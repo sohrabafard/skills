@@ -1,0 +1,23 @@
+; Supervisor program: RabbitMQ consume mode (push-based) if supported by your driver.
+; IMPORTANT: Verify available flags using:
+;   php artisan rabbitmq:consume --help
+;
+; This mode is typically faster but usually targets ONE queue per process.
+
+[program:laravel-rabbitmq-consume-default]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/app/artisan rabbitmq:consume --queue=default
+directory=/var/www/app
+autostart=true
+autorestart=true
+user=www-data
+numprocs=4
+stopsignal=TERM
+stopwaitsecs=3600
+killasgroup=true
+stopasgroup=true
+redirect_stderr=true
+stdout_logfile=/var/www/app/storage/logs/rabbitmq-consume-default.log
+stdout_logfile_maxbytes=50MB
+stdout_logfile_backups=5
+environment=APP_ENV="production",APP_DEBUG="false",QUEUE_CONNECTION="rabbitmq"

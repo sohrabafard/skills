@@ -1,0 +1,29 @@
+# systemd templated unit: RabbitMQ consume mode (if supported by your driver)
+# Place as: /etc/systemd/system/laravel-rabbitmq-consume@.service
+#
+# Start 4 consumers:
+#   systemctl daemon-reload
+#   systemctl enable --now laravel-rabbitmq-consume@1 laravel-rabbitmq-consume@2 laravel-rabbitmq-consume@3 laravel-rabbitmq-consume@4
+#
+# IMPORTANT: confirm command flags in your app version:
+#   php artisan rabbitmq:consume --help
+
+[Unit]
+Description=Laravel RabbitMQ Consumer instance %i
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/app
+ExecStart=/usr/bin/php /var/www/app/artisan rabbitmq:consume --queue=default
+Restart=always
+RestartSec=3
+TimeoutStopSec=3600
+KillSignal=SIGTERM
+Environment=APP_ENV=production
+Environment=APP_DEBUG=false
+Environment=QUEUE_CONNECTION=rabbitmq
+
+[Install]
+WantedBy=multi-user.target
