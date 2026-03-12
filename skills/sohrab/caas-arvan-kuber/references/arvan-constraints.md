@@ -55,9 +55,13 @@ Treat these as unsupported unless live discovery proves otherwise:
 3) CPU generation selection may require node affinity labels (for example `cloud-container-g2`/`g3` families).
 4) Horizontal scaling in panel is stateless-oriented and can be restricted when persistent storage is enabled.
 5) Custom domain flows depend on Arvan CDN-managed DNS and active CDN state.
-6) `ClusterIP` is only for in-cluster access. For external HTTP/HTTPS apps, use an `Ingress` or Arvan's panel-managed domain/public-IP flow on top of the service.
-7) If Arvan terminates TLS at the edge, keep in-cluster ingress/service traffic on HTTP and disable chart-managed TLS unless a real in-cluster certificate flow is required.
-8) Persistent disk behavior:
+6) `ClusterIP` is only for in-cluster access. For stable external HTTP/HTTPS apps on Arvan, prefer a `LoadBalancer` service with explicit service annotations for the domain and, when needed, the MetalLB pool. Support `Ingress` separately when that is the chosen exposure mode.
+7) A known working service pattern is:
+- `service.type: LoadBalancer`
+- `annotations.arvancloud.ir/domain: <app-domain>`
+- `annotations.metallb.universe.tf/ip-allocated-from-pool: <pool>` when the cluster uses pool-based IP allocation.
+8) If Arvan terminates TLS at the edge, keep in-cluster ingress/service traffic on HTTP and disable chart-managed TLS unless a real in-cluster certificate flow is required.
+9) Persistent disk behavior:
 - container filesystem is ephemeral,
 - disk size increases only (no shrink),
 - detach/delete operations are disruptive and should be runbooked.
@@ -76,6 +80,7 @@ Use facts from `references/arvan-rbac-namespace-facts.md` when RBAC symptoms are
 
 ## Portability toggles (recommended)
 
+- `exposureMode=public-ip|ingress|internal`
 - `openshift.enabled`
 - `route.enabled` vs `ingress.enabled`
 - `hpa.enabled` (default false for stateful workloads)

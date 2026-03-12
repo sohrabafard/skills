@@ -86,11 +86,12 @@ Use this skill for:
 7) CPU generation scheduling is optional and value-driven.
 - Affinity presets are opt-in, not forced by default.
 
-8) HTTP exposure needs an explicit ingress strategy.
+8) HTTP exposure needs an explicit exposure mode.
 - `ClusterIP` only solves in-cluster connectivity.
-- For public HTTP/HTTPS apps on Arvan, default to `service.type=ClusterIP` plus `ingress.enabled=true`, unless the user explicitly chooses the panel-managed domain/public-IP flow instead.
-- When chart-managed ingress is used, set the ingress hostname from the application domain and keep TLS disabled in-cluster when Arvan terminates TLS at the edge.
-- Keep ingress annotations configurable; do not hardcode undocumented platform annotations as universal requirements.
+- For stable public HTTP/HTTPS apps on Arvan, prefer `service.type=LoadBalancer` plus service annotations for the public domain and pool when the cluster already uses that pattern.
+- A known working Arvan pattern is `LoadBalancer` service plus `arvancloud.ir/domain` and, when needed, `metallb.universe.tf/ip-allocated-from-pool`.
+- Support `ingress` mode separately as `ClusterIP` plus `Ingress`; keep ingress annotations configurable and do not hardcode undocumented platform annotations as universal requirements.
+- When Arvan terminates TLS at the edge, keep in-cluster ingress/service traffic on HTTP unless a real in-cluster certificate flow is required.
 
 ## OpenAPI-driven capability baseline (Arvan 1.25)
 
@@ -321,7 +322,7 @@ Implementation rules:
 - Probes for app workloads.
 - Stateless: `Deployment` with optional HPA.
 - Stateful/PVC-backed: `StatefulSet` or operator CR, no default HPA.
-- Service first; for public HTTP apps, default to `ClusterIP` plus `Ingress`, with optional LoadBalancer/public IP path only when explicitly chosen.
+- Service first; for public HTTP apps on Arvan, prefer an explicit exposure mode: `LoadBalancer/public-ip` when you want the gateway-style pattern, `ClusterIP + Ingress` when you explicitly want ingress mode.
 - OpenShift Route only behind explicit toggle and API availability.
 - Secrets via secret values or existing secret refs only.
 - RBAC namespace-scoped by default.
