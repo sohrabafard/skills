@@ -1,0 +1,125 @@
+# <CHART/APP NAME> — Arvan CaaS Deployment Guide
+
+## What this is
+One paragraph describing the service and why it exists.
+
+## Platform compatibility
+
+- Primary target: ArvanCloud CaaS (Cloud Container)
+- Compatible with: standard Kubernetes (portable defaults)
+- Optional: OpenShift via explicit toggles only
+
+OpenAPI baseline used for this package:
+
+- `references/arvan-caas-openAPI-1.25.json`
+- `references/openapi-1.25-capability-matrix.md`
+- `references/arvan-rbac-namespace-facts.md` (for alias/canonical namespace RBAC incidents)
+
+## Prerequisites
+
+- Namespace/project access on Arvan
+- One of:
+  - Arvan panel + manifest deploy,
+  - `kubectl` configured,
+  - Arvan CLI (`arvan paas`) / Cloud Shell
+- Helm v3 (for chart-based deployments)
+- Values files:
+  - `values.yaml` (non-secret)
+  - `values.secret.yaml` (secret, not committed)
+
+## Preflight (run before every install/upgrade)
+
+```bash
+bash .codex/skills/caas-arvan-kuber/scripts/verify-cluster.sh <namespace> [runner-serviceaccount]
+bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh ./helm/<chart> <namespace> values.yaml values.secret.yaml rendered.yaml [values.<env>.yaml]
+kubectl apply --dry-run=client -f rendered.yaml
+```
+
+## Install / Upgrade (Helm)
+
+```bash
+helm upgrade --install <release> ./helm/<chart> \
+  -n <namespace> --create-namespace \
+  -f values.yaml \
+  -f values.<env>.yaml \
+  -f values.secret.yaml \
+  --wait --timeout 10m --rollback-on-failure
+```
+
+## Rollback
+
+```bash
+helm history <release> -n <namespace>
+helm rollback <release> <revision> -n <namespace>
+```
+
+## Uninstall
+
+```bash
+helm uninstall <release> -n <namespace>
+```
+
+## Arvan safety requirements
+
+1) Every container must declare resources.
+- On Arvan targets, keep `requests == limits`.
+- Include `ephemeral-storage` when required by policy.
+
+2) Secret handling:
+- never commit `values.secret.yaml`,
+- never use `--set` for secret values,
+- never print secrets in logs.
+
+3) Scaling:
+- HPA by default for stateless workloads only.
+- Stateful/PVC-backed workloads: use manual replica/instance runbook.
+
+4) Config mounts:
+- mount secrets/configmaps into dedicated subdirectories to avoid shadowing existing files.
+
+## Private registry pattern
+
+Use `kubernetes.io/dockerconfigjson` and `imagePullSecrets` with two supported modes:
+
+1) Helm-managed secret from `values.secret.yaml`
+2) Existing secret reference (chart does not create/overwrite)
+
+For GitLab Runner:
+
+- ensure executor job pods render `image_pull_secrets`,
+- pin helper image to a reachable registry path.
+
+## Values layering (recommended)
+
+Order:
+
+1) `values.yaml`
+2) `values.<env>.yaml` (optional, non-secret)
+3) `values.secret.yaml` (last)
+
+## Verify deployment
+
+```bash
+kubectl -n <namespace> get pods
+kubectl -n <namespace> get svc,ingress
+kubectl -n <namespace> describe pod <pod>
+kubectl -n <namespace> logs <pod>
+```
+
+## Fast debug commands
+
+```bash
+helm get values <release> -n <namespace> -a
+helm get manifest <release> -n <namespace> > release.rendered.yaml
+kubectl -n <namespace> get events --sort-by=.metadata.creationTimestamp
+```
+
+## RBAC identity debug note
+
+If authorization failures look inconsistent, collect both namespace forms and principal identity before changing RBAC:
+
+- alias namespace (human-friendly)
+- canonical namespace (hash-prefixed when present)
+- principal evaluated: `system:serviceaccount:<namespace>:<name>`
+
+Use `references/arvan-rbac-namespace-facts.md` as the factual model.

@@ -1,0 +1,165 @@
+# RUNBOOK — <CHART/APP NAME> on Arvan CaaS
+
+## Scope
+
+- Namespace: `<namespace>`
+- Release: `<release>`
+- Chart version: `<version>`
+- OpenAPI baseline: `../references/arvan-caas-openAPI-1.25.json`
+
+## Day-0: Initial install checklist
+
+1) Discovery
+- run `verify-cluster.sh` and confirm required APIs/RBAC
+- verify namespace quota/limitrange visibility
+
+2) Resource policy
+- every workload container has explicit resources
+- requests/limits parity enforced for Arvan
+- `ephemeral-storage` set when required
+
+3) Secret strategy
+- choose one mode:
+  - Helm-managed secret creation, or
+  - existing secret reference
+- confirm `values.secret.yaml` is excluded from git
+
+4) Render and dry run
+
+```bash
+bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh ./helm/<chart> <namespace> values.yaml values.secret.yaml rendered.yaml [values.<env>.yaml]
+kubectl apply --dry-run=client -f rendered.yaml
+```
+
+5) Deploy and verify readiness
+
+```bash
+helm upgrade --install <release> ./helm/<chart> -n <namespace> \
+  -f values.yaml -f values.<env>.yaml -f values.secret.yaml \
+  --wait --timeout 10m --rollback-on-failure
+kubectl -n <namespace> get pods
+```
+
+## Day-1: Operations
+
+### Scale stateless workloads
+
+```bash
+kubectl -n <namespace> scale deploy/<name> --replicas=3
+```
+
+### Scale stateful workloads
+
+- Do not use HPA by default.
+- Follow application replication rules first.
+- Scale only with explicit operator approval/runbook steps.
+
+```bash
+kubectl -n <namespace> scale sts/<name> --replicas=<n>
+```
+
+### Rotate app secrets
+
+1) Update `values.secret.yaml` or existing secret.
+2) Run Helm upgrade.
+3) Verify rollout and app health checks.
+
+### Rotate registry credentials
+
+1) Update dockerconfigjson secret content.
+2) Confirm `imagePullSecrets` still references expected secret.
+3) Validate new pod pulls succeed.
+
+## Day-2: Maintenance
+
+### Upgrade chart/application
+
+```bash
+bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh ./helm/<chart> <namespace> values.yaml values.secret.yaml rendered.yaml [values.<env>.yaml]
+helm upgrade <release> ./helm/<chart> -n <namespace> \
+  -f values.yaml -f values.<env>.yaml -f values.secret.yaml \
+  --wait --timeout 10m
+```
+
+### Rollback
+
+```bash
+helm history <release> -n <namespace>
+helm rollback <release> <revision> -n <namespace>
+```
+
+## Incident playbook
+
+### 1) Helm render/parse failure
+
+Checks:
+
+```bash
+helm lint ./helm/<chart> -f values.yaml -f values.secret.yaml
+helm template <release> ./helm/<chart> -n <namespace> -f values.yaml -f values.secret.yaml > rendered.yaml
+```
+
+Likely causes:
+
+- wrong chart path or missing dependency artifacts
+- YAML indentation/quoting issues in templates
+
+### 2) `ImagePullBackOff` / auth pull errors
+
+Checks:
+
+```bash
+kubectl -n <namespace> describe pod <pod>
+kubectl -n <namespace> get secret <pull-secret> -o yaml
+```
+
+Fixes:
+
+- verify secret type is `kubernetes.io/dockerconfigjson`
+- verify pod/serviceaccount `imagePullSecrets` includes the expected secret
+- for GitLab Runner, verify executor job pod has `image_pull_secrets`
+
+### 3) RBAC denial (`cannot create secrets/configmaps/pods`)
+
+Checks:
+
+```bash
+kubectl -n <namespace> auth can-i create secrets
+kubectl -n <namespace> auth can-i create configmaps
+kubectl -n <namespace> auth can-i create pods
+kubectl -n <namespace> get rolebinding <name> -o yaml
+```
+
+Fixes:
+
+- align `RoleBinding` subject namespace with effective service account identity
+- verify alias vs canonical namespace identity before broadening permissions
+- avoid cluster-scoped RBAC unless explicitly required
+
+### 4) No rollout after successful Helm upgrade
+
+Checks:
+
+```bash
+kubectl -n <namespace> rollout status deploy/<name>
+kubectl -n <namespace> get events --sort-by=.metadata.creationTimestamp
+```
+
+Action:
+
+```bash
+kubectl -n <namespace> rollout restart deploy/<name>
+```
+
+### 5) Admission deny due to resources
+
+Symptoms:
+
+- rejected ratio/policy checks
+- missing resources fields
+
+Fix:
+
+- enforce explicit resources on all containers
+- enforce Arvan parity (`requests == limits`)
+- add `ephemeral-storage` when policy expects it
