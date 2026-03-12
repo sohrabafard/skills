@@ -1,0 +1,18 @@
+
+tests:
+  - name: normalize level and service
+    inputs:
+      - insert_at: in_demo
+        type: log
+        log_fields:
+          level: WARN
+          service: API
+          message: hello
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.level, "warn")
+              assert_eq!(.service, "API")
+              assert_eq!(.message, "hello")

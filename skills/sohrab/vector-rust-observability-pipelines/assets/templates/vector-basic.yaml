@@ -1,0 +1,23 @@
+
+data_dir: /var/lib/vector
+
+sources:
+  in_demo:
+    type: demo_logs
+    format: json
+
+transforms:
+  normalize:
+    type: remap
+    inputs: [in_demo]
+    source: |
+      .service = string!(.service) ?? "unknown"
+      .level = downcase(string!(.level) ?? "info")
+      .ingest_ts = now()
+
+sinks:
+  out_console:
+    type: console
+    inputs: [normalize]
+    encoding:
+      codec: json

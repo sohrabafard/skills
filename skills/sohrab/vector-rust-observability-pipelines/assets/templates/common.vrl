@@ -1,0 +1,23 @@
+
+# Common VRL snippets
+
+# Normalize level
+.level = downcase(string!(.level) ?? "info")
+
+# Parse embedded JSON safely
+parsed, err = parse_json(.message)
+if err == null && is_object(parsed) {
+  .structured = parsed
+}
+
+# Derive routing key
+.route = if .service == "payments" {
+  "critical"
+} else {
+  "default"
+}
+
+# Redact simple secret patterns
+if exists(.token) {
+  .token = "[REDACTED]"
+}

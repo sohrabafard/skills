@@ -1,0 +1,50 @@
+
+data_dir: /var/lib/vector
+
+sources:
+  in_demo:
+    type: demo_logs
+    format: json
+
+transforms:
+  enrich:
+    type: remap
+    inputs: [in_demo]
+    source: |
+      .service = string!(.service) ?? "unknown"
+      .level = downcase(string!(.level) ?? "info")
+      .ts = .timestamp ?? now()
+
+sinks:
+  out_clickhouse:
+    type: clickhouse
+    inputs: [enrich]
+    endpoint: https://clickhouse.example.com:8443
+    database: analytics
+    table: logs_raw
+    compression: gzip
+    date_time_best_effort: true
+
+    batch:
+      max_bytes: 10000000
+      timeout_secs: 1
+
+    buffer:
+      type: disk
+      max_size: 1073741824
+      when_full: block
+
+    acknowledgements:
+      enabled: true
+
+    auth:
+      strategy: basic
+      user: ${CLICKHOUSE_USER}
+      password: ${CLICKHOUSE_PASSWORD}
+
+    tls:
+      verify_certificate: true
+
+# Optional higher-throughput batch encoding path:
+# batch_encoding:
+#   codec: arrow_stream
