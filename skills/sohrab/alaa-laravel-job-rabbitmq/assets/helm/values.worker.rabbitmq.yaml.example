@@ -1,0 +1,103 @@
+# Example values overlay for `platform-app-php` chart (RabbitMQ workers).
+# This profile is optimized for Arvan-safe defaults and `queue:work` mode.
+# For consume mode (`rabbitmq:consume`), see override example at the end.
+
+envConfig:
+  APP_ENV: production
+  APP_DEBUG: "0"
+
+  # Laravel queue driver selection.
+  QUEUE_CONNECTION: rabbitmq
+  # IMPORTANT: do not use Horizon mode for RabbitMQ workers in this repository.
+  # Keep RABBITMQ_WORKER unset or set to default in app config.
+  # Enable dispatch-after-commit for DB-coupled workflows.
+  QUEUE_AFTER_COMMIT: "1"
+  # NOTE: Ensure config/queue.php retry_after is greater than worker timeout.
+
+  # RabbitMQ connection.
+  RABBITMQ_HOST: shared-rabbitmq
+  RABBITMQ_PORT: "5672"
+  # Prefer one canonical env key. Keep USERNAME only if your app maps it.
+  RABBITMQ_USER: app_worker
+  RABBITMQ_USERNAME: app_worker
+  RABBITMQ_VHOST: "/comment_service"
+  RABBITMQ_QUEUE: "default"
+
+  # Connection hardening (driver-supported options).
+  RABBITMQ_HEARTBEAT: "10"
+  RABBITMQ_CONNECTION_TIMEOUT: "3.0"
+  RABBITMQ_READ_TIMEOUT: "3.0"
+  RABBITMQ_WRITE_TIMEOUT: "3.0"
+  RABBITMQ_CHANNEL_RPC_TIMEOUT: "0.0"
+  RABBITMQ_LAZY: "1"
+  RABBITMQ_SECURE: "0"
+  RABBITMQ_NETWORK_PROTOCOL: "tcp"
+
+  # Optional exchange + failed reroute strategy.
+  # Keep disabled unless topology is pre-created and validated.
+  RABBITMQ_EXCHANGE: ""
+  RABBITMQ_EXCHANGE_TYPE: "direct"
+  RABBITMQ_EXCHANGE_ROUTING_KEY: ""
+  RABBITMQ_REROUTE_FAILED: "0"
+  RABBITMQ_FAILED_EXCHANGE: "amq.direct"
+  RABBITMQ_FAILED_ROUTING_KEY: "%s.failed"
+  RABBITMQ_QUEUE_QUORUM: "0"
+
+envSecret:
+  RABBITMQ_PASSWORD: "REPLACE_ME"
+  # APP_KEY: "base64:REPLACE_ME"
+
+worker:
+  enabled: true
+  # Scale from queue lag + throughput tests, not guesswork.
+  replicaCount: 3
+
+  # Default chart command is queue:work; it relies on QUEUE_CONNECTION=rabbitmq.
+  queueWork:
+    # Multi-queue priority list is supported in queue:work mode.
+    queue: "high,default"
+    sleep: 1
+    tries: 5
+    # Keep timeout lower than queue connection retry_after in app config.
+    timeout: 60
+    # Recycle workers periodically to control memory drift.
+    maxJobs: 1000
+    maxTime: 3600
+    # Comma-separated backoff sequence for transient failures.
+    backoff: "1,5,10,30"
+
+  # Give workers enough time to finish in-flight jobs on SIGTERM rollout.
+  terminationGracePeriodSeconds: 300
+
+  # Arvan-safe resources: requests == limits.
+  resources:
+    requests:
+      cpu: 0.5
+      memory: 1Gi
+      ephemeral-storage: 1Gi
+    limits:
+      cpu: 0.5
+      memory: 1Gi
+      ephemeral-storage: 1Gi
+
+# Optional consume mode (higher throughput path):
+# - one queue per deployment/process group
+# - tune prefetch-count with load tests
+# - do NOT pass multiple queues here
+#
+# worker:
+#   command: ["/bin/sh","-lc"]
+#   args:
+#     - |
+#       set -euo pipefail
+#       cd "${APP_DIR:-/var/www/html}"
+#       exec php artisan rabbitmq:consume rabbitmq \
+#         --queue=high \
+#         --prefetch-count=50 \
+#         --prefetch-size=0 \
+#         --tries=5 \
+#         --timeout=60 \
+#         --sleep=1 \
+#         --memory=256 \
+#         --max-time=3600 \
+#         --json

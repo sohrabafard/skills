@@ -1,0 +1,4 @@
+repo=https://github.com/vyuldashev/laravel-queue-rabbitmq
+commit=9b8df5d4239128ed70b857249513edb30749e63b
+snapshot_path=references/upstream/vyuldashev/9b8df5d4239128ed70b857249513edb30749e63b
+created_utc=2026-03-06T12:09:23Z
