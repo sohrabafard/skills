@@ -73,6 +73,7 @@ Use this skill for:
 4) Namespace-scoped RBAC first.
 - Prefer `Role` + `RoleBinding`.
 - Avoid cluster-scoped resources unless explicitly requested and approved.
+- Assume deployment happens in an existing namespace; do not add namespace creation or cluster-scoped namespace checks to Arvan CI flows.
 
 5) Config mount safety.
 - Do not mount secrets/configmaps onto busy app directories.
@@ -84,6 +85,12 @@ Use this skill for:
 
 7) CPU generation scheduling is optional and value-driven.
 - Affinity presets are opt-in, not forced by default.
+
+8) HTTP exposure needs an explicit ingress strategy.
+- `ClusterIP` only solves in-cluster connectivity.
+- For public HTTP/HTTPS apps on Arvan, default to `service.type=ClusterIP` plus `ingress.enabled=true`, unless the user explicitly chooses the panel-managed domain/public-IP flow instead.
+- When chart-managed ingress is used, set the ingress hostname from the application domain and keep TLS disabled in-cluster when Arvan terminates TLS at the edge.
+- Keep ingress annotations configurable; do not hardcode undocumented platform annotations as universal requirements.
 
 ## OpenAPI-driven capability baseline (Arvan 1.25)
 
@@ -314,7 +321,7 @@ Implementation rules:
 - Probes for app workloads.
 - Stateless: `Deployment` with optional HPA.
 - Stateful/PVC-backed: `StatefulSet` or operator CR, no default HPA.
-- Service first, Ingress by toggle, optional LoadBalancer/public IP path when needed.
+- Service first; for public HTTP apps, default to `ClusterIP` plus `Ingress`, with optional LoadBalancer/public IP path only when explicitly chosen.
 - OpenShift Route only behind explicit toggle and API availability.
 - Secrets via secret values or existing secret refs only.
 - RBAC namespace-scoped by default.
@@ -361,7 +368,8 @@ Deliverables must include:
 2) Ensure executor job pods render `image_pull_secrets`.
 3) Keep helper image pinned and reachable in restricted egress environments.
 4) Separate manager pod pull config from executor job pod pull config.
-5) For RBAC denials, evaluate alias/canonical namespace identity mismatch before broadening privileges.
+5) Do not rely on `kubectl create namespace`, `kubectl get namespace`, or `helm --create-namespace` in runner jobs unless live evidence proves the runner has that scope.
+6) For RBAC denials, evaluate alias/canonical namespace identity mismatch before broadening privileges.
 
 ## CI/CD rules (portable + Arvan-safe)
 

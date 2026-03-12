@@ -1,0 +1,6 @@
+haproxy:validate:
+  image: haproxy:3.2
+  stage: test
+  script:
+    - haproxy -vv
+    - haproxy -c -f haproxy/haproxy.cfg

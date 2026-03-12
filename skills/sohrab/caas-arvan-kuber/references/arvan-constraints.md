@@ -28,6 +28,7 @@ Use this file as a fast ruleset. For API and RBAC details, also read:
 4) Namespace-scoped RBAC first.
 - Prefer `Role` + `RoleBinding`.
 - Avoid cluster-scoped objects unless explicitly approved.
+- In CI and runner-driven deploy flows, assume the target namespace already exists and avoid cluster-scoped namespace creation or namespace introspection.
 
 5) Config mount path safety.
 - Do not mount on busy app directories.
@@ -54,7 +55,9 @@ Treat these as unsupported unless live discovery proves otherwise:
 3) CPU generation selection may require node affinity labels (for example `cloud-container-g2`/`g3` families).
 4) Horizontal scaling in panel is stateless-oriented and can be restricted when persistent storage is enabled.
 5) Custom domain flows depend on Arvan CDN-managed DNS and active CDN state.
-6) Persistent disk behavior:
+6) `ClusterIP` is only for in-cluster access. For external HTTP/HTTPS apps, use an `Ingress` or Arvan's panel-managed domain/public-IP flow on top of the service.
+7) If Arvan terminates TLS at the edge, keep in-cluster ingress/service traffic on HTTP and disable chart-managed TLS unless a real in-cluster certificate flow is required.
+8) Persistent disk behavior:
 - container filesystem is ephemeral,
 - disk size increases only (no shrink),
 - detach/delete operations are disruptive and should be runbooked.
