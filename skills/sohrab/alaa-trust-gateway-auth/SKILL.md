@@ -180,6 +180,12 @@ Only claims that are present are injected.
 - When `X-USER-ID` is absent, do not synthesize a trusted actor from client payload fields such as `identity.user_id`, `visitor_id`, `device_id`, or similar client-generated identifiers. If such fields are stored, classify them as untrusted analytics metadata only.
 - Mobile, token id, audience, issue time, not-before time, expiry time, scopes, and permission bitmap are supplemental context, not replacements for server-side authorization rules.
 
+## Services without a tenant boundary
+- Not every gateway-backed service is currently tenant-scoped.
+- VOD's current header-auth path reads `X-USER-ID` and `X-ACCESS`, maps permissions from service-local config, and does not derive tenant context from gateway headers.
+- Target standard: do not invent `project_id` enforcement in a service that has no real tenant boundary just to make documentation look uniform.
+- If such a service later becomes tenant-aware, add trusted `X-PROJECT-ID` normalization first and then scope reads and writes from that trusted value.
+
 ## What not to do
 - Do not derive tenant from a client body field such as `project_id` or `tenant_id` when `X-PROJECT-ID` is already available from the trusted gateway.
 - Do not trust `X-PROJECT-ID` or `X-USER-ID` if the service is reachable directly by clients or untrusted internal callers.
@@ -205,6 +211,9 @@ Only claims that are present are injected.
 - In comment-service, `ResolveUserMiddleware` builds a lightweight authenticated user from trusted headers, service classes call `Gate::forUser($user)->authorize(...)`, and policies return domain-specific deny codes.
 - In comment-service, `AuthServiceProvider` stores denied Gate ability context and `AuthorizationErrorRenderer` turns policy denials into a stable `403` JSON envelope and audit event.
 - Keep raw gateway-header parsing in middleware or a dedicated request-context layer, not in controllers and not scattered across policies.
+- In Laravel services with mixed legacy guard access patterns, resolve the trusted actor once and attach it to every guard and resolver the codebase still reads, such as `Auth::user()`, `$request->user()`, `auth('api')->user()`, or a legacy custom guard.
+- VOD shows a practical compatibility pattern: after resolving the user from trusted headers, set the default auth user, set each legacy guard that existing code still reads, and set the request user resolver in the same middleware.
+- If you migrate only one guard while other legacy guard lookups remain, helpers, policies, and controllers can disagree about whether the request is authenticated.
 - Use policy or Gate responses to express business authorization decisions after auth context normalization, not as a substitute for gateway verification.
 
 ## Tenant-safe request handling
@@ -301,6 +310,9 @@ Only claims that are present are injected.
   - `15` -> `crm_post_ticket_reply`
   - `16` -> `crm_put_ticket`
   - `17` -> `crm_post_bulk_ticket`
+- VOD confirms the same bitmap contract and keeps its service-local permission-id map in `config/permissions.php`; its current mapped set covers ids `1-13` and `22-39`.
+- Laravel compatibility pattern: decode the bitmap once in auth middleware, map ids to permission names from service-local config, attach the mapped names to the request-scoped user object, and let `isAbleTo` or policy checks read those normalized permission names.
+- Do not authenticate the actor successfully and then silently continue with an empty decoded permission set on routes that expect permission-bearing context. Fail during trusted-context normalization with the canonical auth code instead.
 - Comment-service currently derives roles like this:
   - admin when all configured permissions are present
   - moderator when any moderation signal permission is present
@@ -508,6 +520,7 @@ Flag a problem when you see any of these:
 - A service depends on opaque-token behavior that the current gateway does not implement.
 - A backend service is documented with gateway-facing routes even though the gateway strips its service prefix before proxying.
 - A service documents a header rule that the code does not actually enforce yet.
+- A permission middleware or authorization wrapper contains a temporary early return or bypass ahead of the real checks, effectively disabling authorization while requests still look authenticated.
 - Different services use different auth failure codes for the same deny class without a compatibility reason.
 - A service accepts conflicting client-supplied tenant selectors and trusted tenant context without an explicit deny.
 - A service keeps documenting `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id` as if they were different concepts instead of a legacy alias scheduled to be renamed to `project_id` / `X-PROJECT-ID`.
