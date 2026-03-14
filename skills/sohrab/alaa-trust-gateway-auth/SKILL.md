@@ -52,6 +52,30 @@ The current gateway config marks these paths as public and skips JWT checks for 
 
 Important: a public path at the gateway does not automatically mean the downstream service should trust the caller. The downstream service must still apply its own route-level rules.
 
+## Gateway-facing routes vs service-local routes
+This distinction is mandatory.
+
+- Clients call the gateway-facing route, which includes the service prefix used for gateway routing.
+- The gateway routes by prefix and may strip that prefix before proxying to the backend service.
+- A backend service must therefore document and implement its own local route shape, not the gateway-facing one.
+
+Current HAProxy behavior:
+- Routing happens by path prefix such as `/auth`, `/vod`, `/comment`, `/ticket`, and `/wa`.
+- When `stripPathPrefix: true`, the gateway removes that prefix before sending the request to the downstream service.
+
+Example for auth service:
+- Gateway-facing public route: `/auth/api/v2/login`
+- Service-local route after prefix strip: `/api/v2/login`
+
+Example for auth health:
+- Gateway-facing route: `/auth/api/health`
+- Service-local route: `/api/health`
+
+Rule for future agents:
+- When writing or reviewing the gateway itself, use gateway-facing routes.
+- When writing or reviewing a downstream service, use service-local routes after prefix stripping.
+- Never force a backend service to define routes with the gateway prefix unless that backend is intentionally designed that way.
+
 # What the gateway verifies
 For protected routes, the current HAProxy logic verifies these checks in order:
 1. A bearer token exists.
@@ -169,6 +193,135 @@ Only claims that are present are injected.
 - Prefer logging `jti`, tenant id, user id, denial reason, and trace or request id.
 - When auth context is missing or malformed, make the denial observable.
 
+# Auth and token error contract
+Use this section as the standard contract for auth and token-related deny responses and logs across downstream services.
+
+This contract is intentionally aligned with `alaa-observability-soc`:
+- response codes must be stable
+- logs must repeat the same stable `code`
+- logs must include request correlation and safe auth context
+- messages must stay user-safe and not leak verifier internals
+
+## Contract rules
+- Use a stable machine-readable `code` in both the API response and logs.
+- Use a short user-facing `message` in English.
+- Keep `meta` safe and small.
+- Do not put raw tokens, full JWT payloads, secrets, stack traces, or key material in response or logs.
+- Prefer one canonical code per auth failure class across services.
+- If a downstream service translates a gateway denial, preserve the same semantic code instead of inventing a new synonym.
+
+## Recommended response envelope
+```json
+{
+  "error": {
+    "status": 401,
+    "code": "AUTH_MISSING_TOKEN",
+    "message": "Access token is required.",
+    "meta": {}
+  }
+}
+```
+
+## Recommended log fields for auth denies
+At minimum log:
+- `code`
+- `message` or `reason`
+- `http.status`
+- `request_id`
+- `project_id` when known
+- `user_id` when known
+- `token_jti` when known
+- `route` or normalized path
+- `auth_source` such as `gateway` or `service`
+
+## Canonical auth and token codes
+Use these codes by default unless an existing production contract already forces a different stable value:
+
+- `AUTH_MISSING_TOKEN`
+  - HTTP: `401`
+  - Meaning: protected route has no usable bearer token
+
+- `AUTH_INVALID_TOKEN`
+  - HTTP: `401`
+  - Meaning: token exists but cannot be accepted
+  - Use when the service should not expose a narrower verifier reason to callers
+
+- `AUTH_TOKEN_EXPIRED`
+  - HTTP: `401`
+  - Meaning: token is expired
+
+- `AUTH_TOKEN_NOT_YET_VALID`
+  - HTTP: `401`
+  - Meaning: token `nbf` is in the future
+
+- `AUTH_INVALID_SIGNATURE`
+  - HTTP: `401`
+  - Meaning: signature verification failed
+  - Gateway note: this is the class currently promoted to higher-severity forwarding in gateway logs
+
+- `AUTH_DISALLOWED_ALG`
+  - HTTP: `401`
+  - Meaning: JWT algorithm is not allowed
+
+- `AUTH_BAD_ISSUER`
+  - HTTP: `401`
+  - Meaning: issuer is invalid for this verifier
+
+- `AUTH_BAD_AUDIENCE`
+  - HTTP: `401`
+  - Meaning: audience is invalid for this verifier
+
+- `AUTH_MISSING_REQUIRED_CLAIM`
+  - HTTP: `401`
+  - Meaning: one required token claim is missing
+  - `meta.claim` may contain a safe claim name such as `project_id` or `sub`
+
+- `AUTH_CONTEXT_MISSING`
+  - HTTP: `401` or `403` depending on service policy
+  - Meaning: the downstream service expected trusted gateway context but did not receive enough of it
+
+- `AUTHZ_DENIED`
+  - HTTP: `403`
+  - Meaning: caller is authenticated but not allowed to perform the requested action
+
+- `TENANT_CONTEXT_MISMATCH`
+  - HTTP: `403`
+  - Meaning: trusted tenant context and requested target do not match
+
+- `TENANT_CONTEXT_MISSING`
+  - HTTP: `401` or `403` depending on service policy
+  - Meaning: tenant-safe operation could not proceed because trusted tenant context is absent
+
+## Mapping from current gateway error names
+The gateway currently emits lower-level names such as:
+- `missing_token`
+- `disallowed_alg`
+- `invalid_signature`
+- `verify_error`
+- `missing_exp`
+- `expired`
+- `not_yet_valid`
+- `bad_issuer`
+- `bad_audience`
+- `missing_claim_<claim>`
+
+When a downstream service needs to log or surface the same problem in its own contract, map them like this:
+- `missing_token` -> `AUTH_MISSING_TOKEN`
+- `disallowed_alg` -> `AUTH_DISALLOWED_ALG`
+- `invalid_signature` -> `AUTH_INVALID_SIGNATURE`
+- `verify_error` -> `AUTH_INVALID_TOKEN`
+- `missing_exp` -> `AUTH_INVALID_TOKEN`
+- `expired` -> `AUTH_TOKEN_EXPIRED`
+- `not_yet_valid` -> `AUTH_TOKEN_NOT_YET_VALID`
+- `bad_issuer` -> `AUTH_BAD_ISSUER`
+- `bad_audience` -> `AUTH_BAD_AUDIENCE`
+- `missing_claim_<claim>` -> `AUTH_MISSING_REQUIRED_CLAIM`
+
+## Guidance for future backend harmonization
+- In the first step, new services and changed services should adopt these codes for auth and token failures.
+- In the second step, existing services can be migrated gradually by adding the canonical code to logs first, then aligning response payloads.
+- If a service already has a deployed response contract, prefer additive migration over breaking changes.
+
 # Service implementation checklist
 Use this checklist when adapting a downstream service to this trust model:
 1. Confirm the service is not directly exposed to untrusted traffic, or add header stripping at the service edge.
@@ -189,6 +342,8 @@ Flag a problem when you see any of these:
 - Raw tokens are logged.
 - Request-scoped auth or tenant context can leak across requests.
 - A service depends on opaque-token behavior that the current gateway does not implement.
+- A backend service is documented with gateway-facing routes even though the gateway strips its service prefix before proxying.
+- Different services use different auth failure codes for the same deny class without a compatibility reason.
 
 # Laravel and Octane guidance
 - In Laravel services, parse trusted gateway headers once in middleware or a dedicated request-context layer, then pass normalized context into services and policies.
