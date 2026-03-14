@@ -24,13 +24,29 @@ When facts conflict, trust sources in this order:
 
 If README text and HAProxy config disagree, trust the config.
 
+# Canonical rename plan
+- Shared concept: `tenant_id`, `tenant_public_id`, and `project_id` are one tenant-boundary concept.
+- Canonical field name: `project_id`
+- Canonical trusted header name: `X-PROJECT-ID`
+- Legacy names to rename during refactor:
+  - `tenant_id` -> `project_id`
+  - `tenant_public_id` -> `project_id`
+  - `X-Tenant-Public-Id` -> `X-PROJECT-ID`
+- Migration rule: keep trust semantics unchanged while renaming. Only the name changes; the boundary meaning does not.
+- Validation rule for the public identifier: validate canonical `project_id` values as UUIDv7.
+- Example canonical value: `018f7d8f-8cb0-7a85-9a89-e3f61052f840`
+- Documentation rule: OpenAPI, README examples, and service docs should prefer `project_id` / `X-PROJECT-ID`. If a legacy alias still appears, mark it explicitly as legacy and equivalent to `project_id`.
+
 # Core trust model
 - The gateway is the authentication boundary for protected HTTP routes.
 - The gateway verifies the Bearer JWT and then injects trusted request headers for downstream services.
 - Downstream services must still do authorization and tenant-safe data access.
 - Client-supplied internal auth headers are never trusted.
 - Tenant context is derived from the verified token, not from request body, query string, route params, or client-supplied headers.
-- Naming rule: `tenant_id` and `project_id` refer to the same tenant-boundary concept in the current platform. The current cross-service canonical name remains `project_id` / `X-PROJECT-ID` for compatibility during refactor. If a service uses `tenant_id` internally, treat it as an internal alias of the same trusted boundary and normalize it back to the canonical gateway-derived project context.
+- Naming rule: `tenant_id`, `tenant_public_id`, and `project_id` refer to the same tenant-boundary concept in the current platform.
+- Refactor target standard: rename `tenant_id` and `tenant_public_id` usages to `project_id` wherever the field represents the shared tenant boundary.
+- Header target standard: rename `X-Tenant-Public-Id` to `X-PROJECT-ID` in service contracts and docs during the platform refactor.
+- Until that refactor is complete, treat `tenant_id` and `tenant_public_id` only as legacy aliases of the same trusted boundary and normalize them back to the canonical gateway-derived `project_id` / `X-PROJECT-ID` contract.
 
 # How auth enters the system
 ## Protected routes
@@ -150,7 +166,11 @@ Only claims that are present are injected.
 - The current tenant context is `project_id` from the verified JWT.
 - In this gateway, `project_id` is required on protected routes.
 - This is the main tenant boundary header propagated to downstream services as `X-PROJECT-ID`.
-- `tenant_id` is not a different security concept here. It is the same tenant boundary under a different local name. Until a platform-wide refactor is completed, standardize shared gateway and service contracts on `project_id` / `X-PROJECT-ID` and treat `tenant_id` only as an internal alias that must not change trust semantics.
+- `tenant_id` and `tenant_public_id` are not different security concepts here. They are legacy names for the same tenant boundary.
+- Platform refactor target: standardize shared gateway and service contracts on `project_id` / `X-PROJECT-ID`, and rename legacy `tenant_id`, `tenant_public_id`, and `X-Tenant-Public-Id` usages to that standard.
+- Validation rule for the public tenant/project identifier: when a service validates the shared public tenant boundary value, validate it as UUIDv7.
+- UUIDv7 example for `project_id`: `018f7d8f-8cb0-7a85-9a89-e3f61052f840`
+- API-document rule: service OpenAPI or README examples should use the same UUIDv7 example shape for `project_id`, and should explain that older names such as `tenant_public_id` map to the same shared concept and are scheduled to be renamed.
 
 ## User identity
 - The current user identity is `sub` from the verified JWT.
@@ -190,9 +210,12 @@ Only claims that are present are injected.
   - actor or user id
   - token id when useful for audit
   - request id for trace correlation
+- Authorization code should read the normalized request context or server-side request attributes only. Do not re-read raw tenant or actor headers inside policies, services, or repositories after normalization.
 - HTTP requests without `X-PROJECT-ID` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
 - Scope every tenant-aware read and write by the trusted tenant context.
 - Reject protected requests when required trusted context is missing.
+- If a client-supplied tenant selector in body, query, route, or non-trusted header conflicts with the trusted tenant context, deny explicitly instead of silently choosing one source.
+- If a service accepts an extra tenant-shaped identifier for resource lookup, reporting, or local routing, treat it as an untrusted selector until it is matched against the trusted tenant context.
 - If a route or service intentionally supports anonymous traffic, make that policy explicit. In that mode, tenant context can still be mandatory while actor context is optional.
 - Even in anonymous or analytics flows, never let request-body identity fields override or replace trusted gateway tenant context.
 
@@ -207,6 +230,10 @@ Only claims that are present are injected.
 
 ## Header usage rules
 - Use `X-PROJECT-ID` as the tenant boundary input.
+- If a legacy service still exposes `X-Tenant-Public-Id`, treat it as the old name for the same `project_id` boundary and plan to rename it to `X-PROJECT-ID` during refactor.
+- When validating the public tenant boundary value carried in `X-PROJECT-ID`, validate it as UUIDv7.
+- Example header value: `X-PROJECT-ID: 018f7d8f-8cb0-7a85-9a89-e3f61052f840`
+- API-document rule: document `X-PROJECT-ID` with a UUIDv7 example, and if a service still mentions `X-Tenant-Public-Id` or `tenant_public_id`, mark that name as legacy and equivalent to `project_id`.
 - Use `X-USER-ID` as the authenticated actor id.
 - Use `X-ACCESS` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
 - Treat `X-REQUEST-ID` only as correlation.
@@ -281,6 +308,8 @@ Only claims that are present are injected.
 - Log denies and mismatches with request id and safe auth context.
 - Never log the raw token.
 - Prefer logging `jti`, tenant id, user id, denial reason, and trace or request id.
+- Preserve inbound `traceparent`, `tracestate`, and `baggage` across HTTP boundaries. On async boundaries, forward `traceparent` and `tracestate`, and only forward baggage keys that were explicitly reviewed as safe.
+- If a service maps an internal policy decision to a route-specific outward deny code, the API response `code` and the emitted deny log `code` must stay identical.
 - When auth context is missing or malformed, make the denial observable.
 
 # Auth and token error contract
@@ -299,6 +328,7 @@ This contract is intentionally aligned with `alaa-observability-soc`:
 - Do not put raw tokens, full JWT payloads, secrets, stack traces, or key material in response or logs.
 - Prefer one canonical code per auth failure class across services.
 - If a downstream service translates a gateway denial, preserve the same semantic code instead of inventing a new synonym.
+- A service may keep internal policy or framework deny labels, but the final outward response `code` and deny-log `code` must match exactly.
 
 ## Recommended response envelope
 ```json
@@ -402,6 +432,10 @@ Use these codes by default unless an existing production contract already forces
   - HTTP: `401` or `403` depending on service policy
   - Meaning: tenant-safe operation could not proceed because trusted tenant context is absent
 
+- `TENANT_CONTEXT_INVALID`
+  - HTTP: `403`
+  - Meaning: client-supplied tenant selectors or tenant-shaped headers conflict with trusted tenant context, or the service detected an invalid tenant-override attempt
+
 ## Mapping from current gateway error names
 The gateway currently emits lower-level names such as:
 - `missing_token`
@@ -443,11 +477,14 @@ Use this checklist when adapting a downstream service to this trust model:
 1. Confirm the service is not directly exposed to untrusted traffic, or add header stripping at the service edge.
 2. Create one request-scoped auth context builder near ingress or middleware.
 3. Read tenant from `X-PROJECT-ID` and actor from `X-USER-ID`.
-4. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
-5. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
-6. Scope every tenant-aware query or command by the trusted tenant context.
-7. Log denials with request id and safe auth context.
-8. Add tests for spoofed headers, missing tenant context, cross-tenant access attempts, and any route that intentionally allows anonymous traffic.
+4. If the service still uses legacy names such as `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id`, map them to `project_id` as part of the refactor plan and keep the trust semantics unchanged.
+5. Validate the public tenant boundary value as UUIDv7 when that value is exposed in service contracts.
+6. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
+7. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
+8. Deny client tenant-override attempts explicitly instead of silently preferring one tenant source.
+9. Scope every tenant-aware query or command by the trusted tenant context.
+10. Keep deny response codes and deny log codes aligned, with request and trace correlation attached.
+11. Add tests for spoofed headers, missing tenant context, cross-tenant access attempts, conflicting tenant selectors, and any route that intentionally allows anonymous traffic.
 
 # Review checklist for agents
 Flag a problem when you see any of these:
@@ -461,6 +498,8 @@ Flag a problem when you see any of these:
 - A backend service is documented with gateway-facing routes even though the gateway strips its service prefix before proxying.
 - A service documents a header rule that the code does not actually enforce yet.
 - Different services use different auth failure codes for the same deny class without a compatibility reason.
+- A service accepts conflicting client-supplied tenant selectors and trusted tenant context without an explicit deny.
+- A service keeps documenting `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id` as if they were different concepts instead of a legacy alias scheduled to be renamed to `project_id` / `X-PROJECT-ID`.
 
 - A service derives `tenant_id` or `project_id` from request body fields before trusted `X-PROJECT-ID`.
 - A service upgrades payload identity such as `identity.user_id`, `visitor_id`, or `device_id` into trusted actor context when `X-USER-ID` is missing.
@@ -485,5 +524,7 @@ Flag a problem when you see any of these:
 - Letting request body, route params, or query params override trusted tenant context.
 - Treating gateway authentication as full authorization.
 - Spreading raw header reads across the codebase instead of normalizing them once.
+- Silently accepting a client tenant selector that conflicts with trusted tenant context.
+- Treating `tenant_id`, `tenant_public_id`, and `project_id` as different tenant-boundary concepts when they are supposed to be one shared concept under the `project_id` name.
 - Logging raw access tokens.
 - Assuming README design notes are more accurate than active HAProxy config.
