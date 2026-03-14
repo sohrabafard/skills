@@ -195,6 +195,10 @@ Only claims that are present are injected.
 - Treat the gateway as the authentication and context-propagation layer.
 - Treat each downstream service as the authorization layer for business actions.
 - A verified token plus injected headers does not mean the user may perform the requested operation.
+- Legacy migration rule: do not copy older per-request auth-service callback patterns into new gateway-backed services.
+- Ticket-service still contains legacy internal route groups that accept a separate `user-token` header and call auth-service endpoints such as `/api/v2/checkUserAccess` and `/api/v2/authorizeWithPermissionName` on each request.
+- Target standard: for services behind the gateway, replace that pattern with gateway-verified Bearer JWT flow, trusted `X-*` header normalization once at ingress, and local authorization inside the service.
+- If a legacy `user-token` path must remain temporarily during migration, classify it as a service-specific compatibility path only. Do not document it as the canonical platform auth contract and do not let it weaken gateway-trusted header rules for normal service routes.
 
 ## Laravel Gate and policy flow
 - Build the request-scoped actor and tenant context before any framework authorization runs.
@@ -292,6 +296,11 @@ Only claims that are present are injected.
   - `21` -> `comment_reply`
   - `22` -> `comment_get_show`
 - Services must define and document their own role or authorization derivation from decoded permissions.
+- Ticket-service confirms the same bitmap contract and currently maps these ids from `X-ACCESS`:
+  - `14` -> `crm_get_tickets`
+  - `15` -> `crm_post_ticket_reply`
+  - `16` -> `crm_put_ticket`
+  - `17` -> `crm_post_bulk_ticket`
 - Comment-service currently derives roles like this:
   - admin when all configured permissions are present
   - moderator when any moderation signal permission is present
@@ -303,6 +312,8 @@ Only claims that are present are injected.
 - Reusable reference implementation: `references/permission-bitmap.php`
 - Do not assume another service uses the same permission ids or role derivation unless that service explicitly adopts that exact mapping.
 - The bitmap width is produced by the auth service against the full global permission set, so downstream services should expect a common bitmap width even when each service only cares about a subset of ids.
+- Ticket-service shows a common legacy failure mode: decode `X-ACCESS`, map known ids from config, and if nothing valid remains, let the request continue until a later generic `unauthorized` or `access_denied` path fires.
+- Target standard: do not defer malformed or unknown-only bitmap failures to later generic auth checks. Fail during trusted-context normalization with canonical code `AUTH_ACCESS_BITMAP_INVALID` so the outward response and deny logs stay specific and consistent.
 
 ## Logging and observability
 - Log denies and mismatches with request id and safe auth context.
