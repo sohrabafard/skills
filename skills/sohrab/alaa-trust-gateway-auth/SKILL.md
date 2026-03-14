@@ -30,6 +30,7 @@ If README text and HAProxy config disagree, trust the config.
 - Downstream services must still do authorization and tenant-safe data access.
 - Client-supplied internal auth headers are never trusted.
 - Tenant context is derived from the verified token, not from request body, query string, route params, or client-supplied headers.
+- Naming rule: `tenant_id` and `project_id` refer to the same tenant-boundary concept in the current platform. The current cross-service canonical name remains `project_id` / `X-PROJECT-ID` for compatibility during refactor. If a service uses `tenant_id` internally, treat it as an internal alias of the same trusted boundary and normalize it back to the canonical gateway-derived project context.
 
 # How auth enters the system
 ## Protected routes
@@ -51,6 +52,7 @@ The current gateway config marks these paths as public and skips JWT checks for 
 - `/wa/ingest/v1/events`
 
 Important: a public path at the gateway does not automatically mean the downstream service should trust the caller. The downstream service must still apply its own route-level rules.
+- Gateway rule: sanitize internal auth/context headers on every route, including public routes. Even when the gateway skips token verification for a public route, it must still delete spoofable inbound `X-*` auth/context headers before proxying.
 
 ## Gateway-facing routes vs service-local routes
 This distinction is mandatory.
@@ -107,7 +109,7 @@ The README mentions an opaque-token fallback idea, but the active HAProxy config
 
 # Header trust rules
 ## Headers the gateway rejects from client input
-Before any auth context is injected, the gateway deletes these incoming headers to stop spoofing:
+Before any auth context is injected, the gateway deletes these incoming headers to stop spoofing. This sanitize step must run on all routes, including public routes that do not receive injected auth context:
 - `X-PROJECT-ID`
 - `X-USER-ID`
 - `X-USER-MOBILE`
@@ -148,14 +150,18 @@ Only claims that are present are injected.
 - The current tenant context is `project_id` from the verified JWT.
 - In this gateway, `project_id` is required on protected routes.
 - This is the main tenant boundary header propagated to downstream services as `X-PROJECT-ID`.
+- `tenant_id` is not a different security concept here. It is the same tenant boundary under a different local name. Until a platform-wide refactor is completed, standardize shared gateway and service contracts on `project_id` / `X-PROJECT-ID` and treat `tenant_id` only as an internal alias that must not change trust semantics.
 
 ## User identity
 - The current user identity is `sub` from the verified JWT.
 - It is propagated to downstream services as `X-USER-ID`.
+- Some downstream services intentionally allow anonymous or analytics-only traffic. In those services, `X-USER-ID` may be absent while `X-PROJECT-ID` is still required.
+- If the platform decides a given route must always carry an access token, remove that route from the gateway public list instead of teaching downstream services to partially trust missing auth context.
+- When `X-USER-ID` is absent, do not synthesize a trusted actor from client payload fields such as `identity.user_id`, `visitor_id`, `device_id`, or similar client-generated identifiers. If such fields are stored, classify them as untrusted analytics metadata only.
 - Mobile, token id, audience, issue time, not-before time, expiry time, scopes, and permission bitmap are supplemental context, not replacements for server-side authorization rules.
 
 ## What not to do
-- Do not derive tenant from a client body field such as `project_id` when `X-PROJECT-ID` is already available from the trusted gateway.
+- Do not derive tenant from a client body field such as `project_id` or `tenant_id` when `X-PROJECT-ID` is already available from the trusted gateway.
 - Do not trust `X-PROJECT-ID` or `X-USER-ID` if the service is reachable directly by clients or untrusted internal callers.
 - Do not let route params or query params override the trusted tenant context.
 
@@ -187,6 +193,17 @@ Only claims that are present are injected.
 - HTTP requests without `X-PROJECT-ID` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
 - Scope every tenant-aware read and write by the trusted tenant context.
 - Reject protected requests when required trusted context is missing.
+- If a route or service intentionally supports anonymous traffic, make that policy explicit. In that mode, tenant context can still be mandatory while actor context is optional.
+- Even in anonymous or analytics flows, never let request-body identity fields override or replace trusted gateway tenant context.
+
+## Async ingest and accept-then-validate flows
+- Some downstream services accept transport with `202 Accepted` and then validate trusted context inside an async pipeline or ingestion worker.
+- Plain meaning: `202` means `I received your request and queued or started processing it`. It does not mean `auth and tenant validation already succeeded`.
+- This pattern is common in analytics or ingestion services where the HTTP layer accepts a batch quickly and deeper validation happens in transforms, workers, queues, or sinks after the response is sent.
+- Example: a request reaches the service, the HTTP source returns `202`, then a later transform notices that trusted `X-PROJECT-ID` is missing or malformed and drops the data. In that case the transport was accepted, but the business result is still a denial or discard.
+- If required trusted context is missing after accept, log a canonical internal code such as `AUTH_CONTEXT_MISSING` or `TENANT_CONTEXT_MISMATCH` and drop, quarantine, or dead-letter the data according to service policy.
+- Do not invent a second public `401` or `403` contract after a `202` has already been returned. The caller already received the transport response; the later auth result belongs in logs, metrics, audit events, dead-letter reasons, or operator-facing monitoring.
+- If the product needs the client to receive immediate auth failure, do not use accept-then-validate for that route. Move auth/context checks before the `202` response or require the gateway to enforce them earlier.
 
 ## Header usage rules
 - Use `X-PROJECT-ID` as the tenant boundary input.
@@ -412,6 +429,10 @@ When a downstream service needs to log or surface the same problem in its own co
 
 Important: do not collapse downstream header-validation failures into gateway verifier failures. For example, `AUTH_ACCESS_BITMAP_INVALID` and `AUTH_ROLE_RESOLUTION_FAILED` happen after gateway verification, inside the downstream service's trusted-context normalization layer.
 
+## Async transport note for canonical codes
+- For accept-then-validate services, keep the public transport contract and the internal auth result separate.
+- If the HTTP layer already returned `202`, use canonical codes such as `AUTH_CONTEXT_MISSING`, `TENANT_CONTEXT_MISSING`, or `TENANT_CONTEXT_MISMATCH` in logs, metrics, dead-letter reasons, or audit events instead of trying to send a later public auth response.
+
 ## Guidance for future backend harmonization
 - In the first step, new services and changed services should adopt these codes for auth and token failures.
 - In the second step, existing services can be migrated gradually by adding the canonical code to logs first, then aligning response payloads.
@@ -422,11 +443,11 @@ Use this checklist when adapting a downstream service to this trust model:
 1. Confirm the service is not directly exposed to untrusted traffic, or add header stripping at the service edge.
 2. Create one request-scoped auth context builder near ingress or middleware.
 3. Read tenant from `X-PROJECT-ID` and actor from `X-USER-ID`.
-4. Reject protected requests if trusted tenant or actor context is missing.
+4. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
 5. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
 6. Scope every tenant-aware query or command by the trusted tenant context.
 7. Log denials with request id and safe auth context.
-8. Add tests for spoofed headers, missing tenant context, and cross-tenant access attempts.
+8. Add tests for spoofed headers, missing tenant context, cross-tenant access attempts, and any route that intentionally allows anonymous traffic.
 
 # Review checklist for agents
 Flag a problem when you see any of these:
@@ -440,6 +461,10 @@ Flag a problem when you see any of these:
 - A backend service is documented with gateway-facing routes even though the gateway strips its service prefix before proxying.
 - A service documents a header rule that the code does not actually enforce yet.
 - Different services use different auth failure codes for the same deny class without a compatibility reason.
+
+- A service derives `tenant_id` or `project_id` from request body fields before trusted `X-PROJECT-ID`.
+- A service upgrades payload identity such as `identity.user_id`, `visitor_id`, or `device_id` into trusted actor context when `X-USER-ID` is missing.
+- A team treats async `202 Accepted` transport as proof that trusted auth or tenant validation succeeded.
 
 # Laravel and Octane guidance
 - In Laravel services, parse trusted gateway headers once in middleware or a dedicated request-context layer, then pass normalized context into services and policies.
