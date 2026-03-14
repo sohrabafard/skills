@@ -170,6 +170,13 @@ Only claims that are present are injected.
 - Treat each downstream service as the authorization layer for business actions.
 - A verified token plus injected headers does not mean the user may perform the requested operation.
 
+## Laravel Gate and policy flow
+- Build the request-scoped actor and tenant context before any framework authorization runs.
+- In comment-service, `ResolveUserMiddleware` builds a lightweight authenticated user from trusted headers, service classes call `Gate::forUser($user)->authorize(...)`, and policies return domain-specific deny codes.
+- In comment-service, `AuthServiceProvider` stores denied Gate ability context and `AuthorizationErrorRenderer` turns policy denials into a stable `403` JSON envelope and audit event.
+- Keep raw gateway-header parsing in middleware or a dedicated request-context layer, not in controllers and not scattered across policies.
+- Use policy or Gate responses to express business authorization decisions after auth context normalization, not as a substitute for gateway verification.
+
 ## Tenant-safe request handling
 - Build request-scoped auth context once near the service edge.
 - Normalize at least these fields into a trusted request context object:
@@ -177,6 +184,7 @@ Only claims that are present are injected.
   - actor or user id
   - token id when useful for audit
   - request id for trace correlation
+- HTTP requests without `X-PROJECT-ID` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
 - Scope every tenant-aware read and write by the trusted tenant context.
 - Reject protected requests when required trusted context is missing.
 
@@ -185,7 +193,72 @@ Only claims that are present are injected.
 - Use `X-USER-ID` as the authenticated actor id.
 - Use `X-ACCESS` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
 - Treat `X-REQUEST-ID` only as correlation.
+- Keep one canonical spelling for documentation and tests even though HTTP header names are case-insensitive. Current examples in this skill use `X-Project-ID`, `X-User-Id`, `X-User-Mobile`, and `X-Access`.
+- Treat `X-USER-MOBILE` as supplemental identity or audit context by default.
+- Each downstream service must expose one config switch that decides whether `X-USER-MOBILE` is optional or required. The default policy should be optional.
+- If that config marks mobile as required, the service must enforce it automatically and return the same shared error code and response contract used everywhere else.
+- Shared mobile-header contract:
+  - when mobile is optional and the header is absent, continue without mobile context
+  - when mobile is present but malformed, return `422` with code `AUTH_MOBILE_HEADER_INVALID`
+  - when mobile is required but missing or blank, return `401` with code `AUTH_MOBILE_HEADER_MISSING`
+  - use one stable response envelope for both cases:
+    ```json
+    {
+      "error": {
+        "status": 401,
+        "code": "AUTH_MOBILE_HEADER_MISSING",
+        "message": "Required user mobile header is missing.",
+        "meta": {
+          "header": "X-User-Mobile"
+        }
+      }
+    }
+    ```
+  - invalid-format example:
+    ```json
+    {
+      "error": {
+        "status": 422,
+        "code": "AUTH_MOBILE_HEADER_INVALID",
+        "message": "Invalid user mobile format.",
+        "meta": {
+          "header": "X-User-Mobile",
+          "expected_format": "11 digits starting with 09"
+        }
+      }
+    }
+    ```
 - Do not rebuild authorization from raw client headers.
+
+## Permission bitmap and downstream role contract
+- `X-ACCESS` may carry a compact permission bitmap rather than human-readable scopes.
+- The bitmap must be base64url-encoded raw bytes. Permission IDs are 1-based and use least-significant-bit-first packing inside each byte.
+- Permission meaning comes from the downstream service's permission map, not from hard-coded bit labels at the gateway.
+- Required decode flow:
+  - reject empty or non-base64url values
+  - base64url-decode with strict alphabet checking
+  - enumerate set bits up to the maximum configured permission id
+  - map known ids to permission names from config
+  - ignore unknown ids
+  - treat the header as invalid if no known permissions remain after mapping
+- Comment-service currently uses these permission ids:
+  - `18` -> `comment_get`
+  - `19` -> `comment_approve`
+  - `20` -> `comment_delete`
+  - `21` -> `comment_reply`
+  - `22` -> `comment_get_show`
+- Services must define and document their own role or authorization derivation from decoded permissions.
+- Comment-service currently derives roles like this:
+  - admin when all configured permissions are present
+  - moderator when any moderation signal permission is present
+  - student otherwise
+- Current example bitmaps from comment-service docs are:
+  - `AAAC` for minimal student access
+  - `AAAW` for moderator access
+  - `AAAe` for admin access
+- Reusable reference implementation: `references/permission-bitmap.php`
+- Do not assume another service uses the same permission ids or role derivation unless that service explicitly adopts that exact mapping.
+- The bitmap width is produced by the auth service against the full global permission set, so downstream services should expect a common bitmap width even when each service only cares about a subset of ids.
 
 ## Logging and observability
 - Log denies and mismatches with request id and safe auth context.
@@ -280,6 +353,26 @@ Use these codes by default unless an existing production contract already forces
   - HTTP: `401` or `403` depending on service policy
   - Meaning: the downstream service expected trusted gateway context but did not receive enough of it
 
+- `AUTH_ACCESS_HEADER_MISSING`
+  - HTTP: `401`
+  - Meaning: downstream trusted context expected `X-Access`, but it was missing or blank
+
+- `AUTH_ACCESS_BITMAP_INVALID`
+  - HTTP: `401`
+  - Meaning: `X-Access` exists but is not a valid supported base64url permission bitmap, or it maps to no known permissions for that service
+
+- `AUTH_ROLE_RESOLUTION_FAILED`
+  - HTTP: `401`
+  - Meaning: the service decoded permission context but could not derive its internal role or permission tier
+
+- `AUTH_MOBILE_HEADER_MISSING`
+  - HTTP: `401`
+  - Meaning: the service configuration requires `X-User-Mobile`, but the header is missing or blank
+
+- `AUTH_MOBILE_HEADER_INVALID`
+  - HTTP: `422`
+  - Meaning: `X-User-Mobile` is present but malformed for the service contract
+
 - `AUTHZ_DENIED`
   - HTTP: `403`
   - Meaning: caller is authenticated but not allowed to perform the requested action
@@ -317,6 +410,8 @@ When a downstream service needs to log or surface the same problem in its own co
 - `bad_audience` -> `AUTH_BAD_AUDIENCE`
 - `missing_claim_<claim>` -> `AUTH_MISSING_REQUIRED_CLAIM`
 
+Important: do not collapse downstream header-validation failures into gateway verifier failures. For example, `AUTH_ACCESS_BITMAP_INVALID` and `AUTH_ROLE_RESOLUTION_FAILED` happen after gateway verification, inside the downstream service's trusted-context normalization layer.
+
 ## Guidance for future backend harmonization
 - In the first step, new services and changed services should adopt these codes for auth and token failures.
 - In the second step, existing services can be migrated gradually by adding the canonical code to logs first, then aligning response payloads.
@@ -343,6 +438,7 @@ Flag a problem when you see any of these:
 - Request-scoped auth or tenant context can leak across requests.
 - A service depends on opaque-token behavior that the current gateway does not implement.
 - A backend service is documented with gateway-facing routes even though the gateway strips its service prefix before proxying.
+- A service documents a header rule that the code does not actually enforce yet.
 - Different services use different auth failure codes for the same deny class without a compatibility reason.
 
 # Laravel and Octane guidance
