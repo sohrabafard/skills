@@ -1,0 +1,35 @@
+services:
+  tusd-staging:
+    image: tusproject/tusd:latest
+    restart: unless-stopped
+    env_file:
+      - ../env/tusd-staging.env.example
+    command:
+      - "-host=0.0.0.0"
+      - "-port=8080"
+      - "-base-path=/files/"
+      - "-behind-proxy"
+      - "-disable-download"
+      # Uncomment if clients must not delete uploads through tus.
+      # - "-disable-termination"
+      - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN}"
+      - "-hooks-http=${TUSD_HOOKS_HTTP}"
+      - "-hooks-http-forward-headers=Authorization,X-Request-Id,X-Correlation-Id"
+      - "-hooks-enabled-events=pre-create,post-create,post-receive,pre-finish,post-finish,pre-terminate,post-terminate"
+      - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL}"
+      - "-log-format=json"
+      - "-metrics-path=/metrics"
+      - "-network-timeout=${TUSD_NETWORK_TIMEOUT}"
+      - "-shutdown-timeout=${TUSD_SHUTDOWN_TIMEOUT}"
+      - "-request-completion-timeout=${TUSD_REQUEST_COMPLETION_TIMEOUT}"
+      - "-acquire-lock-timeout=${TUSD_ACQUIRE_LOCK_TIMEOUT}"
+      - "-upload-dir=/data/uploads"
+      - "-dir-perms=0750"
+      - "-file-perms=0640"
+    ports:
+      - "127.0.0.1:${TUSD_BIND_PORT:-1081}:8080"
+    volumes:
+      - tusd_staging_data:/data/uploads
+
+volumes:
+  tusd_staging_data:

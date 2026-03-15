@@ -1,0 +1,43 @@
+services:
+  tusd-s3:
+    image: tusproject/tusd:latest
+    restart: unless-stopped
+    env_file:
+      - ../env/tusd-s3.env.example
+    command:
+      - "-host=0.0.0.0"
+      - "-port=8080"
+      - "-base-path=/files/"
+      - "-behind-proxy"
+      - "-disable-download"
+      # Uncomment if clients must not delete uploads through tus.
+      # - "-disable-termination"
+      - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN}"
+      - "-hooks-http=${TUSD_HOOKS_HTTP}"
+      - "-hooks-http-forward-headers=Authorization,X-Request-Id,X-Correlation-Id"
+      - "-hooks-enabled-events=pre-create,post-create,post-receive,pre-finish,post-finish,pre-terminate,post-terminate"
+      - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL}"
+      - "-log-format=json"
+      - "-metrics-path=/metrics"
+      - "-network-timeout=${TUSD_NETWORK_TIMEOUT}"
+      - "-shutdown-timeout=${TUSD_SHUTDOWN_TIMEOUT}"
+      - "-request-completion-timeout=${TUSD_REQUEST_COMPLETION_TIMEOUT}"
+      - "-acquire-lock-timeout=${TUSD_ACQUIRE_LOCK_TIMEOUT}"
+      - "-s3-bucket=${TUSD_S3_BUCKET}"
+      - "-s3-endpoint=${TUSD_S3_ENDPOINT}"
+      - "-s3-object-prefix=${TUSD_S3_OBJECT_PREFIX}"
+      - "-s3-part-size=${TUSD_S3_PART_SIZE}"
+      - "-s3-min-part-size=${TUSD_S3_MIN_PART_SIZE}"
+      - "-s3-concurrent-part-uploads=${TUSD_S3_CONCURRENT_PART_UPLOADS}"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+    ports:
+      - "127.0.0.1:${TUSD_BIND_PORT:-1080}:8080"
+    volumes:
+      # S3 mode still uses local temp disk while preparing multipart parts.
+      - tusd_s3_tmp:/tmp
+
+volumes:
+  tusd_s3_tmp:

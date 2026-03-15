@@ -1,0 +1,38 @@
+groups:
+  - name: tusd
+    rules:
+      - alert: TusdHigh5xxRate
+        expr: sum by (job, instance) (rate(tusd_errors_total{status=~"5.."}[5m])) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "tusd is returning elevated 5xx responses"
+          description: "Inspect tusd logs, hook failures, proxy changes, and storage latency. Tune the threshold to your baseline."
+
+      - alert: TusdHookErrors
+        expr: sum by (job, instance, hooktype) (increase(tusd_hook_errors_total[10m])) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "tusd hooks are failing"
+          description: "Hook failures often indicate auth service, policy, or connectivity issues."
+
+      - alert: TusdS3SemaphoreSaturated
+        expr: tusd_s3_upload_semaphore_demand >= tusd_s3_upload_semaphore_limit
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "tusd S3 part upload concurrency is saturated"
+          description: "Consider tuning part-upload concurrency, scaling workers, or investigating slow object-store requests."
+
+      - alert: TusdOpenConnectionsHigh
+        expr: tusd_connections_open > 500
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "tusd has many open connections"
+          description: "Threshold is a placeholder. Set it from your normal concurrency baseline."

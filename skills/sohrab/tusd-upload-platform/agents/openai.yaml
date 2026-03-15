@@ -1,0 +1,4 @@
+interface:
+  display_name: "tusd Upload Platform"
+  short_description: "Design secure tusd upload systems"
+  default_prompt: "Use $tusd-upload-platform to design or review a secure tusd-based upload architecture."

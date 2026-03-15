@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/upload-record.schema.json",
+  "title": "UploadRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "uploadId",
+    "ownerSubject",
+    "tenantId",
+    "targetType",
+    "status",
+    "createdAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Application-owned primary key for the upload record."
+    },
+    "uploadId": {
+      "type": "string",
+      "description": "tusd upload ID or the ID portion extracted from the tus URL."
+    },
+    "ownerSubject": {
+      "type": "string",
+      "description": "Authenticated user or service subject that owns the upload."
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "projectId": {
+      "type": ["string", "null"]
+    },
+    "targetType": {
+      "type": "string",
+      "enum": ["minio_s3", "upstream_tusd", "other"]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "initiated",
+        "uploading",
+        "uploaded_to_staging",
+        "relay_queued",
+        "relaying",
+        "ready",
+        "failed",
+        "terminated"
+      ]
+    },
+    "declaredSize": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "receivedSize": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "filename": {
+      "type": ["string", "null"]
+    },
+    "requestedContentType": {
+      "type": ["string", "null"]
+    },
+    "validatedContentType": {
+      "type": ["string", "null"]
+    },
+    "correlationId": {
+      "type": ["string", "null"]
+    },
+    "s3Bucket": {
+      "type": ["string", "null"]
+    },
+    "s3Key": {
+      "type": ["string", "null"]
+    },
+    "localPath": {
+      "type": ["string", "null"]
+    },
+    "upstreamUploadUrl": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "upstreamAssetUrl": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "relayJobId": {
+      "type": ["string", "null"]
+    },
+    "failureCode": {
+      "type": ["string", "null"]
+    },
+    "failureMessage": {
+      "type": ["string", "null"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "lastActivityAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "finishedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "terminatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}
