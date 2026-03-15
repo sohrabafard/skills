@@ -15,7 +15,7 @@ Use these as hard constraints unless the user is embedding tusd programmatically
   - response size limit: 5 KiB
   - retries: 3 on 500 or network error with 1s backoff
 - `post-finish` is not the place for long, fragile work without your own durable retry layer.
-- `pre-finish` is one-shot from the client’s perspective. Do not make it the only place final business data exists.
+- `pre-finish` is one-shot from the client's perspective. Do not make it the only place final business data exists.
 
 ## Authentication constraint
 
@@ -46,3 +46,11 @@ Use these as hard constraints unless the user is embedding tusd programmatically
 - Reverse proxies must not buffer upload requests.
 - When behind a proxy, tusd must be told to respect forwarded headers.
 - Graceful shutdown interrupts request bodies cleanly and gives in-flight work a bounded completion window, so deployment automation should use terminating grace periods that match tusd configuration.
+- `PATCH`, `HEAD`, `OPTIONS`, and `DELETE` must survive your gateway path unchanged if the product uses those tus features.
+
+## tus protocol constraints
+
+- `Upload-Metadata` is carried in headers, so keys must be ASCII and values are Base64 on the wire.
+- Servers should validate metadata to avoid header-smuggling or unsafe downstream behavior.
+- Creation-with-upload is an extension, not a guaranteed baseline. Do not enable it blindly unless the full path supports it.
+- Resume depends on `HEAD` returning the current `Upload-Offset` and `PATCH` respecting offsets. Proxies and WAF layers must not interfere with those semantics.

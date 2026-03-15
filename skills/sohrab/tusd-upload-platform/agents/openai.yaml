@@ -1,4 +1,4 @@
 interface:
   display_name: "tusd Upload Platform"
-  short_description: "Design secure tusd upload systems"
-  default_prompt: "Use $tusd-upload-platform to design or review a secure tusd-based upload architecture."
+  short_description: "Design secure tusd platforms with Nginx or HAProxy and browser-side tus clients"
+  default_prompt: "Use $tusd-upload-platform to design or review a secure tusd-based upload architecture, including Nginx or HAProxy and Vue.js + Quasar + Vite tus clients when needed."

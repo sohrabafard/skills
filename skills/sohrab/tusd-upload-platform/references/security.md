@@ -18,6 +18,7 @@ For any public or multi-tenant upload plane, assume:
 - Authorize upload creation in `pre-create`.
 - Enforce ownership again at the gateway for `PATCH`, `HEAD`, and `DELETE`.
 - Keep provider credentials strictly server-side.
+- Issue upload sessions from the application instead of letting the browser invent backend, tenant, or policy decisions.
 
 ### Transport security
 
@@ -51,6 +52,47 @@ Validate and normalize:
 - any provider-specific options
 
 Do not trust client-provided content type as truth. It is a hint, not a guarantee.
+
+## Browser Client Security
+
+### Upload session contract
+
+Have the application issue a short-lived upload session that contains only what the browser needs, for example:
+
+- upload endpoint or upload URL
+- application upload ID
+- correlation ID
+- allowed metadata fields
+- max size and target type
+- short-lived auth material if required
+- expiration timestamp
+
+Do not expose raw upstream provider credentials or long-lived service tokens.
+
+### Resume storage trade-offs
+
+Browser resume support usually stores upload URLs locally. Treat that as a security and privacy decision, not just a convenience toggle.
+
+Recommended default:
+
+- allow resume storage only when the gateway still authenticates and authorizes each request,
+- clear stored fingerprints on success,
+- clear stored fingerprints on logout or tenant switch,
+- disable cross-session resume entirely if the product treats upload URLs as too sensitive to persist locally.
+
+### Sentry and analytics hygiene
+
+- Never send raw upload URLs to Sentry.
+- Never send `Authorization`, cookies, or provider tokens to analytics or logs.
+- Scrub filenames too if they may contain sensitive customer data.
+- Prefer app upload IDs and correlation IDs as safe join keys.
+
+### Service workers and PWA mode
+
+- Do not precache upload URLs or `/files/` paths.
+- Do not runtime-cache `PATCH`, `HEAD`, or `DELETE` upload traffic.
+- Do not let generic offline handlers or fallback routes intercept tus requests.
+- Treat background sync as an explicit design decision, not a free enhancement.
 
 ## Tenant Isolation
 
@@ -110,6 +152,6 @@ Good pattern:
 
 - tusd handles resumable upload transport,
 - your application owns the authoritative asset record,
-- users fetch final status and final playback/download links from your application.
+- users fetch final status and final playback or download links from your application.
 
 That separation reduces coupling and prevents raw upload URLs from becoming long-term product contracts.

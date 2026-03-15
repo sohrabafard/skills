@@ -20,6 +20,25 @@ Capture at least:
 - upload ID when present
 - tenant or account ID when your gateway adds it safely
 
+### Reverse proxy or gateway
+
+Gateway logs matter as much as tusd logs because they are the first place where request buffering mistakes, auth failures, timeout problems, and client abuse appear.
+
+Capture at least:
+
+- request method
+- request path template or normalized route
+- HTTP status
+- upstream status
+- bytes in and out
+- request duration
+- upstream duration
+- client IP or trusted forwarded chain
+- request ID and correlation ID
+- auth decision outcome when your gateway owns auth
+
+Send gateway logs to the SOC pipeline with the same correlation model as tusd and hook logs.
+
 ### Hook service and relay worker
 
 Logs from hooks and workers matter as much as tusd logs because many control-plane failures happen there, not in tusd itself.
@@ -34,6 +53,18 @@ Log these consistently:
 - retry count
 - failure code
 - correlation ID
+
+### Browser client telemetry
+
+Do not treat the browser as the source of truth, but do capture high-value client signals:
+
+- upload session creation failures
+- resume attempts
+- pause and cancel actions
+- terminal upload errors
+- user-visible expiration or permission failures
+
+Do not stream raw progress ticks into Sentry. Prefer app analytics, RUM, or sampled custom telemetry for progress trends.
 
 ## Metrics Exposed by tusd
 
@@ -60,6 +91,17 @@ When using the S3-compatible backend, also expect:
 - `tusd_s3_upload_semaphore_demand`
 - `tusd_s3_upload_semaphore_limit`
 
+### Additional platform metrics worth adding
+
+The surrounding platform should export its own metrics for:
+
+- upload session creation latency and failure rate
+- gateway 401, 403, 409, 410, and 5xx rates on upload paths
+- relay queue depth and time-to-drain
+- staged-file cleanup backlog
+- application upload state lag, for example `uploaded_to_staging` to `ready`
+- client-observed terminal failures by product surface
+
 ## What to Alert On
 
 Use these as the default alert categories:
@@ -77,6 +119,7 @@ Use these as the default alert categories:
 - relay failure rate
 - outbox backlog
 - repeated `pre-create` rejections above baseline
+- upload session issuance failures above baseline
 
 ### Capacity
 
@@ -85,12 +128,14 @@ Use these as the default alert categories:
 - object store latency spikes via `tusd_s3_request_duration_ms`
 - semaphore saturation when `tusd_s3_upload_semaphore_demand` approaches or exceeds the configured limit
 - open connection spikes via `tusd_connections_open`
+- gateway connection or backend saturation
 
 ### Product health
 
 - uploads created but not reaching `ready` state in your application within expected time
 - stale unfinished uploads beyond retention
 - relay jobs stuck in `queued` or `relaying`
+- increasing browser-side terminal failures with 401, 403, 409, or 410 outcomes
 
 ## Dashboards
 
@@ -105,18 +150,32 @@ A useful first dashboard has these panels:
 7. S3 semaphore demand vs limit
 8. local disk usage for staging and temp paths
 9. relay queue depth and relay success rate from your worker metrics
+10. gateway request duration and upstream duration percentiles for upload paths
+11. browser upload session failures and terminal error classes
 
 ## Correlation IDs
 
 Propagate one correlation ID end-to-end:
 
-- client -> gateway
+- client -> app session creation endpoint
+- app -> browser response with upload session
+- browser -> gateway
 - gateway -> tusd
 - tusd -> hook service via forwarded headers or request body context
-- hook service -> queue / outbox
+- hook service -> queue or outbox
 - worker -> upstream provider calls
 
-If the platform already uses `X-Request-Id`, reuse it. Otherwise add a dedicated `X-Correlation-Id`.
+If the platform already uses `X-Request-Id`, reuse it. Otherwise add a dedicated `X-Correlation-Id` plus a per-request ID.
+
+## Client Exception Reporting With Sentry
+
+When the browser uses Sentry:
+
+- tag events with app upload ID, tenant or policy domain when safe, target type, and correlation ID,
+- attach coarse upload context such as size bucket or intended asset type,
+- scrub raw upload URLs, Authorization headers, cookies, and provider tokens,
+- route events through the platform tunnel endpoint if ad blockers or egress policy matter,
+- upload source maps so upload failures are debuggable in production.
 
 ## Profiling
 
@@ -128,12 +187,13 @@ Use profiling only on internal or temporary diagnostic paths:
 
 ## SLO Thinking
 
-For a strict upload-plane SLO, split the service into at least two measured promises:
+For a strict upload-plane SLO, split the service into at least three measured promises:
 
 1. **Transport SLO**: the platform accepts, resumes, and completes client uploads successfully.
-2. **Post-upload SLO**: the platform finishes relay/publication/processing within the expected time budget.
+2. **Control-plane SLO**: session creation, hooks, auth, and queueing behave correctly.
+3. **Post-upload SLO**: the platform finishes relay, publication, moderation, or processing within the expected time budget.
 
-This avoids hiding relay failures inside a single vague uptime number.
+This avoids hiding relay failures or auth regressions inside a single vague uptime number.
 
 ## Operational Runbook Defaults
 
@@ -147,3 +207,4 @@ Keep these checks in the runbook:
 - Are relay jobs draining?
 - Are shutdowns graceful, or are uploads being cut off?
 - Did a proxy or TLS change alter upload speed or resume behavior?
+- Is the browser client still honoring current auth, CORS, and service-worker exclusions?
