@@ -25,17 +25,18 @@ When facts conflict, trust sources in this order:
 If README text and HAProxy config disagree, trust the config.
 
 # Canonical rename plan
-- Shared concept: `tenant_id`, `tenant_public_id`, and `project_id` are one tenant-boundary concept.
-- Canonical field name: `project_id`
+- Shared concept: `tenant_id`, `tenant_public_id`, and `project_id` point at one tenant-boundary concept at the public platform edge.
+- Canonical public field name: `project_id`
 - Canonical trusted header name: `X-PROJECT-ID`
 - Legacy names to rename during refactor:
   - `tenant_id` -> `project_id`
   - `tenant_public_id` -> `project_id`
   - `X-Tenant-Public-Id` -> `X-PROJECT-ID`
-- Migration rule: keep trust semantics unchanged while renaming. Only the name changes; the boundary meaning does not.
+- Migration rule: keep trust semantics unchanged while renaming. Only the public boundary name changes; the boundary meaning does not.
 - Validation rule for the public identifier: validate canonical `project_id` values as UUIDv7.
 - Example canonical value: `018f7d8f-8cb0-7a85-9a89-e3f61052f840`
-- Documentation rule: OpenAPI, README examples, and service docs should prefer `project_id` / `X-PROJECT-ID`. If a legacy alias still appears, mark it explicitly as legacy and equivalent to `project_id`.
+- Internal-key rule during migration: if a service still keeps an internal numeric tenant or project key in its own database, treat that key as a service-local storage detail, not as the public boundary contract and not as a replacement for `project_id`.
+- Documentation rule: OpenAPI, README examples, and service docs should prefer `project_id` / `X-PROJECT-ID`. If a legacy alias still appears, mark it explicitly as legacy and equivalent to the public `project_id` boundary.
 
 # Core trust model
 - The gateway is the authentication boundary for protected HTTP routes.
@@ -69,6 +70,20 @@ The current gateway config marks these paths as public and skips JWT checks for 
 
 Important: a public path at the gateway does not automatically mean the downstream service should trust the caller. The downstream service must still apply its own route-level rules.
 - Gateway rule: sanitize internal auth/context headers on every route, including public routes. Even when the gateway skips token verification for a public route, it must still delete spoofable inbound `X-*` auth/context headers before proxying.
+## Auth-service route drift that must not be copied forward
+- Auth-service is now `v3` only and no longer exposes `/api/v2` routes locally.
+- Current auth-service local public routes are:
+  - `/api/v3/otp/request`
+  - `/api/v3/otp/verify`
+  - `/api/v3/token/refresh`
+  - `/api/v3/logout`
+- Current auth-service local protected gateway routes are:
+  - `/api/v3/sessions*`
+  - `/api/v3/totp*`
+  - `/api/v3/admin/users/{user}/sessions*`
+  - `/api/v3/admin/users/{user}/authz-overrides*`
+  - `/api/v3/profile*`
+- If the gateway still exposes `/auth/api/v2/*` for auth, treat that as gateway drift to remove. Do not reintroduce `/api/v2` into auth-service and do not teach new services to depend on retired auth v2 routes.
 
 ## Gateway-facing routes vs service-local routes
 This distinction is mandatory.
@@ -82,8 +97,8 @@ Current HAProxy behavior:
 - When `stripPathPrefix: true`, the gateway removes that prefix before sending the request to the downstream service.
 
 Example for auth service:
-- Gateway-facing public route: `/auth/api/v2/login`
-- Service-local route after prefix strip: `/api/v2/login`
+- Gateway-facing public route: `/auth/api/v3/otp/request`
+- Service-local route after prefix strip: `/api/v3/otp/request`
 
 Example for auth health:
 - Gateway-facing route: `/auth/api/health`
@@ -153,6 +168,16 @@ The current mapping is:
 - `scopes` -> `X-USER-SCOPES`
 
 Only claims that are present are injected.
+## Auth-service local trusted header contract
+- Auth-service's `trusted_gateway` guard currently consumes only:
+  - `X-USER-ID`
+  - `X-PROJECT-ID`
+- Auth-service does not currently read `X-ACCESS`, `X-USER-SCOPES`, `X-USER-MOBILE`, or token-metadata headers on its protected v3 routes.
+- Current auth-service behavior currently parses trusted `X-USER-ID` and `X-PROJECT-ID` as positive integers on protected gateway-backed routes.
+- Current auth-service standard no longer requires any extra backend-only signature header on trusted routes. The trust boundary is the sanitized gateway path plus the required injected identity headers.
+- Target standard after the current platform decision: the shared gateway boundary still carries public UUIDv7 `project_id` in JWTs and `X-PROJECT-ID`, while auth-service may keep a separate internal numeric project key during migration.
+- Auth-service follow-through rule: do not freeze the current positive-integer header parser into the shared public contract. Translate the trusted public `project_id` boundary to the internal numeric key at auth-service ingress, or complete the broader model migration later.
+- For direct backend testing against auth-service, send the service-local route plus those exact trusted headers. Do not expect auth-service to parse a Bearer token locally on `/api/v3/profile*`, `/api/v3/sessions*`, `/api/v3/totp*`, or admin trusted-gateway routes.
 
 ## Other header behavior
 - `Authorization` is stripped after successful verification in the current deployment values.
@@ -163,14 +188,16 @@ Only claims that are present are injected.
 
 # Tenant and user context
 ## Tenant context
-- The current tenant context is `project_id` from the verified JWT.
-- In this gateway, `project_id` is required on protected routes.
+- The current tenant context is the public `project_id` claim from the verified JWT.
+- In this gateway, public `project_id` is required on protected routes.
 - This is the main tenant boundary header propagated to downstream services as `X-PROJECT-ID`.
-- `tenant_id` and `tenant_public_id` are not different security concepts here. They are legacy names for the same tenant boundary.
-- Platform refactor target: standardize shared gateway and service contracts on `project_id` / `X-PROJECT-ID`, and rename legacy `tenant_id`, `tenant_public_id`, and `X-Tenant-Public-Id` usages to that standard.
+- `tenant_id` and `tenant_public_id` are not different security concepts here. They are legacy names for the same public tenant boundary.
+- Platform refactor target: standardize shared gateway and service contracts on public `project_id` / `X-PROJECT-ID`, and rename legacy `tenant_id`, `tenant_public_id`, and `X-Tenant-Public-Id` usages to that standard.
 - Validation rule for the public tenant/project identifier: when a service validates the shared public tenant boundary value, validate it as UUIDv7.
 - UUIDv7 example for `project_id`: `018f7d8f-8cb0-7a85-9a89-e3f61052f840`
-- API-document rule: service OpenAPI or README examples should use the same UUIDv7 example shape for `project_id`, and should explain that older names such as `tenant_public_id` map to the same shared concept and are scheduled to be renamed.
+- Migration rule for storage-backed services: if a service still keeps an internal numeric tenant or project key, translate the trusted public `project_id` boundary to that internal key near ingress and keep the internal key out of public headers, public tokens, and public API examples.
+- Auth-service is the current explicit case for this split: public gateway boundary should stay UUIDv7, while auth-service may still keep an internal numeric project key until the local model is migrated.
+- API-document rule: service OpenAPI or README examples should use the same UUIDv7 example shape for public `project_id`, and should explain that older names such as `tenant_public_id` map to the same shared concept and are scheduled to be renamed.
 
 ## User identity
 - The current user identity is `sub` from the verified JWT.
@@ -224,6 +251,8 @@ Only claims that are present are injected.
   - token id when useful for audit
   - request id for trace correlation
 - Authorization code should read the normalized request context or server-side request attributes only. Do not re-read raw tenant or actor headers inside policies, services, or repositories after normalization.
+- Laravel Eloquent safety rule: if you attach trusted `project_id` or similar request-scoped auth context directly to a model instance for compatibility, keep it transient and non-dirty immediately or keep that context off the model entirely.
+- Auth-service shows one safe compatibility pattern for non-persistent model context: set the trusted attribute for request-time reads, then call `syncOriginalAttribute('project_id')` so later `save()` calls do not try to persist a gateway-only attribute into the database.
 - HTTP requests without `X-PROJECT-ID` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
 - Scope every tenant-aware read and write by the trusted tenant context.
 - Reject protected requests when required trusted context is missing.
@@ -242,11 +271,12 @@ Only claims that are present are injected.
 - If the product needs the client to receive immediate auth failure, do not use accept-then-validate for that route. Move auth/context checks before the `202` response or require the gateway to enforce them earlier.
 
 ## Header usage rules
-- Use `X-PROJECT-ID` as the tenant boundary input.
-- If a legacy service still exposes `X-Tenant-Public-Id`, treat it as the old name for the same `project_id` boundary and plan to rename it to `X-PROJECT-ID` during refactor.
+- Use `X-PROJECT-ID` as the public tenant boundary input.
+- If a legacy service still exposes `X-Tenant-Public-Id`, treat it as the old name for the same public `project_id` boundary and plan to rename it to `X-PROJECT-ID` during refactor.
 - When validating the public tenant boundary value carried in `X-PROJECT-ID`, validate it as UUIDv7.
 - Example header value: `X-PROJECT-ID: 018f7d8f-8cb0-7a85-9a89-e3f61052f840`
-- API-document rule: document `X-PROJECT-ID` with a UUIDv7 example, and if a service still mentions `X-Tenant-Public-Id` or `tenant_public_id`, mark that name as legacy and equivalent to `project_id`.
+- If a service still needs an internal numeric project key after validation, derive or load it from the trusted public `X-PROJECT-ID` boundary inside the service and keep that numeric key service-local.
+- API-document rule: document `X-PROJECT-ID` with a UUIDv7 example, and if a service still mentions `X-Tenant-Public-Id` or `tenant_public_id`, mark that name as legacy and equivalent to the public `project_id` boundary.
 - Use `X-USER-ID` as the authenticated actor id.
 - Use `X-ACCESS` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
 - Treat `X-REQUEST-ID` only as correlation.
@@ -288,9 +318,18 @@ Only claims that are present are injected.
 - Do not rebuild authorization from raw client headers.
 
 ## Permission bitmap and downstream role contract
+- `X-ACCESS` carries the gateway-injected copy of auth-service's `perm_bm` permission bitmap.
 - `X-ACCESS` may carry a compact permission bitmap rather than human-readable scopes.
 - The bitmap must be base64url-encoded raw bytes. Permission IDs are 1-based and use least-significant-bit-first packing inside each byte.
 - Permission meaning comes from the downstream service's permission map, not from hard-coded bit labels at the gateway.
+- Auth-service is the current producer of the bitmap claim and emits these companion JWT claims together:
+  - `perm_bm`
+  - `perm_catalog_version`
+  - `authz_version`
+- Auth-service derives `perm_bm` from `permission_catalog.bit_index`, not from mutable local package table IDs.
+- Auth-service compilation precedence is `direct deny > direct allow > role grants`.
+- If a downstream service, gateway extension, or debugging tool inspects raw JWT claims instead of injected headers, treat `perm_catalog_version` and `authz_version` as the companion invalidation metadata for `perm_bm`.
+- Current gateway behavior documented in this skill injects `perm_bm` as `X-ACCESS`, but it does not yet document companion header injection for `perm_catalog_version` or `authz_version`.
 - Required decode flow:
   - reject empty or non-base64url values
   - base64url-decode with strict alphabet checking
@@ -501,7 +540,7 @@ Use this checklist when adapting a downstream service to this trust model:
 2. Create one request-scoped auth context builder near ingress or middleware.
 3. Read tenant from `X-PROJECT-ID` and actor from `X-USER-ID`.
 4. If the service still uses legacy names such as `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id`, map them to `project_id` as part of the refactor plan and keep the trust semantics unchanged.
-5. Validate the public tenant boundary value as UUIDv7 when that value is exposed in service contracts.
+5. Validate the public tenant boundary value as UUIDv7 when that value is exposed in service contracts, and if the service still keeps an internal numeric key, translate after that validation instead of replacing the public boundary contract.
 6. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
 7. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
 8. Deny client tenant-override attempts explicitly instead of silently preferring one tenant source.
@@ -532,6 +571,8 @@ Flag a problem when you see any of these:
 # Laravel and Octane guidance
 - In Laravel services, parse trusted gateway headers once in middleware or a dedicated request-context layer, then pass normalized context into services and policies.
 - Keep controllers thin. Authorization belongs in Policies, Gates, or service-layer domain checks.
+- If a Laravel compatibility layer temporarily attaches trusted gateway context to an Eloquent user model, keep that attribute request-scoped only and prevent dirty persistence of non-column values.
+- Auth-service currently uses `setAttribute('project_id', $projectId)` plus `syncOriginalAttribute('project_id')` so protected profile or session writes can read trusted project context without later trying to update `users.project_id`.
 - In Octane or other long-lived workers, auth and tenant context must be strictly request-scoped and reset every request.
 
 # Related skills and why to use them
@@ -552,3 +593,5 @@ Flag a problem when you see any of these:
 - Treating `tenant_id`, `tenant_public_id`, and `project_id` as different tenant-boundary concepts when they are supposed to be one shared concept under the `project_id` name.
 - Logging raw access tokens.
 - Assuming README design notes are more accurate than active HAProxy config.
+
+

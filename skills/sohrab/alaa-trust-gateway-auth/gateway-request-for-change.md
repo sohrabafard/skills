@@ -51,4 +51,42 @@ Track gateway changes requested by downstream service analysis so they can be re
   - client-supplied internal auth/context headers never pass through the gateway unchanged.
 
 ## Requested by current service analysis
+- `auth`
 - `wa`
+
+### 3) Replace retired auth v2 public routes with explicit auth v3 route mapping
+- Service: `auth`
+- Requested outcome:
+  - Remove retired auth public routes from the gateway:
+    - `/auth/api/v2/login`
+    - `/auth/api/v2/otp/request`
+    - `/auth/api/v2/otp/verify`
+    - `/auth/api/v2/token/refresh`
+    - `/auth/api/v2/logout`
+  - Add the current auth public routes instead:
+    - `/auth/api/v3/otp/request`
+    - `/auth/api/v3/otp/verify`
+    - `/auth/api/v3/token/refresh`
+    - `/auth/api/v3/logout`
+  - Keep `/auth/api/health` public.
+  - Do not require or inject any extra backend-only `X-Gateway-Signature` header for auth-service trusted routes.
+- Required explicit mapping:
+  - `/auth/api/v2/login` -> replace with the v3 two-step login flow: first `POST /auth/api/v3/otp/request`, then `POST /auth/api/v3/otp/verify`
+  - `/auth/api/v2/otp/request` -> `POST /auth/api/v3/otp/request`
+  - `/auth/api/v2/otp/verify` -> `POST /auth/api/v3/otp/verify`
+  - `/auth/api/v2/token/refresh` -> `POST /auth/api/v3/token/refresh`
+  - `/auth/api/v2/logout` -> `POST /auth/api/v3/logout`
+- Why:
+  - Auth-service is now `v3` only and no longer exposes `/api/v2` routes locally.
+  - The gateway already routes by the leading `/auth` prefix and strips that prefix before proxying, so auth-service should not keep a second inner `/auth` segment in its own v3 routes.
+  - Auth-service now trusts the sanitized gateway boundary plus required injected `X-USER-ID` and `X-PROJECT-ID` headers, so a second backend-only signature header should not remain in the shared platform contract.
+  - The shared skill should not teach new services or clients to depend on retired auth v2 gateway paths or the old duplicated `/auth/api/v3/auth/*` shape.
+  - `POST /api/v3/logout` remains intentionally public in the current auth repo because it can revoke the refresh token from cookie or request body without requiring trusted gateway headers.
+- Expected downstream effect:
+  - Gateway-facing auth public routes match the current auth repo contract again.
+  - Service-local auth public routes after prefix stripping are now:
+    - `/api/v3/otp/request`
+    - `/api/v3/otp/verify`
+    - `/api/v3/token/refresh`
+    - `/api/v3/logout`
+  - Protected auth-service routes such as `/api/v3/profile*`, `/api/v3/sessions*`, `/api/v3/totp*`, and admin trusted-gateway routes stay behind the normal protected gateway flow.
