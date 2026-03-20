@@ -15,6 +15,25 @@ This skill gives one clear trust model so agents do not guess.
 - Changing gateway config, ingress behavior, trusted proxy settings, or service exposure
 - Reviewing whether a service is safe to expose directly or must stay behind the gateway
 
+# Companion skill routing (mandatory)
+Read this skill first for any gateway-backed auth, trusted-header, tenant-context, or downstream trust-boundary task.
+
+This skill defines the shared trust model. It does not replace the domain-specific companion skills below.
+
+Before proposing code or config changes, the agent must identify which companion skill(s) apply to the current task and read them before continuing.
+
+Mandatory routing rules:
+- If the task touches JWT correctness, token verification, authn/authz risk, header trust, tenant-isolation risk, or token-handling mistakes, read `alaa-security-review` first.
+- If the task touches Laravel middleware, guards, request-context builders, Policies, Gates, controllers, services, DTO boundaries, or response envelopes, read `alaa-laravel-architecture` first.
+- If the task touches Octane, long-lived workers, request-scoped auth state, tenant-context reset, or performance-sensitive auth middleware, read `alaa-octane-performance` first.
+- If the task touches deny logging, request correlation, trace propagation, security events, or auth error observability, read `alaa-observability-soc` first.
+- If the task touches trusted proxy boundaries, direct service exposure, container networking, edge-only exposure, or `X-Forwarded-*` behavior, read `alaa-docker-production` first.
+- If the task touches HAProxy ACL order, JWT verification behavior, header mutation, path stripping, route exposure, or gateway-side auth flow, read `haproxy-3.2` first.
+- If the task touches Arvan/Kubernetes entrypoints, ingress vs load balancer exposure, edge trust boundaries, or public service exposure on Arvan, read `caas-arvan-kuber` first.
+
+Do not continue with implementation advice until the relevant companion skill has been read.
+If multiple areas apply, read all relevant companion skills and follow the stricter rule when they overlap.
+
 # Source priority
 When facts conflict, trust sources in this order:
 1. The active HAProxy template and values in the gateway repo
@@ -23,6 +42,22 @@ When facts conflict, trust sources in this order:
 4. Older team assumptions
 
 If README text and HAProxy config disagree, trust the config.
+
+# Execution order for agents
+Use this execution order:
+
+1. Read this skill to establish the shared trust boundary.
+2. Determine whether the task is gateway-side, downstream-service-side, observability-side, runtime-side, or deployment-side.
+3. Read the matching companion skill(s) before giving implementation advice.
+4. Then inspect repository-local code, docs, and configs.
+5. Only after that, propose or implement changes.
+
+Examples:
+- Gateway ACL/header change -> read `haproxy-3.2`, then inspect gateway config.
+- Laravel trusted-header middleware change -> read `alaa-laravel-architecture`; if Octane is used, also read `alaa-octane-performance`.
+- Auth deny logging or trace propagation change -> read `alaa-observability-soc`.
+- Public exposure or trusted-proxy deployment change -> read `alaa-docker-production`; on Arvan, also read `caas-arvan-kuber`.
+- JWT/header-trust review -> read `alaa-security-review` before suggesting fixes.
 
 # Canonical rename plan
 - Shared concept: `tenant_id`, `tenant_public_id`, and `project_id` point at one tenant-boundary concept at the public platform edge.
@@ -108,6 +143,120 @@ Rule for future agents:
 - When writing or reviewing the gateway itself, use gateway-facing routes.
 - When writing or reviewing a downstream service, use service-local routes after prefix stripping.
 - Never force a backend service to define routes with the gateway prefix unless that backend is intentionally designed that way.
+
+# Auth-service v3 endpoint and client contract
+Use this section when the task is specifically about auth-service endpoint behavior, client integration order, direct local backend testing, or the current v3 contract.
+
+For auth-service endpoint details, trust sources in this order:
+1. `D:\Sohrab\Project\auth\routes\api.php`
+2. `D:\Sohrab\Project\auth\docs\ops\auth-session-contract.md`
+3. `D:\Sohrab\Project\auth\docs\ops\auth-profile-v3-contract.md`
+4. `D:\Sohrab\Project\auth\docs\ops\totp-step-up-mechanism.md`
+5. `D:\Sohrab\Project\auth\docs\ops\postman\auth-service-v3.postman_collection.json`
+6. `D:\Sohrab\Project\auth\README.md`
+
+If auth-service docs and route definitions disagree, trust `routes/api.php`.
+
+## Canonical gateway-facing client flow
+1. Client calls `POST /auth/api/v3/otp/request` with JSON body:
+   ```json
+   {
+     "mobile": "09120000000",
+     "national_code": "1234567890"
+   }
+   ```
+2. Client receives OTP out-of-band.
+3. Client calls `POST /auth/api/v3/otp/verify` with JSON body:
+   ```json
+   {
+     "mobile": "09120000000",
+     "code": "11111"
+   }
+   ```
+4. Successful verify returns a JSON body with `message`, `profile`, and `token`, where `token.access_token` is the Bearer JWT and `token.token_type` is `Bearer`.
+5. The same successful verify call also sets the refresh token in the HttpOnly `auth_refresh_token` cookie.
+6. Client calls gateway-protected routes with `Authorization: Bearer <access token>` on the gateway-facing route.
+7. Gateway verifies the token and injects trusted headers for downstream services.
+8. When the access token expires or is rejected by the gateway, client calls `POST /auth/api/v3/token/refresh`.
+9. Successful refresh rotates the refresh token, returns a new access token, and replaces the refresh cookie.
+10. Client calls `POST /auth/api/v3/logout` when it wants to revoke the current refresh-token session.
+
+## Auth request details from the auth repo and Postman collection
+- OTP request, OTP verify, and refresh requests use `Accept: application/json` and `Content-Type: application/json`.
+- The current Postman collection also sends `X-Request-Id` and `X-Device-Id` on those public auth requests.
+- `X-Device-Id` is optional client/device metadata for auth-service. It is not a trusted gateway auth header.
+- `POST /auth/api/v3/token/refresh` currently expects the refresh token from the HttpOnly `auth_refresh_token` cookie first.
+- Refresh request body must include `access_token`, and may include `device_id`.
+- Auth-service also accepts device id through the configured device header, currently `X-Device-Id`.
+- If `access_token` is missing or not a string-shaped value, refresh returns `422` JSON.
+- If the refresh cookie is missing, refresh returns a `401` session-expired style response.
+- `POST /auth/api/v3/logout` is currently public in the auth-service contract and can revoke from either `refresh_token` in the request body or the `auth_refresh_token` cookie.
+- Do not teach clients to depend on retired `/auth/api/v2/*` auth routes or a one-step `/login` path. The active auth-service contract is the v3 OTP request -> OTP verify flow.
+
+## Current protected auth-service route families behind the gateway
+Gateway-facing protected auth-service routes are:
+- `/auth/api/v3/sessions*`
+- `/auth/api/v3/totp*`
+- `/auth/api/v3/admin/users/{user}/sessions*`
+- `/auth/api/v3/admin/users/{user}/authz-overrides*`
+- `/auth/api/v3/profile*`
+
+Service-local protected auth-service routes after prefix stripping are:
+- `/api/v3/sessions*`
+- `/api/v3/totp*`
+- `/api/v3/admin/users/{user}/sessions*`
+- `/api/v3/admin/users/{user}/authz-overrides*`
+- `/api/v3/profile*`
+
+## Direct local backend testing contract for auth-service
+- The current auth Postman collection tests protected auth-service routes directly against service-local `/api/v3/*` URLs such as `http://localhost/api/v3/sessions`.
+- In that direct local mode, Postman sends trusted headers such as `X-USER-ID` and `X-PROJECT-ID` to the local backend instead of sending a Bearer token.
+- This is backend-only local testing. It is not the public client contract and it must not be copied into browser/mobile client guidance.
+- Current auth Postman examples still use numeric compatibility fixtures such as `gatewayProjectId=1` and profile payload examples that show `project_id: 1`.
+- Treat those numeric examples as the auth-service local compatibility state and test fixture during migration, not as a reason to weaken the shared gateway trust model or to let clients choose tenant context.
+
+## Protected-flow request families that agents should know
+### Session management
+- `GET /auth/api/v3/sessions` lists session families for the authenticated user.
+- `DELETE /auth/api/v3/sessions/{session}` revokes one session family or access-token session.
+- `DELETE /auth/api/v3/sessions` revokes all active sessions for the authenticated user.
+
+### TOTP management and step-up
+- `GET /auth/api/v3/totp` returns current TOTP status.
+- `POST /auth/api/v3/totp/enroll` starts enrollment.
+- `POST /auth/api/v3/totp/confirm` requires JSON body `{ "code": "123456" }`.
+- `POST /auth/api/v3/totp/recovery-codes/regenerate` requires JSON body `{ "code": "123456" }`.
+- `POST /auth/api/v3/totp/step-up` requires JSON body with `purpose` plus either `code` or `recovery_code`.
+- `DELETE /auth/api/v3/totp` requires either `code` or `recovery_code` in the request body.
+- Purpose names are free-form but restricted to letters, digits, `.`, `_`, `:`, and `-`.
+- Step-up proof is purpose-specific. A proof for `profile.write` does not satisfy `profile.photo`.
+
+### Admin authorization overrides
+- `GET /auth/api/v3/admin/users/{user}/authz-overrides` supports optional query filters such as `project_id` and `service_key`.
+- `PUT /auth/api/v3/admin/users/{user}/authz-overrides` uses a JSON body shaped like:
+  ```json
+  {
+    "permission_key": "school_post",
+    "effect": "deny",
+    "project_id": 42,
+    "service_key": "auth-profile"
+  }
+  ```
+- `DELETE /auth/api/v3/admin/users/{user}/authz-overrides` uses the same selector fields except `effect`.
+- Admin session revocation routes are `DELETE /auth/api/v3/admin/users/{user}/sessions` and `DELETE /auth/api/v3/admin/users/{user}/sessions/{session}`.
+
+### Profile reads and writes
+- `GET /auth/api/v3/profile` returns the canonical profile projection.
+- `PATCH /auth/api/v3/profile` and `PUT /auth/api/v3/profile` accept sectioned JSON with `identity`, `contact`, `location`, `health`, and `academic` objects.
+- The current Postman examples show a representative profile update body that includes `identity.first_name`, `identity.last_name`, `contact.email`, `location.school_id`, `health.blood_type_id`, and `academic.grade_level_id` style fields.
+- `GET /auth/api/v3/profile/catalogs`, `GET /auth/api/v3/profile/academic-history`, and `GET /auth/api/v3/profile/assignment-history` are trusted-gateway reads.
+- `POST /auth/api/v3/profile/photo`, `POST /auth/api/v3/profile/national-card`, and `GET /auth/api/v3/profile/national-card` are also trusted-gateway routes.
+
+## Response and observability facts from the auth repo
+- All `/api/*` routes are JSON-only for both success and error paths.
+- Resource responses wrap only the top-level payload in `data`; nested child resources are inline objects.
+- `/api/*` responses include `X-Request-Id`, `X-Correlation-Id`, and `traceparent`.
+- If `X-Request-Id` or `X-Correlation-Id` is already present from the caller or gateway, auth-service preserves it.
 
 # What the gateway verifies
 For protected routes, the current HAProxy logic verifies these checks in order:
@@ -534,6 +683,8 @@ Important: do not collapse downstream header-validation failures into gateway ve
 - In the second step, existing services can be migrated gradually by adding the canonical code to logs first, then aligning response payloads.
 - If a service already has a deployed response contract, prefer additive migration over breaking changes.
 
+Before using the checklist below, confirm that all relevant companion skills have already been read for the current task. The checklist assumes that gateway trust rules from this skill and implementation/deployment rules from the companion skill set are both in scope.
+
 # Service implementation checklist
 Use this checklist when adapting a downstream service to this trust model:
 1. Confirm the service is not directly exposed to untrusted traffic, or add header stripping at the service edge.
@@ -547,6 +698,8 @@ Use this checklist when adapting a downstream service to this trust model:
 9. Scope every tenant-aware query or command by the trusted tenant context.
 10. Keep deny response codes and deny log codes aligned, with request and trace correlation attached.
 11. Add tests for spoofed headers, missing tenant context, cross-tenant access attempts, conflicting tenant selectors, and any route that intentionally allows anonymous traffic.
+
+Run this review checklist only after reading the relevant companion skill(s) for the task area. A review is incomplete if it checks gateway trust rules but skips the applicable Laravel, security, observability, Octane, proxy, or Arvan companion guidance.
 
 # Review checklist for agents
 Flag a problem when you see any of these:
@@ -575,15 +728,34 @@ Flag a problem when you see any of these:
 - Auth-service currently uses `setAttribute('project_id', $projectId)` plus `syncOriginalAttribute('project_id')` so protected profile or session writes can read trusted project context without later trying to update `users.project_id`.
 - In Octane or other long-lived workers, auth and tenant context must be strictly request-scoped and reset every request.
 
-# Related skills and why to use them
-- `alaa-security-review`: use this to review auth correctness, JWT rules, header trust, and token-handling mistakes.
-- `alaa-laravel-architecture`: use this to place authorization in the correct Laravel layer and keep controllers thin.
-- `alaa-octane-performance`: use this when the service runs on Octane and request-scoped tenant or auth state must not leak between requests.
-- `alaa-observability-soc`: use this for denial logging, safe auth telemetry, request correlation, and incident-ready traces.
-- `alaa-docker-production`: use this for trusted proxy boundaries, network exposure, and safe `X-Forwarded-*` handling at container and deployment level.
-- `haproxy-3.2`: use this when the change touches HAProxy auth flow, ACL order, header mutation, or verification behavior.
-- `caas-arvan-kuber`: use this for Arvan or Kubernetes edge exposure behavior, ingress vs load balancer choices, and public-entry trust boundaries.
+# Related skills and required read order
+These are not optional background references. They are required companion reads when the task enters their scope.
 
+- `alaa-security-review`
+  Read before reviewing or changing JWT verification, token handling, header trust, tenant isolation, authn/authz controls, or abuse-resistant auth behavior.
+
+- `alaa-laravel-architecture`
+  Read before changing Laravel middleware, guards, Policies, Gates, service-layer authorization, request-context normalization, DTO boundaries, or auth-related response contracts.
+
+- `alaa-octane-performance`
+  Read before changing auth or tenant-context handling in Octane or any long-lived worker environment, or when auth middleware sits on a hot path.
+
+- `alaa-observability-soc`
+  Read before changing auth error codes, deny logging, request correlation, `X-Request-Id`, `X-Correlation-Id`, trace propagation, or SOC-facing auth event behavior.
+
+- `alaa-docker-production`
+  Read before changing trusted proxy boundaries, direct service exposure, container networking, or `X-Forwarded-*` handling at deployment/runtime edges.
+
+- `haproxy-3.2`
+  Read before changing gateway ACLs, header sanitization or injection, path-prefix stripping, JWT verification order, public vs protected route behavior, or HAProxy-side auth enforcement.
+
+- `caas-arvan-kuber`
+  Read before changing Arvan/Kubernetes exposure mode, ingress vs load balancer entrypoints, or any public-entry trust boundary in Arvan environments.
+
+Routing rule:
+- If a task matches any bullet above, read that companion skill before proceeding.
+- If a task matches more than one bullet, read all matching skills before proceeding.
+- If a task does not match any bullet, stay with this skill and the target repository's local docs/code.
 # Anti-patterns
 - Trusting internal auth headers on directly exposed services.
 - Letting request body, route params, or query params override trusted tenant context.
@@ -593,5 +765,8 @@ Flag a problem when you see any of these:
 - Treating `tenant_id`, `tenant_public_id`, and `project_id` as different tenant-boundary concepts when they are supposed to be one shared concept under the `project_id` name.
 - Logging raw access tokens.
 - Assuming README design notes are more accurate than active HAProxy config.
+- Applying this skill in isolation when the task clearly also requires one or more companion skills.
+
+
 
 
