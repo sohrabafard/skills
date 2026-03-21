@@ -243,3 +243,18 @@ Use `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, m
 Keep tests, docblocks, README/docs, Postman collection v2.1, environment artifacts, and request-flow diagrams aligned with the implementation throughout the refactor.
 Finish with a concise audit showing the selected mode, governing skills used, preserved contracts, intentional exceptions, validations run, documentation status, remaining risks, and follow-up phases if needed.
 ```
+
+## global AGENTS.md
+```text
+## Laravel Boost Context Policy (Production)
+
+- When working in a Laravel repository, first check whether `laravel/boost` is installed and usable in the current project.
+- If Laravel Boost is available, you MUST use it as the primary Laravel-aware inspection layer before making assumptions about the application.
+- Prefer Laravel Boost MCP tools for application info, routes, config, environment-aware context, schema inspection, database queries, logs, last error, and Tinker-based inspection whenever those tools are available and relevant.
+- Prefer Laravel Boost documentation search for Laravel and installed ecosystem packages before using general web search for framework or package behavior.
+- Use normal repository inspection and local code search alongside Boost, but do not skip Boost-based inspection when it is available and relevant.
+- Treat explicit user instructions, repo-local `AGENTS.md`, and active governing skills as higher priority than Boost for architecture, naming, refactor mode, public-contract preservation, domain rules, and repo-wide conventions.
+- Do not let Boost override user constraints, repo-specific guardrails, or the governing decisions of active Alaa skills.
+- If the task touches Laravel 13-specific upgrade or post-upgrade behavior that Boost does not clearly cover, verify against official Laravel 13 documentation or release notes before acting.
+- If Boost is not installed, not configured, or not usable, fall back to normal repository inspection, local code search, tests, and official documentation lookup.
+```

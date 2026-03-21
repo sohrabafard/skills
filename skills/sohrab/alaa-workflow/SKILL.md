@@ -40,6 +40,7 @@ Instead, follow the higher-precedence constraint and document the deviation.
 - expected public API contract (request/response and error envelope)
 - required invariants (tenant boundary, idempotency, ordering, audit needs)
 - migration/rollout risks (if DB changes are involved)
+4) In Laravel repositories, check whether `laravel/boost` is installed and usable. If it is available, use Boost first for Laravel-aware inspection and documentation lookup before making framework or ecosystem assumptions. If it is unavailable, fall back to local inspection and official documentation.
 
 ## Implementation rules
 - Minimal-diff: extend existing code paths; avoid rewrites.
