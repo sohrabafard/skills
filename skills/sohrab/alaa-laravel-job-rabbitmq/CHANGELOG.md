@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-03-21
+
+- Added a maintained fork snapshot for Laravel 13 / PHP 8.5 compatibility under `references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7/`.
+- Updated `SKILL.md` to prefer one tagged shared fork across services instead of app-local driver copies when upstream stable lags.
+- Documented Laravel 13 `queue:monitor` expectations and the current `RabbitMQQueue` monitor-method behavior exposed by the maintained fork.
+- Added explicit guidance for switching back from the maintained fork to upstream stable once a compatible stable release lands.
+
 ## 2026-03-06
 
 - Reworked `SKILL.md` into a source-validated, production-ready guide for `vladimir-yuldashev/laravel-queue-rabbitmq`.

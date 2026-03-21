@@ -1,0 +1,6 @@
+repo=https://github.com/sohrabafard/laravel-queue-rabbitmq
+branch=codex/laravel13-php85-support
+commit=9c8125f133cc13d49e7c08496fde5615919439e7
+snapshot_path=references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7
+based_on_upstream_pr=https://github.com/vyuldashev/laravel-queue-rabbitmq/pull/652
+created_utc=2026-03-21T18:49:56Z

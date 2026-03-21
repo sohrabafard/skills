@@ -1,6 +1,6 @@
 ---
 name: alaa-laravel-job-rabbitmq
-description: "Production skill for Laravel jobs on RabbitMQ via vladimir-yuldashev/laravel-queue-rabbitmq: accurate config, safe worker modes, retries/DLQ/idempotency, and Kubernetes/Arvan-ready operations."
+description: "Production skill for Laravel jobs on RabbitMQ via vladimir-yuldashev/laravel-queue-rabbitmq, including Laravel 13 temporary-fork compatibility, accurate config, safe worker modes, retries/DLQ/idempotency, and Kubernetes/Arvan-ready operations."
 ---
 
 # Purpose
@@ -28,7 +28,16 @@ This skill complements:
 # Source-of-truth order
 Use sources in this order when generating or reviewing changes.
 
-1) Pinned local snapshot inside this skill (works even when `vendor/` is empty):
+1) Maintained Laravel 13 / PHP 8.5 fork snapshot inside this skill:
+   - Root: `references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7`
+   - `src/Consumer.php`
+   - `src/Queue/RabbitMQQueue.php`
+   - `composer.json`
+   - `.github/workflows/tests.yml`
+   - `CHANGELOG-14x.md`
+   - `README.md`
+
+2) Pinned upstream snapshot inside this skill (works even when `vendor/` is empty):
    - Root: `references/upstream/vyuldashev/9b8df5d4239128ed70b857249513edb30749e63b`
    - `src/Console/ConsumeCommand.php`
    - `src/Queue/RabbitMQQueue.php`
@@ -38,24 +47,27 @@ Use sources in this order when generating or reviewing changes.
    - `README.md`
    - `CHANGELOG-14x.md`, `CHANGELOG-13x.md`
 
-2) Installed package in runtime project (if present):
+3) Installed package in runtime project (if present):
    - `vendor/vladimir-yuldashev/laravel-queue-rabbitmq/...`
 
-3) Temporary clone fallback (if present):
+4) Temporary clone fallback (if present):
    - `.tmp/laravel-queue-rabbitmq/...`
 
-4) Upstream issues (open + closed) for operational edge cases.
+5) Upstream PR/issues (open + closed) for compatibility and operational edge cases:
+   - PR `#652` for Laravel 13 queue monitor compatibility
 
-5) Official docs:
+6) Official docs:
    - Laravel Queue docs (`after_commit`, `retry_after`, `--timeout`)
    - RabbitMQ docs (DLX policy, prefetch, heartbeats, quorum queue behavior)
 
-6) Repository policy:
+7) Repository policy:
    - `caas-arvan-kuber` is authoritative for Arvan-specific constraints.
 
-If local snapshot and runtime package differ, prefer local snapshot for deterministic guidance and note the mismatch explicitly.
+If the repository targets Laravel 13 and upstream stable has not yet released the required compatibility, prefer a stable tag from the maintained fork over a local path repository or an untagged branch.
+If local snapshot and runtime package differ, prefer the snapshot that matches the repository's declared driver source (maintained fork tag vs upstream release) and note the mismatch explicitly.
 
 If sources conflict:
+- maintained fork snapshot > older upstream snapshot for Laravel 13 / PHP 8.5 work until upstream stable catches up,
 - package source code > README examples,
 - official Laravel/RabbitMQ docs > community assumptions,
 - Arvan policy wins for deployment defaults in this repository.
@@ -71,12 +83,21 @@ If sources conflict:
 - RabbitMQ workers must run with `worker=default` and be monitored via broker/app metrics instead.
 4) Queue config supports:
 - exchange routing keys, failed reroute settings, queue quorum flag, heartbeat, TLS options, network protocol, and lazy connection.
-5) Topology commands are available:
+5) Laravel 13 queue monitor compatibility:
+- `queue:monitor` expects `pendingSize`, `delayedSize`, `reservedSize`, and `creationTimeOfOldestPendingJob` on the queue driver.
+- The maintained fork snapshot in this skill implements these methods.
+- Current maintained behavior is broker-backed `pendingSize()` plus conservative `0`, `0`, and `null` for delayed/reserved/oldest metrics.
+6) Topology commands are available:
 - `rabbitmq:exchange-declare`
 - `rabbitmq:queue-declare`
 - `rabbitmq:queue-bind`
 - `rabbitmq:queue-delete`
 - `rabbitmq:queue-purge`
+
+# Temporary fork policy for multi-service estates
+- Prefer one tagged maintained fork reused across services instead of copying the driver into each Laravel app.
+- Keep the Composer package name unchanged and override only the repository source while upstream stable lags.
+- Once upstream ships a stable release with the same compatibility, remove the VCS override and refresh lockfiles back to upstream.
 
 # Hard constraints
 - Never commit secrets (`.env`, private certs, passwords, tokens).
@@ -86,6 +107,7 @@ If sources conflict:
 - Keep `--timeout` lower than queue connection `retry_after`.
 - Prefer broker policies (DLX, routing, limits) over hardcoded queue arguments where possible.
 - Do NOT use Horizon for RabbitMQ workers in this repository.
+- Do not duplicate app-local driver copies across services when one tagged maintained fork can be shared safely.
 - For Arvan targets in this repo:
   - container resources are mandatory and should keep requests==limits by default,
   - secret values go in secret files or existing Secrets,
@@ -96,6 +118,8 @@ If sources conflict:
 - When queue or connection selection would otherwise be duplicated at dispatch sites, prefer central `Queue::route(...)` rules.
 - For job-local policy, prefer declarative attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, and `#[FailOnTimeout]` when they keep intent clearer than scattered properties, but preserve repository style if it already standardizes on methods or properties.
 - If the repository listens to queue events, update upgrade reviews for `JobAttempted::$exception` and `QueueBusy::$connectionName`.
+- If the repository uses `php artisan queue:monitor`, verify the driver source exposes Laravel 13 monitor methods before rollout.
+- In the maintained fork snapshot for this skill, `pendingSize()` is meaningful while delayed/reserved/oldest monitor values remain conservative and should not replace broker metrics.
 
 # Decision matrix
 1) Use `queue:work` when:
@@ -114,6 +138,23 @@ If sources conflict:
 Install and pin intentionally:
 - `composer require vladimir-yuldashev/laravel-queue-rabbitmq`
 - For Laravel 13 repositories, keep the driver on the newest stable Laravel 13-compatible release and reconcile config keys against the upstream changelog and package source.
+- If upstream stable has not released the needed Laravel 13 / PHP 8.5 compatibility yet, use a tagged maintained fork instead of a path repository or app-local driver copy.
+- Keep the Composer package name unchanged and override only the repository source in `composer.json`:
+
+```json
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/sohrabafard/laravel-queue-rabbitmq"
+    }
+  ]
+}
+```
+
+- Then install a stable tag from that fork, for example:
+  - `composer require vladimir-yuldashev/laravel-queue-rabbitmq:<stable-tag> --with-all-dependencies`
+- Once upstream stable ships the same compatibility, remove the VCS override and update the lockfile back to upstream.
 - Keep package major versions controlled during release windows.
 - Ensure `ext-pcntl` is available for full worker behavior in container/runtime images.
 
@@ -263,7 +304,17 @@ RabbitMQ (optional):
 For RabbitMQ production observability, rely on:
 - RabbitMQ broker metrics (ready/unacked/consumers/rates/alarms),
 - worker logs and application metrics,
-- failed job tracking and DLQ signals.
+- failed job tracking and DLQ signals,
+- Laravel 13 `queue:monitor` threshold alerts once the installed driver source includes the monitor methods.
+
+Operational note for Laravel 13:
+- `php artisan queue:monitor rabbitmq:default --max=100` is useful as a lightweight threshold alarm.
+- Treat `queue:monitor` as a supplement, not your primary RabbitMQ telemetry.
+- In the maintained fork snapshot for this skill:
+  - `pendingSize()` reflects broker queue depth.
+  - `delayedSize()` and `reservedSize()` currently return `0`.
+  - `creationTimeOfOldestPendingJob()` currently returns `null`.
+- Use broker metrics for ready, unacked, consumers, publish/ack rates, and oldest-message investigations.
 
 # Step 10 — Verification checklist
 - Dispatch a test job and confirm:
@@ -278,21 +329,29 @@ For RabbitMQ production observability, rely on:
   - tune queue split, prefetch, and worker replicas
 
 # Troubleshooting map (high-signal)
-1) Queue/Binding missing at worker start:
+1) Laravel 13 `queue:monitor` failure after driver upgrade lag:
+- Symptom: missing method errors around `pendingSize`, `delayedSize`, `reservedSize`, or `creationTimeOfOldestPendingJob`.
+- Action: use the maintained fork tag or an upstream stable release that implements the Laravel 13 monitor surface.
+2) Queue/Binding missing at worker start:
 - Symptom: `NOT_FOUND` / consume startup errors.
 - Action: pre-create queue+exchange+bindings before scaling consumers.
-2) Accidental Horizon mode enablement:
+3) Accidental Horizon mode enablement:
 - Symptom: `RABBITMQ_WORKER=horizon` appears in env/config for RabbitMQ workers.
 - Action: remove it and force `worker=default`; redeploy workers.
-3) Missed heartbeat / closed channel in long-lived producers:
+4) Missed heartbeat / closed channel in long-lived producers:
 - Symptom: heartbeat/channel closed exceptions after idle windows.
 - Action: validate heartbeat strategy + connection lifecycle; use safe reconnect and process restart behavior.
-4) Duplicate job execution:
+5) Duplicate job execution:
 - Symptom: same job runs twice.
 - Action: enforce `timeout < retry_after`, idempotency, and bounded retry rules.
+6) `queue:monitor` gives only partial queue insight:
+- Symptom: delayed/reserved/oldest metrics look empty even though the broker shows activity.
+- Action: remember the current maintained driver only maps pending depth richly; use broker metrics for the rest.
 
-# Known upstream issue signals (track before major rollout)
-- Open:
+# Known upstream change signals (track before major rollout)
+- Open pull request:
+  - `#652` adds Laravel 13 + PHP 8.5 CI coverage, `Consumer::stop()` compatibility, and `RabbitMQQueue` monitor methods. Prefer a tagged maintained fork until that lands in a stable upstream release.
+- Open issues:
   - `#644` worker queue/binding creation expectations mismatch.
   - `#634` maintenance-mode channel exceptions (`CONNECTION_FORCED`) need graceful handling.
   - `#615` DLQ setup confusion in real deployments.
@@ -305,14 +364,17 @@ For RabbitMQ production observability, rely on:
 # Output contract
 When applying this skill, output should include:
 - exact files changed,
+- exact driver source (`upstream stable` vs maintained fork tag) and why it was chosen,
 - config diffs and why each option exists,
 - deployment/runtime commands,
 - verification checklist and rollback notes,
-- assumptions and unresolved risks.
+- assumptions, monitoring limitations, and unresolved risks.
 
 # References
 - Package repo: https://github.com/vyuldashev/laravel-queue-rabbitmq
+- Maintained fork example: https://github.com/sohrabafard/laravel-queue-rabbitmq
 - Package README: https://github.com/vyuldashev/laravel-queue-rabbitmq/blob/master/README.md
+- Upstream PR #652: https://github.com/vyuldashev/laravel-queue-rabbitmq/pull/652
 - Laravel Queue docs: https://laravel.com/docs/13.x/queues
 - RabbitMQ DLX docs: https://www.rabbitmq.com/docs/dlx
 - RabbitMQ prefetch docs: https://www.rabbitmq.com/docs/consumer-prefetch
