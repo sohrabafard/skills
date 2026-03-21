@@ -2,6 +2,7 @@
 
 ## Contents
 - Container, contracts, and facades
+- Laravel 13 upgrade and feature policy
 - Requests, validation, and authorization
 - Resources and serialization
 - Eloquent query discipline
@@ -18,12 +19,40 @@
 - Use contextual binding or contextual attributes for per-consumer differences.
 - Prefer constructor injection in classes that are likely to grow.
 - Use facades mainly at framework edges or in small orchestration code where they remain clear.
+- Avoid named arguments when calling Laravel framework methods unless the repository already made that trade-off intentionally and the surface is proven stable.
 
 ### Anti-patterns
 - Binding every class into the container unnecessarily.
 - Pulling dependencies from the container inside business logic.
 - Letting a class accumulate many facades and responsibilities.
 - Using facades as an excuse to avoid explicit dependencies in growing services.
+
+## Laravel 13 upgrade and feature policy
+
+### Baseline
+- Treat Laravel 13 as the default framework target for new work in this skill pack.
+- Pair Laravel 13 with PHP 8.5 unless the repository is pinned lower for a concrete compatibility reason.
+- For 12 -> 13 upgrade work, start from the official dependency bumps:
+  - `laravel/framework` -> `^13.0`
+  - `laravel/boost` -> `^2.0` when installed
+  - `laravel/tinker` -> `^3.0` when installed
+  - `phpunit/phpunit` -> `^12.0` when installed
+  - `pestphp/pest` -> `^4.0` when installed
+- Compare framework-owned files against the Laravel 13 skeleton before preserving older bootstrap or config defaults.
+
+### Mandatory audit points
+- Replace direct references to `VerifyCsrfToken` or `ValidateCsrfToken` with `PreventRequestForgery` when touching middleware config, exclusions, or tests.
+- Audit cache object storage against `cache.serializable_classes`; prefer non-object cache payloads unless an explicit allow-list is justified.
+- Preserve Laravel 12 fallback cache or session names only with explicit `CACHE_PREFIX`, `REDIS_PREFIX`, and `SESSION_COOKIE` config.
+- If the app listens to queue events, update `JobAttempted::$exceptionOccurred` to `JobAttempted::$exception` and `QueueBusy::$connection` to `QueueBusy::$connectionName`.
+- Re-check domain route precedence, polymorphic pivot table names, `Container::call` nullable defaults, Bootstrap pagination view names, eager-loaded relation restoration in serialized collections, `Str` factory reset behavior in tests, and `Js::from` unicode expectations where those surfaces exist.
+- If custom cache stores or repositories implement Laravel cache contracts, add support for the `touch` method.
+
+### Laravel 13 feature usage policy
+- Use `Queue::route(...)` when queue or connection selection by class would otherwise be repeated across the codebase.
+- Prefer queue attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`, and `#[DeleteWhenMissingModels]` when they keep job policy clearer than scattered properties or repeated worker flags.
+- Use first-party JSON:API resources only when the public contract is actually JSON:API; do not replace an existing stable non-JSON:API envelope by default.
+- Treat Laravel AI SDK, semantic search, and vector search as opt-in capabilities. Do not introduce them unless the user asks for them or the repository already chose them, and route storage or indexing decisions through the relevant companion skills.
 
 ## Requests, validation, and authorization
 
@@ -107,6 +136,7 @@ For queue, broker, retry, and DLQ policy, switch to `alaa-async-messaging` or `a
 ### Good defaults
 - Keep service providers focused on wiring and registration.
 - Make a provider deferrable when it only registers bindings and the repo benefits from deferred loading.
+- When a repository targets Laravel 13, keep `bootstrap/app.php`, middleware registration, and related framework-owned bootstrap files aligned with the Laravel 13 skeleton unless the repo has an intentional override.
 - Follow the repository's existing folder structure first.
 - Use standard Laravel locations when there is no repo-specific rule:
   - HTTP controllers in `app/Http/Controllers`

@@ -91,6 +91,12 @@ If sources conflict:
   - secret values go in secret files or existing Secrets,
   - worker scaling is explicit (manual/HPA/KEDA by policy), not guessed.
 
+# Laravel 13 queue-integration notes
+- Keep Laravel-side queue behavior aligned with the Laravel 13 queue docs for routing, retries, timeouts, and failure handling.
+- When queue or connection selection would otherwise be duplicated at dispatch sites, prefer central `Queue::route(...)` rules.
+- For job-local policy, prefer declarative attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, and `#[FailOnTimeout]` when they keep intent clearer than scattered properties, but preserve repository style if it already standardizes on methods or properties.
+- If the repository listens to queue events, update upgrade reviews for `JobAttempted::$exception` and `QueueBusy::$connectionName`.
+
 # Decision matrix
 1) Use `queue:work` when:
 - you need multi-queue priority lists (`high,default`),
@@ -107,6 +113,7 @@ If sources conflict:
 # Step 1 — Install the driver
 Install and pin intentionally:
 - `composer require vladimir-yuldashev/laravel-queue-rabbitmq`
+- For Laravel 13 repositories, keep the driver on the newest stable Laravel 13-compatible release and reconcile config keys against the upstream changelog and package source.
 - Keep package major versions controlled during release windows.
 - Ensure `ext-pcntl` is available for full worker behavior in container/runtime images.
 
@@ -306,7 +313,7 @@ When applying this skill, output should include:
 # References
 - Package repo: https://github.com/vyuldashev/laravel-queue-rabbitmq
 - Package README: https://github.com/vyuldashev/laravel-queue-rabbitmq/blob/master/README.md
-- Laravel Queue docs: https://laravel.com/docs/12.x/queues
+- Laravel Queue docs: https://laravel.com/docs/13.x/queues
 - RabbitMQ DLX docs: https://www.rabbitmq.com/docs/dlx
 - RabbitMQ prefetch docs: https://www.rabbitmq.com/docs/consumer-prefetch
 - RabbitMQ heartbeat docs: https://www.rabbitmq.com/docs/heartbeats

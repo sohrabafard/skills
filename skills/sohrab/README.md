@@ -30,7 +30,6 @@ For PHP / Laravel code, the default coding baseline is:
 
 Current target baseline for new work and refactors:
 - PHP 8.5
-- Laravel 12
 - Laravel 13
 
 Use it together with:
@@ -179,7 +178,8 @@ When a generic best practice conflicts with Arvan platform constraints or the Al
 
 ```text
 Inspect this PHP / Laravel project and implement or refactor only the requested slice using `alaa-php-clean-code` in `scoped-soft` mode.
-Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them.
+Target PHP 8.5 and Laravel 13 conventions where the repository supports them.
+For Laravel 12 -> 13 upgrades or post-upgrade refactors, explicitly audit `PreventRequestForgery`, `cache.serializable_classes`, cache or session naming fallbacks, queue event payload changes, domain route precedence, and custom morph pivot table names where relevant.
 Keep the touched slice fully aligned with clean-code, naming, SOLID, explicit types, modern PHP, PSR/PER, and Laravel best practices.
 Preserve repo-local conventions unless they directly block clarity, and refactor adjacent code only as far as needed to keep behavior safe and the local design coherent.
 If the task is non-trivial, multi-file, or behavior-changing, use `alaa-workflow` first.
@@ -196,7 +196,8 @@ Finish with a concise audit showing the selected mode, governing skills used, co
 
 ```text
 Inspect this PHP / Laravel project and refactor the requested slice using `alaa-php-clean-code` in `scoped-hard-contract-preserving` mode.
-Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them.
+Target PHP 8.5 and Laravel 13 conventions where the repository supports them.
+For Laravel 12 -> 13 upgrades or post-upgrade refactors, explicitly audit `PreventRequestForgery`, `cache.serializable_classes`, cache or session naming fallbacks, queue event payload changes, domain route precedence, and custom morph pivot table names where relevant.
 Perform a serious internal cleanup of the selected area: improve naming, remove weak abstractions, extract DTOs/value objects/strategies/services/repositories only where they buy clarity, and make the code look like it was written by one careful author.
 Preserve external and public contracts by default, including routes, request and response fields, response envelopes, status codes, event names and payloads, queue payloads, env var names, and any other documented integration surface, unless I explicitly authorize a breaking change.
 If the task is non-trivial or multi-file, use `alaa-workflow` first.
@@ -213,7 +214,8 @@ Finish with a concise audit showing the selected mode, governing skills used, pr
 ```text
 Inspect this entire PHP / Laravel repository and refactor it using `alaa-php-clean-code` in `whole-project-preserve-local` mode.
 Use `alaa-workflow` first and execute the work in phased, reviewable batches.
-Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them, but preserve the repository's own established naming and layering dialect unless a convention is clearly broken or inconsistent.
+Target PHP 8.5 and Laravel 13 conventions where the repository supports them, but preserve the repository's own established naming and layering dialect unless a convention is clearly broken or inconsistent.
+For Laravel 12 -> 13 upgrades or post-upgrade refactors, explicitly audit `PreventRequestForgery`, `cache.serializable_classes`, cache or session naming fallbacks, queue event payload changes, domain route precedence, and custom morph pivot table names where relevant.
 Make the whole codebase cleaner and more consistent: tighten naming, remove duplication, improve explicit types, reduce vague abstractions, strengthen DTO/value-object boundaries where they are clearly helpful, and standardize local conventions so the repository feels like it was written by one author.
 Do not force a foreign naming system onto the project in this mode.
 Use `alaa-laravel-architecture` for module boundaries, contracts, `public_id`, DTO boundaries, and outbox rules.
@@ -230,7 +232,8 @@ Finish with a concise audit showing the selected mode, governing skills used, pr
 ```text
 Inspect this entire PHP / Laravel repository and refactor it using `alaa-php-clean-code` in `whole-project-normalize-alaa` mode.
 Use `alaa-workflow` first and execute the refactor in phased, reviewable batches.
-Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them, and actively normalize the codebase toward one global Alaa convention set so the repository feels aligned with other Alaa-style projects.
+Target PHP 8.5 and Laravel 13 conventions where the repository supports them, and actively normalize the codebase toward one global Alaa convention set so the repository feels aligned with other Alaa-style projects.
+For Laravel 12 -> 13 upgrades or post-upgrade refactors, explicitly audit `PreventRequestForgery`, `cache.serializable_classes`, cache or session naming fallbacks, queue event payload changes, domain route precedence, and custom morph pivot table names where relevant.
 Use `alaa-laravel-architecture` as the structural source of truth for layer flow, DTO boundaries, `public_id`, API envelopes, and outbox behavior.
 Normalize naming, folder intent, and code shape across the repo: remove vague helpers/managers/base repositories, prefer explicit DTOs and value objects where they clarify boundaries, standardize service/repository/resource/policy/request roles, and make repeated feature slices structurally consistent.
 Preserve external and public contracts by default unless I explicitly authorize broader changes.

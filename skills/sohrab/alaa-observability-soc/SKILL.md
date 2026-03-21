@@ -109,7 +109,7 @@ Collect evidence that distinguishes upstream faults from app faults:
 
 # Sentry integration (optional; production-friendly)
 
-Use this section when the task is to standardize Observability with Sentry for Laravel 12 + Octane:
+Use this section when the task is to standardize Observability with Sentry for Laravel 13 + Octane or other long-lived-worker runtimes:
 - error tracking
 - distributed tracing
 - release tracking
@@ -206,6 +206,14 @@ Expected: event appears in Sentry project.
     - execute an end-to-end request
     - confirm transaction/spans are linked
     - confirm W3C headers are preserved
+
+# Laravel 13 observability audit points
+When the repository targets Laravel 13, explicitly review:
+- queue-event listeners or alerts that still expect `JobAttempted::$exceptionOccurred` instead of `JobAttempted::$exception`
+- queue saturation listeners that still read `QueueBusy::$connection` instead of `QueueBusy::$connectionName`
+- CSRF deny logs, tests, or middleware exclusions that still reference `VerifyCsrfToken` or `ValidateCsrfToken` instead of `PreventRequestForgery`
+- cache-related operational assumptions when object caching now requires explicit `cache.serializable_classes` allow-lists
+- route-level telemetry or alert rules when domain route precedence changes could alter which handler or middleware now wins
 
 # Output contract
 When applying this skill, output:

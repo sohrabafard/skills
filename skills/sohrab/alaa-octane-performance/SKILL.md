@@ -1,6 +1,6 @@
 ---
 name: alaa-octane-performance
-description: "Laravel Octane (Swoole/RoadRunner) production patterns: Octane-safe memory hygiene, multi-tenant safety, performance-first request paths, capacity-aware worker tuning, and PHP 8.1+ hot-path guidance."
+description: "Laravel Octane (Swoole/RoadRunner) production patterns: Octane-safe memory hygiene, multi-tenant safety, performance-first request paths, capacity-aware worker tuning, and Laravel 13 / PHP 8.5 hot-path guidance."
 ---
 
 # Purpose
@@ -12,7 +12,7 @@ Focus:
 - Enforce tenant boundaries reliably under concurrency
 - Make async/offload safe (idempotency + retries) without blocking request workers
 - Tune workers with explicit assumptions and validate via load testing
-- Apply modern PHP 8.1+ patterns that reduce allocations and improve hot-path clarity
+- Apply modern PHP 8.5 patterns that reduce allocations and improve hot-path clarity
 
 This skill complements:
 - `alaa-laravel-architecture` (layering, DTO boundaries, API/error contracts)
@@ -100,8 +100,16 @@ If the codebase uses Octane listeners/hooks, prefer explicit reset hooks for:
 - In multi-tenant systems:
     - cache keys must include tenant identifier
     - never share cached data across tenants unless explicitly intended and proven safe
+- If object payloads are cached in Laravel 13, audit `cache.serializable_classes` explicitly and prefer arrays or scalars on hot paths when that is safer.
 
-# PHP 8.1+ performance patterns (Octane-friendly)
+# Laravel 13 + Octane reminders
+- Treat Laravel 13 on PHP 8.5 as the default target for new Octane work in this skill pack.
+- If web middleware is touched, prefer `PreventRequestForgery` direct references and Laravel 13 middleware configuration APIs.
+- If queue offload rules are repeated across dispatch sites, consider central `Queue::route(...)` rules or job attributes when they improve clarity.
+- Use cache TTL-extension features such as `Cache::touch()` when custom stores or cache-heavy flows would otherwise force noisy get/put churn.
+- Do not add Laravel AI SDK, embeddings, or vector search to Octane hot paths unless the repository already chose them and `alaa-data-layer` has defined the storage and indexing plan.
+
+# PHP 8.5 performance patterns (Octane-friendly)
 Use these rules for hot paths and reusable utilities (framework-agnostic code), especially under Octane.
 
 ## Core rules

@@ -1,6 +1,6 @@
 ---
 name: alaa-laravel-architecture
-description: "Alaa-style Laravel architecture: strict layering, DTO boundaries, stable API envelopes, UUIDv7 public_id policy, and event-driven side effects via outbox."
+description: "Alaa-style Laravel 13 architecture: strict layering, DTO boundaries, stable API envelopes, UUIDv7 public_id policy, event-driven side effects via outbox, and upgrade-safe framework defaults."
 ---
 
 # Purpose
@@ -34,6 +34,16 @@ This skill remains the source of truth for layering, API contracts, `public_id`,
 - Keep controllers thin and deterministic; business rules must live in Services.
 - Do not introduce new datastores, transports, or frameworks unless the user explicitly requests.
 - Do not “standardize” response envelopes by refactoring existing behavior unless the repository already uses the target contract.
+
+# Laravel 13 architecture stance
+When the repository targets Laravel 13:
+- Keep framework-owned bootstrap, middleware, and exception configuration aligned with the Laravel 13 application skeleton unless the repository has an intentional override.
+- Update direct CSRF middleware references to `PreventRequestForgery` when touching middleware exclusions, tests, or bootstrap configuration.
+- Compare `bootstrap/app.php`, middleware registration, and framework defaults before copying Laravel 12 boilerplate into new code.
+- Prefer first-party JSON:API resources only when the public contract is truly JSON:API. Otherwise, keep the repository's established resource envelope.
+- Prefer `Queue::route(...)` or queue attributes when queue routing, retries, or timeout rules become repetitive, but do not force an attribute-first style into a repository that already uses methods consistently.
+- When upgrade work touches routing or Eloquent infrastructure, audit domain route precedence, polymorphic pivot table names, eager-loaded relation restoration in serialized model collections, and Bootstrap pagination view names.
+- Treat Laravel 13 AI, semantic search, and vector search capabilities as opt-in. If the repository adopts them, route schema and indexing choices through `alaa-data-layer` and keep public contracts explicit.
 
 # Architecture rules (strict)
 

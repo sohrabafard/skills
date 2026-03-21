@@ -6,6 +6,10 @@ description: "CI/CD for Laravel + Postgres: deterministic pipelines, pinned serv
 # Purpose
 Make CI fast, reliable, and aligned with how the service runs in production.
 
+Default Laravel baseline in this skill pack:
+- Laravel 13
+- PHP 8.5
+
 # When to use
 - Editing GitHub Actions or GitLab CI configs
 - Changing DB services, migrations, or test DB setup
@@ -24,6 +28,13 @@ Make CI fast, reliable, and aligned with how the service runs in production.
 - Fix timezone/locale assumptions:
     - Prefer `TZ=UTC` in CI unless the repo explicitly requires a different timezone.
 - Key dependency caches by lockfile hash + runtime version (PHP/Composer/toolchain) to avoid stale or cross-version cache poisoning.
+- For upgrade work, move repo-pinned PHP, Composer, Node or package-manager versions, Docker images, CI matrices, and cache keys together. Do not bump `composer.json` alone and leave the toolchain split-brained.
+- When the repository targets Laravel 13, keep first-party upgrade versions coherent in CI and release automation:
+    - `laravel/framework` -> `^13.0`
+    - `laravel/boost` -> `^2.0` when installed
+    - `laravel/tinker` -> `^3.0` when installed
+    - `phpunit/phpunit` -> `^12.0` when installed
+    - `pestphp/pest` -> `^4.0` when installed
 - Avoid non-deterministic seeds and ordering:
     - deterministic fixtures
     - explicit ordering where required
@@ -34,7 +45,7 @@ Make CI fast, reliable, and aligned with how the service runs in production.
 # Step-by-step workflow (deterministic)
 1) Identify pipeline files and current conventions
     - Check `.github/workflows/*`, `.gitlab-ci.yml`, and docs
-    - Note PHP version, required extensions, and Composer caching strategy
+    - Note PHP version, required extensions, Composer version, Node or package-manager version if present, and caching strategy
 2) Validate DB service configuration
     - Use a Postgres service image that matches production major version (pin it)
     - Add basic health checks and wait-for-db logic
@@ -56,6 +67,7 @@ Make CI fast, reliable, and aligned with how the service runs in production.
 - Run: format/lint → static analysis → tests.
 - Use a Postgres service container; run migrations before tests.
 - Keep env vars explicit and documented (avoid magic CI-only behavior).
+- For Laravel 13 upgrade work, add at least one safe framework smoke check such as `php artisan about` after dependency install when the repository supports it.
 
 # Optional supply-chain artifacts (P2; only if requested or policy already exists)
 If your CI policy allows:

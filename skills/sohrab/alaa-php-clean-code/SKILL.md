@@ -1,6 +1,6 @@
 ---
 name: alaa-php-clean-code
-description: "Deterministic PHP 8.5 / Laravel 12-13 clean-code baseline for writing, reviewing, and refactoring code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, Laravel edge patterns, and mode-aware refactors (scoped soft, scoped hard with contract preservation, whole-project preserve-local, whole-project normalize-to-Alaa). Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
+description: "Deterministic PHP 8.5 / Laravel 13 clean-code baseline for writing, reviewing, and refactoring code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, Laravel edge patterns, and mode-aware refactors (scoped soft, scoped hard with contract preservation, whole-project preserve-local, whole-project normalize-to-Alaa). Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
 ---
 
 # Purpose
@@ -31,10 +31,35 @@ Use this skill when the task includes any of the following:
 # Compatibility target
 Target repositories using:
 - PHP 8.5
-- Laravel 12
 - Laravel 13
 
-If a repository is older, follow repo reality first and use the newest features only where the runtime and toolchain support them safely.
+Default target in this skill pack is Laravel 13 on PHP 8.5.
+
+If a repository is older or mid-upgrade, follow repo reality first and use the newest features only where the runtime and toolchain support them safely. Do not let a Laravel 13 repository drift back to Laravel 12 conventions during new code generation, refactors, reviews, or upgrade planning.
+
+# Laravel 13 baseline
+Apply this section whenever the repository already targets Laravel 13 or the task is a Laravel 12 -> 13 upgrade, follow-up refactor, review, or plan.
+
+- Treat Laravel 13 as the primary framework target, not as a dual 12/13 baseline.
+- For upgrade work, audit the official dependency bumps first:
+  - `laravel/framework` -> `^13.0`
+  - `laravel/boost` -> `^2.0` when installed
+  - `laravel/tinker` -> `^3.0` when installed
+  - `phpunit/phpunit` -> `^12.0` when installed
+  - `pestphp/pest` -> `^4.0` when installed
+- Compare framework-owned files against the Laravel 13 application skeleton before carrying old bootstrap, config, or test boilerplate forward.
+- Update direct CSRF middleware references from `VerifyCsrfToken` or `ValidateCsrfToken` to `PreventRequestForgery` when touching middleware registration, route exclusions, or tests.
+- Audit cache payloads against `cache.serializable_classes`; prefer arrays and scalars unless an explicit allow-list of cached classes is justified.
+- Preserve Laravel 12-era generated cache or session names only through explicit `CACHE_PREFIX`, `REDIS_PREFIX`, and `SESSION_COOKIE` config. Do not assume old framework fallbacks still apply.
+- When code listens to queue events or queue telemetry, account for `JobAttempted::$exception` and `QueueBusy::$connectionName`.
+- Re-check domain route precedence, custom morph pivot table names, `Container::call` nullable defaults, Bootstrap pagination view names, `Str` factory reset behavior in tests, and `Js::from` unicode expectations when those surfaces exist.
+- Be cautious with named arguments when calling Laravel framework methods; parameter names are not part of Laravel's backwards-compatibility promise.
+- Prefer Laravel 13 conveniences only when they reduce custom code or improve clarity:
+  - `Queue::route(...)` for central queue / connection routing
+  - queue attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, and `#[FailOnTimeout]`
+  - `PreventRequestForgery` middleware configuration APIs
+  - first-party JSON:API resources when the contract really is JSON:API
+- Do not introduce Laravel AI SDK, semantic search, vector search, or JSON:API resources just because Laravel 13 offers them. Add them only when the repository already uses them or the user explicitly asks for them.
 
 # Ownership and companion-skill boundaries
 This skill owns code quality inside the chosen architecture. It does not replace specialist skills.

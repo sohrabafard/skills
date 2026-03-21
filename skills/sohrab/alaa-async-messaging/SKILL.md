@@ -66,6 +66,12 @@ Rules:
 - Prefer minimal diffs; do not refactor unrelated app code.
 - For non-trivial tasks, follow `alaa-workflow` and create/update the plan file (or constrained-mode alternative).
 
+# Laravel 13 messaging notes
+- Default Laravel target in this skill pack is Laravel 13 on PHP 8.5.
+- When queue or connection selection would otherwise be repeated across dispatch sites, prefer central `Queue::route(...)` rules.
+- Prefer queue and listener attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`, or `#[DeleteWhenMissingModels]` when they make retry or lifecycle policy clearer than scattered properties, while preserving repository style where it is already consistent.
+- When reviewing upgrade work, update queue-event listeners and monitoring code for `JobAttempted::$exception` and `QueueBusy::$connectionName`.
+
 # Step 1 — Repository discovery checklist
 1) Identify current stack:
 - Laravel version + installed packages (Horizon? RabbitMQ driver? Kafka client?)
