@@ -28,6 +28,11 @@ For PHP / Laravel code, the default coding baseline is:
 
 - `alaa-php-clean-code`
 
+Current target baseline for new work and refactors:
+- PHP 8.5
+- Laravel 12
+- Laravel 13
+
 Use it together with:
 
 - `alaa-laravel-architecture` for layering, API contracts, `public_id`, and outbox-oriented application structure
@@ -38,6 +43,8 @@ Use it together with:
 - `alaa-observability-soc` for logs, metrics, traces, alerts, and Sentry
 - `alaa-cicd-laravel-postgres` for CI quality gates, Pint, PHPStan, and tests
 - `alaa-docs-farsi` for docs-alignment workflow, while keeping final docs in simple English when `alaa-php-clean-code` says so
+- `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, models, prompts, tools, or agent workflows and need current official references or citations
+- `alaa-workflow` for non-trivial, multi-file, behavior-changing, or whole-project tasks
 
 ## Default workflows
 
@@ -54,11 +61,12 @@ Use this order:
 Use this order:
 
 1. Inspect the repository and existing conventions.
-2. Read `alaa-laravel-architecture` if the task changes module boundaries, contracts, or outbox rules.
-3. Read `alaa-trust-gateway-auth` first if the service is behind the Ala gateway or trusted-header semantics are involved.
-4. Apply `alaa-php-clean-code` as the default coding baseline.
-5. Pull in specialist skills only where needed: data, async, Octane, security, observability, CI, docs.
-6. Update tests and align documentation artifacts before considering the task done.
+2. For non-trivial, multi-file, behavior-changing, or whole-project work, read `alaa-workflow` first and establish the plan artifact it requires.
+3. Read `alaa-laravel-architecture` if the task changes module boundaries, contracts, or outbox rules.
+4. Read `alaa-trust-gateway-auth` first if the service is behind the Ala gateway or trusted-header semantics are involved.
+5. Apply `alaa-php-clean-code` as the default coding baseline.
+6. Pull in specialist skills only where needed: data, async, Octane, security, observability, CI, docs, and OpenAI docs.
+7. Update tests and align documentation artifacts before considering the task done.
 
 ## Arvan-first rules summary
 
@@ -165,16 +173,70 @@ For PHP / Laravel work, documentation alignment includes:
 
 When a generic best practice conflicts with Arvan platform constraints or the Ala gateway trust model, document the reason for the deviation instead of hiding it.
 
-## Reusable Prompt For Any PHP / Laravel Project
+## Reusable prompts for `alaa-php-clean-code`
+
+### 1) Scoped work or new slice, with soft refactor
 
 ```text
-Inspect this PHP / Laravel project and refactor it in small, reviewable diffs so it aligns with the Sohrab skill set.
-Use `alaa-laravel-architecture` for layering, contracts, `public_id`, and outbox boundaries;
-use `alaa-php-clean-code` as the default coding baseline for clean code, SOLID, design-pattern selection, type safety, modern PHP 8.x, PSR/PER, Laravel best practices, documentation quality, and efficient agent workflow;
-use specialist skills only where the code actually enters their scope, including `alaa-data-layer`, `alaa-octane-performance`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, and `alaa-trust-gateway-auth`.
-Preserve behavior unless a bug, security issue, or explicit requirement justifies change.
-Remove weak or duplicate abstractions, prefer explicit types and clear boundaries, keep controllers thin,
-keep side effects at the edges, and avoid generic repositories or factories unless they add real value.
-After code changes, align docblocks, README/docs, Postman collection v2.1, environment artifacts, and request-flow diagrams so nothing stale or duplicated remains.
-Finish with a concise report of what changed, what was validated, what still carries risk, and any follow-up work that is still needed.
+Inspect this PHP / Laravel project and implement or refactor only the requested slice using `alaa-php-clean-code` in `scoped-soft` mode.
+Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them.
+Keep the touched slice fully aligned with clean-code, naming, SOLID, explicit types, modern PHP, PSR/PER, and Laravel best practices.
+Preserve repo-local conventions unless they directly block clarity, and refactor adjacent code only as far as needed to keep behavior safe and the local design coherent.
+If the task is non-trivial, multi-file, or behavior-changing, use `alaa-workflow` first.
+Use `alaa-laravel-architecture` if the task changes module boundaries, DTO boundaries, `public_id`, API contracts, or outbox behavior.
+Use `alaa-trust-gateway-auth` if the code touches Ala gateway trust, tenant derivation, trusted headers, or downstream auth context.
+Use specialist skills only when the code actually enters their scope, including `alaa-data-layer`, `alaa-octane-performance`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, and `alaa-mongodb-patterns`.
+Use `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, models, prompts, tools, or agent workflows and need current official references or citations.
+Do not introduce generic repositories, managers, helpers, or factories unless they add real value.
+After the code changes, update the nearest tests and align any impacted docblocks, README/docs, Postman collection v2.1, environment artifacts, and request-flow diagrams.
+Finish with a concise audit showing the selected mode, governing skills used, contract-preservation status, validations run, documentation status, and remaining risks.
+```
+
+### 2) Scoped work, with hard refactor but preserved API contracts
+
+```text
+Inspect this PHP / Laravel project and refactor the requested slice using `alaa-php-clean-code` in `scoped-hard-contract-preserving` mode.
+Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them.
+Perform a serious internal cleanup of the selected area: improve naming, remove weak abstractions, extract DTOs/value objects/strategies/services/repositories only where they buy clarity, and make the code look like it was written by one careful author.
+Preserve external and public contracts by default, including routes, request and response fields, response envelopes, status codes, event names and payloads, queue payloads, env var names, and any other documented integration surface, unless I explicitly authorize a breaking change.
+If the task is non-trivial or multi-file, use `alaa-workflow` first.
+Use `alaa-laravel-architecture` before changing layer flow, DTO boundaries, `public_id`, API contracts, or outbox behavior.
+Use `alaa-trust-gateway-auth` before touching Ala gateway trust, tenant context derivation, trusted headers, request identity, step-up auth, or downstream auth propagation.
+Use specialist skills only when the task enters their scope, including `alaa-data-layer`, `alaa-octane-performance`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, and `alaa-mongodb-patterns`.
+Use `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, models, prompts, tools, or agent workflows and need current official references or citations.
+Keep diffs reviewable, add or update regression tests where feasible, and align all impacted docs artifacts before considering the work done.
+Finish with a concise audit showing the selected mode, governing skills used, preserved contracts, intentional exceptions, validations run, documentation status, and remaining risks.
+```
+
+### 3) Whole-project refactor, preserving repo-local conventions
+
+```text
+Inspect this entire PHP / Laravel repository and refactor it using `alaa-php-clean-code` in `whole-project-preserve-local` mode.
+Use `alaa-workflow` first and execute the work in phased, reviewable batches.
+Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them, but preserve the repository's own established naming and layering dialect unless a convention is clearly broken or inconsistent.
+Make the whole codebase cleaner and more consistent: tighten naming, remove duplication, improve explicit types, reduce vague abstractions, strengthen DTO/value-object boundaries where they are clearly helpful, and standardize local conventions so the repository feels like it was written by one author.
+Do not force a foreign naming system onto the project in this mode.
+Use `alaa-laravel-architecture` for module boundaries, contracts, `public_id`, DTO boundaries, and outbox rules.
+Use `alaa-trust-gateway-auth` for any gateway-trust, tenant-context, or downstream-auth surfaces.
+Use specialist skills only where their scope is truly entered, including `alaa-data-layer`, `alaa-octane-performance`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, and `alaa-mongodb-patterns`.
+Use `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, models, prompts, tools, or agent workflows and need current official references or citations.
+Preserve public contracts by default unless I explicitly approve broader changes.
+Keep tests, docblocks, README/docs, Postman collection v2.1, environment artifacts, and request-flow diagrams aligned with the implementation throughout the refactor.
+Finish with a concise audit showing the selected mode, governing skills used, preserved contracts, validations run, documentation status, remaining risks, and follow-up phases if needed.
+```
+
+### 4) Whole-project refactor, normalizing to the global Alaa convention set
+
+```text
+Inspect this entire PHP / Laravel repository and refactor it using `alaa-php-clean-code` in `whole-project-normalize-alaa` mode.
+Use `alaa-workflow` first and execute the refactor in phased, reviewable batches.
+Target PHP 8.5 and Laravel 12/13 conventions where the repository supports them, and actively normalize the codebase toward one global Alaa convention set so the repository feels aligned with other Alaa-style projects.
+Use `alaa-laravel-architecture` as the structural source of truth for layer flow, DTO boundaries, `public_id`, API envelopes, and outbox behavior.
+Normalize naming, folder intent, and code shape across the repo: remove vague helpers/managers/base repositories, prefer explicit DTOs and value objects where they clarify boundaries, standardize service/repository/resource/policy/request roles, and make repeated feature slices structurally consistent.
+Preserve external and public contracts by default unless I explicitly authorize broader changes.
+Use `alaa-trust-gateway-auth` for any gateway-trust, tenant-context, or downstream-auth surfaces.
+Use specialist skills only where their scope is truly entered, including `alaa-data-layer`, `alaa-octane-performance`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, and `alaa-mongodb-patterns`.
+Use `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, models, prompts, tools, or agent workflows and need current official references or citations.
+Keep tests, docblocks, README/docs, Postman collection v2.1, environment artifacts, and request-flow diagrams aligned with the implementation throughout the refactor.
+Finish with a concise audit showing the selected mode, governing skills used, preserved contracts, intentional exceptions, validations run, documentation status, remaining risks, and follow-up phases if needed.
 ```
