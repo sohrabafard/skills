@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa PHP Clean Code"
+  short_description: "Shared PHP/Laravel coding baseline for consistent agent-written code"
+  default_prompt: "Use alaa-php-clean-code to write, review, or refactor PHP/Laravel code with consistent pattern choices, type safety, modern PHP 8.x features, PSR/PER standards, and Laravel best practices while respecting companion skills for architecture, data, async, security, observability, CI, and Octane."

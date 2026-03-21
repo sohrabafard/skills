@@ -13,6 +13,16 @@ Enforce consistent, production-grade Laravel service design that matches Alaa/co
 
 This skill is domain-agnostic: it prescribes *how* to design and implement, not which endpoints/entities to build.
 
+# Companion skill boundary
+Before writing or refactoring PHP / Laravel code with this skill, read `alaa-php-clean-code` and apply it for:
+- clean code and SOLID
+- design-pattern selection and anti-pattern avoidance
+- PHP 8.x modern features and type safety
+- PSR / PER standards
+- general PHP / Laravel best practices
+
+This skill remains the source of truth for layering, API contracts, `public_id`, and event / outbox architecture. Do not duplicate or override `alaa-php-clean-code`; use it inside these architecture boundaries.
+
 # When to use
 - Building a new Laravel service or module that must match comment-service engineering style.
 - Adding or changing endpoints where consistency, maintainability, and testability matter.
@@ -195,3 +205,5 @@ When returning 403 with a stable `code`, emit a lightweight domain/telemetry eve
 - Exposing internal IDs or accepting them in public APIs.
 - Emitting events before DB commit or without outbox durability (when outbox exists).
 - Infinite retries, non-idempotent handlers, or DLQ-less designs.
+
+

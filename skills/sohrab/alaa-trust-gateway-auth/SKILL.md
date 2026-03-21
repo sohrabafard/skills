@@ -24,7 +24,7 @@ Before proposing code or config changes, the agent must identify which companion
 
 Mandatory routing rules:
 - If the task touches JWT correctness, token verification, authn/authz risk, header trust, tenant-isolation risk, or token-handling mistakes, read `alaa-security-review` first.
-- If the task touches Laravel middleware, guards, request-context builders, Policies, Gates, controllers, services, DTO boundaries, or response envelopes, read `alaa-laravel-architecture` first.
+- If the task touches Laravel middleware, guards, request-context builders, Policies, Gates, controllers, services, DTO boundaries, response envelopes, or PHP/Laravel clean-code decisions inside those files, read `alaa-laravel-architecture` and `alaa-php-clean-code` first.
 - If the task touches Octane, long-lived workers, request-scoped auth state, tenant-context reset, or performance-sensitive auth middleware, read `alaa-octane-performance` first.
 - If the task touches deny logging, request correlation, trace propagation, security events, or auth error observability, read `alaa-observability-soc` first.
 - If the task touches trusted proxy boundaries, direct service exposure, container networking, edge-only exposure, or `X-Forwarded-*` behavior, read `alaa-docker-production` first.
@@ -54,7 +54,7 @@ Use this execution order:
 
 Examples:
 - Gateway ACL/header change -> read `haproxy-3.2`, then inspect gateway config.
-- Laravel trusted-header middleware change -> read `alaa-laravel-architecture`; if Octane is used, also read `alaa-octane-performance`.
+- Laravel trusted-header middleware change -> read `alaa-laravel-architecture` and `alaa-php-clean-code`; if Octane is used, also read `alaa-octane-performance`.
 - Auth deny logging or trace propagation change -> read `alaa-observability-soc`.
 - Public exposure or trusted-proxy deployment change -> read `alaa-docker-production`; on Arvan, also read `caas-arvan-kuber`.
 - JWT/header-trust review -> read `alaa-security-review` before suggesting fixes.
@@ -737,6 +737,9 @@ These are not optional background references. They are required companion reads 
 - `alaa-laravel-architecture`
   Read before changing Laravel middleware, guards, Policies, Gates, service-layer authorization, request-context normalization, DTO boundaries, or auth-related response contracts.
 
+- `alaa-php-clean-code`
+  Read before writing or refactoring PHP / Laravel code in gateway-aware middleware, guards, request-context builders, DTOs, services, or auth-facing response mappers so the code follows the shared clean-code, pattern, type-safety, and Laravel best-practice baseline.
+
 - `alaa-octane-performance`
   Read before changing auth or tenant-context handling in Octane or any long-lived worker environment, or when auth middleware sits on a hot path.
 
@@ -766,6 +769,8 @@ Routing rule:
 - Logging raw access tokens.
 - Assuming README design notes are more accurate than active HAProxy config.
 - Applying this skill in isolation when the task clearly also requires one or more companion skills.
+
+
 
 
 
