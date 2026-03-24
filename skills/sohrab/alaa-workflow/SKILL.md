@@ -93,6 +93,24 @@ If the current task constraints forbid creating new files (read-only / “no new
 - Mark phases as:
     - `Parallel-safe` OR `Not parallel-safe`.
 
+## 1.1) Delegated execution mode (optional; only with explicit user authorization)
+Enter delegated execution mode only when the user explicitly authorizes subagents or parallel agent work, for example:
+- `you can use subagent`
+- `delegate this`
+- `use parallel agents`
+- `split this into subagents`
+
+In delegated mode:
+- keep the parent agent as the manager; the parent owns the plan, sequencing, integration, safety checks, and final synthesis
+- do not pre-spawn a full team by default; spawn only the roles needed for the current phase or lane
+- keep `docs/_agent_plans/<YYYYMMDD-HHMMSS>_<slug>.md` as the source of truth for sequencing and progress
+- if a delegated run needs lane-specific detail, either append lane blocks to the same plan file or create child plan files under `docs/_agent_plans/`
+- define lane ownership before spawning: scope, inputs, write scope, expected outputs, validation target, and merge notes
+- prefer the role pattern `planner/researcher -> implementer -> reviewer` only when the task complexity justifies it
+- add a verifier or remediator role only when the task needs an independent validation or remediation pass
+- use browser/mobile/devtools validation only when the user explicitly requests it or the task is inherently visual/UI and repo/browser policy allows it
+- do not let delegated workers broadly rewrite shared coordination artifacts; follow the shared-state safe-write protocol below
+
 ## 2) Minimal terminal verbosity
 - Do not paste long outputs.
 - Summarize results.
