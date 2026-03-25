@@ -2,6 +2,8 @@
 
 Use this file when the task names a Quasar plugin API, composable, directive, global option, or utility helper.
 
+For exact directive usage patterns and minimal snippets, pair this file with `51-directive-usage-atlas.md`.
+
 ## Plugins
 
 - `AppFullscreen`, `AppVisibility`, `BottomSheet`, `Dialog`, `Loading`, `Notify`, `Platform`
@@ -30,6 +32,7 @@ Rules:
 
 - Touch directives often imply accessibility and keyboard fallback work.
 - DOM-observer directives often imply cleanup and hydration parity concerns.
+- When the task is specifically about a directive's behavior or snippet shape, also load `51-directive-usage-atlas.md`.
 
 ## Global options
 
@@ -55,3 +58,4 @@ Rules:
 - Many plugin issues are really component-family issues. Example: `Loading` often pairs with progress indicators and dialogs.
 - `useMeta` is usually a route/data-loading concern, not only a composable concern.
 - `Ripple`, touch directives, and visibility/platform plugins can become reduced-motion or accessibility questions.
+- The model usually knows what directives are, but Quasar-specific popup, touch, and observer directives are worth loading examples for because the directive value shapes and interaction semantics are easy to misremember.

@@ -57,14 +57,18 @@ Use this sequence:
 
 - App setup, build config, `quasar.config`, boot files, routing, env files, aliases, proxies, lazy loading, testing, or upgrades:
   - `references/10-cli-vite-and-config.md`
+  - `references/11-cli-cookbook-and-examples.md` when exact config or boot-file shape matters
 - SSR, hydration, middleware, `ssrContext`, `preFetch`, auth cookies, SEO, PWA, service worker, or offline:
   - `references/20-ssr-pwa-and-security.md`
 - SPA vs SSR vs PWA vs BEX vs Capacitor vs Cordova vs Electron:
   - `references/30-platform-modes.md`
 - Components or layouts:
   - `references/40-components-and-layouts.md`
+- Exact component usage patterns, alternatives, and search terms:
+  - `references/41-component-usage-atlas.md`
 - Plugins, composables, directives, options, or utils:
   - `references/50-plugins-composables-directives-options-utils.md`
+  - `references/51-directive-usage-atlas.md` when exact directive behavior or snippet shape matters
 - A11y, performance, monorepo packaging, tree-shaking, or cross-cutting guardrails:
   - `references/60-guardrails-a11y-performance-monorepo.md`
 - Latest versions, migration risk, or skill maintenance:
@@ -95,6 +99,12 @@ When searching inside this skill pack:
 
 - Search exact Quasar symbols first:
   - `QTable`, `QImg`, `useMeta`, `useHydration`, `ClosePopup`, `Notify`, `extendViteConf`
+- If the symbol is a Quasar config, boot, routing, or Vite-extension surface, also open:
+  - `references/11-cli-cookbook-and-examples.md`
+- If the symbol is a component or layout primitive, also open:
+  - `references/41-component-usage-atlas.md`
+- If the symbol is a directive, also open:
+  - `references/51-directive-usage-atlas.md`
 - Then search task phrases:
   - `boot files`, `ssrContext`, `InjectManifest`, `BEX Bridge`, `envFolder`, `envFiles`
 - If the user mentions an old skill name, search `references/80-legacy-skill-coverage.md`

@@ -2,6 +2,8 @@
 
 Use this file for Quasar CLI wiring, `quasar.config`, dev/build behavior, routing/bootstrap, and general Vite integration inside a Quasar app.
 
+For exact “how do I wire this?” guidance, pair this file with `11-cli-cookbook-and-examples.md`.
+
 ## Covers
 
 - `quasar.config` structure and mode-aware branching
@@ -43,6 +45,8 @@ From the Quasar CLI with Vite upgrade guide and handling docs:
   - also read `30-platform-modes.md`
 - Monorepo libraries, peer deps, asset inclusion, or tree-shaking:
   - also read `60-guardrails-a11y-performance-monorepo.md`
+- Exact `quasar.config`, boot-file, routing, or Vite-extension snippet shape:
+  - also read `11-cli-cookbook-and-examples.md`
 
 ## Easy-to-miss relationships
 
@@ -51,3 +55,4 @@ From the Quasar CLI with Vite upgrade guide and handling docs:
 - `envFolder` and `envFiles` become risky when SSR or secrets are involved.
 - `vitePlugins` problems after upgrades can come from Vite 8 migration behavior, not from Quasar itself.
 - If a repo still mentions Vuex in Quasar CLI integration, assume it is legacy and verify whether the app is already on Pinia before editing.
+- The agent often knows the concepts here but can still get Quasar-specific function signatures or registration shapes slightly wrong; load `11-cli-cookbook-and-examples.md` when the code shape matters more than the concept.

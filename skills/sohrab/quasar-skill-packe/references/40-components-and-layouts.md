@@ -2,10 +2,13 @@
 
 Use this file when the task names a Quasar component, a layout primitive, or a UI family.
 
+For exact “how do I use this component?” guidance, pair this file with `41-component-usage-atlas.md`.
+
 ## Search strategy
 
 - Search the exact component name first, for example `QTable` or `QDialog`.
 - Then classify by family below.
+- Then open `41-component-usage-atlas.md` for usage notes, alternatives, and better search terms.
 - For large or interactive UI surfaces, also read `60-guardrails-a11y-performance-monorepo.md`.
 - For SSR/PWA routes, also read `20-ssr-pwa-and-security.md`.
 
