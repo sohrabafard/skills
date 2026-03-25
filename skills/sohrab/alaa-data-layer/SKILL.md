@@ -87,6 +87,16 @@ Derived fields (counts, last_state, aggregates):
 - Do not overwrite business-critical facts without an audit trail.
 - Indexing must match real query patterns; migrations must be lock-safe and rollback-aware.
 
+## F) Identifier naming policy (mandatory)
+- For PostgreSQL-first repositories, new persistence identifiers MUST default to lower_snake_case:
+    - tables, columns, indexes, constraints, sequences, join tables, foreign-key names, and check-constraint names
+- Do not introduce new mixed-case identifiers that require double quotes in PostgreSQL.
+- Do not treat ORM convenience as a reason to mirror camelCase API or PHP names into schema identifiers.
+- If a repository already has quoted mixed-case identifiers, treat them as explicit legacy debt:
+    - prefer a planned cleanup or rebuild path over extending the mixed-case surface
+    - document any temporary compatibility layer and the exact removal path
+- When using Doctrine DBAL, Laravel schema tooling, or raw SQL together, choose one canonical unquoted identifier spelling and keep it stable across migrations, models, tests, and docs.
+
 # Postgres performance principles (performance-first)
 - Prefer simple, predictable queries and stable indexes.
 - Avoid OFFSET pagination on large tables; use keyset pagination.

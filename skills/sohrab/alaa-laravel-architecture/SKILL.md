@@ -139,6 +139,17 @@ By default (if the repo already uses this pattern), use a consistent, user-safe 
 - Route binding and request filters must accept `public_id` and resolve internally in Repository.
 - Repositories may keep internal numeric IDs, but those are never part of public contracts.
 
+## Persistence naming vs public contract naming
+- Keep persistence naming and external API naming as separate concerns.
+- Persistence-facing identifiers MUST stay lower_snake_case:
+    - table names
+    - column names
+    - index and constraint names
+    - raw Eloquent attribute names used by Repositories, Services, factories, seeders, and DB assertions
+- Resources and transformers own outward serialization and may emit a different public field name when the contract requires it.
+- Do not mirror camelCase or presentation-driven API names into schema identifiers just to reduce mapping code.
+- When a public contract preserves an existing camelCase field, keep the translation at the Resource / DTO / Request boundary and keep the underlying persistence layer canonical.
+
 ## Pagination & filtering
 - Support `per_page` with a sane upper bound.
 - Map filters into DTOs (e.g., `<Domain>FilterData`) rather than passing raw arrays.

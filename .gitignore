@@ -5,3 +5,4 @@
 __pycache__/
 *.pyc
 /.idea/laravel-idea.xml
+/.idea/laravel-idea-personal.xml

@@ -103,6 +103,23 @@ Task mode is mandatory. If the user does not specify one, infer the safest optio
 
 Read `references/refactor-modes.md` whenever the task includes refactoring, new slice design, or more than one touched file.
 
+## Persistence naming rules in `whole-project-normalize-alaa`
+When the selected mode is `whole-project-normalize-alaa`, normalize persistence-facing names decisively:
+
+- Database-backed identifiers and raw persistence attributes MUST use lower_snake_case:
+    - migration column names
+    - table names
+    - index and constraint names
+    - raw Eloquent attribute names
+    - `$fillable`, `$casts`, factory payload keys, seeder payload keys, query-builder column references, and database-test assertions
+- Treat legacy camelCase SQL identifiers as debt to remove, not as a local convention to preserve, unless the task explicitly requires compatibility with an existing live database rollout.
+- Keep the contract boundary separate from persistence:
+    - Resources, transformers, request mappers, and DTOs may preserve outward API keys when contract preservation is required
+    - Do not force schema names to match camelCase API fields just to avoid a mapping step
+- Normal PHP naming remains idiomatic:
+    - methods, local variables, private helpers, and service methods may stay camelCase unless the repository has a different explicit convention
+    - standard PHP camelCase is not itself “legacy”; the normalization target is persistence naming and schema-coupled attribute drift
+
 # Companion-skill routing summary
 Routing is mandatory, not optional advice.
 
