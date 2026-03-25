@@ -1,9 +1,9 @@
 interface:
-  display_name: "Figma"
-  short_description: "Use Figma MCP for design-to-code work"
+  display_name: "Create Design System Rules"
+  short_description: "Generate design system rules for your codebase"
   icon_small: "./assets/figma-small.svg"
   icon_large: "./assets/figma.png"
-  default_prompt: "Use $figma to inspect the target design and translate it into implementable UI decisions."
+  default_prompt: "Use $figma-create-design-system-rules to generate project-specific Figma design system rules and prepare an AGENTS.md section."
 
 dependencies:
   tools:
