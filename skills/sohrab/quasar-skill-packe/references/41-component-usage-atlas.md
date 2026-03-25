@@ -63,6 +63,7 @@ Use this file when the agent needs the layer the old component-specific skills w
   - `srcset` and `sizes` are native browser features; QImg relies on them rather than abstracting them away
   - placeholder images are especially useful for large media
   - if disabling the native context menu, make sure slot content preserves pointer events correctly
+- If the task is really about deterministic image delivery, shared placeholders, or SSR-safe responsive candidate generation, also open `43-image-delivery-and-placeholders.md`.
 - Good search terms:
   - `ratio`, `placeholder-src`, `fit`, `position`, `srcset`, `sizes`, `loading="lazy"`, `context menu`
 
@@ -107,6 +108,7 @@ Use this file when the agent needs the layer the old component-specific skills w
   - `view` is not decoration; it controls fixed/revealed behavior for headers, footers, and drawers
   - `QDrawer` overlay, mini mode, and mobile behavior change navigation and focus expectations in meaningful ways
   - drawers and sticky/page-scroller affordances are accessibility and responsive-behavior concerns, not just visual ones
+- For deeper layout semantics such as `view`, containerized layouts, overlay/fixed behavior, and nested route structure, also open `42-layout-patterns-and-examples.md`.
 - Minimal shell example:
 
 ```vue

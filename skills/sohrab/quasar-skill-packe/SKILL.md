@@ -17,6 +17,14 @@ This skill does three jobs:
 2. Force the agent to load related Quasar topics that are commonly missed.
 3. Keep version-sensitive work current by refreshing live upstream data before acting.
 
+## Package manager rule
+
+Respect the repository's package-manager contract.
+
+- If the repo is Yarn-based, uses Yarn workspaces, or contains `yarn.lock`, prefer Yarn for installs and script execution.
+- Do not switch an existing repo to Bun, pnpm, or npm just because Quasar supports them upstream.
+- Upstream package-manager support is a compatibility fact, not a migration recommendation.
+
 ## When to use
 
 Use this skill when the task includes any of the following:
@@ -60,15 +68,21 @@ Use this sequence:
   - `references/11-cli-cookbook-and-examples.md` when exact config or boot-file shape matters
 - SSR, hydration, middleware, `ssrContext`, `preFetch`, auth cookies, SEO, PWA, service worker, or offline:
   - `references/20-ssr-pwa-and-security.md`
+  - `references/21-pwa-injectmanifest-guard.md` when InjectManifest boundaries or update invariants matter
 - SPA vs SSR vs PWA vs BEX vs Capacitor vs Cordova vs Electron:
   - `references/30-platform-modes.md`
 - Components or layouts:
   - `references/40-components-and-layouts.md`
 - Exact component usage patterns, alternatives, and search terms:
   - `references/41-component-usage-atlas.md`
+- Layout shells, `view` semantics, drawers, and routing-with-layouts patterns:
+  - `references/42-layout-patterns-and-examples.md`
+- Deterministic `QImg` delivery, placeholders, and responsive image sizing:
+  - `references/43-image-delivery-and-placeholders.md`
 - Plugins, composables, directives, options, or utils:
   - `references/50-plugins-composables-directives-options-utils.md`
   - `references/51-directive-usage-atlas.md` when exact directive behavior or snippet shape matters
+  - `references/52-api-usage-atlas.md` when exact plugin/composable/option/util behavior or snippet shape matters
 - A11y, performance, monorepo packaging, tree-shaking, or cross-cutting guardrails:
   - `references/60-guardrails-a11y-performance-monorepo.md`
 - Latest versions, migration risk, or skill maintenance:
@@ -82,6 +96,8 @@ Apply these even if the user only names one Quasar surface:
 
 - Any SSR, `preFetch`, router, store, boot, middleware, SEO, QNoSsr, or auth task:
   - Also load `references/20-ssr-pwa-and-security.md`.
+- Any custom service worker or InjectManifest task:
+  - Also load `references/21-pwa-injectmanifest-guard.md`.
 - Any platform-mode task:
   - Read `references/10-cli-vite-and-config.md` and `references/30-platform-modes.md` together.
 - Any component that handles data grids, virtualization, uploads, media, dialogs, menus, responsive layout, or browser APIs:
@@ -103,8 +119,14 @@ When searching inside this skill pack:
   - `references/11-cli-cookbook-and-examples.md`
 - If the symbol is a component or layout primitive, also open:
   - `references/41-component-usage-atlas.md`
+- If the symbol is specifically about layout shells, drawers, `view`, or page containers, also open:
+  - `references/42-layout-patterns-and-examples.md`
+- If the symbol is specifically about `QImg`, placeholders, responsive image candidates, or deterministic image delivery, also open:
+  - `references/43-image-delivery-and-placeholders.md`
 - If the symbol is a directive, also open:
   - `references/51-directive-usage-atlas.md`
+- If the symbol is a plugin, composable, option, or util, also open:
+  - `references/52-api-usage-atlas.md`
 - Then search task phrases:
   - `boot files`, `ssrContext`, `InjectManifest`, `BEX Bridge`, `envFolder`, `envFiles`
 - If the user mentions an old skill name, search `references/80-legacy-skill-coverage.md`

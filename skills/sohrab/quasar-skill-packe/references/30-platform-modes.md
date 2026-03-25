@@ -31,6 +31,7 @@ From the Quasar CLI with Vite upgrade guide:
 - Treat BEX as a multi-surface app, not a normal SPA with one extra file.
 - Treat Electron tasks as both frontend and desktop-security tasks.
 - Treat SSR + PWA together as a special case because HTML caching and hydration risk interact.
+- If the repo is Yarn-based, prefer Yarn-wrapped project scripts for mode-specific dev/build flows instead of switching package managers because upstream also supports Bun.
 
 ## Easy-to-miss relationships
 

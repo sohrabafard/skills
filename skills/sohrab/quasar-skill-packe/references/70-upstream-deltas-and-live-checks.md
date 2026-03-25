@@ -21,6 +21,19 @@ npm view vue-router version
 npm view workbox-build version
 ```
 
+In a Yarn-based repo, these registry lookups can also be done with Yarn if you want the command style to stay aligned with the project:
+
+```bash
+yarn info quasar version
+yarn info @quasar/app-vite version
+yarn info vite version
+yarn info vue version
+yarn info vue-router version
+yarn info workbox-build version
+```
+
+The refresh script remains the preferred option because it is package-manager-neutral and produces a stable summary.
+
 ## Live snapshot captured on March 25, 2026
 
 From the npm registry:
@@ -80,6 +93,12 @@ From the March 25, 2026 OpenAI docs/cookbook review:
 - The Codex Prompting Guide recommends `rg`, tool preference over raw shell when possible, parallel reads, autonomy, and bias to action.
 - The same guide explicitly says not to force upfront plans, preambles, or status chatter into the base harness prompt.
 - OpenAI's Codex guidance now explicitly notes improved behavior on Windows and PowerShell.
+
+## Package-manager guidance for this skill
+
+- Quasar supporting Bun does not mean a Yarn repo should switch to Bun.
+- If a project uses Yarn workspaces or contains `yarn.lock`, prefer Yarn for installs and scripts.
+- Use registry-inspection commands only for version discovery; do not infer the repo's package-manager contract from them.
 
 ## Helpful doc endpoints
 

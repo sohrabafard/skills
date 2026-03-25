@@ -3,6 +3,8 @@
 Use this file when the task names a Quasar component, a layout primitive, or a UI family.
 
 For exact “how do I use this component?” guidance, pair this file with `41-component-usage-atlas.md`.
+For exact layout-shell semantics, pair this file with `42-layout-patterns-and-examples.md`.
+For deterministic `QImg` delivery patterns, pair this file with `43-image-delivery-and-placeholders.md`.
 
 ## Search strategy
 
@@ -60,6 +62,7 @@ Also load:
 
 - `20-ssr-pwa-and-security.md`
 - `60-guardrails-a11y-performance-monorepo.md`
+- `43-image-delivery-and-placeholders.md` when the task is about placeholder, ratio, or responsive candidate generation
 
 ### Feedback and state indicators
 
@@ -80,6 +83,7 @@ Also load:
 
 - `10-cli-vite-and-config.md`
 - `20-ssr-pwa-and-security.md` for SSR routes
+- `42-layout-patterns-and-examples.md`
 
 ## Easy-to-miss relationships
 

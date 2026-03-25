@@ -13,6 +13,11 @@ The model usually understands Vite, Vue Router, and app bootstrap concepts. It i
 - boot-file registration, redirect behavior, or Vite extension points need exact syntax
 - a bad example would create SSR drift, broken startup order, or hard-to-debug config mistakes
 
+## Project command rule
+
+- If the repo is Yarn-based or contains `yarn.lock`, prefer Yarn for project commands and script execution.
+- Keep the examples in this file API-shaped rather than package-manager-shaped unless command syntax is the point of the example.
+
 ## High-value playbooks
 
 ### `quasar.config` base shape
@@ -138,6 +143,14 @@ const routes = [
 
 - Good search terms:
   - `routing with layouts and pages`, `router-view`, `children routes`, `layout route shell`
+
+### Yarn-first project workflow
+
+- In Quasar repos that use Yarn, prefer existing Yarn scripts for dev, build, and test flows instead of improvising with another package manager.
+- Use raw `quasar ...` commands only when the repo intentionally calls the CLI directly or the user explicitly wants that form.
+
+- Good search terms:
+  - `yarn.lock`, `yarn workspace`, `yarn dev`, `yarn build`, `quasar command through yarn`
 
 ## What usually does NOT need examples
 

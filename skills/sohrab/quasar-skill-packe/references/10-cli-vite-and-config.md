@@ -30,6 +30,8 @@ From the Quasar CLI with Vite upgrade guide and handling docs:
 
 ## Default rules
 
+- Treat package manager choice as a repository contract. If the repo uses Yarn workspaces or contains `yarn.lock`, prefer Yarn for installs and script execution.
+- Upstream Bun support is useful to know about, but it is not a reason to switch an existing Yarn repo.
 - Prefer `defineConfig(ctx => ({ ... }))` and use `ctx.mode.*`, `ctx.dev`, and `ctx.prod` instead of scattering duplicated config branches.
 - Prefer returning an object from `extendViteConf` when you can; mutate only when a plugin truly requires it.
 - When adding aliases, use Quasar's `build.alias` or merge into `viteConf.resolve.alias` without replacing existing aliases.

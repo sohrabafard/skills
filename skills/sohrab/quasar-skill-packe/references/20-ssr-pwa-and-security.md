@@ -2,6 +2,8 @@
 
 Use this file for universal rendering, hydration parity, SSR middleware, SEO, service worker behavior, and server-side auth flows.
 
+For exact InjectManifest guardrails, change boundaries, and update/offline verification structure, pair this file with `21-pwa-injectmanifest-guard.md`.
+
 ## Covers
 
 - SSR setup and runtime behavior
@@ -25,6 +27,7 @@ Use this file for universal rendering, hydration parity, SSR middleware, SEO, se
 - Do not serialize sensitive tokens into HTML or expose them to client JavaScript.
 - When a Quasar SSR app reads auth cookies and forwards them to backend APIs, that translation belongs in server-only code.
 - Any env variable, proxy, or auth header task should cross-check the config/build rules from `10-cli-vite-and-config.md`.
+- Treat `*-html` props, `QEditor`, upload surfaces, and custom slot rendering as content-safety boundaries, not just UI details.
 
 ## PWA rules
 
@@ -49,7 +52,7 @@ For `InjectManifest`, keep these habits:
 ## Common "also load" cases
 
 - Any service worker or PWA config change:
-  - also read `70-upstream-deltas-and-live-checks.md`
+  - also read `21-pwa-injectmanifest-guard.md` and `70-upstream-deltas-and-live-checks.md`
 - Any SSR UI issue:
   - also read `60-guardrails-a11y-performance-monorepo.md`
 - Any component depending on browser APIs:
