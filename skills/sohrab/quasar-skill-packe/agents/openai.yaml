@@ -1,0 +1,5 @@
+interface:
+  display_name: "Quasar Skill Packe"
+  short_description: "Route Quasar CLI, Vite, SSR/PWA, and component tasks"
+  brand_color: "#16a34a"
+  default_prompt: "Use $quasar-skill-packe to route a Quasar CLI/Vite, SSR/PWA, mode, or component task to the right references, then apply the minimal safe fix with live version checks when needed."
