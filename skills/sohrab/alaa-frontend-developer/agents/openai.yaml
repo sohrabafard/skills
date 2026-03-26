@@ -1,8 +1,8 @@
 interface:
   display_name: "Alaa Frontend Developer"
-  short_description: "Unified Vue/Quasar/Vite frontend engineering"
+  short_description: "Unified Vue/Quasar/Vite frontend engineering for SSR, auth/session, API shaping, PWA, performance, and QA"
   brand_color: "#0f766e"
-  default_prompt: "Use $alaa-frontend-developer as the default frontend engineering skill for a Vue 3 + Quasar + Vite app, then load the smallest matching reference and pair with $quasar-skill-packe, $frontend-skill, or browser skills only when the task needs them."
+  default_prompt: "Use $alaa-frontend-developer as the default frontend engineering skill for a Vue 3 + Quasar + Vite app, load the smallest matching reference, and route SSR auth/session work to 21, API/data-shaping work to 45, and gateway trust work to $alaa-trust-gateway-auth only when needed."
 
 policy:
   allow_implicit_invocation: true

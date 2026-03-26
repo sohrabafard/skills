@@ -20,13 +20,17 @@ Use this file when the task spans more than one frontend surface and ownership i
   - Use for persistent iterative browser or Electron debugging with repeated reload and QA loops.
   - Pair when the debugging session is stateful or long-running.
 
-- `$api-designer`
-  - Use for request and response envelopes, pagination, filtering, sorting, cacheability, and backward-compatible API contract changes.
-  - Pair when frontend work depends on changing or formalizing backend contract shape.
+- `$alaa-trust-gateway-auth`
+  - Use for Ala gateway verification, trusted `X-*` headers, downstream auth context, refresh-cookie plus bearer-token flows, and tenant-context trust boundaries.
+  - Pair when the project sits behind the Ala gateway or when frontend auth changes depend on gateway behavior.
 
-- `$ssr-auth-guard`
-  - Use for cookie-to-header mapping, SSR auth fetch wrappers, login or logout flows, and token-leakage prevention.
-  - Pair when auth or protected-route behavior is in scope.
+- `$alaa-laravel-architecture`
+  - Use when a frontend contract change requires backend endpoint, envelope, validation, or authorization implementation changes in the Ala Laravel stack.
+  - Pair when the fix is no longer frontend-only.
+
+- `$alaa-data-layer`
+  - Use when the real problem is query shape, indexing, pagination cost, aggregate computation, or cache/DB trade-offs in the backend.
+  - Pair when frontend data-shaping advice turns into schema or query work.
 
 - `$devops-engineer`
   - Use for CI, Docker, reverse proxy, public path, remote assets, artifact locations, and deployment safety.
@@ -43,6 +47,15 @@ Use this file when the task spans more than one frontend surface and ownership i
 - `$openai-docs`
   - Use for authoritative current OpenAI or Codex docs, examples, models, prompt rules, or skill-authoring guidance.
   - Pair when the task includes OpenAI-specific product facts or latest-official guidance.
+
+## Ownership notes
+
+- This skill now owns generic frontend-facing SSR auth/session guidance, including:
+  - BFF vs token-mediating backend vs browser-only flows
+  - in-memory vs persistent token storage trade-offs
+  - refresh orchestration and token-leakage anti-patterns
+  - frontend-facing API envelopes, pagination, sparse payloads, cache validators, and UI-driven N+1 prevention
+- When the work crosses from frontend policy into backend implementation, pair with the backend repo's architecture or data-layer skill instead of reviving deleted local frontend-only helper skills.
 
 ## Conflict resolution
 

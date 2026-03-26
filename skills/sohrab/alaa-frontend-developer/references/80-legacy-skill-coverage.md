@@ -30,6 +30,21 @@ This pack replaces the previous frontend skill cluster and folds the high-value 
   - Primary coverage:
     - `40-performance-and-realtime.md`
 
+- `ssr-auth-guard`
+  - Primary coverage:
+    - `21-ssr-auth-and-session-patterns.md`
+    - `20-vue-js-ssr-patterns.md`
+
+- `api-designer`
+  - Primary coverage:
+    - `45-api-and-data-shaping.md`
+    - `10-contract-and-boundaries.md`
+
+- `database-optimizer`
+  - Primary coverage:
+    - `45-api-and-data-shaping.md`
+    - `40-performance-and-realtime.md`
+
 - `verify-runbook`
   - Primary coverage:
     - `50-qa-and-verification.md`
@@ -65,12 +80,21 @@ This pack replaces the previous frontend skill cluster and folds the high-value 
 If a task mentions old terms such as:
 
 - `hydration mismatch`
+- `BFF`
+- `token-mediating backend`
+- `silent refresh`
+- `localStorage`
 - `offline fallback`
 - `SKIP_WAITING`
 - `fonts-runtime`
 - `deep watch`
 - `AbortController`
 - `WebSocket reconnect`
+- `problem details`
+- `ETag`
+- `If-None-Match`
+- `sparse fields`
+- `N+1`
 - `verification runbook`
 
 route to the new reference file instead of trying to resurrect the deleted local skill.

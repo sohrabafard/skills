@@ -40,17 +40,32 @@ This file defines the default contract for the standard app family that uses Vue
 5. Make the smallest safe change.
 6. Run the lightest meaningful verification or write a concrete manual verification plan.
 
-## SSR auth boundary
+## SSR auth and session boundary
 
-Default app-family assumption:
+Do not assume one auth model across every app.
 
-- Access tokens live in HttpOnly cookies at the SSR layer.
-- When the server-side frontend calls backend APIs, it maps the cookie token to:
-  - `Authorization: Bearer <token>`
-- That mapping stays server-side only.
-- Do not expose tokens to client JavaScript, serialized HTML, or initial state.
+Before changing auth, protected-route, or SSR data-fetch behavior, inspect:
 
-If the repo uses a different auth contract, repo-local rules override this default.
+- login and logout flows
+- refresh endpoint shape
+- fetch wrappers and boot files
+- token storage and rotation behavior
+- whether the app talks directly to APIs, through a BFF, or through a trusted gateway
+
+Common supported patterns in this skill pack:
+
+- BFF or proxying backend-for-frontend with cookie-backed session
+- token-mediating backend that stores refresh capability server-side and returns short-lived access tokens to the browser
+- server-only cookie-to-Authorization bridge for SSR requests
+- gateway-backed bearer flow where the browser sends an access token and the gateway injects trusted downstream headers
+- browser-only OAuth public client with Authorization Code + PKCE when the repo truly uses that model
+
+Safe default boundary:
+
+- keep secrets and refresh capability out of SSR HTML and initial state
+- prefer server-side sessions or BFF/token-mediating patterns when available
+- if the browser must hold an access token, prefer in-memory storage over persistent browser storage
+- route exact auth/storage decisions through `21-ssr-auth-and-session-patterns.md`
 
 ## Browser automation boundary
 
@@ -84,7 +99,11 @@ Default app-family deployment contract:
   - Pair with `$devops-engineer`
 - `packages/*` boundaries, asset emission, or externalization:
   - Pair with `$monorepo-packages-contract-guard`
-- API envelope or pagination/filtering design:
-  - Pair with `$api-designer`
-- SSR auth boundary or cookie/header flows:
-  - Pair with `$ssr-auth-guard`
+- SSR auth, token storage, refresh, BFF, or session decisions:
+  - Also load `21-ssr-auth-and-session-patterns.md`
+- Frontend-facing API envelopes, pagination, filter/sort, cache validators, or sparse payload design:
+  - Also load `45-api-and-data-shaping.md`
+- Ala gateway verification, trusted headers, or downstream auth context:
+  - Pair with `$alaa-trust-gateway-auth`
+- Ala backend API implementation or data-shape fixes:
+  - Pair with `$alaa-laravel-architecture` or `$alaa-data-layer` when the frontend issue crosses into server work

@@ -9,12 +9,12 @@ Use this file when:
 
 ## Live package snapshot
 
-Captured on March 25, 2026:
+Captured on March 26, 2026:
 
 - `vue` -> `3.5.31`
 - `quasar` -> `2.19.1`
 - `@quasar/app-vite` -> `2.5.4`
-- `vite` -> `8.0.2`
+- `vite` -> `8.0.3`
 - `workbox-build` -> `7.4.0`
 
 Refresh before version-sensitive work:
@@ -25,7 +25,7 @@ node scripts/check-upstream-versions.mjs
 
 ## OpenAI and Codex maintenance rules
 
-Based on the official OpenAI docs and Codex docs reviewed on March 25, 2026:
+Based on the official OpenAI docs and Codex docs reviewed on March 26, 2026:
 
 - Agent Skills use progressive disclosure:
   - Codex starts from skill metadata and only loads full instructions when the skill is chosen.
@@ -33,6 +33,8 @@ Based on the official OpenAI docs and Codex docs reviewed on March 25, 2026:
 - Keep `SKILL.md` focused and move detail into one-hop reference files.
 - `agents/openai.yaml` can add UI metadata and invocation policy.
 - For GPT-5.4 workloads, improve the prompt contract before simply raising reasoning effort.
+- The current models docs are the source of truth for latest model choice. When the user is unsure and the task is complex, code-heavy, or tool-heavy, re-check the latest models page before hard-coding a model recommendation.
+- For coding-specialized API use cases, re-check the current GPT-5 Codex model page before suggesting a codex-family API model.
 - The highest-leverage GPT-5.4 additions for agentic workflows are:
   - explicit completeness rules
   - verification loop
@@ -84,8 +86,10 @@ When updating this skill:
   - [https://developers.openai.com/codex/skills](https://developers.openai.com/codex/skills)
 - Prompt guidance for GPT-5.4:
   - [https://developers.openai.com/api/docs/guides/prompt-guidance](https://developers.openai.com/api/docs/guides/prompt-guidance)
-- GPT-5.4 model guide:
-  - [https://developers.openai.com/api/docs/guides/latest-model](https://developers.openai.com/api/docs/guides/latest-model)
+- Models overview:
+  - [https://developers.openai.com/api/docs/models](https://developers.openai.com/api/docs/models)
+- GPT-5 Codex model page:
+  - [https://developers.openai.com/api/docs/models/gpt-5-codex](https://developers.openai.com/api/docs/models/gpt-5-codex)
 - Codex Prompting Guide:
   - [https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide](https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide)
 - Codex app and CLI docs:

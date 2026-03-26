@@ -52,6 +52,51 @@ Anything created in `onMounted()` needs cleanup in `onBeforeUnmount()`:
 - If a repo uses Quasar `preFetch`, server boot files, or another SSR bootstrap pattern, stay aligned with that path.
 - Keep server-side auth mapping server-side only.
 
+## SSR-safe patterns
+
+Pattern: request-scoped async work with cleanup
+
+```js
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+
+export function useClientResource(load) {
+  const state = ref({ loading: false, data: null, error: null })
+  let controller
+
+  onMounted(async () => {
+    controller = new AbortController()
+    state.value = { ...state.value, loading: true, error: null }
+
+    try {
+      const data = await load({ signal: controller.signal })
+      state.value = { loading: false, data, error: null }
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        state.value = { loading: false, data: null, error }
+      }
+    }
+  })
+
+  onBeforeUnmount(() => controller?.abort())
+
+  return state
+}
+```
+
+Pattern: deterministic SSR shell plus client-only enhancement
+
+- Render stable SSR markup first.
+- Attach viewport observers, sockets, media queries, and browser storage only after mount.
+- Reuse SSR-fetched data instead of immediately refetching on first paint.
+
+## Anti-patterns
+
+- Reading `localStorage`, `sessionStorage`, or `matchMedia` in `setup()` for a component that renders on the server
+- Creating sockets, SSE clients, or timers at module scope
+- Generating SSR keys from `Date.now()`, `Math.random()`, or unstable object references
+- Starting a new fetch on every reactive change without aborting the previous one
+- Using inline object literals in hot templates when they force unnecessary child rerenders
+
 ## JavaScript module hygiene
 
 - Prefer small pure functions with explicit inputs and outputs.
@@ -92,7 +137,7 @@ For documentation-only changes, pair with `$inline-doc-writer`.
 
 - Exact Quasar SSR APIs, boot files, `useMeta`, or `useHydration`:
   - Pair with `$quasar-skill-packe`
-- SSR auth propagation:
-  - Pair with `$ssr-auth-guard`
+- SSR auth propagation, token storage, refresh, or protected-route decisions:
+  - Also load `21-ssr-auth-and-session-patterns.md`
 - Realtime lifecycle:
   - Also load `40-performance-and-realtime.md`
