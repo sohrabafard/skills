@@ -1,0 +1,7 @@
+interface:
+  display_name: "Bash Script Validator"
+  short_description: "Validate bash and shell scripts"
+  default_prompt: "Use $bash-script-validator to follow its workflow for validate bash and shell scripts."
+
+policy:
+  allow_implicit_invocation: false

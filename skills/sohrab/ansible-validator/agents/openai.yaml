@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ansible Validator"
+  short_description: "Validate Ansible automation"
+  default_prompt: "Use $ansible-validator to follow its workflow for validate ansible automation."
+
+policy:
+  allow_implicit_invocation: false

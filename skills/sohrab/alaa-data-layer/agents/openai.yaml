@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Data Layer"
+  short_description: "Postgres and Redis data design"
+  default_prompt: "Use $alaa-data-layer to follow its workflow for postgres and redis data design."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Fluentbit Validator"
+  short_description: "Validate Fluent Bit configs"
+  default_prompt: "Use $fluentbit-validator to follow its workflow for validate fluent bit configs."
+
+policy:
+  allow_implicit_invocation: false

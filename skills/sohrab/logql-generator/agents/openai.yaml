@@ -1,0 +1,7 @@
+interface:
+  display_name: "Logql Generator"
+  short_description: "Generate LogQL queries"
+  default_prompt: "Use $logql-generator to follow its workflow for generate logql queries."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Octane Performance"
+  short_description: "Octane-safe Laravel performance work"
+  default_prompt: "Use $alaa-octane-performance to follow its workflow for octane-safe laravel performance work."
+
+policy:
+  allow_implicit_invocation: true

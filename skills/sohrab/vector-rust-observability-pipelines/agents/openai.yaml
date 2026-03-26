@@ -1,9 +1,7 @@
-
 interface:
-  display_name: "Vector Pipelines (Rust-based)"
-  short_description: "Topology design, VRL, acks, buffers, sink tuning, tests, and runbooks for Vector"
-  brand_color: "#8B5CF6"
-  default_prompt: "Use this skill to design or troubleshoot a Vector topology with config, VRL, validation commands, and operational runbooks."
+  display_name: "Vector Rust Pipelines"
+  short_description: "Vector observability pipeline patterns"
+  default_prompt: "Use $vector-rust-observability-pipelines to follow its workflow for vector observability pipeline patterns."
 
 policy:
   allow_implicit_invocation: false

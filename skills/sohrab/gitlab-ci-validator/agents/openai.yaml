@@ -1,0 +1,7 @@
+interface:
+  display_name: "Gitlab CI Validator"
+  short_description: "Validate GitLab CI pipelines"
+  default_prompt: "Use $gitlab-ci-validator to follow its workflow for validate gitlab ci pipelines."
+
+policy:
+  allow_implicit_invocation: false

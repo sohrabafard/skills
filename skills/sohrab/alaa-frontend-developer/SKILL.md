@@ -68,9 +68,9 @@ Also load companion skills when needed:
 - visual ambition or art direction -> `$frontend-skill`
 - explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
-- CI, Docker, artifact, or deployment contract risks -> `$devops-engineer`
-- package boundary or asset emission risks -> `$monorepo-packages-contract-guard`
-- documentation-only annotation pass -> `$inline-doc-writer`
+- CI, Docker, artifact, or deployment contract risks -> `$alaa-frontend-devops`
+- package boundary or asset emission risks -> `$alaa-mono-package`
+- documentation-only annotation pass -> `$alaa-frontend-doc-annotations`
 - OpenAI or Codex docs, examples, or maintenance guidance -> `$openai-docs`
 
 ## Routing map
@@ -112,7 +112,7 @@ Apply these even when the user names only one surface:
   - If Quasar config or InjectManifest shape matters, pair with `$quasar-skill-packe`.
 - Any package, asset, dist-output, or missing-chunk task:
   - Also load `references/10-contract-and-boundaries.md`.
-  - Pair with `$monorepo-packages-contract-guard` when `packages/*` or package outputs are involved.
+  - Pair with `$alaa-mono-package` when `packages/*` or package outputs are involved.
 - Any API contract, pagination, filter, sort, sparse-field, or cache-validator task:
   - Also load `references/45-api-and-data-shaping.md`.
 - Any UI change that appears "frontend-only" but is really caused by backend query shape, count cost, or missing aggregation:

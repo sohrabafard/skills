@@ -1,0 +1,7 @@
+interface:
+  display_name: "Makefile Generator"
+  short_description: "Generate Makefiles"
+  default_prompt: "Use $makefile-generator to follow its workflow for generate makefiles."
+
+policy:
+  allow_implicit_invocation: false

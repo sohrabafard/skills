@@ -114,7 +114,7 @@ For public composables, utilities, or modules that cross file boundaries, prefer
 - usage shape
 - constraints or trade-offs
 
-For documentation-only changes, pair with `$inline-doc-writer`.
+For documentation-only changes, pair with `$alaa-frontend-doc-annotations`.
 
 ## Modern Vue guidance
 

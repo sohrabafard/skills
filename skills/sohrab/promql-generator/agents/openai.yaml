@@ -1,0 +1,7 @@
+interface:
+  display_name: "Promql Generator"
+  short_description: "Generate PromQL queries"
+  default_prompt: "Use $promql-generator to follow its workflow for generate promql queries."
+
+policy:
+  allow_implicit_invocation: false

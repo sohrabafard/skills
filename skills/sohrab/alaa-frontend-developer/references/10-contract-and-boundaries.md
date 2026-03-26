@@ -96,9 +96,9 @@ Default app-family deployment contract:
 - Exact Quasar config, component, or platform behavior:
   - Pair with `$quasar-skill-packe`
 - CI, Docker, proxy, or deploy-artifact issues:
-  - Pair with `$devops-engineer`
+  - Pair with `$alaa-frontend-devops`
 - `packages/*` boundaries, asset emission, or externalization:
-  - Pair with `$monorepo-packages-contract-guard`
+  - Pair with `$alaa-mono-package`
 - SSR auth, token storage, refresh, BFF, or session decisions:
   - Also load `21-ssr-auth-and-session-patterns.md`
 - Frontend-facing API envelopes, pagination, filter/sort, cache validators, or sparse payload design:
@@ -107,3 +107,5 @@ Default app-family deployment contract:
   - Pair with `$alaa-trust-gateway-auth`
 - Ala backend API implementation or data-shape fixes:
   - Pair with `$alaa-laravel-architecture` or `$alaa-data-layer` when the frontend issue crosses into server work
+- Documentation-only JSDoc and inline annotation passes:
+  - Pair with `$alaa-frontend-doc-annotations`

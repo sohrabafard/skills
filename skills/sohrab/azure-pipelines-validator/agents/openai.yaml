@@ -1,0 +1,7 @@
+interface:
+  display_name: "Azure Pipelines Validator"
+  short_description: "Validate Azure Pipelines YAML"
+  default_prompt: "Use $azure-pipelines-validator to follow its workflow for validate azure pipelines yaml."
+
+policy:
+  allow_implicit_invocation: false

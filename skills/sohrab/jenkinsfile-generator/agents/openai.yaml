@@ -1,0 +1,7 @@
+interface:
+  display_name: "Jenkinsfile Generator"
+  short_description: "Generate Jenkins pipelines"
+  default_prompt: "Use $jenkinsfile-generator to follow its workflow for generate jenkins pipelines."
+
+policy:
+  allow_implicit_invocation: false

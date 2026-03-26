@@ -1,0 +1,7 @@
+interface:
+  display_name: "Azure Pipelines Generator"
+  short_description: "Generate Azure Pipelines YAML"
+  default_prompt: "Use $azure-pipelines-generator to follow its workflow for generate azure pipelines yaml."
+
+policy:
+  allow_implicit_invocation: false

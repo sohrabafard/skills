@@ -32,15 +32,15 @@ Use this file when the task spans more than one frontend surface and ownership i
   - Use when the real problem is query shape, indexing, pagination cost, aggregate computation, or cache/DB trade-offs in the backend.
   - Pair when frontend data-shaping advice turns into schema or query work.
 
-- `$devops-engineer`
+- `$alaa-frontend-devops`
   - Use for CI, Docker, reverse proxy, public path, remote assets, artifact locations, and deployment safety.
   - Pair when the frontend change can affect build or deployment contracts.
 
-- `$monorepo-packages-contract-guard`
+- `$alaa-mono-package`
   - Use for `packages/*` consumption, dist-only package rules, asset emission, and `peerDependencies` externalization.
   - Pair when workspace package boundaries or package-built assets are involved.
 
-- `$inline-doc-writer`
+- `$alaa-frontend-doc-annotations`
   - Use for documentation-only JSDoc and inline-comment passes.
   - Do not use it for logic changes.
 

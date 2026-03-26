@@ -1,0 +1,7 @@
+interface:
+  display_name: "Terraform Generator"
+  short_description: "Generate Terraform IaC"
+  default_prompt: "Use $terraform-generator to follow its workflow for generate terraform iac."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,10 +1,7 @@
 interface:
-  display_name: "Arvan CaaS Kubernetes/Helm/DevOps"
-  short_description: "Single-source Arvan CaaS skill with OpenAPI/RBAC facts, Helm/K8s workflows, and companion-skill orchestration."
-  brand_color: "#0ea5e9"
-  default_prompt: "Use $caas-arvan-kuber as the single source for Arvan CaaS. Start from ../references/arvan-caas-openAPI-1.25.json plus live discovery, apply namespace-scoped RBAC and secret safety, include alias/canonical namespace RBAC reasoning when relevant, and use internet search for latest official docs/troubleshooting when helpful. Orchestrate companion skills (helm/k8s/bash/ci validators) through Discovery -> Plan -> Implement -> Validate -> Deliver."
+  display_name: "Arvan CaaS Kubernetes"
+  short_description: "Arvan-first Kubernetes and Helm delivery"
+  default_prompt: "Use $caas-arvan-kuber to follow its workflow for arvan-first kubernetes and helm delivery."
+
 policy:
   allow_implicit_invocation: true
-# Optional: declare dependencies (MCP tools, etc.) if your environment supports them.
-# dependencies:
-#   tools: []

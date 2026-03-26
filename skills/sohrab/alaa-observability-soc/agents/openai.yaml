@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Observability SOC"
+  short_description: "Logs, traces, metrics, and Sentry"
+  default_prompt: "Use $alaa-observability-soc to follow its workflow for logs, traces, metrics, and sentry."
+
+policy:
+  allow_implicit_invocation: true

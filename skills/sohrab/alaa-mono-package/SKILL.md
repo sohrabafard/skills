@@ -1,0 +1,69 @@
+---
+name: alaa-mono-package
+description: "Portable workspace-package contract skill for frontend monorepos. Use when a task touches `packages/*`, dist-only consumption, peer dependency externalization, package asset emission, or missing browser assets caused by internal package boundaries."
+---
+
+# Alaa Mono Package
+
+## Purpose
+
+Use this skill to protect workspace package boundaries in frontend monorepos.
+
+This skill owns:
+
+- `packages/*` consumption rules
+- dist-only package entrypoints
+- peer dependency and dedupe expectations
+- package CSS and asset emission into the final browser build
+- verification of missing-chunk and missing-asset problems caused by package boundaries
+
+## When to use
+
+Use this skill when the task includes:
+
+- changes under `packages/*`
+- changes to how the root app consumes an internal package
+- package build output or entrypoint changes
+- package CSS, font, image, or asset emission
+- missing assets or missing chunks related to internal packages
+
+## When NOT to use
+
+Do not use this skill when:
+
+- the task is generic CI or deployment work with no package-boundary impact
+- the task is frontend logic only inside the root app
+- the repo does not use workspace packages
+
+## Quick start
+
+1. Read the repo-local `AGENTS.md`.
+2. Read `references/10-package-boundary-and-entrypoints.md`.
+3. Load only the smallest additional reference file needed for the issue.
+4. Validate with a real build output check instead of trusting config alone.
+
+## Companion routing
+
+- Frontend implementation policy:
+  - pair with `$alaa-frontend-developer`
+- Build, artifact, or deployment contract issues:
+  - pair with `$alaa-frontend-devops`
+- Quasar config or Vite bundling behavior:
+  - pair with `$quasar-skill-packe`
+
+## Reference navigation
+
+- Package boundaries, entrypoints, and dist-only consumption:
+  - `references/10-package-boundary-and-entrypoints.md`
+- Peer dependencies, dedupe, and package build output:
+  - `references/20-peer-deps-dedupe-and-build-output.md`
+- CSS, asset emission, and final browser asset placement:
+  - `references/30-assets-css-and-ssr-client-assets.md`
+- Audit steps and validation loop:
+  - `references/40-audit-and-verification.md`
+
+## Maintenance rules
+
+- Keep this skill about package contracts, not generic frontend logic.
+- Keep examples portable across monorepos.
+- Re-check bundler and package-manager guidance before changing the dependency rules in this skill.

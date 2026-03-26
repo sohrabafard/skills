@@ -1,0 +1,7 @@
+interface:
+  display_name: "HAProxy 3.2"
+  short_description: "HAProxy 3.2 operations and config patterns"
+  default_prompt: "Use $haproxy-3.2-skill to follow its workflow for haproxy 3.2 operations and config patterns."
+
+policy:
+  allow_implicit_invocation: true

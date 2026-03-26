@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Frontend DevOps"
+  short_description: "Frontend CI, Docker, and artifact safety"
+  default_prompt: "Use $alaa-frontend-devops to follow its workflow for frontend ci, docker, and artifact safety."
+
+policy:
+  allow_implicit_invocation: true

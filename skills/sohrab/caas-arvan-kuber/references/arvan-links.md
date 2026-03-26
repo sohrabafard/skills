@@ -6,9 +6,9 @@ Last verification snapshot: **2026-02-15**
 
 ## Primary machine-readable source
 
-- Local Arvan CaaS OpenAPI spec: `references/arvan-caas-openAPI-1.25.json`
-- Derived matrix: `references/openapi-1.25-capability-matrix.md`
-- RBAC namespace identity facts: `references/arvan-rbac-namespace-facts.md`
+- Local Arvan CaaS OpenAPI spec: `./arvan-caas-openAPI-1.25.json`
+- Derived matrix: `./openapi-1.25-capability-matrix.md`
+- RBAC namespace identity facts: `./arvan-rbac-namespace-facts.md`
 
 Use the OpenAPI file + live discovery as runtime authority; use links below for operational docs.
 

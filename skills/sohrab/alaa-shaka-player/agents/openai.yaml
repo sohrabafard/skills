@@ -1,8 +1,7 @@
 interface:
   display_name: "Alaa Shaka Player"
-  short_description: "Build or migrate a modular Shaka Player stack for Vue + Quasar + Vite with release-aware guidance, headless validation, and visual QA routing."
-  brand_color: "#2563EB"
-  default_prompt: "Use this skill to design, review, or implement a modular Shaka Player integration for Vue 3 + Quasar + Vite, verify the current Shaka release before pinning, and choose headless or visual QA based on the task."
+  short_description: "Quasar Shaka player implementation pack"
+  default_prompt: "Use $alaa-shaka-player to follow its workflow for quasar shaka player implementation pack."
 
 policy:
   allow_implicit_invocation: true

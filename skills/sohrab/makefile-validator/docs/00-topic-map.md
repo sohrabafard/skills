@@ -1,0 +1,100 @@
+# Makefile Validator Topic Map
+
+Use this file to choose the smallest relevant section in `./full-guide.md`.
+
+## Covered sections
+
+- `# Makefile Validator`
+- `## Overview`
+- `## When to Use This Skill`
+- `## Validation Capabilities`
+- `### 1. Critical Best Practices`
+- `### 2. Syntax Validation`
+- `### 3. mbake Integration`
+- `### 4. Format Checking`
+- `### 5. Security Checks`
+- `### 6. Best Practices`
+- `### 7. Optimization Opportunities`
+- `## Quick Start`
+- `### Basic Validation`
+- `# Validate a Makefile`
+- `# The validator will:`
+- `# 1. Check dependencies (python3, pip3, make)`
+- `# 2. Create isolated venv and install mbake`
+- `# 3. Run syntax validation with GNU make`
+- `# 4. Run mbake validation`
+- `# 5. Check formatting consistency`
+- `# 6. Perform custom security/best practice checks`
+- `# 7. Auto-cleanup venv on exit`
+- `# 8. Generate detailed report`
+- `### Example Output`
+- `## Usage in Claude Code`
+- `### Example Workflow`
+- `## Comprehensive Documentation`
+- `### Core References`
+- `#### best-practices.md`
+- `#### common-mistakes.md`
+- `#### bake-tool.md`
+- `## Validation Script Features`
+- `### Automatic venv Isolation`
+- `### Trap-Based Cleanup`
+- `### Multi-Layer Validation`
+- `### Exit Codes`
+- `## Installation Requirements`
+- `### Required`
+- `### Optional (Recommended)`
+- `### Automatic Installation`
+- `## Common Validation Scenarios`
+- `### Scenario 1: Pre-commit Validation`
+- `# Validate Makefile before committing`
+- `# Fix any errors found`
+- `# Re-validate until clean`
+- `### Scenario 2: Formatting Consistency`
+- `# Check formatting`
+- `# Preview formatting changes`
+- `# Apply formatting`
+- `# Re-validate`
+- `### Scenario 3: Security Audit`
+- `### Scenario 4: Build Optimization`
+- `### Scenario 5: Converting Legacy Makefiles`
+- `# 1. Validate current Makefile`
+- `# 2. Fix critical errors (tabs, syntax)`
+- `# 3. Apply mbake formatting`
+- `# 4. Add .PHONY declarations`
+- `# 5. Re-validate`
+- `# 6. Reference best-practices.md for modernization`
+- `## Integration with Development Workflow`
+- `### Pre-commit Hook`
+- `#!/bin/bash`
+- `# .git/hooks/pre-commit`
+- `### CI/CD Integration`
+- `# GitHub Actions example`
+- `### Make Target for Self-Validation`
+- `## Learning Resources`
+- `## Best Practices`
+- `### For Makefile Authors`
+- `### For Reviewers`
+- `## Technical Details`
+- `### Directory Structure`
+- `### Validation Logic Flow`
+- `### Custom Check Categories`
+- `## Advanced Features`
+- `### mbake Configuration`
+- `### Format Disable Comments`
+- `# bake-format off`
+- `# bake-format on`
+- `### Selective Validation`
+- `# Validate specific Makefile`
+- `# Validate all .mk files`
+- `# Validate only in specific directories`
+- `## Known Limitations`
+- `### mbake Tool Limitations`
+- `## Resources`
+- `### Official Documentation`
+- `### Web Resources`
+- `### Internal References`
+
+## Working rule
+
+- Read only the sections you need from `./full-guide.md`.
+- Keep this topic map small and update it when major sections are added or renamed.

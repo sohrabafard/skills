@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa MongoDB Patterns"
+  short_description: "MongoDB schema and index patterns"
+  default_prompt: "Use $alaa-mongodb-patterns to follow its workflow for mongodb schema and index patterns."
+
+policy:
+  allow_implicit_invocation: true

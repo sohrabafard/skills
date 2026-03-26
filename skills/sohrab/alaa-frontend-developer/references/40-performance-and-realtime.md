@@ -95,6 +95,6 @@ Typical safe wins:
 - Quasar component/layout-specific performance issues:
   - Pair with `$quasar-skill-packe`
 - Package-output or asset-contract performance regressions:
-  - Pair with `$monorepo-packages-contract-guard`
+  - Pair with `$alaa-mono-package`
 - Formal verification plan:
   - Also load `50-qa-and-verification.md`

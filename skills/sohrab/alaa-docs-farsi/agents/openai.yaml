@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Docs Farsi"
+  short_description: "Persian docs alignment and consistency"
+  default_prompt: "Use $alaa-docs-farsi to follow its workflow for persian docs alignment and consistency."
+
+policy:
+  allow_implicit_invocation: true

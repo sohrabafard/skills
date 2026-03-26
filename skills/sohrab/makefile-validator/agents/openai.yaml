@@ -1,0 +1,7 @@
+interface:
+  display_name: "Makefile Validator"
+  short_description: "Validate Makefiles"
+  default_prompt: "Use $makefile-validator to follow its workflow for validate makefiles."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Dockerfile Validator"
+  short_description: "Validate Dockerfiles"
+  default_prompt: "Use $dockerfile-validator to follow its workflow for validate dockerfiles."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Mono Package"
+  short_description: "Workspace package contracts for frontend monorepos"
+  default_prompt: "Use $alaa-mono-package to follow its workflow for workspace package contracts for frontend monorepos."
+
+policy:
+  allow_implicit_invocation: true

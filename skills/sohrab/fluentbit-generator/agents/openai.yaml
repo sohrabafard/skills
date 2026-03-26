@@ -1,0 +1,7 @@
+interface:
+  display_name: "Fluentbit Generator"
+  short_description: "Generate Fluent Bit configs"
+  default_prompt: "Use $fluentbit-generator to follow its workflow for generate fluent bit configs."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki Config Generator"
+  short_description: "Generate Loki server configs"
+  default_prompt: "Use $loki-config-generator to follow its workflow for generate loki server configs."
+
+policy:
+  allow_implicit_invocation: false

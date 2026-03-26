@@ -1,0 +1,7 @@
+interface:
+  display_name: "Terragrunt Generator"
+  short_description: "Generate Terragrunt stacks"
+  default_prompt: "Use $terragrunt-generator to follow its workflow for generate terragrunt stacks."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,4 +1,7 @@
 interface:
   display_name: "Alaa PHP Clean Code"
-  short_description: "Deterministic PHP/Laravel 13 clean refactors"
-  default_prompt: "Use $alaa-php-clean-code to write, review, refactor, or upgrade PHP/Laravel code against a PHP 8.5 + Laravel 13 baseline, with explicit task-mode selection, mandatory companion-skill routing, consistent naming, strong types, preserved public contracts by default, and Laravel 13 upgrade audits where relevant."
+  short_description: "Deterministic PHP and Laravel clean refactors"
+  default_prompt: "Use $alaa-php-clean-code to follow its workflow for deterministic php and laravel clean refactors."
+
+policy:
+  allow_implicit_invocation: true

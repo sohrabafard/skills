@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Security Review"
+  short_description: "Application security review and hardening"
+  default_prompt: "Use $alaa-security-review to follow its workflow for application security review and hardening."
+
+policy:
+  allow_implicit_invocation: true

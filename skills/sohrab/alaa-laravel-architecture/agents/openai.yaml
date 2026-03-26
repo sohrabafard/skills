@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Laravel Architecture"
+  short_description: "Laravel layering and API contracts"
+  default_prompt: "Use $alaa-laravel-architecture to follow its workflow for laravel layering and api contracts."
+
+policy:
+  allow_implicit_invocation: true

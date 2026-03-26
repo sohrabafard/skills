@@ -1,0 +1,7 @@
+interface:
+  display_name: "Github Actions Validator"
+  short_description: "Validate GitHub Actions workflows"
+  default_prompt: "Use $github-actions-validator to follow its workflow for validate github actions workflows."
+
+policy:
+  allow_implicit_invocation: false

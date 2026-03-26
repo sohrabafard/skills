@@ -1,8 +1,7 @@
 interface:
   display_name: "Alaa Low Noise"
-  short_description: "Context-safe Codex execution with compact output and diff-preserving repo-local state"
-  brand_color: "#0f766e"
-  default_prompt: "Use $alaa-low-noise to keep Codex CLI/App work complete but low-noise: search first, read bounded excerpts, summarize instead of dumping, externalize bulky transient state to repo-local files when useful, and preserve normal Git diffs and Codex app review visibility."
+  short_description: "Context-safe Codex execution with compact output"
+  default_prompt: "Use $alaa-low-noise to follow its workflow for context-safe codex execution with compact output."
 
 policy:
   allow_implicit_invocation: false

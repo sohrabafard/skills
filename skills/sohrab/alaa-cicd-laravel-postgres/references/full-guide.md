@@ -1,0 +1,94 @@
+# Purpose
+Make CI fast, reliable, and aligned with how the service runs in production.
+
+Default Laravel baseline in this skill pack:
+- Laravel 13
+- PHP 8.5
+
+# When to use
+- Editing GitHub Actions or GitLab CI configs
+- Changing DB services, migrations, or test DB setup
+- Updating build/test stages, caching, or artifacts
+- Adjusting Docker build usage in CI
+- CI failures or flakiness related to Postgres/migrations
+
+# When NOT to use
+- Local dev setup only
+- Documentation-only changes
+- Feature work without CI impact
+
+# Determinism rules (mandatory)
+- Pin service container images (especially Postgres) to a specific major/minor (avoid floating tags).
+- Ensure `APP_ENV=test` and stable test configuration (explicit env vars; no magic CI-only behavior).
+- Fix timezone/locale assumptions:
+    - Prefer `TZ=UTC` in CI unless the repo explicitly requires a different timezone.
+- Key dependency caches by lockfile hash + runtime version (PHP/Composer/toolchain) to avoid stale or cross-version cache poisoning.
+- For upgrade work, move repo-pinned PHP, Composer, Node or package-manager versions, Docker images, CI matrices, and cache keys together. Do not bump `composer.json` alone and leave the toolchain split-brained.
+- When the repository targets Laravel 13, keep first-party upgrade versions coherent in CI and release automation:
+    - `laravel/framework` -> `^13.0`
+    - `laravel/boost` -> `^2.0` when installed
+    - `laravel/tinker` -> `^3.0` when installed
+    - `phpunit/phpunit` -> `^12.0` when installed
+    - `pestphp/pest` -> `^4.0` when installed
+- Avoid non-deterministic seeds and ordering:
+    - deterministic fixtures
+    - explicit ordering where required
+- Avoid external network calls in tests unless explicitly required (and documented).
+- If parallelism is enabled:
+    - isolate DB/schema per worker or per job to avoid race conditions.
+
+# Step-by-step workflow (deterministic)
+1) Identify pipeline files and current conventions
+    - Check `.github/workflows/*`, `.gitlab-ci.yml`, and docs
+    - Note PHP version, required extensions, Composer version, Node or package-manager version if present, and caching strategy
+2) Validate DB service configuration
+    - Use a Postgres service image that matches production major version (pin it)
+    - Add basic health checks and wait-for-db logic
+    - Confirm correct `DB_*` env and test database names
+3) Ensure test bootstrap is stable
+    - Run migrations before tests (e.g., `php artisan migrate --force`)
+    - Set `APP_KEY`, `APP_ENV=test`, and safe `CACHE/QUEUE` drivers
+    - Avoid parallel jobs racing on the same database unless isolated
+4) Keep CI fast and deterministic
+    - Cache Composer downloads safely (prefer dependency download cache, not vendor/ unless policy allows)
+    - Keep artifacts useful (failed migration output, test logs)
+5) Flaky-test controls (recommended)
+    - isolate time (TZ=UTC; control “now” in tests where needed)
+    - avoid relying on test order; ensure tests are independent
+    - avoid shared mutable state across tests
+
+# CI design rules (baseline)
+- Cache Composer dependencies safely.
+- Run: format/lint → static analysis → tests.
+- Use a Postgres service container; run migrations before tests.
+- Keep env vars explicit and documented (avoid magic CI-only behavior).
+- For Laravel 13 upgrade work, add at least one safe framework smoke check such as `php artisan about` after dependency install when the repository supports it.
+
+# Optional supply-chain artifacts (P2; only if requested or policy already exists)
+If your CI policy allows:
+- SBOM generation (dependencies and/or built image)
+- Vulnerability scanning of images/deps
+- Store SBOM/scan output as CI artifacts for later audit
+- Fail build only based on an explicit severity policy (do not invent policy)
+
+# When to stop and ask
+- If pipeline changes require credentials or registry tokens
+- If deployment steps would change production infrastructure
+- If CI failures are caused by external service outages
+- If asked to enforce “fail-on-vuln” without a defined policy
+
+# Output contract
+When applying this skill, output:
+1) Summary of pipeline changes + rationale
+2) Which CI stages were affected and why
+3) Exact commands executed in CI and expected outcomes
+4) Determinism/flaky-test notes (what you changed to reduce flakiness)
+5) Optional supply-chain artifacts (what to add if policy allows)
+6) Remaining CI risks or follow-up actions
+
+# Anti-patterns
+- CI using a different DB engine than production without explicit reason
+- Magic env vars not documented anywhere
+- Flaky tests due to unordered seed data or time dependencies
+- Using unpinned service images or floating tags (non-deterministic CI)
+- Failing builds on vulnerabilities without an agreed severity policy

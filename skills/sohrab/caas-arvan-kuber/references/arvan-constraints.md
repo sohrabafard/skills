@@ -2,8 +2,8 @@
 
 Use this file as a fast ruleset. For API and RBAC details, also read:
 
-- `references/openapi-1.25-capability-matrix.md`
-- `references/arvan-rbac-namespace-facts.md`
+- `./openapi-1.25-capability-matrix.md`
+- `./arvan-rbac-namespace-facts.md`
 
 ## Hard constraints (apply by default)
 
@@ -68,7 +68,7 @@ Treat these as unsupported unless live discovery proves otherwise:
 
 ## RBAC identity caution (alias vs canonical namespaces)
 
-Use facts from `references/arvan-rbac-namespace-facts.md` when RBAC symptoms are inconsistent:
+Use facts from `./arvan-rbac-namespace-facts.md` when RBAC symptoms are inconsistent:
 
 1) Explicitly state both namespace forms when visible:
 - alias namespace (`vk` style),

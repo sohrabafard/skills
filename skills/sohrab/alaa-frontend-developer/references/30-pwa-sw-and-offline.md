@@ -108,6 +108,6 @@ Every service-worker strategy change should include:
 - Exact Quasar PWA/InjectManifest wiring:
   - Pair with `$quasar-skill-packe`
 - Release and deployment artifact risk:
-  - Pair with `$devops-engineer`
+  - Pair with `$alaa-frontend-devops`
 - QA runbook formalization:
   - Also load `50-qa-and-verification.md`

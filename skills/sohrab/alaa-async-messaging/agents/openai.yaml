@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Async Messaging"
+  short_description: "Kafka and RabbitMQ async design"
+  default_prompt: "Use $alaa-async-messaging to follow its workflow for kafka and rabbitmq async design."
+
+policy:
+  allow_implicit_invocation: true

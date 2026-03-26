@@ -1,0 +1,7 @@
+interface:
+  display_name: "Terragrunt Validator"
+  short_description: "Validate Terragrunt stacks"
+  default_prompt: "Use $terragrunt-validator to follow its workflow for validate terragrunt stacks."
+
+policy:
+  allow_implicit_invocation: false

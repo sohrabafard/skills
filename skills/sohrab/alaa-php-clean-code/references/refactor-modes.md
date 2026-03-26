@@ -128,7 +128,7 @@ Make the whole repository internally consistent while preserving its local diale
 Make the whole repository look and behave like an Alaa-style Laravel codebase while preserving external contracts by default.
 
 ### Required behavior
-- Read `alaa-workflow`, `alaa-laravel-architecture`, and `references/consistency-and-naming.md` before broad renames or moves.
+- Read `alaa-workflow`, `alaa-laravel-architecture`, and `./consistency-and-naming.md` before broad renames or moves.
 - Use the architecture skill's canonical layer flow and naming where it applies.
 - Normalize duplicated concepts, generic helpers, manager classes, weak base repositories, raw-array boundaries, and inconsistent naming.
 - Prefer explicit DTO boundaries, constructor injection, small focused services, value objects for real concepts, and clear request/resource/policy edges.

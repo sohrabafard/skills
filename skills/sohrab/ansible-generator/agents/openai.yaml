@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ansible Generator"
+  short_description: "Generate Ansible automation"
+  default_prompt: "Use $ansible-generator to follow its workflow for generate ansible automation."
+
+policy:
+  allow_implicit_invocation: false

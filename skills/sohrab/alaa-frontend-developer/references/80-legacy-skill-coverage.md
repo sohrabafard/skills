@@ -75,6 +75,20 @@ This pack replaces the previous frontend skill cluster and folds the high-value 
   - Folded into:
     - `30-pwa-sw-and-offline.md`
 
+## Portable companion replacements
+
+- Previous workspace-local frontend delivery guidance
+  - Portable replacement:
+    - `$alaa-frontend-devops`
+
+- Previous workspace-local frontend annotation guidance
+  - Portable replacement:
+    - `$alaa-frontend-doc-annotations`
+
+- Previous workspace-local workspace-package contract guidance
+  - Portable replacement:
+    - `$alaa-mono-package`
+
 ## Search aliases
 
 If a task mentions old terms such as:

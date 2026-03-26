@@ -970,7 +970,7 @@ These patterns provide a solid foundation for common GitLab CI/CD scenarios. Whe
 
 1. **Customize** them for your specific needs
 2. **Validate** using gitlab-ci-validator skill
-3. **Follow** best practices from references/best-practices.md
+3. **Follow** best practices from ./best-practices.md
 4. **Test** locally when possible
 5. **Document** any modifications
 

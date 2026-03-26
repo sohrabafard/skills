@@ -1,9 +1,7 @@
-
 interface:
-  display_name: "ClickHouse Performance & Operations"
-  short_description: "Schema, ingest, MV/projections, query tuning, diagnostics, and runbooks for ClickHouse"
-  brand_color: "#F59E0B"
-  default_prompt: "Use this skill to design or troubleshoot a ClickHouse workload with concrete DDL, query rewrites, diagnostics, and rollout notes."
+  display_name: "ClickHouse Schema Ops"
+  short_description: "ClickHouse performance and schema operations"
+  default_prompt: "Use $clickhouse-performance-schema-ops to follow its workflow for clickhouse performance and schema operations."
 
 policy:
   allow_implicit_invocation: false

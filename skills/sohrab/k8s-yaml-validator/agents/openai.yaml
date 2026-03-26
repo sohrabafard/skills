@@ -1,0 +1,7 @@
+interface:
+  display_name: "K8s Yaml Validator"
+  short_description: "Validate Kubernetes manifests"
+  default_prompt: "Use $k8s-yaml-validator to follow its workflow for validate kubernetes manifests."
+
+policy:
+  allow_implicit_invocation: false

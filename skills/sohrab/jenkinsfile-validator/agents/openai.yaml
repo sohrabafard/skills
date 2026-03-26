@@ -1,0 +1,7 @@
+interface:
+  display_name: "Jenkinsfile Validator"
+  short_description: "Validate Jenkins pipelines"
+  default_prompt: "Use $jenkinsfile-validator to follow its workflow for validate jenkins pipelines."
+
+policy:
+  allow_implicit_invocation: false

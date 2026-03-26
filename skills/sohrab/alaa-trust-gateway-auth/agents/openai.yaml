@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Trust Gateway Auth"
+  short_description: "Gateway trust and downstream auth context"
+  default_prompt: "Use $alaa-trust-gateway-auth to follow its workflow for gateway trust and downstream auth context."
+
+policy:
+  allow_implicit_invocation: true
