@@ -1,0 +1,7 @@
+model = "gpt-5.3-codex"
+model_reasoning_effort = "high"
+developer_instructions = """
+Design an ad manager that supports VAST and VMAP with fail-safe recovery.
+Never leave content stuck because of an ad timeout or empty response.
+Keep ad state explicit and analytics-friendly.
+"""
