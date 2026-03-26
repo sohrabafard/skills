@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-async-messaging",
+  "display_name": "Alaa Async Messaging",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-async-messaging to help with alaa async messaging in this repo.",
+      "expected_skill": "alaa-async-messaging"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa async messaging and want the skill that owns this workflow.",
+      "expected_skill": "alaa-async-messaging"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-async-messaging or a nearby skill for alaa async messaging work.",
+      "expected_skill": "alaa-async-messaging",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-async-messaging even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

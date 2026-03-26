@@ -1,0 +1,34 @@
+{
+  "skill": "gitlab-ci-validator",
+  "display_name": "GitLab CI Validator",
+  "allow_implicit_invocation": false,
+  "counterpart": "gitlab-ci-generator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $gitlab-ci-validator to help with gitlab ci validator in this repo.",
+      "expected_skill": "gitlab-ci-validator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with gitlab ci validator and want the skill that owns this workflow.",
+      "expected_skill": "gitlab-ci-validator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use gitlab-ci-validator or gitlab-ci-generator for gitlab ci validator work.",
+      "expected_skill": "gitlab-ci-validator",
+      "expected_related": "gitlab-ci-generator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger gitlab-ci-validator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

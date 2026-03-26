@@ -1,0 +1,47 @@
+{
+  "skill": "alaa-trust-gateway-auth",
+  "display_name": "Alaa Trust Gateway Auth",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-trust-gateway-auth to help with alaa trust gateway auth in this repo.",
+      "expected_skill": "alaa-trust-gateway-auth"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa trust gateway auth and want the skill that owns this workflow.",
+      "expected_skill": "alaa-trust-gateway-auth"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-trust-gateway-auth or a nearby skill for alaa trust gateway auth work.",
+      "expected_skill": "alaa-trust-gateway-auth",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-trust-gateway-auth even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind alaa-trust-gateway-auth without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use alaa-trust-gateway-auth and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "alaa-trust-gateway-auth",
+      "expected_related": null
+    }
+  ]
+}

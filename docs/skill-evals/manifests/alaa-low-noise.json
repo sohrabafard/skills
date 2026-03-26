@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-low-noise",
+  "display_name": "Alaa Low Noise",
+  "allow_implicit_invocation": false,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-low-noise to help with alaa low noise in this repo.",
+      "expected_skill": "alaa-low-noise"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa low noise and want the skill that owns this workflow.",
+      "expected_skill": "alaa-low-noise"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-low-noise or a nearby skill for alaa low noise work.",
+      "expected_skill": "alaa-low-noise",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-low-noise even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

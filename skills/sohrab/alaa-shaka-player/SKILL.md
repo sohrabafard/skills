@@ -1,7 +1,10 @@
 ---
 name: alaa-shaka-player
-description: "Use when a task needs a production Shaka Player integration in Vue 3 + Quasar + Vite: HLS or DASH playback, live or VOD, ABR, subtitles, DRM including FairPlay or Widevine, ads, analytics, overlays, playlists, TV or STB behavior, or migration from Video.js or native wrappers. Covers SSR-safe integration, modular player architecture, headless event or API validation, and visual player QA. Do not use for simple MP4-only playback or non-Vue stacks."
+description: "Use this skill when a task involves production Shaka Player work in Vue 3 + Quasar + Vite, including playback architecture, HLS or DASH, DRM, ads, overlays, analytics, or migration from another player. Do not use it for simple MP4-only playback or non-Vue stacks."
 ---
+
+
+
 
 # Alaa Shaka Player
 
@@ -74,7 +77,7 @@ Use this skill when:
   - playlist or schedule-driven playback
   - TV, set-top-box, or remote-control behavior
 
-Do not use this skill when:
+## When NOT to use
 
 - A plain `<video>` tag is enough.
 - The task is MP4-only with no engine-level streaming control.

@@ -3,6 +3,9 @@ name: alaa-async-messaging
 description: "Async architecture for Alaa services: Kafka for events + RabbitMQ for jobs (recommended hybrid), optional Redis/Horizon for Laravel queues, with idempotency, retries, DLQ, and ops guardrails (prefetch/heartbeat/quorum poison control)."
 ---
 
+
+
+
 # Purpose
 Provide a production-ready workflow for asynchronous processing in an event-driven, multi-tenant system:
 
@@ -24,6 +27,11 @@ This skill is intentionally opinionated toward:
 - Implement DLQ / failure rerouting, idempotency, outbox-consumer dedupe.
 - Prepare production deployment: Supervisor / systemd / Docker / Kubernetes patterns.
 - Add observability: structured logs, job tags, metrics, dashboards, runbooks.
+
+## When NOT to use
+- do not use this skill for synchronous request-response flows with no queue, event, or broker design decision
+- do not use Kafka or RabbitMQ guidance here to justify bypassing the repository's data, security, or trust-boundary rules
+- do not use Redis or Horizon guidance here as a substitute for RabbitMQ-specific operational controls when RabbitMQ owns the job plane
 
 # Key split (recommended)
 - Kafka: events (facts, replayable, multi-consumer).
@@ -226,3 +234,12 @@ Templates:
 - Non-idempotent handlers.
 - Publishing events before DB commit without outbox/after-commit discipline.
 - Cross-tenant processing without explicit tenant scoping.
+
+## Fast entry
+
+| If the task is mainly about...                     | Start with                                        |
+|----------------------------------------------------|---------------------------------------------------|
+| event facts, replay, or multi-consumer fanout      | the Kafka split and outbox sections               |
+| background jobs, retries, or DLQ handling          | the RabbitMQ / work-queue sections                |
+| Redis + Horizon ergonomics                         | the hybrid Redis/Horizon rules                    |
+| throughput, prefetch, heartbeat, or poison control | the ops guardrails and troubleshooting references |

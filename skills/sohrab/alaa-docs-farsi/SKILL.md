@@ -1,7 +1,10 @@
 ---
 name: alaa-docs-farsi
-description: "Persian repository docs workflow with code, API, and Postman consistency checks."
+description: "Use this skill when the task involves README or docs updates or docs and implementation alignment. Do not use it when logic changes with no doc impact."
 ---
+
+
+
 
 # Alaa Docs Farsi
 
@@ -30,6 +33,13 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Doc impact checklist
+
+- Re-check `README` when install, setup, commands, or workflow expectations changed.
+- Re-check the docs directory when architecture, operations, or business-facing behavior changed.
+- Re-check API docs when request, response, auth, or error contracts changed.
+- Re-check Postman collections when endpoints, examples, or auth flows changed.
 
 ## Companion routing
 

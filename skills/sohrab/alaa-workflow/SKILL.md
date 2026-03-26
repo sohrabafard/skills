@@ -1,7 +1,10 @@
 ---
 name: alaa-workflow
-description: "Phase-based workflow for long, risky, or multi-file tasks with low-noise execution and resumable plans."
+description: "Use this skill when the task involves long or multi-phase tasks or multi-file behavior-changing work. Do not use it when tiny one-file tasks with no coordination cost."
 ---
+
+
+
 
 # Alaa Workflow
 
@@ -30,6 +33,12 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## When not to create plan or state files
+
+- Skip plan/state files for tiny single-file edits that do not need continuation context.
+- Skip them for short answer-only tasks with no risky repository changes.
+- Prefer them when the task is multi-step, long-running, risky, resumable, or parallelizable.
 
 ## Companion routing
 

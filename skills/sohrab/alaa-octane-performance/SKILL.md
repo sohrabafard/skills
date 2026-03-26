@@ -1,7 +1,10 @@
 ---
 name: alaa-octane-performance
-description: "Octane-safe patterns for hot paths, long-lived workers, request-state reset, and performance tuning."
+description: "Use this skill when the task involves Octane, Swoole, or RoadRunner runtime work or hot-path request performance. Do not use it when standard FPM-only tasks with no Octane concerns."
 ---
+
+
+
 
 # Alaa Octane Performance
 
@@ -30,6 +33,13 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Red flags
+
+- Request-state leakage across users or tenants.
+- Singleton contamination that keeps stale request context alive.
+- Auth, tenant, or policy state that is not reset between requests.
+- Memory growth that tracks request count instead of stable workload shape.
 
 ## Companion routing
 

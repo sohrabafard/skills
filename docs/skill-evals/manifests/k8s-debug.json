@@ -1,0 +1,34 @@
+{
+  "skill": "k8s-debug",
+  "display_name": "K8s Debug",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $k8s-debug to help with k8s debug in this repo.",
+      "expected_skill": "k8s-debug"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with k8s debug and want the skill that owns this workflow.",
+      "expected_skill": "k8s-debug"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use k8s-debug or a nearby skill for k8s debug work.",
+      "expected_skill": "k8s-debug",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger k8s-debug even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

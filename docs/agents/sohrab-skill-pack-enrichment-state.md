@@ -1,0 +1,30 @@
+# Sohrab Skill Pack Enrichment State
+
+- Task name: sohrab skill pack enrichment
+- Current status: implemented, validated, pending review feedback
+- Objective: enrich every skill in `skills/sohrab` with sharper routing, targeted decision aids, refreshed `agents/openai.yaml`, and a repository-local eval kit.
+- Current repository understanding:
+  - the pack keeps detailed knowledge in `references/`, `docs/`, `scripts/`, `examples/`, and `assets/`
+  - generator and validator skills had the heaviest top-level `SKILL.md` files and benefited most from normalization
+  - targeted Ala skills already had good routing structure and were enriched with compact matrices, symptom maps, or checklists
+- Completed work:
+  - rewrote legacy generator and validator entrypoints into routing-first top-level files
+  - inserted targeted micro-enrichments into the main Ala and platform skills called out in the RFC
+  - regenerated `agents/openai.yaml` for every skill while preserving implicit-invocation policy
+  - added `docs/skill-evals/` with per-skill manifests, upload-ready JSONL datasets, and review rubrics
+  - added `scripts/validate_sohrab_skill_pack.py`
+  - added a routing-delta note to `skills/sohrab/README.md`
+- Remaining work:
+  - user review of the largest semantic changes
+  - optional follow-up refinement for any skill where repo-specific examples should move from top-level text into new references
+- Risks or blockers:
+  - a few already-strong skills still intentionally keep larger top-level files because they own dense workflows with fewer split references
+  - dashboard graders and prompt-optimizer runs still need to happen in the OpenAI dashboard; repo assets are prepared but not executed here
+- Validation summary:
+  - `python scripts\validate_sohrab_skill_pack.py` now passes with warnings only
+  - warnings are limited to intentionally larger legacy-heavy skills whose top-level files still exceed the soft 120-line target
+- Next recommended step:
+  - review a targeted sample of the heaviest skills to decide whether any more detail should move from top-level files into references
+- Timeline:
+  - 2026-03-26 16:49 +03:30 — generated the pack-wide enrichment pass, eval kit, and validation script.
+  - 2026-03-26 17:12 +03:30 — repaired remaining section/path issues and re-ran the validator to a warnings-only result.

@@ -1,5 +1,5 @@
 interface:
-  display_name: "Vector Rust Pipelines"
+  display_name: "Vector Rust Observability Pipelines"
   short_description: "Vector observability pipeline patterns"
   default_prompt: "Use $vector-rust-observability-pipelines to follow its workflow for vector observability pipeline patterns."
 

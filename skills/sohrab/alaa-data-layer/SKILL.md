@@ -1,7 +1,10 @@
 ---
 name: alaa-data-layer
-description: "Postgres truth-first multi-tenant policy (3NF core + integrity constraints + audited cross-tenant access) plus performance-first migrations/indexing/pooling/concurrency and Redis cache/lock/rate-limit guidance; do not introduce new datastores."
+description: "Postgres truth-first data-layer policy for multi-tenant services plus Redis cache and lock guidance. Use when schema, migration, query, or Redis behavior changes. Do not use it to introduce a new datastore by default."
 ---
+
+
+
 
 # Alaa Data Layer
 
@@ -30,6 +33,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the reference file that matches the current decision.
 5. Pair with the listed companion skills before changing architecture, security, async, or runtime behavior outside this skill's ownership.
+
+## Fast entry
+
+| Symptom or decision                                    | Start with                                               |
+|--------------------------------------------------------|----------------------------------------------------------|
+| tenant boundaries, public IDs, or core schema shape    | `references/10-postgres-design-and-tenant-boundaries.md` |
+| additive migration rollout, large tables, or indexes   | `references/20-schema-migrations-and-performance.md`     |
+| locks, retries, pooling, hot queries, or projections   | `references/30-concurrency-projections-and-pooling.md`   |
+| Redis cache, lock, idempotency, or rate-limit behavior | `references/40-redis-verification-and-anti-patterns.md`  |
 
 ## Companion routing
 

@@ -1,0 +1,47 @@
+{
+  "skill": "promql-validator",
+  "display_name": "PromQL Validator",
+  "allow_implicit_invocation": false,
+  "counterpart": "promql-generator",
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $promql-validator to help with promql validator in this repo.",
+      "expected_skill": "promql-validator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with promql validator and want the skill that owns this workflow.",
+      "expected_skill": "promql-validator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use promql-validator or promql-generator for promql validator work.",
+      "expected_skill": "promql-validator",
+      "expected_related": "promql-generator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger promql-validator even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind promql-validator without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use promql-validator and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "promql-validator",
+      "expected_related": "promql-generator"
+    }
+  ]
+}

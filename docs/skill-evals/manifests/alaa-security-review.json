@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-security-review",
+  "display_name": "Alaa Security Review",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-security-review to help with alaa security review in this repo.",
+      "expected_skill": "alaa-security-review"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa security review and want the skill that owns this workflow.",
+      "expected_skill": "alaa-security-review"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-security-review or a nearby skill for alaa security review work.",
+      "expected_skill": "alaa-security-review",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-security-review even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

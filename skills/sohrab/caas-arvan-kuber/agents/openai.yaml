@@ -1,5 +1,5 @@
 interface:
-  display_name: "Arvan CaaS Kubernetes"
+  display_name: "Caas Arvan Kuber"
   short_description: "Arvan-first Kubernetes and Helm delivery"
   default_prompt: "Use $caas-arvan-kuber to follow its workflow for arvan-first kubernetes and helm delivery."
 

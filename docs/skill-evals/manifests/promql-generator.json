@@ -1,0 +1,34 @@
+{
+  "skill": "promql-generator",
+  "display_name": "PromQL Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "promql-validator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $promql-generator to help with promql generator in this repo.",
+      "expected_skill": "promql-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with promql generator and want the skill that owns this workflow.",
+      "expected_skill": "promql-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use promql-generator or promql-validator for promql generator work.",
+      "expected_skill": "promql-generator",
+      "expected_related": "promql-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger promql-generator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

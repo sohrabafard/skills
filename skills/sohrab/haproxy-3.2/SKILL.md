@@ -1,7 +1,10 @@
 ---
 name: haproxy-3.2-skill
-description: Complete, operator-grade HAProxy 3.2 LTS skillbook with official docs links, safe defaults, and practical recipes across OS, containers, Kubernetes, Helm, and CI/CD.
+description: "Complete, operator-grade HAProxy 3.2 LTS skillbook with official docs links, safe defaults, and practical recipes across OS, containers, Kubernetes, Helm, and CI/CD."
 ---
+
+
+
 
 # HAProxy 3.2 LTS — Master Skill
 
@@ -18,8 +21,8 @@ It includes:
 - Cross-knowledge: **Linux**, **containers**, **Kubernetes**, **Helm**, **GitLab CI/CD**
 
 This pack also includes:
-- `examples/haproxy/*.cfg` — practical configs by scenario
-- `examples/kubernetes/*.yaml` — manifests to run HAProxy as a Deployment
+- `examples/haproxy/` — practical configs by scenario
+- `examples/kubernetes/` — manifests to run HAProxy as a Deployment
 - `examples/helm/values-example.yaml` — values patterns
 - `examples/gitlab-ci/gitlab-ci-snippet.yml` — minimum CI gate
 
@@ -58,6 +61,11 @@ TLS ecosystem (official HAProxy content):
 - **Do** test reload behavior under traffic before relying on it in prod.
 
 ---
+
+## When NOT to use
+- do not use this skill for generic reverse-proxy advice when HAProxy 3.2-specific directives, runtime behavior, or operational constraints are not in scope
+- do not assume a feature exists in the running build until `haproxy -vv` and `haproxy -c` confirm it
+- do not paste recipes from this file into production without trimming them to the repository's real topology, trust boundary, and reload model
 
 # 1) What’s new in HAProxy 3.2 (operator summary)
 
@@ -376,8 +384,8 @@ Fix:
 ---
 
 ## Appendix: example file index
-- HAProxy configs: `examples/haproxy/*.cfg`
-- K8s manifests: `examples/kubernetes/*.yaml`
+- HAProxy configs: `examples/haproxy/`
+- K8s manifests: `examples/kubernetes/`
 - Helm patterns: `examples/helm/values-example.yaml`
 - GitLab CI: `examples/gitlab-ci/gitlab-ci-snippet.yml`
 - Source links: `references/SOURCES.md`

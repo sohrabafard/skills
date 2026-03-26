@@ -1,7 +1,10 @@
 ---
 name: quasar-skill-packe
-description: "Use this skill for Quasar CLI + Vite work when the task touches Quasar app setup, quasar.config, SSR/PWA, platform modes (SPA, BEX, Capacitor, Cordova, Electron), Quasar components, layouts, plugins, composables, directives, utils, or Quasar/Vite upgrades. This skill routes the agent to the smallest relevant references, surfaces related topics that are easy to miss, and tells the agent how to refresh live upstream guidance before version-sensitive changes."
+description: "Routing-first Quasar CLI + Vite skill for Quasar-specific app setup, config, SSR/PWA, platform modes, components, and upgrades. Use when Quasar is the decision surface. Do not use it for generic Vue work that is not Quasar-specific."
 ---
+
+
+
 
 # Quasar Skill Packe
 
@@ -133,6 +136,19 @@ When searching inside this skill pack:
 - If you still are not sure, start with:
   - `references/10-cli-vite-and-config.md`
   - `references/20-ssr-pwa-and-security.md`
+
+## Companion routing
+
+- `$alaa-frontend-developer`
+  - Pair for broader frontend engineering, SSR auth, data shaping, or release-readiness decisions.
+- `$alaa-frontend-devops`
+  - Pair when Quasar changes also touch build, Docker, CI, asset paths, or deployment behavior.
+- `$alaa-mono-package`
+  - Pair when a Quasar package lives in `packages/*` or emits assets for other apps.
+- `$alaa-frontend-doc-annotations`
+  - Pair for documentation-only comment or JSDoc passes.
+- `$openai-docs`
+  - Pair when live Codex or OpenAI product behavior influences the workflow.
 
 ## Current live snapshot
 

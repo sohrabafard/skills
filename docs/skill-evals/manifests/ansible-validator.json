@@ -1,0 +1,34 @@
+{
+  "skill": "ansible-validator",
+  "display_name": "Ansible Validator",
+  "allow_implicit_invocation": false,
+  "counterpart": "ansible-generator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $ansible-validator to help with ansible validator in this repo.",
+      "expected_skill": "ansible-validator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with ansible validator and want the skill that owns this workflow.",
+      "expected_skill": "ansible-validator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use ansible-validator or ansible-generator for ansible validator work.",
+      "expected_skill": "ansible-validator",
+      "expected_related": "ansible-generator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger ansible-validator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

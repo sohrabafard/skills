@@ -1,0 +1,47 @@
+{
+  "skill": "caas-arvan-kuber",
+  "display_name": "Caas Arvan Kuber",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $caas-arvan-kuber to help with caas arvan kuber in this repo.",
+      "expected_skill": "caas-arvan-kuber"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with caas arvan kuber and want the skill that owns this workflow.",
+      "expected_skill": "caas-arvan-kuber"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use caas-arvan-kuber or a nearby skill for caas arvan kuber work.",
+      "expected_skill": "caas-arvan-kuber",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger caas-arvan-kuber even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind caas-arvan-kuber without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use caas-arvan-kuber and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "caas-arvan-kuber",
+      "expected_related": null
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-cicd-laravel-postgres",
+  "display_name": "Alaa Cicd Laravel Postgres",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-cicd-laravel-postgres to help with alaa cicd laravel postgres in this repo.",
+      "expected_skill": "alaa-cicd-laravel-postgres"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa cicd laravel postgres and want the skill that owns this workflow.",
+      "expected_skill": "alaa-cicd-laravel-postgres"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-cicd-laravel-postgres or a nearby skill for alaa cicd laravel postgres work.",
+      "expected_skill": "alaa-cicd-laravel-postgres",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-cicd-laravel-postgres even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

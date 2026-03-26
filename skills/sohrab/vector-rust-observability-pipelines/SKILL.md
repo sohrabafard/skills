@@ -1,12 +1,10 @@
 ---
 name: vector-rust-observability-pipelines
-description: >
-  Use this skill when the task is about Vector (the Rust-based observability data pipeline), including
-  topology design, sources/transforms/sinks, VRL, buffering and backpressure, end-to-end acknowledgements,
-  unit testing and validation, internal metrics/logs, sink reliability, ClickHouse sink tuning, and
-  production troubleshooting. Do NOT use it for generic logging architecture unrelated to Vector, generic
-  Rust programming, or OpenTelemetry Collector-specific tasks unless Vector is explicitly part of the design.
+description: "Use this skill when a task involves Vector topology design, VRL transforms, sink tuning, buffering, acknowledgement strategy, or production troubleshooting. Do not use it for generic logging advice that ignores Vector pipeline mechanics."
 ---
+
+
+
 
 # Skill: Vector (Rust-based) observability pipelines
 
@@ -61,6 +59,30 @@ This skill is for **production Vector work**:
    - if `customConfig` is used, remember it replaces defaults and must be complete
    - when Vector template syntax is embedded in Helm values, escape it intentionally
    - for private registries, define image path and pull secrets explicitly
+
+## When NOT to use
+
+- do not use this skill for generic logging or metrics advice that does not depend on Vector topology, VRL, buffering, or sink behavior
+- do not change acknowledgement, buffering, or delivery settings casually; treat them as product and reliability decisions
+- do not ship Vector config changes without validation for syntax, health, and the intended failure mode
+
+## Fast entry
+
+| If the task is mainly about... | Start with |
+|---|---|
+| topology shape and deployment role | topology and role guidance |
+| VRL transforms or parsing | the VRL reference and validation flow |
+| buffering, acks, or backpressure | buffer and acknowledgement references |
+| ClickHouse sink or pipeline reliability | sink-specific references plus validation guidance |
+
+## Companion routing
+
+- `$clickhouse-performance-schema-ops`
+  - Pair when Vector output shape or ClickHouse ingestion behavior is part of the root cause.
+- `$alaa-observability-soc`
+  - Pair when alerting, incident visibility, or SOC-grade logging expectations change.
+- `$caas-arvan-kuber`
+  - Pair when the rollout target is Arvan CaaS or Kubernetes platform constraints matter.
 
 ## Version guardrails (Vector 0.53.0+)
 

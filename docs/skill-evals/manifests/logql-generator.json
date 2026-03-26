@@ -1,0 +1,34 @@
+{
+  "skill": "logql-generator",
+  "display_name": "LogQL Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "logql-validator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $logql-generator to help with logql generator in this repo.",
+      "expected_skill": "logql-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with logql generator and want the skill that owns this workflow.",
+      "expected_skill": "logql-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use logql-generator or logql-validator for logql generator work.",
+      "expected_skill": "logql-generator",
+      "expected_related": "logql-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger logql-generator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

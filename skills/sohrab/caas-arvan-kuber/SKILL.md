@@ -1,7 +1,10 @@
 ---
 name: caas-arvan-kuber
-description: "Arvan-first Kubernetes/Helm/DevOps skill for building, validating, and operating production workloads on Arvan CaaS with OpenAPI-driven decisions, namespace-safe RBAC, and portable defaults."
+description: "Arvan-first Kubernetes, Helm, and CI/CD guidance for production workloads on Arvan CaaS. Use when manifests, charts, or delivery flows must obey Arvan constraints. Do not use generic Kubernetes defaults when live Arvan facts disagree."
 ---
+
+
+
 
 ## Mission
 
@@ -25,6 +28,11 @@ If sources conflict:
 - OpenAPI + live discovery override generic Kubernetes memory.
 - Namespace-scoped safety overrides convenience.
 - Arvan-first defaults apply unless the user explicitly asks to override.
+
+## Live facts beat local references
+
+When live cluster discovery and local reference files disagree, prefer current platform facts from the target cluster and then update the local understanding accordingly.
+
 
 ## Internet and search usage
 
@@ -50,6 +58,11 @@ Use this skill for:
 - Deployment and rollout troubleshooting on Arvan
 - GitLab Runner, namespace-scoped RBAC, imagePullSecret, and identity issues
 - CI/CD changes that must enforce Arvan-safe rendering and deployment gates
+
+## When NOT to use
+- do not use this skill for generic Kubernetes guidance when the target platform is not Arvan and its constraints are irrelevant
+- do not invent undocumented Arvan behavior when live discovery can answer the question directly
+- do not let generic Helm or Kubernetes defaults override verified Arvan limits, RBAC facts, or exposure patterns
 
 ## Arvan-first non-negotiables
 

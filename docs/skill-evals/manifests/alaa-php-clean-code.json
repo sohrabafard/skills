@@ -1,0 +1,47 @@
+{
+  "skill": "alaa-php-clean-code",
+  "display_name": "Alaa PHP Clean Code",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-php-clean-code to help with alaa php clean code in this repo.",
+      "expected_skill": "alaa-php-clean-code"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa php clean code and want the skill that owns this workflow.",
+      "expected_skill": "alaa-php-clean-code"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-php-clean-code or a nearby skill for alaa php clean code work.",
+      "expected_skill": "alaa-php-clean-code",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-php-clean-code even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind alaa-php-clean-code without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use alaa-php-clean-code and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "alaa-php-clean-code",
+      "expected_related": null
+    }
+  ]
+}

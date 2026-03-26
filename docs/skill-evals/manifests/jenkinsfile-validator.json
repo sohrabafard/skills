@@ -1,0 +1,34 @@
+{
+  "skill": "jenkinsfile-validator",
+  "display_name": "Jenkinsfile Validator",
+  "allow_implicit_invocation": false,
+  "counterpart": "jenkinsfile-generator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $jenkinsfile-validator to help with jenkinsfile validator in this repo.",
+      "expected_skill": "jenkinsfile-validator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with jenkinsfile validator and want the skill that owns this workflow.",
+      "expected_skill": "jenkinsfile-validator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use jenkinsfile-validator or jenkinsfile-generator for jenkinsfile validator work.",
+      "expected_skill": "jenkinsfile-validator",
+      "expected_related": "jenkinsfile-generator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger jenkinsfile-validator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

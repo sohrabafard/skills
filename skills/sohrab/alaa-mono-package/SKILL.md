@@ -1,7 +1,10 @@
 ---
 name: alaa-mono-package
-description: "Portable workspace-package contract skill for frontend monorepos. Use when a task touches `packages/*`, dist-only consumption, peer dependency externalization, package asset emission, or missing browser assets caused by internal package boundaries."
+description: "Use this skill when the task involves changes under `packages/*` or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact."
 ---
+
+
+
 
 # Alaa Mono Package
 
@@ -41,6 +44,16 @@ Do not use this skill when:
 2. Read `references/10-package-boundary-and-entrypoints.md`.
 3. Load only the smallest additional reference file needed for the issue.
 4. Validate with a real build output check instead of trusting config alone.
+
+## Symptom map
+
+| Symptom                                       | Likely cause to check first                        |
+|-----------------------------------------------|----------------------------------------------------|
+| peer dependency conflict                      | package boundary or peer version contract drift    |
+| missing CSS in consumer app                   | asset emission or package export wiring            |
+| wrong SSR asset path                          | public-path or dist contract mismatch              |
+| duplicate runtime dependency                  | workspace hoisting or peer vs dependency confusion |
+| package works locally but fails after publish | dist-only artifact or export-map mismatch          |
 
 ## Companion routing
 

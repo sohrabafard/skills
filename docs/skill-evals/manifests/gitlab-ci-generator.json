@@ -1,0 +1,47 @@
+{
+  "skill": "gitlab-ci-generator",
+  "display_name": "GitLab CI Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "gitlab-ci-validator",
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $gitlab-ci-generator to help with gitlab ci generator in this repo.",
+      "expected_skill": "gitlab-ci-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with gitlab ci generator and want the skill that owns this workflow.",
+      "expected_skill": "gitlab-ci-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use gitlab-ci-generator or gitlab-ci-validator for gitlab ci generator work.",
+      "expected_skill": "gitlab-ci-generator",
+      "expected_related": "gitlab-ci-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger gitlab-ci-generator even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind gitlab-ci-generator without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use gitlab-ci-generator and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "gitlab-ci-generator",
+      "expected_related": "gitlab-ci-validator"
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Source-of-truth for Ala gateway auth trust: how Bearer JWT enters, what HAProxy verifies, which X-* headers are sanitized or injected, how tenant and trusted profile context are derived, how X-Profile is propagated, and what downstream services must do with trusted context, profile decoding, and local profile storage."
+description: "Source-of-truth for Ala gateway auth trust. Use when gateway headers, JWT-derived identity, tenant propagation, or downstream trust semantics change. Do not use it as a generic auth skill outside the Ala gateway boundary."
 ---
+
+
+
 
 # Alaa Trust Gateway Auth
 
@@ -30,6 +33,24 @@ Keep this top-level file small. Load the references for the full trust model, ro
 3. Identify whether the task is mainly about routing, header trust, auth-service contract, downstream service behavior, or error semantics.
 4. Load only the matching reference file first.
 5. Read the required companion skills before suggesting implementation changes outside this skill's trust-boundary ownership.
+
+## Header source-of-truth
+
+| Header or context          | Trusted source                        | Notes                                                 |
+|----------------------------|---------------------------------------|-------------------------------------------------------|
+| `Authorization: Bearer`    | public client into the gateway        | only the gateway should treat it as raw bearer input  |
+| trusted `X-*` auth headers | gateway or HAProxy after verification | sanitize client-supplied copies before forwarding     |
+| tenant or project context  | verified gateway-derived context      | never trust browser or downstream user input for this |
+| `X-Profile`                | trusted gateway/auth-service flow     | preserve exact contract and propagation rules         |
+
+## Route family expectations
+
+| Route family                          | Auth expectation                                                |
+|---------------------------------------|-----------------------------------------------------------------|
+| public auth endpoints                 | may accept raw bearer or refresh inputs at the gateway boundary |
+| trusted internal or downstream routes | must consume only sanitized trusted context                     |
+| local service-only routes             | must not accidentally accept public trust assumptions           |
+| health or operational routes          | keep auth expectations explicit and minimal                     |
 
 ## Companion routing
 

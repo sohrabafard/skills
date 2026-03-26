@@ -1,7 +1,10 @@
 ---
 name: tusd-upload-platform
-description: Design, review, and implement tusd-based upload platforms for resumable uploads, especially when the system must (1) store uploads directly in MinIO or another S3-compatible backend, (2) stage uploads locally and relay them to another tusd or video-provider upload server, (3) enforce application-driven authentication and authorization with hooks plus gateway checks, (4) run behind Nginx or HAProxy under high traffic, HA, observability, and security requirements, or (5) integrate browser-side tus clients in Vue.js + Quasar + Vite applications, including SSR or PWA mode. Use this skill when choosing topology, defining auth flows, configuring hooks, hardening reverse proxies, tuning tusd flags, designing relay workers, planning cleanup, or implementing production client upload flows for tusd. Do not use this skill for generic presigned S3 uploads, non-tus protocols, or low-stakes one-off file transfer advice.
+description: "Design, review, and implement tusd-based upload platforms for resumable uploads, especially when the system must (1) store uploads directly in MinIO or another S3-compatible backend, (2) stage uploads locally and relay them to another tusd or video-provider upload server, (3) enforce application-driven authentication and authorization with hooks plus gateway checks, (4) run behind Nginx or HAProxy under high traffic, HA, observability, and security requirements, or (5) integrate browser-side tus clients in Vue.js + Quasar + Vite applications, including SSR or PWA mode. Use this skill when choosing topology, defining auth flows, configuring hooks, hardening reverse proxies, tuning tusd flags, designing relay workers, planning cleanup, or implementing production client upload flows for tusd. Do not use this skill for generic presigned S3 uploads, non-tus protocols, or low-stakes one-off file transfer advice."
 ---
+
+
+
 
 # tusd Upload Platform
 
@@ -26,6 +29,11 @@ Classify the request first:
 - **Client-side upload implementation**: Always read `references/client-side.md`, then re-read `references/security.md` and `references/observability.md`.
 - **High-traffic, HA, or SLA-sensitive deployment**: Always read `references/observability.md`, `references/proxies.md`, and the scaling sections in `references/topologies.md`.
 - **Security-sensitive deployment**: Always read `references/security.md` and `references/hooks-auth.md`.
+
+## When NOT to use
+- do not use this skill for generic presigned-upload flows, non-tus protocols, or one-off file transfer advice with no resumable-upload platform design
+- do not assume stock tusd provides a built-in remote-provider relay backend or cross-instance locking model that it does not document
+- do not treat browser upload URLs, provider credentials, or hook payloads as safe to expose outside the platform trust boundary
 
 ## Default Recommendations
 
@@ -66,6 +74,19 @@ When using this skill, follow this sequence:
 6. Read `references/client-side.md` before proposing browser or app-side tus logic.
 7. Read `references/observability.md` before proposing HA, SLOs, metrics, alerts, or SOC logging.
 8. Read `references/snippets.md` and copy from `assets/` when generating concrete configs.
+
+## Companion routing
+
+- `$alaa-frontend-developer`
+  - Pair for browser upload UX, SSR-safe client flows, or auth/session handling.
+- `$quasar-skill-packe`
+  - Pair when the client lives in a Quasar app and the issue is Quasar-specific.
+- `$haproxy-3.2-skill`
+  - Pair when HAProxy termination, stickiness, or request forwarding behavior matters.
+- `$caas-arvan-kuber`
+  - Pair when the deployment target is Arvan CaaS or Kubernetes constraints drive the design.
+- `$alaa-observability-soc`
+  - Pair when SLOs, alerts, or security logging are part of the platform design.
 
 ## What to Deliver
 

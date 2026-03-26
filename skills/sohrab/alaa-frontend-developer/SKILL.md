@@ -1,7 +1,10 @@
 ---
 name: alaa-frontend-developer
-description: "Unified frontend engineering skill for the standard Vue 3 + Quasar + Vite app family. Use when a task touches frontend implementation, SSR or hydration safety, SSR auth or session patterns, API response shaping or frontend data efficiency, PWA or service worker behavior, realtime UI, performance, QA or verification, browser-debug UX, package asset contracts, or companion skill routing in these apps."
+description: "Use this skill when the task involves Vue, Quasar, or Vite frontend implementation in an app that follows the standard app-family contract or SSR, hydration, client-only guards, deterministic rendering, or cleanup safety. Do not use it when the task is pure Quasar API lookup with no broader frontend engineering decision."
 ---
+
+
+
 
 # Alaa Frontend Developer
 
@@ -135,6 +138,26 @@ When searching inside this skill pack:
 - Search old skill names in `references/80-legacy-skill-coverage.md` when the task uses prior terminology.
 - Search the companion routing reference when multiple skills could apply and ownership is unclear.
 - Refresh live package versions with `node scripts/check-upstream-versions.mjs` before version-sensitive changes.
+
+## Companion chooser
+
+| If the task is mainly about...                                          | Pair with                        |
+|-------------------------------------------------------------------------|----------------------------------|
+| CI, Docker, artifact paths, CDN, or deploy/runtime delivery             | `$alaa-frontend-devops`          |
+| inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
+| `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
+| Quasar CLI, `quasar.config`, platform modes, or exact Quasar APIs       | `$quasar-skill-packe`            |
+| live OpenAI or Codex product behavior                                   | `$openai-docs`                   |
+
+## Companion chooser
+
+| If the task is mainly about...                                          | Pair with                        |
+|-------------------------------------------------------------------------|----------------------------------|
+| CI, Docker, artifact paths, CDN, or deploy/runtime delivery             | `$alaa-frontend-devops`          |
+| inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
+| `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
+| Quasar CLI, `quasar.config`, platform modes, or exact Quasar APIs       | `$quasar-skill-packe`            |
+| live OpenAI or Codex product behavior                                   | `$openai-docs`                   |
 
 ## Maintenance rules
 

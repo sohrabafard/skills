@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-mono-package",
+  "display_name": "Alaa Mono Package",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-mono-package to help with alaa mono package in this repo.",
+      "expected_skill": "alaa-mono-package"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa mono package and want the skill that owns this workflow.",
+      "expected_skill": "alaa-mono-package"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-mono-package or a nearby skill for alaa mono package work.",
+      "expected_skill": "alaa-mono-package",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-mono-package even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

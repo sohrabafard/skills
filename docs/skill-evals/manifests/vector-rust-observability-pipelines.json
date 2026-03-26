@@ -1,0 +1,34 @@
+{
+  "skill": "vector-rust-observability-pipelines",
+  "display_name": "Vector Rust Observability Pipelines",
+  "allow_implicit_invocation": false,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $vector-rust-observability-pipelines to help with vector rust observability pipelines in this repo.",
+      "expected_skill": "vector-rust-observability-pipelines"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with vector rust observability pipelines and want the skill that owns this workflow.",
+      "expected_skill": "vector-rust-observability-pipelines"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use vector-rust-observability-pipelines or a nearby skill for vector rust observability pipelines work.",
+      "expected_skill": "vector-rust-observability-pipelines",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger vector-rust-observability-pipelines even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

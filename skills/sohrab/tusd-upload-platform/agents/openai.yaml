@@ -1,5 +1,5 @@
 interface:
-  display_name: "tusd Upload Platform"
+  display_name: "Tusd Upload Platform"
   short_description: "Secure tusd platform design and client flows"
   default_prompt: "Use $tusd-upload-platform to follow its workflow for secure tusd platform design and client flows."
 

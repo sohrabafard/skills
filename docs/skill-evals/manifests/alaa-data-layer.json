@@ -1,0 +1,47 @@
+{
+  "skill": "alaa-data-layer",
+  "display_name": "Alaa Data Layer",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-data-layer to help with alaa data layer in this repo.",
+      "expected_skill": "alaa-data-layer"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa data layer and want the skill that owns this workflow.",
+      "expected_skill": "alaa-data-layer"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-data-layer or a nearby skill for alaa data layer work.",
+      "expected_skill": "alaa-data-layer",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-data-layer even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind alaa-data-layer without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use alaa-data-layer and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "alaa-data-layer",
+      "expected_related": null
+    }
+  ]
+}

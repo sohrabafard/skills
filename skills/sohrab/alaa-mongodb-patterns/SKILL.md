@@ -1,7 +1,10 @@
 ---
 name: alaa-mongodb-patterns
-description: "MongoDB schema, index, idempotency, and TTL patterns for repos that already use MongoDB."
+description: "Use this skill when the task involves MongoDB collections, indexes, or write patterns or TTL, compound indexes, or bounded document design. Do not use it when repos that are still Postgres-only."
 ---
+
+
+
 
 # Alaa MongoDB Patterns
 
@@ -29,6 +32,13 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Rollout checklist
+
+- Rehearse TTL index changes with expected expiry delay and operational visibility.
+- Treat compound index additions as rollout work, not just schema text.
+- Keep backfills idempotent and resumable before running them at scale.
+- Re-check query plans after each index or TTL change instead of assuming the new shape helped.
 
 ## Companion routing
 

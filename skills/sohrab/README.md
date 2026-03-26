@@ -229,3 +229,10 @@ Work in this pack is considered ready when:
 ## Practical note
 
 When a generic best practice conflicts with the Ala gateway trust model, Arvan platform rules, or the frontend artifact contract, document the reason for the deviation instead of hiding it.
+
+## Routing delta notes
+
+- No skill names changed in this enrichment pass.
+- Top-level `SKILL.md` files now bias toward routing-first entrypoints and companion-skill delegation instead of duplicating deeper references.
+- When a responsibility narrowed, the skill now points to the owning companion skill instead of repeating that companion's full rulebook.
+- Fast-entry routers, checklists, and diagnostic maps were added where they improve branch selection speed for agents.

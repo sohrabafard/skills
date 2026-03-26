@@ -3,6 +3,9 @@ name: alaa-low-noise
 description: "Use when Codex work risks context bloat or terminal spam: repo-wide search, many files, large logs or diffs, long-running CLI/App sessions, or tasks that should externalize bulky transient state to repo-local files while preserving normal Git diffs and Codex app review visibility."
 ---
 
+
+
+
 # Purpose
 Keep Codex CLI and Codex app execution complete, correct, and reviewable while minimizing terminal noise and context waste.
 
@@ -32,7 +35,7 @@ Use this skill when one or more of these are true:
 - you are working in PowerShell or another shell where noisy output and quoting mistakes are easy to trigger
 - context pressure is already visible through repeated file dumps, repeated diffs, or repeated status chatter
 
-# When not to use
+## When NOT to use
 Do not use this skill when:
 - the task is tiny and ordinary output will already be compact
 - the user explicitly asks for full raw logs, full diffs, or full file contents
@@ -87,9 +90,9 @@ Preferred approach:
 - use existing repo conventions first
 
 Good repo-local locations when the repo already uses them:
-- `docs/_agent_plans/` for task plans
-- `docs/agents/` for durable continuation state
-- `.codex/state/` for machine-oriented transient state
+- the repo-level docs/_agent_plans/ directory for task plans
+- the repo-level docs/agents/ directory for durable continuation state
+- the repo-level .codex/state/ directory for machine-oriented transient state
 - `reports/` or `artifacts/` for captured logs or inventories
 
 If the repo has no convention, choose a small repo-local scratch location instead of OS temp for any artifact the user may need to inspect.

@@ -1,0 +1,34 @@
+{
+  "skill": "quasar-skill-packe",
+  "display_name": "Quasar Packe",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $quasar-skill-packe to help with quasar packe in this repo.",
+      "expected_skill": "quasar-skill-packe"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with quasar packe and want the skill that owns this workflow.",
+      "expected_skill": "quasar-skill-packe"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use quasar-skill-packe or a nearby skill for quasar packe work.",
+      "expected_skill": "quasar-skill-packe",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger quasar-skill-packe even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

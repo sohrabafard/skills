@@ -3,6 +3,9 @@ name: alaa-laravel-job-rabbitmq
 description: "Production skill for Laravel jobs on RabbitMQ via vladimir-yuldashev/laravel-queue-rabbitmq, including Laravel 13 temporary-fork compatibility, accurate config, safe worker modes, retries/DLQ/idempotency, and Kubernetes/Arvan-ready operations."
 ---
 
+
+
+
 # Purpose
 Provide production-grade guidance for Laravel queued jobs on RabbitMQ using `vladimir-yuldashev/laravel-queue-rabbitmq`, with:
 - predictable throughput (queue split, prefetch/concurrency tuning),
@@ -20,6 +23,11 @@ This skill complements:
 - You want Laravel `ShouldQueue` jobs processed by RabbitMQ (AMQP).
 - You deploy web/worker/scheduler in containers and need safe rollouts.
 - You need high-SLA patterns (idempotency, retries, DLQ, graceful stop).
+
+## When NOT to use
+- do not use this skill for broker-cluster administration or generic event-stream design that belongs to broader async architecture decisions
+- do not assume Horizon is the control plane for RabbitMQ workers in this repository
+- do not skip Laravel queue, RabbitMQ, or deployment-specific source-of-truth checks when compatibility is version-sensitive
 
 # Non-goals
 - Full broker platform engineering (cluster topology/operator lifecycle) beyond app-facing requirements.

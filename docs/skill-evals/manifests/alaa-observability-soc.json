@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-observability-soc",
+  "display_name": "Alaa Observability SOC",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-observability-soc to help with alaa observability soc in this repo.",
+      "expected_skill": "alaa-observability-soc"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa observability soc and want the skill that owns this workflow.",
+      "expected_skill": "alaa-observability-soc"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-observability-soc or a nearby skill for alaa observability soc work.",
+      "expected_skill": "alaa-observability-soc",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-observability-soc even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

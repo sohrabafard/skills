@@ -3,6 +3,9 @@ name: alaa-php-clean-code
 description: "Deterministic PHP 8.5 / Laravel 13 clean-code baseline for writing, reviewing, and refactoring code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, Laravel edge patterns, and mode-aware refactors (scoped soft, scoped hard with contract preservation, whole-project preserve-local, whole-project normalize-to-Alaa). Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
 ---
 
+
+
+
 # Purpose
 Make PHP / Laravel code written by different agents look like it came from one careful author.
 
@@ -27,6 +30,11 @@ Use this skill when the task includes any of the following:
 - cleaning up duplicated logic, weak abstractions, vague naming, or hidden side effects
 - making a PHP / Laravel codebase more consistent across modules or across multiple agents
 - performing a whole-project cleanup or normalization pass
+
+## When NOT to use
+- do not use this skill as a replacement for architecture, data, trust-boundary, security, or infrastructure specialist skills
+- do not use it for trivial one-line edits where repo style is already obvious and no meaningful PHP or Laravel design choice is in play
+- do not let code-style preferences here override live repository constraints, existing public contracts, or framework-version reality
 
 # Compatibility target
 Target repositories using:
@@ -284,3 +292,13 @@ Keep the final report concise but auditable.
 - Changing public contracts accidentally during a cleanup.
 - Turning a local feature task into an unbounded whole-repo rewrite.
 - Claiming a companion skill was respected without actually routing to it when its trigger fired.
+
+## Companion chooser
+
+| If the task also changes...                   | Pair with                                               |
+|-----------------------------------------------|---------------------------------------------------------|
+| module boundaries, DTOs, or public contracts  | `$alaa-laravel-architecture`                            |
+| schema, queries, or Redis behavior            | `$alaa-data-layer`                                      |
+| queues, events, or outbox flow                | `$alaa-async-messaging` or `$alaa-laravel-job-rabbitmq` |
+| trust boundaries, auth, or tenant propagation | `$alaa-trust-gateway-auth` or `$alaa-security-review`   |
+| hot paths or long-lived workers               | `$alaa-octane-performance`                              |

@@ -1,7 +1,10 @@
 ---
 name: alaa-cicd-laravel-postgres
-description: "Deterministic Laravel CI/CD guidance for Postgres-backed services."
+description: "Deterministic Laravel CI/CD guidance for Postgres-backed services. Use when pipeline behavior, release gates, or reproducibility change. Do not use it for feature-only application edits."
 ---
+
+
+
 
 # Alaa CI/CD Laravel Postgres
 
@@ -30,6 +33,16 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Release path matrix
+
+| Phase    | Primary concern                                    | Re-check before moving on                 |
+|----------|----------------------------------------------------|-------------------------------------------|
+| build    | deterministic dependencies and reproducible images | lockfiles, cache keys, runtime parity     |
+| test     | fast failure with real Postgres semantics          | migrations, seeds, parallel safety        |
+| migrate  | additive rollout and rollback awareness            | large-table safety and ordering           |
+| deploy   | artifact/runtime alignment                         | image tag, env contract, health checks    |
+| rollback | predictable reversal path                          | schema compatibility and release evidence |
 
 ## Companion routing
 

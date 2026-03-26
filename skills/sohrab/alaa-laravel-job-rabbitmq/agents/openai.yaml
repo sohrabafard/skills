@@ -1,5 +1,5 @@
 interface:
-  display_name: "Alaa Laravel RabbitMQ Jobs"
+  display_name: "Alaa Laravel Job Rabbitmq"
   short_description: "Laravel RabbitMQ worker design"
   default_prompt: "Use $alaa-laravel-job-rabbitmq to follow its workflow for laravel rabbitmq worker design."
 

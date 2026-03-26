@@ -1,0 +1,34 @@
+{
+  "skill": "terraform-generator",
+  "display_name": "Terraform Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "terraform-validator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $terraform-generator to help with terraform generator in this repo.",
+      "expected_skill": "terraform-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with terraform generator and want the skill that owns this workflow.",
+      "expected_skill": "terraform-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use terraform-generator or terraform-validator for terraform generator work.",
+      "expected_skill": "terraform-generator",
+      "expected_related": "terraform-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger terraform-generator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# Sohrab Skill Pack Enrichment Plan
+
+- Timestamp: 2026-03-26 16:49 +03:30
+- Scope: `skills/sohrab`, `docs/skill-evals`, `scripts/validate_sohrab_skill_pack.py`, and pack-level routing docs.
+- Objective: implement the approved enrichment plan without renaming skills or expanding them into generic super-skills.
+- Assumptions:
+  - skill internals remain in English
+  - official-source refresh matters most for routing, version-sensitive notes, and validation discipline
+- Constraints:
+  - preserve frontmatter `name`
+  - keep pack structure stable
+  - keep top-level files lean where possible and push detail into one-hop references
+- Task decomposition:
+  - normalize generator and validator entrypoints
+  - add targeted matrices, routers, and checklists to the prioritized Ala and platform skills
+  - regenerate `agents/openai.yaml`
+  - add eval manifests, datasets, and review rubrics
+  - add pack validation checks and pack-level README routing note
+- Validation approach:
+  - static checks for frontmatter, required sections, one-hop paths, `openai.yaml`, and line-count warnings
+  - manual spot review of the most-changed skills and high-risk skills
+- Exit criteria:
+  - every skill receives an in-domain enrichment
+  - no skill names change
+  - `agents/openai.yaml` exists for every skill
+  - eval kit and validation script are present

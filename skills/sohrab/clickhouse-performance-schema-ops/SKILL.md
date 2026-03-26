@@ -1,13 +1,10 @@
 ---
 name: clickhouse-performance-schema-ops
-description: >
-  Use this skill when the task is about ClickHouse architecture, schema design, MergeTree engine choices,
-  ORDER BY / PARTITION BY / PRIMARY KEY design, ingestion strategy, async inserts, materialized views,
-  projections, TTL, skip indexes, query tuning, system tables, operational troubleshooting, or production
-  hardening. Use it for ClickHouse Cloud and self-managed clusters when the answer must reflect ClickHouse's
-  columnar OLAP model. Do NOT use it for OLTP schema design, generic ANSI SQL questions that are not
-  ClickHouse-specific, or ORM-centric application CRUD work.
+description: "Use this skill when a task involves ClickHouse schema design, ingest strategy, query performance, MergeTree tuning, TTL or mutation tradeoffs, or production diagnostics. Do not use it for generic OLTP database advice that ignores ClickHouse storage behavior."
 ---
+
+
+
 
 # Skill: ClickHouse performance, schema, ingest, and operations
 
@@ -20,6 +17,11 @@ This skill is optimized for **real-world ClickHouse work**:
 - deciding between materialized views, projections, TTL, and lightweight deletes
 - diagnosing slow queries, mutation backlog, merge pressure, and storage churn
 - turning vague ClickHouse asks into a concrete plan, SQL artifacts, and validation steps
+
+## When NOT to use
+- do not use this skill for generic row-store or OLTP guidance that ignores MergeTree storage and merge behavior
+- do not prescribe UPDATE or DELETE heavy patterns before checking whether ingest shape, ordering, partitioning, or table-engine choices solve the problem more safely
+- do not treat vague ClickHouse tuning requests as complete without workload facts, explicit SQL artifacts, or a validation plan
 
 ## Operating principles
 

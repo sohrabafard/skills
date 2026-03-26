@@ -1,7 +1,10 @@
 ---
 name: alaa-frontend-doc-annotations
-description: "Portable documentation-only skill for Vue, Quasar, and Vite frontends with SSR or PWA concerns. Use when the task is to add or improve English JSDoc and inline comments without changing runtime behavior."
+description: "Use this skill when the task involves JSDoc on frontend files or inline comments without logic changes. Do not use it when the task changes behavior."
 ---
+
+
+
 
 # Alaa Frontend Doc Annotations
 
@@ -41,6 +44,31 @@ Do not use this skill when:
 4. Load only the smallest additional reference file needed for the code surface.
 5. Keep diffs limited to comments and JSDoc.
 
+## Good vs bad examples
+
+**Good JSDoc**
+```js
+/**
+ * Rebuilds the SSR-safe redirect target from the current route and auth state.
+ */
+```
+
+**Bad JSDoc**
+```js
+/**
+ * This function does stuff.
+ */
+```
+
+**Good inline comment**
+```js
+// Keep this branch client-only so SSR never touches browser storage.
+```
+
+**Bad inline comment**
+```js
+// set value
+```
 ## Companion routing
 
 - Frontend policy, SSR behavior, or Quasar-specific context:

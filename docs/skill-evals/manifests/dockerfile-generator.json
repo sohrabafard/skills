@@ -1,0 +1,47 @@
+{
+  "skill": "dockerfile-generator",
+  "display_name": "Dockerfile Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "dockerfile-validator",
+  "risk": "high",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $dockerfile-generator to help with dockerfile generator in this repo.",
+      "expected_skill": "dockerfile-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with dockerfile generator and want the skill that owns this workflow.",
+      "expected_skill": "dockerfile-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use dockerfile-generator or dockerfile-validator for dockerfile generator work.",
+      "expected_skill": "dockerfile-generator",
+      "expected_related": "dockerfile-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger dockerfile-generator even though it mentions tooling.",
+      "expected_skill": null
+    },
+    {
+      "id": "boundary-negative",
+      "kind": "hard_negative",
+      "prompt": "Give general advice about the topic behind dockerfile-generator without using a repo-specific workflow.",
+      "expected_skill": null
+    },
+    {
+      "id": "companion-selection",
+      "kind": "companion_check",
+      "prompt": "Use dockerfile-generator and choose any companion skills needed for a mixed task in this domain.",
+      "expected_skill": "dockerfile-generator",
+      "expected_related": "dockerfile-validator"
+    }
+  ]
+}

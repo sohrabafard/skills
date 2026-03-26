@@ -1,5 +1,5 @@
 interface:
-  display_name: "ClickHouse Schema Ops"
+  display_name: "Clickhouse Performance Schema Ops"
   short_description: "ClickHouse performance and schema operations"
   default_prompt: "Use $clickhouse-performance-schema-ops to follow its workflow for clickhouse performance and schema operations."
 

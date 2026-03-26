@@ -1,0 +1,34 @@
+{
+  "skill": "fluentbit-generator",
+  "display_name": "Fluentbit Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "fluentbit-validator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $fluentbit-generator to help with fluentbit generator in this repo.",
+      "expected_skill": "fluentbit-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with fluentbit generator and want the skill that owns this workflow.",
+      "expected_skill": "fluentbit-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use fluentbit-generator or fluentbit-validator for fluentbit generator work.",
+      "expected_skill": "fluentbit-generator",
+      "expected_related": "fluentbit-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger fluentbit-generator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

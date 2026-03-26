@@ -1,0 +1,34 @@
+{
+  "skill": "clickhouse-performance-schema-ops",
+  "display_name": "Clickhouse Performance Schema Ops",
+  "allow_implicit_invocation": false,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $clickhouse-performance-schema-ops to help with clickhouse performance schema ops in this repo.",
+      "expected_skill": "clickhouse-performance-schema-ops"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with clickhouse performance schema ops and want the skill that owns this workflow.",
+      "expected_skill": "clickhouse-performance-schema-ops"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use clickhouse-performance-schema-ops or a nearby skill for clickhouse performance schema ops work.",
+      "expected_skill": "clickhouse-performance-schema-ops",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger clickhouse-performance-schema-ops even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

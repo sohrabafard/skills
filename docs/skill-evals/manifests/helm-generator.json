@@ -1,0 +1,34 @@
+{
+  "skill": "helm-generator",
+  "display_name": "Helm Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "helm-validator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $helm-generator to help with helm generator in this repo.",
+      "expected_skill": "helm-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with helm generator and want the skill that owns this workflow.",
+      "expected_skill": "helm-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use helm-generator or helm-validator for helm generator work.",
+      "expected_skill": "helm-generator",
+      "expected_related": "helm-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger helm-generator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

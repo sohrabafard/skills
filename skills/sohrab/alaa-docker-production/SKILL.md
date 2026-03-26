@@ -1,7 +1,10 @@
 ---
 name: alaa-docker-production
-description: "Production Docker and Compose hardening for Laravel and PHP services."
+description: "Use this skill when the task involves Dockerfile or Compose hardening or image size or attack-surface reduction. Do not use it when pure app logic changes."
 ---
+
+
+
 
 # Alaa Docker Production
 
@@ -30,6 +33,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Troubleshooting map
+
+| If the failure looks like...                | Start with                                     |
+|---------------------------------------------|------------------------------------------------|
+| build-stage errors or dependency drift      | image-build and deterministic-runtime sections |
+| runtime crash or missing extension          | runtime contract and container-user sections   |
+| permissions or writable-path issues         | non-root user and filesystem guidance          |
+| healthcheck, startup, or readiness mismatch | healthcheck and release-evidence sections      |
 
 ## Companion routing
 

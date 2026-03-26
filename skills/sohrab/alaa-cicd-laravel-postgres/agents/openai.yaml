@@ -1,5 +1,5 @@
 interface:
-  display_name: "Alaa CI/CD Laravel Postgres"
+  display_name: "Alaa Cicd Laravel Postgres"
   short_description: "Deterministic Laravel CI/CD pipelines"
   default_prompt: "Use $alaa-cicd-laravel-postgres to follow its workflow for deterministic laravel ci/cd pipelines."
 

@@ -1,7 +1,10 @@
 ---
 name: alaa-observability-soc
-description: "Structured logging, tracing, metrics, alerts, and Sentry guidance for production-grade services."
+description: "Use this skill when the task involves logs, traces, metrics, or alerting work or correlation IDs or incident evidence requirements. Do not use it when feature work with no observability surface change."
 ---
+
+
+
 
 # Alaa Observability SOC
 
@@ -30,6 +33,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Severity rubric
+
+| Signal type | Use when                                                        |
+|-------------|-----------------------------------------------------------------|
+| log only    | the event is useful for forensics but not actionable on its own |
+| metric      | you need durable trend visibility or SLO math                   |
+| alert       | a human should investigate within working hours                 |
+| page        | the condition is urgent enough to interrupt an operator now     |
 
 ## Companion routing
 

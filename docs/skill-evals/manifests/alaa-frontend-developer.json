@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-frontend-developer",
+  "display_name": "Alaa Frontend Developer",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-frontend-developer to help with alaa frontend developer in this repo.",
+      "expected_skill": "alaa-frontend-developer"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with alaa frontend developer and want the skill that owns this workflow.",
+      "expected_skill": "alaa-frontend-developer"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-frontend-developer or a nearby skill for alaa frontend developer work.",
+      "expected_skill": "alaa-frontend-developer",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-frontend-developer even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

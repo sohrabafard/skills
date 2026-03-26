@@ -1,0 +1,34 @@
+{
+  "skill": "tusd-upload-platform",
+  "display_name": "Tusd Upload Platform",
+  "allow_implicit_invocation": true,
+  "counterpart": null,
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $tusd-upload-platform to help with tusd upload platform in this repo.",
+      "expected_skill": "tusd-upload-platform"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with tusd upload platform and want the skill that owns this workflow.",
+      "expected_skill": "tusd-upload-platform"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use tusd-upload-platform or a nearby skill for tusd upload platform work.",
+      "expected_skill": "tusd-upload-platform",
+      "expected_related": null
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger tusd-upload-platform even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

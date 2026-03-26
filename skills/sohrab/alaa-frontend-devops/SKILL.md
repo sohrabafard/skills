@@ -1,7 +1,10 @@
 ---
 name: alaa-frontend-devops
-description: "Portable DevOps guidance for Vue, Quasar, and Vite frontend repos with SSR or PWA concerns. Use when a task touches CI, Docker, artifact contracts, remote asset bases, reverse proxies, cache efficiency, or deployment-safe frontend build changes."
+description: "Use this skill when the task involves CI workflow changes for a frontend repository or Dockerfile or Compose changes that affect frontend build or runtime delivery. Do not use it when the task is frontend logic only and has no build or deploy impact."
 ---
+
+
+
 
 # Alaa Frontend DevOps
 
@@ -43,6 +46,15 @@ Do not use this skill when:
 3. Read `references/10-build-contract-and-artifacts.md` first.
 4. Load only the smallest additional reference file needed for the task.
 5. Validate in the same environment shape that would catch the delivery risk.
+
+## Verification matrix
+
+| Delivery shape   | Must verify                                                                          |
+|------------------|--------------------------------------------------------------------------------------|
+| SPA              | final asset paths, cache headers, and fallback routing                               |
+| SSR              | server entry, client manifest, cookies/session flow, and hydration-safe deploy shape |
+| PWA              | service worker scope, update UX, offline boundaries, and asset versioning            |
+| package-consumer | emitted JS/CSS assets, peer dependencies, and import paths                           |
 
 ## Companion routing
 

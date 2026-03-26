@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Frontend Doc Annotations"
   short_description: "Frontend JSDoc and inline comment pass"
-  default_prompt: "Use $alaa-frontend-doc-annotations to follow its workflow for documentation-only frontend JSDoc and inline comment annotations."
+  default_prompt: "Use $alaa-frontend-doc-annotations to follow its workflow for frontend jsdoc and inline comment pass."
 
 policy:
   allow_implicit_invocation: true

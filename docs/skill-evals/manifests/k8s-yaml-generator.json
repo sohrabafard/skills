@@ -1,0 +1,34 @@
+{
+  "skill": "k8s-yaml-generator",
+  "display_name": "K8s YAML Generator",
+  "allow_implicit_invocation": false,
+  "counterpart": "k8s-yaml-validator",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $k8s-yaml-generator to help with k8s yaml generator in this repo.",
+      "expected_skill": "k8s-yaml-generator"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need help with k8s yaml generator and want the skill that owns this workflow.",
+      "expected_skill": "k8s-yaml-generator"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use k8s-yaml-generator or k8s-yaml-validator for k8s yaml generator work.",
+      "expected_skill": "k8s-yaml-generator",
+      "expected_related": "k8s-yaml-validator"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger k8s-yaml-generator even though it mentions tooling.",
+      "expected_skill": null
+    }
+  ]
+}

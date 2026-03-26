@@ -1,7 +1,10 @@
 ---
 name: alaa-laravel-architecture
-description: "Architecture rules for Laravel layering, DTO boundaries, public IDs, API contracts, and outbox-safe module design."
+description: "Use this skill when the task involves layer boundary changes or controller, service, request, resource, or DTO contract work. Do not use it when pure coding-style cleanup with no architectural surface change."
 ---
+
+
+
 
 # Alaa Laravel Architecture
 
@@ -30,6 +33,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
+
+## Architecture decisions
+
+| If the decision is about...       | Default choice                                                                                           |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------|
+| DTO vs Resource vs Model exposure | DTOs and Resources for boundaries; do not expose Eloquent models directly across public contracts        |
+| Service vs Action vs Job          | Service/Action for synchronous domain flow; Job only when async delivery or queue semantics are required |
+| public IDs or route binding       | public IDs stay stable and should not leak storage-specific keys                                         |
+| cross-module events               | preserve explicit contracts and outbox-safe boundaries                                                   |
 
 ## Companion routing
 
