@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Source-of-truth for Ala gateway auth trust: how Bearer JWT enters, what HAProxy verifies, which X-* headers are sanitized or injected, how tenant context is derived, and what downstream services must do with trusted context."
+description: "Source-of-truth for Ala gateway auth trust: how Bearer JWT enters, what HAProxy verifies, which X-* headers are sanitized or injected, how tenant and trusted profile context are derived, how X-Profile is propagated, and what downstream services must do with trusted context, profile decoding, and local profile storage."
 ---
 
 # Purpose
@@ -300,6 +300,7 @@ Before any auth context is injected, the gateway deletes these incoming headers 
 - `X-TOKEN-NOT-BEFORE`
 - `X-TOKEN-EXPIRES-AT`
 - `X-USER-SCOPES`
+- `X-PROFILE`
 
 This means downstream services must treat these names as trusted only when they were added by the gateway, not when they arrive from an untrusted caller.
 
@@ -315,8 +316,28 @@ The current mapping is:
 - `nbf` -> `X-TOKEN-NOT-BEFORE`
 - `exp` -> `X-TOKEN-EXPIRES-AT`
 - `scopes` -> `X-USER-SCOPES`
+- `profile` -> `X-PROFILE`
 
 Only claims that are present are injected.
+
+## X-Profile profile propagation contract
+- Auth-service is the source of truth for the latest user profile.
+- Auth-service must emit JWT claim `profile` when trusted downstream services need profile context.
+- The `profile` claim value must be a base64url-encoded UTF-8 JSON object whose canonical keys are `first_name`, `last_name`, and `shahr` when they are present.
+  ```json
+  {
+    "first_name": null,
+    "last_name": null,
+    "shahr": null
+  }
+  ```
+- Auth-service should omit any key whose value is `null`, and it may omit the entire `profile` claim when all three canonical fields are `null`.
+- Gateway must strip any inbound `X-PROFILE` / `X-Profile`, verify the token, and if the verified token has a `profile` claim, copy that exact claim value into `X-PROFILE`.
+- Gateway must not decode, reshape, normalize, or re-encode the `profile` claim before forwarding it.
+- If the verified token has no `profile` claim, the gateway must not fabricate `X-PROFILE`.
+- Downstream services that need profile data must base64url-decode `X-Profile`, JSON-decode the UTF-8 payload, require a JSON object, and normalize each canonical field independently: missing key => `null`, explicit JSON `null` => `null`, trimmed empty string => `null`, non-empty string => keep, non-string non-null => `AUTH_PROFILE_HEADER_INVALID`.
+- Downstream services may store immutable request-time snapshots for historical or audit purposes, but their local `users` projection should always hold the latest profile state known from auth-service.
+- Source-of-truth rule: auth-service always owns the latest profile state. Downstream services may cache or project it locally, but they must not treat their local copy as the source of truth.
 ## Auth-service local trusted header contract
 - Auth-service's `trusted_gateway` guard currently consumes only:
   - `X-USER-ID`
@@ -429,7 +450,7 @@ Only claims that are present are injected.
 - Use `X-USER-ID` as the authenticated actor id.
 - Use `X-ACCESS` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
 - Treat `X-REQUEST-ID` only as correlation.
-- Keep one canonical spelling for documentation and tests even though HTTP header names are case-insensitive. Current examples in this skill use `X-Project-ID`, `X-User-Id`, `X-User-Mobile`, and `X-Access`.
+- Keep one canonical spelling for documentation and tests even though HTTP header names are case-insensitive. Current examples in this skill use `X-Project-ID`, `X-User-Id`, `X-User-Mobile`, `X-Access`, and `X-Profile`.
 - Treat `X-USER-MOBILE` as supplemental identity or audit context by default.
 - Each downstream service must expose one config switch that decides whether `X-USER-MOBILE` is optional or required. The default policy should be optional.
 - If that config marks mobile as required, the service must enforce it automatically and return the same shared error code and response contract used everywhere else.
@@ -464,6 +485,18 @@ Only claims that are present are injected.
       }
     }
     ```
+- Use `X-PROFILE` / `X-Profile` only for trusted profile context copied from the verified JWT `profile` claim.
+- Required decode flow for `X-PROFILE` when the header is present:
+  - reject blank or non-base64url values
+  - base64url-decode with strict alphabet checking
+  - JSON-decode the UTF-8 payload
+  - require a JSON object
+  - normalize `first_name`, `last_name`, and `shahr` independently: missing key => `null`, explicit `null` => `null`, trimmed empty string => `null`, non-empty string => keep
+  - treat malformed payloads, non-object payloads, or invalid non-null field types as canonical code `AUTH_PROFILE_HEADER_INVALID`
+- If `X-PROFILE` is absent, downstream services must interpret that as all canonical profile fields being `null` unless a route explicitly forces trusted profile presence.
+- Storage rule for services that persist profile data:
+  - keep the latest user projection in the local `users` read model
+  - keep immutable request-time snapshots only when the domain needs historical or audit context
 - Do not rebuild authorization from raw client headers.
 
 ## Permission bitmap and downstream role contract
@@ -631,6 +664,14 @@ Use these codes by default unless an existing production contract already forces
   - HTTP: `422`
   - Meaning: `X-User-Mobile` is present but malformed for the service contract
 
+- `AUTH_PROFILE_HEADER_INVALID`
+  - HTTP: `400`
+  - Meaning: `X-Profile` is present but is not a valid base64url(JSON) profile payload, does not decode to a JSON object, or contains invalid non-null values for `first_name`, `last_name`, or `shahr`
+
+- `AUTH_PROFILE_HEADER_REQUIRED`
+  - HTTP: `400`
+  - Meaning: the route or operation explicitly requires trusted `X-Profile`, but it was missing or blank
+
 - `AUTHZ_DENIED`
   - HTTP: `403`
   - Meaning: caller is authenticated but not allowed to perform the requested action
@@ -693,11 +734,12 @@ Use this checklist when adapting a downstream service to this trust model:
 4. If the service still uses legacy names such as `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id`, map them to `project_id` as part of the refactor plan and keep the trust semantics unchanged.
 5. Validate the public tenant boundary value as UUIDv7 when that value is exposed in service contracts, and if the service still keeps an internal numeric key, translate after that validation instead of replacing the public boundary contract.
 6. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
-7. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
-8. Deny client tenant-override attempts explicitly instead of silently preferring one tenant source.
-9. Scope every tenant-aware query or command by the trusted tenant context.
-10. Keep deny response codes and deny log codes aligned, with request and trace correlation attached.
-11. Add tests for spoofed headers, missing tenant context, cross-tenant access attempts, conflicting tenant selectors, and any route that intentionally allows anonymous traffic.
+7. When a route or write path consumes trusted profile data, decode `X-Profile` when present, normalize nullable `first_name`, `last_name`, and `shahr`, and keep the latest local user projection separate from immutable request-time snapshots. Use `AUTH_PROFILE_HEADER_REQUIRED` only for routes that intentionally force trusted profile presence.
+8. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
+9. Deny client tenant-override attempts explicitly instead of silently preferring one tenant source.
+10. Scope every tenant-aware query or command by the trusted tenant context.
+11. Keep deny response codes and deny log codes aligned, with request and trace correlation attached.
+12. Add tests for spoofed headers, missing tenant context, malformed `X-Profile`, cross-tenant access attempts, conflicting tenant selectors, and any route that intentionally allows anonymous traffic.
 
 Run this review checklist only after reading the relevant companion skill(s) for the task area. A review is incomplete if it checks gateway trust rules but skips the applicable Laravel, security, observability, Octane, proxy, or Arvan companion guidance.
 
@@ -715,6 +757,8 @@ Flag a problem when you see any of these:
 - A permission middleware or authorization wrapper contains a temporary early return or bypass ahead of the real checks, effectively disabling authorization while requests still look authenticated.
 - Different services use different auth failure codes for the same deny class without a compatibility reason.
 - A service accepts conflicting client-supplied tenant selectors and trusted tenant context without an explicit deny.
+- A service treats `X-PROFILE` as client-provided, raw JSON, or a gateway-decoded value instead of the exact base64url claim copied from the verified token.
+- A service stores historical profile snapshots but fails to refresh the latest local user projection from the trusted gateway payload.
 - A service keeps documenting `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id` as if they were different concepts instead of a legacy alias scheduled to be renamed to `project_id` / `X-PROJECT-ID`.
 
 - A service derives `tenant_id` or `project_id` from request body fields before trusted `X-PROJECT-ID`.
@@ -764,6 +808,7 @@ Routing rule:
 - Letting request body, route params, or query params override trusted tenant context.
 - Treating gateway authentication as full authorization.
 - Spreading raw header reads across the codebase instead of normalizing them once.
+- Treating `X-Profile` as raw JSON instead of base64url(JSON) copied unchanged from the verified `profile` token claim.
 - Silently accepting a client tenant selector that conflicts with trusted tenant context.
 - Treating `tenant_id`, `tenant_public_id`, and `project_id` as different tenant-boundary concepts when they are supposed to be one shared concept under the `project_id` name.
 - Logging raw access tokens.
