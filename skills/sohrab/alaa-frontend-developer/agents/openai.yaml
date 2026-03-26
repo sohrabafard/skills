@@ -1,0 +1,8 @@
+interface:
+  display_name: "Alaa Frontend Developer"
+  short_description: "Unified Vue/Quasar/Vite frontend engineering"
+  brand_color: "#0f766e"
+  default_prompt: "Use $alaa-frontend-developer as the default frontend engineering skill for a Vue 3 + Quasar + Vite app, then load the smallest matching reference and pair with $quasar-skill-packe, $frontend-skill, or browser skills only when the task needs them."
+
+policy:
+  allow_implicit_invocation: true
