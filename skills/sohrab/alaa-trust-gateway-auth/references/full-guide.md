@@ -23,7 +23,7 @@ Mandatory routing rules:
 - If the task touches Octane, long-lived workers, request-scoped auth state, tenant-context reset, or performance-sensitive auth middleware, read `alaa-octane-performance` first.
 - If the task touches deny logging, request correlation, trace propagation, security events, or auth error observability, read `alaa-observability-soc` first.
 - If the task touches trusted proxy boundaries, direct service exposure, container networking, edge-only exposure, or `X-Forwarded-*` behavior, read `alaa-docker-production` first.
-- If the task touches HAProxy ACL order, JWT verification behavior, header mutation, path stripping, route exposure, or gateway-side auth flow, read `haproxy-3.2` first.
+- If the task touches HAProxy ACL order, JWT verification behavior, header mutation, path stripping, route exposure, or gateway-side auth flow, read `alaa-haproxy` first.
 - If the task touches Arvan/Kubernetes entrypoints, ingress vs load balancer exposure, edge trust boundaries, or public service exposure on Arvan, read `caas-arvan-kuber` first.
 
 Do not continue with implementation advice until the relevant companion skill has been read.
@@ -48,7 +48,7 @@ Use this execution order:
 5. Only after that, propose or implement changes.
 
 Examples:
-- Gateway ACL/header change -> read `haproxy-3.2`, then inspect gateway config.
+- Gateway ACL/header change -> read `alaa-haproxy`, then inspect gateway config.
 - Laravel trusted-header middleware change -> read `alaa-laravel-architecture` and `alaa-php-clean-code`; if Octane is used, also read `alaa-octane-performance`.
 - Auth deny logging or trace propagation change -> read `alaa-observability-soc`.
 - Public exposure or trusted-proxy deployment change -> read `alaa-docker-production`; on Arvan, also read `caas-arvan-kuber`.
@@ -788,7 +788,7 @@ These are not optional background references. They are required companion reads 
 - `alaa-docker-production`
   Read before changing trusted proxy boundaries, direct service exposure, container networking, or `X-Forwarded-*` handling at deployment/runtime edges.
 
-- `haproxy-3.2`
+- `alaa-haproxy`
   Read before changing gateway ACLs, header sanitization or injection, path-prefix stripping, JWT verification order, public vs protected route behavior, or HAProxy-side auth enforcement.
 
 - `caas-arvan-kuber`

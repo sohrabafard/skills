@@ -17,7 +17,7 @@ Use this execution order:
 5. Only after that, propose or implement changes.
 
 Examples:
-- Gateway ACL/header change -> read `haproxy-3.2`, then inspect gateway config.
+- Gateway ACL/header change -> read `alaa-haproxy`, then inspect gateway config.
 - Laravel trusted-header middleware change -> read `alaa-laravel-architecture` and `alaa-php-clean-code`; if Octane is used, also read `alaa-octane-performance`.
 - Auth deny logging or trace propagation change -> read `alaa-observability-soc`.
 - Public exposure or trusted-proxy deployment change -> read `alaa-docker-production`; on Arvan, also read `caas-arvan-kuber`.

@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-config
+data:
+  haproxy.cfg: |
+    global
+      log stdout format raw local0 info
+      stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+      stats timeout 30s
+      maxconn 20000
+
+    defaults
+      log stdout format raw local0 info
+      mode http
+      option httplog
+      option dontlognull
+      timeout connect 5s
+      timeout client 30s
+      timeout server 30s
+      timeout http-request 10s
+      timeout http-keep-alive 15s
+
+    frontend fe_public
+      bind :8080
+      http-request set-header X-Request-Id %[unique-id]
+      default_backend be_app
+
+    frontend fe_metrics
+      bind 127.0.0.1:8405
+      mode http
+      http-request use-service prometheus-exporter if { path /metrics }
+      http-request return status 404
+
+    backend be_app
+      balance roundrobin
+      option httpchk GET /healthz
+      http-check expect status 200
+      server app1 app.default.svc.cluster.local:8080 check resolvers dns init-addr none
+
+    resolvers dns
+      nameserver kube-dns 10.96.0.10:53
+      resolve_retries 3
+      timeout resolve 1s
+      timeout retry 1s
+      hold valid 10s

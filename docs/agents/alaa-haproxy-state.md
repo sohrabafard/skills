@@ -1,0 +1,47 @@
+# Alaa HAProxy State
+
+- Task name: refresh and rename the HAProxy skill
+- Current status: implemented, validated, pending user review
+- Objective: rename `haproxy-3.2` to `alaa-haproxy`, refresh it against the current HAProxy 3.2 LTS branch, and expand the bundled production examples.
+- Current repository understanding:
+  - the existing skill lives at `skills/sohrab/haproxy-3.2`
+  - the current top-level `SKILL.md` is useful but too large and too reference-heavy for the pack's routing-first pattern
+  - the bundle currently includes HAProxy, Kubernetes, Helm, and GitLab CI examples plus minimal source links
+  - the pack also keeps eval manifests and datasets under `docs/skill-evals/`
+- Assumptions and constraints:
+  - skill text should stay in simple, fluent English
+  - live official HAProxy sources should override stale local wording
+  - the rename should propagate to pack routing references and eval assets
+- Completed work:
+  - inspected the current skill bundle, metadata, and cross-references
+  - loaded the `skill-creator` skill and its `openai_yaml.md` reference
+  - verified from live official sources that `3.2` is still marked `LTS` in the docs index, `3.3` is not marked `LTS`, and the official release directories show `3.2.15` and `3.3.6` dated `2026-03-19`
+  - renamed the skill folder to `skills/sohrab/alaa-haproxy`
+  - rewrote the top-level skill into a routing-first entrypoint that covers both `3.2` and `3.3`
+  - added `references/00-topic-map.md` and `references/full-guide.md` with branch comparison and `3.2 -> 3.3` upgrade notes
+  - expanded bundled HAProxy examples with observability, PROXY protocol chaining, peers-based rate limiting, canary routing, and a `3.3`-focused backend HTTP/3 example scaffold
+  - expanded the skill further with platform-delivery and security-observability references
+  - enriched CI/CD examples with GitLab CI and GitHub Actions validation flows
+  - enriched Kubernetes and Helm patterns with more production-oriented deployment, service, metrics, HPA, NetworkPolicy, and ServiceMonitor examples
+  - added more service-integration and layered-proxy examples for internal gateway and backend mTLS patterns
+  - updated companion pack references and added canonical eval files under the new skill name
+- Remaining work:
+  - optional follow-up tightening of the top-level skill to get under the validator's soft line-count warning
+  - optional cleanup of legacy eval filenames if workspace permissions are fixed later
+- Risks or blockers:
+  - the repo validator currently reports many pre-existing pack-wide errors and warnings unrelated to this skill
+  - legacy eval files with old filenames could not be removed due workspace access-denied behavior, so their contents were updated and new canonical files were added instead
+  - the `3.3` backend HTTP/3 example is intentionally marked as a branch-specific scaffold and should still be syntax-checked against the exact target `3.3` binary before rollout
+  - some Kubernetes and Helm examples are intentionally chart- or environment-patterns rather than exact drop-in manifests for every cluster, and should be adapted to the target chart and namespace policies
+- Validation summary:
+  - live source checks completed against official HAProxy docs, release directories, and the official `Announcing HAProxy 3.3` post
+  - `python scripts\validate_sohrab_skill_pack.py` was run; it reports many existing pack-wide errors not caused by this task and only a soft line-count warning for `alaa-haproxy`
+  - stale string search shows old `haproxy-3.2` references now remain only in this task's own state and plan history
+- Next recommended step:
+  - user review of the `3.2` vs `3.3` policy and whether the estate should stay on `3.2` LTS or selectively move some services to `3.3`
+- Timeline:
+  - 2026-03-30 00:00 +03:30 — inspected the existing `haproxy-3.2` bundle and confirmed repo-local cross-references.
+  - 2026-03-30 00:00 +03:30 — verified from official HAProxy sources that `3.2` remains the LTS branch and `3.2.15` is available in the release directory.
+  - 2026-03-30 00:00 +03:30 — confirmed `3.3` is newer but not marked `LTS`, and folded `3.2 -> 3.3` guidance into the rewritten skill.
+  - 2026-03-30 00:00 +03:30 — ran the pack validator and recorded the remaining unrelated pack-wide findings.
+  - 2026-03-30 00:00 +03:30 — added richer CI/CD, Kubernetes, Helm, layered-proxy, security, and observability guidance and examples.

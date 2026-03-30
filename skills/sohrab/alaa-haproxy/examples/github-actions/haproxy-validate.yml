@@ -1,0 +1,36 @@
+name: haproxy-validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.32.0
+
+      - name: Validate HAProxy config
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work haproxy:3.2.15 sh -ec '
+            haproxy -vv
+            haproxy -c -f haproxy/haproxy.cfg
+          '
+
+      - name: Render Helm chart
+        run: |
+          helm lint charts/haproxy -f charts/haproxy/values.yaml
+          helm template haproxy-edge charts/haproxy -n edge -f charts/haproxy/values.yaml > rendered-haproxy.yaml
+
+      - name: Kubernetes dry run
+        run: kubectl apply --dry-run=client -f rendered-haproxy.yaml

@@ -66,7 +66,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
   - Pair when deny logs, request correlation, trace propagation, or auth event visibility changes.
 - $alaa-docker-production
   - Pair when trusted proxy boundaries, direct exposure, or container-network trust rules change.
-- $haproxy-3.2-skill
+- $alaa-haproxy
   - Mandatory when HAProxy ACL order, JWT verification, path stripping, or header mutation changes.
 - $caas-arvan-kuber
   - Pair when Arvan or Kubernetes exposure changes affect the public trust boundary.

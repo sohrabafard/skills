@@ -235,7 +235,7 @@ These are not optional background references. They are required companion reads 
 - `alaa-docker-production`
   Read before changing trusted proxy boundaries, direct service exposure, container networking, or `X-Forwarded-*` handling at deployment/runtime edges.
 
-- `haproxy-3.2`
+- `alaa-haproxy`
   Read before changing gateway ACLs, header sanitization or injection, path-prefix stripping, JWT verification order, public vs protected route behavior, or HAProxy-side auth enforcement.
 
 - `caas-arvan-kuber`

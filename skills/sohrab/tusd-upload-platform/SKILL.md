@@ -81,7 +81,7 @@ When using this skill, follow this sequence:
   - Pair for browser upload UX, SSR-safe client flows, or auth/session handling.
 - `$quasar-skill-packe`
   - Pair when the client lives in a Quasar app and the issue is Quasar-specific.
-- `$haproxy-3.2-skill`
+- `$alaa-haproxy`
   - Pair when HAProxy termination, stickiness, or request forwarding behavior matters.
 - `$caas-arvan-kuber`
   - Pair when the deployment target is Arvan CaaS or Kubernetes constraints drive the design.

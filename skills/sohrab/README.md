@@ -125,7 +125,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 ### Infra and platform workflow
 
 1. Generate with the smallest relevant generator skill.
-2. Apply platform policy from `caas-arvan-kuber`, `haproxy-3.2`, or `alaa-docker-production` as needed.
+2. Apply platform policy from `caas-arvan-kuber`, `alaa-haproxy`, or `alaa-docker-production` as needed.
 3. Validate with the matching validator skill.
 4. Keep operator-facing notes and rollback expectations aligned with the final output.
 
@@ -160,7 +160,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 ### Platform, gateway, and delivery
 
 - `caas-arvan-kuber`
-- `haproxy-3.2`
+- `alaa-haproxy`
 - `alaa-docker-production`
 - `tusd-upload-platform`
 - `vector-rust-observability-pipelines`

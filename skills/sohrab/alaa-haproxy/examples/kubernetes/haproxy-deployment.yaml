@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: haproxy
+  template:
+    metadata:
+      labels:
+        app: haproxy
+      annotations:
+        # Recommended: add a checksum annotation in Helm to trigger rollout on config changes
+        # checksum/haproxy-config: "<sha256>"
+        {}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 99
+        runAsGroup: 99
+        fsGroup: 99
+      terminationGracePeriodSeconds: 30
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app: haproxy
+      containers:
+      - name: haproxy
+        image: haproxy:3.2.15
+        args: ["-W", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: metrics
+          containerPort: 8405
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -ec
+              # Pair this with a readiness strategy that stops new traffic first.
+              - kill -USR1 1 || true; sleep 15
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: "2"
+            memory: 1Gi
+        volumeMounts:
+        - name: cfg
+          mountPath: /usr/local/etc/haproxy
+          readOnly: true
+        - name: run
+          mountPath: /run/haproxy
+        - name: lib
+          mountPath: /var/lib/haproxy
+      volumes:
+      - name: cfg
+        configMap:
+          name: haproxy-config
+      - name: run
+        emptyDir: {}
+      - name: lib
+        emptyDir: {}

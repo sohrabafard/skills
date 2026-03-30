@@ -1,0 +1,33 @@
+# Alaa HAProxy Refresh Plan
+
+- Timestamp: 2026-03-30 00:00 +03:30
+- Scope: `skills/sohrab/haproxy-3.2` rename and refresh, pack routing references, and skill eval assets.
+- Objective: produce a cleaner, current, production-grade HAProxy skill named `alaa-haproxy` with stronger routing, better source priority, and more complete examples.
+- Assumptions:
+  - the skill should track the current HAProxy `3.2` LTS line rather than the newer non-LTS branch
+  - example files remain practical templates, not full product templates
+- Constraints:
+  - preserve the existing pack conventions
+  - keep the top-level `SKILL.md` concise and move dense guidance into `references/`
+  - avoid adding unnecessary auxiliary docs inside the skill folder
+- Task decomposition:
+  - rename the skill folder and its metadata
+  - rewrite `SKILL.md` into a routing-first entrypoint
+  - add topic-map and full-guide references
+  - expand HAProxy examples for observability, rollout, peers, and multi-tier proxying
+  - update pack references and eval files to the new skill name
+  - validate consistency with the pack validator and spot checks
+- Dependency notes:
+  - live official HAProxy docs and release pages drive version-sensitive language
+  - pack-level README and companion skills must point to the new name after rename
+- Validation approach:
+  - search for stale `haproxy-3.2` references
+  - run the repo validator if available
+  - manually inspect the rewritten skill metadata and example index
+- Parallelization opportunities:
+  - not used; the write set is tightly coupled around one skill bundle
+- Exit criteria:
+  - `alaa-haproxy` exists with aligned frontmatter and `agents/openai.yaml`
+  - stale `haproxy-3.2` references are removed or intentionally preserved only where historically needed
+  - examples cover the main production patterns claimed by the skill
+  - the skill explicitly distinguishes `3.2` LTS from `3.3` non-LTS and includes upgrade guidance

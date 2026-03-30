@@ -1,0 +1,88 @@
+# Example values patterns.
+# Translate these keys to your chosen chart if the chart uses different names.
+
+image:
+  repository: haproxy
+  tag: "3.2.15"
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+args:
+  - -W
+  - -db
+  - -f
+  - /usr/local/etc/haproxy/haproxy.cfg
+
+service:
+  type: LoadBalancer
+  annotations: {}
+  ports:
+    http: 80
+    https: 443
+  metrics:
+    enabled: true
+    port: 8405
+
+config:
+  existingConfigMap: haproxy-config
+
+tls:
+  existingSecret: haproxy-certs
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: "2"
+    memory: 1Gi
+
+probes:
+  readiness:
+    tcpSocket:
+      port: 8080
+  liveness:
+    tcpSocket:
+      port: 8080
+
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - /bin/sh
+        - -ec
+        - kill -USR1 1 || true; sleep 15
+
+metrics:
+  serviceMonitor:
+    enabled: true
+
+autoscaling:
+  enabled: false
+
+extraVolumes:
+  - name: run
+    emptyDir: {}
+  - name: lib
+    emptyDir: {}
+
+extraVolumeMounts:
+  - name: run
+    mountPath: /run/haproxy
+  - name: lib
+    mountPath: /var/lib/haproxy
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 99
+  runAsGroup: 99
+  fsGroup: 99
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
