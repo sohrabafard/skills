@@ -4,18 +4,17 @@ Create or update repository documentation so it becomes a reliable source of tru
 This skill includes a docs consistency guardian mode to keep:
 - README/docs
 - API contract examples
-- Postman collection artifacts
   aligned with the current implementation.
 
 # When to use
 - “Document the repo”, “update README/docs”, “ops-grade docs”, “align docs with code”.
 - Any task that changes behavior and must update docs/runbooks/changelog.
-- Syncing Postman collections with the current API contract.
+- Route detailed Postman collection and environment work to `$alaa-postman-collections`.
 
 # When NOT to use
 - Code changes or refactors (except tiny doc-adjacent fixes explicitly requested)
 - Runtime config changes without doc impact
-- Tasks unrelated to docs/collections
+- Tasks unrelated to docs
 
 # Language requirements
 - All docs written in Persian (fa-IR).
@@ -53,13 +52,12 @@ This skill includes a docs consistency guardian mode to keep:
 1) Confirm sources of truth
     - Migration docs, API contract, schema design, and the live code
 2) Inventory referenced docs/artifacts
-    - README links, `docs/*`, and Postman collection (if present)
+    - README links, `docs/*`, and any collection artifacts that must stay terminology-aligned
 3) Apply minimal, style-preserving edits
     - preserve headings/order, fix mismatched facts
     - use consistent ID formats and field names in examples (e.g., `public_id`)
-4) Update Postman artifacts (if present)
-    - variables (baseUrl, auth token), headers, example IDs, response bodies
-    - adjust Postman tests to match response shape
+4) If Postman artifacts are in scope, route the collection and environment work to `$alaa-postman-collections`
+    - keep README and docs wording aligned with the collection changes
 5) Run consistency grep (docs + Postman)
     - search for legacy terms and mismatched identifiers
 6) Record changes and leftovers

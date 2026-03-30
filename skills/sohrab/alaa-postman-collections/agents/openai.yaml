@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Postman Collections"
+  short_description: "Postman collection sync and validation"
+  default_prompt: "Use $alaa-postman-collections to follow its workflow for Postman collection and environment sync, validation, and Insomnia-safe portability."
+
+policy:
+  allow_implicit_invocation: true

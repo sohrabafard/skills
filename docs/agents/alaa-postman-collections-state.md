@@ -1,0 +1,37 @@
+# Alaa Postman Collections State
+
+- Task name: alaa postman collections skill authoring
+- Current status: implemented and validated, pending review feedback
+- Objective: create a new reusable `alaa-postman-collections` skill for Postman collection and environment generation, sync, validation, and documentation with clean free-plan Insomnia import compatibility, then narrow `alaa-docs-farsi` so it routes Postman ownership to the new skill.
+- Current repository understanding:
+  - Sohrab skills use small routing-first top-level `SKILL.md` files with details in `references/`.
+  - `alaa-docs-farsi` still owns Postman collection sync in both `SKILL.md` and `references/full-guide.md`.
+  - `scripts/validate_sohrab_skill_pack.py` is the local pack validator that checks skill frontmatter, key sections, referenced paths, and `agents/openai.yaml`.
+- Assumptions and constraints:
+  - All new skill content, examples, descriptions, and comments must remain English-only.
+  - Official live verification must use OpenAI, Postman, and Insomnia/Kong primary sources only.
+  - Keep edits small, deterministic, and reviewable; avoid introducing heavy dependencies.
+- Completed work:
+  - loaded the `skill-creator` guidance
+  - inspected the current docs skill and nearby skill structure
+  - verified current official guidance for OpenAI prompting, Postman collection/schema behavior, Postman environments/variables, and Insomnia free-plan/import constraints
+  - created the new `skills/sohrab/alaa-postman-collections/` skill package with routing-first top-level guidance, focused references, and a helper validator script
+  - updated `skills/sohrab/alaa-docs-farsi/` so detailed Postman ownership now routes to `$alaa-postman-collections`
+  - validated the new skill with `quick_validate.py`
+  - smoke-tested `scripts/validate_postman_artifacts.py` on temporary Postman collection and environment JSON files
+- Remaining work:
+  - user review of the new skill wording and ownership boundary
+- Risks or blockers:
+  - official Insomnia docs clearly confirm broad Postman import support, but exact round-trip fidelity for every advanced Postman-only feature is still a practical compatibility risk and must be treated carefully in the skill
+  - Postman environment export structure is less prominently documented than collection schema details, so the skill should prefer existing exported shapes when present and validate structure conservatively
+- Validation summary:
+  - official-source review completed before editing
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py D:\Sohrab\Project\skills\skills\sohrab\alaa-postman-collections` passed
+  - `python skills\sohrab\alaa-postman-collections\scripts\validate_postman_artifacts.py <temp collection> --env <temp environment>` passed with one expected warning because `jsonschema` is not installed locally
+  - `Get-Command inso, insomnia -ErrorAction SilentlyContinue` returned no local Insomnia CLI or desktop command, so no live import smoke test was available in this session
+  - `python scripts\validate_sohrab_skill_pack.py` still fails on unrelated pre-existing skills elsewhere in the pack; no new error was emitted for `alaa-postman-collections`
+- Next recommended step:
+  - if desired later, forward-test the new skill on a real repository that already contains a stale Postman collection and environment pair
+- Timeline:
+  - 2026-03-30 14:14 +03:30 — inspected local skill patterns, loaded `skill-creator`, and gathered official version-sensitive constraints for the new skill.
+  - 2026-03-30 14:34 +03:30 — authored the new Postman skill, routed Postman ownership out of `alaa-docs-farsi`, and completed local validation plus a validator smoke test.

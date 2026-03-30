@@ -18,13 +18,13 @@ Keep this top-level file small. Load the references for the full rules, examples
 
 - README or docs updates
 - docs and implementation alignment
-- Postman collection sync
 - operational or business-facing repo documentation work
 
 ## When NOT to use
 
 - logic changes with no doc impact
 - pure inline code annotation passes
+- detailed Postman collection or environment work
 
 ## Quick start
 
@@ -32,14 +32,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 2. Apply `$alaa-low-noise` when the task is non-trivial.
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
-5. Pair with the listed companion skills before making changes outside this skill's ownership.
+5. Route collection-specific Postman work to `$alaa-postman-collections`.
+6. Pair with the listed companion skills before making changes outside this skill's ownership.
 
 ## Doc impact checklist
 
 - Re-check `README` when install, setup, commands, or workflow expectations changed.
 - Re-check the docs directory when architecture, operations, or business-facing behavior changed.
 - Re-check API docs when request, response, auth, or error contracts changed.
-- Re-check Postman collections when endpoints, examples, or auth flows changed.
+- Re-check Postman collections through `$alaa-postman-collections` when endpoints, examples, or auth flows changed.
 
 ## Companion routing
 
@@ -47,6 +48,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair when the task also touches docblocks and inline code annotations.
 - $alaa-php-clean-code
   - Pair when the task also touches backend contract and terminology alignment.
+- $alaa-postman-collections
+  - Pair when the task needs Postman collections, environments, examples, tests, or Insomnia-safe artifact sync.
 
 ## Reference navigation
 
