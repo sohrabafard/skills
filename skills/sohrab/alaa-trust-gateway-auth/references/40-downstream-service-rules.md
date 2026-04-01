@@ -101,8 +101,9 @@
   - base64url-decode with strict alphabet checking
   - JSON-decode the UTF-8 payload
   - require a JSON object
-  - normalize `first_name`, `last_name`, and `shahr` independently: missing key => `null`, explicit `null` => `null`, trimmed empty string => `null`, non-empty string => keep
-  - treat malformed payloads, non-object payloads, or invalid non-null field types as canonical code `AUTH_PROFILE_HEADER_INVALID`
+  - normalize `first_name` and `last_name` as nullable trimmed strings
+  - validate `shahr` as either missing or an object with fixed `id` and `name` keys: missing key => `null`, explicit `null` => `null`, `name` trimmed empty => `AUTH_PROFILE_HEADER_INVALID`, `name` non-empty string => keep, `id` integer or `null` => keep
+  - treat malformed payloads, non-object payloads, or any other invalid non-null `shahr` shape as canonical code `AUTH_PROFILE_HEADER_INVALID`
 - If `X-PROFILE` is absent, downstream services must interpret that as all canonical profile fields being `null` unless a route explicitly forces trusted profile presence.
 - Storage rule for services that persist profile data:
   - keep the latest user projection in the local `users` read model

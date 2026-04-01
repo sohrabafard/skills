@@ -318,19 +318,22 @@ Only claims that are present are injected.
 ## X-Profile profile propagation contract
 - Auth-service is the source of truth for the latest user profile.
 - Auth-service must emit JWT claim `profile` when trusted downstream services need profile context.
-- The `profile` claim value must be a base64url-encoded UTF-8 JSON object whose canonical keys are `first_name`, `last_name`, and `shahr` when they are present.
+- The `profile` claim value must be a base64url-encoded UTF-8 JSON object whose canonical keys are `first_name`, `last_name`, and `shahr` when they are present. When `shahr` exists, it is an object with fixed keys `id` and `name`.
   ```json
   {
     "first_name": null,
     "last_name": null,
-    "shahr": null
+    "shahr": {
+      "id": null,
+      "name": "Mashhad"
+    }
   }
   ```
 - Auth-service should omit any key whose value is `null`, and it may omit the entire `profile` claim when all three canonical fields are `null`.
 - Gateway must strip any inbound `X-PROFILE` / `X-Profile`, verify the token, and if the verified token has a `profile` claim, copy that exact claim value into `X-PROFILE`.
 - Gateway must not decode, reshape, normalize, or re-encode the `profile` claim before forwarding it.
 - If the verified token has no `profile` claim, the gateway must not fabricate `X-PROFILE`.
-- Downstream services that need profile data must base64url-decode `X-Profile`, JSON-decode the UTF-8 payload, require a JSON object, and normalize each canonical field independently: missing key => `null`, explicit JSON `null` => `null`, trimmed empty string => `null`, non-empty string => keep, non-string non-null => `AUTH_PROFILE_HEADER_INVALID`.
+- Downstream services that need profile data must base64url-decode `X-Profile`, JSON-decode the UTF-8 payload, require a JSON object, normalize `first_name` and `last_name` as nullable trimmed strings, and validate `shahr` as either missing or an object with keys `id` and `name`: missing key => `null`, explicit JSON `null` => `null`, `shahr.name` trimmed empty => `AUTH_PROFILE_HEADER_INVALID`, `shahr.name` non-empty string => keep, `shahr.id` integer or `null` => keep, and any other non-null `shahr` shape => `AUTH_PROFILE_HEADER_INVALID`.
 - Downstream services may store immutable request-time snapshots for historical or audit purposes, but their local `users` projection should always hold the latest profile state known from auth-service.
 - Source-of-truth rule: auth-service always owns the latest profile state. Downstream services may cache or project it locally, but they must not treat their local copy as the source of truth.
 ## Auth-service local trusted header contract
@@ -486,8 +489,9 @@ Only claims that are present are injected.
   - base64url-decode with strict alphabet checking
   - JSON-decode the UTF-8 payload
   - require a JSON object
-  - normalize `first_name`, `last_name`, and `shahr` independently: missing key => `null`, explicit `null` => `null`, trimmed empty string => `null`, non-empty string => keep
-  - treat malformed payloads, non-object payloads, or invalid non-null field types as canonical code `AUTH_PROFILE_HEADER_INVALID`
+  - normalize `first_name` and `last_name` as nullable trimmed strings
+  - validate `shahr` as either missing or an object with fixed `id` and `name` keys: missing key => `null`, explicit `null` => `null`, `name` trimmed empty => `AUTH_PROFILE_HEADER_INVALID`, `name` non-empty string => keep, `id` integer or `null` => keep
+  - treat malformed payloads, non-object payloads, or any other invalid non-null `shahr` shape as canonical code `AUTH_PROFILE_HEADER_INVALID`
 - If `X-PROFILE` is absent, downstream services must interpret that as all canonical profile fields being `null` unless a route explicitly forces trusted profile presence.
 - Storage rule for services that persist profile data:
   - keep the latest user projection in the local `users` read model

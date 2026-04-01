@@ -36,12 +36,12 @@ Keep this top-level file small. Load the references for the full trust model, ro
 
 ## Header source-of-truth
 
-| Header or context          | Trusted source                        | Notes                                                 |
-|----------------------------|---------------------------------------|-------------------------------------------------------|
-| `Authorization: Bearer`    | public client into the gateway        | only the gateway should treat it as raw bearer input  |
-| trusted `X-*` auth headers | gateway or HAProxy after verification | sanitize client-supplied copies before forwarding     |
-| tenant or project context  | verified gateway-derived context      | never trust browser or downstream user input for this |
-| `X-Profile`                | trusted gateway/auth-service flow     | preserve exact contract and propagation rules         |
+| Header or context          | Trusted source                        | Notes                                                                |
+|----------------------------|---------------------------------------|----------------------------------------------------------------------|
+| `Authorization: Bearer`    | public client into the gateway        | only the gateway should treat it as raw bearer input                 |
+| trusted `X-*` auth headers | gateway or HAProxy after verification | sanitize client-supplied copies before forwarding                    |
+| tenant or project context  | verified gateway-derived context      | never trust browser or downstream user input for this                |
+| `X-Profile`                | trusted gateway/auth-service flow     | preserve exact contract; `profile.shahr` is `{id,name}` when present |
 
 ## Route family expectations
 
