@@ -12,6 +12,7 @@ Use this file to choose the smallest relevant section in `./full-guide.md`.
 - `## Canonical service identity`
 - `## Route family expectations`
 - `## Operational caller expectations`
+- `## Successful /api/* JSON envelope`
 - `## Service-specific infrastructure modeling`
 - `# Health and readiness contract`
 - `## /api/health`
@@ -30,6 +31,7 @@ Use this file to choose the smallest relevant section in `./full-guide.md`.
 - `## Scope`
 - `## Core rule`
 - `## Default behavior`
+- `## Success envelope contract`
 - `## Latest Laravel guidance worth using`
 - `## Boundary rules`
 - `## Testing and docs alignment`

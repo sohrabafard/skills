@@ -62,6 +62,18 @@ Use this execution order:
 - `/api/ready` may be called by a gateway, ingress, orchestrator, or runtime validator, but the contract must not assume one specific caller.
 - Keep operational routes available without access tokens, OTP, cookies, or end-user session state.
 
+## Successful `/api/*` JSON envelope
+Apply these rules to every successful JSON response under `/api/*` unless an approved exception is documented:
+
+- Every successful `/api/*` JSON response MUST include a top-level `data` key.
+- If the response returns one resource or one compound result, `data` MUST be an object.
+- If the response returns a collection, `data` MUST be an array.
+- Nested child resources MUST stay inline inside the parent object and MUST NOT be wrapped again with their own `data` key.
+- Top-level `meta` MAY be used for transport metadata such as success messages.
+- Top-level `links` MUST be reserved for real document-navigation concerns such as pagination or `self` or `describedby` links.
+- Do not embed transport-level `links` inside profile or resource payload objects.
+- Keep this envelope stable across Ala services so docs, SDKs, tests, and downstream consumers can rely on one success shape.
+
 ## Service-specific infrastructure modeling
 - Define readiness checks from the real infrastructure and bootstrap requirements of that service.
 - Use `database` for PostgreSQL-style primary database readiness.
@@ -231,6 +243,18 @@ For Laravel APIs, treat Resources as the public success-response contract.
 - Inspect existing repository patterns before changing response serialization.
 - Use Laravel Boost `search-docs` first for version-specific Resource guidance.
 - Keep docs, examples, and Postman artifacts aligned with the shipped Resource shape when the contract changes.
+
+## Success envelope contract
+When a Laravel endpoint returns a successful JSON response under `/api/*`, enforce the shared Ala envelope through the Resource layer:
+
+- Always serialize the top-level success payload under `data`.
+- Return `data` as an object for one resource or one compound result.
+- Return `data` as an array for collections.
+- Keep nested child resources inline within the parent Resource output. Do not add nested `data` wrappers for child objects.
+- Use top-level `meta` only for transport metadata such as success messages.
+- Use top-level `links` only for real document-navigation concerns such as pagination or `self` or `describedby` links.
+- Do not place pagination or transport `links` inside profile or resource payload fields.
+- Make the Resource or ResourceCollection the single transport boundary that enforces this contract.
 
 ## Latest Laravel guidance worth using
 These points reflect current official Laravel Resource guidance and should be used when they fit the repository style:

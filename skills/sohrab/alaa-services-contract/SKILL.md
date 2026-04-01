@@ -15,6 +15,7 @@ This skill owns shared service-level rules such as:
 - rollout-grade dependency and bootstrap checks
 - internal versus public route expectations
 - baseline inter-service HTTP behavior
+- successful `/api/*` JSON envelope rules
 - Laravel-only API response rules when the target service is Laravel-based
 
 Keep this top-level file small. Read the topic map first, then load only the matching sections from `references/full-guide.md`.
@@ -38,6 +39,10 @@ Keep this top-level file small. Read the topic map first, then load only the mat
 - If a service depends on both PostgreSQL and ClickHouse, include both `database` and `clickhouse` in the same readiness payload.
 - Keep check names, failure lists, and ordering stable and deterministic.
 - Prefer one canonical contract across `auth`, `vod`, `comment`, `ticket`, and `wa`. Document exceptions instead of improvising per service.
+- For successful `/api/*` JSON responses, require a top-level `data` key. Use an object for one resource or one compound result, and use an array for collections.
+- Keep nested child resources inline inside the parent payload. Do not wrap nested children in their own `data` key.
+- Use top-level `meta` only for transport metadata such as success messages.
+- Reserve top-level `links` for real document-navigation concerns such as pagination or `self` or `describedby` links. Do not embed `links` inside profile or resource payload fields.
 - Apply Laravel Resource-first response rules only when the target service is Laravel-based.
 
 ## Companion skills

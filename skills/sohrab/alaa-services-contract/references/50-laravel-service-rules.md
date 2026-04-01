@@ -20,6 +20,19 @@ For Laravel APIs, treat Resources as the public success-response contract.
 - Use Laravel Boost `search-docs` first for version-specific Resource guidance.
 - Keep docs, examples, and Postman artifacts aligned with the shipped Resource shape when the contract changes.
 
+## Success envelope contract
+
+When a Laravel endpoint returns a successful JSON response under `/api/*`, enforce the shared Ala envelope through the Resource layer:
+
+- Always serialize the top-level success payload under `data`.
+- Return `data` as an object for one resource or one compound result.
+- Return `data` as an array for collections.
+- Keep nested child resources inline within the parent Resource output. Do not add nested `data` wrappers for child objects.
+- Use top-level `meta` only for transport metadata such as success messages.
+- Use top-level `links` only for real document-navigation concerns such as pagination or `self` or `describedby` links.
+- Do not place pagination or transport `links` inside profile or resource payload fields.
+- Make the Resource or ResourceCollection the single transport boundary that enforces this contract.
+
 ## Boundary rules
 
 - Do not return `JsonResponse` payload arrays from services.

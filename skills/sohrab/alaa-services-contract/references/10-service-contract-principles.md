@@ -40,6 +40,19 @@ Choose readiness checks from the real infra of each service. Do not assume every
 - `/api/ready` may be called by a gateway or an orchestrator, but the contract must not assume one specific caller. It is an operational probe.
 - Keep operational routes available without access tokens, OTP, or end-user session state.
 
+## Successful `/api/*` JSON envelope
+
+Apply these rules to every successful JSON response under `/api/*` unless an approved exception is documented:
+
+- Every successful `/api/*` JSON response MUST include a top-level `data` key.
+- If the response returns one resource or one compound result, `data` MUST be an object.
+- If the response returns a collection, `data` MUST be an array.
+- Nested child resources MUST stay inline inside the parent object and MUST NOT be wrapped again with their own `data` key.
+- Top-level `meta` MAY be used for transport metadata such as success messages.
+- Top-level `links` MUST be reserved for real document-navigation concerns such as pagination or `self` or `describedby` links.
+- Do not embed transport-level `links` inside profile or resource payload objects.
+- Keep this envelope stable across Ala services so docs, SDKs, tests, and downstream consumers can rely on one success shape.
+
 ## Laravel baseline
 
 For Laravel services, standardize these defaults unless the repository already documents a different shared pattern:
