@@ -64,6 +64,14 @@ Keep this top-level file small. Read the topic map first, then load only the mat
 - `$alaa-docs-farsi`
   Pair when docs, runbooks, or Postman artifacts must be updated. The preferred output for all documentation is simple, fluent, natural English with complete and correct sentences. Do not create a separate Persian version just because the skill name says `farsi`. If an existing document is already written in Persian, update that same document in place and do not change its language unless the user explicitly asks for it.
 
+## Auth project integration note
+
+- When the task touches the `auth` service and any frontend or frontend-facing profile integration depends on academic form behavior, fully read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
+- Treat that document as the canonical frontend integration contract for academic policy in `auth`.
+- Make the frontend fully apply the documented evaluation order, field visibility rules, clearing behavior, code-based state handling, and code-to-id submit mapping.
+- Do not infer or invent extra academic behavior from old API payloads such as `data.academic.rules`; the catalogs endpoint is data-only and the dedicated policy doc must drive the frontend implementation.
+- When backend academic policy changes in `auth`, require the same pull request to update the frontend implementation, the canonical academic policy document, and any contract-facing docs or Postman artifacts that reference the flow.
+
 ## Reference navigation
 
 - Topic map and fast routing:
@@ -79,3 +87,4 @@ Keep this top-level file small. Read the topic map first, then load only the mat
 - Keep the auth service as the first proven reference implementation, then converge the other Ala services toward the same contract.
 - Keep route names, payload keys, and status semantics stable once published internally.
 - When another skill owns a deeper concern, route to it instead of duplicating its rules here.
+
