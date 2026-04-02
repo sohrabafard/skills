@@ -230,7 +230,7 @@ These are not optional background references. They are required companion reads 
   Read before changing auth or tenant-context handling in Octane or any long-lived worker environment, or when auth middleware sits on a hot path.
 
 - `alaa-observability-soc`
-  Read before changing auth error codes, deny logging, request correlation, `X-Request-Id`, `X-Correlation-Id`, trace propagation, or SOC-facing auth event behavior.
+  Read before changing auth error codes, deny logging, request correlation, `X-Request-Id`, `traceparent`, full removal of `X-Correlation-Id`, or SOC-facing auth event behavior.
 
 - `alaa-docker-production`
   Read before changing trusted proxy boundaries, direct service exposure, container networking, or `X-Forwarded-*` handling at deployment/runtime edges.

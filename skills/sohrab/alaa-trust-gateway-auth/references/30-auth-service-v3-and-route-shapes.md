@@ -109,5 +109,6 @@ Service-local protected auth-service routes after prefix stripping are:
 ## Response and observability facts from the auth repo
 - All `/api/*` routes are JSON-only for both success and error paths.
 - Resource responses wrap only the top-level payload in `data`; nested child resources are inline objects.
-- `/api/*` responses include `X-Request-Id`, `X-Correlation-Id`, and `traceparent`.
-- If `X-Request-Id` or `X-Correlation-Id` is already present from the caller or gateway, auth-service preserves it.
+- The target `/api/*` response-header contract is `X-Request-Id` plus `traceparent`.
+- If `X-Request-Id` or a valid inbound `traceparent` is already present from the caller or gateway, auth-service preserves it.
+- If auth-service still emits or documents `X-Correlation-Id`, treat that as migration drift to remove, not as a compatibility state to preserve.

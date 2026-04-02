@@ -1,90 +1,84 @@
 ---
 name: alaa-services-contract
-description: "Source-of-truth for hardened Ala backend service contracts. Use when creating or changing backend services such as auth, vod, comment, ticket, or wa; when standardizing `/api/health` or `/api/ready`; when aligning service naming, rollout readiness checks, internal-vs-public route behavior, inter-service request and response expectations, or framework-specific service rules such as Laravel API response contracts; and when an agent needs the canonical contract that all Ala services must follow."
+description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, or Laravel Resource-first `/api/*` responses. Use when consistency across Ala services matters more than local preference."
 ---
 
 # Alaa Services Contract
 
-## Purpose
+Use this skill as the hard contract layer for Ala backend services.
 
-Use this skill to keep Ala backend services operationally and contractually consistent.
+This skill is intentionally Ala-specific. It exists to keep Ala services aligned with one exact contract so agent output stays consistent across repositories. Treat the contract here as normative. When a target repository deviates, converge it to this contract or explicitly report the blocker. Do not improvise alternate envelopes, headers, event names, route names, or middleware semantics.
 
-This skill owns shared service-level rules such as:
-- service naming
-- health and readiness routes
-- rollout-grade dependency and bootstrap checks
-- internal versus public route expectations
-- baseline inter-service HTTP behavior
-- successful `/api/*` JSON envelope rules
-- Laravel-only API response rules when the target service is Laravel-based
-
-Keep this top-level file small. Read the topic map first, then load only the matching sections from `references/full-guide.md`.
+Keep this top-level file small. Read the reference files for the exact contract and apply steps.
 
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.
 2. Read `references/00-topic-map.md`.
-3. Identify whether the task is mainly about service naming, health/readiness, inter-service HTTP flow, Laravel-only API response rules, or service adoption.
-4. Load only the matching sections from `references/full-guide.md`.
-5. Read the required companion skills before changing auth trust, observability, data, async, architecture, docs, or Laravel response boundaries.
+3. Select the service mode first: any Ala backend, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
+4. Read the smallest relevant reference file first.
+5. Read `references/full-guide.md` when the task is cross-cutting or high-risk.
+6. Load the required companion skills before implementation work outside this skill's ownership.
 
-## Non-negotiable defaults
+## Hard contract rule
 
-- Keep `GET /api/health` and `GET /api/ready` unauthenticated and operational only.
-- Treat `/api/ready` as an internal infra and automation contract, not a public client contract.
-- Make the `service` field come from `APP_NAME` or a config value derived directly from it. Never return framework names such as `Laravel`.
-- Preserve the exact readiness response envelope described in `references/full-guide.md` unless there is an explicit cross-service design decision to change it.
-- Add checks for every required dependency or bootstrap invariant the service needs before it can serve rollout-grade traffic.
-- Model readiness checks from the real infrastructure of that service. Use `database` for PostgreSQL-style primary database checks and `clickhouse` as a separate check when the service depends on ClickHouse.
-- If a service depends on both PostgreSQL and ClickHouse, include both `database` and `clickhouse` in the same readiness payload.
-- Keep check names, failure lists, and ordering stable and deterministic.
-- Prefer one canonical contract across `auth`, `vod`, `comment`, `ticket`, and `wa`. Document exceptions instead of improvising per service.
-- For successful `/api/*` JSON responses, require a top-level `data` key. Use an object for one resource or one compound result, and use an array for collections.
-- Keep nested child resources inline inside the parent payload. Do not wrap nested children in their own `data` key.
-- Use top-level `meta` only for transport metadata such as success messages.
-- Reserve top-level `links` for real document-navigation concerns such as pagination or `self` or `describedby` links. Do not embed `links` inside profile or resource payload fields.
-- Apply Laravel Resource-first response rules only when the target service is Laravel-based.
+- Enforce the exact contract defined by this skill for Ala services.
+- Do not downgrade exact outputs into optional recommendations.
+- Do not invent local variants when this skill already defines the contract.
+- When this skill replaces a legacy header, field, event, or helper, remove the old implementation instead of keeping stale compatibility code in the service.
+- If a repository cannot adopt a rule exactly, stop and report the incompatibility.
+- Keep references relative to this skill folder so the skill remains usable on different machines.
+- Ala service names such as `auth`, `comment`, `ticket`, `vod`, and `wa` are valid inside this skill because it is intentionally platform-specific.
 
-## Companion skills
+## Companion routing
 
+Load these companion skills when their concern is in scope:
 - `$alaa-workflow`
-  Pair when applying this skill requires non-trivial, multi-file, or behavior-changing work.
+  - Load before non-trivial multi-file adoption work.
 - `$alaa-trust-gateway-auth`
-  Mandatory when gateway-derived identity, trusted headers, tenant or project propagation, or downstream trust semantics change.
+  - Load when trusted headers, auth error semantics, permission bitmap rules, `X-Profile`, or tenant or project propagation are involved.
 - `$alaa-observability-soc`
-  Pair when correlation headers, logs, traces, probe noise, or alert behavior changes.
-- `$alaa-data-layer`
-  Pair when readiness checks depend on schema, seed/bootstrap state, Redis state, PostgreSQL state, ClickHouse state, or other persistence invariants.
-- `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq`
-  Pair when readiness includes RabbitMQ or queue-plane expectations.
+  - Load when logs, traces, metrics, alerting, event naming, or incident evidence requirements are involved.
 - `$alaa-laravel-architecture`
-  Pair when route, controller, service, request, resource, or DTO boundaries change in Laravel services.
+  - Load when Laravel middleware, controllers, resources, DTOs, or service boundaries change.
 - `$alaa-php-clean-code`
-  Pair when implementing PHP or Laravel code changes.
+  - Load before implementing or refactoring PHP or Laravel code.
+- `$alaa-data-layer`
+  - Load when readiness checks depend on PostgreSQL, Redis, ClickHouse, bootstrap data, or persistence invariants.
+- `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq`
+  - Load when readiness or runtime behavior depends on RabbitMQ, queues, or workers.
 - `$alaa-docs-farsi`
-  Pair when docs, runbooks, or Postman artifacts must be updated. The preferred output for all documentation is simple, fluent, natural English with complete and correct sentences. Do not create a separate Persian version just because the skill name says `farsi`. If an existing document is already written in Persian, update that same document in place and do not change its language unless the user explicitly asks for it.
+  - Load when docs, Postman artifacts, or runbooks change.
 
-## Auth project integration note
+## Auth-specific routing
 
-- When the task touches the `auth` service and any frontend or frontend-facing profile integration depends on academic form behavior, fully read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
-- Treat that document as the canonical frontend integration contract for academic policy in `auth`.
-- Make the frontend fully apply the documented evaluation order, field visibility rules, clearing behavior, code-based state handling, and code-to-id submit mapping.
-- Do not infer or invent extra academic behavior from old API payloads such as `data.academic.rules`; the catalogs endpoint is data-only and the dedicated policy doc must drive the frontend implementation.
-- When backend academic policy changes in `auth`, require the same pull request to update the frontend implementation, the canonical academic policy document, and any contract-facing docs or Postman artifacts that reference the flow.
+- When the task touches the `auth` service and any frontend or frontend-facing profile integration depends on academic form behavior, read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
+- Treat that document as the canonical frontend integration contract for auth academic policy.
+- When auth academic policy changes, update the frontend implementation and any contract-facing docs or Postman artifacts in the same effort.
 
 ## Reference navigation
 
-- Topic map and fast routing:
-  `references/00-topic-map.md`
-- Full preserved guidance, rules, examples, and checklists:
-  `references/full-guide.md`
+- topic routing and service-mode selection:
+  - `references/00-topic-map.md`
+- core service modes, Ala service map, service identity, route families, and exact readiness envelope:
+  - `references/10-core-service-contract.md`
+- end-to-end platform flow, frontend or gateway orientation, and internal-hop boundaries:
+  - `references/25-end-to-end-flow-and-boundaries.md`
+- exact observability headers, `traceparent`, request logs, event names, and `RequestObservabilityMiddleware`:
+  - `references/20-operational-and-observability-contract.md`
+- exact trusted-ingress rules, Laravel response boundaries, and `ResolveUserMiddleware`:
+  - `references/30-trusted-ingress-and-laravel-contract.md`
+- apply checklist, review checklist, and anti-patterns:
+  - `references/40-apply-checklist-and-anti-patterns.md`
+- copy-oriented Laravel class and helper baselines:
+  - `references/50-laravel-copy-baselines.md`
+- complete preserved contract in one file:
+  - `references/full-guide.md`
 
 ## Maintenance rules
 
-- Keep the main contract cross-service and framework-agnostic unless a rule is explicitly scoped otherwise.
-- Put detailed contract rules into `references/full-guide.md` instead of growing this file.
-- Keep the topic map aligned with the actual headings in `references/full-guide.md`.
-- Keep the auth service as the first proven reference implementation, then converge the other Ala services toward the same contract.
-- Keep route names, payload keys, and status semantics stable once published internally.
-- When another skill owns a deeper concern, route to it instead of duplicating its rules here.
-
+- Keep this file routing-first and explicit.
+- Keep exact contract details in `references/`.
+- Use relative reference paths only.
+- Keep exact route names, header names, event names, and code families stable unless the contract is intentionally revised.
+- When this skill changes a contract owned jointly with another skill, update that companion skill in the same effort so the pack remains consistent.

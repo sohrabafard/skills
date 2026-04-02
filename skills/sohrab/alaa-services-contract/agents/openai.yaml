@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
-  short_description: "Cross-service contracts, readiness, and Laravel response rules"
-  default_prompt: "Use $alaa-services-contract to apply the hardened Ala backend service contract, readiness rules, and Laravel-only API response rules when relevant."
+  short_description: "Hard Ala backend contract for routes, headers, signals, and Laravel API responses"
+  default_prompt: "Use $alaa-services-contract to enforce the exact Ala backend contract for `/api/health`, `/api/ready`, service naming, RequestObservabilityMiddleware, ResolveUserMiddleware, event/code naming, and Laravel Resource-first `/api/*` responses."
 
 policy:
   allow_implicit_invocation: true

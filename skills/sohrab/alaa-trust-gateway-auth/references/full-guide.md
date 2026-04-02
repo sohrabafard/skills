@@ -250,8 +250,9 @@ Service-local protected auth-service routes after prefix stripping are:
 ## Response and observability facts from the auth repo
 - All `/api/*` routes are JSON-only for both success and error paths.
 - Resource responses wrap only the top-level payload in `data`; nested child resources are inline objects.
-- `/api/*` responses include `X-Request-Id`, `X-Correlation-Id`, and `traceparent`.
-- If `X-Request-Id` or `X-Correlation-Id` is already present from the caller or gateway, auth-service preserves it.
+- The target `/api/*` response-header contract is `X-Request-Id` plus `traceparent`.
+- If `X-Request-Id` or a valid inbound `traceparent` is already present from the caller or gateway, auth-service preserves it.
+- If auth-service still emits or documents `X-Correlation-Id`, treat that as migration drift to remove, not as a compatibility state to preserve.
 
 # What the gateway verifies
 For protected routes, the current HAProxy logic verifies these checks in order:
@@ -787,7 +788,7 @@ These are not optional background references. They are required companion reads 
   Read before changing auth or tenant-context handling in Octane or any long-lived worker environment, or when auth middleware sits on a hot path.
 
 - `alaa-observability-soc`
-  Read before changing auth error codes, deny logging, request correlation, `X-Request-Id`, `X-Correlation-Id`, trace propagation, or SOC-facing auth event behavior.
+  Read before changing auth error codes, deny logging, request correlation, `X-Request-Id`, `traceparent`, full removal of `X-Correlation-Id`, or SOC-facing auth event behavior.
 
 - `alaa-docker-production`
   Read before changing trusted proxy boundaries, direct service exposure, container networking, or `X-Forwarded-*` handling at deployment/runtime edges.
