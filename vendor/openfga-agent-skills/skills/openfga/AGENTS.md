@@ -2,7 +2,7 @@
 
 **Version 1.0.0**
 OpenFGA Community
-January 2026
+April 2026
 
 > **Note:**
 > This document is mainly for agents and LLMs to follow when authoring,
@@ -516,7 +516,7 @@ check:
 
 **Impact: LOW (use carefully)**
 
-Wildcards (`type:*`) grant access a all instances of a user type to access a specfic object.
+Wildcards (`type:*`) grant access to all instances of a user type to an specfic object.
 
 **Example (public documents):**
 
@@ -1380,7 +1380,7 @@ Checks 5/5 passing
 fga model test --tests authorization.fga.yaml || exit 1
 ```
 
-You can also use the available GitHub actions. 
+You can also use the [OpenFGA Model Test GitHub actions](https://github.com/marketplace/actions/openfga-model-testing-action). 
 
 **Verbose output for debugging:**
 
@@ -1787,7 +1787,7 @@ type document
     define owner: [user]                # Only users can own
 ```
 
-If business rules implies that a resource can belong to different kind of parents, then it is OK to represent it in the model:
+If business rules imply that a resource can belong to different kind of parents, then it is OK to represent it in the model:
 
 ```dsl.openfga
 type organization
