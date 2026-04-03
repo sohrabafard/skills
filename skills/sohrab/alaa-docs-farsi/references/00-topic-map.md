@@ -9,6 +9,7 @@ Use this file to jump directly to the most relevant section in `full-guide.md`.
 - `# When NOT to use`
 - `# Language requirements`
 - `# Hard constraints`
+- `# Repository-safe links in generated documents`
 - `# Standard documentation contract for README and BIG_PICTURE`
 - `## Audience and outcome requirements`
 - `## Richness protection rule`

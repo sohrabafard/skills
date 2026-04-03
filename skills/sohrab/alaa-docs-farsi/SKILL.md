@@ -44,6 +44,8 @@ Keep this top-level file lean. Load the reference files only as needed.
 - `README.md` and `docs/BIG_PICTURE.md` serve different roles. Do not collapse them into duplicates.
 - When behavior, contracts, runtime shape, auth flow, events, or observability change, review both files in the same task.
 - Prefer explicit source references and concrete repo facts over generic documentation language.
+- All document links must be repo-portable: valid after clone, valid in GitHub/GitLab web viewers, and independent of the local machine path.
+- Never emit local absolute filesystem links in generated docs. Use repository-valid relative Markdown links with POSIX `/` separators only, and fall back to an inline code path when a correct link cannot be verified.
 
 ## Doc impact checklist
 

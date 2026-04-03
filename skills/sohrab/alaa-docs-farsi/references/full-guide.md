@@ -1,5 +1,5 @@
 # Purpose
-Create repository documentation that is implementation-aligned, rich enough to be operationally useful, and deterministic to update across active projects under `D:\Sohrab\Project`.
+Create repository documentation that is implementation-aligned, rich enough to be operationally useful, and deterministic to update across active Ala-style repositories in this workspace.
 
 This guide defines a unified standard for `README.md` and `docs/BIG_PICTURE.md` so they stay:
 - trustworthy for onboarding,
@@ -34,6 +34,24 @@ This guide defines a unified standard for `README.md` and `docs/BIG_PICTURE.md` 
   - prefer corrections, additions, cross-links, and de-duplication over broad rewrites,
   - preserve high-signal existing sections when they are still accurate.
 - If a claim is uncertain, remove ambiguity and add the verification path instead of guessing.
+
+# Repository-safe links in generated documents
+- All document links must be repo-portable: valid after clone, valid in GitHub/GitLab web viewers, and independent of the local machine path.
+- Never use local filesystem absolute paths such as `D:/...`, `C:\...`, `/home/...`, or `file:///...` in generated Markdown or documentation.
+- Use repository-valid Markdown links only for files inside the same repository.
+- Use POSIX-style separators (`/`) only. Never use Windows backslashes (`\`) in links.
+- Prefer relative links from the current document location such as `./file.md`, `../file.md`, or `../../platform/openfga/model.fga`.
+- Before finalizing a document, validate every local Markdown link against the repository tree:
+  - confirm the target exists in the repo,
+  - confirm the relative path is correct from the current document directory.
+- If a correct Markdown link cannot be guaranteed, fall back to a plain inline code path such as `platform/openfga/model.fga` instead of inventing a broken hyperlink.
+- Correct examples:
+  - `[OpenFGA model](../../platform/openfga/model.fga)`
+  - `platform/openfga/model.fga`
+- Incorrect examples:
+  - `[model.fga](D:/Sohrab/Project/entitlement-platform/platform/openfga/model.fga)`
+  - `[model.fga](C:\repo\platform\openfga\model.fga)`
+  - `[model.fga](file:///D:/Sohrab/Project/...)`
 
 # Standard documentation contract for README and BIG_PICTURE
 
@@ -93,6 +111,7 @@ When updating an existing `README.md` or `docs/BIG_PICTURE.md`:
    - Key logs, traces, metrics, verification commands, and operational artifacts.
 8. **Documentation links**
    - `docs/BIG_PICTURE.md`, Postman, runbooks, ADR/decision docs, and service-specific references.
+   - Use repository-safe relative Markdown links for repo files. Do not use machine-local absolute paths.
 
 ## README quality bar
 
@@ -225,7 +244,7 @@ When relevant, add these explicitly:
 - `Detailed payload examples`, `enum references`, `resource shapes`, or `ops notes` when the system complexity justifies them.
 
 # How this standard was derived
-This standard is grounded in the richest docs across active projects under `D:\Sohrab\Project`, especially:
+This standard is grounded in the richest docs across active Ala-style projects in this workspace, especially:
 - `auth`
 - `comment-service`
 - `gateway`
@@ -271,7 +290,7 @@ If one of the paired docs changes, the other must still be reviewed in the same 
    - coding agent,
    - new service author.
 6. Add or refresh diagrams, module maps, request variants, and contract notes where the current docs are too thin.
-7. Re-check cross-links to Postman, runbooks, ADR/decision docs, and service-specific references.
+7. Re-check cross-links to Postman, runbooks, ADR/decision docs, and service-specific references, and validate every repo-local Markdown link against the repository tree.
 8. Before finishing, confirm the new docs are richer or clearer than before, not just more standardized.
 
 # Output checklist for doc updates
@@ -286,6 +305,7 @@ For every documentation update, report:
 - Use `rg` or equivalent heading checks for contract terms such as headers, routes, enums, queues, event names, and runtime modes.
 - Check source code or config for each changed assertion.
 - Verify that `README.md` and `docs/BIG_PICTURE.md` still have matching coverage for shared topics.
+- Resolve each local Markdown link against the repository tree before finalizing the document.
 - Verify that existing useful sections were preserved or intentionally replaced with stronger coverage.
 
 # Anti-patterns
@@ -296,3 +316,4 @@ For every documentation update, report:
 - Translating or renaming technical identifiers.
 - Replacing a concrete service map with vague “high-level architecture” language.
 - Forcing every repo into the same shallow template when the system complexity requires more depth.
+- Using machine-local absolute paths, Windows-style backslashes, or unverified relative links in generated Markdown links.
