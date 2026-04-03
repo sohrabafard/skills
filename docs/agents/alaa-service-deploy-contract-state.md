@@ -35,8 +35,10 @@
   - expanded `alaa-services-contract` so the deploy contract is now first-class in the skill metadata, topic map, preserved full guide, and a dedicated deployment reference file.
   - expanded `alaa-docker-production` so generic Docker Compose and Swarm delivery rules, shared runtime patterns, registry strategy, and secret-handling rules now live in the right skill.
   - refreshed both `agents/openai.yaml` files so the UI metadata matches the new trigger surface.
+  - identified a remaining loophole in `alaa-services-contract`: the shared-infra wording still allowed non-default branches to create a second Postgres or sibling infra identity.
+  - tightened `alaa-services-contract` so PostgreSQL source mode is explicit, shared mode is reuse-only, duplicate shared infra is forbidden, and external Postgres mode keeps runtime credentials separate from provisioning credentials.
 - Remaining work:
-  - no additional implementation work is required for this task.
+  - no additional implementation work is required for this tightening pass.
   - optional future follow-up: align older repo docs that still mention legacy mirror defaults or incomplete Swarm parity.
 - Risks or blockers:
   - deploy behavior may differ subtly across repos, requiring a normalized contract with explicit repo-specific exceptions.
@@ -45,9 +47,12 @@
   - `python skills/.system/skill-creator/scripts/quick_validate.py skills/sohrab/alaa-services-contract` passed.
   - `python skills/.system/skill-creator/scripts/quick_validate.py skills/sohrab/alaa-docker-production` passed.
   - targeted search confirmed the new deployment reference is wired into the services-contract topic map and skill routing.
+  - targeted search confirmed the tightened wording now exists for explicit shared-versus-external Postgres mode selection, fail-fast shared-infra reuse, and `DB_PROVISION_*` separation from the app runtime tuple.
 - Next recommended step:
   - use the updated skills on the next service creation or refactor and tighten repo-specific docs where a legacy deviation is still documented.
 - Timeline:
   - 2026-04-03 09:56 +03:30 — created execution memory after confirming the current skills do not yet encode the full Ala deploy contract.
   - 2026-04-03 10:24 +03:30 — completed cross-repo deploy-pattern extraction from `auth`, `gateway`, `wa`, and `comment-service`; normalized the ownership split between `alaa-services-contract`, `alaa-docker-production`, and `caas-arvan-kuber`.
   - 2026-04-03 10:39 +03:30 — updated both skills, added a dedicated Ala deployment reference, refreshed UI metadata, and validated both skill folders successfully.
+  - 2026-04-03 11:06 +03:30 — traced the remaining shared-infra loophole and started tightening `alaa-services-contract` to require explicit shared-versus-external Postgres mode selection, hard shared-infra reuse, and fail-fast behavior instead of duplicate Postgres creation.
+  - 2026-04-03 11:15 +03:30 — completed the shared-versus-external Postgres tightening in `alaa-services-contract`, updated the preserved full guide review checklist, and revalidated the skill successfully.

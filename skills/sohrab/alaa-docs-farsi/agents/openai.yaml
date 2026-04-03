@@ -1,7 +1,7 @@
 interface:
-  display_name: "Alaa Docs Farsi"
-  short_description: "Persian docs alignment and consistency"
-  default_prompt: "Use $alaa-docs-farsi to follow its workflow for persian docs alignment and consistency."
+  display_name: "Alaa Docs Standard"
+  short_description: "Rich English README and BIG_PICTURE docs"
+  default_prompt: "Use $alaa-docs-farsi to produce rich, simple-English repository docs that stay aligned with code, contracts, runtime behavior, and operations."
 
 policy:
   allow_implicit_invocation: true
