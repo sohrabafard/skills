@@ -9,6 +9,13 @@
  */
 const ALPHABET = '0123456789abcdefghjkmnpqrstvwxyz';
 
+/**
+ * Pure Crockford Base32 codecs shared across browser, Node, CLI, and edge runtimes.
+ *
+ * The class intentionally keeps each value family independent so callers can
+ * choose bytes, integers, strings, or UUIDv7 payloads without hidden wrapper
+ * metadata or token dispatch rules.
+ */
 class CrockfordBase32Codec {
   /**
    * Encode raw bytes as lowercase Crockford Base32 without padding.
@@ -215,6 +222,9 @@ class CrockfordBase32Codec {
 
   /**
    * Normalize common Crockford aliases before payload validation.
+   *
+   * Signed integer payloads handle their optional leading `-` outside this
+   * helper so the Base32 normalization stays transport-focused.
    *
    * @param {string} encoded
    * @returns {string}

@@ -43,15 +43,36 @@
     - `encode-int 25` -> `s`
     - `encode-int 125789` -> `3ttx`
     - `decode-int 3ttx` -> `125789`
+  - a direct Node runtime check also matched the shell-style examples:
+    - `decode-int 9` -> `9`
+    - `decode-int s` -> `25`
+    - `encode-uuidv7 019d554c-4495-79c7-980d-a62028ef44d4` -> `06enak24jnwwf60dmrg2hvt4tg`
+    - `decode-uuidv7 06enak24jnwwf60dmrg2hvt4tg` -> `019d554c-4495-79c7-980d-a62028ef44d4`
+    - `generate-uuidv7` produced a value matching canonical UUIDv7 shape checks
   - PHP and JavaScript also matched on:
     - `encode-string 'salam-123'` -> `edgprrbd5mrk4cr`
     - `encode-uuidv7 0195ff70-7b8e-7c5d-93c2-4c7e2ff0c8a1` -> `06azyw3vhsy5v4y29hz2zw68m4`
     - UUIDv7 encoded payload length -> `26`
     - `encode-bytes ff00` -> `zw00`
   - an elevated Git Bash smoke test confirmed the updated CLI returns the requested pure-codec outputs for bytes, integers, strings, and UUIDv7 values.
-  - local HAProxy runtime validation could not run because `haproxy` is not installed on this workstation.
+  - the Lua helper passed a direct runtime check through `C:\Users\CIT\AppData\Local\Programs\Lua\bin\lua.exe`:
+    - `encode-int 9` -> `9`
+    - `encode-int 25` -> `s`
+    - `decode-int 9` -> `9`
+    - `decode-int s` -> `25`
+    - `encode-string 'salam-123'` -> `edgprrbd5mrk4cr`
+    - `decode-string edgprrbd5mrk4cr` -> `salam-123`
+    - `encode-uuidv7 019d554c-4495-79c7-980d-a62028ef44d4` -> `06enak24jnwwf60dmrg2hvt4tg`
+    - `decode-uuidv7 06enak24jnwwf60dmrg2hvt4tg` -> `019d554c-4495-79c7-980d-a62028ef44d4`
+    - `encode-bytes ff00` -> `zw00`
+    - `decode-bytes zw00` -> `ff00`
+    - `generate-uuidv7` produced a canonical UUIDv7 matching a strict Lua pattern check
+  - `haproxy` is still not installed on this workstation, so HAProxy config validation remains pending.
+  - applied `alaa-frontend-doc-annotations` to the active JavaScript codec module with a documentation-only class-level note and normalization note; Node import still passed after the JSDoc edit.
 - Next recommended step:
   - if a future repository wires in the Lua helper, validate that consuming HAProxy config with `haproxy -c -f <cfg>` on a machine that has HAProxy installed.
 - Timeline:
   - 2026-04-04 01:01 UTC — created a new plan and state pair after confirming the user requested a full architecture correction from typed tokens to pure codecs.
   - 2026-04-04 01:16 UTC — completed the pure codec refactor, validated the new integer examples and renamed asset paths, and confirmed the updated CLI surface end to end.
+  - 2026-04-04 01:25 UTC — verified the `.mjs` runtime against the shell-style examples, confirmed no local Lua interpreter is available, and applied a final documentation-only annotation pass to the JavaScript codec file.
+  - 2026-04-04 01:33 UTC — validated the Lua codec directly after the user installed Lua and confirmed parity with the shell and JavaScript examples.
