@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared Docker networking, canonical service DNS aliases, auth key ownership, registry usage, and fast-test SQLite support. Use when consistency across Ala services matters more than local preference."
+description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared-versus-external Postgres mode selection, hard shared-infra reuse, canonical service DNS aliases, auth key ownership, registry usage, and fast-test SQLite support. Use when consistency across Ala services matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -64,7 +64,7 @@ Load these companion skills when their concern is in scope:
   - `references/00-topic-map.md`
 - core service modes, Ala service map, service identity, route families, and exact readiness envelope:
   - `references/10-core-service-contract.md`
-- deploy modes, Arvan-versus-Docker ownership, shared network and infra rules, DNS and VIP naming, key ownership, registry contract, and SQLite test support:
+- deploy modes, Arvan-versus-Docker ownership, shared-versus-external Postgres rules, hard shared-infra reuse, DNS and VIP naming, key ownership, registry contract, and SQLite test support:
   - `references/15-deployment-and-runtime-contract.md`
 - end-to-end platform flow, frontend or gateway orientation, and internal-hop boundaries:
   - `references/25-end-to-end-flow-and-boundaries.md`

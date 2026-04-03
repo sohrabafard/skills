@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
   short_description: "Hard Ala service and deploy contract"
-  default_prompt: "Use $alaa-services-contract to enforce the Ala service contract for `/api/health`, `/api/ready`, trusted ingress, Laravel API responses, Arvan-versus-Docker deploy modes, canonical Docker DNS aliases, shared infra, and registry or key-handling rules."
+  default_prompt: "Use $alaa-services-contract to enforce the Ala service contract for `/api/health`, `/api/ready`, trusted ingress, Laravel API responses, Arvan-versus-Docker deploy modes, canonical Docker DNS aliases, shared infra, mandatory pull-through public image registry usage, and registry or key-handling rules."
 
 policy:
   allow_implicit_invocation: true

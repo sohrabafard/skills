@@ -11,7 +11,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the task is about client -> gateway -> service flow, frontend or gateway orientation, internal HTTP hops, async boundaries, or which layer owns what.
   - Read `25-end-to-end-flow-and-boundaries.md` after the core contract.
 - `Mode A++ - Deployment and runtime contract`
-  - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, shared Docker networking, shared infra bootstrap, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, or SQLite fast-test support.
+  - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, or SQLite fast-test support.
   - Read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
 - `Mode B - Laravel backend service`
   - Use when the task is about Laravel API response boundaries, Resources, middleware order, or Laravel-specific route and command expectations.
@@ -42,7 +42,10 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `15-deployment-and-runtime-contract.md`
   - Arvan Kubernetes versus Docker ownership
   - Compose and Swarm mode requirements
-  - shared Docker network and shared infra rules
+  - shared Docker network and hard shared infra reuse rules
+  - shared-versus-external Postgres mode selection
+  - duplicate shared-infra prevention and fail-fast behavior
+  - `DB_PROVISION_*` separation from the app runtime tuple
   - canonical service alias and VIP or DNS routing
   - key ownership and registry contract
   - SQLite fast-test support expectations
