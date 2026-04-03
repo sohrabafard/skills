@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, or Laravel Resource-first `/api/*` responses. Use when consistency across Ala services matters more than local preference."
+description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared Docker networking, canonical service DNS aliases, auth key ownership, registry usage, and fast-test SQLite support. Use when consistency across Ala services matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -15,7 +15,7 @@ Keep this top-level file small. Read the reference files for the exact contract 
 
 1. Read the repo-local `AGENTS.md`.
 2. Read `references/00-topic-map.md`.
-3. Select the service mode first: any Ala backend, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
+3. Select the service mode first: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
 4. Read the smallest relevant reference file first.
 5. Read `references/full-guide.md` when the task is cross-cutting or high-risk.
 6. Load the required companion skills before implementation work outside this skill's ownership.
@@ -33,12 +33,14 @@ Keep this top-level file small. Read the reference files for the exact contract 
 ## Companion routing
 
 Load these companion skills when their concern is in scope:
-- `$alaa-workflow`
-  - Load before non-trivial multi-file adoption work.
 - `$alaa-trust-gateway-auth`
   - Load when trusted headers, auth error semantics, permission bitmap rules, `X-Profile`, or tenant or project propagation are involved.
 - `$alaa-observability-soc`
   - Load when logs, traces, metrics, alerting, event naming, or incident evidence requirements are involved.
+- `$alaa-docker-production`
+  - Load when the task changes Dockerfiles, Compose or Swarm wrappers, registry plumbing, secret mounting, runtime users, or container hardening.
+- `$caas-arvan-kuber`
+  - Load when the task changes the Arvan Kubernetes production path, Helm values, OCI charts, or GitLab delivery wiring.
 - `$alaa-laravel-architecture`
   - Load when Laravel middleware, controllers, resources, DTOs, or service boundaries change.
 - `$alaa-php-clean-code`
@@ -62,6 +64,8 @@ Load these companion skills when their concern is in scope:
   - `references/00-topic-map.md`
 - core service modes, Ala service map, service identity, route families, and exact readiness envelope:
   - `references/10-core-service-contract.md`
+- deploy modes, Arvan-versus-Docker ownership, shared network and infra rules, DNS and VIP naming, key ownership, registry contract, and SQLite test support:
+  - `references/15-deployment-and-runtime-contract.md`
 - end-to-end platform flow, frontend or gateway orientation, and internal-hop boundaries:
   - `references/25-end-to-end-flow-and-boundaries.md`
 - exact observability headers, `traceparent`, request logs, event names, and `RequestObservabilityMiddleware`:
@@ -81,4 +85,5 @@ Load these companion skills when their concern is in scope:
 - Keep exact contract details in `references/`.
 - Use relative reference paths only.
 - Keep exact route names, header names, event names, and code families stable unless the contract is intentionally revised.
+- Keep the Ala deploy contract aligned with `alaa-docker-production` and `caas-arvan-kuber` when ownership boundaries change.
 - When this skill changes a contract owned jointly with another skill, update that companion skill in the same effort so the pack remains consistent.

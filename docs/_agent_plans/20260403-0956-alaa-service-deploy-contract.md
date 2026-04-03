@@ -1,0 +1,40 @@
+# Alaa Service Deploy Contract Plan
+
+- Timestamp: 2026-04-03 09:56 +03:30
+- Scope: cross-repo deploy-contract extraction from `auth`, `gateway`, `wa`, and `comment-service`, plus updates to `skills/sohrab/alaa-services-contract` and `skills/sohrab/alaa-docker-production`.
+- Objective: codify the Ala deploy contract so applying `alaa-services-contract` to a new or refactored service also enforces the expected Ala deployment model, while keeping generic Docker production mechanics in `alaa-docker-production`.
+- Assumptions:
+  - the live repositories contain the authoritative deploy patterns in docs, scripts, Compose files, Helm values, and CI definitions.
+  - Arvan Kubernetes remains the primary production target and should stay owned by `caas-arvan-kuber`, with `alaa-services-contract` describing how that relates to the Ala service contract.
+  - Docker Compose and Docker Swarm are important secondary production-capable modes and should be captured as supported Ala deployment modes.
+- Constraints:
+  - keep the top-level skill entrypoints concise and routing-first.
+  - move dense details into `references/`.
+  - do not duplicate Kubernetes implementation guidance already owned by `caas-arvan-kuber`.
+  - preserve current skill naming, folder structure, and companion-skill routing.
+- Task decomposition:
+  - inspect current skill bundles and execution-memory conventions.
+  - read deploy docs and linked references in the four Ala service repos.
+  - inspect implementation evidence such as Compose files, deploy scripts, infra bootstrap logic, and key-sync scripts.
+  - review `skill-creator` guidance and current OpenAI guidance for instruction-writing best practices.
+  - decide the ownership split:
+    - `alaa-services-contract`: Ala-specific deploy modes, shared-network and shared-infra conventions, service naming and DNS/VIP rules, bootstrap expectations, and companion-skill routing.
+    - `alaa-docker-production`: generic Docker/Compose/Swarm production engineering patterns, script expectations, runtime hardening, and validation rules.
+  - update `SKILL.md`, `references/00-topic-map.md`, and any new or revised reference files.
+  - run targeted validation for file consistency and obvious stale references.
+- Dependency notes:
+  - `caas-arvan-kuber` is a companion source for the primary production path.
+  - `skill-creator` and official OpenAI guidance shape the instruction design and progressive disclosure.
+  - the four Ala repos are the evidence base for the deploy contract.
+- Validation approach:
+  - use targeted search to confirm the new deploy concepts appear in the right skill and reference files.
+  - manually inspect the rewritten routing and companion-skill notes.
+  - run any local validator or lightweight consistency checks available in the skill repo.
+- Parallelization opportunities:
+  - inspect `auth` and `gateway` in one track and `wa` and `comment-service` in another.
+  - inspect OpenAI instruction-design guidance in parallel with repo evidence gathering.
+- Exit criteria:
+  - `alaa-services-contract` explicitly encodes the Ala deploy contract as hard constraints.
+  - `alaa-docker-production` captures the reusable Docker production mechanics and clearly distinguishes them from Ala-specific contract ownership.
+  - the relationship with `caas-arvan-kuber` is explicit.
+  - the new guidance is supported by live repo evidence rather than memory alone.

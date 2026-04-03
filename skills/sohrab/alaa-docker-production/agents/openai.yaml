@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Docker Production"
-  short_description: "Production Docker hardening for Laravel"
-  default_prompt: "Use $alaa-docker-production to follow its workflow for production docker hardening for laravel."
+  short_description: "Docker/Compose/Swarm delivery contract"
+  default_prompt: "Use $alaa-docker-production to apply production Docker, Compose, and Swarm delivery rules for hardening, shared runtime design, registry strategy, secret handling, and stable service discovery."
 
 policy:
   allow_implicit_invocation: true

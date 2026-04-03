@@ -10,6 +10,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode A+ - Platform flow and onboarding view`
   - Use when the task is about client -> gateway -> service flow, frontend or gateway orientation, internal HTTP hops, async boundaries, or which layer owns what.
   - Read `25-end-to-end-flow-and-boundaries.md` after the core contract.
+- `Mode A++ - Deployment and runtime contract`
+  - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, shared Docker networking, shared infra bootstrap, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, or SQLite fast-test support.
+  - Read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
 - `Mode B - Laravel backend service`
   - Use when the task is about Laravel API response boundaries, Resources, middleware order, or Laravel-specific route and command expectations.
   - Read `30-trusted-ingress-and-laravel-contract.md` after the core contract.
@@ -36,6 +39,13 @@ Use this file to choose the smallest relevant reference file before loading the 
   - log field schema
   - event and code naming for request and readiness flows
   - `RequestObservabilityMiddleware`
+- `15-deployment-and-runtime-contract.md`
+  - Arvan Kubernetes versus Docker ownership
+  - Compose and Swarm mode requirements
+  - shared Docker network and shared infra rules
+  - canonical service alias and VIP or DNS routing
+  - key ownership and registry contract
+  - SQLite fast-test support expectations
 - `25-end-to-end-flow-and-boundaries.md`
   - client -> gateway -> service flow
   - frontend and gateway orientation

@@ -1,6 +1,6 @@
 ---
 name: alaa-docker-production
-description: "Use this skill when the task involves Dockerfile or Compose hardening or image size or attack-surface reduction. Do not use it when pure app logic changes."
+description: "Use this skill when the task involves production Dockerfile hardening, Docker Compose or Docker Swarm delivery patterns, registry mirror or private-registry strategy, shared-network or shared-infra container runtime design, secret and healthcheck handling, image size, or deterministic production container guidance. Do not use it when pure app logic changes."
 ---
 
 
@@ -17,8 +17,11 @@ Keep this top-level file small. Load the references for the full rules, examples
 ## When to use
 
 - Dockerfile or Compose hardening
+- Docker Compose or Docker Swarm delivery mechanics
 - image size or attack-surface reduction
 - runtime user, healthcheck, or secret handling changes
+- registry mirror, private-registry, or OCI-pull behavior
+- shared network or shared infra container runtime design
 - release evidence or deterministic image work
 
 ## When NOT to use
@@ -29,7 +32,7 @@ Keep this top-level file small. Load the references for the full rules, examples
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.
-2. Apply `$alaa-low-noise` when the task is non-trivial.
+2. Decide whether the task is generic Docker delivery work, Ala-specific service-contract work, or Arvan Kubernetes delivery work.
 3. Read `references/00-topic-map.md`.
 4. Load only the sections you need from `references/full-guide.md`.
 5. Pair with the listed companion skills before making changes outside this skill's ownership.
@@ -42,9 +45,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 | runtime crash or missing extension          | runtime contract and container-user sections   |
 | permissions or writable-path issues         | non-root user and filesystem guidance          |
 | healthcheck, startup, or readiness mismatch | healthcheck and release-evidence sections      |
+| service discovery or proxy misrouting       | DNS alias and shared-network sections          |
+| Swarm rollout or image pull problems        | runtime-mode split and registry sections       |
 
 ## Companion routing
 
+- $alaa-services-contract
+  - Pair when the task also changes Ala-specific deploy expectations, canonical service aliases, key ownership, or service bootstrap rules.
+- $caas-arvan-kuber
+  - Pair when the task touches the primary Arvan Kubernetes production path, Helm values, OCI charts, or GitLab rollout mechanics.
 - $alaa-cicd-laravel-postgres
   - Pair when the task also touches pipeline alignment for image builds.
 - $alaa-security-review
@@ -62,4 +71,5 @@ Keep this top-level file small. Load the references for the full rules, examples
 - Keep this file routing-first and plain.
 - Put detailed rules into `references/full-guide.md` instead of growing this file.
 - Keep the topic map aligned with the actual headings in the full guide.
+- Keep generic Docker and Swarm mechanics here; move Ala-specific service-family hard constraints into `alaa-services-contract`.
 - Re-check companion-skill routing when ownership boundaries change.

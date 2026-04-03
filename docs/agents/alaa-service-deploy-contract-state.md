@@ -1,0 +1,53 @@
+# Alaa Service Deploy Contract State
+
+- Task name: alaa service deploy contract extraction and skill codification
+- Current status: implementation complete, validation complete
+- Objective: extract the real Ala deploy contract from the live `wa`, `gateway`, `auth`, and `comment-service` repositories, then encode the Ala-specific hard constraints in `skills/sohrab/alaa-services-contract` while keeping reusable Docker guidance in `skills/sohrab/alaa-docker-production`.
+- Current repository understanding:
+  - `alaa-services-contract` currently defines service-level operational and ingress contracts but does not explicitly cover the Ala deploy contract for Docker Compose, Docker Swarm, and Arvan Kubernetes production.
+  - `alaa-docker-production` already owns generic production Docker guidance, including Compose hardening, runtime settings, healthchecks, and rollout notes, but does not yet spell out Ala-specific deploy patterns.
+  - the `skills` repository already uses `docs/agents/` and `docs/_agent_plans/` for resumable work.
+  - the live `auth`, `gateway`, `wa`, and `comment-service` repositories confirm a normalized family pattern:
+    - Arvan Kubernetes plus GitLab CI plus Helm or OCI values is the primary production path.
+    - Docker Compose and Docker Swarm are supported secondary deployment modes for Ala services.
+    - shared Docker connectivity uses `alaa-shared-network`.
+    - shared Docker infra is reused under `alaa-shared-infra`.
+    - PHP app services commonly expose a canonical internal alias `<service>-platform-app-php`.
+    - gateway-to-backend routing in Docker uses direct DNS against that canonical alias, with Swarm-ready VIP semantics.
+    - services provision or reuse infra, then create their own database or schema and grants.
+    - auth owns App key and Passport key material; gateway consumes the auth public key through Kubernetes secret mounts or Docker-side sync.
+    - fast tests should support SQLite even when production truth is PostgreSQL-first.
+    - public image pulls are normalized around the `mirror.cdn.ir` pull-through mirror, while first-party images and OCI artifacts use the private registry path.
+- Assumptions:
+  - the canonical deploy behavior is best inferred from the live Ala repos and their docs rather than from memory alone.
+  - Swarm and Compose guidance should remain separate from the Arvan Kubernetes production path, with the Kubernetes path delegated to `caas-arvan-kuber`.
+- Constraints:
+  - preserve the existing skill-pack structure and keep top-level `SKILL.md` files concise.
+  - place Ala-specific hard constraints in `alaa-services-contract` and reusable Docker mechanics in `alaa-docker-production`.
+  - avoid inventing contract details not supported by repo evidence or clearly marked synthesis.
+- Completed work:
+  - inspected the current `alaa-services-contract` and `alaa-docker-production` skills.
+  - confirmed `alaa-services-contract` lacks direct Docker and Swarm language.
+  - confirmed `alaa-docker-production` contains Docker/Compose and output-contract guidance but no explicit Swarm contract.
+  - inspected deploy docs, CI, Compose files, Helm values, and wrapper scripts in `auth`, `gateway`, `wa`, and `comment-service`.
+  - extracted the normalized Ala deployment contract from those repos and separated it into Ala-specific versus reusable Docker ownership.
+  - reviewed `skill-creator` guidance and current official OpenAI agent-instruction guidance to keep the skill edits routing-first, explicit, and reference-backed.
+  - expanded `alaa-services-contract` so the deploy contract is now first-class in the skill metadata, topic map, preserved full guide, and a dedicated deployment reference file.
+  - expanded `alaa-docker-production` so generic Docker Compose and Swarm delivery rules, shared runtime patterns, registry strategy, and secret-handling rules now live in the right skill.
+  - refreshed both `agents/openai.yaml` files so the UI metadata matches the new trigger surface.
+- Remaining work:
+  - no additional implementation work is required for this task.
+  - optional future follow-up: align older repo docs that still mention legacy mirror defaults or incomplete Swarm parity.
+- Risks or blockers:
+  - deploy behavior may differ subtly across repos, requiring a normalized contract with explicit repo-specific exceptions.
+  - some contract details may live in scripts or CI files rather than in top-level docs.
+- Validation summary:
+  - `python skills/.system/skill-creator/scripts/quick_validate.py skills/sohrab/alaa-services-contract` passed.
+  - `python skills/.system/skill-creator/scripts/quick_validate.py skills/sohrab/alaa-docker-production` passed.
+  - targeted search confirmed the new deployment reference is wired into the services-contract topic map and skill routing.
+- Next recommended step:
+  - use the updated skills on the next service creation or refactor and tighten repo-specific docs where a legacy deviation is still documented.
+- Timeline:
+  - 2026-04-03 09:56 +03:30 — created execution memory after confirming the current skills do not yet encode the full Ala deploy contract.
+  - 2026-04-03 10:24 +03:30 — completed cross-repo deploy-pattern extraction from `auth`, `gateway`, `wa`, and `comment-service`; normalized the ownership split between `alaa-services-contract`, `alaa-docker-production`, and `caas-arvan-kuber`.
+  - 2026-04-03 10:39 +03:30 — updated both skills, added a dedicated Ala deployment reference, refreshed UI metadata, and validated both skill folders successfully.

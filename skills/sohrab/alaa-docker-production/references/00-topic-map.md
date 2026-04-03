@@ -7,6 +7,12 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `# Purpose`
 - `# When to use`
 - `# Defaults (unless repo contradicts)`
+- `# Runtime mode split & ownership`
+- `# Delivery wrapper contract`
+- `# Shared-network & shared-infra pattern`
+- `# Stable DNS and load-balancing pattern`
+- `# Registry strategy`
+- `# Secret and key-material handling`
 - `# PHP/Laravel + Octane/Swoole notes`
 - `# Exposure rules`
 - `# Security hardening checklist`
