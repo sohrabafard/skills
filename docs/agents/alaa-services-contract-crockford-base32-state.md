@@ -1,0 +1,55 @@
+# Alaa Services Contract Crockford Base32 Helpers State
+
+- Task name: alaa services contract Crockford Base32 helper assets
+- Current status: implementation complete, validation complete with noted runtime limits
+- Objective: add copy-ready PHP, JavaScript, bash, and HAProxy Lua helper artifacts to `skills/sohrab/alaa-services-contract` for lowercase Crockford Base32 encoding and decoding, UUIDv7 generation plus encoding and decoding, integer encoding and decoding, and string encoding and decoding with a reversible no-conflict token contract.
+- Current repository understanding:
+  - `skills/sohrab/alaa-services-contract` is a routing-first skill with dense guidance delegated to `references/`.
+  - the skill currently has no `assets/` or `scripts/` directory and no existing Base32 or UUID helper artifact.
+  - other local skills package reusable code in bundled resources, with the top-level `SKILL.md` only linking to them.
+  - `alaa-haproxy` guidance requires official HAProxy documentation for version-sensitive Lua usage and recommends validating config with `haproxy -c`.
+  - the local environment has working `php` and `node`, but no directly usable `lua` runtime and no sandbox-safe bash runtime yet.
+- Assumptions:
+  - a typed-token contract with distinct lowercase Crockford prefix characters is the simplest way to guarantee reversibility and prevent collisions across integers, strings, and UUIDv7 values.
+  - keeping raw Base32 byte helpers alongside typed helpers will make the assets more reusable for future skill consumers.
+- Constraints:
+  - preserve the current skill-pack structure and wording style.
+  - keep documentation in English.
+  - use only lowercase Crockford Base32 output on encode.
+  - avoid introducing non-portable doc links or extra non-skill files.
+- Completed work:
+  - inspected the active skill folder and related repo workflow conventions.
+  - read the requested companion skills and the local `skill-creator` guidance.
+  - confirmed the intended packaging pattern is bundled resources plus minimal routing docs.
+  - confirmed local `php` and `node` runtimes are available for validation.
+  - confirmed the default bash command path fails in the current sandbox and that `lua` is not installed locally.
+  - checked official HAProxy documentation for Lua loading guidance and extension-point registration patterns.
+  - added `references/35-crockford-base32-and-uuidv7-helpers.md` as the new shared helper contract and discovery point.
+  - updated `skills/sohrab/alaa-services-contract/SKILL.md` and `references/00-topic-map.md` so agents can find the new helper bundle.
+  - added `assets/crockford-base32/CrockfordBase32TokenCodec.php` with lowercase Crockford Base32 byte helpers, typed no-conflict tokens, signed 64-bit integer packing, UTF-8 string helpers, and UUIDv7 generation plus encoding and decoding.
+  - added `assets/crockford-base32/crockford-base32-token-codec.mjs` with the same token contract for modern JavaScript runtimes.
+  - added `scripts/crockford-base32-cli.sh` as a strict-mode bash CLI wrapper for the same token contract.
+  - added `assets/haproxy/crockford-base32-token-codec.lua` for HAProxy `lua-load` usage with registered converters and convenience fetches.
+- Remaining work:
+  - no further implementation work is required for this task.
+  - optional future follow-up: validate the Lua helper against a local HAProxy binary if one is added to the workstation or CI image.
+- Risks or blockers:
+  - shell runtime execution required an elevated Git Bash run because the current sandbox blocks bash startup.
+  - Lua syntax and runtime validation remain limited because the workstation does not currently have a local `lua` or `haproxy` executable.
+- Validation summary:
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-services-contract` passed.
+  - `php -l skills\sohrab\alaa-services-contract\assets\crockford-base32\CrockfordBase32TokenCodec.php` passed.
+  - Node successfully imported the JavaScript module.
+  - PHP and JavaScript produced the same typed tokens for representative fixtures:
+    - integer `-42` -> `nzzzzzzzzzzzxc`
+    - string `salam-123` -> `sedgprrbd5mrk4cr`
+    - UUIDv7 `0195ff70-7b8e-7c5d-93c2-4c7e2ff0c8a1` -> `v06azyw3vhsy5v4y29hz2zw68m4`
+  - PHP and JavaScript both round-tripped their integer, string, and UUIDv7 fixtures successfully.
+  - an elevated Git Bash smoke test ran the shell CLI and produced the same representative tokens for the integer, string, and UUIDv7 fixtures.
+  - direct Lua or HAProxy runtime validation could not run locally because neither executable is installed on this workstation.
+- Next recommended step:
+  - copy the new helper assets into the first consuming service or edge config and, if HAProxy is in scope there, validate the Lua file with `haproxy -c -f <cfg>`.
+- Timeline:
+  - 2026-04-03 23:13 +03:30 — created plan and state files after confirming this is a multi-file skill update with cross-runtime artifacts.
+  - 2026-04-03 23:26 +03:30 — added the new helper reference, wired the skill entrypoints to it, and created the PHP, JavaScript, bash, and HAProxy Lua helper artifacts.
+  - 2026-04-03 23:35 +03:30 — validated the skill structure, linted the PHP class, confirmed JavaScript importability, and confirmed matching PHP, JavaScript, and shell token outputs for representative fixtures.

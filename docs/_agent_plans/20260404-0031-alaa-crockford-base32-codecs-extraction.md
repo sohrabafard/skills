@@ -1,0 +1,37 @@
+# Alaa Crockford Base32 Codecs Extraction Plan
+
+- Timestamp: 2026-04-04 00:31 UTC
+- Scope: extract the previously added Crockford Base32 and UUIDv7 helper bundle out of `skills/sohrab/alaa-services-contract` into a new standalone skill named `skills/sohrab/alaa-crockford-base32-codecs`, then convert the original skill and companion skills into forwarding or routing references.
+- Objective: make the helper bundle discoverable as a cross-runtime reusable skill while preserving the existing typed token contract, runtime behavior, and historical execution memory from the earlier implementation effort.
+- Assumptions:
+  - the helper logic is already correct and the current task is ownership-only, not a protocol revision.
+  - `alaa-services-contract` should keep a short forwarding reference because the helper remains relevant there, but it should no longer own the implementation files.
+  - the other touched skills only need concise routing hooks, not duplicated helper specification content.
+- Constraints:
+  - keep `SKILL.md` routing-first and compact in the new skill.
+  - preserve the earlier execution-memory files as historical records.
+  - avoid changing helper filenames, typed token prefixes, alias normalization, UUIDv7 validation, or runtime notes.
+  - validate from the new canonical paths after the move.
+- Task decomposition:
+  - create `alaa-crockford-base32-codecs` with `skill-creator` conventions.
+  - move the PHP, JavaScript, shell, and HAProxy Lua helpers into the new skill.
+  - reshape the helper documentation into the new skill's `references/` structure.
+  - update `alaa-services-contract` to a forwarding reference.
+  - add short routing hooks in `alaa-haproxy`, `alaa-frontend-developer`, and `alaa-php-clean-code`.
+  - update `skills/sohrab/README.md` so the new skill is discoverable at pack level.
+  - validate the updated skills and the moved runtime assets.
+- Dependency notes:
+  - `skill-creator` governs skill scaffolding and metadata structure.
+  - `alaa-docs-farsi` governs the style and portability of skill-pack documentation.
+  - `alaa-haproxy`, `alaa-frontend-developer`, `alaa-php-clean-code`, and `alaa-services-contract` remain the companion routing surfaces that need aligned references.
+- Validation approach:
+  - run `quick_validate.py` on the new skill and each updated forwarding or companion skill.
+  - lint the PHP helper in its new path.
+  - import the JavaScript helper from its new path.
+  - confirm representative PHP and JavaScript round trips still match.
+  - run a shell CLI smoke test from the new path if Git Bash remains usable.
+  - record the HAProxy validation limit honestly if no local `haproxy` binary exists.
+- Exit criteria:
+  - the helper bundle has one canonical owner: `alaa-crockford-base32-codecs`.
+  - `alaa-services-contract` and the companion skills point to the new owner without duplicating the full helper spec.
+  - the moved assets validate from their new paths.

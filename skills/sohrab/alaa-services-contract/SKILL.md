@@ -19,6 +19,7 @@ Keep this top-level file small. Read the reference files for the exact contract 
 4. Read the smallest relevant reference file first.
 5. Read `references/full-guide.md` when the task is cross-cutting or high-risk.
 6. Load the required companion skills before implementation work outside this skill's ownership.
+7. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
 
 ## Hard contract rule
 

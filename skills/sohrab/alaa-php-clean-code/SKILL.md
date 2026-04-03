@@ -82,6 +82,7 @@ This skill owns code quality inside the chosen architecture. It does not replace
 - `alaa-observability-soc` owns logging schemas, traces, metrics, alerts, Sentry, and operational runbooks.
 - `alaa-cicd-laravel-postgres` owns CI, quality-gate automation, Pint, PHPStan, and pipeline behavior.
 - `alaa-docs-farsi` owns repo-wide docs-alignment workflow, Postman sync, and docs consistency checks. When this skill requires docs updates, use that workflow but keep the resulting docs in simple, fluent English unless the user explicitly asks for another language.
+- `alaa-crockford-base32-codecs` owns the shared lowercase Crockford Base32, typed token, and UUIDv7 helper contract when PHP code must match JavaScript, shell, or HAProxy Lua behavior.
 - `openai-docs` owns authoritative, current guidance for OpenAI APIs, models, prompts, tools, agent workflows, and product behavior. Read it when docs, examples, or integration notes touch OpenAI-specific behavior and need official current references or citations.
 - `alaa-mongodb-patterns` applies only when the repository already uses MongoDB or the user explicitly requests MongoDB work.
 
@@ -126,7 +127,7 @@ When the selected mode is `whole-project-normalize-alaa`, normalize persistence-
     - Do not force schema names to match camelCase API fields just to avoid a mapping step
 - Normal PHP naming remains idiomatic:
     - methods, local variables, private helpers, and service methods may stay camelCase unless the repository has a different explicit convention
-    - standard PHP camelCase is not itself “legacy”; the normalization target is persistence naming and schema-coupled attribute drift
+    - standard PHP camelCase is not itself "legacy"; the normalization target is persistence naming and schema-coupled attribute drift
 
 # Companion-skill routing summary
 Routing is mandatory, not optional advice.
@@ -143,6 +144,7 @@ Read `references/companion-skill-routing.md` for the full checklist. The short v
 - Read `alaa-observability-soc` before changing logs, traces, metrics, alerts, correlation IDs, or Sentry behavior.
 - Read `alaa-cicd-laravel-postgres` before changing CI, static analysis, test gating, repo quality gates, or pipeline commands.
 - Read `alaa-docs-farsi` when README, docs, Postman, or diagrams must change.
+- Read `alaa-crockford-base32-codecs` when PHP or Laravel work needs Crockford Base32, typed token, or UUIDv7 helpers that must match JavaScript, shell, or HAProxy Lua behavior.
 - Read `openai-docs` when docs, examples, or integration notes touch OpenAI APIs, models, prompts, tools, or agent workflows and need current official guidance or citations.
 - Read `alaa-mongodb-patterns` only for MongoDB repositories or MongoDB-specific requests.
 

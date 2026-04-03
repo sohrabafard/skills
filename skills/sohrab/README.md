@@ -2,13 +2,12 @@
 
 This pack is a public installable skill set for production-oriented coding agents.
 
-It now contains:
+It now includes these portable companion skills introduced during the pack enrichment work:
 
-- 54 original skills from the `sohrab` pack
-- 3 new portable companion skills:
-  - `alaa-frontend-devops`
-  - `alaa-frontend-doc-annotations`
-  - `alaa-mono-package`
+- `alaa-frontend-devops`
+- `alaa-frontend-doc-annotations`
+- `alaa-mono-package`
+- `alaa-crockford-base32-codecs`
 
 The pack is designed around simple routing-first skill entrypoints:
 
@@ -213,6 +212,9 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 
 ### Internal helper
 
+### Cross-runtime utility skills
+
+- `alaa-crockford-base32-codecs`
 - `alaa-low-noise`
 
 ## Definition of done

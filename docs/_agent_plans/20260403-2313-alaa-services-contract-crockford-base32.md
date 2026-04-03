@@ -1,0 +1,43 @@
+# Alaa Services Contract Crockford Base32 Helpers Plan
+
+- Timestamp: 2026-04-03 23:13 +03:30
+- Scope: add reusable Crockford Base32 and UUIDv7 helper artifacts to `skills/sohrab/alaa-services-contract`, covering PHP, JavaScript, shell, and HAProxy Lua plus the minimum routing documentation needed for discovery.
+- Objective: give future agents a copy-ready, cross-runtime helper set that can encode and decode lowercase Crockford Base32 safely for bytes, strings, integers, and UUIDv7 while keeping the public typed tokens reversible and conflict-free across runtimes.
+- Assumptions:
+  - the safest cross-runtime contract is a typed-token format that keeps raw Crockford Base32 encoding as a low-level primitive and adds explicit type prefixes for higher-level values.
+  - the target audience is future agents and developers who will copy or adapt these helpers into Ala services, edge scripts, and integration utilities.
+  - HAProxy Lua guidance should stay aligned with official HAProxy Lua loading and extension-point rules.
+- Constraints:
+  - keep `SKILL.md` concise and routing-first.
+  - store reusable implementation artifacts in bundled resources instead of bloating reference docs.
+  - keep output alphabet strictly lowercase Crockford Base32 on encode.
+  - make decode tolerant of common Crockford aliases where safe.
+  - avoid undocumented behavior drift across the four runtime examples.
+- Task decomposition:
+  - inspect the existing `alaa-services-contract` packaging and related skill guidance.
+  - define a small shared token spec for bytes, typed integers, typed strings, and typed UUIDv7 values.
+  - add copy-ready PHP and JavaScript classes.
+  - add a bash CLI helper script.
+  - add an HAProxy Lua helper script shaped for `lua-load` usage.
+  - add or update the smallest reference files needed so future agents can discover the new helpers.
+  - run targeted validation with the local runtimes that are available.
+- Dependency notes:
+  - `$alaa-php-clean-code` governs PHP class shape and documentation posture.
+  - `$alaa-frontend-developer` and `$alaa-frontend-doc-annotations` govern the JavaScript class shape and inline documentation style.
+  - `$bash-script-generator` informs the bash helper structure.
+  - `$alaa-haproxy` governs HAProxy Lua loading and extension-point usage.
+  - `$alaa-docs-farsi` governs Markdown documentation updates and link portability.
+  - `$skill-creator` governs how the skill should package reusable artifacts and keep the top-level instructions lean.
+- Validation approach:
+  - run the skill quick validator after the edits.
+  - run PHP syntax checks and round-trip tests for representative values.
+  - run Node-based round-trip tests for representative values.
+  - if shell runtime execution is possible, run targeted bash validation; otherwise record the blocker honestly.
+  - record any Lua validation limitation if no Lua or HAProxy runtime is available locally.
+- Parallelization opportunities:
+  - none worth the write coordination cost; the shared token spec should stay single-authored.
+- Exit criteria:
+  - `alaa-services-contract` contains one PHP class, one JavaScript class, one bash helper, and one HAProxy Lua helper for the requested encoding tasks.
+  - the helpers share one clear reversible token format with no cross-type conflicts.
+  - the new assets are discoverable from the skill documentation.
+  - local validation covers every runtime that is available in this environment.

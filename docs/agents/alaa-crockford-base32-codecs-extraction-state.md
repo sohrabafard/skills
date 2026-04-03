@@ -1,0 +1,52 @@
+# Alaa Crockford Base32 Codecs Extraction State
+
+- Task name: extract Crockford Base32 and UUIDv7 helpers into a standalone skill
+- Current status: implementation complete, validation complete with noted runtime limits
+- Objective: move the shared lowercase Crockford Base32 and UUIDv7 helper bundle into `skills/sohrab/alaa-crockford-base32-codecs` so it becomes a cross-runtime reusable skill with forwarding references from the original owning surfaces.
+- Current repository understanding:
+  - the helper bundle was first introduced under `skills/sohrab/alaa-services-contract`; that earlier implementation history is preserved in `docs/_agent_plans/20260403-2313-alaa-services-contract-crockford-base32.md` and `docs/agents/alaa-services-contract-crockford-base32-state.md`.
+  - the new extraction should keep the token contract stable and change only ownership, discovery, and file paths.
+  - the companion skills need only short routing hooks because the detailed helper contract now belongs in one place.
+- Assumptions:
+  - `alaa-crockford-base32-codecs` is the correct long-term owner because the bundle spans PHP, JavaScript, shell, and HAProxy Lua rather than one Ala service contract.
+  - preserving the earlier state files as history is better than rewriting them to look as if the original helper work never happened.
+- Constraints:
+  - keep the helper implementations behavior-identical across the move.
+  - keep documentation in English.
+  - do not leave duplicate full helper docs inside `alaa-services-contract`.
+- Completed work:
+  - created `skills/sohrab/alaa-crockford-base32-codecs` with `skill-creator` scaffolding and the requested OpenAI interface metadata.
+  - moved the PHP, JavaScript, shell, and HAProxy Lua helper assets into the new skill.
+  - replaced the scaffolded new-skill `SKILL.md` with a routing-first owner document.
+  - added `references/00-topic-map.md` and `references/10-shared-token-contract.md` under the new skill.
+  - updated `alaa-services-contract` to forward to `$alaa-crockford-base32-codecs` instead of owning the helper details locally.
+  - removed the old local helper reference file from `alaa-services-contract`.
+  - added short routing hooks in `alaa-haproxy`, `alaa-frontend-developer`, and `alaa-php-clean-code`.
+  - updated `skills/sohrab/README.md` so the new skill is listed as a portable cross-runtime utility.
+  - removed the old empty helper folders from `alaa-services-contract`.
+  - normalized one smart-quote pair in `skills/sohrab/alaa-php-clean-code/SKILL.md` so the Windows `quick_validate.py` reader could validate the touched skill consistently.
+- Remaining work:
+  - review the final diff for any leftover old-path references or stale filesystem artifacts.
+- Risks or blockers:
+  - Git status currently reflects the earlier helper-creation work and the new extraction together, so final review should distinguish old historical files from the new ownership move.
+  - HAProxy runtime validation may still be blocked if `haproxy` is not installed on this workstation.
+- Validation summary:
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-crockford-base32-codecs` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-services-contract` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-haproxy` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-frontend-developer` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-php-clean-code` passed after replacing one smart-quote pair with ASCII quotes.
+  - `php -l skills\sohrab\alaa-crockford-base32-codecs\assets\crockford-base32\CrockfordBase32TokenCodec.php` passed.
+  - Node successfully imported `skills/sohrab/alaa-crockford-base32-codecs/assets/crockford-base32/crockford-base32-token-codec.mjs`.
+  - PHP and JavaScript matched on representative fixtures from the new canonical paths:
+    - integer `-42` -> `nzzzzzzzzzzzxc`
+    - string `salam-123` -> `sedgprrbd5mrk4cr`
+    - UUIDv7 `0195ff70-7b8e-7c5d-93c2-4c7e2ff0c8a1` -> `v06azyw3vhsy5v4y29hz2zw68m4`
+  - PHP and JavaScript both round-tripped the representative integer, string, and UUIDv7 fixtures successfully.
+  - an elevated Git Bash smoke test confirmed the moved CLI encodes and decodes the same representative integer, string, and UUIDv7 fixtures from `skills/sohrab/alaa-crockford-base32-codecs/scripts/crockford-base32-cli.sh`.
+  - local HAProxy validation could not run because `haproxy` is not installed on this workstation.
+- Next recommended step:
+  - if a future repository wires in the Lua helper, validate that consuming HAProxy config with `haproxy -c -f <cfg>` on a machine that has HAProxy installed.
+- Timeline:
+  - 2026-04-04 00:31 UTC — created extraction-specific plan and state files so the ownership move can be resumed independently of the earlier helper-creation history.
+  - 2026-04-04 00:41 UTC — validated the new skill owner, forwarding references, and moved runtime helpers; confirmed PHP, JavaScript, and bash parity from the new canonical paths and recorded the local HAProxy runtime limit.

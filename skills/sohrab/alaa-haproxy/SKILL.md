@@ -95,6 +95,8 @@ If sources conflict:
   - Pair when HAProxy changes alter trust boundaries, mTLS policy, exposure, or admin surface.
 - `$alaa-trust-gateway-auth`
   - Pair when HAProxy is part of an Ala gateway auth or trusted-header path.
+- `$alaa-crockford-base32-codecs`
+  - Pair when HAProxy Lua work needs shared Crockford Base32, UUIDv7, or typed token helpers that must match backend, frontend, or CLI code.
 
 ## Reference navigation
 

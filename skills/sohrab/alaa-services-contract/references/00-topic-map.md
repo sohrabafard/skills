@@ -22,6 +22,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode D - Laravel auth-boundary service`
   - Use when the service is allowed to satisfy trusted ingress through request guards or `Auth::viaRequest(...)` but must still expose the same outward contract.
   - Read `30-trusted-ingress-and-laravel-contract.md`, then `50-laravel-copy-baselines.md` if implementation help is needed.
+- `Mode E - Cross-runtime helper assets`
+  - Use when the task needs copy-ready helper code for lowercase Crockford Base32, UUIDv7 token generation, or reversible no-conflict tokens shared across PHP, JavaScript, shell tooling, and HAProxy Lua.
+  - Load `$alaa-crockford-base32-codecs`.
 
 ## Reference files
 
