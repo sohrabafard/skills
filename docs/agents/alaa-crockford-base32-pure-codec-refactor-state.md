@@ -1,0 +1,57 @@
+# Alaa Crockford Base32 Pure Codec Refactor State
+
+- Task name: convert the Crockford helper bundle into a pure codec utility
+- Current status: implementation complete, validation complete with noted runtime limits
+- Objective: remove typed-token prefixes and token-oriented abstractions from the shared Crockford Base32 helper bundle so it becomes a pure codec utility for bytes, integers, UTF-8 strings, and UUIDv7 values.
+- Current repository understanding:
+  - `skills/sohrab/alaa-crockford-base32-codecs` currently still reflects the earlier token-based design even though the skill ownership extraction is complete.
+  - the PHP, JavaScript, bash, and Lua assets each still mix raw Base32 helpers with typed-token wrappers and token-specific command or registration surfaces.
+  - the skill docs also still describe a token contract rather than a codec contract.
+- Assumptions:
+  - the integer codec should use a sign-plus-magnitude textual strategy that preserves the user’s examples and avoids fixed-width binary semantics.
+  - historical state files that mention the previous token design should remain as historical trace, while this file records the corrective refactor.
+- Constraints:
+  - keep behavior aligned across the active runtime assets.
+  - avoid retaining dead token compatibility layers.
+  - preserve the shared byte-level Base32 and UUIDv7 validation logic where already correct.
+- Completed work:
+  - inspected the active PHP, JavaScript, bash, Lua, and skill-doc surfaces and confirmed that the token architecture is still present end to end.
+  - confirmed the correction must touch code, command names, runtime registrations, and docs together.
+  - renamed the active PHP, JavaScript, and Lua helper assets away from `TokenCodec` naming and updated the owning skill docs to describe a pure codec contract.
+  - removed typed-token prefixes, token dispatch helpers, token-specific CLI commands, and the token-oriented HAProxy fetch from the active helper bundle.
+  - replaced fixed-width signed int64 token packing with an explicit sign-plus-magnitude integer codec:
+    - positive integers encode as minimal unsigned Crockford Base32 digits
+    - negative integers encode as `-` plus the minimal unsigned magnitude
+    - zero always encodes as `0`
+  - updated the CLI to expose only `encode-bytes`, `decode-bytes`, `encode-int`, `decode-int`, `encode-string`, `decode-string`, `generate-uuidv7`, `encode-uuidv7`, and `decode-uuidv7`.
+  - updated companion-skill and forwarding references so they describe shared codec parity instead of token parity.
+- Remaining work:
+  - review the final diff and summarize the exact removed features and behavior changes.
+- Risks or blockers:
+  - integer behavior is a contract change, so validation needs to cover both positive examples and signed edge handling.
+  - HAProxy runtime validation may still be blocked by the lack of a local `haproxy` executable.
+- Validation summary:
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-crockford-base32-codecs` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-services-contract` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-haproxy` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-frontend-developer` passed.
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-php-clean-code` passed.
+  - `php -l skills\sohrab\alaa-crockford-base32-codecs\assets\crockford-base32\CrockfordBase32Codec.php` passed.
+  - Node successfully imported `skills/sohrab/alaa-crockford-base32-codecs/assets/crockford-base32/crockford-base32-codec.mjs`.
+  - PHP and JavaScript both matched the required integer examples:
+    - `encode-int 9` -> `9`
+    - `encode-int 25` -> `s`
+    - `encode-int 125789` -> `3ttx`
+    - `decode-int 3ttx` -> `125789`
+  - PHP and JavaScript also matched on:
+    - `encode-string 'salam-123'` -> `edgprrbd5mrk4cr`
+    - `encode-uuidv7 0195ff70-7b8e-7c5d-93c2-4c7e2ff0c8a1` -> `06azyw3vhsy5v4y29hz2zw68m4`
+    - UUIDv7 encoded payload length -> `26`
+    - `encode-bytes ff00` -> `zw00`
+  - an elevated Git Bash smoke test confirmed the updated CLI returns the requested pure-codec outputs for bytes, integers, strings, and UUIDv7 values.
+  - local HAProxy runtime validation could not run because `haproxy` is not installed on this workstation.
+- Next recommended step:
+  - if a future repository wires in the Lua helper, validate that consuming HAProxy config with `haproxy -c -f <cfg>` on a machine that has HAProxy installed.
+- Timeline:
+  - 2026-04-04 01:01 UTC — created a new plan and state pair after confirming the user requested a full architecture correction from typed tokens to pure codecs.
+  - 2026-04-04 01:16 UTC — completed the pure codec refactor, validated the new integer examples and renamed asset paths, and confirmed the updated CLI surface end to end.

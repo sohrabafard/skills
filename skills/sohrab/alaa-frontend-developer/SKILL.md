@@ -73,7 +73,7 @@ Also load companion skills when needed:
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
 - CI, Docker, artifact, or deployment contract risks -> `$alaa-frontend-devops`
 - package boundary or asset emission risks -> `$alaa-mono-package`
-- shared Crockford Base32 or UUIDv7 token parity across frontend, backend, shell, or edge layers -> `$alaa-crockford-base32-codecs`
+- shared Crockford Base32 or UUIDv7 codec parity across frontend, backend, shell, or edge layers -> `$alaa-crockford-base32-codecs`
 - documentation-only annotation pass -> `$alaa-frontend-doc-annotations`
 - OpenAI or Codex docs, examples, or maintenance guidance -> `$openai-docs`
 

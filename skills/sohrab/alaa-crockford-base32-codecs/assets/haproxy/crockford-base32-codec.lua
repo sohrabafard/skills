@@ -1,20 +1,19 @@
--- Shared lowercase Crockford Base32 helpers plus no-conflict typed tokens.
+-- Pure lowercase Crockford Base32 codecs for bytes, integers, strings, and UUIDv7 values.
 --
 -- This module is shaped for HAProxy `lua-load` / `lua-load-per-thread` usage.
--- It registers a few converters and fetches when the HAProxy `core` object is
--- available, while still returning a reusable table for plain Lua callers.
--- The UUIDv7 helper uses Lua-side pseudo-random bytes, so treat it as suitable
--- for request identifiers and correlation values, not for secrets.
+-- It registers reusable converters when the HAProxy `core` object is available
+-- while still returning a plain Lua table for non-HAProxy callers.
+--
+-- Integer strategy:
+-- - positive integers encode as minimal unsigned Crockford Base32 digits
+-- - negative integers encode as `-` plus the minimal unsigned magnitude
+-- - zero always encodes as `0`
 
 local M = {}
 
 local ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
-local TYPE_BYTES = "b"
-local TYPE_INTEGER = "n"
-local TYPE_STRING = "s"
-local TYPE_UUID_V7 = "v"
-
 local LOOKUP = {}
+
 for index = 1, #ALPHABET do
     LOOKUP[ALPHABET:sub(index, index)] = index - 1
 end
@@ -28,20 +27,6 @@ local function normalize_encoded(value)
     normalized = normalized:gsub("o", "0")
 
     return normalized
-end
-
-local function extract_payload(token, expected_prefix)
-    if token == nil or token == "" then
-        error("Typed token cannot be empty.")
-    end
-
-    local prefix = string.lower(token:sub(1, 1))
-
-    if prefix ~= expected_prefix then
-        error(string.format("Expected token prefix [%s], got [%s].", expected_prefix, prefix))
-    end
-
-    return token:sub(2)
 end
 
 local function ensure_seeded()
@@ -67,6 +52,146 @@ local function random_bytes(count)
     end
 
     return table.concat(parts)
+end
+
+local function trim_leading_decimal_zeros(value)
+    local trimmed = value:gsub("^0+", "")
+
+    if trimmed == "" then
+        return "0"
+    end
+
+    return trimmed
+end
+
+local function normalize_integer_input(value)
+    local text = tostring(value)
+
+    if type(value) == "number" then
+        local integer = math.tointeger(value)
+
+        if integer == nil then
+            error("Integer input must be a Lua integer value.")
+        end
+
+        text = tostring(integer)
+    end
+
+    if not text:match("^%-?%d+$") then
+        error("Integer input must be a canonical base-10 integer.")
+    end
+
+    local negative = text:sub(1, 1) == "-"
+    local magnitude = negative and text:sub(2) or text
+    magnitude = trim_leading_decimal_zeros(magnitude)
+
+    return negative and magnitude ~= "0", magnitude
+end
+
+local function divide_decimal_string_by_32(decimal)
+    local carry = 0
+    local quotient = {}
+
+    for index = 1, #decimal do
+        carry = (carry * 10) + tonumber(decimal:sub(index, index))
+        local digit = math.floor(carry / 32)
+
+        if #quotient > 0 or digit ~= 0 then
+            quotient[#quotient + 1] = tostring(digit)
+        end
+
+        carry = carry % 32
+    end
+
+    if #quotient == 0 then
+        return "0", carry
+    end
+
+    return table.concat(quotient), carry
+end
+
+local function encode_unsigned_decimal_to_base32(decimal)
+    if decimal == "0" then
+        return "0"
+    end
+
+    local digits = {}
+    local value = decimal
+
+    while value ~= "0" do
+        local quotient, remainder = divide_decimal_string_by_32(value)
+        digits[#digits + 1] = ALPHABET:sub(remainder + 1, remainder + 1)
+        value = quotient
+    end
+
+    local reversed = {}
+
+    for index = #digits, 1, -1 do
+        reversed[#reversed + 1] = digits[index]
+    end
+
+    return table.concat(reversed)
+end
+
+local function multiply_decimal_string_by_32_and_add(decimal, addend)
+    local carry = addend
+    local reversed = {}
+
+    for index = #decimal, 1, -1 do
+        local value = (tonumber(decimal:sub(index, index)) * 32) + carry
+        reversed[#reversed + 1] = tostring(value % 10)
+        carry = math.floor(value / 10)
+    end
+
+    while carry > 0 do
+        reversed[#reversed + 1] = tostring(carry % 10)
+        carry = math.floor(carry / 10)
+    end
+
+    local digits = {}
+
+    for index = #reversed, 1, -1 do
+        digits[#digits + 1] = reversed[index]
+    end
+
+    return table.concat(digits)
+end
+
+local function split_signed_encoded_integer(encoded)
+    if encoded == nil or encoded == "" then
+        error("Integer payload cannot be empty.")
+    end
+
+    local negative = encoded:sub(1, 1) == "-"
+    local magnitude = negative and encoded:sub(2) or encoded
+    magnitude = normalize_encoded(magnitude)
+
+    if magnitude == "" then
+        error("Integer payload cannot be empty.")
+    end
+
+    if #magnitude > 1 and magnitude:sub(1, 1) == "0" then
+        error("Integer payload must use a minimal Crockford Base32 representation.")
+    end
+
+    return negative, magnitude
+end
+
+local function decode_unsigned_base32_to_decimal(encoded)
+    local decimal = "0"
+
+    for index = 1, #encoded do
+        local character = encoded:sub(index, index)
+        local value = LOOKUP[character]
+
+        if value == nil then
+            error(string.format("Invalid Crockford Base32 integer character [%s].", character))
+        end
+
+        decimal = multiply_decimal_string_by_32_and_add(decimal, value)
+    end
+
+    return trim_leading_decimal_zeros(decimal)
 end
 
 local function bytes_to_uuid(bytes)
@@ -186,42 +311,34 @@ function M.decode_bytes(encoded)
     return table.concat(parts)
 end
 
-function M.encode_bytes_token(bytes)
-    return TYPE_BYTES .. M.encode_bytes(bytes)
-end
-
-function M.decode_bytes_token(token)
-    return M.decode_bytes(extract_payload(token, TYPE_BYTES))
-end
-
 function M.encode_int(value)
-    local integer = math.tointeger(value)
+    local negative, magnitude = normalize_integer_input(value)
+    local encoded = encode_unsigned_decimal_to_base32(magnitude)
 
-    if integer == nil then
-        error("Integer token input must be a Lua integer value.")
+    if negative and encoded ~= "0" then
+        return "-" .. encoded
     end
 
-    return TYPE_INTEGER .. M.encode_bytes(string.pack(">i8", integer))
+    return encoded
 end
 
-function M.decode_int(token)
-    local payload = M.decode_bytes(extract_payload(token, TYPE_INTEGER))
+function M.decode_int(encoded)
+    local negative, magnitude = split_signed_encoded_integer(encoded)
+    local decimal = decode_unsigned_base32_to_decimal(magnitude)
 
-    if #payload ~= 8 then
-        error("Integer token payload must decode to exactly 8 bytes.")
+    if negative and decimal ~= "0" then
+        return "-" .. decimal
     end
 
-    local value = string.unpack(">i8", payload)
-
-    return value
+    return decimal
 end
 
 function M.encode_string(value)
-    return TYPE_STRING .. M.encode_bytes(value)
+    return M.encode_bytes(value)
 end
 
-function M.decode_string(token)
-    return M.decode_bytes(extract_payload(token, TYPE_STRING))
+function M.decode_string(encoded)
+    return M.decode_bytes(encoded)
 end
 
 function M.generate_uuid_v7()
@@ -229,7 +346,7 @@ function M.generate_uuid_v7()
     local milliseconds = (os.time() * 1000) + math.floor((os.clock() * 1000) % 1000)
     local parts = {}
 
-    for index = 16, 1, -1 do
+    for index = 1, 16 do
         parts[index] = bytes:sub(index, index)
     end
 
@@ -244,44 +361,18 @@ function M.generate_uuid_v7()
     return bytes_to_uuid(table.concat(parts))
 end
 
-function M.generate_uuid_v7_token()
-    return M.encode_uuid_v7(M.generate_uuid_v7())
-end
-
 function M.encode_uuid_v7(uuid)
     local bytes = uuid_to_bytes(uuid)
     assert_uuid_v7_bytes(bytes)
 
-    return TYPE_UUID_V7 .. M.encode_bytes(bytes)
+    return M.encode_bytes(bytes)
 end
 
-function M.decode_uuid_v7(token)
-    local payload = M.decode_bytes(extract_payload(token, TYPE_UUID_V7))
+function M.decode_uuid_v7(encoded)
+    local payload = M.decode_bytes(encoded)
     assert_uuid_v7_bytes(payload)
 
     return bytes_to_uuid(payload)
-end
-
-function M.decode_token(token)
-    local prefix = string.lower((token or ""):sub(1, 1))
-
-    if prefix == TYPE_BYTES then
-        return { type = "bytes", value = M.decode_bytes_token(token) }
-    end
-
-    if prefix == TYPE_INTEGER then
-        return { type = "int", value = M.decode_int(token) }
-    end
-
-    if prefix == TYPE_STRING then
-        return { type = "string", value = M.decode_string(token) }
-    end
-
-    if prefix == TYPE_UUID_V7 then
-        return { type = "uuidv7", value = M.decode_uuid_v7(token) }
-    end
-
-    error(string.format("Unsupported typed token prefix [%s].", prefix))
 end
 
 local function safe_wrapper(name, callback)
@@ -293,7 +384,7 @@ local function safe_wrapper(name, callback)
         end
 
         if core ~= nil and core.Warning ~= nil then
-            core.Warning(string.format("crockford-base32-token-codec.lua %s failed: %s", name, result))
+            core.Warning(string.format("crockford-base32-codec.lua %s failed: %s", name, result))
         end
 
         return nil
@@ -301,6 +392,14 @@ local function safe_wrapper(name, callback)
 end
 
 if core ~= nil and core.register_converters ~= nil then
+    core.register_converters("crockford_b32_encode_bytes", safe_wrapper("encode_bytes", function(value)
+        return M.encode_bytes(value or "")
+    end))
+
+    core.register_converters("crockford_b32_decode_bytes", safe_wrapper("decode_bytes", function(value)
+        return M.decode_bytes(value or "")
+    end))
+
     core.register_converters("crockford_b32_encode_string", safe_wrapper("encode_string", function(value)
         return M.encode_string(value or "")
     end))
@@ -310,11 +409,11 @@ if core ~= nil and core.register_converters ~= nil then
     end))
 
     core.register_converters("crockford_b32_encode_int", safe_wrapper("encode_int", function(value)
-        return M.encode_int(tonumber(value))
+        return M.encode_int(value or "0")
     end))
 
     core.register_converters("crockford_b32_decode_int", safe_wrapper("decode_int", function(value)
-        return tostring(M.decode_int(value or ""))
+        return M.decode_int(value or "")
     end))
 
     core.register_converters("crockford_b32_encode_uuidv7", safe_wrapper("encode_uuid_v7", function(value)
@@ -329,10 +428,6 @@ end
 if core ~= nil and core.register_fetches ~= nil then
     core.register_fetches("crockford_b32_uuidv7", function()
         return M.generate_uuid_v7()
-    end)
-
-    core.register_fetches("crockford_b32_uuidv7_token", function()
-        return M.generate_uuid_v7_token()
     end)
 end
 

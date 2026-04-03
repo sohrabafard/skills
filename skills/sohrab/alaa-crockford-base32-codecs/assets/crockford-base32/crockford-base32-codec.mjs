@@ -1,25 +1,15 @@
 /**
- * Cross-runtime JavaScript reference implementation for the shared lowercase
- * Crockford Base32 token contract owned by `alaa-crockford-base32-codecs`.
+ * Cross-runtime JavaScript reference implementation for the pure lowercase
+ * Crockford Base32 codec bundle owned by `alaa-crockford-base32-codecs`.
  *
- * Keep this module behavior-aligned with the PHP, bash, and HAProxy Lua
- * variants so copied helpers stay reversible across backend, frontend, CLI,
- * and edge layers.
+ * Integer strategy:
+ * - positive integers encode as minimal unsigned Crockford Base32 digits
+ * - negative integers encode as `-` plus the minimal unsigned magnitude
+ * - zero always encodes as `0`
  */
 const ALPHABET = '0123456789abcdefghjkmnpqrstvwxyz';
 
-/**
- * Shared lowercase Crockford Base32 helpers plus no-conflict typed tokens.
- *
- * The token prefixes keep bytes, integers, strings, and UUIDv7 values reversible
- * even when the decoder only sees the encoded token.
- */
-class CrockfordBase32TokenCodec {
-  static TYPE_BYTES = 'b';
-  static TYPE_INTEGER = 'n';
-  static TYPE_STRING = 's';
-  static TYPE_UUID_V7 = 'v';
-
+class CrockfordBase32Codec {
   /**
    * Encode raw bytes as lowercase Crockford Base32 without padding.
    *
@@ -97,73 +87,79 @@ class CrockfordBase32TokenCodec {
   }
 
   /**
-   * Wrap raw bytes in the `b` typed-token prefix.
-   *
-   * @param {Uint8Array | ArrayBuffer | number[]} value
-   * @returns {string}
-   */
-  static encodeBytesToken(value) {
-    return this.TYPE_BYTES + this.encodeBytes(value);
-  }
-
-  /**
-   * Decode one `b` token into its raw byte payload.
-   *
-   * @param {string} token
-   * @returns {Uint8Array}
-   */
-  static decodeBytesToken(token) {
-    return this.decodeBytes(this.extractPayload(token, this.TYPE_BYTES));
-  }
-
-  /**
-   * Encode one signed 64-bit integer into the no-conflict `n` token form.
+   * Encode one signed integer using the module's sign-plus-magnitude strategy.
    *
    * @param {bigint | number | string} value
    * @returns {string}
    */
   static encodeInt(value) {
-    return this.TYPE_INTEGER + this.encodeBytes(this.packSignedInt64(this.toBigInt(value)));
-  }
+    const integer = this.toBigInt(value);
 
-  /**
-   * Decode one `n` token into a lossless JavaScript `bigint`.
-   *
-   * @param {string} token
-   * @returns {bigint}
-   */
-  static decodeInt(token) {
-    const bytes = this.decodeBytes(this.extractPayload(token, this.TYPE_INTEGER));
-
-    if (bytes.length !== 8) {
-      throw new TypeError('Integer token payload must decode to exactly 8 bytes.');
+    if (integer === 0n) {
+      return '0';
     }
 
-    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const negative = integer < 0n;
+    let magnitude = negative ? -integer : integer;
+    let encoded = '';
 
-    return view.getBigInt64(0, false);
+    while (magnitude > 0n) {
+      const remainder = Number(magnitude % 32n);
+      encoded = ALPHABET[remainder] + encoded;
+      magnitude /= 32n;
+    }
+
+    return negative ? `-${encoded}` : encoded;
   }
 
   /**
-   * Encode a UTF-8 string into the no-conflict `s` token form.
+   * Decode one signed Crockford Base32 integer into canonical base-10 text.
+   *
+   * Returning decimal text keeps the JavaScript helper lossless for values
+   * outside the safe IEEE-754 number range while staying easy to print from CLIs.
+   *
+   * @param {string} encoded
+   * @returns {string}
+   */
+  static decodeInt(encoded) {
+    const { negative, magnitude } = this.splitSignedEncodedInteger(encoded);
+    let value = 0n;
+
+    for (const character of magnitude) {
+      const digit = ALPHABET.indexOf(character);
+
+      if (digit === -1) {
+        throw new TypeError(`Invalid Crockford Base32 integer character [${character}].`);
+      }
+
+      value = (value * 32n) + BigInt(digit);
+    }
+
+    if (!negative || value === 0n) {
+      return value.toString();
+    }
+
+    return `-${value.toString()}`;
+  }
+
+  /**
+   * Encode one UTF-8 JavaScript string as lowercase Crockford Base32.
    *
    * @param {string} value
    * @returns {string}
    */
   static encodeString(value) {
-    return this.TYPE_STRING + this.encodeBytes(new TextEncoder().encode(value));
+    return this.encodeBytes(new TextEncoder().encode(value));
   }
 
   /**
-   * Decode one `s` token back into a UTF-8 JavaScript string.
+   * Decode one Crockford Base32 payload back into a UTF-8 JavaScript string.
    *
-   * @param {string} token
+   * @param {string} encoded
    * @returns {string}
    */
-  static decodeString(token) {
-    const bytes = this.decodeBytes(this.extractPayload(token, this.TYPE_STRING));
-
-    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  static decodeString(encoded) {
+    return new TextDecoder('utf-8', { fatal: true }).decode(this.decodeBytes(encoded));
   }
 
   /**
@@ -187,16 +183,7 @@ class CrockfordBase32TokenCodec {
   }
 
   /**
-   * Generate one UUIDv7 and immediately wrap it in the `v` typed-token form.
-   *
-   * @returns {string}
-   */
-  static generateUuidV7Token() {
-    return this.encodeUuidV7(this.generateUuidV7());
-  }
-
-  /**
-   * Encode one canonical UUIDv7 string into the no-conflict `v` token form.
+   * Encode one canonical UUIDv7 string as lowercase Crockford Base32.
    *
    * @param {string} uuid
    * @returns {string}
@@ -205,20 +192,20 @@ class CrockfordBase32TokenCodec {
     const bytes = this.uuidToBytes(uuid);
     this.assertUuidV7Bytes(bytes);
 
-    return this.TYPE_UUID_V7 + this.encodeBytes(bytes);
+    return this.encodeBytes(bytes);
   }
 
   /**
-   * Decode one `v` token back into a canonical UUIDv7 string.
+   * Decode one Crockford Base32 UUID payload back into canonical UUIDv7 text.
    *
-   * @param {string} token
+   * @param {string} encoded
    * @returns {string}
    */
-  static decodeUuidV7(token) {
-    const bytes = this.decodeBytes(this.extractPayload(token, this.TYPE_UUID_V7));
+  static decodeUuidV7(encoded) {
+    const bytes = this.decodeBytes(encoded);
 
     if (bytes.length !== 16) {
-      throw new TypeError('UUIDv7 token payload must decode to exactly 16 bytes.');
+      throw new TypeError('UUIDv7 payload must decode to exactly 16 bytes.');
     }
 
     this.assertUuidV7Bytes(bytes);
@@ -227,33 +214,7 @@ class CrockfordBase32TokenCodec {
   }
 
   /**
-   * Decode one typed token without relying on an out-of-band type hint.
-   *
-   * @param {string} token
-   * @returns {{ type: 'bytes' | 'int' | 'string' | 'uuidv7', value: Uint8Array | bigint | string }}
-   */
-  static decodeToken(token) {
-    const prefix = (token[0] ?? '').toLowerCase();
-
-    switch (prefix) {
-      case this.TYPE_BYTES:
-        return { type: 'bytes', value: this.decodeBytesToken(token) };
-      case this.TYPE_INTEGER:
-        return { type: 'int', value: this.decodeInt(token) };
-      case this.TYPE_STRING:
-        return { type: 'string', value: this.decodeString(token) };
-      case this.TYPE_UUID_V7:
-        return { type: 'uuidv7', value: this.decodeUuidV7(token) };
-      default:
-        throw new TypeError(`Unsupported typed token prefix [${prefix}].`);
-    }
-  }
-
-  /**
    * Normalize common Crockford aliases before payload validation.
-   *
-   * This keeps decode tolerant of uppercase input, hyphen separators, and the
-   * usual `i`/`l`/`o` ambiguity without changing the encode-side output.
    *
    * @param {string} encoded
    * @returns {string}
@@ -268,24 +229,28 @@ class CrockfordBase32TokenCodec {
   }
 
   /**
-   * Remove and validate the one-character typed-token prefix.
+   * Parse the module's signed integer wire format.
    *
-   * @param {string} token
-   * @param {string} expectedPrefix
-   * @returns {string}
+   * @param {string} encoded
+   * @returns {{ negative: boolean, magnitude: string }}
    */
-  static extractPayload(token, expectedPrefix) {
-    if (token.length === 0) {
-      throw new TypeError('Typed token cannot be empty.');
+  static splitSignedEncodedInteger(encoded) {
+    if (encoded.length === 0) {
+      throw new TypeError('Integer payload cannot be empty.');
     }
 
-    const prefix = token[0].toLowerCase();
+    const negative = encoded.startsWith('-');
+    const magnitude = this.normalizeEncoded(negative ? encoded.slice(1) : encoded);
 
-    if (prefix !== expectedPrefix) {
-      throw new TypeError(`Expected token prefix [${expectedPrefix}], got [${prefix}].`);
+    if (magnitude.length === 0) {
+      throw new TypeError('Integer payload cannot be empty.');
     }
 
-    return token.slice(1);
+    if (magnitude.length > 1 && magnitude.startsWith('0')) {
+      throw new TypeError('Integer payload must use a minimal Crockford Base32 representation.');
+    }
+
+    return { negative, magnitude };
   }
 
   /**
@@ -311,36 +276,17 @@ class CrockfordBase32TokenCodec {
   }
 
   /**
-   * Coerce integer input into a signed 64-bit-safe `bigint`.
+   * Coerce integer input into an arbitrary-precision `bigint`.
    *
    * @param {bigint | number | string} value
    * @returns {bigint}
    */
   static toBigInt(value) {
-    const integer = typeof value === 'bigint' ? value : BigInt(value);
-    const minimum = -(1n << 63n);
-    const maximum = (1n << 63n) - 1n;
-
-    if (integer < minimum || integer > maximum) {
-      throw new RangeError('Integer value must fit within the signed 64-bit range.');
+    if (typeof value === 'number' && !Number.isInteger(value)) {
+      throw new TypeError('Integer input must not contain a fractional component.');
     }
 
-    return integer;
-  }
-
-  /**
-   * Pack one signed 64-bit integer into big-endian bytes.
-   *
-   * @param {bigint} value
-   * @returns {Uint8Array}
-   */
-  static packSignedInt64(value) {
-    const buffer = new ArrayBuffer(8);
-    const view = new DataView(buffer);
-
-    view.setBigInt64(0, value, false);
-
-    return new Uint8Array(buffer);
+    return typeof value === 'bigint' ? value : BigInt(value);
   }
 
   /**
@@ -423,5 +369,5 @@ class CrockfordBase32TokenCodec {
   }
 }
 
-export { CrockfordBase32TokenCodec };
-export default CrockfordBase32TokenCodec;
+export { CrockfordBase32Codec };
+export default CrockfordBase32Codec;

@@ -9,18 +9,21 @@ usage() {
 Usage: crockford-base32-cli.sh COMMAND [VALUE]
 
 Commands:
-    encode-hex HEX              Encode raw bytes from hexadecimal to a `b` token
-    decode-hex TOKEN            Decode a `b` token back to hexadecimal
-    encode-int VALUE            Encode one signed 64-bit integer to an `n` token
-    decode-int TOKEN            Decode an `n` token back to decimal
-    encode-string VALUE         Encode one UTF-8 string to an `s` token
-    decode-string TOKEN         Decode an `s` token back to a UTF-8 string
-    generate-uuidv7             Generate one canonical UUIDv7 string
-    generate-uuidv7-token       Generate one `v` token directly
-    encode-uuidv7 UUID          Encode one canonical UUIDv7 string to a `v` token
-    decode-uuidv7 TOKEN         Decode one `v` token back to a canonical UUIDv7 string
-    decode-token TOKEN          Decode any typed token and print a small JSON object
-    -h, --help                  Show this help
+    encode-bytes HEX           Encode raw bytes from hexadecimal to Base32
+    decode-bytes BASE32        Decode Base32 back to hexadecimal
+    encode-int VALUE           Encode one signed integer to minimal Crockford Base32
+    decode-int BASE32          Decode Crockford Base32 back to base-10 text
+    encode-string VALUE        Encode one UTF-8 string to Base32
+    decode-string BASE32       Decode Base32 back to a UTF-8 string
+    generate-uuidv7            Generate one canonical UUIDv7 string
+    encode-uuidv7 UUID         Encode one canonical UUIDv7 string to Base32
+    decode-uuidv7 BASE32       Decode Base32 back to a canonical UUIDv7 string
+    -h, --help                 Show this help
+
+Integer strategy:
+    - positive integers encode as minimal unsigned Crockford Base32 digits
+    - negative integers encode as '-' plus the minimal unsigned magnitude
+    - zero always encodes as '0'
 
 Notes:
     - Encode output always uses lowercase Crockford Base32.
@@ -69,18 +72,16 @@ main() {
     python_bin="$(find_python)"
 
     "${python_bin}" - "$@" <<'PY'
-import json
 import re
-import struct
 import sys
 import time
 import uuid
 
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
-TYPE_BYTES = "b"
-TYPE_INTEGER = "n"
-TYPE_STRING = "s"
-TYPE_UUID_V7 = "v"
+LOOKUP = {character: index for index, character in enumerate(ALPHABET)}
+UUID_PATTERN = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+)
 
 
 def encode_bytes(payload: bytes) -> str:
@@ -123,8 +124,8 @@ def decode_bytes(encoded: str) -> bytes:
 
     for character in normalized:
         try:
-            value = ALPHABET.index(character)
-        except ValueError as exc:
+            value = LOOKUP[character]
+        except KeyError as exc:
             raise ValueError(f"Invalid Crockford Base32 character [{character}].") from exc
 
         buffer = (buffer << 5) | value
@@ -141,53 +142,62 @@ def decode_bytes(encoded: str) -> bytes:
     return bytes(decoded)
 
 
-def extract_payload(token: str, expected_prefix: str) -> str:
-    if token == "":
-        raise ValueError("Typed token cannot be empty.")
-
-    prefix = token[0].lower()
-
-    if prefix != expected_prefix:
-        raise ValueError(f"Expected token prefix [{expected_prefix}], got [{prefix}].")
-
-    return token[1:]
-
-
-def encode_bytes_token(payload: bytes) -> str:
-    return TYPE_BYTES + encode_bytes(payload)
-
-
-def decode_bytes_token(token: str) -> bytes:
-    return decode_bytes(extract_payload(token, TYPE_BYTES))
-
-
 def encode_int(value: int) -> str:
-    if value < -(1 << 63) or value > (1 << 63) - 1:
-        raise ValueError("Integer value must fit within the signed 64-bit range.")
+    if value == 0:
+        return "0"
 
-    return TYPE_INTEGER + encode_bytes(struct.pack(">q", value))
+    negative = value < 0
+    magnitude = -value if negative else value
+    digits: list[str] = []
+
+    while magnitude > 0:
+        magnitude, remainder = divmod(magnitude, 32)
+        digits.append(ALPHABET[remainder])
+
+    encoded = "".join(reversed(digits))
+    return f"-{encoded}" if negative else encoded
 
 
-def decode_int(token: str) -> int:
-    payload = decode_bytes(extract_payload(token, TYPE_INTEGER))
+def split_signed_encoded_integer(encoded: str) -> tuple[bool, str]:
+    if encoded == "":
+        raise ValueError("Integer payload cannot be empty.")
 
-    if len(payload) != 8:
-        raise ValueError("Integer token payload must decode to exactly 8 bytes.")
+    negative = encoded.startswith("-")
+    magnitude = normalize_encoded(encoded[1:] if negative else encoded)
 
-    return struct.unpack(">q", payload)[0]
+    if magnitude == "":
+        raise ValueError("Integer payload cannot be empty.")
+
+    if len(magnitude) > 1 and magnitude[0] == "0":
+        raise ValueError("Integer payload must use a minimal Crockford Base32 representation.")
+
+    return negative, magnitude
+
+
+def decode_int(encoded: str) -> str:
+    negative, magnitude = split_signed_encoded_integer(encoded)
+    value = 0
+
+    for character in magnitude:
+        try:
+            digit = LOOKUP[character]
+        except KeyError as exc:
+            raise ValueError(f"Invalid Crockford Base32 integer character [{character}].") from exc
+
+        value = (value * 32) + digit
+
+    if negative and value != 0:
+        return f"-{value}"
+
+    return str(value)
 
 
 def encode_string(value: str) -> str:
-    return TYPE_STRING + encode_bytes(value.encode("utf-8"))
+    return encode_bytes(value.encode("utf-8"))
 
 
-def decode_string(token: str) -> str:
-    return decode_bytes(extract_payload(token, TYPE_STRING)).decode("utf-8")
-
-
-UUID_PATTERN = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-)
+def decode_string(encoded: str) -> str:
+    return decode_bytes(encoded).decode("utf-8")
 
 
 def generate_uuid_v7() -> str:
@@ -227,28 +237,13 @@ def assert_uuid_v7_bytes(payload: bytes) -> None:
 def encode_uuid_v7(value: str) -> str:
     payload = uuid_to_bytes(value)
     assert_uuid_v7_bytes(payload)
-    return TYPE_UUID_V7 + encode_bytes(payload)
+    return encode_bytes(payload)
 
 
-def decode_uuid_v7(token: str) -> str:
-    payload = decode_bytes(extract_payload(token, TYPE_UUID_V7))
+def decode_uuid_v7(encoded: str) -> str:
+    payload = decode_bytes(encoded)
     assert_uuid_v7_bytes(payload)
     return str(uuid.UUID(bytes=payload))
-
-
-def decode_token(token: str) -> dict[str, str | int]:
-    prefix = (token[:1] or "").lower()
-
-    if prefix == TYPE_BYTES:
-        return {"type": "bytes", "value": decode_bytes_token(token).hex()}
-    if prefix == TYPE_INTEGER:
-        return {"type": "int", "value": decode_int(token)}
-    if prefix == TYPE_STRING:
-        return {"type": "string", "value": decode_string(token)}
-    if prefix == TYPE_UUID_V7:
-        return {"type": "uuidv7", "value": decode_uuid_v7(token)}
-
-    raise ValueError(f"Unsupported typed token prefix [{prefix}].")
 
 
 def require_arg(arguments: list[str], position: int, label: str) -> str:
@@ -261,38 +256,32 @@ def require_arg(arguments: list[str], position: int, label: str) -> str:
 def main(argv: list[str]) -> int:
     command = require_arg(argv, 1, "command")
 
-    if command == "encode-hex":
-        print(encode_bytes_token(bytes.fromhex(require_arg(argv, 2, "hex"))))
+    if command == "encode-bytes":
+        print(encode_bytes(bytes.fromhex(require_arg(argv, 2, "hex"))))
         return 0
-    if command == "decode-hex":
-        print(decode_bytes_token(require_arg(argv, 2, "token")).hex())
+    if command == "decode-bytes":
+        print(decode_bytes(require_arg(argv, 2, "base32")).hex())
         return 0
     if command == "encode-int":
         print(encode_int(int(require_arg(argv, 2, "value"))))
         return 0
     if command == "decode-int":
-        print(decode_int(require_arg(argv, 2, "token")))
+        print(decode_int(require_arg(argv, 2, "base32")))
         return 0
     if command == "encode-string":
         print(encode_string(require_arg(argv, 2, "value")))
         return 0
     if command == "decode-string":
-        print(decode_string(require_arg(argv, 2, "token")))
+        print(decode_string(require_arg(argv, 2, "base32")))
         return 0
     if command == "generate-uuidv7":
         print(generate_uuid_v7())
-        return 0
-    if command == "generate-uuidv7-token":
-        print(encode_uuid_v7(generate_uuid_v7()))
         return 0
     if command == "encode-uuidv7":
         print(encode_uuid_v7(require_arg(argv, 2, "uuid")))
         return 0
     if command == "decode-uuidv7":
-        print(decode_uuid_v7(require_arg(argv, 2, "token")))
-        return 0
-    if command == "decode-token":
-        print(json.dumps(decode_token(require_arg(argv, 2, "token")), ensure_ascii=False))
+        print(decode_uuid_v7(require_arg(argv, 2, "base32")))
         return 0
 
     raise ValueError(f"Unsupported command [{command}].")

@@ -1,0 +1,30 @@
+# Alaa Crockford Base32 Pure Codec Refactor Plan
+
+- Timestamp: 2026-04-04 01:01 UTC
+- Scope: refactor `skills/sohrab/alaa-crockford-base32-codecs` from a typed-token helper bundle into a pure codec utility across PHP, JavaScript, bash, HAProxy Lua, and the owning skill docs.
+- Objective: remove typed-token prefixes and related dead abstractions so the helper bundle exposes only raw bytes, integer, UTF-8 string, and UUIDv7 encode/decode pairs with a clean CLI surface.
+- Assumptions:
+  - the shared byte-level Crockford Base32 logic and UUID validation logic are already mostly correct and should be preserved where possible.
+  - the integer codec should use an explicit sign strategy instead of fixed-width binary packing.
+  - the architecture should become codec-first even if that requires file and class renames away from `TokenCodec`.
+- Constraints:
+  - remove token concepts completely from active code paths and docs.
+  - keep the CLI limited to the requested commands only.
+  - keep encode output lowercase Crockford Base32 with no prefix metadata.
+  - validate the representative integer examples exactly.
+- Task decomposition:
+  - rename token-centric asset files and classes to codec-centric names.
+  - replace fixed-width token integer logic with a minimal signed integer codec.
+  - remove token-oriented methods, commands, fetches, and docs.
+  - update the skill references so the owning skill describes a pure codec contract.
+  - run focused validation for PHP, JavaScript, and bash from the new architecture.
+- Validation approach:
+  - lint the PHP class in its renamed path.
+  - import the JavaScript module in its renamed path.
+  - run representative PHP and JavaScript examples for bytes, integers, strings, and UUIDv7.
+  - run the bash CLI examples from the requested command set.
+  - record the HAProxy runtime limitation honestly if `haproxy` is still unavailable locally.
+- Exit criteria:
+  - no active asset or doc in `alaa-crockford-base32-codecs` depends on typed-token prefixes.
+  - the CLI exposes only the requested pure codec commands.
+  - `encode-int 9 -> 9`, `encode-int 25 -> s`, `encode-int 125789 -> 3ttx`, and `decode-int 3ttx -> 125789` all pass.

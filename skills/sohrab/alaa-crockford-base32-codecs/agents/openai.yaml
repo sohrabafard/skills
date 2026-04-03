@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Crockford Base32 Codecs"
-  short_description: "Shared Crockford Base32 and UUIDv7 helpers"
-  default_prompt: "Use $alaa-crockford-base32-codecs to follow its workflow for shared lowercase Crockford Base32, typed token, and UUIDv7 helpers across PHP, JavaScript, shell, and HAProxy Lua."
+  short_description: "Shared Crockford Base32 and UUIDv7 codecs"
+  default_prompt: "Use $alaa-crockford-base32-codecs to follow its workflow for shared lowercase Crockford Base32 and UUIDv7 pure codecs across PHP, JavaScript, shell, and HAProxy Lua."
 
 policy:
   allow_implicit_invocation: true
