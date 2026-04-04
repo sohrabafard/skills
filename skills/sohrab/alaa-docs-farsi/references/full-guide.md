@@ -184,7 +184,7 @@ Preferred Mermaid types:
 - `sequenceDiagram` when call order or actor handoff matters.
 
 Diagram quality rules:
-- Keep labels short and stable, using canonical identifiers exactly as code uses, such as `X-Project-ID`, `POST /api/...`, queue names, event class names, and table names.
+- Keep labels short and stable, using canonical identifiers exactly as code uses, such as `X-Project-Id`, `POST /api/...`, queue names, event class names, and table names.
 - Keep a small local legend only when necessary.
 - Do not include speculative systems that are not verified in source config or code.
 - Prefer multiple focused diagrams over one oversized diagram that hides important behavior.

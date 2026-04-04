@@ -189,7 +189,7 @@ export function bffFetch(url, init = {}) {
 - Serializing tokens into SSR HTML, boot payloads, or `window.__INITIAL_STATE__`
 - Keeping long-lived access tokens in persistent browser storage by default
 - Starting multiple refresh calls in parallel when one would do
-- Trusting `X-USER-ID`, `X-PROJECT-ID`, or similar internal headers from the browser
+- Trusting `X-User-Id`, `X-Project-Id`, or similar internal headers from the browser
 - Rewriting the auth model during an unrelated bug fix
 
 ## Practical review checklist
