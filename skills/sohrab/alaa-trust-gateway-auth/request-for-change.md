@@ -19,7 +19,7 @@ Implement the compact trusted-identity contract so downstream services receive o
 - sanitize inbound auth/context headers before proxying
 - inject trusted headers only from verified claims
 - keep required protected-route claims limited to `pid` and `sub`
-- inject `X-PROJECT-ID`, `X-USER-ID`, `X-USER-MOBILE`, `X-ACCESS`, `X-ACCESS-TOKEN-ID`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, and the `X-Location-*` headers from the matching claims
+- inject `X-Project-Id`, `X-User-Id`, `X-User-Mobile`, `X-Access`, `X-Access-Token-Id`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, and the `X-Location-*` headers from the matching claims
 - do not fabricate missing compact values
 
 ## Auth-service behavior

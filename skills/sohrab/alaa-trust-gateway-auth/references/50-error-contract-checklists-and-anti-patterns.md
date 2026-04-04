@@ -173,7 +173,7 @@ Before using the checklist below, confirm that all relevant companion skills hav
 Use this checklist when adapting a downstream service to this trust model:
 1. Confirm the service is not directly exposed to untrusted traffic, or add header stripping at the service edge.
 2. Create one request-scoped auth context builder near ingress or middleware.
-3. Read tenant from `X-PROJECT-ID` and actor from `X-USER-ID`.
+3. Read tenant from `X-Project-Id` and actor from `X-User-Id`.
 4. If the service still uses legacy names such as `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id`, map them to `project_id` as part of the refactor plan and keep the trust semantics unchanged.
 5. Validate the public tenant boundary value as UUIDv7 when that value is exposed in service contracts, and if the service still keeps an internal numeric key, translate after that validation instead of replacing the public boundary contract.
 6. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
@@ -188,7 +188,7 @@ Run this review checklist only after reading the relevant companion skill(s) for
 
 # Review checklist for agents
 Flag a problem when you see any of these:
-- A service trusts `X-PROJECT-ID` or `X-USER-ID` on a public endpoint without a trusted proxy boundary.
+- A service trusts `X-Project-Id` or `X-User-Id` on a public endpoint without a trusted proxy boundary.
 - A service accepts tenant id from request body or route and lets it override gateway context.
 - Business authorization is missing because the team assumed the gateway already handled it.
 - A direct service exposure lets clients send internal auth headers.
@@ -202,10 +202,10 @@ Flag a problem when you see any of these:
 - A service accepts conflicting client-supplied tenant selectors and trusted tenant context without an explicit deny.
 - A service treats the compact identity headers as client-provided or gateway-decoded values instead of the exact values copied from the verified token.
 - A service stores historical identity snapshots but fails to refresh the latest local user projection from the trusted gateway payload.
-- A service keeps documenting `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id` as if they were different concepts instead of a legacy alias scheduled to be renamed to `project_id` / `X-PROJECT-ID`.
+- A service keeps documenting `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id` as if they were different concepts instead of a legacy alias scheduled to be renamed to `project_id` / `X-Project-Id`.
 
-- A service derives `tenant_id` or `project_id` from request body fields before trusted `X-PROJECT-ID`.
-- A service upgrades payload identity such as `identity.user_id`, `visitor_id`, or `device_id` into trusted actor context when `X-USER-ID` is missing.
+- A service derives `tenant_id` or `project_id` from request body fields before trusted `X-Project-Id`.
+- A service upgrades payload identity such as `identity.user_id`, `visitor_id`, or `device_id` into trusted actor context when `X-User-Id` is missing.
 - A team treats async `202 Accepted` transport as proof that trusted auth or tenant validation succeeded.
 
 # Laravel and Octane guidance

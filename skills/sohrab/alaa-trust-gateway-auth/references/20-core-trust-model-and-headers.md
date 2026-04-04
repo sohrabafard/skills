@@ -22,17 +22,17 @@ From the current values used by this repo:
 ## What the gateway does not verify
 - It does not do business authorization.
 - It does not decide whether a user may perform a domain action.
-- It does not evaluate `X-ACCESS` or `X-USER-SCOPES` for route permission.
+- It does not evaluate `X-Access` or `X-USER-SCOPES` for route permission.
 - It does not derive tenant from hostname, path prefix, body, or query string.
 - It does not introspect opaque tokens.
 
 ## Headers the gateway rejects from client input
 Before any auth context is injected, the gateway deletes these incoming headers to stop spoofing. This sanitize step must run on all routes, including public routes that do not receive injected auth context:
-- `X-PROJECT-ID`
-- `X-USER-ID`
-- `X-USER-MOBILE`
-- `X-ACCESS`
-- `X-ACCESS-TOKEN-ID`
+- `X-Project-Id`
+- `X-User-Id`
+- `X-User-Mobile`
+- `X-Access`
+- `X-Access-Token-Id`
 - `X-TOKEN-CLIENT-ID`
 - `X-TOKEN-ISSUED-AT`
 - `X-TOKEN-NOT-BEFORE`
@@ -49,11 +49,11 @@ Before any auth context is injected, the gateway deletes these incoming headers 
 
 ## Compact JWT claim to header map
 The gateway injects these trusted headers after successful verification:
-- `pid` -> `X-PROJECT-ID`
-- `sub` -> `X-USER-ID`
-- `m` -> `X-USER-MOBILE`
-- `prm` -> `X-ACCESS`
-- `jti` -> `X-ACCESS-TOKEN-ID`
+- `pid` -> `X-Project-Id`
+- `sub` -> `X-User-Id`
+- `m` -> `X-User-Mobile`
+- `prm` -> `X-Access`
+- `jti` -> `X-Access-Token-Id`
 - `aud` -> `X-TOKEN-CLIENT-ID`
 - `iat` -> `X-TOKEN-ISSUED-AT`
 - `nbf` -> `X-TOKEN-NOT-BEFORE`
@@ -98,10 +98,10 @@ Only claims that are present are injected.
 
 ## Auth-service local trusted header contract
 - Auth-service's `trusted_gateway` guard currently consumes only:
-  - `X-USER-ID`
-  - `X-PROJECT-ID`
-- Auth-service does not currently read `X-ACCESS`, `X-USER-MOBILE`, `X-ACCESS-TOKEN-ID`, `X-TOKEN-*`, `X-USER-SCOPES`, or the name and location headers on its protected v3 routes.
-- Current auth-service behavior parses trusted `X-USER-ID` and `X-PROJECT-ID` as positive integers on protected gateway-backed routes.
+  - `X-User-Id`
+  - `X-Project-Id`
+- Auth-service does not currently read `X-Access`, `X-User-Mobile`, `X-Access-Token-Id`, `X-TOKEN-*`, `X-USER-SCOPES`, or the name and location headers on its protected v3 routes.
+- Current auth-service behavior parses trusted `X-User-Id` and `X-Project-Id` as positive integers on protected gateway-backed routes.
 - Current auth-service standard no longer requires any extra backend-only signature header on trusted routes. The trust boundary is the sanitized gateway path plus the required injected identity headers.
 - Target standard after the current platform decision: the shared gateway boundary carries the compact JWT claims above, while auth-service may keep a separate internal numeric project key during migration.
 - Auth-service follow-through rule: do not freeze the current positive-integer header parser into the shared public contract. Translate the trusted public boundary to the internal numeric key at auth-service ingress, or complete the broader model migration later.
@@ -118,9 +118,9 @@ Only claims that are present are injected.
 ### Tenant context
 - The current tenant context is the compact `pid` claim from the verified JWT.
 - In this gateway, compact `pid` is required on protected routes.
-- This is the main tenant boundary header propagated to downstream services as `X-PROJECT-ID`.
+- This is the main tenant boundary header propagated to downstream services as `X-Project-Id`.
 - `tenant_id` and `tenant_public_id` are legacy names for the same public tenant boundary.
-- Platform refactor target: keep compact `pid` as the JWT claim key, keep `X-PROJECT-ID` as the trusted header, and standardize public and service-facing payloads on `project_id`.
+- Platform refactor target: keep compact `pid` as the JWT claim key, keep `X-Project-Id` as the trusted header, and standardize public and service-facing payloads on `project_id`.
 - Validation rule for the public tenant/project identifier: when a service validates the shared public tenant boundary value, validate it as UUIDv7.
 - UUIDv7 example for `project_id`: `018f7d8f-8cb0-7a85-9a89-e3f61052f840`
 - Migration rule for storage-backed services: if a service still keeps an internal numeric tenant or project key, translate the trusted public boundary to that internal key near ingress and keep the internal key out of trusted headers, public API examples, and other public-facing contracts.
@@ -128,19 +128,19 @@ Only claims that are present are injected.
 
 ### User identity
 - The current user identity is `sub` from the verified JWT.
-- It is propagated to downstream services as `X-USER-ID`.
-- Some downstream services intentionally allow anonymous or analytics-only traffic. In those services, `X-USER-ID` may be absent while `X-PROJECT-ID` is still required.
+- It is propagated to downstream services as `X-User-Id`.
+- Some downstream services intentionally allow anonymous or analytics-only traffic. In those services, `X-User-Id` may be absent while `X-Project-Id` is still required.
 - If the platform decides a given route must always carry an access token, remove that route from the gateway public list instead of teaching downstream services to partially trust missing auth context.
-- When `X-USER-ID` is absent, do not synthesize a trusted actor from client payload fields such as `identity.user_id`, `visitor_id`, `device_id`, or similar client-generated identifiers. If such fields are stored, classify them as untrusted analytics metadata only.
+- When `X-User-Id` is absent, do not synthesize a trusted actor from client payload fields such as `identity.user_id`, `visitor_id`, `device_id`, or similar client-generated identifiers. If such fields are stored, classify them as untrusted analytics metadata only.
 - Mobile, token id, audience, issue time, not-before time, expiry time, scopes, and permission bitmap are supplemental context, not replacements for server-side authorization rules.
 
 ### Services without a tenant boundary
 - Not every gateway-backed service is currently tenant-scoped.
-- VOD's current header-auth path reads `X-USER-ID` and `X-ACCESS`, maps permissions from service-local config, and does not derive tenant context from gateway headers.
+- VOD's current header-auth path reads `X-User-Id` and `X-Access`, maps permissions from service-local config, and does not derive tenant context from gateway headers.
 - Target standard: do not invent `project_id` enforcement in a service that has no real tenant boundary just to make documentation look uniform.
-- If such a service later becomes tenant-aware, add trusted `X-PROJECT-ID` normalization first and then scope reads and writes from that trusted value.
+- If such a service later becomes tenant-aware, add trusted `X-Project-Id` normalization first and then scope reads and writes from that trusted value.
 
 ## What not to do
-- Do not derive tenant from a client body field such as `project_id` or `tenant_id` when `X-PROJECT-ID` is already available from the trusted gateway.
-- Do not trust `X-PROJECT-ID` or `X-USER-ID` if the service is reachable directly by clients or untrusted internal callers.
+- Do not derive tenant from a client body field such as `project_id` or `tenant_id` when `X-Project-Id` is already available from the trusted gateway.
+- Do not trust `X-Project-Id` or `X-User-Id` if the service is reachable directly by clients or untrusted internal callers.
 - Do not let route params or query params override the trusted tenant context.

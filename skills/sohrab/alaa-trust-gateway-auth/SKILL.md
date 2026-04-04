@@ -38,11 +38,11 @@ Keep this top-level file small. Load the references for the full trust model, ro
 
 | Compact key | Meaning                    | Forwarded header         |
 |-------------|----------------------------|--------------------------|
-| `m`         | mobile                     | `X-USER-MOBILE`          |
-| `prm`       | permission bitmap          | `X-ACCESS`               |
+| `m`         | mobile                     | `X-User-Mobile`          |
+| `prm`       | permission bitmap          | `X-Access`               |
 | `prv`       | permission catalog version | not forwarded by default |
 | `av`        | authorization version      | not forwarded by default |
-| `pid`       | public project boundary    | `X-PROJECT-ID`           |
+| `pid`       | public project boundary    | `X-Project-Id`           |
 | `fn`        | first name                 | `X-User-Fname`           |
 | `ln`        | last name                  | `X-User-Lname`           |
 | `loc`       | location bundle            | `X-Location-*`           |
@@ -63,11 +63,11 @@ Keep this top-level file small. Load the references for the full trust model, ro
 | Header or context       | Trusted source                 | Notes                                                |
 |-------------------------|--------------------------------|------------------------------------------------------|
 | `Authorization: Bearer` | public client into the gateway | only the gateway should treat it as raw bearer input |
-| `X-PROJECT-ID`          | verified `pid` claim           | trusted project boundary after verification          |
-| `X-USER-ID`             | verified `sub` claim           | authenticated user identifier                        |
-| `X-USER-MOBILE`         | verified `m` claim             | trusted mobile context                               |
-| `X-ACCESS`              | verified `prm` claim           | compact permission bitmap                            |
-| `X-ACCESS-TOKEN-ID`     | verified `jti` claim           | access-token id for session alignment                |
+| `X-Project-Id`          | verified `pid` claim           | trusted project boundary after verification          |
+| `X-User-Id`             | verified `sub` claim           | authenticated user identifier                        |
+| `X-User-Mobile`         | verified `m` claim             | trusted mobile context                               |
+| `X-Access`              | verified `prm` claim           | compact permission bitmap                            |
+| `X-Access-Token-Id`     | verified `jti` claim           | access-token id for session alignment                |
 | `X-TOKEN-CLIENT-ID`     | verified `aud` claim           | token audience metadata                              |
 | `X-TOKEN-ISSUED-AT`     | verified `iat` claim           | token issued-at metadata                             |
 | `X-TOKEN-NOT-BEFORE`    | verified `nbf` claim           | token not-before metadata                            |

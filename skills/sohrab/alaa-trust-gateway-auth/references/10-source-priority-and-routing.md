@@ -28,18 +28,18 @@ Examples:
 - Shared concept: `tenant_id`, `tenant_public_id`, `project_id` and the compact JWT claim `pid` point at one tenant-boundary concept at the public platform edge.
 - Canonical JWT claim key: `pid`
 - Canonical public API field name: `project_id`
-- Canonical trusted header name: `X-Project-ID`
+- Canonical trusted header name: `X-Project-Id`
 - Legacy names to rename during refactor:
   - `tenant_id` -> `project_id` at public API and service-domain boundaries
   - `tenant_public_id` -> `project_id` at public API and service-domain boundaries
   - `tenant_id` -> `pid` only inside compact JWT claim mapping or other gateway-internal trust-boundary notation
   - `tenant_public_id` -> `pid` only inside compact JWT claim mapping or other gateway-internal trust-boundary notation
-  - `X-Tenant-Public-Id` -> `X-Project-ID`
+  - `X-Tenant-Public-Id` -> `X-Project-Id`
 - Migration rule: keep trust semantics unchanged while renaming. Public API payloads and docs keep the `project_id` name; compact JWT and gateway-internal claim mapping use `pid`.
 - Validation rule for the public identifier: validate the trusted project boundary (`project_id`) as UUIDv7 after gateway verification.
 - Example canonical value: `018f7d8f-8cb0-7a85-9a89-e3f61052f840`
 - Internal-key rule during migration: if a service still keeps an internal numeric tenant or project key in its own database, treat that key as a service-local storage detail, not as the public boundary contract and not as a replacement for `pid`.
-- Documentation rule: OpenAPI, README examples, and service docs should prefer `project_id` for public API fields and `X-Project-ID` for trusted headers. Use `pid` only when the subject is the compact JWT claim map or another gateway-internal trust-boundary detail. If a legacy alias still appears, mark it explicitly as legacy and equivalent to the public tenant boundary.
+- Documentation rule: OpenAPI, README examples, and service docs should prefer `project_id` for public API fields and `X-Project-Id` for trusted headers. Use `pid` only when the subject is the compact JWT claim map or another gateway-internal trust-boundary detail. If a legacy alias still appears, mark it explicitly as legacy and equivalent to the public tenant boundary.
 
 # Core trust model
 - The gateway is the authentication boundary for protected HTTP routes.
@@ -49,8 +49,8 @@ Examples:
 - Tenant context is derived from the verified token, not from request body, query string, route params, or client-supplied headers.
 - Naming rule: `tenant_id`, `tenant_public_id`, `project_id`, and `pid` refer to the same tenant-boundary concept in the current platform, but they belong to different layers.
 - Refactor target standard: rename `tenant_id` and `tenant_public_id` usages to `project_id` at public API or service-domain boundaries and to `pid` only inside compact JWT claim handling.
-- Header target standard: rename `X-Tenant-Public-Id` to `X-Project-ID` in service contracts and docs during the platform refactor.
-- Until that refactor is complete, treat `tenant_id` and `tenant_public_id` only as legacy aliases of the same trusted boundary and normalize them back to the canonical layer-specific contract: `project_id` in public APIs and `pid` / `X-Project-ID` in compact JWT and trusted-header handling.
+- Header target standard: rename `X-Tenant-Public-Id` to `X-Project-Id` in service contracts and docs during the platform refactor.
+- Until that refactor is complete, treat `tenant_id` and `tenant_public_id` only as legacy aliases of the same trusted boundary and normalize them back to the canonical layer-specific contract: `project_id` in public APIs and `pid` / `X-Project-Id` in compact JWT and trusted-header handling.
 
 # How auth enters the system
 ## Protected routes
@@ -120,4 +120,4 @@ Rule for future agents:
 - Never force a backend service to define routes with the gateway prefix unless that backend is intentionally designed that way.
 
 ## Current forwarded header surface
-- The current forwarded identity and token headers injected after verification are `X-Project-ID`, `X-User-ID`, `X-User-Mobile`, `X-ACCESS`, `X-ACCESS-TOKEN-ID`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, `X-Location-Ostan`, `X-Location-Shahrestan`, `X-Location-Bakhsh`, `X-Location-Shahr`, `X-Location-Shobe`, and `X-Location-School`.
+- The current forwarded identity and token headers injected after verification are `X-Project-Id`, `X-User-Id`, `X-User-Mobile`, `X-Access`, `X-Access-Token-Id`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, `X-Location-Ostan`, `X-Location-Shahrestan`, `X-Location-Bakhsh`, `X-Location-Shahr`, `X-Location-Shobe`, and `X-Location-School`.

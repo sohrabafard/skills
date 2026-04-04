@@ -5,7 +5,7 @@
 - A service may trust gateway auth headers only if the request came through the trusted edge and sanitized gateway path.
 - If a service can be reached directly, it must either block that exposure or strip and reject internal auth headers at its own edge.
 - Internal auth headers are hop-by-hop trust artifacts inside your platform, not public API inputs.
-- Frontend clients must never generate or rely on trusted internal headers such as `X-PROJECT-ID`, `X-USER-ID`, `X-ACCESS`, `X-USER-MOBILE`, `X-User-Fname`, `X-User-Lname`, or `X-Location-*`.
+- Frontend clients must never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, `X-User-Mobile`, `X-User-Fname`, `X-User-Lname`, or `X-Location-*`.
 
 ## Authentication vs authorization
 
@@ -37,7 +37,7 @@
 - Authorization code should read the normalized request context or server-side request attributes only. Do not re-read raw tenant or actor headers inside policies, services, or repositories after normalization.
 - Laravel Eloquent safety rule: if you attach trusted `project_id` or similar request-scoped auth context directly to a model instance for compatibility, keep it transient and non-dirty immediately or keep that context off the model entirely.
 - Auth-service shows one safe compatibility pattern for non-persistent model context: set the trusted attribute for request-time reads, then sync the original attribute so later `save()` calls do not try to persist a gateway-only value into the database.
-- HTTP requests without `X-PROJECT-ID` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
+- HTTP requests without `X-Project-Id` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
 - Scope every tenant-aware read and write by the trusted tenant context.
 - Reject protected requests when required trusted context is missing.
 - If a client-supplied tenant selector in body, query, route, or non-trusted header conflicts with the trusted tenant context, deny explicitly instead of silently choosing one source.
@@ -51,25 +51,25 @@
 - Some downstream services accept transport with `202 Accepted` and then validate trusted context inside an async pipeline or ingestion worker.
 - Plain meaning: `202` means `I received your request and queued or started processing it`. It does not mean `auth and tenant validation already succeeded`.
 - This pattern is common in analytics or ingestion services where the HTTP layer accepts a batch quickly and deeper validation happens in transforms, workers, queues, or sinks after the response is sent.
-- Example: a request reaches the service, the HTTP source returns `202`, then a later transform notices that trusted `X-PROJECT-ID` is missing or malformed and drops the data. In that case the transport was accepted, but the business result is still a denial or discard.
+- Example: a request reaches the service, the HTTP source returns `202`, then a later transform notices that trusted `X-Project-Id` is missing or malformed and drops the data. In that case the transport was accepted, but the business result is still a denial or discard.
 - If required trusted context is missing after accept, log a canonical internal code such as `AUTH_CONTEXT_MISSING` or `TENANT_CONTEXT_MISMATCH` and drop, quarantine, or dead-letter the data according to service policy.
 - Do not invent a second public `401` or `403` contract after a `202` has already been returned. The caller already received the transport response; the later auth result belongs in logs, metrics, audit events, dead-letter reasons, or operator-facing monitoring.
 - If the product needs the client to receive immediate auth failure, do not use accept-then-validate for that route. Move auth/context checks before the `202` response or require the gateway to enforce them earlier.
 
 ## Header usage rules
 
-- Use `X-PROJECT-ID` as the public tenant boundary input.
-- If a legacy service still exposes `X-Tenant-Public-Id`, treat it as the old name for the same public `project_id` boundary and plan to rename it to `X-PROJECT-ID` during refactor.
-- When validating the public tenant boundary value carried in `X-PROJECT-ID`, validate it as UUIDv7.
-- Example header value: `X-PROJECT-ID: 018f7d8f-8cb0-7a85-9a89-e3f61052f840`
-- If a service still needs an internal numeric project key after validation, derive or load it from the trusted public `X-PROJECT-ID` boundary inside the service and keep that numeric key service-local.
-- API-document rule: document `X-PROJECT-ID` with a UUIDv7 example, and if a service still mentions `X-Tenant-Public-Id` or `tenant_public_id`, mark that name as legacy and equivalent to the public `project_id` boundary.
-- Use `X-USER-ID` as the authenticated actor id.
-- Use `X-ACCESS` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
+- Use `X-Project-Id` as the public tenant boundary input.
+- If a legacy service still exposes `X-Tenant-Public-Id`, treat it as the old name for the same public `project_id` boundary and plan to rename it to `X-Project-Id` during refactor.
+- When validating the public tenant boundary value carried in `X-Project-Id`, validate it as UUIDv7.
+- Example header value: `X-Project-Id: 018f7d8f-8cb0-7a85-9a89-e3f61052f840`
+- If a service still needs an internal numeric project key after validation, derive or load it from the trusted public `X-Project-Id` boundary inside the service and keep that numeric key service-local.
+- API-document rule: document `X-Project-Id` with a UUIDv7 example, and if a service still mentions `X-Tenant-Public-Id` or `tenant_public_id`, mark that name as legacy and equivalent to the public `project_id` boundary.
+- Use `X-User-Id` as the authenticated actor id.
+- Use `X-Access` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
 - Treat `X-REQUEST-ID` only as correlation.
 - Keep one canonical spelling for documentation and tests even though HTTP header names are case-insensitive.
-- Treat `X-USER-MOBILE` as supplemental identity or audit context by default.
-- Each downstream service must expose one config switch that decides whether `X-USER-MOBILE` is optional or required. The default policy should be optional.
+- Treat `X-User-Mobile` as supplemental identity or audit context by default.
+- Each downstream service must expose one config switch that decides whether `X-User-Mobile` is optional or required. The default policy should be optional.
 - If that config marks mobile as required, the service must enforce it automatically and return the same shared error code and response contract used everywhere else.
 - Shared mobile-header contract:
   - when mobile is optional and the header is absent, continue without mobile context
@@ -113,8 +113,8 @@
 
 ## Permission bitmap and downstream role contract
 
-- `X-ACCESS` carries the gateway-injected copy of auth-service's `prm` permission bitmap claim.
-- `X-ACCESS` may carry a compact permission bitmap rather than human-readable scopes.
+- `X-Access` carries the gateway-injected copy of auth-service's `prm` permission bitmap claim.
+- `X-Access` may carry a compact permission bitmap rather than human-readable scopes.
 - The bitmap must be base64url-encoded raw bytes. Permission IDs are 1-based and use least-significant-bit-first packing inside each byte.
 - Permission meaning comes from the downstream service's permission map, not from hard-coded bit labels at the gateway.
 - Auth-service  is the current producer of the bitmap claim and emits companion JWT invalidation metadata under `prv` and `av`.
@@ -135,7 +135,7 @@
   - `21` -> `comment_reply`
   - `22` -> `comment_get_show`
 - Services must define and document their own role or authorization derivation from decoded permissions.
-- Ticket-service currently maps these ids from `X-ACCESS`:
+- Ticket-service currently maps these ids from `X-Access`:
   - `14` -> `crm_get_tickets`
   - `15` -> `crm_post_ticket_reply`
   - `16` -> `crm_put_ticket`
@@ -154,7 +154,7 @@
 - Reusable reference implementation: `./permission-bitmap.php`
 - Do not assume another service uses the same permission ids or role derivation unless that service explicitly adopts that exact mapping.
 - The bitmap width is produced by the auth service against the full global permission set, so downstream services should expect a common bitmap width even when each service only cares about a subset of ids.
-- Ticket-service shows a common legacy failure mode: decode `X-ACCESS`, map known ids from config, and if nothing valid remains, let the request continue until a later generic `unauthorized` or `access_denied` path fires.
+- Ticket-service shows a common legacy failure mode: decode `X-Access`, map known ids from config, and if nothing valid remains, let the request continue until a later generic `unauthorized` or `access_denied` path fires.
 - Target standard: do not defer malformed or unknown-only bitmap failures to later generic auth checks. Fail during trusted-context normalization with canonical code `AUTH_ACCESS_BITMAP_INVALID` so the outward response and deny logs stay specific and consistent.
 
 ## Logging and observability

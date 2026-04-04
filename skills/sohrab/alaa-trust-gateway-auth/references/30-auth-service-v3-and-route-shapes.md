@@ -64,7 +64,7 @@ Service-local protected auth-service routes after prefix stripping are:
 
 ## Direct local backend testing contract for auth-service
 - The current auth Postman collection tests protected auth-service routes directly against service-local `/api/v3/*` URLs such as `http://localhost/api/v3/sessions`.
-- In that direct local mode, Postman sends trusted headers such as `X-USER-ID` and `X-PROJECT-ID` to the local backend instead of sending a Bearer token.
+- In that direct local mode, Postman sends trusted headers such as `X-User-Id` and `X-Project-Id` to the local backend instead of sending a Bearer token.
 - This is backend-only local testing. It is not the public client contract and it must not be copied into browser/mobile client guidance.
 - Current auth Postman examples still use numeric compatibility fixtures such as `gatewayProjectId=1` and profile payload examples that show `project_id: 1`.
 - Treat those numeric examples as the auth-service local compatibility state and test fixture during migration, not as a reason to weaken the shared gateway trust model or to let clients choose tenant context.
