@@ -1,0 +1,43 @@
+# Alaa Golang State
+
+- Task name: create the `alaa-golang` routing skill
+- Current status: implemented, validated, pending user review
+- Objective: build a public Sohrab skill that serves as the main entrypoint for Go work, merges the requested external guidance coherently, and routes to the already-installed Go and Sohrab companion skills by name.
+- Current repository understanding:
+  - `skills/sohrab/alaa-golang` exists but is empty
+  - the pack prefers lean top-level `SKILL.md` files with dense detail moved into `references/`
+  - `agents/openai.yaml` is used for UI-facing metadata and prompt seeding
+  - the repo already uses `docs/_agent_plans/` and `docs/agents/` for non-trivial skill work
+- Assumptions and constraints:
+  - Go has no official LTS branch; the skill should say that explicitly and route users toward the official supported-release policy
+  - the user wants `alaa-golang` to reference already-installed public skills by name, not by path
+  - the external concurrency guidance should be translated into Go primitives rather than copied literally from the Effect ecosystem
+- Completed work:
+  - inspected `alaa-workflow`, `alaa-low-noise`, `alaa-haproxy`, and representative installed Go skills
+  - extracted current descriptions for the installed public Go skill set and selected Sohrab companion skills
+  - verified from `go.dev/doc/devel/release` that the current latest stable release is `go1.26.1` and the previously supported major line is `go1.25.x`
+  - verified from official Go release policy text that each major Go release is supported until there are two newer major releases
+  - verified from official Fiber sources that Fiber v3 warns about compatibility with the latest Go version due to its `unsafe` usage and says it has been tested with Go `1.25` or higher
+  - collected the requested MCP Market pages for:
+    - `effect-concurrency-fibers`
+    - `go-style-uber-guide`
+    - `fiber-best-practices-project-structure`
+  - authored `skills/sohrab/alaa-golang/SKILL.md` as a routing-first Go entrypoint
+  - added `references/00-topic-map.md`, `references/full-guide.md`, `references/10-installed-golang-skills.md`, `references/20-sohrab-companions.md`, and `references/SOURCES.md`
+  - generated `skills/sohrab/alaa-golang/agents/openai.yaml` using the `skill-creator` helper script, then corrected the prompt string and added pack-style policy metadata
+- Remaining work:
+  - no implementation work remains for this authoring pass
+- Risks or blockers:
+  - none currently
+- Validation summary:
+  - research validation complete through official Go, Fiber, and Uber sources plus the requested MCP Market pages
+  - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-golang` returned `Skill is valid!`
+  - `git -c safe.directory=D:/Sohrab/Project/skills diff --check -- docs/_agent_plans/20260404-2235-alaa-golang.md docs/agents/alaa-golang-state.md skills/sohrab/alaa-golang` returned clean output
+- Next recommended step:
+  - user review of the routing coverage, especially whether any additional Sohrab companion skills should be added later for specific Go domains
+- Timeline:
+  - 2026-04-04 22:35 +03:30 — inspected repo-local conventions and confirmed `skills/sohrab/alaa-golang` is empty.
+  - 2026-04-04 22:35 +03:30 — verified official Go release policy and current supported release lines.
+  - 2026-04-04 22:35 +03:30 — collected the requested MCP Market skill pages and mapped their guidance into the Go/Fiber problem space.
+  - 2026-04-04 22:35 +03:30 — authored the new `alaa-golang` skill files and routing references.
+  - 2026-04-04 22:35 +03:30 — validated the skill folder and confirmed a clean diff check for the touched files.
