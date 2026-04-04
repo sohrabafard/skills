@@ -61,6 +61,8 @@ Load these companion skills when their concern is in scope:
 
 ## Reference navigation
 
+- skill scope, use cases, service-mode selection, and auth-specific routing:
+  - `references/05-scope-service-modes-and-auth-routing.md`
 - topic routing and service-mode selection:
   - `references/00-topic-map.md`
 - core service modes, Ala service map, service identity, route families, and exact readiness envelope:

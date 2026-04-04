@@ -1,8 +1,8 @@
 # Alaa Services Contract Coverage Repair State
 
 - Task name: alaa services contract coverage repair
-- Current status: implementation complete and validated
-- Objective: restore `skills/sohrab/alaa-services-contract` so the skill again presents a preserved whole-contract guide while retaining the newer compact trusted-context model.
+- Current status: follow-up split coverage complete and validated
+- Objective: restore `skills/sohrab/alaa-services-contract` so the skill again presents a preserved whole-contract guide while retaining the newer compact trusted-context model, and ensure full-guide-only onboarding topics also exist in split references.
 - Current repository understanding:
   - the active dirty worktree already migrated the services-contract skill toward compact trusted headers such as `X-Project-Id`, `X-Access-Token-Id`, `X-User-Fname`, `X-User-Lname`, and `X-Location-*`
   - `references/full-guide.md` was over-compressed and no longer preserves the whole contract in one place
@@ -22,6 +22,8 @@
   - updated `SKILL.md` and `references/00-topic-map.md` so future edits keep the split references and full guide synchronized
   - aligned `references/25-end-to-end-flow-and-boundaries.md` with `$alaa-trust-gateway-auth` by restoring `X-User-Mobile` to the frontend-forbidden header list
   - rebuilt `references/full-guide.md` into a true preserved whole-contract guide, including the detailed deployment, readiness, observability, Laravel-boundary, and review sections that had been over-compressed
+  - added `references/05-scope-service-modes-and-auth-routing.md` so the full-guide onboarding topics now also have a split-reference home
+  - expanded `references/25-end-to-end-flow-and-boundaries.md` so route-shape reminders and internal-hop normalization rules are no longer stranded only in the full guide
 - Remaining work:
   - no further implementation work is required for this repair
 - Risks or blockers:
@@ -29,11 +31,12 @@
   - the repo already has in-progress edits in this skill, so the repair must remain diff-aware and additive
 - Validation summary:
   - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-services-contract` passed
-  - `git diff --check -- skills/sohrab/alaa-services-contract docs\_agent_plans\20260404-212209_alaa-services-contract-coverage-repair.md docs\agents\alaa-services-contract-coverage-repair-state.md` passed with no whitespace or patch-format issues
-  - targeted readback confirmed the repaired `SKILL.md`, `references/00-topic-map.md`, and `references/full-guide.md` are coherent and still preserve the compact trusted-context model
+  - `git diff --check -- skills/sohrab/alaa-services-contract docs\agents\alaa-services-contract-coverage-repair-state.md` passed with no whitespace or patch-format issues
+  - targeted readback confirmed the repaired `SKILL.md`, `references/00-topic-map.md`, `references/05-scope-service-modes-and-auth-routing.md`, and `references/full-guide.md` are coherent and still preserve the compact trusted-context model
 - Next recommended step:
-  - if the current dirty `alaa-services-contract` worktree is being finalized as one commit, review the combined diff once more before staging so the earlier compact-trust edits and this coverage repair land together intentionally
+  - if this follow-up should land as a separate commit from the earlier repair, review the new split-reference additions once before staging so the scope stays documentation-only and intentional
 - Timeline:
   - 2026-04-04 21:22 +03:30 — audited the current dirty worktree and confirmed the regression is loss of preserved full-guide coverage rather than the compact trust migration itself.
   - 2026-04-04 21:22 +03:30 — created the repair plan and durable state files before further edits.
+  - 2026-04-04 21:44 +03:30 — added a dedicated split reference for scope, service modes, and auth-specific routing, then aligned the end-to-end reference with the full-guide route-shape and internal-hop rules.
   - 2026-04-04 21:47 +03:30 — repaired the services-contract router files, restored the preserved full-guide coverage, and validated the skill bundle.

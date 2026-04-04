@@ -4,6 +4,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 
 ## Service modes
 
+- `Mode 0 - Skill scope and onboarding view`
+  - Use when the task is about whether this skill applies, what it standardizes, how to choose the service mode, or auth-specific frontend routing notes for the `auth` service.
+  - Read `05-scope-service-modes-and-auth-routing.md` first.
 - `Mode A - Any Ala backend service`
   - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, or observability event naming.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
@@ -28,6 +31,11 @@ Use this file to choose the smallest relevant reference file before loading the 
 
 ## Reference files
 
+- `05-scope-service-modes-and-auth-routing.md`
+  - purpose and use
+  - service modes
+  - auth-specific routing note for `auth`
+  - onboarding rule for moving from scope selection to exact contract files
 - `10-core-service-contract.md`
   - hard contract posture
   - Ala service map

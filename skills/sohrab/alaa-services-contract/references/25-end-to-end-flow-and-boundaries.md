@@ -26,6 +26,8 @@ Rules:
 
 Route-shape reminder:
 - gateway-facing routes may include a service prefix such as `/auth`, `/comment`, `/ticket`, `/vod`, or `/wa`
+- trusted internal routes stay service-owned and are not public frontend discovery surfaces
+- operational routes remain separate from product routes even when they share the `/api/*` prefix
 - service-local routes may differ after gateway prefix stripping
 - use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details
 
@@ -47,11 +49,13 @@ Rules:
 
 Rules:
 - preserve `X-Request-Id` and `traceparent` across internal HTTP hops
+- keep trusted header parsing and normalization close to the receiving edge
 - keep operational routes separate from product-facing routes
 - do not proxy another service's `/api/ready` unless that dependency is an explicit approved rollout requirement
 - if a service depends on shared infrastructure such as Redis or RabbitMQ, check that infrastructure directly instead of proxying another app's status
 - if a frontend or service needs domain behavior from another service, prefer that service's public API or events over direct table coupling
 - downstream services may consume compact trusted name and location headers, but they must not fabricate display-name fields from compact ids unless another explicit source-of-truth contract owns that lookup
+- backend services may keep local user projections or immutable request snapshots, but auth-service remains the source of truth for the latest identity state
 
 ## Why this file exists
 
