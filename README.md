@@ -69,6 +69,17 @@ The command derives the subtree name, detects the default branch, adds the subtr
 
 It does not auto-enable hooks and it does not auto-install the vendored skills into Codex. Those remain explicit manual steps.
 
+As your vendored inventory grows, prefer selective exposure instead of linking every vendored skill into `~/.codex/skills`.
+
+Useful commands:
+
+```powershell
+python scripts\vendor_skill_links.py vendors
+python scripts\vendor_skill_links.py list --vendor cc-skills-golang
+python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting
+python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run
+```
+
 The manifest for all managed subtree remotes lives in [`vendor/subtrees.json`](vendor/subtrees.json).
 
 ## License

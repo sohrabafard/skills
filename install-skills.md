@@ -170,6 +170,28 @@ python scripts\vendor_subtrees.py add https://github.com/org/repo.git --branch m
 
 That command only vendors the repository, updates `vendor/subtrees.json`, and refreshes the docs. It does not auto-enable hooks and it does not auto-link the new vendored skills into Codex.
 
+Recommended pattern as vendored packs grow:
+- keep vendors committed under `vendor/`
+- expose only the specific skills you want Codex to see
+- avoid bulk-linking every vendored skill pack unless you really want all of them routed
+
+Selective vendored skill exposure is managed with:
+
+```powershell
+python scripts\vendor_skill_links.py vendors
+python scripts\vendor_skill_links.py list --vendor cc-skills-golang
+python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting
+python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill-prefix golang-samber- --dry-run
+python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run
+```
+
+Notes:
+- `vendors` shows each vendored pack that has a `skills/` directory
+- `list` shows available vendored skills plus whether each one is already linked into `~/.codex/skills`
+- `link` creates only the symlinks you explicitly selected
+- `unlink` removes only matching symlinks that point at the expected vendored skill directories
+- the script refuses to overwrite conflicting existing destinations
+
 To link vendored skills into Codex, extend the existing install pattern to include each vendored `skills/` directory:
 
 ```powershell

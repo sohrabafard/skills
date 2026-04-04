@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Source-of-truth for Ala gateway auth trust. Use when gateway headers, JWT-derived identity, tenant propagation, or downstream trust semantics change. Do not use it as a generic auth skill outside the Ala gateway boundary."
+description: "Source-of-truth for Ala gateway auth trust. Use when gateway headers, JWT-derived identity, compact claim mapping, tenant propagation, or downstream trust semantics change. Do not use it as a generic auth skill outside the Ala gateway boundary."
 ---
 
 
@@ -10,7 +10,7 @@ description: "Source-of-truth for Ala gateway auth trust. Use when gateway heade
 
 ## Purpose
 
-Use this skill when a task touches the Ala gateway trust boundary, trusted headers, JWT-derived identity, tenant context propagation, or auth-service route shape.
+Use this skill when a task touches the Ala gateway trust boundary, trusted headers, compact JWT-derived identity, tenant context propagation, or auth-service route shape.
 
 Keep this top-level file small. Load the references for the full trust model, route rules, service expectations, and error contracts.
 
@@ -18,7 +18,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
 
 - gateway or reverse-proxy auth routing changes
 - trusted header, tenant context, or request identity work
-- auth-service v3 route, refresh, logout, or profile contract reviews
+- compact JWT custom claim reviews
 - downstream service middleware or policy changes behind the gateway
 
 ## When NOT to use
@@ -34,14 +34,60 @@ Keep this top-level file small. Load the references for the full trust model, ro
 4. Load only the matching reference file first.
 5. Read the required companion skills before suggesting implementation changes outside this skill's trust-boundary ownership.
 
+## Compact claim map
+
+| Compact key | Meaning                    | Forwarded header         |
+|-------------|----------------------------|--------------------------|
+| `m`         | mobile                     | `X-USER-MOBILE`          |
+| `prm`       | permission bitmap          | `X-ACCESS`               |
+| `prv`       | permission catalog version | not forwarded by default |
+| `av`        | authorization version      | not forwarded by default |
+| `pid`       | public project boundary    | `X-PROJECT-ID`           |
+| `fn`        | first name                 | `X-User-Fname`           |
+| `ln`        | last name                  | `X-User-Lname`           |
+| `loc`       | location bundle            | `X-Location-*`           |
+
+### `loc` sub-keys
+
+| Compact key | Meaning    | Forwarded header        |
+|-------------|------------|-------------------------|
+| `o`         | ostan      | `X-Location-Ostan`      |
+| `sr`        | shahrestan | `X-Location-Shahrestan` |
+| `b`         | bakhsh     | `X-Location-Bakhsh`     |
+| `sh`        | shahr      | `X-Location-Shahr`      |
+| `br`        | shobe      | `X-Location-Shobe`      |
+| `sc`        | school     | `X-Location-School`     |
+
 ## Header source-of-truth
 
-| Header or context          | Trusted source                        | Notes                                                                |
-|----------------------------|---------------------------------------|----------------------------------------------------------------------|
-| `Authorization: Bearer`    | public client into the gateway        | only the gateway should treat it as raw bearer input                 |
-| trusted `X-*` auth headers | gateway or HAProxy after verification | sanitize client-supplied copies before forwarding                    |
-| tenant or project context  | verified gateway-derived context      | never trust browser or downstream user input for this                |
-| `X-Profile`                | trusted gateway/auth-service flow     | preserve exact contract; `profile.shahr` is `{id,name}` when present |
+| Header or context       | Trusted source                 | Notes                                                |
+|-------------------------|--------------------------------|------------------------------------------------------|
+| `Authorization: Bearer` | public client into the gateway | only the gateway should treat it as raw bearer input |
+| `X-PROJECT-ID`          | verified `pid` claim           | trusted project boundary after verification          |
+| `X-USER-ID`             | verified `sub` claim           | authenticated user identifier                        |
+| `X-USER-MOBILE`         | verified `m` claim             | trusted mobile context                               |
+| `X-ACCESS`              | verified `prm` claim           | compact permission bitmap                            |
+| `X-ACCESS-TOKEN-ID`     | verified `jti` claim           | access-token id for session alignment                |
+| `X-TOKEN-CLIENT-ID`     | verified `aud` claim           | token audience metadata                              |
+| `X-TOKEN-ISSUED-AT`     | verified `iat` claim           | token issued-at metadata                             |
+| `X-TOKEN-NOT-BEFORE`    | verified `nbf` claim           | token not-before metadata                            |
+| `X-TOKEN-EXPIRES-AT`    | verified `exp` claim           | token expiry metadata                                |
+| `X-USER-SCOPES`         | verified `scopes` claim        | token scopes metadata                                |
+| `X-User-Fname`          | verified `fn` claim            | trusted first-name context                           |
+| `X-User-Lname`          | verified `ln` claim            | trusted last-name context                            |
+| `X-Location-Ostan`      | verified `loc.o` claim         | trusted location context                             |
+| `X-Location-Shahrestan` | verified `loc.sr` claim        | trusted location context                             |
+| `X-Location-Bakhsh`     | verified `loc.b` claim         | trusted location context                             |
+| `X-Location-Shahr`      | verified `loc.sh` claim        | trusted location context                             |
+| `X-Location-Shobe`      | verified `loc.br` claim        | trusted location context                             |
+| `X-Location-School`     | verified `loc.sc` claim        | trusted location context                             |
+
+Rules:
+- the gateway sanitizes client-supplied copies of these headers before proxying
+- the gateway injects trusted headers only from verified claims
+- missing optional compact fields are not fabricated
+- public and service-facing payloads should continue to use `project_id`; `pid` is the compact JWT claim key
+- `prv` and `av` remain raw JWT metadata only unless a future contract explicitly adds a use for them
 
 ## Route family expectations
 
@@ -81,7 +127,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
   - `references/20-core-trust-model-and-headers.md`
 - Auth-service v3 endpoint contract, client flow, and route families:
   - `references/30-auth-service-v3-and-route-shapes.md`
-- Downstream service requirements, policy flow, permission bitmap, and observability:
+- Downstream service requirements, policy flow, compact user projection, and permission bitmap:
   - `references/40-downstream-service-rules.md`
 - Error contracts, implementation checklist, review checklist, related skills, and anti-patterns:
   - `references/50-error-contract-checklists-and-anti-patterns.md`

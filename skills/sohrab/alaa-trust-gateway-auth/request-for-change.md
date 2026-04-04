@@ -1,54 +1,37 @@
-# X-Profile Gateway/Auth Request for Change
+# Compact Gateway/Auth Request For Change
 
-Implement gateway-trusted `X-Profile` propagation so every downstream backend receives the verified profile claim in a consistent, non-spoofable way.
+Implement the compact trusted-identity contract so downstream services receive only sanitized gateway headers derived from verified JWT claims.
 
 ## Target contract
-- Auth-service is the source of truth for the latest user profile.
-- Auth-service must place the latest profile into JWT claim `profile` as base64url-encoded UTF-8 JSON.
-- Canonical decoded JSON schema uses keys `first_name`, `last_name`, and `shahr` when present. `shahr` keeps the fixed object shape `{id, name}`:
-  ```json
-  {
-    "first_name": null,
-    "last_name": null,
-    "shahr": {
-      "id": null,
-      "name": "Mashhad"
-    }
-  }
-  ```
-- Auth-service should omit any canonical key whose value is `null`, and it may omit the entire `profile` claim when all three fields are `null`.
-- Gateway must sanitize inbound internal headers, verify the JWT, and set `X-Profile` to the exact verified `profile` claim value without decoding or re-encoding it.
-- If the token has no `profile` claim, the gateway must not synthesize or fabricate `X-Profile`.
 
-## Auth-service responsibilities
-- Extend token issuance so the access token contains claim `profile` whenever trusted downstream services need profile context.
-- Build the claim from the latest canonical profile state held by auth-service.
-- Encode the claim as base64url(JSON) over UTF-8 bytes.
-- Keep canonical keys exactly `first_name`, `last_name`, `shahr` when they are present, omit top-level keys whose value is `null`, and keep `shahr` itself as an object with fixed `id` and `name` keys once present.
-- Treat auth-service as the only source of truth for the latest profile state.
-- Keep backward-compatible auth response bodies as needed, but do not make downstream services depend on response-body profile data for trusted reads.
+- Standard claims remain unchanged: `aud`, `jti`, `iat`, `nbf`, `exp`, `sub`, `scopes`
+- Custom claims are `m`, `prm`, `prv`, `av`, `pid`, `loc`, `fn`, and `ln`
+- `pid` is the public project boundary
+- `loc` carries the compact location bundle with `o`, `sr`, `b`, `sh`, `br`, and `sc`
+- `fn` and `ln` carry the trusted first and last names
+- `0` means the source value was null for a location id
+- empty string means the source value was null for a name field
+- `prv` and `av` remain raw JWT metadata only and are not forwarded as headers by default
+- public and service-facing payloads keep the field name `project_id`; only the compact JWT claim uses `pid`
 
-## Gateway responsibilities
-- Continue stripping all internal auth/context headers from untrusted client input, including `X-Profile`.
-- After successful JWT verification, copy verified claim `profile` into upstream header `X-Profile`.
-- Do not decode, normalize, rename, pretty-print, or re-encode the claim before forwarding it.
-- Do not allow clients to override `X-Profile` manually.
-- Do not fabricate `X-Profile` when claim `profile` is absent.
-- Preserve the existing trusted-header model for `X-Project-ID`, `X-User-Id`, `X-User-Mobile`, and `X-Access`.
+## Gateway behavior
 
-## Downstream service expectations
-- Any backend that needs trusted profile data must read `X-Profile` when it is present, base64url-decode it, JSON-decode it, require a JSON object, normalize `first_name` and `last_name` as nullable trimmed strings, and validate `shahr` as either missing or an object with fixed `id` and `name` keys. For `shahr`, missing key => `null`, explicit `null` => `null`, `name` trimmed empty => `AUTH_PROFILE_HEADER_INVALID`, `name` non-empty string => keep, `id` integer or `null` => keep, and any other non-null shape => `AUTH_PROFILE_HEADER_INVALID`.
-- If `X-Profile` is absent, downstream services must treat the canonical profile fields as `null` by default.
-- Downstream services may store immutable request-time profile snapshots for audit or historical needs.
-- Downstream services should keep the latest local user projection in their own `users` read model, but auth-service remains the source of truth for the latest profile.
-- `AUTH_PROFILE_HEADER_REQUIRED` remains the canonical reserved error when a downstream route intentionally forces trusted profile presence.
-- Services must not assume `X-Profile` is raw JSON and must not trust client-supplied profile data on direct requests.
+- sanitize inbound auth/context headers before proxying
+- inject trusted headers only from verified claims
+- keep required protected-route claims limited to `pid` and `sub`
+- inject `X-PROJECT-ID`, `X-USER-ID`, `X-USER-MOBILE`, `X-ACCESS`, `X-ACCESS-TOKEN-ID`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, and the `X-Location-*` headers from the matching claims
+- do not fabricate missing compact values
 
-## Acceptance criteria and validation
-- Token issuance test proves claim `profile` exists when profile data is present and decodes to the expected nullable JSON schema.
-- Token issuance test also proves auth-service may omit the `profile` claim entirely when all canonical profile fields are `null`.
-- Gateway sanitize/inject test proves client-supplied `X-Profile` never reaches upstream unchanged.
-- Gateway forwarding test proves upstream receives the exact verified claim value in `X-Profile`.
-- Gateway missing-claim test proves no `X-Profile` header is fabricated when `profile` is absent.
-- End-to-end downstream test proves a backend can decode `X-Profile`, normalize nullable `first_name` and `last_name`, validate the object-shaped `shahr` contract, refresh the latest local user projection, clear stale local raw profile state when the header is absent, and store an immutable request-time snapshot.
-- Rollout note: downstream services that currently assume raw JSON `X-Profile` must migrate to strict base64url decode before the new contract is enabled in production.
+## Auth-service behavior
+
+- emit the compact claim set in both initial token issuance and refresh paths
+- keep the public project boundary semantics stable under `pid`
+- normalize missing location ids to `0`
+- normalize missing names to `""`
+
+## Validation goals
+
+- gateway tests prove spoofed inbound trusted headers are stripped and replaced
+- gateway tests prove compact claim values reach upstream headers
+- downstream tests prove identity and location headers are parsed once into a trusted request context
+- token tests prove the emitted JWT uses only the compact custom claim contract

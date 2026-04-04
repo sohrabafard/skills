@@ -1,71 +1,49 @@
 # Alaa Trust Gateway Auth Topic Map
 
-Use this file to choose the smallest relevant section in `./full-guide.md`.
+Use this file to choose the smallest relevant reference first.
+When needed, jump to the matching section in `./full-guide.md`.
 
 ## Covered sections
 
-- `# Purpose`
-- `# When to use`
-- `# Companion skill routing (mandatory)`
-- `# Source priority`
-- `# Execution order for agents`
-- `# Canonical rename plan`
-- `# Core trust model`
-- `# How auth enters the system`
-- `## Protected routes`
-- `## Public routes`
-- `## Auth-service route drift that must not be copied forward`
-- `## Gateway-facing routes vs service-local routes`
-- `# What the gateway verifies`
-- `## Current deployment-specific truth`
-- `## What the gateway does not verify`
-- `## Important doc drift`
-- `# Header trust rules`
-- `## Headers the gateway rejects from client input`
-- `## Headers the gateway injects after successful verification`
-- `## X-Profile profile propagation contract`
-- `## Auth-service local trusted header contract`
-- `## Other header behavior`
-- `# Tenant and user context`
-- `## Tenant context`
-- `## User identity`
-- `## Services without a tenant boundary`
-- `## What not to do`
-- `# Auth-service v3 endpoint and client contract`
-- `## Canonical gateway-facing client flow`
-- `## Auth request details from the auth repo and Postman collection`
-- `## Current protected auth-service route families behind the gateway`
-- `## Direct local backend testing contract for auth-service`
-- `## Protected-flow request families that agents should know`
-- `### Session management`
-- `### TOTP management and step-up`
-- `### Admin authorization overrides`
-- `### Profile reads and writes`
-- `## Response and observability facts from the auth repo`
-- `# What downstream services must do`
-- `## Network and trust boundary rules`
-- `## Authentication vs authorization`
-- `## Laravel Gate and policy flow`
-- `## Tenant-safe request handling`
-- `## Async ingest and accept-then-validate flows`
-- `## Header usage rules`
-- `## Permission bitmap and downstream role contract`
-- `## Logging and observability`
-- `# Auth and token error contract`
-- `## Contract rules`
-- `## Recommended response envelope`
-- `## Recommended log fields for auth denies`
-- `## Canonical auth and token codes`
-- `## Mapping from current gateway error names`
-- `## Async transport note for canonical codes`
-- `## Guidance for future backend harmonization`
-- `# Service implementation checklist`
-- `# Review checklist for agents`
-- `# Laravel and Octane guidance`
-- `# Related skills and required read order`
-- `# Anti-patterns`
+- `## Purpose and use`
+- `## Companion skill routing`
+- `## Source priority and execution order`
+- `## Compact claim and header contract`
+- `## Trusted ingress and auth-service boundary`
+- `## Downstream normalization and authorization`
+- `## Error contract, review checklist, and anti-patterns`
+
+## Fast file routing
+
+- Routing order, rename rules, public versus service-local routes:
+  - `10-source-priority-and-routing.md`
+- Gateway verification, trusted header rules, tenant and user context:
+  - `20-core-trust-model-and-headers.md`
+- Auth-service v3 endpoint contract and current client flow:
+  - `30-auth-service-v3-and-route-shapes.md`
+- Downstream normalization, authorization, and permission bitmap rules:
+  - `40-downstream-service-rules.md`
+- Error contract, implementation checklist, review checklist, and anti-patterns:
+  - `50-error-contract-checklists-and-anti-patterns.md`
+- Permission bitmap packing, base64url semantics, and bit ordering:
+  - `permission-bitmap.php`
+- Historical migration intent for compact claims and null sentinels:
+  - `../request-for-change.md`
+- Cross-cutting or high-risk work spanning multiple domains:
+  - `full-guide.md`
+
+## Use this file when the task is about
+
+- JWT compact claims or claim-to-header mapping
+- trusted gateway header injection and spoofing defense
+- public versus service-local route shape behind the gateway
+- downstream request-scoped identity normalization
+- permission bitmap decoding, bit ordering, or service-local permission maps
+- auth-service route families and current v3 client flow
+- deny-code semantics, review checklists, or anti-patterns
 
 ## Working rule
 
 - Read only the sections you need from `./full-guide.md`.
-- Keep this topic map small and update it when major sections are added or renamed.
+- Prefer the smaller reference file when one file clearly matches the task.
+- Keep this topic map aligned with the actual headings in the full guide.

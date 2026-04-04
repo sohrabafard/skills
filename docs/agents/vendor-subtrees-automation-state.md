@@ -2,7 +2,7 @@
 
 - Task name: vendor subtrees automation
 - Current status: implemented, validated, pending user review
-- Objective: make vendored subtree updates reproducible and mostly automatic after repository pulls, add `cc-skills-golang` as a vendored upstream, and provide a headless vendor-add flow.
+- Objective: make vendored subtree updates reproducible and mostly automatic after repository pulls, add `cc-skills-golang` as a vendored upstream, provide a headless vendor-add flow, and keep vendored skill exposure selective as vendor count grows.
 - Current repository understanding:
   - vendored content already lives under `vendor/` and is committed to the main repository
   - the repo currently documents manual subtree update steps only for `vendor/openfga-agent-skills`
@@ -12,6 +12,7 @@
   - vendored content itself is already pushable to `origin`, so downstream clones do not need subtree pulls unless they want fresh upstream vendor updates
   - remote Git access and `.git/config` writes required elevated execution in this environment
   - the headless vendor-add flow must not auto-enable hooks or auto-link skills into Codex
+  - vendored skill exposure should remain selective so the installed skill list does not grow without intent
 - Completed work:
   - inspected the current vendor layout, remotes, and install documentation
   - confirmed there is no existing repo-managed subtree automation
@@ -21,6 +22,8 @@
   - configured `core.hooksPath=.githooks` in the current clone
   - synced vendor remotes and added `vendor/cc-skills-golang` via `git subtree`
   - converted vendored-doc sections in `README.md` and `install-skills.md` to marker-backed generated blocks
+  - added `scripts/vendor_skill_links.py` for vendor-aware selective link management into `~/.codex/skills`
+  - documented selective vendored skill exposure as the recommended pattern for future vendors
 - Remaining work:
   - user review of command naming, generated docs wording, and whether more add-command overrides are needed
 - Risks or blockers:
@@ -33,6 +36,10 @@
   - `python scripts\vendor_subtrees.py refresh-docs` succeeded after fixing literal regex replacement for backslash-heavy PowerShell blocks
   - manual `python scripts\vendor_subtrees.py sync` now exits early with a clean-worktree message when local edits are present
   - `git config --local --get core.hooksPath` returns `.githooks` in the current clone
+  - `python scripts\vendor_skill_links.py vendors` succeeded
+  - `python scripts\vendor_skill_links.py list --vendor cc-skills-golang` succeeded and reported 35 Go skills as not yet linked
+  - `python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting --dry-run` succeeded
+  - `python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run` succeeded
 - Next recommended step:
   - review the current command surface, then decide whether you want a future explicit install/link command for vendored skills in addition to the current manual PowerShell snippet
 - Timeline:
@@ -40,3 +47,4 @@
   - 2026-04-04 15:11 +03:30 — added the repo-managed subtree manifest, sync script, and hook entrypoints.
   - 2026-04-04 15:11 +03:30 — synced vendors and added `vendor/cc-skills-golang` as a subtree merge commit.
   - 2026-04-04 15:40 +03:30 — finished the headless `add` flow, marker-backed docs refresh, and dirty-worktree guards.
+  - 2026-04-04 15:xx +03:30 — added vendor-aware selective skill linking so future vendor growth does not force all vendored skills into Codex routing.

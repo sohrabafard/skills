@@ -1,4 +1,5 @@
 # Auth and token error contract
+
 Use this section as the standard contract for auth and token-related deny responses and logs across downstream services.
 
 This contract is intentionally aligned with `alaa-observability-soc`:
@@ -80,7 +81,7 @@ Use these codes by default unless an existing production contract already forces
 - `AUTH_MISSING_REQUIRED_CLAIM`
   - HTTP: `401`
   - Meaning: one required token claim is missing
-  - `meta.claim` may contain a safe claim name such as `project_id` or `sub`
+  - `meta.claim` may contain a safe claim name such as `pid` or `sub`
 
 - `AUTH_CONTEXT_MISSING`
   - HTTP: `401` or `403` depending on service policy
@@ -106,13 +107,13 @@ Use these codes by default unless an existing production contract already forces
   - HTTP: `422`
   - Meaning: `X-User-Mobile` is present but malformed for the service contract
 
-- `AUTH_PROFILE_HEADER_INVALID`
+- `AUTH_NAME_OR_LOCATION_HEADER_INVALID`
   - HTTP: `400`
-  - Meaning: `X-Profile` is present but is not a valid base64url(JSON) profile payload, does not decode to a JSON object, or contains invalid non-null values for `first_name`, `last_name`, or `shahr`
+  - Meaning: one of the trusted name or location headers is malformed or violates the compact gateway contract
 
-- `AUTH_PROFILE_HEADER_REQUIRED`
+- `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED`
   - HTTP: `400`
-  - Meaning: the route or operation explicitly requires trusted `X-Profile`, but it was missing or blank
+  - Meaning: the route or operation explicitly requires trusted compact identity headers, but one or more were missing or blank
 
 - `AUTHZ_DENIED`
   - HTTP: `403`
@@ -176,12 +177,12 @@ Use this checklist when adapting a downstream service to this trust model:
 4. If the service still uses legacy names such as `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id`, map them to `project_id` as part of the refactor plan and keep the trust semantics unchanged.
 5. Validate the public tenant boundary value as UUIDv7 when that value is exposed in service contracts, and if the service still keeps an internal numeric key, translate after that validation instead of replacing the public boundary contract.
 6. Reject protected requests if trusted tenant context is missing, and reject missing actor context when the route or service policy requires an authenticated actor.
-7. When a route or write path consumes trusted profile data, decode `X-Profile` when present, normalize nullable `first_name`, `last_name`, and `shahr`, and keep the latest local user projection separate from immutable request-time snapshots. Use `AUTH_PROFILE_HEADER_REQUIRED` only for routes that intentionally force trusted profile presence.
+7. When a route or write path consumes trusted compact identity headers, normalize the trusted name and location headers once, keep the latest local user projection separate from immutable request-time snapshots, and use `AUTH_NAME_OR_LOCATION_HEADER_REQUIRED` only for routes that intentionally force trusted identity presence.
 8. Keep authorization in service-layer policies or domain logic, not in controllers and not in reverse-proxy assumptions.
 9. Deny client tenant-override attempts explicitly instead of silently preferring one tenant source.
 10. Scope every tenant-aware query or command by the trusted tenant context.
 11. Keep deny response codes and deny log codes aligned, with request and trace correlation attached.
-12. Add tests for spoofed headers, missing tenant context, malformed `X-Profile`, cross-tenant access attempts, conflicting tenant selectors, and any route that intentionally allows anonymous traffic.
+12. Add tests for spoofed headers, missing tenant context, malformed compact identity headers, cross-tenant access attempts, conflicting tenant selectors, and any route that intentionally allows anonymous traffic.
 
 Run this review checklist only after reading the relevant companion skill(s) for the task area. A review is incomplete if it checks gateway trust rules but skips the applicable Laravel, security, observability, Octane, proxy, or Arvan companion guidance.
 
@@ -199,8 +200,8 @@ Flag a problem when you see any of these:
 - A permission middleware or authorization wrapper contains a temporary early return or bypass ahead of the real checks, effectively disabling authorization while requests still look authenticated.
 - Different services use different auth failure codes for the same deny class without a compatibility reason.
 - A service accepts conflicting client-supplied tenant selectors and trusted tenant context without an explicit deny.
-- A service treats `X-PROFILE` as client-provided, raw JSON, or a gateway-decoded value instead of the exact base64url claim copied from the verified token.
-- A service stores historical profile snapshots but fails to refresh the latest local user projection from the trusted gateway payload.
+- A service treats the compact identity headers as client-provided or gateway-decoded values instead of the exact values copied from the verified token.
+- A service stores historical identity snapshots but fails to refresh the latest local user projection from the trusted gateway payload.
 - A service keeps documenting `tenant_id`, `tenant_public_id`, or `X-Tenant-Public-Id` as if they were different concepts instead of a legacy alias scheduled to be renamed to `project_id` / `X-PROJECT-ID`.
 
 - A service derives `tenant_id` or `project_id` from request body fields before trusted `X-PROJECT-ID`.
@@ -211,7 +212,7 @@ Flag a problem when you see any of these:
 - In Laravel services, parse trusted gateway headers once in middleware or a dedicated request-context layer, then pass normalized context into services and policies.
 - Keep controllers thin. Authorization belongs in Policies, Gates, or service-layer domain checks.
 - If a Laravel compatibility layer temporarily attaches trusted gateway context to an Eloquent user model, keep that attribute request-scoped only and prevent dirty persistence of non-column values.
-- Auth-service currently uses `setAttribute('project_id', $projectId)` plus `syncOriginalAttribute('project_id')` so protected profile or session writes can read trusted project context without later trying to update `users.project_id`.
+- Auth-service currently uses request-scoped trusted tenant context and syncs it into the model only for protected request-time reads so later saves do not try to persist a gateway-only attribute into the database.
 - In Octane or other long-lived workers, auth and tenant context must be strictly request-scoped and reset every request.
 
 # Related skills and required read order
@@ -245,14 +246,15 @@ Routing rule:
 - If a task matches any bullet above, read that companion skill before proceeding.
 - If a task matches more than one bullet, read all matching skills before proceeding.
 - If a task does not match any bullet, stay with this skill and the target repository's local docs/code.
+
 # Anti-patterns
 - Trusting internal auth headers on directly exposed services.
 - Letting request body, route params, or query params override trusted tenant context.
 - Treating gateway authentication as full authorization.
 - Spreading raw header reads across the codebase instead of normalizing them once.
-- Treating `X-Profile` as raw JSON instead of base64url(JSON) copied unchanged from the verified `profile` token claim.
+- Treating the compact identity headers as raw data instead of copied verified claims.
 - Silently accepting a client tenant selector that conflicts with trusted tenant context.
-- Treating `tenant_id`, `tenant_public_id`, and `project_id` as different tenant-boundary concepts when they are supposed to be one shared concept under the `project_id` name.
+- Treating `tenant_id`, `tenant_public_id`, and `project_id` as different tenant-boundary concepts when they are supposed to be one shared concept under the public boundary name.
 - Logging raw access tokens.
 - Assuming README design notes are more accurate than active HAProxy config.
 - Applying this skill in isolation when the task clearly also requires one or more companion skills.

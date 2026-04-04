@@ -1,38 +1,42 @@
 # What downstream services must do
+
 ## Network and trust boundary rules
-- A service may trust gateway auth headers only if the request came through the trusted edge and gateway path.
+
+- A service may trust gateway auth headers only if the request came through the trusted edge and sanitized gateway path.
 - If a service can be reached directly, it must either block that exposure or strip and reject internal auth headers at its own edge.
 - Internal auth headers are hop-by-hop trust artifacts inside your platform, not public API inputs.
+- Frontend clients must never generate or rely on trusted internal headers such as `X-PROJECT-ID`, `X-USER-ID`, `X-ACCESS`, `X-USER-MOBILE`, `X-User-Fname`, `X-User-Lname`, or `X-Location-*`.
 
 ## Authentication vs authorization
+
 - Treat the gateway as the authentication and context-propagation layer.
 - Treat each downstream service as the authorization layer for business actions.
 - A verified token plus injected headers does not mean the user may perform the requested operation.
 - Legacy migration rule: do not copy older per-request auth-service callback patterns into new gateway-backed services.
-- Ticket-service still contains legacy internal route groups that accept a separate `user-token` header and call auth-service endpoints such as `/api/v2/checkUserAccess` and `/api/v2/authorizeWithPermissionName` on each request.
-- Target standard: for services behind the gateway, replace that pattern with gateway-verified Bearer JWT flow, trusted `X-*` header normalization once at ingress, and local authorization inside the service.
 - If a legacy `user-token` path must remain temporarily during migration, classify it as a service-specific compatibility path only. Do not document it as the canonical platform auth contract and do not let it weaken gateway-trusted header rules for normal service routes.
 
 ## Laravel Gate and policy flow
+
 - Build the request-scoped actor and tenant context before any framework authorization runs.
-- In comment-service, `ResolveUserMiddleware` builds a lightweight authenticated user from trusted headers, service classes call `Gate::forUser($user)->authorize(...)`, and policies return domain-specific deny codes.
-- In comment-service, `AuthServiceProvider` stores denied Gate ability context and `AuthorizationErrorRenderer` turns policy denials into a stable `403` JSON envelope and audit event.
 - Keep raw gateway-header parsing in middleware or a dedicated request-context layer, not in controllers and not scattered across policies.
 - In Laravel services with mixed legacy guard access patterns, resolve the trusted actor once and attach it to every guard and resolver the codebase still reads, such as `Auth::user()`, `$request->user()`, `auth('api')->user()`, or a legacy custom guard.
-- VOD shows a practical compatibility pattern: after resolving the user from trusted headers, set the default auth user, set each legacy guard that existing code still reads, and set the request user resolver in the same middleware.
 - If you migrate only one guard while other legacy guard lookups remain, helpers, policies, and controllers can disagree about whether the request is authenticated.
 - Use policy or Gate responses to express business authorization decisions after auth context normalization, not as a substitute for gateway verification.
+- Compact trusted name and location headers belong to the same one-time normalization layer; do not re-read them in policies or controllers.
 
 ## Tenant-safe request handling
+
 - Build request-scoped auth context once near the service edge.
 - Normalize at least these fields into a trusted request context object:
   - tenant or project id
   - actor or user id
   - token id when useful for audit
   - request id for trace correlation
+  - trusted compact name fields when the service uses them
+  - trusted compact location ids when the service uses them
 - Authorization code should read the normalized request context or server-side request attributes only. Do not re-read raw tenant or actor headers inside policies, services, or repositories after normalization.
 - Laravel Eloquent safety rule: if you attach trusted `project_id` or similar request-scoped auth context directly to a model instance for compatibility, keep it transient and non-dirty immediately or keep that context off the model entirely.
-- Auth-service shows one safe compatibility pattern for non-persistent model context: set the trusted attribute for request-time reads, then call `syncOriginalAttribute('project_id')` so later `save()` calls do not try to persist a gateway-only attribute into the database.
+- Auth-service shows one safe compatibility pattern for non-persistent model context: set the trusted attribute for request-time reads, then sync the original attribute so later `save()` calls do not try to persist a gateway-only value into the database.
 - HTTP requests without `X-PROJECT-ID` must be rejected with `400`; fallback to the default project id is only allowed for console or queue execution, not normal HTTP traffic.
 - Scope every tenant-aware read and write by the trusted tenant context.
 - Reject protected requests when required trusted context is missing.
@@ -40,8 +44,10 @@
 - If a service accepts an extra tenant-shaped identifier for resource lookup, reporting, or local routing, treat it as an untrusted selector until it is matched against the trusted tenant context.
 - If a route or service intentionally supports anonymous traffic, make that policy explicit. In that mode, tenant context can still be mandatory while actor context is optional.
 - Even in anonymous or analytics flows, never let request-body identity fields override or replace trusted gateway tenant context.
+- Do not derive location display names from compact ids unless another explicit contract adds that source of truth.
 
 ## Async ingest and accept-then-validate flows
+
 - Some downstream services accept transport with `202 Accepted` and then validate trusted context inside an async pipeline or ingestion worker.
 - Plain meaning: `202` means `I received your request and queued or started processing it`. It does not mean `auth and tenant validation already succeeded`.
 - This pattern is common in analytics or ingestion services where the HTTP layer accepts a batch quickly and deeper validation happens in transforms, workers, queues, or sinks after the response is sent.
@@ -51,6 +57,7 @@
 - If the product needs the client to receive immediate auth failure, do not use accept-then-validate for that route. Move auth/context checks before the `202` response or require the gateway to enforce them earlier.
 
 ## Header usage rules
+
 - Use `X-PROJECT-ID` as the public tenant boundary input.
 - If a legacy service still exposes `X-Tenant-Public-Id`, treat it as the old name for the same public `project_id` boundary and plan to rename it to `X-PROJECT-ID` during refactor.
 - When validating the public tenant boundary value carried in `X-PROJECT-ID`, validate it as UUIDv7.
@@ -60,7 +67,7 @@
 - Use `X-USER-ID` as the authenticated actor id.
 - Use `X-ACCESS` and `X-USER-SCOPES` as verified token context, but still enforce server-side permission rules.
 - Treat `X-REQUEST-ID` only as correlation.
-- Keep one canonical spelling for documentation and tests even though HTTP header names are case-insensitive. Current examples in this skill use `X-Project-ID`, `X-User-Id`, `X-User-Mobile`, `X-Access`, and `X-Profile`.
+- Keep one canonical spelling for documentation and tests even though HTTP header names are case-insensitive.
 - Treat `X-USER-MOBILE` as supplemental identity or audit context by default.
 - Each downstream service must expose one config switch that decides whether `X-USER-MOBILE` is optional or required. The default policy should be optional.
 - If that config marks mobile as required, the service must enforce it automatically and return the same shared error code and response contract used everywhere else.
@@ -95,34 +102,25 @@
       }
     }
     ```
-- Use `X-PROFILE` / `X-Profile` only for trusted profile context copied from the verified JWT `profile` claim.
-- Required decode flow for `X-PROFILE` when the header is present:
-  - reject blank or non-base64url values
-  - base64url-decode with strict alphabet checking
-  - JSON-decode the UTF-8 payload
-  - require a JSON object
-  - normalize `first_name` and `last_name` as nullable trimmed strings
-  - validate `shahr` as either missing or an object with fixed `id` and `name` keys: missing key => `null`, explicit `null` => `null`, `name` trimmed empty => `AUTH_PROFILE_HEADER_INVALID`, `name` non-empty string => keep, `id` integer or `null` => keep
-  - treat malformed payloads, non-object payloads, or any other invalid non-null `shahr` shape as canonical code `AUTH_PROFILE_HEADER_INVALID`
-- If `X-PROFILE` is absent, downstream services must interpret that as all canonical profile fields being `null` unless a route explicitly forces trusted profile presence.
-- Storage rule for services that persist profile data:
-  - keep the latest user projection in the local `users` read model
-  - keep immutable request-time snapshots only when the domain needs historical or audit context
+- Treat `X-User-Fname` and `X-User-Lname` as optional trusted strings.
+- Treat every `X-Location-*` header as an optional trusted integer identifier.
+- If auth-service emits compact null sentinels such as empty string or `0`, normalize them once near ingress into the repository-owned projection shape instead of leaking raw sentinel handling across the codebase.
+- If the headers are absent entirely, do not fabricate them in the service. Normalize that absence consistently in the local projection and document the chosen behavior.
+- Keep the trusted projection surface compact and do not invent a second user-context shape.
+- Consume the dedicated compact headers directly and keep local projection rules service-owned.
+- If a service persists user data, keep the latest user projection in the local `users` read model and keep immutable request-time snapshots only when the domain needs historical or audit context.
 - Do not rebuild authorization from raw client headers.
 
 ## Permission bitmap and downstream role contract
-- `X-ACCESS` carries the gateway-injected copy of auth-service's `perm_bm` permission bitmap.
+
+- `X-ACCESS` carries the gateway-injected copy of auth-service's `prm` permission bitmap claim.
 - `X-ACCESS` may carry a compact permission bitmap rather than human-readable scopes.
 - The bitmap must be base64url-encoded raw bytes. Permission IDs are 1-based and use least-significant-bit-first packing inside each byte.
 - Permission meaning comes from the downstream service's permission map, not from hard-coded bit labels at the gateway.
-- Auth-service is the current producer of the bitmap claim and emits these companion JWT claims together:
-  - `perm_bm`
-  - `perm_catalog_version`
-  - `authz_version`
+- Auth-service  is the current producer of the bitmap claim and emits companion JWT invalidation metadata under `prv` and `av`.
 - Auth-service derives `perm_bm` from `permission_catalog.bit_index`, not from mutable local package table IDs.
 - Auth-service compilation precedence is `direct deny > direct allow > role grants`.
-- If a downstream service, gateway extension, or debugging tool inspects raw JWT claims instead of injected headers, treat `perm_catalog_version` and `authz_version` as the companion invalidation metadata for `perm_bm`.
-- Current gateway behavior documented in this skill injects `perm_bm` as `X-ACCESS`, but it does not yet document companion header injection for `perm_catalog_version` or `authz_version`.
+- If a downstream service, gateway extension, or debugging tool inspects raw JWT claims instead of injected headers, treat `prv` and `av` as the companion invalidation metadata for `prm`.
 - Required decode flow:
   - reject empty or non-base64url values
   - base64url-decode with strict alphabet checking
@@ -137,14 +135,14 @@
   - `21` -> `comment_reply`
   - `22` -> `comment_get_show`
 - Services must define and document their own role or authorization derivation from decoded permissions.
-- Ticket-service confirms the same bitmap contract and currently maps these ids from `X-ACCESS`:
+- Ticket-service currently maps these ids from `X-ACCESS`:
   - `14` -> `crm_get_tickets`
   - `15` -> `crm_post_ticket_reply`
   - `16` -> `crm_put_ticket`
   - `17` -> `crm_post_bulk_ticket`
-- VOD confirms the same bitmap contract and keeps its service-local permission-id map in `config/permissions.php`; its current mapped set covers ids `1-13` and `22-39`.
+- VOD keeps its service-local permission-id map in `config/permissions.php`; its current mapped set covers ids `1-13` and `22-39`.
 - Laravel compatibility pattern: decode the bitmap once in auth middleware, map ids to permission names from service-local config, attach the mapped names to the request-scoped user object, and let `isAbleTo` or policy checks read those normalized permission names.
-- Do not authenticate the actor successfully and then silently continue with an empty decoded permission set on routes that expect permission-bearing context. Fail during trusted-context normalization with the canonical auth code instead.
+- Do not authenticate the actor successfully and then silently continue with an empty decoded permission set on routes that expect permission-bearing context. Fail during trusted-context normalization with canonical code `AUTH_ACCESS_BITMAP_INVALID` so the outward response and deny logs stay specific and consistent.
 - Comment-service currently derives roles like this:
   - admin when all configured permissions are present
   - moderator when any moderation signal permission is present
@@ -160,6 +158,7 @@
 - Target standard: do not defer malformed or unknown-only bitmap failures to later generic auth checks. Fail during trusted-context normalization with canonical code `AUTH_ACCESS_BITMAP_INVALID` so the outward response and deny logs stay specific and consistent.
 
 ## Logging and observability
+
 - Log denies and mismatches with request id and safe auth context.
 - Never log the raw token.
 - Prefer logging `jti`, tenant id, user id, denial reason, and trace or request id.
