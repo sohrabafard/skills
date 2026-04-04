@@ -1,0 +1,36 @@
+# Vendor Subtrees Automation Plan
+
+- Timestamp: 2026-04-04 15:40 +03:30
+- Scope: `vendor/`, `scripts/`, repo-managed hooks, install/vendor docs, and local Git subtree bootstrap behavior.
+- Objective: automate vendored subtree syncing after pulls as far as Git allows, vendor `cc-skills-golang` alongside the existing `openfga-agent-skills` subtree, and support headless addition of future vendors from only a Git URL.
+- Assumptions:
+  - vendored subtree content should remain committed directly in this repository
+  - `git subtree pull --squash` remains the update mechanism for upstream vendor refreshes
+  - users want clones of `origin` to contain current vendored content without extra subtree pulls
+- Constraints:
+  - preserve the current repository structure
+  - avoid destructive Git actions
+  - keep the automation deterministic and recursion-safe
+  - document the one-time setup required because Git hook configuration is local, not versioned
+- Task decomposition:
+  - add a manifest that defines subtree prefix, remote, URL, branch, and optional post-sync commands
+  - add a script to ensure remotes, sync all vendors, and install repo-managed hooks
+  - add repo-managed `post-merge` and `post-rewrite` hooks that trigger vendor sync after pull/merge/rebase flows
+  - add `cc-skills-golang` as a vendored subtree and register it in the manifest
+  - update install/vendor docs with exact clone/push semantics
+  - extend the script with a headless `add` command that updates the manifest and docs without auto-enabling hooks or Codex linking
+- Dependency notes:
+  - the sync script and manifest should exist before hook files so hooks have a stable target
+  - remote network access is required before the new subtree can be added and validated
+- Validation approach:
+  - inspect manifest parsing and dry-run output
+  - verify repo status after tooling changes
+  - validate the vendored subtree appears in Git history/status and docs reference the right paths
+- Parallelization opportunities:
+  - none worth splitting; the script, hooks, docs, and subtree add all share the same control plane
+- Exit criteria:
+  - repo-managed tooling can ensure remotes and sync all declared vendor subtrees
+  - the current clone is configured to use the repo-managed hooks
+  - `cc-skills-golang` is vendored under `vendor/`
+  - documentation explains that pushed vendor contents travel with `origin`, while hook activation still needs one local setup per clone
+  - a new vendor can be added with one headless command that takes only a Git URL and updates the manifest/docs

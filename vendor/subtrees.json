@@ -1,0 +1,24 @@
+{
+  "subtrees": [
+    {
+      "name": "openfga-agent-skills",
+      "prefix": "vendor/openfga-agent-skills",
+      "remote": "openfga-upstream",
+      "url": "https://github.com/openfga/agent-skills.git",
+      "branch": "main",
+      "post_sync": [
+        [
+          "node",
+          "vendor/openfga-agent-skills/scripts/build-agents-md.js"
+        ]
+      ]
+    },
+    {
+      "name": "cc-skills-golang",
+      "prefix": "vendor/cc-skills-golang",
+      "remote": "cc-skills-golang-upstream",
+      "url": "https://github.com/samber/cc-skills-golang.git",
+      "branch": "main"
+    }
+  ]
+}

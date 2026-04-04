@@ -106,3 +106,93 @@ then
 ```bash
 node .\vendor\openfga-agent-skills\scripts\build-agents-md.js
 ```
+
+## vendored skill packs
+
+This repository tracks upstream skill packs under `vendor/` with `git subtree`.
+
+<!-- vendor-subtrees:install-list:start -->
+Current vendored upstreams:
+- [`vendor/openfga-agent-skills`](vendor/openfga-agent-skills/) from `https://github.com/openfga/agent-skills.git`
+- [`vendor/cc-skills-golang`](vendor/cc-skills-golang/) from `https://github.com/samber/cc-skills-golang.git`
+<!-- vendor-subtrees:install-list:end -->
+
+The source of truth for subtree definitions is:
+
+```powershell
+vendor/subtrees.json
+```
+
+Important behavior:
+- vendored files are committed into this repository like normal files
+- when you sync vendor updates locally and push to `origin`, every future clone of `origin` already gets those vendor files
+- another clone does not need a separate subtree pull unless you want to refresh directly from upstream vendors again
+- local Git configuration does not travel through `origin`, so subtree remotes and hook activation still need one setup command per clone
+
+One-time setup per clone to make plain `git pull` also sync all configured subtrees:
+
+```powershell
+python scripts\vendor_subtrees.py install-hooks
+```
+
+That command:
+- configures `core.hooksPath=.githooks` for the current clone
+- ensures all subtree remotes from `vendor/subtrees.json` exist locally
+
+After that, the repo-managed `post-merge` and `post-rewrite` hooks call the shared sync script after pull, merge, and rebase flows.
+
+Manual subtree commands are still available:
+
+```powershell
+python scripts\vendor_subtrees.py list
+python scripts\vendor_subtrees.py ensure-remotes
+python scripts\vendor_subtrees.py sync
+python scripts\vendor_subtrees.py refresh-docs
+```
+
+Notes:
+- `python scripts\vendor_subtrees.py sync` fetches every configured vendor remote and runs `git subtree pull --squash` for existing prefixes
+- if a configured prefix is missing locally, the script bootstraps it with `git subtree add --squash`
+- `python scripts\vendor_subtrees.py sync` requires a clean worktree; hook-driven sync skips automatically when the worktree is dirty
+- when `openfga-agent-skills` changes, the sync script also runs `node vendor/openfga-agent-skills/scripts/build-agents-md.js`
+
+To headlessly add a new vendor from only its Git URL:
+
+```powershell
+python scripts\vendor_subtrees.py add https://github.com/org/repo.git
+```
+
+Optional overrides are available when needed:
+
+```powershell
+python scripts\vendor_subtrees.py add https://github.com/org/repo.git --branch main --name repo --prefix vendor\repo --remote repo-upstream
+```
+
+That command only vendors the repository, updates `vendor/subtrees.json`, and refreshes the docs. It does not auto-enable hooks and it does not auto-link the new vendored skills into Codex.
+
+To link vendored skills into Codex, extend the existing install pattern to include each vendored `skills/` directory:
+
+```powershell
+# vendor-subtrees:codex-src-roots:start
+$repoRoot = (Resolve-Path ".").Path
+$srcRoots = @(
+    (Join-Path $repoRoot "vendor\openfga-agent-skills\skills"),
+    (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
+)
+# vendor-subtrees:codex-src-roots:end
+$dstRoot = "$HOME\.codex\skills"
+
+New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
+
+foreach ($srcRoot in $srcRoots) {
+    Get-ChildItem $srcRoot -Directory | ForEach-Object {
+        $linkPath = Join-Path $dstRoot $_.Name
+        if (-not (Test-Path $linkPath)) {
+            New-Item -ItemType SymbolicLink -Path $linkPath -Target $_.FullName | Out-Null
+            Write-Host "Linked: $($_.Name)"
+        } else {
+            Write-Host "Exists: $($_.Name)"
+        }
+    }
+}
+```

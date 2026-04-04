@@ -1,0 +1,42 @@
+# Vendor Subtrees Automation State
+
+- Task name: vendor subtrees automation
+- Current status: implemented, validated, pending user review
+- Objective: make vendored subtree updates reproducible and mostly automatic after repository pulls, add `cc-skills-golang` as a vendored upstream, and provide a headless vendor-add flow.
+- Current repository understanding:
+  - vendored content already lives under `vendor/` and is committed to the main repository
+  - the repo currently documents manual subtree update steps only for `vendor/openfga-agent-skills`
+  - subtree remote definitions and Git hook configuration are local Git config, so they do not travel through `origin`
+- Assumptions and constraints:
+  - `git pull` automation must be implemented with repo-tracked hooks plus a one-time local `core.hooksPath` setup per clone
+  - vendored content itself is already pushable to `origin`, so downstream clones do not need subtree pulls unless they want fresh upstream vendor updates
+  - remote Git access and `.git/config` writes required elevated execution in this environment
+  - the headless vendor-add flow must not auto-enable hooks or auto-link skills into Codex
+- Completed work:
+  - inspected the current vendor layout, remotes, and install documentation
+  - confirmed there is no existing repo-managed subtree automation
+  - added `vendor/subtrees.json` as the repo-tracked source of truth for subtree definitions
+  - added `scripts/vendor_subtrees.py` with `list`, `ensure-remotes`, `install-hooks`, `sync`, `refresh-docs`, and `add` commands
+  - added repo-managed `.githooks/post-merge` and `.githooks/post-rewrite` entrypoints
+  - configured `core.hooksPath=.githooks` in the current clone
+  - synced vendor remotes and added `vendor/cc-skills-golang` via `git subtree`
+  - converted vendored-doc sections in `README.md` and `install-skills.md` to marker-backed generated blocks
+- Remaining work:
+  - user review of command naming, generated docs wording, and whether more add-command overrides are needed
+- Risks or blockers:
+  - Git cannot version `.git/config`, so automatic hook activation in brand-new clones still needs one local setup command
+  - hook-driven subtree pulls must avoid recursion when a subtree merge itself triggers Git hooks
+  - `git subtree pull` requires a clean worktree; the hook path now skips automatically when dirty and manual sync exits with an explicit message
+- Validation summary:
+  - `python scripts\vendor_subtrees.py list` succeeded
+  - `python scripts\vendor_subtrees.py add --help` succeeded
+  - `python scripts\vendor_subtrees.py refresh-docs` succeeded after fixing literal regex replacement for backslash-heavy PowerShell blocks
+  - manual `python scripts\vendor_subtrees.py sync` now exits early with a clean-worktree message when local edits are present
+  - `git config --local --get core.hooksPath` returns `.githooks` in the current clone
+- Next recommended step:
+  - review the current command surface, then decide whether you want a future explicit install/link command for vendored skills in addition to the current manual PowerShell snippet
+- Timeline:
+  - 2026-04-04 13:00 +03:30 — inspected current vendor layout, remotes, and existing manual subtree update docs.
+  - 2026-04-04 15:11 +03:30 — added the repo-managed subtree manifest, sync script, and hook entrypoints.
+  - 2026-04-04 15:11 +03:30 — synced vendors and added `vendor/cc-skills-golang` as a subtree merge commit.
+  - 2026-04-04 15:40 +03:30 — finished the headless `add` flow, marker-backed docs refresh, and dirty-worktree guards.

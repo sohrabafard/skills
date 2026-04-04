@@ -35,6 +35,42 @@ $skill-installer install https://github.com/openai/skills/tree/main/skills/.expe
 
 After installing a skill, restart Codex to pick up new skills.
 
+## Vendored Upstream Skills
+
+This repository also commits third-party skill packs under [`vendor/`](vendor/) using `git subtree`.
+
+<!-- vendor-subtrees:readme-list:start -->
+Current vendored upstreams:
+- [`vendor/openfga-agent-skills`](vendor/openfga-agent-skills/) from `https://github.com/openfga/agent-skills.git`
+- [`vendor/cc-skills-golang`](vendor/cc-skills-golang/) from `https://github.com/samber/cc-skills-golang.git`
+<!-- vendor-subtrees:readme-list:end -->
+
+These directories are regular tracked files in this repository. If you sync vendor updates locally and push them to `origin`, any later clone of `origin` already receives the vendored content without running extra subtree pulls.
+
+The only clone-local setup is Git configuration. To make plain `git pull` also refresh all configured vendors in a clone, run once:
+
+```powershell
+python scripts\vendor_subtrees.py install-hooks
+```
+
+Manual sync remains available:
+
+```powershell
+python scripts\vendor_subtrees.py sync
+```
+
+To headlessly add a new vendor from only its Git URL:
+
+```powershell
+python scripts\vendor_subtrees.py add https://github.com/org/repo.git
+```
+
+The command derives the subtree name, detects the default branch, adds the subtree under `vendor/`, updates `vendor/subtrees.json`, and refreshes the vendored-skill docs blocks.
+
+It does not auto-enable hooks and it does not auto-install the vendored skills into Codex. Those remain explicit manual steps.
+
+The manifest for all managed subtree remotes lives in [`vendor/subtrees.json`](vendor/subtrees.json).
+
 ## License
 
 The license of an individual skill can be found directly inside the skill's directory inside the `LICENSE.txt` file.

@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+
+if [ "${SKILLS_VENDOR_SYNC_ACTIVE:-}" = "1" ]; then
+  exit 0
+fi
+
+if command -v python3 >/dev/null 2>&1; then
+  PYTHON_BIN=python3
+elif command -v python >/dev/null 2>&1; then
+  PYTHON_BIN=python
+else
+  echo "vendor-subtrees: python is required for post-merge sync" >&2
+  exit 0
+fi
+
+exec "$PYTHON_BIN" scripts/vendor_subtrees.py sync-from-hook --source post-merge
