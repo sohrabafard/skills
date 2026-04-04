@@ -70,10 +70,12 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `50-laravel-copy-baselines.md`
   - copy-oriented middleware and helper class baselines
 - `full-guide.md`
-  - the whole contract in one place when the task is broad or risky
+  - the preserved whole-contract guide when the task is broad, risky, or easier to solve from one canonical document
 
 ## Working rule
 
 - Use the smallest file that answers the task.
 - Load `full-guide.md` when the task spans multiple files or multiple contract domains.
+- Keep `full-guide.md` as the preserved whole-contract view instead of a shortened recap of the split files.
+- When a normative rule changes in either the full guide or a split reference, update the matching view in the same patch.
 - Keep this topic map aligned with the actual reference files.

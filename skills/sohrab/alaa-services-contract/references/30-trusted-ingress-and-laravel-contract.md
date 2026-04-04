@@ -14,11 +14,19 @@ A Laravel service that owns the trust boundary may satisfy the trusted-ingress s
 ## Trusted header names
 
 Use these exact header names unless a temporary migration is explicitly documented:
-- `X-Project-ID`
+- `X-Project-Id`
 - `X-User-Id`
 - `X-Access`
+- `X-Access-Token-Id`
 - `X-User-Mobile`
-- `X-Profile`
+- `X-User-Fname`
+- `X-User-Lname`
+- `X-Location-Ostan`
+- `X-Location-Shahrestan`
+- `X-Location-Bakhsh`
+- `X-Location-Shahr`
+- `X-Location-Shobe`
+- `X-Location-School`
 
 ## `ResolveUserMiddleware` contract
 
@@ -29,22 +37,23 @@ Responsibility:
 - synchronize request-time user access across request helpers, facades, and legacy guards still in use
 
 Required validation behavior:
-- validate `X-Project-ID` as UUIDv7
+- validate `X-Project-Id` as UUIDv7
 - validate `X-User-Id` as a positive integer
 - decode `X-Access` as the base64url permission bitmap
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
+- normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `$alaa-trust-gateway-auth`
-- decode `X-Profile` as base64url JSON
-- require `X-Profile` to be an object when present
-- normalize `first_name` and `last_name` as nullable trimmed strings
-- normalize `shahr` exactly according to `$alaa-trust-gateway-auth`
+- normalize `X-User-Fname` and `X-User-Lname` as nullable trimmed strings
+- validate each `X-Location-*` header as a non-negative integer when present
 - use the exact auth error codes owned by `$alaa-trust-gateway-auth`
 
 Actor context must be able to hold at least:
 - trusted project identifier
 - trusted user identifier
 - normalized permission names
-- normalized profile payload
+- trusted access-token identifier when present
+- normalized first and last name values
+- normalized location object with `ostan`, `shahrestan`, `bakhsh`, `shahr`, `shobe`, and `school`
 - trusted mobile when present
 - `request_id`
 - `trace_id`
@@ -60,7 +69,7 @@ Required support components:
 - trusted request context helper
 - trusted actor context value object or DTO
 - permission bitmap decoder and mapper
-- trusted profile parser and normalizer
+- compact trusted user-projection normalizer
 - auth-state synchronizer
 - optional role-derivation helper when needed
 - stable API-error mapping path aligned with `$alaa-trust-gateway-auth`
@@ -68,7 +77,8 @@ Required support components:
 Implementation rules:
 - do not parse raw trusted headers in controllers, policies, resources, or repositories
 - keep policy and Gate decisions focused on business authorization after auth context is normalized
-- if the service persists trusted profile data, keep mutable projections separate from immutable snapshots
+- if the service persists trusted user data, keep mutable projections separate from immutable snapshots
+- do not fabricate display-city fields from compact location ids unless another contract owns that lookup
 
 ## Laravel success-response contract
 

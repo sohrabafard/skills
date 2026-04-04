@@ -17,7 +17,7 @@ Keep this top-level file small. Read the reference files for the exact contract 
 2. Read `references/00-topic-map.md`.
 3. Select the service mode first: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
 4. Read the smallest relevant reference file first.
-5. Read `references/full-guide.md` when the task is cross-cutting or high-risk.
+5. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
 6. Load the required companion skills before implementation work outside this skill's ownership.
 7. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
 
@@ -35,7 +35,7 @@ Keep this top-level file small. Read the reference files for the exact contract 
 
 Load these companion skills when their concern is in scope:
 - `$alaa-trust-gateway-auth`
-  - Load when trusted headers, auth error semantics, permission bitmap rules, `X-Profile`, or tenant or project propagation are involved.
+  - Load when trusted headers, auth error semantics, compact claim semantics, or tenant or project propagation are involved.
 - `$alaa-observability-soc`
   - Load when logs, traces, metrics, alerting, event naming, or incident evidence requirements are involved.
 - `$alaa-docker-production`
@@ -55,7 +55,7 @@ Load these companion skills when their concern is in scope:
 
 ## Auth-specific routing
 
-- When the task touches the `auth` service and any frontend or frontend-facing profile integration depends on academic form behavior, read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
+- When the task touches the `auth` service and any frontend or frontend-facing identity integration depends on academic form behavior, read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
 - Treat that document as the canonical frontend integration contract for auth academic policy.
 - When auth academic policy changes, update the frontend implementation and any contract-facing docs or Postman artifacts in the same effort.
 
@@ -85,6 +85,8 @@ Load these companion skills when their concern is in scope:
 - Keep this file routing-first and explicit.
 - Keep exact contract details in `references/`.
 - Use relative reference paths only.
+- When a normative rule changes in a split reference file, update `references/full-guide.md` in the same patch so the preserved whole-guide view stays complete.
+- Do not strand normative Ala rules in only one document. Keep `references/00-topic-map.md`, the split references, and `references/full-guide.md` aligned.
 - Keep exact route names, header names, event names, and code families stable unless the contract is intentionally revised.
 - Keep the Ala deploy contract aligned with `alaa-docker-production` and `caas-arvan-kuber` when ownership boundaries change.
 - When this skill changes a contract owned jointly with another skill, update that companion skill in the same effort so the pack remains consistent.

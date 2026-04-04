@@ -117,8 +117,9 @@ final class ResolveUserMiddleware
 Required helper responsibilities behind this baseline:
 - validate trusted headers exactly according to `$alaa-trust-gateway-auth`
 - decode and map the permission bitmap
-- normalize `X-Profile`
-- normalize `shahr`
+- normalize compact trusted first and last names
+- normalize compact trusted location ids into one repository-owned structure when needed
+- normalize `X-Access-Token-Id` when the repository uses token-session context
 - expose one trusted actor object
 - synchronize `$request->user()` and `Auth::user()`
 - support legacy guard synchronization when the repository still needs it
@@ -136,14 +137,24 @@ final readonly class TrustedActorContext
 {
     /**
      * @param list<string> $permissions
-     * @param array<string, mixed>|null $profile
+     * @param array{
+     *     ostan?: int,
+     *     shahrestan?: int,
+     *     bakhsh?: int,
+     *     shahr?: int,
+     *     shobe?: int,
+     *     school?: int
+     * }|null $location
      */
     public function __construct(
         public string $projectId,
         public int $userId,
         public array $permissions,
         public ?string $mobile,
-        public ?array $profile,
+        public ?string $firstName,
+        public ?string $lastName,
+        public ?array $location,
+        public ?string $tokenId,
         public ?string $role,
         public string $requestId,
         public string $traceId,
@@ -151,6 +162,12 @@ final readonly class TrustedActorContext
     }
 }
 ```
+
+## Snapshot baseline
+
+- if a repo stores request-time user context, keep mutable projections separate from immutable snapshots
+- prefer a repository-owned projection that preserves compact ids instead of inventing display names
+- keep missing location ids explicit instead of fabricating location names
 
 ## Route and response reminder
 

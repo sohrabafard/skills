@@ -5,15 +5,16 @@
 1. Identify the service mode first.
 2. Read the smallest relevant contract file before changing code.
 3. Load the required companion skills.
-4. Inspect the current route families, middleware order, auth shape, observability shape, readiness checks, and response boundaries.
+4. Inspect the current route families, middleware order, auth shape, observability shape, readiness checks, response boundaries, and trusted-header expectations.
 5. Converge the repository to the exact contract instead of partially mirroring it.
-6. Add required helper or support components when they do not exist.
-7. Add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel.
-8. Add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
-9. Add or align exact response envelopes, exact headers, exact event names, and exact code naming.
-10. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-11. Run focused tests for every changed contract surface.
-12. Report blockers explicitly when exact convergence is not possible.
+6. Remove active dependencies on retired trust surfaces such as `X-Profile` or old claim names when the compact contract replaced them.
+7. Add required helper or support components when they do not exist.
+8. Add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel.
+9. Add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
+10. Add or align exact response envelopes, exact headers, exact event names, and exact code naming.
+11. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+12. Run focused tests for every changed contract surface.
+13. Report blockers explicitly when exact convergence is not possible.
 
 ## Minimum validation checklist
 
@@ -37,12 +38,12 @@
 - metrics use bounded labels only
 
 ### Trusted ingress
-- missing blank invalid `X-Project-ID`
+- missing blank invalid `X-Project-Id`
 - missing invalid `X-User-Id`
 - missing invalid zero-known-permission `X-Access`
 - invalid `X-User-Mobile`
-- invalid `X-Profile`
-- invalid `shahr`
+- malformed `X-User-Fname` or `X-User-Lname`
+- malformed `X-Location-*` values
 - parity between `$request->user()` and `Auth::user()`
 - parity with any legacy guard still in use
 
@@ -67,6 +68,9 @@ Flag a problem when you see any of these:
 - `$request->user()` and `Auth::user()` can diverge within one request
 - Laravel services return transport-shaped arrays or raw models instead of Resource boundaries
 - docs or API artifacts drift from implementation
+- compact trusted name and location headers are re-parsed in multiple layers instead of one normalization path
+- a repository keeps old and new trust contracts active in parallel without an explicit migration blocker
+- a repository invents location-name lookup behavior even though the compact contract only carries ids
 
 ## Anti-patterns
 
@@ -78,3 +82,4 @@ Flag a problem when you see any of these:
 - keeping stale compatibility branches, helpers, tests, or docs for removed contract surfaces
 - scattering trusted-user normalization across controllers, policies, resources, and observers
 - leaving helper responsibilities implicit so each agent re-invents them
+- reviving the retired profile-blob trust surface instead of consuming the compact header projection
