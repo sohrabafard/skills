@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Docs Standard"
-  short_description: "Rich English README and BIG_PICTURE docs"
-  default_prompt: "Use $alaa-docs-farsi to produce rich, simple-English repository docs that stay aligned with code, contracts, runtime behavior, and operations."
+  short_description: "Rich English repo docs plus API summary docs"
+  default_prompt: "Use $alaa-docs-farsi to produce rich, simple-English repository docs that stay aligned with code, contracts, runtime behavior, operations, and API surfaces, including `docs/api-summary.md` for API-bearing repos."
 
 policy:
   allow_implicit_invocation: true

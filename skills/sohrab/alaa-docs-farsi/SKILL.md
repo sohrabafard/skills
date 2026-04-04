@@ -1,6 +1,6 @@
 ---
 name: alaa-docs-farsi
-description: "Use this skill when the task involves repository documentation such as README.md, docs/BIG_PICTURE.md, architecture or operations docs, or aligning docs with code and contracts in Ala-style projects. It produces rich, simple-English docs for human developers, frontend integrators, and agents. Do not use it for logic-only changes or Postman-only work."
+description: "Use this skill when the task involves repository documentation such as README.md, docs/BIG_PICTURE.md, docs/api-summary.md, architecture or operations docs, or aligning docs with code and contracts in Ala-style projects. It produces rich, simple-English docs for human developers, frontend integrators, and agents, and when a repository exposes HTTP APIs it must create or refresh `docs/api-summary.md` in a concise request-example format. Do not use it for logic-only changes or Postman-only work."
 ---
 
 # Alaa Docs Farsi
@@ -17,6 +17,7 @@ Keep this top-level file lean. Load the reference files only as needed.
 
 - `README.md` updates
 - `docs/BIG_PICTURE.md` updates
+- `docs/api-summary.md` creation or refresh for API-bearing repositories
 - architecture, operations, contract, onboarding, or troubleshooting docs
 - documentation alignment after API, auth, runtime, deployment, event, or observability changes
 - standardizing docs across repositories so frontend developers, backend developers, and agents can understand the system quickly
@@ -30,10 +31,10 @@ Keep this top-level file lean. Load the reference files only as needed.
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.
-2. Read the current `README.md` and `docs/BIG_PICTURE.md` if they exist.
+2. Read the current `README.md`, `docs/BIG_PICTURE.md`, and `docs/api-summary.md` if they exist.
 3. Read `references/00-topic-map.md`.
-4. Load only the relevant sections from `references/full-guide.md`.
-5. Inspect source-of-truth files before documenting behavior.
+4. Load the specific topic reference file named in `references/00-topic-map.md`.
+5. Inspect source-of-truth files before documenting behavior, especially route definitions, request validation, controller/actions, and Postman or API artifacts when the repo exposes APIs.
 6. Pair with the relevant companion skills when the task touches frontend, auth, architecture, observability, or Postman.
 
 ## Non-negotiables
@@ -42,6 +43,9 @@ Keep this top-level file lean. Load the reference files only as needed.
 - Never weaken an existing strong document into a shorter but lower-signal version.
 - Preserve service-specific richness such as caveats, diagrams, enum tables, payload examples, operational notes, and flow variants unless they are provably obsolete.
 - `README.md` and `docs/BIG_PICTURE.md` serve different roles. Do not collapse them into duplicates.
+- If the repository exposes HTTP APIs for frontend or service consumers, ensure `docs/api-summary.md` exists and is refreshed in the standardized concise format defined in `references/full-guide.md`.
+- Keep `docs/api-summary.md` focused on canonical endpoints and practical request examples. Do not turn it into a second `README.md`, a second `BIG_PICTURE.md`, or a full OpenAPI replacement.
+- Prefer the shortest format that still makes the API easy to call correctly: complete endpoint inventory first, then only the most representative verified examples, plus a short template note for repeated action-style endpoints when that is clearer than duplicating nearly identical examples.
 - When behavior, contracts, runtime shape, auth flow, events, or observability change, review both files in the same task.
 - Prefer explicit source references and concrete repo facts over generic documentation language.
 - All document links must be repo-portable: valid after clone, valid in GitHub/GitLab web viewers, and independent of the local machine path.
@@ -51,6 +55,7 @@ Keep this top-level file lean. Load the reference files only as needed.
 
 - Re-check `README.md` when install, setup, commands, onboarding, or workflow expectations changed.
 - Re-check `docs/BIG_PICTURE.md` when architecture, runtime, request flow, event flow, observability, or trust boundaries changed.
+- Re-check `docs/api-summary.md` when route families, HTTP methods, path parameters, query parameters, request bodies, version prefixes, or consumer-facing action endpoints changed.
 - Re-check related docs when request, response, auth, headers, errors, enums, jobs, logs, or deployment behavior changed.
 - Re-check Postman collections through `$alaa-postman-collections` when endpoints, examples, or auth flows changed.
 - Re-check diagrams and module maps when system flow or code boundaries changed.
@@ -77,12 +82,14 @@ Keep this top-level file lean. Load the reference files only as needed.
 ## Reference navigation
 
 - Read `references/00-topic-map.md` first for fast routing.
-- Read `references/full-guide.md` for the documentation contract, audience coverage, richness guardrails, required section sets, and workflow.
+- Load the topic-specific reference file named in `references/00-topic-map.md` for the exact subject you are working on.
+- Read `references/full-guide.md` when you need the whole documentation contract in one place, when multiple topics are in scope, or when you are updating the split references themselves.
 - Use the active repository `AGENTS.md` as a repository-local override for sync rules and done criteria.
 
 ## Maintenance rules
 
 - Keep this file routing-first and plain.
 - Put detailed rules into `references/full-guide.md` instead of growing this file.
+- Keep the split topic references in `references/` aligned with `references/full-guide.md`.
 - Keep the topic map aligned with the actual headings in the full guide.
 - Re-check companion-skill routing when ownership boundaries change.
