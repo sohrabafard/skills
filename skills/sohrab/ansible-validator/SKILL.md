@@ -1092,9 +1092,9 @@ Steps:
 
 This skill works well in combination with:
 
-- **k8s-yaml-validator** - When Ansible manages Kubernetes resources
+- **alaa-k8s-helm** - When Ansible manages Kubernetes or Helm resources
 - **terraform-validator** - When Ansible and Terraform are used together
-- **k8s-debug** - For debugging infrastructure managed by Ansible
+- **alaa-k8s-helm** - For debugging Kubernetes infrastructure managed by Ansible
 
 ## Notes
 

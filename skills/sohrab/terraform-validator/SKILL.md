@@ -492,9 +492,8 @@ operations and List Resources for querying infrastructure.
 
 ## Integration with Other Skills
 
-- **k8s-yaml-validator** - For Terraform Kubernetes provider validation
-- **helm-validator** - When Terraform manages Helm releases
-- **k8s-debug** - For debugging infrastructure provisioned by Terraform
+- **alaa-k8s-helm** - For Terraform Kubernetes provider and Helm release validation
+- **alaa-k8s-helm** - For debugging Kubernetes infrastructure provisioned by Terraform
 
 ## Notes
 

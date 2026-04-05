@@ -160,25 +160,20 @@ Use these skills together when applicable. `caas-arvan-kuber` sets policy; compa
 
 ### Kubernetes and Helm core
 
-1) `helm-generator`
-2) `helm-validator`
-3) `k8s-yaml-generator`
-4) `k8s-yaml-validator`
-5) `k8s-debug`
+1) `alaa-k8s-helm`
 
 Usage pattern:
 
-1) Build templates/manifests with generator skill.
+1) Build or refine templates/manifests with `alaa-k8s-helm`.
 2) Apply Arvan constraints from this skill.
-3) Validate with validator skill.
-4) If runtime issues occur, use `k8s-debug` with Arvan RBAC/namespace facts.
+3) Validate with `alaa-k8s-helm`.
+4) If runtime issues occur, use `alaa-k8s-helm` with Arvan RBAC/namespace facts.
 
 ### Bash and automation
 
-1) `bash-script-generator`
-2) `bash-script-validator`
-3) `makefile-generator`
-4) `makefile-validator`
+1) `alaa-bash-shell`
+2) `makefile-generator`
+3) `makefile-validator`
 
 Usage pattern:
 
@@ -187,7 +182,7 @@ Usage pattern:
 
 ### CI/CD pipelines
 
-1) `gitlab-ci-generator` + `gitlab-ci-validator`
+1) `alaa-gitlab-ci-cd`
 2) `github-actions-generator` + `github-actions-validator`
 3) `jenkinsfile-generator` + `jenkinsfile-validator`
 

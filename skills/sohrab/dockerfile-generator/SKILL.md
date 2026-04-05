@@ -944,7 +944,7 @@ This skill works well in combination with:
 
 - **devops-skills:dockerfile-validator** - Validates generated Dockerfiles (REQUIRED)
 - **k8s-generator** - Generate Kubernetes deployments for the container
-- **helm-generator** - Create Helm charts with the container image
+- **alaa-k8s-helm** - Create Helm charts and Kubernetes manifests for the container image
 
 ## Notes
 

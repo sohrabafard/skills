@@ -868,8 +868,7 @@ Steps:
 This skill works well in combination with:
 
 - **dockerfile-generator** - Generate optimized Dockerfiles
-- **k8s-yaml-validator** - Validate Kubernetes deployments that reference Docker images
-- **helm-validator** - Validate Helm charts with container configurations
+- **alaa-k8s-helm** - Validate Kubernetes deployments and Helm charts that reference Docker images
 
 ## Notes
 
