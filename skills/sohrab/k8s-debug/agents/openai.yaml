@@ -1,7 +1,0 @@
-interface:
-  display_name: "K8s Debug"
-  short_description: "Comprehensive Kubernetes debugging and troubleshooting toolkit"
-  default_prompt: "Use $k8s-debug to follow its workflow for comprehensive kubernetes debugging and troubleshooting toolkit."
-
-policy:
-  allow_implicit_invocation: true

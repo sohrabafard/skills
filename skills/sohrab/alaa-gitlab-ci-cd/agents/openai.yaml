@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa GitLab CI/CD"
+  short_description: "GitLab CI/CD, runners, and secure build workflows"
+  default_prompt: "Use $alaa-gitlab-ci-cd to generate, validate, review, or debug GitLab CI/CD YAML, runner configuration, and container-build workflows."

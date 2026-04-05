@@ -1,7 +1,0 @@
-interface:
-  display_name: "Bash Script Generator"
-  short_description: "Generate bash scripts"
-  default_prompt: "Use $bash-script-generator to follow its workflow for generate bash scripts."
-
-policy:
-  allow_implicit_invocation: false

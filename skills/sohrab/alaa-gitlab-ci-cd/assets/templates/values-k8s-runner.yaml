@@ -1,0 +1,32 @@
+gitlabUrl: https://gitlab.example.com/
+
+runnerToken: "glrt-REPLACE_WITH_AUTH_TOKEN"
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: gitlab-runner
+
+runners:
+  tags: "k8s,buildkit"
+  privileged: false
+  config: |
+    [[runners]]
+      executor = "kubernetes"
+      [runners.kubernetes]
+        namespace = "gitlab-runner"
+        service_account = "gitlab-runner"
+        image = "alpine:3.20"
+        poll_timeout = 600
+        cleanup_resources_timeout = "10m"
+        privileged = false
+        helper_image_autoset_arch_and_os = true
+        allowed_pull_policies = ["always"]
+        allowed_images = ["alpine:*", "docker.io/library/*:*", "moby/buildkit:*"]
+        allowed_services = ["docker:*", "docker.io/library/docker:*"]
+        logs_base_dir = "/tmp"
+        scripts_base_dir = "/tmp"
+        [runners.kubernetes.node_selector]
+          "kubernetes.io/os" = "linux"

@@ -1,0 +1,17 @@
+spec:
+  inputs:
+    job-prefix:
+      default: app
+    image:
+      default: alpine:3.20
+    stage:
+      default: test
+    test-command:
+      default: echo "override test-command when including this component"
+---
+$[[ inputs.job-prefix ]]-test:
+  stage: $[[ inputs.stage ]]
+  image: $[[ inputs.image ]]
+  interruptible: true
+  script:
+    - sh -lc '$[[ inputs.test-command ]]'

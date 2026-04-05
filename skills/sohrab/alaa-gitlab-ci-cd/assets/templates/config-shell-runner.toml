@@ -1,0 +1,15 @@
+concurrent = 4
+check_interval = 0
+
+[[runners]]
+  name = "shell-trusted"
+  url = "https://gitlab.example.com/"
+  token = "glrt-REPLACE_WITH_AUTH_TOKEN"
+  executor = "shell"
+  shell = "bash"
+  builds_dir = "/srv/gitlab-runner/builds"
+  cache_dir = "/srv/gitlab-runner/cache"
+  environment = ["FF_USE_FASTZIP=true"]
+
+  [runners.cache]
+    MaxUploadedArchiveSize = 0

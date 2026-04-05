@@ -1,0 +1,38 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+default:
+  tags:
+    - k8s
+    - buildkit
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: [""]
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+    BUILDKIT_PROGRESS: plain
+    CACHE_IMAGE: $CI_REGISTRY_IMAGE:buildcache-$CI_COMMIT_REF_SLUG
+
+stages:
+  - build
+
+build-image:
+  stage: build
+  before_script:
+    - mkdir -p ~/.docker
+    - |
+      cat > ~/.docker/config.json <<EOF
+      {
+        "auths": {
+          "${CI_REGISTRY}": {
+            "username": "${CI_REGISTRY_USER}",
+            "password": "${CI_REGISTRY_PASSWORD}"
+          }
+        }
+      }
+      EOF
+  script:
+    - |
+      buildctl-daemonless.sh build         --frontend dockerfile.v0         --local context=.         --local dockerfile=.         --opt filename=Dockerfile         --output type=image,name=${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA},push=true         --import-cache type=registry,ref=${CACHE_IMAGE}         --export-cache type=registry,ref=${CACHE_IMAGE},mode=max

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa K8s + Helm"
+  short_description: "Generate, validate, and debug K8s, Helm, and OpenShift"
+  default_prompt: "Use $alaa-k8s-helm to generate, validate, explain, or debug Helm charts and Kubernetes/OpenShift workloads."

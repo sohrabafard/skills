@@ -1,0 +1,34 @@
+# Requires a privileged Kubernetes runner and a shared /certs/client volume in runner config.
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+default:
+  tags:
+    - k8s
+    - dind
+  image: docker:24.0.5-cli
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: /certs
+  DOCKER_CERT_PATH: /certs/client
+
+services:
+  - name: docker:24.0.5-dind
+    alias: docker
+    variables:
+      HEALTHCHECK_TCP_PORT: "2376"
+
+stages:
+  - build
+
+build-image:
+  stage: build
+  script:
+    - docker info
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"

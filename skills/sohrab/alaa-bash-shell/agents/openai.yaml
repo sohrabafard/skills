@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Bash & Shell"
+  short_description: "Generate, validate, and debug shell scripts"
+  default_prompt: "Use $alaa-bash-shell to build or refactor a readable shell CLI with mandatory -h/--help and solid portability checks."

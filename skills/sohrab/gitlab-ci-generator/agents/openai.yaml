@@ -1,7 +1,0 @@
-interface:
-  display_name: "Gitlab CI Generator"
-  short_description: "Generate GitLab CI pipelines"
-  default_prompt: "Use $gitlab-ci-generator to follow its workflow for generate gitlab ci pipelines."
-
-policy:
-  allow_implicit_invocation: false

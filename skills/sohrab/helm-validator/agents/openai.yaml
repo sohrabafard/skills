@@ -1,7 +1,0 @@
-interface:
-  display_name: "Helm Validator"
-  short_description: "Validate Helm charts"
-  default_prompt: "Use $helm-validator to follow its workflow for validate helm charts."
-
-policy:
-  allow_implicit_invocation: false

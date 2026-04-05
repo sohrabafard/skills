@@ -32,6 +32,7 @@ Get-ChildItem $srcRoot -Directory | ForEach-Object {
 }
 
 $srcRoot = "D:\Sohrab\Project\skills\skills\sohrab"
+$dstRoot = "$HOME\.codex\skills"
 Get-ChildItem $srcRoot -Directory | ForEach-Object {
     $linkPath = Join-Path $dstRoot $_.Name
     if (-not (Test-Path $linkPath)) {

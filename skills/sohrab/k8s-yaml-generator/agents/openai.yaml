@@ -1,7 +1,0 @@
-interface:
-  display_name: "K8s Yaml Generator"
-  short_description: "Generate Kubernetes manifests"
-  default_prompt: "Use $k8s-yaml-generator to follow its workflow for generate kubernetes manifests."
-
-policy:
-  allow_implicit_invocation: false

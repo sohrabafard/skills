@@ -1,0 +1,20 @@
+# Exclude local and non-chart files from packaged Helm charts.
+.DS_Store
+.git/
+.gitignore
+.github/
+.gitlab/
+.gitlab-ci.yml
+.vscode/
+.idea/
+*.swp
+*.tmp
+*.bak
+*.orig
+*~
+README.md
+CONTRIBUTING.md
+docs/
+test/
+tests/
+coverage/
