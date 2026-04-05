@@ -1,7 +1,4 @@
 interface:
   display_name: "Alaa Low Noise"
-  short_description: "Context-safe Codex execution with compact output"
-  default_prompt: "Use $alaa-low-noise to follow its workflow for context-safe codex execution with compact output."
-
-policy:
-  allow_implicit_invocation: false
+  short_description: "Suppress terminal noise without hiding real work"
+  default_prompt: "Use $alaa-low-noise to keep a complex Codex run quiet, bounded, and fully reviewable."

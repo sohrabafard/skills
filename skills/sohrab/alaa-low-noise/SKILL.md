@@ -1,233 +1,98 @@
 ---
 name: alaa-low-noise
-description: "Use when Codex work risks context bloat or terminal spam: repo-wide search, many files, large logs or diffs, long-running CLI/App sessions, or tasks that should externalize bulky transient state to repo-local files while preserving normal Git diffs and Codex app review visibility."
+description: Use this companion skill when Codex work in the CLI, IDE extension, or Codex app risks wasting context or terminal budget through broad search, repeated file dumps, long logs, large diffs, manual status chatter, or long-running sessions. It keeps the run quiet and reviewable by favoring targeted search, bounded reads, repo-local artifacts for bulky transient state, and concise reporting while preserving normal repository edits and Git-based review visibility. Do not use it for tiny tasks, when the user explicitly wants raw full output, or as a substitute for domain skills or `alaa-workflow` planning.
 ---
 
+# Alaa Low Noise
 
+This skill enforces output discipline, not effort reduction.
 
+It is a companion skill. It does not own architecture, stack decisions, or durable workflow planning.
 
-# Purpose
-Keep Codex CLI and Codex app execution complete, correct, and reviewable while minimizing terminal noise and context waste.
+## Core contract
 
-This skill is about low output, not low effort:
-- still gather enough context
-- still implement the real fix
-- still validate when validation is required
-- still preserve user visibility into the final code diff
+- Complete the real task. Suppress output, not diligence.
+- Keep the repository as the source of truth. Final implementation must land in normal repo files.
+- Prefer targeted evidence over raw dumps.
+- Externalize bulky transient state only when it improves continuity or inspection.
+- Obey explicit user requests for full raw output even when it is noisy.
 
-Use it to reduce chatter, repeated dumps, and context-window blowups without weakening the agent.
+## Use this skill when
 
-# Design targets
-This skill is intentionally aligned with modern Codex guidance:
-- keep the skill focused on one job
-- prefer imperative instructions over bulky embedded references
-- use progressive disclosure: keep the live context lean and move bulky transient state to files only when useful
-- prefer dedicated tools over raw shell when the harness provides them
-- batch coherent edits instead of repeated micro-edits
-- preserve normal Git-based review flows in Codex app and related tools
+- Search or read scope is broad.
+- Logs, validation output, or generated inventories may be large.
+- The final diff may be large enough that pasting it would waste context.
+- The session is long enough that repeated narration would become noise.
+- PowerShell or shell quoting and output habits are likely to create avoidable spam.
+- Subagents or parallel lanes would otherwise flood the parent thread with discovery output.
 
-# When to use
-Use this skill when one or more of these are true:
-- the task spans many files or a large repository area
-- you need repo-wide search, inventory, or pattern audits
-- logs, diffs, or command output may be large
-- the task is long-running and needs intermediate notes, inventories, or captured output
-- you are working in PowerShell or another shell where noisy output and quoting mistakes are easy to trigger
-- context pressure is already visible through repeated file dumps, repeated diffs, or repeated status chatter
+## Do not use this skill when
 
-## When NOT to use
-Do not use this skill when:
-- the task is tiny and ordinary output will already be compact
-- the user explicitly asks for full raw logs, full diffs, or full file contents
-- the main task is vendor-source forensics where raw large excerpts are the deliverable
+- The task is tiny and ordinary output is already naturally compact.
+- Raw logs, a full diff, or full file contents are the actual deliverable.
+- A narrow domain skill can handle the task directly without notable output risk.
 
-# Instruction precedence
-If instructions conflict, follow this order:
-1. explicit user instructions for the current task
-2. repo-local `AGENTS.md`
-3. this skill
-4. general best practices
+## Operating rules
 
-If a higher-precedence instruction requires more output, do that work and keep the rest of the flow as low-noise as possible.
+### 1) Search first, read surgically
 
-# Core operating model
-## 1) Low-noise means low-output, not low-work
-Never use this skill as a reason to:
-- skip root-cause analysis
-- skip relevant files
-- skip validation that a higher-precedence rule requires
-- hide blockers, risks, or behavior changes
+- Search before full-file reads.
+- Prefer bounded excerpts around matches.
+- Read the full file privately only when needed for a safe edit.
+- Do not re-open the same file without a new reason.
 
-The goal is to reduce what gets printed, not reduce what gets done.
+### 2) Keep commentary sparse
 
-## 2) Search first, read surgically
-Prefer this discovery sequence:
-1. locate with search
-2. inspect only the relevant excerpts
-3. read the full file privately only when needed for a safe edit
-4. summarize what matters instead of dumping what you read
+- Do not narrate every command, search, or tiny edit.
+- Do not emit ritualized proof-of-work text.
+- Surface only milestone-level updates, blockers, scope changes, validation outcomes, and artifact paths.
+- If the surface already provides commentary or reasoning summaries, do not duplicate them with extra manual chatter unless the user asked.
 
-Preferred patterns:
-- use `rg` or equivalent fast search first
-- request bounded excerpts around matches
-- avoid opening unrelated files "just in case"
-- avoid re-reading the same file repeatedly without new information
+### 3) Prefer repo-local artifacts for bulky transient state
 
-## 3) Externalize bulky transient state to repo-local files when useful
-If the task produces large intermediate artifacts, do not stream them into the terminal by default.
+- Use existing repo conventions first.
+- If `$alaa-workflow` is active, inherit its artifact family and naming rules instead of inventing new ones.
+- Otherwise prefer existing repo-local scratch paths such as `artifacts/` or `reports/`.
+- Never hide the real implementation in OS temp files, shell history, or off-repo notes.
+- Remove throwaway artifacts before finishing if they have no lasting value and repo policy allows cleanup.
 
-Examples:
-- large inventories
-- long test or build logs
-- migration or refactor plans
-- captured diagnostics
-- structured state needed across a long task
+### 4) Preserve reviewability
 
-Preferred approach:
-- write bulky transient state to a repo-local path
-- print only the path plus a short summary
-- keep the artifact scoped and clearly named
-- use existing repo conventions first
+- Prefer changed-file lists, concise diff stats, or file-local diffs over repo-wide dumps.
+- Do not paste giant unified diffs into chat unless the user asked for them.
+- Keep the final answer focused on what changed, why it changed, what was validated, and where any saved artifacts live.
 
-Good repo-local locations when the repo already uses them:
-- the repo-level docs/_agent_plans/ directory for task plans
-- the repo-level docs/agents/ directory for durable continuation state
-- the repo-level .codex/state/ directory for machine-oriented transient state
-- `reports/` or `artifacts/` for captured logs or inventories
+### 5) Bound shell output
 
-If the repo has no convention, choose a small repo-local scratch location instead of OS temp for any artifact the user may need to inspect.
+- Avoid unbounded `cat`, `type`, `Get-Content`, folder trees, or generated manifest dumps.
+- Redirect long validation output to repo-local files and summarize only the meaningful lines.
+- Prefer dedicated tools over raw shell whenever the harness provides them.
+- Batch independent searches or reads in parallel when the environment supports it.
 
-## 4) Preserve Git diff and Codex app review behavior
-Codex app review is based on repository Git state, not just the assistant's narration.
+### 6) Stay companion-oriented
 
-Because of that, never use low-noise tactics that hide the real work from the repo diff.
+- Combine this skill with domain skills for implementation rules.
+- Combine this skill with `$alaa-workflow` for long-horizon plans, resume state, handoffs, or delegated execution.
+- Do not invent a second planning system when workflow artifacts already exist.
 
-Required invariants:
-- final deliverable changes must land in normal repository files
-- do not keep the real implementation only in shell history, clipboard steps, or OS temp files
-- do not bypass normal repo edits just to keep the terminal quiet
-- if you create analysis or helper artifacts that matter to the user, keep them repo-local so they remain inspectable
-- if a transient artifact has no lasting value and repo policy allows cleanup, remove it before finishing
+## Subagent Strategy
 
-Low-noise should make review cleaner, not make review impossible.
+If subagents are used:
 
-## 5) Prefer summary views over raw dumps
-Prefer:
-- counts
-- short file lists
-- narrow excerpts
-- targeted diffs
-- concise validation summaries
+- The parent owns concise synthesis and the final report.
+- Discovery-heavy lanes should return findings through owned artifacts or tight summaries, not raw logs.
+- Child lanes should avoid spamming shared coordination files or repeated terminal narration.
+- Prefer read-only explorer lanes for broad search and reserve writer lanes for disjoint edits.
 
-Avoid by default:
-- full file dumps
-- full folder dumps
-- giant unified diffs
-- repeated status restatements
-- repeated command output pasted again after it was already seen
+## Reference navigation
 
-## 6) Batch coherent work
-Read enough context to make a coherent edit, then apply the edit cleanly.
+- Read `references/noise-control-patterns.md` for concrete Bash and PowerShell patterns for search, excerpting, diffing, and log capture.
+- Read `references/workflow-integration.md` only when pairing with `$alaa-workflow`, repo-local state artifacts, or delegated lanes.
 
-Prefer:
-- one bounded search pass
-- one focused read pass
-- one coherent edit pass
-- one targeted validation pass when needed
+## Quick self-check
 
-Avoid thrashing:
-- repeated tiny edits to the same area
-- repeated re-reading of the same file without new evidence
-- printing a preamble before every small tool call
-
-# Tooling rules
-## Prefer dedicated tools when available
-If the harness offers dedicated read/search/edit/diff tools, use them before falling back to raw shell.
-
-Use shell for:
-- commands that genuinely require the shell
-- validation flows that are simpler or more reliable in shell
-- file moves or environment operations that dedicated tools do not cover
-
-## Keep shell output bounded
-Forbidden by default:
-- unbounded `cat`
-- unbounded `Get-Content`
-- unbounded `type`
-- printing `node_modules`, build outputs, or coverage trees unless explicitly required
-
-Preferred patterns:
-- locate with `rg -n`
-- then request a narrow excerpt
-- use summary diffs first, detailed diffs only for the specific file that matters
-
-## Parallelize independent inspection
-When the harness supports parallel tool calls, use them for independent searches or reads.
-
-Examples:
-- searching several patterns at once
-- reading several disjoint files at once
-- collecting line counts and file locations together
-
-Do not parallelize overlapping writes.
-
-# Reading pattern
-Use this order whenever possible:
-1. `rg -n "pattern" <paths>`
-2. bounded excerpt around the match
-3. full-file private read only if required to edit safely
-4. concise summary of findings
-
-If you must inspect a large config or generated manifest, capture only the sections relevant to the decision you need to make.
-
-# Editing pattern
-- prefer targeted edits over whole-file rewrites
-- preserve existing formatting and import order unless correctness requires change
-- avoid broad cleanup or reformatting while using this skill
-- keep the write set as small as correctness allows
-- add brief comments only when they materially improve readability
-
-# Validation pattern
-When validation is required or useful:
-- start with the smallest meaningful check
-- if output is long, redirect or capture it to a repo-local file
-- report the command, the outcome, and the path to any saved log
-- surface only the key failures or warnings in the terminal summary
-
-Examples:
-- store a long build log under `artifacts/` and summarize the failing step
-- save a repo-wide audit under `reports/` and report the top findings only
-
-# Reporting pattern
-Keep updates and final reporting high-signal.
-
-Prefer reporting:
-- what changed
-- why it changed
-- what was validated
-- what remains blocked or risky
-- where large supporting artifacts were written
-
-Avoid reporting:
-- every command verbatim
-- full raw logs unless asked
-- long restatements of unchanged context
-
-# Anti-patterns
-Do not:
-- prove you read a file by dumping it
-- paste a repo-wide diff when a file list or targeted diff is enough
-- print large generated folders by default
-- create huge scratch artifacts outside the repo when the user may need to inspect them
-- hide final work in temporary files that never become repo edits
-- confuse low-noise with low-transparency
-- silently skip validation just because the logs are large
-
-# Quick checklist
-- I kept the task complete, not partial.
-- I searched before reading.
-- I bounded reads and diffs.
-- I externalized bulky transient state only when it helped.
-- I kept user-relevant artifacts repo-local.
-- I preserved normal Git diff and Codex app review visibility.
-- I summarized the important evidence instead of dumping it.
+- I reduced output, not diligence.
+- I searched before reading deeply.
+- Bulky transient output lives in repo-local artifacts only when it helps.
+- Final edits remain visible in normal repo diffs.
+- I did not duplicate workflow ownership or domain-skill ownership.
