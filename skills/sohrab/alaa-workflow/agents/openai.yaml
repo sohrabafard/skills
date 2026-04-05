@@ -1,7 +1,4 @@
 interface:
   display_name: "Alaa Workflow"
-  short_description: "Phase-based workflow for long tasks"
-  default_prompt: "Use $alaa-workflow to follow its workflow for phase-based workflow for long tasks."
-
-policy:
-  allow_implicit_invocation: false
+  short_description: "Durable workflow for long tasks"
+  default_prompt: "Use $alaa-workflow to plan, execute, resume, or delegate a long repository task with durable artifacts and safe sequencing."

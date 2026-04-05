@@ -1,0 +1,42 @@
+{
+  "task_id": "{{task_id}}",
+  "task": "{{task}}",
+  "mode": "{{mode}}",
+  "status": "planning",
+  "created_at": "{{created_at}}",
+  "updated_at": "{{created_at}}",
+  "plan_path": "{{plan_path}}",
+  "state_path": "{{state_path}}",
+  "parent_task_id": {{parent_task_id_json}},
+  "parent_plan_path": {{parent_plan_path_json}},
+  "lane": {{lane_json}},
+  "current_phase": null,
+  "completed_phases": [],
+  "pending_phases": [],
+  "frozen_decisions": [],
+  "constraints": [],
+  "lanes": {
+    {{lane_key_json}}: {
+      "status": "active",
+      "scope": {{lane_scope_json}},
+      "write_scope": [
+        "{{plan_path}}",
+        "{{state_path}}"
+      ],
+      "last_update": "{{created_at}}",
+      "next_actions": []
+    }
+  },
+  "touched_files": [],
+  "validation": {
+    "commands_required": [],
+    "last_run": [],
+    "pending": []
+  },
+  "risks": [],
+  "handoff": {
+    "summary": "",
+    "next_actions": [],
+    "blockers": []
+  }
+}

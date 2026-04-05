@@ -1,28 +1,35 @@
 # Alaa Workflow Topic Map
 
-Use this file to choose the smallest relevant section in `full-guide.md`.
+Read only the smallest section you need.
 
-## Covered sections
+## Fast routing
 
-- `# Purpose`
-- `# When to use`
-- `# Instruction precedence (mandatory)`
-- `# Repo guardrails (mandatory)`
-- `## Before you change anything`
-- `## Implementation rules`
-- `# Workflow (follow in order)`
-- `## 0) Establish a Plan (mandatory)`
-- `### Default mode (preferred)`
-- `### Constrained mode (exception; still required if default mode is forbidden)`
-- `## 1) Phase design rules`
-- `## 1.1) Delegated execution mode (optional; only with explicit user authorization)`
-- `## 2) Minimal terminal verbosity`
-- `## 3) User-changing-files safety`
-- `## 3.1) Shared state safe-write protocol (mandatory in multi-agent runs)`
-- `## 4) End-of-task report (mandatory)`
-- `# Anti-patterns`
+- Need trigger boundaries or ownership?
+  - Read `full-guide.md#trigger-boundaries-and-ownership`
+- Need path selection, file naming, or artifact continuity?
+  - Read `full-guide.md#artifact-path-and-naming-rules`
+- Need a deep implementation-ready plan?
+  - Read `full-guide.md#plan-mode`
+  - Open `../assets/plan-template.md`
+- Need execution discipline during a long run?
+  - Read `full-guide.md#execution-mode`
+- Need resume, handoff, or compaction-safe memory?
+  - Read `full-guide.md#state-files`
+  - Open `../assets/state-template.json`
+- Need subagents or parallel work?
+  - Read `full-guide.md#delegated-execution-and-subagents`
+  - Open `../assets/lane-plan-template.md`
+- Need stack-specific pairing?
+  - Read `companion-routing.md`
+- Need PowerShell-safe commands or Windows-specific notes?
+  - Read `windows-powershell.md`
+- Need deterministic scaffolding?
+  - Run `../scripts/init_workflow_files.py --help`
+- Need artifact validation?
+  - Run `../scripts/validate_workflow_files.py --help`
 
-## Working rule
+## Reading rule
 
-- Read only the sections you need from `full-guide.md`.
-- Keep this topic map small and update it when major sections are added or renamed.
+- Start with the relevant section only.
+- Do not read the entire guide unless the task actually needs broad coordination rules.
+- Prefer assets and scripts when you need structure, not prose.
