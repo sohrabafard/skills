@@ -1,7 +1,7 @@
 ---
 name: golang-stretchr-testify
 description: "Comprehensive guide to stretchr/testify for Golang testing. Covers assert, require, mock, and suite packages in depth. Use whenever writing tests with testify, creating mocks, setting up test suites, or choosing between assert and require. Essential for testify assertions, mock expectations, argument matchers, call verification, suite lifecycle, and advanced patterns like Eventually, JSONEq, and custom matchers. Trigger on any Go test file importing testify."
-user-invocable: false
+user-invocable: true
 license: MIT
 compatibility: Designed for Claude Code or similar AI coding agents, and for projects using Golang.
 metadata:
@@ -18,6 +18,7 @@ metadata:
       - kind: go
         package: github.com/cweill/gotests/...@latest
         bins: [gotests]
+    skill-library-version: "1.11.1"
 allowed-tools: Read Edit Write Glob Grep Bash(go:*) Bash(golangci-lint:*) Bash(git:*) Agent WebFetch mcp__context7__resolve-library-id mcp__context7__query-docs Bash(gotests:*) AskUserQuestion
 ---
 
