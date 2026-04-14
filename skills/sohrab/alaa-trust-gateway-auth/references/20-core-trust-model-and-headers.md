@@ -1,5 +1,61 @@
 # Compact JWT and header trust model
 
+## Ala end-to-end authn and authz picture
+
+Use this section when an agent needs the whole Ala picture before making auth changes.
+
+Default Ala flow:
+- frontend or public client -> gateway -> backend service
+- gateway -> active request-time checker such as `authz-sidecar` or `entitlement-spoa` -> OpenFGA
+- normalized business change -> `entitlement-api` -> `projector` -> OpenFGA
+
+Core meaning:
+- the gateway owns authentication
+- the active request-time checker owns the fine-grained route decision
+- backend services consume trusted context and enforce business rules inside the service
+- `entitlement-api` owns normalized authorization business truth
+- `projector` writes derived tuples
+- OpenFGA stores derived effective authorization state
+
+## Layer ownership map
+
+### Frontend or public client
+
+- call documented gateway-facing routes only
+- send `Authorization: Bearer ...` to the gateway only
+- never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, or any `X-Authz-*` header
+- never call `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly
+
+### Gateway
+
+- verify the access token
+- sanitize spoofable inbound auth and authz headers
+- inject trusted headers from verified claims
+- derive request-time authorization inputs such as endpoint category
+- call the active request-time checker
+- fail closed on deny or dependency failure
+
+### Active request-time checker
+
+- trust only sanitized gateway context
+- normalize trusted route context when needed
+- map `endpoint_category + target_type` to the final `can_*` permission
+- check OpenFGA with the pinned model
+- return an allow or deny decision plus observability metadata
+
+### Downstream backend service
+
+- trust only sanitized gateway context
+- normalize trusted headers once near ingress
+- do business authorization after identity normalization
+- never treat `X-Authz-*` decision metadata as a credential
+
+### Entitlement control plane
+
+- `entitlement-api` owns normalized authorization aggregates
+- `projector` is the only intended tuple writer
+- OpenFGA is derived authorization state, not the business source of truth
+
 ## What the gateway verifies
 For protected routes, the current gateway (HAProxy) logic verifies these checks in order:
 1. A bearer token exists.

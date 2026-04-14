@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Source-of-truth for Ala gateway auth trust. Use when gateway headers, JWT-derived identity, compact claim mapping, tenant propagation, or downstream trust semantics change. Do not use it as a generic auth skill outside the Ala gateway boundary."
+description: "Source-of-truth for Ala gateway authentication trust and trusted request context. Use when gateway headers, JWT-derived identity, compact claim mapping, project propagation, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, or downstream trust semantics behind the Ala gateway change. Do not use it as a generic auth skill outside the Ala gateway boundary."
 ---
 
 
@@ -10,7 +10,14 @@ description: "Source-of-truth for Ala gateway auth trust. Use when gateway heade
 
 ## Purpose
 
-Use this skill when a task touches the Ala gateway trust boundary, trusted headers, compact JWT-derived identity, tenant context propagation, or auth-service route shape.
+Use this skill when a task touches the Ala gateway trust boundary, trusted headers, compact JWT-derived identity, project context propagation, request-time authorization at the gateway boundary, or auth-service route shape.
+
+Use it to keep one shared picture of the Ala auth path:
+- frontend calls the gateway
+- gateway owns authentication and trusted header injection
+- the active request-time checker such as `authz-sidecar` or `entitlement-spoa` owns the fine-grained route decision
+- downstream backends consume normalized trusted context and still own business authorization inside the service
+- `entitlement-api`, `projector`, and OpenFGA together provide the fine-grained authorization state; they do not replace gateway authentication
 
 Keep this top-level file small. Load the references for the full trust model, route rules, service expectations, and error contracts.
 
@@ -30,9 +37,10 @@ Keep this top-level file small. Load the references for the full trust model, ro
 
 1. Read the repo-local `AGENTS.md`.
 2. Read `references/00-topic-map.md`.
-3. Identify whether the task is mainly about routing, header trust, auth-service contract, downstream service behavior, or error semantics.
-4. Load only the matching reference file first.
-5. Read the required companion skills before suggesting implementation changes outside this skill's trust-boundary ownership.
+3. Identify the repository role first: frontend, gateway, backend behind gateway, or authz runtime.
+4. Identify whether the task is mainly about routing, header trust, request-time authorization, auth-service contract, downstream service behavior, or error semantics.
+5. Load only the matching reference file first.
+6. Read the required companion skills before suggesting implementation changes outside this skill's trust-boundary ownership.
 
 ## Compact claim map
 
@@ -123,11 +131,11 @@ Rules:
   - `references/00-topic-map.md`
 - Source priority, rename rules, public vs local routes, and routing order:
   - `references/10-source-priority-and-routing.md`
-- What the gateway verifies, trusted header rules, and tenant or user context:
+- What the gateway verifies, trusted header rules, Ala layer ownership, and tenant or user context:
   - `references/20-core-trust-model-and-headers.md`
 - Auth-service v3 endpoint contract, client flow, and route families:
   - `references/30-auth-service-v3-and-route-shapes.md`
-- Downstream service requirements, policy flow, compact user projection, and permission bitmap:
+- Downstream service requirements, request-time versus business authorization, compact user projection, and permission bitmap:
   - `references/40-downstream-service-rules.md`
 - Error contracts, implementation checklist, review checklist, related skills, and anti-patterns:
   - `references/50-error-contract-checklists-and-anti-patterns.md`

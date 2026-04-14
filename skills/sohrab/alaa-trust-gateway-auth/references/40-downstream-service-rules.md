@@ -1,5 +1,21 @@
 # What downstream services must do
 
+## How this fits with entitlement-platform
+
+- authentication still belongs to the gateway
+- route-level fine-grained authorization belongs to the active request-time checker such as `authz-sidecar` or `entitlement-spoa`
+- normalized authorization business truth belongs to `entitlement-api`
+- derived tuple writes belong to `projector`
+- OpenFGA stores derived effective authorization state
+
+For a normal backend behind the gateway, the practical rule is:
+- trust the gateway authentication result
+- trust the gateway allow or deny decision for the route
+- normalize trusted identity context once
+- then enforce service-local business authorization and data-safety rules inside the backend
+
+Do not make a normal downstream service behave like the gateway, the request-time checker, or the entitlement control plane.
+
 ## Network and trust boundary rules
 
 - A service may trust gateway auth headers only if the request came through the trusted edge and sanitized gateway path.
@@ -10,10 +26,13 @@
 ## Authentication vs authorization
 
 - Treat the gateway as the authentication and context-propagation layer.
-- Treat each downstream service as the authorization layer for business actions.
+- Treat the active request-time checker as the route-level fine-grained authorization layer.
+- Treat each downstream service as the business-authorization layer for business actions after trusted context is normalized.
 - A verified token plus injected headers does not mean the user may perform the requested operation.
 - Legacy migration rule: do not copy older per-request auth-service callback patterns into new gateway-backed services.
 - If a legacy `user-token` path must remain temporarily during migration, classify it as a service-specific compatibility path only. Do not document it as the canonical platform auth contract and do not let it weaken gateway-trusted header rules for normal service routes.
+- Do not treat allow-side `X-Authz-*` decision metadata as a second authorization system.
+- Do not call OpenFGA directly from a normal downstream service unless that repository explicitly owns request-time authorization runtime behavior.
 
 ## Laravel Gate and policy flow
 

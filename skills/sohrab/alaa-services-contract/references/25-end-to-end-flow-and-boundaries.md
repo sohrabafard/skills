@@ -6,14 +6,32 @@ Use this file when the task is about how the Ala platform fits together end-to-e
 
 Treat the default Ala flow like this:
 - public client or frontend -> gateway -> backend service
+- gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses entitlement-platform authorization
 - backend service -> backend service only for internal workloads that truly require a synchronous hop
 - backend service -> async infrastructure for queue, event, or job delivery when appropriate
+- normalized business change -> entitlement control plane -> projector -> OpenFGA for derived fine-grained authorization state
 
 Rules:
 - do not let services recreate browser-facing trust assumptions on internal hops
 - keep route ownership clear so frontend, gateway, and backend work stay aligned
 - prefer direct ownership boundaries over convenience coupling across service internals
 - backend services may keep local user projections or immutable request snapshots, but auth-service remains the source of truth for the latest identity state
+
+## How entitlement-platform fits into the Ala stack
+
+- entitlement-platform does not own authentication; the gateway does
+- entitlement-platform may own request-time fine-grained route authorization through `authz-sidecar` or `entitlement-spoa`
+- entitlement-platform keeps normalized authorization business truth in `entitlement-api`
+- entitlement-platform writes derived tuples through `projector`
+- OpenFGA stores derived effective authorization state
+
+For a normal backend behind gateway, the practical rule is:
+- trust the gateway authentication result
+- trust the gateway allow or deny result for the route
+- normalize trusted identity context once near ingress
+- still enforce business authorization, validation, and data-safety rules inside the backend
+
+Do not make a normal backend behave like the gateway, the request-time checker, or the entitlement control plane unless the repository explicitly owns that role.
 
 ## Frontend and gateway orientation
 
@@ -56,6 +74,30 @@ Rules:
 - if a frontend or service needs domain behavior from another service, prefer that service's public API or events over direct table coupling
 - downstream services may consume compact trusted name and location headers, but they must not fabricate display-name fields from compact ids unless another explicit source-of-truth contract owns that lookup
 - backend services may keep local user projections or immutable request snapshots, but auth-service remains the source of truth for the latest identity state
+
+## Repo-role reminders
+
+### Frontend repository
+
+- call gateway-facing public routes only
+- never generate trusted internal headers
+- never call `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly
+
+### Gateway repository
+
+- own authentication, spoofing defense, trusted-header injection, and request-time authorization inputs
+- keep request-time authorization fail-closed
+
+### Backend service behind gateway
+
+- consume normalized trusted context
+- keep controllers and policies away from raw header parsing
+- do not use allow-side `X-Authz-*` metadata as authorization input
+
+### Entitlement-platform repository
+
+- own fine-grained authorization contracts, request-time checker behavior, and tuple projection rules
+- do not turn OpenFGA into business truth
 
 ## Why this file exists
 

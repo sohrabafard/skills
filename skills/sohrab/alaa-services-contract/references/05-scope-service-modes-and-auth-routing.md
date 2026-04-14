@@ -12,6 +12,7 @@ This skill is intentionally Ala-specific. The portability requirement for this s
 
 Use it when:
 - creating or changing `auth`, `comment`, `ticket`, `vod`, `wa`, or another Ala backend service
+- explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
 - standardizing `/api/health`
 - standardizing `/api/ready`
 - fixing exact readiness payloads and check naming
@@ -22,6 +23,21 @@ Use it when:
 - aligning Laravel Resource-first `/api/*` success responses
 - helping a new Ala service understand the current service landscape, ownership boundaries, and expected interaction model before implementation
 - forcing cross-service consistency where agents would otherwise improvise
+
+## Platform ownership picture
+
+Use this picture before code changes when a repo needs platform orientation.
+
+Default Ala flow:
+- frontend or public client -> gateway -> backend service
+- gateway may call a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa`
+- entitlement-platform keeps fine-grained authorization state through `entitlement-api`, `projector`, and OpenFGA
+
+Plain meaning:
+- the gateway owns authentication and trusted header injection
+- entitlement-platform owns route-level fine-grained authorization state and runtime checks when those checks are enabled
+- a normal backend service behind the gateway still owns request normalization, business authorization, response shaping, and observability inside the service
+- frontend code must use gateway-facing routes and must never generate trusted internal headers
 
 ## Service modes
 

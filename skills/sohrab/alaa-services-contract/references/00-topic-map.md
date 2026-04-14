@@ -11,7 +11,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, or observability event naming.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
 - `Mode A+ - Platform flow and onboarding view`
-  - Use when the task is about client -> gateway -> service flow, frontend or gateway orientation, internal HTTP hops, async boundaries, or which layer owns what.
+  - Use when the task is about client -> gateway -> service flow, frontend or gateway orientation, internal HTTP hops, async boundaries, which layer owns what, or how entitlement-platform fits into the Ala service picture.
   - Read `25-end-to-end-flow-and-boundaries.md` after the core contract.
 - `Mode A++ - Deployment and runtime contract`
   - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, or SQLite fast-test support.
@@ -62,6 +62,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - SQLite fast-test support expectations
 - `25-end-to-end-flow-and-boundaries.md`
   - client -> gateway -> service flow
+  - relation between entitlement-platform and normal backend services
   - frontend and gateway orientation
   - operational caller expectations
   - internal HTTP and async-boundary discipline
@@ -69,6 +70,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - `ResolveUserMiddleware`
   - trusted headers
   - actor normalization
+  - route-level authz versus backend business authorization
   - auth synchronization
   - Laravel Resource-first `/api/*` responses
 - `40-apply-checklist-and-anti-patterns.md`

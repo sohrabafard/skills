@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared-versus-external Postgres mode selection, hard shared-infra reuse, canonical service DNS aliases, auth key ownership, registry usage, and fast-test SQLite support. Use when consistency across Ala services matters more than local preference."
+description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, backend behavior behind the Ala gateway, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared-versus-external Postgres mode selection, hard shared-infra reuse, canonical service DNS aliases, auth key ownership, registry usage, and fast-test SQLite support. Use when consistency across Ala services matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -11,15 +11,22 @@ This skill is intentionally Ala-specific. It exists to keep Ala services aligned
 
 Keep this top-level file small. Read the reference files for the exact contract and apply steps.
 
+This skill explains how a normal Ala backend fits into the larger platform:
+- frontend calls the gateway
+- gateway owns authentication and trusted header injection
+- entitlement-platform may enforce route-level fine-grained authorization at the gateway boundary
+- the backend still owns normalized request handling, business authorization, response contracts, and observability
+
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.
 2. Read `references/00-topic-map.md`.
-3. Select the service mode first: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
-4. Read the smallest relevant reference file first.
-5. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
-6. Load the required companion skills before implementation work outside this skill's ownership.
-7. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
+3. Select the repository role first: frontend-facing backend behind gateway, internal backend, auth-boundary service, or authz-runtime or control-plane service.
+4. Then select the service mode: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
+5. Read the smallest relevant reference file first.
+6. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
+7. Load the required companion skills before implementation work outside this skill's ownership.
+8. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
 
 ## Hard contract rule
 
@@ -73,7 +80,7 @@ Load these companion skills when their concern is in scope:
   - `references/25-end-to-end-flow-and-boundaries.md`
 - exact observability headers, `traceparent`, request logs, event names, and `RequestObservabilityMiddleware`:
   - `references/20-operational-and-observability-contract.md`
-- exact trusted-ingress rules, Laravel response boundaries, and `ResolveUserMiddleware`:
+- exact trusted-ingress rules, Laravel response boundaries, `ResolveUserMiddleware`, and how backend business auth fits after gateway allow:
   - `references/30-trusted-ingress-and-laravel-contract.md`
 - apply checklist, review checklist, and anti-patterns:
   - `references/40-apply-checklist-and-anti-patterns.md`

@@ -13,6 +13,62 @@ Use it for:
 - changing gateway config, ingress behavior, trusted-proxy settings, or service exposure
 - reviewing whether a service is safe to expose directly or must stay behind the gateway
 
+## Ala end-to-end authn and authz picture
+
+Use this section when the task spans frontend, gateway, downstream service, or entitlement-platform behavior and one shared platform picture is required before implementation.
+
+Default Ala flow:
+- frontend or public client -> gateway -> backend service
+- gateway -> active request-time checker such as `authz-sidecar` or `entitlement-spoa` -> OpenFGA
+- normalized business change -> `entitlement-api` -> `projector` -> OpenFGA
+
+Plain meaning:
+- the gateway owns authentication
+- the active request-time checker owns the fine-grained route decision
+- downstream backends consume normalized trusted context and still own business authorization inside the service
+- `entitlement-api` owns normalized authorization business truth
+- `projector` writes derived tuples
+- OpenFGA stores derived effective authorization state
+
+## Layer ownership map
+
+### Frontend or public client
+
+- call documented gateway-facing routes only
+- send `Authorization: Bearer ...` only to the gateway
+- never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, or `X-Authz-*`
+- never call `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly
+
+### Gateway
+
+- verify the access token
+- sanitize spoofable inbound auth and authz headers
+- inject trusted headers from verified claims
+- derive request-time authorization inputs such as endpoint category
+- call the active request-time checker
+- fail closed on deny or dependency failure
+
+### Active request-time checker
+
+- trust only sanitized gateway context
+- normalize trusted route context when needed
+- map `endpoint_category + target_type` to the final `can_*` permission
+- check OpenFGA with the pinned model
+- return an allow or deny decision plus observability metadata
+
+### Downstream backend service
+
+- trust only sanitized gateway context
+- normalize trusted headers once near ingress
+- do business authorization after identity normalization
+- never treat `X-Authz-*` decision metadata as a credential
+
+### Entitlement control plane
+
+- `entitlement-api` owns normalized authorization aggregates
+- `projector` is the only intended tuple writer
+- OpenFGA is derived authorization state, not the business source of truth
+
 ## Companion skill routing
 
 Read this skill first for any gateway-backed auth, trusted-header, tenant-context, or downstream trust-boundary task.
@@ -171,7 +227,8 @@ Compact claim meaning table:
 
 - The gateway is the authentication boundary for protected HTTP routes.
 - The gateway verifies the Bearer JWT and then injects trusted request headers for downstream services.
-- Downstream services must still do authorization and tenant-safe data access.
+- The active request-time checker performs the route-level fine-grained authorization decision.
+- Downstream services must still do business authorization and tenant-safe data access after trusted context normalization.
 - Client-supplied internal auth headers are never trusted.
 - Tenant context is derived from the verified token, not from request body, query string, route params, or client-supplied headers.
 - Naming rule: `tenant_id`, `tenant_public_id`, `project_id`, and `pid` refer to the same tenant-boundary concept in the current platform, but they belong to different layers.
@@ -507,10 +564,13 @@ What not to do:
 ### Authentication vs authorization
 
 - Treat the gateway as the authentication and context-propagation layer.
-- Treat each downstream service as the authorization layer for business actions.
+- Treat the active request-time checker as the route-level fine-grained authorization layer.
+- Treat each downstream service as the business-authorization layer for business actions after trusted context is normalized.
 - A verified token plus injected headers does not mean the user may perform the requested operation.
 - Legacy migration rule: do not copy older per-request auth-service callback patterns into new gateway-backed services.
 - If a legacy `user-token` path must remain temporarily during migration, classify it as a service-specific compatibility path only. Do not document it as the canonical platform auth contract and do not let it weaken gateway-trusted header rules for normal service routes.
+- Do not treat allow-side `X-Authz-*` decision metadata as a second authorization system.
+- Do not call OpenFGA directly from a normal downstream service unless that repository explicitly owns request-time authorization runtime behavior.
 
 ### Laravel Gate and policy flow
 

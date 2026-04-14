@@ -28,6 +28,18 @@ Use these exact header names unless a temporary migration is explicitly document
 - `X-Location-Shobe`
 - `X-Location-School`
 
+## How trusted ingress relates to entitlement-platform
+
+- the gateway owns authentication and trusted header injection
+- a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` may already have enforced the route-level fine-grained decision
+- the backend still owns normalized request handling and business authorization inside the service
+
+Rules:
+- trust the gateway allow or deny result for the route
+- do not use allow-side `X-Authz-*` metadata as a credential
+- do not bypass the shared platform contract with ad hoc direct OpenFGA checks from a normal downstream backend
+- keep service-local policies and Gates focused on business rules after trusted context normalization
+
 ## `ResolveUserMiddleware` contract
 
 Responsibility:

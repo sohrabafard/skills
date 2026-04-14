@@ -6,6 +6,8 @@ When needed, jump to the matching section in `./full-guide.md`.
 ## Covered sections
 
 - `## Purpose and use`
+- `## Ala end-to-end authn and authz picture`
+- `## Layer ownership map`
 - `## Companion skill routing`
 - `## Source priority and execution order`
 - `## Compact claim and header contract`
@@ -17,11 +19,11 @@ When needed, jump to the matching section in `./full-guide.md`.
 
 - Routing order, rename rules, public versus service-local routes:
   - `10-source-priority-and-routing.md`
-- Gateway verification, trusted header rules, tenant and user context:
+- Gateway verification, trusted header rules, Ala layer ownership, and tenant and user context:
   - `20-core-trust-model-and-headers.md`
 - Auth-service v3 endpoint contract and current client flow:
   - `30-auth-service-v3-and-route-shapes.md`
-- Downstream normalization, authorization, and permission bitmap rules:
+- Downstream normalization, request-time versus business authorization, and permission bitmap rules:
   - `40-downstream-service-rules.md`
 - Error contract, implementation checklist, review checklist, and anti-patterns:
   - `50-error-contract-checklists-and-anti-patterns.md`
@@ -36,6 +38,8 @@ When needed, jump to the matching section in `./full-guide.md`.
 
 - JWT compact claims or claim-to-header mapping
 - trusted gateway header injection and spoofing defense
+- frontend versus gateway versus backend ownership for auth context
+- request-time authorization at the gateway boundary and how it relates to entitlement-platform
 - public versus service-local route shape behind the gateway
 - downstream request-scoped identity normalization
 - permission bitmap decoding, bit ordering, or service-local permission maps
