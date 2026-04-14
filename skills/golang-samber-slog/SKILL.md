@@ -1,7 +1,7 @@
 ---
 name: golang-samber-slog
 description: "Structured logging extensions for Golang using samber/slog-**** packages — multi-handler pipelines (slog-multi), log sampling (slog-sampling), attribute formatting (slog-formatter), HTTP middleware (slog-fiber, slog-gin, slog-chi, slog-echo), and backend routing (slog-datadog, slog-sentry, slog-loki, slog-syslog, slog-logstash, slog-graylog...). Apply when using or adopting slog, or when the codebase already imports any github.com/samber/slog-* package."
-user-invocable: false
+user-invocable: true
 license: MIT
 compatibility: Designed for Claude Code or similar AI coding agents, and for projects using Golang.
 metadata:
@@ -14,6 +14,39 @@ metadata:
       bins:
         - go
     install: []
+    skill-library-version:
+      slog-multi: "1.8.0"
+      slog-sampling: "1.6.0"
+      slog-formatter: "1.3.0"
+      slog-fiber: "1.22.1"
+      slog-gin: "1.21.0"
+      slog-chi: "1.19.0"
+      slog-echo: "1.21.0"
+      slog-http: "1.12.0"
+      slog-betterstack: "1.4.4"
+      slog-channel: "1.4.4"
+      slog-datadog: "2.10.4"
+      slog-sentry: "2.10.3"
+      slog-loki: "3.7.2"
+      slog-syslog: "2.5.4"
+      slog-logstash: "2.6.4"
+      slog-graylog: "2.7.5"
+      slog-fluentd: "2.5.4"
+      slog-kafka: "2.6.5"
+      slog-logrus: "2.5.4"
+      slog-zap: "2.6.4"
+      slog-zerolog: "2.9.2"
+      slog-slack: "2.7.5"
+      slog-telegram: "2.4.4"
+      slog-webhook: "2.8.4"
+      slog-mattermost: "2.5.4"
+      slog-microsoft-teams: "2.7.4"
+      slog-nats: "0.4.5"
+      slog-otel: "0.1.0"
+      slog-parquet: "2.5.2"
+      slog-quickwit: "0.3.4"
+      slog-rollbar: "2.7.4"
+      slog-mock: "0.1.0"
 allowed-tools: Read Edit Write Glob Grep Bash(go:*) Bash(golangci-lint:*) Bash(git:*) Agent WebFetch mcp__context7__resolve-library-id mcp__context7__query-docs AskUserQuestion
 ---
 
