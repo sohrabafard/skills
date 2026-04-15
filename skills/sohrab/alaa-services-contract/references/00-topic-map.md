@@ -14,7 +14,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the task is about client -> gateway -> service flow, frontend or gateway orientation, internal HTTP hops, async boundaries, which layer owns what, or how entitlement-platform fits into the Ala service picture.
   - Read `25-end-to-end-flow-and-boundaries.md` after the core contract.
 - `Mode A++ - Deployment and runtime contract`
-  - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, or SQLite fast-test support.
+  - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
   - Read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
 - `Mode B - Laravel backend service`
   - Use when the task is about Laravel API response boundaries, Resources, middleware order, or Laravel-specific route and command expectations.
@@ -53,6 +53,8 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `15-deployment-and-runtime-contract.md`
   - Arvan Kubernetes versus Docker ownership
   - Compose and Swarm mode requirements
+  - shared `service-ci-kit` GitLab CI/CD baseline
+  - thin-wrapper `.gitlab-ci.yml` and shared-versus-local CI ownership
   - shared Docker network and hard shared infra reuse rules
   - shared-versus-external Postgres mode selection
   - duplicate shared-infra prevention and fail-fast behavior

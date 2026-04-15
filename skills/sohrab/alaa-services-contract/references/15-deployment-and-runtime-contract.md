@@ -13,6 +13,17 @@ Rules:
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
 - do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$caas-arvan-kuber`
 
+## GitLab CI/CD baseline contract
+
+Rules:
+- for Ala Laravel backend services that follow the shared `platform-app-php` delivery model, default to the shared `service-ci-kit` project for GitLab CI/CD
+- keep `.gitlab-ci.yml` as a thin include-based wrapper and pin an explicit `SERVICE_CI_KIT_REF`
+- keep shared CI logic in `service-ci-kit`; do not copy shared `ci/scripts/*` trees or local semantic-release helper trees into service repositories
+- keep only service-local CI assets in the app repo, such as `.gitlab-ci.yml`, `.releaserc.json`, `ci/helm/values.app.yaml`, `ci/helm/values.app.ops.yaml`, `ci/helm/values.app.hpa.yaml`, `ci/helm/values.ci.runtime.yaml`, and optional local overlays that the shared kit intentionally consumes
+- when shared CI behavior must change, update `service-ci-kit` first, release a new kit ref, and then bump the pinned ref in service repositories
+- load `$alaa-gitlab-ci-cd` for GitLab authoring, validation, and debugging, but keep the Ala fleet policy in this skill instead of moving it into the generic GitLab skill
+- if a repository cannot use `service-ci-kit`, report the blocker explicitly instead of silently reintroducing a repo-owned pipeline
+
 ## Required deployment modes
 
 Normalized Ala deployment modes:
@@ -180,6 +191,10 @@ Rules:
 Flag a problem when you see:
 - no documented Arvan Kubernetes production path
 - no Compose or no Swarm story and no explicit blocker
+- no shared `service-ci-kit` baseline for an Ala Laravel backend that follows the shared `platform-app-php` delivery model
+- a non-thin `.gitlab-ci.yml` in a service repo that should use the shared kit
+- shared `ci/scripts/*` or local semantic-release helper trees reintroduced into a service repo
+- undocumented divergence from the shared kit baseline
 - no explicit shared-versus-external Postgres mode selection
 - no `alaa-shared-network` use where cross-service Docker routing is required
 - no reuse or bootstrap path for `alaa-shared-infra`

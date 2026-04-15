@@ -13,6 +13,7 @@ This skill is intentionally Ala-specific. The portability requirement for this s
 Use it when:
 - creating or changing `auth`, `comment`, `ticket`, `vod`, `wa`, or another Ala backend service
 - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
+- standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala Laravel backend services
 - standardizing `/api/health`
 - standardizing `/api/ready`
 - fixing exact readiness payloads and check naming
@@ -70,6 +71,19 @@ Read next:
 - `10-core-service-contract.md`
 - `30-trusted-ingress-and-laravel-contract.md`
 
+### Mode A++ - Deployment and runtime contract
+
+Adds:
+- Arvan Kubernetes versus Docker ownership
+- shared `service-ci-kit` GitLab CI/CD baseline for Ala Laravel services
+- thin-wrapper `.gitlab-ci.yml` and shared-versus-local CI ownership
+- shared-versus-external Postgres mode selection
+- canonical shared Docker network, shared infra, DNS alias, registry, and runtime-secret rules
+
+Read next:
+- `10-core-service-contract.md`
+- `15-deployment-and-runtime-contract.md`
+
 ### Mode C - Laravel downstream trusted service
 
 Adds:
@@ -106,5 +120,6 @@ Read next:
 ## Working rule
 
 - Start here when the task is cross-cutting or the target repository is new to the Ala contract.
+- When the target is a new or refactored Ala Laravel backend service, read the deployment contract before inventing repo-local GitLab CI behavior.
 - After choosing a service mode, move to the smallest contract file that owns the exact rule you need.
 - Keep `full-guide.md` as the merged preserved view, not as the only place where agents can discover these onboarding rules.

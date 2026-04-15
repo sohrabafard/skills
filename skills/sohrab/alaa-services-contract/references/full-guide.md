@@ -239,6 +239,17 @@ Rules:
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
 - do not duplicate Kubernetes implementation detail in this guide when the concern is already owned by `$caas-arvan-kuber`
 
+### GitLab CI/CD baseline contract
+
+Rules:
+- for Ala Laravel backend services that follow the shared `platform-app-php` delivery model, default to the shared `service-ci-kit` project for GitLab CI/CD
+- keep `.gitlab-ci.yml` as a thin include-based wrapper and pin an explicit `SERVICE_CI_KIT_REF`
+- keep shared CI logic in `service-ci-kit`; do not copy shared `ci/scripts/*` trees or local semantic-release helper trees into service repositories
+- keep only service-local CI assets in the app repo, such as `.gitlab-ci.yml`, `.releaserc.json`, `ci/helm/values.app.yaml`, `ci/helm/values.app.ops.yaml`, `ci/helm/values.app.hpa.yaml`, `ci/helm/values.ci.runtime.yaml`, and optional local overlays that the shared kit intentionally consumes
+- when shared CI behavior must change, update `service-ci-kit` first, release a new kit ref, and then bump the pinned ref in service repositories
+- load `$alaa-gitlab-ci-cd` for GitLab authoring, validation, and debugging, but keep the Ala fleet policy in this skill instead of moving it into the generic GitLab skill
+- if a repository cannot use `service-ci-kit`, report the blocker explicitly instead of silently reintroducing a repo-owned pipeline
+
 ### Required deployment modes
 
 Normalized Ala deployment modes:
@@ -865,14 +876,15 @@ Snapshot baseline:
 2. load the smallest relevant contract file
 3. load companion skills
 4. inspect the current repo shape
-5. converge routes, middleware, helpers, headers, events, envelopes, and runtime rules to the exact contract
-6. remove active dependencies on retired trust surfaces such as `X-Profile` or old claim names when the compact contract replaced them
-7. add missing helper or support components instead of hand-waving them
-8. add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel
-9. add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required
-10. update docs, Postman, and runbooks in the same patch when public or operational behavior changes
-11. run focused tests for every changed contract surface
-12. report blockers explicitly when exact convergence is not possible
+5. for an Ala Laravel backend that follows the shared `platform-app-php` delivery model, converge GitLab CI to the shared `service-ci-kit` thin-wrapper baseline instead of inventing repo-local CI logic
+6. converge routes, middleware, helpers, headers, events, envelopes, and runtime rules to the exact contract
+7. remove active dependencies on retired trust surfaces such as `X-Profile` or old claim names when the compact contract replaced them
+8. add missing helper or support components instead of hand-waving them
+9. add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel
+10. add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required
+11. update docs, Postman, and runbooks in the same patch when public or operational behavior changes
+12. run focused tests for every changed contract surface
+13. report blockers explicitly when exact convergence is not possible
 
 ### Minimum validation checklist
 
@@ -922,6 +934,10 @@ Snapshot baseline:
 - `/api/health` touches PostgreSQL, Redis, RabbitMQ, ClickHouse, or another service
 - `/api/ready` depends on tokens, cookies, OTP, or end-user state
 - `/api/ready` uses the wrong envelope or wrong key names
+- no shared `service-ci-kit` baseline for an Ala Laravel backend that follows the shared `platform-app-php` delivery model
+- a non-thin `.gitlab-ci.yml` in a service repo that should use the shared kit
+- shared `ci/scripts/*` or local semantic-release helper trees reintroduced into a service repo
+- undocumented divergence from the shared kit baseline
 - no explicit shared-versus-external Postgres mode selection in deploy-facing docs or config expectations
 - no documented Arvan Kubernetes production path
 - no Compose or no Swarm story and no explicit blocker
@@ -964,6 +980,7 @@ Snapshot baseline:
 - inventing local event names that conflict with `$alaa-observability-soc`
 - inventing local auth error names that conflict with `$alaa-trust-gateway-auth`
 - keeping stale compatibility branches, helpers, tests, or docs for removed contract surfaces
+- reintroducing duplicated GitLab CI logic into service repositories instead of updating `service-ci-kit` first
 - assuming middleware can attach response headers after a rethrow without exception-handler support
 - scattering trusted-user normalization across controllers, policies, resources, and observers
 - leaving helper responsibilities implicit so each agent re-invents them

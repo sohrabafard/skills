@@ -5,16 +5,17 @@
 1. Identify the service mode first.
 2. Read the smallest relevant contract file before changing code.
 3. Load the required companion skills.
-4. Inspect the current route families, middleware order, auth shape, observability shape, readiness checks, response boundaries, and trusted-header expectations.
-5. Converge the repository to the exact contract instead of partially mirroring it.
-6. Remove active dependencies on retired trust surfaces such as `X-Profile` or old claim names when the compact contract replaced them.
-7. Add required helper or support components when they do not exist.
-8. Add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel.
-9. Add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
-10. Add or align exact response envelopes, exact headers, exact event names, and exact code naming.
-11. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-12. Run focused tests for every changed contract surface.
-13. Report blockers explicitly when exact convergence is not possible.
+4. Inspect the current route families, middleware order, auth shape, observability shape, readiness checks, response boundaries, trusted-header expectations, and deploy wiring.
+5. For an Ala Laravel backend that follows the shared `platform-app-php` delivery model, converge GitLab CI to the shared `service-ci-kit` thin-wrapper baseline instead of inventing repo-local CI logic.
+6. Converge the repository to the exact contract instead of partially mirroring it.
+7. Remove active dependencies on retired trust surfaces such as `X-Profile` or old claim names when the compact contract replaced them.
+8. Add required helper or support components when they do not exist.
+9. Add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel.
+10. Add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
+11. Add or align exact response envelopes, exact headers, exact event names, and exact code naming.
+12. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+13. Run focused tests for every changed contract surface.
+14. Report blockers explicitly when exact convergence is not possible.
 
 ## Minimum validation checklist
 
@@ -59,6 +60,10 @@ Flag a problem when you see any of these:
 - `/api/health` calls PostgreSQL, Redis, RabbitMQ, ClickHouse, or another service
 - `/api/ready` depends on tokens, cookies, OTP, or end-user state
 - the readiness envelope or key names differ from the contract
+- a new or refactored Ala Laravel backend invents repo-local GitLab CI instead of defaulting to `service-ci-kit`
+- `.gitlab-ci.yml` is not a thin wrapper in a repo that should follow the shared kit
+- shared `ci/scripts/*` or local semantic-release helper trees appear in a service repo without an explicit blocker
+- the repository diverges from the shared kit baseline without documenting the reason
 - `service` returns a framework or runtime name
 - `X-Correlation-Id` remains anywhere in service code, config, tests, docs, or emitted headers after the migration
 - `X-Trace-Id` is still treated as a response-header requirement
@@ -80,6 +85,7 @@ Flag a problem when you see any of these:
 - inventing local event names that conflict with `$alaa-observability-soc`
 - inventing local auth error names that conflict with `$alaa-trust-gateway-auth`
 - keeping stale compatibility branches, helpers, tests, or docs for removed contract surfaces
+- reintroducing duplicated GitLab CI logic into service repositories instead of updating `service-ci-kit` first
 - scattering trusted-user normalization across controllers, policies, resources, and observers
 - leaving helper responsibilities implicit so each agent re-invents them
 - reviving the retired profile-blob trust surface instead of consuming the compact header projection
