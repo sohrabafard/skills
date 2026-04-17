@@ -18,6 +18,8 @@ For repositories that expose HTTP APIs, `docs/api-summary.md` is the fast contra
 This file complements the broader docs set:
 - `README.md` remains the onboarding and operational entrypoint.
 - `docs/BIG_PICTURE.md` remains the architecture and runtime contract map.
+- `docs/data-architecture.md` remains the storage and state walkthrough when the repo has meaningful persistence.
+- `docs/errors-events-observability.md` remains the concrete error, event, and observability map when the repo has that surface.
 - `docs/api-summary.md` remains the concise endpoint-and-request example sheet.
 
 Do not merge these roles together.
@@ -48,6 +50,7 @@ Use this exact high-level structure unless the user explicitly asks for another 
 5. For any request that accepts a body:
    - a `Body:` label
    - a fenced `json` block with a realistic minimal example
+6. A short `See also` block when local links materially help the reader navigate to deeper docs
 
 Prefer the project or service name for the title, such as `Comment API Summary`, `Gateway API Summary`, or `Ticket API Summary`.
 
@@ -70,9 +73,10 @@ Prefer the project or service name for the title, such as `Comment API Summary`,
   - keep the full endpoint inventory even if example coverage is abbreviated,
   - show one full example for a repeated action family when that example teaches the calling pattern,
   - add a short guidance line or mini-template for the sibling endpoints instead of repeating near-identical examples.
-- Include `base host` in the `## Examples` heading only when that host and port are verified from repo sources such as README, env examples, Docker/Compose, test fixtures, or existing docs.
+- Include `base host` in the `## Examples` heading only when that host and port are verified from repo sources such as README, env examples, Docker or Compose, test fixtures, or existing docs.
 - Exclude boilerplate operational endpoints such as health, readiness, or metrics unless the user explicitly asks to include them or they are part of the main consumed API surface.
 - Do not dump response bodies by default. Add response examples only when they are unusually important to using the route correctly.
+- If endpoint semantics depend on storage shape, event side effects, or a nuanced error contract, add a one-line note that points to the deeper doc instead of copying the whole deep-dive section.
 
 ## API summary example-selection rules
 Model `docs/api-summary.md` after the same pattern as the comment-service example:
@@ -104,6 +108,7 @@ When an existing `docs/api-summary.md` already has useful examples, preserve the
 - Which request bodies are expected for the important write paths?
 - Which action endpoints exist beyond basic CRUD?
 - What is the verified local example host, if the repo documents one?
+- Which deeper doc should I read next when I need storage, event, or error detail?
 
 The file should feel compact, current, and source-backed.
 It should not read like generated sludge, and it should not try to replace richer docs or Postman collections.

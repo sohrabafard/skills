@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Docs Standard"
-  short_description: "Rich English repo docs plus API summary docs"
-  default_prompt: "Use $alaa-docs-farsi to produce rich, simple-English repository docs that stay aligned with code, contracts, runtime behavior, operations, and API surfaces, including `docs/api-summary.md` for API-bearing repos."
+  short_description: "Rich repo docs with data, events, and API contracts"
+  default_prompt: "Use $alaa-docs-farsi to produce rich, simple-English repository docs aligned with code, contracts, runtime behavior, storage shape, errors, events, observability, and API surfaces. For broad refreshes, explicitly use parallel subagents for read-heavy discovery, then consolidate in the parent agent. Create or refresh `docs/api-summary.md`, `docs/data-architecture.md`, and `docs/errors-events-observability.md` when the repo warrants them, and repair README and internal doc links."
 
 policy:
   allow_implicit_invocation: true

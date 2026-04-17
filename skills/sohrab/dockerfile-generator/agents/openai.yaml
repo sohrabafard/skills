@@ -1,7 +1,0 @@
-interface:
-  display_name: "Dockerfile Generator"
-  short_description: "Generate production Dockerfiles"
-  default_prompt: "Use $dockerfile-generator to follow its workflow for generate production dockerfiles."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Makefile"
+  short_description: "Create and review Makefiles"
+  default_prompt: "Use $alaa-makefile to generate, validate, refactor, and debug Makefiles and .mk build files."
+
+policy:
+  allow_implicit_invocation: false

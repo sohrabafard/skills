@@ -75,10 +75,10 @@ Signals:
 Use these when runtime, packaging, or cluster surfaces change:
 
 - `$alaa-docker-production`
+- `$alaa-makefile`
 - `$caas-arvan-kuber`
 - `$alaa-haproxy`
 - `$gitlab-ci-generator` / `$gitlab-ci-validator`
-- `$dockerfile-generator` / `$dockerfile-validator`
 - `$helm-generator` / `$helm-validator`
 - `$k8s-debug`
 - `$k8s-yaml-generator` / `$k8s-yaml-validator`
@@ -89,6 +89,7 @@ Use these when runtime, packaging, or cluster surfaces change:
 Signals:
 
 - `Dockerfile`, `compose.yml`, Swarm, rootless container behavior
+- `Makefile`, `.mk`, local automation, install/test/build wrappers
 - Kubernetes, OpenShift, namespace-only access, Helm charts
 - HAProxy configs and trust boundaries
 - GitLab CI/CD, runners, executors, delivery pipelines

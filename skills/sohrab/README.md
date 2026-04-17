@@ -2,20 +2,18 @@
 
 This pack is a public installable skill set for production-oriented coding agents.
 
-It now includes these portable companion skills introduced during the pack enrichment work:
+The current pack mixes two patterns on purpose:
 
-- `alaa-frontend-devops`
-- `alaa-frontend-doc-annotations`
-- `alaa-mono-package`
-- `alaa-crockford-base32-codecs`
+- routing-first umbrella skills where one entrypoint owns a full surface
+- explicit generator/validator pairs where the narrow artifact workflow is still useful
 
-The pack is designed around simple routing-first skill entrypoints:
+## Pack design rules
 
 - `SKILL.md` stays short and easy to scan
 - large rulebooks move into `references/` or existing `docs/` folders
-- `agents/openai.yaml` exists for every skill
-- generator and validator skills stay explicit and opt-in
-- domain skills are easier to discover and route automatically
+- `agents/openai.yaml` exists for every shipped skill
+- mature surfaces prefer one routing-first owner instead of many tiny near-duplicates
+- companion skills stay explicit where ownership boundaries still matter
 
 ## Core precedence rules
 
@@ -121,14 +119,43 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 5. Pull in specialist skills only where the task actually enters their scope.
 6. Keep docs, tests, and operational notes aligned before treating the work as done.
 
-### Infra and platform workflow
+### Infra and delivery workflow
 
-1. Generate with the smallest relevant generator skill.
-2. Apply platform policy from `caas-arvan-kuber`, `alaa-haproxy`, or `alaa-docker-production` as needed.
-3. Validate with the matching validator skill.
+1. Start with the routing-first owner when one exists:
+   - `alaa-k8s-helm`
+   - `alaa-gitlab-ci-cd`
+   - `alaa-bash-shell`
+   - `alaa-makefile`
+   - `alaa-docker-production`
+2. Apply platform policy from `caas-arvan-kuber`, `alaa-haproxy`, or service-specific companion skills as needed.
+3. Use explicit generator/validator pairs only on surfaces that still keep that split.
 4. Keep operator-facing notes and rollback expectations aligned with the final output.
 
 ## Current skill map
+
+### Core Ala architecture and policy
+
+- `alaa-workflow`
+- `alaa-low-noise`
+- `alaa-services-contract`
+- `alaa-trust-gateway-auth`
+- `alaa-security-review`
+- `alaa-observability-soc`
+- `alaa-docs-farsi`
+- `alaa-postman-collections`
+- `alaa-crockford-base32-codecs`
+
+### PHP / Laravel and service engineering
+
+- `alaa-php-clean-code`
+- `alaa-laravel-architecture`
+- `alaa-data-layer`
+- `alaa-async-messaging`
+- `alaa-laravel-job-rabbitmq`
+- `alaa-octane-performance`
+- `alaa-cicd-laravel-postgres`
+- `alaa-mongodb-patterns`
+- `service-runtime-kit-governance`
 
 ### Frontend and frontend delivery
 
@@ -139,83 +166,67 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 - `quasar-skill-packe`
 - `alaa-shaka-player`
 
-### PHP / Laravel and application policy
+### Go and specialized app platforms
 
-- `alaa-php-clean-code`
-- `alaa-laravel-architecture`
-- `alaa-data-layer`
-- `alaa-async-messaging`
-- `alaa-laravel-job-rabbitmq`
-- `alaa-octane-performance`
-- `alaa-security-review`
-- `alaa-observability-soc`
-- `alaa-trust-gateway-auth`
-- `alaa-cicd-laravel-postgres`
-- `alaa-docs-farsi`
-- `alaa-mongodb-patterns`
-- `alaa-workflow`
-- `clickhouse-performance-schema-ops`
+- `alaa-golang`
+- `jitsi-platform-architect`
 
-### Platform, gateway, and delivery
+### Containers, CI/CD, Kubernetes, and platform delivery
 
-- `caas-arvan-kuber`
-- `alaa-haproxy`
 - `alaa-docker-production`
+- `alaa-gitlab-ci-cd`
+- `alaa-k8s-helm`
+- `alaa-haproxy`
+- `caas-arvan-kuber`
 - `tusd-upload-platform`
 - `vector-rust-observability-pipelines`
 
-### Kubernetes and Helm
+### Build files, shell, and local automation
 
-- `helm-generator`
-- `helm-validator`
-- `k8s-yaml-generator`
-- `k8s-yaml-validator`
-- `k8s-debug`
+- `alaa-bash-shell`
+- `alaa-makefile`
 
-### Docker, shell, and build files
+### Artifact-specific CI, IaC, and automation skills
 
-- `dockerfile-generator`
-- `dockerfile-validator`
-- `bash-script-generator`
-- `bash-script-validator`
-- `makefile-generator`
-- `makefile-validator`
-
-### CI / CD
-
+- `ansible-generator`
+- `ansible-validator`
 - `azure-pipelines-generator`
 - `azure-pipelines-validator`
+- `fluentbit-generator`
+- `fluentbit-validator`
 - `github-actions-generator`
 - `github-actions-validator`
-- `gitlab-ci-generator`
-- `gitlab-ci-validator`
 - `jenkinsfile-generator`
 - `jenkinsfile-validator`
-
-### Infrastructure as code and automation
-
 - `terraform-generator`
 - `terraform-validator`
 - `terragrunt-generator`
 - `terragrunt-validator`
-- `ansible-generator`
-- `ansible-validator`
 
-### Observability and logging
+### Observability queries and logging configuration
 
 - `promql-generator`
 - `promql-validator`
 - `logql-generator`
 - `loki-config-generator`
-- `fluentbit-generator`
-- `fluentbit-validator`
 
-### Internal helper
+### Data platform and storage-specialized skills
 
-### Cross-runtime utility skills
+- `clickhouse-performance-schema-ops`
 
-- `alaa-crockford-base32-codecs`
-- `alaa-low-noise`
+## Recently consolidated or removed from this pack
+
+These older skill folders are no longer part of the active pack surface:
+
+- `dockerfile-generator`
+- `dockerfile-validator`
+- `makefile-generator`
+- `makefile-validator`
+
+Their active replacements are:
+
+- `alaa-docker-production`
+- `alaa-makefile`
 
 ## Definition of done
 
@@ -224,7 +235,7 @@ Work in this pack is considered ready when:
 - the smallest correct skill is easy to discover from `SKILL.md`
 - detailed guidance is preserved in one-hop `references/` or `docs/` files
 - `agents/openai.yaml` exists and matches the current skill intent
-- old project-local donor skill names are no longer required inside this pack
+- stale donor skill names are removed from active routing docs
 - examples, checklists, and anti-patterns are preserved in simple English
 - system-level helpers are clearly separated from pack-local skills
 
@@ -234,7 +245,7 @@ When a generic best practice conflicts with the Ala gateway trust model, Arvan p
 
 ## Routing delta notes
 
-- No skill names changed in this enrichment pass.
-- Top-level `SKILL.md` files now bias toward routing-first entrypoints and companion-skill delegation instead of duplicating deeper references.
-- When a responsibility narrowed, the skill now points to the owning companion skill instead of repeating that companion's full rulebook.
-- Fast-entry routers, checklists, and diagnostic maps were added where they improve branch selection speed for agents.
+- Top-level `SKILL.md` files bias toward routing-first entrypoints and companion-skill delegation instead of duplicating deeper references.
+- Some mature surfaces now use a single owner skill instead of separate generator/validator pairs.
+- Where a responsibility narrowed, the skill points to the owning companion skill instead of repeating that companion's full rulebook.
+- Fast-entry routers, checklists, and diagnostic maps are preferred when they reduce search and branch-selection time for agents.

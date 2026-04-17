@@ -5,6 +5,7 @@
 - `# Standard documentation contract for README and BIG_PICTURE`
 - `## Audience and outcome requirements`
 - `## Richness protection rule`
+- `## Deep-dive companion docs`
 - `## Required sections in README (minimum baseline)`
 - `## README quality bar`
 - `## Required sections in docs/BIG_PICTURE.md (minimum baseline)`
@@ -22,7 +23,7 @@
 `docs/BIG_PICTURE.md` is the operational and architecture contract map.
 
 They must not become duplicates.
-For any service or project where both exist, review both in the same task when behavior, trust, API shape, deployment expectations, or operating assumptions change.
+For any service or project where both exist, review both in the same task when behavior, trust, API shape, storage shape, deployment expectations, or operating assumptions change.
 
 ## Audience and outcome requirements
 
@@ -31,11 +32,11 @@ The documentation set must serve all of these readers at the same time:
 - **Human maintainer**
   - Must understand repo purpose, boundaries, runtime shape, safe edit zones, and the validation path.
 - **Frontend developer**
-  - Must understand request flows, headers, auth state assumptions, endpoint families, response/error patterns, and which docs to read next.
+  - Must understand request flows, headers, auth state assumptions, endpoint families, response or error patterns, and which docs to read next.
 - **Coding agent**
   - Must get a fast initial mental model, source-of-truth file map, common caveats, and the correct order for deeper inspection.
 - **New service author**
-  - Must be able to infer Ala conventions for trust boundaries, response contracts, observability, deployment modes, and documentation structure.
+  - Must be able to infer Ala conventions for trust boundaries, response contracts, data flow, observability, deployment modes, and documentation structure.
 
 If a rewrite improves one audience while making the doc less useful for the others, the rewrite is incomplete.
 
@@ -49,30 +50,47 @@ When updating an existing `README.md` or `docs/BIG_PICTURE.md`:
   - request variants,
   - trust and header details,
   - queue or outbox flow notes,
+  - storage and cache notes,
   - logging and SOC flow notes,
   - deployment-mode differences,
   - known caveats and operator notes.
 - Standardize structure without flattening service-specific knowledge.
 - If a repo already exceeds the baseline in a useful way, keep the richer coverage and map it under the standard instead of deleting it.
 
+## Deep-dive companion docs
+
+When the repository warrants them, the documentation set uses separate deep-dive docs alongside `README.md` and `docs/BIG_PICTURE.md`:
+
+- `docs/data-architecture.md`
+  - storage topology, tables or collections, cache inventory, data-structure notes, and one representative request walkthrough tied to persisted state.
+- `docs/errors-events-observability.md`
+  - error contracts, event inventory, payload notes, logging, tracing, metrics, alerts, and troubleshooting evidence.
+
+Role boundaries:
+- `README.md` tells the reader what to read next.
+- `docs/BIG_PICTURE.md` gives the summary map and links outward.
+- Deep-dive docs hold the dense, topic-specific detail.
+
+Do not copy the full deep-dive content into `README.md` or `docs/BIG_PICTURE.md`. Summarize and link instead.
+
 ## Required sections in README (minimum baseline)
 
 1. **Project summary**
    - Explain what the repo does and what it does not own.
 2. **Ownership and runtime truth**
-   - Stack, service role, runtime modes, deployment shape, and health/readiness model.
+   - Stack, service role, runtime modes, deployment shape, and health or readiness model.
 3. **How to run locally**
    - Setup, install, build, lint, test, and strict prerequisites.
 4. **API or client contract surface**
    - Route families, API versions, entrypoint differences, and where deeper contracts live.
 5. **Trust and authentication contract**
-   - Required headers, tokens/cookies, identity propagation, and tenant assumptions.
+   - Required headers, tokens or cookies, identity propagation, and tenant assumptions.
 6. **Integration notes**
-   - Frontend flows, backend integration notes, sample request/response expectations, and practical caveats.
+   - Frontend flows, backend integration notes, sample request or response expectations, and practical caveats.
 7. **Observability and troubleshooting**
    - Key logs, traces, metrics, verification commands, and operational artifacts.
 8. **Documentation links**
-   - `docs/BIG_PICTURE.md`, Postman, runbooks, ADR/decision docs, and service-specific references.
+   - `docs/BIG_PICTURE.md`, `docs/api-summary.md`, `docs/data-architecture.md`, `docs/errors-events-observability.md`, Postman, runbooks, ADR or decision docs, and service-specific references when they exist.
    - Use repository-safe relative Markdown links for repo files. Do not use machine-local absolute paths.
 
 ## README quality bar
@@ -83,8 +101,8 @@ When updating an existing `README.md` or `docs/BIG_PICTURE.md`:
 - What should a new developer read next?
 - How do I run it locally?
 - Which runtime modes or environments matter?
-- How does auth and trust work at a high level?
-- Where are the main contracts and operational artifacts?
+- How do auth and trust work at a high level?
+- Where are the main contracts, storage notes, and operational artifacts?
 
 `README.md` should be concise, but not shallow.
 It may be shorter than `docs/BIG_PICTURE.md`, but it must still be useful without prior repo knowledge.
@@ -96,11 +114,11 @@ It may be shorter than `docs/BIG_PICTURE.md`, but it must still be useful withou
 2. **System boundary and trust model**
    - Trusted headers, gateway or auth boundaries, tenant context, failure assumptions, and non-negotiable trust rules.
 3. **Runtime and topology**
-   - Process stack, data stores, queue/storage/cache topology, runtime modes, and environment differences.
+   - Process stack, data stores, queue or storage or cache topology, runtime modes, and environment differences.
 4. **Flow map**
    - Request lifecycle and key call paths with small Mermaid diagrams when practical.
 5. **API and data contract**
-   - Public/internal/admin surface families, common request/response contracts, important headers, and critical enums/lookups.
+   - Public or internal or admin surface families, common request or response contracts, important headers, and critical enums or lookups.
 6. **Domain model and rulebook**
    - Key entities, invariants, state transitions, rule boundaries, and validation expectations.
 7. **Frontend integration**
@@ -108,21 +126,23 @@ It may be shorter than `docs/BIG_PICTURE.md`, but it must still be useful withou
 8. **Events, queues, and side effects**
    - Jobs, listeners, outbox, notifications, schedulers, and observability hooks.
 9. **Operations and safety playbooks**
-   - Local runbook, safe change playbooks, known caveats, hotspots, and rollback/revalidation expectations.
+   - Local runbook, safe change playbooks, known caveats, hotspots, and rollback or revalidation expectations.
 10. **Source-of-truth map**
-   - Exact files that must be checked before documenting route, behavior, auth, deployment, or observability changes.
+   - Exact files that must be checked before documenting route, behavior, auth, storage, deployment, error, event, or observability changes.
+11. **Related deep-dive docs**
+   - Link to `docs/api-summary.md`, `docs/data-architecture.md`, and `docs/errors-events-observability.md` when they exist.
 
 ## BIG_PICTURE quality bar
 
 `docs/BIG_PICTURE.md` should let a developer or agent answer these questions without deep code reading:
 
 - What are the main runtime components and how do they connect?
-- Which trust boundary rules are non-negotiable?
+- Which trust-boundary rules are non-negotiable?
 - Which request families exist and how do they differ?
-- Which events, jobs, outbox flows, or logging pipelines matter?
+- Which stores, caches, events, jobs, or logging pipelines matter?
 - Which modules or layers are responsible for what?
 - Which caveats and hotspots are likely to cause regressions?
-- Which files are the real source of truth for each topic?
+- Which files and docs are the real sources of truth for each topic?
 
 This file may be long when the system is complex.
 Prefer high-signal depth over generic summaries.
@@ -133,20 +153,22 @@ Prefer high-signal depth over generic summaries.
 
 1. **Request flow**
    - Include at least one diagram for the main request path.
-   - Add a variant when auth/trust behavior changes by route family or caller type.
+   - Add a variant when auth or trust behavior changes by route family or caller type.
 2. **Async and event flow**
-   - Include event emit/consume/job flow when the service uses outbox, queues, notifications, or schedulers.
+   - Include event emit or consume or job flow when the service uses outbox, queues, notifications, or schedulers.
 3. **Error and observability flow**
-   - Include correlation path covering `request-id`, `traceparent`, logs, metrics, tracing, and SOC/monitoring handoff when implemented.
-4. **Deployment/runtime flow**
+   - Include correlation path covering `request-id`, `traceparent`, logs, metrics, tracing, and SOC or monitoring handoff when implemented.
+4. **Deployment or runtime flow**
    - Add one topology diagram when route or runtime behavior differs by local Docker, shared Docker, Swarm, Helm, or Kubernetes mode.
+
+If a deep-dive doc exists, `docs/BIG_PICTURE.md` may keep the diagram small and link to the detailed companion doc instead of duplicating every storage state snapshot or event payload detail.
 
 Preferred Mermaid types:
 - `flowchart LR` or `flowchart TD` for request, topology, and mode mapping.
 - `sequenceDiagram` when call order or actor handoff matters.
 
 Diagram quality rules:
-- Keep labels short and stable, using canonical identifiers exactly as code uses, such as `X-Project-Id`, `POST /api/...`, queue names, event class names, and table names.
+- Keep labels short and stable, using canonical identifiers exactly as code uses, such as `X-Project-Id`, `POST /api/...`, queue names, event class names, cache-key prefixes, and table names.
 - Keep a small local legend only when necessary.
 - Do not include speculative systems that are not verified in source config or code.
 - Prefer multiple focused diagrams over one oversized diagram that hides important behavior.
@@ -156,17 +178,17 @@ Diagram quality rules:
 
 When a repo has significant structure, add a short **Coding Patterns and Module Map** section that includes:
 - layer map such as `Http/Controller -> Service/Usecase -> Repository/Model -> DB/Queue`,
-- boundary rules between route group, middleware, service, queue worker, and observer/listener layers,
+- boundary rules between route group, middleware, service, queue worker, and observer or listener layers,
 - module decomposition strategy used in the repo, such as `packages`, bounded domains, feature modules, or route groups,
 - reuse rules explaining where to extend existing modules before creating new files,
 - hard "Do Not" patterns observed in the codebase, such as mixed auth paths, duplicated tenant checks, or stateful singleton misuse,
 - cross-service touchpoints with explicit file anchors or doc references.
 
 Recommended minimum subsection list:
-- `Request/route boundary`
+- `Request or route boundary`
 - `Authorization and trusted headers boundary`
-- `Async/event boundary`
-- `Storage/cache boundary`
+- `Async or event boundary`
+- `Storage or cache boundary`
 - `Frontend-facing contract boundary`
 
 ## Frontend integration coverage requirements
@@ -177,8 +199,8 @@ When the repo exposes frontend-consumed APIs, the docs must clearly cover:
 - required headers, cookies, and auth-refresh assumptions,
 - common success and error envelope patterns,
 - order of frontend bootstrap calls,
-- main user flows such as sign-in, list/detail, create/update, upload, and retry/error handling,
-- links to payload examples, enum references, and Postman artifacts.
+- main user flows such as sign-in, list or detail, create or update, upload, and retry or error handling,
+- links to payload examples, enum references, Postman artifacts, and the deeper docs that explain storage or error side effects.
 
 Frontend developers should not need to infer basic contract rules by reverse-engineering controllers.
 
@@ -188,19 +210,20 @@ When a repo is mature enough to act as a pattern source, the docs should expose 
 
 - trust boundary and header handling,
 - route grouping and API versioning conventions,
-- response envelope and resource serialization rules,
+- response envelope and resource-serialization rules,
+- data-flow and cache-invalidation conventions,
 - observability and correlation conventions,
 - deployment mode distinctions,
 - documentation cross-linking expectations,
-- safe change and done-means expectations.
+- safe-change and done-means expectations.
 
 If these conventions exist only implicitly in code, surface them explicitly in the docs.
 
 ## Shared section extensions
 
 When relevant, add these explicitly:
-- `Deployment modes` with explicit differences such as local Docker vs shared infra vs Helm/K8s vs Swarm.
+- `Deployment modes` with explicit differences such as local Docker vs shared infra vs Helm or Kubernetes vs Swarm.
 - `Known implementation caveats` and `High-risk hotspots`.
 - `Change checklist` for safe PR-level behavior edits.
-- `Documentation and contract maintenance` with explicit "refresh this when X changes" guidance.
-- `Detailed payload examples`, `enum references`, `resource shapes`, or `ops notes` when the system complexity justifies them.
+- `Documentation and contract maintenance` with explicit refresh triggers.
+- `Detailed payload examples`, `enum references`, `resource shapes`, `storage tables`, `cache key inventories`, or `ops notes` when the system complexity justifies them.

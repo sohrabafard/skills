@@ -172,8 +172,7 @@ Usage pattern:
 ### Bash and automation
 
 1) `alaa-bash-shell`
-2) `makefile-generator`
-3) `makefile-validator`
+2) `alaa-makefile`
 
 Usage pattern:
 
@@ -194,8 +193,7 @@ Usage pattern:
 
 ### Container build inputs
 
-1) `dockerfile-generator`
-2) `dockerfile-validator`
+1) `alaa-docker-production`
 
 Usage pattern:
 
