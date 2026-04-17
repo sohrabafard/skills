@@ -1,0 +1,4 @@
+interface:
+  display_name: "Service Runtime Kit Governance"
+  short_description: "Route, debug, and govern service-runtime-kit runtime work"
+  default_prompt: "Use $service-runtime-kit-governance to classify a local runtime change, choose the right ownership layer, and apply the correct render, validate, and debug workflow for services that consume service-runtime-kit."
