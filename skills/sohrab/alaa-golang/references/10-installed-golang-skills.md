@@ -1,189 +1,147 @@
 # Installed Public Go Skills
 
-Use this file when `alaa-golang` triggers and you need to select the already-installed public Go skills that should
-handle the detailed work. Each entry explains the main decision surface and the usual companions.
+Use this file after `full-guide.md` establishes the baseline. Load only the public Go skills that match the real task.
 
-## golang-benchmark
+## General rule
 
-Use `golang-benchmark` when the question is about measuring performance rather than guessing about it. This is the first
-stop for `pprof`, `benchstat`, trace interpretation, regression measurement, and proof that a claimed hot path is
-actually hot before `golang-performance` changes code.
+When you decide to load a public Go skill, route to it explicitly in this form:
 
-## golang-cli
+- Use `golang-modernize` ( `$golang-modernize` )
 
-Use `golang-cli` when the project is a command-line tool or when the task touches Cobra, Viper, flags, exit codes, shell
-completion, config layering, or version embedding. Pair it with `golang-project-layout` for structure and
-`golang-testing` for command behavior.
+That is enough. Do not mention vendor paths.
 
-## golang-code-style
+## Structure, architecture, and API shape
 
-Use `golang-code-style` when code clarity, local conventions, comment quality, or line-by-line style rules are the main
-question. It is the detailed style companion behind `alaa-golang`'s Uber-influenced baseline.
+### golang-project-layout ( `$golang-project-layout` )
 
-## golang-concurrency
+Use it when the task is about module shape, folder layout, package boundaries, `cmd/`, `internal/`, config placement, or test layout.
 
-Use `golang-concurrency` when goroutines, channels, locks, worker pools, errgroup flows, backpressure, or goroutine
-leaks are involved. Pair it with `golang-context` whenever cancellation or request lifetimes matter.
+### golang-design-patterns ( `$golang-design-patterns` )
 
-## golang-context
+Use it when the task is about architecture, boundary design, service layering, adapters, ports, or application structure.
 
-Use `golang-context` when cancellation, deadlines, propagation, tracing context, or `context.Context` API boundaries are
-the main issue. This skill keeps request and worker lifecycles explicit instead of hand-wavy.
+### golang-structs-interfaces ( `$golang-structs-interfaces` )
 
-## golang-continuous-integration
+Use it when interface size, receiver choice, type design, method sets, or boundary abstractions are the real issue.
 
-Use `golang-continuous-integration` when the task is about GitHub Actions, release gates, lint and test automation,
-coverage, SAST, Dependabot, Renovate, or release packaging for Go projects. This is the CI owner, not the code-style
-owner.
+### golang-dependency-injection ( `$golang-dependency-injection` )
 
-## golang-data-structures
+Use it when you need to choose or refactor a DI approach. Pair it with the local package catalog because `google/wire` is now archived and should not be a fresh default.
 
-Use `golang-data-structures` when slices, maps, arrays, heaps, builders, copy semantics, or generic containers are the
-real decision surface. It is especially helpful when performance or mutation behavior depends on data-structure
-internals.
+### golang-code-style ( `$golang-code-style` )
 
-## golang-database
+Use it when clarity, local style rules, comment quality, or line-by-line polish are the main issue.
 
-Use `golang-database` when Go code is touching SQL, pools, transactions, isolation, query patterns, scanning,
-nullability, or database tests. It owns application-side database access patterns, not schema design policy.
+### golang-naming ( `$golang-naming` )
 
-## golang-dependency-injection
+Use it when package names, exported identifiers, error names, method names, or test naming need cleanup.
 
-Use `golang-dependency-injection` when you need to choose or refactor a wiring model, compare manual constructors
-against DI libraries, or reason about service lifetime and composition. Pair it with `golang-project-layout` and
-`golang-design-patterns` for larger service design work.
+## Language, correctness, and debugging
 
-## golang-dependency-management
+### golang-modernize ( `$golang-modernize` )
 
-Use `golang-dependency-management` when the task is about `go.mod`, `go.work`, version selection, upgrades,
-vulnerability review, dependency size, or update automation. It is the right companion before adding or replacing
-non-trivial libraries.
+Use it for version-aware rewrites, newer standard-library idioms, and Go release upgrades.
 
-## golang-design-patterns
+### golang-concurrency ( `$golang-concurrency` )
 
-Use `golang-design-patterns` when the question is architectural: constructors, options, lifecycle, resilience, modular
-service design, or API-shaping patterns. It is the main design companion for services and reusable packages.
+Use it for goroutines, channels, errgroup, worker pools, backpressure, leaks, and shared-state design.
 
-## golang-documentation
+### golang-context ( `$golang-context` )
 
-Use `golang-documentation` when the work is about package docs, godoc, examples, README, CONTRIBUTING, or published
-developer guidance. Pair it with `alaa-docs-farsi` only when repository-level documentation strategy or Ala-style docs
-are also in scope.
+Use it when cancellation, deadlines, context propagation, tracing context, or request lifetime is the key problem.
 
-## golang-error-handling
+### golang-safety ( `$golang-safety` )
 
-Use `golang-error-handling` when error semantics, wrapping, inspection, classification, recovery, or structured logging
-are under discussion. This is the detailed error owner behind `alaa-golang`'s "handle errors once" baseline.
+Use it for nil-safety, map and slice hazards, race-prone patterns, and correctness guardrails.
 
-## golang-grpc
+### golang-error-handling ( `$golang-error-handling` )
 
-Use `golang-grpc` when protobufs, gRPC service design, interceptors, bufconn tests, status codes, streaming RPCs, or
-transport-level gRPC concerns are involved. It is the gRPC-specific transport owner.
+Use it for error creation, wrapping, surfacing, propagation, and error-contract design.
 
-## golang-lint
+### golang-troubleshooting ( `$golang-troubleshooting` )
 
-Use `golang-lint` when the task is about `golangci-lint`, `go vet`, linter selection, `.golangci.yml`, suppressions, or
-interpreting lint output. This skill turns style policy into enforced tooling.
+Use it for production debugging, runtime investigation, `pprof`, compiler or test failures, and systematic diagnosis.
 
-## golang-modernize
+## Data and dependencies
 
-Use `golang-modernize` when code should adopt newer Go idioms, newer standard-library features, or newer tooling
-practices. Start here when the repo feels stale or the request mentions upgrading to the latest Go patterns.
+### golang-database ( `$golang-database` )
 
-## golang-naming
+Use it for query patterns, pools, transactions, scanning, isolation, and application-side database access.
 
-Use `golang-naming` when the main problem is choosing better package, type, interface, error, enum, receiver, or test
-names. It prevents a generic style review from turning into naming guesswork.
+### golang-data-structures ( `$golang-data-structures` )
 
-## golang-observability
+Use it when performance or mutation behavior depends on slices, maps, builders, heaps, or generic containers.
 
-Use `golang-observability` when the work is about structured logs, Prometheus, OpenTelemetry, continuous profiling,
-trace correlation, or production signal design. Pair it with `alaa-observability-soc` when operational evidence
-requirements matter.
+### golang-dependency-management ( `$golang-dependency-management` )
 
-## golang-performance
+Use it when adding, auditing, upgrading, pinning, or visualizing dependencies.
 
-Use `golang-performance` after measurement has identified a real bottleneck and you need concrete optimization patterns.
-It is not the first stop for "maybe this is slow"; that role belongs to `golang-benchmark`.
+### golang-popular-libraries ( `$golang-popular-libraries` )
 
-## golang-popular-libraries
+Use it for broad library discovery. Pair it with the local package catalog when the recommendation must fit this exact stack.
 
-Use `golang-popular-libraries` when the task asks for library recommendations or when a new dependency is about to be
-introduced. It helps avoid random package choices and pushes the agent toward well-supported ecosystem options.
+## Transport, protocols, and CLIs
 
-## golang-project-layout
+### golang-grpc ( `$golang-grpc` )
 
-Use `golang-project-layout` when the task is about repository shape, package placement, `cmd/`, `internal/`, monorepos,
-workspaces, or server layout. It is especially relevant for Fiber services and mixed repos with commands plus packages.
+Use it for gRPC services, protobuf code generation, interceptors, streaming, and transport behavior.
 
-## golang-safety
+### golang-cli ( `$golang-cli` )
 
-Use `golang-safety` when the code risks panics, aliasing bugs, nil misuse, numeric conversion problems, or unsafe
-lifecycle behavior. It is the defensive-coding companion to style and concurrency work.
+Use it for CLIs, Cobra, flags, shell completion, config layering for tools, and command lifecycle.
 
-## golang-samber-do
+## Quality, operations, and delivery
 
-Use `golang-samber-do` when the project already uses `github.com/samber/do/v2` or has decided to adopt it for dependency
-injection and lifecycle management. Load it instead of treating Samber Do as generic DI.
+### golang-testing ( `$golang-testing` )
 
-## golang-samber-hot
+Use it for unit, integration, HTTP, and mocking patterns.
 
-Use `golang-samber-hot` when in-memory caching with `github.com/samber/hot` is in play or under evaluation. It owns
-eviction strategy, stale handling, and cache-specific operational patterns for that library.
+### golang-stretchr-testify ( `$golang-stretchr-testify` )
 
-## golang-samber-lo
+Use it when the repo already uses `testify` or when selective assertions and mocks are appropriate.
 
-Use `golang-samber-lo` when the codebase already uses `github.com/samber/lo` or when functional helpers are the
-deliberate approach for slice, map, or tuple transforms. It helps keep that style disciplined instead of ad hoc.
+### golang-linter ( `$golang-linter` )
 
-## golang-samber-mo
+Use it for `golangci-lint`, analyzer policy, `nolint` hygiene, and modernization analyzers.
 
-Use `golang-samber-mo` when the project uses or is evaluating `github.com/samber/mo` for monadic result or option flows.
-This is the right companion when nullable or functional control-flow design is the real question.
+### golang-benchmark ( `$golang-benchmark` )
 
-## golang-samber-oops
+Use it when you need measurement instead of guesswork: `testing.B`, `benchstat`, profiles, and regressions.
 
-Use `golang-samber-oops` when the codebase already depends on `github.com/samber/oops` or when the task is specifically
-about adopting its structured error model. It should own Oops-specific behavior instead of generic error advice.
+### golang-performance ( `$golang-performance` )
 
-## golang-samber-ro
+Use it for CPU, memory, I/O, and runtime tuning after a hot path is proven.
 
-Use `golang-samber-ro` when the task is about reactive streams, observables, backpressure, or event-driven flows
-implemented with `github.com/samber/ro`. Load it when the repo is genuinely using that model, not for ordinary
-goroutines.
+### golang-observability ( `$golang-observability` )
 
-## golang-samber-slog
+Use it for logs, metrics, traces, profiling, dashboards, and alerting inside Go services.
 
-Use `golang-samber-slog` when the project uses Samber's `slog-*` extensions for routing, sampling, formatting, or
-backend integration. It is the specialized companion for those packages on top of generic observability guidance.
+### golang-security ( `$golang-security` )
 
-## golang-security
+Use it for code-level hardening, secrets, injection defenses, crypto usage, logging hygiene, and threat-model review.
 
-Use `golang-security` when the task is a security review or touches injection, secrets, crypto, file safety, cookies,
-network hardening, or risky user-input handling in Go. Pair it with `alaa-security-review` when the trust boundary
-extends beyond generic code safety.
+### golang-documentation ( `$golang-documentation` )
 
-## golang-stay-updated
+Use it for package docs, code comments, developer docs, and project-facing Go documentation.
 
-Use `golang-stay-updated` when the user wants learning resources, release news, community channels, or guidance on how
-to keep up with the Go ecosystem. It is a knowledge-radar skill, not an implementation skill.
+### golang-continuous-integration ( `$golang-continuous-integration` )
 
-## golang-stretchr-testify
+Use it for CI pipelines, release gates, dependency automation, security scans, coverage, and Go release flows.
 
-Use `golang-stretchr-testify` when the repo imports `testify` or the task is about assertions, mocks, suites, or
-testify-specific testing behavior. Load it alongside `golang-testing` when the test strategy itself also matters.
+## Samber-specific skills
 
-## golang-structs-interfaces
+If the repo already uses one of these packages, route to the matching skill instead of treating it as generic Go:
 
-Use `golang-structs-interfaces` when the design issue is about composition, embedding, interface size, type switches,
-field tags, or receiver tradeoffs. It is the detailed type-system companion behind many design reviews.
+- `golang-samber-do` ( `$golang-samber-do` )
+- `golang-samber-lo` ( `$golang-samber-lo` )
+- `golang-samber-mo` ( `$golang-samber-mo` )
+- `golang-samber-ro` ( `$golang-samber-ro` )
+- `golang-samber-slog` ( `$golang-samber-slog` )
+- `golang-samber-hot` ( `$golang-samber-hot` )
+- `golang-samber-oops` ( `$golang-samber-oops` )
 
-## golang-testing
+## Learning-only or ecosystem-radar work
 
-Use `golang-testing` for table-driven tests, unit and integration tests, race checks, fuzzing, fixtures, snapshot tests,
-leak detection, or test architecture. This is the default test owner for Go tasks.
+### golang-stay-updated ( `$golang-stay-updated` )
 
-## golang-troubleshooting
-
-Use `golang-troubleshooting` when something is wrong and the main need is root-cause debugging rather than design or
-style guidance. It covers deadlocks, crashes, race detection, Delve, GODEBUG, and systematic debugging flow.
+Use it when the task is about Go ecosystem awareness, recent changes, or learning-oriented exploration rather than direct implementation.

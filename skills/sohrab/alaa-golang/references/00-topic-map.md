@@ -4,21 +4,30 @@ Use this file to decide what to read next after `alaa-golang` triggers.
 
 ## Start here
 
-- Read `full-guide.md` first when the task needs the merged Go baseline.
+- Read `full-guide.md` first when the task needs the merged Go baseline, modernization stance, or delivery rules.
 
-## Detailed routing
+## If the task is about HTTP APIs
 
-- Read `10-installed-golang-skills.md` when you need to choose which installed public Go skills to load next.
-- Read `20-sohrab-companions.md` when the Go task also touches workflow, observability, security, data, Docker,
-  Kubernetes, or other Sohrab-owned concerns.
+- Read `30-http-api-framework-choice.md` first.
+- Read `31-chi-api-guide.md` when the service is new, when `chi` is chosen, or when the user wants to learn `chi` properly.
 
-## Version-sensitive or external-source checks
+## If the task is about choosing packages
 
-- Read `SOURCES.md` when the task depends on current Go support policy, Fiber compatibility, or the external MCP Market
-  source pages that informed this skill.
+- Read `40-production-ready-package-catalog.md`.
+- Use `golang-popular-libraries` ( `$golang-popular-libraries` ) for the broad public ecosystem view.
+- Use the local package catalog when the choice must fit this specific stack and operating model.
+
+## If the task is about routing to other skills
+
+- Read `10-installed-golang-skills.md` for public Go skills.
+- Read `20-sohrab-companions.md` for repository-specific companion skills.
+
+## If the task is version-sensitive or needs fresh facts
+
+- Read `SOURCES.md` and verify live state from official sources.
 
 ## Reading policy
 
-- Load only the sections you need.
-- Do not dump all routing tables into context if the task only needs one or two companion skills.
-- Prefer `full-guide.md` plus the specific routing entries that match the actual task.
+- load only the references that the task actually needs
+- do not dump every routing table into context when one or two sections are enough
+- prefer `full-guide.md` plus one focused reference over loading the whole skill pack

@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Golang"
-  short_description: "Go router for code, Fiber, and delivery"
-  default_prompt: "Use $alaa-golang to route this Go task through the right Go, Fiber, and Sohrab companion skills."
+  short_description: "Route production Go work and package choices"
+  default_prompt: "Use $alaa-golang to route this Go task, pick the right Go and companion skills, and default new HTTP APIs to chi unless Fiber is justified."
 
 policy:
   allow_implicit_invocation: true
