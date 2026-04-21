@@ -5,7 +5,7 @@ Use these baselines when a Laravel repository needs copy-oriented implementation
 Rules:
 - Adapt namespaces and injected helpers to the target repository.
 - Preserve the owned behavior and field names.
-- Do not change headers, event names, code names, or envelope shapes while copying.
+- Do not change headers, event names, code names, envelope shapes, or metric names while copying.
 
 ## RequestObservabilityMiddleware baseline
 
@@ -71,6 +71,22 @@ Required helper responsibilities behind this baseline:
 - persist request correlation context so the exception handler can attach the same headers to rendered API error responses
 - emit `http.request.completed` and `http.request.failed`
 - enforce bounded metric labels
+
+## MetricsEmitter baseline expectations
+
+The request middleware metrics emitter should align to the shared metric contract.
+
+Minimum request-middleware metrics:
+- `alaa_http_requests_total`
+- `alaa_http_request_duration_seconds`
+- `alaa_http_requests_in_flight`
+- `alaa_http_request_failures_total`
+
+Rules:
+- use route templates or stable route names, not raw paths
+- do not label by `user_id`, `project_id`, request IDs, raw URLs, or exception text
+- use histograms for request duration
+- if the stack supports exemplars, attach trace identifiers as exemplar data rather than normal labels
 
 ## Exception-handler reminder
 
@@ -177,3 +193,4 @@ When copying middleware baselines into a Laravel repository, also enforce:
 - `php artisan ops:ready --json`
 - top-level `data` envelope for successful `/api/*` responses
 - `X-Request-Id` and `traceparent` response headers
+- the metric families defined by `21-alaa-platform-observability-directive.md` when the service owns an HTTP metrics boundary

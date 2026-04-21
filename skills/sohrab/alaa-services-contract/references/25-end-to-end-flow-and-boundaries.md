@@ -2,6 +2,53 @@
 
 Use this file when the task is about how the Ala platform fits together end-to-end, especially for onboarding an agent or a frontend developer to the shared system shape.
 
+## High-level system view
+
+The Ala platform is organized in layers with clear ownership:
+- client applications send public traffic to the gateway
+- the gateway is the external trust boundary
+- the gateway verifies access tokens for protected routes, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
+- when a route family needs fine-grained request-time authorization, the gateway calls `authz-sidecar` or `entitlement-spoa`
+- backend services own their business domains and internal logic
+- entitlement-platform keeps normalized authorization business truth in `entitlement-api`, projects derived tuples through `projector`, and serves request-time checks from OpenFGA
+
+Rules:
+- do not let services recreate browser-facing trust assumptions on internal hops
+- keep route ownership clear so frontend, gateway, and backend work stay aligned
+- prefer direct ownership boundaries over convenience coupling across service internals
+- backend services may keep local user projections or immutable request snapshots, but `auth` remains the source of truth for current identity state
+
+## Current services and responsibilities
+
+### Existing services
+
+- `auth`
+  - canonical auth and profile source of truth for sign-in, tokens, sessions, profile truth, and trusted identity APIs
+- `content`
+  - new macroservice for `course`, `set`, and `content`
+- `vod`
+  - legacy learning and playback service during migration; on the deprecation path for learning-content ownership
+- `comment`
+  - discussion service for comments, replies, likes, moderation, and related activity
+- `ticket`
+  - support service for ticket creation, replies, assignment, status changes, and follow-up flows
+- `wa`
+  - watch and analytics ingestion service for event intake and related processing flows
+- `entitlement-api`
+  - normalized authorization business truth
+- `projector`
+  - derived tuple writer into OpenFGA
+- OpenFGA
+  - derived authorization graph for fast request-time checks
+
+### Components being evaluated
+
+These are not yet stable ownership surfaces, but they should follow the same platform contract where relevant:
+- `notification-core`
+- `realtime-hub`
+- delivery workers
+- queue or broker backbones such as RabbitMQ or Redis Streams
+
 ## Baseline platform flow
 
 Treat the default Ala flow like this:
@@ -9,20 +56,28 @@ Treat the default Ala flow like this:
 - gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses entitlement-platform authorization
 - backend service -> backend service only for internal workloads that truly require a synchronous hop
 - backend service -> async infrastructure for queue, event, or job delivery when appropriate
-- normalized business change -> entitlement control plane -> projector -> OpenFGA for derived fine-grained authorization state
+- normalized business change -> `entitlement-api` -> `projector` -> OpenFGA for derived fine-grained authorization state
 
-Rules:
-- do not let services recreate browser-facing trust assumptions on internal hops
-- keep route ownership clear so frontend, gateway, and backend work stay aligned
-- prefer direct ownership boundaries over convenience coupling across service internals
-- backend services may keep local user projections or immutable request snapshots, but auth-service remains the source of truth for the latest identity state
+## Simple user journey
+
+In a normal user journey:
+- a learner calls a gateway-facing route
+- if the route is protected, the gateway verifies the token, strips spoofed internal headers, injects trusted context such as `X-User-Id` and `X-Project-Id`, and decides whether request-time authorization is also required
+- sign-in and token refresh flows reach `auth`
+- learning-page data should reach `content` in the long-term platform direction, while some migration traffic may still pass through `vod`
+- discussion actions reach `comment`
+- support actions reach `ticket`
+- watch or telemetry ingestion reaches `wa`
+- protected route families that use fine-grained authorization are checked first by `authz-sidecar` or `entitlement-spoa`, using the derived authorization state stored in OpenFGA
+
+From the user point of view, this feels like one product. Inside the platform, each layer keeps a clear responsibility.
 
 ## How entitlement-platform fits into the Ala stack
 
 - entitlement-platform does not own authentication; the gateway does
 - entitlement-platform may own request-time fine-grained route authorization through `authz-sidecar` or `entitlement-spoa`
 - entitlement-platform keeps normalized authorization business truth in `entitlement-api`
-- entitlement-platform writes derived tuples through `projector`
+- `projector` writes derived tuples
 - OpenFGA stores derived effective authorization state
 
 For a normal backend behind gateway, the practical rule is:
@@ -43,7 +98,7 @@ Rules:
 - if a route previously depended on the retired profile blob, move that client integration to the public auth or profile APIs instead of reviving `X-Profile`
 
 Route-shape reminder:
-- gateway-facing routes may include a service prefix such as `/auth`, `/comment`, `/ticket`, `/vod`, or `/wa`
+- gateway-facing routes may include a service prefix such as `/auth`, `/content`, `/comment`, `/ticket`, `/vod`, or `/wa`
 - trusted internal routes stay service-owned and are not public frontend discovery surfaces
 - operational routes remain separate from product routes even when they share the `/api/*` prefix
 - service-local routes may differ after gateway prefix stripping
@@ -73,7 +128,7 @@ Rules:
 - if a service depends on shared infrastructure such as Redis or RabbitMQ, check that infrastructure directly instead of proxying another app's status
 - if a frontend or service needs domain behavior from another service, prefer that service's public API or events over direct table coupling
 - downstream services may consume compact trusted name and location headers, but they must not fabricate display-name fields from compact ids unless another explicit source-of-truth contract owns that lookup
-- backend services may keep local user projections or immutable request snapshots, but auth-service remains the source of truth for the latest identity state
+- backend services may keep local user projections or immutable request snapshots, but `auth` remains the source of truth for the latest identity state
 
 ## Repo-role reminders
 
@@ -105,6 +160,7 @@ This file gives one concise picture of:
 - what the public client is allowed to do
 - what the gateway owns
 - what backend services own
+- how `content` and legacy `vod` fit during migration
 - where async boundaries belong
 
 That helps agents keep frontend, gateway, and backend work consistent instead of treating each repository as an isolated system.

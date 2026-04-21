@@ -6,7 +6,7 @@ This skill exists to make Ala services converge on one contract.
 
 Rules:
 - Treat the contract as exact unless a blocking incompatibility is reported.
-- Do not let agents choose alternative `/api/ready` shapes, alternate headers, or different event names just because they also look reasonable.
+- Do not let agents choose alternative `/api/ready` shapes, alternate headers, different event names, or repo-local metric families just because they also look reasonable.
 - Prefer convergence to the Ala contract over local stylistic preference.
 - If a service still carries a replaced contract surface such as `X-Correlation-Id`, migrate it fully and delete the stale implementation in the same effort.
 
@@ -17,10 +17,19 @@ This skill should help a new service understand the current Ala service landscap
 | Service | Primary ownership | Main interaction expectations |
 |---|---|---|
 | `auth` | canonical auth and profile truth, OTP login, token lifecycle, RBAC compilation, trusted profile APIs | downstream services should trust gateway-derived identity and should not duplicate canonical auth or profile ownership |
+| `content` | macroservice for `course`, `set`, and `content`; long-term learning-content source of truth | use `content` for the new educational-content domain model instead of reviving legacy `vod` ownership |
+| `vod` | legacy learning and playback service during migration | keep it aligned to the same platform contract while moving learning-content responsibilities to `content` |
 | `comment` | tenant-scoped comments, replies, likes, moderation, durable outbox publication | frontends and backends should use the comment API or comment events rather than couple to comment tables |
 | `ticket` | support-ticket management, ticket messages, queue-driven notifications, local user projection | protected routes trust gateway-derived context; cross-service consumers should respect ticket ownership and its service-local API |
-| `vod` | VOD or video-domain backend currently using Laravel, Octane, and RabbitMQ | align it to the same operational and trusted-ingress contract; refresh exact domain ownership from current repo docs before broad changes |
-| `wa` | watch-time and video analytics ingestion into ClickHouse via Vector | it is not Laravel, but it should still align to Ala operational and observability naming where applicable |
+| `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
+| `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
+| `projector` | derived tuple projection into OpenFGA | keep it as a derived-state writer, not as the business-truth owner |
+
+Components currently under evaluation but expected to follow this contract where relevant:
+- `notification-core`
+- `realtime-hub`
+- delivery workers
+- queue or broker surfaces that expose service-owned metrics, traces, or readiness behavior
 
 Rules:
 - Keep this map updated as Ala services evolve.
@@ -32,7 +41,7 @@ Rules:
 Rules:
 - Derive the `service` field from `APP_NAME` or an equivalent service-level config.
 - Keep it stable and machine-readable.
-- Use the actual Ala service identifier such as `auth`, `comment`, `ticket`, `vod`, or `wa`.
+- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `vod`, or `wa`.
 - Do not return framework or runtime names such as `Laravel`, `Go`, `Node`, or `PHP`.
 - Do not decorate the value with environment or version strings.
 

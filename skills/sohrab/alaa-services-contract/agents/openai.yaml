@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
-  short_description: "Hard Ala backend, deploy, and service-ci-kit contract"
-  default_prompt: "Use $alaa-services-contract to enforce the Ala backend service contract for `/api/health`, `/api/ready`, trusted ingress, Laravel API responses, frontend-to-gateway-to-backend flow, Arvan-versus-Docker deploy modes, shared infra, registry and key-handling rules, and the shared `service-ci-kit` GitLab CI/CD baseline."
+  short_description: "Hard Ala backend, observability, deploy, and CI contract"
+  default_prompt: "Use $alaa-services-contract to enforce the Ala backend service contract for `/api/health`, `/api/ready`, trusted ingress, Laravel API responses, frontend-to-gateway-to-backend flow, the Alaa Platform Observability Directive, OpenTelemetry and Prometheus rules, Arvan-versus-Docker deploy modes, shared infra, registry and key-handling rules, and the shared `service-ci-kit` GitLab CI/CD baseline."
 
 policy:
   allow_implicit_invocation: true

@@ -2,20 +2,21 @@
 
 ## Step-by-step apply checklist
 
-1. Identify the service mode first.
-2. Read the smallest relevant contract file before changing code.
-3. Load the required companion skills.
-4. Inspect the current route families, middleware order, auth shape, observability shape, readiness checks, response boundaries, trusted-header expectations, and deploy wiring.
-5. For an Ala Laravel backend that follows the shared `platform-app-php` delivery model, converge GitLab CI to the shared `service-ci-kit` thin-wrapper baseline instead of inventing repo-local CI logic.
-6. Converge the repository to the exact contract instead of partially mirroring it.
-7. Remove active dependencies on retired trust surfaces such as `X-Profile` or old claim names when the compact contract replaced them.
-8. Add required helper or support components when they do not exist.
-9. Add or align `/api/health`, `/api/ready`, and `ops:ready --json` when the target is Laravel.
-10. Add or align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
-11. Add or align exact response envelopes, exact headers, exact event names, and exact code naming.
-12. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-13. Run focused tests for every changed contract surface.
-14. Report blockers explicitly when exact convergence is not possible.
+1. Read `AGENTS.md`.
+2. Identify the repository role and service mode.
+3. Read the smallest owning reference file first.
+4. Read `21-alaa-platform-observability-directive.md` whenever observability design, OTLP configuration, Prometheus metrics, or Collector topology is in scope.
+5. Confirm the canonical Ala service identity.
+6. Confirm the exact route-family split.
+7. Align `/api/health` and `/api/ready` to the exact contract.
+8. Align exact readiness check names and codes.
+9. Align `X-Request-Id`, `traceparent`, request logging, and stable event/code naming.
+10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
+11. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
+12. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
+13. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+14. Run focused tests for every changed contract surface.
+15. Report blockers explicitly when exact convergence is not possible.
 
 ## Minimum validation checklist
 
@@ -36,7 +37,14 @@
 - no service code, config, docs, tests, or emitted headers still mention `X-Correlation-Id`
 - successful probes stay low-noise
 - readiness failure and request failure logs use the exact event and code rules
+- logs are structured JSON in production
+- traces and logs use the OTLP path without backend-specific code branches
 - metrics use bounded labels only
+- the internal metrics endpoint is scrapeable and not treated as a public client API
+- HTTP latency uses histograms, not summaries, unless a documented exception exists
+- Pushgateway is not used for normal long-lived service metrics
+- the service exposes the baseline metric families that apply to it
+- if a Collector gateway is part of the task, queue and exporter failure behavior is observable
 
 ### Trusted ingress
 - missing blank invalid `X-Project-Id`
@@ -60,7 +68,7 @@ Flag a problem when you see any of these:
 - `/api/health` calls PostgreSQL, Redis, RabbitMQ, ClickHouse, or another service
 - `/api/ready` depends on tokens, cookies, OTP, or end-user state
 - the readiness envelope or key names differ from the contract
-- a new or refactored Ala Laravel backend invents repo-local GitLab CI instead of defaulting to `service-ci-kit`
+- a new or refactored Ala service invents repo-local GitLab CI instead of defaulting to `service-ci-kit`
 - `.gitlab-ci.yml` is not a thin wrapper in a repo that should follow the shared kit
 - shared `ci/scripts/*` or local semantic-release helper trees appear in a service repo without an explicit blocker
 - the repository diverges from the shared kit baseline without documenting the reason
@@ -68,7 +76,11 @@ Flag a problem when you see any of these:
 - `X-Correlation-Id` remains anywhere in service code, config, tests, docs, or emitted headers after the migration
 - `X-Trace-Id` is still treated as a response-header requirement
 - request or readiness logs invent alternate event names for the same flow
-- metrics use unbounded labels
+- logs are not structured JSON in production
+- the service hard-codes vendor-specific telemetry backends instead of targeting OTLP and the shared metrics contract
+- metrics use unbounded labels or raw user or tenant identifiers
+- a public route exposes the internal metrics endpoint
+- a normal long-lived service uses Pushgateway for app metrics
 - trusted headers are parsed in controllers, policies, or repositories
 - `$request->user()` and `Auth::user()` can diverge within one request
 - Laravel services return transport-shaped arrays or raw models instead of Resource boundaries
@@ -89,3 +101,4 @@ Flag a problem when you see any of these:
 - scattering trusted-user normalization across controllers, policies, resources, and observers
 - leaving helper responsibilities implicit so each agent re-invents them
 - reviving the retired profile-blob trust surface instead of consuming the compact header projection
+- pushing observability logic into app code that belongs in the Collector layer

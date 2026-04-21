@@ -1,32 +1,34 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala backend services such as auth, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, backend behavior behind the Ala gateway, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared-versus-external Postgres mode selection, hard shared-infra reuse, canonical service DNS aliases, auth key ownership, registry usage, fast-test SQLite support, or the shared `service-ci-kit` GitLab CI/CD baseline for Ala Laravel services. Use when consistency across Ala services matters more than local preference."
+description: "Hard contract for Ala backend services such as auth, content, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, backend behavior behind the Ala gateway, the Alaa Platform Observability Directive, OpenTelemetry and Prometheus contract rules, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared-versus-external Postgres mode selection, hard shared-infra reuse, canonical service DNS aliases, auth key ownership, registry usage, fast-test SQLite support, or the shared `service-ci-kit` GitLab CI/CD baseline for Ala services. Use when consistency across Ala services matters more than local preference."
 ---
 
 # Alaa Services Contract
 
 Use this skill as the hard contract layer for Ala backend services.
 
-This skill is intentionally Ala-specific. It exists to keep Ala services aligned with one exact contract so agent output stays consistent across repositories. Treat the contract here as normative. When a target repository deviates, converge it to this contract or explicitly report the blocker. Do not improvise alternate envelopes, headers, event names, route names, or middleware semantics.
+This skill is intentionally Ala-specific. It exists to keep Ala services aligned with one exact contract so agent output stays consistent across repositories. Treat the contract here as normative. When a target repository deviates, converge it to this contract or explicitly report the blocker. Do not improvise alternate envelopes, headers, event names, route names, middleware semantics, or repo-local observability contracts.
 
 Keep this top-level file small. Read the reference files for the exact contract and apply steps.
 
 This skill explains how a normal Ala backend fits into the larger platform:
 - frontend calls the gateway
-- gateway owns authentication and trusted header injection
-- entitlement-platform may enforce route-level fine-grained authorization at the gateway boundary
-- the backend still owns normalized request handling, business authorization, response contracts, and observability
+- gateway owns authentication, spoofed-header removal, and trusted-header injection
+- the gateway may call a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa`
+- entitlement-platform keeps normalized authorization truth in `entitlement-api`, projects derived tuples through `projector`, and serves route-time checks from OpenFGA
+- the backend still owns normalized request handling, business authorization, response contracts, and observability inside the service boundary
 
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.
 2. Read `references/00-topic-map.md`.
 3. Select the repository role first: frontend-facing backend behind gateway, internal backend, auth-boundary service, or authz-runtime or control-plane service.
-4. Then select the service mode: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or Laravel auth-boundary service.
+4. Then select the service mode: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or the platform observability directive.
 5. Read the smallest relevant reference file first.
-6. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
-7. Load the required companion skills before implementation work outside this skill's ownership.
-8. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
+6. Read `references/21-alaa-platform-observability-directive.md` whenever the task includes telemetry design, OpenTelemetry, Prometheus, metric catalogs, queue or DB instrumentation, collector topology, or cross-runtime observability alignment between Go and Laravel.
+7. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
+8. Load the required companion skills before implementation work outside this skill's ownership.
+9. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
 
 ## Hard contract rule
 
@@ -36,7 +38,7 @@ This skill explains how a normal Ala backend fits into the larger platform:
 - When this skill replaces a legacy header, field, event, or helper, remove the old implementation instead of keeping stale compatibility code in the service.
 - If a repository cannot adopt a rule exactly, stop and report the incompatibility.
 - Keep references relative to this skill folder so the skill remains usable on different machines.
-- Ala service names such as `auth`, `comment`, `ticket`, `vod`, and `wa` are valid inside this skill because it is intentionally platform-specific.
+- Ala service names such as `auth`, `content`, `comment`, `ticket`, `vod`, and `wa` are valid inside this skill because it is intentionally platform-specific.
 
 ## Companion routing
 
@@ -44,7 +46,9 @@ Load these companion skills when their concern is in scope:
 - `$alaa-trust-gateway-auth`
   - Load when trusted headers, auth error semantics, compact claim semantics, or tenant or project propagation are involved.
 - `$alaa-observability-soc`
-  - Load when logs, traces, metrics, alerting, event naming, or incident evidence requirements are involved.
+  - Load when logs, traces, metrics, alerting, incident evidence requirements, or security-log catalog work are in scope.
+- `$alaa-golang`
+  - Load when a Go service must implement this contract with Chi, OTLP, Prometheus, or service-runtime patterns that are already standardized in Ala.
 - `$alaa-docker-production`
   - Load when the task changes Dockerfiles, Compose or Swarm wrappers, registry plumbing, secret mounting, runtime users, or container hardening.
 - `$caas-arvan-kuber`
@@ -78,10 +82,12 @@ Load these companion skills when their concern is in scope:
   - `references/10-core-service-contract.md`
 - deploy modes, Arvan-versus-Docker ownership, shared `service-ci-kit` GitLab CI/CD baseline, shared-versus-external Postgres rules, hard shared-infra reuse, DNS and VIP naming, key ownership, registry contract, and SQLite test support:
   - `references/15-deployment-and-runtime-contract.md`
-- end-to-end platform flow, frontend or gateway orientation, and internal-hop boundaries:
-  - `references/25-end-to-end-flow-and-boundaries.md`
 - exact observability headers, `traceparent`, request logs, event names, and `RequestObservabilityMiddleware`:
   - `references/20-operational-and-observability-contract.md`
+- full telemetry architecture, OpenTelemetry collector gateway rules, Prometheus scrape rules, shared metric catalog, and cross-runtime observability guidance:
+  - `references/21-alaa-platform-observability-directive.md`
+- end-to-end platform flow, frontend or gateway orientation, service ownership, and internal-hop boundaries:
+  - `references/25-end-to-end-flow-and-boundaries.md`
 - exact trusted-ingress rules, Laravel response boundaries, `ResolveUserMiddleware`, and how backend business auth fits after gateway allow:
   - `references/30-trusted-ingress-and-laravel-contract.md`
 - apply checklist, review checklist, and anti-patterns:
@@ -98,6 +104,6 @@ Load these companion skills when their concern is in scope:
 - Use relative reference paths only.
 - When a normative rule changes in a split reference file, update `references/full-guide.md` in the same patch so the preserved whole-guide view stays complete.
 - Do not strand normative Ala rules in only one document. Keep `references/00-topic-map.md`, the split references, and `references/full-guide.md` aligned.
-- Keep exact route names, header names, event names, and code families stable unless the contract is intentionally revised.
+- Keep exact route names, header names, event names, code families, metric names, and observability field names stable unless the contract is intentionally revised.
 - Keep the Ala deploy contract aligned with `alaa-docker-production` and `caas-arvan-kuber` when ownership boundaries change.
 - When this skill changes a contract owned jointly with another skill, update that companion skill in the same effort so the pack remains consistent.

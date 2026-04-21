@@ -1,5 +1,9 @@
 # Operational And Observability Contract
 
+This file owns the exact stable observability surfaces that must not drift across Ala services.
+
+Use `21-alaa-platform-observability-directive.md` together with this file when the task includes telemetry architecture, OpenTelemetry Collector design, Prometheus metric catalogs, or cross-runtime observability guidance. If these two files appear to conflict, this file owns the exact header, event, code, and middleware invariants.
+
 ## Exact response headers
 
 The target Ala response-header contract is:
@@ -123,6 +127,8 @@ Forbidden defaults:
 - raw path
 - query string
 - exception message as a metric label
+
+Use `21-alaa-platform-observability-directive.md` for the exact metric families, histogram rules, collector ownership rules, and wider Prometheus contract.
 
 ## `RequestObservabilityMiddleware` contract
 

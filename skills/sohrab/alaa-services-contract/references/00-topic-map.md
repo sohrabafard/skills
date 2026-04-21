@@ -10,9 +10,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode A - Any Ala backend service`
   - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, or observability event naming.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
-- `Mode A+ - Platform flow and onboarding view`
-  - Use when the task is about client -> gateway -> service flow, frontend or gateway orientation, internal HTTP hops, async boundaries, which layer owns what, or how entitlement-platform fits into the Ala service picture.
-  - Read `25-end-to-end-flow-and-boundaries.md` after the core contract.
+- `Mode A+ - Platform observability directive`
+  - Use when the task is about OpenTelemetry exporter setup, OTLP endpoint ownership, Collector gateway topology, Prometheus scrape endpoints, metric-family selection, label/cardinality budgets, queue or dependency instrumentation, exemplars, or a shared telemetry contract across Go and Laravel services.
+  - Read `20-operational-and-observability-contract.md` and `21-alaa-platform-observability-directive.md`.
 - `Mode A++ - Deployment and runtime contract`
   - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
   - Read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
@@ -23,71 +23,25 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the service sits behind the Ala gateway and consumes sanitized trusted headers.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
 - `Mode D - Laravel auth-boundary service`
-  - Use when the service is allowed to satisfy trusted ingress through request guards or `Auth::viaRequest(...)` but must still expose the same outward contract.
-  - Read `30-trusted-ingress-and-laravel-contract.md`, then `50-laravel-copy-baselines.md` if implementation help is needed.
-- `Mode E - Cross-runtime helper assets`
-  - Use when the task needs copy-ready helper code for lowercase Crockford Base32, UUIDv7 encoding, or reversible bytes, integer, string, and UUID codecs shared across PHP, JavaScript, shell tooling, and HAProxy Lua.
-  - Load `$alaa-crockford-base32-codecs`.
+  - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
+  - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.
+- `Mode E - Platform flow and boundaries view`
+  - Use when the task is about client -> gateway -> service flow, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, or internal-hop discipline.
+  - Read `25-end-to-end-flow-and-boundaries.md`.
 
-## Reference files
+## Cross-cutting references
 
-- `05-scope-service-modes-and-auth-routing.md`
-  - purpose and use
-  - service modes
-  - auth-specific routing note for `auth`
-  - onboarding rule for moving from scope selection to exact contract files
-- `10-core-service-contract.md`
-  - hard contract posture
-  - Ala service map
-  - service identity
-  - route families
-  - exact `/api/health`
-  - exact `/api/ready`
-  - readiness naming and failure rules
 - `20-operational-and-observability-contract.md`
-  - `X-Request-Id`
-  - `traceparent`
-  - log field schema
-  - event and code naming for request and readiness flows
-  - `RequestObservabilityMiddleware`
-- `15-deployment-and-runtime-contract.md`
-  - Arvan Kubernetes versus Docker ownership
-  - Compose and Swarm mode requirements
-  - shared `service-ci-kit` GitLab CI/CD baseline
-  - thin-wrapper `.gitlab-ci.yml` and shared-versus-local CI ownership
-  - shared Docker network and hard shared infra reuse rules
-  - shared-versus-external Postgres mode selection
-  - duplicate shared-infra prevention and fail-fast behavior
-  - `DB_PROVISION_*` separation from the app runtime tuple
-  - canonical service alias and VIP or DNS routing
-  - key ownership and registry contract
-  - SQLite fast-test support expectations
-- `25-end-to-end-flow-and-boundaries.md`
-  - client -> gateway -> service flow
-  - relation between entitlement-platform and normal backend services
-  - frontend and gateway orientation
-  - operational caller expectations
-  - internal HTTP and async-boundary discipline
-- `30-trusted-ingress-and-laravel-contract.md`
-  - `ResolveUserMiddleware`
-  - trusted headers
-  - actor normalization
-  - route-level authz versus backend business authorization
-  - auth synchronization
-  - Laravel Resource-first `/api/*` responses
+  - Exact `X-Request-Id` and `traceparent` rules, structured log field contract, event and code naming, metrics-boundary rules, and `RequestObservabilityMiddleware`.
+- `21-alaa-platform-observability-directive.md`
+  - Full telemetry architecture, OTLP/Collector responsibilities, Prometheus scrape rules, shared metric catalog, runtime-specific notes, and validation rules for observability work.
 - `40-apply-checklist-and-anti-patterns.md`
-  - step-by-step apply checklist
-  - review checklist
-  - anti-patterns
+  - Use before finalizing a contract change or skill-driven implementation review.
 - `50-laravel-copy-baselines.md`
-  - copy-oriented middleware and helper class baselines
-- `full-guide.md`
-  - the preserved whole-contract guide when the task is broad, risky, or easier to solve from one canonical document
+  - Use only when you need copy-oriented Laravel baselines after understanding the owning rules.
 
 ## Working rule
 
-- Use the smallest file that answers the task.
-- Load `full-guide.md` when the task spans multiple files or multiple contract domains.
-- Keep `full-guide.md` as the preserved whole-contract view instead of a shortened recap of the split files.
-- When a normative rule changes in either the full guide or a split reference, update the matching view in the same patch.
-- Keep this topic map aligned with the actual reference files.
+- Start with the smallest file that owns the rule you need.
+- Load `full-guide.md` only when the task is broad enough that split-file navigation would cost more context than it saves.
+- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces and `21` owns the larger telemetry design.
