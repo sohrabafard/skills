@@ -907,13 +907,17 @@ For Go:
 - expose Prometheus metrics with the official Prometheus Go client `github.com/prometheus/client_golang/...`
 
 For PHP and Laravel:
-- use official OpenTelemetry PHP packages such as `open-telemetry/api`, `open-telemetry/context`, `open-telemetry/sdk`, and `open-telemetry/exporter-otlp` as needed
+- the baseline Composer set for Ala PHP and Laravel services is `open-telemetry/api`, `open-telemetry/context`, `open-telemetry/sdk`, and `open-telemetry/exporter-otlp`
+- application code and shared internal libraries should depend on classes and interfaces from `open-telemetry/api`; keep SDK, exporter, and provider wiring in bootstrap or infrastructure code
+- treat `open-telemetry/context` as effectively baseline for real platform services because queues, workers, downstream HTTP calls, custom middleware, and manual boundaries need explicit context propagation when automatic propagation is not enough
 - use the official Laravel auto-instrumentation package `open-telemetry/opentelemetry-auto-laravel` where auto-instrumentation is appropriate
-- when using official PHP auto-instrumentation, install and enable the OpenTelemetry PHP extension, the SDK, and the needed instrumentation libraries; the extension by itself does not generate traces
-- for a Laravel manual-instrumentation baseline, the expected Composer starting point is `composer require open-telemetry/sdk open-telemetry/exporter-otlp`
+- when using official PHP auto-instrumentation or zero-code instrumentation, install and enable the OpenTelemetry PHP extension, the SDK, and the needed instrumentation libraries; the extension by itself does not generate traces
+- for a Laravel manual-instrumentation baseline, the expected Composer starting point is `composer require open-telemetry/api open-telemetry/context open-telemetry/sdk open-telemetry/exporter-otlp`
 - for official Laravel auto-instrumentation, add `open-telemetry/opentelemetry-auto-laravel` and satisfy its `ext-opentelemetry` requirement instead of substituting an unrelated package
+- because Ala platform observability includes structured logs, use the official `open-telemetry/opentelemetry-logger-monolog` package when sending Laravel Monolog records through the OpenTelemetry logging pipeline
 - use only a platform-approved Prometheus-compatible metrics endpoint package for Laravel services
 - do not treat third-party Laravel OpenTelemetry helpers as platform defaults; verify the exact package name, maintenance status, Octane behavior, and production readiness before approving one
+- a helper such as `keepsuit/laravel-opentelemetry` may be approved as an optional app-level convenience layer for Laravel ergonomics, but it is not the canonical platform package contract
 - do not cite `spatie/laravel-opentelemetry` as a canonical package name; as of 2026-04-21 verification, public package evidence points to `spatie/laravel-open-telemetry`, and that package must not be used as the platform default unless the platform explicitly re-approves it despite the maintenance and production-readiness warnings seen during verification
 
 ### Propagation rules
