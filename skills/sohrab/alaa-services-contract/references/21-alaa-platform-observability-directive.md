@@ -61,12 +61,31 @@ The platform direction is:
 - Prometheus scrapes service metrics from internal endpoints
 - backends can change later by configuration without redesigning each service
 
+The current Ala target architecture is:
+- application services send OpenTelemetry traces, exceptions, and structured logs to a gateway OpenTelemetry Collector endpoint
+- application services expose Prometheus-compatible metrics endpoints; metrics are first-class and must not be skipped when tracing is added
+- the gateway Collector exports to SigNoz or another approved backend through Collector configuration
+- SigNoz tokens, endpoints, and exporter-specific headers belong in Collector or deployment secrets, not application code
+
+### What goes where
+
+Use this ownership table to avoid moving platform concerns into application code:
+
+| Data type                           | App code        | OTel Collector          | Metrics backend |
+|-------------------------------------|-----------------|-------------------------|-----------------|
+| traces                              | yes             | receive/process/export  | yes             |
+| exceptions                          | yes             | receive/process/export  | yes             |
+| structured logs                     | yes             | collect/process/export  | yes             |
+| Prometheus metrics                  | expose endpoint | scrape/forward optional | yes             |
+| retry/compression/fan-out/redaction | no by default   | yes                     | no              |
+
 Rules:
 - keep telemetry endpoint configuration in env or deployment config
 - do not hard-code backend-specific behavior in service code
 - do not build custom multi-backend fan-out, retry queues, compression, or redaction pipelines inside application code unless the platform explicitly approves an exception
 - do not replace the Prometheus scrape contract with ad hoc pushing for normal services
 - do not use the Pushgateway for normal long-lived service metrics; only use it for explicit service-level batch-job cases when the lifecycle is intentionally decoupled from individual instances
+- do not deliver "tracing only" observability; metrics, logs, traces, and exceptions are all part of done
 
 ## OpenTelemetry SDK and OTLP rules
 
@@ -77,6 +96,12 @@ Use standard OTel resource identity consistently:
 - `service.version` should come from the build or release version
 - `deployment.environment.name` should come from the deployment environment
 - add other resource attributes only when they are stable, useful, and policy-safe
+
+Real resource identifiers belong in the right signal:
+- use real identifiers in structured logs and trace attributes when they are needed for debugging and allowed by data-protection policy
+- examples include `request_id`, `project_id`, `user_id`, `content_id`, `set_id`, `ticket_id`, or an upstream dependency request id
+- real resource identifiers MUST NOT appear as Prometheus metric labels
+- use bounded metric labels such as route pattern, operation, dependency, status class, code, queue, job name, and outcome
 
 ### Configuration rules
 
@@ -92,6 +117,25 @@ Rules:
 - do not require code edits to move from one backend or collector endpoint to another
 - keep OTLP timeouts configurable, not hard-coded
 - do not put secrets directly in source code
+
+### Package guidance
+
+Use explicit, vendor-neutral packages:
+
+For Go:
+- use official OpenTelemetry Go modules under `go.opentelemetry.io/otel` and `go.opentelemetry.io/contrib/...`
+- use official OTLP exporters from the OpenTelemetry Go modules
+- expose Prometheus metrics with the official Prometheus Go client `github.com/prometheus/client_golang/...`
+
+For PHP and Laravel:
+- use official OpenTelemetry PHP packages such as `open-telemetry/api`, `open-telemetry/context`, `open-telemetry/sdk`, and `open-telemetry/exporter-otlp` as needed
+- use the official Laravel auto-instrumentation package `open-telemetry/opentelemetry-auto-laravel` where auto-instrumentation is appropriate
+- when using official PHP auto-instrumentation, install and enable the OpenTelemetry PHP extension, the SDK, and the needed instrumentation libraries; the extension by itself does not generate traces
+- for a Laravel manual-instrumentation baseline, the expected Composer starting point is `composer require open-telemetry/sdk open-telemetry/exporter-otlp`
+- for official Laravel auto-instrumentation, add `open-telemetry/opentelemetry-auto-laravel` and satisfy its `ext-opentelemetry` requirement instead of substituting an unrelated package
+- use only a platform-approved Prometheus-compatible metrics endpoint package for Laravel services
+- do not treat third-party Laravel OpenTelemetry helpers as platform defaults; verify the exact package name, maintenance status, Octane behavior, and production readiness before approving one
+- do not cite `spatie/laravel-opentelemetry` as a canonical package name; as of 2026-04-21 verification, public package evidence points to `spatie/laravel-open-telemetry`, and that package must not be used as the platform default unless the platform explicitly re-approves it despite the maintenance and production-readiness warnings seen during verification
 
 ### Propagation rules
 
@@ -123,6 +167,7 @@ The default platform pattern is a Collector gateway tier:
 - applications or local agents send OTLP telemetry to a stable central endpoint
 - one or more gateway collectors receive, process, and export telemetry
 - the stable OTLP endpoint can exist per cluster, per region, or per environment
+- the approved backend can be SigNoz, but applications must still target the Collector endpoint rather than a SigNoz-specific endpoint
 
 In Kubernetes or OpenShift:
 - use a Deployment for a gateway tier by default
@@ -147,6 +192,7 @@ The Collector tier owns:
 - redaction and masking
 - transformation and normalization
 - backend routing and fan-out
+- SigNoz exporter configuration when SigNoz is the active backend
 - centralized sampling policy
 - Collector self-telemetry
 
@@ -348,6 +394,8 @@ Rules:
 - prefer OTel semantic conventions for HTTP, DB, messaging, and RPC
 - use stable operation names and bounded attributes
 - do not use raw SQL text, raw tokens, or raw PII as general span attributes
+- use real resource identifiers as span attributes only when they materially help debugging and are policy-safe
+- never copy those identifiers into Prometheus labels
 - if query-level grouping is needed, use a safe fingerprint
 - make retry paths, timeout paths, and cancellation paths visible
 
@@ -382,6 +430,7 @@ Rules:
 - avoid summaries for multi-replica request latency unless there is a very specific justified exception
 - if the monitoring stack has explicitly enabled and validated native histograms end-to-end, they may be rolled out deliberately; otherwise keep classic histograms with explicit buckets
 - do not use raw user IDs, project IDs, request IDs, raw URLs, query strings, SQL text, exception text, email addresses, or phone numbers as labels
+- do not use real resource identifiers such as content ids, set ids, ticket ids, order ids, token ids, or dependency request ids as labels
 - prefer service-discovery or target labels for metadata such as service and environment when the platform already injects them, instead of duplicating the same dimensions in every metric
 
 ### Allowed label examples
@@ -407,6 +456,7 @@ Do not use:
 - `user_id`
 - `project_id`
 - `request_id`
+- real content, set, ticket, order, token, or dependency request ids
 - raw URL
 - query string
 - email
@@ -591,6 +641,8 @@ Rules:
 - treat each queue job, consumer loop unit, or scheduled command as a fresh unit of work with fresh context
 - keep the Prometheus endpoint internal and low-noise
 - keep logs structured and avoid multiline free-form stack traces as the primary production format
+- remember that Octane keeps the Laravel application in memory between requests, so never keep request, user, span, baggage, or trusted-header state in long-lived statics or singletons without an explicit reset path
+- do not claim the OpenTelemetry PHP extension is universally required for every possible Octane implementation; require it for official PHP auto-instrumentation or for any chosen package that depends on extension hooks, and evaluate manual instrumentation separately
 
 ### Go
 
@@ -610,6 +662,21 @@ For Ala environments:
 - when using the official Collector Helm chart, choose the deployment mode intentionally; gateway tiers usually use `deployment`, while host-level or node-level collection usually points to `daemonset`
 - keep metrics endpoints internal and scrape them through platform discovery or explicit scrape configuration
 - keep the same contract in Docker Compose and Docker Swarm: OTLP to the shared collector endpoint, Prometheus scraping internal service metrics, and no public metrics endpoint
+- when SigNoz is the selected backend, put SigNoz exporter endpoints, access tokens, headers, and TLS options only in the Collector deployment configuration or secrets
+
+## Service adoption checklist
+
+When applying this skill to a service, finish by checking:
+- `/api/health`
+- `/api/ready`
+- `X-Request-Id`
+- `traceparent`
+- structured JSON logs
+- exact event/code naming
+- Prometheus endpoint and applicable baseline metric families
+- bounded labels
+- OTLP exporter endpoint via env
+- no vendor-specific backend coupling
 
 ## Minimum validation checklist
 
@@ -622,6 +689,9 @@ A service is not considered observability-complete unless all of the following a
 - it exposes a Prometheus-compatible internal metrics endpoint
 - it provides the shared HTTP, readiness, dependency, DB, and queue metrics that apply to it
 - it uses bounded labels only
+- real resource identifiers appear only in logs or trace attributes when needed, never as metric labels
+- OTLP exporter endpoint and protocol are controlled by env or deployment config
+- no vendor-specific backend coupling exists in application code
 - it captures readiness failures, request failures, queue failures, dependency failures, and important denials with enough context for diagnosis
 - it makes slow routes, slow queries, slow dependencies, repeated retries, and repeated denials easy to identify
 - its collector path is observable enough to show queue pressure, export failures, or dropped telemetry when those happen

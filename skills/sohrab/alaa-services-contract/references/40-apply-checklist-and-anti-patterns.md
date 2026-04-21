@@ -18,6 +18,20 @@
 14. Run focused tests for every changed contract surface.
 15. Report blockers explicitly when exact convergence is not possible.
 
+## Short service adoption checklist
+
+When applying this skill to a service, finish by checking:
+- `/api/health`
+- `/api/ready`
+- `X-Request-Id`
+- `traceparent`
+- structured JSON logs
+- exact event/code naming
+- Prometheus endpoint and applicable baseline metric families
+- bounded labels
+- OTLP exporter endpoint via env
+- no vendor-specific backend coupling
+
 ## Minimum validation checklist
 
 ### Operational
@@ -40,7 +54,9 @@
 - logs are structured JSON in production
 - traces and logs use the OTLP path without backend-specific code branches
 - metrics use bounded labels only
+- real resource identifiers appear only in logs or trace attributes when needed, never as metric labels
 - the internal metrics endpoint is scrapeable and not treated as a public client API
+- OTLP exporter endpoint and protocol come from env or deployment config
 - HTTP latency uses histograms, not summaries, unless a documented exception exists
 - Pushgateway is not used for normal long-lived service metrics
 - the service exposes the baseline metric families that apply to it
