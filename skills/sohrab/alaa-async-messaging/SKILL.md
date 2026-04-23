@@ -223,9 +223,12 @@ Templates:
 - Runbook notes captured.
 
 # References in this skill pack
+- `references/source-map.md`
 - `references/queues-best-practices.md`
 - `references/rabbitmq-topology-and-policies.md`
 - `references/troubleshooting.md`
+
+Read `references/source-map.md` before relying on latest/current/version/security-sensitive queue, broker, Laravel Horizon, Kafka, RabbitMQ, Redis, retry, or DLQ behavior.
 
 # Anti-patterns
 - Using Kafka as a “do work once” job queue without careful semantics.

@@ -11,6 +11,11 @@ This skill provides a comprehensive, interactive workflow for generating product
 practices built-in. Generate queries for monitoring dashboards, alerting rules, and ad-hoc analysis with an emphasis on
 user collaboration and planning before code generation.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version-sensitive Prometheus, PromQL, native histogram, feature flag, function, operator, recording rule, or alerting behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Prometheus docs confirm the guidance.
+
 ## When to Use This Skill
 
 Invoke this skill when:
@@ -24,6 +29,12 @@ Invoke this skill when:
 - The user asks to "create", "generate", "build", or "write" PromQL queries
 - Working with Prometheus metrics (counters, gauges, histograms, summaries)
 - Implementing RED (Rate, Errors, Duration) or USE (Utilization, Saturation, Errors) metrics
+
+## When NOT to use
+
+- Do not use for LogQL log queries; use `logql-generator`.
+- Do not use for validating existing PromQL without generation needs; use `promql-validator`.
+- Do not use for non-Prometheus observability work unless PromQL output is required.
 
 ## Interactive Query Planning Workflow
 
@@ -356,13 +367,13 @@ max_over_time(queue_depth{job="worker"}[1h])
 
 ### Stage 6: Validate the Generated Query
 
-**ALWAYS validate the generated query** using the devops-skills:promql-validator skill:
+**ALWAYS validate the generated query** using the $promql-validator skill:
 
 ```
 After generating the query, automatically invoke:
-Skill(devops-skills:promql-validator)
+Skill($promql-validator)
 
-The devops-skills:promql-validator skill will:
+The $promql-validator skill will:
 1. Check syntax correctness
 2. Validate semantic logic (correct functions for metric types)
 3. Identify anti-patterns and inefficiencies
@@ -929,14 +940,14 @@ When generating queries:
 7. **Validate Proactively**: Always validate and fix issues
 8. **Follow Up**: Ask if adjustments are needed
 
-## Integration with devops-skills:promql-validator
+## Integration with $promql-validator
 
-After generating any PromQL query, **automatically invoke the devops-skills:promql-validator skill** to ensure quality:
+After generating any PromQL query, **automatically invoke the $promql-validator skill** to ensure quality:
 
 ```
 Steps:
 1. Generate the PromQL query based on user requirements
-2. Invoke devops-skills:promql-validator skill with the generated query
+2. Invoke $promql-validator skill with the generated query
 3. Review validation results (syntax, semantics, performance)
 4. Fix any issues identified by the validator
 5. Re-validate until all checks pass
@@ -1040,7 +1051,7 @@ This ensures all generated queries follow best practices and are production-read
 
 1. **Always Plan Interactively**: Never generate a query without confirming the plan with the user
 2. **Use AskUserQuestion**: Leverage the tool to gather requirements and confirm plans
-3. **Validate Everything**: Always invoke devops-skills:promql-validator after generation
+3. **Validate Everything**: Always invoke $promql-validator after generation
 4. **Educate Users**: Explain what the query does and why it's structured that way
 5. **Consider Use Case**: Tailor the query based on whether it's for dashboards, alerts, or analysis
 6. **Think About Performance**: Always include label filters and consider cardinality
@@ -1058,7 +1069,7 @@ A successful query generation session should:
 5. Generate a syntactically correct query
 6. Use appropriate functions for metric types
 7. Include specific label filters
-8. Pass devops-skills:promql-validator validation
+8. Pass $promql-validator validation
 9. Provide clear usage instructions
 10. Offer customization guidance
 

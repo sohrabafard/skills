@@ -8,9 +8,9 @@ Use this file when the task spans more than one frontend surface and ownership i
   - Use for exact Quasar APIs, `quasar.config`, boot files, platform modes, components, directives, plugins, and Quasar/Vite upgrade details.
   - Pair with this skill when Quasar specifics matter more than general frontend policy.
 
-- `$frontend-skill`
-  - Use for premium visual direction, composition, imagery, and motion language.
-  - Pair with this skill when the UI needs stronger art direction, not just safe implementation.
+- Visual direction beyond implementation constraints
+  - This Sohrab pack does not currently include a dedicated visual-design skill.
+  - Keep pure art direction out of this skill unless a concrete Vue, Quasar, Vite, SSR, accessibility, or implementation constraint is also in scope.
 
 - `$playwright`
   - Use for straightforward real-browser automation flows from the terminal.

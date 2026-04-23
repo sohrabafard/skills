@@ -16,6 +16,11 @@ directory is detected in the role. This is non-negotiable and happens without as
 tests cannot run due to environmental issues (Docker, version compatibility), the skill documents the blocker but
 continues with other validation steps.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Ansible, collection, ansible-lint, Molecule, or Checkov behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless the official/primary source map confirms the guidance.
+
 ## When to Use This Skill
 
 Apply this skill when encountering any of these scenarios:
@@ -30,6 +35,12 @@ Apply this skill when encountering any of these scenarios:
 - Ensuring infrastructure-as-code best practices
 - Security validation of Ansible playbooks
 - Version compatibility checks for collections and modules
+
+## When NOT to use
+
+- Do not use for generating new Ansible content from scratch; use `ansible-generator`.
+- Do not use for Terraform, Helm, Dockerfile, or CI/CD validation unless Ansible is the main artifact.
+- Do not use when the task is only a general YAML edit with no Ansible semantics.
 
 ## Validation Workflow
 

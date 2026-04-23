@@ -25,10 +25,11 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 ## Quick start
 
 1. Read the repo-local `AGENTS.md` and the current task constraints.
-2. Read `docs/00-topic-map.md`.
-3. Open only the smallest supporting docs, examples, or scripts needed for the exact task.
-4. Read `docs/full-guide.md` only when the topic map is not enough.
-5. Pair with the companion skill when generation and validation should both happen in the same task.
+2. Read `docs/source-map.md` when validation depends on latest/current/version-sensitive Prometheus, PromQL, native histogram, feature flag, function, operator, recording rule, or alerting behavior.
+3. Read `docs/00-topic-map.md`.
+4. Open only the smallest supporting docs, examples, or scripts needed for the exact task.
+5. Read `docs/full-guide.md` only when the topic map is not enough.
+6. Pair with the companion skill when generation and validation should both happen in the same task.
 
 ## Companion routing
 
@@ -37,6 +38,7 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 
 ## Reference navigation
 
+- Official-first source map: `docs/source-map.md`
 - Topic map: `docs/00-topic-map.md`
 - Full preserved guide: `docs/full-guide.md`
 - Supporting docs:
@@ -56,3 +58,4 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 - Keep detailed guidance in `docs` instead of growing this file again.
 - Keep the topic map aligned with the actual headings in the full guide.
 - Keep paths in this file one hop away from `SKILL.md` so agents can discover them quickly.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only; confirm normative PromQL behavior against the source map.

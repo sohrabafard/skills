@@ -1,6 +1,6 @@
 interface:
   display_name: "Promql Validator"
-  short_description: "Validate PromQL queries"
+  short_description: "Validate and optimize PromQL queries"
   default_prompt: "Use $promql-validator to follow its workflow for validate promql queries."
 
 policy:

@@ -34,15 +34,36 @@ yarn info workbox-build version
 
 The refresh script remains the preferred option because it is package-manager-neutral and produces a stable summary.
 
-## Live snapshot captured on March 25, 2026
+## Source priority
+
+Use sources in this order:
+
+1. Repo-local Quasar config, `package.json`, lockfile, boot files, SSR/PWA files, and tests.
+2. Official Quasar docs and Quasar CLI with Vite upgrade guide.
+3. Official Vite, Vue, Vue Router, and Workbox docs for their own behavior.
+4. Official npm metadata, GitHub releases, migration guides, and changelogs.
+5. Community posts, StackOverflow answers, and issue comments only as troubleshooting leads.
+
+Do not let community examples override the current Quasar docs or the installed `@quasar/app-vite` version.
+
+## Freshness triggers
+
+Re-check official sources when the task includes:
+
+- "latest", "current", "upgrade", "migration", "security", "CVE", or "breaking"
+- Quasar CLI, Vite, Vue, Vue Router, Workbox, Node, or package-manager changes
+- SSR middleware, PWA InjectManifest, BEX bridge, Electron/Capacitor/Cordova mode behavior, or `quasar.config` format
+- a production-only mismatch between dev and build output
+
+## Live snapshot captured on April 24, 2026
 
 From the npm registry:
 
-- `quasar` -> `2.19.1` (published March 24, 2026)
-- `@quasar/app-vite` -> `2.5.4` (published March 24, 2026)
-- `vite` -> `8.0.2` (published March 23, 2026)
-- `vue` -> `3.5.31` (published March 25, 2026)
-- `vue-router` -> `5.0.4`
+- `quasar` -> `2.19.3` (published April 6, 2026)
+- `@quasar/app-vite` -> `2.6.0` (published April 6, 2026)
+- `vite` -> `8.0.10` (published April 23, 2026)
+- `vue` -> `3.5.33` (published April 22, 2026)
+- `vue-router` -> `5.0.6` (published April 22, 2026)
 - `workbox-build` -> `7.4.0`
 
 This source pack was built from an older snapshot centered around Quasar `2.18.6`, `@quasar/app-vite` `2.4.0`, Vite `7.3.0`, and Vue `3.5.26`, so version drift is real and should not be ignored.

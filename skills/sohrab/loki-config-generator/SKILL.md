@@ -12,6 +12,11 @@ aggregation systems, or building production-ready Loki configurations."
 Generate production-ready Grafana Loki server configurations with best practices. Supports monolithic, simple scalable,
 and microservices deployment modes with S3, GCS, Azure, or filesystem storage.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Loki, Alloy, Helm, storage, schema, ruler, or Promtail migration behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Grafana Loki or Alloy docs confirm the guidance.
+
 > **Current Stable:** Loki 3.6.2 (November 2025)
 > **Important:** Promtail deprecated in 3.4 - use [Grafana Alloy](https://grafana.com/docs/alloy/latest/) instead. See
 `examples/grafana-alloy.yaml` for log collection configuration.
@@ -20,6 +25,12 @@ and microservices deployment modes with S3, GCS, Azure, or filesystem storage.
 
 Invoke when: deploying Loki, creating configs from scratch, migrating to Loki, implementing multi-tenant logging,
 configuring storage backends, or optimizing existing deployments.
+
+## When NOT to use
+
+- Do not use for writing LogQL queries; use `logql-generator`.
+- Do not use for PromQL metrics queries or alert expressions.
+- Do not use for non-Loki logging stacks unless converting them to Loki configuration.
 
 ---
 

@@ -29,7 +29,7 @@ This skill replaces a cluster of narrower frontend skills with one routing-first
 
 - `alaa-frontend-developer` owns app-family frontend engineering policy and cross-cutting frontend guardrails.
 - `$quasar-skill-packe` owns exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, and live Quasar/Vite usage details.
-- `$frontend-skill` owns art direction, visual thesis, composition, premium hierarchy, and motion language.
+- Broader art direction, visual thesis, composition, premium hierarchy, and motion language stay outside this skill unless a concrete frontend implementation task is also in scope.
 - `$playwright` and `$playwright-interactive` own browser mechanics and execution loops.
 - `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
 
@@ -68,7 +68,7 @@ Do not use this skill when:
 Also load companion skills when needed:
 
 - exact Quasar API, config, or platform behavior -> `$quasar-skill-packe`
-- visual ambition or art direction -> `$frontend-skill`
+- visual ambition or art direction -> stay in this skill only when it also requires Vue, Quasar, Vite, SSR, or implementation constraints
 - explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
 - CI, Docker, artifact, or deployment contract risks -> `$alaa-frontend-devops`
@@ -123,7 +123,8 @@ Apply these even when the user names only one surface:
   - Also load `references/45-api-and-data-shaping.md`.
   - Pair with `$alaa-laravel-architecture` or `$alaa-data-layer` when the fix crosses into server implementation.
 - Any visually ambitious landing page or premium UI task:
-  - Pair with `$frontend-skill`.
+  - Use this skill for implementation constraints, SSR safety, Quasar/Vite integration, and verification planning.
+  - Treat pure art direction with no frontend implementation constraint as out of scope.
 - Any explicit browser validation request, visual QA request, or browser-only reproduction:
   - Pair with `$playwright` or `$playwright-interactive`.
 - Any "latest", maintenance, migration, or skill-authoring task:
@@ -139,16 +140,6 @@ When searching inside this skill pack:
 - Search old skill names in `references/80-legacy-skill-coverage.md` when the task uses prior terminology.
 - Search the companion routing reference when multiple skills could apply and ownership is unclear.
 - Refresh live package versions with `node scripts/check-upstream-versions.mjs` before version-sensitive changes.
-
-## Companion chooser
-
-| If the task is mainly about...                                          | Pair with                        |
-|-------------------------------------------------------------------------|----------------------------------|
-| CI, Docker, artifact paths, CDN, or deploy/runtime delivery             | `$alaa-frontend-devops`          |
-| inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
-| `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
-| Quasar CLI, `quasar.config`, platform modes, or exact Quasar APIs       | `$quasar-skill-packe`            |
-| live OpenAI or Codex product behavior                                   | `$openai-docs`                   |
 
 ## Companion chooser
 

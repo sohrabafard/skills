@@ -2,6 +2,10 @@
 
 Use these sources when a task depends on current package state, current Go releases, official framework behavior, or current OpenAI/Codex guidance.
 
+## Freshness triggers
+
+Re-check official or primary sources when the user asks for latest/current behavior, a Go release or security fix, a package major version, a new standard-library feature, a framework comparison, a vulnerability, or current Codex/subagent/model guidance.
+
 ## Official Go sources
 
 ### https://go.dev/doc/devel/release
@@ -195,13 +199,17 @@ Use only for discovery and breadth.
 
 Do not treat it as the final authority for package choice. Confirm shortlisted packages from official docs or package docs before recommending them.
 
+## Community troubleshooting sources
+
+Use community posts, Stack Overflow answers, and issue comments only to troubleshoot concrete symptoms after official docs, package docs, release notes, and local evidence are exhausted. Do not use them as normative package, security, or architecture policy.
+
 ## Official OpenAI and Codex sources
 
 ### https://developers.openai.com/codex/skills
 
 Use for current skills behavior, `openai.yaml`, and implicit invocation rules.
 
-### https://developers.openai.com/codex/subagents
+### https://developers.openai.com/codex/concepts/subagents
 
 Use for current subagent behavior and configuration.
 
@@ -209,9 +217,9 @@ Use for current subagent behavior and configuration.
 
 Use for current Codex prompting recommendations.
 
-### https://developers.openai.com/api/docs/guides/latest-model
+### https://developers.openai.com/codex/models
 
-Use for current GPT-5.4 guidance when model behavior matters.
+Use for current Codex model choice. Prefer GPT-5.5 for complex Codex work when available; fall back to the strongest approved Codex model when GPT-5.5 is unavailable, and reserve lighter models for bounded scans or validation lanes.
 
 ### https://developers.openai.com/codex/changelog
 

@@ -31,6 +31,8 @@ When needed, jump to the matching section in `./full-guide.md`.
   - `permission-bitmap.php`
 - Historical migration intent for compact claims and null sentinels:
   - `../request-for-change.md`
+- Standards, official docs, freshness triggers, and community-source limits:
+  - `90-source-map.md`
 - Cross-cutting or high-risk work spanning multiple domains:
   - `full-guide.md`
 

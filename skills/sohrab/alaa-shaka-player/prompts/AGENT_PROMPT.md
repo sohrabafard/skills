@@ -29,7 +29,7 @@ Replace Video.js or an existing player wrapper with a Shaka-based architecture t
 - Choose the QA mode deliberately:
   - headless for API calls, retries, analytics, and event behavior
   - visual browser validation for controls, captions, ads, overlays, and responsive UX
-- If the user explicitly wants a stronger player UI or premium watch-page UX, pair the implementation with the design rules from `$frontend-skill`
+- If the user explicitly wants a stronger player UI or premium watch-page UX, keep the implementation tied to playback, accessibility, responsiveness, and frontend constraints; treat pure art direction as outside the Sohrab pack unless a separate design skill is explicitly available in the session.
 - For repo-safe Vue or Quasar implementation details, pair with `$alaa-frontend-developer`
 
 ## Deliverables

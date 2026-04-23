@@ -44,7 +44,7 @@ Use this file to choose the smallest relevant section in `./full-guide.md`.
 - `## Error Handling`
 - `### Common Issues and Solutions`
 - `## Communication Guidelines`
-- `## Integration with devops-skills:fluentbit-validator`
+- `## Integration with $fluentbit-validator`
 - `## Resources`
 - `### scripts/`
 - `### examples/`

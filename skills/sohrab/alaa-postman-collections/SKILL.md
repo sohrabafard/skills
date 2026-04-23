@@ -82,6 +82,8 @@ This skill is Postman-first, schema-aware, and repository-truth-first. It create
   - `references/50-insomnia-compatibility-and-free-plan-rules.md`
 - validation steps and output contract:
   - `references/60-validation-and-output-contract.md`
+- official-first source map and freshness triggers:
+  - `references/90-source-map.md`
 - repeatable local validation helper:
   - `scripts/validate_postman_artifacts.py`
 
@@ -89,6 +91,6 @@ This skill is Postman-first, schema-aware, and repository-truth-first. It create
 
 - Keep this top-level file routing-first and compact.
 - Put detailed operational rules in `references/` instead of expanding this file.
-- Refresh version-sensitive rules when official OpenAI, Postman, or Insomnia guidance changes.
+- Refresh version-sensitive rules when official Postman, Insomnia, JSON Schema, or API-provider guidance changes.
 - Keep helper scripts dependency-light and safe for repo-local use.
 - Treat Insomnia compatibility as an explicit validation target, not an assumption.

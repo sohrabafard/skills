@@ -10,6 +10,17 @@ description: Comprehensive toolkit for generating best practice Terraform config
 This skill enables the generation of production-ready Terraform configurations following best practices and current
 standards. Automatically integrates validation and documentation lookup for custom providers and modules.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Terraform, OpenTofu, provider, backend, module, or registry behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless HashiCorp, OpenTofu, provider, registry, or cloud provider docs confirm the guidance.
+
+## When NOT to use
+
+- Do not use for validating or debugging existing Terraform without generation needs; use `terraform-validator`.
+- Do not use for Terragrunt projects; use the Terragrunt skills.
+- Do not use for cloud architecture prose unless Terraform HCL is the expected artifact.
+
 ## Critical Requirements Checklist
 
 **STOP: You MUST complete ALL steps in order. Do NOT skip any REQUIRED step.**
@@ -22,7 +33,7 @@ standards. Automatically integrates validation and documentation lookup for cust
 | 4    | Generate Terraform files with ALL best practices                | ✅ REQUIRED |
 | 5    | Include data sources for dynamic values (region, account, AMIs) | ✅ REQUIRED |
 | 6    | Add lifecycle rules on critical resources (KMS, databases)      | ✅ REQUIRED |
-| 7    | Invoke `Skill(devops-skills:terraform-validator)`               | ✅ REQUIRED |
+| 7    | Invoke `Skill($terraform-validator)`               | ✅ REQUIRED |
 | 8    | **FIX all validation/security failures and RE-VALIDATE**        | ✅ REQUIRED |
 | 9    | Provide usage instructions (files, next steps, security)        | ✅ REQUIRED |
 
@@ -89,8 +100,8 @@ Before generating configurations, identify if custom or third-party providers/mo
 Before generating configuration, you MUST read the relevant reference files:
 
 ```
-Read(file_path: ".claude/skills/terraform-generator/references/terraform_best_practices.md")
-Read(file_path: ".claude/skills/terraform-generator/references/provider_examples.md")
+Read(file_path: "skills/sohrab/terraform-generator/references/terraform_best_practices.md")
+Read(file_path: "skills/sohrab/terraform-generator/references/provider_examples.md")
 ```
 
 **When to consult each reference:**
@@ -366,13 +377,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
 
 ### Step 4: Validate Generated Configuration (REQUIRED)
 
-After generating Terraform files, ALWAYS validate them using the devops-skills:terraform-validator skill:
+After generating Terraform files, ALWAYS validate them using the $terraform-validator skill:
 
 ```
-Invoke: Skill(devops-skills:terraform-validator)
+Invoke: Skill($terraform-validator)
 ```
 
-The devops-skills:terraform-validator skill will:
+The $terraform-validator skill will:
 
 1. Check HCL syntax with `terraform fmt -check`
 2. Initialize the configuration with `terraform init`
@@ -386,7 +397,7 @@ If ANY validation or security check fails, you MUST:
 
 1. **Review the error** - Understand what failed and why
 2. **Fix the issue** - Edit the generated file to resolve the problem
-3. **Re-run validation** - Invoke `Skill(devops-skills:terraform-validator)` again
+3. **Re-run validation** - Invoke `Skill($terraform-validator)` again
 4. **Repeat until ALL checks pass** - Do NOT proceed with failing checks
 
 ```
@@ -413,7 +424,7 @@ If ANY validation or security check fails, you MUST:
 
 **If custom providers are detected during validation:**
 
-- The devops-skills:terraform-validator skill will automatically fetch documentation
+- The $terraform-validator skill will automatically fetch documentation
 - Use the fetched documentation to fix any issues
 
 ### Step 5: Provide Usage Instructions (REQUIRED)
@@ -488,7 +499,7 @@ Actions:
 1. Identify module: terraform-aws-modules/vpc/aws
 2. Web search for latest version and documentation
 3. Generate configuration using module with appropriate inputs
-4. Validate with devops-skills:terraform-validator
+4. Validate with $terraform-validator
 
 ### Pattern 3: Multi-Provider Configuration
 
@@ -499,7 +510,7 @@ Actions:
 2. Web search for Datadog provider documentation with version
 3. Generate configuration with both providers properly configured
 4. Ensure provider aliases if needed
-5. Validate with devops-skills:terraform-validator
+5. Validate with $terraform-validator
 
 ### Pattern 4: Complex Resource with Dependencies
 
@@ -532,7 +543,7 @@ Generated structure:
    - Consider breaking into separate modules
 
 4. **Validation Failures:**
-   - Run devops-skills:terraform-validator skill to get detailed errors
+   - Run $terraform-validator skill to get detailed errors
    - Fix issues one at a time
    - Re-validate after each fix
 
@@ -994,7 +1005,7 @@ The `references/` directory contains detailed documentation for reference:
 To load a reference, use the Read tool:
 
 ```
-Read(file_path: ".claude/skills/terraform-generator/references/[filename].md")
+Read(file_path: "skills/sohrab/terraform-generator/references/[filename].md")
 ```
 
 ### assets/
@@ -1009,7 +1020,7 @@ Templates can be copied and customized for the user's specific needs.
 
 ## Notes
 
-- Always run devops-skills:terraform-validator after generation
+- Always run $terraform-validator after generation
 - Web search is essential for custom providers/modules
 - Follow the principle of least surprise in configurations
 - Make configurations readable and maintainable

@@ -94,12 +94,13 @@ Do not skip these steps.
 1. Classify the task mode using `references/refactor-modes.md`.
 2. If the task is non-trivial, multi-file, behavior-changing, or whole-project, read `alaa-workflow` first and create or update the required plan artifact.
 3. Run the companion-skill routing checklist in `references/companion-skill-routing.md`. Read every required companion skill before editing affected code.
-4. In Laravel repositories, check whether `laravel/boost` is installed and usable. If it is available, use Boost as the first Laravel-aware inspection and documentation layer before making framework, package, schema, route, config, or runtime assumptions. Prefer Boost MCP tools and Boost documentation search when relevant, but keep explicit user instructions, repo-local rules, this skill, and any triggered companion skills as the governing source for code shape, naming, refactor mode, and contract preservation.
-5. Inspect the repository's current conventions, then decide whether the task should preserve local conventions or normalize toward the Alaa convention set.
-6. Read `references/consistency-and-naming.md` before renaming classes, methods, namespaces, files, folders, or concepts.
-7. Read the technical references that fit the change: patterns, modern PHP / PSR, Laravel edge practices, docs artifacts, and agent orchestration.
-8. Implement the smallest coherent change set that satisfies the selected mode.
-9. Validate behavior, tests, and documentation alignment before calling the work done.
+4. Read `references/source-map.md` before relying on latest/current/version/security-sensitive PHP, Laravel, or tooling behavior.
+5. In Laravel repositories, check whether `laravel/boost` is installed and usable. If it is available, use Boost as the first Laravel-aware inspection and documentation layer before making framework, package, schema, route, config, or runtime assumptions. Prefer Boost MCP tools and Boost documentation search when relevant, but keep explicit user instructions, repo-local rules, this skill, and any triggered companion skills as the governing source for code shape, naming, refactor mode, and contract preservation.
+6. Inspect the repository's current conventions, then decide whether the task should preserve local conventions or normalize toward the Alaa convention set.
+7. Read `references/consistency-and-naming.md` before renaming classes, methods, namespaces, files, folders, or concepts.
+8. Read the technical references that fit the change: patterns, modern PHP / PSR, Laravel edge practices, docs artifacts, and agent orchestration.
+9. Implement the smallest coherent change set that satisfies the selected mode.
+10. Validate behavior, tests, and documentation alignment before calling the work done.
 
 # Task-mode defaults
 Task mode is mandatory. If the user does not specify one, infer the safest option.
@@ -245,6 +246,8 @@ Documentation is part of done when behavior, contracts, setup, env vars, request
 - Use `alaa-docs-farsi` for the docs workflow when docs artifacts are in scope, but keep the actual output in English unless the user explicitly asks otherwise.
 
 # References to read selectively
+- `references/source-map.md`
+  Read when the task uses latest/current/version/security language or depends on official PHP, Laravel, PSR/PER, PHPUnit, Pest, Pint, PHPStan, Rector, or Composer behavior.
 - `references/refactor-modes.md`
   Read whenever the task includes refactoring, new slice design, or more than one touched file.
 - `references/companion-skill-routing.md`

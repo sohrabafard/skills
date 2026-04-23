@@ -78,10 +78,8 @@ Use these when runtime, packaging, or cluster surfaces change:
 - `$alaa-makefile`
 - `$caas-arvan-kuber`
 - `$alaa-haproxy`
-- `$gitlab-ci-generator` / `$gitlab-ci-validator`
-- `$helm-generator` / `$helm-validator`
-- `$k8s-debug`
-- `$k8s-yaml-generator` / `$k8s-yaml-validator`
+- `$alaa-gitlab-ci-cd`
+- `$alaa-k8s-helm`
 - `$terraform-generator` / `$terraform-validator`
 - `$terragrunt-generator` / `$terragrunt-validator`
 - `$ansible-generator` / `$ansible-validator`

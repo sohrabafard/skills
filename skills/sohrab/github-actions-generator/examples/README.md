@@ -152,7 +152,7 @@ These examples can be used as:
 To validate any of these examples:
 
 ```bash
-cd .claude/skills/github-actions-validator
+cd skills/sohrab/github-actions-validator
 bash scripts/validate_workflow.sh ../../github-actions-generator/examples/workflows/nodejs-ci.yml
 ```
 

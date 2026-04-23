@@ -1,0 +1,248 @@
+{
+  "task_id": "20260424-000739_sohrab-gpt55-skill-pack-upgrade",
+  "task": "Sohrab GPT-5.5 skill pack upgrade",
+  "mode": "execute",
+  "status": "completed",
+  "created_at": "2026-04-23T20:37:39Z",
+  "updated_at": "2026-04-23T21:13:45Z",
+  "plan_path": "docs/_agent_plans/20260424-000739_sohrab-gpt55-skill-pack-upgrade.md",
+  "state_path": ".codex/state/20260424-000739_sohrab-gpt55-skill-pack-upgrade.json",
+  "parent_task_id": null,
+  "parent_plan_path": null,
+  "lane": null,
+  "current_phase": "completed",
+  "completed_phases": [
+    "Phase 0 - Bootstrap workflow state",
+    "Phase 1 - Validator hardening and baseline metadata",
+    "Phase 2 - GPT-5.5 skill authoring standard rollout",
+    "Phase 3 - Source maps and current-knowledge refresh",
+    "Phase 4 - Domain-bounded skill enrichment",
+    "Phase 5 - Dense generator/validator surgical refactor",
+    "Phase 6 - Forward-testing and routing evaluation",
+    "Phase 7 - Final integration, validation, and handoff"
+  ],
+  "pending_phases": [],
+  "frozen_decisions": [
+    "Use $skill-creator in every phase.",
+    "Prefer GPT-5.5 for high-risk skill authoring and review when available; record fallback to GPT-5.4 if needed.",
+    "Keep SKILL.md as a compact decision layer and move long detail into one-hop references.",
+    "Do not modify untracked zip/tar artifacts or global skill links.",
+    "Do not invent GPT-5.5-specific skill syntax or unverified model capabilities.",
+    "Preserve dense generator/validator mandatory workflows."
+  ],
+  "constraints": [
+    "Do not revert unrelated user changes.",
+    "Use python -X utf8 for Windows quick_validate.py runs when needed.",
+    "Use subagents only with disjoint write scopes.",
+    "Official and primary sources outrank community troubleshooting sources."
+  ],
+  "lanes": {
+    "parent": {
+      "status": "completed",
+      "scope": "orchestration, workflow artifacts, integration, validation, final synthesis",
+      "write_scope": [
+        "docs/_agent_plans/20260424-000739_sohrab-gpt55-skill-pack-upgrade.md",
+        ".codex/state/20260424-000739_sohrab-gpt55-skill-pack-upgrade.json",
+        "docs/agents/sohrab-gpt55-skill-pack-upgrade-state.md"
+      ],
+        "last_update": "2026-04-23T21:13:45Z",
+      "next_actions": [
+          "No further parent action required."
+      ]
+    },
+    "validator-and-metadata": {
+      "status": "completed",
+      "scope": "validator hardening, canonical non-use headings, short metadata fixes",
+      "write_scope": [
+        "scripts/validate_sohrab_skill_pack.py",
+        "skills/sohrab/*/SKILL.md",
+        "skills/sohrab/*/agents/openai.yaml"
+      ],
+      "last_update": "2026-04-23T21:00:00Z",
+      "next_actions": [
+        "No further Phase 1 action unless later validation regresses."
+      ]
+    },
+    "source-map-domain-lanes": {
+        "status": "completed",
+      "scope": "official-first source maps, freshness triggers, domain-bounded enrichment",
+      "write_scope": [
+        "skills/sohrab/*/SKILL.md",
+        "skills/sohrab/*/references/**",
+        "skills/sohrab/*/agents/openai.yaml"
+      ],
+        "last_update": "2026-04-23T21:13:45Z",
+        "next_actions": [
+          "No further lane action required."
+        ],
+        "subagents": [
+          {
+            "id": "019dbc1e-b43a-75a3-9ae1-8d8f27e066fc",
+            "nickname": "Ohm",
+            "lane": "core contracts"
+          },
+          {
+            "id": "019dbc1e-b477-70f0-9573-333655ba6840",
+            "nickname": "Linnaeus",
+            "lane": "PHP/Laravel"
+          },
+          {
+            "id": "019dbc1e-b4cf-7973-aa61-cf748aeb38cb",
+            "nickname": "Ampere",
+            "lane": "frontend/media"
+          },
+          {
+            "id": "019dbc1e-b522-71e3-8bc1-97c43c30cb9e",
+            "nickname": "Hegel",
+            "lane": "platform delivery"
+          },
+          {
+            "id": "019dbc1e-b580-7bc1-bb22-a59334258880",
+            "nickname": "Boole",
+            "lane": "CI/IaC/observability"
+          }
+        ]
+      }
+  },
+  "touched_files": [
+    {
+      "path": "docs/_agent_plans/20260424-000739_sohrab-gpt55-skill-pack-upgrade.md",
+      "phase": "Phase 0",
+      "summary": "Created and filled parent execution plan."
+    },
+    {
+      "path": ".codex/state/20260424-000739_sohrab-gpt55-skill-pack-upgrade.json",
+      "phase": "Phase 0",
+      "summary": "Created and filled JSON continuation state."
+    },
+    {
+      "path": "docs/agents/sohrab-gpt55-skill-pack-upgrade-state.md",
+      "phase": "Phase 0",
+      "summary": "Created human-readable continuation state."
+    },
+    {
+      "path": "scripts/validate_sohrab_skill_pack.py",
+      "phase": "Phase 1",
+      "summary": "Hardened bundled-resource path checks to ignore target-repo examples, globs, placeholders, and output/test path examples."
+    },
+    {
+      "path": "skills/sohrab/*/SKILL.md",
+      "phase": "Phase 1",
+      "summary": "Metadata worker normalized canonical When NOT to use headings for validator-reported skills."
+    },
+    {
+      "path": "skills/sohrab/*/agents/openai.yaml",
+      "phase": "Phase 1",
+      "summary": "Metadata worker fixed short_description length failures."
+    },
+    {
+      "path": "skills/sohrab/alaa-frontend-developer/references/90-upstream-deltas-and-maintenance.md",
+      "phase": "Phase 2",
+      "summary": "Updated stale GPT-5.4 wording to conservative GPT-5.5-ready model policy."
+    },
+      {
+        "path": "skills/sohrab/alaa-golang/references/SOURCES.md",
+        "phase": "Phase 2",
+        "summary": "Updated Codex model source URL and model-policy guidance."
+      },
+      {
+        "path": "skills/sohrab/*/references/source-map.md",
+        "phase": "Phase 3",
+        "summary": "Added or refreshed official-first source maps and freshness triggers across domain lanes."
+      },
+      {
+        "path": "skills/sohrab/*/SKILL.md",
+        "phase": "Phase 4",
+        "summary": "Added routing pointers, source-map references, and community-source boundaries while preserving compact top-level routing."
+      },
+      {
+        "path": "skills/sohrab/{ansible,github-actions,jenkinsfile,terraform,terragrunt,promql,logql,loki,fluentbit,azure-pipelines}*",
+        "phase": "Phase 5",
+        "summary": "Surgically refreshed dense generator/validator source routing without deleting mandatory workflows."
+      },
+      {
+        "path": "docs/skill-evals/manifests/alaa-signoz-clickhouse-docs.json",
+        "phase": "Phase 6",
+        "summary": "Added missing routing manifest for the SigNoz ClickHouse docs skill."
+      },
+      {
+        "path": "docs/skill-evals/datasets/alaa-signoz-clickhouse-docs.jsonl",
+        "phase": "Phase 6",
+        "summary": "Added missing routing dataset for the SigNoz ClickHouse docs skill."
+      }
+  ],
+  "validation": {
+    "commands_required": [
+      "python scripts\\validate_sohrab_skill_pack.py",
+      "python -X utf8 C:\\Users\\CIT\\.codex\\skills\\.system\\skill-creator\\scripts\\quick_validate.py skills\\sohrab\\<skill>",
+      "git diff --check"
+    ],
+    "last_run": [
+      {
+        "command": "git status --short",
+        "status": "completed",
+        "result": "Only pre-existing untracked artifacts were listed."
+      },
+      {
+        "command": "python scripts\\validate_sohrab_skill_pack.py",
+        "status": "failed_expected_baseline",
+        "result": "Validator currently reports heading, metadata, and path-reference failures before Phase 1 fixes."
+      },
+      {
+        "command": "python -m py_compile scripts\\validate_sohrab_skill_pack.py",
+        "status": "passed",
+        "result": "Validator syntax is valid after hardening."
+      },
+      {
+        "command": "python scripts\\validate_sohrab_skill_pack.py",
+        "status": "passed_with_warnings",
+        "result": "After Phase 1, validator passes with line-count warnings only."
+      },
+      {
+        "command": "git diff --check",
+        "status": "passed",
+        "result": "No whitespace errors after Phase 1 parent validation."
+      },
+      {
+        "command": "quick_validate.py targeted Phase 1 and Phase 2 skills",
+        "status": "passed",
+        "result": "Targeted touched skills validated successfully."
+      },
+      {
+        "command": "quick_validate.py all skills/sohrab folders",
+        "status": "passed",
+        "result": "Every Sohrab skill folder returned Skill is valid."
+      },
+      {
+        "command": "python scripts\\validate_sohrab_skill_pack.py",
+        "status": "passed_with_warnings",
+        "result": "Final pack validator passed with intentional line-count warnings only."
+      },
+      {
+        "command": "python -c parse docs/skill-evals manifests and datasets",
+        "status": "passed",
+        "result": "All JSON manifests and JSONL dataset rows parse."
+      },
+      {
+        "command": "git diff --check",
+        "status": "passed",
+        "result": "No whitespace errors in final diff."
+      }
+    ],
+    "pending": []
+  },
+  "risks": [
+    "Validator hardening could accidentally suppress real missing bundled references.",
+    "Dense generator/validator skills may regress if workflow text is shortened instead of moved intact.",
+    "Version-sensitive source claims may drift and require live verification during each lane.",
+    "Multiple workers could conflict if write scopes are not enforced."
+  ],
+  "handoff": {
+    "summary": "All phases are complete. The pack now has GPT-5.5-ready model policy, official-first source maps, repaired stale references, routing eval coverage, and final validation evidence.",
+    "next_actions": [
+      "Review final diff.",
+      "Optionally stage and commit."
+    ],
+    "blockers": []
+  }
+}

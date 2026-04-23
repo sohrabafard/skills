@@ -42,7 +42,7 @@ agents do not build on stale assumptions.
 7. **Visual design agent**
    - Only create this track when UI or UX polish is explicitly requested
    - Improve controls hierarchy, overlay behavior, empty states, and responsive composition
-   - Follow `$frontend-skill` guidance instead of inventing generic control bars
+   - Keep visual decisions tied to concrete playback, accessibility, responsiveness, and frontend implementation constraints instead of inventing generic control bars
 
 ## Consolidated output
 Return:

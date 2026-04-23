@@ -1,6 +1,6 @@
 interface:
   display_name: "Logql Generator"
-  short_description: "Generate LogQL queries"
+  short_description: "Generate Loki LogQL queries and alerts"
   default_prompt: "Use $logql-generator to follow its workflow for generate logql queries."
 
 policy:

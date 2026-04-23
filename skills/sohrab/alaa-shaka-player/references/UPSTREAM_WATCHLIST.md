@@ -5,12 +5,12 @@ recommending a new player architecture.
 
 ## Current baseline
 
-As of **2026-03-26**:
+As of **2026-04-24**:
 
-- GitHub releases show `v5.0.8` as the latest v5 release on **2026-03-23**
-- GitHub releases also show `v4.16.24` on **2026-03-23** for the v4 line
+- GitHub releases API shows `v5.1.1` as the latest release, published **2026-04-20**.
+- Older notes for `v5.0.8` and `v4.16.24` remain useful only when the target repo is pinned to those lines.
 
-## Freshly landed fixes in 5.0.8 and 4.16.24
+## Older fixes to remember when a repo is pinned to 5.0.8 or 4.16.24
 
 - HLS: DTS and DTS-HD audio codec variants
 - HLS: prevent infinite manifest update delay
@@ -23,7 +23,10 @@ Implication:
 - Re-check whether a live-HLS, segment-duplication, or parser-performance issue
   still reproduces before shipping a custom workaround.
 
-## Open pull requests worth tracking
+## Pull requests and issue notes to re-check
+
+The PR numbers below were useful watch items in the earlier snapshot. Re-check
+their current state before treating them as open, fixed, or released.
 
 ### `#9896` Buffer-based ABR for low-latency live
 

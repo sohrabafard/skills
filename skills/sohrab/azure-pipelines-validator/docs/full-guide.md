@@ -79,13 +79,13 @@ Use the **azure-pipelines-validator** skill in the following scenarios:
 To validate an Azure Pipelines configuration file:
 
 ```bash
-bash .claude/skills/azure-pipelines-validator/scripts/validate_azure_pipelines.sh <file-path>
+bash skills/sohrab/azure-pipelines-validator/scripts/validate_azure_pipelines.sh <file-path>
 ```
 
 **Example:**
 
 ```bash
-bash .claude/skills/azure-pipelines-validator/scripts/validate_azure_pipelines.sh azure-pipelines.yml
+bash skills/sohrab/azure-pipelines-validator/scripts/validate_azure_pipelines.sh azure-pipelines.yml
 ```
 
 This runs all four validation layers:
@@ -220,7 +220,7 @@ pool:
 steps:
   - script: |
       pip3 install PyYAML
-      bash .claude/skills/azure-pipelines-validator/scripts/validate_azure_pipelines.sh azure-pipelines.yml --strict
+      bash skills/sohrab/azure-pipelines-validator/scripts/validate_azure_pipelines.sh azure-pipelines.yml --strict
     displayName: 'Validate Pipeline Configuration'
 ```
 

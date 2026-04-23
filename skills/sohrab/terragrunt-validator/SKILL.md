@@ -11,6 +11,11 @@ This skill provides comprehensive validation, linting, and testing capabilities 
 Terragrunt is a thin wrapper for Terraform/OpenTofu that provides extra tools for keeping configurations DRY (Don't
 Repeat Yourself), working with multiple modules, and managing remote state.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Terragrunt, Stacks, CLI redesign, Terraform/OpenTofu, provider, scanner, backend, or module behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Terragrunt, Terraform/OpenTofu, provider, scanner, registry, or cloud provider docs confirm the guidance.
+
 **Use this skill when:**
 
 - Validating Terragrunt HCL files (*.hcl, terragrunt.hcl, terragrunt.stack.hcl)
@@ -23,6 +28,12 @@ Repeat Yourself), working with multiple modules, and managing remote state.
 - Formatting HCL files
 - Running security scans on infrastructure code (Trivy, Checkov)
 - Generating run reports and summaries
+
+## When NOT to use
+
+- Do not use for generating new Terragrunt from scratch; use `terragrunt-generator`.
+- Do not use for plain Terraform-only projects; use the Terraform skills.
+- Do not use for generic HCL edits unless Terragrunt semantics are involved.
 
 ## Terragrunt Version Compatibility
 

@@ -19,6 +19,12 @@ Collect only the facts that materially change the design:
 
 If those facts are missing, make safe modern assumptions, state them briefly, and continue. Default to GitLab 18.x behavior, Runner 18.x behavior, dedicated runners for privileged work, and protected branches for release or deploy jobs.
 
+## When NOT to use
+
+- Do not use for non-GitLab CI systems.
+- Do not use for Kubernetes, Helm, or Docker work unless GitLab pipeline behavior is the main concern.
+- Do not use for application code changes that do not affect CI/CD.
+
 ## Open only the reference you need
 
 - `references/pipeline-authoring.md` for new or refactored pipelines, rules, DAGs, includes, components, and child pipelines.
@@ -28,6 +34,7 @@ If those facts are missing, make safe modern assumptions, state them briefly, an
 - `references/security-and-hardening.md` for runner isolation, secrets, merge request risk, pull policy, token risk, and privileged-mode decisions.
 - `references/validation-and-debugging.md` for local validation, CI Lint, `glab`, failure triage, and symptom-to-cause mapping.
 - `references/feature-version-notes.md` when a feature might be gated, beta, experimental, or version-dependent.
+- `references/SOURCES.md` when latest/current GitLab, Runner, security, or feature behavior matters.
 
 Do not read every reference by default. Load the narrowest file that matches the task.
 
@@ -165,6 +172,8 @@ Use local scripts first for cheap feedback. Use CI Lint or `glab ci lint` when y
 
 If multi-agent mode is available and the task is large, split work by concern:
 
+- Prefer GPT-5.5 for complex CI/CD orchestration when available; use the strongest approved fallback model if it is not.
+- Use lighter models only for read-only inventory, template comparison, or mechanical validation lanes.
 - Pipeline semantics and YAML generation.
 - Runner or Kubernetes executor configuration.
 - Security and version verification.

@@ -9,12 +9,12 @@ Use this file when:
 
 ## Live package snapshot
 
-Captured on March 26, 2026:
+Captured on April 24, 2026 by `node scripts/check-upstream-versions.mjs`:
 
-- `vue` -> `3.5.31`
-- `quasar` -> `2.19.1`
-- `@quasar/app-vite` -> `2.5.4`
-- `vite` -> `8.0.3`
+- `vue` -> `3.5.33` (published 2026-04-22)
+- `quasar` -> `2.19.3` (published 2026-04-06)
+- `@quasar/app-vite` -> `2.6.0` (published 2026-04-06)
+- `vite` -> `8.0.10` (published 2026-04-23)
 - `workbox-build` -> `7.4.0`
 
 Refresh before version-sensitive work:
@@ -23,24 +23,46 @@ Refresh before version-sensitive work:
 node scripts/check-upstream-versions.mjs
 ```
 
+## Official-first source map
+
+Use sources in this order:
+
+1. Repo-local contracts: `package.json`, lockfile, Quasar/Vite config, SSR/PWA files, route guards, API clients, and tests.
+2. Official docs for the affected surface:
+   - Vue docs and release policy
+   - Quasar docs and Quasar CLI with Vite upgrade guide
+   - Vite docs and migration guide
+   - Workbox docs for service-worker and PWA behavior
+   - MDN for browser APIs
+3. Official release notes, npm metadata, and upstream changelogs for version-sensitive claims.
+4. Community posts, StackOverflow answers, and issue comments only as troubleshooting leads.
+
+Re-check official sources before claiming current behavior for Vue lifecycle, hydration, watcher semantics, Quasar SSR/PWA behavior, Vite transforms, Workbox defaults, browser storage, service workers, or security-sensitive auth behavior.
+
+Do not encode community anecdotes as durable frontend policy. Use them to find a reproduction, then verify locally or against official docs.
+
 ## OpenAI and Codex maintenance rules
 
-Based on the official OpenAI docs and Codex docs reviewed on March 26, 2026:
+Based on the official OpenAI docs and Codex docs reviewed on April 24, 2026:
 
 - Agent Skills use progressive disclosure:
   - Codex starts from skill metadata and only loads full instructions when the skill is chosen.
 - Skill trigger quality depends mainly on `name` and `description`.
 - Keep `SKILL.md` focused and move detail into one-hop reference files.
 - `agents/openai.yaml` can add UI metadata and invocation policy.
-- For GPT-5.4 workloads, improve the prompt contract before simply raising reasoning effort.
+- For GPT-5.5 or fallback GPT-5.4 workloads, improve the prompt contract before simply raising reasoning effort.
 - The current models docs are the source of truth for latest model choice. When the user is unsure and the task is complex, code-heavy, or tool-heavy, re-check the latest models page before hard-coding a model recommendation.
 - For coding-specialized API use cases, re-check the current GPT-5 Codex model page before suggesting a codex-family API model.
-- The highest-leverage GPT-5.4 additions for agentic workflows are:
+- The highest-leverage GPT-5.5-ready additions for agentic workflows are:
   - explicit completeness rules
   - verification loop
   - tool-persistence rules
   - dependency checks
   - selective parallel tool calls
+- Model policy from the current Codex models docs:
+  - start with GPT-5.5 for complex Codex work when it is available
+  - fall back to GPT-5.4 during rollout or when GPT-5.5 is unavailable
+  - use GPT-5.4-mini only for lighter, lower-cost scans or subagent lanes
 - Higher-priority developer and system instructions remain binding when instructions change mid-conversation.
 
 ## Codex prompting guidance to preserve
@@ -84,7 +106,9 @@ When updating this skill:
 
 - Agent Skills:
   - [https://developers.openai.com/codex/skills](https://developers.openai.com/codex/skills)
-- Prompt guidance for GPT-5.4:
+- Codex models:
+  - [https://developers.openai.com/codex/models](https://developers.openai.com/codex/models)
+- Prompt guidance:
   - [https://developers.openai.com/api/docs/guides/prompt-guidance](https://developers.openai.com/api/docs/guides/prompt-guidance)
 - Models overview:
   - [https://developers.openai.com/api/docs/models](https://developers.openai.com/api/docs/models)

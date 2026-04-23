@@ -80,7 +80,7 @@ Then:
 ## Pairing guidance
 
 - strong visual thesis or art direction:
-  - Pair with `$frontend-skill`
+  - Keep this skill focused on frontend implementation constraints; treat pure art direction as outside the Sohrab pack unless a separate design skill is explicitly available in the session.
 - exact Quasar component or layout choice:
   - Pair with `$quasar-skill-packe`
 - browser execution:

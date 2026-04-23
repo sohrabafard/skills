@@ -26,6 +26,10 @@ Use this file to choose the smallest relevant reference file.
 
 - `references/60-validation-and-output-contract.md`
 
+## Read when source or version behavior matters
+
+- `references/90-source-map.md`
+
 ## Optional helper
 
 - `scripts/validate_postman_artifacts.py`

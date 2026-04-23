@@ -1,6 +1,6 @@
 interface:
   display_name: "Terraform Generator"
-  short_description: "Generate Terraform IaC"
+  short_description: "Generate Terraform HCL configurations"
   default_prompt: "Use $terraform-generator to follow its workflow for generate terraform iac."
 
 policy:

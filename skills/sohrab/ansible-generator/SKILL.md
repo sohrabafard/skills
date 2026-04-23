@@ -8,8 +8,19 @@ description: Comprehensive toolkit for generating best practice Ansible playbook
 ## Overview
 
 Generate production-ready Ansible resources (playbooks, roles, tasks, inventory files) following current best practices,
-naming conventions, and security standards. All generated resources are automatically validated using the devops-skills:
-ansible-validator skill to ensure syntax correctness and lint compliance.
+naming conventions, and security standards. All generated resources are automatically validated using `$ansible-validator`
+to ensure syntax correctness and lint compliance.
+
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Ansible, collection, ansible-lint, or Molecule behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless the official/primary source map confirms the guidance.
+
+## When NOT to use
+
+- Do not use for validating or debugging existing Ansible content without generation needs; use `ansible-validator`.
+- Do not use for Terraform, Helm, Dockerfile, or CI/CD authoring unless Ansible is the main artifact.
+- Do not use for one-off shell automation that should remain a script.
 
 ## Core Capabilities
 
@@ -37,7 +48,7 @@ Create complete, production-ready playbooks with proper structure, error handlin
     - Use appropriate tags for task categorization
     - Include documentation header with usage instructions
     - Add health checks in post_tasks when applicable
-7. **ALWAYS validate** the generated playbook using the devops-skills:ansible-validator skill
+7. **ALWAYS validate** the generated playbook using the $ansible-validator skill
 8. If validation fails, fix the issues and re-validate
 
 **Example structure:**
@@ -143,7 +154,7 @@ Create complete role structures with all required components organized following
     - Include validation in template tasks
     - Add comprehensive tags
 5. Create proper role documentation in README.md
-6. **ALWAYS validate** the role using the devops-skills:ansible-validator skill
+6. **ALWAYS validate** the role using the $ansible-validator skill
 7. Fix any validation errors and re-validate
 
 **Role variable naming convention:**
@@ -171,7 +182,7 @@ Create focused task files for specific operations that can be included in playbo
     - Idempotency checks
     - Appropriate tags
     - Conditional execution where needed
-4. **ALWAYS validate** using the devops-skills:ansible-validator skill
+4. **ALWAYS validate** using the $ansible-validator skill
 
 **Example:**
 
@@ -404,12 +415,12 @@ ansible.builtin:
 
 ### Validation Process
 
-1. **After generating any Ansible file**, immediately invoke the `devops-skills:ansible-validator` skill:
+1. **After generating any Ansible file**, immediately invoke the `$ansible-validator` skill:
    ```
-   Skill: devops-skills:ansible-validator
+   Skill: $ansible-validator
    ```
 
-2. **The devops-skills:ansible-validator skill will:**
+2. **The $ansible-validator skill will:**
     - Validate YAML syntax
     - Run ansible-lint for best practices
     - Perform ansible-playbook --syntax-check
@@ -619,7 +630,7 @@ copy and paste them - use them as guides for the correct structure, sections, an
 3. **Replace** all `[PLACEHOLDERS]` with actual values appropriate for the task
 4. **Customize** logic based on user requirements
 5. **Remove** unnecessary sections that don't apply
-6. **Validate** the result using devops-skills:ansible-validator skill
+6. **Validate** the result using $ansible-validator skill
 
 ## Typical Workflow Example
 
@@ -646,7 +657,7 @@ copy and paste them - use them as guides for the correct structure, sections, an
     - Add proper tags and handlers
 
 4. ✅ Validate:
-    - Invoke `devops-skills:ansible-validator` skill
+    - Invoke `$ansible-validator` skill
     - Fix any reported issues
     - Re-validate if needed
 
@@ -721,7 +732,7 @@ copy and paste them - use them as guides for the correct structure, sections, an
 
 ## Error Messages and Troubleshooting
 
-### If devops-skills:ansible-validator reports errors:
+### If $ansible-validator reports errors:
 
 1. **Syntax errors:** Fix YAML formatting, indentation, or structure
 2. **Lint warnings:** Address best practice violations (FQCN, naming, etc.)
@@ -747,7 +758,7 @@ Before presenting any generated Ansible resource to the user, verify all items:
 - [ ] **RHEL 8+** - Use `ansible.builtin.dnf` (NOT `ansible.builtin.yum`) for modern RHEL/CentOS
 - [ ] **Idempotent** - All tasks safe to run multiple times
 - [ ] **Security** - `no_log: true` on sensitive tasks, proper file permissions
-- [ ] **Validated** - devops-skills:ansible-validator skill invoked and passed
+- [ ] **Validated** - $ansible-validator skill invoked and passed
 - [ ] **Formal presentation** - Output formatted per template below
 
 ### Required Output Format
@@ -789,7 +800,7 @@ Always follow this sequence when generating Ansible resources:
 2. **Reference** - Check best-practices.md and module-patterns.md
 3. **Generate** - Use templates and follow standards (FQCN, idempotency, naming)
 4. **Search** - For custom modules/collections, use WebSearch to get current docs
-5. **Validate** - ALWAYS use devops-skills:ansible-validator skill
+5. **Validate** - ALWAYS use $ansible-validator skill
 6. **Fix** - Resolve any validation errors
 7. **Present** - Deliver validated, production-ready Ansible code
 

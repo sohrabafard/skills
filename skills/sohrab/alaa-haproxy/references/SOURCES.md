@@ -1,5 +1,11 @@
 # Sources
 
+Use this file when HAProxy branch, release, directive, container, chart, security, or observability behavior must be current.
+
+## Freshness triggers
+
+Re-check official sources when the user asks for latest/current behavior, branch status, a security-sensitive directive, TLS/QUIC/HTTP3 behavior, container or Kubernetes delivery, chart behavior, deprecations, or an upgrade across `3.2` and `3.3`.
+
 ## First-check official sources
 
 - https://docs.haproxy.org/
@@ -28,3 +34,4 @@
 
 - For version-sensitive work, prefer the docs index and release directories over older blog posts.
 - Confirm the running build with `haproxy -vv` before relying on QUIC, TLS, tracing, or experimental directives.
+- Use community posts, Stack Overflow answers, and issue comments only for concrete troubleshooting after official manuals, release notes, `haproxy -vv`, and `haproxy -c -f ...` are checked.

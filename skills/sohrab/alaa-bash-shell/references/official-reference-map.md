@@ -2,6 +2,10 @@
 
 Use these references when the exact shell version, utility flag, or portability rule matters. Re-check them when the task is version-sensitive.
 
+## Freshness triggers
+
+Re-check official or primary sources when the user asks for latest/current behavior, shell-version differences, POSIX portability, BusyBox/dash/macOS compatibility, ShellCheck or shfmt rule behavior, security-sensitive shell code, or GNU/BSD utility flags.
+
 ## Core shell references
 
 - GNU Bash Reference Manual  
@@ -73,3 +77,7 @@ Use these references when the exact shell version, utility flag, or portability 
 - GNU Parallel  
   Purpose: documented advanced parallel command execution  
   URL: https://www.gnu.org/software/parallel/
+
+## Community troubleshooting sources
+
+Use community posts, Stack Overflow answers, and issue comments only for concrete troubleshooting after manuals, tool docs, lint output, and local reproduction are checked. Do not use them as normative portability, security, or style policy.

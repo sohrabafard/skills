@@ -29,9 +29,9 @@ failures easier to localize.
 - Pair with `$alaa-frontend-developer` for SSR and hydration safety, browser-only
   guards, repo-safe Vue or Quasar implementation, API-shaping implications, and
   app-family conventions.
-- Pair with `$frontend-skill` when the user asks for a premium or art-directed
-  player shell, richer watch-page composition, stronger control hierarchy,
-  poster or empty-state design, or broader UI or UX polish.
+- Keep premium or art-directed player-shell decisions in this skill only when
+  they also require concrete Vue, Quasar, Vite, Shaka, accessibility, or
+  responsive implementation constraints.
 - Pair with `$playwright` for browser execution. Prefer headless runs for event,
   API, retry, analytics, and networking validation; prefer visual mode for
   layout, captions, overlays, ads, accessibility, focus states, and responsive
@@ -44,19 +44,17 @@ failures easier to localize.
 
 ## Upstream baseline
 
-As of **2026-03-26**:
+As of **2026-04-24**:
 
-- The Shaka Player releases page shows `v5.0.8` and `v4.16.24`, both released on
-  **2026-03-23**.
-- Recent fixes include HLS DTS and DTS-HD codec variant support, prevention of
-  infinite manifest update delay, more tolerant duplicate segment detection, and
-  several HLS, DASH, VTT, networking, and GC-pressure improvements.
-- Open pull requests worth tracking for future skill updates:
-  - `#9896` adds `BufferBasedAbrManager` for low-latency live streams
-  - `#9864` addresses duplicate segment downloads during stream switching
-  - `#9795` fixes FairPlay polyfill behavior for Safari `src=` playback
+- The Shaka Player GitHub releases API shows `v5.1.1`, published on
+  **2026-04-20**, as the latest release.
+- Recent 5.x release notes and watchlist items still matter for HLS, DASH, DRM,
+  ABR, networking, ad, and TV-platform behavior. Re-check before repeating old
+  workarounds.
+- Open PR and issue notes are troubleshooting inputs only until confirmed by an
+  official release, merged code, or a focused local reproduction.
 
-Do not hard-code `5.0.3` in new work. For version-sensitive tasks, always read
+Do not hard-code old 5.0.x versions in new work. For version-sensitive tasks, always read
 `references/UPSTREAM_WATCHLIST.md` before choosing a pinned version or
 recommending a workaround.
 
@@ -249,8 +247,10 @@ Use Vue + Quasar for:
 - quiz flows
 - stats and debug panels
 
-If the user asks for a high-end watch experience, pair with `$frontend-skill`
-instead of overloading the core wrapper with visual decisions.
+If the user asks for a high-end watch experience, use this skill for the
+playback-engine, Shaka UI integration, accessibility, responsiveness, and
+verification boundaries. Treat pure visual direction with no playback or
+frontend implementation constraint as outside this skill.
 
 ## QA mode selection
 

@@ -39,8 +39,10 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `# Laravel 13 observability audit points`
 - `# Output contract`
 - `# Anti-patterns`
+- `references/90-source-map.md`
 
 ## Working rule
 
 - Read only the sections you need from `full-guide.md`.
+- Read `90-source-map.md` before relying on version-sensitive observability, SigNoz, Sentry, or OTel guidance.
 - Keep this topic map small and update it when major sections are added or renamed.

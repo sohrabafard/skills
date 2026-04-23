@@ -1,5 +1,7 @@
 
-# Community notes and sharp edges
+# Troubleshooting-only community notes and sharp edges
+
+Use this file only after checking `OFFICIAL_LINKS.md`. These notes capture recurring field symptoms and hypotheses; they are not normative ClickHouse guidance unless official docs or live cluster evidence confirm them.
 
 These are the recurring field problems worth remembering:
 

@@ -36,6 +36,8 @@ This skill complements:
 # Source-of-truth order
 Use sources in this order when generating or reviewing changes.
 
+For the detailed official-first map, freshness triggers, and troubleshooting-only community policy, read `references/source-map.md`.
+
 1) Maintained Laravel 13 / PHP 8.5 fork snapshot inside this skill:
    - Root: `references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7`
    - `src/Consumer.php`
@@ -389,7 +391,7 @@ When applying this skill, output should include:
 - RabbitMQ heartbeat docs: https://www.rabbitmq.com/docs/heartbeats
 - RabbitMQ quorum docs: https://www.rabbitmq.com/docs/quorum-queues
 - RabbitMQ at-least-once DL: https://www.rabbitmq.com/blog/2022/03/29/at-least-once-dead-lettering
-- StackOverflow timeout/retry_after rule of thumb: https://stackoverflow.com/questions/41991251/what-is-the-difference-queuework-tries-3-and-tries-3
+- Troubleshooting-only community note for timeout/retry_after symptoms: https://stackoverflow.com/questions/41991251/what-is-the-difference-queuework-tries-3-and-tries-3
 - GitHub issues list: https://github.com/vyuldashev/laravel-queue-rabbitmq/issues
 
 # Anti-patterns

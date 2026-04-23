@@ -45,6 +45,7 @@ Agents are allowed and encouraged to use internet search when it improves correc
 Rules for web research:
 
 - Prefer primary/official sources first (Arvan docs, Kubernetes docs, Helm docs, GitLab docs).
+- Use `references/SOURCES.md` as the one-hop official-first source map when current behavior matters.
 - Verify dates/versions and align with the local OpenAPI baseline.
 - Keep citations/links in outputs when decisions depend on online findings.
 - Never leak secrets while browsing or sharing commands.
@@ -202,6 +203,8 @@ Usage pattern:
 ## Agent prompting best practices (high-signal)
 
 When invoking this skill, prompt and execute in this structure:
+
+For complex Codex orchestration, prefer GPT-5.5 when available; fall back to the strongest approved Codex model when it is not. Use lighter models only for read-only inventory, static rendering checks, or narrow troubleshooting lanes.
 
 1) Objective
 - Define exact artifact and scope.
@@ -411,6 +414,7 @@ Read only what is needed:
 - `references/openapi-1.25-capability-matrix.md`
 - `references/arvan-rbac-namespace-facts.md`
 - `references/arvan-links.md`
+- `references/SOURCES.md`
 - `assets/README.operator.md.template`
 - `assets/RUNBOOK.operator.md.template`
 - `assets/values.secret.yaml.example`

@@ -39,6 +39,8 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use before finalizing a contract change or skill-driven implementation review.
 - `50-laravel-copy-baselines.md`
   - Use only when you need copy-oriented Laravel baselines after understanding the owning rules.
+- `90-source-map.md`
+  - Official-first source map for version-sensitive standards, framework docs, observability docs, and community-source limits.
 
 ## Working rule
 

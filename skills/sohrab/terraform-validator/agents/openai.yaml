@@ -1,6 +1,6 @@
 interface:
   display_name: "Terraform Validator"
-  short_description: "Validate Terraform IaC"
+  short_description: "Validate Terraform HCL and plans"
   default_prompt: "Use $terraform-validator to follow its workflow for validate terraform iac."
 
 policy:

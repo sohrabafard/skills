@@ -22,6 +22,7 @@ Use this skill to turn tusd into a production upload plane instead of treating i
 
 Classify the request first:
 
+- **Latest, version-sensitive, security-sensitive, or current behavior question**: Read `references/source-map.md` first.
 - **Direct-to-MinIO / S3-compatible storage**: Read `references/topologies.md` and `references/snippets.md`.
 - **Upload to your own tusd, then relay to another tusd / video provider**: Read `references/topologies.md`, `references/hooks-auth.md`, and `references/security.md`.
 - **Mixed platform that needs both paths**: Read `references/decision-matrix.md` first. Default to two separate tusd deployments unless the user explicitly asks for one custom Go service.
@@ -66,14 +67,15 @@ Apply these defaults unless the user explicitly wants a different trade-off:
 
 When using this skill, follow this sequence:
 
-1. Read `references/decision-matrix.md` to choose the platform shape.
-2. Read `references/topologies.md` for the chosen path.
-3. Read `references/proxies.md` before proposing Nginx, HAProxy, gateway auth, or load-balancer behavior.
-4. Read `references/hooks-auth.md` before designing auth, custom headers, or lifecycle automation.
-5. Read `references/security.md` for any public, multi-tenant, or security-sensitive setup.
-6. Read `references/client-side.md` before proposing browser or app-side tus logic.
-7. Read `references/observability.md` before proposing HA, SLOs, metrics, alerts, or SOC logging.
-8. Read `references/snippets.md` and copy from `assets/` when generating concrete configs.
+1. Read `references/source-map.md` when freshness, release, security, or support-tier claims matter.
+2. Read `references/decision-matrix.md` to choose the platform shape.
+3. Read `references/topologies.md` for the chosen path.
+4. Read `references/proxies.md` before proposing Nginx, HAProxy, gateway auth, or load-balancer behavior.
+5. Read `references/hooks-auth.md` before designing auth, custom headers, or lifecycle automation.
+6. Read `references/security.md` for any public, multi-tenant, or security-sensitive setup.
+7. Read `references/client-side.md` before proposing browser or app-side tus logic.
+8. Read `references/observability.md` before proposing HA, SLOs, metrics, alerts, or SOC logging.
+9. Read `references/snippets.md` and copy from `assets/` when generating concrete configs.
 
 ## Companion routing
 
@@ -105,6 +107,7 @@ For any substantial tusd design or implementation answer, produce all of the fol
 
 ## Reference Map
 
+- `references/source-map.md`: Read for official-first source priority, current release snapshots, freshness triggers, and community-troubleshooting boundaries.
 - `references/decision-matrix.md`: Read first when choosing between one service, two services, S3 direct, or local relay.
 - `references/topologies.md`: Read for end-to-end architecture, state transitions, and scaling trade-offs.
 - `references/proxies.md`: Read for Nginx vs HAProxy selection, forwarded headers, buffering rules, timeouts, and stickiness.

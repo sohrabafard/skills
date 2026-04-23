@@ -5,8 +5,12 @@ description: Comprehensive toolkit for generating best practice Jenkinsfiles for
 
 # Jenkinsfile Generator Skill
 
-Generate production-ready Jenkinsfiles following best practices. All generated files are validated using devops-skills:
-jenkinsfile-validator skill.
+Generate production-ready Jenkinsfiles following best practices. All generated files are validated using `$jenkinsfile-validator`.
+
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Jenkins, plugin, LTS, credentials, or pipeline-step behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Jenkins docs, plugin docs, or live controller metadata confirms the guidance.
 
 ## When to Use
 
@@ -15,6 +19,12 @@ jenkinsfile-validator skill.
 - Parallel execution, matrix builds, parameterized pipelines
 - DevSecOps pipelines with security scanning
 - Shared library scaffolding
+
+## When NOT to use
+
+- Do not use for validating or debugging existing Jenkinsfiles without generation needs; use `jenkinsfile-validator`.
+- Do not use for GitHub Actions, GitLab CI, or other CI systems.
+- Do not use for application code changes that do not affect Jenkins pipeline behavior.
 
 ## Quick Reference
 
@@ -72,7 +82,7 @@ stage('Deploy') {
     - Post conditions: always (cleanup), success (artifacts), failure (notifications)
     - **Always add `failFast true` or `parallelsAlwaysFailFast()` for parallel blocks**
     - **Always include `fingerprint: true` when using `archiveArtifacts`**
-4. **ALWAYS validate** using devops-skills:jenkinsfile-validator skill
+4. **ALWAYS validate** using $jenkinsfile-validator skill
 
 ### 2. Scripted Pipelines
 
@@ -83,7 +93,7 @@ stage('Deploy') {
     - Read `assets/templates/scripted/basic.Jenkinsfile` for node/stage patterns
     - Understand try-catch-finally structure for error handling
 2. Implement try-catch-finally for error handling
-3. **ALWAYS validate** using devops-skills:jenkinsfile-validator skill
+3. **ALWAYS validate** using $jenkinsfile-validator skill
 
 ### 3. Parallel/Matrix Pipelines
 
@@ -318,10 +328,10 @@ log.info 'Starting build'
 
 ## Validation Workflow
 
-**CRITICAL: ALWAYS validate using devops-skills:jenkinsfile-validator skill:**
+**CRITICAL: ALWAYS validate using $jenkinsfile-validator skill:**
 
 1. Generate Jenkinsfile
-2. Invoke `devops-skills:jenkinsfile-validator` skill
+2. Invoke `$jenkinsfile-validator` skill
 3. **Handle validation results by severity:**
     - **ERRORS:** MUST fix before presenting to user - these break the pipeline
     - **WARNINGS:** SHOULD fix - these indicate potential issues
@@ -389,6 +399,6 @@ Dependency-Check, Email, AWS, Azure, HTTP Request, Microsoft Teams, Nexus, Artif
 - `references/best_practices.md` - Performance, security, reliability patterns
 - `references/common_plugins.md` - Git, Docker, K8s, credentials, notifications
 - `assets/templates/` - Declarative and scripted templates
-- `devops-skills:jenkinsfile-validator` skill - Syntax and best practices validation
+- `$jenkinsfile-validator` skill - Syntax and best practices validation
 
 **Always prefer Declarative unless scripted flexibility is required.**

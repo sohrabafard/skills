@@ -3,8 +3,8 @@
 ## Overview
 
 Generate production-ready Azure DevOps Pipeline configurations following current best practices, security standards, and
-naming conventions. All generated resources are automatically validated using the devops-skills:
-azure-pipelines-validator skill to ensure syntax correctness and compliance with best practices.
+naming conventions. All generated resources are automatically validated using `$azure-pipelines-validator` to ensure
+syntax correctness and compliance with best practices.
 
 ## Core Capabilities
 
@@ -32,7 +32,7 @@ Create simple continuous integration pipelines for building and testing applicat
     - Add proper test result publishing
     - Use conditions appropriately
     - Set reasonable timeouts
-7. **ALWAYS validate** the generated pipeline using the devops-skills:azure-pipelines-validator skill
+7. **ALWAYS validate** the generated pipeline using the $azure-pipelines-validator skill
 8. If validation fails, fix the issues and re-validate
 
 **Example structure:**
@@ -101,7 +101,7 @@ Create complex pipelines with multiple stages for build, test, and deployment.
     - Deployment jobs for environment tracking
     - Conditions for branch-specific deployments
     - Artifact management between stages
-7. **ALWAYS validate** using devops-skills:azure-pipelines-validator skill
+7. **ALWAYS validate** using $azure-pipelines-validator skill
 
 **Example:**
 
@@ -165,7 +165,7 @@ Create pipelines for building and pushing Docker images to container registries.
     - Service connection for registry authentication
     - Proper image tagging (build ID, latest, semantic version)
     - Optional security scanning with Trivy or similar
-7. **ALWAYS validate** using devops-skills:azure-pipelines-validator skill
+7. **ALWAYS validate** using $azure-pipelines-validator skill
 
 **Example:**
 
@@ -211,7 +211,7 @@ Create pipelines that deploy applications to Kubernetes clusters.
     - Proper namespace management
     - Rollout status checking
     - Health check validation
-7. **ALWAYS validate** using devops-skills:azure-pipelines-validator skill
+7. **ALWAYS validate** using $azure-pipelines-validator skill
 
 **Example:**
 
@@ -252,7 +252,7 @@ Create pipelines optimized for specific programming languages and frameworks.
     - Build commands specific to framework
     - Test execution with proper reporting
     - Artifact publishing
-5. **ALWAYS validate** using devops-skills:azure-pipelines-validator skill
+5. **ALWAYS validate** using $azure-pipelines-validator skill
 
 #### Go Language Pipeline Details
 
@@ -470,13 +470,13 @@ When generating pipelines that use specific Azure Pipelines tasks or require lat
 
 ### Validation Process
 
-1. **After generating any pipeline configuration**, immediately invoke the `devops-skills:azure-pipelines-validator`
+1. **After generating any pipeline configuration**, immediately invoke the `$azure-pipelines-validator`
    skill:
    ```
-   Skill: devops-skills:azure-pipelines-validator
+   Skill: $azure-pipelines-validator
    ```
 
-2. **The devops-skills:azure-pipelines-validator skill will:**
+2. **The $azure-pipelines-validator skill will:**
     - Validate YAML syntax
     - Check Azure Pipelines schema compliance
     - Verify task names and versions
@@ -611,7 +611,7 @@ and best practices. Use the Read tool to load these files before generating.
 2. Read: examples/go-cicd.yml (for Go patterns)
 3. Read: examples/kubernetes-deploy.yml (for Docker/K8s patterns)
 4. Generate pipeline combining both patterns
-5. Validate with devops-skills:azure-pipelines-validator skill
+5. Validate with $azure-pipelines-validator skill
 ```
 
 ## Typical Workflow Example
@@ -654,7 +654,7 @@ and best practices. Use the Read tool to load these files before generating.
         - Health check validation
 
 5. ✅ Validate:
-    - Invoke `devops-skills:azure-pipelines-validator` skill
+    - Invoke `$azure-pipelines-validator` skill
     - Fix any reported issues
     - Re-validate if needed
 
@@ -732,7 +732,7 @@ steps:
 
 ## Error Messages and Troubleshooting
 
-### If devops-skills:azure-pipelines-validator reports errors:
+### If $azure-pipelines-validator reports errors:
 
 1. **Syntax errors:** Fix YAML formatting, indentation, or structure
 2. **Task version errors:** Ensure tasks use proper version format (TaskName@version)
@@ -755,7 +755,7 @@ Always follow this sequence when generating Azure Pipelines:
 2. **Reference** - Check ./yaml-schema.md, tasks-reference.md, best-practices.md
 3. **Search** - For specific tasks, use WebSearch or Context7 for current docs
 4. **Generate** - Follow standards (pinning, caching, naming, stages)
-5. **Validate** - ALWAYS use devops-skills:azure-pipelines-validator skill
+5. **Validate** - ALWAYS use $azure-pipelines-validator skill
 6. **Fix** - Resolve any validation errors
 7. **Present** - Deliver validated, production-ready pipeline
 

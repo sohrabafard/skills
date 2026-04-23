@@ -3,8 +3,8 @@
 ## Overview
 
 Generate production-ready Makefiles with best practices for C/C++, Python, Go, Java, and generic projects. Features GNU
-Coding Standards compliance, standard targets, security hardening, and automatic validation via devops-skills:
-`alaa-makefile` validation workflow.
+Coding Standards compliance, standard targets, security hardening, and automatic validation through the `alaa-makefile`
+validation workflow.
 
 ## When to Use
 

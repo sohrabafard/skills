@@ -6,8 +6,18 @@ description: Comprehensive toolkit for generating best practice GitHub Actions w
 # GitHub Actions Generator
 
 Generate production-ready GitHub Actions workflows and custom actions following current best practices, security
-standards, and naming conventions. All generated resources are automatically validated using the devops-skills:
-github-actions-validator skill.
+standards, and naming conventions. All generated resources are automatically validated using `$github-actions-validator`.
+
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive GitHub Actions behavior, runner images, public actions, permissions, OIDC, or reusable workflow limits.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless GitHub Docs or the action maintainer source confirms the guidance.
+
+## When NOT to use
+
+- Do not use for validating or debugging existing workflows without generation needs; use `github-actions-validator`.
+- Do not use for GitLab CI, Jenkins, or other CI systems.
+- Do not use for application code changes that do not affect GitHub Actions.
 
 ## Quick Reference
 
@@ -20,6 +30,7 @@ github-actions-validator skill.
 | Reusable Workflows | Shared patterns across repos    | `references/advanced-triggers.md` |
 | Security Scanning  | Dependency review, SBOM         | `references/best-practices.md`    |
 | Modern Features    | Summaries, environments         | `references/modern-features.md`   |
+| Source Freshness   | Official docs and update checks | `references/source-map.md`        |
 
 ---
 
@@ -37,7 +48,7 @@ github-actions-validator skill.
 4. Generate workflow with:
     - Semantic names, pinned actions (SHA), proper permissions
     - Concurrency controls, caching, matrix strategies
-5. **Validate** with devops-skills:github-actions-validator skill
+5. **Validate** with $github-actions-validator skill
 6. Fix issues and re-validate if needed
 
 **Minimal Example:**
@@ -85,7 +96,7 @@ jobs:
 1. Use templates from `assets/templates/action/`
 2. Follow structure in `references/custom-actions.md`
 3. Include branding, inputs/outputs, documentation
-4. **Validate** with devops-skills:github-actions-validator skill
+4. **Validate** with $github-actions-validator skill
 
 See `references/custom-actions.md` for:
 
@@ -181,7 +192,7 @@ See `references/common-actions.md` for pre-verified action versions.
 **CRITICAL:** Every generated resource MUST be validated.
 
 1. Generate workflow/action file
-2. Invoke `devops-skills:github-actions-validator` skill
+2. Invoke `$github-actions-validator` skill
 3. If errors: fix and re-validate
 4. If success: present with usage instructions
 
@@ -274,6 +285,6 @@ deploy:
 2. **Reference** appropriate docs
 3. **Generate** with standards
 4. **Search** for public action docs (if needed)
-5. **Validate** with devops-skills:github-actions-validator
+5. **Validate** with $github-actions-validator
 6. **Fix** any errors
 7. **Present** validated result

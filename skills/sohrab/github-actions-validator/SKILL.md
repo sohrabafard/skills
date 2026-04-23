@@ -11,6 +11,11 @@ Validate and test GitHub Actions workflows, custom actions, and public actions u
 and act). This skill provides comprehensive validation including syntax checking, static analysis, local workflow
 execution testing, and action verification with version-aware documentation lookup.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive GitHub Actions behavior, runner images, public actions, actionlint, act, permissions, OIDC, or reusable workflow limits.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless GitHub Docs, tool docs, or the action maintainer source confirms the guidance.
+
 ## When to Use This Skill
 
 Use this skill when:
@@ -22,6 +27,12 @@ Use this skill when:
 - **Verifying public actions**: Validating usage of actions from GitHub Marketplace
 - **Pre-commit validation**: Ensuring workflows are valid before committing
 
+## When NOT to use
+
+- Do not use for generating new workflows from scratch; use `github-actions-generator`.
+- Do not use for GitLab CI, Jenkins, or other CI systems.
+- Do not use for generic YAML validation when GitHub Actions semantics do not matter.
+
 ## CRITICAL: Assistant Workflow (MUST FOLLOW)
 
 **Every validation MUST follow these steps. Skipping any step is non-compliant.**
@@ -29,7 +40,7 @@ Use this skill when:
 ### Step 1: Run Validation Script
 
 ```bash
-cd .claude/skills/github-actions-validator
+cd skills/sohrab/github-actions-validator
 bash scripts/validate_workflow.sh <workflow-file-or-directory>
 ```
 
@@ -132,7 +143,7 @@ runs-on: ubuntu-latest
 ### Initial Setup
 
 ```bash
-cd .claude/skills/github-actions-validator
+cd skills/sohrab/github-actions-validator
 bash scripts/install_tools.sh
 ```
 
@@ -299,7 +310,7 @@ act -n                                         # Dry-run (no execution)
 ### Example 1: Pre-commit Validation
 
 ```bash
-cd .claude/skills/github-actions-validator
+cd skills/sohrab/github-actions-validator
 bash scripts/validate_workflow.sh .github/workflows/
 git add .github/workflows/ && git commit -m "Update workflows"
 ```

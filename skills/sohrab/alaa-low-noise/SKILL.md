@@ -26,7 +26,7 @@ It is a companion skill. It does not own architecture, stack decisions, or durab
 - PowerShell or shell quoting and output habits are likely to create avoidable spam.
 - Subagents or parallel lanes would otherwise flood the parent thread with discovery output.
 
-## Do not use this skill when
+## When NOT to use
 
 - The task is tiny and ordinary output is already naturally compact.
 - Raw logs, a full diff, or full file contents are the actual deliverable.
@@ -88,6 +88,7 @@ If subagents are used:
 
 - Read `references/noise-control-patterns.md` for concrete Bash and PowerShell patterns for search, excerpting, diffing, and log capture.
 - Read `references/workflow-integration.md` only when pairing with `$alaa-workflow`, repo-local state artifacts, or delegated lanes.
+- Read `references/90-source-map.md` when output behavior depends on current tool, shell, or model-use guidance.
 
 ## Quick self-check
 

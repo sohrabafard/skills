@@ -34,8 +34,9 @@ Keep this top-level file small. Load the references for the full rules, examples
 1. Read the repo-local `AGENTS.md`.
 2. Decide whether the task is generic Docker delivery work, Ala-specific service-contract work, or Arvan Kubernetes delivery work.
 3. Read `references/00-topic-map.md`.
-4. Load only the sections you need from `references/full-guide.md`.
-5. Pair with the listed companion skills before making changes outside this skill's ownership.
+4. Read `references/SOURCES.md` when the task depends on latest Docker, Compose, Swarm, OCI, registry, or security behavior.
+5. Load only the sections you need from `references/full-guide.md`.
+6. Pair with the listed companion skills before making changes outside this skill's ownership.
 
 ## Troubleshooting map
 
@@ -65,6 +66,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - `references/00-topic-map.md`
 - Full preserved guidance, rules, examples, and checklists:
   - `references/full-guide.md`
+- Official-first Docker, OCI, registry, and security source map:
+  - `references/SOURCES.md`
 
 ## Maintenance rules
 
@@ -72,4 +75,5 @@ Keep this top-level file small. Load the references for the full rules, examples
 - Put detailed rules into `references/full-guide.md` instead of growing this file.
 - Keep the topic map aligned with the actual headings in the full guide.
 - Keep generic Docker and Swarm mechanics here; move Ala-specific service-family hard constraints into `alaa-services-contract`.
+- Re-check official Docker and OCI sources when latest, current, version, or security behavior matters.
 - Re-check companion-skill routing when ownership boundaries change.

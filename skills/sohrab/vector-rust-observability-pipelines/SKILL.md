@@ -18,6 +18,11 @@ This skill is for **production Vector work**:
 - validating configurations before rollout
 - monitoring Vector itself and debugging stalls, loss, duplication, or OOM scenarios
 
+## Source freshness
+
+- Read `references/OFFICIAL_LINKS.md` before handling latest/current/version/security-sensitive Vector, VRL, sink, buffering, acknowledgement, Helm, or runtime behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Vector docs or runtime validation evidence confirms the guidance.
+
 ## Core operating principles
 
 1. **Treat Vector as a topology, not a single config blob**
@@ -195,7 +200,7 @@ If multi-agent is enabled, use or suggest:
 - `delivery_guarantees`: analyse acks, buffers, retries, and loss semantics
 - `sink_specialist`: tune the destination sink (ClickHouse, Kafka, S3, etc.)
 - `ops_observability`: internal metrics/logs, rollout, capacity, and incident playbooks
-- `community_risk_reviewer`: scan current issues/community threads for sharp edges
+- `troubleshooting_risk_reviewer`: scan official docs first, then issues/community threads only for troubleshooting sharp edges
 
 ## Output contract
 Every final answer using this skill should include:

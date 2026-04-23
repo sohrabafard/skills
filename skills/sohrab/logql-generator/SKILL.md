@@ -10,12 +10,23 @@ description: Comprehensive toolkit for generating best practice LogQL (Loki Quer
 Interactive workflow for generating production-ready LogQL queries. LogQL is Grafana Loki's query language—distributed
 grep with labels for filtering, plus aggregation and metrics capabilities.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version-sensitive Loki or LogQL behavior, syntax, functions, recording rules, label guidance, or query-runtime differences.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Grafana Loki docs confirm the guidance.
+
 ## When to Use This Skill
 
 - Creating LogQL queries for log analysis, dashboards, or alerting
 - Converting log analysis requirements into LogQL expressions
 - Troubleshooting applications through log analysis
 - Working with structured logs (JSON, logfmt)
+
+## When NOT to use
+
+- Do not use for PromQL metrics queries; use the PromQL skills.
+- Do not use for Loki server configuration; use `loki-config-generator`.
+- Do not use for generic log analysis that does not require LogQL output.
 
 ## Interactive Query Planning Workflow
 
@@ -82,8 +93,8 @@ knowledge or cached information.
 
 ```
 # Use the Read tool with these paths during skill execution:
-Read(".claude/skills/logql-generator/examples/common_queries.logql")   # For query patterns
-Read(".claude/skills/logql-generator/references/best_practices.md")    # For optimization and anti-patterns
+Read("skills/sohrab/logql-generator/examples/common_queries.logql")   # For query patterns
+Read("skills/sohrab/logql-generator/references/best_practices.md")    # For optimization and anti-patterns
 ```
 
 **Example workflow**:

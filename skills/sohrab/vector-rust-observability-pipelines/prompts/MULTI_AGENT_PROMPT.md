@@ -14,7 +14,7 @@ Spawn specialist agents in parallel, then consolidate:
 5. Ops agent
    - internal metrics/logs, capacity, startup policy, and incident runbook
 6. Community-risk agent
-   - scan current docs/issues/community threads for sharp edges
+   - scan official docs first; use issues/community threads only for troubleshooting sharp edges
 
 Return:
 - final topology

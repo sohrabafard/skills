@@ -10,6 +10,17 @@ description: Comprehensive toolkit for generating best practice Terragrunt confi
 Generate production-ready Terragrunt configurations following current best practices, naming conventions, and security
 standards. All generated configurations are automatically validated.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Terragrunt, Stacks, CLI redesign, Terraform/OpenTofu, provider, backend, or module behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Terragrunt, Terraform/OpenTofu, provider, registry, or cloud provider docs confirm the guidance.
+
+## When NOT to use
+
+- Do not use for validating or debugging existing Terragrunt without generation needs; use `terragrunt-validator`.
+- Do not use for plain Terraform-only projects; use the Terraform skills.
+- Do not use for cloud architecture prose unless Terragrunt HCL is the expected artifact.
+
 **Terragrunt 2025 Features Supported:**
 
 - [Stacks](https://terragrunt.gruntwork.io/docs/features/stacks/) - Infrastructure blueprints with
@@ -451,7 +462,7 @@ When generating configs with custom providers:
    terragrunt dag graph                 # Dependency graph validation
    ```
 
-    - Invoke `devops-skills:terragrunt-validator` skill for comprehensive validation
+    - Invoke `$terragrunt-validator` skill for comprehensive validation
 
 ### Step 5: Fix and Re-Validate
 
@@ -494,7 +505,7 @@ After all files are generated:
 
 1. **Invoke validation skill:**
    ```
-   Invoke: devops-skills:terragrunt-validator skill
+   Invoke: $terragrunt-validator skill
    ```
 
 2. **If validation fails:**
@@ -597,7 +608,7 @@ Suggest what the user might want to do next (add more modules, customize configu
 
 ## Best Practices
 
-Reference `../devops-skills:terragrunt-validator/references/best_practices.md` for comprehensive guidelines.
+Reference `skills/sohrab/terragrunt-validator/references/best_practices.md` for comprehensive guidelines.
 
 **Key principles:**
 
@@ -651,7 +662,7 @@ Reference `../devops-skills:terragrunt-validator/references/best_practices.md` f
 | Reference                                                            | Content                               | When to Read              |
 |----------------------------------------------------------------------|---------------------------------------|---------------------------|
 | `references/common-patterns.md`                                      | All generation patterns with examples | Always, before generating |
-| `../devops-skills:terragrunt-validator/references/best_practices.md` | Comprehensive best practices          | Always, before generating |
+| `skills/sohrab/terragrunt-validator/references/best_practices.md` | Comprehensive best practices          | Always, before generating |
 
 ### Official Documentation
 
@@ -773,7 +784,7 @@ dev/
 Before generating, READ these files in order:
 
 1. [ ] `references/common-patterns.md` - Understand available patterns
-2. [ ] `../devops-skills:terragrunt-validator/references/best_practices.md` - Know the rules
+2. [ ] `skills/sohrab/terragrunt-validator/references/best_practices.md` - Know the rules
 3. [ ] Relevant template(s) from `assets/templates/` - Structural reference
 
 ### Architecture Decision Tree
@@ -792,5 +803,5 @@ Q: Multiple environments (dev/staging/prod)?
 
 1. Format check: `terragrunt hcl fmt --check`
 2. Input validation: `terragrunt hcl validate --inputs`
-3. Full validation: Invoke `devops-skills:terragrunt-validator` skill
+3. Full validation: Invoke `$terragrunt-validator` skill
 4. Fix errors → Re-validate → Repeat until clean

@@ -20,12 +20,19 @@ Use this as the single entrypoint for Helm, Kubernetes YAML, OpenShift, and day-
 4. Establish two facts early:
    - the **version surface** (`helm version`, `kubectl version`, `oc version`, API availability)
    - the **access surface** (cluster-admin, namespace admin, developer, or container-only access)
+5. Read `references/SOURCES.md` when latest/current Kubernetes, Helm, OpenShift, API, or security behavior matters.
+
+## When NOT to use
+
+- Do not use for Docker-only, Terraform-only, or CI-only work.
+- Do not use for cloud architecture that does not materially depend on Kubernetes, OpenShift, or Helm.
+- Do not use for application logic unless the fix is tied to workload runtime behavior.
 
 ## Default operating model
 
-- **Version-aware first**: Read `references/version-awareness.md` whenever compatibility or “latest” behavior matters.
+- **Version-aware first**: Read `references/version-awareness.md` whenever compatibility or "latest" behavior matters.
 - **Access-aware first**: Never assume cluster-admin. Confirm what the user can actually do before recommending cluster-scoped objects or node-level actions.
-- **Stable by default**: Prefer stable APIs and portable patterns that work across Kubernetes 1.33–1.35 and OpenShift 4.19–4.21 unless the user explicitly asks for newer or platform-specific behavior.
+- **Stable by default**: Prefer stable APIs and portable patterns that work across Kubernetes 1.33-1.35 and OpenShift 4.19-4.21 unless the user explicitly asks for newer or platform-specific behavior.
 - **Namespace-safe by default**: Generate namespaced resources unless cluster-scoped resources are truly required.
 - **Evidence before edits**: For debugging, gather events, logs, status, and access errors before suggesting fixes.
 - **OpenShift-safe by default**: When the target might be OpenShift or an OpenShift-like managed platform, assume arbitrary UID, non-root execution, stricter admission, and no node access until proven otherwise.
@@ -142,6 +149,8 @@ Always verify uncertain permissions with `kubectl auth can-i` or `oc auth can-i`
 
 When the environment supports multi-agent workflows, use them only when the task is broad enough to benefit.
 
+- Prefer GPT-5.5 for complex chart/platform orchestration when available; use the strongest approved fallback model if it is not.
+- Use lighter models only for bounded read-only inventory, static validation, or log/event summarization lanes.
 - **Inventory agent**: inspect existing charts, manifests, CRDs, and platform signals.
 - **Validator agent**: run static checks, render charts, and summarize blocking failures.
 - **Platform-fit agent**: map the target to vanilla Kubernetes, OpenShift, or a managed namespace platform and flag access constraints.

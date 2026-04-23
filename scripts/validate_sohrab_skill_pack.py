@@ -8,6 +8,45 @@ ROOT = Path(__file__).resolve().parents[1]
 PACK_DIR = ROOT / "skills" / "sohrab"
 
 PATH_RE = re.compile(r"`((?:references|docs|examples|scripts|assets|output|test|tests)/[^`]+)`")
+LOCAL_RESOURCE_PREFIXES = ("references/", "examples/", "scripts/", "assets/")
+TARGET_REPO_PREFIXES = ("docs/", "output/", "test/", "tests/")
+
+
+def is_placeholder_or_glob(path: str) -> bool:
+    return any(token in path for token in ("*", "?", "[", "]", "<", ">"))
+
+
+def is_command_example(path: str) -> bool:
+    return any(char.isspace() for char in path)
+
+
+def should_validate_path(skill_dir: Path, path: str) -> bool:
+    """Return true only for bundled skill resource paths.
+
+    Skill docs often mention target-repository paths such as
+    `docs/BIG_PICTURE.md` or command placeholders such as
+    `scripts/validate_makefile.sh <file>`. Those are not bundled resources and
+    should not fail pack validation.
+    """
+    normalized = path.replace("\\", "/").strip()
+
+    if is_placeholder_or_glob(normalized) or is_command_example(normalized):
+        return False
+
+    if normalized.endswith("/"):
+        return False
+
+    for prefix in LOCAL_RESOURCE_PREFIXES:
+        if normalized.startswith(prefix):
+            return (skill_dir / prefix.rstrip("/")).exists()
+
+    if normalized.startswith("docs/"):
+        return (skill_dir / "docs").exists()
+
+    if normalized.startswith(TARGET_REPO_PREFIXES):
+        return False
+
+    return True
 
 
 def load_skill(skill_dir: Path):
@@ -40,7 +79,7 @@ def main() -> int:
         if lines > 120:
             warnings.append(f"{skill_dir.name}: top-level body is {lines} lines")
         for match in PATH_RE.findall(body):
-            if not (skill_dir / match).exists():
+            if should_validate_path(skill_dir, match) and not (skill_dir / match).exists():
                 errors.append(f"{skill_dir.name}: referenced path does not exist -> {match}")
         openai_path = skill_dir / "agents" / "openai.yaml"
         if not openai_path.exists():
@@ -59,7 +98,7 @@ def main() -> int:
             if topic_map.exists():
                 topic_raw = topic_map.read_text(encoding="utf-8")
                 for rel in PATH_RE.findall(topic_raw):
-                    if not (skill_dir / rel).exists():
+                    if should_validate_path(skill_dir, rel) and not (skill_dir / rel).exists():
                         errors.append(f"{skill_dir.name}: topic map path missing -> {rel}")
     if errors:
         print("Errors:")

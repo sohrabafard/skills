@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa SigNoz Docs & ClickHouse"
+  short_description: "Find SigNoz docs and write dashboard SQL"
+  default_prompt: "Use $alaa-signoz-clickhouse-docs to find the right SigNoz docs page for OpenTelemetry instrumentation or write a SigNoz ClickHouse dashboard query for logs or traces."

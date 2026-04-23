@@ -9,6 +9,11 @@ Comprehensive toolkit for validating, linting, and testing Jenkinsfile pipelines
 skill applies when working with Jenkins pipeline files, validating pipeline syntax, checking best practices, debugging
 pipeline issues, or working with custom plugins that require documentation lookup.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Jenkins, plugin, LTS, credentials, CPS, or pipeline-step behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Jenkins docs, plugin docs, or live controller metadata confirms the guidance.
+
 ## When to Use This Skill
 
 - Validating Jenkinsfile syntax before committing to repository
@@ -20,6 +25,12 @@ pipeline issues, or working with custom plugins that require documentation looku
 - Ensuring proper credential handling and security practices
 - Checking for common anti-patterns and performance issues
 - Verifying variable usage and scope
+
+## When NOT to use
+
+- Do not use for generating new Jenkinsfiles from scratch; use `jenkinsfile-generator`.
+- Do not use for GitHub Actions, GitLab CI, or other CI systems.
+- Do not use for generic Groovy edits unless Jenkins pipeline semantics are involved.
 
 ## Validation Capabilities
 

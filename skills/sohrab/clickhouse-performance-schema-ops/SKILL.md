@@ -18,6 +18,11 @@ This skill is optimized for **real-world ClickHouse work**:
 - diagnosing slow queries, mutation backlog, merge pressure, and storage churn
 - turning vague ClickHouse asks into a concrete plan, SQL artifacts, and validation steps
 
+## Source freshness
+
+- Read `references/OFFICIAL_LINKS.md` before handling latest/current/version/security-sensitive ClickHouse schema, MergeTree, ingest, settings, mutation, projection, materialized view, or operations behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless ClickHouse docs or live cluster evidence confirms the guidance.
+
 ## When NOT to use
 - do not use this skill for generic row-store or OLTP guidance that ignores MergeTree storage and merge behavior
 - do not prescribe UPDATE or DELETE heavy patterns before checking whether ingest shape, ordering, partitioning, or table-engine choices solve the problem more safely
@@ -152,7 +157,7 @@ If multi-agent is enabled, suggest or spawn these roles:
 - `ingest_strategist`: insert path, batching, async_insert, queueing, dedup
 - `query_profiler`: query_log analysis, EXPLAIN, read amplification, join rewrites
 - `storage_ops`: parts, merges, mutations, disk usage, replication, recovery
-- `community_risk_reviewer`: scan docs/issues/community wisdom for sharp edges and version-specific gotchas
+- `troubleshooting_risk_reviewer`: scan official docs first, then issues/community threads only for troubleshooting sharp edges and version-specific gotchas
 
 Use read-only exploration for evidence gathering and keep synthesis in the parent thread.
 

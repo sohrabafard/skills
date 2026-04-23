@@ -1,6 +1,6 @@
 interface:
   display_name: "Promql Generator"
-  short_description: "Generate PromQL queries"
+  short_description: "Generate PromQL queries and alert rules"
   default_prompt: "Use $promql-generator to follow its workflow for generate promql queries."
 
 policy:

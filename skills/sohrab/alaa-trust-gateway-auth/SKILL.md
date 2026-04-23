@@ -143,6 +143,8 @@ Rules:
   - `references/full-guide.md`
 - Permission bitmap reference asset:
   - `references/permission-bitmap.php`
+- Official-first source map and freshness triggers:
+  - `references/90-source-map.md`
 - Historical request-for-change note:
   - `request-for-change.md`
 

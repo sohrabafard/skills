@@ -23,7 +23,7 @@ Use this skill for:
 - Docker, Kubernetes, and OpenShift deployment choices
 - scaling, stability, observability, and security reviews
 
-Do not use this skill for:
+## When NOT to use
 
 - basic end-user instructions for joining or running meetings
 - generic browser troubleshooting without a platform angle

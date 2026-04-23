@@ -38,7 +38,7 @@ Use this file to choose the smallest relevant section in `./full-guide.md`.
 - `### Matrix Testing Pattern`
 - `### Conditional Deployment Pattern`
 - `## Error Messages and Troubleshooting`
-- `### If devops-skills:azure-pipelines-validator reports errors:`
+- `### If $azure-pipelines-validator reports errors:`
 - `### If documentation for specific task is not found:`
 - `## Summary`
 

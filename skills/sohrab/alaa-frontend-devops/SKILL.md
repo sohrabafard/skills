@@ -43,9 +43,10 @@ Do not use this skill when:
 
 1. Read the repo-local `AGENTS.md`.
 2. Apply `$alaa-low-noise`.
-3. Read `references/10-build-contract-and-artifacts.md` first.
-4. Load only the smallest additional reference file needed for the task.
-5. Validate in the same environment shape that would catch the delivery risk.
+3. Read `references/00-source-map.md` when the task is version-sensitive, security-sensitive, or about current deploy behavior.
+4. Read `references/10-build-contract-and-artifacts.md` first for delivery-contract work.
+5. Load only the smallest additional reference file needed for the task.
+6. Validate in the same environment shape that would catch the delivery risk.
 
 ## Verification matrix
 
@@ -71,6 +72,8 @@ Do not use this skill when:
 
 ## Reference navigation
 
+- Official-first source priority, freshness triggers, and community-troubleshooting boundary:
+  - `references/00-source-map.md`
 - Build contract, artifact rules, SSR runtime entry, and final asset expectations:
   - `references/10-build-contract-and-artifacts.md`
 - CI, Docker, cache keys, install layers, and deterministic builds:
@@ -85,4 +88,5 @@ Do not use this skill when:
 - Keep this skill focused on frontend delivery and deploy safety.
 - Prefer one-hop references instead of growing this file.
 - Keep examples plain and portable; do not hard-code one repo unless the example is explicitly repo-scoped.
+- Re-check official sources before updating version, security, or current-behavior guidance.
 - If current OpenAI or Codex guidance affects tool usage or maintenance advice, re-check `$openai-docs` before updating this skill.

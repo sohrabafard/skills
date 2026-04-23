@@ -31,12 +31,19 @@ Make these decisions before editing:
    - portability
    - runtime smoke check on real targets
 
+## When NOT to use
+
+- Do not use for shell scripts, CI YAML, or package-manager scripts unless Make behavior is the decision surface.
+- Do not use to replace a working repo-native task runner without a clear Makefile requirement.
+- Do not use for build-system migrations outside GNU Make scope.
+
 ## Default operating model
 
 - **Routing-first**: Open the smallest reference that matches the task instead of loading every Makefile guide.
 - **GNU-safe by default**: Use modern GNU Make patterns when the repo already depends on them.
 - **Reviewable first**: Prefer small, explicit targets and clear variables over clever macro-heavy Makefiles.
 - **Shell-aware**: Treat recipe safety as part of the Makefile design, not as an afterthought.
+- **Freshness-aware**: Read `references/SOURCES.md` when GNU Make, POSIX make, validation tooling, latest/current behavior, or security-sensitive recipe behavior matters.
 - **Validation before closeout**: Run the bundled validator script and any cheap repo-specific smoke checks before finishing.
 
 ## Task lanes
@@ -151,6 +158,8 @@ These are good for deterministic scaffolding, but do not stop there. Review the 
 - Validation tooling:
   - `references/bake-tool.md`
   - `references/validation-full-guide.md`
+- Official-first source map:
+  - `references/SOURCES.md`
 
 ## Deliverable rules
 
@@ -164,4 +173,5 @@ These are good for deterministic scaffolding, but do not stop there. Review the 
 - Keep this file routing-first and compact.
 - Keep detailed reference material in `references/`.
 - Keep the scripts usable as standalone helpers, but do not let them become the only documented workflow.
+- Re-check official GNU Make, POSIX, and validation-tool sources when latest, current, version, or security behavior matters.
 - When ownership changes, update companion routing and pack-level docs in the same patch.

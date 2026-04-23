@@ -894,10 +894,10 @@ Apply these best practices to all generated configurations:
 
 ### Stage 10: Validate Generated Configuration
 
-**ALWAYS validate the generated configuration** using the devops-skills:fluentbit-validator skill:
+**ALWAYS validate the generated configuration** using the $fluentbit-validator skill:
 
 ```
-Invoke the devops-skills:fluentbit-validator skill to validate the config:
+Invoke the $fluentbit-validator skill to validate the config:
 1. Syntax validation (section format, key-value pairs)
 2. Required field checks
 3. Plugin parameter validation
@@ -907,7 +907,7 @@ Invoke the devops-skills:fluentbit-validator skill to validate the config:
 7. Best practice recommendations
 8. Dry-run testing (if fluent-bit binary available)
 
-Follow the devops-skills:fluentbit-validator workflow to identify and fix any issues.
+Follow the $fluentbit-validator workflow to identify and fix any issues.
 ```
 
 **Validation checklist:**
@@ -992,15 +992,15 @@ When generating configurations:
 7. **Security reminders** - Highlight credential and TLS requirements
 8. **Performance notes** - Explain buffer limits and flush intervals
 
-## Integration with devops-skills:fluentbit-validator
+## Integration with $fluentbit-validator
 
-After generating any Fluent Bit configuration, **automatically invoke the devops-skills:fluentbit-validator skill** to
+After generating any Fluent Bit configuration, **automatically invoke the $fluentbit-validator skill** to
 ensure quality:
 
 ```
 Steps:
 1. Generate the Fluent Bit configuration
-2. Invoke devops-skills:fluentbit-validator skill with the config file
+2. Invoke $fluentbit-validator skill with the config file
 3. Review validation results
 4. Fix any issues identified
 5. Re-validate until all checks pass

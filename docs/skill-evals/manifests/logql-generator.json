@@ -2,7 +2,7 @@
   "skill": "logql-generator",
   "display_name": "LogQL Generator",
   "allow_implicit_invocation": false,
-  "counterpart": "logql-validator",
+  "counterpart": "promql-generator",
   "risk": "normal",
   "cases": [
     {
@@ -20,9 +20,9 @@
     {
       "id": "sibling-confusion",
       "kind": "sibling_confusion",
-      "prompt": "I am deciding whether to use logql-generator or logql-validator for logql generator work.",
+      "prompt": "I am deciding whether to use logql-generator or promql-generator for Grafana Loki log query work.",
       "expected_skill": "logql-generator",
-      "expected_related": "logql-validator"
+      "expected_related": "promql-generator"
     },
     {
       "id": "hard-negative",

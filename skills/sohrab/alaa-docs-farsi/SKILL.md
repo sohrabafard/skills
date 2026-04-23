@@ -114,6 +114,7 @@ Keep this top-level file lean. Load only the reference files you need.
 - Read `references/60-errors-events-observability-contract.md` for error contracts, event inventory, logs, and observability docs.
 - Read `references/70-subagent-doc-workflows.md` for concrete parallel delegation patterns, return contracts, and parent-agent merge rules.
 - Read `references/40-sync-workflow-and-evidence.md` for paired-doc rules, workflow, link validation, and done criteria.
+- Read `references/90-source-map.md` for official-first source maps, freshness triggers, and community-source limits.
 - Read `references/full-guide.md` when multiple topics overlap heavily or when updating the reference pack itself.
 - Use the active repository `AGENTS.md` as a repo-local override for sync rules and done criteria.
 

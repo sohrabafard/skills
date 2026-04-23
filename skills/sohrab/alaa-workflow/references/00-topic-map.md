@@ -27,6 +27,8 @@ Read only the smallest section you need.
   - Run `../scripts/init_workflow_files.py --help`
 - Need artifact validation?
   - Run `../scripts/validate_workflow_files.py --help`
+- Need source priority, freshness triggers, or GPT-5.5-ready workflow guidance?
+  - Read `90-source-map.md`
 
 ## Reading rule
 

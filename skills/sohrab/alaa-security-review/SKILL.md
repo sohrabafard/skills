@@ -56,6 +56,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - `references/00-topic-map.md`
 - Full preserved guidance, rules, examples, and checklists:
   - `references/full-guide.md`
+- Official-first source map, freshness triggers, and community-source limits:
+  - `references/90-source-map.md`
 
 ## Maintenance rules
 

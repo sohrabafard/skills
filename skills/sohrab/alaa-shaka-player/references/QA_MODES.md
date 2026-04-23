@@ -47,7 +47,7 @@ Preferred evidence:
 
 - Browser mechanics: pair with `$playwright` or `$playwright-interactive`
 - Repo-safe Vue or Quasar implementation: pair with `$alaa-frontend-developer`
-- Premium UI or stronger watch-page art direction: pair with `$frontend-skill`
+- Premium UI or stronger watch-page art direction: keep this skill focused on playback, frontend implementation, accessibility, responsiveness, and QA constraints; treat pure art direction as outside the Sohrab pack unless a separate design skill is explicitly available in the session.
 
 ## Anti-patterns
 

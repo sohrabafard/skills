@@ -16,7 +16,7 @@ One skill for the full shell lifecycle: generate, refactor, validate, debug, exp
 - The work needs static checks, format checks, smoke tests, or debug guidance.
 - The task involves Alpine, BusyBox `ash`, Debian `dash`, macOS, GNU vs BSD tools, or shell-friendly CI.
 
-## Do not use this skill when
+## When NOT to use
 
 - The target is `zsh`, `fish`, `PowerShell`, or Windows batch.
 - The real solution should be Python, Go, Rust, or another fuller language and shell would only make the implementation brittle.
@@ -122,6 +122,8 @@ Start with `references/00-topic-map.md`, then read only what the task needs:
 
 If multi-agent workflows are enabled, this skill benefits from parallel review passes:
 
+- Prefer GPT-5.5 for complex shell refactors or cross-platform orchestration when available; use the strongest approved fallback model if it is not.
+- Use lighter models only for bounded read-only lint review, portability inventory, or smoke-test lanes.
 - one agent for shell-target and portability analysis
 - one agent for static validation and lint findings
 - one agent for smoke tests, Bats coverage, or CI snippets

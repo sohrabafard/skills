@@ -11,6 +11,8 @@ Read `references/change-routing.md` first when the main question is where the ch
 
 Read `references/runtime-contract-map.md` when you need to know which file, variable, or debug step matches the requested runtime behavior.
 
+Read `references/source-map.md` before relying on latest/current/version/security-sensitive runtime-kit, Docker Compose, Docker Swarm, image, or generated wrapper behavior.
+
 ## Goal
 
 Keep runtime changes in the correct layer and keep generated outputs honest.
@@ -19,6 +21,12 @@ Keep runtime changes in the correct layer and keep generated outputs honest.
 - The service repo owns only supported runtime inputs plus the copied thin wrappers under `scripts/runtime/`.
 - Generated files are outputs and must not be the final authoring surface.
 - `service-ci-kit` owns GitLab CI/CD for Kubernetes or OpenShift deployment, not local Compose or Swarm runtime behavior.
+
+## When NOT to use
+
+- Do not use for Kubernetes, OpenShift, Helm, or GitLab CI deployment changes.
+- Do not use for pure application logic unrelated to runtime generation.
+- Do not use to edit generated runtime artifacts without checking runtime-kit ownership.
 
 ## Ownership Model
 

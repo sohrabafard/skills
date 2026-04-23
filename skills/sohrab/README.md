@@ -91,8 +91,6 @@ These may still be referenced when a task needs them:
 
 - `$openai-docs`
   - for current official OpenAI and Codex guidance, citations, model guidance, prompt updates, CLI or app behavior
-- `$frontend-skill`
-  - for visually ambitious or art-direction-heavy frontend work
 - `$playwright`
   - for explicit browser automation, navigation, or browser-based QA
 - `$playwright-interactive`
@@ -107,7 +105,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 1. Start with `alaa-frontend-developer`.
 2. Route immediately to `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, or `alaa-mono-package` when the task crosses that boundary.
 3. Pair with `quasar-skill-packe` when Quasar-specific behavior or config is part of the root cause.
-4. Use `$frontend-skill` only for strong visual design work.
+4. Keep pure visual art direction outside the Sohrab pack unless a separate design skill is explicitly available in the current session.
 5. Use `$playwright` or `$playwright-interactive` only when browser work is explicitly needed.
 
 ### PHP / Laravel workflow

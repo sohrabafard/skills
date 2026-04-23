@@ -152,13 +152,13 @@ When searching inside this skill pack:
 
 ## Current live snapshot
 
-This snapshot was refreshed on March 25, 2026 and will age over time:
+This snapshot was refreshed on April 24, 2026 and will age over time:
 
-- Quasar: `2.19.1` (published March 24, 2026)
-- `@quasar/app-vite`: `2.5.4` (published March 24, 2026)
-- Vite: `8.0.2` (published March 23, 2026)
-- Vue: `3.5.31` (published March 25, 2026)
-- Vue Router: `5.0.4`
+- Quasar: `2.19.3` (published April 6, 2026)
+- `@quasar/app-vite`: `2.6.0` (published April 6, 2026)
+- Vite: `8.0.10` (published April 23, 2026)
+- Vue: `3.5.33` (published April 22, 2026)
+- Vue Router: `5.0.6` (published April 22, 2026)
 - Workbox: `7.4.0`
 
 Refresh this snapshot before any version-sensitive work by running:

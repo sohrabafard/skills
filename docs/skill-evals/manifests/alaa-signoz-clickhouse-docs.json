@@ -1,0 +1,34 @@
+{
+  "skill": "alaa-signoz-clickhouse-docs",
+  "display_name": "Alaa Signoz Clickhouse Docs",
+  "allow_implicit_invocation": false,
+  "counterpart": "clickhouse-performance-schema-ops",
+  "risk": "normal",
+  "cases": [
+    {
+      "id": "positive-primary",
+      "kind": "positive_trigger",
+      "prompt": "Use $alaa-signoz-clickhouse-docs to explain the SigNoz ClickHouse traces schema and query fields.",
+      "expected_skill": "alaa-signoz-clickhouse-docs"
+    },
+    {
+      "id": "positive-natural-language",
+      "kind": "positive_trigger",
+      "prompt": "I need the skill that owns SigNoz docs, live query-builder behavior, and SigNoz ClickHouse schema notes.",
+      "expected_skill": "alaa-signoz-clickhouse-docs"
+    },
+    {
+      "id": "sibling-confusion",
+      "kind": "sibling_confusion",
+      "prompt": "I am deciding whether to use alaa-signoz-clickhouse-docs or clickhouse-performance-schema-ops for a SigNoz trace query field issue.",
+      "expected_skill": "alaa-signoz-clickhouse-docs",
+      "expected_related": "clickhouse-performance-schema-ops"
+    },
+    {
+      "id": "hard-negative",
+      "kind": "hard_negative",
+      "prompt": "Write a product launch email. This should not trigger alaa-signoz-clickhouse-docs even though it mentions dashboards.",
+      "expected_skill": null
+    }
+  ]
+}

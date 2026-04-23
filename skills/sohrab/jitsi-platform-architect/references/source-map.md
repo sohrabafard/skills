@@ -21,22 +21,30 @@ Use sources in this order unless the task clearly requires something narrower:
 
 Treat `jitsi-contrib` as community-supported, not as the same support tier as the core Jitsi handbook.
 
+Current release snapshot checked on 2026-04-24:
+
+- Jitsi Handbook releases page was updated on 2026-04-11.
+- Jitsi IFrame API page was updated on 2026-04-16.
+- `jitsi/docker-jitsi-meet` latest GitHub release: `stable-10888`, published 2026-03-30.
+
+Refresh these before version-sensitive deployment, packaging, config-key, or support-tier claims.
+
 ## Official docs to read first
 
 ### 1. Core architecture
 
 Read first when the task touches components, scaling, or media path design.
 
-- Jitsi architecture handbook
-- `jitsi-meet` repository
-- `jitsi-videobridge` repository
+- Jitsi architecture handbook: https://jitsi.github.io/handbook/docs/architecture/
+- `jitsi-meet` repository: https://github.com/jitsi/jitsi-meet
+- `jitsi-videobridge` repository: https://github.com/jitsi/jitsi-videobridge
 
 ### 2. Scalable production setups
 
 Read when the task touches concurrency, multi-bridge, fleet topology, bridge websockets, or node separation.
 
-- Scalable Jitsi DevOps guide
-- Handbook requirements page
+- Scalable Jitsi DevOps guide: https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-scalable
+- Handbook requirements page: https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-requirements
 - FAQ material around bridge websockets and reverse-proxy caveats
 
 Important: the current scalable guide explicitly says some older scaling tutorials are outdated. Prefer the current handbook over older blog posts or videos.
@@ -45,32 +53,32 @@ Important: the current scalable guide explicitly says some older scaling tutoria
 
 Read when the task involves JWTs, guest access, moderator rules, or platform-owned authorization.
 
-- Token authentication handbook page
-- `lib-jitsi-meet/doc/tokens.md`
+- Token authentication handbook page: https://jitsi.github.io/handbook/docs/devops-guide/secure-domain
+- `lib-jitsi-meet/doc/tokens.md`: https://github.com/jitsi/lib-jitsi-meet/blob/master/doc/tokens.md
 - Optional reservation-system docs if room creation is externally controlled
 
 ### 4. Client behavior and product customization
 
 Read when the task involves branding, feature flags, meeting UX, or embedding.
 
-- Jitsi configuration guide
-- IFrame API constructor docs
-- IFrame API commands, functions, and events docs
+- Jitsi configuration guide: https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-configuration
+- IFrame API constructor docs: https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe
+- IFrame API commands, functions, and events docs: https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe-commands
 
 ### 5. Recording, streaming, and media workers
 
 Read when the task involves recording, livestreaming, replay libraries, or capacity planning.
 
-- Jibri README
+- Jibri README: https://github.com/jitsi/jibri
 - Architecture handbook sections mentioning Jibri
 
 ### 6. Self-hosting and packaging
 
 Read when the task involves packaging choice or environment fit.
 
-- Official Docker self-hosting guide
-- Docker Jitsi Meet release notes
-- Community Helm docs in `jitsi-contrib/jitsi-helm`
+- Official Docker self-hosting guide: https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker
+- Docker Jitsi Meet release notes: https://github.com/jitsi/docker-jitsi-meet/releases
+- Community Helm docs in `jitsi-contrib/jitsi-helm`: https://github.com/jitsi-contrib/jitsi-helm
 
 ## Community and pitfall sources
 

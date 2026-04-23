@@ -40,9 +40,10 @@ Do not use this skill when:
 
 1. Read the repo-local `AGENTS.md`.
 2. Confirm the task is documentation-only.
-3. Read `references/10-annotation-boundaries.md`.
-4. Load only the smallest additional reference file needed for the code surface.
-5. Keep diffs limited to comments and JSDoc.
+3. Read `references/00-source-map.md` when a comment depends on current Vue, Quasar, Vite, SSR, or browser behavior.
+4. Read `references/10-annotation-boundaries.md`.
+5. Load only the smallest additional reference file needed for the code surface.
+6. Keep diffs limited to comments and JSDoc.
 
 ## Good vs bad examples
 
@@ -80,6 +81,8 @@ Do not use this skill when:
 
 ## Reference navigation
 
+- Official-first source priority, freshness triggers, and community-troubleshooting boundary:
+  - `references/00-source-map.md`
 - What is allowed in a documentation-only pass:
   - `references/10-annotation-boundaries.md`
 - JSDoc shapes, comment styles, and comment density rules:
@@ -92,4 +95,5 @@ Do not use this skill when:
 - Keep this skill documentation-only.
 - Keep comments plain, useful, and short.
 - Do not let examples drift into behavior changes.
+- Re-check official sources before writing comments that claim current, latest, deprecated, or unsupported behavior.
 - If the repo’s frontend architecture evolves, refresh the SSR and lifecycle notes first.

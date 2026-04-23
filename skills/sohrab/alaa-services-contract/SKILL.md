@@ -30,6 +30,12 @@ This skill explains how a normal Ala backend fits into the larger platform:
 8. Load the required companion skills before implementation work outside this skill's ownership.
 9. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
 
+## When NOT to use
+
+- Do not use for purely local feature work that does not affect shared Ala service contracts.
+- Do not use for frontend UI design unless gateway, API, trust-boundary, or observability contracts are involved.
+- Do not use to override a repository-specific blocker; report the incompatibility instead.
+
 ## Hard contract rule
 
 - Enforce the exact contract defined by this skill for Ala services.
@@ -95,6 +101,8 @@ Load these companion skills when their concern is in scope:
   - `references/40-apply-checklist-and-anti-patterns.md`
 - copy-oriented Laravel class and helper baselines:
   - `references/50-laravel-copy-baselines.md`
+- official-first source map and freshness triggers:
+  - `references/90-source-map.md`
 - complete preserved contract in one file:
   - `references/full-guide.md`
 

@@ -41,9 +41,10 @@ Do not use this skill when:
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.
-2. Read `references/10-package-boundary-and-entrypoints.md`.
-3. Load only the smallest additional reference file needed for the issue.
-4. Validate with a real build output check instead of trusting config alone.
+2. Read `references/00-source-map.md` when the task is version-sensitive, package-manager-sensitive, or security-sensitive.
+3. Read `references/10-package-boundary-and-entrypoints.md`.
+4. Load only the smallest additional reference file needed for the issue.
+5. Validate with a real build output check instead of trusting config alone.
 
 ## Symptom map
 
@@ -66,6 +67,8 @@ Do not use this skill when:
 
 ## Reference navigation
 
+- Official-first source priority, freshness triggers, and community-troubleshooting boundary:
+  - `references/00-source-map.md`
 - Package boundaries, entrypoints, and dist-only consumption:
   - `references/10-package-boundary-and-entrypoints.md`
 - Peer dependencies, dedupe, and package build output:
@@ -79,4 +82,5 @@ Do not use this skill when:
 
 - Keep this skill about package contracts, not generic frontend logic.
 - Keep examples portable across monorepos.
+- Treat community package-manager notes as troubleshooting-only until official docs and local artifacts confirm them.
 - Re-check bundler and package-manager guidance before changing the dependency rules in this skill.

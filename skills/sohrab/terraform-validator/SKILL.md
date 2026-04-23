@@ -8,6 +8,17 @@ description: Comprehensive toolkit for validating, linting, testing, and automat
 Comprehensive toolkit for validating, linting, and testing Terraform configurations with automated workflows for syntax
 validation, security scanning, and intelligent documentation lookup.
 
+## Source freshness
+
+- Read `references/source-map.md` before handling latest/current/version/security-sensitive Terraform, OpenTofu, provider, scanner, backend, module, or registry behavior.
+- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Terraform/OpenTofu, provider, scanner, registry, or cloud provider docs confirm the guidance.
+
+## When NOT to use
+
+- Do not use for generating new Terraform from scratch; use `terraform-generator`.
+- Do not use for Terragrunt projects; use the Terragrunt skills.
+- Do not use for generic HCL edits unless Terraform semantics are involved.
+
 ## ⚠️ Critical Requirements Checklist
 
 **STOP: You MUST complete these steps in order. Do NOT skip any REQUIRED step.**

@@ -50,6 +50,8 @@ This skill owns reusable pure codec helpers for PHP, JavaScript, shell, and HAPr
   - `references/00-topic-map.md`
 - shared codec contract, integer strategy, runtime notes, and bundled asset paths:
   - `references/10-shared-codec-contract.md`
+- official-first source map and freshness triggers:
+  - `references/90-source-map.md`
 
 ## Bundled assets
 

@@ -31,8 +31,9 @@ Keep this top-level file small. Load the references for the full rules, examples
 1. Read the repo-local `AGENTS.md`.
 2. Apply `$alaa-low-noise` when the task is non-trivial.
 3. Read `references/00-topic-map.md`.
-4. Load only the sections you need from `references/full-guide.md`.
-5. Pair with the listed companion skills before making changes outside this skill's ownership.
+4. Read `references/source-map.md` when latest/current/version/security-sensitive CI, PHP, Laravel, Postgres, or tool behavior matters.
+5. Load only the sections you need from `references/full-guide.md`.
+6. Pair with the listed companion skills before making changes outside this skill's ownership.
 
 ## Release path matrix
 
@@ -55,6 +56,8 @@ Keep this top-level file small. Load the references for the full rules, examples
 
 - Section map and fast routing:
   - `references/00-topic-map.md`
+- Official-first source map and freshness triggers:
+  - `references/source-map.md`
 - Full preserved guidance, rules, examples, and checklists:
   - `references/full-guide.md`
 

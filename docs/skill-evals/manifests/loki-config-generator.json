@@ -2,7 +2,7 @@
   "skill": "loki-config-generator",
   "display_name": "Loki Config Generator",
   "allow_implicit_invocation": false,
-  "counterpart": "loki-config-validator",
+  "counterpart": "logql-generator",
   "risk": "normal",
   "cases": [
     {
@@ -20,9 +20,9 @@
     {
       "id": "sibling-confusion",
       "kind": "sibling_confusion",
-      "prompt": "I am deciding whether to use loki-config-generator or loki-config-validator for loki config generator work.",
+      "prompt": "I am deciding whether to use loki-config-generator or logql-generator for Loki retention and storage configuration work.",
       "expected_skill": "loki-config-generator",
-      "expected_related": "loki-config-validator"
+      "expected_related": "logql-generator"
     },
     {
       "id": "hard-negative",

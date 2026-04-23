@@ -86,6 +86,11 @@ Use `full-guide.md` when you need the entire contract in one place or when sever
 - `# Evidence checks`
 - `# Anti-patterns`
 
+- `references/90-source-map.md`
+- `# Source priority`
+- `# Freshness triggers`
+- `# Community-source limits`
+
 ## Working rule
 
 - Read only the topic reference file you need for the current task.

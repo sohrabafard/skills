@@ -12,7 +12,7 @@ Spawn specialist agents in parallel, then consolidate:
 4. Ops agent
    - inspect parts, merges, mutations, disk pressure, replication, background activity
 5. Community-risk agent
-   - scan current docs/issues/community guidance for edge cases and version-sensitive gotchas
+   - scan official docs first; use issues/community guidance only for troubleshooting edge cases and version-sensitive gotchas
 
 Return one consolidated plan with:
 - final DDL

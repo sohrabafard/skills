@@ -13,6 +13,12 @@ It is a router, policy layer, and gap-filler. It does not replace the installed 
 load, adds the right Sohrab companion skills, and keeps Go, package, and Codex guidance aligned with your platform and
 operating model.
 
+## When NOT to use
+
+- Do not use for non-Go implementation work.
+- Do not use for frontend-only, Terraform-only, Kubernetes-only, or CI-only tasks unless Go service behavior is involved.
+- Do not use as a substitute for narrower public Go skills when the task needs only one isolated Go topic.
+
 ## Environment this skill assumes
 
 - high-concurrency production services
@@ -68,6 +74,8 @@ Do not switch routers casually in an existing service. Treat router changes as a
 
 Use subagents only when they create real leverage.
 
+- For complex Codex orchestration, prefer GPT-5.5 when it is available; fall back to the strongest approved Codex model when it is not.
+- Use lighter models only for bounded read-only scans or mechanical validation lanes.
 - one read-only subagent can verify live package, release, or framework facts from official docs
 - one read-only subagent can inspect the repo for existing framework, logger, DI, config, or package choices
 - one implementation-focused subagent can draft a narrow code change only after the baseline is clear

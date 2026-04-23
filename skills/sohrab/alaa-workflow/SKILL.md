@@ -1,6 +1,6 @@
 ---
 name: alaa-workflow
-description: Use this skill for long-running, multi-phase, or behavior-changing repository work that needs durable plan/state artifacts, phased execution, resume or handoff safety, or user-authorized subagents and parallel lanes. It should support both plan mode and execution mode, keep repo-local memory in `docs/plan/*` or `docs/_agent_plans/*` plus `.codex/state/*.json`, document progress and validation continuously, and pair with narrower Alaa skills by domain. Do not use it for tiny single-file edits, short read-only answers, or narrow domain work that does not need long-horizon coordination.
+description: Use this skill for long-running, multi-phase, or behavior-changing repository work that needs durable plan/state artifacts, phased execution, resume or handoff safety, or user-authorized subagents and parallel lanes. It should support both plan mode and execution mode, keep repo-local memory in `docs/agents/*`, `docs/plan/*`, or `docs/_agent_plans/*` plus `.codex/state/*.json`, document progress and validation continuously, and pair with narrower Alaa skills by domain. Do not use it for tiny single-file edits, short read-only answers, or narrow domain work that does not need long-horizon coordination.
 ---
 
 # Alaa Workflow
@@ -21,7 +21,7 @@ This skill is the workflow operating system for long tasks. It owns orchestratio
 - The work spans multiple files, contracts, tests, migrations, infrastructure, or rollout risk.
 - The user says the run may continue later, may need another agent, or explicitly allows subagents.
 
-## Do not use this skill when
+## When NOT to use
 
 - The task is a tiny edit with no coordination cost.
 - The task is read-only and does not need durable artifacts.
@@ -40,6 +40,7 @@ This skill is the workflow operating system for long tasks. It owns orchestratio
 
 - Never rename these path families:
   - `.codex/state/*.json`
+  - `docs/agents/*`
   - `docs/plan/*`
   - `docs/_agent_plans/*`
 - If the current task already has a plan or state file, continue that exact file family and stem.
@@ -48,6 +49,7 @@ This skill is the workflow operating system for long tasks. It owns orchestratio
   2. existing `docs/_agent_plans/`
   3. existing `docs/plan/`
   4. default `docs/_agent_plans/`
+- Use `docs/agents/` for durable human-readable continuation state, not timestamped parent plans.
 - Parent plan file naming must be `<YYYYMMDD-HHMMSS>_<slug>.md`.
 - Parent state file naming should reuse the same stem: `.codex/state/<YYYYMMDD-HHMMSS>_<slug>.json`.
 - Child lane artifacts should stay adjacent to the parent by reusing the same stem:
@@ -153,6 +155,7 @@ Before finishing:
 ## Reference navigation
 
 - `references/00-topic-map.md` - smallest useful reading path
+- `references/90-source-map.md` - official-first source map, freshness triggers, and model-use notes
 - `references/full-guide.md` - detailed operating rules
 - `references/companion-routing.md` - ecosystem pairing map
 - `references/windows-powershell.md` - native Windows and PowerShell patterns

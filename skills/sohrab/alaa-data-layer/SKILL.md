@@ -31,8 +31,9 @@ Keep this top-level file small. Load the references for the full rules, examples
 1. Read the repo-local `AGENTS.md`.
 2. Apply `$alaa-workflow` when the task is long or risky.
 3. Read `references/00-topic-map.md`.
-4. Load only the reference file that matches the current decision.
-5. Pair with the listed companion skills before changing architecture, security, async, or runtime behavior outside this skill's ownership.
+4. Read `references/source-map.md` when latest/current/version/security-sensitive database or Redis behavior matters.
+5. Load only the reference file that matches the current decision.
+6. Pair with the listed companion skills before changing architecture, security, async, or runtime behavior outside this skill's ownership.
 
 ## Fast entry
 
@@ -58,6 +59,8 @@ Keep this top-level file small. Load the references for the full rules, examples
 
 - Section map and fast routing:
   - `references/00-topic-map.md`
+- Official-first source map and freshness triggers:
+  - `references/source-map.md`
 - Postgres design, integrity, tenant boundaries, and identifier policy:
   - `references/10-postgres-design-and-tenant-boundaries.md`
 - Migration rollout, large-table safety, and performance-first schema work:
