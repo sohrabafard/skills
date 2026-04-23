@@ -11,7 +11,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, or observability event naming.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
 - `Mode A+ - Platform observability directive`
-  - Use when the task is about OpenTelemetry exporter setup, OTLP endpoint ownership, Collector gateway topology, Prometheus scrape endpoints, metric-family selection, label/cardinality budgets, queue or dependency instrumentation, exemplars, or a shared telemetry contract across Go and Laravel services.
+  - Use when the task is about OpenTelemetry exporter setup, OTLP endpoint ownership, queryable `trace_id`, exception delivery to SigNoz when Sentry is absent, Collector gateway topology, Prometheus scrape endpoints, metric-family selection, label/cardinality budgets, queue or dependency instrumentation, exemplars, or a shared telemetry contract across Go, Laravel, HAProxy, Vector, WA, OpenFGA, and future services.
   - Read `20-operational-and-observability-contract.md` and `21-alaa-platform-observability-directive.md`.
 - `Mode A++ - Deployment and runtime contract`
   - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
@@ -34,7 +34,7 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `20-operational-and-observability-contract.md`
   - Exact `X-Request-Id` and `traceparent` rules, structured log field contract, event and code naming, metrics-boundary rules, and `RequestObservabilityMiddleware`.
 - `21-alaa-platform-observability-directive.md`
-  - Full telemetry architecture, OTLP/Collector responsibilities, Prometheus scrape rules, shared metric catalog, runtime-specific notes, and validation rules for observability work.
+  - Full telemetry architecture, OTLP/Collector responsibilities, SigNoz/Sentry role split, exception fallback rules, Prometheus scrape rules, shared metric catalog, runtime-specific notes, current service reality, and validation rules for observability work.
 - `40-apply-checklist-and-anti-patterns.md`
   - Use before finalizing a contract change or skill-driven implementation review.
 - `50-laravel-copy-baselines.md`

@@ -6,16 +6,26 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 
 - `# Purpose`
 - `# When to use`
+- `# Ownership and precedence`
 - `# Step-by-step workflow (deterministic)`
+- `# Signal decision matrix`
+- `# Platform tool roles`
+- `# OpenTelemetry and OTLP contract`
 - `# OpenTelemetry alignment (mandatory when OTel is used)`
+- `# Collector architecture`
+- `# SigNoz and Sentry role split`
 - `# Cardinality budgets (mandatory)`
 - `## Metrics label allowlist (default)`
 - `## Trace attribute discipline`
 - `# Mandatory logging standard (structured JSON)`
 - `## Required fields (baseline)`
+- `## Trace query fields`
 - `## Authz denials (403) — response + log alignment`
 - `## PII and secrets`
 - `# Metrics guidance (SLA-friendly)`
+- `# Trace guidance`
+- `# Exceptions and Sentry`
+- `# Profiling`
 - `# SOC deliverable: Security log catalog`
 - `# Evidence-first incident diagnostics`
 - `# Sentry integration (optional; production-friendly)`

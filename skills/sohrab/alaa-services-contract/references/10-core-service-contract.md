@@ -22,12 +22,16 @@ This skill should help a new service understand the current Ala service landscap
 | `comment` | tenant-scoped comments, replies, likes, moderation, durable outbox publication | frontends and backends should use the comment API or comment events rather than couple to comment tables |
 | `ticket` | support-ticket management, ticket messages, queue-driven notifications, local user projection | protected routes trust gateway-derived context; cross-service consumers should respect ticket ownership and its service-local API |
 | `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
+| `gateway` | HAProxy ingress gateway, JWT verification, trusted-header injection, request-time authz hop, structured gateway logs, and HAProxy metrics | do not force app middleware or app spans onto it; preserve HAProxy metrics and Vector log-pipeline ownership |
 | `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
 | `projector` | derived tuple projection into OpenFGA | keep it as a derived-state writer, not as the business-truth owner |
+| `authz-sidecar` | request-time authorization runtime for gateway-protected route families | emit decision evidence, propagate trace context, and keep route-time decisions separate from service business authorization |
+| `notification` | in-development notification service and delivery workflows | converge on this contract before production readiness, including exception evidence when Sentry is absent |
 
 Components currently under evaluation but expected to follow this contract where relevant:
 - `notification-core`
 - `realtime-hub`
+- `assessment`
 - delivery workers
 - queue or broker surfaces that expose service-owned metrics, traces, or readiness behavior
 
@@ -41,7 +45,7 @@ Rules:
 Rules:
 - Derive the `service` field from `APP_NAME` or an equivalent service-level config.
 - Keep it stable and machine-readable.
-- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `vod`, or `wa`.
+- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `projector`, `authz-sidecar`, `notification`, `vod`, or `wa`.
 - Do not return framework or runtime names such as `Laravel`, `Go`, `Node`, or `PHP`.
 - Do not decorate the value with environment or version strings.
 

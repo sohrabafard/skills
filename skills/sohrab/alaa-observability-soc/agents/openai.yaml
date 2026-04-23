@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Observability SOC"
-  short_description: "Logs, traces, metrics, and Sentry"
-  default_prompt: "Use $alaa-observability-soc to follow its workflow for logs, traces, metrics, and sentry."
+  short_description: "Signals, OTel, SigNoz, Sentry, alerts, and SOC evidence"
+  default_prompt: "Use $alaa-observability-soc to make logs, traces, metrics, exceptions, profiles, alerts, SigNoz, Sentry, and SOC evidence deterministic and production-ready."
 
 policy:
   allow_implicit_invocation: true

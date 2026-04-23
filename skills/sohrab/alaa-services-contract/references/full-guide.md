@@ -29,18 +29,18 @@ This contract exists so agent outputs stay consistent across services and so ope
 This skill is intentionally Ala-specific. The portability requirement for this skill is about filesystem independence and reuse across machines, not about being generic to unrelated organizations.
 
 Use it when:
-- creating or changing `auth`, `content`, `comment`, `ticket`, `vod`, `wa`, or another Ala backend service
+- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-platform`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
 - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
 - standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala services
 - standardizing `/api/health`
 - standardizing `/api/ready`
 - fixing exact readiness payloads and check naming
-- standardizing `X-Request-Id` and `traceparent`
+- standardizing `X-Request-Id`, `traceparent`, and queryable `trace_id`
 - enforcing request and readiness event names and machine-readable codes
 - standardizing `RequestObservabilityMiddleware`
 - standardizing `ResolveUserMiddleware`
 - adding or reviewing the Alaa Platform Observability Directive
-- aligning OpenTelemetry and Prometheus behavior across Go and Laravel services
+- aligning OpenTelemetry, SigNoz, Sentry, and Prometheus behavior across Go, Laravel, HAProxy, Vector, OpenFGA, and future services
 - aligning Laravel Resource-first `/api/*` success responses
 - helping a new Ala service understand the current service landscape, ownership boundaries, and expected interaction model before implementation
 - forcing cross-service consistency where agents would otherwise improvise
@@ -84,10 +84,12 @@ Read next:
 Adds:
 - the platform-wide telemetry path
 - OpenTelemetry SDK and OTLP configuration rules
+- queryable `trace_id`
+- exception delivery through SigNoz when Sentry is absent
 - Collector gateway ownership
 - Prometheus scrape rules and metric naming
 - shared metric catalog and validation rules
-- cross-runtime observability guidance for Go and Laravel
+- cross-runtime observability guidance for Go, Laravel, HAProxy, Vector, WA, OpenFGA, and future services
 
 Read next:
 - `20-operational-and-observability-contract.md`
@@ -185,12 +187,16 @@ This skill should help a new service understand the current Ala service landscap
 | `comment` | tenant-scoped comments, replies, likes, moderation, durable outbox publication | frontends and backends should use the comment API or comment events rather than couple to comment tables |
 | `ticket` | support-ticket management, ticket messages, queue-driven notifications, local user projection | protected routes trust gateway-derived context; cross-service consumers should respect ticket ownership and its service-local API |
 | `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
+| `gateway` | HAProxy ingress gateway, JWT verification, trusted-header injection, request-time authz hop, structured gateway logs, and HAProxy metrics | do not force app middleware or app spans onto it; preserve HAProxy metrics and Vector log-pipeline ownership |
 | `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
 | `projector` | derived tuple projection into OpenFGA | keep it as a derived-state writer, not as the business-truth owner |
+| `authz-sidecar` | request-time authorization runtime for gateway-protected route families | emit decision evidence, propagate trace context, and keep route-time decisions separate from service business authorization |
+| `notification` | in-development notification service and delivery workflows | converge on this contract before production readiness, including exception evidence when Sentry is absent |
 
 Components currently under evaluation but expected to follow this contract where relevant:
 - `notification-core`
 - `realtime-hub`
+- `assessment`
 - delivery workers
 - queue or broker surfaces that expose service-owned metrics, traces, or readiness behavior
 
@@ -204,7 +210,7 @@ Rules:
 Rules:
 - Derive the `service` field from `APP_NAME` or an equivalent service-level config.
 - Keep it stable and machine-readable.
-- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `vod`, or `wa`.
+- Use the actual Ala service identifier such as `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `projector`, `authz-sidecar`, `notification`, `vod`, or `wa`.
 - Do not return framework or runtime names such as `Laravel`, `Go`, `Node`, or `PHP`.
 - Do not decorate the value with environment or version strings.
 
@@ -212,11 +218,11 @@ Rules:
 
 Every route belongs to exactly one family:
 
-| Family           | Purpose                                  |   Public client use? | Contract rule                                 |
-|------------------|------------------------------------------|---------------------:|-----------------------------------------------|
-| public API       | product-facing API behavior              | yes, when documented | keep separate from operational probes         |
-| trusted internal | sanitized gateway-derived context        |                   no | align exactly with `$alaa-trust-gateway-auth` |
-| operational      | liveness, readiness, rollout diagnostics |                   no | keep auth expectations explicit and minimal   |
+| Family | Purpose | Public client use? | Contract rule |
+|---|---|---:|---|
+| public API | product-facing API behavior | yes, when documented | keep separate from operational probes |
+| trusted internal | sanitized gateway-derived context | no | align exactly with `$alaa-trust-gateway-auth` |
+| operational | liveness, readiness, rollout diagnostics | no | keep auth expectations explicit and minimal |
 
 Rules:
 - Do not merge operational probes into product-facing route groups just for convenience.
@@ -658,6 +664,8 @@ Response rules:
 
 Logging rules:
 - log `trace_id`
+- make `trace_id` queryable as its own field in structured logs and OTLP log records
+- include `traceparent` in structured logs when it helps propagation debugging, but never force operators to parse it for normal trace lookup
 - do not require a separate `X-Trace-Id` response header
 
 ## Structured log field contract
@@ -672,6 +680,7 @@ For logs emitted by middleware or operational flows owned by this skill, include
 - `code`
 - `request_id`
 - `trace_id`
+- `traceparent` when useful for propagation debugging or async handoff evidence
 - `project_id` when available
 - `user_id` when available and safe
 - `http.method`
@@ -749,6 +758,7 @@ Preferred order:
 Required behavior:
 - compute canonical `X-Request-Id`
 - compute canonical `traceparent`
+- derive and expose `trace_id` from the canonical trace context
 - store request-scoped correlation context on the request
 - capture request start time
 - attach `X-Request-Id` and `traceparent` to API responses
@@ -760,6 +770,7 @@ Required support components:
 - request context normalizer
 - request-id generator and validator
 - `traceparent` parser and generator
+- `trace_id` extractor for logs, OTLP log records, and request attributes
 - route-template or route-name resolver
 - request-duration capture
 - log-context sharing mechanism
@@ -779,7 +790,7 @@ Laravel implementation rules:
 
 # Alaa Platform Observability Directive
 
-Use this file when the task includes telemetry architecture, OpenTelemetry exporter setup, OTLP endpoint ownership, Collector gateway design, Prometheus scrape endpoints, metric catalogs, queue or dependency instrumentation, or cross-runtime observability alignment between Go and Laravel services.
+Use this file when the task includes telemetry architecture, OpenTelemetry exporter setup, OTLP endpoint ownership, queryable `trace_id`, Collector gateway design, SigNoz, Sentry, exception delivery, Prometheus scrape endpoints, metric catalogs, queue or dependency instrumentation, Vector pipelines, OpenFGA telemetry, or cross-runtime observability alignment between Go, Laravel, HAProxy, Vector, WA, OpenFGA, and future services.
 
 ## Contract posture
 
@@ -789,6 +800,10 @@ Working rule:
 - apply `20-operational-and-observability-contract.md` and this file together for observability work
 - `20` owns the exact stable surfaces such as response headers, event names, machine-readable codes, and middleware invariants
 - this file owns the larger telemetry design, OTLP path, Collector gateway rules, Prometheus contract, and validation expectations
+- pair with `$alaa-observability-soc` for the signal decision model, SOC evidence, alert/runbook rules, Sentry role, and SigNoz/Sentry split
+- pair with `$vector-rust-observability-pipelines` when Vector topology, VRL transforms, buffering, acknowledgements, or log-to-OTLP conversion are in scope
+- pair with `$alaa-trust-gateway-auth` when trusted headers, request-time authorization, or gateway-derived identity affect telemetry
+- pair with `$openfga` when the work changes OpenFGA model, tuple, permission, SDK, or test behavior rather than only observing OpenFGA as a runtime dependency
 
 ## Why this directive exists
 
@@ -806,6 +821,7 @@ This directive exists to make that outcome repeatable across:
 - queue workers and background consumers
 - entitlement control-plane components such as `entitlement-api` and `projector`
 - future services such as `notification-core`, `realtime-hub`, and delivery workers
+- in-development services such as `assessment` and `notification`
 
 ## How this fits the Ala platform
 
@@ -819,20 +835,48 @@ Treat the platform like this:
 - OpenFGA stores the derived authorization graph used for fast request-time checks
 - `content` is the new macroservice for `course`, `set`, and `content`
 - `vod` still exists during migration but is on the deprecation path for learning-content ownership
+- `notification` is in development and must converge on the same request correlation, exception, log, metric, and Collector rules before production readiness
+- `assessment` is treated as a future Ala service in this contract until a local repository provides stricter source truth
+- `wa` is a Vector and ClickHouse ingestion runtime, so apply the same trusted-header, request-id, SOC evidence, and operational visibility goals without forcing Laravel or Go middleware shapes onto it
 
 Observability must respect those boundaries:
 - gateway telemetry must explain trust-boundary behavior
 - authz-runtime telemetry must explain route-time allow or deny behavior
 - service telemetry must explain work done inside the service boundary
 - entitlement control-plane telemetry must explain derived-state maintenance, not pretend to be the source of business truth
+- WA telemetry must explain ingest acceptance, Vector parsing/routing, drop reasons, ClickHouse sink state, and stored raw analytics rows
+- OpenFGA telemetry must be described as native runtime telemetry for the derived authorization graph, not as the business source of truth
+
+## Current Ala service reality
+
+Use this table as a starting point, then re-check the target repository before editing because repo truth wins.
+
+| Service or repo | Current shape to preserve |
+|-----------------|---------------------------|
+| `auth` | Laravel token-issuer boundary. Uses `X-Request-Id`, `traceparent`, structured logs, OTLP traces/logs, and internal `/metrics`. Do not let observability work reshape token, refresh, session, profile, admin, or TOTP behavior. |
+| `ticket` | Laravel service with Sentry present, OTel/Prometheus rollout, root internal `/metrics`, and exact `X-Request-Id` plus `traceparent` response contract. Sentry may remain for exception tracking but does not replace OTel/SigNoz/Prometheus. |
+| `comment-service` | Laravel service with canonical `APP_NAME=comment`, OTel traces/logs, Prometheus `/metrics`, and docs that explicitly keep metrics scrape-based. |
+| `content` | Laravel macroservice for course, set, and content. Uses manual OTel traces/logs, Prometheus `/metrics`, and outbox rows carrying `request_id` and `traceparent`; AMQP trace headers may require driver extension work. |
+| `gateway` | HAProxy gateway. HAProxy owns request serving, trusted-header injection, trace context preservation/generation, and built-in Prometheus metrics at internal `:8404/metrics`. Vector owns optional log parsing, PII guard, buffering, and OTLP log export. Gateway does not currently emit app spans just because it propagates trace context. |
+| `entitlement-platform` | Go services `entitlement-api`, `projector`, and `authz-sidecar` use OTel tracing and Prometheus metrics. OpenFGA uses native OTLP/gRPC and native Prometheus metrics. Logs are structured JSON; OTLP log export may be intentionally deferred per repo truth. |
+| `wa` | Vector plus ClickHouse ingestion runtime. Canonical routes are `POST /ingest/v1/events` and `GET /health`; trusted headers include `X-Project-Id`, `X-Request-Id`, and optional `X-User-Id`. Apply Vector pipeline reliability and internal metrics rules instead of Laravel middleware rules. |
+| `notification` | In-development Laravel service. It already uses `X-Request-Id`, `traceparent`, request observability middleware, and Sentry scaffolding. It must converge on the full OTel/Prometheus/SigNoz contract before production readiness. |
+| `assessment` | Future or absent in this local workspace during this rewrite. Apply the generic Ala service contract until repo-local source truth exists. |
+
+Rules:
+- never flatten these runtime differences into one implementation template
+- keep the outcome consistent even when implementation mechanisms differ
+- do not invent a new observability route, header, event, metric family, or backend role for a repo when the platform contract already defines one
 
 ## Platform direction
 
-Every long-lived Ala service must be prepared to:
+Every long-lived Ala service must:
 - produce standard telemetry with official OpenTelemetry and Prometheus libraries
 - send traces and logs to an OTLP endpoint
 - expose a Prometheus-compatible internal metrics endpoint for scraping
 - stay vendor-neutral in application code
+- capture exception evidence even when Sentry is not present
+- make `trace_id` directly queryable anywhere operators query logs or OTLP log records
 
 The platform direction is:
 - application code produces correct telemetry
@@ -841,22 +885,24 @@ The platform direction is:
 - backends can change later by configuration without redesigning each service
 
 The current Ala target architecture is:
-- application services send OpenTelemetry traces, exceptions, and structured logs to a gateway OpenTelemetry Collector endpoint
+- application services send OpenTelemetry traces, exception evidence, and structured logs to a gateway OpenTelemetry Collector endpoint
 - application services expose Prometheus-compatible metrics endpoints; metrics are first-class and must not be skipped when tracing is added
 - the gateway Collector exports to SigNoz or another approved backend through Collector configuration
 - SigNoz tokens, endpoints, and exporter-specific headers belong in Collector or deployment secrets, not application code
+- Sentry may be added for exception grouping, stack traces, releases, source maps, and developer workflow, but it is not required for exceptions to be observable
+- when Sentry is absent, exception spans and structured exception logs must still reach SigNoz through the OTLP Collector path
 
 ### What goes where
 
 Use this ownership table to avoid moving platform concerns into application code:
 
-| Data type                           | App code        | OTel Collector          | Metrics backend |
-| ----------------------------------- | --------------- | ----------------------- | --------------- |
-| traces                              | yes             | receive/process/export  | yes             |
-| exceptions                          | yes             | receive/process/export  | yes             |
-| structured logs                     | yes             | collect/process/export  | yes             |
-| Prometheus metrics                  | expose endpoint | scrape/forward optional | yes             |
-| retry/compression/fan-out/redaction | no by default   | yes                     | no              |
+| Data type                           | App code        | OTel Collector          | SigNoz / metrics backend | Sentry |
+|-------------------------------------|-----------------|-------------------------|---------------------------|--------|
+| traces                              | yes             | receive/process/export  | yes                       | optional, not source of truth |
+| exceptions                          | record on spans and logs | receive/process/export | yes, required when Sentry absent | optional specialized grouping |
+| structured logs                     | yes             | collect/process/export  | yes                       | optional only if approved |
+| Prometheus metrics                  | expose endpoint | scrape/forward optional | yes                       | no |
+| retry/compression/fan-out/redaction | no by default   | yes                     | no                        | no |
 
 Rules:
 - keep telemetry endpoint configuration in env or deployment config
@@ -865,6 +911,7 @@ Rules:
 - do not replace the Prometheus scrape contract with ad hoc pushing for normal services
 - do not use the Pushgateway for normal long-lived service metrics; only use it for explicit service-level batch-job cases when the lifecycle is intentionally decoupled from individual instances
 - do not deliver "tracing only" observability; metrics, logs, traces, and exceptions are all part of done
+- do not deliver "Sentry only" exception visibility; exceptions must also be visible through the platform OTel/SigNoz path when Sentry is absent or disabled
 
 ## OpenTelemetry SDK and OTLP rules
 
@@ -881,6 +928,21 @@ Real resource identifiers belong in the right signal:
 - examples include `request_id`, `project_id`, `user_id`, `content_id`, `set_id`, `ticket_id`, or an upstream dependency request id
 - real resource identifiers MUST NOT appear as Prometheus metric labels
 - use bounded metric labels such as route pattern, operation, dependency, status class, code, queue, job name, and outcome
+- `trace_id` is special: it is high-cardinality and must not be a normal metric label, but it must be directly queryable in structured logs and OTLP log records
+
+### Trace queryability
+
+`traceparent` is the propagation contract, not the only query field.
+
+Rules:
+- keep `traceparent` as the W3C context carrier across HTTP, RPC, queue, and worker boundaries
+- derive `trace_id` from the canonical trace context once at the request or job boundary
+- include `trace_id` as a first-class structured log field
+- when exporting OTLP logs, populate native trace context fields when supported by the exporter or pipeline
+- when building OTLP LogRecord payloads manually or through Vector, set native `traceId`, `spanId`, and trace flags from `traceparent`
+- keep `traceparent` as an additional field only when useful for debugging propagation, parent/span id, or sampled flag behavior
+- never require operators to parse `traceparent` during normal incident queries
+- never add `trace_id` to Prometheus metric labels; use exemplars if the metrics stack supports trace linking
 
 ### Configuration rules
 
@@ -940,6 +1002,7 @@ Rules:
 - continue the trace in consumers when context exists in message metadata
 - when async context is absent, start a new trace and log the boundary clearly
 - derive the logged `trace_id` from the canonical trace context
+- export or map the same `trace_id` into OTLP logs so SigNoz log search can join with traces without parsing `traceparent`
 - prefer OTel semantic conventions for HTTP, DB, messaging, and RPC rather than inventing local attribute names
 
 ## OpenTelemetry Collector gateway contract
@@ -1036,6 +1099,7 @@ At minimum, every operational log related to a request, job, readiness check, de
 - `code`
 - `request_id`
 - `trace_id`
+- `traceparent` when useful for propagation debugging or async handoff evidence
 - `project_id` when available
 - `user_id` when available and allowed
 - `http.method` when request-related
@@ -1044,6 +1108,11 @@ At minimum, every operational log related to a request, job, readiness check, de
 - `duration_ms` when the log measures work over time
 
 Keep these field names stable.
+
+Trace field rule:
+- `trace_id` is mandatory for query speed.
+- `traceparent` is the propagation carrier and may also be logged, but it is not a substitute for a separate `trace_id`.
+- Vector and other log-pipeline agents must preserve or map `trace_id` into the backend query model.
 
 ### Recommended additional fields
 
@@ -1110,6 +1179,13 @@ At minimum, capture:
 - authorization denials that matter operationally
 - validation failures at the correct aggregation level
 - business-critical failures even when the user-facing response stays graceful
+
+Exception routing rules:
+- if Sentry is installed and enabled, send exception events to Sentry for grouping, release regression, stack-trace workflow, and developer assignment
+- regardless of Sentry, record exceptions on active OTel spans when a span exists
+- regardless of Sentry, emit structured exception logs with `trace_id`, `request_id`, `service`, `event`, `code`, route or operation, exception type, safe message, and stack trace when policy allows
+- if Sentry is absent, the OTLP logs/traces to Collector -> SigNoz path becomes the required exception visibility path
+- do not hide handled-but-actionable exceptions only because no Sentry DSN exists
 
 ### Required captured context
 
@@ -1447,6 +1523,29 @@ For Ala environments:
 - keep the same contract in Docker Compose and Docker Swarm: OTLP to the shared collector endpoint, Prometheus scraping internal service metrics, and no public metrics endpoint
 - when SigNoz is the selected backend, put SigNoz exporter endpoints, access tokens, headers, and TLS options only in the Collector deployment configuration or secrets
 
+## Sentry contract
+
+Sentry is allowed but scoped.
+
+Use Sentry for:
+- exception grouping
+- stack traces
+- first-seen and regression workflow
+- releases
+- frontend source maps or debug IDs
+- developer notifications and ownership
+- profiling only when deliberately sampled
+
+Rules:
+- Sentry is not the main Ala observability backend.
+- Do not send normal service metrics only to Sentry.
+- Do not make Sentry traces the only distributed trace path when the service is part of the Ala OTel/SigNoz platform.
+- Do not make Sentry the only exception path.
+- If Sentry is absent or disabled, exception spans and structured exception logs must still reach SigNoz through OTLP and the Collector.
+- Keep `SENTRY_SEND_DEFAULT_PII=false` unless there is an explicit approved data policy.
+- Keep Sentry trace and profile sample rates `0` or low until overhead, cost, and duplication with SigNoz are reviewed.
+- Put Sentry auth tokens for source-map or release uploads in CI/CD secrets, not source files.
+
 ## Service adoption checklist
 
 When applying this skill to a service, finish by checking:
@@ -1454,8 +1553,10 @@ When applying this skill to a service, finish by checking:
 - `/api/ready`
 - `X-Request-Id`
 - `traceparent`
+- queryable `trace_id`
 - structured JSON logs
 - exact event/code naming
+- exception evidence through Sentry when present and through SigNoz/OTLP always
 - Prometheus endpoint and applicable baseline metric families
 - bounded labels
 - OTLP exporter endpoint via env
@@ -1468,6 +1569,7 @@ A service is not considered observability-complete unless all of the following a
 - it returns `X-Request-Id` and `traceparent` on `/api/*` responses
 - it preserves valid inbound correlation and generates valid values when missing
 - it propagates W3C trace context across HTTP and async boundaries
+- it makes `trace_id` directly queryable in structured logs and OTLP log records
 - it sends traces and logs through the OTLP path without backend-specific code branches
 - it exposes a Prometheus-compatible internal metrics endpoint
 - it provides the shared HTTP, readiness, dependency, DB, and queue metrics that apply to it
@@ -1476,6 +1578,7 @@ A service is not considered observability-complete unless all of the following a
 - OTLP exporter endpoint and protocol are controlled by env or deployment config
 - no vendor-specific backend coupling exists in application code
 - it captures readiness failures, request failures, queue failures, dependency failures, and important denials with enough context for diagnosis
+- it captures exception evidence in SigNoz through OTel spans/logs when Sentry is absent, and in both SigNoz and Sentry when Sentry is deliberately enabled
 - it makes slow routes, slow queries, slow dependencies, repeated retries, and repeated denials easy to identify
 - its collector path is observable enough to show queue pressure, export failures, or dropped telemetry when those happen
 
@@ -1483,6 +1586,8 @@ A service is not considered observability-complete unless all of the following a
 
 - building custom telemetry fan-out inside application code
 - treating telemetry as optional after feature work is done
+- treating Sentry as the only exception pipeline
+- forcing operators to parse `traceparent` because `trace_id` is missing from logs
 - using raw IDs or unbounded text as metric labels
 - exposing the metrics endpoint as a public client API
 - using Pushgateway for normal long-lived service metrics
@@ -1819,12 +1924,12 @@ Laravel implementation rules:
 1. Read `AGENTS.md`.
 2. Identify the repository role and service mode.
 3. Read the smallest owning reference file first.
-4. Read `21-alaa-platform-observability-directive.md` whenever observability design, OTLP configuration, Prometheus metrics, or Collector topology is in scope.
+4. Read `21-alaa-platform-observability-directive.md` whenever observability design, OTLP configuration, queryable `trace_id`, exception delivery, SigNoz, Sentry, Prometheus metrics, or Collector topology is in scope.
 5. Confirm the canonical Ala service identity.
 6. Confirm the exact route-family split.
 7. Align `/api/health` and `/api/ready` to the exact contract.
 8. Align exact readiness check names and codes.
-9. Align `X-Request-Id`, `traceparent`, request logging, and stable event/code naming.
+9. Align `X-Request-Id`, `traceparent`, queryable `trace_id`, request logging, and stable event/code naming.
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
 11. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
 12. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
@@ -1839,8 +1944,10 @@ When applying this skill to a service, finish by checking:
 - `/api/ready`
 - `X-Request-Id`
 - `traceparent`
+- queryable `trace_id`
 - structured JSON logs
 - exact event/code naming
+- exception evidence through OTel/SigNoz and Sentry when present
 - Prometheus endpoint and applicable baseline metric families
 - bounded labels
 - OTLP exporter endpoint via env
@@ -1860,12 +1967,14 @@ When applying this skill to a service, finish by checking:
 - valid incoming `X-Request-Id` is preserved
 - missing invalid `traceparent` generates a fresh valid value
 - valid incoming `traceparent` is preserved
+- `trace_id` is directly queryable in structured logs and OTLP log records
 - `/api/health` and `/api/ready` return `X-Request-Id` and `traceparent`
 - rendered API error responses after exceptions still return `X-Request-Id` and `traceparent`
 - no service code, config, docs, tests, or emitted headers still mention `X-Correlation-Id`
 - successful probes stay low-noise
 - readiness failure and request failure logs use the exact event and code rules
 - logs are structured JSON in production
+- unhandled and actionable handled exceptions are recorded on spans and emitted as structured logs; Sentry is used when present but is not the only exception path
 - traces and logs use the OTLP path without backend-specific code branches
 - metrics use bounded labels only
 - real resource identifiers appear only in logs or trace attributes when needed, never as metric labels
@@ -1905,9 +2014,11 @@ Flag a problem when you see any of these:
 - `service` returns a framework or runtime name
 - `X-Correlation-Id` remains anywhere in service code, config, tests, docs, or emitted headers after the migration
 - `X-Trace-Id` is still treated as a response-header requirement
+- `trace_id` is missing as a queryable field and operators must parse `traceparent`
 - request or readiness logs invent alternate event names for the same flow
 - logs are not structured JSON in production
 - the service hard-codes vendor-specific telemetry backends instead of targeting OTLP and the shared metrics contract
+- exceptions are observable only in Sentry, or only in local logs when Sentry is absent
 - metrics use unbounded labels or raw user or tenant identifiers
 - a public route exposes the internal metrics endpoint
 - a normal long-lived service uses Pushgateway for app metrics
@@ -1932,6 +2043,7 @@ Flag a problem when you see any of these:
 - leaving helper responsibilities implicit so each agent re-invents them
 - reviving the retired profile-blob trust surface instead of consuming the compact header projection
 - pushing observability logic into app code that belongs in the Collector layer
+- treating Sentry as the main observability backend instead of a focused exception, release, and developer-debugging layer
 
 ---
 

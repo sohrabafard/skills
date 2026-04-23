@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala backend services such as auth, content, comment, ticket, vod, and wa. Use when an agent must enforce exact Ala service behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted-header handling, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, backend behavior behind the Ala gateway, the Alaa Platform Observability Directive, OpenTelemetry and Prometheus contract rules, or the Ala deploy contract for Arvan Kubernetes, Docker Compose, Docker Swarm, shared-versus-external Postgres mode selection, hard shared-infra reuse, canonical service DNS aliases, auth key ownership, registry usage, fast-test SQLite support, or the shared `service-ci-kit` GitLab CI/CD baseline for Ala services. Use when consistency across Ala services matters more than local preference."
+description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing exact Ala behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted headers, `X-Request-Id`, `traceparent`, queryable `trace_id`, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, the Alaa Platform Observability Directive, OpenTelemetry, OTLP, Collector, SigNoz, Sentry fallback, Prometheus rules, Arvan Kubernetes, Docker Compose/Swarm, shared Postgres mode, shared infra reuse, canonical DNS aliases, auth key ownership, registry usage, fast-test SQLite support, or the shared `service-ci-kit` GitLab CI/CD baseline. Use when cross-service consistency matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -25,7 +25,7 @@ This skill explains how a normal Ala backend fits into the larger platform:
 3. Select the repository role first: frontend-facing backend behind gateway, internal backend, auth-boundary service, or authz-runtime or control-plane service.
 4. Then select the service mode: any Ala backend, deployment and runtime contract, Laravel backend, Laravel downstream trusted service, or the platform observability directive.
 5. Read the smallest relevant reference file first.
-6. Read `references/21-alaa-platform-observability-directive.md` whenever the task includes telemetry design, OpenTelemetry, Prometheus, metric catalogs, queue or DB instrumentation, collector topology, or cross-runtime observability alignment between Go and Laravel.
+6. Read `references/21-alaa-platform-observability-directive.md` whenever the task includes telemetry design, OpenTelemetry, OTLP logs/traces, Prometheus, metric catalogs, exception delivery, SigNoz, Sentry, queue or DB instrumentation, collector topology, or cross-runtime observability alignment between Go, Laravel, HAProxy, Vector, and OpenFGA.
 7. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
 8. Load the required companion skills before implementation work outside this skill's ownership.
 9. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
@@ -35,6 +35,7 @@ This skill explains how a normal Ala backend fits into the larger platform:
 - Enforce the exact contract defined by this skill for Ala services.
 - Do not downgrade exact outputs into optional recommendations.
 - Do not invent local variants when this skill already defines the contract.
+- Do not treat logs, traces, metrics, or exception evidence as optional for long-lived Ala services.
 - When this skill replaces a legacy header, field, event, or helper, remove the old implementation instead of keeping stale compatibility code in the service.
 - If a repository cannot adopt a rule exactly, stop and report the incompatibility.
 - Keep references relative to this skill folder so the skill remains usable on different machines.

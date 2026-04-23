@@ -11,18 +11,18 @@ This contract exists so agent outputs stay consistent across services and so ope
 This skill is intentionally Ala-specific. The portability requirement for this skill is about filesystem independence and reuse across machines, not about being generic to unrelated organizations.
 
 Use it when:
-- creating or changing `auth`, `content`, `comment`, `ticket`, `vod`, `wa`, or another Ala backend service
+- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-platform`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
 - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
 - standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala services
 - standardizing `/api/health`
 - standardizing `/api/ready`
 - fixing exact readiness payloads and check naming
-- standardizing `X-Request-Id` and `traceparent`
+- standardizing `X-Request-Id`, `traceparent`, and queryable `trace_id`
 - enforcing request and readiness event names and machine-readable codes
 - standardizing `RequestObservabilityMiddleware`
 - standardizing `ResolveUserMiddleware`
 - adding or reviewing the Alaa Platform Observability Directive
-- aligning OpenTelemetry and Prometheus behavior across Go and Laravel services
+- aligning OpenTelemetry, SigNoz, Sentry, and Prometheus behavior across Go, Laravel, HAProxy, Vector, OpenFGA, and future services
 - aligning Laravel Resource-first `/api/*` success responses
 - helping a new Ala service understand the current service landscape, ownership boundaries, and expected interaction model before implementation
 - forcing cross-service consistency where agents would otherwise improvise
@@ -66,10 +66,12 @@ Read next:
 Adds:
 - the platform-wide telemetry path
 - OpenTelemetry SDK and OTLP configuration rules
+- queryable `trace_id`
+- exception delivery through SigNoz when Sentry is absent
 - Collector gateway ownership
 - Prometheus scrape rules and metric naming
 - shared metric catalog and validation rules
-- cross-runtime observability guidance for Go and Laravel
+- cross-runtime observability guidance for Go, Laravel, HAProxy, Vector, WA, OpenFGA, and future services
 
 Read next:
 - `20-operational-and-observability-contract.md`

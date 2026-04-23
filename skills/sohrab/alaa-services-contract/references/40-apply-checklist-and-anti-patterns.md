@@ -5,12 +5,12 @@
 1. Read `AGENTS.md`.
 2. Identify the repository role and service mode.
 3. Read the smallest owning reference file first.
-4. Read `21-alaa-platform-observability-directive.md` whenever observability design, OTLP configuration, Prometheus metrics, or Collector topology is in scope.
+4. Read `21-alaa-platform-observability-directive.md` whenever observability design, OTLP configuration, queryable `trace_id`, exception delivery, SigNoz, Sentry, Prometheus metrics, or Collector topology is in scope.
 5. Confirm the canonical Ala service identity.
 6. Confirm the exact route-family split.
 7. Align `/api/health` and `/api/ready` to the exact contract.
 8. Align exact readiness check names and codes.
-9. Align `X-Request-Id`, `traceparent`, request logging, and stable event/code naming.
+9. Align `X-Request-Id`, `traceparent`, queryable `trace_id`, request logging, and stable event/code naming.
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
 11. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
 12. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
@@ -25,8 +25,10 @@ When applying this skill to a service, finish by checking:
 - `/api/ready`
 - `X-Request-Id`
 - `traceparent`
+- queryable `trace_id`
 - structured JSON logs
 - exact event/code naming
+- exception evidence through OTel/SigNoz and Sentry when present
 - Prometheus endpoint and applicable baseline metric families
 - bounded labels
 - OTLP exporter endpoint via env
@@ -46,12 +48,14 @@ When applying this skill to a service, finish by checking:
 - valid incoming `X-Request-Id` is preserved
 - missing invalid `traceparent` generates a fresh valid value
 - valid incoming `traceparent` is preserved
+- `trace_id` is directly queryable in structured logs and OTLP log records
 - `/api/health` and `/api/ready` return `X-Request-Id` and `traceparent`
 - rendered API error responses after exceptions still return `X-Request-Id` and `traceparent`
 - no service code, config, docs, tests, or emitted headers still mention `X-Correlation-Id`
 - successful probes stay low-noise
 - readiness failure and request failure logs use the exact event and code rules
 - logs are structured JSON in production
+- unhandled and actionable handled exceptions are recorded on spans and emitted as structured logs; Sentry is used when present but is not the only exception path
 - traces and logs use the OTLP path without backend-specific code branches
 - metrics use bounded labels only
 - real resource identifiers appear only in logs or trace attributes when needed, never as metric labels
@@ -91,9 +95,11 @@ Flag a problem when you see any of these:
 - `service` returns a framework or runtime name
 - `X-Correlation-Id` remains anywhere in service code, config, tests, docs, or emitted headers after the migration
 - `X-Trace-Id` is still treated as a response-header requirement
+- `trace_id` is missing as a queryable field and operators must parse `traceparent`
 - request or readiness logs invent alternate event names for the same flow
 - logs are not structured JSON in production
 - the service hard-codes vendor-specific telemetry backends instead of targeting OTLP and the shared metrics contract
+- exceptions are observable only in Sentry, or only in local logs when Sentry is absent
 - metrics use unbounded labels or raw user or tenant identifiers
 - a public route exposes the internal metrics endpoint
 - a normal long-lived service uses Pushgateway for app metrics
@@ -118,3 +124,4 @@ Flag a problem when you see any of these:
 - leaving helper responsibilities implicit so each agent re-invents them
 - reviving the retired profile-blob trust surface instead of consuming the compact header projection
 - pushing observability logic into app code that belongs in the Collector layer
+- treating Sentry as the main observability backend instead of a focused exception, release, and developer-debugging layer

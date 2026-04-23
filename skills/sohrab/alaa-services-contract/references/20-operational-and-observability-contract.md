@@ -53,6 +53,8 @@ Response rules:
 
 Logging rules:
 - log `trace_id`
+- make `trace_id` queryable as its own field in structured logs and OTLP log records
+- include `traceparent` in structured logs when it helps propagation debugging, but never force operators to parse it for normal trace lookup
 - do not require a separate `X-Trace-Id` response header
 
 ## Structured log field contract
@@ -67,6 +69,7 @@ For logs emitted by middleware or operational flows owned by this skill, include
 - `code`
 - `request_id`
 - `trace_id`
+- `traceparent` when useful for propagation debugging or async handoff evidence
 - `project_id` when available
 - `user_id` when available and safe
 - `http.method`
@@ -144,6 +147,7 @@ Preferred order:
 Required behavior:
 - compute canonical `X-Request-Id`
 - compute canonical `traceparent`
+- derive and expose `trace_id` from the canonical trace context
 - store request-scoped correlation context on the request
 - capture request start time
 - attach `X-Request-Id` and `traceparent` to API responses
@@ -155,6 +159,7 @@ Required support components:
 - request context normalizer
 - request-id generator and validator
 - `traceparent` parser and generator
+- `trace_id` extractor for logs, OTLP log records, and request attributes
 - route-template or route-name resolver
 - request-duration capture
 - log-context sharing mechanism
