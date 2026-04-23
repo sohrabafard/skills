@@ -1,0 +1,55 @@
+{
+  "task": "Alaa observability and services contract rewrite",
+  "status": "completed",
+  "created_at": "2026-04-22T20:54:55+03:30",
+  "updated_at": "2026-04-22T21:13:00+03:30",
+  "objective": "Rewrite alaa-observability-soc and alaa-services-contract so agents apply deterministic Ala observability and service contracts across current and future services.",
+  "current_understanding": [
+    "Current Laravel service rollouts converge on X-Request-Id plus traceparent, structured JSON logs, OTLP traces/logs to a Collector, and Prometheus scrape metrics at /metrics.",
+    "Gateway is HAProxy/Vector based: HAProxy owns request handling and /metrics; Vector owns log parsing, buffering, PII guard, and OTLP log export when enabled.",
+    "Entitlement-platform contains entitlement-api, projector, and authz-sidecar Go services; OpenFGA has native OTLP/gRPC and native Prometheus metrics.",
+    "WA is a Vector plus ClickHouse ingestion runtime, not a Laravel or Go app service.",
+    "Sentry exists in some Laravel repos and should remain focused on exceptions, releases, source maps, and developer debugging instead of becoming the main observability backend.",
+    "When Sentry is absent, exception evidence must still reach SigNoz through OTel spans/logs and the Collector."
+  ],
+  "constraints": [
+    "Do not edit service repos.",
+    "Keep detailed skill rules in references.",
+    "Keep service-specific names and headers stable.",
+    "Expose trace_id as a query field alongside traceparent in emitted telemetry."
+  ],
+  "completed_work": [
+    "Read target skill top-level files and key references.",
+    "Read skill-creator, workflow, low-noise, and docs skill guidance.",
+    "Searched memory for prior observability rollout decisions.",
+    "Verified current external OTel, SigNoz, and Sentry guidance from official docs.",
+    "Inspected current local service repo observability surfaces.",
+    "Patched SOC and services-contract references and regenerated the services-contract full guide.",
+    "Validated both skill folders and ran whitespace validation."
+  ],
+  "remaining_work": [],
+  "risks_or_blockers": [
+    "assessment repo is absent locally, so any assessment guidance must be future-service contract wording.",
+    "Some repos use different env variable names for service identity and OTel toggles; the skill should define the contract outcome and allow repo-local config names when behavior matches."
+  ],
+  "validation_summary": [
+    "python skill-creator quick_validate.py skills/sohrab/alaa-observability-soc: passed.",
+    "python skill-creator quick_validate.py skills/sohrab/alaa-services-contract: passed after shortening frontmatter description.",
+    "git diff --check: passed; PowerShell reported only CRLF-to-LF warning for regenerated alaa-services-contract full-guide.md."
+  ],
+  "next_recommended_step": "Review the skill diff and decide whether the documented SigNoz/Sentry role split should be treated as final platform policy.",
+  "timeline": [
+    {
+      "at": "2026-04-22T20:54:55+03:30",
+      "entry": "Created workflow artifacts after repo, memory, external-doc, and service-repo inspection."
+    },
+    {
+      "at": "2026-04-22T21:08:00+03:30",
+      "entry": "Patched SOC and services-contract references with deterministic signal ownership, queryable trace_id, SigNoz/Sentry role split, and exception fallback to SigNoz when Sentry is absent."
+    },
+    {
+      "at": "2026-04-22T21:13:00+03:30",
+      "entry": "Validation completed for both skill folders and whitespace checks; task state marked complete."
+    }
+  ]
+}
