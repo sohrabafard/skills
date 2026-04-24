@@ -24,6 +24,8 @@ At minimum, verify:
 - auth inheritance is coherent and not fighting request-level overrides
 - examples match the current code and contract closely enough to be trusted
 - scripts use readable `pm.*` patterns and avoid deprecated Postman interfaces
+- runner-only workflow APIs, package-library scripts, Visualizer, Flows, and mock servers are absent or explicitly optional
+- saved response examples exist where the task asked for Postman documentation or response examples
 
 ## Helper script
 

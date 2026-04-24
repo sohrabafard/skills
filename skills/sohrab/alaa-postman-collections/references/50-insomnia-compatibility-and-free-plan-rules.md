@@ -26,6 +26,8 @@ Current official guidance also states:
 - Postman collection v2.0 and v2.1 scripts should work in Insomnia after import
 - if a collection uses variables from a Postman global environment, the imported collection should use an Insomnia Base Environment
 - mock servers from Postman are not imported
+- Insomnia request collections support pre-request and after-response scripts, collection runs, and imports from Postman collections
+- Insomnia does not support collection-level authentication headers in its native model; use folder-level auth or explicit request headers when portability matters
 
 ## Insomnia Postman importer detection
 
@@ -43,6 +45,8 @@ Do not use `https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collec
 - Favor folder-level auth when strong Insomnia clarity matters.
 - Keep scripts simple and modern.
 - Do not make the core workflow depend on Postman features that Insomnia will drop or reinterpret.
+- Prefer self-contained scripts over Postman Package Library dependencies.
+- Prefer ordinary request order and saved environment variables over complex `pm.execution.*` runner control.
 - If you cannot run an Insomnia import check locally, state that exact gap in the task output.
 
 ## Postman free-plan rules that matter here

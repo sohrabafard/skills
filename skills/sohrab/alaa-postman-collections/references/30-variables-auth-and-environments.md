@@ -10,12 +10,22 @@ Use the smallest stable scope that keeps the collection understandable:
 
 Postman variables resolve through scope, and `pm.variables.get()` returns the highest-precedence value. Use that to keep shared scripts portable when scope may change later.
 
+## Dynamic and data variables
+
+Use dynamic variables and runner data only when they keep examples realistic without inventing contract truth:
+
+- dynamic values such as generated UUIDs or timestamps are useful for safe local request bodies
+- collection-runner data files can be useful for scenario testing, but they should remain local optional inputs
+- do not make the committed collection unusable without an external data file unless the repo also commits that safe data file
+- prefer explicit environment variables for IDs that users commonly need to edit or that scripts save from create responses
+
 ## Safety rules for values
 
 - Keep secrets out of committed collection variables.
 - Export environment files with safe placeholders, never real secrets.
 - Prefer placeholders such as `<replace-me>` or `https://api.example.test` over sample production values.
 - Do not make the workflow depend on Postman Vault features. Vault is not the portability baseline for this skill.
+- Treat Postman Vault, package-private values, uploaded runner data, and cloud-only sharing as optional operator conveniences, not as required artifact behavior.
 
 ## Team and cloud behavior
 
