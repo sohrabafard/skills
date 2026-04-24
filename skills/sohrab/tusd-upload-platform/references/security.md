@@ -1,5 +1,19 @@
 # Security Hardening
 
+## Contents
+
+- [Security Baseline](#security-baseline)
+- [Safer Defaults](#safer-defaults)
+- [Metadata Handling](#metadata-handling)
+- [Browser Client Security](#browser-client-security)
+- [Tenant Isolation](#tenant-isolation)
+- [Upload IDs and Paths](#upload-ids-and-paths)
+- [Hook Service Security](#hook-service-security)
+- [Secrets and Credentials](#secrets-and-credentials)
+- [Additional Controls Worth Considering](#additional-controls-worth-considering)
+- [Application URLs vs Raw tusd URLs](#application-urls-vs-raw-tusd-urls)
+
+
 ## Security Baseline
 
 For any public or multi-tenant upload plane, assume:
@@ -61,7 +75,7 @@ Have the application issue a short-lived upload session that contains only what 
 
 - upload endpoint or upload URL
 - application upload ID
-- correlation ID
+- request/trace ID
 - allowed metadata fields
 - max size and target type
 - short-lived auth material if required
@@ -85,7 +99,7 @@ Recommended default:
 - Never send raw upload URLs to Sentry.
 - Never send `Authorization`, cookies, or provider tokens to analytics or logs.
 - Scrub filenames too if they may contain sensitive customer data.
-- Prefer app upload IDs and correlation IDs as safe join keys.
+- Prefer app upload IDs and request/trace IDs as safe join keys.
 
 ### Service workers and PWA mode
 
@@ -122,7 +136,7 @@ Protect the hook endpoint like control-plane traffic:
 - put it on a private network or behind internal auth,
 - prefer mTLS or another service-to-service auth layer,
 - limit who may call it,
-- log every rejection and every policy failure with correlation IDs,
+- log every rejection and every policy failure with request/trace IDs,
 - make the endpoint idempotent and safe for retries.
 
 ## Secrets and Credentials

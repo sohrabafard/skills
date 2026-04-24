@@ -1,5 +1,19 @@
 # Reverse Proxy and Gateway Guidance
 
+## Contents
+
+- [Core Rule](#core-rule)
+- [Non-Negotiable Behaviors](#non-negotiable-behaviors)
+- [Choose Nginx When](#choose-nginx-when)
+- [Choose HAProxy When](#choose-haproxy-when)
+- [Nginx Notes](#nginx-notes)
+- [HAProxy Notes](#haproxy-notes)
+- [Sticky Sessions and Horizontal Scale](#sticky-sessions-and-horizontal-scale)
+- [Auth Placement](#auth-placement)
+- [Timeouts](#timeouts)
+- [Pre-Production Verification Checklist](#pre-production-verification-checklist)
+
+
 ## Core Rule
 
 Either Nginx or HAProxy is a valid front door for tusd. The correct choice depends on the platform that already owns ingress, auth, stickiness, and operational tooling.

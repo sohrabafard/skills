@@ -1,5 +1,20 @@
 # Hooks and Authorization
 
+## Contents
+
+- [Core Rule](#core-rule)
+- [Recommended Responsibilities by Hook](#recommended-responsibilities-by-hook)
+- [The Secure Authorization Pattern](#the-secure-authorization-pattern)
+- [Why hooks alone are not enough for ownership enforcement](#why-hooks-alone-are-not-enough-for-ownership-enforcement)
+- [Hook Transport Guidance](#hook-transport-guidance)
+- [Idempotency Rules](#idempotency-rules)
+- [Queue and Outbox Pattern](#queue-and-outbox-pattern)
+- [Use `pre-finish` Carefully](#use-pre-finish-carefully)
+- [Upstream Relay Pattern](#upstream-relay-pattern)
+- [Example Hook Responses](#example-hook-responses)
+- [Anti-Patterns](#anti-patterns)
+
+
 ## Core Rule
 
 Use hooks for policy decisions and lifecycle signals, but use the gateway for request-by-request ownership enforcement.
@@ -42,7 +57,7 @@ Store at least:
 - `declared_size`
 - `filename`
 - `requested_content_type`
-- `correlation_id`
+- `trace_id`
 - timestamps for creation and last activity
 
 Use `assets/schemas/upload-record.schema.json` as a starting point.
@@ -79,7 +94,7 @@ Forward request headers that matter operationally, for example:
 - `Authorization`
 - `Cookie`
 - `X-Request-Id`
-- `X-Correlation-Id`
+- `traceparent`
 - tenant headers if they are part of your trust model
 
 ### gRPC hooks

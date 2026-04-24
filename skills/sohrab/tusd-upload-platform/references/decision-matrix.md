@@ -65,7 +65,7 @@
 Unless the user explicitly requests something else, recommend these defaults:
 
 - one upload-session creation call from the app before the browser starts tus traffic,
-- stable `X-Correlation-Id` per upload plus per-request IDs,
+- stable `traceparent` per upload plus per-request IDs,
 - `removeFingerprintOnSuccess=true` on the browser client,
 - disable termination unless the product clearly exposes cancel/delete via tus,
 - explicit service-worker exclusions for upload origins and paths,

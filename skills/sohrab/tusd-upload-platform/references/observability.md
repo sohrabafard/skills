@@ -1,5 +1,18 @@
 # Observability and Operations
 
+## Contents
+
+- [Logging](#logging)
+- [Metrics Exposed by tusd](#metrics-exposed-by-tusd)
+- [What to Alert On](#what-to-alert-on)
+- [Dashboards](#dashboards)
+- [Correlation IDs](#correlation-ids)
+- [Client Exception Reporting With Sentry](#client-exception-reporting-with-sentry)
+- [Profiling](#profiling)
+- [SLO Thinking](#slo-thinking)
+- [Operational Runbook Defaults](#operational-runbook-defaults)
+
+
 ## Logging
 
 ### tusd process
@@ -16,7 +29,7 @@ Capture at least:
 - service name
 - environment
 - instance or pod ID
-- request or correlation ID
+- request or request/trace ID
 - upload ID when present
 - tenant or account ID when your gateway adds it safely
 
@@ -34,7 +47,7 @@ Capture at least:
 - request duration
 - upstream duration
 - client IP or trusted forwarded chain
-- request ID and correlation ID
+- request ID and request/trace ID
 - auth decision outcome when your gateway owns auth
 
 Send gateway logs to the SOC pipeline with the same correlation model as tusd and hook logs.
@@ -52,7 +65,7 @@ Log these consistently:
 - upstream asset or upload ID
 - retry count
 - failure code
-- correlation ID
+- request/trace ID
 
 ### Browser client telemetry
 
@@ -155,7 +168,7 @@ A useful first dashboard has these panels:
 
 ## Correlation IDs
 
-Propagate one correlation ID end-to-end:
+Propagate one request/trace ID end-to-end:
 
 - client -> app session creation endpoint
 - app -> browser response with upload session
@@ -165,13 +178,13 @@ Propagate one correlation ID end-to-end:
 - hook service -> queue or outbox
 - worker -> upstream provider calls
 
-If the platform already uses `X-Request-Id`, reuse it. Otherwise add a dedicated `X-Correlation-Id` plus a per-request ID.
+If the platform already uses `X-Request-Id`, reuse it. Otherwise add a dedicated `traceparent` plus a per-request ID.
 
 ## Client Exception Reporting With Sentry
 
 When the browser uses Sentry:
 
-- tag events with app upload ID, tenant or policy domain when safe, target type, and correlation ID,
+- tag events with app upload ID, tenant or policy domain when safe, target type, and request/trace ID,
 - attach coarse upload context such as size bucket or intended asset type,
 - scrub raw upload URLs, Authorization headers, cookies, and provider tokens,
 - route events through the platform tunnel endpoint if ad blockers or egress policy matter,

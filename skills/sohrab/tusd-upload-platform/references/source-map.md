@@ -25,7 +25,7 @@ Prefer sources in this order:
 Checked on 2026-04-24:
 
 - `tus/tusd` latest GitHub release: `v2.9.2`, published 2026-03-11.
-- `tus/tus-js-client` latest GitHub release: `v4.3.1`, published 2025-01-16.
+- `tus/tus-js-client` latest stable GitHub release observed in official releases: `v4.3.1`; a `v5.0.0-pre2` prerelease exists and must not be assumed stable without explicit approval.
 
 Refresh this snapshot before version-sensitive work.
 
@@ -35,9 +35,9 @@ Re-check official sources before asserting:
 
 - current tusd flags, hook payload fields, hook ordering guarantees, CORS behavior, metrics paths, or S3 options
 - whether a storage backend, lock implementation, plugin path, or hook transport is officially supported
-- whether a browser client option is available in the installed `tus-js-client` version
+- whether a browser client option is available in the installed `tus-js-client` version, especially retry, resume, storage, parallel upload, and hook callback behavior
 - proxy behavior for buffering, streaming request bodies, timeouts, sticky routing, or forwarded headers
-- security guidance around upload URLs, termination, downloads, CORS, auth headers, or multi-tenant ownership checks
+- security guidance around upload URLs, frontend URL storage, termination, downloads, CORS, auth headers, or multi-tenant ownership checks
 
 ## Community Troubleshooting Boundary
 

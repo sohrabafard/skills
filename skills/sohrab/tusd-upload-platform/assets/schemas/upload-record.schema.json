@@ -66,7 +66,7 @@
     "validatedContentType": {
       "type": ["string", "null"]
     },
-    "correlationId": {
+    "traceId": {
       "type": ["string", "null"]
     },
     "s3Bucket": {

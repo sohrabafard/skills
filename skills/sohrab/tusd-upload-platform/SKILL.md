@@ -1,138 +1,80 @@
 ---
 name: tusd-upload-platform
-description: "Design, review, and implement tusd-based upload platforms for resumable uploads, especially when the system must (1) store uploads directly in MinIO or another S3-compatible backend, (2) stage uploads locally and relay them to another tusd or video-provider upload server, (3) enforce application-driven authentication and authorization with hooks plus gateway checks, (4) run behind Nginx or HAProxy under high traffic, HA, observability, and security requirements, or (5) integrate browser-side tus clients in Vue.js + Quasar + Vite applications, including SSR or PWA mode. Use this skill when choosing topology, defining auth flows, configuring hooks, hardening reverse proxies, tuning tusd flags, designing relay workers, planning cleanup, or implementing production client upload flows for tusd. Do not use this skill for generic presigned S3 uploads, non-tus protocols, or low-stakes one-off file transfer advice."
+description: "Design, review, implement, and debug high-importance tusd/tus resumable-upload platforms, especially Ala services behind a trust gateway, Vue 3/Quasar/Vite/tus-js-client frontends, PHP/Laravel Octane hook and control-plane services, Go embedded tusd services, gRPC or HTTP hooks, MinIO/S3 or local staging storage, HAProxy/Nginx/API gateway behavior, security, observability, and incident response. Do not use for generic presigned uploads, non-tus protocols, or low-stakes one-off file transfer advice."
 ---
-
-
-
 
 # tusd Upload Platform
 
-## Overview
+## Mission
 
-Use this skill to turn tusd into a production upload plane instead of treating it as a standalone binary with a few flags. Focus on five recurring concerns:
+Use this skill to turn an agent into a tusd specialist for production architecture, review, development, debugging, and incident response. Treat tusd as an upload data plane inside Ala's gateway-first service architecture, with Vue/tus-js-client as a first-class frontend integration concern.
 
-1. Choose the right topology for each upload target.
-2. Put authorization and ownership checks in the correct places.
-3. Keep long-running side effects out of blocking hooks.
-4. Pick and harden the right reverse proxy path: Nginx or HAProxy.
-5. Make browser-side tus uploads operationally safe for SSR, PWA, observability, and security-sensitive products.
+## First decisions
 
-## Start With the Right Path
+1. Classify the task: frontend/Vue, architecture, proxy/gateway, auth/ownership, hooks, PHP/Octane, Go embedding, observability, or incident/debug.
+2. Read only the reference files needed for that class from the map below.
+3. Re-check official tus, tusd, and tus-js-client sources before version-sensitive, security-sensitive, or uncertain claims.
+4. When Ala platform behavior is involved, pair this skill with `$alaa-services-contract`, `$alaa-trust-gateway-auth`, and `$alaa-observability-soc`. Use `$alaa-haproxy` for HAProxy/gateway routing, `$alaa-golang` for Go service design, and the relevant Vue/Quasar skill when frontend implementation changes.
 
-Classify the request first:
+## Non-negotiable rules
 
-- **Latest, version-sensitive, security-sensitive, or current behavior question**: Read `references/source-map.md` first.
-- **Direct-to-MinIO / S3-compatible storage**: Read `references/topologies.md` and `references/snippets.md`.
-- **Upload to your own tusd, then relay to another tusd / video provider**: Read `references/topologies.md`, `references/hooks-auth.md`, and `references/security.md`.
-- **Mixed platform that needs both paths**: Read `references/decision-matrix.md` first. Default to two separate tusd deployments unless the user explicitly asks for one custom Go service.
-- **Proxy or gateway design question**: Always read `references/proxies.md`.
-- **Client-side upload implementation**: Always read `references/client-side.md`, then re-read `references/security.md` and `references/observability.md`.
-- **High-traffic, HA, or SLA-sensitive deployment**: Always read `references/observability.md`, `references/proxies.md`, and the scaling sections in `references/topologies.md`.
-- **Security-sensitive deployment**: Always read `references/security.md` and `references/hooks-auth.md`.
+- The gateway is the public trust boundary. Browser and mobile clients must never send trusted internal headers such as `X-User-Id`, `X-Project-Id`, `X-Access`, or `X-Access-Token-Id`.
+- Vue/tus-js-client code must call an application upload-session API before tus creation. The client must not choose tenant, backend, object key, provider credentials, or trusted identity.
+- Do not rely on `pre-create` alone for authorization. Resume, offset, download, and terminate methods also need gateway/service ownership checks.
+- Treat tus upload URLs as capability URLs. Avoid storing or logging them unless resume policy requires it and ownership checks still run on every method.
+- Do not stream large upload bodies through PHP or Laravel Octane. PHP/Octane should run session, hook, metadata, policy, and workflow control-plane code.
+- Do not run relay, scanning, transcoding, or provider-registration work in blocking hooks. Enqueue durable jobs from non-blocking hooks or internal callbacks.
+- Do not assume one stock tusd process supports multiple independent storage backends or cross-instance distributed locking.
+- Do not expose provider credentials, raw upload URLs, Authorization headers, hook payload secrets, signed internal URLs, filenames, or raw metadata in logs, Sentry, analytics, or user-visible errors.
+- Do not use `latest` container tags for production tusd. Pin a version and ideally a digest.
 
-## When NOT to use
-- do not use this skill for generic presigned-upload flows, non-tus protocols, or one-off file transfer advice with no resumable-upload platform design
-- do not assume stock tusd provides a built-in remote-provider relay backend or cross-instance locking model that it does not document
-- do not treat browser upload URLs, provider credentials, or hook payloads as safe to expose outside the platform trust boundary
+## Default platform shape
 
-## Default Recommendations
+- Public client traffic goes to the gateway; the gateway strips spoofable headers, verifies tokens, injects trusted context, optionally calls route-time authz, and forwards to tusd or an embedded Go upload service.
+- The application exposes `POST /api/uploads/sessions`; Vue uses the returned endpoint/upload URL, safe metadata, max-size policy, and retry/resume policy.
+- Use stock tusd deployments for simple single-storage upload planes. Use an embedded Go service only when routing, custom storage, custom locks, custom middleware, or exact Ala service contracts must be owned in code.
+- Use HTTP hooks for most PHP/Octane control-plane integration. Use gRPC hooks when the hook service is Go-heavy, typed contracts matter, and internal gRPC/mTLS is already operational.
+- Use separate tusd deployments for distinct storage classes such as `s3-direct` and `local-staging-relay` unless a custom Go multiplexer is explicitly justified.
 
-Apply these defaults unless the user explicitly wants a different trade-off:
+## Reference map
 
-- Run **two separate tusd deployments** when the platform needs both MinIO/S3 direct storage and local-staging-plus-relay. Avoid forcing one stock tusd process to behave like multi-storage.
-- Use **HTTP hooks** as the default production hook transport. Prefer them over file hooks for clustered deployments and over plugin hooks when shared central state matters.
-- Put an **authenticated gateway or reverse proxy in front of tusd for every client method** (`POST`, `PATCH`, `HEAD`, `DELETE`). Do not rely on `pre-create` alone for security-sensitive ownership enforcement.
-- Support **either Nginx or HAProxy**. Choose based on existing platform conventions, ingress standards, stickiness strategy, and operational ownership. Do not assume Nginx-only.
-- Treat `post-finish` as a **durable job trigger**, not as the place to do large relay, transcoding, malware scanning, or other volatile work inline.
-- Treat tus upload URLs as **capability URLs**. If the system must guarantee that resume requests belong to the original actor, add gateway-side ownership checks on every request.
-- For browser uploads, have the **application issue an upload session** first. The client should not invent auth state, backend selection, or policy metadata locally.
-- In Vue.js + Quasar + Vite apps, keep tus upload logic **client-only** when SSR is enabled, and keep service workers away from upload endpoints when PWA is enabled.
-- Restrict **CORS, downloads, and termination** explicitly in production. Do not leave the defaults unreviewed.
-- When using S3-compatible storage, budget for **temporary local disk** as well as object storage.
-
-## Non-Negotiable Rules
-
-- Never expose upstream provider tokens, API keys, or service-owned upload credentials to browsers or mobile apps.
-- Never recommend synchronous relay-to-upstream inside a blocking hook.
-- Never make the `pre-finish` response the only source of truth for the final asset URL or provider ID.
-- Never assume built-in tusd lockers protect uploads across multiple instances.
-- Never depend on hook execution order except for the documented guarantees.
-- Never use file hooks as the primary production pattern for a horizontally scaled cluster unless the user explicitly accepts per-instance hook execution.
-- Never invent a direct built-in "remote tusd storage backend" for stock tusd. If the user needs that behavior, recommend a relay worker or a custom Go datastore/handler design.
-- Never let SSR code, server-render code, or service workers touch browser-only tus primitives by accident.
-- Never send raw upload URLs, Authorization headers, cookies, or provider tokens into Sentry, analytics, or user-visible logs.
-
-## Working Method
-
-When using this skill, follow this sequence:
-
-1. Read `references/source-map.md` when freshness, release, security, or support-tier claims matter.
-2. Read `references/decision-matrix.md` to choose the platform shape.
-3. Read `references/topologies.md` for the chosen path.
-4. Read `references/proxies.md` before proposing Nginx, HAProxy, gateway auth, or load-balancer behavior.
-5. Read `references/hooks-auth.md` before designing auth, custom headers, or lifecycle automation.
-6. Read `references/security.md` for any public, multi-tenant, or security-sensitive setup.
-7. Read `references/client-side.md` before proposing browser or app-side tus logic.
-8. Read `references/observability.md` before proposing HA, SLOs, metrics, alerts, or SOC logging.
-9. Read `references/snippets.md` and copy from `assets/` when generating concrete configs.
-
-## Companion routing
-
-- `$alaa-frontend-developer`
-  - Pair for browser upload UX, SSR-safe client flows, or auth/session handling.
-- `$quasar-skill-packe`
-  - Pair when the client lives in a Quasar app and the issue is Quasar-specific.
-- `$alaa-haproxy`
-  - Pair when HAProxy termination, stickiness, or request forwarding behavior matters.
-- `$caas-arvan-kuber`
-  - Pair when the deployment target is Arvan CaaS or Kubernetes constraints drive the design.
-- `$alaa-observability-soc`
-  - Pair when SLOs, alerts, or security logging are part of the platform design.
-
-## What to Deliver
-
-For any substantial tusd design or implementation answer, produce all of the following unless the user asked for a narrower scope:
-
-- A clear topology choice and why it fits the stated constraints.
-- The proxy choice and why Nginx or HAProxy is the better fit for the stated environment.
-- The auth model for `POST`, `PATCH`, `HEAD`, and `DELETE`.
-- The hook event map: which hook does what, what must stay fast, and what is queued.
-- The client upload flow: session creation, resume strategy, cancellation policy, and SSR/PWA handling when relevant.
-- Storage behavior and cleanup plan.
-- Reverse proxy and network assumptions.
-- Observability plan: logs, metrics, alerting, correlation IDs, SOC routing, and client exception hygiene.
-- Failure handling and retry model.
-- Open risks and operational caveats.
-
-## Reference Map
-
-- `references/source-map.md`: Read for official-first source priority, current release snapshots, freshness triggers, and community-troubleshooting boundaries.
-- `references/decision-matrix.md`: Read first when choosing between one service, two services, S3 direct, or local relay.
-- `references/topologies.md`: Read for end-to-end architecture, state transitions, and scaling trade-offs.
-- `references/proxies.md`: Read for Nginx vs HAProxy selection, forwarded headers, buffering rules, timeouts, and stickiness.
-- `references/hooks-auth.md`: Read for hook selection, request ownership, queue patterns, and client-visible responses.
-- `references/client-side.md`: Read for Vue.js + Quasar + Vite client uploads, SSR/PWA constraints, tus-js-client defaults, and Sentry-safe error reporting.
-- `references/constraints.md`: Read when you need the non-negotiable tusd and tus protocol behaviors that drive the architecture.
-- `references/security.md`: Read for hardening, token handling, CORS, tenant isolation, client resume risk, and safer defaults.
-- `references/observability.md`: Read for Prometheus metrics, JSON logs, alert suggestions, SLO guidance, client telemetry, and SOC logging.
-- `references/snippets.md`: Read when writing commands, configs, gateway examples, client code stubs, or deployment templates.
+- `references/source-map.md`: official source priority, current snapshot, and freshness rules.
+- `references/decision-matrix.md`: choose between stock tusd, two deployments, relay, and embedded Go.
+- `references/topologies.md`: S3/MinIO direct, local staging plus relay, scaling, locking, and cleanup.
+- `references/alaa-trust-gateway.md`: Ala gateway trust boundary, trusted headers, ownership checks, and route/method authorization.
+- `references/hooks-auth.md`: hook events, hook response rules, auth integration, and queue handoff.
+- `references/vue-frontend.md`: Vue 3, Quasar, Vite, Pinia, SSR/PWA, tus-js-client, retry/resume, UX, and frontend review rules.
+- `references/client-side.md`: compact browser implementation guide and link to deeper Vue reference.
+- `references/proxies.md`: Nginx, HAProxy, API gateway, CORS, buffering, timeouts, forwarded headers, and metrics protection.
+- `references/security.md`: hardening, token handling, tenant isolation, CORS, metadata, and secret hygiene.
+- `references/observability.md`: logs, metrics, alerts, SLOs, SOC evidence, client telemetry, and readiness.
+- `references/constraints.md`: tus protocol and tusd constraints that drive design decisions.
+- `references/snippets.md`: commands, templates, and adaptation guidance.
 
 ## Assets
 
-Reuse these templates instead of inventing them from scratch:
+Use assets as starting points, not blind copy-paste. Always adapt domains, auth, TLS, storage, timeouts, and version pins.
 
+- `assets/client/useTusUpload.ts`: Vue 3 Composition API composable with tus-js-client retry, resume, pause, cancel, and safe callbacks.
+- `assets/client/useUploadQueueStore.ts`: Pinia-style upload queue store for multi-upload screens.
+- `assets/client/TusUploadPanel.vue`: Vue single-file component example for file selection and controls.
+- `assets/client/uploadTelemetry.ts`: safe frontend telemetry helpers for Sentry or analytics.
+- `assets/client/quasar.boot.uploads.ts`
+- `assets/client/quasar.boot.sentry.ts`
+- `assets/client/quasar.config.snippet.ts`
 - `assets/docker-compose/tusd-s3.compose.yaml`
 - `assets/docker-compose/tusd-staging.compose.yaml`
 - `assets/env/tusd-s3.env.example`
 - `assets/env/tusd-staging.env.example`
 - `assets/nginx/tusd-reverse-proxy.conf`
 - `assets/haproxy/tusd-reverse-proxy.cfg`
-- `assets/client/useTusUpload.ts`
-- `assets/client/quasar.boot.uploads.ts`
-- `assets/client/quasar.boot.sentry.ts`
-- `assets/client/quasar.config.snippet.ts`
 - `assets/prometheus/tusd-alert-rules.yml`
 - `assets/schemas/upload-record.schema.json`
 
-When generating concrete output, adapt these templates to the user's domains, image tags, secret management, ports, infrastructure conventions, Quasar mode selection, and telemetry stack.
+## Subagent strategy
+
+For large production reviews, use read-only subagents on independent tracks when the environment supports multi-agent workflows: official tusd/tus-js-client versions and docs, Vue/frontend behavior, gateway/authz, proxy/storage, PHP/Octane or Go implementation, and observability/SOC. Consolidate findings into one risk-ranked answer; do not imply the skill automatically enables platform-level multi-agent features.
+
+## Expected output from the agent
+
+For substantial work, return a topology decision, trust/auth model for every tus method, frontend upload-session and tus-js-client flow, hook map, proxy/gateway requirements, storage and cleanup plan, PHP/Octane or Go implementation notes, observability plan, failure handling, and unresolved risks. For debugging, lead with likely root causes and concrete verification commands, browser checks, logs, or request/response fields.

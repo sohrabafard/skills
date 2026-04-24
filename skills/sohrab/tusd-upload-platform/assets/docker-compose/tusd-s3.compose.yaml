@@ -1,6 +1,6 @@
 services:
   tusd-s3:
-    image: tusproject/tusd:latest
+    image: ${TUSD_IMAGE:-tusproject/tusd:v2.9.2}
     restart: unless-stopped
     env_file:
       - ../env/tusd-s3.env.example
@@ -13,8 +13,10 @@ services:
       # Uncomment if clients must not delete uploads through tus.
       # - "-disable-termination"
       - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN}"
+      - "-cors-allow-headers=Authorization,X-Request-Id,traceparent,Tus-Resumable,Upload-Length,Upload-Defer-Length,Upload-Metadata,Upload-Offset,Upload-Checksum,Upload-Concat"
+      - "-cors-expose-headers=Location,Upload-Offset,Upload-Length,Upload-Defer-Length,Upload-Metadata,Upload-Expires,Tus-Resumable,Tus-Version,Tus-Extension,Tus-Max-Size,Tus-Checksum-Algorithm,X-Request-Id,traceparent"
       - "-hooks-http=${TUSD_HOOKS_HTTP}"
-      - "-hooks-http-forward-headers=Authorization,X-Request-Id,X-Correlation-Id"
+      - "-hooks-http-forward-headers=X-Project-Id,X-User-Id,X-Access,X-Access-Token-Id,X-Request-Id,traceparent,X-User-Mobile,X-User-Fname,X-User-Lname"
       - "-hooks-enabled-events=pre-create,post-create,post-receive,pre-finish,post-finish,pre-terminate,post-terminate"
       - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL}"
       - "-log-format=json"

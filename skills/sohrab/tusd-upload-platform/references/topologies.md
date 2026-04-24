@@ -1,5 +1,14 @@
 # Topologies
 
+## Contents
+
+- [Topology A: Direct to MinIO / S3-Compatible Storage](#topology-a-direct-to-minio--s3-compatible-storage)
+- [Topology B: Local Staging, Then Async Relay to an Upstream tusd / Video Provider](#topology-b-local-staging-then-async-relay-to-an-upstream-tusd--video-provider)
+- [Topology C: One Custom Go Service With Multiple tusd Handlers](#topology-c-one-custom-go-service-with-multiple-tusd-handlers)
+- [Scaling and Locking](#scaling-and-locking)
+- [Local vs S3 Path Customization](#local-vs-s3-path-customization)
+
+
 ## Topology A: Direct to MinIO / S3-Compatible Storage
 
 ### When to use it

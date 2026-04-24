@@ -1,7 +1,4 @@
 interface:
-  display_name: "Tusd Upload Platform"
-  short_description: "Secure tusd platform design and client flows"
-  default_prompt: "Use $tusd-upload-platform to follow its workflow for secure tusd platform design and client flows."
-
-policy:
-  allow_implicit_invocation: true
+  display_name: "tusd Upload Platform"
+  short_description: "Production tusd and Vue upload specialist"
+  default_prompt: "Use $tusd-upload-platform to design, review, or debug a production tusd upload flow with Vue frontend and Ala gateway integration."

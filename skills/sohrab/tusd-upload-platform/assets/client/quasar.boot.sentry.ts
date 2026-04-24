@@ -1,36 +1,25 @@
-import { defineBoot } from '#q-app/wrappers'
-import * as Sentry from '@sentry/vue'
+// Adapt this helper to the project's Sentry initialization.
+// The important rule is to remove raw upload URLs, auth headers, cookies, and raw Upload-Metadata.
+import { redactUploadUrl } from './uploadTelemetry'
 
-export default defineBoot(({ app, router }) => {
-  if (typeof window === 'undefined') {
-    return
-  }
+export function beforeSendUploadSafe(event: any) {
+  for (const request of [event?.request, event?.contexts?.request]) {
+    if (!request) continue
 
-  const dsn = import.meta.env.VITE_SENTRY_DSN
-  if (!dsn) {
-    return
-  }
+    if (typeof request.url === 'string') {
+      request.url = redactUploadUrl(request.url)
+    }
 
-  Sentry.init({
-    app,
-    dsn,
-    environment: import.meta.env.MODE,
-    integrations: [
-      Sentry.browserTracingIntegration({ router }),
-    ],
-    tracesSampleRate: 0.1,
-    sendDefaultPii: false,
-    // Uncomment if your platform tunnels browser events through your own app.
-    // tunnel: '/monitoring/tunnel',
-    beforeSend(event) {
-      if (event.request?.headers) {
-        delete event.request.headers.Authorization
-        delete event.request.headers.authorization
-        delete event.request.headers.Cookie
-        delete event.request.headers.cookie
+    const headers = request.headers
+    if (!headers) continue
+
+    for (const key of Object.keys(headers)) {
+      const normalized = key.toLowerCase()
+      if (normalized === 'authorization' || normalized === 'cookie' || normalized === 'upload-metadata') {
+        headers[key] = '[Filtered]'
       }
+    }
+  }
 
-      return event
-    },
-  })
-})
+  return event
+}
