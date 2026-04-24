@@ -1864,6 +1864,39 @@ Implementation rules:
 - if the service persists trusted user data, keep mutable projections separate from immutable snapshots
 - do not fabricate display-city fields from compact location ids unless another contract owns that lookup
 
+## Canonical `project_id` boundary
+
+Use this rule for every Ala Laravel service that accepts a client-visible project selector named `project_id`.
+
+Public request rule:
+- `project_id` in public request bodies, query parameters, and DTOs is a canonical UUIDv7 string
+- the service resolves that UUIDv7 to its internal project key only after validation passes
+- positive integer project ids are not accepted from public clients
+- services may persist internal numeric project ids when that is their storage model
+- public Resources and event or API payloads should expose the public UUIDv7 boundary when a mapped row exists
+
+Trusted context rule:
+- `X-Project-Id` is injected by the gateway from the verified token `pid` claim
+- downstream services normalize trusted `X-Project-Id` once inside their trusted request context builder
+- direct backend-only tests may keep numeric compatibility only when the service explicitly documents that local testing mode
+- controllers, policies, Resources, repositories, jobs, and observers must not independently parse raw project identifiers
+
+Preferred Laravel naming:
+- `App\Support\Auth\TrustedProjectContext` for shared project-boundary helpers
+- `App\Rules\MappedProjectUuidV7` for public UUIDv7 validation plus registry lookup
+- `resolveInternalProjectId(mixed $value): ?int` to map a public UUIDv7 or documented trusted compatibility value to storage id
+- `resolvePublicProjectId(?int $internalProjectId): ?string` to map storage id back to public UUIDv7
+- `resolveBoundaryProjectId(mixed $value): int|string|null` only for trusted or serialization boundaries where existing internal compatibility is explicitly allowed
+
+Implementation order:
+1. validate the raw public input as string UUIDv7
+2. confirm it maps to an approved project row or registry entry
+3. store the resolved internal id in request attributes or a typed DTO
+4. pass the internal id into services, queries, policies, events, and cache keys
+5. expose the public UUIDv7 again at public response or token boundaries
+
+Do not use a trait or request normalizer that converts public `project_id` to an integer before validation. That leaks the storage model into the public contract and allows internal ids such as `1` to become accepted API input.
+
 ## Laravel success-response contract
 
 Treat Resources as the public success-response boundary for Laravel `/api/*` success responses.
@@ -1931,11 +1964,12 @@ Laravel implementation rules:
 8. Align exact readiness check names and codes.
 9. Align `X-Request-Id`, `traceparent`, queryable `trace_id`, request logging, and stable event/code naming.
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
-11. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
-12. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
-13. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-14. Run focused tests for every changed contract surface.
-15. Report blockers explicitly when exact convergence is not possible.
+11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
+12. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
+13. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
+14. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+15. Run focused tests for every changed contract surface.
+16. Report blockers explicitly when exact convergence is not possible.
 
 ## Short service adoption checklist
 
@@ -1995,6 +2029,13 @@ When applying this skill to a service, finish by checking:
 - parity between `$request->user()` and `Auth::user()`
 - parity with any legacy guard still in use
 
+### Public project selector
+- public `project_id` accepts a mapped canonical UUIDv7
+- public `project_id` rejects integer `1` and string `"1"`
+- unmapped UUIDv7 returns validation errors
+- services receive the resolved internal project id only after validation
+- docs, Postman, and examples do not teach internal ids for public request bodies
+
 ### Laravel response boundary
 - successful `/api/*` responses use the exact `data` envelope
 - `meta` and `links` follow the contract
@@ -2023,6 +2064,8 @@ Flag a problem when you see any of these:
 - a public route exposes the internal metrics endpoint
 - a normal long-lived service uses Pushgateway for app metrics
 - trusted headers are parsed in controllers, policies, or repositories
+- public `project_id` is normalized to an integer before validation
+- tests or Postman examples send internal numeric `project_id` values for public routes
 - `$request->user()` and `Auth::user()` can diverge within one request
 - Laravel services return transport-shaped arrays or raw models instead of Resource boundaries
 - docs or API artifacts drift from implementation
@@ -2040,6 +2083,8 @@ Flag a problem when you see any of these:
 - keeping stale compatibility branches, helpers, tests, or docs for removed contract surfaces
 - reintroducing duplicated GitLab CI logic into service repositories instead of updating `service-ci-kit` first
 - scattering trusted-user normalization across controllers, policies, resources, and observers
+- accepting storage ids such as `project_id: 1` from public clients instead of UUIDv7 project ids
+- using one normalizer for both public `project_id` and trusted `X-Project-Id` when the public path must be stricter
 - leaving helper responsibilities implicit so each agent re-invents them
 - reviving the retired profile-blob trust surface instead of consuming the compact header projection
 - pushing observability logic into app code that belongs in the Collector layer
@@ -2055,6 +2100,100 @@ Rules:
 - Adapt namespaces and injected helpers to the target repository.
 - Preserve the owned behavior and field names.
 - Do not change headers, event names, code names, envelope shapes, or metric names while copying.
+
+## Public project selector baseline
+
+Use this baseline whenever a Laravel service accepts public `project_id` input. Keep the names aligned unless the target repository already has an equivalent helper with the same semantics.
+
+### `MappedProjectUuidV7` validation rule
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Rules;
+
+use App\Support\Auth\TrustedProjectContext;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
+
+final class MappedProjectUuidV7 implements ValidationRule
+{
+    private const string CANONICAL_UUIDV7_PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/';
+
+    /**
+     * @param Closure(string, ?string=): PotentiallyTranslatedString $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (! is_string($value) || preg_match(self::CANONICAL_UUIDV7_PATTERN, $value) !== 1) {
+            $fail('The :attribute must be a canonical UUIDv7 project id.');
+
+            return;
+        }
+
+        if (TrustedProjectContext::resolveInternalProjectId($value) === null) {
+            $fail('The selected :attribute is invalid.');
+        }
+    }
+}
+```
+
+### Public FormRequest usage
+
+```php
+use App\Rules\MappedProjectUuidV7;
+use App\Support\Auth\TrustedProjectContext;
+
+public function rules(): array
+{
+    return [
+        'project_id' => ['bail', 'required', 'string', new MappedProjectUuidV7],
+    ];
+}
+
+protected function passedValidation(): void
+{
+    $projectId = TrustedProjectContext::resolveInternalProjectId(
+        (string) $this->validated('project_id')
+    );
+
+    if ($projectId !== null) {
+        $this->attributes->set('project_id', $projectId);
+        $this->attributes->set('project_public_id', TrustedProjectContext::resolvePublicProjectId($projectId));
+    }
+}
+```
+
+### Controller or action usage
+
+```php
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
+private function resolveProjectId(Request $request): int
+{
+    $projectId = $request->attributes->get('project_id');
+
+    if ((is_int($projectId) || is_string($projectId)) && (int) $projectId > 0) {
+        return (int) $projectId;
+    }
+
+    throw ValidationException::withMessages([
+        'project_id' => ['The selected project id is invalid.'],
+    ]);
+}
+```
+
+Usage rules:
+- public FormRequests use `MappedProjectUuidV7`
+- trusted-header middleware may use a separate trusted normalizer when compatibility requires it
+- never convert public `project_id` to an integer in `prepareForValidation()`
+- put the resolved internal id in request attributes or a typed DTO, not back into public input
+- add tests that reject integer `1`, string `"1"`, malformed UUIDs, and unmapped UUIDv7 values
+- keep Postman examples on a public UUIDv7 variable such as `authProjectId`, separate from trusted-header variables such as `gatewayProjectId`
 
 ## RequestObservabilityMiddleware baseline
 

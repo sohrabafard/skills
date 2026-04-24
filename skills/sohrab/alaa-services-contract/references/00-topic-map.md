@@ -17,10 +17,10 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
   - Read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
 - `Mode B - Laravel backend service`
-  - Use when the task is about Laravel API response boundaries, Resources, middleware order, or Laravel-specific route and command expectations.
+  - Use when the task is about Laravel API response boundaries, Resources, middleware order, public `project_id` validation and resolution, or Laravel-specific route and command expectations.
   - Read `30-trusted-ingress-and-laravel-contract.md` after the core contract.
 - `Mode C - Laravel downstream trusted service`
-  - Use when the service sits behind the Ala gateway and consumes sanitized trusted headers.
+  - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
 - `Mode D - Laravel auth-boundary service`
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
@@ -38,7 +38,7 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `40-apply-checklist-and-anti-patterns.md`
   - Use before finalizing a contract change or skill-driven implementation review.
 - `50-laravel-copy-baselines.md`
-  - Use only when you need copy-oriented Laravel baselines after understanding the owning rules.
+  - Use only when you need copy-oriented Laravel baselines after understanding the owning rules, especially for shared `project_id` / `TrustedProjectContext` validation snippets.
 - `90-source-map.md`
   - Official-first source map for version-sensitive standards, framework docs, observability docs, and community-source limits.
 

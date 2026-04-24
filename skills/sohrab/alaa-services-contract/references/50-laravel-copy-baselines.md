@@ -7,6 +7,100 @@ Rules:
 - Preserve the owned behavior and field names.
 - Do not change headers, event names, code names, envelope shapes, or metric names while copying.
 
+## Public project selector baseline
+
+Use this baseline whenever a Laravel service accepts public `project_id` input. Keep the names aligned unless the target repository already has an equivalent helper with the same semantics.
+
+### `MappedProjectUuidV7` validation rule
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Rules;
+
+use App\Support\Auth\TrustedProjectContext;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
+
+final class MappedProjectUuidV7 implements ValidationRule
+{
+    private const string CANONICAL_UUIDV7_PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/';
+
+    /**
+     * @param Closure(string, ?string=): PotentiallyTranslatedString $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (! is_string($value) || preg_match(self::CANONICAL_UUIDV7_PATTERN, $value) !== 1) {
+            $fail('The :attribute must be a canonical UUIDv7 project id.');
+
+            return;
+        }
+
+        if (TrustedProjectContext::resolveInternalProjectId($value) === null) {
+            $fail('The selected :attribute is invalid.');
+        }
+    }
+}
+```
+
+### Public FormRequest usage
+
+```php
+use App\Rules\MappedProjectUuidV7;
+use App\Support\Auth\TrustedProjectContext;
+
+public function rules(): array
+{
+    return [
+        'project_id' => ['bail', 'required', 'string', new MappedProjectUuidV7],
+    ];
+}
+
+protected function passedValidation(): void
+{
+    $projectId = TrustedProjectContext::resolveInternalProjectId(
+        (string) $this->validated('project_id')
+    );
+
+    if ($projectId !== null) {
+        $this->attributes->set('project_id', $projectId);
+        $this->attributes->set('project_public_id', TrustedProjectContext::resolvePublicProjectId($projectId));
+    }
+}
+```
+
+### Controller or action usage
+
+```php
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
+private function resolveProjectId(Request $request): int
+{
+    $projectId = $request->attributes->get('project_id');
+
+    if ((is_int($projectId) || is_string($projectId)) && (int) $projectId > 0) {
+        return (int) $projectId;
+    }
+
+    throw ValidationException::withMessages([
+        'project_id' => ['The selected project id is invalid.'],
+    ]);
+}
+```
+
+Usage rules:
+- public FormRequests use `MappedProjectUuidV7`
+- trusted-header middleware may use a separate trusted normalizer when compatibility requires it
+- never convert public `project_id` to an integer in `prepareForValidation()`
+- put the resolved internal id in request attributes or a typed DTO, not back into public input
+- add tests that reject integer `1`, string `"1"`, malformed UUIDs, and unmapped UUIDv7 values
+- keep Postman examples on a public UUIDv7 variable such as `authProjectId`, separate from trusted-header variables such as `gatewayProjectId`
+
 ## RequestObservabilityMiddleware baseline
 
 ```php

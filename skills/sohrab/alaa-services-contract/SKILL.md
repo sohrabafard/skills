@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing exact Ala behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted headers, `X-Request-Id`, `traceparent`, queryable `trace_id`, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, the Alaa Platform Observability Directive, OpenTelemetry, OTLP, Collector, SigNoz, Sentry fallback, Prometheus rules, Arvan Kubernetes, Docker Compose/Swarm, shared Postgres mode, shared infra reuse, canonical DNS aliases, auth key ownership, registry usage, fast-test SQLite support, or the shared `service-ci-kit` GitLab CI/CD baseline. Use when cross-service consistency matters more than local preference."
+description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing exact Ala behavior for `/api/health`, `/api/ready`, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted headers, public `project_id` UUIDv7 handling, `X-Project-Id` trusted context, `X-Request-Id`, `traceparent`, queryable `trace_id`, event/code naming, Laravel Resource-first `/api/*` responses, frontend-to-gateway-to-backend flow, the Alaa Platform Observability Directive, OpenTelemetry, OTLP, Collector, SigNoz, Sentry fallback, Prometheus rules, Arvan Kubernetes, Docker Compose/Swarm, shared Postgres mode, shared infra reuse, canonical DNS aliases, auth key ownership, registry usage, fast-test SQLite support, or the shared `service-ci-kit` GitLab CI/CD baseline. Use when cross-service consistency matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -29,6 +29,7 @@ This skill explains how a normal Ala backend fits into the larger platform:
 7. Read `references/full-guide.md` when the task is cross-cutting, high-risk, or you need the preserved whole-contract view in one file.
 8. Load the required companion skills before implementation work outside this skill's ownership.
 9. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
+10. For any Laravel request body, query parameter, or DTO field named `project_id`, read `references/30-trusted-ingress-and-laravel-contract.md` before editing validation or resolution code.
 
 ## When NOT to use
 
@@ -97,6 +98,9 @@ Load these companion skills when their concern is in scope:
   - `references/25-end-to-end-flow-and-boundaries.md`
 - exact trusted-ingress rules, Laravel response boundaries, `ResolveUserMiddleware`, and how backend business auth fits after gateway allow:
   - `references/30-trusted-ingress-and-laravel-contract.md`
+- canonical public `project_id` UUIDv7 handling, `TrustedProjectContext` helper naming, and copy-oriented Laravel validation baselines:
+  - `references/30-trusted-ingress-and-laravel-contract.md`
+  - `references/50-laravel-copy-baselines.md`
 - apply checklist, review checklist, and anti-patterns:
   - `references/40-apply-checklist-and-anti-patterns.md`
 - copy-oriented Laravel class and helper baselines:

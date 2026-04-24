@@ -92,6 +92,39 @@ Implementation rules:
 - if the service persists trusted user data, keep mutable projections separate from immutable snapshots
 - do not fabricate display-city fields from compact location ids unless another contract owns that lookup
 
+## Canonical `project_id` boundary
+
+Use this rule for every Ala Laravel service that accepts a client-visible project selector named `project_id`.
+
+Public request rule:
+- `project_id` in public request bodies, query parameters, and DTOs is a canonical UUIDv7 string
+- the service resolves that UUIDv7 to its internal project key only after validation passes
+- positive integer project ids are not accepted from public clients
+- services may persist internal numeric project ids when that is their storage model
+- public Resources and event or API payloads should expose the public UUIDv7 boundary when a mapped row exists
+
+Trusted context rule:
+- `X-Project-Id` is injected by the gateway from the verified token `pid` claim
+- downstream services normalize trusted `X-Project-Id` once inside their trusted request context builder
+- direct backend-only tests may keep numeric compatibility only when the service explicitly documents that local testing mode
+- controllers, policies, Resources, repositories, jobs, and observers must not independently parse raw project identifiers
+
+Preferred Laravel naming:
+- `App\Support\Auth\TrustedProjectContext` for shared project-boundary helpers
+- `App\Rules\MappedProjectUuidV7` for public UUIDv7 validation plus registry lookup
+- `resolveInternalProjectId(mixed $value): ?int` to map a public UUIDv7 or documented trusted compatibility value to storage id
+- `resolvePublicProjectId(?int $internalProjectId): ?string` to map storage id back to public UUIDv7
+- `resolveBoundaryProjectId(mixed $value): int|string|null` only for trusted or serialization boundaries where existing internal compatibility is explicitly allowed
+
+Implementation order:
+1. validate the raw public input as string UUIDv7
+2. confirm it maps to an approved project row or registry entry
+3. store the resolved internal id in request attributes or a typed DTO
+4. pass the internal id into services, queries, policies, events, and cache keys
+5. expose the public UUIDv7 again at public response or token boundaries
+
+Do not use a trait or request normalizer that converts public `project_id` to an integer before validation. That leaks the storage model into the public contract and allows internal ids such as `1` to become accepted API input.
+
 ## Laravel success-response contract
 
 Treat Resources as the public success-response boundary for Laravel `/api/*` success responses.
