@@ -5,6 +5,7 @@
 - Produce Postman Collection Format v2.1 JSON.
 - Keep the collection `info` block complete and set `info.schema` to the v2.1 schema URL.
 - Preserve an existing `_postman_id` when the collection already has one. The official schema notes that maintaining the same ID is recommended for an existing collection.
+- Set `info.schema` to the Postman export/import marker `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`. Do not use the schema-host draft URL as the collection marker; it can validate JSON but may make Insomnia report `No importers found for file`.
 
 ## Core shape
 

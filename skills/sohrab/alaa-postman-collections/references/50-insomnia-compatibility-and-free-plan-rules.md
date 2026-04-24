@@ -27,6 +27,16 @@ Current official guidance also states:
 - if a collection uses variables from a Postman global environment, the imported collection should use an Insomnia Base Environment
 - mock servers from Postman are not imported
 
+## Insomnia Postman importer detection
+
+Use the exact Postman v2.1 export marker in collection `info.schema`:
+
+```text
+https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+```
+
+Do not use `https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collection.json` as the collection `info.schema`. That URL is useful for schema validation, but Insomnia's importer detection can fail before schema validation and report `No importers found for file`.
+
 ## Practical compatibility rules
 
 - Prefer constructs that survive import with minimal interpretation.

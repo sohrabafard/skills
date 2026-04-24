@@ -18,6 +18,7 @@ At minimum, verify:
 
 - the collection is valid JSON
 - `info`, `item`, and the v2.1 schema link are present
+- `info.schema` uses the conventional Postman export marker `https://schema.getpostman.com/json/collection/v2.1.0/collection.json` so Insomnia can detect the Postman importer
 - referenced variables are defined in collection variables, environment files, or explicitly external sources
 - committed values do not look like real secrets
 - auth inheritance is coherent and not fighting request-level overrides
@@ -37,6 +38,14 @@ The helper is intended to:
 - attempt official schema validation when the environment can do so
 
 If the helper cannot perform full schema validation because `jsonschema` is unavailable or the schema fetch fails, record that as a validation gap instead of pretending the check happened.
+
+When local Node/network access is available and Insomnia portability matters, run the same importer family before closing:
+
+```shell
+npx --yes insomnia-importers@3.6.0 path/to/collection.postman_collection.json
+```
+
+A successful conversion is stronger evidence than generic JSON/schema validation for the `No importers found for file` failure mode.
 
 ## Manual follow-up checks
 

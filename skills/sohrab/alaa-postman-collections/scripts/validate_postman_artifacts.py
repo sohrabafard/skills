@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 DEFAULT_SCHEMA_URL = "https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collection.json"
+CANONICAL_COLLECTION_SCHEMA_URL = "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 COLLECTION_SCHEMA_HINT = "v2.1.0"
 VARIABLE_RE = re.compile(r"{{\s*([^{}\s][^{}]*?)\s*}}")
 SECRET_HINTS = (
@@ -219,6 +220,11 @@ def validate_collection(
         schema_value = info.get("schema")
         if not isinstance(schema_value, str) or COLLECTION_SCHEMA_HINT not in schema_value:
             errors.append("collection.info: expected a Postman Collection Format v2.1 schema URL")
+        elif schema_value != CANONICAL_COLLECTION_SCHEMA_URL:
+            errors.append(
+                "collection.info: use the Postman v2.1 export marker "
+                f"`{CANONICAL_COLLECTION_SCHEMA_URL}` so Insomnia can detect the Postman importer"
+            )
 
     items = collection.get("item")
     if not isinstance(items, list) or not items:
