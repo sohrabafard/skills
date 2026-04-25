@@ -210,6 +210,8 @@ Do not assume a generated file still reflects the latest `.env` or runtime contr
   suspect stale wrapper files or a stale local `.service-runtime-kit` cache
 - service logs are not visible in Docker:
   prefer `LOG_CHANNEL=stderr` in the service `.env`, not a shared forced logging override
+- Octane app logs or traces stay buffered in SigNoz:
+  verify generated app env contains `OCTANE_MAX_REQUESTS=${OCTANE_MAX_REQUESTS:-1000}` and the common env contains `OTEL_SCHEDULED_FLUSH_ENABLED=${OTEL_SCHEDULED_FLUSH_ENABLED:-true}` before changing generated Compose files by hand
 - corrected `.env` still appears ignored:
   rerender first, then inspect whether the actual generated file reads `.env` directly or a runtime default from `runtime/service.runtime.env`
 
