@@ -168,6 +168,13 @@ Rules:
 - do not require code edits to move from one backend or collector endpoint to another
 - keep OTLP timeouts configurable, not hard-coded
 - do not put secrets directly in source code
+- default shared Docker Compose or Swarm service containers to the Collector DNS endpoint `http://otel-collector:4318`
+- treat `host.docker.internal` as a local developer override only; do not commit it as the service default
+- for Laravel or PHP long-lived workers, default to bounded scheduled flushing with `OTEL_SCHEDULED_FLUSH_ENABLED=true`
+- keep `OTEL_FLUSH_ON_OPERATION=false` by default; enable it only for controlled full-fidelity verification that intentionally accepts operation-boundary export cost
+- allow per-request structured logging to stay unsampled when the service contract requires it
+- keep OTLP log and trace export batched, fail-open, circuit-breakered, and bounded so Collector problems do not degrade request latency
+- express OTLP/exporter timeout defaults in milliseconds; use `OTEL_EXPORTER_OTLP_TIMEOUT=500`, `OTEL_BSP_EXPORT_TIMEOUT=500`, and `OTEL_BLRP_EXPORT_TIMEOUT=500` for high-traffic Laravel local runtime fallbacks unless production telemetry SLOs justify explicit different values
 
 ### Package guidance
 

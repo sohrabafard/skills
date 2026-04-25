@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
-  short_description: "Hard Ala service, project, observability, deploy, and CI contract"
-  default_prompt: "Use $alaa-services-contract to enforce the Ala service contract for `/api/health`, `/api/ready`, trusted ingress, public `project_id` UUIDv7 handling, trusted `X-Project-Id` context, Laravel API responses, frontend-to-gateway-to-backend flow, `X-Request-Id`, `traceparent`, queryable `trace_id`, the Alaa Platform Observability Directive, OpenTelemetry, OTLP, SigNoz, Sentry fallback, Prometheus rules, Arvan-versus-Docker deploy modes, shared infra, registry and key-handling rules, and the shared `service-ci-kit` GitLab CI/CD baseline."
+  short_description: "Hard Ala service and runtime contract"
+  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, trust-boundary, observability, runtime, and deployment contract."
 
 policy:
   allow_implicit_invocation: true

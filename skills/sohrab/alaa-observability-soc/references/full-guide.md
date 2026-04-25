@@ -156,6 +156,12 @@ Recommended baseline:
 - `OTEL_EXPORTER_OTLP_TIMEOUT`
 - signal-specific endpoint overrides only when the platform needs them
 
+High-traffic Laravel and PHP services must separate event capture from export flushing:
+- keep structured request logging full-fidelity when the service contract requires one log per request
+- keep OTLP log and trace export batched, fail-open, circuit-breakered, and bounded by short transport/export timeouts
+- use `OTEL_FLUSH_ON_OPERATION=true` only as a controlled full-fidelity verification switch
+- never let a slow Collector block or materially slow the request hot path
+
 Trace context rules:
 - `traceparent` is the propagation header.
 - `tracestate` and `baggage` are propagated when the platform uses them.

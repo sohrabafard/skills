@@ -9,6 +9,12 @@ description: "Design, review, implement, and debug high-importance tusd/tus resu
 
 Use this skill to turn an agent into a tusd specialist for production architecture, review, development, debugging, and incident response. Treat tusd as an upload data plane inside Ala's gateway-first service architecture, with Vue/tus-js-client as a first-class frontend integration concern.
 
+## When NOT to use
+
+- Do not use for generic presigned upload advice when the tus protocol or tusd runtime is not involved.
+- Do not use for non-resumable upload flows unless the task is explicitly comparing them with tus.
+- Do not use for low-stakes one-off file transfer guidance that does not need production trust, storage, proxy, or observability design.
+
 ## First decisions
 
 1. Classify the task: frontend/Vue, architecture, proxy/gateway, auth/ownership, hooks, PHP/Octane, Go embedding, observability, or incident/debug.
