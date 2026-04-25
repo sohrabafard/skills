@@ -35,3 +35,5 @@ Use this file first when the task is broad or when you are not sure which refere
   - Start with `clickhouse-traces-reference.md`
 - “I need both the docs page and the SQL.”
   - Read the relevant routing file first, then the matching ClickHouse reference
+- “SigNoz says this trace has missing spans.”
+  - Start with `observability-guardrails.md`, then use `clickhouse-traces-reference.md` for the anti-join verification query

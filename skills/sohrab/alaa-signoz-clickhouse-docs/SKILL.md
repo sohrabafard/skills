@@ -1,6 +1,6 @@
 ---
 name: alaa-signoz-clickhouse-docs
-description: Use this skill when the user needs the right SigNoz docs page or a docs-grounded answer about OpenTelemetry instrumentation, migration, log collection, Collector setup, query builder behavior, dashboard variables, search syntax, field ambiguity, traces, logs, or SigNoz troubleshooting. Also use it when the user needs a SigNoz ClickHouse dashboard query over traces or logs, or when an existing SigNoz query needs to be fixed. Do not use it for generic ClickHouse outside SigNoz, PromQL-only metrics work, or non-SigNoz observability unless the task depends on SigNoz docs or SigNoz table conventions.
+description: Use this skill when the user needs the right SigNoz docs page or a docs-grounded answer about OpenTelemetry instrumentation, migration, log collection, Collector setup, query builder behavior, dashboard variables, search syntax, field ambiguity, missing spans, traces, logs, or SigNoz troubleshooting. Also use it when the user needs a SigNoz ClickHouse dashboard query over traces or logs, or when an existing SigNoz query or trace-quality issue needs to be fixed. Do not use it for generic ClickHouse outside SigNoz, PromQL-only metrics work, or non-SigNoz observability unless the task depends on SigNoz docs or SigNoz table conventions.
 ---
 
 # Alaa SigNoz ClickHouse Docs
@@ -19,6 +19,7 @@ Keep the flow simple. First classify the task, then load only the smallest refer
 3. Classify the task as one of these modes:
    - docs lookup or docs-grounded answer
    - ClickHouse query writing or query repair
+   - missing-spans or trace-quality troubleshooting
    - mixed task: docs first, then query
 4. Read only the reference files for that mode.
 5. Give a direct answer, not a long research diary.
@@ -39,6 +40,7 @@ Use official `signoz.io/docs` pages as the source of truth.
 - If the topic is instrumentation, migration, or collector setup, also read `references/instrumentation-routing.md`.
 - If the topic is log ingestion, also read `references/log-collection-routing.md`.
 - If the topic is query builder, search syntax, field ambiguity, or variables, also read `references/query-language-routing.md`.
+- If the topic is "missing spans", parent spans, broken trace trees, or traceparent propagation, also read `references/observability-guardrails.md` and `references/clickhouse-traces-reference.md`.
 
 ### Retrieval rules
 
@@ -70,6 +72,25 @@ Then read exactly one reference:
 - Traces: `references/clickhouse-traces-reference.md`
 
 Also read `references/observability-guardrails.md` if the query depends on service identity, trace-log correlation, field ambiguity, or instrumentation quality.
+
+## Mode 2.5: Missing-spans or trace-quality troubleshooting
+
+Use this mode when SigNoz shows "This trace has missing spans", when server spans have unexpected parent span IDs, or when the task mentions parent spans or `traceparent` propagation.
+
+1. Open the official SigNoz traces page: `https://signoz.io/docs/userguide/traces/#missing-spans`.
+2. Use SigNoz MCP first for live evidence:
+   - search recent traces for the service
+   - inspect `parent_span_id`, `span_id`, `trace_id`, `name`, and `spanKind`
+   - group by operation and parent span id when the pattern is unclear
+3. If ClickHouse access is available, use the missing-parent anti-join in `references/clickhouse-traces-reference.md`.
+4. If the problem is in a Laravel or PHP service, pair with the repo/PHP/Laravel skills before editing code.
+5. Fix instrumentation at the source:
+   - preserve a valid inbound `traceparent` for propagation
+   - never generate a fake `traceparent` and then extract it as an OpenTelemetry parent
+   - for missing or invalid inbound context, start the request server span as a root span
+   - when possible, use the actual started span context for response/log correlation
+   - use generated fallback `traceparent` values only when telemetry is disabled or fail-open behavior prevents reading the real span context
+6. Verify with both local tests and live SigNoz/ClickHouse evidence. A direct request with no inbound `traceparent` should produce a server/root span with an empty parent span id, not a random missing parent.
 
 ### Query writing rules
 

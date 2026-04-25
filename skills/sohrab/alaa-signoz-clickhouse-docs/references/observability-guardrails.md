@@ -34,6 +34,19 @@ A good mental model is:
 - Do not put `trace_id`, `span_id`, `user_id`, or other unbounded request identifiers into metric labels.
 - If trace-log correlation matters, choose a log path that preserves or injects trace context cleanly.
 
+## Missing-spans guardrails
+
+SigNoz marks a trace as having missing spans when a span's parent span id is not found in the collected trace. Common causes include sampling, dropped spans, or an upstream service that propagates `traceparent` but does not export its own span.
+
+When debugging an Ala service:
+
+- Check whether request server spans have non-empty `parent_span_id` values even when the request had no real exporting upstream span.
+- Watch for code that generates a local `traceparent` and then calls an OpenTelemetry extractor with that generated value. That creates a child span whose parent span id was never exported.
+- Preserve valid inbound W3C trace context, but do not treat a locally generated fallback `traceparent` as a parent context.
+- For missing or invalid inbound `traceparent`, start the request server span as a root span.
+- Use the actual started span context for response headers and log correlation when the SDK exposes it; keep generated fallback headers only for telemetry-disabled or fail-open paths.
+- Verify the fix with a direct request that sends no `traceparent`: the server span should have an empty parent span id, and child DB or dependency spans should parent to that server span.
+
 ## Field-quality rules
 
 - Resource identity belongs in resource fields.

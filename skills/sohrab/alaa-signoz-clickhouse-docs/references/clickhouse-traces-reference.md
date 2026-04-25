@@ -195,6 +195,49 @@ GROUP BY `service.name`, ts
 ORDER BY ts ASC
 ```
 
+### Recent spans whose parent span is missing
+
+Use this as a troubleshooting query for SigNoz "missing spans" warnings. It lists spans whose `parent_span_id` is non-empty but no collected span in the same trace has that span id.
+
+```sql
+WITH __resource_filter AS (
+    SELECT fingerprint
+    FROM signoz_traces.distributed_traces_v3_resource
+    WHERE (simpleJSONExtractString(labels, 'service.name') = '{{service_name}}')
+      AND seen_at_ts_bucket_start BETWEEN $start_timestamp - 1800 AND $end_timestamp
+),
+__spans AS (
+    SELECT
+        trace_id,
+        span_id,
+        parent_span_id,
+        name,
+        kind_string,
+        timestamp
+    FROM signoz_traces.distributed_signoz_index_v3
+    WHERE resource_fingerprint GLOBAL IN __resource_filter
+      AND timestamp BETWEEN $start_datetime AND $end_datetime
+      AND ts_bucket_start BETWEEN $start_timestamp - 1800 AND $end_timestamp
+)
+SELECT
+    child.timestamp,
+    child.trace_id,
+    child.name,
+    child.kind_string,
+    child.span_id,
+    child.parent_span_id
+FROM __spans AS child
+LEFT JOIN __spans AS parent
+    ON parent.trace_id = child.trace_id
+   AND parent.span_id = child.parent_span_id
+WHERE child.parent_span_id != ''
+  AND (parent.span_id = '' OR parent.span_id IS NULL)
+ORDER BY child.timestamp DESC
+LIMIT 100
+```
+
+For Laravel/PHP services, a common application-side cause is generating a fallback `traceparent` for response/log correlation and then extracting that fallback as the OpenTelemetry parent. Fix the instrumentation so generated or invalid inbound context starts a root server span; only real inbound trace context should be extracted as a parent.
+
 ### Average duration by HTTP method for one service
 
 ```sql
