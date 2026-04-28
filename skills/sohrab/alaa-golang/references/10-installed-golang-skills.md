@@ -86,6 +86,12 @@ Use it for broad library discovery. Pair it with the local package catalog when 
 
 Use it for gRPC services, protobuf code generation, interceptors, streaming, and transport behavior.
 
+### golang-graphql ( `$golang-graphql` )
+
+Use it for GraphQL servers, schemas, resolvers, subscriptions, and repos that import `gqlgen` or `graphql-go`.
+Because the installed skill currently has only trigger metadata, pair it with `50-gap-coverage.md` for production
+defaults before making non-trivial GraphQL changes.
+
 ### golang-cli ( `$golang-cli` )
 
 Use it for CLIs, Cobra, flags, shell completion, config layering for tools, and command lifecycle.
@@ -100,7 +106,7 @@ Use it for unit, integration, HTTP, and mocking patterns.
 
 Use it when the repo already uses `testify` or when selective assertions and mocks are appropriate.
 
-### golang-linter ( `$golang-linter` )
+### golang-lint ( `$golang-lint` )
 
 Use it for `golangci-lint`, analyzer policy, `nolint` hygiene, and modernization analyzers.
 
@@ -132,13 +138,33 @@ Use it for CI pipelines, release gates, dependency automation, security scans, c
 
 If the repo already uses one of these packages, route to the matching skill instead of treating it as generic Go:
 
-- `golang-samber-do` ( `$golang-samber-do` )
-- `golang-samber-lo` ( `$golang-samber-lo` )
-- `golang-samber-mo` ( `$golang-samber-mo` )
-- `golang-samber-ro` ( `$golang-samber-ro` )
-- `golang-samber-slog` ( `$golang-samber-slog` )
-- `golang-samber-hot` ( `$golang-samber-hot` )
-- `golang-samber-oops` ( `$golang-samber-oops` )
+### golang-samber-do ( `$golang-samber-do` )
+
+Use it when the repo uses `github.com/samber/do` or `github.com/samber/do/v2` for dependency injection.
+
+### golang-samber-lo ( `$golang-samber-lo` )
+
+Use it when the repo uses `github.com/samber/lo` functional helpers.
+
+### golang-samber-mo ( `$golang-samber-mo` )
+
+Use it when the repo uses `github.com/samber/mo` option, result, either, or future-style types.
+
+### golang-samber-ro ( `$golang-samber-ro` )
+
+Use it when the repo uses `github.com/samber/ro` reactive stream patterns.
+
+### golang-samber-slog ( `$golang-samber-slog` )
+
+Use it when the repo uses Samber `slog` helpers or adapters.
+
+### golang-samber-hot ( `$golang-samber-hot` )
+
+Use it when the repo uses `github.com/samber/hot` for in-memory caching.
+
+### golang-samber-oops ( `$golang-samber-oops` )
+
+Use it when the repo uses `github.com/samber/oops` for structured errors.
 
 ## Learning-only or ecosystem-radar work
 

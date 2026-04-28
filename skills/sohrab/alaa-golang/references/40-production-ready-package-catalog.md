@@ -241,6 +241,22 @@ Use when gRPC interceptors for logging, retries, recovery, selection, or validat
 
 Use when tracing and metrics are required for gRPC servers or clients.
 
+## GraphQL
+
+### `github.com/99designs/gqlgen` - default for schema-first GraphQL
+
+Use when GraphQL is truly needed and you want generated typed resolver contracts from a schema.
+
+Pair it with `golang-graphql` ( `$golang-graphql` ) and `50-gap-coverage.md` because production GraphQL still needs
+explicit auth, pagination, depth or complexity limits, batching, and error-shaping rules.
+
+### `github.com/graph-gophers/graphql-go` - conditional
+
+Use when the repo already standardizes on it or when its reflection-based model fits an existing codebase better than
+schema-first generated resolver contracts.
+
+Do not choose it just to avoid code generation if the service needs a durable public contract.
+
 ## Observability
 
 ### `go.opentelemetry.io/otel` and the Go OTel SDK - default

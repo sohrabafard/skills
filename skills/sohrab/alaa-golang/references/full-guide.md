@@ -70,6 +70,14 @@ Read `30-http-api-framework-choice.md` before making that call.
 - for Kafka, use `franz-go`
 - design retries, backoff, idempotency, and DLQ behavior explicitly; do not hide them behind library defaults
 
+## GraphQL stance
+
+- use GraphQL only when the product really benefits from graph-shaped reads or client-selected fields
+- prefer `gqlgen` when schema-first code generation, typed resolvers, and subscriptions matter
+- keep auth, tenant, pagination, complexity limits, and N+1 prevention explicit in resolver design
+- do not bypass trusted-gateway or service-contract rules just because the transport is GraphQL
+- pair the installed `golang-graphql` skill with `50-gap-coverage.md` until that public skill has full body guidance
+
 ## Observability and security stance
 
 - use `log/slog` as the logging baseline
@@ -102,8 +110,9 @@ For HTTP and gRPC services, also validate:
 
 ## Routing heuristics
 
-- If the task is “modernize this Go codebase”, start with `golang-modernize` ( `$golang-modernize` ) and often `golang-linter` ( `$golang-linter` ).
+- If the task is “modernize this Go codebase”, start with `golang-modernize` ( `$golang-modernize` ) and often `golang-lint` ( `$golang-lint` ).
 - If the task is “design or review a service”, start with `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-error-handling` ( `$golang-error-handling` ), `golang-observability` ( `$golang-observability` ), and this local guide.
 - If the task is “debug concurrency or leaks”, load `golang-concurrency` ( `$golang-concurrency` ), `golang-context` ( `$golang-context` ), `golang-safety` ( `$golang-safety` ), and `golang-troubleshooting` ( `$golang-troubleshooting` ).
+- If the task is “build or audit GraphQL”, load `golang-graphql` ( `$golang-graphql` ) and then `50-gap-coverage.md`.
 - If the task is “choose packages”, read `40-production-ready-package-catalog.md` and then use the narrow vendor skill if one exists.
 - If the task changes platform behavior, CI, cluster objects, contracts, or trust boundaries, add the relevant companion skill from `20-sohrab-companions.md`.

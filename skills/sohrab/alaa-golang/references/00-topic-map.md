@@ -16,6 +16,13 @@ Use this file to decide what to read next after `alaa-golang` triggers.
 - Read `40-production-ready-package-catalog.md`.
 - Use `golang-popular-libraries` ( `$golang-popular-libraries` ) for the broad public ecosystem view.
 - Use the local package catalog when the choice must fit this specific stack and operating model.
+- Read `30-enterprise-shortlist.md` when stdlib, public skills, and the package catalog still leave a gap.
+
+## If the task falls between public Go skills
+
+- Read `50-gap-coverage.md`.
+- Use it for service lifecycle, config, health/readiness, GraphQL production cautions, gateway contracts, and local
+  package/tool choices that the public skills do not fully own.
 
 ## If the task is about routing to other skills
 
