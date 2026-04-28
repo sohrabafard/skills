@@ -1,6 +1,6 @@
 ---
 name: alaa-php-clean-code
-description: "Deterministic PHP 8.5 / Laravel 13 clean-code baseline for writing, reviewing, and refactoring code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, Laravel edge patterns, and mode-aware refactors (scoped soft, scoped hard with contract preservation, whole-project preserve-local, whole-project normalize-to-Alaa). Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
+description: "Deterministic PHP 8.5 / Laravel 13 clean-code baseline for writing, reviewing, and refactoring Octane-safe Laravel code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, pragmatic design patterns, long-lived worker hygiene, and mode-aware refactors. Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
 ---
 
 
@@ -17,6 +17,7 @@ This skill owns code shape inside files, classes, methods, and local module boun
 - PHP 8.5 feature usage and type safety
 - PSR / PER baseline
 - Laravel code-level best practices
+- Octane-safe code shape for long-lived workers
 - local performance hygiene
 - boundary-first error handling
 - mode-aware refactor discipline
@@ -98,9 +99,10 @@ Do not skip these steps.
 5. In Laravel repositories, check whether `laravel/boost` is installed and usable. If it is available, use Boost as the first Laravel-aware inspection and documentation layer before making framework, package, schema, route, config, or runtime assumptions. Prefer Boost MCP tools and Boost documentation search when relevant, but keep explicit user instructions, repo-local rules, this skill, and any triggered companion skills as the governing source for code shape, naming, refactor mode, and contract preservation.
 6. Inspect the repository's current conventions, then decide whether the task should preserve local conventions or normalize toward the Alaa convention set.
 7. Read `references/consistency-and-naming.md` before renaming classes, methods, namespaces, files, folders, or concepts.
-8. Read the technical references that fit the change: patterns, modern PHP / PSR, Laravel edge practices, docs artifacts, and agent orchestration.
-9. Implement the smallest coherent change set that satisfies the selected mode.
-10. Validate behavior, tests, and documentation alignment before calling the work done.
+8. Apply the Octane-safe clean-code baseline in `references/octane-clean-code.md` for every Laravel change. All Alaa Laravel apps are assumed to run under Octane unless repo evidence proves otherwise.
+9. Read the technical references that fit the change: patterns, modern PHP / PSR, Laravel edge practices, docs artifacts, and agent orchestration.
+10. Implement the smallest coherent change set that satisfies the selected mode.
+11. Validate behavior, tests, and documentation alignment before calling the work done.
 
 # Task-mode defaults
 Task mode is mandatory. If the user does not specify one, infer the safest option.
@@ -163,12 +165,16 @@ If a trigger fires, do not continue the affected part of the task until that ski
 Choose the simplest abstraction that fixes the real problem.
 
 1. Start with a plain class, private method extraction, or tighter naming.
-2. Add a DTO when validated or transferred data needs a stable typed shape.
-3. Add a value object when a domain concept has invariants or behavior.
-4. Add a strategy when algorithms or providers vary behind one contract.
-5. Add a factory when construction enforces invariants or hides meaningful branching.
-6. Add a repository when persistence logic is non-trivial, repeated, or represents a real boundary.
-7. Add an interface only when there is a real seam: multiple implementations, package boundary, external integration, or a test seam that genuinely helps clarity.
+2. Move business flow into a service when a controller, job, listener, or command is doing more than orchestration.
+3. Add a DTO when validated or transferred data needs a stable typed shape.
+4. Add a value object when a domain concept has invariants or behavior.
+5. Add a strategy when algorithms or providers vary behind one contract.
+6. Add a factory when construction enforces invariants or hides meaningful branching.
+7. Add an adapter when external provider APIs must be hidden behind an internal contract.
+8. Add a repository when persistence logic is non-trivial, repeated, or represents a real boundary.
+9. Add a pipeline when a workflow is a clear sequence of independent, reorderable steps.
+10. Add a command/job when an action must be queued, retried, delayed, logged, or executed outside the HTTP request.
+11. Add an interface only when there is a real seam: multiple implementations, package boundary, external integration, or a test seam that genuinely helps clarity.
 
 Do not stack Repository + Factory + Strategy + Interface merely for aesthetics. Every abstraction must earn its keep.
 
@@ -211,11 +217,26 @@ Clarity, fewer moving parts, and repo consistency beat textbook purity.
 - Use API Resources for stable JSON responses.
 - Use policies or gates for authorization.
 - Prefer DTOs or typed inputs over passing raw validated arrays across layers when the shape matters.
+- Move business operations into focused services before controllers become transaction, validation, provider-selection, and response-shaping buckets.
 - Prefer Eloquent directly when the query is simple and local; move to a repository only when a real persistence boundary appears.
 - Prevent N+1 by default with deliberate eager loading and resource helpers such as `whenLoaded()`, `whenCounted()`, and `whenAggregated()` when appropriate.
 - For large dataset traversal, use `chunk`, `chunkById`, `lazy`, `lazyById`, or `cursor` deliberately based on mutation and memory behavior.
 - Keep facades near framework edges. Prefer dependency injection in services and domain-facing code.
 - Follow repository folder structure first. If the repository has no strong convention and the task enters architecture territory, defer folder and layer decisions to `alaa-laravel-architecture`.
+
+# Octane-safe clean-code baseline
+All Alaa Laravel apps are treated as Octane apps by default, with Swoole today and RoadRunner migration expected. Clean code is not acceptable if it leaks request state across long-lived workers.
+
+- Keep services stateless unless state is immutable, tenant-agnostic, and safe to reuse across requests.
+- Never store current request, user, tenant, project, locale, auth, headers, correlation IDs, trace context, or policy decisions in static properties, globals, or container singletons.
+- Pass request-specific context explicitly through method arguments, request-scoped DTOs, or request-scoped services that are reset after each request.
+- Treat container singletons as cross-request memory. Bind mutable services as transient/scoped according to repo runtime support, or make them immutable.
+- Include tenant/project identifiers in cache keys and in-memory memoization keys unless the data is explicitly global.
+- Avoid runtime mutation of config, auth guards, locale, facades, static registries, HTTP client default headers, or SDK clients during a request.
+- Prefer constructor injection for stable collaborators, but do not inject `Request`, authenticated user objects, tenant context holders, or mutable per-request state into long-lived services.
+- Keep factories, strategies, adapters, observers, listeners, jobs, and pipelines free of hidden retained state. They may be resolved once and reused by Octane workers.
+- Do not use Swoole-only APIs in app-level business code when a Laravel or PSR abstraction exists; preserve RoadRunner portability unless the task explicitly owns runtime-specific code.
+- Read `alaa-octane-performance` before touching Octane hooks, reset listeners, Swoole/RoadRunner configuration, task workers, worker tuning, hot paths, memory growth, singletons, request-scoped state, or cross-request leak fixes.
 
 # Error-handling baseline
 - Throw specific exceptions with clear ownership.
@@ -255,7 +276,9 @@ Documentation is part of done when behavior, contracts, setup, env vars, request
 - `references/consistency-and-naming.md`
   Read before renaming, extracting, consolidating, or normalizing code shape.
 - `references/design-patterns.md`
-  Read for Repository, Factory, Strategy, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
+  Read for MVC, Service, Repository, Factory, Strategy, Observer, Adapter, Facade, Dependency Injection, Singleton, Pipeline, Command, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
+- `references/octane-clean-code.md`
+  Read for Octane-safe clean-code rules, design-pattern cautions, Swoole-to-RoadRunner portability, state-leak review checks, and validation expectations.
 - `references/php-modern-and-psr.md`
   Read for PHP 8.5 features, type safety, PSR / PER usage, and language-level anti-patterns.
 - `references/laravel-best-practices.md`
@@ -293,7 +316,10 @@ Keep the final report concise but auditable.
 - Raw associative arrays acting as de facto DTOs across layers.
 - Generic repositories, helpers, managers, or util classes with vague responsibility.
 - Overusing inheritance when composition or a value object is simpler.
+- Forcing design patterns where a plain class, private method, or local `match` is clearer.
 - Dynamic properties, magic behavior, or hidden serialization tricks in new code.
+- Static caches, mutable singletons, or global holders for request, tenant, user, auth, locale, headers, trace, or policy state under Octane.
+- Swoole-specific app code that blocks RoadRunner portability without an explicit runtime-owned reason.
 - Changing public contracts accidentally during a cleanup.
 - Turning a local feature task into an unbounded whole-repo rewrite.
 - Claiming a companion skill was respected without actually routing to it when its trigger fired.

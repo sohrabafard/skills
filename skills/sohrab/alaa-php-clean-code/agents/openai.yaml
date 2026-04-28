@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa PHP Clean Code"
-  short_description: "Deterministic PHP and Laravel clean refactors"
-  default_prompt: "Use $alaa-php-clean-code to follow its workflow for deterministic php and laravel clean refactors."
+  short_description: "Octane-safe PHP and Laravel clean refactors"
+  default_prompt: "Use $alaa-php-clean-code to follow its workflow for Octane-safe PHP and Laravel clean refactors."
 
 policy:
   allow_implicit_invocation: true
