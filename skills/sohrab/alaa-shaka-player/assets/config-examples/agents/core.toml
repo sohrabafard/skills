@@ -1,4 +1,4 @@
-model = "gpt-5.3-codex"
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 developer_instructions = """
 Build the smallest correct Shaka playback core for Vue 3 + Quasar + Vite.

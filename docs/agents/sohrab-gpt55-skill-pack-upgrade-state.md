@@ -38,6 +38,7 @@
 - Phase 5 dense skill pass: preserved mandatory generator/validator workflows while adding source-map and freshness-routing pointers.
 - Phase 6 routing evaluation: ran two read-only fresh-context eval agents, then fixed stale companion names, unavailable `$frontend-skill` references, stale `.claude/skills` paths, nonexistent LogQL/Loki validator references, Windows-default `alaa-k8s-helm` validation friction, and missing SigNoz eval coverage.
 - Phase 7 final validation: every Sohrab skill passes `quick_validate.py`; pack validator passes with warnings only; `git diff --check` passes.
+- 2026-04-28 follow-up: migrated the active `alaa-shaka-player` multi-agent config examples from older Codex-family model pins to `gpt-5.5`.
 
 ## Remaining Work
 
@@ -66,6 +67,7 @@
 - Final pack-wide `quick_validate.py` pass: all Sohrab skills valid.
 - Final `python scripts\validate_sohrab_skill_pack.py`: passed with line-count warnings only.
 - Final `git diff --check`: passed.
+- 2026-04-28 follow-up validation: `quick_validate.py skills\sohrab\alaa-shaka-player` passed, `python scripts\validate_sohrab_skill_pack.py` passed with the existing line-count warnings only, `git diff --check` passed, and model-pin search found no remaining older Codex-family active skill-pack pins.
 
 ## Next Recommended Step
 
@@ -82,3 +84,4 @@ Review the final diff, especially new source-map files and eval coverage. No blo
 - 2026-04-24 00:41 +03:30 - Integrated all five worker lanes and ran pack-wide `quick_validate.py`, pack validator, and whitespace validation successfully.
 - 2026-04-24 00:43 +03:30 - Applied Phase 6 routing-eval repairs for stale companion/path names, missing SigNoz eval coverage, and Windows-default `alaa-k8s-helm` validation.
 - 2026-04-24 00:44 +03:30 - Final validation passed; task marked complete.
+- 2026-04-28 19:17 +03:30 - Follow-up migrated `alaa-shaka-player` multi-agent config examples to `gpt-5.5` and revalidated the touched skill plus the pack validator.
