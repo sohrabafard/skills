@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Trust Gateway Auth"
-  short_description: "Gateway trust, request-time authz, and downstream auth context"
-  default_prompt: "Use $alaa-trust-gateway-auth to follow its workflow for Ala gateway trust, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, and downstream auth context."
+  short_description: "Gateway trust, JWT claims, X-Access, and downstream auth context"
+  default_prompt: "Use $alaa-trust-gateway-auth to follow its workflow for Ala gateway trust, JWT claim projection, X-Access permission bitmap semantics, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, and downstream auth context."
 
 policy:
   allow_implicit_invocation: true

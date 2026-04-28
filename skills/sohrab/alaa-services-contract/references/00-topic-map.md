@@ -22,6 +22,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode C - Laravel downstream trusted service`
   - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
+- `Mode C+ - Permission catalog consumer`
+  - Use when the task is about `config/permissions.php`, permission names, bitmap ids, generated service permission configs, `X-Access` permission mapping, or catalog drift checks.
+  - Read `35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth`.
 - `Mode D - Laravel auth-boundary service`
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
   - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.

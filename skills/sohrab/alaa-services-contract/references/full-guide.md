@@ -11,6 +11,7 @@ It mirrors the split references below and should be kept aligned with them in th
 - `21-alaa-platform-observability-directive.md`
 - `25-end-to-end-flow-and-boundaries.md`
 - `30-trusted-ingress-and-laravel-contract.md`
+- `35-permission-catalog-and-service-configs.md`
 - `40-apply-checklist-and-anti-patterns.md`
 - `50-laravel-copy-baselines.md`
 
@@ -130,6 +131,19 @@ Adds:
 
 Read next:
 - `30-trusted-ingress-and-laravel-contract.md`
+- `$alaa-trust-gateway-auth`
+
+### Mode C+ - Permission catalog consumer
+
+Adds:
+- generated service-local permission configs
+- permission bitmap id governance
+- `X-Access` permission-name mapping
+- catalog drift checks
+- one-service-at-a-time apply discipline
+
+Read next:
+- `35-permission-catalog-and-service-configs.md`
 - `$alaa-trust-gateway-auth`
 
 ### Mode D - Laravel auth-boundary service
@@ -1831,6 +1845,7 @@ Required validation behavior:
 - validate `X-Project-Id` as UUIDv7
 - validate `X-User-Id` as a positive integer
 - decode `X-Access` as the base64url permission bitmap
+- map `X-Access` only through the service's generated, committed catalog-owned permission config
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `$alaa-trust-gateway-auth`
@@ -1957,6 +1972,75 @@ Laravel implementation rules:
 
 ---
 
+# Permission Catalog And Service Configs
+
+Use this file when an Ala service changes `config/permissions.php`, permission names, bitmap ids, generated permission artifacts, permission drift checks, or `X-Access` decoding behavior.
+
+## Ownership
+
+- `alaa-permission-catalog` is the normative cross-service source of truth for permission names, service ownership, generated permission snapshots, and bitmap ids.
+- Auth is the only runtime issuer of JWT authorization claims: `prm`, `prv`, and `av`.
+- Backend services are generated-config consumers. Their committed `config/permissions.php` files should come from the catalog output for that service.
+- Gateway, `authz-sidecar`, entitlement-platform, and OpenFGA are route or resource authorization infrastructure. They do not own service-local permission-name-to-bitmap-id maps.
+
+## Service Config Rules
+
+- Do not invent, manually renumber, or hand-maintain bitmap ids in `config/permissions.php`.
+- Generate service-local permission configs from `alaa-permission-catalog`, review the generated output, then commit the generated file in the target service during an explicit apply phase.
+- Use CI drift checks to detect mismatch between the catalog and committed service configs.
+- Treat drift as evidence. Do not let normal import or generate commands silently copy generated configs into source repositories.
+- Source service CI may run catalog drift checks with temporary generated output, but it must not modify source files, stage files, or reinterpret report-only warnings as failures.
+
+## Apply Phase Rules
+
+- Permission config changes must happen through explicit apply phases, one service at a time.
+- Each apply phase must name the service, the generated input path, the destination path, and the focused validation set before copying files.
+- Keep unrelated repos untouched. Applying content config must not also apply comment, auth, WA, gateway, JWT semantics, or bitmap encoding changes unless the phase explicitly says so.
+- After apply, run service-local tests that prove:
+  - `X-Access` decodes against the committed generated config
+  - trusted context resolution still rejects missing, malformed, or zero-known-permission bitmaps
+  - service authorization behavior still matches local policies, Gates, or middleware
+- Run catalog `check-drift` before and after permission-related work when the repo has access to `alaa-permission-catalog`.
+
+## Extraction And Reuse Rules
+
+- Bitmap ids are never reused.
+- Removed permissions must become `deprecated` or `reserved`; do not delete published ids from the catalog.
+- Service extraction must not reuse old bitmap ids across new service boundaries.
+- Legacy VOD ids remain stable for VOD compatibility.
+- Extracted `content_*` permissions receive new catalog-owned ids, currently `64-78`, and are not runtime aliases for VOD permissions.
+
+## Current Canonical Outcomes
+
+- Current generated catalog status is `clean` with `91` permissions. Fatal and error drift findings are `0`; current warnings are report-only unless a later policy promotes a scoped warning.
+- `wa_get_watch_stats` owns bitmap id `1`; WA service-local config adoption is deferred until WA has a committed permission-consumer shape.
+- `comment_get_index` owns bitmap id `18`.
+- `comment_get_show` owns bitmap id `40`.
+- Extracted content-service permissions own bitmap ids `64-78`.
+- ControlledOps content bulk permissions own bitmap ids `79-91`.
+
+## Current Permission Snapshot
+
+Use this compact grouping instead of copying the full catalog into prompts:
+
+| Range | Owner | Permissions |
+| --- | --- | --- |
+| `1` | `wa` | `wa_get_watch_stats` |
+| `2-13` | `vod` | analytics and study-cell permissions |
+| `14-17` | `ticket` | `crm_get_tickets`, `crm_post_ticket_reply`, `crm_put_ticket`, `crm_post_bulk_ticket` |
+| `18-21`, `40` | `comment` | `comment_get_index`, `comment_approve`, `comment_delete`, `comment_reply`, `comment_get_show` |
+| `22-39` | `vod` | legacy content, content-set, product, copy, and discount permissions |
+| `41-63` | `auth` | profile, sessions, TOTP, admin authz override, and admin catalog permissions |
+| `64-78` | `content` | extracted set, content, and course permissions |
+| `79-91` | `content` | ControlledOps content bulk permissions |
+
+## Companion Skill Boundary
+
+- Use `$alaa-trust-gateway-auth` for JWT claim semantics, `prm` to `X-Access` projection, bitmap packing, trusted-header spoofing defense, and gateway/auth ownership.
+- Use this file for service-local generated config adoption, CI drift checks, and one-service-at-a-time apply discipline.
+
+---
+
 # Apply Checklist And Anti-Patterns
 
 ## Step-by-step apply checklist
@@ -1972,11 +2056,12 @@ Laravel implementation rules:
 9. Align `X-Request-Id`, `traceparent`, queryable `trace_id`, request logging, and stable event/code naming.
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
 11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
-12. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
-13. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
-14. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-15. Run focused tests for every changed contract surface.
-16. Report blockers explicitly when exact convergence is not possible.
+12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, permission names, bitmap ids, `X-Access`, or drift checks.
+13. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
+14. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
+15. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+16. Run focused tests for every changed contract surface.
+17. Report blockers explicitly when exact convergence is not possible.
 
 ## Short service adoption checklist
 
@@ -2030,6 +2115,8 @@ When applying this skill to a service, finish by checking:
 - missing blank invalid `X-Project-Id`
 - missing invalid `X-User-Id`
 - missing invalid zero-known-permission `X-Access`
+- `X-Access` decoding against the generated, committed service permission config
+- catalog drift check before and after permission-config changes when `alaa-permission-catalog` is available
 - invalid `X-User-Mobile`
 - malformed `X-User-Fname` or `X-User-Lname`
 - malformed `X-Location-*` values
@@ -2071,6 +2158,9 @@ Flag a problem when you see any of these:
 - a public route exposes the internal metrics endpoint
 - a normal long-lived service uses Pushgateway for app metrics
 - trusted headers are parsed in controllers, policies, or repositories
+- `config/permissions.php` invents or hand-renumbers bitmap ids instead of consuming `alaa-permission-catalog` generated output
+- permission config changes are applied across multiple services in one implicit phase
+- a service extraction reuses legacy VOD bitmap ids for new `content_*` permissions
 - public `project_id` is normalized to an integer before validation
 - tests or Postman examples send internal numeric `project_id` values for public routes
 - `$request->user()` and `Auth::user()` can diverge within one request

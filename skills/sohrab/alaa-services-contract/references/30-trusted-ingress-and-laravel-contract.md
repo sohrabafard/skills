@@ -52,6 +52,7 @@ Required validation behavior:
 - validate `X-Project-Id` as UUIDv7
 - validate `X-User-Id` as a positive integer
 - decode `X-Access` as the base64url permission bitmap
+- map `X-Access` only through the service's generated, committed catalog-owned permission config
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `$alaa-trust-gateway-auth`

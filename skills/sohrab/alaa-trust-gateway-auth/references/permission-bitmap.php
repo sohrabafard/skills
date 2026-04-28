@@ -10,14 +10,17 @@ declare(strict_types=1);
  * - decode and test permission ids using the same bit ordering
  *
  * Contract:
- * - permission ids are 1-based
+ * - permission bitmap ids are 1-based
+ * - auth bit_index values are zero-based and equal bitmap_id - 1
  * - bits are packed least-significant-bit first inside each byte
  * - the output uses unpadded base64url encoding
  * - invalid input decodes to an empty string or empty permission list
  *
  * Important:
- * - keep the permission-id map in service config, not hard-coded here
+ * - keep the permission-id map in generated, committed service config
+ * - generate service config from alaa-permission-catalog; do not hand-maintain ids here
  * - do not assume every service shares the same permission ids or role rules
+ * - the gateway projects verified prm as X-Access but does not own backend maps
  */
 final class PermissionBitmap
 {

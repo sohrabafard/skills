@@ -33,6 +33,7 @@ Do not make a normal downstream service behave like the gateway, the request-tim
 - If a legacy `user-token` path must remain temporarily during migration, classify it as a service-specific compatibility path only. Do not document it as the canonical platform auth contract and do not let it weaken gateway-trusted header rules for normal service routes.
 - Do not treat allow-side `X-Authz-*` decision metadata as a second authorization system.
 - Do not call OpenFGA directly from a normal downstream service unless that repository explicitly owns request-time authorization runtime behavior.
+- Do not make the gateway a backend permission-catalog consumer. The gateway verifies JWTs, strips spoofable headers, injects trusted context, and delegates route/resource authorization to the `authz-sidecar`/OpenFGA path when configured.
 
 ## Laravel Gate and policy flow
 
@@ -132,12 +133,17 @@ Do not make a normal downstream service behave like the gateway, the request-tim
 
 ## Permission bitmap and downstream role contract
 
-- `X-Access` carries the gateway-injected copy of auth-service's `prm` permission bitmap claim.
+- `alaa-permission-catalog` is the normative owner for permission names, service ownership, and bitmap ids.
+- Auth remains the only runtime issuer of JWT authorization claims: `prm`, `prv`, and `av`.
+- `X-Access` carries the gateway-injected copy of auth-service's verified `prm` permission bitmap claim.
 - `X-Access` may carry a compact permission bitmap rather than human-readable scopes.
-- The bitmap must be base64url-encoded raw bytes. Permission IDs are 1-based and use least-significant-bit-first packing inside each byte.
-- Permission meaning comes from the downstream service's permission map, not from hard-coded bit labels at the gateway.
-- Auth-service  is the current producer of the bitmap claim and emits companion JWT invalidation metadata under `prv` and `av`.
-- Auth-service derives `perm_bm` from `permission_catalog.bit_index`, not from mutable local package table IDs.
+- The bitmap must be unpadded base64url-encoded raw bytes.
+- Permission `bitmap_id` values are 1-based.
+- Auth `bit_index` values are zero-based and equal `bitmap_id - 1`.
+- Bits are packed least-significant-bit first inside each byte.
+- Permission meaning comes from the downstream service's generated, committed permission map, not from hard-coded bit labels at the gateway.
+- Downstream `config/permissions.php` maps must be generated from `alaa-permission-catalog` and committed per service; do not hand-maintain local bitmap ids.
+- Auth-service derives `perm_bm` from catalog-owned `bit_index`, not from mutable local package table IDs.
 - Auth-service compilation precedence is `direct deny > direct allow > role grants`.
 - If a downstream service, gateway extension, or debugging tool inspects raw JWT claims instead of injected headers, treat `prv` and `av` as the companion invalidation metadata for `prm`.
 - Required decode flow:
@@ -148,28 +154,32 @@ Do not make a normal downstream service behave like the gateway, the request-tim
   - ignore unknown ids
   - treat the header as invalid if no known permissions remain after mapping
 - Comment-service currently uses these permission ids:
-  - `18` -> `comment_get`
+  - `18` -> `comment_get_index`
   - `19` -> `comment_approve`
   - `20` -> `comment_delete`
   - `21` -> `comment_reply`
-  - `22` -> `comment_get_show`
+  - `40` -> `comment_get_show`
 - Services must define and document their own role or authorization derivation from decoded permissions.
 - Ticket-service currently maps these ids from `X-Access`:
   - `14` -> `crm_get_tickets`
   - `15` -> `crm_post_ticket_reply`
   - `16` -> `crm_put_ticket`
   - `17` -> `crm_post_bulk_ticket`
-- VOD keeps its service-local permission-id map in `config/permissions.php`; its current mapped set covers ids `1-13` and `22-39`.
+- Current canonical catalog outcomes:
+  - `wa_get_watch_stats` owns bitmap id `1`; WA service-local config adoption is deferred until WA has a committed permission-consumer shape.
+  - `comment_get_index` owns bitmap id `18`.
+  - `comment_get_show` owns bitmap id `40`.
+  - extracted `content_*` permissions own bitmap ids `64-78`.
+  - ControlledOps `content_bulk_*` permissions own bitmap ids `79-91`.
+  - legacy VOD ids remain stable and must not be reused across the extracted content service boundary.
+- VOD keeps legacy service-local permission ids stable; extracted content-service permissions use new catalog-owned ids and are not runtime aliases for VOD permissions.
 - Laravel compatibility pattern: decode the bitmap once in auth middleware, map ids to permission names from service-local config, attach the mapped names to the request-scoped user object, and let `isAbleTo` or policy checks read those normalized permission names.
 - Do not authenticate the actor successfully and then silently continue with an empty decoded permission set on routes that expect permission-bearing context. Fail during trusted-context normalization with canonical code `AUTH_ACCESS_BITMAP_INVALID` so the outward response and deny logs stay specific and consistent.
 - Comment-service currently derives roles like this:
   - admin when all configured permissions are present
   - moderator when any moderation signal permission is present
   - student otherwise
-- Current example bitmaps from comment-service docs are:
-  - `AAAC` for minimal student access
-  - `AAAW` for moderator access
-  - `AAAe` for admin access
+- Recompute example bitmaps from the generated service config whenever permission ids change; do not preserve stale examples by hand.
 - Reusable reference implementation: `./permission-bitmap.php`
 - Do not assume another service uses the same permission ids or role derivation unless that service explicitly adopts that exact mapping.
 - The bitmap width is produced by the auth service against the full global permission set, so downstream services should expect a common bitmap width even when each service only cares about a subset of ids.

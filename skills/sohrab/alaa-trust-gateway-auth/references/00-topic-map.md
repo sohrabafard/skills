@@ -23,7 +23,7 @@ When needed, jump to the matching section in `./full-guide.md`.
   - `20-core-trust-model-and-headers.md`
 - Auth-service v3 endpoint contract and current client flow:
   - `30-auth-service-v3-and-route-shapes.md`
-- Downstream normalization, request-time versus business authorization, and permission bitmap rules:
+- Downstream normalization, request-time versus business authorization, permission bitmap rules, and central catalog generated service maps:
   - `40-downstream-service-rules.md`
 - Error contract, implementation checklist, review checklist, and anti-patterns:
   - `50-error-contract-checklists-and-anti-patterns.md`
@@ -44,7 +44,7 @@ When needed, jump to the matching section in `./full-guide.md`.
 - request-time authorization at the gateway boundary and how it relates to entitlement-platform
 - public versus service-local route shape behind the gateway
 - downstream request-scoped identity normalization
-- permission bitmap decoding, bit ordering, or service-local permission maps
+- permission bitmap decoding, bit ordering, `X-Access` projection, or catalog-generated service-local permission maps
 - auth-service route families and current v3 client flow
 - deny-code semantics, review checklists, or anti-patterns
 

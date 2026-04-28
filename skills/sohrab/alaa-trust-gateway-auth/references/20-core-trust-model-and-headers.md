@@ -79,6 +79,7 @@ From the current values used by this repo:
 - It does not do business authorization.
 - It does not decide whether a user may perform a domain action.
 - It does not evaluate `X-Access` or `X-USER-SCOPES` for route permission.
+- It does not consume backend permission-catalog generated configs or own permission-name-to-bitmap-id maps.
 - It does not derive tenant from hostname, path prefix, body, or query string.
 - It does not introspect opaque tokens.
 
@@ -126,6 +127,7 @@ The gateway injects these trusted headers after successful verification:
 
 Only claims that are present are injected.
 `prv` and `av` are compact versioning claims used for invalidation and diagnostics; they are not forwarded as headers by default.
+`X-Access` is only the trusted gateway projection of verified `prm`; downstream service configs determine local permission names from `alaa-permission-catalog` generated outputs.
 
 ## Compact claim semantics
 

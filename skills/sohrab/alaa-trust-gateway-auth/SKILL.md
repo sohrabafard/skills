@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Source-of-truth for Ala gateway authentication trust and trusted request context. Use when gateway headers, JWT-derived identity, compact claim mapping, project propagation, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, or downstream trust semantics behind the Ala gateway change. Do not use it as a generic auth skill outside the Ala gateway boundary."
+description: "Source-of-truth for Ala gateway authentication trust and trusted request context. Use when gateway headers, JWT-derived identity, compact claim mapping, permission bitmap claim semantics, X-Access projection, project propagation, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, or downstream trust semantics behind the Ala gateway change. Do not use it as a generic auth skill outside the Ala gateway boundary."
 ---
 
 
@@ -18,6 +18,7 @@ Use it to keep one shared picture of the Ala auth path:
 - the active request-time checker such as `authz-sidecar` or `entitlement-spoa` owns the fine-grained route decision
 - downstream backends consume normalized trusted context and still own business authorization inside the service
 - `entitlement-api`, `projector`, and OpenFGA together provide the fine-grained authorization state; they do not replace gateway authentication
+- `alaa-permission-catalog` owns permission names and bitmap ids as the central catalog, while auth remains the only runtime issuer of JWT authorization claims
 
 Keep this top-level file small. Load the references for the full trust model, route rules, service expectations, and error contracts.
 
@@ -26,6 +27,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
 - gateway or reverse-proxy auth routing changes
 - trusted header, tenant context, or request identity work
 - compact JWT custom claim reviews
+- `prm`, `prv`, `av`, `X-Access`, or permission-bitmap decoding reviews
 - downstream service middleware or policy changes behind the gateway
 
 ## When NOT to use
@@ -96,6 +98,24 @@ Rules:
 - missing optional compact fields are not fabricated
 - public and service-facing payloads should continue to use `project_id`; `pid` is the compact JWT claim key
 - `prv` and `av` remain raw JWT metadata only unless a future contract explicitly adds a use for them
+- auth remains the only runtime issuer of `prm`, `prv`, and `av`
+- downstream services consume `X-Access` only as the gateway-trusted projection of verified `prm`
+- the gateway is not a backend permission-catalog consumer; it verifies JWTs, strips spoofable headers, injects trusted headers, and delegates resource authorization to `authz-sidecar`/OpenFGA when a route family requires that path
+
+## Permission bitmap boundary
+
+- `alaa-permission-catalog` governs permission names, ownership, and bitmap ids.
+- Auth consumes the catalog-owned generated auth seed snapshot and issues runtime JWT authorization claims.
+- Downstream services must use generated, committed service-local permission maps from the catalog instead of hand-maintained permission-name-to-bitmap-id maps.
+- Bitmap ids are 1-based; `bit_index` is zero-based and equals `bitmap_id - 1`.
+- Bits are packed least-significant-bit first inside each byte.
+- Permission bitmap bytes are encoded with unpadded base64url.
+- Current canonical outcomes:
+  - `wa_get_watch_stats` owns bitmap id `1`
+  - `comment_get_index` owns bitmap id `18`
+  - `comment_get_show` owns bitmap id `40`
+  - extracted `content_*` permissions own bitmap ids `64-78`
+  - ControlledOps `content_bulk_*` permissions own bitmap ids `79-91`
 
 ## Route family expectations
 
