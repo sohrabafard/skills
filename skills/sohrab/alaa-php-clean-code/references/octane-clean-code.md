@@ -70,7 +70,7 @@ Controllers may read request context, but they must not retain it. Keep controll
 Services should be stateless orchestrators. If a service needs user or tenant context, pass it to the method instead of storing it on the service.
 
 ### Repository pattern
-Repositories must not remember the "current tenant" internally. Accept tenant/project identifiers or typed filter DTOs explicitly, or use a repo-approved global-scope/RLS approach that is reset-safe.
+Repositories are mandatory for application-layer persistence access. They must not remember the "current tenant" internally. Accept tenant/project identifiers or typed filter DTOs explicitly, or use a repo-approved global-scope/RLS approach that is reset-safe.
 
 ### Factory pattern
 Factories may keep immutable maps of supported strategies or adapters. Do not cache provider instances when those instances carry request headers, tokens, tenant values, or mutable options.
@@ -108,6 +108,7 @@ The fleet is expected to migrate from Swoole to RoadRunner. Keep application cod
 Before finalizing PHP/Laravel code, ask:
 - Does any static property, singleton, facade mutation, or closure retain request-specific data?
 - Does every tenant/project-specific query, cache key, memoization key, and policy decision include trusted tenant/project context?
+- Is every touched application-layer persistence read/write behind a repository?
 - Are current user, request, locale, headers, trace IDs, and auth state passed explicitly instead of stored?
 - Are services, factories, strategies, adapters, observers, listeners, jobs, and pipeline steps stateless or reset-safe?
 - Is any Swoole-specific code isolated from domain/application code?

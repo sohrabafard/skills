@@ -1,6 +1,6 @@
 ---
 name: alaa-php-clean-code
-description: "Deterministic PHP 8.5 / Laravel 13 clean-code baseline for writing, reviewing, and refactoring Octane-safe Laravel code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, pragmatic design patterns, long-lived worker hygiene, and mode-aware refactors. Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
+description: "Deterministic PHP 8.5 / Laravel 13 clean-code baseline for writing, reviewing, and refactoring Octane-safe Laravel code with one-author consistency: enforce naming, SOLID, explicit types, modern PHP features, repository-first persistence, pragmatic design patterns, long-lived worker hygiene, and mode-aware refactors. Use before changing PHP/Laravel code; route to companion skills mandatorily when architecture, gateway trust, data, async, Octane, security, observability, CI, docs, or MongoDB concerns are in scope."
 ---
 
 
@@ -14,6 +14,7 @@ This skill owns code shape inside files, classes, methods, and local module boun
 - clean-code defaults
 - pragmatic SOLID usage
 - design-pattern selection
+- repository-first persistence access
 - PHP 8.5 feature usage and type safety
 - PSR / PER baseline
 - Laravel code-level best practices
@@ -166,24 +167,36 @@ Choose the simplest abstraction that fixes the real problem.
 
 1. Start with a plain class, private method extraction, or tighter naming.
 2. Move business flow into a service when a controller, job, listener, or command is doing more than orchestration.
-3. Add a DTO when validated or transferred data needs a stable typed shape.
-4. Add a value object when a domain concept has invariants or behavior.
-5. Add a strategy when algorithms or providers vary behind one contract.
-6. Add a factory when construction enforces invariants or hides meaningful branching.
-7. Add an adapter when external provider APIs must be hidden behind an internal contract.
-8. Add a repository when persistence logic is non-trivial, repeated, or represents a real boundary.
+3. Add or reuse a repository before application-layer code reads or writes persistence.
+4. Add a DTO when validated or transferred data needs a stable typed shape.
+5. Add a value object when a domain concept has invariants or behavior.
+6. Add a strategy when algorithms or providers vary behind one contract.
+7. Add a factory when construction enforces invariants or hides meaningful branching.
+8. Add an adapter when external provider APIs must be hidden behind an internal contract.
 9. Add a pipeline when a workflow is a clear sequence of independent, reorderable steps.
 10. Add a command/job when an action must be queued, retried, delayed, logged, or executed outside the HTTP request.
 11. Add an interface only when there is a real seam: multiple implementations, package boundary, external integration, or a test seam that genuinely helps clarity.
 
 Do not stack Repository + Factory + Strategy + Interface merely for aesthetics. Every abstraction must earn its keep.
 
+# Mandatory repository policy
+In Alaa Laravel code, the Repository pattern is mandatory for application-layer persistence access.
+
+- Controllers, services, jobs, listeners, commands, policies, actions, pipelines, and adapters must not compose Eloquent/query-builder persistence directly.
+- Create or reuse a repository for each aggregate, use case, read model, or persistence boundary touched by the task.
+- Keep repositories focused on persistence and query composition. Business rules stay in services, authorization stays in policies/gates, serialization stays in resources.
+- Accept typed DTOs/filter objects/value objects/scalars, not raw `Request` objects or unvalidated arrays.
+- Return models, collections, paginators, DTOs, or domain results according to repo convention.
+- Avoid vague generic `BaseRepository` abstractions and repository methods that are only decorative pass-throughs. If the operation is simple, the repository method may be simple, but the persistence boundary still belongs in the repository.
+- Existing direct Eloquent outside repositories is legacy debt. Do not expand it; when touching that slice, move the touched persistence access behind a repository unless the task mode explicitly forbids behavior-adjacent cleanup.
+- Allowed exceptions: Eloquent model relationship definitions, scopes/casts/accessors that belong on the model, migrations, factories, seeders, test fixtures/assertions, resources reading already-loaded models, and framework glue where Laravel requires the model API.
+
 # Default design decisions
 Keep these defaults visible here; detailed pattern guidance lives in `references/design-patterns.md`.
 
 - Prefer constructor injection for growing classes and reusable collaborators.
 - Add an interface only for a real seam: multiple implementations, external integration, package boundary, or a test seam that genuinely improves clarity.
-- Add a repository only for a meaningful persistence boundary, repeated non-trivial query logic, or aggregate-oriented persistence. Do not create one per model by habit, and avoid generic base repositories.
+- Use repositories for all application-layer persistence access. Model each repository around an aggregate, use case, read model, or persistence boundary; avoid generic base repositories.
 - Add a factory when construction enforces invariants or hides meaningful branching. Do not wrap obvious `new` calls with no added value.
 - Use DTOs for validated or transferred layer-boundary data, and use value objects for domain concepts with invariants or behavior.
 - Use a strategy when algorithms or providers genuinely vary. Do not introduce a strategy hierarchy for one stable implementation.
@@ -218,7 +231,7 @@ Clarity, fewer moving parts, and repo consistency beat textbook purity.
 - Use policies or gates for authorization.
 - Prefer DTOs or typed inputs over passing raw validated arrays across layers when the shape matters.
 - Move business operations into focused services before controllers become transaction, validation, provider-selection, and response-shaping buckets.
-- Prefer Eloquent directly when the query is simple and local; move to a repository only when a real persistence boundary appears.
+- Use repositories for persistence access from controllers, services, jobs, listeners, commands, policies, actions, pipelines, and adapters.
 - Prevent N+1 by default with deliberate eager loading and resource helpers such as `whenLoaded()`, `whenCounted()`, and `whenAggregated()` when appropriate.
 - For large dataset traversal, use `chunk`, `chunkById`, `lazy`, `lazyById`, or `cursor` deliberately based on mutation and memory behavior.
 - Keep facades near framework edges. Prefer dependency injection in services and domain-facing code.
@@ -314,6 +327,7 @@ Keep the final report concise but auditable.
 - Fat controllers, fat jobs, fat listeners, or god services.
 - Primitive obsession for domain concepts that deserve a value object.
 - Raw associative arrays acting as de facto DTOs across layers.
+- Direct Eloquent or query-builder persistence in application-layer code outside a repository.
 - Generic repositories, helpers, managers, or util classes with vague responsibility.
 - Overusing inheritance when composition or a value object is simpler.
 - Forcing design patterns where a plain class, private method, or local `match` is clearer.

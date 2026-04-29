@@ -28,10 +28,10 @@ Prefer the smallest useful abstraction:
 2. focused service
 3. typed DTO or value object
 4. strategy/factory/adapter where variation or external boundaries are real
-5. repository/query object where persistence complexity is repeated or boundary-worthy
+5. repository/query object for persistence access and query composition
 6. pipeline or command/job where workflow shape requires it
 
-Do not stack patterns by habit. Every pattern must remove a real smell: fat controller, duplicated query, provider-specific API leakage, unstable array shape, scattered branching, hidden side effects, or unsafe long-lived worker state.
+Do not stack patterns by habit. Every pattern must remove a real smell: fat controller, duplicated query, provider-specific API leakage, unstable array shape, scattered branching, hidden side effects, or unsafe long-lived worker state. Repository is the exception in Alaa Laravel application code: it is mandatory for persistence access, but it still must be named and shaped around a real aggregate, use case, read model, or persistence boundary.
 
 ## MVC pattern
 
@@ -98,23 +98,27 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 ## Repository pattern
 
 ### Use when
-- Persistence logic is non-trivial and repeated.
-- Query composition deserves a stable home.
-- The code works against a meaningful persistence boundary or aggregate.
-- Multiple storage implementations are plausible.
+- Any application-layer code needs to read or write persistence.
+- A controller, service, job, listener, command, policy, action, pipeline, or adapter needs Eloquent/query-builder data.
+- Query composition needs a stable home.
+- The code works against a meaningful persistence boundary, read model, aggregate, or use case.
 
 ### Laravel application
-- Keep repositories in the persistence layer defined by the repo architecture.
+- Keep repositories in the persistence layer defined by the repo architecture, or follow the nearest existing repository convention.
 - Let services orchestrate business rules and call repositories for persistence and query composition.
 - Accept typed filter DTOs instead of raw request arrays.
+- Put all touched Eloquent/query-builder read/write composition behind a repository unless the code is an allowed exception.
+- Allowed exceptions: model relationships/scopes/casts/accessors, migrations, factories, seeders, test fixtures/assertions, resources reading already-loaded models, and framework glue where Laravel requires the model API.
 
 ### Good defaults
-- Model the repository around the domain use case, not around generic CRUD.
+- Model the repository around an aggregate, use case, read model, or persistence boundary, not around generic CRUD.
 - Keep business rules, authorization, and serialization out of the repository.
 - Return domain objects, DTOs, collections, or paginators that match repo conventions.
+- Keep simple operations simple, but still behind the repository boundary.
 
 ### Anti-patterns
-- One repository per Eloquent model with only `create`, `update`, `delete`, `find`.
+- Direct Eloquent or query-builder reads/writes in controllers, services, jobs, listeners, commands, policies, actions, pipelines, or adapters.
+- One vague repository per Eloquent model with only uncurated `create`, `update`, `delete`, `find` pass-throughs.
 - A generic `BaseRepository` that becomes a dumping ground.
 - Hiding all Eloquent behavior behind thin wrappers with no value.
 - Putting authorization or domain rules in the repository.
@@ -358,7 +362,7 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 
 ### Laravel application
 - Keep validated filter input in a typed DTO.
-- Optionally introduce a query object when repository methods become hard to read.
+- Introduce a query object when repository methods become hard to read, then call it from the repository boundary.
 - Keep pagination, sorting, and filtering explicit.
 
 ### Good defaults

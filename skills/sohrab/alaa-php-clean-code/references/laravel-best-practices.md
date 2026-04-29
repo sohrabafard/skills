@@ -62,9 +62,11 @@
 - Use policies for model or resource authorization.
 - Use gates for non-model decisions such as dashboards, admin abilities, or capability checks.
 - Keep controllers thin: receive validated input, call the service layer, return resources.
+- Call repositories for persistence access; do not compose Eloquent/query-builder reads or writes in controllers.
 
 ### Anti-patterns
 - Reading raw request input in services or repositories.
+- Direct Eloquent/query-builder persistence in controllers.
 - Putting validation rules in controllers or service methods when a Form Request is appropriate.
 - Mixing authorization, validation, and persistence in one method.
 
@@ -87,9 +89,11 @@
 - Use `with()`, `load()`, or `loadMissing()` intentionally.
 - Use `withCount()`, `withExists()`, and targeted `select(...)` to reduce unnecessary work.
 - Consider enabling `preventLazyLoading()` in local, test, or other safe non-production environments if the repo policy allows it.
-- Keep query composition close to repositories or dedicated query objects when it grows.
+- Keep query composition inside repositories, using dedicated query objects underneath when repository methods become hard to read.
+- Services, jobs, listeners, commands, policies, actions, pipelines, and adapters must call repositories instead of composing Eloquent/query-builder persistence directly.
 
 ### Anti-patterns
+- Direct Eloquent/query-builder reads or writes outside repositories, except model internals, migrations, factories, seeders, tests, resources reading already-loaded models, or framework glue.
 - Accessing dynamic relationship properties inside loops without eager loading.
 - Querying from accessors, resources, or casts in ways that hide extra IO.
 - Pulling entire models when only a few columns are needed.
