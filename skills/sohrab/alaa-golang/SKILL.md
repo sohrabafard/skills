@@ -1,6 +1,6 @@
 ---
 name: alaa-golang
-description: "Use this skill as the main entrypoint for Go work in Alaa-style systems: HTTP APIs, services behind a trusted gateway, gRPC, GraphQL, CLIs, workers, dependency choice, linting, testing, debugging, modernization, observability, security, and production delivery on Kubernetes, OpenShift, Docker, or Swarm. It routes to the right installed Go skills, defaults new HTTP APIs to chi unless the repo or measured constraints justify Fiber, adds Sohrab companion skills when platform or trust boundaries matter, and fills local gaps with curated package, framework, lifecycle, and platform guidance."
+description: "Use this skill as the main entrypoint for Go work in Alaa-style systems: chi or Fiber HTTP APIs, services behind a trusted gateway, gRPC, GraphQL, CLIs, workers, repositories, Redis cache layers, testing, TDD, clean architecture, design patterns, concurrency, observability, security, and production delivery. It routes to installed Go skills, routes Fiber work to `alaa-golang-fiber`, teaches chi for small raw services, recommends Fiber for raw large/high-concurrency services, and enforces repository pattern, Redis cache safety, TDD, and `99.99%+` service readiness."
 ---
 
 # Alaa Golang
@@ -9,110 +9,86 @@ description: "Use this skill as the main entrypoint for Go work in Alaa-style sy
 
 Use this skill first for serious Go work in this pack.
 
-It is a router, policy layer, and gap-filler. It does not replace the installed public Go skills. It decides which ones to
-load, adds the right Sohrab companion skills, and keeps Go, package, and Codex guidance aligned with your platform and
-operating model.
+It is a router, policy layer, and local gap-filler. It does not replace the installed public Go skills. It chooses the
+right Go skill, adds Sohrab companion skills, and keeps framework, repository, cache, testing, and production rules
+aligned with this platform.
 
 ## When NOT to use
 
 - Do not use for non-Go implementation work.
 - Do not use for frontend-only, Terraform-only, Kubernetes-only, or CI-only tasks unless Go service behavior is involved.
-- Do not use as a substitute for narrower public Go skills when the task needs only one isolated Go topic.
-
-## Environment this skill assumes
-
-- high-concurrency production services
-- security-sensitive and observability-sensitive systems
-- SLA-minded delivery with explicit failure handling and graceful shutdown
-- HTTP APIs behind a trusted gateway
-- Redis for cache and coordination, PostgreSQL for OLTP, ClickHouse for analytics
-- deployment on Kubernetes or OpenShift, plus local Docker and sometimes Docker Swarm
+- Do not use as a substitute for a narrower public Go skill when the task is only one isolated Go topic.
+- Do not use to migrate an existing chi service to Fiber, or Fiber to chi, unless the user explicitly asks for migration.
 
 ## Default stance
 
-- start standard-library first and justify every dependency
-- for new HTTP APIs, prefer `chi` over `fiber`
-- use `fiber` only when the repo already uses it or there is a measured reason to accept `fasthttp`-style tradeoffs
-- keep transport thin, config typed, shutdown explicit, and observability built in from day one
-- prefer `pgx` plus `sqlc` over heavyweight ORM-first designs for PostgreSQL services in this stack
-- prefer explicit worker ownership, bounded concurrency, and context propagation everywhere
-- prefer clean code, small interfaces, stable contracts, and behavior-safe changes over framework cleverness
+- Start with repository evidence: `go.mod`, imports, routes, tests, docs, and existing conventions.
+- Explicit user framework choice wins.
+- Existing repo framework wins.
+- Raw small/simple HTTP services should use chi.
+- Raw large, high-concurrency, latency-sensitive, or SLA-heavy HTTP services should use Fiber and `$alaa-golang-fiber`.
+- DB-backed services must use repository pattern.
+- Redis is a cache layer unless the repo explicitly defines another role.
+- Behavior-changing work must start with a failing or updated test.
+- Keep handlers thin, use cases explicit, repositories isolated, context propagated, and shutdown deterministic.
+- Prefer standard library and small dependencies unless a dependency removes real complexity.
 
 ## Fast path
 
-1. Read `references/full-guide.md` for the merged Go baseline.
-2. If the task touches an HTTP API, read `references/30-http-api-framework-choice.md` first.
-3. If `chi` is chosen or the task is educational, read `references/31-chi-api-guide.md`.
-4. Read `references/10-installed-golang-skills.md` and load only the public Go skills that match the task.
-5. Read `references/20-sohrab-companions.md` when the task crosses platform, CI, contract, security, or trust boundaries.
-6. Read `references/40-production-ready-package-catalog.md` only when dependency choice is part of the task.
-7. Read `references/30-enterprise-shortlist.md` only when stdlib and public-skill guidance do not cover a package/tool decision.
-8. Read `references/50-gap-coverage.md` when the task falls between public Go skills or a public Go skill is too shallow for this stack.
-9. Read `references/SOURCES.md` when you need live verification or official docs.
+1. Read `references/full-guide.md` for the Go service baseline.
+2. For HTTP APIs, read `references/30-http-api-framework-choice.md`.
+3. If chi is chosen or already present, read `references/31-chi-api-guide.md`.
+4. If Fiber is chosen or already present, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).
+5. Read `references/10-installed-golang-skills.md` and load only the matching public Go skills.
+6. Read `references/60-service-architecture-patterns.md` for DB-backed services.
+7. Read `references/61-redis-cache-layer.md` when Redis cache behavior is involved.
+8. Read `references/62-clean-code-and-patterns.md` for architecture or code quality work.
+9. Read `references/63-tdd-and-testing-discipline.md` before behavior-changing implementation.
+10. Read `references/20-sohrab-companions.md` when platform, trust, data, delivery, or contracts matter.
+11. Read `references/SOURCES.md` when version-sensitive claims need live verification.
 
 ## Routing rules
 
-- language and standard-library upgrades: use `golang-modernize` ( `$golang-modernize` )
-- layout, architecture, DI, type design, and style: use `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-dependency-injection` ( `$golang-dependency-injection` ), `golang-structs-interfaces` ( `$golang-structs-interfaces` ), `golang-code-style` ( `$golang-code-style` ), and `golang-naming` ( `$golang-naming` )
-- concurrency, cancellation, safety, errors, and runtime debugging: use `golang-concurrency` ( `$golang-concurrency` ), `golang-context` ( `$golang-context` ), `golang-safety` ( `$golang-safety` ), `golang-error-handling` ( `$golang-error-handling` ), and `golang-troubleshooting` ( `$golang-troubleshooting` )
-- data and dependency work: use `golang-data-structures` ( `$golang-data-structures` ), `golang-database` ( `$golang-database` ), `golang-dependency-management` ( `$golang-dependency-management` ), and `golang-popular-libraries` ( `$golang-popular-libraries` )
-- transport work: use `golang-grpc` ( `$golang-grpc` ) for gRPC and protobuf, `golang-graphql` ( `$golang-graphql` ) for GraphQL schemas/resolvers/subscriptions, and `golang-cli` ( `$golang-cli` ) for CLIs and jobs
-- quality, operations, and delivery: use `golang-testing` ( `$golang-testing` ), `golang-stretchr-testify` ( `$golang-stretchr-testify` ) when the repo uses Testify, `golang-lint` ( `$golang-lint` ), `golang-benchmark` ( `$golang-benchmark` ), `golang-performance` ( `$golang-performance` ), `golang-observability` ( `$golang-observability` ), `golang-security` ( `$golang-security` ), `golang-documentation` ( `$golang-documentation` ), and `golang-continuous-integration` ( `$golang-continuous-integration` )
-- if the repo already uses a Samber library, load the matching `golang-samber-*` skill instead of inventing local conventions
-- ecosystem awareness and learning-only tasks: use `golang-stay-updated` ( `$golang-stay-updated` )
+- language upgrades and modern idioms: use `golang-modernize` ( `$golang-modernize` )
+- project layout, architecture, DI, type design, style, and naming: use `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-dependency-injection` ( `$golang-dependency-injection` ), `golang-structs-interfaces` ( `$golang-structs-interfaces` ), `golang-code-style` ( `$golang-code-style` ), and `golang-naming` ( `$golang-naming` )
+- concurrency, cancellation, safety, errors, and debugging: use `golang-concurrency` ( `$golang-concurrency` ), `golang-context` ( `$golang-context` ), `golang-safety` ( `$golang-safety` ), `golang-error-handling` ( `$golang-error-handling` ), and `golang-troubleshooting` ( `$golang-troubleshooting` )
+- data, Redis, repositories, and dependencies: use `golang-database` ( `$golang-database` ), `golang-data-structures` ( `$golang-data-structures` ), `golang-dependency-management` ( `$golang-dependency-management` ), and `golang-popular-libraries` ( `$golang-popular-libraries` ), then apply local repository and cache references
+- HTTP transport: use this skill for chi decisions and `$alaa-golang-fiber` for Fiber; use `golang-swagger` ( `$golang-swagger` ) for Swagger/OpenAPI
+- gRPC and GraphQL: use `golang-grpc` ( `$golang-grpc` ) and `golang-graphql` ( `$golang-graphql` )
+- CLIs and config: use `golang-cli` ( `$golang-cli` ), `golang-spf13-cobra` ( `$golang-spf13-cobra` ), and `golang-spf13-viper` ( `$golang-spf13-viper` ) when those packages appear
+- DI frameworks: prefer manual DI first; route existing `wire`, `dig`, `fx`, or `samber/do` usage to the matching public Go skill
+- quality, operations, and delivery: use `golang-testing` ( `$golang-testing` ), `golang-stretchr-testify` ( `$golang-stretchr-testify` ), `golang-lint` ( `$golang-lint` ), `golang-benchmark` ( `$golang-benchmark` ), `golang-performance` ( `$golang-performance` ), `golang-observability` ( `$golang-observability` ), `golang-security` ( `$golang-security` ), `golang-documentation` ( `$golang-documentation` ), and `golang-continuous-integration` ( `$golang-continuous-integration` )
+- Samber packages: if the repo imports a Samber library, load the matching `golang-samber-*` skill
 
-## Gap coverage rule
+## Mandatory local rules
 
-Use installed public Go skills for their owned topics first. Use this skill's references to cover what the public skills do
-not fully own for this pack:
-
-- Alaa platform assumptions, trusted-gateway identity, health/readiness contracts, and service lifecycle rules
-- `chi`-first HTTP API selection and practical middleware ordering
-- GraphQL production cautions when the installed `golang-graphql` skill has only trigger metadata
-- package/tool shortlists for PostgreSQL, Redis, ClickHouse, RabbitMQ, Kafka, protobuf, OIDC/JWT, observability, tests, and delivery
-- model/subagent routing policy for complex Codex Go work
-
-## HTTP API rule
-
-For this pack, the default answer for a new HTTP API is `chi`.
-
-Choose `fiber` only when one of these is true:
-
-- the repo already uses Fiber
-- the team explicitly wants Fiber's ergonomics and accepts its non-`net/http` semantics
-- there is a measured hot-path reason, not a guessed one
-
-Do not switch routers casually in an existing service. Treat router changes as architecture work.
-
-## Subagent strategy
-
-Use subagents only when they create real leverage.
-
-- For complex Codex orchestration, prefer GPT-5.5 when it is available; fall back to the strongest approved Codex model when it is not.
-- Use lighter models only for bounded read-only scans or mechanical validation lanes.
-- one read-only subagent can verify live package, release, or framework facts from official docs
-- one read-only subagent can inspect the repo for existing framework, logger, DI, config, or package choices
-- one implementation-focused subagent can draft a narrow code change only after the baseline is clear
-
-Keep subagents narrow, parallel, and disposable. Use them for research or repo inspection, not for duplicating the same reasoning.
+- Do not put SQL, Redis, queue calls, or business rules in HTTP handlers.
+- Keep framework types out of domain, use case, and repository packages.
+- Use repository interfaces at use case boundaries and infrastructure implementations behind them.
+- Use cache-aside Redis by default and make invalidation explicit.
+- Add or update unit tests before implementation for behavior changes.
+- Run focused tests, then `go test ./...`; add `go test -race ./...` for shared state, cache, goroutines, or workers.
+- Preserve trusted-gateway and service-contract rules; do not trust client-supplied identity or tenant context.
 
 ## Reference map
 
-- `references/00-topic-map.md` - very short navigation layer
-- `references/full-guide.md` - merged Go baseline and delivery stance
+- `references/00-topic-map.md` - shortest reading path
+- `references/full-guide.md` - merged Go service baseline
 - `references/10-installed-golang-skills.md` - public Go skill routing
 - `references/20-sohrab-companions.md` - Sohrab companion skill routing
-- `references/30-enterprise-shortlist.md` - gap-filling enterprise packages and tools
-- `references/30-http-api-framework-choice.md` - `chi` vs `fiber` decision rules
-- `references/31-chi-api-guide.md` - practical `chi` guide for this stack
-- `references/40-production-ready-package-catalog.md` - curated package list and when to use each package
-- `references/50-gap-coverage.md` - local coverage for Go service areas not fully owned by public skills
-- `references/SOURCES.md` - live sources and what each source is good for
+- `references/30-http-api-framework-choice.md` - chi vs Fiber decision rules
+- `references/31-chi-api-guide.md` - chi guide for small/simple services
+- `references/40-production-ready-package-catalog.md` - curated package list
+- `references/50-gap-coverage.md` - local gap policy
+- `references/60-service-architecture-patterns.md` - repository pattern and service boundaries
+- `references/61-redis-cache-layer.md` - Redis cache layer rules
+- `references/62-clean-code-and-patterns.md` - Go clean code and patterns
+- `references/63-tdd-and-testing-discipline.md` - TDD and test policy
+- `references/SOURCES.md` - live source map
 
 ## Maintenance rules
 
-- keep this file routing-first and compact
-- keep detailed package notes, framework guidance, and examples in `references/`
-- keep the `chi`-first HTTP API rule consistent across this file, `full-guide.md`, and the package catalog
-- keep skill names written with the `$skill-name` form wherever explicit routing helps the agent
-- re-check official Go, package, and OpenAI sources whenever version-sensitive wording changes
+- Keep this file compact and routing-first.
+- Keep detailed framework, package, repository, Redis, and testing guidance in `references/`.
+- Keep `references/10-installed-golang-skills.md` in exact parity with `vendor/cc-skills-golang/skills`.
+- Keep skill names written with `$skill-name` where explicit routing helps the agent.

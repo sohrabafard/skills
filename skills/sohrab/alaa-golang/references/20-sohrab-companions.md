@@ -12,6 +12,13 @@ Use it when the Go task is long, multi-phase, risky, or spread across many files
 
 Use it when repo search, logs, or command output could flood context and reduce signal.
 
+## Go framework companion
+
+### alaa-golang-fiber ( `$alaa-golang-fiber` )
+
+Use it when the repo already uses Fiber, the user explicitly chooses Fiber, or a raw service is large, high-concurrency,
+latency-sensitive, or SLA-heavy enough to justify Fiber's model.
+
 ## Observability, security, and trust
 
 ### alaa-observability-soc ( `$alaa-observability-soc` )

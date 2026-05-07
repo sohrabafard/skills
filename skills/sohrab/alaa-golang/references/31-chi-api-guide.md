@@ -15,9 +15,9 @@
 - Testing
 - Common mistakes
 
-## Why `chi` fits this stack
+## Why `chi` fits small services in this stack
 
-`chi` is the best default for new HTTP APIs in this pack because it keeps you in `net/http`.
+`chi` is the best default for raw small or simple HTTP APIs in this pack because it keeps you in `net/http`.
 
 That gives you straightforward behavior with:
 
@@ -29,7 +29,8 @@ That gives you straightforward behavior with:
 - reverse proxies and trusted gateway headers
 - standard middleware and standard transports
 
-For this platform, that simplicity is more valuable than framework cleverness.
+For small services, that simplicity is more valuable than framework cleverness. For raw large, high-concurrency, or
+SLA-heavy services, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ) and consider Fiber instead.
 
 ## Minimal service shape
 
@@ -41,7 +42,7 @@ internal/app/
 internal/httpserver/
 internal/httpapi/
 internal/domain/
-internal/store/
+internal/repository/
 internal/observability/
 internal/config/
 ```
@@ -51,8 +52,9 @@ Keep these boundaries clear:
 - `main.go` wires dependencies and starts the process
 - `httpserver` owns `http.Server`, lifecycle, and shutdown
 - `httpapi` owns routes, middleware, request decoding, and response writing
-- `domain` owns business logic
-- `store` owns database and cache access
+- `domain` owns business rules
+- `repository` owns database access behind interfaces
+- Redis cache access stays behind use case, repository decorator, or cache abstractions
 
 ## Router construction
 

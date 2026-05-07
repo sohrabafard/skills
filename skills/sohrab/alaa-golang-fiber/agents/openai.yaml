@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Golang Fiber"
+  short_description: "Build production Fiber v3 Go services"
+  default_prompt: "Use $alaa-golang-fiber to build, review, test, or harden a production Fiber v3 Go service."
+
+policy:
+  allow_implicit_invocation: true

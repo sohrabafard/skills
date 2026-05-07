@@ -1,84 +1,63 @@
 # HTTP API Framework Choice
 
-Use this file when the task is about picking, reviewing, or justifying the HTTP layer for a Go service.
+Use this file when choosing, reviewing, or justifying the HTTP layer for a Go service.
 
-## Default decision for this pack
+## Decision order
 
-For a new HTTP API, choose `chi`.
+1. If the user explicitly says chi, use chi.
+2. If the user explicitly says Fiber, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).
+3. If the repo already imports `github.com/go-chi/chi/v5`, preserve chi.
+4. If the repo already imports `github.com/gofiber/fiber/v3` or older Fiber, load `$alaa-golang-fiber` and preserve Fiber.
+5. If the repo is raw and small/simple, recommend chi.
+6. If the repo is raw and large, high-concurrency, latency-sensitive, or SLA-heavy, recommend Fiber and load `$alaa-golang-fiber`.
+7. If the repo is raw and unclear, inspect expected traffic, route count, middleware needs, team preference, and deployment model before choosing.
 
-Use `fiber` only when there is a clear reason. Do not treat router choice as a taste issue.
+Do not migrate frameworks casually.
 
-## Why `chi` is the default here
+## Choose chi when
 
-`chi` fits this stack better because it stays inside the standard `net/http` model.
+- the service is small or simple
+- standard `net/http` semantics are more valuable than framework features
+- `httptest`, `otelhttp`, `promhttp`, and ordinary middleware compatibility matter most
+- the team wants low abstraction and long-term maintainability
+- the repo already uses chi
 
-That matters in this environment because you care about:
+Read `31-chi-api-guide.md` next.
 
-- trusted gateway integration
-- predictable request context and cancellation
-- explicit timeouts and graceful shutdown
-- easy interop with OpenTelemetry, Prometheus, reverse proxies, and standard middleware
-- low-friction testing with `httptest`
-- long-term maintainability under production pressure
-
-`chi` is also a small dependency with minimal abstraction cost. It feels like Go, not like a framework trying to hide Go.
-
-## When `fiber` is a valid choice
-
-Choose `fiber` when at least one of these is true:
-
-- the existing service already uses Fiber and the team wants consistency
-- the team explicitly wants Fiber's Express-like ergonomics
-- there is measured evidence that the chosen workload benefits enough from Fiber and the team accepts the tradeoffs
-- the surrounding repo already invested in Fiber middleware, helpers, and conventions
-
-## Why `fiber` is not the default here
-
-Fiber is built on `fasthttp`, not the standard `net/http` stack.
-
-That can be completely fine, but it changes the interoperability story. In this pack, that matters because the baseline heavily uses standard `net/http` assumptions across middleware, observability, testing, reverse proxies, and operational debugging.
-
-Use Fiber on purpose, not by accident.
-
-## Decision table
-
-### Choose `chi` when
-
-- you are starting a new service
-- the service sits behind a trusted gateway or HAProxy and you want standard request semantics
-- observability and operational clarity matter more than framework convenience
-- you want the easiest path to `otelhttp`, `promhttp`, standard middleware, and standard tests
-- the service has long-lived maintainers and should feel like idiomatic Go
-
-### Choose `fiber` when
+## Choose Fiber when
 
 - the repo already uses Fiber
-- the team is already productive with Fiber and accepts its model
-- you have measured performance reasons, not assumed ones
-- you are comfortable validating observability, timeout, proxy, and shutdown behavior carefully in that stack
+- the user explicitly chooses Fiber
+- the service is large or high-concurrency
+- strict latency or heavy request volume makes Fiber's model worth the tradeoff
+- the team accepts `fasthttp` semantics and Fiber-specific context rules
 
-## Red flags before choosing `fiber`
+Load `alaa-golang-fiber` ( `$alaa-golang-fiber` ) next.
 
-- “It is faster” without benchmark evidence for your workload
-- “It feels nicer” when the rest of the platform is `net/http`-oriented
-- “We may migrate later” with no migration plan
-- “It is more like Node” when the real need is better local conventions, not a different router
+## Why the split exists
 
-## Red flags before choosing `chi`
+Chi keeps Go services close to the standard library. That is excellent for small services and for teams that want the simplest possible HTTP stack.
 
-- the repo already has deep Fiber conventions and you are trying to replace them casually
-- the team expects framework-driven features that you have no plan to rebuild with idiomatic helpers
+Fiber can be a strong choice for larger, high-concurrency services, but it is built on `fasthttp`, not standard `net/http`. That means agents must learn Fiber-specific context, middleware, testing, proxy, and shutdown behavior before editing a Fiber service.
+
+## Red flags
+
+Before choosing chi:
+
+- the repo already has deep Fiber conventions
+- the service is explicitly expected to be very high-concurrency and the team wants Fiber
+
+Before choosing Fiber:
+
+- the service is small and simple
+- the team only wants Fiber because it feels like Express
+- the repo depends heavily on standard `net/http` middleware
+- no one has accepted Fiber-specific context and proxy behavior
 
 ## Practical rule
 
-For this pack:
-
-- new HTTP API: `chi`
-- existing Fiber service: keep Fiber unless there is a strong reason to migrate
-- migration from Fiber to `chi`: treat as architecture work, not routine refactoring
-
-## What to read next
-
-- Read `31-chi-api-guide.md` when `chi` is chosen.
-- Read `40-production-ready-package-catalog.md` for supporting packages around routing, validation, config, logging, and observability.
-- Route to `golang-project-layout` ( `$golang-project-layout` ), `golang-context` ( `$golang-context` ), `golang-observability` ( `$golang-observability` ), and `golang-testing` ( `$golang-testing` ) for the implementation details around the chosen transport.
+- explicit framework choice: follow it
+- existing framework: preserve it
+- raw small/simple service: chi
+- raw large/high-concurrency service: Fiber
+- migration: architecture work, not routine refactoring

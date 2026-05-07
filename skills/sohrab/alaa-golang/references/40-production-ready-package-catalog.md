@@ -32,9 +32,9 @@ This catalog was prepared with these rules:
 
 ## HTTP API and edge-facing services
 
-### `github.com/go-chi/chi/v5` - default
+### `github.com/go-chi/chi/v5` - default for raw small/simple HTTP services
 
-Use when you are building a new HTTP API in this pack.
+Use when you are building a raw small or simple HTTP API in this pack, or when the repo already uses chi.
 
 Why:
 
@@ -43,11 +43,12 @@ Why:
 - easy to instrument with `otelhttp` and Prometheus
 - fits trusted gateway and reverse-proxy environments well
 
-### `github.com/gofiber/fiber/v3` - conditional
+### `github.com/gofiber/fiber/v3` - default for raw large/high-concurrency HTTP services
 
-Use when the repo already uses Fiber or when you have a measured reason to accept its `fasthttp`-oriented model.
+Use when the repo already uses Fiber, the user explicitly chooses Fiber, or the raw service is large, high-concurrency,
+latency-sensitive, or SLA-heavy enough to justify Fiber's `fasthttp`-oriented model.
 
-Do not use it just because it feels more like Express.
+Load `alaa-golang-fiber` ( `$alaa-golang-fiber` ) before implementing or reviewing Fiber code.
 
 ### `github.com/go-chi/cors` - conditional
 
@@ -170,6 +171,9 @@ Use it for:
 - short-lived coordination
 - rate-limit state when the service owns that concern
 - distributed locks only when you have explicit correctness rules
+
+For DB-backed data, use Redis as a cache layer by default. The database remains source of truth. Read
+`61-redis-cache-layer.md` before designing keys, TTLs, invalidation, stampede protection, or cache fallback behavior.
 
 After dependency updates, run `govulncheck` because Redis client vulnerabilities do happen.
 
@@ -376,7 +380,7 @@ Use when you need UUID generation and parsing with a small, familiar package.
 ## Packages to avoid by default in this stack
 
 - ORM-heavy stacks for normal PostgreSQL services
-- custom HTTP frameworks when `chi` already fits
+- custom HTTP frameworks when chi or Fiber already fits the selected service shape
 - framework swaps without a measured reason
 - runtime DI containers when constructors are still manageable
 - low-level data clients before the higher-level official client is proven too slow
@@ -385,8 +389,10 @@ Use when you need UUID generation and parsing with a small, familiar package.
 ## Practical selection rules
 
 1. Prefer the standard library first.
-2. Prefer `chi` for new HTTP APIs in this pack.
-3. Prefer `pgx` plus `sqlc` for PostgreSQL.
-4. Prefer official or primary package docs over opinionated blog lists.
-5. Ask whether the dependency removes real complexity or only moves it.
-6. Run `govulncheck` after adding or upgrading important dependencies.
+2. Preserve the framework already used by the repo.
+3. Prefer chi for raw small/simple HTTP services.
+4. Prefer Fiber for raw large/high-concurrency/SLA-heavy HTTP services.
+5. Prefer `pgx` plus `sqlc` for PostgreSQL.
+6. Prefer official or primary package docs over opinionated blog lists.
+7. Ask whether the dependency removes real complexity or only moves it.
+8. Run `govulncheck` after adding or upgrading important dependencies.

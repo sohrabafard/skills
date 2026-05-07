@@ -3,116 +3,113 @@
 ## Table of contents
 
 - Service profile
-- Version policy
-- Core engineering stance
-- HTTP API stance
-- Data and messaging stance
+- Framework stance
+- Architecture stance
+- Data and cache stance
+- Testing stance
 - Observability and security stance
 - Validation baseline
 - Routing heuristics
 
 ## Service profile
 
-This skill is optimized for services that look like this:
+This skill is optimized for Go services that are:
 
-- Go services deployed to Kubernetes or OpenShift, with local Docker for development and sometimes Docker Swarm for smaller environments
-- high-concurrency traffic with strict latency expectations
-- security-sensitive boundaries, especially around identity, trusted gateway headers, and downstream authorization
-- observability-sensitive systems where logs, metrics, traces, and health endpoints are part of the feature, not an afterthought
-- Redis, PostgreSQL, and ClickHouse in the platform baseline
+- high-concurrency and latency-sensitive
+- security-sensitive and correctness-sensitive
+- built behind a trusted gateway or reverse proxy
+- expected to meet strict SLA targets, including `99.99%+` services
+- deployed to Kubernetes, OpenShift, Docker, or Swarm
+- backed by PostgreSQL, Redis, ClickHouse, queues, or service-to-service APIs
 
-## Version policy
+## Framework stance
 
-- Go has no LTS branch. Support follows the latest two major releases.
-- Verify the current release state from `https://go.dev/doc/devel/release` before making version-sensitive claims.
-- As of `2026-04-19`, `go1.26.2` is the latest stable release and `go1.25.9` is the previous supported line.
-- Apply Go 1.26-specific rewrites only when `go.mod`, `go.work`, or file build constraints require Go 1.26 or later.
+Framework choice follows evidence:
 
-### Go 1.26 features worth checking
+- explicit user choice wins
+- existing repo framework wins
+- raw small/simple HTTP services should use chi
+- raw large/high-concurrency/SLA-heavy HTTP services should use Fiber and `$alaa-golang-fiber`
 
-- `errors.AsType[T](err)` instead of the older `errors.As` target-variable pattern
-- `new(expr)` instead of one-off pointer helper functions
-- `go fix ./...` and targeted fixers such as `go fix -newexpr ./...`
-- newer analyzers surfaced by `gopls` and `golangci-lint`
+Use `30-http-api-framework-choice.md` before choosing a framework.
 
-## Core engineering stance
+## Architecture stance
 
-- start stdlib-first
-- justify every dependency by fit, maintenance, and operational cost
-- keep binaries in `cmd/`, private service code in `internal/`, and exported packages intentionally small
-- keep transport thin and business logic outside handlers, CLI callbacks, and queue consumers
-- centralize config parsing and validation instead of scattering `os.Getenv` across the codebase
-- every goroutine needs an owner, a cancellation story, bounded fan-out, and a deterministic exit path
-- prefer manual DI by default; add a DI library only when the graph is large enough to justify it
+For DB-backed services, repository pattern is mandatory.
 
-## HTTP API stance
+Keep boundaries clear:
 
-For this pack, prefer `net/http` plus `chi` for new HTTP APIs.
+- transport packages own chi or Fiber details
+- use cases own business flow
+- domain packages own domain rules
+- repositories own persistence
+- platform packages own clients, logging, metrics, tracing, and infrastructure adapters
 
-Why `chi` is the default here:
+Do not pass framework types into domain, use case, repository, worker, or cache packages.
 
-- it stays inside the standard `net/http` model
-- it composes cleanly with `otelhttp`, `promhttp`, standard middleware, and standard testing
-- it keeps request context, timeouts, shutdown, and reverse-proxy behavior predictable
-- it is easier to reason about in trusted-gateway and observability-heavy systems
+Read `60-service-architecture-patterns.md` for the default service shape.
 
-Use `fiber` only when the repo already uses Fiber or when a measured requirement justifies its `fasthttp`-oriented model.
-Read `30-http-api-framework-choice.md` before making that call.
+## Data and cache stance
 
-## Data and messaging stance
+- Prefer `pgx` plus `sqlc` for PostgreSQL services that own SQL directly.
+- Keep transactions explicit at use case boundaries.
+- Treat Redis as a cache layer unless the repo explicitly defines another role.
+- Use cache-aside Redis by default.
+- Make TTL, key design, invalidation, stampede protection, and cache error behavior explicit.
+- Do not use cache values to bypass authorization or revocation rules.
 
-- prefer `pgx` for PostgreSQL
-- prefer `sqlc` when the service owns SQL directly and wants type-safe generated query code
-- choose migrations intentionally: `goose` for simple incremental SQL, `Atlas` when schema planning and drift controls matter
-- prefer `go-redis` for Redis
-- prefer `clickhouse-go/v2` first for ClickHouse and move to `ch-go` only for specialized hot paths
-- for RabbitMQ, use `amqp091-go`
-- for Kafka, use `franz-go`
-- design retries, backoff, idempotency, and DLQ behavior explicitly; do not hide them behind library defaults
+Read `61-redis-cache-layer.md` before changing cache behavior.
 
-## GraphQL stance
+## Testing stance
 
-- use GraphQL only when the product really benefits from graph-shaped reads or client-selected fields
-- prefer `gqlgen` when schema-first code generation, typed resolvers, and subscriptions matter
-- keep auth, tenant, pagination, complexity limits, and N+1 prevention explicit in resolver design
-- do not bypass trusted-gateway or service-contract rules just because the transport is GraphQL
-- pair the installed `golang-graphql` skill with `50-gap-coverage.md` until that public skill has full body guidance
+Behavior-changing work must be test-driven:
+
+1. write or update a failing test
+2. implement the smallest passing change
+3. refactor after tests pass
+
+Use table-driven tests with `t.Run` for behavior matrices. Add `go test -race ./...` for shared state, caches, goroutines, and workers. Add fuzz tests for parsers, codecs, validators, and untrusted input.
+
+Read `63-tdd-and-testing-discipline.md` before implementation.
 
 ## Observability and security stance
 
-- use `log/slog` as the logging baseline
-- use OpenTelemetry for traces and cross-service context propagation
-- use Prometheus client packages for service metrics
-- make health, readiness, and shutdown behavior explicit and testable
-- trust gateway-derived identity only where the system contract says you may trust it
-- do not add JWT verification code to every service just because the platform uses JWT somewhere
-- when a service must verify OIDC or JWT itself, use dedicated libraries and explicit key-management rules
+- Use `log/slog` as the default logging baseline.
+- Use OpenTelemetry for traces where the platform supports it.
+- Use Prometheus metrics for service signals.
+- Keep health, readiness, startup, and shutdown explicit.
+- Do not trust client-supplied identity, tenant, profile, or authorization headers.
+- Consume trusted gateway headers only where the platform contract says they are trusted.
+- Do not add local JWT verification to every service unless that service owns an auth boundary.
+- Never log secrets, tokens, passwords, credentials, or sensitive trusted headers.
 
 ## Validation baseline
 
-Use the narrowest checks that match the task.
+Use the narrowest checks that match the task:
 
 - `go test ./...` for basic behavioral confidence
-- `go test -race ./...` when shared state, goroutines, or channels are involved
-- `go vet ./...` for native static checks
+- `go test -race ./...` for shared state, cache, goroutines, or workers
+- `go vet ./...` for built-in static checks
 - `golangci-lint run` when lint ownership matters
-- `go fix ./...` or targeted `go fix` passes when modernization is the point
-- `govulncheck ./...` before releases and after dependency changes
-- profiles and benchmarks only when performance is the real decision surface
+- `govulncheck ./...` after dependency changes and before release-sensitive work
+- benchmarks and profiles only when performance is the real decision surface
 
-For HTTP and gRPC services, also validate:
+For HTTP services, also validate:
 
-- timeouts and context cancellation
-- middleware or interceptor ordering
+- framework-specific handler tests
+- middleware order
 - request IDs and trace propagation
-- health, readiness, and graceful shutdown behavior
-- error contracts and status-code mapping
+- health/readiness behavior
+- graceful shutdown
+- error contracts and status mapping
 
 ## Routing heuristics
 
-- If the task is “modernize this Go codebase”, start with `golang-modernize` ( `$golang-modernize` ) and often `golang-lint` ( `$golang-lint` ).
-- If the task is “design or review a service”, start with `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-error-handling` ( `$golang-error-handling` ), `golang-observability` ( `$golang-observability` ), and this local guide.
-- If the task is “debug concurrency or leaks”, load `golang-concurrency` ( `$golang-concurrency` ), `golang-context` ( `$golang-context` ), `golang-safety` ( `$golang-safety` ), and `golang-troubleshooting` ( `$golang-troubleshooting` ).
-- If the task is “build or audit GraphQL”, load `golang-graphql` ( `$golang-graphql` ) and then `50-gap-coverage.md`.
-- If the task is “choose packages”, read `40-production-ready-package-catalog.md` and then use the narrow vendor skill if one exists.
-- If the task changes platform behavior, CI, cluster objects, contracts, or trust boundaries, add the relevant companion skill from `20-sohrab-companions.md`.
+- Modernize Go code: use `golang-modernize` ( `$golang-modernize` ) and often `golang-lint` ( `$golang-lint` ).
+- Design or review a service: use `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-error-handling` ( `$golang-error-handling` ), `golang-observability` ( `$golang-observability` ), and local architecture references.
+- Build or review Fiber: load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).
+- Build or review chi: read `31-chi-api-guide.md`.
+- Debug concurrency or leaks: use `golang-concurrency` ( `$golang-concurrency` ), `golang-context` ( `$golang-context` ), `golang-safety` ( `$golang-safety` ), and `golang-troubleshooting` ( `$golang-troubleshooting` ).
+- Build or audit GraphQL: use `golang-graphql` ( `$golang-graphql` ).
+- Choose packages: read `40-production-ready-package-catalog.md`, then route to the narrow vendor skill if one exists.
+- Change platform behavior, CI, contracts, trust boundaries, or deployment: add the relevant companion skill from `20-sohrab-companions.md`.

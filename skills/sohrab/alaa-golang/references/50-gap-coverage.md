@@ -1,27 +1,62 @@
 # Alaa Go Gap Coverage
 
-Use this file after routing to the installed public Go skill that most closely matches the task.
+Use this file after routing to the closest installed public Go skill.
 
-This reference covers local decisions that are intentionally not owned by a single public `golang-*` skill, or where the
-installed skill has only shallow trigger guidance.
+This reference covers local production rules that are not fully owned by one public `golang-*` skill.
 
 ## Service lifecycle
 
 - Keep `main` small: parse config, build dependencies, wire transports/workers, start supervisors, and wait for shutdown.
-- Use `signal.NotifyContext` for process cancellation and pass the derived context into servers, workers, clients, and
-  background loops.
-- Every goroutine needs an owner, a cancellation path, and an error-reporting path. Prefer `errgroup` for related work.
-- Use explicit startup and shutdown timeouts. Do not rely on process exit to close HTTP servers, database pools, queues,
-  or telemetry exporters.
-- Treat health and readiness separately: health means the process is alive; readiness means it can serve useful traffic.
+- Use `signal.NotifyContext` for process cancellation.
+- Every goroutine needs an owner, cancellation path, and error-reporting path.
+- Use explicit startup and shutdown timeouts.
+- Treat health and readiness separately.
+
+## Framework boundary
+
+- Use chi for raw small/simple HTTP services.
+- Use `$alaa-golang-fiber` for Fiber repos, explicit Fiber requests, and raw large/high-concurrency services.
+- Keep framework types at the transport edge.
+- Do not migrate frameworks casually.
+
+## Repository pattern
+
+- DB-backed services must use repository pattern.
+- Put repository interfaces at use case boundaries.
+- Put database implementations in infrastructure/repository packages.
+- Pass `context.Context` to repository methods.
+- Do not put SQL in handlers.
+- Do not put Redis in handlers.
+
+Read `60-service-architecture-patterns.md`.
+
+## Redis cache layer
+
+- Treat Redis as a cache layer unless the repo says otherwise.
+- Use cache-aside by default.
+- Make keys, TTLs, invalidation, stampede protection, and error policy explicit.
+- Cache failures usually fall back to the database.
+- Do not cache authorization decisions unless TTL and invalidation are explicitly designed.
+
+Read `61-redis-cache-layer.md`.
+
+## TDD and tests
+
+- Write or update a failing test before behavior-changing code.
+- Implement the smallest passing change.
+- Refactor only after tests pass.
+- Run focused tests, then `go test ./...`.
+- Run `go test -race ./...` for cache, goroutines, workers, or shared state.
+
+Read `63-tdd-and-testing-discipline.md`.
 
 ## Configuration and secrets
 
-- Prefer typed config structs with validation at startup.
-- Keep `os.Getenv` and flag parsing near the edge; pass typed config into packages.
-- Fail fast on missing required config. Use defaults only for non-sensitive, documented local-development values.
+- Prefer typed config structs with startup validation.
+- Keep `os.Getenv` and flag parsing near the edge.
+- Fail fast on missing required config.
+- Use defaults only for non-sensitive local-development values.
 - Never log secrets, tokens, passwords, connection strings with credentials, or trusted identity headers.
-- For containerized services, prefer env-first config; use richer config libraries only when multiple sources are real.
 
 ## Trusted gateway and service contracts
 
@@ -29,41 +64,16 @@ installed skill has only shallow trigger guidance.
 - Consume trusted gateway headers only where the platform contract says the service is behind the trusted gateway.
 - Keep auth parsing, tenant resolution, and authorization decisions explicit and testable.
 - Preserve service-contract endpoints such as health, readiness, metrics, and version/build metadata when they exist.
-- Route cross-service response shape, observability, and header semantics to `alaa-services-contract` and
-  `alaa-trust-gateway-auth` when they matter.
-
-## GraphQL production baseline
-
-Use `golang-graphql` ( `$golang-graphql` ) for trigger-level routing, then apply these local rules until that skill has
-full body guidance.
-
-- Prefer `github.com/99designs/gqlgen` for schema-first APIs with typed generated resolver contracts.
-- Keep resolvers thin. Put authorization, use cases, loaders, and repository logic outside generated resolver methods.
-- Add query complexity, depth, pagination, and timeout controls before exposing GraphQL to untrusted clients.
-- Use dataloaders or batched repository calls for relation-heavy fields. Treat N+1 queries as a correctness and latency
-  issue, not just an optimization.
-- Map GraphQL errors deliberately. Do not leak internal error strings, SQL details, secrets, or authorization reasons.
-- Keep subscriptions behind explicit connection, auth, backpressure, and shutdown rules.
+- Route response shape, observability, and header semantics to `alaa-services-contract` and `alaa-trust-gateway-auth` when they matter.
 
 ## Data, async, and migrations
 
 - Prefer `pgx` plus `sqlc` for PostgreSQL services that own SQL directly.
-- Make transactions explicit at use-case boundaries; avoid hidden transaction behavior inside generic helpers.
-- For Redis, distinguish cache, coordination, lock, and rate-limit uses in code and tests.
-- For RabbitMQ or Kafka, design idempotency keys, retry backoff, confirms/acks, DLQ behavior, and shutdown handling before
-  writing consumers.
-- Choose migration tooling per repo: `goose` for simple SQL sequences, Atlas when drift control and review workflows
-  matter.
+- Make transactions explicit at use case boundaries.
+- For RabbitMQ or Kafka, design idempotency keys, retry backoff, confirms/acks, DLQ behavior, and shutdown handling before writing consumers.
+- Choose migration tooling per repo: `goose` for simple SQL sequences, Atlas when drift control and review workflows matter.
 
-## Validation and release checks
-
-- Start with `go test ./...`; add `go test -race ./...` for goroutines, channels, shared state, or caches.
-- Use `golang-lint` ( `$golang-lint` ) for `golangci-lint`, `go vet`, analyzer policy, and `nolint` hygiene.
-- Run `govulncheck ./...` after dependency changes and before release-sensitive work.
-- Use benchmarks and profiles only after identifying a real hot path or regression.
-- For delivery changes, route CI to `golang-continuous-integration` and platform rollout to the relevant Sohrab companion.
-
-## Dependency decision fallback
+## Dependency fallback
 
 When no public Go skill owns the decision:
 

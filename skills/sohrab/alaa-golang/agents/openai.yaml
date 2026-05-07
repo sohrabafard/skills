@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Golang"
-  short_description: "Route production Go work, gaps, and packages"
-  default_prompt: "Use $alaa-golang to route this Go task, pick the right Go and companion skills, fill local coverage gaps, and default new HTTP APIs to chi unless Fiber is justified."
+  short_description: "Route production Go work and service patterns"
+  default_prompt: "Use $alaa-golang to route this Go task, choose chi or Fiber, enforce repository pattern, Redis cache safety, TDD, and production readiness."
 
 policy:
   allow_implicit_invocation: true
