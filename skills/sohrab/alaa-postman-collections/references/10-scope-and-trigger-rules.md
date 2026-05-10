@@ -42,6 +42,8 @@ Use this order unless the repo proves a stronger contract source:
 
 If code and docs disagree, trust code and verified contracts over stale prose.
 
+If an existing Postman request or prose doc describes behavior that current code does not implement, do not silently keep it as shipped behavior. Report the gap and route any `remaining-task.md` backlog wording to `$alaa-docs-farsi`.
+
 ## Discovery checklist
 
 Inspect the smallest relevant set of sources:
@@ -58,6 +60,7 @@ Inspect the smallest relevant set of sources:
 ## Hard constraints
 
 - Never invent endpoints, methods, parameters, fields, auth flows, or error cases.
+- Never preserve documented-but-missing behavior as an active Postman contract without clearly marking or reporting the implementation gap.
 - Never commit real secrets.
 - Never treat guessed examples as verified facts.
 - Never rewrite a collection from scratch without checking whether a minimal update is safer.

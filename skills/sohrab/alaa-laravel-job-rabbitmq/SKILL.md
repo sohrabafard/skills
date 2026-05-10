@@ -17,6 +17,7 @@ This skill complements:
 - `alaa-async-messaging` (architecture + generic RabbitMQ/Kafka guidance)
 - `alaa-octane-performance` (Octane long-lived worker hygiene)
 - `alaa-observability-soc` (logs/metrics/runbooks)
+- `service-runtime-kit-governance` (local Docker Compose/Swarm runtime env generation and Windows Git Bash path-conversion traps)
 - `alaa-workflow` (plan file + phased execution)
 
 # When to use
@@ -118,6 +119,7 @@ If sources conflict:
 - Prefer broker policies (DLX, routing, limits) over hardcoded queue arguments where possible.
 - Do NOT use Horizon for RabbitMQ workers in this repository.
 - Do not duplicate app-local driver copies across services when one tagged maintained fork can be shared safely.
+- If local Docker Compose on Windows appears to corrupt `RABBITMQ_VHOST=/` or another slash-valued runtime env var, route to `service-runtime-kit-governance`; this skill owns Laravel queue semantics, not Git Bash/MSYS path conversion in generated wrappers.
 - For Arvan targets in this repo:
   - container resources are mandatory and should keep requests==limits by default,
   - secret values go in secret files or existing Secrets,

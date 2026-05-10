@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Codex Runtime Ops"
+  short_description: "Codex Windows runtime recovery"
+  default_prompt: "Use $alaa-codex-runtime-ops to recover from Codex shell, sandbox, or Windows runtime issues safely."

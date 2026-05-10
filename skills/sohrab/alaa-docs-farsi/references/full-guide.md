@@ -762,7 +762,18 @@ If one of the paired docs changes, the other affected docs must still be reviewe
 9. For repos with meaningful error, event, or observability surface, create or refresh `docs/errors-events-observability.md` with error matrices, event inventory, payload notes, and troubleshooting evidence.
 10. Add or refresh diagrams, module maps, flowcharts, and state snapshots where the current docs are too thin.
 11. Re-check cross-links to Postman, runbooks, ADR or decision docs, and service-specific references, and validate every repo-local Markdown link against the repository tree.
-12. Before finishing, confirm the new docs are richer or clearer than before, not just more standardized.
+12. If docs or Postman artifacts promise behavior not implemented in current code, create or refresh `remaining-task.md` using the implementation-gap rules below.
+13. Before finishing, confirm the new docs are richer or clearer than before, not just more standardized.
+
+# Implementation gap and remaining-task rules
+
+Create or refresh `remaining-task.md` when the user asks for remaining work, or when docs/Postman artifacts describe behavior that current source code does not implement.
+
+Each item must cite both sides: the source doc, Postman request, or design note that promises or implies the behavior, and the source-code evidence showing the behavior is absent, stubbed, fail-closed, or incomplete.
+
+Keep the file grouped by service, module, or feature area. Number each task. Mention whether the gap affects docs only, Postman examples, public API, storage, jobs, events, or operations.
+
+Do not list speculative product ideas as implementation gaps, and do not use machine-local absolute paths in Markdown links.
 
 # Output checklist for doc updates
 For every documentation update, report:
@@ -773,9 +784,10 @@ For every documentation update, report:
 5. `docs/data-architecture.md` created, refreshed, reused under another filename, or intentionally not needed.
 6. `docs/errors-events-observability.md` created, refreshed, reused under another filename, or intentionally not needed.
 7. Postman artifacts updated or intentionally kept in sync.
-8. Subagents used or intentionally skipped, with owned tracks.
-9. Internal Markdown links validated.
-10. Remaining uncertain areas, if any.
+8. `remaining-task.md` created, refreshed, or intentionally not needed when implementation gaps were found.
+9. Subagents used or intentionally skipped, with owned tracks.
+10. Internal Markdown links validated.
+11. Remaining uncertain areas, if any.
 
 # Evidence checks
 - Use `rg` or equivalent heading and identifier checks for contract terms such as headers, routes, enums, queues, event names, table names, cache-key prefixes, logger names, and runtime modes.
@@ -797,5 +809,6 @@ For every documentation update, report:
 - Replacing a concrete service map with vague high-level architecture language.
 - Creating a deep-dive doc full of guessed table names, payload fields, or event flows.
 - Duplicating `docs/api-summary.md`, `docs/data-architecture.md`, or `docs/errors-events-observability.md` verbatim into `README.md` or `docs/BIG_PICTURE.md`.
+- Leaving future-looking docs or Postman requests mixed into shipped behavior without either implementing them or moving them into a source-backed `remaining-task.md`.
 - Letting multiple subagents edit the same documentation file concurrently without a clear merge owner.
 - Using machine-local absolute paths, Windows-style backslashes, or unverified relative links in generated Markdown links.

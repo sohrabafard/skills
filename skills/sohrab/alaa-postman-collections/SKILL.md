@@ -36,7 +36,8 @@ This skill is Postman-first, schema-aware, and repository-truth-first. It create
 3. Read `references/00-topic-map.md`.
 4. Load only the smallest reference files needed for the current repo and task.
 5. Prefer minimal updates to existing artifacts over full rewrites.
-6. Validate before concluding.
+6. If an existing request or docs claim describes behavior missing from current code, report the gap and route backlog wording to `$alaa-docs-farsi`.
+7. Validate before concluding.
 
 ## Deliverables
 
@@ -65,6 +66,8 @@ This skill is Postman-first, schema-aware, and repository-truth-first. It create
   - pair with `$alaa-security-review`
 - broader README, runbook, or docs-page updates:
   - pair with `$alaa-docs-farsi`
+- documented-but-not-implemented endpoints or examples:
+  - report the gap and let `$alaa-docs-farsi` own `remaining-task.md`
 
 ## Reference navigation
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa ControlledOps"
+  short_description: "ControlledOps package and service adoption"
+  default_prompt: "Use $alaa-controlled-ops to guide ControlledOps package or service adoption work."

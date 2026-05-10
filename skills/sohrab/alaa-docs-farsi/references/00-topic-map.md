@@ -86,6 +86,14 @@ Use `full-guide.md` when you need the entire contract in one place or when sever
 - `# Evidence checks`
 - `# Anti-patterns`
 
+- `references/80-implementation-gap-backlog.md`
+- `# Implementation gap and remaining-task rules`
+- `## When to create or refresh remaining-task.md`
+- `## Evidence standard`
+- `## Required shape`
+- `## What not to include`
+- `## Postman handoff`
+
 - `references/90-source-map.md`
 - `# Source priority`
 - `# Freshness triggers`

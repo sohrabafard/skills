@@ -1,6 +1,6 @@
 ---
 name: service-runtime-kit-governance
-description: Use when working in a Laravel or PHP service repository that consumes `service-runtime-kit` for local Docker Compose or Docker Swarm runtime generation. Trigger for changes to `runtime/*.env`, `runtime/hooks/**`, `runtime/env.*.extra`, `runtime/README.md`, `scripts/runtime/**`, generated `docker-compose*.yml`, generated `scripts/docker/**`, generated `docker/octane/**`, generated `docker/pgbouncer/**`, `.gitattributes`, `.githooks/**`, copied runtime helper scripts such as `scripts/setup-git-hooks-bom.*` or `scripts/validate_runtime.php`, runtime-kit version pinning, bootstrap or auto-fetch behavior, or questions about which layer owns a runtime fix or debug path. Do not use for Kubernetes, OpenShift, Helm, or GitLab CI deployment changes owned by `service-ci-kit`, or for pure application logic unrelated to runtime generation.
+description: Use when working in a Laravel or PHP service repository that consumes `service-runtime-kit` for local Docker Compose or Docker Swarm runtime generation. Trigger for changes to `runtime/*.env`, `runtime/hooks/**`, `runtime/env.*.extra`, `runtime/README.md`, `scripts/runtime/**`, generated `docker-compose*.yml`, generated `scripts/docker/**`, generated `docker/octane/**`, generated `docker/pgbouncer/**`, `.gitattributes`, `.githooks/**`, copied runtime helper scripts such as `scripts/setup-git-hooks-bom.*` or `scripts/validate_runtime.php`, runtime-kit version pinning, bootstrap or auto-fetch behavior, Windows Git Bash path-conversion issues with Docker Compose env vars such as `RABBITMQ_VHOST=/`, or questions about which layer owns a runtime fix or debug path. Do not use for Kubernetes, OpenShift, Helm, or GitLab CI deployment changes owned by `service-ci-kit`, or for pure application logic unrelated to runtime generation.
 ---
 
 # Service Runtime Kit Governance
@@ -10,6 +10,8 @@ Use this skill before changing any runtime-related file in a service repo that i
 Read `references/change-routing.md` first when the main question is where the change belongs.
 
 Read `references/runtime-contract-map.md` when you need to know which file, variable, or debug step matches the requested runtime behavior.
+
+Read `references/windows-git-bash-compose.md` when Docker Compose behavior on Windows may have rewritten slash-valued environment variables such as `RABBITMQ_VHOST=/`.
 
 Read `references/source-map.md` before relying on latest/current/version/security-sensitive runtime-kit, Docker Compose, Docker Swarm, image, or generated wrapper behavior.
 
@@ -118,6 +120,7 @@ Inspect them freely. Use them to confirm current behavior. But do not keep the f
 - Render attempts local git hook setup automatically when Git and Python are available.
 - `scripts/runtime/ensure-runtime-kit.sh` may prefer a valid sibling `../service-runtime-kit` over a stale repo-local `.service-runtime-kit` cache when `SERVICE_RUNTIME_KIT_PREFER_SHARED_PARENT=true`.
 - Generated container env exports both `RABBITMQ_USER` / `RABBITMQ_PASS` and `RABBITMQ_USERNAME` / `RABBITMQ_PASSWORD`.
+- On Windows, Git Bash can path-convert slash-valued env vars before native `docker compose` sees them. If a value like `RABBITMQ_VHOST=/` appears corrupted in Compose or containers, read `references/windows-git-bash-compose.md` before changing Laravel queue config.
 - Generated container-to-container Redis wiring uses `REDIS_RUNTIME_HOST`, `REDIS_RUNTIME_CACHE_HOST`, and `REDIS_RUNTIME_PORT`.
 - Logging visibility is service-owned. Use service `.env` values such as `LOG_CHANNEL=stderr`; do not solve that by forcing a shared `LOG_STACK` override.
 - PgBouncer mode supports `dedicated`, `shared`, and `off`.
@@ -204,6 +207,8 @@ Do not assume a generated file still reflects the latest `.env` or runtime contr
   check generated `REDIS_RUNTIME_*` values and the service `.env` split between host-side Redis and container-side Redis
 - worker cannot authenticate to RabbitMQ:
   confirm the service config expects `RABBITMQ_USER` or `RABBITMQ_USERNAME`, then verify the generated env block exports both naming variants
+- RabbitMQ vhost `/` is wrong only when launched from Windows Git Bash:
+  suspect MSYS path conversion before changing `config/queue.php`; prefer native PowerShell for `docker compose` or set a scoped `MSYS_NO_PATHCONV=1` / `MSYS2_ARG_CONV_EXCL=*`, then verify rendered Compose config and in-container env
 - worker crashes because queue does not exist:
   confirm `QUEUE_CONNECTION=rabbitmq`, queue names, and generated RabbitMQ bootstrap flow
 - render still behaves like an old bug after a shared fix:

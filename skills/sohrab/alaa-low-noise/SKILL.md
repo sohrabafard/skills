@@ -68,11 +68,13 @@ It is a companion skill. It does not own architecture, stack decisions, or durab
 - Redirect long validation output to repo-local files and summarize only the meaningful lines.
 - Prefer dedicated tools over raw shell whenever the harness provides them.
 - Batch independent searches or reads in parallel when the environment supports it.
+- If a parallel read or search fails because of Windows sandbox setup or refresh errors, switch to `$alaa-codex-runtime-ops`, rerun only the failed or essential read serially, and keep the retry output bounded.
 
 ### 6) Stay companion-oriented
 
 - Combine this skill with domain skills for implementation rules.
 - Combine this skill with `$alaa-workflow` for long-horizon plans, resume state, handoffs, or delegated execution.
+- Combine this skill with `$alaa-codex-runtime-ops` when the noise risk comes from Windows sandbox, shell, locked-file, or command-length recovery.
 - Do not invent a second planning system when workflow artifacts already exist.
 
 ## Subagent Strategy

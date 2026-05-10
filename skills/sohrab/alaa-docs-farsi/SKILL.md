@@ -22,6 +22,7 @@ Keep this top-level file lean. Load only the reference files you need.
 - `docs/errors-events-observability.md` creation or refresh for repos with meaningful error, event, queue, logging, tracing, or metrics surface
 - architecture, operations, contract, onboarding, troubleshooting, and documentation-alignment work
 - documentation alignment after API, auth, storage, cache, runtime, deployment, event, error, or observability changes
+- implementation-gap or `remaining-task.md` docs when repository docs or Postman examples promise behavior that current code does not implement
 - standardizing docs so frontend developers, backend developers, operators, and agents can understand the system quickly
 
 ## When NOT to use
@@ -76,6 +77,7 @@ Keep this top-level file lean. Load only the reference files you need.
 - Re-check `docs/errors-events-observability.md` when error envelopes, status codes, exception mapping, event names, payloads, listener or job flows, logs, traces, metrics, alerts, or operational evidence paths changed.
 - Re-check Postman artifacts through `$alaa-postman-collections` when endpoints, examples, or auth flows changed.
 - Re-check diagrams and module maps when code boundaries or system flows changed.
+- Create or refresh `remaining-task.md` when the user asks for remaining work, or when documentation/Postman artifacts describe behavior that current source code does not implement.
 
 ## Companion routing
 
@@ -113,6 +115,7 @@ Keep this top-level file lean. Load only the reference files you need.
 - Read `references/50-data-architecture-contract.md` for storage topology, tables and cache inventory, and request-walkthrough docs.
 - Read `references/60-errors-events-observability-contract.md` for error contracts, event inventory, logs, and observability docs.
 - Read `references/70-subagent-doc-workflows.md` for concrete parallel delegation patterns, return contracts, and parent-agent merge rules.
+- Read `references/80-implementation-gap-backlog.md` when the task asks for remaining work or when docs/Postman claims outrun current implementation.
 - Read `references/40-sync-workflow-and-evidence.md` for paired-doc rules, workflow, link validation, and done criteria.
 - Read `references/90-source-map.md` for official-first source maps, freshness triggers, and community-source limits.
 - Read `references/full-guide.md` when multiple topics overlap heavily or when updating the reference pack itself.
