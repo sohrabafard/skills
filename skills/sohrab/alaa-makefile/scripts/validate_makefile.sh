@@ -6,6 +6,10 @@
 
 set -euo pipefail
 
+# Keep Python-based validators stable under Windows Git Bash and legacy consoles.
+export PYTHONUTF8=1
+export PYTHONIOENCODING=utf-8
+
 # Colors for output (supports NO_COLOR standard: https://no-color.org/)
 if [ -n "${NO_COLOR:-}" ]; then
     RED=''
@@ -66,12 +70,14 @@ print_subheader() {
 
 # Check dependencies
 check_dependencies() {
-    if ! command -v python3 &> /dev/null; then
-        error_exit "python3 is required but not installed"
-    fi
-
-    if ! command -v pip3 &> /dev/null; then
-        error_exit "pip3 is required but not installed"
+    if command -v python3 &> /dev/null; then
+        PYTHON_CMD=(python3)
+    elif command -v python &> /dev/null; then
+        PYTHON_CMD=(python)
+    elif command -v py &> /dev/null; then
+        PYTHON_CMD=(py -3)
+    else
+        error_exit "python3, python, or py -3 is required but not installed"
     fi
 
     if ! command -v make &> /dev/null; then
@@ -80,19 +86,41 @@ check_dependencies() {
     fi
 }
 
+resolve_venv_python() {
+    if [ -x "$VENV_DIR/bin/python" ]; then
+        VENV_PYTHON="$VENV_DIR/bin/python"
+    elif [ -x "$VENV_DIR/Scripts/python.exe" ]; then
+        VENV_PYTHON="$VENV_DIR/Scripts/python.exe"
+    elif [ -x "$VENV_DIR/Scripts/python" ]; then
+        VENV_PYTHON="$VENV_DIR/Scripts/python"
+    else
+        error_exit "Failed to locate Python inside virtual environment"
+    fi
+}
+
+resolve_mbake() {
+    if [ -x "$VENV_DIR/bin/mbake" ]; then
+        MBAKE_BIN="$VENV_DIR/bin/mbake"
+    elif [ -x "$VENV_DIR/Scripts/mbake.exe" ]; then
+        MBAKE_BIN="$VENV_DIR/Scripts/mbake.exe"
+    elif [ -x "$VENV_DIR/Scripts/mbake" ]; then
+        MBAKE_BIN="$VENV_DIR/Scripts/mbake"
+    else
+        error_exit "Failed to locate mbake inside virtual environment"
+    fi
+}
+
 # Setup virtual environment and install mbake
 setup_venv() {
     print_subheader "ENVIRONMENT SETUP"
     echo "Creating temporary venv at: $VENV_DIR"
 
-    python3 -m venv "$VENV_DIR" 2>&1 || error_exit "Failed to create virtual environment"
-
-    # Activate venv
-    # shellcheck source=/dev/null
-    source "$VENV_DIR/bin/activate"
+    "${PYTHON_CMD[@]}" -m venv "$VENV_DIR" 2>&1 || error_exit "Failed to create virtual environment"
+    resolve_venv_python
 
     echo "Installing mbake..."
-    pip3 install --quiet mbake 2>&1 || error_exit "Failed to install mbake"
+    "$VENV_PYTHON" -m pip install --quiet mbake 2>&1 || error_exit "Failed to install mbake"
+    resolve_mbake
 
     echo -e "${GREEN}✓${NC} Environment ready"
 }
@@ -146,7 +174,7 @@ mbake_validation() {
     print_subheader "MBAKE VALIDATION"
 
     echo "Running mbake validate..."
-    if mbake validate "$file" 2>&1; then
+    if "$MBAKE_BIN" validate "$file" 2>&1; then
         echo -e "${GREEN}✓${NC} mbake validation passed"
     else
         echo -e "${RED}✗${NC} mbake validation failed"
@@ -162,7 +190,7 @@ mbake_format_check() {
     echo "Checking formatting consistency..."
     # Capture output - mbake may wrap long lines
     local format_output
-    format_output=$(mbake format --check "$file" 2>&1)
+    format_output=$("$MBAKE_BIN" format --check "$file" 2>&1)
     local format_exit=$?
 
     # Join multi-line output for easier pattern matching (mbake wraps at ~80 chars)
