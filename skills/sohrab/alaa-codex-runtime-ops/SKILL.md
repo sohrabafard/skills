@@ -18,6 +18,7 @@ The goal is to make the smallest reliable retry or fallback, not to turn a tooli
 - active `~/.codex/sessions` JSONL files are locked while being scanned
 - Git reports dubious ownership and read-only repo inspection needs `safe.directory`
 - PowerShell, Git Bash, path separator, quoting, or command splitting issues block a task
+- Windows Docker or localhost port binding fails because a host port is excluded or reserved
 - a command must be retried with escalation because sandboxing blocked an important action
 
 ## When NOT to use

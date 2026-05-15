@@ -11,6 +11,7 @@ Use this file to choose the smallest recovery reference.
 - command-line length failures
 - PowerShell and Git Bash path handling
 - quoting and batching on Windows
+- Windows reserved/excluded host ports blocking Docker or localhost binds
 - escalation boundaries
 
 - `references/30-git-session-and-locked-file-recovery.md`

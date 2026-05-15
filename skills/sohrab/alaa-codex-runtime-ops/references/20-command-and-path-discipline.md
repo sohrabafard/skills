@@ -22,6 +22,17 @@ Prefer:
 
 Use `rg` for search when available.
 
+## Windows excluded port ranges
+
+When Docker or a local server fails with an error like `ports are not available` or `bind: An attempt was made to access a socket in a way forbidden by its access permissions`, do not assume another process owns the port.
+
+On Windows, first check both listeners and excluded TCP ranges:
+
+- `Get-NetTCPConnection -LocalPort <port> -ErrorAction SilentlyContinue`
+- `netsh interface ipv4 show excludedportrange protocol=tcp`
+
+If the target port falls inside an excluded range, choose a host port outside the excluded ranges and update only the host-side binding. Keep the container port unchanged unless the application itself must listen on a different port.
+
 ## Git Bash and path conversion
 
 Git Bash may rewrite slash-looking argument or environment values when invoking native Windows binaries. For Docker Compose and runtime scripts, route service-runtime env conversion issues to `$service-runtime-kit-governance`.
