@@ -165,9 +165,12 @@ The body contains step-by-step instructions. Use secondary markdown files in `re
 
 **Important:** When including non-markdown content (configuration files, scripts, templates, linter configs, etc.), create them as separate files in `assets/` rather than embedding them directly in markdown. Reference these files from your markdown using relative links (e.g., `[View config](assets/example.yml)`). This keeps markdown files clean, makes assets reusable, and allows proper syntax highlighting when the files are viewed separately.
 
+Polanyi's paradox: most operational knowledge is tacit and resists explicit description. The skills that work aren't the ones with the most rules, they're the ones that capture a posture. Markdown is the iceberg's tip.
+
 ### Token budgets
 
 - **~100 tokens per description** — loaded at startup for all skills
+- **≤ 1,000 characters per description** — hard limit; keep descriptions focused and scannable
 - **< 5.000 tokens per SKILL.md** (spec recommendation) — keep focused on essentials
 - **< 2.500 tokens per SKILL.md** (project recommendation)
 - **< 500 lines per SKILL.md** — move detailed reference material to `references/`
@@ -562,6 +565,13 @@ After making changes, suggest the following as next steps for the developer to r
 7. Depending on evaluation final report, suggest improvements and loop
 
 For initial evaluation of skills, use Human-as-Judge.
+
+### After creating a new skill
+
+After writing a new skill body, run the description optimization loop before marking it ready:
+
+1. Verify the description against quality criteria: contains "Golang", has "Use when"/"Apply when" trigger clause with specific scenarios, no broad anti-patterns (`whenever writing Go code`, `Essential for ANY`, `proactively`), FQN cross-refs for competing skills (`samber/cc-skills-golang@<skill>`), library skills use `Apply when the codebase imports github.com/...` pattern. Description must stay ≤ 1,000 characters.
+2. Follow the [After updating a skill](#after-updating-a-skill) checklist.
 
 ### Checking for outdated skills
 
