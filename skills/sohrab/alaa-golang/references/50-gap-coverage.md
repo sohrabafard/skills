@@ -4,6 +4,15 @@ Use this file after routing to the closest installed public Go skill.
 
 This reference covers local production rules that are not fully owned by one public `golang-*` skill.
 
+## Vendor orchestrator boundary
+
+- Use `golang-how-to` ( `$golang-how-to` ) for broad Go skill selection and overlap disambiguation.
+- Use this file for Alaa-specific rules after the vendor skill set is selected.
+- Do not let generic vendor guidance override trusted-gateway, repository, Redis cache, TDD, observability, security, or
+  service-contract rules from this pack.
+- Do not run `golang-how-to` configure mode unless the user explicitly asks to force-load Go skills in project agent
+  config.
+
 ## Service lifecycle
 
 - Keep `main` small: parse config, build dependencies, wire transports/workers, start supervisors, and wait for shutdown.

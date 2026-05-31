@@ -8,6 +8,7 @@
 - Data and cache stance
 - Testing stance
 - Observability and security stance
+- Orchestration stance
 - Validation baseline
 - Routing heuristics
 
@@ -83,6 +84,19 @@ Read `63-tdd-and-testing-discipline.md` before implementation.
 - Do not add local JWT verification to every service unless that service owns an auth boundary.
 - Never log secrets, tokens, passwords, credentials, or sensitive trusted headers.
 
+## Orchestration stance
+
+For broad Go tasks, use `golang-how-to` as the vendor skill selector and then apply the Alaa rules in this skill.
+
+- Load the primary and secondary public Go skills together when the task spans multiple concerns.
+- Keep local Alaa references in force for framework choice, repository pattern, Redis cache behavior, trusted gateway
+  context, TDD, observability, and production readiness.
+- Do not run `golang-how-to` configure mode or edit project agent config files unless the user explicitly asks for
+  always-loaded Go skills.
+
+Read `11-orchestration-and-overlap-guide.md` for common bundles, overlap boundaries, recommended patterns, and
+anti-patterns.
+
 ## Validation baseline
 
 Use the narrowest checks that match the task:
@@ -105,6 +119,7 @@ For HTTP services, also validate:
 
 ## Routing heuristics
 
+- Broad Go task or unclear skill boundary: use `golang-how-to` ( `$golang-how-to` ) and `11-orchestration-and-overlap-guide.md`.
 - Modernize Go code: use `golang-modernize` ( `$golang-modernize` ) and often `golang-lint` ( `$golang-lint` ).
 - Design or review a service: use `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-error-handling` ( `$golang-error-handling` ), `golang-observability` ( `$golang-observability` ), and local architecture references.
 - Build or review Fiber: load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).

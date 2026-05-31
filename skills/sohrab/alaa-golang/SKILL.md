@@ -1,6 +1,6 @@
 ---
 name: alaa-golang
-description: "Use this skill as the main entrypoint for Go work in Alaa-style systems: chi or Fiber HTTP APIs, services behind a trusted gateway, gRPC, GraphQL, CLIs, workers, repositories, Redis cache layers, testing, TDD, clean architecture, design patterns, concurrency, observability, security, and production delivery. It routes to installed Go skills, routes Fiber work to `alaa-golang-fiber`, teaches chi for small raw services, recommends Fiber for raw large/high-concurrency services, and enforces repository pattern, Redis cache safety, TDD, and `99.99%+` service readiness."
+description: "Use this skill as the main entrypoint for Go work in Alaa-style systems: chi or Fiber HTTP APIs, services behind a trusted gateway, gRPC, GraphQL, CLIs, workers, repositories, Redis cache layers, testing, TDD, clean architecture, design patterns, concurrency, observability, security, and production delivery. It combines the vendor `golang-how-to` orchestration model with Alaa platform rules, routes to installed Go skills and `alaa-golang-fiber`, teaches chi for small raw services, recommends Fiber for raw large/high-concurrency services, and enforces repository pattern, Redis cache safety, TDD, and `99.99%+` service readiness."
 ---
 
 # Alaa Golang
@@ -12,6 +12,9 @@ Use this skill first for serious Go work in this pack.
 It is a router, policy layer, and local gap-filler. It does not replace the installed public Go skills. It chooses the
 right Go skill, adds Sohrab companion skills, and keeps framework, repository, cache, testing, and production rules
 aligned with this platform.
+
+Use the vendor `golang-how-to` skill as the broad Go skill selector, then apply this skill as the Alaa-specific
+production overlay.
 
 ## When NOT to use
 
@@ -36,19 +39,21 @@ aligned with this platform.
 ## Fast path
 
 1. Read `references/full-guide.md` for the Go service baseline.
-2. For HTTP APIs, read `references/30-http-api-framework-choice.md`.
-3. If chi is chosen or already present, read `references/31-chi-api-guide.md`.
-4. If Fiber is chosen or already present, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).
-5. Read `references/10-installed-golang-skills.md` and load only the matching public Go skills.
-6. Read `references/60-service-architecture-patterns.md` for DB-backed services.
-7. Read `references/61-redis-cache-layer.md` when Redis cache behavior is involved.
-8. Read `references/62-clean-code-and-patterns.md` for architecture or code quality work.
-9. Read `references/63-tdd-and-testing-discipline.md` before behavior-changing implementation.
-10. Read `references/20-sohrab-companions.md` when platform, trust, data, delivery, or contracts matter.
-11. Read `references/SOURCES.md` when version-sensitive claims need live verification.
+2. Read `references/11-orchestration-and-overlap-guide.md` when the task is broad, ambiguous, or touches multiple Go concerns.
+3. For HTTP APIs, read `references/30-http-api-framework-choice.md`.
+4. If chi is chosen or already present, read `references/31-chi-api-guide.md`.
+5. If Fiber is chosen or already present, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).
+6. Read `references/10-installed-golang-skills.md` and load only the matching public Go skills.
+7. Read `references/60-service-architecture-patterns.md` for DB-backed services.
+8. Read `references/61-redis-cache-layer.md` when Redis cache behavior is involved.
+9. Read `references/62-clean-code-and-patterns.md` for architecture or code quality work.
+10. Read `references/63-tdd-and-testing-discipline.md` before behavior-changing implementation.
+11. Read `references/20-sohrab-companions.md` when platform, trust, data, delivery, or contracts matter.
+12. Read `references/SOURCES.md` when version-sensitive claims need live verification.
 
 ## Routing rules
 
+- broad Go coding, review, debug, setup, or overlap decisions: use `golang-how-to` ( `$golang-how-to` ) first, then load the primary and secondary public Go skills together
 - language upgrades and modern idioms: use `golang-modernize` ( `$golang-modernize` )
 - project layout, architecture, DI, type design, style, and naming: use `golang-project-layout` ( `$golang-project-layout` ), `golang-design-patterns` ( `$golang-design-patterns` ), `golang-dependency-injection` ( `$golang-dependency-injection` ), `golang-structs-interfaces` ( `$golang-structs-interfaces` ), `golang-code-style` ( `$golang-code-style` ), and `golang-naming` ( `$golang-naming` )
 - concurrency, cancellation, safety, errors, and debugging: use `golang-concurrency` ( `$golang-concurrency` ), `golang-context` ( `$golang-context` ), `golang-safety` ( `$golang-safety` ), `golang-error-handling` ( `$golang-error-handling` ), and `golang-troubleshooting` ( `$golang-troubleshooting` )
@@ -69,12 +74,14 @@ aligned with this platform.
 - Add or update unit tests before implementation for behavior changes.
 - Run focused tests, then `go test ./...`; add `go test -race ./...` for shared state, cache, goroutines, or workers.
 - Preserve trusted-gateway and service-contract rules; do not trust client-supplied identity or tenant context.
+- Do not run `golang-how-to` configure mode or edit project `CLAUDE.md` / `AGENTS.md` files unless the user explicitly asks for always-loaded Go skills.
 
 ## Reference map
 
 - `references/00-topic-map.md` - shortest reading path
 - `references/full-guide.md` - merged Go service baseline
 - `references/10-installed-golang-skills.md` - public Go skill routing
+- `references/11-orchestration-and-overlap-guide.md` - primary and secondary skill bundles
 - `references/20-sohrab-companions.md` - Sohrab companion skill routing
 - `references/30-http-api-framework-choice.md` - chi vs Fiber decision rules
 - `references/31-chi-api-guide.md` - chi guide for small/simple services
@@ -91,4 +98,5 @@ aligned with this platform.
 - Keep this file compact and routing-first.
 - Keep detailed framework, package, repository, Redis, and testing guidance in `references/`.
 - Keep `references/10-installed-golang-skills.md` in exact parity with `vendor/cc-skills-golang/skills`.
+- Keep `references/11-orchestration-and-overlap-guide.md` aligned with the vendor `golang-how-to` skill when that skill changes.
 - Keep skill names written with `$skill-name` where explicit routing helps the agent.

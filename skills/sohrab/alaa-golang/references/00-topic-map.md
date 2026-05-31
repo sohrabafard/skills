@@ -5,6 +5,7 @@ Use this file after `alaa-golang` triggers. Read only the smallest reference tha
 ## Start here
 
 - Read `full-guide.md` for the production Go baseline.
+- Read `11-orchestration-and-overlap-guide.md` when a task spans multiple Go concerns or the right public skill is unclear.
 
 ## If the task is about HTTP APIs
 
@@ -41,6 +42,7 @@ Use this file after `alaa-golang` triggers. Read only the smallest reference tha
 
 ## If the task is about routing to other skills
 
+- Read `11-orchestration-and-overlap-guide.md` for primary plus secondary skill bundles.
 - Read `10-installed-golang-skills.md` for public Go skills.
 - Read `20-sohrab-companions.md` for Sohrab companion skills.
 

@@ -10,6 +10,23 @@ When loading a public Go skill, route to it explicitly in this form:
 
 Do not mention vendor paths in normal user-facing answers.
 
+This file should have one `###` heading per `vendor/cc-skills-golang/skills/*/SKILL.md`. Last audited against
+`16cac906147f73fd1c31c5d155697da60e685af9`: `vendor=43 routed=43 missing=0 extra=0`.
+
+For broad, ambiguous, or cross-cutting Go work, load `golang-how-to` first and then load the primary plus secondary
+skills it selects. Keep Alaa platform, trusted-gateway, repository, cache, and TDD rules from this skill in force.
+
+## Orchestration
+
+### golang-how-to ( `$golang-how-to` )
+
+Use it as the vendor Go skill orchestrator for broad coding, review, debug, setup, and overlapping-domain tasks. It
+selects primary plus secondary public Go skills, disambiguates competing clusters, and carries the vendor by-category
+catalog.
+
+In Alaa repos, use `golang-how-to` for skill selection only. Do not run its configure mode or edit project
+`CLAUDE.md` / `AGENTS.md` files unless the user explicitly asks to force-load Go skills.
+
 ## Structure, architecture, and API shape
 
 ### golang-project-layout ( `$golang-project-layout` )

@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Golang"
-  short_description: "Route production Go work and service patterns"
-  default_prompt: "Use $alaa-golang to route this Go task, choose chi or Fiber, enforce repository pattern, Redis cache safety, TDD, and production readiness."
+  short_description: "Route production Go work and skill clusters"
+  default_prompt: "Use $alaa-golang to route this Go task through $golang-how-to, choose chi or Fiber, enforce repository pattern, Redis cache safety, TDD, and production readiness."
 
 policy:
   allow_implicit_invocation: true

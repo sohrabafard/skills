@@ -4,10 +4,11 @@
 - Current status: implemented, validated, pending user review
 - Objective: build a public Sohrab skill that serves as the main entrypoint for Go work, merges the requested external guidance coherently, and routes to the already-installed Go and Sohrab companion skills by name.
 - Current repository understanding:
-  - `skills/sohrab/alaa-golang` exists but is empty
+  - `skills/sohrab/alaa-golang` is the compact routing-first Go entrypoint
   - the pack prefers lean top-level `SKILL.md` files with dense detail moved into `references/`
   - `agents/openai.yaml` is used for UI-facing metadata and prompt seeding
   - the repo already uses `docs/_agent_plans/` and `docs/agents/` for non-trivial skill work
+  - commit `16cac906147f73fd1c31c5d155697da60e685af9` added vendor `golang-how-to`, bringing the current vendor Go skill count to `43`
 - Assumptions and constraints:
   - Go has no official LTS branch; the skill should say that explicitly and route users toward the official supported-release policy
   - the user wants `alaa-golang` to reference already-installed public skills by name, not by path
@@ -26,18 +27,26 @@
   - added `references/00-topic-map.md`, `references/full-guide.md`, `references/10-installed-golang-skills.md`, `references/20-sohrab-companions.md`, and `references/SOURCES.md`
   - generated `skills/sohrab/alaa-golang/agents/openai.yaml` using the `skill-creator` helper script, then corrected the prompt string and added pack-style policy metadata
 - Remaining work:
-  - no implementation work remains for this authoring pass
+  - no implementation work remains for the 2026-05-31 vendor how-to sync
 - Risks or blockers:
-  - none currently
+  - route audit depends on one `###` heading per routed vendor skill in `references/10-installed-golang-skills.md`
+  - PowerShell can mishandle literal `$skill-name` strings if YAML is regenerated through shell wrappers
 - Validation summary:
   - research validation complete through official Go, Fiber, and Uber sources plus the requested MCP Market pages
   - `python C:\Users\CIT\.codex\skills\.system\skill-creator\scripts\quick_validate.py skills\sohrab\alaa-golang` returned `Skill is valid!`
   - `git -c safe.directory=D:/Sohrab/Project/skills diff --check -- docs/_agent_plans/20260404-2235-alaa-golang.md docs/agents/alaa-golang-state.md skills/sohrab/alaa-golang` returned clean output
+  - `2026-05-31T12:47:51+03:30` pre-edit route audit found `vendor=43 routed=42 missing=golang-how-to extra=0`
+  - `2026-05-31T12:51:51+03:30` quick skill validation passed with `Skill is valid!`
+  - `2026-05-31T12:51:51+03:30` full pack validation passed with existing body-length warnings in unrelated skills
+  - `2026-05-31T12:51:51+03:30` route audit passed with `vendor=43 routed=43 missing=0 extra=0`
+  - `2026-05-31T12:51:51+03:30` `git diff --check` passed
 - Next recommended step:
-  - user review of the routing coverage, especially whether any additional Sohrab companion skills should be added later for specific Go domains
+  - user review of the updated orchestration guidance and route coverage
 - Timeline:
   - 2026-04-04 22:35 +03:30 — inspected repo-local conventions and confirmed `skills/sohrab/alaa-golang` is empty.
   - 2026-04-04 22:35 +03:30 — verified official Go release policy and current supported release lines.
   - 2026-04-04 22:35 +03:30 — collected the requested MCP Market skill pages and mapped their guidance into the Go/Fiber problem space.
   - 2026-04-04 22:35 +03:30 — authored the new `alaa-golang` skill files and routing references.
   - 2026-04-04 22:35 +03:30 — validated the skill folder and confirmed a clean diff check for the touched files.
+  - 2026-05-31 12:47 +03:30 — inspected vendor commit `16cac906147f73fd1c31c5d155697da60e685af9`; confirmed the new `golang-how-to` skill is the route parity gap and started a focused sync plan.
+  - 2026-05-31 12:51 +03:30 — added `golang-how-to` routing, created `11-orchestration-and-overlap-guide.md`, linked it through the Alaa Go references, and validated route parity.
