@@ -1,7 +1,7 @@
 interface:
-  display_name: "Fluentbit Validator"
-  short_description: "Validate Fluent Bit configs"
-  default_prompt: "Use $fluentbit-validator to follow its workflow for validate fluent bit configs."
+  display_name: "Fluent Bit Validator"
+  short_description: "Validate, lint, and dry-run Fluent Bit configs"
+  default_prompt: "Use $fluentbit-validator to validate Fluent Bit config syntax, required parameters, parser/tag correctness, security, and OTel/output behavior, then report fixes. Pair with $fluentbit-generator when authoring."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

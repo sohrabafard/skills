@@ -1,7 +1,7 @@
 interface:
   display_name: "Ansible Generator"
-  short_description: "Generate Ansible automation"
-  default_prompt: "Use $ansible-generator to follow its workflow for generate ansible automation."
+  short_description: "Generate idempotent, FQCN-correct Ansible playbooks/roles, then validate"
+  default_prompt: "Use $ansible-generator to scaffold production Ansible playbooks/roles/inventories (FQCN modules, idempotency, vault, structure), then run $ansible-validator and fix until clean. Read its references for patterns."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

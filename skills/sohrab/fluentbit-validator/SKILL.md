@@ -1,6 +1,6 @@
 ---
 name: fluentbit-validator
-description: "Comprehensive toolkit for validating, linting, and testing Fluent Bit configurations. Use this skill when working with Fluent Bit config files, validating syntax, checking for best practices, identifying security issues, or performing dry-run testing."
+description: "Validate, lint, and dry-run Fluent Bit configurations — syntax, required parameters, parser/tag correctness, security issues, and OpenTelemetry/output behavior, with bundled checker scripts and test configs. Use when reviewing or debugging an existing Fluent Bit config. Do not use to author a new config from scratch (use `fluentbit-generator`), or for non-Fluent Bit logging agents (Vector, Alloy, Logstash)."
 ---
 
 # Fluent Bit Config Validator
@@ -19,8 +19,9 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 
 ## When NOT to use
 
-- do not use this skill as a generic replacement for unrelated tooling work
-- do not use it when the task is to build a brand-new artifact from scratch
+- Building a brand-new config from scratch — use `fluentbit-generator`.
+- Non-Fluent Bit logging agents (Vector, Grafana Alloy, Logstash).
+- Generic config edits where Fluent Bit semantics are not involved.
 
 ## Quick start
 

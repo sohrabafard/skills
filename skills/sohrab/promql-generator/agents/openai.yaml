@@ -1,7 +1,7 @@
 interface:
-  display_name: "Promql Generator"
-  short_description: "Generate PromQL queries and alert rules"
-  default_prompt: "Use $promql-generator to follow its workflow for generate promql queries."
+  display_name: "PromQL Generator"
+  short_description: "Generate PromQL queries, recording rules, and alerts (incl. native histograms & SLOs)"
+  default_prompt: "Use $promql-generator to plan and write production PromQL queries, recording rules, and alerts (native histograms, SLO/burn-rate), then hand off to $promql-validator. Read its references for patterns and the planning template."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

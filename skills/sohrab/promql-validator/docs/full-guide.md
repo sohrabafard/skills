@@ -18,7 +18,7 @@ When a user provides a PromQL query, follow this workflow:
 Run the syntax validation script to check for basic correctness:
 
 ```bash
-python3 skills/sohrab/promql-validator/scripts/validate_syntax.py "<query>"
+python3 scripts/validate_syntax.py "<query>"
 ```
 
 The script will check for:
@@ -35,7 +35,7 @@ The script will check for:
 Run the best practices checker to detect anti-patterns and optimization opportunities:
 
 ```bash
-python3 skills/sohrab/promql-validator/scripts/check_best_practices.py "<query>"
+python3 scripts/check_best_practices.py "<query>"
 ```
 
 The script will identify:

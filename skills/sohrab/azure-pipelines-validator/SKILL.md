@@ -1,6 +1,6 @@
 ---
 name: azure-pipelines-validator
-description: "Comprehensive toolkit for validating, linting, and securing Azure DevOps Pipeline configurations."
+description: "Validate, lint, and security-check Azure DevOps Pipeline YAML — schema, task inputs, hosted images, service connections, and security findings, with bundled checker scripts. Use when reviewing or debugging existing Azure Pipelines. Do not use to generate new pipelines from scratch (use `azure-pipelines-generator`), or for GitHub Actions / GitLab CI / Jenkins."
 ---
 
 # Azure Pipelines Validator
@@ -19,8 +19,9 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 
 ## When NOT to use
 
-- do not use this skill as a generic replacement for unrelated tooling work
-- do not use it when the task is to build a brand-new artifact from scratch
+- Generating new pipelines from scratch — use `azure-pipelines-generator`.
+- GitHub Actions, GitLab CI, Jenkins, or other CI systems.
+- Generic YAML edits where Azure Pipelines semantics are not involved.
 
 ## Quick start
 

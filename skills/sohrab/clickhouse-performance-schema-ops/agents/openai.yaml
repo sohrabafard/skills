@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $clickhouse-performance-schema-ops to follow its workflow for clickhouse performance and schema operations."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

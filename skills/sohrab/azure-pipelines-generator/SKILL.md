@@ -1,6 +1,6 @@
 ---
 name: azure-pipelines-generator
-description: "Comprehensive toolkit for generating best practice Azure DevOps Pipelines following current standards and conventions. Use this skill when creating new Azure Pipelines, implementing CI/CD workflows, or building deployment pipelines."
+description: "Generate production Azure DevOps Pipelines (YAML) — stages, jobs, steps, templates, hosted images, and service connections — then validate them. Use when authoring new Azure Pipelines, CI/CD, or deployment pipelines on Azure DevOps. Do not use to audit, lint, or debug existing pipelines with no generation need (use `azure-pipelines-validator`), or for GitHub Actions / GitLab CI / Jenkins."
 ---
 
 # Azure Pipelines Generator
@@ -19,8 +19,9 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 
 ## When NOT to use
 
-- do not use this skill as a generic replacement for unrelated tooling work
-- do not use it when the task is only to audit, lint, or debug an existing file
+- Auditing, linting, or debugging existing pipelines with no generation need — use `azure-pipelines-validator`.
+- GitHub Actions, GitLab CI, Jenkins, or other CI systems.
+- Application changes that do not affect Azure Pipelines behavior.
 
 ## Quick start
 

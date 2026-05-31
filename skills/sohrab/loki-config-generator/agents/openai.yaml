@@ -1,7 +1,7 @@
 interface:
   display_name: "Loki Config Generator"
-  short_description: "Generate Loki server configs"
-  default_prompt: "Use $loki-config-generator to follow its workflow for generate loki server configs."
+  short_description: "Generate production Grafana Loki server configs and Alloy collection configs"
+  default_prompt: "Use $loki-config-generator to generate production Grafana Loki server configs (schema, storage, limits, ruler, compactor) and Grafana Alloy log-collection configs. Read its references for the workflow and production checklist."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

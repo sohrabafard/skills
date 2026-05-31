@@ -21,7 +21,7 @@ A minimal Terraform project structure with:
 To use a template, copy its directory to your project location:
 
 ```bash
-cp -r skills/sohrab/terraform-generator/assets/minimal-project/ ./my-terraform-project/
+cp -r assets/minimal-project/ ./my-terraform-project/
 cd my-terraform-project
 cp terraform.tfvars.example terraform.tfvars
 # Edit terraform.tfvars with your values

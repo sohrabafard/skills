@@ -1,7 +1,7 @@
 interface:
   display_name: "Ansible Validator"
-  short_description: "Validate Ansible automation"
-  default_prompt: "Use $ansible-validator to follow its workflow for validate ansible automation."
+  short_description: "Validate, lint, dry-run, and security-audit Ansible automation"
+  default_prompt: "Use $ansible-validator to lint (ansible-lint), check-mode dry-run, run Molecule, security-audit, and report fixes for Ansible playbooks/roles/collections. Read its references for the full workflow."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

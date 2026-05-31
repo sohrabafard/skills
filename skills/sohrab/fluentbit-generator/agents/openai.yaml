@@ -1,7 +1,7 @@
 interface:
-  display_name: "Fluentbit Generator"
-  short_description: "Generate Fluent Bit configs"
-  default_prompt: "Use $fluentbit-generator to follow its workflow for generate fluent bit configs."
+  display_name: "Fluent Bit Generator"
+  short_description: "Generate production Fluent Bit configs (INPUT/FILTER/OUTPUT), then validate"
+  default_prompt: "Use $fluentbit-generator to scaffold production Fluent Bit configs (inputs, filters, parsers, multiline, K8s/OTel/Loki/Elasticsearch outputs), then pair with $fluentbit-validator. Read its topic map and docs for the workflow."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

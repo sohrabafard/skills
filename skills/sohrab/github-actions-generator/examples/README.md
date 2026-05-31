@@ -152,7 +152,7 @@ These examples can be used as:
 To validate any of these examples:
 
 ```bash
-cd skills/sohrab/github-actions-validator
+# run the commands below from this skill root directory (folder containing SKILL.md)
 bash scripts/validate_workflow.sh ../../github-actions-generator/examples/workflows/nodejs-ci.yml
 ```
 

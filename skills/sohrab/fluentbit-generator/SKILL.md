@@ -1,6 +1,6 @@
 ---
 name: fluentbit-generator
-description: "Comprehensive toolkit for generating best practice Fluent Bit configurations. Use this skill when creating new Fluent Bit configs, implementing log collection pipelines (INPUT, FILTER, OUTPUT sections), or building production-ready telemetry configurations."
+description: "Generate production Fluent Bit configurations — INPUT/FILTER/OUTPUT pipelines, parsers, multiline, and Kubernetes/OpenTelemetry/Loki/Elasticsearch outputs — then validate them. Use when authoring new Fluent Bit configs or log/telemetry collection pipelines. Do not use to audit, lint, or debug an existing config with no generation need (use `fluentbit-validator`), or for non-Fluent Bit logging agents (Vector, Alloy, Logstash)."
 ---
 
 # Fluent Bit Config Generator
@@ -19,8 +19,9 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 
 ## When NOT to use
 
-- do not use this skill as a generic replacement for unrelated tooling work
-- do not use it when the task is only to audit, lint, or debug an existing file
+- Auditing, linting, or debugging an existing config with no generation need — use `fluentbit-validator`.
+- Non-Fluent Bit logging agents (Vector, Grafana Alloy, Logstash).
+- Loki server configuration — use `loki-config-generator`.
 
 ## Quick start
 

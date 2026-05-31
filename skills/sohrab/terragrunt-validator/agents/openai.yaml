@@ -1,7 +1,7 @@
 interface:
   display_name: "Terragrunt Validator"
-  short_description: "Validate Terragrunt stacks"
-  default_prompt: "Use $terragrunt-validator to follow its workflow for validate terragrunt stacks."
+  short_description: "Validate, lint, security-scan, and dry-run Terragrunt configs and Stacks"
+  default_prompt: "Use $terragrunt-validator to format, lint, validate, graph, and dry-run Terragrunt/Stacks, run Trivy/Checkov security scans, and report fixes. Read its references for the full workflow."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

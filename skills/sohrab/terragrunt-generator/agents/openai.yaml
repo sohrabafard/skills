@@ -1,7 +1,7 @@
 interface:
   display_name: "Terragrunt Generator"
-  short_description: "Generate Terragrunt stacks"
-  default_prompt: "Use $terragrunt-generator to follow its workflow for generate terragrunt stacks."
+  short_description: "Generate Terragrunt configs, Stacks, and multi-env setups, then validate"
+  default_prompt: "Use $terragrunt-generator to scaffold production Terragrunt (root configs, child modules, Stacks, multi-env, modern blocks), then run $terragrunt-validator and fix until clean. Read its references for patterns."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

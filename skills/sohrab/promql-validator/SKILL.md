@@ -1,6 +1,6 @@
 ---
 name: promql-validator
-description: "Comprehensive toolkit for validating, optimizing, and understanding Prometheus Query Language (PromQL) queries. Use this skill when working with PromQL queries to check syntax, detect anti-patterns, identify optimization opportunities, and interactively plan queries with users."
+description: "Validate, optimize, and explain existing PromQL queries — check syntax, detect anti-patterns, surface optimization opportunities, and interactively plan queries, using bundled checker scripts. Use when reviewing, optimizing, or debugging PromQL. Do not use to author new PromQL from scratch (use `promql-generator`), for LogQL log queries, or for non-Prometheus observability work where PromQL is not involved."
 ---
 
 # Promql Validator
@@ -19,8 +19,9 @@ Keep this top-level file small. Load the topic map, supporting docs, examples, s
 
 ## When NOT to use
 
-- do not use this skill as a generic replacement for unrelated tooling work
-- do not use it when the task is to build a brand-new artifact from scratch
+- Authoring new PromQL from scratch — use `promql-generator`.
+- LogQL log queries — use the LogQL skills.
+- Non-Prometheus observability work where PromQL is not involved.
 
 ## Quick start
 

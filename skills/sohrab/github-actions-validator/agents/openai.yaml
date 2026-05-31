@@ -1,7 +1,7 @@
 interface:
-  display_name: "Github Actions Validator"
-  short_description: "Validate GitHub Actions workflows"
-  default_prompt: "Use $github-actions-validator to follow its workflow for validate github actions workflows."
+  display_name: "GitHub Actions Validator"
+  short_description: "Validate, lint, and security-audit GitHub Actions workflows and actions"
+  default_prompt: "Use $github-actions-validator to lint workflows with actionlint, dry-run with act, audit permissions/OIDC/pinned versions, and report fixes for .github/workflows and custom actions. Read its references for the full workflow."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

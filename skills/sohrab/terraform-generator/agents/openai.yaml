@@ -1,7 +1,7 @@
 interface:
   display_name: "Terraform Generator"
-  short_description: "Generate Terraform HCL configurations"
-  default_prompt: "Use $terraform-generator to follow its workflow for generate terraform iac."
+  short_description: "Generate production-ready Terraform/OpenTofu HCL, then validate it"
+  default_prompt: "Use $terraform-generator to scaffold production Terraform/OpenTofu: detect providers/modules, read its references, generate HCL with required data sources and lifecycle protection, then run $terraform-validator and fix until all checks pass."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

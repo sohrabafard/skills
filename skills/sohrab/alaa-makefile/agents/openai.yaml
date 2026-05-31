@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $alaa-makefile to generate, validate, refactor, and debug Makefiles and .mk build files."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true
