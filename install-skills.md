@@ -44,6 +44,41 @@ Get-ChildItem $srcRoot -Directory | ForEach-Object {
 }
 
 ```
+claude code:
+```
+$srcRoot = "D:\Sohrab\Project\skills\skills\sohrab"
+$dstRoot = "$HOME\.claude\skills"
+
+New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
+
+Get-ChildItem $srcRoot -Directory |
+    Where-Object {
+        $_.Name -notlike ".*" -and
+        (Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md"))
+    } |
+    ForEach-Object {
+        $skillName = $_.Name
+        $target = $_.FullName
+        $linkPath = Join-Path $dstRoot $skillName
+
+        if (-not (Test-Path -LiteralPath $linkPath)) {
+            New-Item -ItemType SymbolicLink -Path $linkPath -Target $target | Out-Null
+            Write-Host "Linked: $skillName -> $target"
+            return
+        }
+
+        $item = Get-Item -LiteralPath $linkPath -Force
+
+        if ($item.LinkType -eq "SymbolicLink" -and $item.Target -eq $target) {
+            Write-Host "Exists OK: $skillName"
+        } else {
+            Write-Host "Exists but not matching, skipped: $skillName"
+            Write-Host "  Path:   $linkPath"
+            Write-Host "  Target: $($item.Target)"
+        }
+    }
+```
+
 
 
 ## install browser:
