@@ -106,7 +106,9 @@ Rules:
 
 - `alaa-permission-catalog` governs permission names, ownership, and bitmap ids.
 - Auth consumes the catalog-owned generated auth seed snapshot and issues runtime JWT authorization claims.
-- Downstream services must use generated, committed service-local permission maps from the catalog instead of hand-maintained permission-name-to-bitmap-id maps.
+- Downstream services must use generated, committed service-local permission maps from the catalog instead of
+  hand-maintained permission-name-to-bitmap-id maps. These maps may be PHP configs or generated Go files depending
+  on the service stack.
 - Bitmap ids are 1-based; `bit_index` is zero-based and equals `bitmap_id - 1`.
 - Bits are packed least-significant-bit first inside each byte.
 - Permission bitmap bytes are encoded with unpadded base64url.
@@ -116,6 +118,7 @@ Rules:
   - `comment_get_show` owns bitmap id `40`
   - extracted `content_*` permissions own bitmap ids `64-78`
   - ControlledOps `content_bulk_*` permissions own bitmap ids `79-91`
+  - tusd upload-intake permissions own bitmap ids `92-95`
 
 ## Route family expectations
 

@@ -682,7 +682,8 @@ What not to do:
 - Auth `bit_index` values are zero-based and equal `bitmap_id - 1`.
 - Bits are packed least-significant-bit first inside each byte.
 - Permission meaning comes from the downstream service's generated, committed permission map, not from hard-coded bit labels at the gateway.
-- Downstream `config/permissions.php` maps must be generated from `alaa-permission-catalog` and committed per service; do not hand-maintain local bitmap ids.
+- Downstream `config/permissions.php` maps or generated Go permission maps must be generated from
+  `alaa-permission-catalog` and committed per service; do not hand-maintain local bitmap ids.
 - Auth-service derives `perm_bm` from catalog-owned `bit_index`, not from mutable local package table IDs.
 - Auth-service compilation precedence is `direct deny > direct allow > role grants`.
 - If a downstream service, gateway extension, or debugging tool inspects raw JWT claims instead of injected headers, treat `prv` and `av` as the companion invalidation metadata for `prm`.
@@ -711,6 +712,7 @@ What not to do:
   - `comment_get_show` owns bitmap id `40`.
   - extracted `content_*` permissions own bitmap ids `64-78`.
   - ControlledOps `content_bulk_*` permissions own bitmap ids `79-91`.
+  - tusd upload-intake permissions own bitmap ids `92-95`.
   - legacy VOD ids remain stable and must not be reused across the extracted content service boundary.
 - VOD keeps legacy service-local permission ids stable; extracted content-service permissions use new catalog-owned ids and are not runtime aliases for VOD permissions.
 - Laravel compatibility pattern: decode the bitmap once in auth middleware, map ids to permission names from service-local config, attach the mapped names to the request-scoped user object, and let `isAbleTo` or policy checks read those normalized permission names.
