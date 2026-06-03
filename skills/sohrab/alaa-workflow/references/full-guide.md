@@ -79,7 +79,16 @@ Choose the plan directory in this order:
 3. existing `docs/plan/`
 4. default `docs/_agent_plans/`
 
-Use `.codex/state/` for state JSON whenever state files are needed.
+Use `.codex/state/` for state JSON whenever state files are needed and the current sandbox can write it.
+
+If `.codex/state` is blocked by sandbox, managed automation permissions, or approval settings:
+
+- do not keep retrying the same blocked write
+- do not request escalation only to create workflow state
+- keep the plan file in the selected plan directory
+- use an existing or new `docs/agents/<stem>-state.md` continuation file as the repo-writable fallback
+- record the intended `.codex/state/<stem>.json` path and the exact blocker
+- keep final output honest that JSON state was blocked and repo-local markdown state was used instead
 
 ## Naming rules
 

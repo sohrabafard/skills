@@ -56,6 +56,7 @@ This skill is the workflow operating system for long tasks. It owns orchestratio
   - plan: `<parent-stem>__<lane>.md`
   - state: `<parent-stem>__<lane>.json`
 - Never migrate an in-flight task from `docs/plan/` to `docs/_agent_plans/` or the reverse.
+- If `.codex/state` writes are blocked by sandbox, managed automation permissions, or approval settings, do not keep retrying or widen scope just to create state JSON. Keep the plan file, use an existing or new `docs/agents/<stem>-state.md` continuation file as the repo-writable fallback, and record the blocked `.codex/state/<stem>.json` path plus the exact rejection.
 
 ## Plan mode contract
 
@@ -90,6 +91,7 @@ Treat the current plan file as the primary source of truth for sequencing. Durin
 - run phase validation before moving on
 - update plan/state files after each meaningful milestone, before long validation runs, before handoff, and at task completion
 - keep terminal output low-noise and move durable knowledge into repo-local artifacts instead of chat
+- when state JSON cannot be written, keep the same update cadence in the fallback `docs/agents/*` state file and mention the fallback in the final report
 
 Read `references/full-guide.md`, especially:
 

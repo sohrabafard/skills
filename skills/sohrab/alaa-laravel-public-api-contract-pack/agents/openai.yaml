@@ -1,0 +1,7 @@
+interface:
+  display_name: "Laravel Public API Contract Pack"
+  short_description: "Source-backed Laravel API contract packs"
+  default_prompt: "Use $alaa-laravel-public-api-contract-pack to build source-backed Laravel public API contract docs, OpenAPI, and Postman artifacts."
+
+policy:
+  allow_implicit_invocation: true

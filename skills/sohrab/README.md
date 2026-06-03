@@ -154,6 +154,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 - `alaa-cicd-laravel-postgres`
 - `alaa-mongodb-patterns`
 - `service-runtime-kit-governance`
+- `alaa-laravel-public-api-contract-pack`
 
 ### Frontend and frontend delivery
 
