@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la && echo \"---ROOT---\" && cd /d/Sohrab/Project/skills && ls -la)"
+    ]
+  }
+}

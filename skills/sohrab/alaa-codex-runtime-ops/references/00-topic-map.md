@@ -18,6 +18,8 @@ Use this file to choose the smallest recovery reference.
 - `git safe.directory` for read-only inspection
 - locked Codex session JSONL files
 - active log scanning safety
+- session transcript audits and evidence classification
+- missing Codex app chat/config/global-state diagnosis
 
 - `references/90-source-map.md`
 - freshness triggers for Codex, shell, and OS behavior
