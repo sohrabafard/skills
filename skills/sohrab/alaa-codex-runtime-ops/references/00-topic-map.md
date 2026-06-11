@@ -4,6 +4,7 @@ Use this file to choose the smallest recovery reference.
 
 - `references/10-windows-sandbox-recovery.md`
 - sandbox refresh or setup failures
+- sandbox-related DNS, package-registry, package-index, or remote-doc access failures
 - serial retry after failed parallel reads
 - preserving scope after harness errors
 

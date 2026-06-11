@@ -28,3 +28,12 @@ If a parallel read batch fails:
 ## Escalation
 
 Request escalation when the command is necessary and sandboxing prevents completion. Keep the justification tied to the user's task and the failed capability.
+
+## Network, registry, and docs access
+
+When a command fails with DNS, host-resolution, package-registry, package-index, Composer, npm, Git remote, or remote-doc access errors:
+
+1. Decide whether live external access is actually required for the task.
+2. If current external state is required, rerun the exact command with escalation and a narrow justification.
+3. If local source, lock files, generated artifacts, or vendored docs are enough, proceed locally and report the freshness limit.
+4. Do not edit dependency manifests, lock files, mirrors, package configs, or docs URLs just to work around a sandbox/network-policy failure.

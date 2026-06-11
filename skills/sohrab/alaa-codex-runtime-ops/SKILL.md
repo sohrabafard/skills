@@ -1,6 +1,6 @@
 ---
 name: alaa-codex-runtime-ops
-description: "Use this skill when Codex work on Windows hits runtime or harness problems such as sandbox refresh/setup failures, `CreateProcessAsUserW failed: 206`, command-length issues, Windows `EPERM` during validation or build cleanup, Docker Desktop named-pipe permission failures, locked active session JSONL files, session transcript audits, missing Codex app state/config diagnostics, Git dubious-ownership or `safe.directory` reads, shell syntax/path/quoting confusion, or escalation decisions. It recovers the task without widening scope or changing repo behavior."
+description: "Use this skill when Codex work on Windows hits runtime or harness problems such as sandbox refresh/setup failures, `CreateProcessAsUserW failed: 206`, command-length issues, Windows `EPERM` during validation or build cleanup, Docker Desktop named-pipe permission failures, sandbox-related DNS/network/registry/index access failures, locked active session JSONL files, session transcript audits, missing Codex app state/config diagnostics, Git dubious-ownership or `safe.directory` reads, shell syntax/path/quoting confusion, or escalation decisions. It recovers the task without widening scope or changing repo behavior."
 ---
 
 # Alaa Codex Runtime Ops
@@ -17,6 +17,7 @@ The goal is to make the smallest reliable retry or fallback, not to turn a tooli
 - `CreateProcessAsUserW failed: 206` or other command-line length failures
 - Windows `EPERM` appears while validation/build commands open Vite/Vitest temp config modules or unlink package `dist` outputs
 - Docker commands fail on Windows with named-pipe permission errors such as `npipe:////./pipe/dockerDesktopLinuxEngine`
+- DNS, host-resolution, package-registry, package-index, Composer, npm, Git remote, or docs-fetch commands fail in a way that is likely sandbox or network-policy related
 - active `~/.codex/sessions` JSONL files are locked while being scanned
 - local Codex session transcripts or `.codex-global-state.json` must be audited without dumping private content
 - Codex app chat history, `config.toml`, or global `AGENTS.md` appears missing and needs read-only diagnosis
@@ -35,16 +36,17 @@ The goal is to make the smallest reliable retry or fallback, not to turn a tooli
 ## Recovery workflow
 
 1. Preserve the original task scope and the last reliable evidence.
-2. Identify whether the failure is sandbox setup, command length, Windows `EPERM`, Docker named-pipe access, locked file, Git trust, shell syntax, quoting, or permissions.
+2. Identify whether the failure is sandbox setup, command length, Windows `EPERM`, Docker named-pipe access, network or registry access, locked file, Git trust, shell syntax, quoting, or permissions.
 3. Retry only the failed or essential command with the smallest stable shape.
 4. Prefer native PowerShell plus `rg`, `Get-Content`, and bounded reads for Windows read-only recovery.
 5. Split broad commands into deterministic batches when command length or sandbox refresh is the likely failure.
-6. Request escalation only when the blocked command is important and the sandbox failure prevents completion.
+6. Request escalation only when the blocked command is important and the sandbox or network-policy failure prevents completion.
 7. For session transcript audits, parse metadata and aggregate patterns first; redact secrets, tokens, long IDs, and private values before showing any examples.
 8. For Windows `EPERM` in validation/build cleanup, rerun the exact failed gate once with escalation before changing code or deleting artifacts.
 9. For Docker named-pipe permission failures, rerun the exact Docker command with escalation if Docker state is required; otherwise fall back to source/config inspection and say runtime Docker validation was blocked.
-10. For shell parser errors, switch shell syntax once: convert to native PowerShell or run the intended Bash command through `bash -lc` from the right working directory.
-11. Report the runtime workaround briefly, then return to the actual task.
+10. For sandbox-related DNS, package-registry, package-index, or remote-doc failures, rerun the exact required command with escalation when live external access is necessary; otherwise stay with local sources and report the freshness limit.
+11. For shell parser errors, switch shell syntax once: convert to native PowerShell or run the intended Bash command through `bash -lc` from the right working directory.
+12. Report the runtime workaround briefly, then return to the actual task.
 
 ## Hard rules
 
