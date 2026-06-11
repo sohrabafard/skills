@@ -11,6 +11,7 @@ Use this file to choose the smallest recovery reference.
 - command-line length failures
 - PowerShell and Git Bash path handling
 - quoting and batching on Windows
+- Windows `EPERM` during Vite/Vitest/tsup validation or build cleanup
 - Windows reserved/excluded host ports blocking Docker or localhost binds
 - escalation boundaries
 

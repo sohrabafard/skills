@@ -42,3 +42,16 @@ For one-off shell recovery, prefer native PowerShell. If Bash is required, consi
 ## Escalated commands
 
 If a needed command fails because of sandbox permissions, rerun it with escalation and a concise task-specific justification. Do not request broad persistent prefixes for arbitrary scripting.
+
+## Windows EPERM during frontend validation
+
+Observed recurring pattern: on Windows, package validation can fail under the sandbox with `EPERM` while Vitest opens `.vite-temp/vitest.config.*.mjs` files or tsup/build cleanup unlinks package `dist` outputs such as `index.mjs` or `index.d.ts`.
+
+Recovery sequence:
+
+1. Treat the first `EPERM` as a runtime/permission failure, not evidence of a code regression.
+2. Rerun the exact failed validation or build command once with `sandbox_permissions: "require_escalated"` and a task-specific justification.
+3. Prefer the smallest gate that failed, such as `yarn workspace <pkg> test` or `yarn workspace <pkg> build`; if a multi-package loop failed, rerun affected packages serially or rerun the same loop elevated.
+4. Keep the retry scoped to validation. Do not edit source, rewrite config, or delete `node_modules`, `.vite-temp`, or `dist` as the first fix.
+5. If the exact escalated retry passes, record the runtime workaround and continue with normal validation.
+6. If it still fails, then inspect for a real lock holder, antivirus/indexer interference, stale generated output, or a project script issue before proposing cleanup.
