@@ -39,6 +39,22 @@ Git Bash may rewrite slash-looking argument or environment values when invoking 
 
 For one-off shell recovery, prefer native PowerShell. If Bash is required, consider `MSYS_NO_PATHCONV=1` or `MSYS2_ARG_CONV_EXCL=*` only for the affected command.
 
+## Shell syntax mismatch
+
+Recurring Windows failure modes:
+
+- PowerShell `ParserError` from complex regex, brace expansion, `awk`, or Bash quoting pasted into a PowerShell command.
+- `The term 'NAME=value' is not recognized` when Bash-style environment assignment is run in PowerShell.
+- Inline `python -c` commands fail because `\n`, quotes, or list literals were flattened into one PowerShell string.
+
+Recovery sequence:
+
+1. Do not retry the identical command string.
+2. If the command is conceptually PowerShell-native, rewrite it using PowerShell syntax: `$env:NAME = 'value'`, `Get-Content`, `Select-String`, arrays, and explicit path lists instead of Bash brace expansion.
+3. If the command is Bash-native, run it as Bash explicitly, for example `bash -lc 'cd /d/path && NAME=value command ...'`.
+4. For inline Python on PowerShell, prefer a here-string assigned to `$code`, then `python -c $code`; set `$env:PYTHONIOENCODING = 'utf-8'` when transcript text may contain non-ASCII.
+5. Keep the retry bounded to the failed command or smallest useful subset.
+
 ## Escalated commands
 
 If a needed command fails because of sandbox permissions, rerun it with escalation and a concise task-specific justification. Do not request broad persistent prefixes for arbitrary scripting.
@@ -55,3 +71,15 @@ Recovery sequence:
 4. Keep the retry scoped to validation. Do not edit source, rewrite config, or delete `node_modules`, `.vite-temp`, or `dist` as the first fix.
 5. If the exact escalated retry passes, record the runtime workaround and continue with normal validation.
 6. If it still fails, then inspect for a real lock holder, antivirus/indexer interference, stale generated output, or a project script issue before proposing cleanup.
+
+## Docker Desktop named-pipe permissions
+
+On Windows, Docker commands may fail with `permission denied while trying to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine`.
+
+Recovery sequence:
+
+1. Decide whether live Docker state is required for the user's task.
+2. If it is required, rerun the exact Docker command with escalation and a concise justification.
+3. If the task can proceed from source/config inspection, use that fallback and report that Docker runtime validation was blocked.
+4. Do not treat the named-pipe permission error as evidence that containers, Compose files, or application code are broken.
+5. If Docker access works after escalation, continue with the original validation path and keep any follow-up Docker reads scoped.

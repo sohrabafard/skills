@@ -11,7 +11,9 @@ Use this file to choose the smallest recovery reference.
 - command-line length failures
 - PowerShell and Git Bash path handling
 - quoting and batching on Windows
+- PowerShell parser errors, Bash syntax accidentally run in PowerShell, and inline script quoting
 - Windows `EPERM` during Vite/Vitest/tsup validation or build cleanup
+- Docker Desktop named-pipe permission failures
 - Windows reserved/excluded host ports blocking Docker or localhost binds
 - escalation boundaries
 
