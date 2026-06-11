@@ -37,7 +37,8 @@ Keep this top-level file lean. Load only the reference files needed for the curr
 4. Verify current behavior from the active repo before using any historical route counts, permission IDs, package versions, or phase names.
 5. For package work, inspect `D:\Sohrab\Project\alaa-controlled-ops` docs, contracts, tests, and `scripts/controlled_ops_verify.php`.
 6. For adopter-service work, inspect the consuming service routes, controllers, FormRequests, resources, migrations, jobs, tests, docs, and Postman artifacts first.
-7. Pair with `$alaa-services-contract`, `$alaa-trust-gateway-auth`, `$alaa-postman-collections`, `$alaa-docs-farsi`, `$alaa-php-clean-code`, or `$service-runtime-kit-governance` when those surfaces are in scope.
+7. For release or publish work, read `references/20-package-service-adoption.md`, `references/40-validation-and-release-gates.md`, and `D:\satis-local\README.md`; verify branch/tag/remote truth from the current repos; and stop for explicit user approval before any publishing action unless the user already said approval is not required.
+8. Pair with `$alaa-services-contract`, `$alaa-trust-gateway-auth`, `$alaa-postman-collections`, `$alaa-docs-farsi`, `$alaa-php-clean-code`, or `$service-runtime-kit-governance` when those surfaces are in scope.
 
 ## Non-negotiables
 
@@ -46,6 +47,8 @@ Keep this top-level file lean. Load only the reference files needed for the curr
 - Dry-run, approval, execution, retry, cancellation, and recovery claims must be backed by current code or committed docs.
 - Treat historical session facts as search hints. Verify exact route counts, Postman counts, permission IDs, and package versions against the current repositories.
 - Prefer tagged Satis package adoption for service Composer locks. Local path repositories are developer-only overrides unless the user explicitly asks otherwise.
+- Never publish a ControlledOps package release, push a release tag, push package code as part of a release, run the Satis build, or perform the consuming-service release adoption step without explicit user approval, unless the user explicitly said approval is not required or that publishing is authorized in the current request.
+- After an approved release branch/tag push, refresh the local Ala Satis repository from `D:\satis-local` with `docker compose --profile build run --rm satis-build`; do not stop at Git push and claim the package is available.
 
 ## Reference navigation
 
