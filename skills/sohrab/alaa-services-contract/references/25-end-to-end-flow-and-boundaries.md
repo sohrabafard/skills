@@ -99,6 +99,12 @@ Rules:
 
 Route-shape reminder:
 - gateway-facing routes may include a service prefix such as `/auth`, `/content`, `/comment`, `/ticket`, `/vod`, or `/wa`
+- the current default public gateway service-prefix map for frontend clients and framework-free SDKs is:
+  - `auth` -> `/auth`
+  - `content` -> `/content`
+  - `comment` -> `/comment`
+  - `tusd` -> `/tusd`
+  - `wa` -> `/wa`
 - that first service prefix is a gateway routing prefix, not necessarily a backend route prefix and not necessarily the same concept as a child SDK `servicePrefix`, `apiPrefix`, or fixed ingest path
 - clients and SDKs should compose the public gateway path exactly once through existing public configuration seams, such as service base URLs or child route-prefix options, without changing child SDK/service route definitions just to satisfy gateway routing
 - trusted internal routes stay service-owned and are not public frontend discovery surfaces
@@ -108,6 +114,9 @@ Route-shape reminder:
 - do not collapse or de-duplicate repeated path segments at runtime; if a duplicate segment appears, decide whether it is intentional public-vs-child route composition or a bad config, then fix the config seam rather than rewriting paths ad hoc
 - for client SDK and frontend package work, do not change child SDK source or backend routes to add a gateway prefix; prefer public config such as core `baseUrls`, child `servicePrefix`/`apiPrefix`, or service-specific path options
 - if a child path is fixed, as with WA ingest, apply the gateway prefix through the service base URL
+- for aggregate SDKs such as `@alaa/sdk`, default `createAlaaSdk(config)`-style factories to the canonical prefix map, but never rewrite service roots supplied through an injected core; the core owner must provide gateway-compatible roots
+- for the current frontend SDK set, auth is special: preserve the auth child route prefix that already includes its service route family and point the auth core base at the gateway root; apply content, comment, tusd, and WA gateway prefixes through shared core `baseUrls`
+- do not pass child route-prefix overrides solely for gateway routing, and do not trim, rewrite, or de-duplicate repeated path segments between the gateway prefix and child-defined route path
 - before claiming a prefix is active in an environment, verify the gateway route table and rendered HAProxy config when available; in the current local convention this usually means checking `D:/Sohrab/Project/gateway/charts/gateway/values*.yaml`, `D:/Sohrab/Project/gateway/docker/values.shared-network.yaml`, and rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`
 - use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
 

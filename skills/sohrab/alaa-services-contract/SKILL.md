@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing exact Ala behavior for health/readiness routes, service naming, response envelopes, RequestObservabilityMiddleware, ResolveUserMiddleware, trusted headers, public `project_id` UUIDv7 handling, `X-Project-Id` trusted context, `X-Access` permission decoding, central alaa-permission-catalog generated service permission configs or Go maps, `config/permissions.php` drift, `X-Request-Id`, `traceparent`, queryable `trace_id`, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, `stripPathPrefix`, public prefixed routes versus service-local routes, frontend-to-gateway-to-backend flow, observability, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, fast-test SQLite support, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
+description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -32,7 +32,7 @@ This skill explains how a normal Ala backend fits into the larger platform:
 9. Load `$alaa-crockford-base32-codecs` when the task needs shared Crockford Base32 or UUIDv7 helper assets across runtimes.
 10. For any Laravel request body, query parameter, or DTO field named `project_id`, read `references/30-trusted-ingress-and-laravel-contract.md` before editing validation or resolution code.
 11. For any permission config, bitmap id, `config/permissions.php`, `X-Access` decoding, or drift-check task, read `references/35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth`.
-12. For gateway-facing route prefixes, `stripPathPrefix`, frontend/client SDK URL composition, or public-path versus backend-local route shape, read `references/25-end-to-end-flow-and-boundaries.md` and pair with `$alaa-trust-gateway-auth`; also load `$alaa-haproxy` when actual gateway config or rendered HAProxy behavior matters.
+12. For gateway-facing route prefixes, the canonical service-prefix map, `stripPathPrefix`, frontend/client SDK URL composition, or public-path versus backend-local route shape, read `references/25-end-to-end-flow-and-boundaries.md` and pair with `$alaa-trust-gateway-auth`; also load `$alaa-haproxy` when actual gateway config or rendered HAProxy behavior matters.
 
 ## When NOT to use
 
