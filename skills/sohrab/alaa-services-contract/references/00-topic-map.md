@@ -29,7 +29,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
   - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.
 - `Mode E - Platform flow and boundaries view`
-  - Use when the task is about client -> gateway -> service flow, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, or internal-hop discipline.
+  - Use when the task is about client -> gateway -> service flow, gateway route prefixes, `stripPathPrefix`, public prefixed routes versus service-local routes, frontend/client SDK URL composition, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, or internal-hop discipline.
   - Read `25-end-to-end-flow-and-boundaries.md`.
 
 ## Cross-cutting references

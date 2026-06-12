@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
-  short_description: "Hard Ala service, runtime, and permission-config contract"
-  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, trust-boundary, permission-catalog, observability, runtime, and deployment contract."
+  short_description: "Hard Ala service, gateway route, runtime, and permission contract"
+  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, gateway route-prefix, trust-boundary, permission-catalog, observability, runtime, and deployment contract."
 
 policy:
   allow_implicit_invocation: true
