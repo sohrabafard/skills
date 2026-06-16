@@ -27,8 +27,11 @@ useMeta(() => ({
 - Do not use it as a blanket excuse to hide unstable SSR output.
 - Prefer fixing deterministic markup first; use `QNoSsr` or `useHydration` only when the feature is genuinely client-only.
 
+- ✅ Do — for id/aria mismatches, reach for Vue 3.5 `useId()` (stable across server/client) before `useHydration`.
+- ❌ Don't — wrap a whole subtree in `QNoSsr` to hide one unstable value; that loses SSR/SEO for the entire subtree.
+
 - Good search terms:
-  - `useHydration`, `isHydrated`, `QNoSsr`, `client-only`
+  - `useHydration`, `isHydrated`, `QNoSsr`, `client-only`, `useId`
 
 ### `useDialogPluginComponent`
 
@@ -53,8 +56,28 @@ useMeta(() => ({
 - `Loading` is for blocking or global loading state.
 - Treat `html: true` and similar content-rich options as security boundaries; sanitize untrusted content.
 
+- ✅ Do — keep user-controlled text as plain text (default), letting Quasar escape it.
+
+```js
+Notify.create({ message: userText }) // escaped by default
+```
+
+- ❌ Don't — pass unsanitized user input with `html: true`; it is an XSS sink.
+
+```js
+Notify.create({ message: userText, html: true }) // injects raw HTML
+```
+
 - Good search terms:
   - `Dialog plugin`, `Notify`, `Loading`, `html true`, `sanitize`
+
+### `Cookies`
+
+- Use for SSR-safe cookie read/write (`Cookies.get`/`set`; via `ssrContext` on the server).
+- Behavior note (Quasar 2.20): `Cookies` now uses `MaxAge` instead of `expires`. Re-check expiry assumptions if you relied on an absolute `expires` date.
+
+- Good search terms:
+  - `Cookies set`, `maxAge`, `expires`, `ssrContext cookies`, `httpOnly`
 
 ### `Screen`
 
@@ -111,11 +134,14 @@ useMeta(() => ({
 - Prefer tree-shaken imports or destructuring to avoid pulling in more than you need.
 - Treat locale/timezone-sensitive formatting in SSR as a potential hydration risk.
 
+- ✅ Do — import the `date` util and destructure just what you use.
+
 ```js
 import { date } from 'quasar'
-
 const { formatDate } = date
 ```
+
+- ❌ Don't — assume timezone/locale-stable output in SSR markup; format such values after mount or allow the mismatch deliberately (`data-allow-mismatch`).
 
 - Good search terms:
   - `formatDate`, `addToDate`, `extractDate`, `timezone`, `tree shaking`

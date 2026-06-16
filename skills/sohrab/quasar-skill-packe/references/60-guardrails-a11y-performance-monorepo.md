@@ -32,6 +32,18 @@ For code-shape examples, pair this file with:
 - If validation or helper text matters, keep the relationship between field, error, and hint understandable to assistive tech.
 - Maintain stable primitive `:key` values in `v-for`.
 
+✅ Do — give an icon-only control an accessible name and a real role.
+
+```vue
+<q-btn flat round icon="delete" aria-label="Delete row" @click="remove(row)" />
+```
+
+❌ Don't — ship an icon-only or clickable-`div` control with no name and no keyboard path.
+
+```vue
+<div class="cursor-pointer" @click="remove(row)"><q-icon name="delete" /></div>
+```
+
 ### Accessibility audit checklist
 
 - Can the user reach and leave the UI surface with keyboard only?
@@ -54,6 +66,32 @@ For code-shape examples, pair this file with:
 - For `QVirtualScroll`, keep large item arrays non-reactive or frozen when possible.
 - Be careful with media-heavy surfaces such as `QImg`, `QVideo`, carousels, and uploads on weak networks.
 - After upgrading to Vite 8, treat optimizer, Rolldown/Oxc, or minifier behavior changes as possible root causes instead of assuming the component regressed.
+
+### Vite 8 build-tooling facts that bite Quasar apps
+
+Vite 8 (bundled by app-vite v3) changed the build internals. These are the ones that actually break or surprise Quasar builds:
+
+- Dependency pre-bundling uses **Rolldown** (not esbuild); JS transforms/minify use **Oxc**; CSS minify uses **Lightning CSS**.
+- The **object form of `manualChunks` is removed**. Function form is deprecated in favor of Rolldown's `codeSplitting` option.
+- `build.rollupOptions` -> `build.rolldownOptions` (old name deprecated, still works for now).
+- **CommonJS default-import** interop is stricter and can break a package; escape hatch `legacy.inconsistentCjsInterop: true`.
+- Default browser targets rose (Chrome 111, Safari 16.4, ...); revisit `build.target` if you must support older browsers.
+
+✅ Do — split vendor chunks with the function form (or `codeSplitting`) under `extendViteConf`.
+
+```js
+extendViteConf (viteConf) {
+  return { build: { rolldownOptions: { output: { manualChunks (id) {
+    if (id.includes('node_modules')) return 'vendor'
+  } } } } }
+}
+```
+
+❌ Don't — use the removed object form; it silently no longer applies in Vite 8.
+
+```js
+manualChunks: { vendor: ['vue', 'quasar'] } // object form: removed in Vite 8
+```
 
 ### Performance audit checklist
 
@@ -102,16 +140,20 @@ Use these rules when Quasar code lives in workspaces or shared packages:
 
 ### Small packaging patterns
 
-- Package boundary shape:
+- Package boundary shape (align peers with the host app; app-vite v3 expects `vue-router >= 5`, `pinia ^2 || ^3`):
 
 ```json
 {
   "peerDependencies": {
     "vue": "^3.5.0",
-    "quasar": "^2.0.0"
+    "quasar": "^2.16.0"
   }
 }
 ```
+
+✅ Do — declare `vue` and `quasar` as peers and externalize them so the host owns a single copy.
+
+❌ Don't — list `vue`/`quasar` as direct `dependencies` of a reusable package; that ships duplicate copies and triggers "two Vues" / dedupe failures when linked.
 
 - Package entry should pull required runtime styles into the build graph:
 

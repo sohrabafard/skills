@@ -14,6 +14,20 @@ This file restores the strongest parts of the old `quasar-layout-*` skills: `QLa
 - Important warning:
   - CSS margins on `QLayout`, `QPageContainer`, `QHeader`, `QFooter`, or drawers can break the layout; use padding instead.
 
+- ✅ Do — name every section in `view` and space content with padding.
+
+```vue
+<q-layout view="hHh lpR fFf">
+  <q-page-container class="q-pa-md"><router-view /></q-page-container>
+</q-layout>
+```
+
+- ❌ Don't — add margins to layout parts or shorten the `view` string.
+
+```vue
+<q-layout view="hhh" style="margin: 16px">  <!-- margin breaks offsets; view is incomplete -->
+```
+
 - Good search terms:
   - `view`, `uppercase fixed`, `layout builder`, `margin breaks layout`
 

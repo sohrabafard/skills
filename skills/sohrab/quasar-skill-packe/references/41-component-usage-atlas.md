@@ -24,6 +24,18 @@ Use this file when the agent needs the layer the old component-specific skills w
   - define `columns` explicitly when you need sorting, slot targeting, or visibility control
   - treat server-side pagination as a data-flow problem, not just a visual prop choice
   - grid mode can be a valid mobile fallback
+- ✅ Do — set a stable primitive `row-key` and declare `columns` explicitly.
+
+```vue
+<q-table :rows="rows" :columns="columns" row-key="id" />
+```
+
+- ❌ Don't — use the row object or the array index as `row-key`; selection, `key` reuse, and update tracking break.
+
+```vue
+<q-table :rows="rows" :row-key="row => row" />  <!-- unstable key -->
+```
+
 - Good search terms:
   - `row-key`, `columns`, `visible-columns`, `selection`, `server-side pagination`, `sticky header`, `sticky column`, `grid mode`, `virtual-scroll`
 
@@ -51,6 +63,18 @@ Use this file when the agent needs the layer the old component-specific skills w
   - `use-input` turns it into a more autocomplete-like surface
   - `behavior` matters on mobile and can need conditional dialog mode on iOS
   - `options-cover` disables transitions
+- ✅ Do — use `emit-value` + `map-options` to store ids while showing labels.
+
+```vue
+<q-select v-model="userId" :options="users" option-value="id" option-label="name" emit-value map-options />
+```
+
+- ❌ Don't — bind a non-array model with `multiple`, or omit `map-options` and then store whole option objects you did not intend.
+
+```vue
+<q-select v-model="single" multiple :options="users" />  <!-- multiple needs an array model -->
+```
+
 - Good search terms:
   - `emit-value`, `map-options`, `use-input`, `behavior`, `clearable`, `multiple`, `display-value`, `options-cover`, `new-value-mode`
 
@@ -80,6 +104,8 @@ Use this file when the agent needs the layer the old component-specific skills w
   - `headers`, `form-fields`, `with-credentials`, and `factory` are the key transport hooks
   - `batch` changes multiple-file upload behavior
   - custom header/list slots often need `QUploaderAddTrigger`
+- ✅ Do — use `QUploader` with a `factory`/`headers` for managed, authenticated uploads.
+- ❌ Don't — try to programmatically pre-select files into a `QFile`; a native file input cannot be prefilled by script, and showing files through the model does not make the input actually hold them.
 - Good search terms:
   - `accept`, `headers`, `form-fields`, `factory`, `with-credentials`, `batch`, `QUploaderAddTrigger`, `filter`
 
@@ -173,6 +199,21 @@ Use this file when the agent needs the layer the old component-specific skills w
   - do not wrap `QInput`, `QFile`, or `QSelect` with `QField`; those components already inherit `QField`
   - if a custom `QField` control also uses `label`, search `stack-label` to avoid label overlap with custom content
   - submit buttons inside `before`, `after`, `prepend`, or `append` slots need an explicit `@click` submit handler because those slot clicks do not bubble like many people expect
+- ✅ Do — let `QForm` own submission and put validation in `rules`.
+
+```vue
+<q-form @submit.prevent="onSubmit">
+  <q-input v-model="email" :rules="[v => !!v || 'Required']" />
+  <q-btn type="submit" label="Save" />
+</q-form>
+```
+
+- ❌ Don't — wrap a `QInput`/`QSelect`/`QFile` inside a `QField`; those already extend `QField`, so you get double framing and broken labels.
+
+```vue
+<q-field><q-input v-model="email" /></q-field>  <!-- double QField -->
+```
+
 - Good search terms:
   - `rules`, `lazy-rules`, `debounce`, `mask`, `submit slot click`, `option group`, `stack-label`, `useFormChild`
 

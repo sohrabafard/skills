@@ -79,6 +79,10 @@ Also load:
 - `QLayout`, `QDrawer`, `QHeader`, `QFooter`, `QPage`, `QPageScroller`, `QPageSticky`
 - Grid/flex foundations, gallery patterns, routing with layouts and pages
 
+✅ Do — respect the nesting: `QPage` inside `QPageContainer` inside `QLayout`.
+
+❌ Don't — place a `QPage` directly in a `QLayout` or in a route component with no `QPageContainer`; spacing and scroll behavior break.
+
 Also load:
 
 - `10-cli-vite-and-config.md`

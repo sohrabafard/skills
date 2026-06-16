@@ -23,6 +23,8 @@ Also load:
 Rules:
 
 - `useHydration`, `useId`, `useMeta`, and `useRenderCache` are SSR-sensitive. Always pair them with `20-ssr-pwa-and-security.md`.
+- ✅ Do — call these composables in `setup()` / `<script setup>` top level so they bind to the right instance.
+- ❌ Don't — call them inside `onMounted`, event handlers, `setTimeout`, or other async callbacks; they will not bind correctly and may break SSR parity.
 - Search by exact composable name before using vague phrases like "hydration helper" or "meta composable".
 - When the task is specifically about composable behavior or snippet shape, also load `52-api-usage-atlas.md`.
 

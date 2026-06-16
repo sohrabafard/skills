@@ -30,6 +30,8 @@ Only load this file when directive behavior or snippet shape matters. Keep `50-p
 <q-btn label="Save and close all" color="primary" v-close-popup="2" />
 ```
 
+- ✅ Do — use `v-close-popup` inside a real popup child to close the nearest popup.
+- ❌ Don't — reach for `v-close-popup` across sibling dialogs that are only visually nested; they are not one chain, so toggle their `v-model` instead.
 - Good search terms:
   - `close popup levels`, `v-close-popup 2`, `dialog menu chain`, `QPopupProxy separates chains`
 
@@ -90,6 +92,8 @@ function onIntersection (entry) {
 </div>
 ```
 
+- ✅ Do — when ripple is on a custom surface, also give it `role`, `tabindex`, and a keyboard handler (or just use `QBtn`/`QItem`, which already do this).
+- ❌ Don't — add `v-ripple` to a non-interactive or disabled wrapper as decoration; it implies an affordance that is not really there.
 - Good search terms:
   - `v-ripple`, `keyboard fallback`, `focus visible`, `reduced motion`
 

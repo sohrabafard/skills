@@ -29,6 +29,7 @@ This skill replaces a cluster of narrower frontend skills with one routing-first
 
 - `alaa-frontend-developer` owns app-family frontend engineering policy and cross-cutting frontend guardrails.
 - `$quasar-skill-packe` owns exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, and live Quasar/Vite usage details.
+- `$alaa-app-vite-quasar` owns the `@quasar/app-vite` **v2-production + v3-readiness/migration** decision: version posture (keep stable v2, prepare for v3), upgrade guardrails, and the v2->v3 migration playbook. Defer to it whenever the task hinges on which app-vite line to use or how to stay v3-ready.
 - Broader art direction, visual thesis, composition, premium hierarchy, and motion language stay outside this skill unless a concrete frontend implementation task is also in scope.
 - `$playwright` and `$playwright-interactive` own browser mechanics and execution loops.
 - `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
@@ -68,6 +69,7 @@ Do not use this skill when:
 Also load companion skills when needed:
 
 - exact Quasar API, config, or platform behavior -> `$quasar-skill-packe`
+- `@quasar/app-vite` v2-vs-v3 choice, v3-readiness, or a v2->v3 migration -> `$alaa-app-vite-quasar`
 - visual ambition or art direction -> stay in this skill only when it also requires Vue, Quasar, Vite, SSR, or implementation constraints
 - explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
@@ -127,6 +129,9 @@ Apply these even when the user names only one surface:
   - Treat pure art direction with no frontend implementation constraint as out of scope.
 - Any explicit browser validation request, visual QA request, or browser-only reproduction:
   - Pair with `$playwright` or `$playwright-interactive`.
+- Any task that depends on the `@quasar/app-vite` version line (v2 vs v3), v3-readiness, or a v2->v3 migration:
+  - Require `$alaa-app-vite-quasar` for the version posture and migration guardrails.
+  - Pair with `$quasar-skill-packe` for the exact per-line `quasar.config`/boot/component shape.
 - Any "latest", maintenance, migration, or skill-authoring task:
   - Load `references/90-upstream-deltas-and-maintenance.md`.
   - Use `$openai-docs` for OpenAI or Codex-specific claims.
@@ -149,6 +154,7 @@ When searching inside this skill pack:
 | inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
 | `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
 | Quasar CLI, `quasar.config`, platform modes, or exact Quasar APIs       | `$quasar-skill-packe`            |
+| `@quasar/app-vite` v2-vs-v3, v3-readiness, or v2->v3 migration           | `$alaa-app-vite-quasar`          |
 | live OpenAI or Codex product behavior                                   | `$openai-docs`                   |
 
 ## Maintenance rules

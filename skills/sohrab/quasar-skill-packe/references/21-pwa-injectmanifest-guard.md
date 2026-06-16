@@ -4,6 +4,15 @@ Use this file when the task changes a custom service worker, the PWA update life
 
 Load this file together with `20-ssr-pwa-and-security.md`, not instead of it.
 
+## File location depends on the app-vite line
+
+- `@quasar/app-vite` v3: the custom SW lives at `src-pwa/sw/custom-sw.{js,ts}` (config key `sourceFiles.pwaServiceWorker`, default `'src-pwa/sw/custom-sw'`).
+- `@quasar/app-vite` v2: the custom SW lives at `src-pwa/custom-sw.{js,ts}`.
+
+✅ Do — open the SW at the path that matches the installed app-vite major before editing.
+
+❌ Don't — create a new `src-pwa/custom-sw.js` in a v3 repo; the CLI looks under `src-pwa/sw/`, so your changes would be ignored.
+
 ## Why this file exists
 
 The generic SSR/PWA reference is enough for conceptual questions. It is not enough when the task can accidentally cause:

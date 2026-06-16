@@ -31,6 +31,20 @@ This file generalizes the value of the old image-helper skill without assuming e
 - Do not keep stacking duplicate `w/h` params.
 - Do not derive requested size from the original file size when the display slot is much smaller.
 
+### Do / Don't
+
+✅ Do — let the browser pick with native `srcset`/`sizes` plus a `ratio` to hold layout.
+
+```vue
+<q-img :src="base" :srcset="`${base}?w=480 480w, ${base}?w=960 960w`" sizes="(max-width: 600px) 480px, 960px" :ratio="16/9" />
+```
+
+❌ Don't — measure the element after mount to compute an image URL; it causes a server/client request mismatch and layout shift.
+
+```js
+onMounted(() => { url.value = `${base}?w=${el.value.clientWidth}` }) // post-hydrate measurement
+```
+
 ## Decision heuristics
 
 - Fixed-size avatar/icon/media slot:

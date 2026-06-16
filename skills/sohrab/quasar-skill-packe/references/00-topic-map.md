@@ -2,6 +2,10 @@
 
 Start here when the user mentions Quasar but the exact surface is not obvious.
 
+## Before config/CLI/mode work: detect the app-vite line
+
+For any `quasar.config`, boot, env, alias, SSR, PWA, BEX, Electron, or Capacitor task, read `@quasar/app-vite` in `package.json` first. v2 and v3 have different import paths, config extensions, env keys, and aliases. The split table is in `70-upstream-deltas-and-live-checks.md`. Picking the wrong line produces code that does not run.
+
 ## Fast entry points
 
 | If the task mentions...                                                                                                          | Read first                                           | Also load                                                                                         |
@@ -22,6 +26,8 @@ Search these exact terms before using broad guesses:
 
 - Config and build:
   - `extendViteConf`, `vitePlugins`, `viteVuePluginOptions`, `envFolder`, `envFiles`, `htmlMinifyOptions`, `yarn.lock`
+- app-vite v3 surfaces:
+  - `#q-app`, `build.env.folder`, `build.env.clientPrefix`, `defineEnv`, `import.meta.env.QUASAR_`, `@/ alias`, `src-pwa/sw`, `serve.devError`, `defineCapacitorConfig`
 - SSR and hydration:
   - `ssrContext`, `defineSsrMiddleware`, `useHydration`, `useId`, `QNoSsr`, `preFetch`
 - PWA:
