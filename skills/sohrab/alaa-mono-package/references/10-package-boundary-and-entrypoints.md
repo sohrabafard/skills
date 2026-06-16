@@ -4,6 +4,7 @@ Use this file when the task touches internal packages or their import paths.
 
 ## Hard rules
 
+- Before changing or auditing a package, read the package-local `AGENTS.md` if it exists, even when the current shell stays at the repo root.
 - Root apps should consume package entrypoints, not package source files directly.
 - Packages should expose stable dist outputs.
 - Imports that reach into `packages/<name>/src/*` are boundary violations unless the repo explicitly allows them.
