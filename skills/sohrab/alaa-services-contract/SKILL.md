@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
+description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, auth terms-acceptance policy, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -84,6 +84,7 @@ Load these companion skills when their concern is in scope:
 - When the task touches the `auth` service and any frontend or frontend-facing identity integration depends on academic form behavior, read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
 - Treat that document as the canonical frontend integration contract for auth academic policy.
 - When auth academic policy changes, update the frontend implementation and any contract-facing docs or Postman artifacts in the same effort.
+- Auth terms acceptance is implicit in successful OTP verification and login. The retired `user/accept-terms-and-conditions` flow must not be revived or searched for as the current API. The frontend may show a non-removable terms notice or checkbox before OTP request; the backend acceptance moment is successful `POST /api/v3/otp/verify`. Do not invent a separate accept-terms API, request field, or persistence column unless the user explicitly asks to change the legal/audit contract.
 
 ## Reference navigation
 

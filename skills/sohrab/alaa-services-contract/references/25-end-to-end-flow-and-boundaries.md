@@ -96,6 +96,8 @@ Rules:
 - trusted headers belong to the gateway-to-service contract, not the public client contract
 - if a route is operational, frontend clients must not treat it as product behavior
 - if a route previously depended on the retired profile blob, move that client integration to the public auth or profile APIs instead of reviving `X-Profile`
+- for auth terms acceptance, frontend may show a non-removable terms notice or required checkbox before OTP request; successful OTP verification and login is the backend acceptance moment
+- do not look for, call, or create a separate `accept-terms` API in the current auth flow unless the product/legal requirement explicitly changes to auditable terms-version persistence
 
 Route-shape reminder:
 - gateway-facing routes may include a service prefix such as `/auth`, `/content`, `/comment`, `/ticket`, `/vod`, or `/wa`

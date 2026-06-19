@@ -25,6 +25,7 @@ Use it when:
 - aligning OpenTelemetry, SigNoz, Sentry, and Prometheus behavior across Go, Laravel, HAProxy, Vector, OpenFGA, and future services
 - aligning Laravel Resource-first `/api/*` success responses
 - helping a new Ala service understand the current service landscape, ownership boundaries, and expected interaction model before implementation
+- clarifying auth terms acceptance so agents do not search for or invent a retired accept-terms API
 - forcing cross-service consistency where agents would otherwise improvise
 
 ## Platform ownership picture
@@ -134,6 +135,9 @@ Read next:
 - When the task touches the `auth` service and any frontend or frontend-facing identity integration depends on academic form behavior, read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
 - Treat that document as the canonical frontend integration contract for auth academic policy.
 - When auth academic policy changes, update the frontend implementation and any contract-facing docs or Postman artifacts in the same effort.
+- Auth terms acceptance is implicit in successful OTP verification and login. Treat `user/accept-terms-and-conditions` as a retired flow, not as a missing current API.
+- The frontend may present a non-removable terms notice or required checkbox before OTP request. The backend acceptance moment is successful `POST /api/v3/otp/verify`, when the service creates the authenticated session.
+- Do not add or search for a separate accept-terms endpoint, request field, `terms_accepted_at`, `terms_version`, or consent table unless the user explicitly asks to change the legal/audit contract. If they do, treat it as a new product/legal contract change that needs docs, Postman, tests, and migration planning.
 
 ## Working rule
 
