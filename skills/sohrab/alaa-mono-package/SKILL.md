@@ -47,6 +47,14 @@ Do not use this skill when:
 5. Load only the smallest additional reference file needed for the issue.
 6. Validate with a real build output check instead of trusting config alone.
 
+## Build order
+
+When a package consumes another workspace package through a public entrypoint or export subpath, build upstream packages first and consumers second.
+
+- Derive order from the dependency graph: framework-free/core/model packages -> domain packages/adapters -> aggregate packages -> UI packages -> playground/root app.
+- Do not let source aliases, test aliases, or tsconfig paths hide missing upstream `dist`; package-local build/check scripts should either build required upstream packages first or fail with a clear message.
+- After building a consumer package, validate the built entrypoint from `dist` imports successfully, then check CSS/assets. This catches packages that pass source tests but fail as dist-only consumers.
+
 ## Symptom map
 
 | Symptom                                       | Likely cause to check first                        |

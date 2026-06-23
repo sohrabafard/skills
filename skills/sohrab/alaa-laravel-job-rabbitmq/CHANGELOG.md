@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-06-23
+
+- Updated Laravel 13 guidance to prefer official upstream `vladimir-yuldashev/laravel-queue-rabbitmq` `v15.0.0` or newer instead of the temporary `sohrabafard` fork override.
+- Kept the historical fork snapshot only as archived compatibility context and corrected troubleshooting/source-map wording to point at upstream stable.
+
 ## 2026-03-21
 
 - Added a maintained fork snapshot for Laravel 13 / PHP 8.5 compatibility under `references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7/`.

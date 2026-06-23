@@ -6,13 +6,11 @@ Use this map when Laravel RabbitMQ driver behavior, Laravel 13 compatibility, qu
 
 1. Repository truth:
    - `composer.json`, `composer.lock`, `config/queue.php`, `.env.example`, worker runtime files, deployment manifests, tests, logs, and installed package source under `vendor/`.
-2. Pinned package snapshots in this skill:
-   - Maintained fork snapshot: `references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7`.
+2. Package source fallbacks in this skill:
+   - Official upstream installed package source: `vendor/vladimir-yuldashev/laravel-queue-rabbitmq/...`.
    - Upstream snapshot: `references/upstream/vyuldashev/9b8df5d4239128ed70b857249513edb30749e63b`.
-   - Use the snapshot that matches the repository's declared package source.
 3. Primary package sources:
    - Upstream repo: https://github.com/vyuldashev/laravel-queue-rabbitmq
-   - Maintained fork: https://github.com/sohrabafard/laravel-queue-rabbitmq
    - Upstream PR #652: https://github.com/vyuldashev/laravel-queue-rabbitmq/pull/652
    - Issues list: https://github.com/vyuldashev/laravel-queue-rabbitmq/issues
 4. Official Laravel and RabbitMQ sources:
@@ -34,7 +32,7 @@ Use this map when Laravel RabbitMQ driver behavior, Laravel 13 compatibility, qu
 
 Verify package source and official docs before acting when the task mentions:
 
-- `latest`, `current`, `upgrade`, `Laravel 13`, `PHP 8.5`, `security`, `CVE`, upstream release, maintained fork, PR status, issue status, or package driver compatibility.
+- `latest`, `current`, `upgrade`, `Laravel 13`, `PHP 8.5`, `security`, `CVE`, upstream release, PR status, issue status, or package driver compatibility.
 - `queue:monitor`, `pendingSize`, `delayedSize`, `reservedSize`, `creationTimeOfOldestPendingJob`, Horizon mode, `rabbitmq:consume`, `queue:work`, DLX/DLQ, quorum queues, prefetch, heartbeat, TLS, or failed reroute behavior.
 
 ## Small example
