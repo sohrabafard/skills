@@ -1,6 +1,6 @@
 ---
 name: alaa-mono-package
-description: "Use this skill when the task involves changes under `packages/*`, package-local `AGENTS.md` instructions, or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact."
+description: "Use this skill when the task involves changes under `packages/*`, clean-island package lanes, package-local `AGENTS.md` instructions, or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact."
 ---
 
 
@@ -15,6 +15,7 @@ Use this skill to protect workspace package boundaries in frontend monorepos.
 This skill owns:
 
 - `packages/*` consumption rules
+- clean-island package write boundaries
 - dist-only package entrypoints
 - peer dependency and dedupe expectations
 - package CSS and asset emission into the final browser build
@@ -25,6 +26,7 @@ This skill owns:
 Use this skill when the task includes:
 
 - changes under `packages/*`
+- clean-island package lanes where only one package or package family is writable
 - changes to how the root app consumes an internal package
 - package build output or entrypoint changes
 - package CSS, font, image, or asset emission
@@ -42,10 +44,11 @@ Do not use this skill when:
 
 1. Read the repo-local `AGENTS.md`.
 2. If the task touches or consumes a package, search for and read the nearest package-local `AGENTS.md` even when working from the root app.
-3. Read `references/00-source-map.md` when the task is version-sensitive, package-manager-sensitive, or security-sensitive.
-4. Read `references/10-package-boundary-and-entrypoints.md`.
-5. Load only the smallest additional reference file needed for the issue.
-6. Validate with a real build output check instead of trusting config alone.
+3. Capture the explicit writable package boundary before editing; when the user says "clean island", treat sibling packages, the root app, `src/*`, legacy files, and root config as read-only unless the user widens scope.
+4. Read `references/00-source-map.md` when the task is version-sensitive, package-manager-sensitive, or security-sensitive.
+5. Read `references/10-package-boundary-and-entrypoints.md`.
+6. Load only the smallest additional reference file needed for the issue.
+7. Validate with a real build output check instead of trusting config alone.
 
 ## Build order
 

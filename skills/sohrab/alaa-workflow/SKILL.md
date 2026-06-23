@@ -30,11 +30,12 @@ This skill is the workflow operating system for long tasks. It owns orchestratio
 ## Start sequence
 
 1. Read repo-local `AGENTS.md` and any closer agent instructions first.
-2. Pair with `$alaa-low-noise` for any non-trivial run.
-3. Read `references/00-topic-map.md` and then only the smallest relevant reference sections.
-4. Decide the workflow mode: `plan`, `execute`, `resume`, or `delegated`.
-5. Route to the correct companion skill before making domain-sensitive decisions.
-6. Create or continue workflow artifacts only when they add real continuity value.
+2. If the user names a Codex goal objective file or ordered "read first" source list, read it as a blocking precondition before planning or execution.
+3. Pair with `$alaa-low-noise` for any non-trivial run.
+4. Read `references/00-topic-map.md` and then only the smallest relevant reference sections.
+5. Decide the workflow mode: `plan`, `execute`, `resume`, or `delegated`.
+6. Route to the correct companion skill before making domain-sensitive decisions.
+7. Create or continue workflow artifacts only when they add real continuity value.
 
 ## Artifact and naming rules
 
