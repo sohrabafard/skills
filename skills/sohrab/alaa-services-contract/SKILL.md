@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, auth terms-acceptance policy, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
+description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, auth terms-acceptance policy, auth TOTP enrollment and purpose-scoped step-up policy, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
 ---
 
 # Alaa Services Contract
@@ -33,6 +33,7 @@ This skill explains how a normal Ala backend fits into the larger platform:
 10. For any Laravel request body, query parameter, or DTO field named `project_id`, read `references/30-trusted-ingress-and-laravel-contract.md` before editing validation or resolution code.
 11. For any permission config, bitmap id, `config/permissions.php`, `X-Access` decoding, or drift-check task, read `references/35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth`.
 12. For gateway-facing route prefixes, the canonical service-prefix map, `stripPathPrefix`, frontend/client SDK URL composition, or public-path versus backend-local route shape, read `references/25-end-to-end-flow-and-boundaries.md` and pair with `$alaa-trust-gateway-auth`; also load `$alaa-haproxy` when actual gateway config or rendered HAProxy behavior matters.
+13. For auth TOTP setup, QR/`otpauth_uri`, optional enrollment, forced route-level MFA, `AUTH_TOTP_ENABLED`, or `require_totp:<purpose>`, read `references/32-auth-totp-and-step-up-contract.md`; pair it with `$alaa-trust-gateway-auth` and `$alaa-frontend-developer` when public clients, SDKs, or gateway route behavior are involved.
 
 ## When NOT to use
 
@@ -85,6 +86,7 @@ Load these companion skills when their concern is in scope:
 - Treat that document as the canonical frontend integration contract for auth academic policy.
 - When auth academic policy changes, update the frontend implementation and any contract-facing docs or Postman artifacts in the same effort.
 - Auth terms acceptance is implicit in successful OTP verification and login. The retired `user/accept-terms-and-conditions` flow must not be revived or searched for as the current API. The frontend may show a non-removable terms notice or checkbox before OTP request; the backend acceptance moment is successful `POST /api/v3/otp/verify`. Do not invent a separate accept-terms API, request field, or persistence column unless the user explicitly asks to change the legal/audit contract.
+- Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. When `AUTH_TOTP_ENABLED=true`, clients can expose setup and recovery-code flows; when disabled, clients should treat the TOTP API as unavailable, not as a generic missing route. The backend returns `secret` and `otpauth_uri` for setup; clients generate the QR code from `otpauth_uri`. Forced route rollout must document the purpose, expected challenge errors, SDK retry behavior, and Postman/OpenAPI examples.
 
 ## Reference navigation
 

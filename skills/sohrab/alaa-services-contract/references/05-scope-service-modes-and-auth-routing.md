@@ -26,6 +26,8 @@ Use it when:
 - aligning Laravel Resource-first `/api/*` success responses
 - helping a new Ala service understand the current service landscape, ownership boundaries, and expected interaction model before implementation
 - clarifying auth terms acceptance so agents do not search for or invent a retired accept-terms API
+- clarifying optional auth TOTP setup, authenticator QR generation, recovery-code handling, and SDK/frontend expectations
+- adding, reviewing, or documenting route-level `require_totp:<purpose>` enforcement
 - forcing cross-service consistency where agents would otherwise improvise
 
 ## Platform ownership picture
@@ -130,6 +132,15 @@ Read next:
 - `30-trusted-ingress-and-laravel-contract.md`
 - `50-laravel-copy-baselines.md`
 
+### Mode D+ - Auth TOTP management and forced route step-up
+
+Use when the task is about optional TOTP enrollment, authenticator-app setup, QR generation, `AUTH_TOTP_ENABLED`, recovery codes, forced route-level MFA, `require_totp:<purpose>`, or SDK/frontend step-up handling.
+
+Read next:
+- `32-auth-totp-and-step-up-contract.md`
+- `$alaa-trust-gateway-auth` for gateway trust boundaries and public/internal route separation
+- `$alaa-frontend-developer` for SDK and frontend challenge-and-retry behavior
+
 ## Auth-specific routing note
 
 - When the task touches the `auth` service and any frontend or frontend-facing identity integration depends on academic form behavior, read `docs/ops/auth-academic-policy-contract.md` in the `auth` repository before planning or editing.
@@ -138,6 +149,8 @@ Read next:
 - Auth terms acceptance is implicit in successful OTP verification and login. Treat `user/accept-terms-and-conditions` as a retired flow, not as a missing current API.
 - The frontend may present a non-removable terms notice or required checkbox before OTP request. The backend acceptance moment is successful `POST /api/v3/otp/verify`, when the service creates the authenticated session.
 - Do not add or search for a separate accept-terms endpoint, request field, `terms_accepted_at`, `terms_version`, or consent table unless the user explicitly asks to change the legal/audit contract. If they do, treat it as a new product/legal contract change that needs docs, Postman, tests, and migration planning.
+- Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. When `AUTH_TOTP_ENABLED=true`, clients can expose setup and recovery-code flows; when disabled, clients should treat the TOTP API as unavailable, not as a generic missing route.
+- The backend returns `secret` and `otpauth_uri` for setup; clients generate the QR code from `otpauth_uri`. Forced route rollout must document the purpose, expected challenge errors, SDK retry behavior, and Postman/OpenAPI examples.
 
 ## Working rule
 

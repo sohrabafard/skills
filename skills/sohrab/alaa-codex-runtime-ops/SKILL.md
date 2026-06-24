@@ -43,10 +43,11 @@ The goal is to make the smallest reliable retry or fallback, not to turn a tooli
 6. Request escalation only when the blocked command is important and the sandbox or network-policy failure prevents completion.
 7. For session transcript audits, parse metadata and aggregate patterns first; count only live user messages and failed tool results unless explicitly auditing internal approval or subagent prompts; redact secrets, tokens, long IDs, and private values before showing any examples.
 8. For Windows `EPERM` in validation/build cleanup, rerun the exact failed gate once with escalation before changing code or deleting artifacts.
-9. For Docker named-pipe permission failures, rerun the exact Docker command with escalation if Docker state is required; otherwise fall back to source/config inspection and say runtime Docker validation was blocked.
-10. For sandbox-related DNS, package-registry, package-index, or remote-doc failures, rerun the exact required command with escalation when live external access is necessary; otherwise stay with local sources and report the freshness limit.
-11. For shell parser errors, switch shell syntax once: convert to native PowerShell or run the intended Bash command through `bash -lc` from the right working directory.
-12. Report the runtime workaround briefly, then return to the actual task.
+9. For Quasar/Vite app verification in this environment, Yarn test/build gates such as `yarn test`, `yarn test:new`, `yarn build`, `yarn build:ssr`, `yarn workspace <pkg> test`, and `yarn workspace <pkg> build`, plus Quasar build/dev commands such as `quasar build --mode ssr`, `yarn dev`, and `quasar dev`, have standing maintainer approval for unsandboxed execution when they are required validation gates or when sandboxed esbuild `spawn EPERM` or local-server verification blocks completion. Keep the command exact and scoped; do not pair it with cleanup or unrelated commands.
+10. For Docker named-pipe permission failures, rerun the exact Docker command with escalation if Docker state is required; otherwise fall back to source/config inspection and say runtime Docker validation was blocked.
+11. For sandbox-related DNS, package-registry, package-index, or remote-doc failures, rerun the exact required command with escalation when live external access is necessary; otherwise stay with local sources and report the freshness limit.
+12. For shell parser errors, switch shell syntax once: convert to native PowerShell or run the intended Bash command through `bash -lc` from the right working directory.
+13. Report the runtime workaround briefly, then return to the actual task.
 
 ## Hard rules
 

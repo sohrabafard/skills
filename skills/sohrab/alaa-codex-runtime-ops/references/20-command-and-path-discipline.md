@@ -67,7 +67,7 @@ Recovery sequence:
 
 1. Treat the first `EPERM` as a runtime/permission failure, not evidence of a code regression.
 2. Rerun the exact failed validation or build command once with `sandbox_permissions: "require_escalated"` and a task-specific justification.
-3. Prefer the smallest gate that failed, such as `yarn workspace <pkg> test` or `yarn workspace <pkg> build`; if a multi-package loop failed, rerun affected packages serially or rerun the same loop elevated.
+3. Prefer the smallest gate that failed, such as `yarn test`, `yarn test:new`, `yarn build`, `yarn build:ssr`, `yarn workspace <pkg> test`, `yarn workspace <pkg> build`, or the exact Quasar build/dev command needed for app verification; if a multi-package loop failed, rerun affected packages serially or rerun the same loop elevated.
 4. Keep the retry scoped to validation. Do not edit source, rewrite config, or delete `node_modules`, `.vite-temp`, or `dist` as the first fix.
 5. If the exact escalated retry passes, record the runtime workaround and continue with normal validation.
 6. If it still fails, then inspect for a real lock holder, antivirus/indexer interference, stale generated output, or a project script issue before proposing cleanup.
