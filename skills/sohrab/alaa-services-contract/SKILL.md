@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, auth terms-acceptance policy, auth TOTP enrollment and purpose-scoped step-up policy, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference."
+description: "Hard contract for Ala services such as auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment, and future services. Use when enforcing Ala health/readiness routes, service naming, response envelopes, observability middleware, trusted gateway headers, public `project_id` UUIDv7 handling, `X-Project-Id`, `X-Access`, permission catalog service configs, trace/request IDs, event/code naming, Laravel Resource-first `/api/*` responses, gateway route prefixes, canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, auth terms-acceptance policy, auth TOTP enrollment and purpose-scoped step-up policy, frontend-to-gateway-to-backend flow, Docker/Swarm/Kubernetes runtime contracts, shared infra, registry usage, SQLite fast tests, or shared `service-ci-kit` GitLab CI/CD. Use when cross-service consistency matters more than local preference. Also use for frontend or host-app consumption of the `@alaa/*` SDK packages — which package to import (`@alaa/sdk` and `@alaa/sdk-vue` only, never `@alaa/sdk-core` from app code), app-versus-SDK responsibility for trusted headers, token, and single-flight refresh, and public correlation headers — and for building or consuming Page Kit, UI Kit, app-shell, and widgets (props-in/events-out, three-layer data flow, dist-only package boundaries, island isolation). Use this skill whenever frontend code imports `@alaa/sdk`, `@alaa/sdk-vue`, `@alaa/page-*`, `@alaa/widgets-*`, `@alaa/forms`, `@alaa/crud`, or `@alaa/app-shell`, even if the contract is not mentioned explicitly."
 ---
 
 # Alaa Services Contract
@@ -34,11 +34,12 @@ This skill explains how a normal Ala backend fits into the larger platform:
 11. For any permission config, bitmap id, `config/permissions.php`, `X-Access` decoding, or drift-check task, read `references/35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth`.
 12. For gateway-facing route prefixes, the canonical service-prefix map, `stripPathPrefix`, frontend/client SDK URL composition, or public-path versus backend-local route shape, read `references/25-end-to-end-flow-and-boundaries.md` and pair with `$alaa-trust-gateway-auth`; also load `$alaa-haproxy` when actual gateway config or rendered HAProxy behavior matters.
 13. For auth TOTP setup, QR/`otpauth_uri`, optional enrollment, forced route-level MFA, `AUTH_TOTP_ENABLED`, or `require_totp:<purpose>`, read `references/32-auth-totp-and-step-up-contract.md`; pair it with `$alaa-trust-gateway-auth` and `$alaa-frontend-developer` when public clients, SDKs, or gateway route behavior are involved.
+14. For frontend or host-app code consuming the `@alaa/*` SDK packages, read `references/60-frontend-sdk-consumption-contract.md`; for Page Kit, UI Kit, app-shell, or widget work, read `references/65-frontend-page-kit-and-widgets-contract.md`. Pair both with `$alaa-frontend-developer` and `$alaa-mono-package`, and with `$alaa-security-review` for any trust-boundary-adjacent change.
 
 ## When NOT to use
 
 - Do not use for purely local feature work that does not affect shared Ala service contracts.
-- Do not use for frontend UI design unless gateway, API, trust-boundary, or observability contracts are involved.
+- Do not use for purely visual or design polish when no package-boundary, SDK-consumption, trust-boundary, or observability contract is in scope; use `$alaa-frontend-developer` (and `$frontend-skill` for art-direction-heavy UI) for pure UI design.
 - Do not use to override a repository-specific blocker; report the incompatibility instead.
 
 ## Hard contract rule
@@ -79,6 +80,18 @@ Load these companion skills when their concern is in scope:
   - Load when readiness or runtime behavior depends on RabbitMQ, queues, or workers.
 - `$alaa-docs-farsi`
   - Load when docs, Postman artifacts, or runbooks change.
+- `$alaa-frontend-developer`
+  - Load for frontend/host architecture: the three-layer client split, SSR auth/session, and data shaping for any approved host surface.
+- `$alaa-mono-package`
+  - Load for any `@alaa/*` package boundary, exports, dedupe, asset-contract, or extraction decision, including promoting a helper onto the `@alaa/sdk` public surface.
+- `$alaa-security-review`
+  - Load for any client-side trust-boundary, token, refresh, header, or raw-HTML/sanitization change.
+- `$alaa-signoz-clickhouse-docs`
+  - Load when client correlation/event fields must align with how SigNoz/ClickHouse query them downstream.
+- `$alaa-frontend-doc-annotations`
+  - Load for the documentation pass on the public surface the host or a package adds.
+- `$quasar-skill-packe` and `$alaa-app-vite-quasar`
+  - Load for exact Quasar component/SSR shapes and the `@quasar/app-vite` build posture in widget/host work.
 
 ## Auth-specific routing
 
@@ -87,6 +100,32 @@ Load these companion skills when their concern is in scope:
 - When auth academic policy changes, update the frontend implementation and any contract-facing docs or Postman artifacts in the same effort.
 - Auth terms acceptance is implicit in successful OTP verification and login. The retired `user/accept-terms-and-conditions` flow must not be revived or searched for as the current API. The frontend may show a non-removable terms notice or checkbox before OTP request; the backend acceptance moment is successful `POST /api/v3/otp/verify`. Do not invent a separate accept-terms API, request field, or persistence column unless the user explicitly asks to change the legal/audit contract.
 - Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. When `AUTH_TOTP_ENABLED=true`, clients can expose setup and recovery-code flows; when disabled, clients should treat the TOTP API as unavailable, not as a generic missing route. The backend returns `secret` and `otpauth_uri` for setup; clients generate the QR code from `otpauth_uri`. Forced route rollout must document the purpose, expected challenge errors, SDK retry behavior, and Postman/OpenAPI examples.
+
+## Frontend coding contract
+
+This is the client-side half of the platform contract: how frontend and host-app code is allowed to consume the
+`@alaa/*` SDK and widget packages so the trust boundary, refresh ownership, and package layering established for the
+backend are not silently broken from the client. It complements the gateway/trusted-header orientation in
+`references/25-end-to-end-flow-and-boundaries.md`.
+
+- For SDK consumption (which package to import, app-versus-SDK responsibility, trusted headers, token/refresh,
+  correlation headers), read `references/60-frontend-sdk-consumption-contract.md`. The load-bearing rules:
+  - Frontend/host code imports the SDK only through `@alaa/sdk` (factory + types) and `@alaa/sdk-vue` (Vue composables).
+    Never import `@alaa/sdk-core` or a domain SDK from app code; if a helper is needed, expose it on `@alaa/sdk` first.
+  - The SDK owns trusted-header rejection, token attach, and single-flight refresh. The app never re-implements or
+    duplicates those (including no redundant app-side trusted-header guard). The app sends only `Authorization: Bearer`,
+    `X-Request-Id`, and `traceparent`; the opaque token never lands in a cookie, SSR HTML, or SSR state.
+- For Page Kit, UI Kit, app-shell, and widgets, read `references/65-frontend-page-kit-and-widgets-contract.md`. The
+  load-bearing rules:
+  - Define the public contract first (props in / events out / types), then build behind it.
+  - Widgets are props-in / events-out and own no host singletons (store, SDK, token, trusted headers, router); data
+    flows presentation -> flow composable -> store -> SDK, so a widget never calls the SDK or a service directly.
+  - Consume packages through public `dist`/entry exports and `link:` deps only; keep `vue`/`quasar` as peers; assets
+    must reach `dist/ssr/client/assets`; do not wire island packages into legacy lanes without explicit migration
+    approval; render untrusted HTML only through the sanctioned sanitizer.
+- Pair both with `$alaa-frontend-developer`, `$alaa-mono-package`, and `$alaa-security-review`; pair the SDK file with
+  `$alaa-trust-gateway-auth` and (for telemetry) `$alaa-observability-soc` / `$alaa-signoz-clickhouse-docs`; document
+  the public surface with `$alaa-frontend-doc-annotations`.
 
 ## Reference navigation
 
@@ -115,6 +154,10 @@ Load these companion skills when their concern is in scope:
   - `references/40-apply-checklist-and-anti-patterns.md`
 - copy-oriented Laravel class and helper baselines:
   - `references/50-laravel-copy-baselines.md`
+- frontend/host consumption of the `@alaa/*` SDK packages, app-versus-SDK responsibility, client trust boundary, token/refresh ownership, and correlation headers:
+  - `references/60-frontend-sdk-consumption-contract.md`
+- Page Kit, UI Kit, app-shell, and widget contracts: props-in/events-out, three-layer data flow, dist-only package boundaries, island isolation, and widget security:
+  - `references/65-frontend-page-kit-and-widgets-contract.md`
 - official-first source map and freshness triggers:
   - `references/90-source-map.md`
 - complete preserved contract in one file:

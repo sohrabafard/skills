@@ -34,6 +34,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode E - Platform flow and boundaries view`
   - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, public prefixed routes versus service-local routes, frontend/client SDK URL composition, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, or internal-hop discipline.
   - Read `25-end-to-end-flow-and-boundaries.md`.
+- `Mode F - Frontend coding contract`
+  - Use when frontend or host-app code consumes the `@alaa/*` SDK packages, or when building/consuming Page Kit, UI Kit, app-shell, or widgets: which package to import, app-versus-SDK responsibility for trusted headers/token/refresh, public correlation headers, props-in/events-out widget contracts, three-layer data flow, dist-only package boundaries, or island isolation.
+  - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `$alaa-frontend-developer`, `$alaa-mono-package`, and `$alaa-security-review`.
 
 ## Cross-cutting references
 
@@ -47,6 +50,10 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use before finalizing a contract change or skill-driven implementation review.
 - `50-laravel-copy-baselines.md`
   - Use only when you need copy-oriented Laravel baselines after understanding the owning rules, especially for shared `project_id` / `TrustedProjectContext` validation snippets.
+- `60-frontend-sdk-consumption-contract.md`
+  - Client-side consumption of the `@alaa/*` SDK: import only `@alaa/sdk` + `@alaa/sdk-vue`, app-versus-SDK ownership of trusted headers/token/refresh, the client trust boundary, and correlation headers.
+- `65-frontend-page-kit-and-widgets-contract.md`
+  - Page Kit, UI Kit, app-shell, and widget contracts: props-in/events-out, three-layer data flow, dist-only package boundaries, island isolation, and widget security.
 - `90-source-map.md`
   - Official-first source map for version-sensitive standards, framework docs, observability docs, and community-source limits.
 
