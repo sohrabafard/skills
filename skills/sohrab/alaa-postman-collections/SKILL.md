@@ -33,11 +33,12 @@ This skill is Postman-first, schema-aware, and repository-truth-first. It create
 
 1. Read the repo-local `AGENTS.md`.
 2. Inspect the repository truth and any existing Postman or Insomnia artifacts before editing.
-3. Read `references/00-topic-map.md`.
-4. Load only the smallest reference files needed for the current repo and task.
-5. Prefer minimal updates to existing artifacts over full rewrites.
-6. If an existing request or docs claim describes behavior missing from current code, report the gap and route backlog wording to `$alaa-docs-farsi`.
-7. Validate before concluding.
+3. If a repo script or generator owns the collection, update the generator inputs and regenerate the artifact instead of hand-editing derived JSON.
+4. Read `references/00-topic-map.md`.
+5. Load only the smallest reference files needed for the current repo and task.
+6. Prefer minimal updates to existing artifacts over full rewrites.
+7. If an existing request or docs claim describes behavior missing from current code, report the gap and route backlog wording to `$alaa-docs-farsi`.
+8. Validate before concluding.
 
 ## Deliverables
 
@@ -51,8 +52,9 @@ This skill is Postman-first, schema-aware, and repository-truth-first. It create
 1. Discover API truth from code, contracts, tests, and runtime examples.
 2. Inspect existing Postman collections and environments for stable IDs, structure, variables, and auth layout.
 3. Choose the smallest fitting collection structure, variable model, and auth inheritance plan.
-4. Create or update the collection and environment artifacts with minimal, reviewable diffs.
-5. Validate schema, variables, scripts, examples, and Insomnia portability before closing.
+4. When artifacts are generated, patch the generator or source inputs first, then regenerate and review the produced diff.
+5. Create or update the collection and environment artifacts with minimal, reviewable diffs.
+6. Validate schema, variables, scripts, examples, and Insomnia portability before closing.
 
 ## Companion routing
 

@@ -5,12 +5,13 @@
 Validate from cheapest to strongest:
 
 1. confirm the repository truth and the artifact intent still match
-2. parse the collection and environment JSON locally
-3. run `scripts/validate_postman_artifacts.py` when local JSON artifacts exist
-4. validate against the official Postman Collection Format v2.1 schema when practical
-5. verify variable references, auth inheritance, scripts, and saved responses
-6. run any repo-specific smoke check that materially reduces risk
-7. if local Insomnia import validation is available, use it; otherwise state the gap explicitly
+2. when artifacts are generator-owned, rerun the repo generator and review the generated diff
+3. parse the collection and environment JSON locally
+4. run `scripts/validate_postman_artifacts.py` when local JSON artifacts exist
+5. validate against the official Postman Collection Format v2.1 schema when practical
+6. verify variable references, auth inheritance, scripts, and saved responses
+7. run any repo-specific smoke check that materially reduces risk
+8. if local Insomnia import validation is available, use it; otherwise state the gap explicitly
 
 ## What to check
 
