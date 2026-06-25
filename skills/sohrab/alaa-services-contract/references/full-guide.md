@@ -2684,8 +2684,13 @@ The `@alaa/*` SDK is layered, and each layer has one job:
 
 The app must not re-implement anything the SDK or gateway already owns. Default ownership:
 
-- **Trusted-header rejection** → SDK. The SDK transport rejects caller-supplied trusted gateway headers fail-closed
-  (`@alaa/sdk-auth`'s `rejectForbiddenCallerHeaders` over core's deny-list). The app never re-checks or duplicates this.
+- **Trusted-header rejection** → SDK, at two layers, fail-closed. The domain SDK rejects caller-supplied forbidden
+  headers when it builds the request (`@alaa/sdk-auth`'s `rejectForbiddenCallerHeaders`), and `@alaa/sdk-core`'s
+  transport re-asserts the deny-list on the *final* outbound headers right before the fetch
+  (`assertNoTrustedCallerHeaders`, which permits only the SDK's own `Authorization`). The app never re-checks or
+  duplicates either layer. The one thing the SDK cannot police is code that runs *inside* a host-injected custom fetch
+  after that final assert (the documented "custom-fetch bypass"); the gateway is the authoritative enforcement there, so
+  a host-injected fetch must only ever add public-safe correlation headers (`X-Request-Id` / `traceparent`).
 - **Token attach + refresh** → SDK. The opaque bearer token is attached by the SDK; refresh is SDK-owned and
   single-flight. The app never re-implements refresh, never queues its own refresh, and never decodes the token.
 - **Branded errors + events** → SDK. The app classifies failures with `isAlaaSdkError` and subscribes to the SDK event
