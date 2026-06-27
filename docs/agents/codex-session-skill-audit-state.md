@@ -6,14 +6,15 @@ Audit recent local Codex sessions and update Sohrab skills only where recurring 
 
 ## Status
 
-Complete: 2026-06-15 refresh.
+Complete: 2026-06-27 last-48-hours refresh.
 
 ## Current Understanding
 
 - Active workspace: `D:\Sohrab\Project\skills`.
 - No repo-local `AGENTS.md` exists at the workspace root, so the pasted global operating rules are the active repo guidance for this task.
-- Relevant skills loaded this run: `alaa-codex-runtime-ops`, `skill-creator`, `alaa-workflow`, and `alaa-low-noise`.
+- Relevant skills loaded this run: `alaa-codex-runtime-ops`, `skill-creator`, `alaa-workflow`, `alaa-low-noise`, `alaa-mono-package`, and `alaa-frontend-developer`.
 - Prior memory indicates a June 11 runtime audit already updated `alaa-codex-runtime-ops` for EPERM, Docker named-pipe, and shell-routing failures.
+- Current plan file: `docs/_agent_plans/20260627-211810_codex-session-skill-audit.md`.
 
 ## Constraints
 
@@ -36,6 +37,13 @@ Complete: 2026-06-15 refresh.
 - Parsed `.codex-global-state.json` in bounded form and confirmed it remained parseable without dumping values.
 - Reviewed ownership coverage in `alaa-codex-runtime-ops`, `alaa-workflow`, `alaa-low-noise`, `alaa-controlled-ops`, `service-runtime-kit-governance`, `alaa-services-contract`, `alaa-mono-package`, `alaa-frontend-developer`, and `alaa-postman-collections`.
 - Decided no skill update and no new skill were justified in this refresh: the recurring evidence maps to existing skills and current global AGENTS rules.
+- Reopened the audit for the filename-local last-48-hours window 2026-06-25 21:15 through 2026-06-27 21:15 Asia/Tehran.
+- Safely read 54 JSONL session files with shared reads; no locked or parse-failed files were skipped.
+- Parsed `.codex-global-state.json` in bounded form and confirmed it remained present without dumping values.
+- Reviewed the Sohrab skill inventory at frontmatter level: 60/60 skill directories had readable fenced frontmatter.
+- Updated `alaa-frontend-developer` to make browser automation opt-in and source/log/static reasoning the default when no explicit browser permission exists.
+- Updated `alaa-codex-runtime-ops` transcript-audit reference to keep "last N days" windows on local rollout filename timestamps unless session metadata proves otherwise.
+- Created `docs/_agent_plans/20260627-211810_codex-session-skill-audit.md` for this execution cycle.
 
 ## Remaining
 
@@ -50,6 +58,28 @@ Complete: 2026-06-15 refresh.
 - 2026-06-15 targeted `quick_validate.py` passed for reviewed owning skills: `alaa-codex-runtime-ops`, `alaa-workflow`, `alaa-low-noise`, `alaa-controlled-ops`, `service-runtime-kit-governance`, `alaa-services-contract`, `alaa-mono-package`, `alaa-frontend-developer`, and `alaa-postman-collections`.
 - 2026-06-15 transcript classifier read 69/69 files with no skips. Last-three-day subset contained 37 files across 15 parent-thread groups.
 - 2026-06-15 `git diff --check` passed for tracked changes; direct trailing-whitespace and secret-pattern scans passed for the changed state file and new plan file.
+- 2026-06-27 transcript classifier read 54/54 files, with 528 live user messages, 497 classified failed function outputs, zero locked skips, and zero parse errors.
+- 2026-06-27 targeted `quick_validate.py` passed for `alaa-frontend-developer` and `alaa-codex-runtime-ops`.
+- 2026-06-27 `git diff --check` passed.
+- 2026-06-27 secret-pattern scan over changed files matched only policy wording and existing auth terminology, not credential values.
+- 2026-06-27 Sohrab skill frontmatter inventory check found 60/60 readable fenced frontmatters.
+
+## 2026-06-27 Evidence Summary
+
+- Session cwd distribution: `entekhabat-front` (33), `content` (7), `gateway` (7), `skills` (2), and one each for `entitlement-platform`, `tusd`, `comment-service`, plus two Codex-local utility workspaces.
+- User-message patterns by session count: named skill routing (38), freshness/current-window demands (29), visual or responsive instructions (24), secret/redaction constraints (23), language or honest-judgment instructions (20), review finding re-verification (20), clean-lane scope boundaries (14), direct fix-after-review asks (10), objective-file preconditions (3), and approval-gated doc append behavior (2).
+- Function-output failure patterns by session count: Windows permission/runtime friction (30), network or local-service reachability (23), generic nonzero commands (19), PowerShell path/parser issues (15), Git safe-directory issues (14), and validation/test/build failures (8).
+- Browser-related tool calls appeared in 9 sessions; only a minority had an easily detected explicit browser/visual request in user text, so frontend guidance was tightened to align with the current global browser automation policy.
+- No recurring, cross-repo behavior was uncovered that lacked an existing owner skill.
+
+## 2026-06-27 Decision Map
+
+- Existing skill update: `alaa-frontend-developer` now carries an explicit browser-automation opt-in rule in `SKILL.md` and QA reference.
+- Existing skill update: `alaa-codex-runtime-ops` now guards transcript date-window audits against local-vs-UTC filename timestamp drift.
+- No action: Windows `EPERM`, access denied, Docker/npipe, Git safe-directory, PowerShell parser/path, network/sandbox, and locked-session scanning remain covered by `alaa-codex-runtime-ops`.
+- No action: package-local `AGENTS.md`, clean-island lanes, package build order, and package boundary behavior remain covered by `alaa-mono-package`.
+- No action: objective-file preconditions, durable plan/state, subagent boundaries, and long-run status updates remain covered by `alaa-workflow` plus `alaa-low-noise`.
+- No new skill: all recurring cross-repo patterns mapped to current owner skills or current global AGENTS rules.
 
 ## 2026-06-15 Evidence Summary
 
@@ -64,3 +94,5 @@ Complete: 2026-06-15 refresh.
 - 2026-06-12 01:35 Asia/Tehran - Validated changed skill frontmatter and whitespace. No new skill was needed.
 - 2026-06-15 10:50 Asia/Tehran - Reopened audit for 2026-06-09 through 2026-06-15 transcript window; created dated plan before transcript classification.
 - 2026-06-15 11:15 Asia/Tehran - Classified the transcript window with refined failure-only matching, reviewed existing skill coverage, validated reviewed skill frontmatter, and closed with no skill changes.
+- 2026-06-27 21:18 Asia/Tehran - Started last-48-hours transcript refresh. Filename-local window is 2026-06-25 21:15 through 2026-06-27 21:15. Initial structured scan found 54 sessions, 528 live user messages, no locked or parse-failed session files, and recurring runtime/tooling plus instruction-routing patterns.
+- 2026-06-27 21:32 Asia/Tehran - Patched frontend browser opt-in guidance and runtime transcript-window timestamp guidance. Validated touched skill folders, diff whitespace, secret-pattern scan, and Sohrab frontmatter inventory. No new skill was created.

@@ -38,6 +38,13 @@ Prioritize in this order:
 - if output is long, capture it to a repo-local artifact and summarize the key result
 - if commands cannot run, provide a precise manual plan
 
+### 4. Gate browser automation
+
+- Browser automation is not the default frontend QA path.
+- Use browser tooling only when the user explicitly asks for browser, Playwright, visual, or responsive validation; a higher-priority repo rule requires it; or static source/log/test evidence is no longer trustworthy for a browser-only bug.
+- When the browser is not allowed, rely on source inspection, tests, logs, static DOM/CSS reasoning, and already-provided screenshots or artifacts.
+- Before opening the browser after a static pass, state the target route or URL and the success criterion.
+
 ## Mandatory SSR and hydration checks
 
 - no SSR crashes on first load

@@ -31,7 +31,7 @@ This skill replaces a cluster of narrower frontend skills with one routing-first
 - `$quasar-skill-packe` owns exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, and live Quasar/Vite usage details.
 - `$alaa-app-vite-quasar` owns the `@quasar/app-vite` **v2-production + v3-readiness/migration** decision: version posture (keep stable v2, prepare for v3), upgrade guardrails, and the v2->v3 migration playbook. Defer to it whenever the task hinges on which app-vite line to use or how to stay v3-ready.
 - Broader art direction, visual thesis, composition, premium hierarchy, and motion language stay outside this skill unless a concrete frontend implementation task is also in scope.
-- `$playwright`, `$playwright-interactive`, and configured Playwright MCP profiles own browser mechanics and execution loops. Prefer `playwright_headless` for deterministic headless browser checks and `playwright_visual` for headed visual QA when those MCP profiles are available.
+- `$playwright`, `$playwright-interactive`, and configured Playwright MCP profiles own browser mechanics and execution loops. Browser automation is opt-in: use it only when the user explicitly asks for browser, Playwright, visual, or responsive validation, a higher-priority repo rule requires it, or static analysis is no longer trustworthy for a browser-only bug. Prefer `playwright_headless` for deterministic headless browser checks and `playwright_visual` for headed visual QA when those MCP profiles are available.
 - `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
 
 ## When to use
@@ -131,6 +131,10 @@ Apply these even when the user names only one surface:
   - Pair with `$playwright` or `$playwright-interactive`.
   - When MCP browser profiles are configured, prefer `playwright_headless` for deterministic headless smoke checks and `playwright_visual` for headed visual inspection.
   - Do not select `MCP_DOCKER` only to get a headless browser when a Playwright headless profile is available.
+- Any frontend task without explicit browser permission:
+  - Prefer source inspection, tests, logs, static DOM/CSS reasoning, and existing screenshots or artifacts.
+  - Do not open browser automation merely because the task is frontend, Quasar, Vite, visual, or responsive.
+  - If browser execution becomes necessary because static evidence is insufficient, state that pivot and the target route/check before opening it.
 - Any task that depends on the `@quasar/app-vite` version line (v2 vs v3), v3-readiness, or a v2->v3 migration:
   - Require `$alaa-app-vite-quasar` for the version posture and migration guardrails.
   - Pair with `$quasar-skill-packe` for the exact per-line `quasar.config`/boot/component shape.

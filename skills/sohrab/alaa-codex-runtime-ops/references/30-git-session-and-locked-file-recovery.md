@@ -19,6 +19,7 @@ Use a shared-read approach when available, or skip and report the active locked 
 ## Session scan hygiene
 
 - Prefer filename/session metadata dates over filesystem modified time when the user asks for a date window.
+- For "last N days" transcript windows, treat rollout filename timestamps as local to the active Codex surface unless session metadata proves otherwise. State the exact local window used and do not compare local filename timestamps against UTC cutoffs.
 - Keep broad scans read-only.
 - Deduplicate forked subagent/session evidence before turning it into a skill update.
 - Compare historical findings against current skill files before editing.
