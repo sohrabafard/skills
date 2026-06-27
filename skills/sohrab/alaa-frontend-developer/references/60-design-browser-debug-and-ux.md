@@ -85,3 +85,6 @@ Then:
   - Pair with `$quasar-skill-packe`
 - browser execution:
   - Pair with `$playwright` or `$playwright-interactive`
+  - If MCP browser profiles are configured, use `playwright_visual` for visual QA and headed inspection.
+  - Use `playwright_headless` only for non-visual browser reproduction, console/network evidence, or deterministic smoke checks.
+  - Do not use `MCP_DOCKER` only to obtain headless browser behavior when the Playwright headless profile exists.

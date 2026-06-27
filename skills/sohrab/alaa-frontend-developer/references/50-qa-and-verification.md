@@ -82,6 +82,9 @@ Before calling a task done, confirm:
 
 - Browser execution or UI evidence collection:
   - Pair with `$playwright` or `$playwright-interactive`
+  - If MCP browser profiles are configured, use `playwright_headless` for deterministic headless smoke checks, console checks, snapshots, and non-visual reproductions.
+  - Use `playwright_visual` for headed visual QA, screenshot review, layout inspection, responsive checks, and anything where seeing the rendered page matters.
+  - Do not route to `MCP_DOCKER` only because the check is headless; reserve it for Docker-specific isolation or Docker MCP features.
 - Service-worker runbook changes:
   - Also load `30-pwa-sw-and-offline.md`
 - Performance-sensitive verification:

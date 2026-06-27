@@ -19,10 +19,14 @@ Use this file when the task spans more than one frontend surface and ownership i
 - `$playwright`
   - Use for straightforward real-browser automation flows from the terminal.
   - Pair when the user explicitly asks for browser validation or the task requires a deterministic browser reproduction.
+  - If MCP browser profiles are configured, prefer `playwright_headless` for deterministic headless smoke checks, console/network checks, snapshots, and non-visual reproductions.
+  - Prefer `playwright_visual` for headed visual QA, screenshot review, layout inspection, responsive checks, and anything where rendered-page inspection matters.
+  - Do not route to `MCP_DOCKER` only because a browser check should be headless; reserve Docker MCP for Docker-specific isolation or Docker MCP features.
 
 - `$playwright-interactive`
   - Use for persistent iterative browser or Electron debugging with repeated reload and QA loops.
   - Pair when the debugging session is stateful or long-running.
+  - Do not use it for a one-shot headless MCP check; use `playwright_headless` or `$playwright` instead.
 
 - `$alaa-trust-gateway-auth`
   - Use for Ala gateway verification, trusted `X-*` headers, downstream auth context, refresh-cookie plus bearer-token flows, and tenant-context trust boundaries.

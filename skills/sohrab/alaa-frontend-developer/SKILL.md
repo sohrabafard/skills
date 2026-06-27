@@ -31,7 +31,7 @@ This skill replaces a cluster of narrower frontend skills with one routing-first
 - `$quasar-skill-packe` owns exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, and live Quasar/Vite usage details.
 - `$alaa-app-vite-quasar` owns the `@quasar/app-vite` **v2-production + v3-readiness/migration** decision: version posture (keep stable v2, prepare for v3), upgrade guardrails, and the v2->v3 migration playbook. Defer to it whenever the task hinges on which app-vite line to use or how to stay v3-ready.
 - Broader art direction, visual thesis, composition, premium hierarchy, and motion language stay outside this skill unless a concrete frontend implementation task is also in scope.
-- `$playwright` and `$playwright-interactive` own browser mechanics and execution loops.
+- `$playwright`, `$playwright-interactive`, and configured Playwright MCP profiles own browser mechanics and execution loops. Prefer `playwright_headless` for deterministic headless browser checks and `playwright_visual` for headed visual QA when those MCP profiles are available.
 - `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
 
 ## When to use
@@ -71,7 +71,7 @@ Also load companion skills when needed:
 - exact Quasar API, config, or platform behavior -> `$quasar-skill-packe`
 - `@quasar/app-vite` v2-vs-v3 choice, v3-readiness, or a v2->v3 migration -> `$alaa-app-vite-quasar`
 - visual ambition or art direction -> stay in this skill only when it also requires Vue, Quasar, Vite, SSR, or implementation constraints
-- explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`
+- explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`; when MCP browser tools are configured, route deterministic non-visual checks to `playwright_headless` and headed visual QA to `playwright_visual`
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
 - CI, Docker, artifact, or deployment contract risks -> `$alaa-frontend-devops`
 - package boundary or asset emission risks -> `$alaa-mono-package`
@@ -129,6 +129,8 @@ Apply these even when the user names only one surface:
   - Treat pure art direction with no frontend implementation constraint as out of scope.
 - Any explicit browser validation request, visual QA request, or browser-only reproduction:
   - Pair with `$playwright` or `$playwright-interactive`.
+  - When MCP browser profiles are configured, prefer `playwright_headless` for deterministic headless smoke checks and `playwright_visual` for headed visual inspection.
+  - Do not select `MCP_DOCKER` only to get a headless browser when a Playwright headless profile is available.
 - Any task that depends on the `@quasar/app-vite` version line (v2 vs v3), v3-readiness, or a v2->v3 migration:
   - Require `$alaa-app-vite-quasar` for the version posture and migration guardrails.
   - Pair with `$quasar-skill-packe` for the exact per-line `quasar.config`/boot/component shape.
