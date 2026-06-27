@@ -43,6 +43,8 @@ Get-ChildItem $srcRoot -Directory | ForEach-Object {
     }
 }
 
+$srcRoot = "D:\Sohrab\Project\skills\vendor\knowledge-work-plugins\design\skills"
+
 ```
 claude code:
 ```
