@@ -10,6 +10,7 @@ It mirrors the split references below and should be kept aligned with them in th
 - `20-operational-and-observability-contract.md`
 - `21-alaa-platform-observability-directive.md`
 - `25-end-to-end-flow-and-boundaries.md`
+- `26-request-time-authorization-openfga.md`
 - `30-trusted-ingress-and-laravel-contract.md`
 - `32-auth-totp-and-step-up-contract.md`
 - `35-permission-catalog-and-service-configs.md`
@@ -1826,6 +1827,106 @@ This file gives one concise picture of:
 - where async boundaries belong
 
 That helps agents keep frontend, gateway, and backend work consistent instead of treating each repository as an isolated system.
+
+---
+
+# Request-Time Authorization With OpenFGA
+
+Use this section for fine-grained, per-resource authorization: a route that must answer "may *this* user act on *this* object?" before the backend runs. `End-To-End Flow And Boundaries` explains who owns what; this section explains how the request-time decision is made, what data crosses each hop, how to add a protected route, and how to debug one. Pair with `$alaa-trust-gateway-auth`, `$alaa-haproxy`, and `$openfga`.
+
+## Why this layer exists
+
+Authentication answers "who is this user?" (the compact JWT and trusted headers `X-User-Id`, `X-Project-Id`, `X-Access`). It does not answer "may this user open course 12, set 55, content 901?" That is a relationship between a user and a specific object, and it changes constantly. Encoding it in a token would make tokens huge and stale, so the platform keeps it in OpenFGA and asks at request time. The decision is fail-closed: a "no" or an unreachable decision means the backend is never called.
+
+## The two paths and the single seam
+
+OpenFGA is the seam between a write path and a read path. A bug is almost always "the tuple was never written" (write path) or "the route asked the wrong question" (read path).
+
+- Write path (truth -> graph): `entitlement-api` owns business truth and emits a change event on every grant/deny change. `projector` consumes it and writes or deletes the matching tuples. `projector` is the only tuple writer.
+- Read path (request -> decision): the gateway authenticates, builds a canonical object id, and asks `authz-sidecar` (or `entitlement-spoa`). The sidecar resolves the route to a final `can_*` permission and runs one OpenFGA `check`. The sidecar is read-only.
+
+Grant vs permission: `projector` writes `grant_*`/`deny_*` relations; the OpenFGA model derives the final `can_*` permissions from them with inheritance and deny precedence; the sidecar always checks a `can_*` relation, never a raw grant. A "view" purchase on content 901 is stored as `grant_view`, and a later `can_view` check passes because the model resolves `can_view` from `grant_view` unless a deny overrides it.
+
+## Read path, hop by hop
+
+Worked example: `GET /vod/api/v3/course/12/set/55/content/901` for user `91`. The gateway repo `docs/authz-openfga-flow.md` has the full diagrams.
+
+1. Gateway matches a route group. Protected routes are declared in `authzRouteGroups` (gateway `charts/gateway/values.yaml` and overlays), binding method + anchored public path regex to an `endpointCategory` and an `identityMode`. Two identity modes: `canonical_from_param` (VOD, ticket: the gateway builds the object id from a path param) and `comment_service_bundle` (comment: the gateway forwards a typed target ref and the sidecar normalizes).
+2. Gateway builds the canonical object id (Lua, `haproxy/lua/authz-sidecar.lua`) in the fixed shape `<type>:p_<project_segment>__<tag>_<resource_segment>`. `project_segment` is the lowercase Crockford Base32 of the project UUIDv7 (26 chars). `resource_segment` is the Crockford Base32 of the integer id. `tag` is per type: `course`->`crs`, `set`->`set`, `content`->`cnt`, `assessment`->`asm`, `ticket_category`->`tcat`, `product`->`prd`. Content `901` -> `content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5`.
+3. Gateway -> `authz-sidecar`: a `HEAD /internal/authz/check` subrequest, carrying allowlisted trusted headers (`authzSidecar.requestHeaderAllowlist`). For `canonical_from_param` it sends `X-Authz-Endpoint-Category` and `X-Authz-Canonical-Object-Id` plus `X-Project-Id`, `X-User-Id`, `X-Request-Id`, `traceparent`, `X-Access`. For `comment_service_bundle` it sends `X-Authz-Service-Key` and the comment target/lineage/story refs instead. These `X-Authz-*` headers are stripped from client input at the edge.
+4. `authz-sidecar` -> OpenFGA: after validating context (`X-Project-Id` is a UUIDv7, `X-User-Id` is a non-zero integer, category is known, object id matches the contract pattern), it resolves the final permission from `endpoint-permissions.yaml`, confirms the store and model pins, checks a short-TTL cache, and on a miss calls `POST {OPENFGA_API_URL}/stores/{OPENFGA_STORE_ID}/check` with body `{ "authorization_model_id": "<model id>", "tuple_key": { "user": "user:91", "relation": "can_view", "object": "content:p_01hzy0f6m4p7n8q9r0s1t2v3wx__cnt_w5" } }`. `user` is `user:` + the numeric `X-User-Id`. OpenFGA replies `{ "allowed": true|false }`; any non-`200` is a dependency failure. The runtime check sends no `context`; the optional `context` object (for conditional `not_expired` tuples) appears only in manual tooling examples.
+5. Decision and enforcement. The sidecar maps the result to a status the gateway enforces fail-closed:
+  - `204` `AUTHZ_ALLOWED` -> copy allow-only `X-Authz-*` metadata downstream and forward; event `http.request.completed`.
+  - `403` `AUTHZ_DENIED` / `AUTHZ_TARGET_RULE_MISMATCH` -> gateway-owned `403`; event `authz.denied`.
+  - `401` `AUTH_CONTEXT_MISSING` -> gateway-owned `401`; event `auth.context.invalid`.
+  - `400` `AUTHZ_REQUEST_CONTEXT_INVALID` / `AUTHZ_ENDPOINT_CATEGORY_INVALID` / `AUTHZ_OBJECT_ID_INVALID` / `AUTHZ_NORMALIZATION_FAILED` -> gateway-owned `400`; event `input.validation.failed`.
+  - `503` `AUTHZ_SERVICE_TIMEOUT` / `AUTHZ_SERVICE_UNAVAILABLE` / `AUTHZ_STORE_NOT_PINNED` / `AUTHZ_MODEL_NOT_PINNED` -> gateway-owned `503`; event `http.request.failed`.
+  On allow the sidecar returns `X-Authz-Decision-Id`, `X-Authz-Decision-Code`, `X-Authz-Model-Id`, `X-Authz-Model-Label`, `X-Authz-Allow-Reason`, `X-Authz-Allow-Modifiers`, and a base64url `X-Authz-Decision-Artifact`. Allow-side `X-Authz-*` headers copied to the backend are observability only; a backend must never treat them as an authorization input and must still enforce its own business rules.
+
+## Endpoint category -> permission mapping
+
+Source: `entitlement-platform/platform/openfga/contracts/endpoint-permissions.yaml`. Runtime callers check `can_*` only.
+
+| Endpoint category | Target type | Final permission |
+|---|---|---|
+| `course_page` | `course` | `can_preview` |
+| `set_page` | `set` | `can_preview` |
+| `watch_content` | `content` | `can_view` |
+| `list_comments` | `course` / `set` | `can_preview` |
+| `list_comments` | `content` | `can_view` |
+| `post_comment` | `course` / `set` / `content` | `can_comment` |
+| `open_ticket_category` | `ticket_category` | `can_use_ticket` |
+| `take_assessment` | `assessment` | `can_take` |
+
+## Store, model, and pinning
+
+Three identifiers must agree across `projector` and `authz-sidecar`: `OPENFGA_STORE_ID` (the isolated namespace holding tuples and model versions, the `/stores/{store_id}/...` segment), `OPENFGA_AUTHORIZATION_MODEL_ID` (a specific immutable model version, pinned so a model edit never silently changes live decisions), and `OPENFGA_MODEL_LABEL` (default `authz_v1`, the human-readable label echoed in logs and `X-Authz-Model-Label`). Upload a new model id before writing new tuple shapes, and roll back the label and model id together.
+
+## Adding a new request-time-authorized route
+
+This spans two repositories; prepare the contract before exposing the route, or it fails closed for everyone.
+
+In `entitlement-platform`:
+1. Confirm the OpenFGA model has the target type and the final `can_*` relation; if new, add them, upload the model, and re-pin `OPENFGA_AUTHORIZATION_MODEL_ID` (bump `OPENFGA_MODEL_LABEL`) for both `projector` and `authz-sidecar`.
+2. Add the `endpoint_category` + `target_type` -> `final_permission` rule to `endpoint-permissions.yaml`; the category name must match what the gateway sends.
+3. Ensure `projector` writes the grant/deny tuples for that scope type and `entitlement-api` emits the events; without tuples every `can_*` check returns `allowed: false`.
+
+In `gateway`:
+4. Add the `authzRouteGroups` entry to `charts/gateway/values.yaml` and every active overlay: `name`, `enabled: true`, `enforcer: sidecar`, `method`, an anchored `publicPathRegex` capturing the resource id, `endpointCategory` (matching step 2), and `identityMode`.
+5. For `canonical_from_param`, extend the Lua extractor `extract_public_path_context` in `haproxy/lua/authz-sidecar.lua` with a branch for the new route-group name that pulls the resource id from the path. The `captures` field in values is documentation; the Lua extractor is what reads the id. Forgetting this branch is the most common reason a new canonical route fails with `AUTHZ_REQUEST_CONTEXT_INVALID`.
+6. If the target type is new, add its tag to `RESOURCE_TAGS` in the same Lua file (for example `assessment = "asm"`).
+7. Confirm the headers the sidecar needs are in `authzSidecar.requestHeaderAllowlist`.
+8. Render the chart, run the gateway authz smoke harness, and verify the store/model pins match across `projector` and `authz-sidecar`. A `comment_service_bundle` route skips steps 5-6 but must be a supported normalization target in the contract.
+
+## Debugging an authz decision
+
+Every hop shares `X-Request-Id` and `traceparent`. Work the path in order.
+1. Read the gateway access log: check `endpoint_category`, `canonical_object_id`, `sidecar_status`, `sidecar_decision_code`.
+2. `400 AUTHZ_OBJECT_ID_INVALID` / `AUTHZ_REQUEST_CONTEXT_INVALID`: the gateway built a bad or empty object id; suspect a missing Lua extractor branch, a wrong `publicPathRegex`, or a missing resource tag.
+3. `400 AUTHZ_ENDPOINT_CATEGORY_INVALID`: the gateway's `endpointCategory` is not in `endpoint-permissions.yaml`; the repos disagree on the name.
+4. `403 AUTHZ_TARGET_RULE_MISMATCH`: the category exists but has no rule for that target type; add the target rule.
+5. `403 AUTHZ_DENIED`: the contract resolved a `can_*` but OpenFGA said no. A write-path question: reproduce the `check`, then `read` the tuples for that user and object. If the expected `grant_*` tuple is missing, look at `projector` (did the event arrive and validate?) and `entitlement-api` (was the grant created?).
+6. `401 AUTH_CONTEXT_MISSING`: identity did not reach the sidecar; the upstream JWT/trusted-header step is the suspect.
+7. `503 AUTHZ_*`: dependency or pin failure (`STORE_NOT_PINNED`/`MODEL_NOT_PINNED` are config; `SERVICE_TIMEOUT`/`SERVICE_UNAVAILABLE` are reachability). Fail-closed by design.
+8. Allowed but the backend still rejects: that is backend business authorization, not this layer.
+Confirm the sidecar's `authz decision` log line and that its `authorization_model_id` matches the model that actually holds your tuples; a stale pin makes "the tuple exists but the check denies."
+
+## Anti-patterns
+
+- Calling OpenFGA, `authz-sidecar`, or `entitlement-spoa` directly from a frontend or normal backend.
+- Checking a `grant_*`/`deny_*` relation at request time instead of a `can_*`.
+- Adding a gateway route group before the permission rule and tuples exist.
+- Adding a `canonical_from_param` route group without the Lua extractor branch.
+- Treating allow-side `X-Authz-*` headers as authorization input in a backend.
+- Letting `projector` and `authz-sidecar` drift onto different model ids.
+
+## Source of truth
+
+- Gateway read path, full diagrams and worked example: gateway repo `docs/authz-openfga-flow.md`.
+- Write path and reconciliation: gateway repo `docs/entitlement-projector.md`.
+- Route groups and Lua: gateway `charts/gateway/values.yaml`, `charts/gateway/templates/configmap.yaml`, `haproxy/lua/authz-sidecar.lua`.
+- Model, object-id encoding, conditions, endpoint mapping: `entitlement-platform` `platform/openfga/contracts/authorization-contract.yaml` and `endpoint-permissions.yaml`.
+- Runnable OpenFGA `check`/`read`/`write`: `entitlement-platform` Postman collection.
 
 ---
 
