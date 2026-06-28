@@ -3,6 +3,7 @@
 ## Phase 0: Verify the baseline
 - confirm the currently pinned or intended Shaka version
 - check `references/UPSTREAM_WATCHLIST.md`
+- for `5.0.8` to `5.1.11`, read `references/MIGRATION_5_0_8_TO_5_1_11.md`
 - note any upstream bug or PR that changes the migration risk
 
 ## Phase 1: Create a safe test surface
@@ -23,6 +24,8 @@
 ## Phase 4: Add feature modules
 - analytics
 - subtitles and track UI
+- 5.1 structured audio, text, and video preferences
+- subtitle delay controls, if product scope needs them
 - quiz overlays
 - timeline markers
 - ads

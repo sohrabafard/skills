@@ -5,7 +5,9 @@ Use these sources whenever you need to verify or refresh the skill:
 ## Shaka Player
 
 - [Releases](https://github.com/shaka-project/shaka-player/releases)
+- [GitHub releases API](https://api.github.com/repos/shaka-project/shaka-player/releases)
 - [Pull requests](https://github.com/shaka-project/shaka-player/pulls)
+- [Upgrade Guide](https://shaka-player-demo.appspot.com/docs/api/tutorial-upgrade.html)
 - [Basic Usage](https://shaka-player-demo.appspot.com/docs/api/tutorial-basic-usage.html)
 - [Configuration](https://shaka-player-demo.appspot.com/docs/api/tutorial-config.html)
 - [License Server Authentication](https://shaka-player-demo.appspot.com/docs/api/tutorial-license-server-auth.html)
@@ -25,9 +27,13 @@ Use these sources whenever you need to verify or refresh the skill:
 ## Refresh order
 
 1. Check the Shaka releases page.
-2. Check the Shaka pull request list for unresolved regressions or near-term changes.
-3. Check the relevant Shaka tutorial page for current supported patterns.
-4. Only then reuse an old workaround from this skill.
+2. Check the Shaka upgrade guide for documented public API, config, and
+   deprecation changes.
+3. Check the relevant Shaka tutorial or generated API page for current
+   supported patterns.
+4. Check the Shaka pull request list only for unresolved regressions or
+   near-term watch items.
+5. Only then reuse an old workaround from this skill.
 
 ## Freshness triggers
 

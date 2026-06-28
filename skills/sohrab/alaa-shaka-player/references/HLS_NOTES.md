@@ -35,12 +35,19 @@ For short live playlists, default buffering assumptions may be too optimistic.
 If live playback buffers between chunks, review `manifest.hls.liveSegmentsDelay`
 and other low-latency settings before building a custom workaround.
 
-### 6. Version-aware fixes
-Current releases already include fixes for infinite manifest update delay and
-more tolerant duplicate segment detection. Re-check the release notes before
-copying older live-HLS workarounds into a new project.
+### 6. Chapters and timed metadata
+Shaka 5.1 adds or documents useful chapter and metadata surfaces, including
+chapter images, external `chaptersUri`, and public timeline or EMSG region
+functions. Use these for chapter menus, seek previews, MediaSession metadata,
+and cuepoint overlays before inventing a custom parser.
 
-### 7. Error funnel
+### 7. Version-aware fixes
+Current releases include fixes and performance improvements around live playlist
+refresh, LL-HLS stalls, discontinuity sequence timeline sync, duplicate segment
+detection, `audio/x-mpegurl`, and long DVR startup. Re-check release notes
+before copying older live-HLS workarounds into a new project.
+
+### 8. Error funnel
 Do not let network and media errors vanish into the console. Forward them into
 a structured error reporting path.
 

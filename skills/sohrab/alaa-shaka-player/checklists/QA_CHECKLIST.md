@@ -21,8 +21,11 @@
 - seek
 - replay
 - playback rate
+- startup offset through `updateStartTime`
 - subtitle toggle
+- subtitle delay, if exposed
 - track switching
+- structured audio, text, and video preference fallback order
 
 ## Network behavior
 - throttled bandwidth
@@ -35,6 +38,8 @@
 - pre-roll
 - mid-roll
 - post-roll
+- ad-playing state
+- interstitial preload state
 - ad failure recovery
 - resume behavior
 
@@ -47,6 +52,7 @@
 ## Overlays and markers
 - quiz timing
 - seek policy
+- chapter images and chapter URI behavior, if used
 - marker add, remove, jump, and share
 
 ## Conductor and playlist

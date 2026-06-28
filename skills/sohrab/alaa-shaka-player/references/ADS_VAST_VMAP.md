@@ -19,6 +19,12 @@ IMA for VAST or VMAP flows.
 4. exit ad state cleanly
 5. resume content or continue to the next scheduled action
 
+In Shaka 5.1+, prefer the documented ad events for precise state:
+
+- `ad-playing` means the ad actually started
+- `ad-interstitial-preloaded` can drive preload-aware UI
+- `ad-break-started` includes `startedAt` timing data when available
+
 ## Support targets
 
 This skill is built to support:
@@ -28,6 +34,8 @@ This skill is built to support:
 - post-roll
 - VAST
 - VMAP
+- HLS Interstitials, including X-ASSET-LIST and start-offset behavior when the
+  content uses it
 
 ## Platform cautions
 

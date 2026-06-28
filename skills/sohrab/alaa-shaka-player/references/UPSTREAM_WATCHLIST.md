@@ -5,66 +5,64 @@ recommending a new player architecture.
 
 ## Current baseline
 
-As of **2026-04-24**:
+As of **2026-06-28**:
 
-- GitHub releases API shows `v5.1.1` as the latest release, published **2026-04-20**.
-- Older notes for `v5.0.8` and `v4.16.24` remain useful only when the target repo is pinned to those lines.
+- GitHub releases API shows `v5.1.11` as the latest checked release,
+  published **2026-06-24**.
+- Official Shaka upgrade docs list a `v5.1` migration item: individual
+  preference config fields are deprecated in favor of structured
+  `preferredAudio`, `preferredText`, and `preferredVideo` arrays.
+- Older notes for `v5.0.8` and `v4.16.24` remain useful only when the target
+  repo is pinned to those lines.
+- For `v5.0.8` to `v5.1.11`, read
+  `MIGRATION_5_0_8_TO_5_1_11.md` before changing application code.
 
-## Older fixes to remember when a repo is pinned to 5.0.8 or 4.16.24
+## 5.1.11 release note highlights
 
-- HLS: DTS and DTS-HD audio codec variants
-- HLS: prevent infinite manifest update delay
-- HLS: more tolerant duplicate segment detection
-- HLS and DASH parsing: lower allocation and GC pressure
-- Player and VTT parsing: reduced function churn and allocation pressure
+- Text: `LINE_THROUGH` maps to valid CSS `line-through`.
+- UI: `mute_volume` is available as a composite element to avoid hover jank
+  between the mute button and volume bar.
+
+## Patch-line fixes to re-check before app workarounds
+
+- HLS and LL-HLS: live playlist refresh stalls, timeline sync gaps,
+  discontinuity sequences, long DVR startup, MIME mapping for
+  `audio/x-mpegurl`, and live playlist refresh performance.
+- DASH and segment indexing: lazy segment reference creation, period parsing,
+  binary search in hot paths, and lower allocation pressure.
+- DRM: hangs after DRM playback, key-status teardown, SAMPLE-AES stalls, and
+  PlayReady fixes across Windows browsers.
+- Ads/UI: pre-roll replay prevention, ad marker alignment, mute/volume hover
+  behavior, ad-state control updates, and context-menu closure.
+- Text/captions: external preferred text tracks, text-region cache keys,
+  TTML/CSS safety, VTT allocation pressure, and valid line-through styling.
 
 Implication:
 
-- Re-check whether a live-HLS, segment-duplication, or parser-performance issue
-  still reproduces before shipping a custom workaround.
+- Re-check whether the issue still reproduces on the pinned Shaka version before
+  shipping an app-level workaround.
+
+## 5.1 feature surfaces to consider
+
+- Structured audio, text, and video preferences with fallback priority order.
+- `subtitleDelay` for user-facing subtitle timing offset.
+- Chapter images, external chapter URI support, and richer MediaSession chapter
+  behavior.
+- Ad events and interstitial metadata such as real ad playback start and
+  preloaded interstitial signals.
+- ABR behavior informed by low-latency mode and dropped frames.
+- UI options for paused-state controls, right-side menus, track label formats,
+  touch/seek behavior, MediaSession Auto PiP, chapter thumbnails, and
+  mute/volume interaction.
+- Platform and format support for TiVo OS, Titan OS, DASH JSON, automatic DASH
+  XLink processing, HLS `CAN-SKIP-DATERANGES`, MoQT/MSF improvements, and queue
+  item metadata.
 
 ## Pull requests and issue notes to re-check
 
-The PR numbers below were useful watch items in the earlier snapshot. Re-check
-their current state before treating them as open, fixed, or released.
-
-### `#9896` Buffer-based ABR for low-latency live
-
-What it changes:
-
-- adds `shaka.abr.BufferBasedAbrManager()`
-- targets low-latency live where bandwidth estimation is unreliable
-- switches quality based on buffer health relative to target latency
-
-Implication:
-
-- For low-latency live tasks, mention this upstream direction before building a
-  custom ABR manager.
-
-### `#9864` Duplicate segment downloads during stream switching
-
-What it changes:
-
-- addresses duplicate segment fetches caused by floating-point drift and segment
-  discontinuities during seeks or variant switches
-
-Implication:
-
-- When users report AV sync slips or repeated segment downloads, verify the
-  pinned Shaka version before implementing app-level drift hacks.
-
-### `#9795` FairPlay polyfill fixes for Safari `src=` playback
-
-What it changes:
-
-- fixes `com.apple.fps` to `com.apple.fps.1_0` remapping in the legacy Apple
-  media-keys polyfill
-- removes a metadata-ready-state deadlock in `src=` mode
-
-Implication:
-
-- For Safari or FairPlay bugs, distinguish carefully between Modern EME,
-  legacy Apple Media Keys, `src=` playback, and MSE playback.
+Open PRs and issues are troubleshooting inputs only. Treat a note as fixed only
+after it is confirmed in an official release note, official doc, or focused
+local reproduction on the target version.
 
 ## Durable platform notes from official docs
 
@@ -77,11 +75,15 @@ Implication:
   token refresh on retries.
 - FairPlay support differs between Modern EME and legacy Apple Media Keys, and
   provider-specific request or response filters are common.
+- The official upgrade guide is the source of truth for removed, renamed, and
+  deprecated public APIs.
 
 ## Maintenance rule
 
 Whenever you update this skill:
 
 1. re-check the releases page
-2. scan open PRs for playback, HLS, ABR, DRM, or TV-platform items
-3. update this watchlist before editing workflow guidance elsewhere
+2. check the official upgrade guide and generated API docs for documented public
+   migration surfaces
+3. scan open PRs only for watch items, not normative migration claims
+4. update this watchlist before editing workflow guidance elsewhere

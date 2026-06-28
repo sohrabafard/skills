@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Shaka Player"
-  short_description: "Quasar Shaka player implementation pack"
-  default_prompt: "Use $alaa-shaka-player to follow its workflow for quasar shaka player implementation pack."
+  short_description: "Shaka 5.1 migration and Quasar player pack"
+  default_prompt: "Use $alaa-shaka-player to plan or implement a Shaka 5.1 player migration in a Vue 3 + Quasar + Vite app."
 
 policy:
   allow_implicit_invocation: true

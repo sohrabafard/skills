@@ -19,4 +19,5 @@ current task to keep the working context clean.
 - `ABR_AND_TRACKS.md`
 - `PLAYLIST.md`
 - `TROUBLESHOOTING.md`
+- `MIGRATION_5_0_8_TO_5_1_11.md`
 - `OFFICIAL_LINKS.md`

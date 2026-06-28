@@ -1,6 +1,6 @@
 ---
 name: alaa-shaka-player
-description: "Use this skill when a task involves production Shaka Player work in Vue 3 + Quasar + Vite, including playback architecture, HLS or DASH, DRM, ads, overlays, analytics, or migration from another player. Do not use it for simple MP4-only playback or non-Vue stacks."
+description: "Use this skill when a task involves production Shaka Player work in Vue 3 + Quasar + Vite, including playback architecture, HLS or DASH, DRM, ads, overlays, analytics, migration from another player, or version migration such as Shaka 5.0.8 to 5.1.11. Do not use it for simple MP4-only playback or non-Vue stacks."
 ---
 
 
@@ -44,19 +44,27 @@ failures easier to localize.
 
 ## Upstream baseline
 
-As of **2026-04-24**:
+As of **2026-06-28**:
 
-- The Shaka Player GitHub releases API shows `v5.1.1`, published on
-  **2026-04-20**, as the latest release.
-- Recent 5.x release notes and watchlist items still matter for HLS, DASH, DRM,
-  ABR, networking, ad, and TV-platform behavior. Re-check before repeating old
-  workarounds.
+- The Shaka Player GitHub releases API shows `v5.1.11`, published on
+  **2026-06-24**, as the latest release checked for this skill.
+- `v5.1` introduces structured preference arrays for audio, text, and video.
+  The older individual preference fields still work with deprecation warnings
+  but should be migrated before the next major release.
+- Recent 5.x release notes and official docs still matter for HLS, DASH, DRM,
+  ABR, networking, ads, UI controls, captions, MediaSession, and TV-platform
+  behavior. Re-check before repeating old workarounds.
 - Open PR and issue notes are troubleshooting inputs only until confirmed by an
   official release, merged code, or a focused local reproduction.
 
-Do not hard-code old 5.0.x versions in new work. For version-sensitive tasks, always read
-`references/UPSTREAM_WATCHLIST.md` before choosing a pinned version or
-recommending a workaround.
+Do not hard-code old 5.0.x versions in new work. For version-sensitive tasks,
+always read `references/UPSTREAM_WATCHLIST.md` before choosing a pinned version
+or recommending a workaround.
+
+For upgrades from the skill's older `v5.0.8` coverage baseline, read
+`references/MIGRATION_5_0_8_TO_5_1_11.md` before editing application code.
+Base migration claims on official Shaka release notes/changelog and official
+Shaka docs; do not infer product behavior from source-code diffs alone.
 
 ## When to use
 
@@ -102,6 +110,7 @@ Use this skill when:
    - `CONDUCTOR_SCHEDULE.md`
    - `TROUBLESHOOTING.md`
    - `QA_MODES.md`
+   - `MIGRATION_5_0_8_TO_5_1_11.md`
    - `UPSTREAM_WATCHLIST.md`
 
 ## Inputs to collect before implementation
@@ -180,11 +189,16 @@ them.
    - Since request filters run on every attempt in v5.x, use that to refresh
      expired credentials safely.
 
-6. Treat ads and product logic as optional modules.
+6. Prefer 5.1 structured media preferences in new or touched code.
+   - Use `preferredAudio`, `preferredText`, and `preferredVideo`.
+   - Replace old individual preference fields when migrating from 5.0.x.
+   - Treat deprecation warnings as migration work, not harmless noise.
+
+7. Treat ads and product logic as optional modules.
    - Do not bury ad or analytics state inside the core wrapper.
    - A failed ad flow must not permanently block content playback.
 
-7. Do not assume the latest issue discussion is already fixed.
+8. Do not assume the latest issue discussion is already fixed.
    - Re-check current release notes before carrying forward a workaround.
 
 ## Recommended architecture
