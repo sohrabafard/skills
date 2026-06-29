@@ -171,7 +171,7 @@ Use IndexedDB for:
 Do not use IndexedDB for:
 
 - Access tokens, refresh tokens, session secrets, payment secrets, or private keys that become dangerous if JavaScript can read them.
-- Source-of-truth entitlement, authorization, billing, identity, or irreversible business truth.
+- JWT claims, `X-Access`, OpenFGA/authz decisions, or source-of-truth entitlement, authorization, billing, identity, project, or irreversible business truth.
 - Large raw files when Cache API or OPFS is a better abstraction.
 - Full-text search without an index/search layer.
 - Analytics data lake replacement.
@@ -187,8 +187,8 @@ Do not use IndexedDB for:
 | File-like large binary content | OPFS or Cache API | Use IndexedDB for metadata when needed |
 | Small tab-scoped values | sessionStorage | Synchronous; keep tiny |
 | Small cross-navigation non-sensitive strings | localStorage only if unavoidable | Synchronous; blocks main thread; tiny only |
-| Server/client request state | Cookies | Keep minimal; cookies are sent with requests |
-| Credentials/session authority | HttpOnly secure cookies/server session | Not IndexedDB |
+| Public client request context | SDK/gateway contract | Alaa browser code sends only approved public headers through `@alaa/sdk` / `@alaa/sdk-vue` |
+| Credentials/session authority | SDK-owned bearer attachment plus gateway/auth refresh contract | Not IndexedDB; do not add app-side token persistence or app-managed refresh |
 
 ## Source-of-truth rule
 
@@ -199,8 +199,10 @@ Before creating an IndexedDB object store, answer:
 3. Is there a resync path?
 4. Is the backend still authoritative?
 5. Is the data safe to expose to any script running in the origin?
+6. For Alaa, is this only a cache/display hint rather than auth, project, entitlement, or identity authority?
 
 If the answer to 5 is no, do not store it in IndexedDB without a security review.
+If the answer to 6 is no, do not store it in IndexedDB; use the Alaa SDK/gateway/server contract instead.
 
 ## Progressive enhancement principle
 
@@ -628,7 +630,7 @@ Prefer one app DB per origin/app family, with account/project keys inside record
 ```text
 DB name: alaa-client-storage
 DB version: integer
-Record namespace: accountKey = projectId:userId or anonymous-session
+Record namespace: accountKey = publicProjectId:userId or anonymous-session
 ```
 
 Benefits:
@@ -636,6 +638,7 @@ Benefits:
 - Fewer DBs to upgrade.
 - Less risk of many stale per-user DBs.
 - Easier global cleanup and telemetry.
+- Clearer logout/account-switch cleanup while keeping `accountKey` as a namespace only, not as auth or entitlement proof.
 
 Use separate DBs only when there is a concrete reason:
 
@@ -1123,14 +1126,16 @@ Do not store in IndexedDB:
 - access tokens
 - refresh tokens
 - session secrets
+- JWT claims or decoded token payloads
+- trusted gateway headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, `X-User-*`, `X-Location-*`, or `X-Authz-*`
 - password-equivalent values
 - payment credentials
 - private keys that unlock server resources
-- entitlement authority or grant truth
+- entitlement authority, grant truth, or OpenFGA/authz decisions
 - unredacted high-risk PII unless specifically approved
 - server signing secrets or API keys
 
-Use server-side sessions, token-mediating backends, HttpOnly/Secure/SameSite cookies, short-lived server-issued URLs, and gateway-side authorization instead.
+Use server-side sessions, token-mediating backends, short-lived server-issued URLs, and gateway-side authorization instead. In Alaa frontend code, use `@alaa/sdk` / `@alaa/sdk-vue` for bearer attachment and single-flight refresh; do not add app-side token persistence, app-managed refresh, or browser-written trusted headers.
 
 ## Data classification
 
@@ -1141,8 +1146,9 @@ Use server-side sessions, token-mediating backends, HttpOnly/Secure/SameSite coo
 | User-generated unsynced | drafts, pending answers, comments before submit | Allowed with user-visible recovery and sync |
 | Analytics/outbox | watch events, UX events, retry queue | Allowed if minimized, bounded, and idempotent |
 | PII moderate/high | names, contact info, school info, support content | Minimize, encrypt only with meaningful key model, TTL, purge controls, security review |
-| Secrets/credentials | tokens, passwords, session authority | Forbidden |
-| Authorization truth | entitlements, paid access grants | Cache display hints only; never authoritative |
+| Secrets/credentials | tokens, passwords, session authority, JWT claims | Forbidden |
+| Trusted gateway context | `X-Project-Id`, `X-User-Id`, `X-Access`, `X-Authz-*` | Forbidden as client-authored data; derive only through gateway/server responses |
+| Authorization truth | entitlements, paid access grants, OpenFGA/authz decisions | Cache display hints only with TTL/server revision; never authoritative |
 
 ## Alaa auth boundary
 
@@ -1150,16 +1156,19 @@ For Alaa-style architecture:
 
 - Authentication and profile truth belong to server/auth services.
 - Gateway/trusted backend path verifies tokens and injects trusted context.
-- Client storage may cache display state, but backend remains authoritative.
+- Alaa frontend code consumes protected APIs through `@alaa/sdk` / `@alaa/sdk-vue`; the SDK owns bearer attachment, refresh, trusted-header rejection, and route composition.
+- Browser clients may send only `Authorization: Bearer`, `X-Request-Id`, and `traceparent`; they must never send trusted internal headers.
+- `project_id` is a public UUIDv7 body field only where an API contract requires it. It is not local-storage authority and must not be promoted to `X-Project-Id` by the browser.
+- Client storage may cache display state, profile hints, project hints, or entitlement hints, but backend/gateway services remain authoritative.
 - Entitlement decisions must be revalidated server-side.
-- IndexedDB may store `entitlementSnapshot` only as non-authoritative UX cache with TTL and server revision.
+- IndexedDB may store `entitlementSnapshot` only as a non-authoritative UX cache with TTL and server revision; it must never unlock protected content or skip gateway/authz checks.
 
 ## Token-storage rule
 
 If a task asks “can we put token in IndexedDB?” answer:
 
 ```text
-No for access/refresh/session tokens. IndexedDB is readable by JavaScript in the origin; XSS turns it into token exfiltration. Use HttpOnly Secure SameSite cookies or a token-mediating backend/session design. Store only non-secret session display metadata if needed.
+No for access, refresh, session tokens, or decoded JWT claims. IndexedDB is readable by JavaScript in the origin; XSS turns it into token exfiltration. In Alaa frontend code, let `@alaa/sdk` / `@alaa/sdk-vue` own bearer attachment and refresh through the gateway/auth contract. Store only non-secret session display metadata if needed.
 ```
 
 ## Logout and account switch
@@ -1175,6 +1184,7 @@ On logout/account switch:
 7. Confirm no user-private records remain for the previous account.
 
 Do not delete unsynced drafts silently unless the user explicitly chooses discard or policy says guest data is ephemeral.
+`accountKey` is only a storage namespace for cleanup and cache partitioning. It is not proof of identity, project authorization, or entitlement.
 
 ## Shared devices
 
@@ -1251,6 +1261,8 @@ Before approving a new IndexedDB store:
 - [ ] Data class identified.
 - [ ] Source of truth identified.
 - [ ] No tokens/secrets/authority stored.
+- [ ] No decoded JWT claims, trusted gateway headers, or authz/OpenFGA decisions stored as authority.
+- [ ] Alaa network sync uses SDK/gateway paths, not direct service-local authz paths.
 - [ ] Record schema validated on read.
 - [ ] TTL/retention defined.
 - [ ] Logout/account-switch purge defined.
@@ -1270,6 +1282,8 @@ Before approving a new IndexedDB store:
 ## Golden rule
 
 IndexedDB is a local reliability layer, not the product's source of truth. Server services own canonical data. Client storage improves UX under flaky networks, tab reloads, and low-latency reads.
+
+For Alaa frontend work, storage-backed sync still uses the public SDK/gateway path. Do not call service-local routes, `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly from browser storage code.
 
 ## Pattern catalog
 
@@ -1298,6 +1312,7 @@ Rules:
 
 - Use TTL and server validators (`ETag`, revision, `updatedAt`) when available.
 - Do not cache sensitive payloads without data-classification approval.
+- Treat profile, project, and entitlement records as display hints only; never use them to unlock protected behavior.
 - Invalidate by domain event or version when possible.
 - On stale cache, show stale-while-revalidate only when UX accepts it.
 
@@ -1330,6 +1345,8 @@ Rules:
 
 - Every network mutation must be idempotent or have a client mutation ID.
 - Never enqueue secrets.
+- Never enqueue tokens, decoded JWT claims, trusted gateway headers, or authorization decisions.
+- Flush through `@alaa/sdk` / `@alaa/sdk-vue` or another approved gateway-backed SDK client. Do not build a storage-owned fetch layer that reimplements token attach, refresh, or trusted-header filtering.
 - Keep queue bounded by item count, bytes, and age.
 - Sync outside the transaction that reads queue items.
 - Mark item state in a short transaction before and after network call.
@@ -1376,7 +1393,7 @@ Trigger sync on:
 - app boot
 - network `online`
 - visibility change to visible
-- successful auth/session refresh
+- successful SDK-owned auth/session refresh
 - route entering relevant area
 - manual retry
 - background sync where available and tested
@@ -1395,7 +1412,7 @@ Do not depend only on background sync; browser support varies.
    - success -> mark done, store server ack/revision
    - retryable error -> pending with backoff
    - conflict -> failed/conflict and create UI resolution task
-   - unauthorized -> pause account sync and require auth refresh
+   - unauthorized -> pause account sync and let the SDK/gateway auth flow refresh or require login
    - forbidden -> dead/failed after server confirmation
 7. Release lease.
 8. Emit metrics.
@@ -1420,6 +1437,7 @@ Use layered invalidation:
 - TTL expiration.
 - Server revision/ETag mismatch.
 - User logout/account switch.
+- Project/account/actor change; `accountKey` partitions storage only and is not authorization proof.
 - App build/storage schema version change.
 - Domain event: course changed, comment updated, ticket status changed.
 - Manual “clear local data”.
@@ -1672,15 +1690,16 @@ For any IndexedDB feature request:
 ```text
 1. Classify the feature.
 2. Identify data classes and source of truth.
-3. Select capability tiers and fallback behavior.
-4. Design schema/object stores/indexes.
-5. Define quota budget and cleanup policy.
-6. Define security/privacy rules.
-7. Define migration/multi-tab plan.
-8. Define sync/offline/conflict behavior if relevant.
-9. Implement with short transactions and feature detection.
-10. Test with unit + browser matrix.
-11. Add observability and operational notes.
+3. For Alaa, identify the SDK/gateway client and prove storage code will not own token attach, refresh, trusted headers, or authz decisions.
+4. Select capability tiers and fallback behavior.
+5. Design schema/object stores/indexes.
+6. Define quota budget and cleanup policy.
+7. Define security/privacy rules.
+8. Define migration/multi-tab plan.
+9. Define sync/offline/conflict behavior if relevant.
+10. Implement with short transactions and feature detection.
+11. Test with unit + browser matrix.
+12. Add observability and operational notes.
 ```
 
 ## Output contract: architecture answer
@@ -1688,13 +1707,13 @@ For any IndexedDB feature request:
 Use this structure:
 
 ```markdown
-## تصمیم
+## Decision
 
-## داده‌ها و منبع حقیقت
+## Data and source of truth
 
-## سطح قابلیت مرورگر و fallback
+## Browser capability tier and fallback
 
-## طراحی IndexedDB
+## IndexedDB design
 
 ### DB
 ### Object stores
@@ -1703,35 +1722,35 @@ Use this structure:
 
 ## Quota / persistence / eviction
 
-## امنیت و حریم خصوصی
+## Security and privacy
 
-## Migration و multi-tab
+## Migration and multi-tab
 
 ## Sync / conflict / recovery
 
-## تست و observability
+## Testing and observability
 
-## ریسک‌ها و تصمیم‌های باز
+## Risks and open decisions
 ```
 
 ## Output contract: code review
 
 ```markdown
-## نتیجه review
+## Review result
 
-## ایرادهای قطعی
+## Confirmed issues
 
-## ریسک‌های browser compatibility
+## Browser compatibility risks
 
-## ریسک‌های quota/eviction
+## Quota/eviction risks
 
-## ریسک‌های security/privacy
+## Security/privacy risks
 
-## مشکلات migration/concurrency
+## Migration/concurrency issues
 
-## پیشنهاد patch
+## Patch recommendation
 
-## تست‌های لازم
+## Required tests
 ```
 
 ## Output contract: implementation plan
@@ -1769,6 +1788,7 @@ Constraints:
 - offline requirement: [none/basic/critical]
 - sensitive data: [yes/no]
 - expected records/bytes: [estimate]
+For Alaa, keep protected calls behind @alaa/sdk or @alaa/sdk-vue and do not store trusted gateway headers or authz decisions.
 Return a decision record, schema, quota plan, fallback tiers, security notes, and test matrix. Do not write implementation code unless necessary.
 ```
 
@@ -1779,7 +1799,8 @@ Use $alaa-indexeddb-browser-storage.
 Implement [feature] in this repo.
 Before editing, inspect current storage utilities and AGENTS.md.
 Use feature detection, short transactions, quota handling, and migration-safe schema changes.
-Do not store tokens/secrets.
+Do not store tokens/secrets, decoded JWT claims, trusted gateway headers, or authz decisions.
+Use the approved Alaa SDK/gateway path for protected sync; do not call service-local authz paths or OpenFGA from browser storage.
 Add or update tests for fresh install, upgrade, quota error, and unavailable storage.
 Summarize files changed and remaining risks.
 ```
@@ -1806,7 +1827,7 @@ Return concrete patch suggestions and tests.
 
 ```text
 Use $alaa-indexeddb-browser-storage.
-Review local browser storage for secrets, PII, entitlement authority, cache poisoning, logout purge, shared-device risk, and XSS exposure.
+Review local browser storage for secrets, decoded JWT claims, trusted gateway headers, PII, entitlement authority, authz/OpenFGA decisions, cache poisoning, logout purge, shared-device risk, and XSS exposure.
 Return must-fix issues, acceptable data classes, and a revised storage policy.
 ```
 
@@ -1825,11 +1846,13 @@ If not blocking, proceed with explicit assumptions and mark them as assumptions.
 ## Agent anti-patterns
 
 - Jumping straight to Dexie/raw IDB code without data classification.
-- Assuming IndexedDB quota is “unlimited”.
+- Assuming IndexedDB quota is "unlimited".
 - Assuming `navigator.storage.estimate()` is exact.
 - Promising offline durability in private mode.
 - Implementing a feature only tested in Chrome.
-- Storing auth tokens because “IndexedDB is not localStorage”.
+- Storing auth tokens because "IndexedDB is not localStorage".
+- Storing decoded JWT claims, trusted gateway headers, or `X-Access` as local context.
+- Calling `authz-sidecar`, `entitlement-spoa`, OpenFGA, or service-local protected routes directly from browser storage sync.
 - Using user-agent checks as primary logic.
 - Ignoring `blocked`/`versionchange`.
 - Running fetch inside a transaction.
@@ -1867,6 +1890,7 @@ Alaa-style client storage must respect platform service ownership:
 
 - Client applications call public routes through the gateway.
 - Gateway/auth paths remain the trust boundary for identity and protected access.
+- Frontend applications consume protected APIs through `@alaa/sdk` / `@alaa/sdk-vue`; storage modules must not own bearer attachment, refresh, trusted-header rejection, or route-prefix composition.
 - `auth` owns identity/profile/session truth.
 - `content` owns course/set/content learning-content truth.
 - legacy playback/domain responsibilities may still exist during migration.
@@ -1876,13 +1900,17 @@ Alaa-style client storage must respect platform service ownership:
 
 IndexedDB should improve frontend resilience and UX, not replace these service boundaries.
 
+Browser storage must never fabricate or persist trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, or `X-Authz-*`. Browser clients may send only `Authorization: Bearer`, `X-Request-Id`, and `traceparent` through the approved SDK/gateway contract.
+
 ## Recommended Alaa client DB
 
 ```text
 DB: alaa-client-storage
 Version: integer
-Namespace: accountKey = projectId:userId or anonymous-session
+Namespace: accountKey = publicProjectId:userId or anonymous-session
 ```
+
+`accountKey` is a local storage partition key for cleanup and cache isolation only. It is not proof of identity, project authority, or entitlement. `project_id` remains a public UUIDv7 body field only where an API contract requires it; the browser must not promote it into `X-Project-Id`.
 
 Suggested stores:
 
@@ -1951,6 +1979,7 @@ For course/content metadata:
 
 - Cache only server-shaped DTOs or normalized records.
 - Use TTL and server validators.
+- Treat project, profile, and entitlement data as display/cache hints only.
 - Do not cache access authority as truth.
 - Invalidate when project/account/content revision changes.
 
@@ -1984,8 +2013,10 @@ For local notification state:
 ## Alaa security rules
 
 - Do not store auth tokens in IndexedDB.
+- Do not store decoded JWT claims, `X-Access`, trusted gateway headers, or OpenFGA/authz decisions in IndexedDB.
 - Do not trust client-cached entitlement for protected access.
-- All protected API calls go through the gateway/session model.
+- All protected API calls go through the SDK/gateway/session model.
+- Storage sync must not call service-local routes, `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly.
 - Any local record read from IndexedDB must be treated as untrusted input.
 - User-scoped data must include accountKey and be purged on logout/account switch.
 
@@ -2033,7 +2064,7 @@ Avoid exposing raw `IDBDatabase` to feature code unless the storage module itsel
 
 1. Add storage capability probe.
 2. Add storage facade and schema v1.
-3. Add data classification and accountKey enforcement.
+3. Add data classification and accountKey cleanup enforcement.
 4. Implement one low-risk store first, e.g., learning state or drafts.
 5. Add quota metadata and cleanup.
 6. Add outbox pattern for analytics/events.

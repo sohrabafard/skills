@@ -1,6 +1,6 @@
 ---
 name: alaa-indexeddb-browser-storage
-description: "Use this skill when designing, implementing, reviewing, testing, or debugging IndexedDB/browser-storage features for Alaa or similar web apps: offline state, local cache, outbox sync, schema migrations, quota handling, browser compatibility, storage security, and progressive enhancement."
+description: "Use this skill when designing, implementing, reviewing, testing, or debugging IndexedDB/browser-storage features for Alaa or similar web apps: offline state, local cache, outbox sync, schema migrations, quota handling, browser compatibility, storage security, Alaa SDK/gateway trust boundaries, and progressive enhancement."
 ---
 
 # Alaa IndexedDB Browser Storage
@@ -51,49 +51,37 @@ Do not use this skill when:
 ## Quick start workflow
 
 1. Read the repo-local `AGENTS.md` and project instructions first.
-2. For any browser-version, quota, Safari/WebKit, or “latest/current” claim, refresh official sources before acting.
+2. For any browser-version, quota, Safari/WebKit, or "latest/current" claim, refresh official sources before acting.
 3. Load `references/00-topic-map.md` and then only the smallest relevant reference files.
-4. Start every design with this classification:
-   - source of truth: server or client?
-   - data sensitivity: public/cache/user-private/PII/secret?
-   - lifetime: ephemeral/session/durable/offline-critical?
-   - recovery path: recompute, refetch, resync, or user loss?
+4. Start every design by classifying source of truth, data sensitivity, lifetime, and recovery path.
 5. Prefer progressive enhancement: same core UX on all supported browsers; better UX on stronger devices and newer browsers.
 6. Use feature detection and capability probes. Do not rely on user-agent sniffing except for documented product analytics or known WebKit/iOS mitigations.
 7. Treat IndexedDB as a client-side cache/outbox/offline layer, not an authorization or identity authority.
-8. Validate changes with unit tests, browser tests, and at least one real browser path for each risky compatibility class.
+8. For Alaa frontend work, route protected network calls through `@alaa/sdk` or `@alaa/sdk-vue`; do not re-own token attach, refresh, trusted-header rejection, or gateway route composition in storage code.
+9. Validate changes with unit tests, browser tests, and at least one real browser path for each risky compatibility class.
 
 ## Routing map
 
-- Source priority, freshness, and compatibility research rules:
-  - `references/05-source-priority-and-freshness.md`
-- IndexedDB mental model, boundaries, and storage choice framework:
-  - `references/10-indexeddb-mental-model-and-boundaries.md`
-- Browser compatibility, versions, capability tiers, and progressive enhancement:
-  - `references/20-browser-compatibility-and-capability-tiers.md`
-- Quota, persistence, eviction, storage pressure, private mode, and budgets:
-  - `references/30-storage-quota-persistence-and-eviction.md`
-- Schema versions, migrations, multi-tab upgrades, concurrency, and blocked connections:
-  - `references/40-schema-versioning-migrations-and-concurrency.md`
-- Transactions, performance, query design, batching, durability, indexes, and workers:
-  - `references/50-transactions-performance-and-query-patterns.md`
-- Security, privacy, data classification, auth-token rules, logout purge, and local encryption boundaries:
-  - `references/60-security-privacy-and-data-classification.md`
-- Offline sync, outbox, cache, drafts, learning state, and conflict handling:
-  - `references/70-offline-sync-outbox-cache-patterns.md`
-- Testing, browser-debugging, observability, and release readiness:
-  - `references/80-testing-debugging-and-observability.md`
-- Agent workflows, prompt patterns, output contracts, and GPT/Claude-compatible skill usage:
-  - `references/90-agent-workflows-prompts-and-output-contracts.md`
-- Alaa-specific integration playbook:
-  - `references/95-alaa-integration-playbook.md`
-- Source map and maintenance policy:
-  - `references/99-sources-and-maintenance.md`
+| Need | Load |
+|---|---|
+| Source priority, freshness, compatibility research | `references/05-source-priority-and-freshness.md` |
+| IndexedDB mental model, boundaries, storage choice | `references/10-indexeddb-mental-model-and-boundaries.md` |
+| Browser compatibility, versions, capability tiers | `references/20-browser-compatibility-and-capability-tiers.md` |
+| Quota, persistence, eviction, storage pressure | `references/30-storage-quota-persistence-and-eviction.md` |
+| Schema versions, migrations, multi-tab safety | `references/40-schema-versioning-migrations-and-concurrency.md` |
+| Transactions, performance, indexes, workers | `references/50-transactions-performance-and-query-patterns.md` |
+| Security, privacy, auth-token rules, logout purge | `references/60-security-privacy-and-data-classification.md` |
+| Offline sync, outbox, cache, drafts, conflicts | `references/70-offline-sync-outbox-cache-patterns.md` |
+| Testing, debugging, observability, release readiness | `references/80-testing-debugging-and-observability.md` |
+| Agent workflows, prompts, output contracts | `references/90-agent-workflows-prompts-and-output-contracts.md` |
+| Alaa-specific service-boundary integration | `references/95-alaa-integration-playbook.md` |
+| Source map and maintenance policy | `references/99-sources-and-maintenance.md` |
 
 ## Mandatory rules
 
-- Never store access tokens, refresh tokens, session secrets, entitlement authority, payment secrets, or irreversible private keys in IndexedDB.
-- Never make security or entitlement decisions solely from IndexedDB. Revalidate through trusted server/gateway paths.
+- Never store access tokens, refresh tokens, session secrets, JWT claims, `X-Access`, entitlement authority, OpenFGA/authz decisions, payment secrets, or irreversible private keys in IndexedDB.
+- Never make security or entitlement decisions solely from IndexedDB. Revalidate through trusted server/gateway paths and Alaa SDK-owned request flows.
+- Never send or cache trusted internal gateway headers from browser storage code. Browser clients may send only `Authorization: Bearer`, `X-Request-Id`, and `traceparent` through the approved SDK/gateway contract.
 - Always handle `QuotaExceededError` and storage unavailability.
 - Always assume data can be evicted unless persistent storage was granted, and even then assume the user can delete it.
 - Always design a server resync, recompute, or user-visible recovery path.
@@ -130,14 +118,4 @@ Use exact searches such as:
 
 ## Output default
 
-When answering an IndexedDB task, produce:
-
-1. Decision summary.
-2. Data classification and source-of-truth statement.
-3. Capability tier and fallback behavior.
-4. Schema/object-store/index plan.
-5. Quota and eviction plan.
-6. Security/privacy plan.
-7. Migration and multi-tab plan.
-8. Test matrix.
-9. Code changes or pseudocode only when implementation is requested.
+When answering an IndexedDB task, include the decision, data classification/source of truth, capability tier and fallback, schema/index plan, quota/eviction plan, security/privacy posture, migration/multi-tab plan, test matrix, and code or pseudocode only when implementation is requested.

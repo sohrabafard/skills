@@ -6,6 +6,7 @@ Alaa-style client storage must respect platform service ownership:
 
 - Client applications call public routes through the gateway.
 - Gateway/auth paths remain the trust boundary for identity and protected access.
+- Frontend applications consume protected APIs through `@alaa/sdk` / `@alaa/sdk-vue`; storage modules must not own bearer attachment, refresh, trusted-header rejection, or route-prefix composition.
 - `auth` owns identity/profile/session truth.
 - `content` owns course/set/content learning-content truth.
 - legacy playback/domain responsibilities may still exist during migration.
@@ -15,13 +16,17 @@ Alaa-style client storage must respect platform service ownership:
 
 IndexedDB should improve frontend resilience and UX, not replace these service boundaries.
 
+Browser storage must never fabricate or persist trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, or `X-Authz-*`. Browser clients may send only `Authorization: Bearer`, `X-Request-Id`, and `traceparent` through the approved SDK/gateway contract.
+
 ## Recommended Alaa client DB
 
 ```text
 DB: alaa-client-storage
 Version: integer
-Namespace: accountKey = projectId:userId or anonymous-session
+Namespace: accountKey = publicProjectId:userId or anonymous-session
 ```
+
+`accountKey` is a local storage partition key for cleanup and cache isolation only. It is not proof of identity, project authority, or entitlement. `project_id` remains a public UUIDv7 body field only where an API contract requires it; the browser must not promote it into `X-Project-Id`.
 
 Suggested stores:
 
@@ -90,6 +95,7 @@ For course/content metadata:
 
 - Cache only server-shaped DTOs or normalized records.
 - Use TTL and server validators.
+- Treat project, profile, and entitlement data as display/cache hints only.
 - Do not cache access authority as truth.
 - Invalidate when project/account/content revision changes.
 
@@ -123,8 +129,10 @@ For local notification state:
 ## Alaa security rules
 
 - Do not store auth tokens in IndexedDB.
+- Do not store decoded JWT claims, `X-Access`, trusted gateway headers, or OpenFGA/authz decisions in IndexedDB.
 - Do not trust client-cached entitlement for protected access.
-- All protected API calls go through the gateway/session model.
+- All protected API calls go through the SDK/gateway/session model.
+- Storage sync must not call service-local routes, `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly.
 - Any local record read from IndexedDB must be treated as untrusted input.
 - User-scoped data must include accountKey and be purged on logout/account switch.
 
@@ -172,7 +180,7 @@ Avoid exposing raw `IDBDatabase` to feature code unless the storage module itsel
 
 1. Add storage capability probe.
 2. Add storage facade and schema v1.
-3. Add data classification and accountKey enforcement.
+3. Add data classification and accountKey cleanup enforcement.
 4. Implement one low-risk store first, e.g., learning state or drafts.
 5. Add quota metadata and cleanup.
 6. Add outbox pattern for analytics/events.

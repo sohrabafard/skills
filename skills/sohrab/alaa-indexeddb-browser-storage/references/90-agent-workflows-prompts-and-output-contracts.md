@@ -20,15 +20,16 @@ For any IndexedDB feature request:
 ```text
 1. Classify the feature.
 2. Identify data classes and source of truth.
-3. Select capability tiers and fallback behavior.
-4. Design schema/object stores/indexes.
-5. Define quota budget and cleanup policy.
-6. Define security/privacy rules.
-7. Define migration/multi-tab plan.
-8. Define sync/offline/conflict behavior if relevant.
-9. Implement with short transactions and feature detection.
-10. Test with unit + browser matrix.
-11. Add observability and operational notes.
+3. For Alaa, identify the SDK/gateway client and prove storage code will not own token attach, refresh, trusted headers, or authz decisions.
+4. Select capability tiers and fallback behavior.
+5. Design schema/object stores/indexes.
+6. Define quota budget and cleanup policy.
+7. Define security/privacy rules.
+8. Define migration/multi-tab plan.
+9. Define sync/offline/conflict behavior if relevant.
+10. Implement with short transactions and feature detection.
+11. Test with unit + browser matrix.
+12. Add observability and operational notes.
 ```
 
 ## Output contract: architecture answer
@@ -36,13 +37,13 @@ For any IndexedDB feature request:
 Use this structure:
 
 ```markdown
-## تصمیم
+## Decision
 
-## داده‌ها و منبع حقیقت
+## Data and source of truth
 
-## سطح قابلیت مرورگر و fallback
+## Browser capability tier and fallback
 
-## طراحی IndexedDB
+## IndexedDB design
 
 ### DB
 ### Object stores
@@ -51,35 +52,35 @@ Use this structure:
 
 ## Quota / persistence / eviction
 
-## امنیت و حریم خصوصی
+## Security and privacy
 
-## Migration و multi-tab
+## Migration and multi-tab
 
 ## Sync / conflict / recovery
 
-## تست و observability
+## Testing and observability
 
-## ریسک‌ها و تصمیم‌های باز
+## Risks and open decisions
 ```
 
 ## Output contract: code review
 
 ```markdown
-## نتیجه review
+## Review result
 
-## ایرادهای قطعی
+## Confirmed issues
 
-## ریسک‌های browser compatibility
+## Browser compatibility risks
 
-## ریسک‌های quota/eviction
+## Quota/eviction risks
 
-## ریسک‌های security/privacy
+## Security/privacy risks
 
-## مشکلات migration/concurrency
+## Migration/concurrency issues
 
-## پیشنهاد patch
+## Patch recommendation
 
-## تست‌های لازم
+## Required tests
 ```
 
 ## Output contract: implementation plan
@@ -117,6 +118,7 @@ Constraints:
 - offline requirement: [none/basic/critical]
 - sensitive data: [yes/no]
 - expected records/bytes: [estimate]
+For Alaa, keep protected calls behind @alaa/sdk or @alaa/sdk-vue and do not store trusted gateway headers or authz decisions.
 Return a decision record, schema, quota plan, fallback tiers, security notes, and test matrix. Do not write implementation code unless necessary.
 ```
 
@@ -127,7 +129,8 @@ Use $alaa-indexeddb-browser-storage.
 Implement [feature] in this repo.
 Before editing, inspect current storage utilities and AGENTS.md.
 Use feature detection, short transactions, quota handling, and migration-safe schema changes.
-Do not store tokens/secrets.
+Do not store tokens/secrets, decoded JWT claims, trusted gateway headers, or authz decisions.
+Use the approved Alaa SDK/gateway path for protected sync; do not call service-local authz paths or OpenFGA from browser storage.
 Add or update tests for fresh install, upgrade, quota error, and unavailable storage.
 Summarize files changed and remaining risks.
 ```
@@ -154,7 +157,7 @@ Return concrete patch suggestions and tests.
 
 ```text
 Use $alaa-indexeddb-browser-storage.
-Review local browser storage for secrets, PII, entitlement authority, cache poisoning, logout purge, shared-device risk, and XSS exposure.
+Review local browser storage for secrets, decoded JWT claims, trusted gateway headers, PII, entitlement authority, authz/OpenFGA decisions, cache poisoning, logout purge, shared-device risk, and XSS exposure.
 Return must-fix issues, acceptable data classes, and a revised storage policy.
 ```
 
@@ -173,11 +176,13 @@ If not blocking, proceed with explicit assumptions and mark them as assumptions.
 ## Agent anti-patterns
 
 - Jumping straight to Dexie/raw IDB code without data classification.
-- Assuming IndexedDB quota is “unlimited”.
+- Assuming IndexedDB quota is "unlimited".
 - Assuming `navigator.storage.estimate()` is exact.
 - Promising offline durability in private mode.
 - Implementing a feature only tested in Chrome.
-- Storing auth tokens because “IndexedDB is not localStorage”.
+- Storing auth tokens because "IndexedDB is not localStorage".
+- Storing decoded JWT claims, trusted gateway headers, or `X-Access` as local context.
+- Calling `authz-sidecar`, `entitlement-spoa`, OpenFGA, or service-local protected routes directly from browser storage sync.
 - Using user-agent checks as primary logic.
 - Ignoring `blocked`/`versionchange`.
 - Running fetch inside a transaction.

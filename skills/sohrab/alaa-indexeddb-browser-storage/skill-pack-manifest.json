@@ -5,7 +5,6 @@
   "last_researched": "2026-06-29",
   "created_at_utc": "2026-06-29T13:43:27.366118+00:00",
   "root_files": [
-    "README.md",
     "SKILL.md",
     "agents/openai.yaml",
     "assets/alaa-indexeddb-adr.md",
@@ -42,5 +41,5 @@
     "scripts/validate_skill_pack.py",
     "skill-pack-manifest.json"
   ],
-  "updated_at_utc": "2026-06-29T13:44:05.109817+00:00"
+  "updated_at_utc": "2026-06-29T15:22:54.2967216Z"
 }

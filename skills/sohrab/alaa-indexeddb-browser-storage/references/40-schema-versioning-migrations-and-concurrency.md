@@ -17,7 +17,7 @@ Prefer one app DB per origin/app family, with account/project keys inside record
 ```text
 DB name: alaa-client-storage
 DB version: integer
-Record namespace: accountKey = projectId:userId or anonymous-session
+Record namespace: accountKey = publicProjectId:userId or anonymous-session
 ```
 
 Benefits:
@@ -25,6 +25,7 @@ Benefits:
 - Fewer DBs to upgrade.
 - Less risk of many stale per-user DBs.
 - Easier global cleanup and telemetry.
+- Clearer logout/account-switch cleanup while keeping `accountKey` as a namespace only, not as auth or entitlement proof.
 
 Use separate DBs only when there is a concrete reason:
 

@@ -4,6 +4,8 @@
 
 IndexedDB is a local reliability layer, not the product's source of truth. Server services own canonical data. Client storage improves UX under flaky networks, tab reloads, and low-latency reads.
 
+For Alaa frontend work, storage-backed sync still uses the public SDK/gateway path. Do not call service-local routes, `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly from browser storage code.
+
 ## Pattern catalog
 
 ### 1. Read-through cache
@@ -31,6 +33,7 @@ Rules:
 
 - Use TTL and server validators (`ETag`, revision, `updatedAt`) when available.
 - Do not cache sensitive payloads without data-classification approval.
+- Treat profile, project, and entitlement records as display hints only; never use them to unlock protected behavior.
 - Invalidate by domain event or version when possible.
 - On stale cache, show stale-while-revalidate only when UX accepts it.
 
@@ -63,6 +66,8 @@ Rules:
 
 - Every network mutation must be idempotent or have a client mutation ID.
 - Never enqueue secrets.
+- Never enqueue tokens, decoded JWT claims, trusted gateway headers, or authorization decisions.
+- Flush through `@alaa/sdk` / `@alaa/sdk-vue` or another approved gateway-backed SDK client. Do not build a storage-owned fetch layer that reimplements token attach, refresh, or trusted-header filtering.
 - Keep queue bounded by item count, bytes, and age.
 - Sync outside the transaction that reads queue items.
 - Mark item state in a short transaction before and after network call.
@@ -109,7 +114,7 @@ Trigger sync on:
 - app boot
 - network `online`
 - visibility change to visible
-- successful auth/session refresh
+- successful SDK-owned auth/session refresh
 - route entering relevant area
 - manual retry
 - background sync where available and tested
@@ -128,7 +133,7 @@ Do not depend only on background sync; browser support varies.
    - success -> mark done, store server ack/revision
    - retryable error -> pending with backoff
    - conflict -> failed/conflict and create UI resolution task
-   - unauthorized -> pause account sync and require auth refresh
+   - unauthorized -> pause account sync and let the SDK/gateway auth flow refresh or require login
    - forbidden -> dead/failed after server confirmation
 7. Release lease.
 8. Emit metrics.
@@ -153,6 +158,7 @@ Use layered invalidation:
 - TTL expiration.
 - Server revision/ETag mismatch.
 - User logout/account switch.
+- Project/account/actor change; `accountKey` partitions storage only and is not authorization proof.
 - App build/storage schema version change.
 - Domain event: course changed, comment updated, ticket status changed.
 - Manual “clear local data”.

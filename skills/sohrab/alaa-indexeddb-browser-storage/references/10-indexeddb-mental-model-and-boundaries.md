@@ -2,7 +2,9 @@
 
 ## What IndexedDB is
 
-IndexedDB is a browser-provided, asynchronous, transactional, object-oriented database scoped to an origin. It stores structured-clone-compatible JavaScript values, including objects and blobs, inside object stores keyed by primary keys and optional indexes.
+IndexedDB is a browser-provided, asynchronous, transactional, object-oriented database scoped to an origin. It stores
+structured-clone-compatible JavaScript values, including objects and blobs, inside object stores keyed by primary keys
+and optional indexes.
 
 Think of it as:
 
@@ -18,7 +20,8 @@ Origin: https://app.example
     └── other origin storage
 ```
 
-IndexedDB is not SQL. It has no joins, no server-grade query planner, no global transactions across origins, no permission model inside one origin, and no guarantee that data survives user deletion or browser eviction.
+IndexedDB is not SQL. It has no joins, no server-grade query planner, no global transactions across origins, no
+permission model inside one origin, and no guarantee that data survives user deletion or browser eviction.
 
 ## Core constructs
 
@@ -46,8 +49,10 @@ Use IndexedDB for:
 
 Do not use IndexedDB for:
 
-- Access tokens, refresh tokens, session secrets, payment secrets, or private keys that become dangerous if JavaScript can read them.
-- Source-of-truth entitlement, authorization, billing, identity, or irreversible business truth.
+- Access tokens, refresh tokens, session secrets, payment secrets, or private keys that become dangerous if JavaScript
+  can read them.
+- JWT claims, `X-Access`, OpenFGA/authz decisions, or source-of-truth entitlement, authorization, billing, identity,
+  project, or irreversible business truth.
 - Large raw files when Cache API or OPFS is a better abstraction.
 - Full-text search without an index/search layer.
 - Analytics data lake replacement.
@@ -56,15 +61,15 @@ Do not use IndexedDB for:
 
 ## Storage API decision framework
 
-| Need | Preferred API | Notes |
-|---|---|---|
-| Structured records, indexes, offline state, outbox | IndexedDB | Primary focus of this skill |
-| Static network resources and HTTP response caching | Cache API | Usually via Service Worker |
-| File-like large binary content | OPFS or Cache API | Use IndexedDB for metadata when needed |
-| Small tab-scoped values | sessionStorage | Synchronous; keep tiny |
-| Small cross-navigation non-sensitive strings | localStorage only if unavoidable | Synchronous; blocks main thread; tiny only |
-| Server/client request state | Cookies | Keep minimal; cookies are sent with requests |
-| Credentials/session authority | HttpOnly secure cookies/server session | Not IndexedDB |
+| Need                                               | Preferred API                                                  | Notes                                                                                      |
+|----------------------------------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| Structured records, indexes, offline state, outbox | IndexedDB                                                      | Primary focus of this skill                                                                |
+| Static network resources and HTTP response caching | Cache API                                                      | Usually via Service Worker                                                                 |
+| File-like large binary content                     | OPFS or Cache API                                              | Use IndexedDB for metadata when needed                                                     |
+| Small tab-scoped values                            | sessionStorage                                                 | Synchronous; keep tiny                                                                     |
+| Small cross-navigation non-sensitive strings       | localStorage only if unavoidable                               | Synchronous; blocks main thread; tiny only                                                 |
+| Public client request context                      | SDK/gateway contract                                           | Alaa browser code sends only approved public headers through `@alaa/sdk` / `@alaa/sdk-vue` |
+| Credentials/session authority                      | SDK-owned bearer attachment plus gateway/auth refresh contract | Not IndexedDB; do not add app-side token persistence or app-managed refresh                |
 
 ## Source-of-truth rule
 
@@ -75,17 +80,21 @@ Before creating an IndexedDB object store, answer:
 3. Is there a resync path?
 4. Is the backend still authoritative?
 5. Is the data safe to expose to any script running in the origin?
+6. For Alaa, is this only a cache/display hint rather than auth, project, entitlement, or identity authority?
 
 If the answer to 5 is no, do not store it in IndexedDB without a security review.
+If the answer to 6 is no, do not store it in IndexedDB; use the Alaa SDK/gateway/server contract instead.
 
 ## Progressive enhancement principle
 
 Design for consistent core behavior:
 
 - Baseline browsers get core functionality and safe degradation.
-- Modern browsers get persistent-storage requests, better quota estimates, improved bulk APIs, background sync, workers, or OPFS where applicable.
+- Modern browsers get persistent-storage requests, better quota estimates, improved bulk APIs, background sync, workers,
+  or OPFS where applicable.
 - Powerful devices get larger local budgets, larger prefetch windows, and better local search/indexing.
-- Low-end or private-mode environments get smaller budgets, fewer retained records, and clear UX about reduced offline reliability.
+- Low-end or private-mode environments get smaller budgets, fewer retained records, and clear UX about reduced offline
+  reliability.
 
 ## Agent design default
 

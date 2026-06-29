@@ -6,7 +6,6 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     'SKILL.md',
-    'README.md',
     'agents/openai.yaml',
     'references/00-topic-map.md',
     'references/99-sources-and-maintenance.md',

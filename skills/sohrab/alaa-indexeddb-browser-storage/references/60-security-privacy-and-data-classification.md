@@ -2,7 +2,8 @@
 
 ## Security model
 
-IndexedDB is same-origin browser storage. Any JavaScript that runs in the origin can generally access that origin's IndexedDB unless the application has created a stronger isolation boundary.
+IndexedDB is same-origin browser storage. Any JavaScript that runs in the origin can generally access that origin's
+IndexedDB unless the application has created a stronger isolation boundary.
 
 Therefore:
 
@@ -19,26 +20,31 @@ Do not store in IndexedDB:
 - access tokens
 - refresh tokens
 - session secrets
+- JWT claims or decoded token payloads
+- trusted gateway headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, `X-User-*`, `X-Location-*`, or `X-Authz-*`
 - password-equivalent values
 - payment credentials
 - private keys that unlock server resources
-- entitlement authority or grant truth
+- entitlement authority, grant truth, or OpenFGA/authz decisions
 - unredacted high-risk PII unless specifically approved
 - server signing secrets or API keys
 
-Use server-side sessions, token-mediating backends, HttpOnly/Secure/SameSite cookies, short-lived server-issued URLs, and gateway-side authorization instead.
+Use server-side sessions, token-mediating backends, short-lived server-issued URLs, and gateway-side authorization
+instead. In Alaa frontend code, use `@alaa/sdk` / `@alaa/sdk-vue` for bearer attachment and single-flight refresh; do
+not add app-side token persistence, app-managed refresh, or browser-written trusted headers.
 
 ## Data classification
 
-| Class | Examples | IndexedDB policy |
-|---|---|---|
-| Public cache | public course list, thumbnails metadata, static config | Allowed with TTL and versioning |
-| User-private low risk | UI preferences, last-opened lesson, local filters | Allowed; purge on logout/account switch |
-| User-generated unsynced | drafts, pending answers, comments before submit | Allowed with user-visible recovery and sync |
-| Analytics/outbox | watch events, UX events, retry queue | Allowed if minimized, bounded, and idempotent |
-| PII moderate/high | names, contact info, school info, support content | Minimize, encrypt only with meaningful key model, TTL, purge controls, security review |
-| Secrets/credentials | tokens, passwords, session authority | Forbidden |
-| Authorization truth | entitlements, paid access grants | Cache display hints only; never authoritative |
+| Class                   | Examples                                                  | IndexedDB policy                                                                       |
+|-------------------------|-----------------------------------------------------------|----------------------------------------------------------------------------------------|
+| Public cache            | public course list, thumbnails metadata, static config    | Allowed with TTL and versioning                                                        |
+| User-private low risk   | UI preferences, last-opened lesson, local filters         | Allowed; purge on logout/account switch                                                |
+| User-generated unsynced | drafts, pending answers, comments before submit           | Allowed with user-visible recovery and sync                                            |
+| Analytics/outbox        | watch events, UX events, retry queue                      | Allowed if minimized, bounded, and idempotent                                          |
+| PII moderate/high       | names, contact info, school info, support content         | Minimize, encrypt only with meaningful key model, TTL, purge controls, security review |
+| Secrets/credentials     | tokens, passwords, session authority, JWT claims          | Forbidden                                                                              |
+| Trusted gateway context | `X-Project-Id`, `X-User-Id`, `X-Access`, `X-Authz-*`      | Forbidden as client-authored data; derive only through gateway/server responses        |
+| Authorization truth     | entitlements, paid access grants, OpenFGA/authz decisions | Cache display hints only with TTL/server revision; never authoritative                 |
 
 ## Alaa auth boundary
 
@@ -46,16 +52,24 @@ For Alaa-style architecture:
 
 - Authentication and profile truth belong to server/auth services.
 - Gateway/trusted backend path verifies tokens and injects trusted context.
-- Client storage may cache display state, but backend remains authoritative.
+- Alaa frontend code consumes protected APIs through `@alaa/sdk` / `@alaa/sdk-vue`; the SDK owns bearer attachment,
+  refresh, trusted-header rejection, and route composition.
+- Browser clients may send only `Authorization: Bearer`, `X-Request-Id`, and `traceparent`; they must never send trusted
+  internal headers.
+- `project_id` is a public UUIDv7 body field only where an API contract requires it. It is not local-storage authority
+  and must not be promoted to `X-Project-Id` by the browser.
+- Client storage may cache display state, profile hints, project hints, or entitlement hints, but backend/gateway
+  services remain authoritative.
 - Entitlement decisions must be revalidated server-side.
-- IndexedDB may store `entitlementSnapshot` only as non-authoritative UX cache with TTL and server revision.
+- IndexedDB may store `entitlementSnapshot` only as a non-authoritative UX cache with TTL and server revision; it must
+  never unlock protected content or skip gateway/authz checks.
 
 ## Token-storage rule
 
 If a task asks “can we put token in IndexedDB?” answer:
 
 ```text
-No for access/refresh/session tokens. IndexedDB is readable by JavaScript in the origin; XSS turns it into token exfiltration. Use HttpOnly Secure SameSite cookies or a token-mediating backend/session design. Store only non-secret session display metadata if needed.
+No for access, refresh, session tokens, or decoded JWT claims. IndexedDB is readable by JavaScript in the origin; XSS turns it into token exfiltration. In Alaa frontend code, let `@alaa/sdk` / `@alaa/sdk-vue` own bearer attachment and refresh through the gateway/auth contract. Store only non-secret session display metadata if needed.
 ```
 
 ## Logout and account switch
@@ -70,7 +84,10 @@ On logout/account switch:
 6. Close/reopen storage connections if needed.
 7. Confirm no user-private records remain for the previous account.
 
-Do not delete unsynced drafts silently unless the user explicitly chooses discard or policy says guest data is ephemeral.
+Do not delete unsynced drafts silently unless the user explicitly chooses discard or policy says guest data is
+ephemeral.
+`accountKey` is only a storage namespace for cleanup and cache partitioning. It is not proof of identity, project
+authorization, or entitlement.
 
 ## Shared devices
 
@@ -85,7 +102,8 @@ For students, schools, labs, family devices, or public computers:
 
 ## Local encryption
 
-Client-side encryption can help for some local-at-rest threats, but not for XSS if the decryption key is available to JavaScript.
+Client-side encryption can help for some local-at-rest threats, but not for XSS if the decryption key is available to
+JavaScript.
 
 Use encryption only after answering:
 
@@ -147,6 +165,8 @@ Before approving a new IndexedDB store:
 - [ ] Data class identified.
 - [ ] Source of truth identified.
 - [ ] No tokens/secrets/authority stored.
+- [ ] No decoded JWT claims, trusted gateway headers, or authz/OpenFGA decisions stored as authority.
+- [ ] Alaa network sync uses SDK/gateway paths, not direct service-local authz paths.
 - [ ] Record schema validated on read.
 - [ ] TTL/retention defined.
 - [ ] Logout/account-switch purge defined.

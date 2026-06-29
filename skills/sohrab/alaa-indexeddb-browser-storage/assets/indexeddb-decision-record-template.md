@@ -14,6 +14,15 @@ Status: proposed | accepted | rejected | superseded
 | Data | Class | Source of truth | Lifetime | Recoverable? |
 |---|---|---|---|---|
 
+## Alaa SDK and gateway boundary
+
+- SDK/gateway client:
+- Protected API path:
+- Browser-sent headers limited to `Authorization: Bearer`, `X-Request-Id`, and `traceparent`? yes/no
+- Trusted gateway headers, decoded JWT claims, and authz decisions stored? no
+- `project_id` used only as public UUIDv7 body field when required? yes/no
+- `accountKey` used only as local namespace? yes/no
+
 ## Browser capability tiers
 
 | Tier | Behavior | Fallback |
@@ -41,6 +50,8 @@ Status: proposed | accepted | rejected | superseded
 ## Security and privacy
 
 - Secrets stored? no
+- Tokens/JWT claims/trusted headers/authz decisions stored? no
+- Local entitlement/profile/project data used as authority? no
 - PII stored?
 - Logout purge:
 - Account switch behavior:

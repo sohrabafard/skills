@@ -25,17 +25,22 @@ classes:
     ttl_required: true
     logout_purge: required
   secret_or_credential:
-    examples: ["access token", "refresh token", "session secret", "payment secret"]
+    examples: ["access token", "refresh token", "session secret", "decoded JWT claim", "payment secret"]
     indexeddb: forbidden
     ttl_required: not_applicable
     logout_purge: not_enough
+  trusted_gateway_context:
+    examples: ["X-Project-Id", "X-User-Id", "X-Access", "X-Authz-*"]
+    indexeddb: forbidden_as_client_authored_authority
+    display_cache: allowed_only_from_server_response_with_ttl
   authorization_truth:
-    examples: ["paid access grant", "entitlement source of truth"]
+    examples: ["paid access grant", "entitlement source of truth", "OpenFGA decision", "authz-sidecar decision"]
     indexeddb: forbidden_as_authority
     display_cache: allowed_with_ttl_and_server_revalidation
 rules:
   - "Validate all records read from IndexedDB before use."
-  - "Namespace account-scoped records by accountKey."
+  - "Namespace account-scoped records by accountKey for cleanup and cache isolation only."
   - "Purge user-private records on logout/account switch unless user-visible retention policy says otherwise."
-  - "Never store tokens or session secrets."
-  - "Do not trust local entitlement cache for protected backend access."
+  - "Never store tokens, session secrets, decoded JWT claims, trusted gateway headers, or authz decisions."
+  - "Do not trust local entitlement, profile, or project cache for protected backend access."
+  - "Use Alaa SDK/gateway-backed clients for sync; do not call service-local authz paths or OpenFGA from browser storage."
