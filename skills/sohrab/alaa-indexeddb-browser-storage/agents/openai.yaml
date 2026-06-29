@@ -1,0 +1,15 @@
+interface:
+  display_name: "Alaa IndexedDB Browser Storage"
+  short_description: "IndexedDB, browser storage, quota, offline sync"
+  default_prompt: "Use $alaa-indexeddb-browser-storage to design and implement IndexedDB/browser-storage features with quota handling, browser compatibility, security, migrations, and testing."
+
+policy:
+  allow_implicit_invocation: true
+  primary_domains:
+    - indexeddb
+    - browser-storage
+    - offline-state
+    - local-cache
+    - outbox-sync
+    - quota-eviction
+    - client-storage-security

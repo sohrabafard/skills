@@ -1,0 +1,41 @@
+classes:
+  public_cache:
+    examples: ["public course metadata", "static config", "thumbnail metadata"]
+    indexeddb: allowed
+    ttl_required: true
+    logout_purge: optional_unless_account_scoped
+  user_private_low_risk:
+    examples: ["preferences", "last opened lesson", "UI state"]
+    indexeddb: allowed
+    ttl_required: recommended
+    logout_purge: required_when_account_scoped
+  user_generated_unsynced:
+    examples: ["draft comment", "draft ticket", "draft quiz answer"]
+    indexeddb: allowed_with_recovery
+    ttl_required: policy_defined
+    logout_purge: user_visible_policy_required
+  analytics_outbox:
+    examples: ["watch event", "UX telemetry retry item"]
+    indexeddb: allowed_minimized_bounded
+    ttl_required: true
+    logout_purge: required_when_account_scoped
+  pii_moderate_high:
+    examples: ["support content", "profile fields", "school identifiers"]
+    indexeddb: security_review_required
+    ttl_required: true
+    logout_purge: required
+  secret_or_credential:
+    examples: ["access token", "refresh token", "session secret", "payment secret"]
+    indexeddb: forbidden
+    ttl_required: not_applicable
+    logout_purge: not_enough
+  authorization_truth:
+    examples: ["paid access grant", "entitlement source of truth"]
+    indexeddb: forbidden_as_authority
+    display_cache: allowed_with_ttl_and_server_revalidation
+rules:
+  - "Validate all records read from IndexedDB before use."
+  - "Namespace account-scoped records by accountKey."
+  - "Purge user-private records on logout/account switch unless user-visible retention policy says otherwise."
+  - "Never store tokens or session secrets."
+  - "Do not trust local entitlement cache for protected backend access."

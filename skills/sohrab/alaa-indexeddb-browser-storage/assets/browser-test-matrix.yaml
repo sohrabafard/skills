@@ -1,0 +1,65 @@
+last_researched: "2026-06-29"
+policy: "Use capability detection first; use this matrix to choose real test lanes."
+lanes:
+  - name: chromium-desktop-stable
+    browsers: ["Chrome stable", "Edge stable"]
+    tests:
+      - fresh-install
+      - schema-upgrade
+      - blocked-upgrade-two-tabs
+      - quota-error-cleanup
+      - outbox-offline-online
+      - persistent-storage-request
+  - name: firefox-desktop-stable-esr
+    browsers: ["Firefox stable", "Firefox ESR when enterprise/school support matters"]
+    tests:
+      - fresh-install
+      - schema-upgrade
+      - persistent-storage-permission
+      - relaxed-durability-assumptions
+      - outbox-offline-online
+  - name: safari-macos
+    browsers: ["Safari current", "Safari previous major when supported"]
+    tests:
+      - fresh-install
+      - schema-upgrade
+      - blocked-upgrade-two-tabs
+      - storage-estimate
+      - private-browsing
+      - inactivity-return-check
+  - name: ios-ipados-webkit
+    browsers: ["iOS Safari", "iPadOS Safari", "third-party iOS browser if product supports it"]
+    tests:
+      - fresh-install
+      - offline-critical-flow
+      - storage-pressure-manual
+      - private-browsing
+      - app-background-foreground
+  - name: android
+    browsers: ["Chrome Android", "Android WebView/Capacitor runtime when applicable"]
+    tests:
+      - fresh-install
+      - low-storage-device
+      - background-foreground
+      - outbox-retry
+  - name: private-incognito
+    browsers: ["Chrome Incognito", "Edge InPrivate", "Firefox Private", "Safari Private"]
+    tests:
+      - idb-open-write-probe
+      - reduced-quota-behavior
+      - session-end-data-loss
+      - offline-promise-disabled
+  - name: low-end-device
+    browsers: ["low-end Android", "old iPad if supported"]
+    tests:
+      - db-open-performance
+      - batch-write-performance
+      - cursor-pagination
+      - quota-cleanup
+required_for_storage_heavy_release:
+  - chromium-desktop-stable
+  - firefox-desktop-stable-esr
+  - safari-macos
+  - ios-ipados-webkit
+  - android
+  - private-incognito

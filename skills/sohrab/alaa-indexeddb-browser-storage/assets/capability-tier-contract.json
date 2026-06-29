@@ -1,0 +1,81 @@
+{
+  "last_researched": "2026-06-29",
+  "tiers": {
+    "tier0_no_reliable_local_db": {
+      "requirements": [
+        "IndexedDB missing or open/write probe fails"
+      ],
+      "allowed_features": [
+        "in-memory state",
+        "server-first operations"
+      ],
+      "forbidden_promises": [
+        "durable offline",
+        "survives browser close"
+      ]
+    },
+    "tier1_core_indexeddb": {
+      "requirements": [
+        "open DB",
+        "create stores/indexes",
+        "read/write records",
+        "cursor/key range support"
+      ],
+      "allowed_features": [
+        "drafts",
+        "small cache",
+        "basic outbox",
+        "learning state snapshots"
+      ],
+      "fallbacks": [
+        "bounded storage",
+        "manual retry",
+        "server resync"
+      ]
+    },
+    "tier2_modern_storage_management": {
+      "requirements": [
+        "StorageManager estimate",
+        "persist or persisted when available",
+        "bulk APIs or cursor fallbacks"
+      ],
+      "allowed_features": [
+        "quota-aware cleanup",
+        "storage usage UX",
+        "larger offline metadata"
+      ],
+      "fallbacks": [
+        "skip persistence request",
+        "smaller budget"
+      ]
+    },
+    "tier3_enhanced_offline": {
+      "requirements": [
+        "workers and/or OPFS/Cache API and/or background sync where relevant"
+      ],
+      "allowed_features": [
+        "rich offline",
+        "larger prefetch",
+        "background sync",
+        "worker-based processing"
+      ],
+      "fallbacks": [
+        "tier2 behavior"
+      ]
+    }
+  },
+  "must_feature_detect": [
+    "indexedDB open/write",
+    "navigator.storage.estimate",
+    "navigator.storage.persist",
+    "IDBObjectStore.getAll",
+    "IDBObjectStore.getAllKeys",
+    "IDBObjectStore.getAllRecords",
+    "transaction durability options",
+    "indexedDB.databases",
+    "BroadcastChannel",
+    "navigator.locks",
+    "OPFS",
+    "Background Sync"
+  ]
+}
