@@ -11,6 +11,7 @@ It mirrors the split references below and should be kept aligned with them in th
 - `21-alaa-platform-observability-directive.md`
 - `25-end-to-end-flow-and-boundaries.md`
 - `26-request-time-authorization-openfga.md`
+- `27-notification-service-contract.md`
 - `30-trusted-ingress-and-laravel-contract.md`
 - `32-auth-totp-and-step-up-contract.md`
 - `35-permission-catalog-and-service-configs.md`
@@ -1927,6 +1928,128 @@ Confirm the sidecar's `authz decision` log line and that its `authorization_mode
 - Route groups and Lua: gateway `charts/gateway/values.yaml`, `charts/gateway/templates/configmap.yaml`, `haproxy/lua/authz-sidecar.lua`.
 - Model, object-id encoding, conditions, endpoint mapping: `entitlement-platform` `platform/openfga/contracts/authorization-contract.yaml` and `endpoint-permissions.yaml`.
 - Runnable OpenFGA `check`/`read`/`write`: `entitlement-platform` Postman collection.
+
+---
+
+# Notification Service Contract (Cross-Service)
+
+Cross-service contract for how every Ala service talks to the `notification` service. Source of truth:
+the `notification` repo owns `docs/async-contracts.md` (command ingress) and `docs/list_of_channels.md`
+(channels); this section mirrors them and adds the `entitlement-platform` audience-resolution handshake.
+When this section and the notification repo disagree, the notification repo wins. Status: the command
+ingress is implemented; per-producer onboarding and the audience-to-command bridge are `reserved`.
+
+Platform architecture context: the canonical high-level architecture (shared
+`docs/high-level-Alaa-system-artitecture.md`, symlinked into each repo) describes the broader
+notification system as still-being-evaluated components — a **Notification Core** business service, a
+**Realtime Hub** for online SSE/WebSocket fan-out, **Delivery Workers** for web/SMS/(future) push, and
+an internal **Queue/Broker** (Redis Streams or RabbitMQ). This section documents the *currently
+implemented* cross-service ingress (`notification.commands` over RabbitMQ); the larger component split
+and internal delivery backbone are an evaluated target, not finalized.
+
+Platform shape: most Ala services are Laravel; only the `entitlement-platform` Go services are Go.
+Laravel-first conventions (snake_case JSON everywhere), because PHP `json_decode` is case-sensitive.
+
+## Notification roles
+
+- Producer service: publishes RabbitMQ commands to notification instead of business HTTP.
+- Notification service: consumes commands and performs delivery/storage/user-projection work with
+  receipt-based deduplication.
+- Audience-resolution authority: for access-derived audiences, `entitlement-platform` expands an object
+  audience into explicit recipients; it owns the `notif.*` audience queues.
+
+## Canonical command ingress (authoritative)
+
+- Exchange `notification.commands` (`direct`); DLX `notification.commands.dlx`; ingress connection
+  `rabbitmq_ingress`; receipts in `rabbitmq_command_receipts`.
+- Queues / routing keys (DLQ key is `<rk>.failed`):
+  `notification.command.sms.send_message.v1` (`sms.send_message.v1`),
+  `notification.command.sms.send_pattern.v1` (`sms.send_pattern.v1`),
+  `notification.command.notification.store.v1` (`notification.store.v1`),
+  `notification.command.user_projection.upsert.v1` (`user_projection.upsert.v1`).
+- Producers publish to `notification.commands` with the matching routing key; broker publish ack is the
+  synchronous success boundary.
+
+## Canonical command envelope (snake_case everywhere, including nested objects)
+
+Required: `message_id` (UUIDv7), `message_type` (canonical family; alias `family`), `message_version`
+(positive int; inferred from `.vN`), `occurred_at` (RFC3339; defaults to now), `producer_service`
+(stable `services.name`; aliases `service_name`/`service_id`), `idempotency_key` (alias `dedupe_key`),
+`payload` (plain JSON object, never a serialized Laravel job). Recommended: `correlation_id` (defaults
+to `message_id`). Optional: `causation_id`. Idempotency dedupe is by `message_id` and
+`(message_type, idempotency_key)`. The command envelope is NOT project-scoped; targeting is by explicit
+recipients in the payload.
+
+Command families: `sms.send_message.v1` `{ message, users:[{id,mobile}], provider_public_id? }`;
+`sms.send_pattern.v1` `{ pattern_code, user:{id,mobile}, pattern_values:[{key,value}],
+provider_public_id? }`; `notification.store.v1` `{ owner_id, message_public_id }`;
+`user_projection.upsert.v1` `{ user_id, first_name, last_name, mobile, national_code }`.
+
+## Recipient model (current) vs channel addressing (reserved)
+
+Current/implemented: explicit recipients in the payload (`users[]`/`user`). Channel/audience addressing
+is a notification-owned concept in `notification/docs/list_of_channels.md` and is NOT part of the
+implemented command contract today. Mirror of the current inventory (do not emit channels absent from
+that source): auth — `p:<project_id>:user#<user_id>`, `p:<project_id>:ostan#<ostan_id>`,
+`p:<project_id>:shahrestan#<shahrestan_id>`, `p:<project_id>:bakhsh#<bakhsh_id>`,
+`p:<project_id>:shahr#<shahr_id>`, `p:<project_id>:shobe#<shobe_id>`; content —
+`p:<project_id>:course#<course_id>`, `p:<project_id>:set#<set_id>`, `p:<project_id>:content#<content_id>`.
+Status: reserved/planning — update this section and the notification channel doc together when
+implemented.
+
+## Audience-resolution handshake (entitlement-platform `notif.*` queues)
+
+Separate from the command ingress. Entitlement-owned queues that turn an access-derived object audience
+into explicit recipients, using an entitlement-owned envelope (`schema_version`, `command_id`,
+`project_id`), not the notification command envelope:
+
+- `notif.retrieve_users` (entitlement `expansion-worker` consumes): `schema_version`, `command_id`,
+  `project_id`, `notification_id`?, `target_type`, `object_type` (`course`|`set`|`content`),
+  `content_id`?/`set_id`?/`course_id`?, `need_mobile`, `requested_at`.
+- `notif.expand_users` (entitlement publishes): `schema_version`, `command_id`, `project_id`,
+  `notification_id`?, `principal_type`, `principal_key`, `need_mobile`, `reason` (`{ type, ref }`).
+- `notif.recipient_chunks` (entitlement publishes): `schema_version`, `command_id`, `project_id`,
+  `notification_id`?, `chunk_no`, `users[]` of `{ user_id, mobile?, reason { type, ref },
+  source_grant_revision_id }`.
+
+Nested `reason` is `{ type, ref }` (lowercase). Reserved gap: bridging recipient chunks into
+`notification.command.sms.*` commands is not built. These messages are an interim, not-yet-converged
+shape and do not carry correlation (`request_id`/`trace_id`) or `producer` attribution; those must be
+added before any production consumer is wired. The contract-complete envelope is `notification.commands`
+(which carries `correlation_id`). See entitlement-platform `docs/api/internal-api.md`.
+
+## Per-service notification matrix
+
+| Service | Runtime | Direction | Contract | Status |
+| --- | --- | --- | --- | --- |
+| `entitlement-platform` | Go | audience resolution | entitlement-owned `notif.*` queues | entitlement side implemented; bridge to `notification.commands` reserved |
+| `auth` | Laravel | producer | `notification.commands` (e.g. `sms.send_pattern`) | reserved |
+| `content` | Laravel | producer | `notification.commands` | reserved |
+| `comment` | Laravel | producer | `notification.commands` | reserved |
+| `ticket` | Laravel | producer | `notification.commands` | reserved |
+| `assessment` | Laravel | producer | `notification.commands` | reserved |
+| `wa` | Laravel | future delivery channel | — | reserved |
+| watchtime | Laravel | producer | `notification.commands` | reserved |
+
+Any service owning users should also publish `user_projection.upsert.v1`.
+
+## Notification language-specific rules
+
+- Laravel producers: publish the canonical envelope with snake_case keys; `payload` is plain JSON,
+  never a serialized Laravel job; consumers read with case-sensitive `json_decode`. Pair with
+  `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq`.
+- Go producers (the two `entitlement-platform` Go services): explicit snake_case `json:"..."` tags on
+  all message structs including nested value objects. Pair with `$alaa-golang`.
+
+## Notification anti-patterns
+
+- Capitalized/Go-default JSON keys in any notification or `notif.*` message.
+- Inventing queues/exchanges or a bespoke envelope instead of `notification.commands` plus the
+  canonical envelope.
+- Sending serialized Laravel jobs across repositories.
+- Using RabbitMQ as a synchronous query/RPC layer for notification reads.
+- Starting new internal business HTTP integrations with notification.
+- Omitting `message_id` or `idempotency_key`; leaking/logging recipient PII beyond need.
 
 ---
 

@@ -37,6 +37,9 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode E+ - Request-time authorization with OpenFGA`
   - Use when the task is about how the per-resource decision is actually made: `authzRouteGroups`, the gateway -> `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` call and its `tuple_key`, endpoint-category to `can_*` mapping, canonical object id construction, `grant_*` vs `can_*`, the store/model/label pins, or adding or debugging a protected route.
   - Read `26-request-time-authorization-openfga.md`; pair with `$alaa-trust-gateway-auth`, `$alaa-haproxy`, and `$openfga`.
+- `Mode E++ - Notification cross-service contract`
+  - Use when the task is about how any service sends work to the `notification` service: the `notification.commands` ingress (exchange, queues, routing keys, canonical envelope), the snake_case-everywhere rule (including nested objects), the reserved channel-addressing model, the `entitlement-platform` audience-resolution handshake (`notif.retrieve_users`, `notif.expand_users`, `notif.recipient_chunks`), or the per-service notification matrix.
+  - Read `27-notification-service-contract.md` (mirrors the authoritative `notification/docs/async-contracts.md`); pair with `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq` for producers, `$alaa-golang` for Go producers, and `$alaa-observability-soc` for correlation.
 - `Mode F - Frontend coding contract`
   - Use when frontend or host-app code consumes the `@alaa/*` SDK packages, or when building/consuming Page Kit, UI Kit, app-shell, or widgets: which package to import, app-versus-SDK responsibility for trusted headers/token/refresh, public correlation headers, props-in/events-out widget contracts, three-layer data flow, dist-only package boundaries, or island isolation.
   - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `$alaa-frontend-developer`, `$alaa-mono-package`, and `$alaa-security-review`.
@@ -45,6 +48,8 @@ Use this file to choose the smallest relevant reference file before loading the 
 
 - `26-request-time-authorization-openfga.md`
   - The request-time authorization contract: gateway route groups, the `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` request/response, endpoint-category to `can_*` mapping, store/model pinning, and add-a-route plus debug runbooks. Pairs with `25-end-to-end-flow-and-boundaries.md` (which owns the ownership view).
+- `27-notification-service-contract.md`
+  - Cross-service contract for talking to the `notification` service: the `notification.commands` ingress and canonical envelope (mirrors the authoritative `notification/docs/async-contracts.md`), the snake_case-everywhere rule, the reserved channel-addressing model, the entitlement-owned `notif.*` audience-resolution handshake, the per-service matrix, and Laravel-first/Go producer rules.
 - `20-operational-and-observability-contract.md`
   - Exact `X-Request-Id` and `traceparent` rules, structured log field contract, event and code naming, metrics-boundary rules, and `RequestObservabilityMiddleware`.
 - `21-alaa-platform-observability-directive.md`
