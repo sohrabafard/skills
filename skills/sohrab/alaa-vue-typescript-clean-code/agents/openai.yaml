@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alaa Vue TypeScript Clean Code"
+  short_description: "Enforced Vue Quasar TypeScript clean code"
+  default_prompt: "Use $alaa-vue-typescript-clean-code to implement, review, or refactor Vue 3 + Quasar + TypeScript code with enforced clean-code, SOLID, and Vue style-guide rules."
