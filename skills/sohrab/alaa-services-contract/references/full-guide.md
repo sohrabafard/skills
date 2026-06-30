@@ -1746,13 +1746,15 @@ Rules:
 - do not look for, call, or create a separate `accept-terms` API in the current auth flow unless the product/legal requirement explicitly changes to auditable terms-version persistence
 
 Route-shape reminder:
-- gateway-facing routes may include a service prefix such as `/auth`, `/content`, `/comment`, `/ticket`, `/vod`, or `/wa`
+- gateway-facing routes may include a service prefix such as `/auth`, `/content`, `/comment`, `/ticket`, `/vod`, `/wa`, or `/entitlement`
 - the current default public gateway service-prefix map for frontend clients and framework-free SDKs is:
   - `auth` -> `/auth`
   - `content` -> `/content`
   - `comment` -> `/comment`
   - `tusd` -> `/tusd`
   - `wa` -> `/wa`
+  - `entitlement` -> `/entitlement`
+- `entitlement` is the `entitlement-api` admin/control-plane surface (a privileged admin/operator SDK such as `@alaa/sdk-entitlement`), not an anonymous end-user route family; the public prefix uses the short key `/entitlement`, never `/entitlement-api`, and the internal service name stays `entitlement-api`. As with every entry here, the gateway repo owns activation — verify the rendered HAProxy route table before relying on it.
 - that first service prefix is a gateway routing prefix, not necessarily a backend route prefix and not necessarily the same concept as a child SDK `servicePrefix`, `apiPrefix`, or fixed ingest path
 - clients and SDKs should compose the public gateway path exactly once through existing public configuration seams, such as service base URLs or child route-prefix options, without changing child SDK/service route definitions just to satisfy gateway routing
 - trusted internal routes stay service-owned and are not public frontend discovery surfaces
