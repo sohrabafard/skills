@@ -1,25 +1,28 @@
 ---
 name: alaa-workflow
-description: Use this skill for long-running, multi-phase, or behavior-changing repository work that needs durable plan/state artifacts, phased execution, resume or handoff safety, or user-authorized subagents and parallel lanes. It should support both plan mode and execution mode, keep repo-local memory in `docs/agents/*`, `docs/plan/*`, or `docs/_agent_plans/*` plus `.codex/state/*.json`, document progress and validation continuously, and pair with narrower Alaa skills by domain. Do not use it for tiny single-file edits, short read-only answers, or narrow domain work that does not need long-horizon coordination.
+description: Use this skill for long-running, multi-phase, plan-mode, review-mode, resume, handoff, or delegated repository work that needs durable plan/state/phase-prompt artifacts, compaction-safe memory, mandatory main-plan re-read, subagent or parallel-lane orchestration, test-first execution, final documentation alignment, or GPT-5.5 Codex implementation plus Opus review prompts. Do not use it for tiny single-file edits, short read-only answers, or narrow domain work that does not need long-horizon coordination.
 ---
 
 # Alaa Workflow
 
-This skill is the workflow operating system for long tasks. It owns orchestration, continuity, and execution discipline. It does not replace domain-specific skills.
+This skill is the workflow operating system for long tasks. It owns planning discipline, durable memory, orchestration, review cadence, handoff safety, and final reconciliation. It does not replace domain-specific skills.
 
-## What this skill must produce
+## Core invariants
 
-- A repository-grounded, implementation-ready plan when the task is in plan mode.
-- Durable repo-local memory for long execution, resume, handoff, or delegated work.
-- Tight phase discipline: plan -> implement -> validate -> repair -> update state.
-- Clear routing to narrower Alaa skills when the work touches a specific stack or subsystem.
+- Use simple, fluent English with complete sentences for plans, prompts, state notes, reviews, and final reports.
+- For any non-trivial plan, execution, resume, delegated, or review run, keep durable repo-local memory. Do not let critical context live only in chat.
+- The main plan is the source of truth. Read it before executing, reviewing, resuming, delegating, or integrating work.
+- Draft first, then rewrite the user-facing artifact into a clean final version. Preserve every material detail from the draft; remove scratch wording unless the user asked to see it.
+- Treat tests, validation commands, review evidence, and state artifacts as part of the work, not optional follow-up.
+- Pair with narrower Alaa skills for stack-specific judgment.
 
 ## Use this skill when
 
-- The user asks for a detailed plan, turns on plan mode, or wants implementation from a plan.
-- The task is large enough that context drift, resumability, or phased execution matters.
-- The work spans multiple files, contracts, tests, migrations, infrastructure, or rollout risk.
-- The user says the run may continue later, may need another agent, or explicitly allows subagents.
+- The user asks for a detailed plan, enters plan mode, asks for an implementation prompt pack, or wants work from an existing plan.
+- The task is large enough that context drift, compaction, resumability, or phased execution matters.
+- The task spans multiple files, contracts, tests, migrations, packages, infrastructure, rollout risk, or documentation.
+- The user authorizes subagents, parallel lanes, background jobs, worktrees, or handoff to another agent.
+- The user asks for review mode or production-readiness review of a behavior-changing change.
 
 ## When NOT to use
 
@@ -30,129 +33,138 @@ This skill is the workflow operating system for long tasks. It owns orchestratio
 ## Start sequence
 
 1. Read repo-local `AGENTS.md` and any closer agent instructions first.
-2. If the user names a Codex goal objective file or ordered "read first" source list, read it as a blocking precondition before planning or execution.
-3. Pair with `$alaa-low-noise` for any non-trivial run.
-4. Read `references/00-topic-map.md` and then only the smallest relevant reference sections.
-5. Decide the workflow mode: `plan`, `execute`, `resume`, or `delegated`.
-6. Route to the correct companion skill before making domain-sensitive decisions.
-7. Create or continue workflow artifacts only when they add real continuity value.
+2. If a main plan already exists or is named by the user, read it as a blocking precondition before planning, execution, review, resume, or delegation.
+3. If the user names a Codex goal objective file, phase-prompt file, state file, issue, PR, or ordered "read first" source list, read it as a blocking precondition.
+4. Pair with `$alaa-low-noise` for any non-trivial run.
+5. Read `references/00-topic-map.md`, then only the smallest relevant reference sections.
+6. Decide the workflow mode: `plan`, `execute`, `resume`, `delegated`, or `review`.
+7. Route to the correct companion skill before making domain-sensitive decisions.
+8. Create or continue workflow artifacts unless the user or environment forbids file creation. If artifacts are blocked, record the blocked path and use the closest writable fallback.
 
-## Artifact and naming rules
+## Required artifact set
 
-- Never rename these path families:
-  - `.codex/state/*.json`
-  - `docs/agents/*`
-  - `docs/plan/*`
-  - `docs/_agent_plans/*`
-- If the current task already has a plan or state file, continue that exact file family and stem.
-- Otherwise choose the plan directory in this order:
-  1. existing task-specific path already referenced in chat or repo docs
-  2. existing `docs/_agent_plans/`
-  3. existing `docs/plan/`
-  4. default `docs/_agent_plans/`
-- Use `docs/agents/` for durable human-readable continuation state, not timestamped parent plans.
-- Parent plan file naming must be `<YYYYMMDD-HHMMSS>_<slug>.md`.
-- Parent state file naming should reuse the same stem: `.codex/state/<YYYYMMDD-HHMMSS>_<slug>.json`.
-- Child lane artifacts should stay adjacent to the parent by reusing the same stem:
-  - plan: `<parent-stem>__<lane>.md`
-  - state: `<parent-stem>__<lane>.json`
-- Never migrate an in-flight task from `docs/plan/` to `docs/_agent_plans/` or the reverse.
-- If `.codex/state` writes are blocked by sandbox, managed automation permissions, or approval settings, do not keep retrying or widen scope just to create state JSON. Keep the plan file, use an existing or new `docs/agents/<stem>-state.md` continuation file as the repo-writable fallback, and record the blocked `.codex/state/<stem>.json` path plus the exact rejection.
+For every parent plan created by this skill, create these artifacts with the same stem:
+
+- Main plan: `docs/_agent_plans/<stem>.md` or `docs/plan/<stem>.md`.
+- Phase prompt pack: same directory and stem, `<stem>__phase-prompts.md`.
+- Human continuation state: `docs/agents/<stem>-state.md`.
+- Machine state when writable: `.codex/state/<stem>.json`.
+
+Keep these path families stable:
+
+- `.codex/state/*.json`
+- `docs/agents/*`
+- `docs/plan/*`
+- `docs/_agent_plans/*`
+
+If an in-flight task already uses one of these families, continue that family and stem. Do not migrate it mid-task.
+
+Use `assets/plan-template.md`, `assets/phase-prompts-template.md`, `assets/continuation-state-template.md`, and `assets/state-template.json` unless an in-flight task already has a stronger compatible structure.
 
 ## Plan mode contract
 
-When planning, produce an implementation-ready plan, not a conceptual outline.
+When planning, produce an implementation-ready plan, not a conceptual outline. Read `references/full-guide.md#plan-mode` and `assets/plan-template.md`.
 
-The plan must be specific to the current repository and current state. It must explicitly capture:
+A valid plan must include:
 
-- what is already good
-- what gaps remain
-- what must change now
-- what is intentionally deferred
-- frozen decisions, scope boundaries, and non-goals
-- exact files, modules, or surfaces likely to change
-- validation commands, acceptance criteria, and risk or drift watchpoints
-- execution order and any safe parallel lanes
+- `## Summary` near the top, explaining the topic, target outcome, and main strategy.
+- Repository-grounded facts: what is already good, what gaps remain, what must change now, and what is intentionally deferred.
+- Phase-by-phase execution with dependencies, safe parallel lanes, and a serial integration phase when lanes converge.
+- For every phase: mandatory skills, exact files or surfaces, task checklist, test-first checklist, validation checklist, acceptance criteria, risks, and completion signal.
+- For every task that changes behavior: test files or validation fixtures to write or update before or with implementation.
+- A final phase that aligns all affected documentation, guides, contracts, runbooks, API docs, and project overview files.
+- Worktree and branch guidance when parallel implementation is useful: fix branch names, not worktree directory names; include merge/integration assumptions; provide suggested git commands and commit messages for the user, but do not commit, push, deploy, or run destructive Git commands without explicit permission.
+- A same-stem `__phase-prompts.md` companion file with Codex/GPT implementation prompts and Opus review prompts for each phase.
 
-Keep the mandatory exact headers required by this skill. The template is in `assets/plan-template.md`.
+## Phase prompt pack contract
 
-Read `references/full-guide.md`, especially:
+For every plan, create `<stem>__phase-prompts.md`. Read `references/phase-prompts.md` and use `assets/phase-prompts-template.md`.
 
-- `# Workflow modes`
-- `# Plan mode`
-- `## Mandatory exact plan headers`
-- `## Deep-plan quality bar`
+The pack must assume two agents unless the user says otherwise:
 
-## Execution mode contract
+- GPT-5.5/Codex for implementation, optimized for `/goal` or pursue-goal execution.
+- Claude Opus 4.8 for expert review.
 
-Treat the current plan file as the primary source of truth for sequencing. During execution:
+For every phase, include:
 
-- work one phase at a time unless delegated mode is justified
-- re-open exact files before editing if time has passed or another lane may have changed them
-- run phase validation before moving on
-- update plan/state files after each meaningful milestone, before long validation runs, before handoff, and at task completion
-- keep terminal output low-noise and move durable knowledge into repo-local artifacts instead of chat
-- when state JSON cannot be written, keep the same update cadence in the fallback `docs/agents/*` state file and mention the fallback in the final report
+- required read-first files, state files, and mandatory skills
+- a Codex `/goal` implementation prompt with one durable objective, a verifiable end state, scope boundaries, validation commands, compact checkpoint reporting, and explicit permission to use subagents/parallel jobs when write scopes are disjoint
+- an Opus review prompt using clear XML-style structure, concrete must-check criteria, gate evidence, and a verdict format
+- a fix-loop prompt for feeding review findings back into implementation
+- notes for parallel worktrees when the plan supports concurrent branches, with branch names fixed and worktree paths left flexible
 
-Read `references/full-guide.md`, especially:
+## Execution and resume contract
 
-- `# Execution mode`
-- `## Update cadence`
-- `## Resume and handoff protocol`
-- `# State files`
+Treat the main plan as the runbook. Read it before doing work, after compaction, after interruption, after branch/worktree switch, and before delegating or reviewing a phase.
 
-## Subagent Strategy
+During execution:
 
-Treat `allow to use subagents` as explicit authorization.
+- update `.codex/state/<stem>.json` and `docs/agents/<stem>-state.md` after artifact creation, phase start, lane dispatch, meaningful decision freeze, blocker, before long validation, after validation, phase completion, and handoff
+- keep checklists current by ticking completed items in the plan or state file
+- run phase validation before moving forward
+- repair failures before declaring the phase done
+- record exact blockers, attempted fixes, validation evidence, and next actions
+- ensure another agent can continue from files alone without hidden chat context
 
-Also accept close equivalents such as:
+If `.codex/state` is blocked, use `docs/agents/<stem>-state.md` as the writable fallback and record the intended JSON path plus the exact blocker.
 
-- `use subagents`
-- `you can delegate this`
-- `split this into subagents`
-- `parallelize this`
+## Subagents, parallel lanes, and background jobs
 
-Use subagents only when the task has real independent lanes. The parent agent remains the manager and owns:
+Treat explicit phrases such as `allow subagents`, `use subagents`, `parallelize this`, `background tasks`, `parallel jobs`, or close equivalents as authorization to use them.
 
-- the parent plan and parent state file
-- lane design and write-scope allocation
-- integration, validation, and final synthesis
-- conflict handling and rollback decisions
+Use subagents or parallel jobs when the task has independent lanes with disjoint write scopes, separate validation targets, or isolated review/research value. The parent agent remains the orchestrator and owns:
 
-If subagents are unavailable, disabled, or not worth the overhead, keep the same lane design in the plan and execute it serially.
+- the main plan, phase prompt pack, machine state, and continuation state
+- lane design, branch/worktree assumptions, read/write scope, and mandatory skills
+- integration, conflict resolution, final validation, and final report
+- closing, redirecting, or marking broken lanes blocked
 
-Read `references/full-guide.md`, especially:
+Every subagent prompt must be self-contained. It must name the main plan, current state files, phase objective, mandatory skills, read scope, write scope, tests to write, validation commands, checklists to update, and the rule that the subagent must preserve the same state/continuity discipline inside its lane. Subagents must not edit parent-owned plan/state/phase-prompt files unless the parent explicitly assigns a narrow append-only block.
 
-- `# Delegated execution and subagents`
-- `## Spawn criteria`
-- `## Parent-agent duties`
-- `## Fallback when subagents are unavailable`
+If subagents, background jobs, or worktrees are unavailable or not worth the overhead, keep the same lane design and execute it serially under the parent agent. Record the fallback.
+
+## Review mode contract
+
+Use review mode when the user asks to review code, plans, phases, PRs, diffs, or production readiness. Read `references/review-mode.md`.
+
+A valid review must include the standard review checks plus these Alaa-specific checks:
+
+- bug-free behavior, production readiness, security sensitivity, observability, performance, high-traffic suitability, concurrency safety, reliability, and failure behavior
+- clean code, good abstractions, architecture, boundaries, best practices, and design patterns
+- tests that prove behavior rather than implementation details; reject hard-coded or test-special-cased solutions
+- recommendations beyond the exact diff when architecture or refactor quality materially affects production quality; label out-of-scope recommendations clearly instead of ignoring them
+- exact gate evidence: commands run, results, or why the gate could not be run
+
+Return a verdict and concrete findings with file paths and lines when available. Do not reassure without evidence.
 
 ## Companion routing
 
-This skill handles workflow, not domain ownership. Read `references/companion-routing.md` and actively pair with the right stack skill before making architecture or runtime decisions.
+This skill handles workflow, not domain ownership. Read `references/companion-routing.md` and actively pair with the right stack skill before architecture, security, runtime, data, frontend, infrastructure, or documentation decisions.
 
 ## Windows and Codex surface notes
 
-This skill should work well in Codex app, CLI, and IDE environments, but optimize examples for Windows 11 + native PowerShell first. Use `references/windows-powershell.md` when shell examples or JSON validation commands are needed.
+This skill should work in Codex app, CLI, and IDE environments. Optimize shell examples for Windows 11 + native PowerShell when the environment is Windows. Use `references/windows-powershell.md` for PowerShell-safe commands and artifact validation.
 
 ## Useful bundled files
 
-- `assets/plan-template.md` - parent plan skeleton with the required exact headers
+- `assets/plan-template.md` - parent plan skeleton with required headings and checklists
 - `assets/lane-plan-template.md` - child-lane plan skeleton
-- `assets/state-template.json` - recommended state schema starter
+- `assets/phase-prompts-template.md` - same-stem implementation/review prompt pack skeleton
+- `assets/continuation-state-template.md` - human-readable continuation state skeleton
+- `assets/state-template.json` - machine-readable state schema starter
 - `scripts/init_workflow_files.py` - deterministic artifact bootstrapper
-- `scripts/validate_workflow_files.py` - quick plan/state validator
+- `scripts/validate_workflow_files.py` - plan/state/phase-prompt validator
 
 ## Completion standard
 
-A run is not done when code has changed. It is done when the plan, validations, remaining work, and handoff state all agree.
+A run is not done when code has changed. It is done when the plan, phase prompts, state files, validations, remaining work, docs, and final report agree.
 
 Before finishing:
 
 - reconcile plan vs. actual work
-- mark done, remaining, deferred, and blocked items clearly
-- make the next agent able to continue from the artifacts alone
+- tick completed checklist items and mark remaining, deferred, blocked, or cancelled work clearly
+- update state files so a fresh agent can resume
+- confirm docs alignment was completed or explicitly blocked
 - produce the final report in the order defined in `references/full-guide.md`
 
 ## Reference navigation
@@ -160,5 +172,7 @@ Before finishing:
 - `references/00-topic-map.md` - smallest useful reading path
 - `references/90-source-map.md` - official-first source map, freshness triggers, and model-use notes
 - `references/full-guide.md` - detailed operating rules
+- `references/phase-prompts.md` - Codex `/goal` and Opus review prompt pack rules
+- `references/review-mode.md` - production review rules and output format
 - `references/companion-routing.md` - ecosystem pairing map
 - `references/windows-powershell.md` - native Windows and PowerShell patterns

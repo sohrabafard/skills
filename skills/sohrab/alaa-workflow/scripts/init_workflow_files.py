@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Create workflow plan/state artifacts with stable naming and templates."""
+"""Create Alaa workflow plan/state/phase-prompt artifacts.
+
+Run from a repository root. By default, parent plans also get a same-stem
+`__phase-prompts.md` file and a `docs/agents/<stem>-state.md` continuation file.
+"""
 
 from __future__ import annotations
 
@@ -15,15 +19,15 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
 
 
-def slugify(text: str) -> str:
-    value = text.strip().lower()
+def slugify(value: str) -> str:
+    value = value.strip().lower()
     value = re.sub(r"[^a-z0-9]+", "-", value)
-    value = re.sub(r"-{2,}", "-", value).strip("-")
+    value = re.sub(r"-+", "-", value).strip("-")
     return value or "task"
 
 
 def now_stamp() -> str:
-    return datetime.now().strftime("%Y%m%d-%H%M%S")
+    return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
 
 
 def now_iso() -> str:
@@ -75,7 +79,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--mode",
         default="plan",
-        choices=["plan", "execute", "resume", "delegated"],
+        choices=["plan", "execute", "resume", "delegated", "review"],
         help="Primary workflow mode for the created artifact.",
     )
     parser.add_argument(
@@ -90,6 +94,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--timestamp", help="Optional fixed timestamp in YYYYMMDD-HHMMSS format.")
     parser.add_argument("--force", action="store_true", help="Overwrite output files if they already exist.")
     parser.add_argument("--dry-run", action="store_true", help="Print paths without writing files.")
+    parser.add_argument(
+        "--no-continuation",
+        action="store_true",
+        help="Do not create docs/agents/<stem>-state.md. Use only when file creation is constrained.",
+    )
     return parser.parse_args()
 
 
@@ -112,7 +121,8 @@ def main() -> int:
     created_at = now_iso()
     slug = slugify(args.slug or args.task)
 
-    if parent_plan is not None:
+    is_lane = parent_plan is not None
+    if is_lane:
         stem = parent_plan.stem
         parent_task_id = stem
         lane = slugify(args.lane or slug)
@@ -131,6 +141,8 @@ def main() -> int:
     plan_dir = choose_plan_dir(args.plan_dir, parent_plan)
     plan_path = plan_dir / f"{stem}.md"
     state_path = Path(".codex/state") / f"{stem}.json"
+    phase_prompts_path = plan_dir / f"{stem}__phase-prompts.md" if not is_lane else plan_dir / f"{parent_plan.stem}__phase-prompts.md"
+    continuation_state_path = Path("docs/agents") / f"{stem}-state.md"
 
     values = {
         "task": args.task,
@@ -141,6 +153,8 @@ def main() -> int:
         "created_at": created_at,
         "mode": mode,
         "plan_path": str(plan_path).replace("\\", "/"),
+        "phase_prompts_path": str(phase_prompts_path).replace("\\", "/"),
+        "continuation_state_path": str(continuation_state_path).replace("\\", "/"),
         "state_path": str(state_path).replace("\\", "/"),
         "parent_task_id_json": json.dumps(parent_task_id or None),
         "parent_plan_path_json": json.dumps(str(parent_plan).replace("\\", "/") if parent_plan else None),
@@ -152,11 +166,23 @@ def main() -> int:
     outputs: list[Path] = []
 
     if not args.state_only:
-        template_name = "lane-plan-template.md" if parent_plan else "plan-template.md"
+        template_name = "lane-plan-template.md" if is_lane else "plan-template.md"
         plan_text = render_markdown(template_name, values)
         outputs.append(plan_path)
         if not args.dry_run:
             write_text(plan_path, plan_text, force=args.force)
+
+        if not is_lane:
+            phase_text = render_markdown("phase-prompts-template.md", values)
+            outputs.append(phase_prompts_path)
+            if not args.dry_run:
+                write_text(phase_prompts_path, phase_text, force=args.force)
+
+        if not args.no_continuation:
+            continuation_text = render_markdown("continuation-state-template.md", values)
+            outputs.append(continuation_state_path)
+            if not args.dry_run:
+                write_text(continuation_state_path, continuation_text, force=args.force)
 
     if args.with_state or args.state_only:
         state_text = render_json(values)

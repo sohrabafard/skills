@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Workflow"
-  short_description: "Durable workflow for long tasks"
-  default_prompt: "Use $alaa-workflow to plan, execute, resume, or delegate a long repository task with durable artifacts and safe sequencing."
+  short_description: "Plan, execute, resume, delegate, and review long coding work"
+  default_prompt: "Use $alaa-workflow to create a durable multi-phase plan, state files, phase prompts, and review cadence for this repository task."
