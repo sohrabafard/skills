@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Partitioned Table FK Audit"
+  short_description: "Postgres partitioned-table FK bug audit"
+  default_prompt: "Use $alaa-partitioned-table-fk-audit to audit this Laravel + PostgreSQL repo for id-only foreign keys into partitioned tables and add a durable regression test."
+
+policy:
+  allow_implicit_invocation: true

@@ -54,6 +54,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair when projections, outbox consumers, retries, or job safety are part of the design.
 - $alaa-octane-performance
   - Pair when hot paths, worker lifetime, or memory reuse affect DB or Redis behavior.
+- $alaa-partitioned-table-fk-audit
+  - Pair when auditing or hardening a Postgres schema for the id-only-FK-into-a-partitioned-parent bug class (SQLSTATE 42830), or when a migration fails with "no unique constraint matching given keys."
 
 ## Reference navigation
 
