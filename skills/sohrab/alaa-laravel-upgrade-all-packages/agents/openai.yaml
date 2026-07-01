@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Laravel Upgrade All Packages"
+  short_description: "Laravel Composer package upgrade sweep"
+  default_prompt: "Use $alaa-laravel-upgrade-all-packages to run this Laravel repo's Composer (and npm, if present) dependency upgrade sweep and validation gate."
+
+policy:
+  allow_implicit_invocation: true
