@@ -1,49 +1,116 @@
 # Claude Fable 5
 
-**Correct the obvious assumption first: Fable 5 is not a creative-writing or persona model.** It is Anthropic's new top-tier flagship, positioned *above* Claude Opus 4.8 — per the official models overview: "For workloads that need the highest available capability, see Claude Fable 5." It is built for the hardest, longest-running, most ambiguous problems: multi-day autonomous agentic runs, complex coding migrations and large refactors, deep enterprise knowledge work, and heavy vision/document analysis. Opus 4.8 remains "most capable Opus-tier model," Sonnet 5 remains "the best combination of speed and intelligence" — Fable 5 sits a full capability tier above both, at a steep price premium (documented at $10/$50 per MTok versus Opus 4.8's $5/$25 and Sonnet 5's $3/$15).
+**Correct the obvious assumption first: Fable 5 is not a creative-writing or persona model.** It is Anthropic's top capability tier, positioned above Claude Opus 4.8 for the hardest, longest-running, and most ambiguous work. Use it for multi-day autonomous agentic runs, complex migrations, large refactors, deep enterprise knowledge work, heavy vision/document analysis, and problems that have already exceeded Opus 4.8's reliable range. Do not use it as a routine upgrade for ordinary coding when Sonnet 5 or Opus 4.8 is enough.
 
-A sibling model, Mythos 5, shares Fable's underlying capability but without Fable's safety classifiers (which can decline certain offensive-cybersecurity, biology/life-sciences, and reasoning-extraction requests); Mythos 5 is limited-availability, invitation-only. This skill's guidance is for Fable 5.
+Mythos 5 shares Fable's underlying capability but is a separate limited-availability model without Fable's safety classifiers. This pack's guidance is for Fable 5 unless a task explicitly names Mythos 5.
 
-Compared with Opus 4.8, documented improvements include: long-horizon autonomy (multi-day goal-directed runs), first-shot correctness on complex well-specified problems, vision (dense technical images/screenshots), enterprise workflows (financial analysis, spreadsheets, slides, docs), code review/debugging recall outside cybersecurity, navigating ambiguity, and more dependable dispatch/sustaining of parallel subagents. Reach for Fable 5 when the task is genuinely at the edge of what Opus 4.8 can reliably do, or when the run needs to sustain itself autonomously for many hours — not as a default upgrade for routine work (see `references/90-model-selection.md`).
+## Capability improvements
 
-## Effort and thinking
+Compared with Opus 4.8, Fable 5 is documented as stronger at long-horizon autonomy, first-shot correctness on complex well-specified problems, dense vision/screenshot interpretation, enterprise workflows across spreadsheets/slides/docs, code review and debugging outside covered safety domains, ambiguity navigation, and dispatching/sustaining parallel subagents. Testing it only on easy tasks undersells it; pick a task near the top of the difficulty range when evaluating the model.
 
-Fable 5 (and Mythos 5) use **adaptive thinking exclusively** — it is the only thinking mode, always on when `thinking` is unset, and `thinking: {type: "disabled"}` is not supported. Traditional token-budget thinking does not apply; depth and cost are controlled entirely by `effort` (low/medium/high/xhigh), described as the primary trade-off control for intelligence, latency, and cost. The raw chain-of-thought is never returned; `thinking.display` is `"summarized"` or `"omitted"` (default). Recommended default is `high` effort for most tasks, `xhigh` reserved for the most capability-sensitive workloads — lower effort on Fable 5 often still exceeds `xhigh` performance on prior models, so do not reflexively max out effort. Individual hard-task requests can run many minutes at higher effort, and autonomous runs can extend for hours — adjust client timeouts, streaming, and progress UX accordingly before migrating a harness from Opus 4.8.
+Fable 5 is not intended for offensive cybersecurity or biology/life-sciences work. Safety classifiers can also catch benign cybersecurity, beneficial life sciences, and reasoning-extraction-adjacent requests. Harnesses that need continuity should configure fallback to Opus 4.8 for `stop_reason: "refusal"` where appropriate.
+
+## Effort, thinking, and long turns
+
+Fable 5 and Mythos 5 use adaptive thinking only. Traditional extended-thinking token budgets do not apply; `effort` (low / medium / high / xhigh) controls the trade-off among intelligence, latency, and cost. Use `high` as the default for most tasks, `xhigh` for the most capability-sensitive workloads, and `medium` or `low` for routine work. Lower effort on Fable 5 can still exceed high-effort results on prior models, so reduce effort if a task is correct but slower or more deliberative than needed.
+
+The raw chain-of-thought is never returned; `thinking.display` is summarized or omitted. Do not ask Fable 5 to echo, transcribe, or explain internal reasoning in user-facing text; this can trigger reasoning-extraction refusals. Use structured thinking outputs where supported and a user-message tool for progress visibility.
+
+Hard individual requests can run for many minutes at higher effort, and autonomous runs can extend for hours. Adjust client timeouts, streaming, user-facing progress indicators, and async check-in mechanisms before migrating an Opus 4.8 harness.
 
 ## Prompting techniques that matter most
 
-- **Prevent overplanning/over-narration**: tell it explicitly to act once it has enough information, rather than re-deriving established facts or narrating options it won't pursue outside thinking blocks.
-- **Curb unrequested tidying**: at high effort it can over-scope — add an explicit anti-scope-creep instruction (no refactors/abstractions/error-handling beyond what was asked, no designing for hypothetical future needs, no compatibility shims when the code can just be changed).
-- **Steer verbosity with one brevity instruction, not a list**: "lead with the outcome in the first sentence" is enough on its own — Fable 5's strong instruction-following makes one short instruction as effective as many.
-- **Define checkpoint/pause behavior explicitly**: pause only for destructive/irreversible actions, real scope changes, or user-only input; otherwise proceed, and never end a turn on an unfulfilled promise ("I'll now run X" with no accompanying tool call).
-- **Ground long-run progress claims**: instruct it to audit every progress claim against an actual tool result from the session before reporting, and to state plainly — not hedge — when something is unverified, failed, or skipped. Anthropic found this nearly eliminated fabricated status reports in testing.
-- **Bound unrequested side actions**: it can occasionally take actions nobody asked for (drafting an email, creating a defensive git backup) — instruct it to stay assessment-only when the user is thinking out loud, and to verify evidence actually supports a state-changing command before running it.
-- **Delegate to subagents proactively**: Fable 5 dispatches subagents more readily and reliably than prior models — give explicit delegation guidance, prefer async orchestration over blocking, and keep long-lived subagents with persistent context to save time/cost via cache reads.
-- **Build an explicit cross-session memory system**: give it a place (e.g. a notes file) to record one lesson per entry with a one-line summary, capture both corrections and confirmed approaches, avoid duplicating what the repo/chat already records, and delete disproven notes.
-- **State intent, not just the request** — Fable 5 uses stated reasoning to connect a task to relevant context rather than inferring intent alone, which matters most for long-running multi-workstream agents.
-- **Never ask it to echo or explain its internal chain-of-thought as response text** — this can trigger a `reasoning_extraction` refusal and elevate fallback to Opus 4.8. Use the structured `thinking` block or an explicit send-to-user tool for visibility instead.
-- **When migrating prompts/skills tuned for older models, loosen them**: highly prescriptive instructions written for prior models can degrade Fable 5's output; it also adapts skill guidance on the fly based on what it learns mid-task.
-- **For unattended/asynchronous pipelines**: add a system reminder that the user cannot answer mid-task questions and that it should proceed on reversible actions without asking, and should not end a turn on a plan/question/promise without having done the work.
-- **In very long sessions, do not surface a raw remaining-context countdown** to the model — if unavoidable, add reassurance language that ample context remains, so it doesn't prematurely suggest a new session or trim its own work.
-- **For long verification-heavy tasks, prefer separate fresh-context verifier subagents over self-critique**: e.g. "establish a method for checking your own work at an interval of [X], verifying it with subagents against the specification."
+- **Prevent overplanning**: tell it to act once it has enough information, not to re-derive established facts, and to recommend a path rather than survey options it will not pursue.
+- **Curb unrequested tidying**: tell it not to add features, refactor, introduce abstractions, add defensive branches, or create compatibility shims beyond the task.
+- **Lead with the outcome**: one concise brevity instruction is usually enough; the first sentence should answer what happened or what was found.
+- **Pause only for real blockers**: destructive or irreversible actions, real scope changes, or input only the user can provide.
+- **Ground progress claims**: before reporting progress, audit each claim against an actual tool result from the session; state failed, skipped, unverified, and verified work plainly.
+- **Bound unrequested side actions**: when the user is asking a question or thinking aloud, report the assessment and stop; do not apply a fix until asked.
+- **Delegate actively**: use subagents for independent subtasks, keep working while they run, and intervene when a subagent lacks context or drifts.
+- **State intent, not just the request**: explain the larger outcome and audience so Fable can connect the task to relevant context.
+- **Loosen old skills and prompts**: highly prescriptive prompts tuned for prior models can degrade Fable 5; remove scaffolding that default capability makes unnecessary.
 
 ## Ready-to-use autonomy fragment
 
 ```text
 You are operating autonomously; the user is not watching in real time and cannot answer mid-task questions.
-Proceed on reversible actions without asking. Pause only for destructive/irreversible actions, a real scope
-change, or input only the user can provide. Before reporting any progress claim, verify it against an actual
-tool result from this session - state plainly, not hedged, when something is unverified, failed, or skipped.
-End your turn only when the task is complete or genuinely blocked - never on an unfulfilled "I'll now do X."
+Proceed on reversible actions that follow from the request. Pause only for destructive or irreversible actions,
+a real scope change, or input only the user can provide. Before reporting progress, verify every claim against
+an actual tool result from this session. End only when the task is complete or genuinely blocked.
 ```
 
-## Tone
+## Long-run memory
 
-Not separately documented as a distinct persona/tone profile — there is no roleplay or creative-writing framing anywhere in the official docs. The one documented tendency is a bias toward being thorough/elaborative when un-steered (surveying options it won't pursue, long root-cause explanations, heavily structured PR descriptions), especially at higher effort. Steer this with the explicit brevity and "write for a reader who wasn't there" instructions above, not with a persona instruction.
+Fable 5 performs well when it can record lessons from prior runs. Provide a simple memory location and rules:
+
+- Store one lesson per file or entry with a one-line summary at the top.
+- Record corrections and confirmed approaches, including why they mattered.
+- Do not save what the repo, tests, or chat history already records.
+- Update an existing note instead of creating duplicates.
+- Delete notes that later prove wrong.
+
+To bootstrap memory from history, ask Fable 5 to review prior sessions with subagents, extract recurring lessons, store them in the chosen location, and explicitly reference that location in future runs.
+
+## Early stopping and context-budget concerns
+
+Deep into a long session, Fable 5 can occasionally end with a promise such as "I'll now run X" without actually calling the tool, or ask permission when it already has enough authority to proceed. A direct "continue end to end" usually recovers it, but autonomous pipelines should include the autonomy fragment above.
+
+Avoid surfacing raw remaining-context countdowns to the model. If the harness must show them, add:
+
+```text
+You have ample context remaining. Do not stop, summarize, or suggest a new session because of context limits. Continue the work.
+```
+
+## Readability for user communication
+
+Fable 5 can produce dense shorthand after long tool-heavy sessions. The final answer should be written for a reader who did not watch the run:
+
+- Open with the outcome in one complete sentence.
+- Reintroduce project-specific terms before relying on them.
+- Use complete sentences instead of arrow chains or compressed labels.
+- Spell out what files, commits, flags, or identifiers mean in plain language.
+- Choose clarity over maximum brevity when summarizing long work.
+
+## Send-to-user tool
+
+Long asynchronous agents sometimes need to surface user-visible content without ending the turn: a partial deliverable, a specific progress update, or a direct reply to a question asked mid-loop. Provide a tool like:
+
+```json
+{
+  "name": "send_to_user",
+  "description": "Display a message directly to the user. Use this for progress updates, partial results, or content the user must see exactly as written before the task finishes.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "description": "The content to display to the user."
+      }
+    },
+    "required": ["message"]
+  }
+}
+```
+
+Defining the tool is not enough. Pair it with an instruction:
+
+```text
+Between tool calls, when you have user-facing content that must be shown verbatim, call send_to_user with that content. Use it only for user-facing content, not narration or internal reasoning.
+```
+
+Do not route routine narration or reasoning through `send_to_user`; over-calling it defeats its purpose.
+
+## Recommended scaffolding changes
+
+- Start evaluation with a hard, realistic task, not only a simple workload.
+- Make self-verification explicit in long runs; prefer separate fresh-context verifier subagents over self-critique.
+- Refactor older prompts and skills by removing excess scaffolding when Fable 5 performs better with less prescription.
+- Audit prompts for chain-of-thought extraction requests and replace them with structured thinking/progress surfaces.
+- Add send-to-user only when the UX requires verbatim mid-task user-visible content.
 
 ## Caveats
 
-Public documentation for Fable 5 is not sparse — this file is built from multiple official, cross-linked, directly-fetched Anthropic pages, all internally consistent (matching model IDs, pricing, dates, cross-references). "Project Glasswing" and the exact Mythos 5 classifier behavior could not be independently corroborated beyond what the docs themselves state. This model postdates a typical training cutoff; treat every claim here as sourced from a live fetch, not memory, and re-verify before hard-coding pricing or capability claims elsewhere.
+Pricing, exact availability, safety-classifier behavior, fallback policy, and any API limits are time-sensitive Anthropic-stated details. Re-check the live docs before hard-coding them elsewhere. This model postdates a typical training cutoff; treat every claim here as sourced from the live-docs research pass, not memory.
 
 ## Sources
 
@@ -51,7 +118,9 @@ Public documentation for Fable 5 is not sparse — this file is built from multi
 - [Introducing Claude Fable 5 and Claude Mythos 5](https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5)
 - [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview)
 - [Prompting best practices (Claude family)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
-- [Claude Fable — Anthropic](https://www.anthropic.com/claude/fable)
+- [Refusals and fallback](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback)
+- [Adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking)
+- [Claude Fable - Anthropic](https://www.anthropic.com/claude/fable)
 
 ## Companion reference
 

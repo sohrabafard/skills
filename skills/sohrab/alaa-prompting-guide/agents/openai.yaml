@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Prompting Guide"
-  short_description: "Model-aware prompting guide for GPT-5.5, Opus 4.8, Sonnet 5, Fable 5"
+  short_description: "Prompting guide for GPT-5.5 and Claude Opus/Sonnet/Fable"
   default_prompt: "Use $alaa-prompting-guide to write or review a prompt for GPT-5.5, Claude Opus 4.8, Claude Sonnet 5, or Claude Fable 5, including its agentic feature prompts (Codex /goal, subagents, Claude Code /loop, Agent subagents, Workflow tool)."

@@ -45,6 +45,10 @@ For the standard Vue 3 + Quasar + Vite app family, start with:
 
 - `alaa-frontend-developer`
 
+Apply the default Vue / TypeScript quality baseline whenever coding, review, or refactor touches Vue SFCs, composables, Pinia stores, frontend TypeScript, or package-grade Vue APIs:
+
+- `alaa-vue-typescript-clean-code`
+
 Then route to the smallest companion skill that owns the next decision:
 
 - build, deployment, Docker, CI, artifact, public-path, CDN, or proxy concerns:
@@ -103,10 +107,11 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 ### Frontend workflow
 
 1. Start with `alaa-frontend-developer`.
-2. Route immediately to `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, or `alaa-mono-package` when the task crosses that boundary.
-3. Pair with `quasar-skill-packe` when Quasar-specific behavior or config is part of the root cause.
-4. Keep pure visual art direction outside the Sohrab pack unless a separate design skill is explicitly available in the current session.
-5. Use `$playwright` or `$playwright-interactive` only when browser work is explicitly needed.
+2. Apply `alaa-vue-typescript-clean-code` for Vue / TypeScript coding, review, refactor, or package-quality decisions.
+3. Route immediately to `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, or `alaa-mono-package` when the task crosses that boundary.
+4. Pair with `quasar-skill-packe` when Quasar-specific behavior or config is part of the root cause.
+5. Keep pure visual art direction outside the Sohrab pack unless a separate design skill is explicitly available in the current session.
+6. Use `$playwright` or `$playwright-interactive` only when browser work is explicitly needed.
 
 ### PHP / Laravel workflow
 
@@ -160,6 +165,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 ### Frontend and frontend delivery
 
 - `alaa-frontend-developer`
+- `alaa-vue-typescript-clean-code`
 - `alaa-frontend-devops`
 - `alaa-frontend-doc-annotations`
 - `alaa-mono-package`

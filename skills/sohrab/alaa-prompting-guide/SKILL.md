@@ -1,6 +1,6 @@
 ---
 name: alaa-prompting-guide
-description: Model-aware prompting hub covering exactly four models in v1 — GPT-5.5 (running in Codex), Claude Opus 4.8, Claude Sonnet 5, and Claude Fable 5 (all three running in Claude Code) — plus ready-to-use prompts for each model's distinctive agentic feature (Codex /goal and subagents; Claude Code /loop, Agent subagents, and the Workflow tool). Use this whenever writing, reviewing, or fixing a prompt aimed at any of these four models, whenever picking which of the four models fits a task, or whenever a prompt needs to invoke a model-specific feature like /goal, /loop, subagents, or background/parallel jobs — even if the user never says the word "prompt" or names a model explicitly, for example "write me a Codex goal for this migration," "how should I phrase this for Opus," "spin up subagents to review this in parallel," or "what model should handle this." Also owns the cross-agent skill-trigger-character rule ($ for GPT/Codex, / for Claude Code) that every cross-model prompt pack in this repository depends on getting right.
+description: Write, review, and repair prompts for GPT-5.5 in Codex and Claude Opus 4.8, Sonnet 5, and Fable 5 in Claude Code. Use for model selection, model-specific prompt tuning, $ vs / skill-trigger syntax, Codex /goal and subagents, and Claude Code /loop, Agent subagents, and Workflow prompts.
 ---
 
 # Alaa Prompting Guide
@@ -8,6 +8,12 @@ description: Model-aware prompting hub covering exactly four models in v1 — GP
 ## Purpose
 
 This is the shared reference any agent in this pack reaches for before writing a prompt aimed at another model — or at itself, when the model is one of the four covered here. It exists because these four models are new enough that habits carried over from older prompts are often wrong: GPT-5.5 needs re-tuned verbosity/effort, not a ported GPT-5.2 stack; Opus 4.8 under-spawns subagents by default where an older Opus over-spawned; Sonnet 5 rejects `temperature` and manual thinking budgets outright; and Fable 5 is not the creative/persona model its name might suggest — it is Anthropic's new top capability tier, above Opus 4.8. Guessing at any of this produces a plausible-sounding prompt that quietly under- or over-shoots the model's real behavior. Read the model's reference file instead of guessing.
+
+## When NOT to use
+
+- Do not use this as a general coding, review, or refactor skill unless the task is about writing, choosing, reviewing, or repairing a prompt or agentic model workflow.
+- Do not extrapolate its guidance to Haiku, older Claude generations, non-Codex GPT surfaces, or other models outside the v1 scope.
+- Do not use it instead of `$alaa-workflow` for a full multi-phase implementation/review engagement with plan, state, and phase-prompt artifacts.
 
 ## The four models in v1
 
