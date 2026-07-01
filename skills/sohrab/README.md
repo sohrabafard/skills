@@ -134,6 +134,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 ### Core Ala architecture and policy
 
 - `alaa-workflow`
+- `alaa-prompting-guide`
 - `alaa-low-noise`
 - `alaa-services-contract`
 - `alaa-trust-gateway-auth`
