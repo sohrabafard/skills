@@ -507,8 +507,8 @@ The parent agent must:
 - define each lane before spawning: objective, mandatory skills, read scope, write scope, validation target, branch/worktree notes, merge notes
 - decide whether a lane is read-only research, implementation, review, or verification
 - tell every subagent to follow the same continuity, testing, validation, and state rules inside its lane
-- integrate changes, resolve conflicts, and run the final acceptance pass
-- close or redirect broken lanes instead of letting them drift
+- integrate changes, resolve conflicts, and run the final acceptance pass by re-running the full validation gate against the merged tree yourself. A lane's own isolated test run cannot see fallout in files a sibling lane touched; accepting the union of each lane's self-reported "green" status instead of an independent merged-tree run has let real regressions through in this pattern's field use.
+- close or redirect broken lanes instead of letting them drift; see `Handling a stalled or silent lane` below for lanes that go quiet rather than fail outright
 
 ## Lane design rules
 
@@ -542,6 +542,18 @@ Plan worktrees like this:
 - keep shared-file wiring in a later integration phase
 - give the user suggested commands and commit messages
 - do not commit, push, reset, delete, or force-push without explicit permission
+
+## Handling a stalled or silent lane
+
+Neither Codex's ad hoc subagent delegation nor Claude Code's Agent tool enforces an automatic timeout on an ordinary spawned lane -- only Codex's separate `spawn_agents_on_csv` batch tool has a built-in per-worker timeout (`job_max_runtime_seconds`). For a normal delegated lane, the parent agent decides when a lane has gone silent too long; the harness will not decide it for you.
+
+- Set an explicit patience budget before spawning (a turn count, a wall-clock estimate, or "check back after the next validation checkpoint") and state it in the lane's own instructions, so the lane knows the parent may check on it.
+- When a lane goes quiet past that budget, close or stop it rather than waiting indefinitely.
+- Do not discard whatever the lane already produced. Inspect its actual output and diff first. Safe, validated partial work should be kept and finished serially by the parent, not thrown away just because the lane itself did not finish.
+- Finish the remaining scope of a closed lane serially under the parent, using the same write-scope and validation rules the lane was given.
+- Record the stall, what was salvaged, and the serial completion in state, the same way a fallback-to-serial decision is recorded below.
+
+Model-specific tendencies affect how often this comes up, not the recovery procedure itself: Opus 4.8 under-spawns subagents by default and needs explicit delegation guidance to fan out at all, while Fable 5 is documented as more reliable than Opus 4.8 at sustaining parallel subagents once spawned. Read the current tuning for whichever model is running the lane in `$alaa-prompting-guide` (Codex) or `/alaa-prompting-guide` (Claude Code) -- `references/11-codex-runtime-features.md`, `references/20-opus-4-8.md`, `references/30-sonnet-5.md`, or `references/40-fable-5.md` -- instead of assuming one model's subagent behavior applies to another.
 
 ## Fallback when subagents are unavailable
 

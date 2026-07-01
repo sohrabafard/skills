@@ -4,6 +4,7 @@
 
 ## Always consider
 
+- `$alaa-prompting-guide` for writing, tuning, or repairing any prompt this skill produces for another model or itself -- phase-prompt implementation/review prompts, `/goal` objectives, subagent lane instructions, and skill-trigger syntax (`$` vs `/`) all depend on getting the target model and runtime right.
 - `$alaa-low-noise` for any non-trivial run that risks noisy logs, broad searches, long command output, large diffs, or oversized status chatter.
 - `$alaa-security-review` for review mode, auth, tenant isolation, trust boundaries, untrusted input, secrets, permissions, public APIs, or deployment exposure.
 - `$alaa-observability-soc` for review mode or implementation that touches logs, metrics, traces, alerts, incident evidence, queues, analytics, high-traffic production behavior, or failure visibility.

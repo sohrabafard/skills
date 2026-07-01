@@ -23,7 +23,7 @@ Before writing a phase prompt pack, read:
 2. relevant `AGENTS.md` files
 3. the current continuation and machine state when available
 4. the user's requested agent split if any
-5. official/current docs when model, goal-mode, skill, subagent, or prompt-surface details are version-sensitive
+5. `$alaa-prompting-guide` (Codex) or `/alaa-prompting-guide` (Claude Code) for current per-model tuning, trigger syntax, and runtime-feature templates before writing the GPT-5.5 implementation prompt or the Opus/Sonnet/Fable review prompt; fall back to official/current docs directly only if that skill is unavailable, and say so
 
 # Required sections
 

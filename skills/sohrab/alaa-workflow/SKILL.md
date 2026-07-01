@@ -116,8 +116,8 @@ Use subagents or parallel jobs when the task has independent lanes with disjoint
 
 - the main plan, phase prompt pack, machine state, and continuation state
 - lane design, branch/worktree assumptions, read/write scope, and mandatory skills
-- integration, conflict resolution, final validation, and final report
-- closing, redirecting, or marking broken lanes blocked
+- integration, conflict resolution, an independent full-gate re-validation of the merged result (not just each lane's own reported status), and final report
+- closing, redirecting, marking broken lanes blocked, or recovering a stalled/silent lane by finishing its scope serially without discarding safe in-progress work
 
 Every subagent prompt must be self-contained. It must name the main plan, current state files, phase objective, mandatory skills, read scope, write scope, tests to write, validation commands, checklists to update, and the rule that the subagent must preserve the same state/continuity discipline inside its lane. Subagents must not edit parent-owned plan/state/phase-prompt files unless the parent explicitly assigns a narrow append-only block.
 
