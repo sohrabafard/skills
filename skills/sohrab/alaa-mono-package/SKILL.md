@@ -44,7 +44,7 @@ Do not use this skill when:
 
 1. Read the repo-local `AGENTS.md`.
 2. If the task touches or consumes a package, search for and read the nearest package-local `AGENTS.md` even when working from the root app.
-3. Capture the explicit writable package boundary before editing; when the user says "clean island", treat sibling packages, the root app, `src/*`, legacy files, and root config as read-only unless the user widens scope.
+3. Capture the explicit writable package boundary before editing; when the user says "clean island", "only this package", "do not change other packages", or another agent owns sibling worktrees, treat sibling packages, the root app, `src/*`, legacy files, and root config as read-only unless the user widens scope.
 4. Read `references/00-source-map.md` when the task is version-sensitive, package-manager-sensitive, or security-sensitive.
 5. Read `references/10-package-boundary-and-entrypoints.md`.
 6. Load only the smallest additional reference file needed for the issue.
@@ -57,6 +57,16 @@ When a package consumes another workspace package through a public entrypoint or
 - Derive order from the dependency graph: framework-free/core/model packages -> domain packages/adapters -> aggregate packages -> UI packages -> playground/root app.
 - Do not let source aliases, test aliases, or tsconfig paths hide missing upstream `dist`; package-local build/check scripts should either build required upstream packages first or fail with a clear message.
 - After building a consumer package, validate the built entrypoint from `dist` imports successfully, then check CSS/assets. This catches packages that pass source tests but fail as dist-only consumers.
+
+## Package-only lane guard
+
+Use this guard when a task is part of parallel package work or the user freezes the write surface to one package.
+
+1. Write down the allowed package path or package family before editing.
+2. Inspect the live diff before and after changes with a changed-file list, including untracked files.
+3. If a required fix appears outside the allowed package, stop and report the exact outside file instead of editing it.
+4. Before final response, verify every changed file is inside the allowed package boundary or is an explicitly allowed package-owned doc/test/build artifact.
+5. If root-app validation is needed, run it as a consumer check without changing root-app code.
 
 ## Symptom map
 
