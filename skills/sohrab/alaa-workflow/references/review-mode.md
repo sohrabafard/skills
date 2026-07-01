@@ -8,6 +8,15 @@ Be a staff-level reviewer. Be skeptical, concrete, and evidence-based. It is mor
 
 Use simple, fluent English with complete sentences. Prepare a draft of the findings, then rewrite the final review so it is coherent and preserves every material finding.
 
+# Reconciling a review or claim you did not produce yourself
+
+Sometimes the input to a review is not a fresh diff but someone else's already-finished verdict: a review pasted in from a different session or model, a "done"/"fixed" claim sitting in a state file, or your own prior conclusion from before a compaction or handoff. Treat every one of these as a hypothesis to re-derive against the current repository, not as settled fact.
+
+- Re-open the actual files and re-run the actual gates yourself before accepting a claim of "complete," "fixed," "verified," or "no issues found" -- including a claim you made earlier in this same task, since repository state can change between when a claim was made and when it is relied on.
+- When a review was produced by a different model or agent, its findings are still only a lead. Confirm each one against source before acting on it, and confirm the absence of findings the same way -- a clean-sounding review is not itself evidence.
+- If a handed-in review and your own read of the code disagree, resolve it by re-checking the code, not by deferring to whichever source sounds more confident.
+- State plainly which claims you independently re-verified and which you are relaying unverified, if any; do not blur the two together in the final report.
+
 # Required read-first files
 
 Read these before judging:

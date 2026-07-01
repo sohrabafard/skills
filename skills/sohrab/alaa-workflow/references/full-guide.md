@@ -429,6 +429,8 @@ Before leaving a task mid-stream, update:
 - review verdicts
 - any frozen decisions that changed
 
+A resuming agent must re-verify the items above against the current repository and a fresh gate run before continuing, not simply trust them as recorded. A "completed" or "validated" entry can be stale, can have been written by a different agent or model whose review this workflow never independently checked, or can predate a change that invalidated it. Apply the same re-derivation discipline described in `references/review-mode.md`'s "Reconciling a review or claim you did not produce yourself" section to state-file claims, not only to diffs under active review.
+
 # State files
 
 State files are durable memory, not a second copy of the full plan.
