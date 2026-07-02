@@ -51,6 +51,11 @@ Load only what the task needs:
 - For TypeScript or Composition API work, read `references/20-typescript-composition-contract.md`.
 - For clean-code/SOLID refactors, read `references/30-clean-code-solid-vue.md`.
 - For pattern selection or architecture changes, read `references/40-patterns-vue-quasar.md`.
+- ALWAYS, before writing or reviewing view mappers, flow composables, stores, SDK adapters, or design-system
+  components in an Alaa-style repo, read `references/65-alaa-observed-patterns.md` — the project-proven
+  mandatory patterns (PRVM field resolution, no shadow adapters, orchestrator splits, navigation intents,
+  presence-detection merges, failure classification, route sync, teardown guards) with explicit do/don't
+  examples. Each antipattern there has already shipped broken once; repeating one is a blocking finding.
 - For Quasar, Vite, Pinia, router, SSR, PWA, or boot files, read `references/50-quasar-vite-pinia-contract.md`.
 - Before finalizing code changes, read `references/60-validation-checklists.md`.
 
