@@ -140,6 +140,30 @@ Apply these as coding gates:
 - **KISS**: choose the simplest design that handles the real requirements and edge cases.
 - **Code for the next developer**: names, data flow, and tests must make intent obvious.
 
+### Size and complexity budgets (hard gates, not advice)
+
+Qualitative SRP guidance is not enough; enforce these numbers on every file you create or materially change
+(repo-local rules may set stricter numbers — they win):
+
+- A composable, store, service, or util `.ts`/`.js` file: **≤ 400 lines**.
+- An SFC (`.vue`): **≤ 300 lines** of template + script combined.
+- One exported primary unit per file (its own types and private helpers ride along; unrelated exports do not).
+- A single function: **≤ 60 lines**. A `useX` composable's returned surface stays cohesive around ONE
+  responsibility — if one composable returns filters AND transport verbs AND drafts AND lifecycle sync, it is at
+  least three composables plus one thin orchestrator, not one file.
+
+When a budget is crossed, split BEFORE declaring the work done, along these standard seams:
+
+- pure policy/classification/formatting → standalone pure modules (no Vue imports; trivially unit-testable)
+- view/filter/selection state → one focused `useX`
+- drafts/dialog/detail state → one focused `useX`
+- transport/side-effect verbs → one focused `useX` that receives the state composables' narrow surfaces
+- one thin orchestrator composable that composes the above and exposes the page's stable public surface
+
+Deliberate data registries (mock rows, static option tables) are the standing exception — data rows are not logic.
+Files already over budget before your change: never silently grow them; bring the touched responsibility under
+budget or record explicitly why not.
+
 SOLID mapping for Vue:
 
 - SRP: split UI, state, API, validation, mapping, and formatting.
