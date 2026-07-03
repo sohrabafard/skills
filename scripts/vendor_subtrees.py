@@ -130,8 +130,16 @@ def sync_entry(entry: dict[str, object]) -> bool:
     prefix = str(entry["prefix"])
     remote = str(entry["remote"])
     branch = str(entry["branch"])
+    source_path = str(entry.get("source_path", ""))
 
     ensure_remote(entry)
+    if source_path:
+        print(
+            f"[vendor-subtrees] skipping {name}: source_path snapshots "
+            "are refreshed manually"
+        )
+        return False
+
     print(f"[vendor-subtrees] syncing {name} ({prefix}) from {remote}/{branch}")
     git(["fetch", remote, branch])
 

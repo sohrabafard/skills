@@ -1,7 +1,7 @@
 # Vendor Subtrees Automation State
 
 - Task name: vendor subtrees automation
-- Current status: implemented, validated, pending user review
+- Current status: implemented, validated, active vendor inventory updated
 - Objective: make vendored subtree updates reproducible and mostly automatic after repository pulls, add `cc-skills-golang` as a vendored upstream, provide a headless vendor-add flow, and keep vendored skill exposure selective as vendor count grows.
 - Current repository understanding:
   - vendored content already lives under `vendor/` and is committed to the main repository
@@ -13,6 +13,7 @@
   - remote Git access and `.git/config` writes required elevated execution in this environment
   - the headless vendor-add flow must not auto-enable hooks or auto-link skills into Codex
   - vendored skill exposure should remain selective so the installed skill list does not grow without intent
+  - `vendor/basic-memory` is a source-path snapshot of `basic-memory/skills`, not a whole-repo subtree, so the sync script intentionally skips it until a dedicated source-path refresh flow exists
 - Completed work:
   - inspected the current vendor layout, remotes, and install documentation
   - confirmed there is no existing repo-managed subtree automation
@@ -24,6 +25,10 @@
   - converted vendored-doc sections in `README.md` and `install-skills.md` to marker-backed generated blocks
   - added `scripts/vendor_skill_links.py` for vendor-aware selective link management into `~/.codex/skills`
   - documented selective vendored skill exposure as the recommended pattern for future vendors
+  - converted `vendor/claude-plugins-official` and `vendor/knowledge-work-plugins` from accidental Git links with nested `.git` directories into ordinary vendored files
+  - registered `claude-plugins-official`, `knowledge-work-plugins`, and `basic-memory` in `vendor/subtrees.json`
+  - added `vendor/basic-memory` from `https://github.com/basicmachines-co/basic-memory/tree/main/skills` as a non-installed vendor snapshot
+  - guarded `scripts/vendor_subtrees.py sync` so source-path snapshots are not treated as whole-repo subtree pulls
 - Remaining work:
   - user review of command naming, generated docs wording, and whether more add-command overrides are needed
 - Risks or blockers:
@@ -40,11 +45,16 @@
   - `python scripts\vendor_skill_links.py list --vendor cc-skills-golang` succeeded and reported 35 Go skills as not yet linked
   - `python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting --dry-run` succeeded
   - `python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run` succeeded
+  - `python scripts\vendor_subtrees.py list` reports `claude-plugins-official`, `knowledge-work-plugins`, and `basic-memory`
+  - focused `git diff --cached --check` for authored docs/tooling, `vendor/subtrees.json`, and `vendor/basic-memory` passed
+  - full `git diff --cached --check` reports upstream whitespace issues inside the newly vendored third-party snapshots; these were left unchanged
+  - checked `~/.codex/skills` for `basic-memory`, `memory-capture`, `claude-plugins-official`, and `knowledge-work-plugins`; none exist
 - Next recommended step:
-  - review the current command surface, then decide whether you want a future explicit install/link command for vendored skills in addition to the current manual PowerShell snippet
+  - decide whether source-path snapshots such as `vendor/basic-memory` should get a first-class refresh command in `scripts/vendor_subtrees.py`
 - Timeline:
   - 2026-04-04 13:00 +03:30 — inspected current vendor layout, remotes, and existing manual subtree update docs.
   - 2026-04-04 15:11 +03:30 — added the repo-managed subtree manifest, sync script, and hook entrypoints.
   - 2026-04-04 15:11 +03:30 — synced vendors and added `vendor/cc-skills-golang` as a subtree merge commit.
   - 2026-04-04 15:40 +03:30 — finished the headless `add` flow, marker-backed docs refresh, and dirty-worktree guards.
   - 2026-04-04 15:xx +03:30 — added vendor-aware selective skill linking so future vendor growth does not force all vendored skills into Codex routing.
+  - 2026-07-03 04:13 +03:30 — converted `claude-plugins-official` and `knowledge-work-plugins` from Git links to ordinary vendored files, added the Basic Memory `skills` snapshot, refreshed generated vendor docs, and kept all three uninstalled.

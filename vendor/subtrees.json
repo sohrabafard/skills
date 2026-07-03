@@ -19,6 +19,31 @@
       "remote": "cc-skills-golang-upstream",
       "url": "https://github.com/samber/cc-skills-golang.git",
       "branch": "main"
+    },
+    {
+      "name": "claude-plugins-official",
+      "prefix": "vendor/claude-plugins-official",
+      "remote": "claude-plugins-official-upstream",
+      "url": "https://github.com/anthropics/claude-plugins-official.git",
+      "branch": "main",
+      "pinned_commit": "f42c6edab38a90e56b7120a45525c541dee86ecc"
+    },
+    {
+      "name": "knowledge-work-plugins",
+      "prefix": "vendor/knowledge-work-plugins",
+      "remote": "knowledge-work-plugins-upstream",
+      "url": "https://github.com/anthropics/knowledge-work-plugins.git",
+      "branch": "main",
+      "pinned_commit": "73b2b2dc0cf8467da112d0ef6b555ab022ee219d"
+    },
+    {
+      "name": "basic-memory",
+      "prefix": "vendor/basic-memory",
+      "remote": "basic-memory-upstream",
+      "url": "https://github.com/basicmachines-co/basic-memory.git",
+      "branch": "main",
+      "source_path": "skills",
+      "pinned_commit": "a1e0987eaf5ac9853c32fed5d907b1451e7a90df"
     }
   ]
 }
