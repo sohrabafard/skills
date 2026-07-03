@@ -17,6 +17,7 @@ DEFAULT_DEST_ROOT = Path.home() / ".codex" / "skills"
 class VendorEntry:
     name: str
     prefix: str
+    skills_root: Path | None
 
 
 @dataclass(frozen=True)
@@ -33,27 +34,72 @@ def load_vendors() -> list[VendorEntry]:
     vendors: list[VendorEntry] = []
     for entry in entries:
         prefix = str(entry["prefix"])
-        skills_root = ROOT / prefix / "skills"
+        source_path = str(entry.get("source_path", "skills"))
+        skills_root = ROOT / prefix / source_path
+        detected_root: Path | None = None
         if not skills_root.exists():
+            snapshot_root = ROOT / prefix
+            has_direct_skills = any(
+                child.is_dir() and (child / "SKILL.md").exists()
+                for child in snapshot_root.iterdir()
+            ) if snapshot_root.exists() else False
+            if has_direct_skills:
+                detected_root = snapshot_root
+        else:
+            detected_root = skills_root
+        if detected_root is None and not (ROOT / prefix).exists():
             continue
-        vendors.append(VendorEntry(name=str(entry["name"]), prefix=prefix))
+        vendors.append(VendorEntry(name=str(entry["name"]), prefix=prefix, skills_root=detected_root))
     return vendors
 
 
 def discover_skills(vendors: list[VendorEntry]) -> list[SkillRecord]:
     records: list[SkillRecord] = []
     for vendor in vendors:
-        skills_root = ROOT / vendor.prefix / "skills"
-        for skill_dir in sorted([p for p in skills_root.iterdir() if p.is_dir() and (p / "SKILL.md").exists()]):
+        skill_dirs = discover_vendor_skill_dirs(vendor)
+        install_names = install_names_for_vendor_skills(vendor, skill_dirs)
+        for skill_dir in skill_dirs:
             records.append(
                 SkillRecord(
                     vendor_name=vendor.name,
                     vendor_prefix=vendor.prefix,
-                    skill_name=skill_dir.name,
+                    skill_name=install_names[skill_dir],
                     skill_dir=skill_dir,
                 )
             )
     return records
+
+
+def discover_vendor_skill_dirs(vendor: VendorEntry) -> list[Path]:
+    if vendor.skills_root is not None:
+        return sorted(
+            [
+                path
+                for path in vendor.skills_root.iterdir()
+                if path.is_dir() and (path / "SKILL.md").exists()
+            ]
+        )
+
+    vendor_root = ROOT / vendor.prefix
+    return sorted([path.parent for path in vendor_root.rglob("SKILL.md")])
+
+
+def install_names_for_vendor_skills(vendor: VendorEntry, skill_dirs: list[Path]) -> dict[Path, str]:
+    if vendor.skills_root is not None:
+        return {skill_dir: skill_dir.name for skill_dir in skill_dirs}
+
+    counts: dict[str, int] = {}
+    for skill_dir in skill_dirs:
+        counts[skill_dir.name] = counts.get(skill_dir.name, 0) + 1
+
+    names: dict[Path, str] = {}
+    for skill_dir in skill_dirs:
+        if counts[skill_dir.name] == 1:
+            names[skill_dir] = skill_dir.name
+            continue
+        parent_name = skill_dir.parent.parent.name if skill_dir.parent.name == "skills" else skill_dir.parent.name
+        names[skill_dir] = f"{parent_name}-{skill_dir.name}"
+    return names
 
 
 def normalize_path(path: Path) -> str:
