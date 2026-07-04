@@ -1,6 +1,6 @@
 ---
 name: alaa-laravel-public-api-contract-pack
-description: Use this skill when a Laravel service needs a source-backed public client API contract pack, TypeScript SDK input docs, `docs/contracts/<service>` artifacts, OpenAPI/Postman parity, route inventory, or public-vs-trusted header boundary extraction. Keep the work docs-only unless the user explicitly asks for code changes, and mark unproven behavior as `NEEDS_BACKEND_CONFIRMATION` or `not_implemented` instead of inventing contracts.
+description: Use this skill when a Laravel service needs a source-backed public client API contract pack, TypeScript SDK input docs, per-service docs/contracts artifacts, OpenAPI/Postman parity, route inventory, or public-vs-trusted header boundary extraction. Keep the work docs-only unless the user explicitly asks for code changes, and mark unproven behavior as NEEDS_BACKEND_CONFIRMATION or not_implemented instead of inventing contracts.
 ---
 
 # Laravel Public API Contract Pack

@@ -171,7 +171,7 @@ Read next:
 
 ### Mode D+ - Auth TOTP management and forced route step-up
 
-Use when the task is about optional TOTP enrollment, authenticator-app setup, QR generation, `AUTH_TOTP_ENABLED`, recovery codes, forced route-level MFA, `require_totp:<purpose>`, or SDK/frontend step-up handling.
+Use when the task is about optional TOTP enrollment, authenticator-app setup, QR generation, `AUTH_TOTP_ENABLED`, recovery codes, forced route-level MFA, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, or SDK/frontend step-up handling.
 
 Read next:
 - `32-auth-totp-and-step-up-contract.md`
@@ -187,7 +187,7 @@ Read next:
 - The frontend may present a non-removable terms notice or required checkbox before OTP request. The backend acceptance moment is successful `POST /api/v3/otp/verify`, when the service creates the authenticated session.
 - Do not add or search for a separate accept-terms endpoint, request field, `terms_accepted_at`, `terms_version`, or consent table unless the user explicitly asks to change the legal/audit contract. If they do, treat it as a new product/legal contract change that needs docs, Postman, tests, and migration planning.
 - Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. When `AUTH_TOTP_ENABLED=true`, clients can expose setup and recovery-code flows; when disabled, clients should treat the TOTP API as unavailable, not as a generic missing route.
-- The backend returns `secret` and `otpauth_uri` for setup; clients generate the QR code from `otpauth_uri`. Forced route rollout must document the purpose, expected challenge errors, SDK retry behavior, and Postman/OpenAPI examples.
+- The backend returns `secret` and `otpauth_uri` for setup; clients generate the QR code from `otpauth_uri`. Forced route rollout must document the purpose, signed proof-token target, client cache and retry behavior, gateway `X-TOTP-Proof` verification, downstream `X-TOTP-*` metadata, and Postman/OpenAPI examples.
 
 ## Working rule
 
@@ -2305,11 +2305,78 @@ Purpose rules:
 - Do not use generic names such as `default`, `admin`, `write`, or route paths that may change.
 - Do not silently attach forced TOTP. Update route docs, OpenAPI, Postman, SDK/client notes, tests, and rollout notes.
 
+## Site-level credential and purpose-scoped proof
+
+- The platform uses one site-level TOTP enrollment per user. The authenticator entry created during setup is not tied to
+  one downstream route or service.
+- The `purpose` is attached to each short-lived proof, not to the stored authenticator secret. Use purpose-specific
+  proof when the same user must re-authenticate for a sensitive action.
+- A future separate setup domain may introduce a different enrollment purpose only if the repository contract explicitly
+  documents that new credential boundary. Do not create a new authenticator setup for ordinary force-TOTP routes.
+
+## Signed proof-token target
+
+The target cross-service flow is signed proof-token based:
+
+1. The client calls the protected route normally.
+2. The gateway or backend returns a TOTP challenge with the required `purpose`.
+3. The client calls `POST /auth/api/v3/totp/step-up` with that `purpose` and a fresh TOTP code or recovery code.
+4. Auth verifies the code against the user's enabled site-level TOTP credential and returns:
+
+```json
+{
+  "purpose": "content.bulk_delete",
+  "verified_until": "2026-07-04T12:05:00Z",
+  "proof_token": "<opaque signed proof token>"
+}
+```
+
+The proof token must bind at least user, project or tenant context where applicable, purpose, proof id, issued time,
+expiry, and issuer. The token must be opaque to public clients. Public docs and examples must use placeholders only.
+
+## Client proof cache
+
+The client may cache the returned `proof_token` in its auth-state storage, similar to an access token, until
+`verified_until`.
+
+Rules:
+
+- Cache by user/session, project or tenant context where applicable, and purpose.
+- Do not cache, log, persist, serialize, or replay the submitted TOTP code.
+- Do not create a refresh token for TOTP proof. When the proof expires or the gateway rejects it, prompt for a new TOTP
+  code and obtain a fresh proof through `POST /auth/api/v3/totp/step-up`.
+- Clear cached proofs on logout, account switch, project switch, TOTP disable/reset, token/session revocation,
+  permission context changes, explicit step-up failure, or proof expiry.
+
+## Gateway and downstream service contract
+
+Public clients retry force-TOTP routes with only:
+
+```http
+X-TOTP-Proof: <opaque signed proof token>
+```
+
+Gateway responsibilities:
+
+- Strip any inbound trusted backend `X-TOTP-*` headers from public requests.
+- Verify `X-TOTP-Proof` signature, issuer, expiry, user/session binding, project binding where applicable, and purpose.
+- Forward only gateway-verified backend metadata to the downstream service:
+  - `X-TOTP-PURPOSE`
+  - `X-TOTP-VERIFIED-UNTIL`
+  - `X-TOTP-PROOF-ID`
+
+Downstream service responsibilities:
+
+- Never validate raw TOTP codes.
+- Never trust public `X-TOTP-*` metadata.
+- Enforce only route/business purpose policy against gateway-verified proof metadata after normal authentication,
+  authorization, tenant, and business checks remain in place.
+
 ## Client challenge handling
 
 Clients and SDKs should model forced TOTP as a challenge-and-retry flow:
 
-- On `TOTP_STEP_UP_REQUIRED`, preserve the original request intent, show a TOTP challenge, call `POST /auth/api/v3/totp/step-up` with the same purpose plus `code` or `recovery_code`, then retry the original request after success.
+- On `TOTP_STEP_UP_REQUIRED`, preserve the original request intent, show a TOTP challenge, call `POST /auth/api/v3/totp/step-up` with the same purpose plus `code` or `recovery_code`, cache the returned `proof_token` until `verified_until`, then retry the original request with public `X-TOTP-Proof`.
 - On `TOTP_REQUIRED`, guide the user through status, enroll, confirm, and then step-up or retry the original action if it still requires proof.
 - On `TOTP_UNAVAILABLE`, show a controlled unavailable state and report rollout/config drift to operators.
 - On `TOTP_STEP_UP_FAILED` or `TOTP_DISABLE_FAILED`, keep the challenge open and do not update local enabled state.
@@ -2332,6 +2399,8 @@ SDK/frontend expectations:
 - Keep the auth base URL and gateway prefix configurable.
 - Generate the QR code client-side from `otpauth_uri`; do not expect a server-generated image unless implementation changes and the public contract is updated.
 - Invalidate cached TOTP status and pending challenge state after TOTP mutations.
+- Return the step-up `proof_token` to host code but do not store it inside the SDK unless the host explicitly delegates a
+  storage adapter with the cache and clear rules above.
 - Do not cache mutation responses that contain secrets or recovery codes.
 - Ensure SSR builds do not render browser-only QR libraries on the server without a client-only guard.
 - Never include trusted gateway headers in public SDK examples.
@@ -2344,6 +2413,10 @@ Flag the change when any of these appear:
 - Docs or SDK claim the backend returns a QR image while the implementation only returns `otpauth_uri`.
 - Docs say TOTP is disabled while `AUTH_TOTP_ENABLED=true`, or docs imply forced route TOTP exists without route evidence.
 - A forced-TOTP route lacks challenge-and-retry client guidance.
+- A public client sends raw TOTP code to a downstream service instead of auth.
+- A public client sends trusted backend `X-TOTP-*` metadata instead of public `X-TOTP-Proof`.
+- A service accepts force-TOTP metadata without gateway stripping/verification ownership being documented.
+- TOTP proof is refreshed without a new TOTP code.
 - TOTP is used instead of role/permission/business authorization.
 - Purpose names are unstable, generic, user-controlled, or route-path-derived.
 - OpenAPI, Postman, endpoint docs, flow docs, tests, or SDK contracts are not aligned with route behavior.
