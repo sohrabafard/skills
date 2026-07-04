@@ -8,6 +8,8 @@ bm reindex -p alaa-memory
 bm doctor
 bm schema validate <type> --project alaa-memory
 bm format --project alaa-memory
+bm orphans --project alaa-memory
+bm schema diff <type> --project alaa-memory
 ```
 
 Do not use unsupported:
@@ -20,8 +22,11 @@ basic-memory sync
 
 ```powershell
 bm tool search-notes "rabbitmq notification contract" --hybrid --project alaa-memory
+bm tool search-notes --type drift --meta drift_status=open --project alaa-memory
+bm tool search-notes --status needs_review --project alaa-memory
 bm tool build-context memory://alaa-rabbitmq-messaging-contracts --project alaa-memory
 bm tool read-note memory://alaa-rabbitmq-messaging-contracts --include-frontmatter --project alaa-memory
+bm tool recent-activity --timeframe 7d --project alaa-memory
 ```
 
 ## HTTP MCP for Codex app/desktop

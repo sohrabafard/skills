@@ -23,10 +23,11 @@ function Redact-Line {
 
 try {
   $inputJson = [Console]::In.ReadToEnd()
-  $event = $null
-  if ($inputJson.Trim().Length -gt 0) { $event = $inputJson | ConvertFrom-Json }
+  $hookEvent = $null
+  if ($inputJson.Trim().Length -gt 0) { $hookEvent = $inputJson | ConvertFrom-Json }
 
-  $cwd = $event.cwd
+  $cwd = $null
+  if ($hookEvent) { $cwd = $hookEvent.cwd }
   if (-not $cwd) { $cwd = (Get-Location).Path }
   $repoName = Split-Path $cwd -Leaf
   $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -45,16 +46,23 @@ try {
     try { Pop-Location } catch {}
   }
 
+  $trigger = "unknown"
+  $transcriptPath = ""
+  if ($hookEvent) {
+    if ($hookEvent.trigger) { $trigger = $hookEvent.trigger }
+    if ($hookEvent.transcript_path) { $transcriptPath = $hookEvent.transcript_path }
+  }
+
   $includeTail = $env:ALAA_MEMORY_INCLUDE_TRANSCRIPT_TAIL -eq "1"
   $tailBlock = "Transcript tail capture disabled by default to avoid secrets and memory bloat. Set ALAA_MEMORY_INCLUDE_TRANSCRIPT_TAIL=1 only for trusted local debugging."
-  if ($includeTail -and $event.transcript_path -and (Test-Path -LiteralPath $event.transcript_path)) {
-    $tailLines = Get-Content -LiteralPath $event.transcript_path -Tail 40 -ErrorAction SilentlyContinue | ForEach-Object { Redact-Line $_ }
+  if ($includeTail -and $transcriptPath -and (Test-Path -LiteralPath $transcriptPath)) {
+    $tailLines = Get-Content -LiteralPath $transcriptPath -Tail 40 -ErrorAction SilentlyContinue | ForEach-Object { Redact-Line $_ }
     $tailBlock = ($tailLines | Out-String)
   }
 
   $title = "Emergency Checkpoint - $repoName - $safeTimestamp"
-  $folder = "inbox/agent-captures"
   $permalink = "emergency-checkpoint-$repoName-$safeTimestamp".ToLower() -replace '[^a-z0-9\-]+','-'
+  $fence = '```'
 
   $content = @"
 ---
@@ -68,7 +76,6 @@ tags:
   - alaa
   - emergency-checkpoint
   - compact
-  - $repoName
 created_at: "$timestamp"
 canonical_source_paths: []
 ---
@@ -79,44 +86,36 @@ canonical_source_paths: []
 
 - [summary] PreCompact emergency checkpoint created automatically.
 - [boundary] This inbox capture is not canonical memory and must be curated before becoming durable state.
-- [repo] $repoName
-- [cwd] $cwd
-- [branch] $branch
-- [trigger] $($event.trigger)
-- [transcript_path] $($event.transcript_path)
+- [source] Repo: $repoName | cwd: $cwd | branch: $branch
+- [source] Trigger: $trigger | transcript: $transcriptPath
 - [todo] Next agent should create or update a semantic handoff if the task remains active.
 
 ## Git status
 
-````text
+${fence}text
 $status
-````
+${fence}
 
 ## Transcript tail policy
 
-````text
+${fence}text
 $tailBlock
-````
+${fence}
 
 ## Relations
 
 - governed_by [[Alaa Basic Memory Operating Rules]]
 "@
 
-  $wrote = $false
-  if (Get-Command bm -ErrorAction SilentlyContinue) {
-    $content | & bm tool write-note --project $Project --title $title --folder $folder --type inbox_capture
-    if ($LASTEXITCODE -eq 0) {
-      & bm status --project $Project --wait --timeout 60 | Out-Null
-      $wrote = $true
-    }
-  }
+  # File-first write into the vault (avoids double frontmatter from bm tool write-note),
+  # then let Basic Memory index it.
+  $captureDir = Join-Path $AgentMemoryPath "inbox\agent-captures"
+  New-Item -ItemType Directory -Force -Path $captureDir | Out-Null
+  $captureFile = Join-Path $captureDir "$title.md"
+  $content | Set-Content -Encoding UTF8 -LiteralPath $captureFile
 
-  if (-not $wrote) {
-    $fallbackDir = Join-Path $AgentMemoryPath "inbox\agent-captures"
-    New-Item -ItemType Directory -Force -Path $fallbackDir | Out-Null
-    $fallbackFile = Join-Path $fallbackDir "$title.md"
-    $content | Set-Content -Encoding UTF8 -LiteralPath $fallbackFile
+  if (Get-Command bm -ErrorAction SilentlyContinue) {
+    & bm status --project $Project --wait --timeout 60 | Out-Null
   }
 
   @{ systemMessage = "Alaa Basic Memory emergency checkpoint created for $repoName."; continue = $true } | ConvertTo-Json -Compress

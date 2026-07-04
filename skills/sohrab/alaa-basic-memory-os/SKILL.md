@@ -1,6 +1,6 @@
 ---
 name: alaa-basic-memory-os
-description: "Use when Alaa work needs Basic Memory project alaa-memory or Obsidian memory governance: creating/updating architecture, contract, operations, lesson, work-pattern, project-index, project-state, handoff, research, or inbox-capture notes; publishing Prompt 1/2 self-improvement outputs into Basic Memory; resuming work from cross-session memory; maintaining templates/schemas without duplicating alaa-workflow or alaa-low-noise. Do not use for tiny code edits or as a second task system."
+description: "Use when Alaa work needs Basic Memory project alaa-memory or Obsidian memory governance: creating/updating architecture, service-ownership, contract, operations, drift, lesson, work-pattern, project-index, project-state, handoff, research, or inbox-capture notes; recording or resolving drift between docs/code/services; publishing Prompt 1/2 self-improvement outputs into Basic Memory; resuming work from cross-session memory; maintaining templates/schemas without duplicating alaa-workflow or alaa-low-noise. Do not use for tiny code edits or as a second task system."
 ---
 
 # Alaa Basic Memory OS
@@ -13,6 +13,7 @@ Operate Basic Memory project `alaa-memory` as Alaa's curated cross-agent memory 
 
 - A task is non-trivial, cross-service, contract-sensitive, architecture-sensitive, continuation-likely, or memory-sensitive.
 - Creating or updating Basic Memory notes.
+- Recording or resolving drift between sources of truth.
 - Publishing Prompt 1/2 outputs into curated runtime memory.
 - Resuming prior work using memory and repo-local state.
 - Maintaining Basic Memory schemas, templates, metadata, or Obsidian conventions.
@@ -31,14 +32,14 @@ Operate Basic Memory project `alaa-memory` as Alaa's curated cross-agent memory 
 - Skills define behavior; do not copy full installed skills into Basic Memory.
 - Obsidian is the human editing/navigation surface, not runtime source of truth.
 - `raw/processed` is the self-improvement evidence warehouse.
-- Use `bm status --project alaa-memory --wait --timeout 60`, `bm reindex -p alaa-memory`, `bm doctor`, and `bm schema validate <type> --project alaa-memory`.
+- Use `bm status --project alaa-memory --wait --timeout 60`, `bm reindex -p alaa-memory`, `bm doctor`, `bm orphans --project alaa-memory`, and `bm schema validate <type> --project alaa-memory`.
 - Do not use unsupported `basic-memory sync`.
 
 ## Task-start rule
 
 For non-trivial, cross-service, contract-sensitive, architecture-sensitive, or continuation-likely work:
 
-1. Search Basic Memory for project, service/domain, contract names, decisions, lessons, and handoffs.
+1. Search Basic Memory for project, service/domain, contract names, decisions, lessons, handoffs, and open drift.
 2. Use `build_context` from known memory URLs when available.
 3. Inspect repo-local `AGENTS.md`, `CLAUDE.md`, README, docs, configs, closest code patterns, and validation commands.
 4. Separate memory facts, repo facts, assumptions, risks, and questions.
@@ -69,6 +70,18 @@ Use Design Mode only when explicitly asked to design, standardize, complete, or 
 
 - Proposed values must be `[proposal]`, `[draft_contract]`, or `[decision_needed]`.
 - Keep status `draft` or `needs_review` until approved and recorded in repo truth.
+
+## Drift rule
+
+When two sources of truth disagree (doc vs code, memory vs repo, service vs service), never silently pick a side:
+
+1. Search `drift/` for an existing drift note on the same mismatch; update instead of duplicating.
+2. Create/update a `type: drift` note in `drift/` from the Drift Note Template (`drift_status: open`; SOC-log and notification contracts default to severity `high`/`critical`).
+3. Mark each affected contract/architecture/operations note with one `- [drift] see [[<drift note>]]` observation and `status: needs_review`.
+4. Register it in `drift/Drift Registry.md`, continue on the safest verified behavior, and report the drift to the user.
+5. Resolution flow: prompt 14 (analyze + human decision) then prompt 15 per affected repo (fix code AND docs, validate, clear markers, archive when fully resolved).
+
+See `references/drift-management.md`.
 
 ## Prompt 3 publishing rule
 
@@ -111,6 +124,7 @@ Gated/manual only:
 
 - `references/operating-model.md`
 - `references/note-governance.md`
+- `references/drift-management.md`
 - `references/prompt-3-publishing.md`
 - `references/cli-and-mcp.md`
 - `references/obsidian-usage.md`
@@ -125,4 +139,5 @@ Gated/manual only:
 - No raw transcript/log/source/doc dump was stored.
 - `alaa-workflow` state was not duplicated.
 - Relevant schema validation was run or explicitly recommended.
-- Final response reports notes changed, source paths, validation, and unresolved questions.
+- Any discovered source-of-truth disagreement was recorded as a drift note, not silently resolved.
+- Final response reports notes changed, source paths, validation, drift recorded, and unresolved questions.

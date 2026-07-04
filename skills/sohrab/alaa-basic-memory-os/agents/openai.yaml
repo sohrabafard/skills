@@ -1,3 +1,3 @@
 version: 1
 name: alaa-basic-memory-os
-description: Alaa Basic Memory + Obsidian operating system for curated cross-agent memory, Prompt 3 publishing, schemas, templates, and handoff pointers.
+description: Alaa Basic Memory + Obsidian operating system for curated cross-agent memory, drift detection and resolution, Prompt 3 publishing, schemas, templates, and handoff pointers.
