@@ -1,0 +1,26 @@
+{
+  "skill_name": "alaa-golang-clean-code-principles",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "news-create-endpoint",
+      "prompt": "I'm working on the Ala 'news' Go service (it's built on our alaa-go-chi kit, chi router, pgx). Please implement the POST /api/v1/news endpoint end to end as Go source files: the route registration, the HTTP handler, the CreateNews use case, and the ports it needs. Business rules: the caller must hold the permission news_user_can_send_to_his_shobe and a fresh TOTP step-up for purpose news.insert; the request body has title (required), text (required), and an audience object with a nullable shobe_id and a user_ids list; creating a published news item must also record an audit entry and emit a notification.command.news.broadcast.v1 command. Write idiomatic production-quality Go. Put the files under outputs/ as handler.go, usecase.go, ports.go, routes.go.",
+      "expected_output": "Route declared with explicit trusted posture + permission + TOTP middleware; handler uses kit binder/responder (no hand-rolled JSON errors); use case receives a typed trust context (never *http.Request); broadcast command written as an outbox row in the same transaction as the news insert + audit row; typed domain errors.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "receipt-flusher-worker",
+      "prompt": "In our Ala news Go service (alaa-go-chi kit based), I need a background 'read receipt flusher': read receipts get buffered in memory when users open a news item, and a background worker flushes them to Postgres in batches — every 2 seconds or every 500 buffered rows, whichever comes first. The table is news_read_receipts(news_id, user_id, first_read_at, last_read_at, read_count) with primary key (news_id, user_id); a re-read should bump last_read_at and read_count. It must shut down cleanly when the service stops. Write flusher.go (the worker), the SQL it executes, and how it's constructed/configured. Put files under outputs/.",
+      "expected_output": "Worker owns its goroutine lifecycle (context cancellation, ticker, final drain on shutdown); SQL is an ON CONFLICT upsert (idempotent); flush interval/batch size injected via constructor from boot-time config (no os.Getenv in the worker); failures counted in a metric and logged, not swallowed silently.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "broadcast-command-structs",
+      "prompt": "For our Ala platform (Go services on the alaa-go-chi kit, RabbitMQ between services): define the Go message structs for the notification.command.news.broadcast.v1 command and show how the news service emits it when a news item is published. The payload carries: project_id (our canonical public project id), news_public_id, title, summary (nullable), public_url, action_btns (list of {text, url, copy_text}), force_channels (list of channel names), visibility, and an audience object with six nullable location pins (ostan_id, shahrestan_id, bakhsh_id, shahr_id, shobe_id, school_id) plus a user_ids list. The consumer on the other side is case-sensitive about JSON keys. Write command.go (structs) and emit.go (how the publish happens from the publish-news flow). Put files under outputs/.",
+      "expected_output": "Every struct field at every nesting level has an explicit snake_case json tag; envelope carries message_id/message_type/idempotency_key/correlation_id and trace context; project_id is a UUID string (not an int); emission writes an outbox row inside the same DB transaction as the news status change rather than publishing directly to the broker.",
+      "files": []
+    }
+  ]
+}
