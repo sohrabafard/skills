@@ -10,3 +10,4 @@ __pycache__/
 # Local reference dump (third-party skills mirror) — kept locally, never committed.
 # Prevents a broad `git add` from pulling in thousands of unrelated files.
 /other/
+/.idea
