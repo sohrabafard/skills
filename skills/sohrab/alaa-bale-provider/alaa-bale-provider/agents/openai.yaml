@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Bale Provider"
+  short_description: "Bale Safir API provider guidance"
+  default_prompt: "Use $alaa-bale-provider to implement or review Bale Safir message sending, OTP, templates, file uploads, and payload validation."
+
+policy:
+  allow_implicit_invocation: true
