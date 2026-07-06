@@ -81,3 +81,7 @@ Use `https://signoz.io/docs/instrumentation/` when you need the exact language p
 - For migration questions, lead with the migration page, not the fresh-install quickstart.
 - For mixed traces and logs questions, decide the traces path and log path separately.
 - If the user is confused by field ambiguity later, route them to `query-language-routing.md` and tell them to fix the instrumentation source rather than only changing the query.
+
+## Current-doc freshness note
+
+SigNoz instrumentation and Collector pages move. Recheck official docs when endpoint syntax, ingestion headers, language SDK versions, auto-instrumentation packages, migration behavior, or Cloud/Self-Host differences affect the answer.

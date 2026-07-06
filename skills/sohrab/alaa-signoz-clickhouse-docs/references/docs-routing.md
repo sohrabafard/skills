@@ -23,6 +23,8 @@ All links below are official `signoz.io/docs` pages that were useful and reachab
 | Dashboard variables                              | `https://signoz.io/docs/userguide/manage-variables/`                                                   | The user wants reusable dashboard filters or template dashboards                                    | Useful with panel authoring                                               |
 | Logs ClickHouse dashboard SQL                    | `https://signoz.io/docs/userguide/logs_clickhouse_queries/`                                            | The user wants logs panel SQL                                                                       | Main official schema page for logs                                        |
 | Traces ClickHouse dashboard SQL                  | `https://signoz.io/docs/userguide/writing-clickhouse-traces-query/`                                    | The user wants traces panel SQL                                                                     | Main official schema page for traces                                      |
+| Metrics ClickHouse dashboard SQL                 | `https://signoz.io/docs/userguide/write-a-metrics-clickhouse-query/`                                   | The user wants metrics panel or alert SQL over sample/time-series tables                             | Main official schema page for metrics; schemas are version-sensitive      |
+| ClickHouse dashboard/alert overview              | `https://signoz.io/docs/operate/clickhouse/clickhouse-queries/`                                        | The user asks when to use ClickHouse SQL vs Query Builder                                            | Explains signal-specific guides and Dashboard/Alert scope                 |
 
 ## Page selection rules
 
@@ -39,7 +41,7 @@ Use these patterns if the right page is not obvious:
 - `site:signoz.io/docs signoz <language> instrumentation`
 - `site:signoz.io/docs signoz <platform> logs`
 - `site:signoz.io/docs signoz query builder <topic>`
-- `site:signoz.io/docs signoz clickhouse <logs|traces>`
+- `site:signoz.io/docs signoz clickhouse <metrics|logs|traces>`
 
 ## Markdown fetch note
 

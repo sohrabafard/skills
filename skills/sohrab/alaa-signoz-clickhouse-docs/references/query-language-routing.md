@@ -1,39 +1,68 @@
 # Query Language Routing
 
-Use this file when the user is asking about SigNoz search behavior, Query Builder behavior, field ambiguity, data types, or dashboard variables.
+Use this file for SigNoz Query Builder v5, search syntax, filtering, aggregation, formulas, field ambiguity, and dashboard variables.
 
-## Pick the right page
+## Pick the right surface
 
-| Topic | Best page | Use it when |
-|---|---|---|
-| Search syntax | `https://signoz.io/docs/userguide/search-syntax/` | The user wants filter syntax for logs, traces, or metrics |
-| Operators | `https://signoz.io/docs/userguide/operators-reference/` | The user asks about operators such as `IN`, `EXISTS`, `HAS`, comparisons, or boolean logic |
-| Functions | `https://signoz.io/docs/userguide/functions-reference/` | The user needs functions, especially JSON body or array operations |
-| Field ambiguity and data types | `https://signoz.io/docs/userguide/field-context-data-types/` | The user sees ambiguous keys like `service.name` or has type issues |
-| Query Builder v5 | `https://signoz.io/docs/userguide/query-builder-v5/` | The user asks about the current structured query interface |
-| Logs Query Builder | `https://signoz.io/docs/userguide/logs_query_builder/` | The question is specifically about log filters, grouping, body search, or log query UI behavior |
-| Dashboard variables | `https://signoz.io/docs/userguide/manage-variables/` | The user wants reusable dashboard filters or templates |
+- Logs Explorer, Traces Explorer, and Metrics Explorer: prefer Query Builder/search syntax, not raw ClickHouse SQL.
+- Dashboards: use Query Builder when it can express the panel; use ClickHouse SQL only for custom panels that Query Builder cannot cover.
+- Alerts: use Query Builder first when supported; use ClickHouse alert queries only when the alert type/surface explicitly supports them.
+- If the user says “SQL”, “ClickHouse”, “dashboard query”, “panel query”, or gives existing SQL, route to the signal-specific ClickHouse reference.
 
-## Routing rules
+## Best pages
 
-- If the user asks for SigNoz filter syntax, answer with SigNoz search syntax, not ClickHouse SQL.
-- If the user asks for dashboard panel SQL, use the ClickHouse references instead.
-- If the user sees an ambiguity warning for fields like `service.name`, route to the field-context page and explain the likely instrumentation problem.
-- If the user wants a reusable dashboard, pair the answer with the variables page.
+- Query Builder v5: https://signoz.io/docs/userguide/query-builder-v5/
+- Search syntax: https://signoz.io/docs/userguide/search-syntax/
+- Field context and data types: https://signoz.io/docs/userguide/field-context-data-types/
+- Dashboard variables: https://signoz.io/docs/userguide/manage-variables/
+- ClickHouse queries for dashboards and alerts: https://signoz.io/docs/operate/clickhouse/clickhouse-queries/
 
-## Practical guidance
+## Query Builder v5 guidance
 
-### Field ambiguity
+Use Query Builder for:
 
-When the docs mention ambiguity, the important point is this:
+- service/operation/status filters
+- log body search and simple log aggregations
+- trace/span filtering, grouping, and percentile charts
+- metric temporal/spatial aggregation
+- multi-query formulas such as error-rate ratios
+- dashboards and alerts where the visual builder expresses the logic
 
-- resource identity fields such as `service.name`, `deployment.environment`, `k8s.namespace.name`, and `host.name` should usually live in resource context
-- if the same key appears as both a resource field and a normal attribute, the long-term fix is to correct instrumentation, not just to patch the query
+Do not answer a Query Builder task with ClickHouse SQL unless the user explicitly asks for SQL or the requested dashboard/alert requires raw ClickHouse.
 
-### Data types
+## Filtering rules
 
-If a comparison behaves strangely, tell the user to check the field type and use explicit typing only when needed.
+- Use explicit field filters for traces and metrics.
+- Log full-text search can search log bodies without specifying a field; quote phrases where the docs require it.
+- Combine filters with `AND` unless the user asks for broader matching.
+- Use field context/data type docs when the same field name can appear in resource attributes, span attributes, log attributes, or top-level columns.
 
-### Dashboard variables
+## Aggregation rules
 
-Use variables when the user wants the same panel or dashboard to work across many services, environments, or teams.
+- Logs/traces support statistical aggregations, percentiles such as p50/p90/p95/p99, and rates in Query Builder.
+- Metrics use temporal aggregation plus spatial aggregation; choose function based on metric type: gauge, counter, histogram, or exponential histogram.
+- Prefer formulas for ratios: error rate, success rate, saturation ratio, or “bad / total”.
+- Apply group-by only to bounded-cardinality fields. Avoid raw URL, user ID, trace ID, request ID, email, phone, or token values.
+
+## Dashboard variables
+
+Use variables to avoid hardcoded values in reusable dashboards.
+
+- Keep variable names clear, for example `service_name`, `env`, `operation`, `status_code`.
+- Use the macro syntax documented for the current surface. Do not convert dashboard variables into ClickHouse macros unless the relevant reference confirms the exact syntax.
+- In raw ClickHouse queries, preserve SigNoz default time variables exactly as documented for that signal.
+
+## Field ambiguity
+
+When a field is ambiguous:
+
+1. Prefer top-level/pre-extracted columns when the schema reference lists them.
+2. Use explicit context when Query Builder requires it.
+3. For SQL, choose the right map/JSON access expression from the signal-specific reference.
+4. If the source instrumentation is wrong, fix instrumentation rather than masking it with query hacks.
+
+## Answer shape
+
+- Name the surface: Query Builder, Logs Explorer, Traces Explorer, Metrics Explorer, Dashboard ClickHouse, or Alert ClickHouse.
+- Give the filter/aggregation/formula or SQL route.
+- Mention when the user must switch to the signal-specific ClickHouse reference.

@@ -1,8 +1,21 @@
 # Alaa Observability SOC Topic Map
 
-Use this file to choose the smallest relevant section in `full-guide.md`.
+Use this file to choose the smallest relevant reference for the task.
 
-## Covered sections
+## Core routing
+
+- Top-level activation, invariants, companion routing, and output contract:
+  - `../SKILL.md`
+- Full preserved guidance, examples, and domain rules:
+  - `full-guide.md`
+- Official-first source map and freshness triggers:
+  - `90-source-map.md`
+- Security-sensitive production/SOC checklists:
+  - `91-sensitive-system-checklists.md`
+- Cross-model skill/runtime compatibility for GPT-5.5/Codex, Opus 4.8, Sonnet 5, and Fable 5:
+  - `95-model-runtime-compatibility.md`
+
+## `full-guide.md` section index
 
 - `# Purpose`
 - `# When to use`
@@ -29,13 +42,6 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `# SOC deliverable: Security log catalog`
 - `# Evidence-first incident diagnostics`
 - `# Sentry integration (optional; production-friendly)`
-- `## 1) Install packages`
-- `## 2) Laravel / Octane configuration`
-- `## 3) Tracing (distributed tracing)`
-- `## 4) Release tracking (CI-driven)`
-- `## 5) Profiling (cost-controlled)`
-- `## 6) Compatibility with OpenTelemetry / W3C Trace Context`
-- `## 7) Validation (minimum)`
 - `# Laravel 13 observability audit points`
 - `# Output contract`
 - `# Anti-patterns`
@@ -46,10 +52,23 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `# SOC / SIEM egress`
 - `# Collector selection (OTel Collector vs Vector vs Grafana Alloy)`
 - `# Working with the SigNoz execution skill`
-- `references/90-source-map.md`
+- `# 2026 security-sensitive additions`
+- `## Profiles signal positioning`
+- `## Service readiness evidence`
+- `## Collector and Vector resilience validation`
+- `## Safe SOC/SIEM forwarding model`
 
-## Working rule
+## Fast routing
 
-- Read only the sections you need from `full-guide.md`.
-- Read `90-source-map.md` before relying on version-sensitive observability, SigNoz, Sentry, or OTel guidance.
-- Keep this topic map small and update it when major sections are added or renamed.
+- “Should this be a log, metric, trace, alert, Sentry event, or SOC event?”
+  - `full-guide.md` → signal decision matrix, platform tool roles, and security-sensitive additions
+- “Is this safe for a customer/security-sensitive system?”
+  - `91-sensitive-system-checklists.md`
+- “Can we add this metric label?”
+  - `full-guide.md` → cardinality budgets and `91-sensitive-system-checklists.md` → cardinality gate
+- “How do we link p99 latency to the trace that caused it?”
+  - `full-guide.md` → latency percentiles and exemplars
+- “Should Sentry receive OTLP directly?”
+  - `full-guide.md` → Sentry/SigNoz role split and `90-source-map.md` freshness triggers
+- “Write the SigNoz SQL or pick the SigNoz docs page.”
+  - Hand off to `$alaa-signoz-clickhouse-docs`

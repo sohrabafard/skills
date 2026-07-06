@@ -1,4 +1,7 @@
 interface:
-  display_name: "Alaa SigNoz Docs & ClickHouse"
-  short_description: "Find SigNoz docs, SQL, and trace fixes"
-  default_prompt: "Use $alaa-signoz-clickhouse-docs to find the right SigNoz docs page, fix missing spans, or write a SigNoz ClickHouse query for logs or traces."
+  display_name: Alaa SigNoz ClickHouse Docs
+  short_description: SigNoz docs routing and ClickHouse SQL
+  default_prompt: Use $alaa-signoz-clickhouse-docs for SigNoz docs lookup, Query Builder routing, and ClickHouse SQL over logs, traces, or metrics.
+  brand_color: "#3A5BA0"
+policy:
+  allow_implicit_invocation: true

@@ -247,3 +247,14 @@ Before finalizing a logs query, check these points:
 - indexed columns used where possible
 - timeseries ordered by `ts ASC`
 - human-readable time conversion used when the panel should display timestamps clearly
+
+# 2026 production update
+
+Use this reference only for SigNoz Dashboard/Alert ClickHouse SQL over logs. Logs Explorer uses Query Builder/search syntax unless the user explicitly requests raw SQL for a dashboard/alert.
+
+For sensitive systems:
+
+- Keep `body` scans narrow with time bounds and additional indexed filters.
+- Do not expose raw payloads, tokens, cookies, emails, phones, or customer-private text in example output.
+- Prefer pre-extracted severity/service/resource columns over attribute-map access when present.
+- Use `validation-checklists.md` before finalizing a query for a production dashboard or alert.

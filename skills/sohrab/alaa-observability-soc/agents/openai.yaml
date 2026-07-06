@@ -1,7 +1,7 @@
 interface:
-  display_name: "Alaa Observability SOC"
-  short_description: "Signals, OTel, SigNoz, Sentry, alerts, and SOC evidence"
-  default_prompt: "Use $alaa-observability-soc to make logs, traces, metrics, exceptions, profiles, alerts, SigNoz, Sentry, and SOC evidence deterministic and production-ready."
-
+  display_name: Alaa Observability SOC
+  short_description: OTel, SigNoz, Sentry, alerts, SOC evidence
+  default_prompt: Use $alaa-observability-soc for observability/SOC signal architecture, production-readiness reviews, telemetry privacy, and incident evidence.
+  brand_color: "#264653"
 policy:
   allow_implicit_invocation: true

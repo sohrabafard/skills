@@ -52,3 +52,7 @@ Use it whenever the user is unsure between SDK, HTTP, file, Collector, or proces
 - Name the recommended path in plain language.
 - Give the best page first.
 - Briefly explain the tradeoff: correlation, reliability, operational simplicity, or reuse of existing pipeline.
+
+## Production log safety note
+
+For sensitive systems, do not forward raw logs wholesale without a redaction and routing policy. Prefer paths that preserve `trace_id`/`span_id`, support retries or buffering, avoid duplicate collection, and make ownership clear. Pair with `$alaa-observability-soc` when logs become SOC evidence or customer egress.

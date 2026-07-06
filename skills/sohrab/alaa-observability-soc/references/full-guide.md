@@ -712,3 +712,45 @@ Default: central = OpenTelemetry Collector, edge = Vector, Alloy not used unless
 This skill owns the design and reasoning: the signal model, exemplars, latency percentiles, SOC evidence, cardinality budgets, the Sentry role, and the Collector mental model. `$alaa-signoz-clickhouse-docs` owns execution against SigNoz: picking the right SigNoz docs page and writing or repairing the ClickHouse queries for dashboard panels (the p99 latency panel, the metric-to-trace exemplar lookup, the service-map RED view) and the missing-spans anti-join.
 
 Hand off to `$alaa-signoz-clickhouse-docs` when the task becomes writing an actual SigNoz query or choosing a SigNoz docs page. Expect that skill to defer back here when a query task raises a design question (why exemplars, cardinality budgets, signal choice, SOC evidence). Keep the shared vocabulary aligned: `trace_id`/`span_id`, exemplars, and the percentile fields are described the same way in both skills.
+
+# 2026 security-sensitive additions
+
+Use these additions alongside the earlier guidance when the target system is production, customer-facing, regulated, or incident/security sensitive.
+
+## Profiles signal positioning
+
+OpenTelemetry semantic conventions include profiles, but Alaa does not treat continuous profiling as a universal minimum for every service in every environment. Use profiling when runtime cost, sampling policy, data sensitivity, and backend support are acceptable and the task involves CPU/memory contention, tail latency, allocator pressure, long-lived workers, or Sentry/SigNoz profiling workflows.
+
+Profiles must follow the same privacy and operational rules as other signals: no secrets, no customer-private content, bounded retention, clear owner, cost controls, and a documented disable path.
+
+## Service readiness evidence
+
+A service is observability-ready only when the evidence exists in the repo, tests, or live telemetry:
+
+- Traces: inbound server spans, outbound dependency spans, error status, operation names based on route templates, and propagated `traceparent`.
+- Metrics: request rate, error rate, latency histogram, p50/p90/p95/p99 panels or equivalent queries, and resource/saturation metrics where relevant.
+- Logs: structured JSON, UTC timestamps, `service.name`, environment, request ID, `trace_id`, bounded event names, result/error codes, and no secrets/PII.
+- Exemplars: latency histograms that let an operator move from a percentile spike to representative traces, or a documented equivalent trace-linking workflow.
+- Alerts: owner, severity, threshold, evaluation window, no-data behavior, runbook, and dashboard/log/trace links.
+- Pipeline: Collector/Vector config validates, self-telemetry is visible, queues/retries are monitored, and critical remote hops have persistent buffering or an explicitly accepted loss profile.
+- Drill: one controlled failure produces correlated metric, trace, log, alert, and SOC evidence when the event is security relevant.
+
+## Collector and Vector resilience validation
+
+For local sidecar/agent and central Collector patterns, validate each network hop separately:
+
+- application to local endpoint: short timeouts, bounded memory, fail-open behavior, and no synchronous dependency on backend availability
+- local Vector/Collector to central Collector: queue size, retry policy, disk buffer or persistent queue where needed, TLS, authentication, and self-telemetry
+- central Collector to SigNoz/Sentry/SOC: bounded fan-out, isolated exporter queues, retry/drop/dead-letter behavior, and alerting on export failures
+
+When a Collector branch is for SOC/SIEM export, failure of that branch must not block SigNoz observability or application traffic. Prefer independent exporters/queues and explicit loss/replay behavior.
+
+## Safe SOC/SIEM forwarding model
+
+Do not forward raw application logs wholesale to a customer SOC endpoint by default. Build a curated security-event catalog with a schema version, event category/action, decision, reason code, actor reference, resource reference, customer/tenant routing rule, trace/request correlation, and redaction policy.
+
+A SOC/SIEM egress design is blocked until it defines transport security, endpoint authentication, credential rotation, retry/replay/dead-letter behavior, delivery-failure alerting, and a test event that the customer can verify safely.
+
+## Source freshness and model-runtime note
+
+When this skill itself is edited, use `references/95-model-runtime-compatibility.md`. Keep skill instructions portable across Codex/GPT-5.5 and Claude Opus/Sonnet/Fable runtimes. Do not hardcode model-specific API parameters or data-retention assumptions into ordinary observability guidance; put those in runtime/harness configuration or the compatibility reference.

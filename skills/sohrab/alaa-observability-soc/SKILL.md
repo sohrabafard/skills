@@ -1,86 +1,97 @@
 ---
 name: alaa-observability-soc
-description: "Use this skill when the task involves observability architecture, structured logs, OpenTelemetry traces or logs, Prometheus metrics, OTLP/Collector routing, SigNoz, Sentry, profiling, alerting, SOC evidence, incident diagnostics, correlation IDs, trace IDs, or security-log catalogs. Pair it with alaa-services-contract for Ala service work so signal decisions become deterministic platform contracts. Do not use it for feature work with no observability or SOC surface change."
+description: "Observability/SOC signal architecture for Alaa services: OpenTelemetry traces, metrics, logs, profiles, exemplars, SigNoz/Sentry roles, Collector/Vector topology, alerting, SOC/SIEM egress, correlation IDs, trace IDs, and security evidence. Use for telemetry design, production-readiness audits, incident diagnostics, signal quality, privacy, cardinality, and auditability decisions. Pair with alaa-signoz-clickhouse-docs for SigNoz docs lookup or ClickHouse SQL."
 ---
-
-
-
 
 # Alaa Observability SOC
 
 ## Purpose
 
-Use this skill when the task needs the architectural or policy guidance owned by Alaa Observability SOC.
+Use this skill to design, review, or troubleshoot Alaa observability and SOC evidence. It owns the signal model,
+security-event evidence model, telemetry privacy rules, Sentry/SigNoz role split, Collector/Vector topology,
+alert/runbook quality, and incident-diagnostic reasoning.
 
-Keep this top-level file small. Load the references for the full rules, examples, and checklists.
+Keep this file routing-first. Load references only when the task needs the detail.
 
-Platform principle: full, standard OpenTelemetry (traces, metrics, and logs) is mandatory for every Alaa service, and every service's latency histograms must carry exemplars so metrics link to traces. Treat this as a production-readiness requirement, not an optional enhancement. See `references/full-guide.md` sections "OpenTelemetry alignment (mandatory for every Alaa service)", "Exemplars and metric-to-trace correlation", and "Latency percentiles".
+## Activate for
 
-## When to use
+- OpenTelemetry traces, metrics, logs, profiles, OTLP, Collector, Vector, SigNoz, Sentry, Prometheus, exemplars, or
+  telemetry pipeline work
+- correlation IDs, `traceparent`, `trace_id`, request IDs, incident evidence, audit logs, security-log catalogs,
+  SOC/SIEM egress, or customer SOC forwarding
+- SLOs, latency percentiles, RED/USE signals, alerts, pages, runbooks, cardinality budgets, sampling, retention, or
+  telemetry cost controls
+- production-readiness or security-sensitive reviews where missing/unsafe telemetry can hide incidents or expose
+  sensitive data
 
-- logs, traces, metrics, or alerting work
-- correlation IDs or incident evidence requirements
-- exemplars and metric-to-trace correlation; finding a bottleneck from a latency percentile
-- percentile latency (p50/p90/p95/p99/p99.9) SLOs and alerts
-- Sentry integration, cleanup, or "can Sentry be just an OTLP destination" decisions
-- SigNoz, OpenTelemetry, OTLP, Collector, Vector sidecar, Prometheus, profiling, or telemetry-pipeline decisions
-- SOC/SIEM egress of security events to a customer SOC server
-- deciding which signal answers which operational question
-- operational visibility reviews
+## Do not use for
 
-## When NOT to use
+- feature work with no observability, incident, audit, or SOC signal change
+- pure frontend/UI tasks unless the task includes RUM, tracing, error capture, or security-event evidence
+- SigNoz ClickHouse SQL authoring or docs-page selection; use `$alaa-signoz-clickhouse-docs`
 
-- feature work with no observability surface change
-- pure UI or frontend-only tasks
+## Operating rules
 
-## Quick start
+1. Read repo-local `AGENTS.md` and current service docs before changing behavior.
+2. For Ala backend, gateway, WA, entitlement, or future service standardization, pair with `$alaa-services-contract`
+   before implementation decisions.
+3. Read `references/00-topic-map.md`, then the smallest relevant section of `references/full-guide.md`.
+4. For current or version-sensitive claims, use `references/90-source-map.md` and prefer official primary docs plus repo
+   truth.
+5. For security-sensitive systems, load `references/91-sensitive-system-checklists.md` before approving design, alerts,
+   events, egress, or production readiness.
+6. When authoring or updating skills, prompts, or model-runtime instructions, load
+   `references/95-model-runtime-compatibility.md`.
 
-1. Read the repo-local `AGENTS.md`.
-2. Apply `$alaa-low-noise` when the task is non-trivial.
-3. Read `references/00-topic-map.md`.
-4. Load only the sections you need from `references/full-guide.md`.
-5. If the target is an Ala backend, gateway, WA, entitlement, or future Ala service, load `$alaa-services-contract` before making implementation decisions.
-6. Pair with the listed companion skills before making changes outside this skill's ownership.
+## Platform invariants
 
-## Ownership boundary
+- Every Alaa service emits standard OpenTelemetry traces, metrics, and logs over OTLP or an approved local pipeline.
+  Treat this as production readiness, not an optional enhancement.
+- Latency histograms used for SLO/debugging must preserve a path from aggregate latency to representative traces through
+  exemplars or an equivalent trace-linking mechanism.
+- Telemetry must be fail-open for product traffic. A broken backend, Collector, Vector sidecar, or SOC/SIEM destination
+  must not block the hot path.
+- Secrets, credentials, tokens, session values, raw PII, unrestricted payloads, and customer-private content do not
+  belong in logs, span attributes, metric labels, alert annotations, Sentry contexts, or SOC exports.
+- Metric labels stay low-cardinality and bounded. High-cardinality values belong in traces/logs and are linked through
+  `trace_id`, not metric labels.
+- Security/audit events must be structured, queryable, timestamped, and correlated to trace/request identity wherever
+  technically possible.
 
-- This skill owns the signal model, SOC evidence model, signal-quality rules, Sentry role, SigNoz role, Collector mental model, alert/runbook quality, and incident diagnostics.
-- `$alaa-services-contract` owns Ala-specific hard contracts: `X-Request-Id`, `traceparent`, `trace_id`, route families, `/api/health`, `/api/ready`, `/metrics`, middleware behavior, event/code names, metric names, trusted ingress, deploy topology, and current service boundaries.
-- If the two appear to conflict on an Ala service, use `$alaa-services-contract` for exact platform shape and this skill for the underlying observability reasoning.
-- `$alaa-signoz-clickhouse-docs` owns the SigNoz execution layer: SigNoz docs-page selection and writing/repairing ClickHouse dashboard queries over logs and traces. This skill owns the design and reasoning (signal model, exemplars, SOC evidence, cardinality budgets, Sentry role, Collector mental model); defer query authoring and SigNoz-page lookup to that skill.
+## Ownership and companion routing
+
+- `$alaa-services-contract` owns exact Alaa service surfaces: headers, middleware behavior, route families,
+  health/readiness endpoints, metric/event names, trusted ingress, deploy topology, and current service boundaries.
+- This skill owns why each signal exists and whether the signal model is safe, debuggable, cost-aware, and SOC-ready.
+- `$alaa-signoz-clickhouse-docs` owns SigNoz docs routing and ClickHouse SQL execution over logs, traces, and metrics.
+  Hand off query writing, panel SQL repair, missing-span anti-joins, and SigNoz table-schema questions.
+- `$alaa-security-review` should be paired when event semantics, policy decisions, customer data, authn/authz, abuse, or
+  incident response overlap with security controls.
 
 ## Severity rubric
 
-| Signal type | Use when                                                        |
-|-------------|-----------------------------------------------------------------|
-| log only    | the event is useful for forensics but not actionable on its own |
-| metric      | you need durable trend visibility or SLO math                   |
-| alert       | a human should investigate within working hours                 |
-| page        | the condition is urgent enough to interrupt an operator now     |
+| Signal type | Use when                                                                        |
+|-------------|---------------------------------------------------------------------------------|
+| log only    | Useful for forensics or debugging but not actionable alone                      |
+| metric      | Durable trend/SLO math or alerting on rate, duration, saturation, or errors     |
+| alert       | A human should investigate within the defined response window                   |
+| page        | Urgent enough to interrupt an operator immediately                              |
+| SOC event   | Security/audit evidence must be retained, routed, or shared with a customer SOC |
 
-## Companion routing
+## Output contract
 
-- $alaa-security-review
-  - Pair when the task also touches security event semantics and sensitive data controls.
-- $alaa-services-contract
-  - Pair for Ala services, gateway, WA, entitlement-platform, or future service standardization.
-- $alaa-octane-performance
-  - Pair when the task also touches long-lived worker observability concerns.
-- $alaa-signoz-clickhouse-docs
-  - Hand off when the task turns into writing or repairing an actual SigNoz ClickHouse query (a p99 latency panel, a metric-to-trace exemplar lookup, a service-map RED view) or picking the right SigNoz docs page. This skill owns the observability reasoning; that skill owns the SigNoz query execution and docs routing.
+For reviews or designs, return:
 
-## Reference navigation
+- decision or recommendation
+- affected services/pipelines
+- required signals and exact correlation fields
+- privacy/cardinality constraints
+- alert/runbook or SOC/SIEM impact
+- validation evidence or the smallest missing evidence
+- companion skill handoff, if query execution or code changes are outside this skill
 
-- Section map and fast routing:
-  - `references/00-topic-map.md`
-- Full preserved guidance, rules, examples, and checklists:
-  - `references/full-guide.md`
-- Official-first source map and freshness triggers:
-  - `references/90-source-map.md`
+## Stop rules
 
-## Maintenance rules
-
-- Keep this file routing-first and plain.
-- Put detailed rules into `references/full-guide.md` instead of growing this file.
-- Keep the topic map aligned with the actual headings in the full guide.
-- Re-check companion-skill routing when ownership boundaries change.
+Make progress from repo truth and safe assumptions. Ask only when the missing detail would materially change security
+posture, data exposure, production side effects, or schema compatibility. If evidence is missing, state the gap and give
+the safest bounded recommendation rather than inventing a metric, field, table, customer, or retention promise.

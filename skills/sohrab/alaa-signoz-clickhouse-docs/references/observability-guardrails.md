@@ -66,3 +66,9 @@ When debugging an Ala service:
 - For request debugging, make `trace_id` easy to filter in logs.
 - For dashboards, start with a small number of high-value dimensions.
 - For alerts, prefer stable metric signals over brittle free-text log patterns.
+
+## Sensitive-system additions
+
+For production or customer-sensitive systems, validate queries and telemetry against `validation-checklists.md` and pair with `$alaa-observability-soc` for privacy, cardinality, SOC/SIEM, Sentry, Collector, Vector, and alert severity decisions.
+
+Metric labels must stay bounded. Put high-cardinality investigative fields in logs or traces and connect them through `trace_id` or exemplars rather than labels.

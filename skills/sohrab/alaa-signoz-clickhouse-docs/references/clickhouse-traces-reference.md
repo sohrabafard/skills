@@ -272,3 +272,14 @@ Before finalizing a traces query, check these points:
 - indexed or pre-extracted columns used where possible
 - timeseries ordered by `ts ASC`
 - no old `resources_string[...]` access when a better field exists
+
+# 2026 production update
+
+Use this reference only for SigNoz Dashboard/Alert ClickHouse SQL over traces/spans. Traces Explorer uses Query Builder/search syntax unless the user explicitly requests raw SQL for a dashboard/alert.
+
+For sensitive systems:
+
+- Keep the `ts_bucket_start` and timestamp filters aligned with the panel window.
+- Prefer route templates, service names, operation names, status codes, and bounded attributes for grouping.
+- Do not group by raw URL, user ID, request ID, trace ID, span ID, email, phone, token, or payload-derived values except in a bounded forensic table with explicit approval.
+- Use `validation-checklists.md` before finalizing a query for a production dashboard or alert.
