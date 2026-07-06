@@ -141,6 +141,8 @@ If the user wants actual code changes in an application:
 - use this skill to choose the official SigNoz path and the right telemetry rules
 - then pair with the repo or language skill that will edit the code
 
+If the task raises an observability design question rather than a SigNoz query or docs lookup — why exemplars, cardinality budgets, which signal answers which question, latency-percentile SLOs, the Sentry role, SOC evidence, or the Collector mental model — defer to `$alaa-observability-soc`, which owns that reasoning. This skill owns SigNoz execution (docs-page selection and ClickHouse query writing/repair, including percentile panels and metric-to-trace exemplar lookups); that skill owns the design and policy.
+
 ## Subagent Strategy
 
 If multi-agent support is available and the task is broad, split it like this:

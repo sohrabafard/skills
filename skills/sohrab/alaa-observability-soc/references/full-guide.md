@@ -38,10 +38,10 @@ Prometheus-compatible metrics support health, SLOs, dashboards, and alerts.
 
 This skill owns signal decisions and operator/SOC quality rules.
 
-For Ala service repositories, pair with `$alaa-services-contract`.
+For Ala service repositories, pair with `/sohrab-skills:alaa-services-contract`.
 
 Precedence:
-- `$alaa-services-contract` owns exact Ala headers, response behavior, route contracts, metric names, event/code names, trusted-ingress behavior, deployment topology, and service-boundary rules.
+- `/sohrab-skills:alaa-services-contract` owns exact Ala headers, response behavior, route contracts, metric names, event/code names, trusted-ingress behavior, deployment topology, and service-boundary rules.
 - This skill owns why each signal exists, what each tool is for, how to avoid noisy or unsafe telemetry, and what evidence operators need.
 - If a target repo already has a deployed log schema, do not rename fields casually. Add compatible fields or a documented migration path.
 
@@ -173,14 +173,26 @@ Trace query rule:
 - For OTLP logs, populate native log-record trace context when the exporter supports it and also keep a stable `trace_id` log attribute or field if the backend query model benefits from it.
 - For structured JSON logs, include both `traceparent` when useful for propagation/debugging and `trace_id` for direct filtering.
 
-# OpenTelemetry alignment (mandatory when OTel is used)
+# OpenTelemetry alignment (mandatory for every Alaa service)
 
-If the service uses OpenTelemetry:
+Full, standard OpenTelemetry is a platform requirement, not an option. Every Alaa service emits all three signals - traces, metrics, and logs - over OTLP. A service that cannot emit standard OpenTelemetry is not production-ready. The older "only when OTel is used" reading is retired: OTel is always used.
+
+Required of every service:
+- Emit traces, metrics, and logs; do not ship a service with a missing signal.
 - Use W3C Trace Context propagation across HTTP, RPC, queue, and worker boundaries.
+- Carry stable resource identity on every signal: `service.name`, `service.version`, `deployment.environment.name`.
 - Prefer OpenTelemetry semantic conventions for HTTP, database, messaging, RPC, exceptions, logs, resources, and profiles.
 - Do not invent local attribute names when semantic conventions already define one.
-- Keep instrumentation fail-open unless the user explicitly requests fail-closed telemetry behavior.
+- Emit latency histograms that carry exemplars (see "Exemplars and metric-to-trace correlation"), so an aggregate percentile can be traced to a concrete request.
+- Keep instrumentation fail-open unless the user explicitly requests fail-closed telemetry behavior, so mandatory telemetry never becomes a mandatory outage.
 - Never put secrets or unmasked PII into OTel attributes.
+
+Definition of done (audit a service against this):
+- all three signals leave the service over OTLP;
+- `traceparent` is propagated across every HTTP/RPC/queue/worker hop;
+- `/metrics` is exposed and its latency histograms carry exemplars;
+- `trace_id` is queryable in logs without parsing `traceparent`;
+- resource attributes are stable and correct per service and per customer environment.
 
 # Collector architecture
 
@@ -196,11 +208,20 @@ Larger pattern when justified:
 Services -> Agent Collector -> Gateway Collector -> SigNoz or approved backend
 ```
 
+Alaa platform default (per-application Vector sidecar, agent tier):
+
+```text
+application -> local Vector sidecar (localhost, one per pod/replica) -> central OpenTelemetry Collector (gateway, scaled) -> SigNoz / SOC
+```
+
+The application emits OTLP only to a Vector running beside it and knows nothing about where the central Collector lives. See "Per-application Vector sidecar collection" for the full rationale and deployment shapes.
+
 Rules:
-- Start with a gateway Collector unless host-local collection or node-level collection is needed.
+- Start with a gateway Collector; use the per-application Vector sidecar as the agent tier so applications are decoupled from backend location and central back-pressure never reaches the request hot path.
 - Keep redaction, retries, batching, fan-out, and backend credentials in the Collector or deployment layer.
 - Use `memory_limiter` and `batch` processors in production Collector pipelines where appropriate.
-- Use exporter sending queues for network exporters.
+- Use exporter sending queues for network exporters, and disk buffering at the sidecar so a central-Collector outage is absorbed locally.
+- Run the central gateway Collector horizontally scaled behind a load balancer so it is never a single bottleneck (see "The central Collector must never become a bottleneck").
 - Monitor Collector self-telemetry, especially exporter queue size, send failures, dropped data, and memory pressure.
 - Validate Collector config with the Collector's validation command when a config changes.
 - Do not expose OTLP receivers or debug endpoints publicly by default.
@@ -222,6 +243,12 @@ Rules:
 - Do not duplicate full tracing, logs, metrics, and alert ownership across both tools without an explicit architecture decision.
 - When Sentry tracing is enabled, use conservative sample rates and make sure it does not conflict with the OTel/SigNoz trace strategy.
 - Sentry structured logs are beta in some SDKs; do not replace the platform log pipeline with Sentry logs unless the platform explicitly approves it.
+
+Can Sentry become "just an OTLP destination" behind the Collector? (dated: 2026-07; version-sensitive - recheck the source map)
+- Sentry now ingests OTLP for traces and logs, via the Collector's `otlphttp`/Sentry exporter. This is open beta and single-project by default; multi-project routing (per customer/service) needs the Collector routing connector.
+- OTLP does NOT carry errors to Sentry. Sentry's own docs state that only the Sentry SDK captures backend exceptions and links them to the trace. Error grouping, first-seen/regression, source maps/debug IDs, and release health also require the SDK.
+- Therefore do not delete the Sentry SDK to make Sentry a pure OTLP sink. Keep the split: OTel/Collector/SigNoz own traces/metrics/logs; the Sentry SDK owns exception grouping and developer workflow where its value is real (backend services with meaningful regressions, plus the frontend source maps/replay).
+- Reason the errors caveat matters: an unhandled exception is by definition unhandled. If it occurs inside an active span, the platform records a span exception event and a structured error log over OTLP, so SigNoz has evidence even with Sentry off. But a failure with no active span (boot, a worker crash, a panic outside a request) may never reach the Collector - which is exactly why a dedicated capture path (the SDK, or an explicit crash hook) still matters.
 
 # Cardinality budgets (mandatory)
 
@@ -347,9 +374,10 @@ Recommended signals:
 Rules:
 - Use counters for totals.
 - Use gauges for values that go up and down.
-- Use histograms for latency.
-- Avoid summaries for multi-instance service latency unless explicitly justified.
-- Prefer pull-based Prometheus-compatible endpoints for long-lived services.
+- Use histograms for latency, never averages - averages hide the tail. Define latency SLOs and alerts on percentiles (p95/p99); see "Latency percentiles".
+- Latency histograms must carry exemplars so a slow percentile bucket links to a concrete `trace_id`; see "Exemplars and metric-to-trace correlation". This is mandatory, not optional.
+- Avoid summaries for multi-instance service latency unless explicitly justified - summary quantiles cannot be aggregated across instances, histograms can.
+- Prefer pull-based Prometheus-compatible endpoints for long-lived services, exposed as OpenMetrics so exemplars survive the scrape.
 - Alerts must have thresholds, owners, and runbook links.
 
 # Trace guidance
@@ -569,11 +597,118 @@ For reviews, lead with findings and classify them by severity.
 - Logging secrets, full tokens, or raw PII
 - Debug spam in hot paths
 - High-cardinality metric labels
+- Putting `trace_id` or `span_id` on a metric as a label instead of as an exemplar
+- Latency histograms without exemplars, so a red percentile cannot be traced to a request
+- Reasoning about latency with averages instead of percentiles
 - Alerts without thresholds, owners, or runbooks
 - Dashboards without alert or incident use
 - Sentry as a replacement for platform metrics and traces
 - SigNoz as a replacement for exception grouping and release debugging
+- Deleting the Sentry SDK and expecting OTLP-to-Sentry to carry errors (it does not)
 - Direct app-to-vendor fan-out when the Collector should own routing
+- Application code that knows the central Collector address instead of emitting to its local sidecar
+- Heavy trace processing (tail-sampling) at the per-app sidecar instead of the central Collector
+- A single unscaled central Collector on the path of a high-concurrency site
+- SOC egress wired as an inline dependency instead of a fan-out branch
 - Hard-coded backend secrets in application code
 - Parsing `traceparent` in every incident query because `trace_id` was not emitted separately
 - Enabling high Sentry trace/profile sample rates in production without cost and overhead validation
+
+# Latency percentiles
+
+Reason about latency in percentiles, not averages. A percentile latency answers "what latency were the slowest X% of requests at or below?" p99 = 500 ms means 99% of requests finished within 500 ms and the slowest 1% were worse. Averages hide this: a service can look healthy on average while its p99 times out for one request in a hundred - which at high traffic is thousands of users. Define latency SLOs and alerts on percentiles (usually p95 and p99), and use histograms as the instrument because percentiles can be computed from them at query time and histograms are what carry exemplars.
+
+| Percentile | Reading | What it tells you | Typical use |
+|---|---|---|---|
+| p50 (median) | half of requests are faster than this | the typical experience | baseline health, capacity trend |
+| p90 | 90% faster than this | start of the slow tail | early warning on degradation |
+| p95 | 95% faster than this | common SLO target | user-facing latency SLOs and alerts |
+| p99 | 99% faster; slowest 1% worse | the tail your unlucky users feel | strict SLOs, bottleneck hunting |
+| p99.9 | 99.9% faster than this | rare but real worst case | high-traffic services where 0.1% is still many requests |
+
+Rules:
+- Do not aggregate averages or summary quantiles across instances; aggregate histograms and compute the percentile at query time.
+- When a percentile alert fires, do not stop at the number - follow the histogram bucket's exemplar to the trace (next section).
+
+# Exemplars and metric-to-trace correlation
+
+This is the mechanism that answers the platform's core operational question: "the p99 latency panel is red - which exact request caused it, and where did the time go?" Metrics are pulled by Prometheus on their own schedule and traces are pushed over OTLP, so they look disconnected. An exemplar is what connects them.
+
+What an exemplar is: a small sample attached to a metric point - most usefully to one bucket of a latency histogram - that carries the `trace_id` (and often `span_id`) of a representative request that landed in that bucket. So when a bucket goes slow, its exemplar hands you a concrete `trace_id` you open directly in SigNoz. Crucially, the `trace_id` rides *inside* the metric as an exemplar, not as a metric label. This is the only cardinality-safe bridge: a `trace_id` label would create a new time series per request and destroy the metrics system, which is why the cardinality rules forbid it. Exemplars give you the same navigation without the cardinality cost.
+
+Enabling requirements:
+- Instrument latency as histograms and record exemplars on them.
+- Expose metrics as OpenMetrics with exemplar storage enabled on the scrape path, or emit OTLP metrics that carry exemplars on the push path.
+- This is mandatory for every service (see the OpenTelemetry alignment definition of done).
+
+The complementary path (SigNoz span-metrics): the Collector's `spanmetrics` connector derives rate/error/duration (RED) metrics directly from traces, so those metrics and the traces share the same service and operation identity. This gives a service-map RED view you can pivot from a metric straight into the underlying traces, without hand-linking anything.
+
+Bottleneck workflow (teach this explicitly):
+1. Open the latency panel and find the slow percentile bucket (p95/p99).
+2. Follow that bucket's exemplar `trace_id`.
+3. Open the trace in SigNoz.
+4. Read the span tree - the slow span (DB, Redis, provider, downstream service) is the bottleneck.
+5. Fix at the source, then confirm the percentile recovers.
+
+Rule of thumb: traces are the primary bottleneck tool; exemplars and span-metrics are how you get from an aggregate chart down to the one trace. Keep high-cardinality identifiers in traces and logs, keep metric labels bounded, and link the two through exemplars. To actually write the SigNoz ClickHouse query for a percentile panel or the metric-to-trace lookup, hand off to `$alaa-signoz-clickhouse-docs`.
+
+# Per-application Vector sidecar collection
+
+Platform default topology: every application emits its OTLP data only to a lightweight Vector running beside it (one per pod/replica, reached over localhost), and the application knows nothing about where the central OpenTelemetry Collector lives or how delivery happens. The local Vector owns the forward to the central Collector.
+
+```text
+application -> local Vector sidecar (localhost) -> central OpenTelemetry Collector (gateway, scaled) -> SigNoz / SOC
+```
+
+Why this is the right design:
+- It fully decouples the application from backend location and availability; the app's only responsibility is "fire OTLP at localhost and forget."
+- Each replica has its own buffer, so a slow or restarting central Collector cannot back-pressure the request hot path.
+- It scales naturally: every new pod brings its own sidecar, with no shared contention between pods.
+- It gives a natural per-application place to pre-filter or shape data, including SOC pre-filtering (see "SOC / SIEM egress").
+- It is the concrete realization of the Agent Collector to Gateway Collector two-tier pattern, with Vector as the agent tier.
+
+Deployment shapes:
+- Kubernetes / OpenShift: a sidecar container in the same pod, sharing the network namespace; the app targets `localhost:4318`.
+- Docker Swarm / Compose: a co-located Vector service on the shared network, or a baked binary - but a baked binary means two processes in one container, which requires a proper process supervisor and carries the documented trade-offs of that pattern.
+
+Rules:
+- The sidecar buffers to disk and forwards with retry so it absorbs central-Collector outages.
+- Heavy trace processing such as tail-sampling belongs at the central Collector, not the sidecar; Vector's trace handling is forward/shape-oriented.
+- The application never carries the central Collector address.
+
+# The central Collector must never become a bottleneck
+
+Because every service and every sidecar forwards into the central Collector, treat "the Collector is not a single point of congestion" as a first-class design rule. Defend it on four layers:
+
+1. Application export is always asynchronous, batched, fail-open, and bounded by short timeouts - a slow Collector must never slow a request.
+2. The per-application Vector sidecar buffers locally, so the app never feels central back-pressure.
+3. The central Collector runs horizontally scaled behind a load balancer with `memory_limiter`, `batch`, sending-queue, and retry processors, plus sampling to bound trace volume.
+4. The Collector's own self-telemetry (exporter queue size, send failures, dropped spans, memory pressure) is monitored and alerted.
+
+The Collector is a deployed, sized runtime component included in the per-customer deploy artifacts, not a build-time step. Review its capacity as part of onboarding a high-traffic customer.
+
+# SOC / SIEM egress
+
+Some customers run a SOC/SIEM server and want specific rule-matched security events forwarded to it. Make this a standard pipeline branch, not a per-customer improvisation. (Note: a Vector that converts syslog to OTLP and ships it to the Collector is a telemetry-ingest adapter, not a SOC sink - SOC egress must be an explicit, dedicated branch.)
+
+How it works:
+- SOC forwarding is a filtered fan-out branch (a Vector sink or a Collector exporter) that selects only the rule-matched security events from the security log catalog and forwards them.
+- Common SOC ingestion formats/protocols: syslog RFC5424, CEF, LEEF over TCP/TLS, OTLP, or Kafka/HTTP.
+- From the customer, request only three things: the SOC endpoint, the required format/protocol, and the rule/event set. Their "rules" become filter conditions in the pipeline config.
+- SOC egress must never block or degrade the primary SigNoz path; it is a fan-out branch, not an inline dependency.
+
+# Collector selection (OTel Collector vs Vector vs Grafana Alloy)
+
+| Tier | Tool | Why |
+|---|---|---|
+| Central gateway | OpenTelemetry Collector (contrib) | CNCF reference; most flexible; hundreds of receivers/processors/exporters; best trace processing; vendor-neutral |
+| Edge sidecar, log-shaping, SOC egress | Vector | Rust, fast, low memory, strong transforms (VRL); already used in gateway and wa |
+| - | Grafana Alloy | Only for a Grafana-native stack (Prometheus remote-write, Loki, Pyroscope); not our fit since the platform standardizes on SigNoz |
+
+Default: central = OpenTelemetry Collector, edge = Vector, Alloy not used unless a customer mandates Grafana. This choice is version-sensitive; recheck the source map when a customer has an unusual constraint.
+
+# Working with the SigNoz execution skill
+
+This skill owns the design and reasoning: the signal model, exemplars, latency percentiles, SOC evidence, cardinality budgets, the Sentry role, and the Collector mental model. `$alaa-signoz-clickhouse-docs` owns execution against SigNoz: picking the right SigNoz docs page and writing or repairing the ClickHouse queries for dashboard panels (the p99 latency panel, the metric-to-trace exemplar lookup, the service-map RED view) and the missing-spans anti-join.
+
+Hand off to `$alaa-signoz-clickhouse-docs` when the task becomes writing an actual SigNoz query or choosing a SigNoz docs page. Expect that skill to defer back here when a query task raises a design question (why exemplars, cardinality budgets, signal choice, SOC evidence). Keep the shared vocabulary aligned: `trace_id`/`span_id`, exemplars, and the percentile fields are described the same way in both skills.

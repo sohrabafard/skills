@@ -14,12 +14,17 @@ Use this skill when the task needs the architectural or policy guidance owned by
 
 Keep this top-level file small. Load the references for the full rules, examples, and checklists.
 
+Platform principle: full, standard OpenTelemetry (traces, metrics, and logs) is mandatory for every Alaa service, and every service's latency histograms must carry exemplars so metrics link to traces. Treat this as a production-readiness requirement, not an optional enhancement. See `references/full-guide.md` sections "OpenTelemetry alignment (mandatory for every Alaa service)", "Exemplars and metric-to-trace correlation", and "Latency percentiles".
+
 ## When to use
 
 - logs, traces, metrics, or alerting work
 - correlation IDs or incident evidence requirements
-- Sentry integration or cleanup
-- SigNoz, OpenTelemetry, OTLP, Collector, Prometheus, profiling, or telemetry-pipeline decisions
+- exemplars and metric-to-trace correlation; finding a bottleneck from a latency percentile
+- percentile latency (p50/p90/p95/p99/p99.9) SLOs and alerts
+- Sentry integration, cleanup, or "can Sentry be just an OTLP destination" decisions
+- SigNoz, OpenTelemetry, OTLP, Collector, Vector sidecar, Prometheus, profiling, or telemetry-pipeline decisions
+- SOC/SIEM egress of security events to a customer SOC server
 - deciding which signal answers which operational question
 - operational visibility reviews
 
@@ -42,6 +47,7 @@ Keep this top-level file small. Load the references for the full rules, examples
 - This skill owns the signal model, SOC evidence model, signal-quality rules, Sentry role, SigNoz role, Collector mental model, alert/runbook quality, and incident diagnostics.
 - `$alaa-services-contract` owns Ala-specific hard contracts: `X-Request-Id`, `traceparent`, `trace_id`, route families, `/api/health`, `/api/ready`, `/metrics`, middleware behavior, event/code names, metric names, trusted ingress, deploy topology, and current service boundaries.
 - If the two appear to conflict on an Ala service, use `$alaa-services-contract` for exact platform shape and this skill for the underlying observability reasoning.
+- `$alaa-signoz-clickhouse-docs` owns the SigNoz execution layer: SigNoz docs-page selection and writing/repairing ClickHouse dashboard queries over logs and traces. This skill owns the design and reasoning (signal model, exemplars, SOC evidence, cardinality budgets, Sentry role, Collector mental model); defer query authoring and SigNoz-page lookup to that skill.
 
 ## Severity rubric
 
@@ -60,6 +66,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair for Ala services, gateway, WA, entitlement-platform, or future service standardization.
 - $alaa-octane-performance
   - Pair when the task also touches long-lived worker observability concerns.
+- $alaa-signoz-clickhouse-docs
+  - Hand off when the task turns into writing or repairing an actual SigNoz ClickHouse query (a p99 latency panel, a metric-to-trace exemplar lookup, a service-map RED view) or picking the right SigNoz docs page. This skill owns the observability reasoning; that skill owns the SigNoz query execution and docs routing.
 
 ## Reference navigation
 

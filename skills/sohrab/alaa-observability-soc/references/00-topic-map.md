@@ -11,7 +11,7 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `# Signal decision matrix`
 - `# Platform tool roles`
 - `# OpenTelemetry and OTLP contract`
-- `# OpenTelemetry alignment (mandatory when OTel is used)`
+- `# OpenTelemetry alignment (mandatory for every Alaa service)`
 - `# Collector architecture`
 - `# SigNoz and Sentry role split`
 - `# Cardinality budgets (mandatory)`
@@ -39,6 +39,13 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `# Laravel 13 observability audit points`
 - `# Output contract`
 - `# Anti-patterns`
+- `# Latency percentiles`
+- `# Exemplars and metric-to-trace correlation`
+- `# Per-application Vector sidecar collection`
+- `# The central Collector must never become a bottleneck`
+- `# SOC / SIEM egress`
+- `# Collector selection (OTel Collector vs Vector vs Grafana Alloy)`
+- `# Working with the SigNoz execution skill`
 - `references/90-source-map.md`
 
 ## Working rule
