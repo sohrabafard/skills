@@ -105,6 +105,20 @@ def subtree_exists(prefix: str) -> bool:
     return (ROOT / prefix).exists()
 
 
+def snapshot_skip_reason(entry: dict[str, object]) -> str:
+    source_path_value = entry.get("source_path")
+    pinned_commit_value = entry.get("pinned_commit")
+    source_path = str(source_path_value) if source_path_value else ""
+    pinned_commit = str(pinned_commit_value) if pinned_commit_value else ""
+    if source_path and pinned_commit:
+        return f"source_path snapshot ({source_path}) pinned at {pinned_commit[:12]}"
+    if source_path:
+        return f"source_path snapshot ({source_path})"
+    if pinned_commit:
+        return f"pinned snapshot at {pinned_commit[:12]}"
+    return ""
+
+
 def subtree_env() -> dict[str, str]:
     env = os.environ.copy()
     env[SYNC_ENV_VAR] = "1"
@@ -130,13 +144,18 @@ def sync_entry(entry: dict[str, object]) -> bool:
     prefix = str(entry["prefix"])
     remote = str(entry["remote"])
     branch = str(entry["branch"])
-    source_path = str(entry.get("source_path", ""))
 
     ensure_remote(entry)
-    if source_path:
+    skip_reason = snapshot_skip_reason(entry)
+    if skip_reason:
+        if not subtree_exists(prefix):
+            raise SystemExit(
+                f"[vendor-subtrees] cannot refresh {name}: {skip_reason} "
+                f"is missing from {prefix}; restore it manually"
+            )
         print(
-            f"[vendor-subtrees] skipping {name}: source_path snapshots "
-            "are refreshed manually"
+            f"[vendor-subtrees] skipping {name}: {skip_reason}; "
+            "refresh it manually"
         )
         return False
 

@@ -147,7 +147,7 @@ node .\vendor\openfga-agent-skills\scripts\build-agents-md.js
 
 ## vendored skill packs
 
-This repository tracks upstream skill packs under `vendor/` with `git subtree`.
+This repository tracks upstream skill packs under `vendor/`. Metadata-backed entries use `git subtree`; pinned or source-path snapshots are committed vendor directories and are refreshed manually.
 
 <!-- vendor-subtrees:install-list:start -->
 Current vendored upstreams:
@@ -192,8 +192,9 @@ python scripts\vendor_subtrees.py refresh-docs
 ```
 
 Notes:
-- `python scripts\vendor_subtrees.py sync` fetches every configured vendor remote and runs `git subtree pull --squash` for existing prefixes
-- if a configured prefix is missing locally, the script bootstraps it with `git subtree add --squash`
+- `python scripts\vendor_subtrees.py sync` fetches each syncable vendor remote and runs `git subtree pull --squash` for existing subtree-backed prefixes
+- if a syncable configured prefix is missing locally, the script bootstraps it with `git subtree add --squash`
+- pinned or source-path snapshots are reported and skipped because they do not have subtree metadata to pull from
 - `python scripts\vendor_subtrees.py sync` requires a clean worktree; hook-driven sync skips automatically when the worktree is dirty
 - when `openfga-agent-skills` changes, the sync script also runs `node vendor/openfga-agent-skills/scripts/build-agents-md.js`
 

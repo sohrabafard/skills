@@ -40,7 +40,7 @@ After installing a skill, restart Codex to pick up new skills.
 
 ## Vendored Upstream Skills
 
-This repository also commits third-party skill packs under [`vendor/`](vendor/) using `git subtree`.
+This repository also commits third-party skill packs under [`vendor/`](vendor/). Metadata-backed entries use `git subtree`; pinned or source-path snapshots are committed vendor directories and are refreshed manually.
 
 <!-- vendor-subtrees:readme-list:start -->
 Current vendored upstreams:
@@ -59,7 +59,7 @@ The only clone-local setup is Git configuration. To make plain `git pull` also r
 python scripts\vendor_subtrees.py install-hooks
 ```
 
-Manual sync remains available:
+Manual sync remains available. It updates subtree-backed vendors and reports pinned or source-path snapshots as manual refreshes:
 
 ```powershell
 python scripts\vendor_subtrees.py sync

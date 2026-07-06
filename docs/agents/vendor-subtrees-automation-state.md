@@ -1,7 +1,7 @@
 # Vendor Subtrees Automation State
 
 - Task name: vendor subtrees automation
-- Current status: implemented, validated, active vendor inventory updated
+- Current status: implemented, validated, active vendor inventory updated, pinned snapshot sync guard fixed
 - Objective: make vendored subtree updates reproducible and mostly automatic after repository pulls, add `cc-skills-golang` as a vendored upstream, provide a headless vendor-add flow, and keep vendored skill exposure selective as vendor count grows.
 - Current repository understanding:
   - vendored content already lives under `vendor/` and is committed to the main repository
@@ -29,6 +29,7 @@
   - registered `claude-plugins-official`, `knowledge-work-plugins`, and `basic-memory` in `vendor/subtrees.json`
   - added `vendor/basic-memory` from `https://github.com/basicmachines-co/basic-memory/tree/main/skills` as a non-installed vendor snapshot
   - guarded `scripts/vendor_subtrees.py sync` so source-path snapshots are not treated as whole-repo subtree pulls
+  - guarded `scripts/vendor_subtrees.py sync` so pinned snapshots are not treated as subtree pulls
 - Remaining work:
   - user review of command naming, generated docs wording, and whether more add-command overrides are needed
 - Risks or blockers:
@@ -46,6 +47,9 @@
   - `python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting --dry-run` succeeded
   - `python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run` succeeded
   - `python scripts\vendor_subtrees.py list` reports `claude-plugins-official`, `knowledge-work-plugins`, and `basic-memory`
+  - `python -m py_compile scripts\vendor_subtrees.py` succeeded after the pinned snapshot guard was added
+  - `python scripts\vendor_subtrees.py list` succeeded after the pinned snapshot guard was added
+  - temporary clean-clone `python scripts\vendor_subtrees.py sync` succeeded after the pinned snapshot guard was added; `openfga-agent-skills` and `cc-skills-golang` were up to date, while `claude-plugins-official`, `knowledge-work-plugins`, and `basic-memory` were skipped as manual-refresh snapshots
   - focused `git diff --cached --check` for authored docs/tooling, `vendor/subtrees.json`, and `vendor/basic-memory` passed
   - full `git diff --cached --check` reports upstream whitespace issues inside the newly vendored third-party snapshots; these were left unchanged
   - checked `~/.codex/skills` for `basic-memory`, `memory-capture`, `claude-plugins-official`, and `knowledge-work-plugins`; none exist
@@ -58,3 +62,4 @@
   - 2026-04-04 15:40 +03:30 — finished the headless `add` flow, marker-backed docs refresh, and dirty-worktree guards.
   - 2026-04-04 15:xx +03:30 — added vendor-aware selective skill linking so future vendor growth does not force all vendored skills into Codex routing.
   - 2026-07-03 04:13 +03:30 — converted `claude-plugins-official` and `knowledge-work-plugins` from Git links to ordinary vendored files, added the Basic Memory `skills` snapshot, refreshed generated vendor docs, and kept all three uninstalled.
+  - 2026-07-06 23:52 +03:30 — fixed `scripts/vendor_subtrees.py sync` to skip pinned vendor snapshots instead of attempting `git subtree pull` on directories with no subtree metadata.
