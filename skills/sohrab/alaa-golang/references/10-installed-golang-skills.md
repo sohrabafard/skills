@@ -11,7 +11,11 @@ When loading a public Go skill, route to it explicitly in this form:
 Do not mention vendor paths in normal user-facing answers.
 
 This file should have one `###` heading per `vendor/cc-skills-golang/skills/*/SKILL.md`. Last audited against
-`16cac906147f73fd1c31c5d155697da60e685af9`: `vendor=43 routed=43 missing=0 extra=0`.
+vendor subtree `112a945f0d7489b848705ab6f4fbf8c30c4ff053` (upstream `4881c01d`): `vendor=46 routed=46 missing=0 extra=0`.
+
+The three additions since the previous audit are the code-intelligence and refactoring tier: `golang-gopls`,
+`golang-refactoring`, and `golang-pkg-go-dev`. They change how a strong Go agent reads and reshapes a codebase, so
+route to them deliberately, not only when a user names them.
 
 For broad, ambiguous, or cross-cutting Go work, load `golang-how-to` first and then load the primary plus secondary
 skills it selects. Keep Alaa platform, trusted-gateway, repository, cache, and TDD rules from this skill in force.
@@ -103,7 +107,14 @@ Use it when performance or mutation behavior depends on slices, maps, builders, 
 
 ### golang-dependency-management ( `$golang-dependency-management` )
 
-Use it for adding, auditing, upgrading, pinning, tidying, visualizing, or securing dependencies.
+Use it for adding, auditing, upgrading, pinning, tidying, visualizing, or securing dependencies (editing `go.mod`).
+
+### golang-pkg-go-dev ( `$golang-pkg-go-dev` )
+
+Use it to query pkg.go.dev for a known import path with the `godig` CLI/MCP: available versions, exported symbols and
+signatures, runnable examples, `imported-by`, licenses, and known CVEs — including packages not yet in `go.mod`. It is
+the read-only ecosystem-lookup layer. It does not edit `go.mod` (use `golang-dependency-management`) and cannot see your
+local, resolved build or call sites (use `golang-gopls`).
 
 ### golang-popular-libraries ( `$golang-popular-libraries` )
 
@@ -134,6 +145,29 @@ Use it when the repo imports `github.com/spf13/viper`, uses layered config, env 
 ### golang-swagger ( `$golang-swagger` )
 
 Use it for Swagger/OpenAPI docs with `swaggo/swag`, annotations, generated docs, Swagger UI routes, and framework integrations including chi and Fiber.
+
+## Code intelligence, navigation, and safe refactoring
+
+Prefer these over grep-and-hand-edit whenever a question is about the *resolved build* (types, call graphs, interface
+satisfaction) or when reshaping existing code. `grep` finds text; these find meaning.
+
+### golang-gopls ( `$golang-gopls` )
+
+Use it for semantic code intelligence via `gopls` (the official Go language server): go-to-definition, find references,
+call/implementation hierarchy, workspace symbol search, package API discovery, post-edit diagnostics, safe rename, and
+`extract`/`inline`/`fill`/`rewrite` code actions. Reach it through gopls's own MCP server (`go_*` tools, preferred), the
+native `LSP` tool, or the `gopls` CLI. Load it before any navigation-heavy read or any rename/extract/inline. It reasons
+only about your locally resolved build (`go.sum`, including `replace` forks); for the published ecosystem use
+`golang-pkg-go-dev`.
+
+### golang-refactoring ( `$golang-refactoring` )
+
+Use it for the safe, at-scale *process* of restructuring existing Go: a coverage-adaptive safety net, behavior-preserving
+tool-driven transforms (gopls Rename/Inline/Extract, `gofmt -r`, `eg`, `gopatch`, `go/analysis` fixers), the Fowler
+catalog mapped to Go, breaking import cycles, moving types across packages with type aliases, and a human-in-the-loop
+flow of small stacked PRs. It owns *how* to change code safely; the *target shape* stays owned by `golang-naming`,
+`golang-project-layout`, `golang-code-style`, `golang-design-patterns`, and `golang-modernize` — load it alongside
+whichever of those defines the destination. Never mix a structural change and a behavioral change in one commit.
 
 ## Quality, operations, and delivery
 

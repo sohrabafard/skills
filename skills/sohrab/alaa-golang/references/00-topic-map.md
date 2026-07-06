@@ -25,8 +25,20 @@ Use this file after `alaa-golang` triggers. Read only the smallest reference tha
 
 ## If the task is about clean code or design patterns
 
-- Read `62-clean-code-and-patterns.md`.
-- Route generic Go style to `golang-code-style` ( `$golang-code-style` ) and local production rules to this reference.
+- Load `alaa-golang-clean-code-principles` ( `$alaa-golang-clean-code-principles` ) first for any `alaa-go-chi` service — it owns the mandatory P1–P13 platform discipline.
+- Read `62-clean-code-and-patterns.md` for the generic Go clean-code and pattern layer beneath it.
+- Route generic Go style to `golang-code-style` ( `$golang-code-style` ) and the pattern catalog to `golang-design-patterns` ( `$golang-design-patterns` ).
+
+## If the task is about reading, navigating, or refactoring existing code
+
+- Load `golang-gopls` ( `$golang-gopls` ) for semantic navigation and diagnostics (`go_search`, `go_file_context`, `go_symbol_references`, safe rename) instead of grep-and-guess.
+- Load `golang-refactoring` ( `$golang-refactoring` ) for the safe, staged process of restructuring at scale, together with the target-shape skill and `golang-gopls` as the actuator.
+- Read `11-orchestration-and-overlap-guide.md` for the gopls-vs-godig-vs-govulncheck boundary and the refactoring-vs-target-shape split.
+
+## If the task is about the latest Go language and toolchain
+
+- Read `70-go-1.26-and-modern-language.md` for the Go 1.26 baseline, the features to adopt by default, and the adoption rules.
+- Route the mechanical rewrite to `golang-modernize` ( `$golang-modernize` ) and confirm live release facts from `SOURCES.md`.
 
 ## If the task changes behavior
 
@@ -37,6 +49,7 @@ Use this file after `alaa-golang` triggers. Read only the smallest reference tha
 
 - Read `40-production-ready-package-catalog.md`.
 - Use `golang-popular-libraries` ( `$golang-popular-libraries` ) for broad ecosystem discovery.
+- Use `golang-pkg-go-dev` ( `$golang-pkg-go-dev` ) to check a specific path's versions, symbols, importers, licenses, or CVEs before adopting it.
 - Use the local package catalog when the choice must fit this stack.
 - Read `30-enterprise-shortlist.md` only when stdlib, public skills, and the package catalog still leave a gap.
 

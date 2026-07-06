@@ -88,6 +88,25 @@ Route to DI skills only when the repo already uses them or graph complexity just
 - `golang-uber-fx` ( `$golang-uber-fx` )
 - `golang-samber-do` ( `$golang-samber-do` )
 
+## Production backend patterns index
+
+A production-grade Alaa Go service composes patterns owned across this pack. Do not re-derive them here — route to the
+owner and keep the boundaries above. This index is what makes the service survive real traffic.
+
+| Pattern | Where it is owned |
+| --- | --- |
+| Transactional outbox; state + outbox + audit in one transaction; facts leave via a relay | `$alaa-golang-clean-code-principles` P6 · `$alaa-async-messaging` |
+| Idempotency keys / receipts; run-twice proof | `$alaa-golang-clean-code-principles` P7 · `$alaa-data-layer` |
+| Two-lane DB access (pooled runtime DSN + direct migration/admin DSN); pgBouncer transaction pooling | `$alaa-data-layer` · `$alaa-golang-clean-code-principles` P10 |
+| UUIDv7 public ids; snake_case JSON wire tags | `$alaa-golang-clean-code-principles` P8 |
+| Keyset (cursor) pagination; locking; tenant-scoped access | `$alaa-data-layer` · `$golang-database` |
+| `FOR UPDATE SKIP LOCKED` job queues; worker pools; backpressure | `$golang-concurrency` · `$alaa-async-messaging` |
+| RabbitMQ consumers: ack-after-commit, publisher confirms, DLQ, reconnect with backoff + jitter | `$alaa-async-messaging` · `$alaa-golang-clean-code-principles` P6/P9 |
+| Rate limiters, circuit breakers, retry/timeout wrappers | `$golang-design-patterns` · `$golang-concurrency` |
+| Trusted-gateway identity, permission bitmap, TOTP step-up, `X-Access` projection | `$alaa-trust-gateway-auth` · `$alaa-golang-clean-code-principles` P3 |
+| Health/readiness with required/degraded checks; response envelopes; error codes | `$alaa-services-contract` · `$alaa-golang-clean-code-principles` P2/P4 |
+| OTel traceparent across HTTP + AMQP; Prometheus low-cardinality; slog JSON; SigNoz; Sentry for panics only | `$alaa-observability-soc` · `$golang-observability` · `$alaa-golang-clean-code-principles` P11 |
+
 ## Completion check
 
 Before finishing architecture work, confirm:

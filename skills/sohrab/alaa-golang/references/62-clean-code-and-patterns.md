@@ -1,6 +1,14 @@
 # Clean Code and Go Patterns
 
-Use this file when writing or reviewing Go code in this pack.
+Use this file for the generic Go clean-code and pattern layer — the rules that hold in any Go service.
+
+**Platform discipline lives in a dedicated skill.** For any Go code on an `alaa-go-chi` service, the mandatory
+clean-code baseline is `$alaa-golang-clean-code-principles` — its thirteen principles (P1–P13) with a pre-commit
+checklist own the kit-era rules: kit-first reuse, declared route posture, TrustCtx over raw headers, typed errkit
+errors mapped once, ports-in/adapters-out, one-transaction-plus-outbox, proven idempotency, explicit JSON tags and
+UUIDv7 ids, owned goroutines, config-at-boot, bounded observability, and contracts-never-reach-ins. Load it *before*
+writing or reviewing such code; treat this file as the generic Go layer beneath it, and route line-level style to
+`golang-code-style`, naming to `golang-naming`, and the pattern catalog to `golang-design-patterns`.
 
 ## Core rules
 

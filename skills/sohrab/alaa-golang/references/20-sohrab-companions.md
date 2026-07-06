@@ -2,11 +2,32 @@
 
 Use this file when the Go task crosses platform, workflow, contract, or trust boundaries that are not owned by generic Go skills.
 
+## Clean-code discipline (load first, with the vendor Go skills)
+
+### alaa-golang-clean-code-principles ( `$alaa-golang-clean-code-principles` )
+
+Load it **before writing, reviewing, or refactoring any Go code** on an `alaa-go-chi` service (news, notification v2,
+entitlement-platform after adoption, and every future Go service), and whenever a task touches the canonical error
+envelope, TrustCtx / trusted headers, route families, outbox or transaction boundaries, idempotency, JSON wire tags,
+UUIDv7 public ids, goroutine lifecycles, config or env loading, metric and log vocabulary, or cross-service contracts.
+It is the mandatory kit-era discipline layer: thirteen named principles (P1–P13) with wrong/right examples and a
+pre-commit checklist. `alaa-golang` teaches you to write good Go; `alaa-golang-clean-code-principles` makes that Go
+belong on this platform. The two are reciprocal — this router owns Go depth and skill selection; the principles skill
+owns platform conformance. When guidance appears to conflict, platform contracts win and a real conflict is a drift to
+record, not to resolve silently.
+
 ## Workflow and context management
 
 ### alaa-workflow ( `$alaa-workflow` )
 
 Use it when the Go task is long, multi-phase, risky, or spread across many files and needs durable plan and execution state.
+
+### alaa-prompting-guide ( `$alaa-prompting-guide` )
+
+Use it when you orchestrate the Go work through subagents, `/goal`, `/loop`, or a Workflow — it owns model selection,
+`$` vs `/` trigger syntax, and how to brief, bound, and delegate to subagents. Large Go audits, security sweeps,
+codebase-wide modernization, and staged refactors fan out well to parallel subagents (each a non-overlapping scope);
+read this skill before writing those delegation prompts so each lane gets the same constraints.
 
 ### alaa-low-noise ( `$alaa-low-noise` )
 

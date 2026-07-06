@@ -12,9 +12,29 @@ Re-check official or primary sources when the user asks for latest/current behav
 
 Use for current stable Go version, supported releases, release dates, and security notes.
 
+### https://tip.golang.org/doc/go1.26
+
+Use for the Go 1.26 release notes: language, toolchain, runtime, compiler, standard-library, and security changes. This
+is the canonical source behind `70-go-1.26-and-modern-language.md`; re-read it when a task depends on a specific 1.26
+feature or a `1.26.x` patch. The stable mirror is <https://go.dev/doc/go1.26> once the release ships.
+
+### https://go.dev/ref/spec
+
+Use for the current Go language specification when a syntax, generics, or type-system detail must be exact.
+
 ### https://go.dev/doc/modules/layout
 
 Use for official module and package layout guidance.
+
+### https://pkg.go.dev/golang.org/x/tools/gopls
+
+Use for `gopls` capabilities, MCP tools, code actions, and settings behind the `golang-gopls` skill. Prefer semantic
+navigation over grep for questions about the resolved build.
+
+### https://pkg.go.dev
+
+Use as the package index queried by `godig` (the `golang-pkg-go-dev` skill): versions, symbols, examples, importers,
+licenses, and known CVEs for a published import path.
 
 ### https://pkg.go.dev/testing
 

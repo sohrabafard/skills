@@ -40,6 +40,10 @@ cache-aside, TDD, observability, security, and production readiness.
 | Write tests | `golang-testing` | `golang-stretchr-testify` only when the repo uses Testify | `63-tdd-and-testing-discipline.md` |
 | Use Samber helpers | matching `golang-samber-*` skill | adjacent correctness, performance, or error skill | Keep dependency use explicit and repo-conventional |
 | Select DI approach | `golang-dependency-injection` | `golang-google-wire`, `golang-uber-dig`, `golang-uber-fx`, or `golang-samber-do` only when chosen or already present | `60-service-architecture-patterns.md` |
+| Navigate or understand unfamiliar code | `golang-gopls` | `golang-project-layout` for module shape | read the file, then `go_search` / `go_file_context` / `go_package_api` — semantic, not grep |
+| Refactor or restructure existing code | `golang-refactoring` | `golang-gopls` plus the target-shape skill (`golang-naming`, `golang-project-layout`, `golang-code-style`, `golang-design-patterns`, or `golang-modernize`) | `62-clean-code-and-patterns.md`, `63-tdd-and-testing-discipline.md`, and `$alaa-golang-clean-code-principles` for kit-era services |
+| Look up a published package (versions, symbols, CVEs, importers, licenses) | `golang-pkg-go-dev` | `golang-dependency-management` to apply the change, `golang-security` for whole-tree scan | `40-production-ready-package-catalog.md`, `SOURCES.md` |
+| Adopt latest Go language features | `golang-modernize` | `golang-lint`, `golang-gopls` for the mechanical rewrite | `70-go-1.26-and-modern-language.md` |
 
 ## Overlap boundaries
 
@@ -135,6 +139,53 @@ Recommended: use lint output to find candidates, then use modernize rules to cho
 
 Not recommended: adopting newer language features if the repo's `go.mod` or CI matrix does not support them.
 
+### Package lookup and discovery cluster
+
+Four skills touch third-party packages; each owns a different stage.
+
+- `golang-pkg-go-dev`: read-only facts about a *published* import path via `godig` — versions, symbols, examples,
+  `imported-by`, licenses, and CVEs, even for a package not yet in `go.mod`. It queries pkg.go.dev, never your checkout.
+- `golang-popular-libraries`: which library to adopt for a use case; stdlib-vs-third-party judgment.
+- `golang-dependency-management`: editing `go.mod` — `go get`, upgrade, pin, `replace`/`exclude`, tidy, workspaces.
+- `golang-security`: whole-tree reachable-CVE scanning with `govulncheck` and remediation.
+
+Recommended: `godig` to learn facts, `golang-dependency-management` to change `go.mod`, `golang-security` to prove a CVE
+is reachable in your tree.
+
+Not recommended: guessing a package version, CVE status, or importer set from memory when `godig` can answer it.
+
+### Code intelligence: gopls vs godig vs govulncheck
+
+These are not interchangeable; pick by whether the question is about your build or the ecosystem.
+
+- `golang-gopls` (`gopls`): your *locally resolved* build — where a symbol is defined, every call site in your repo,
+  interface satisfaction, post-edit diagnostics, safe rename/extract/inline, and a lightweight `go_vulncheck`
+  reachability check mid-edit. Sees `replace`d forks; grep and `godig` cannot.
+- `golang-pkg-go-dev` (`godig`): the *published ecosystem* — anything not tied to your build (versions, licenses,
+  ecosystem-wide importers, CVEs of a package you have not added).
+- `golang-security` (`govulncheck ./...`): the *whole-tree* audit of record for CI gates and periodic sweeps.
+
+Recommended: use `gopls` to read and reshape code before editing (`go_search` → `go_file_context` →
+`go_symbol_references` → edit → `go_diagnostics`); use `godig` for ecosystem facts; use `govulncheck` for the CI gate.
+
+Not recommended: hand-editing across dozens of call sites when a gopls Rename or a generated `gofmt -r`/`eg`/`gopatch`
+rewrite is behavior-preserving by construction.
+
+### Refactoring vs target-shape skills
+
+- `golang-refactoring`: the safe, staged *process* of changing existing code — blast-radius mapping, PR ordering
+  (structural before behavioral), the refactoring-branch git model, tool-driven mechanics, and the coverage-adaptive
+  safety net. It never owns what the result should look like.
+- `golang-naming` / `golang-project-layout` / `golang-code-style` / `golang-design-patterns` / `golang-modernize`: the
+  *target shape* — the new name, the new package, the target control flow, the target pattern, the modern idiom.
+
+Recommended: load `golang-refactoring` together with whichever target-shape skill defines the destination, plus
+`golang-gopls` as the actuator; keep every commit purely structural or purely behavioral, never both. For kit-era Ala
+services, hold `$alaa-golang-clean-code-principles` (P1–P13) as the definition of the shape the refactor moves toward.
+
+Not recommended: mixing a code move and an optimization in one PR, or refactoring critical code that has no test
+safety net.
+
 ## Sample routing traces
 
 ### "Review this handler that queries Postgres and writes Redis"
@@ -167,3 +218,21 @@ add the Sohrab GitLab companion instead of forcing GitHub Actions.
 
 Use current action major versions, least-privilege permissions, dependency scanning, `go test -race`, `go vet`,
 `golangci-lint`, and release gates that match the repo.
+
+### "Rename this exported method across the whole service and move it to a new package"
+
+Load `golang-refactoring` as primary, `golang-gopls` as the actuator, and `golang-naming` plus `golang-project-layout`
+for the target name and location. For a kit-era Ala service, also load `$alaa-golang-clean-code-principles`.
+
+Map blast radius with `go_symbol_references` first, prefer gopls Rename over hand-edits, use a type alias for the moved
+type so callers migrate gradually, grep for struct-tag and `text/template` references the rename cannot see, and land
+the move and any behavioral change as separate atomic PRs.
+
+### "Explain how this unfamiliar Postgres-backed service is wired"
+
+Load `golang-gopls` first: `go_workspace` for layout, `go_search` to locate the entrypoint and route setup,
+`go_file_context` on each file you open, and `go_package_api` to read a dependency's surface without reading every file.
+Then read `60-service-architecture-patterns.md` to name the layers you find, and `$alaa-golang-clean-code-principles`
+if the service is on `alaa-go-chi`.
+
+Do not grep-and-guess call graphs when `go_symbol_references` gives the exact, build-accurate answer.

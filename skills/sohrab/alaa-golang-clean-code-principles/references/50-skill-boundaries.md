@@ -21,7 +21,10 @@ the specific public Go skill. Duplicating that material here would create exactl
 | Performance, profiling, troubleshooting | `golang-performance`, `golang-troubleshooting` |
 | Security | `golang-security` |
 | Lint configuration | `golang-lint` |
-| Modern idioms / upgrades | `golang-modernize` |
+| Modern idioms / upgrades / latest-Go (1.26) features | `golang-modernize` + `alaa-golang` reference 70 |
+| Semantic code navigation and diagnostics | `golang-gopls` (via the alaa-golang router) |
+| Safe, staged, at-scale refactoring process | `golang-refactoring` (via the alaa-golang router) |
+| Published-package lookup (versions, CVEs, symbols) | `golang-pkg-go-dev` (via the alaa-golang router) |
 | chi-vs-Fiber policy, Ala Go baseline, repository pattern, Redis cache rules, TDD discipline | `alaa-golang` references 30/31/60/61/62/63 |
 
 Division of labor in one sentence: **`alaa-golang` teaches you to write good Go; this skill teaches you to
