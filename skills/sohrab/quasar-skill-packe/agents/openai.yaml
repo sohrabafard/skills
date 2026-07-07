@@ -1,7 +1,0 @@
-interface:
-  display_name: "Quasar Packe"
-  short_description: "Quasar CLI and Vite routing pack"
-  default_prompt: "Use $quasar-skill-packe to follow its workflow for quasar cli and vite routing pack."
-
-policy:
-  allow_implicit_invocation: true

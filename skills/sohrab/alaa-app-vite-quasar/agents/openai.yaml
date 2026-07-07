@@ -1,7 +1,0 @@
-interface:
-  display_name: "Alaa Quasar app-vite"
-  short_description: "Quasar app-vite v2/v3 guardrails"
-  default_prompt: "Use $alaa-app-vite-quasar to review a Quasar app-vite v2 change for v3 readiness."
-  brand_color: "#1976D2"
-policy:
-  allow_implicit_invocation: true
