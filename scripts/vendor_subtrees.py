@@ -105,6 +105,13 @@ def subtree_exists(prefix: str) -> bool:
     return (ROOT / prefix).exists()
 
 
+def normalize_prefix(prefix: str) -> str:
+    normalized = prefix.replace("\\", "/").strip("/")
+    if not normalized:
+        raise ValueError("subtree prefix cannot be empty")
+    return normalized
+
+
 def snapshot_skip_reason(entry: dict[str, object]) -> str:
     source_path_value = entry.get("source_path")
     pinned_commit_value = entry.get("pinned_commit")
@@ -294,7 +301,7 @@ def add_subtree_from_repo_url(
     slug = slugify_name(repo_name)
     entry = {
         "name": repo_name,
-        "prefix": prefix or f"vendor/{slug}",
+        "prefix": normalize_prefix(prefix or f"vendor/{slug}"),
         "remote": remote or f"{slug}-upstream",
         "url": repo_url,
         "branch": branch or detect_default_branch(repo_url),
