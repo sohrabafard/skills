@@ -90,7 +90,7 @@ v3-readiness notes:
 
 ## 7. Verified v2 -> v3 breaking-change deltas (authoritative)
 
-This is the canonical delta list for this pack. Verified against the official Quasar CLI with Vite upgrade guide (snapshot 2026-06-16; re-verify for version-sensitive work). v3 is still RC — use this to maintain a v3 repo or plan an explicitly requested migration, never to push stable production onto a pre-release.
+This is the canonical delta list for this pack. Verified against the official Quasar CLI with Vite upgrade guide (snapshot 2026-06-16, re-confirmed against the stable `3.0.1` guide on 2026-07-08; re-verify for version-sensitive work). v3 is stable since `3.0.1` (2026-07-07) — use this list to execute migrations planned via `$alaa-quasar-app-vite-v3` and to maintain v3 repos.
 
 - Wrapper import: `#q-app/wrappers` -> `#q-app` (global search/replace; affects `defineConfig`, `defineBoot`, `defineRouter`, `defineStore`, `defineSsrMiddleware`, `definePreFetch`).
 - `quasar.config` extensions: `.js`/`.ts` only (`.cjs`/`.mjs`/`.cts`/`.mts` dropped).

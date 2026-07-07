@@ -94,7 +94,7 @@ Default app-family deployment contract:
 ## Pairing guidance
 
 - Exact Quasar config, component, or platform behavior:
-  - Pair with `$quasar-skill-packe`
+  - Pair with `$alaa-quasar-app-vite-v3`
 - CI, Docker, proxy, or deploy-artifact issues:
   - Pair with `$alaa-frontend-devops`
 - `packages/*` boundaries, asset emission, or externalization:

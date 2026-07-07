@@ -9,13 +9,13 @@ Use this file when:
 
 ## Live package snapshot
 
-Captured on April 24, 2026 by `node scripts/check-upstream-versions.mjs`:
+Captured on July 8, 2026 by `node scripts/check-upstream-versions.mjs`:
 
-- `vue` -> `3.5.33` (published 2026-04-22)
-- `quasar` -> `2.19.3` (published 2026-04-06)
-- `@quasar/app-vite` -> `2.6.0` (published 2026-04-06)
-- `vite` -> `8.0.10` (published 2026-04-23)
-- `workbox-build` -> `7.4.0`
+- `vue` -> `3.5.39` (published 2026-06-25)
+- `quasar` -> `2.21.1` (published 2026-07-06)
+- `@quasar/app-vite` -> `3.0.1` (published 2026-07-07) — **v3 is the stable production line**; last v2 stable is `2.6.2` (maintenance line for not-yet-migrated repos)
+- `vite` -> `8.1.3` (published 2026-07-02)
+- `workbox-build` -> `7.4.1`
 
 Refresh before version-sensitive work:
 
@@ -99,8 +99,9 @@ When updating this skill:
 2. Refresh the Vue, Quasar, Vite, and Workbox version snapshot.
 3. Keep the body routing-first and the references one hop away from `SKILL.md`.
 4. Re-test whether realistic prompts still load this skill implicitly.
-5. Re-run `quick_validate.py`.
+5. Re-verify markdown links and reference paths resolve (no dedicated validator script ships with this skill).
 6. Update `80-legacy-skill-coverage.md` if routing boundaries change.
+7. Re-check Baseline status for the features in `25-modern-css-and-motion.md`; move features between tiers as Baseline and Interop 2026 progress.
 
 ## Useful official docs
 

@@ -58,7 +58,7 @@ Then route to the smallest companion skill that owns the next decision:
 - workspace package, `packages/*`, peer dependency, or asset-emission issues:
   - `alaa-mono-package`
 - Quasar CLI, `quasar.config`, mode-specific, or Quasar upgrade details:
-  - `quasar-skill-packe`
+  - `alaa-quasar-app-vite-v3`
 
 ### 4. PHP / Laravel coding baseline
 
@@ -109,7 +109,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 1. Start with `alaa-frontend-developer`.
 2. Apply `alaa-vue-typescript-clean-code` for Vue / TypeScript coding, review, refactor, or package-quality decisions.
 3. Route immediately to `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, or `alaa-mono-package` when the task crosses that boundary.
-4. Pair with `quasar-skill-packe` when Quasar-specific behavior or config is part of the root cause.
+4. Pair with `alaa-quasar-app-vite-v3` when Quasar-specific behavior or config is part of the root cause.
 5. Keep pure visual art direction outside the Sohrab pack unless a separate design skill is explicitly available in the current session.
 6. Use `$playwright` or `$playwright-interactive` only when browser work is explicitly needed.
 
@@ -169,7 +169,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 - `alaa-frontend-devops`
 - `alaa-frontend-doc-annotations`
 - `alaa-mono-package`
-- `quasar-skill-packe`
+- `alaa-quasar-app-vite-v3`
 - `alaa-shaka-player`
 
 ### Go and specialized app platforms

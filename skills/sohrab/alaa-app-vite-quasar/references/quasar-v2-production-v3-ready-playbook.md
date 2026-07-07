@@ -1,6 +1,6 @@
 # Quasar app-vite v2 Production + v3-Ready Playbook
 
-Use this reference when working on a Quasar CLI with Vite project for Alaa.
+Use this reference when working on a Quasar CLI with Vite project for Alaa that is **still on the app-vite v2 maintenance line**. Since `3.0.1` (2026-07-07) v3 is the stable production line: the "v3 migration notes" this playbook teaches you to leave behind are no longer future hedges — they are the exact worklist for a migration scheduled via `$alaa-quasar-app-vite-v3`.
 
 ## 0. Compatibility policy and agent implementation rules
 

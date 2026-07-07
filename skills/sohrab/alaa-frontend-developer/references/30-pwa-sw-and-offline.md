@@ -10,7 +10,9 @@ If the user did not explicitly request a service-worker strategy change:
 
 - keep the current service-worker strategy intact
 - limit changes to UI around offline, update, or network status when possible
-- use exact Quasar/InjectManifest references from `$quasar-skill-packe` if Quasar config or build wiring is involved
+- use exact Quasar/InjectManifest references from `$alaa-quasar-app-vite-v3` if Quasar config or build wiring is involved
+
+When the user does request SW implementation depth (caching strategy design, Workbox recipes, update-UX code, SW performance, SW debugging, push/badging/background sync), pair with `$alaa-quasar-app-vite-v3` `references/30-service-worker-excellence.md`; this file stays the policy layer.
 
 ## Standard service-worker contract
 
@@ -106,7 +108,7 @@ Every service-worker strategy change should include:
 ## Pairing guidance
 
 - Exact Quasar PWA/InjectManifest wiring:
-  - Pair with `$quasar-skill-packe`
+  - Pair with `$alaa-quasar-app-vite-v3`
 - Release and deployment artifact risk:
   - Pair with `$alaa-frontend-devops`
 - QA runbook formalization:

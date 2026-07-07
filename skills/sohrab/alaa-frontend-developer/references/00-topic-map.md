@@ -10,6 +10,8 @@ Start here when you know the task area but not yet the exact reference file.
   - Open `21-ssr-auth-and-session-patterns.md`
 - Need Vue, SSR, hydration, lifecycle, reactivity, browser-only guards, or modern JavaScript defaults:
   - Open `20-vue-js-ssr-patterns.md`
+- Need modern CSS features (container queries, `:has()`, View Transitions, scroll-driven animations, `@starting-style`, popover, anchor positioning, oklch theming) or animation/motion guidance:
+  - Open `25-modern-css-and-motion.md`
 - Need service worker, offline fallback, update flow, InjectManifest boundaries, or PWA-facing UI constraints:
   - Open `30-pwa-sw-and-offline.md`
 - Need bundle-size, hydration-cost, Web Vitals, long tasks, memory leaks, WebSocket, or SSE guidance:
@@ -35,6 +37,8 @@ Start here when you know the task area but not yet the exact reference file.
   - Also load `21-ssr-auth-and-session-patterns.md`
 - Any PWA, service worker, offline, or update-flow task:
   - Also load `30-pwa-sw-and-offline.md`
+- Any animation, transition, motion, or modern-CSS-feature task:
+  - Also load `25-modern-css-and-motion.md`
 - Any API contract, payload-size, pagination, or request-cache task:
   - Also load `45-api-and-data-shaping.md`
 - Any task that can affect build artifacts, package outputs, or runtime asset paths:
@@ -62,3 +66,7 @@ Start here when you know the task area but not yet the exact reference file.
 - `sparse fields`
 - `verification mapping`
 - `legacy skill`
+- `view transitions`
+- `container queries`
+- `prefers-reduced-motion`
+- `@starting-style`

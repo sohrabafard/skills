@@ -2,6 +2,8 @@
 
 Use this file for repo-safe UI design specs, state coverage, accessibility, responsive behavior, and browser-debug decision flow.
 
+For CSS technique selection (container queries, `:has()`, popover, anchor positioning, theming) and any animation/motion work, also load `references/25-modern-css-and-motion.md` — it owns the Baseline tiers and the motion-taste contract.
+
 ## When to open this file
 
 - new screen or flow design
@@ -82,7 +84,7 @@ Then:
 - strong visual thesis or art direction:
   - Keep this skill focused on frontend implementation constraints; treat pure art direction as outside the Sohrab pack unless a separate design skill is explicitly available in the session.
 - exact Quasar component or layout choice:
-  - Pair with `$quasar-skill-packe`
+  - Pair with `$alaa-quasar-app-vite-v3`
 - browser execution:
   - Pair with `$playwright` or `$playwright-interactive`
   - If MCP browser profiles are configured, use `playwright_visual` for visual QA and headed inspection.

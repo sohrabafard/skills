@@ -17,18 +17,18 @@ For exact "how do I wire this?" guidance, pair this file with `11-cli-cookbook-a
 
 `@quasar/app-vite` v2 and v3 have different import paths, config extensions, env keys, and aliases. Read the installed version in `package.json` first. The full split table and migration list live in `70-upstream-deltas-and-live-checks.md`.
 
-✅ Do — branch your guidance on the detected major; for production prefer the stable v2 line.
+✅ Do — branch your guidance on the detected major; new apps default to the stable v3 line.
 
 ```text
-v2 (^2.x, STABLE/production): `#q-app/wrappers`, `.js/.mjs/.ts/.cjs` config, build.envFolder/envFiles, legacy aliases
-v3 (^3.0.0-rc.x, RC):         `#q-app`, `.js`/`.ts` config, build.env.{folder,file,clientPrefix}, @/ alias, Rolldown under /src-*
+v3 (^3.x, STABLE/production): `#q-app`, `.js`/`.ts` config, build.env.{folder,file,clientPrefix}, @/ alias, Rolldown under /src-*
+v2 (^2.x, maintenance):       `#q-app/wrappers`, `.js/.mjs/.ts/.cjs` config, build.envFolder/envFiles, legacy aliases
 ```
 
-❌ Don't — give one config shape "from memory" without checking, or move a production app from stable v2 onto RC v3 by default; the wrong line produces a `quasar.config` that fails to load.
+❌ Don't — give one config shape "from memory" without checking, or bump a v2 repo onto v3 as a side effect of another task; the wrong line produces a `quasar.config` that fails to load. Migrations run deliberately via `$alaa-quasar-app-vite-v3`.
 
 ## Current upstream notes
 
-`@quasar/app-vite` v3 (`3.0.0-rc.x`, still **RC** — not a stable release) introduced these. They matter when reading/maintaining a repo already on v3 or planning an explicitly requested migration. Treat them as real migration inputs, not invisible patch behavior:
+`@quasar/app-vite` v3 (stable since `3.0.1`, 2026-07-07) introduced these. They matter when reading/maintaining a v3 repo or planning a migration. Treat them as real migration inputs, not invisible patch behavior:
 
 - The CLI bundles **Vite 8** and compiles `/src-*` with **Rolldown** instead of esbuild.
 - `quasar.config` is **`.js` or `.ts` only** (`.cjs`/`.mjs`/`.cts`/`.mts` dropped). Wrappers import from **`#q-app`** (was `#q-app/wrappers`).

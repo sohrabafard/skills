@@ -93,7 +93,7 @@ Typical safe wins:
 ## Pairing guidance
 
 - Quasar component/layout-specific performance issues:
-  - Pair with `$quasar-skill-packe`
+  - Pair with `$alaa-quasar-app-vite-v3`
 - Package-output or asset-contract performance regressions:
   - Pair with `$alaa-mono-package`
 - Formal verification plan:

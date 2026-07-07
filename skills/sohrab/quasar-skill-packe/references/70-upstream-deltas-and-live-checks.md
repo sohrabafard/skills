@@ -64,22 +64,23 @@ Re-check official sources when the task includes:
 - SSR middleware, PWA service worker, BEX bridge, Electron/Capacitor mode behavior, or `quasar.config` format
 - a production-only mismatch between dev and build output
 
-## Live snapshot (captured 2026-06-16)
+## Live snapshot (captured 2026-07-08)
 
-From the npm registry on 2026-06-16:
+From the npm registry on 2026-07-08:
 
-- `quasar` -> `2.20.1` (stable)
-- `@quasar/app-vite` (stable / production) -> `2.6.2` (published 2026-06-03) — **the production line**
-- `@quasar/app-vite` (pre-release) -> `3.0.0-rc.3` (sits on the `latest` dist-tag; dist-tags are only `beta` 3.0.0-beta.45 and `latest` 3.0.0-rc.3 — **there is no stable v3 release yet**)
-- `vite` -> `8.0.16` (stable)
-- `vue` -> `3.5.38` (stable)
+- `quasar` -> `2.21.1` (stable)
+- `@quasar/app-vite` (stable / production) -> `3.0.1` (published 2026-07-07; holds the `latest` dist-tag) — **v3 is the production line**
+- `@quasar/app-vite` (maintenance) -> `2.6.2` (last v2 stable, published 2026-06-03; line supported ~until 2027-06)
+- `@quasar/extras` -> `2.0.2` (ESM-only; icon-library cuts — audit before bumping)
+- `vite` -> `8.1.3` (stable)
+- `vue` -> `3.5.39` (stable)
 - `vue-router` -> `5.1.0` (stable)
 - `pinia` -> `3.0.4` (stable; v2 or v3 both accepted by app-vite v3)
 - `workbox-build` -> `7.4.1` (stable)
 
-**Stable-first rule:** for production, recommend stable releases. The only pre-release above is `@quasar/app-vite` v3 (RC). Note the unusual situation: the npm `latest` dist-tag points at the RC, but RC is not stable — the production app-vite line is v2.x (`2.6.2`). Do not push a production app onto v3 while it is RC; cover v3 only to support repos that already opted in or when the user explicitly asks for the pre-release.
+**Stable-first rule:** for production, recommend stable releases. Since `3.0.1` (2026-07-07) that means **v3 is the default for new apps**. v2 repos migrate deliberately via `$alaa-quasar-app-vite-v3`, not as a side effect of another task; until migrated, keep them pinned to `^2`.
 
-This snapshot ages. Re-run the script before any version-sensitive answer. The previous snapshot (centered on `@quasar/app-vite` `2.6.0`, `quasar` `2.19.3`, `vite` `8.0.10`, `vue-router` `5.0.6`) drifted in under two months, so do not trust a stale snapshot.
+This snapshot ages. Re-run the script before any version-sensitive answer. The previous snapshot (2026-06-16, when v3 was still `3.0.0-rc.3`) drifted to a stable v3 release in three weeks, so do not trust a stale snapshot.
 
 ## The `@quasar/app-vite` v2-vs-v3 split (read this first for any config/CLI task)
 
@@ -87,9 +88,9 @@ This is the highest-impact fact in the whole pack. There are two live CLI lines,
 
 **Always detect the line first.** Read `@quasar/app-vite` in the repo's `package.json` (and the lockfile) before giving any config, boot, env, alias, SSR, PWA, BEX, Electron, or Capacitor advice.
 
-| Signal | `@quasar/app-vite` `^2.x` (stable / production) | `@quasar/app-vite` `^3.x` (pre-release / RC) |
+| Signal | `@quasar/app-vite` `^2.x` (maintenance) | `@quasar/app-vite` `^3.x` (stable / production) |
 | --- | --- | --- |
-| Status | **Stable, production-ready** (latest `2.6.2`); in Maintenance until ~2027-06-11 | **RC, no stable release yet** (`3.0.0-rc.3`); on the `latest` dist-tag but not production-ready |
+| Status | **Maintenance line** (last stable `2.6.2`); supported until ~2027-06-11 | **Stable, production-ready** (`3.0.1` since 2026-07-07); holds the `latest` dist-tag; the default for new apps |
 | Wrapper import | `#q-app/wrappers` | `#q-app` |
 | `quasar.config` ext | `.js` `.mjs` `.ts` `.cjs` | `.js` `.ts` only |
 | Quasar constants | `process.env.MODE`, `process.env.DEV`, ... | `import.meta.env.QUASAR_MODE`, `import.meta.env.QUASAR_DEV`, ... |
@@ -104,7 +105,7 @@ This is the highest-impact fact in the whole pack. There are two live CLI lines,
 ✅ Do — confirm the line, then give shapes for that line only.
 
 ```text
-"package.json shows @quasar/app-vite ^3.0.0-rc.3, so I will use `#q-app`,
+"package.json shows @quasar/app-vite ^3.0.1, so I will use `#q-app`,
 build.env.folder, and the @/ alias."
 ```
 
@@ -115,11 +116,11 @@ build.env.folder, and the @/ alias."
 "import { defineBoot } from '#q-app'"             // breaks a v2 repo
 ```
 
-If the repo already has a line installed, match it. If the line is genuinely unknown (or it is a greenfield production app), default to **stable v2** and state the assumption explicitly rather than guessing silently or reaching for the RC.
+If the repo already has a line installed, match it. If the line is genuinely unknown (or it is a greenfield app), default to **stable v3** and state the assumption explicitly rather than guessing silently.
 
-## `@quasar/app-vite` v3 breaking changes (summary — full playbook in `$alaa-app-vite-quasar`)
+## `@quasar/app-vite` v3 breaking changes (summary — full playbook in `$alaa-quasar-app-vite-v3`)
 
-v3 is still **RC** (no stable release). This is a **summary** so you can pick the right code shape from within this pack. The **authoritative v2->v3 migration playbook, full breaking-change checklist, and v3-readiness rules live in `$alaa-app-vite-quasar`** — route there for any migration/upgrade/readiness work, and never push a stable production app onto the RC.
+v3 is **stable** since `3.0.1` (2026-07-07). This is a **summary** so you can pick the right code shape from within this pack. The **v2->v3 migration playbook lives in `$alaa-quasar-app-vite-v3`** (with the deep verified delta list in `$alaa-app-vite-quasar` `references/review-and-upgrade-checklist.md`) — route there for any migration/upgrade work; migrations run deliberately, never as a side effect.
 
 Shape-affecting deltas at a glance (v2 -> v3):
 
@@ -131,23 +132,25 @@ Shape-affecting deltas at a glance (v2 -> v3):
 
 For the exact per-line `quasar.config`/boot/component shapes, use the cookbook in `11-cli-cookbook-and-examples.md`.
 
-## Quasar 2.20.x framework notes
+## Quasar 2.20.x–2.21.x framework notes
 
-The framework (`quasar`) and the CLI (`@quasar/app-vite`) version independently. `quasar` is at `2.20.1`.
+The framework (`quasar`) and the CLI (`@quasar/app-vite`) version independently. `quasar` is at `2.21.1`.
 
 - 2.20.0 modernized the codebase: "UI now much smaller and faster", better Rolldown-API leverage, removed the legacy vetur build step.
 - **Behavior change to flag:** `Cookies` now uses `MaxAge` instead of `expires`. Re-check cookie expiry assumptions when upgrading.
 - Fixes: `QPopupProxy` no longer wrongly emits `update:modelValue`; `QDrawer` `hideOnRouteChange`; `QInput type="number"` label overlap; `QDialog` backdrop a11y.
-- No new components and no deprecations in the 2.19 -> 2.20 range.
+- 2.21.0: QTable instance exposes `getCellValue(colName, row)`; new `lb` (Luxembourgish) language pack; language-pack/icon-set audits.
+- 2.21.1: fixes Safari (macOS) page-scroll loss after closing QDialog via a CSS approach.
+- No new components and no deprecations in the 2.19 -> 2.21 range.
 
 ## Quasar v3 (UI framework) status
 
 - The Quasar **UI framework** v3 is only **Planned** (roadmap: input gathering Q3-Q4 2026, release "hopefully" Q1 2027). It is not in beta or RC.
-- Do not conflate it with `@quasar/app-vite` v3, which is a CLI major currently on the `latest` dist-tag but still RC (not stable). When someone says "Quasar 3", confirm whether they mean the CLI (RC) or the UI framework (planned).
+- Do not conflate it with `@quasar/app-vite` v3, which is the CLI major and **stable since `3.0.1` (2026-07-07)**. When someone says "Quasar 3", confirm whether they mean the CLI (stable) or the UI framework (planned).
 
 ## Vite 8 migration risks
 
-From the official Vite migration guide. All of these are real for Vite 8 (`8.0.16`):
+From the official Vite migration guide. All of these are real for Vite 8 (`8.1.3`):
 
 - Dependency optimization (pre-bundling) uses **Rolldown** instead of esbuild. `optimizeDeps.esbuildOptions` is deprecated and auto-maps to `optimizeDeps.rolldownOptions`.
 - JS transforms and minification moved to **Oxc**. The `esbuild` config option is deprecated in favor of `oxc`; `build.minify: 'esbuild'` is deprecated.
@@ -171,7 +174,7 @@ When a Quasar app fails only after a toolchain bump, check these surfaces before
 
 ## Vue 3.5 SSR-relevant features
 
-Baseline since Vue 3.5 (current `3.5.38`); use them to prevent or scope hydration issues:
+Baseline since Vue 3.5 (current `3.5.39`); use them to prevent or scope hydration issues:
 
 - `useId()` — app-stable IDs consistent across server and client; the correct fix for form/aria-id hydration mismatches.
 - `data-allow-mismatch` — suppress expected hydration-mismatch warnings (e.g. localized dates); optionally scope it (`text`, `children`, `class`, `style`, `attribute`).

@@ -206,7 +206,7 @@ export function bffFetch(url, init = {}) {
 - Ala gateway, trusted headers, refresh-cookie plus bearer-token flow, or tenant-context trust:
   - Pair with `$alaa-trust-gateway-auth`
 - Exact Quasar SSR boot-file or `preFetch` wiring:
-  - Pair with `$quasar-skill-packe`
+  - Pair with `$alaa-quasar-app-vite-v3`
 - Frontend-facing auth error envelopes, cache headers, or pagination around protected data:
   - Also load `45-api-and-data-shaping.md`
 

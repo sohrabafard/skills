@@ -50,9 +50,15 @@ onMounted(() => {
 })
 ```
 
-or guard:
+or guard (match the installed `@quasar/app-vite` line — the constant differs):
 
 ```ts
+// app-vite v3 (stable line since 3.0.1):
+if (import.meta.env.QUASAR_CLIENT) {
+  // browser-only code
+}
+
+// app-vite v2 (maintenance line):
 if (process.env.CLIENT) {
   // browser-only code
 }

@@ -4,13 +4,9 @@ Use this file when the task spans more than one frontend surface and ownership i
 
 ## Routing rules
 
-- `$quasar-skill-packe`
-  - Use for exact Quasar APIs, `quasar.config`, boot files, platform modes, components, directives, plugins, and Quasar/Vite upgrade details.
-  - Pair with this skill when Quasar specifics matter more than general frontend policy.
-
-- `$alaa-app-vite-quasar`
-  - Use for the `@quasar/app-vite` v2-production + v3-readiness/migration decision: stable-first version posture (keep production on stable v2, stay v3-ready), upgrade guardrails, env/alias/wrapper deltas, and the v2->v3 migration playbook.
-  - Require it whenever a task hinges on which app-vite line to use or how to keep new work migration-safe; pair it with `$quasar-skill-packe` for the exact per-line code shape.
+- `$alaa-quasar-app-vite-v3`
+  - The single Quasar CLI + Vite skill: exact Quasar APIs, `quasar.config`, boot files, platform modes, components, directives, plugins, upgrade details, `@quasar/app-vite` v3 builds (the stable production line since 3.0.1, 2026-07-07), the v2->v3 migration playbook and verified delta list, v2-era maintenance semantics, service-worker implementation depth, WebOTP/device-trust flows, and modern-experience decisions.
+  - Require it whenever Quasar specifics, the app-vite line, a migration, or SW implementation depth matter more than general frontend policy.
 
 - Visual direction beyond implementation constraints
   - This Sohrab pack does not currently include a dedicated visual-design skill.

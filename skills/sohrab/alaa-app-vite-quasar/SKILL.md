@@ -1,27 +1,27 @@
 ---
 name: alaa-app-vite-quasar
-description: Use for coding, reviewing, planning, or migrating Alaa Quasar CLI with Vite apps, especially @quasar/app-vite v2 production work that must remain v3-ready. Covers quasar.config, imports/aliases, env, SSR, PWA, routing, boot files, Pinia, testing, CI validation, and upgrade guardrails. Do not use for plain Vue/Vite apps that do not use Quasar CLI.
+description: Use for coding, reviewing, or maintaining Alaa Quasar CLI with Vite apps still on the @quasar/app-vite v2 maintenance line, and as the verified v2->v3 delta source when planning a migration. Covers v2 quasar.config, imports/aliases, env, SSR, PWA, routing, boot files, Pinia, testing, CI validation, and upgrade guardrails. For v3 builds and the migration playbook use $alaa-quasar-app-vite-v3. Do not use for plain Vue/Vite apps that do not use Quasar CLI.
 ---
 
 # Alaa App Vite Quasar Skill
 
-Production-grade Quasar CLI with Vite assistant for Alaa projects. Default posture:
+Production-grade Quasar CLI with Vite assistant for Alaa projects **still on the `@quasar/app-vite` v2 maintenance line**. Since `3.0.1` (2026-07-07) **v3 is the stable production line**; this skill owns the v2 era and the verified v2->v3 deltas, while `$alaa-quasar-app-vite-v3` owns v3 posture and the migration playbook. Default posture:
 
-- Production baseline: keep `@quasar/app-vite` on the latest stable v2 line the repo uses, unless the user explicitly asks for a v3 migration.
-- Forward compatibility: make new work v3-ready where that does not break v2 production.
-- Upgrade posture: treat v3 as a planned migration, not an opportunistic dependency bump.
+- Repos on v2: keep them working on the latest v2 stable (`2.6.2`), pinned to `^2` (an unpinned install now pulls v3); make new v2 work migration-clean.
+- Migration: v3 is stable — migration is a scheduled engineering task planned via `$alaa-quasar-app-vite-v3`, executed against the verified delta list in `references/review-and-upgrade-checklist.md`; never an opportunistic bump inside an unrelated change.
+- New apps: scaffold on v3 via `$alaa-quasar-app-vite-v3`, not here.
 
 Written for both GPT-5/Codex-family (e.g. `gpt-5.x-codex`) and Claude/Opus coding agents. Prefer the repo's actual files, lockfile, scripts, and test results over generic assumptions. High-value rules use a Correct / Wrong contrast pair: the Correct side is the action to take, the Wrong side is a guardrail.
 
 ## Current versions (verify live)
 
-Snapshot 2026-06-16, re-check before version-sensitive work:
+Snapshot 2026-07-08, re-check before version-sensitive work:
 
-- `@quasar/app-vite` stable / production: **`2.6.2`** — the line to keep in production.
-- `@quasar/app-vite` pre-release: `3.0.0-rc.3` (RC; no stable v3 yet — it holds the npm `latest` tag, so an unpinned install pulls the RC). Pin production to `@quasar/app-vite@^2`.
-- `quasar` `2.20.1`, `vue` `3.5.38`, `vue-router` `5.1.0`, `pinia` `3.0.4`, `vite` `8.0.16`, `workbox-build` `7.4.1` (all stable).
+- `@quasar/app-vite` stable / production: **`3.0.1`** (v3, since 2026-07-07; holds npm `latest`).
+- `@quasar/app-vite` maintenance: `2.6.2` — the last v2 stable, for repos this skill serves. Keep them pinned to `@quasar/app-vite@^2`.
+- `quasar` `2.21.1`, `vue` `3.5.39`, `vue-router` `5.1.0`, `pinia` `3.0.4`, `vite` `8.1.3`, `workbox-build` `7.4.1` (all stable).
 
-Refresh with the version checker shipped by `$quasar-skill-packe` (it reports `latestStableByMajor.v2`, the production line, alongside the RC on `latest`).
+Refresh with the version checker shipped by `$quasar-skill-packe` (it reports `latestStableByMajor.v2` and `.v3` alongside `latest`).
 
 ## Required first move
 
@@ -49,7 +49,9 @@ Do not use this skill when:
 
 ## Companion skills and ownership
 
-This skill owns only the **app-vite v2 production + v3-readiness policy** (version posture, migration guardrails, env/alias/wrapper deltas, mode-folder discipline). It is not a full Quasar API reference or a full frontend-engineering skill.
+This skill owns only the **app-vite v2-era semantics and the verified v2->v3 delta material** (v2 code contracts, migration guardrails, env/alias/wrapper deltas, mode-folder discipline). It is not a full Quasar API reference or a full frontend-engineering skill.
+
+- **Require `$alaa-quasar-app-vite-v3`** for v3 posture, new v3 apps, and the v2->v3 migration playbook — that skill leads migrations and consumes this skill's delta list.
 
 - **Require `$quasar-skill-packe`** when the task needs exact Quasar shapes: `quasar.config` keys, boot/router/Vite-extension snippets, component/layout/directive/plugin/composable/util usage, platform-mode structure, or InjectManifest. This skill decides *which line is safe*; `$quasar-skill-packe` gives the *exact, version-aware code shape*. Don't emit a config/boot/component snippet from memory without confirming it there.
 - **Require `$alaa-frontend-developer`** when the task is broader frontend engineering: SSR auth/session, API data-shaping, performance/Web Vitals/realtime, QA/release-readiness, or package/asset contracts. Use it for the engineering decision and this skill for the v2-safe, v3-ready implementation.
@@ -60,16 +62,16 @@ This skill owns only the **app-vite v2 production + v3-readiness policy** (versi
 
 | Situation | Default action |
 |---|---|
-| Existing production app on `@quasar/app-vite` v2 | Keep v2; make minimal, tested changes. |
-| User asks "v2 or v3 in production?" | Recommend stable v2 until v3 ships a stable release for the repo's runtime; evaluate v3 in a branch. |
-| User asks to make code v3-ready | Keep it compatible with installed v2, avoid new v3-incompatible patterns, document the migration delta. |
-| User explicitly asks to migrate to v3 | Produce a migration plan first; do not implement until accepted for nontrivial repos. |
-| New internal PoC / branch with no SLA | v3 can be evaluated if Node/runtime and dependency constraints are met. |
+| Existing production app on `@quasar/app-vite` v2 | Keep v2 working with minimal, tested changes; treat the v3 migration as a scheduled task to plan via `$alaa-quasar-app-vite-v3`. |
+| User asks "v2 or v3 in production?" | v3 is the stable production line (since `3.0.1`, 2026-07-07). Recommend migrating when the repo's Node floor, App Extensions, and release window allow; route the plan to `$alaa-quasar-app-vite-v3`. |
+| User asks to make v2 code migration-clean | Keep it compatible with installed v2, avoid new v3-incompatible patterns, document the migration delta. |
+| User asks to migrate to v3 | Route to `$alaa-quasar-app-vite-v3` for the playbook; supply this skill's `references/review-and-upgrade-checklist.md` §7–8 delta list; plan before implementing on nontrivial repos. |
+| New app | Scaffold on v3 via `$alaa-quasar-app-vite-v3`; this skill is not the entry point. |
 | Plain Vue + Vite app without Quasar CLI | Do not apply this skill except to explain the difference from `@quasar/vite-plugin`. |
 
 ## Hard rules
 
-1. Do not upgrade production from app-vite v2 to v3 just because v3 exists (v3 is still RC).
+1. Do not bump a production app from v2 to v3 inside an unrelated task. v3 is stable, but the migration touches app code (imports, env, aliases, mode folders) and runs as its own planned change via `$alaa-quasar-app-vite-v3`.
 2. Do not add `vite.config.*` to a Quasar CLI app. Use `quasar.config.*` and `build.extendViteConf` / `build.vitePlugins`.
 3. Do not confuse `@quasar/app-vite` (the Quasar CLI app runner/build package) with `@quasar/vite-plugin` (for adding Quasar to a non-Quasar Vite app).
 4. Do not edit generated `.quasar/` files. Use `quasar.config.*`, source files, or official extension config.

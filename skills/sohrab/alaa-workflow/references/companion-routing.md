@@ -34,7 +34,7 @@ Signals:
 Use these when the task touches Vue or Quasar behavior, rendering, design-system components, or deployment:
 
 - `$alaa-frontend-developer`
-- `$quasar-skill-packe`
+- `$alaa-quasar-app-vite-v3`
 - `$alaa-frontend-devops`
 - `$alaa-frontend-doc-annotations`
 - `$alaa-shaka-player`

@@ -97,7 +97,7 @@ Do not use this skill when:
 | Main risk | Pair with |
 |---|---|
 | Vue/Quasar implementation, SSR, hydration, boot files | `$alaa-frontend-developer` |
-| Service Worker, Cache API, PWA update flow | `$alaa-frontend-developer` and exact PWA/Quasar skill if available |
+| Service Worker, Cache API, PWA update flow | `$alaa-quasar-app-vite-v3` (SW implementation depth) and `$alaa-frontend-developer` (SW policy) |
 | Gateway/auth/session/trusted headers | `$alaa-trust-gateway-auth` |
 | API contracts, envelopes, pagination, cache validators | `$alaa-services-contract` |
 | Watch/analytics event design | Alaa observability/analytics skill if available |

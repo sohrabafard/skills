@@ -49,7 +49,7 @@ const width = window.innerWidth // crashes during SSR render
 
 ## Vue 3.5 hydration tools
 
-Vue 3.5 (current `3.5.38`) ships the right primitives for the mismatches Quasar apps hit most:
+Vue 3.5 (current `3.5.39`) ships the right primitives for the mismatches Quasar apps hit most:
 
 - Use **`useId()`** for form/aria ids so server and client agree. This is the correct fix for "id mismatch" hydration warnings.
 - Use **`data-allow-mismatch`** only for genuinely environment-dependent output (e.g. localized dates), optionally scoped (`text`, `class`, `attribute`, ...).

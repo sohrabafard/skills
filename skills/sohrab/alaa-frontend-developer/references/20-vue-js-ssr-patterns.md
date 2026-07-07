@@ -136,7 +136,7 @@ For documentation-only changes, pair with `$alaa-frontend-doc-annotations`.
 ## Pairing guidance
 
 - Exact Quasar SSR APIs, boot files, `useMeta`, or `useHydration`:
-  - Pair with `$quasar-skill-packe`
+  - Pair with `$alaa-quasar-app-vite-v3`
 - SSR auth propagation, token storage, refresh, or protected-route decisions:
   - Also load `21-ssr-auth-and-session-patterns.md`
 - Realtime lifecycle:

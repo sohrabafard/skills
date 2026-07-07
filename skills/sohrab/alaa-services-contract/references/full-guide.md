@@ -3190,7 +3190,7 @@ Rules:
 
 - `$alaa-mono-package` — mandatory for any package boundary, exports, dedupe, asset, or extraction decision.
 - `$alaa-frontend-developer` — the three-layer architecture and SSR component patterns.
-- `$quasar-skill-packe` and `$alaa-app-vite-quasar` — exact Quasar component/SSR shapes and the app-vite build posture.
+- `$alaa-quasar-app-vite-v3` — exact Quasar component/SSR shapes and the app-vite build posture.
 - `$alaa-security-review` — mandatory for raw-HTML/sanitization and any trust-boundary-adjacent widget path.
 - `$alaa-frontend-doc-annotations` — documentation pass for the widget/package public surface.
 - For data a widget needs, route through `60-frontend-sdk-consumption-contract.md` (host fetches, widget receives props).

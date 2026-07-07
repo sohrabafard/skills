@@ -75,7 +75,7 @@ Do not use this skill when:
 - Frontend policy, SSR behavior, or Quasar-specific context:
   - pair with `$alaa-frontend-developer`
 - Quasar-specific API or config details:
-  - pair with `$quasar-skill-packe`
+  - pair with `$alaa-quasar-app-vite-v3`
 - Broader repo docs and README alignment:
   - pair with `$alaa-docs-farsi`
 

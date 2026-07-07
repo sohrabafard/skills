@@ -16,11 +16,13 @@ Wrong recommendation:
 
 Correct:
 
-> The repo is on `@quasar/app-vite` v2. For production, keep v2 and make this change compatible with the current lockfile. I will add a v3 migration note for alias/env changes.
+> The repo is on `@quasar/app-vite` v2. This change stays compatible with the current lockfile, and I will add a migration note for alias/env changes. v3 is the stable production line now — worth scheduling the migration as its own task via `$alaa-quasar-app-vite-v3`.
 
 Wrong:
 
-> v3 exists, so I upgraded `@quasar/app-vite` and `vue-router` in the same patch.
+> v3 is stable now, so I upgraded `@quasar/app-vite` and `vue-router` in the same patch.
+
+(The migration touches imports, env, aliases, and mode folders across the app; bundling it into an unrelated patch ships untested breaking changes.)
 
 ## 3. Alias migration
 

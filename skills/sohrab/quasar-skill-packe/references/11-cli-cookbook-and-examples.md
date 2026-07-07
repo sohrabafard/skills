@@ -29,16 +29,16 @@ The model usually understands Vite, Vue Router, and app bootstrap concepts. It i
 
 ## Confirm the app-vite line before copying any example
 
-The import path, config extensions, env keys, and aliases differ between `@quasar/app-vite` v2 (stable/production) and v3 (RC). Read `@quasar/app-vite` in `package.json` first. The split summary is in `70-upstream-deltas-and-live-checks.md`. For production, v2 is the default; treat v3 shapes as for repos already on the RC. For migration planning, v3-readiness, or the full upgrade playbook, use `$alaa-app-vite-quasar` — this file only carries the per-line code shapes.
+The import path, config extensions, env keys, and aliases differ between `@quasar/app-vite` v3 (stable/production since `3.0.1`, 2026-07-07) and v2 (maintenance line). Read `@quasar/app-vite` in `package.json` first. The split summary is in `70-upstream-deltas-and-live-checks.md`. New apps default to v3; v2 shapes remain for not-yet-migrated repos. For migration planning or the full upgrade playbook, use `$alaa-quasar-app-vite-v3` — this file only carries the per-line code shapes.
 
 ✅ Do — pick the shape for the detected line.
 
 ```text
-"package.json has @quasar/app-vite ^2.6.2 (stable) -> use `#q-app/wrappers`, build.envFolder, src/ alias."
-"package.json has @quasar/app-vite ^3.0.0-rc.3 (RC) -> use `#q-app`, build.env.folder, @/ alias."
+"package.json has @quasar/app-vite ^3.0.1 (stable) -> use `#q-app`, build.env.folder, @/ alias."
+"package.json has @quasar/app-vite ^2.6.2 (maintenance) -> use `#q-app/wrappers`, build.envFolder, src/ alias."
 ```
 
-❌ Don't — emit a single shape from memory without checking, mix v2 and v3 keys in one config, or hand a production app v3 shapes when it is on stable v2.
+❌ Don't — emit a single shape from memory without checking, mix v2 and v3 keys in one config, or hand a v2 repo v3 shapes (or vice versa).
 
 ## `quasar.config` base shape
 
@@ -46,7 +46,7 @@ The import path, config extensions, env keys, and aliases differ between `@quasa
 - Keep mode-specific branching inside the config function instead of duplicating whole objects.
 - Use `ctx.mode.*`, `ctx.dev`, `ctx.prod` instead of scattered branches.
 
-✅ Do — v2 (`@quasar/app-vite` ^2, stable/production): import from `#q-app/wrappers`.
+✅ Do — v2 (`@quasar/app-vite` ^2, maintenance line): import from `#q-app/wrappers`.
 
 ```js
 import { defineConfig } from '#q-app/wrappers'
@@ -60,7 +60,7 @@ export default defineConfig((ctx) => ({
 }))
 ```
 
-✅ Do — v3 (`@quasar/app-vite` ^3, RC): import from `#q-app`, `.js` or `.ts` file only.
+✅ Do — v3 (`@quasar/app-vite` ^3, stable/production): import from `#q-app`, `.js` or `.ts` file only.
 
 ```js
 import { defineConfig } from '#q-app'
@@ -86,7 +86,7 @@ export default defineConfig((ctx) => ({
 
 The env surface changed shape in v3, including how client exposure is gated.
 
-✅ Do — v2 (stable): point at env files with the flat keys, and use `build.env`/`build.rawDefine` for constants.
+✅ Do — v2 (maintenance): point at env files with the flat keys, and use `build.env`/`build.rawDefine` for constants.
 
 ```js
 build: {
@@ -96,7 +96,7 @@ build: {
 }
 ```
 
-✅ Do — v3 (RC): nest under `build.env`, and expose client vars only through `clientPrefix`.
+✅ Do — v3 (stable): nest under `build.env`, and expose client vars only through `clientPrefix`.
 
 ```js
 build: {
@@ -147,7 +147,7 @@ boot: [
 ]
 ```
 
-✅ Do — v2 boot function (stable/production): import from `#q-app/wrappers`, and return immediately after `redirect()`.
+✅ Do — v2 boot function (maintenance line): import from `#q-app/wrappers`, and return immediately after `redirect()`.
 
 ```js
 import { defineBoot } from '#q-app/wrappers'
@@ -164,7 +164,7 @@ export default defineBoot(({ app, router, store, ssrContext, redirect }) => {
 })
 ```
 
-✅ Do — v3 boot function (RC): identical idea, but import from `#q-app`; `urlPath`/`publicPath` are also provided.
+✅ Do — v3 boot function (stable line): identical idea, but import from `#q-app`; `urlPath`/`publicPath` are also provided.
 
 ```js
 import { defineBoot } from '#q-app'
@@ -234,14 +234,14 @@ const routes = [
 
 ## Path aliases (v2 vs v3)
 
-✅ Do — v2 (stable): use the legacy aliases.
+✅ Do — v2 (maintenance): use the legacy aliases.
 
 ```js
 import MyWidget from 'components/MyWidget.vue'
 import { useUserStore } from 'stores/user'
 ```
 
-✅ Do — v3 (RC): use the single `@/` alias (points to `/src`).
+✅ Do — v3 (stable): use the single `@/` alias (points to `/src`).
 
 ```js
 import MyWidget from '@/components/MyWidget.vue'

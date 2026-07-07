@@ -64,7 +64,7 @@ Do not use this skill when:
 - Workspace package asset emission or `packages/*` boundaries:
   - pair with `$alaa-mono-package`
 - Quasar config, platform mode, or exact Quasar build behavior:
-  - pair with `$quasar-skill-packe`
+  - pair with `$alaa-quasar-app-vite-v3`
 - Documentation-only deployment notes or inline doc updates:
   - pair with `$alaa-frontend-doc-annotations`
 - Current OpenAI or Codex product facts that affect build or tool integration:

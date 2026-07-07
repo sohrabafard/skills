@@ -92,7 +92,7 @@ Load these companion skills when their concern is in scope:
   - Load when client correlation/event fields must align with how SigNoz/ClickHouse query them downstream.
 - `$alaa-frontend-doc-annotations`
   - Load for the documentation pass on the public surface the host or a package adds.
-- `$quasar-skill-packe` and `$alaa-app-vite-quasar`
+- `$alaa-quasar-app-vite-v3`
   - Load for exact Quasar component/SSR shapes and the `@quasar/app-vite` build posture in widget/host work.
 
 ## Auth-specific routing

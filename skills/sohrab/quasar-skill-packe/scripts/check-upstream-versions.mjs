@@ -4,11 +4,12 @@
 // Package-manager-neutral: talks to the npm registry directly over HTTPS.
 //
 // For @quasar/app-vite it prints every dist-tag AND resolves the latest stable
-// release per requested major. Two lines are live at once: v3 (currently the
-// `latest` tag, in RC) and v2 (stable, production). The registry carries no
-// dedicated v2 dist-tag, so the v2 production version is computed from the
-// packument's version list (highest non-prerelease 2.x). The installed major
-// decides whether v2 or v3 guidance applies; for production prefer stable v2.
+// release per requested major. Two lines are live at once: v3 (stable since
+// 3.0.1 on 2026-07-07, holds the `latest` tag — the production line) and v2
+// (maintenance line for not-yet-migrated repos). The registry carries no
+// dedicated v2 dist-tag, so the v2 version is computed from the packument's
+// version list (highest non-prerelease 2.x). The installed major decides
+// whether v2 or v3 guidance applies.
 
 import https from 'node:https'
 
@@ -27,7 +28,7 @@ const showAllTags = new Set(['@quasar/app-vite'])
 
 // Packages where the latest *stable* release for a given major must be reported
 // even when it is not on a dist-tag (the stable-first production line).
-const resolveStableMajors = { '@quasar/app-vite': [2] }
+const resolveStableMajors = { '@quasar/app-vite': [2, 3] }
 
 function compareVersions(a, b) {
   const pa = a.split('.').map(Number)
@@ -116,7 +117,7 @@ async function getPackageInfo(name) {
 async function main() {
   const result = {
     checkedAt: new Date().toISOString(),
-    note: '@quasar/app-vite has two live lines: v3 (the `latest` dist-tag, RC) and v2 (stable/production, reported under latestStableByMajor.v2). For production prefer stable v2. Detect the installed major before giving config/CLI advice.',
+    note: '@quasar/app-vite has two live lines: v3 (stable, the `latest` dist-tag — the production line) and v2 (maintenance, reported under latestStableByMajor.v2). Detect the installed major before giving config/CLI advice.',
     packages: {},
   }
 

@@ -4,8 +4,8 @@ A production-oriented Agent Skill for Alaa Quasar CLI with Vite projects.
 
 Default posture:
 
-- Keep production on `@quasar/app-vite` v2 unless the user explicitly asks for v3 migration.
-- Make new work v3-ready without breaking the installed v2 runtime.
+- Serve repos still on the `@quasar/app-vite` v2 maintenance line; v3 is the stable production line since `3.0.1` (2026-07-07).
+- Make v2 work migration-clean without breaking the installed v2 runtime; route v3 builds and migrations to `alaa-quasar-app-vite-v3`.
 - Use official Quasar docs/release notes and the repository lockfile as sources of truth.
 
 Install by placing this folder in one of the supported skills locations, for example:

@@ -85,7 +85,9 @@ Use this guard when a task is part of parallel package work or the user freezes 
 - Build, artifact, or deployment contract issues:
   - pair with `$alaa-frontend-devops`
 - Quasar config or Vite bundling behavior:
-  - pair with `$quasar-skill-packe`
+  - pair with `$alaa-quasar-app-vite-v3`
+- Packages consumed by a Quasar app-vite v3 app (peer expectations: `vue-router >= 5`, `pinia ^2 || ^3`, Node 22+, Vite 8/Rolldown) or a v2->v3 migration touching `packages/*`:
+  - pair with `$alaa-quasar-app-vite-v3`
 
 ## Reference navigation
 

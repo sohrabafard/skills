@@ -28,8 +28,7 @@ This skill replaces a cluster of narrower frontend skills with one routing-first
 ## Ownership
 
 - `alaa-frontend-developer` owns app-family frontend engineering policy and cross-cutting frontend guardrails.
-- `$quasar-skill-packe` owns exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, and live Quasar/Vite usage details.
-- `$alaa-app-vite-quasar` owns the `@quasar/app-vite` **v2-production + v3-readiness/migration** decision: version posture (keep stable v2, prepare for v3), upgrade guardrails, and the v2->v3 migration playbook. Defer to it whenever the task hinges on which app-vite line to use or how to stay v3-ready.
+- `$alaa-quasar-app-vite-v3` owns everything Quasar CLI + Vite: exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, the `@quasar/app-vite` v3 stable line (production default since 3.0.1, 2026-07-07), the v2->v3 migration playbook, v2-era maintenance semantics, service-worker implementation depth, WebOTP/device-trust flows, and modern-experience decisions.
 - Broader art direction, visual thesis, composition, premium hierarchy, and motion language stay outside this skill unless a concrete frontend implementation task is also in scope.
 - `$playwright`, `$playwright-interactive`, and configured Playwright MCP profiles own browser mechanics and execution loops. Browser automation is opt-in: use it only when the user explicitly asks for browser, Playwright, visual, or responsive validation, a higher-priority repo rule requires it, or static analysis is no longer trustworthy for a browser-only bug. Prefer `playwright_headless` for deterministic headless browser checks and `playwright_visual` for headed visual QA when those MCP profiles are available.
 - `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
@@ -68,8 +67,7 @@ Do not use this skill when:
 
 Also load companion skills when needed:
 
-- exact Quasar API, config, or platform behavior -> `$quasar-skill-packe`
-- `@quasar/app-vite` v2-vs-v3 choice, v3-readiness, or a v2->v3 migration -> `$alaa-app-vite-quasar`
+- exact Quasar API/config/platform behavior, v3 builds, a v2->v3 migration, v2 maintenance, SW depth, or WebOTP/device trust -> `$alaa-quasar-app-vite-v3`
 - visual ambition or art direction -> stay in this skill only when it also requires Vue, Quasar, Vite, SSR, or implementation constraints
 - explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`; when MCP browser tools are configured, route deterministic non-visual checks to `playwright_headless` and headed visual QA to `playwright_visual`
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
@@ -87,6 +85,8 @@ Also load companion skills when needed:
   - `references/21-ssr-auth-and-session-patterns.md`
 - Vue, JavaScript, SSR, hydration, lifecycle, reactivity, and JSDoc defaults:
   - `references/20-vue-js-ssr-patterns.md`
+- Modern CSS platform features (container queries, :has(), View Transitions, scroll-driven animations, @starting-style, popover, anchor positioning, oklch/light-dark theming) and the classy-motion contract (durations, easing, stagger, reduced-motion, compositor-only rules):
+  - `references/25-modern-css-and-motion.md`
 - PWA, service worker, offline fallback, update flow, and safe SW change boundaries:
   - `references/30-pwa-sw-and-offline.md`
 - Performance, runtime efficiency, Web Vitals, WebSocket, and SSE patterns:
@@ -115,7 +115,11 @@ Apply these even when the user names only one surface:
   - If trusted headers, gateway verification, or downstream auth context matter, pair with `$alaa-trust-gateway-auth`.
 - Any service worker, offline, update UX, or caching task:
   - Also load `references/30-pwa-sw-and-offline.md`.
-  - If Quasar config or InjectManifest shape matters, pair with `$quasar-skill-packe`.
+  - If Quasar config or InjectManifest shape matters, pair with `$alaa-quasar-app-vite-v3`.
+  - For implementation depth (Workbox recipes, update-UX code, SW debugging, push/badging), pair with `$alaa-quasar-app-vite-v3`.
+- Any animation, transition, motion polish, or modern-CSS-feature task:
+  - Also load `references/25-modern-css-and-motion.md`.
+  - Treat `prefers-reduced-motion` support as a blocking gate, not polish.
 - Any package, asset, dist-output, or missing-chunk task:
   - Also load `references/10-contract-and-boundaries.md`.
   - Pair with `$alaa-mono-package` when `packages/*` or package outputs are involved.
@@ -135,9 +139,8 @@ Apply these even when the user names only one surface:
   - Prefer source inspection, tests, logs, static DOM/CSS reasoning, and existing screenshots or artifacts.
   - Do not open browser automation merely because the task is frontend, Quasar, Vite, visual, or responsive.
   - If browser execution becomes necessary because static evidence is insufficient, state that pivot and the target route/check before opening it.
-- Any task that depends on the `@quasar/app-vite` version line (v2 vs v3), v3-readiness, or a v2->v3 migration:
-  - Require `$alaa-app-vite-quasar` for the version posture and migration guardrails.
-  - Pair with `$quasar-skill-packe` for the exact per-line `quasar.config`/boot/component shape.
+- Any task that depends on the `@quasar/app-vite` version line (v2 vs v3), a v3 build, a v2->v3 migration, or an exact per-line `quasar.config`/boot/component shape:
+  - Require `$alaa-quasar-app-vite-v3`; v3 is the stable production line since 3.0.1 (2026-07-07), and that skill also owns the v2 maintenance semantics and the migration playbook.
 - Any "latest", maintenance, migration, or skill-authoring task:
   - Load `references/90-upstream-deltas-and-maintenance.md`.
   - Use `$openai-docs` for OpenAI or Codex-specific claims.
@@ -147,7 +150,7 @@ Apply these even when the user names only one surface:
 When searching inside this skill pack:
 
 - Start with exact frontend concepts:
-  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`
+  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`, `view transitions`, `startViewTransition`, `container queries`, `:has()`, `@starting-style`, `allow-discrete`, `popover`, `anchor positioning`, `oklch`, `light-dark`, `prefers-reduced-motion`, `linear()`
 - Search old skill names in `references/80-legacy-skill-coverage.md` when the task uses prior terminology.
 - Search the companion routing reference when multiple skills could apply and ownership is unclear.
 - Refresh live package versions with `node scripts/check-upstream-versions.mjs` before version-sensitive changes.
@@ -159,8 +162,7 @@ When searching inside this skill pack:
 | CI, Docker, artifact paths, CDN, or deploy/runtime delivery             | `$alaa-frontend-devops`          |
 | inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
 | `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
-| Quasar CLI, `quasar.config`, platform modes, or exact Quasar APIs       | `$quasar-skill-packe`            |
-| `@quasar/app-vite` v2-vs-v3, v3-readiness, or v2->v3 migration           | `$alaa-app-vite-quasar`          |
+| Quasar CLI, `quasar.config`, platform modes, exact Quasar APIs, v3 builds, v2->v3 migration, v2 maintenance, SW depth, WebOTP, device trust | `$alaa-quasar-app-vite-v3` |
 | live OpenAI or Codex product behavior                                   | `$openai-docs`                   |
 
 ## Maintenance rules

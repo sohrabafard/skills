@@ -1,6 +1,6 @@
 ---
 name: quasar-skill-packe
-description: "Routing-first Quasar CLI + Vite skill for Quasar-specific app setup, quasar.config, boot/routing, SSR/PWA, platform modes (BEX, Capacitor, Electron), components, layouts, plugins, and upgrades. Covers both @quasar/app-vite v2 and the newer v3 (import paths, env config, aliases, folder structure differ). Use when Quasar is the decision surface or when the user mentions Quasar, quasar.config, QImg/QTable/QLayout-style symbols, app-vite, or a Quasar upgrade. Do not use it for generic Vue or Vite work that is not Quasar-specific."
+description: "Routing-first Quasar CLI + Vite skill for Quasar-specific app setup, quasar.config, boot/routing, SSR/PWA, platform modes (BEX, Capacitor, Electron), components, layouts, plugins, and upgrades. Covers both @quasar/app-vite v3 (the stable production line since 3.0.1) and the v2 maintenance line (import paths, env config, aliases, folder structure differ). Use when Quasar is the decision surface or when the user mentions Quasar, quasar.config, QImg/QTable/QLayout-style symbols, app-vite, or a Quasar upgrade. Do not use it for generic Vue or Vite work that is not Quasar-specific."
 ---
 
 # Quasar Skill Packe
@@ -24,24 +24,22 @@ It is written to be consumed by both Claude Opus 4.x and GPT-5 / Codex agents. S
 
 Default to **production-ready stable** releases. For Quasar/Vite work that means:
 
-- **`@quasar/app-vite` v2.x is the stable, production-ready line** (latest stable `2.6.2`). It is the default for new work and the recommendation for any production app.
-- **`@quasar/app-vite` v3 (`3.0.0-rc.x`) is pre-release (RC). It has no stable release yet** — only `beta` and `rc` on npm. Cover it and support a repo that already opted in, but **do not recommend migrating a production app to v3 while it is RC**, and do not scaffold new production apps on it unless the user explicitly asks for the pre-release.
-- Quasar `2.20.1`, Vite `8.0.16`, Vue `3.5.38`, Vue Router `5.1.0`, Pinia `3.0.4`, Workbox `7.4.1` are all stable; use them freely.
+- **`@quasar/app-vite` v3 is the stable, production-ready line** (stable since `3.0.1`, 2026-07-07; it holds the npm `latest` tag). It is the default for new apps.
+- **`@quasar/app-vite` v2 is the maintenance line** (last stable `2.6.2`, supported ~until 2027-06). It stays legitimate for repos that have not migrated yet — match such a repo's line, keep it pinned to `^2`, and do not upgrade it to v3 inside an unrelated task.
+- Quasar `2.21.1`, Vite `8.1.3`, Vue `3.5.39`, Vue Router `5.1.0`, Pinia `3.0.4`, Workbox `7.4.1` are all stable; use them freely.
 
-If the user explicitly wants the bleeding edge, say plainly that v3 app-vite is RC and proceed only on their request.
-
-For the **v2-vs-v3 production decision, v3-readiness, or a v2->v3 migration**, use `$alaa-app-vite-quasar` (it owns that playbook). This pack keeps only the summary needed to pick the right per-line code shape.
+For **v3 builds, the v2->v3 migration playbook, service-worker depth, WebOTP, or modern-experience decisions**, use `$alaa-quasar-app-vite-v3`. For v2-era production semantics on not-yet-migrated repos, use `$alaa-app-vite-quasar`. This pack keeps only the summary needed to pick the right per-line code shape.
 
 ## Detect the app-vite line first (highest-impact rule)
 
 The two app-vite lines have **different import paths, config formats, aliases, and folder layouts**. Read `@quasar/app-vite` in the repo's `package.json` before giving config, boot, env, alias, SSR, PWA, BEX, Electron, or Capacitor advice — and match the repo, never "upgrade it to v3" by default.
 
-- `^2.x` (stable / production) — uses `#q-app/wrappers`, `.js/.mjs/.ts/.cjs` config, `build.envFolder`/`build.envFiles`, `process.env.MODE`, and legacy aliases (`src/`, `components/`, `boot/`, ...).
-- `^3.x` (pre-release / RC) — uses `#q-app`, `.js/.ts` config only, `build.env.{folder,file,clientPrefix}`, `import.meta.env.QUASAR_MODE`, and the single `@/` alias.
+- `^3.x` (stable / production, default for new apps) — uses `#q-app`, `.js/.ts` config only, `build.env.{folder,file,clientPrefix}`, `import.meta.env.QUASAR_MODE`, and the single `@/` alias.
+- `^2.x` (maintenance line) — uses `#q-app/wrappers`, `.js/.mjs/.ts/.cjs` config, `build.envFolder`/`build.envFiles`, `process.env.MODE`, and legacy aliases (`src/`, `components/`, `boot/`, ...).
 
-✅ Do — confirm the line, give shapes for that line only, and keep a production repo on stable v2 unless the user asks otherwise.
+✅ Do — confirm the line and give shapes for that line only; a v2 repo migrates deliberately via `$alaa-quasar-app-vite-v3`, not as a side effect.
 
-❌ Don't — apply v3 import paths/aliases to a v2 repo (or vice versa), or push a production app onto RC v3. The full split is in `references/70-upstream-deltas-and-live-checks.md`.
+❌ Don't — apply v3 import paths/aliases to a v2 repo (or vice versa), or bump a v2 repo to v3 inside an unrelated task. The full split is in `references/70-upstream-deltas-and-live-checks.md`.
 
 ## How examples are written in this pack
 
@@ -169,9 +167,11 @@ When searching inside this skill pack:
 
 ## Companion routing
 
+- `$alaa-quasar-app-vite-v3`
+  - **Require** this for v3 builds, the v2->v3 migration playbook, service-worker implementation depth, WebOTP/device-trust flows, and modern-experience decisions. v3 is the stable production line since `3.0.1` (2026-07-07).
+  - This pack keeps only a **summary** of the v2/v3 split (enough to pick the right code shape). Route the posture/migration work there, and stay here for the exact Quasar API/config/component shape it asks for.
 - `$alaa-app-vite-quasar`
-  - **Require** this for the app-vite **v2 production + v3-readiness/migration** decision: version posture, "should we go v2 or v3", how to write v2 code that migrates cleanly, the full v2->v3 migration playbook, and upgrade/CI guardrails.
-  - This pack keeps only a **summary** of the v2/v3 split (enough to pick the right code shape). Route to `$alaa-app-vite-quasar` for the deep migration/readiness work, and stay here for the exact Quasar API/config/component shape it asks for.
+  - Pair for **v2-era production semantics** on repos still on the v2 maintenance line: how existing v2 code works, how to write v2 code that migrates cleanly, and the deep verified v2->v3 delta material.
 - `$alaa-frontend-developer`
   - Pair for broader frontend engineering, SSR auth, data shaping, or release-readiness decisions.
 - `$alaa-frontend-devops`
@@ -185,14 +185,15 @@ When searching inside this skill pack:
 
 ## Current live snapshot
 
-This snapshot was refreshed on June 16, 2026 and will age over time:
+This snapshot was refreshed on July 8, 2026 and will age over time:
 
-- Quasar (framework): `2.20.1` (stable)
-- `@quasar/app-vite` (stable / production): `2.6.2` — **use this line for production**
-- `@quasar/app-vite` (pre-release): `3.0.0-rc.3` (RC; no stable release yet — beta + rc only)
-- Vite: `8.0.16` (stable)
-- Vue: `3.5.38` (stable)
-- Vue Router: `5.1.0` (stable)
+- Quasar (framework): `2.21.1` (stable)
+- `@quasar/app-vite` (stable / production): `3.0.1` — **the v3 line is stable and holds npm `latest`** (since 2026-07-07)
+- `@quasar/app-vite` (maintenance): `2.6.2` — last v2 stable, for not-yet-migrated repos
+- `@quasar/extras`: `2.0.2` (ESM-only; icon-library cuts — audit before bumping)
+- Vite: `8.1.3` (stable)
+- Vue: `3.5.39` (stable)
+- Vue Router: `5.1.0` (stable; required `>= 5` by app-vite v3)
 - Pinia: `3.0.4` (v2 or v3; Vuex is no longer integrated in the CLI)
 - Workbox: `7.4.1` (stable)
 
