@@ -236,12 +236,10 @@ def vendor_list_markdown(entries: list[dict[str, object]]) -> str:
 def codex_src_roots_block(entries: list[dict[str, object]]) -> str:
     skill_roots = [str(entry["prefix"]) for entry in entries if subtree_exists(f"{entry['prefix']}/skills")]
     if not skill_roots:
-        return "$srcRoots = @()"
-    lines = ["$repoRoot = (Resolve-Path \".\").Path", "$srcRoots = @("]
-    for index, prefix in enumerate(skill_roots):
-        suffix = "," if index < len(skill_roots) - 1 else ""
-        lines.append(f"    (Join-Path $repoRoot \"{prefix.replace('/', '\\')}\\skills\"){suffix}")
-    lines.append(")")
+        return "    # No vendored skill roots detected."
+    lines = []
+    for prefix in skill_roots:
+        lines.append(f"    (Join-Path $repoRoot \"{prefix.replace('/', '\\')}\\skills\")")
     return "\n".join(lines)
 
 

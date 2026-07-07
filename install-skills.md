@@ -1,84 +1,87 @@
-#git clone https://github.com/openai/skills.git
+# Install local skills
 
-$srcRoot = "D:\Sohrab\Project\skills\skills\.curated"
-$dstRoot = "$HOME\.codex\skills"
+From the repository root, use one source-root list and one destination list. Add any new
+vendor, local pack, or agent home to these arrays.
 
-New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
+```powershell
+$repoRoot = (Resolve-Path ".").Path
 
-Get-ChildItem $srcRoot -Directory | ForEach-Object {
-    $linkPath = Join-Path $dstRoot $_.Name
-    if (-not (Test-Path $linkPath)) {
-        New-Item -ItemType SymbolicLink -Path $linkPath -Target $_.FullName | Out-Null
-        Write-Host "Linked: $($_.Name)"
-    } else {
-        Write-Host "Exists: $($_.Name)"
+$srcRoots = @(
+    (Join-Path $repoRoot "skills\.curated")
+    (Join-Path $repoRoot "skills\sohrab")
+# vendor-subtrees:codex-src-roots:start
+    (Join-Path $repoRoot "vendor\openfga-agent-skills\skills")
+    (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
+# vendor-subtrees:codex-src-roots:end
+)
+
+$destinations = @(
+    [pscustomobject]@{ Name = "codex"; Path = (Join-Path $HOME ".codex\skills") }
+    [pscustomobject]@{ Name = "claude"; Path = (Join-Path $HOME ".claude\skills") }
+)
+
+function Resolve-LinkTargetPath {
+    param([Parameter(Mandatory)][string] $Path)
+
+    try {
+        return (Resolve-Path -LiteralPath $Path -ErrorAction Stop).Path
+    } catch {
+        return [System.IO.Path]::GetFullPath($Path)
     }
 }
 
-```
-$srcRoot = "D:\Sohrab\Project\skills\skills\.curated"
-$dstRoot = "$HOME\.codex\skills"
-
-New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
-
-Get-ChildItem $srcRoot -Directory | ForEach-Object {
-    $linkPath = Join-Path $dstRoot $_.Name
-    if (-not (Test-Path $linkPath)) {
-        New-Item -ItemType SymbolicLink -Path $linkPath -Target $_.FullName | Out-Null
-        Write-Host "Linked: $($_.Name)"
-    } else {
-        Write-Host "Exists: $($_.Name)"
-    }
+foreach ($destination in $destinations) {
+    New-Item -ItemType Directory -Force -Path $destination.Path | Out-Null
 }
 
-$srcRoot = "D:\Sohrab\Project\skills\skills\sohrab"
-$dstRoot = "$HOME\.codex\skills"
-Get-ChildItem $srcRoot -Directory | ForEach-Object {
-    $linkPath = Join-Path $dstRoot $_.Name
-    if (-not (Test-Path $linkPath)) {
-        New-Item -ItemType SymbolicLink -Path $linkPath -Target $_.FullName | Out-Null
-        Write-Host "Linked: $($_.Name)"
-    } else {
-        Write-Host "Exists: $($_.Name)"
+foreach ($srcRoot in $srcRoots) {
+    if (-not (Test-Path -LiteralPath $srcRoot -PathType Container)) {
+        Write-Warning "Source root missing, skipped: $srcRoot"
+        continue
     }
-}
 
-$srcRoot = "D:\Sohrab\Project\skills\vendor\knowledge-work-plugins\design\skills"
+    Get-ChildItem -LiteralPath $srcRoot -Directory |
+        Where-Object {
+            $_.Name -notlike ".*" -and
+            (Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md") -PathType Leaf)
+        } |
+        ForEach-Object {
+            $skillName = $_.Name
+            $target = $_.FullName
+            $expectedTarget = Resolve-LinkTargetPath $target
 
-```
-claude code:
-```
-$srcRoot = "D:\Sohrab\Project\skills\skills\sohrab"
-$dstRoot = "$HOME\.claude\skills"
+            foreach ($destination in $destinations) {
+                $linkPath = Join-Path $destination.Path $skillName
+                $prefix = "[$($destination.Name)] $skillName"
 
-New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
+                $item = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
 
-Get-ChildItem $srcRoot -Directory |
-    Where-Object {
-        $_.Name -notlike ".*" -and
-        (Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md"))
-    } |
-    ForEach-Object {
-        $skillName = $_.Name
-        $target = $_.FullName
-        $linkPath = Join-Path $dstRoot $skillName
+                if ($null -eq $item) {
+                    New-Item -ItemType SymbolicLink -Path $linkPath -Target $target | Out-Null
+                    Write-Host "Linked: $prefix -> $target"
+                    continue
+                }
 
-        if (-not (Test-Path -LiteralPath $linkPath)) {
-            New-Item -ItemType SymbolicLink -Path $linkPath -Target $target | Out-Null
-            Write-Host "Linked: $skillName -> $target"
-            return
+                if ($item.LinkType -ne "SymbolicLink") {
+                    Write-Warning "Exists but is not a symlink, skipped: $prefix"
+                    Write-Host "  Path: $linkPath"
+                    continue
+                }
+
+                $rawTarget = @($item.Target)[0]
+                $actualTarget = Resolve-LinkTargetPath ([string]$rawTarget)
+                if ($actualTarget -eq $expectedTarget) {
+                    Write-Host "Exists OK: $prefix -> $target"
+                    continue
+                }
+
+                Write-Warning "Exists but target does not match, skipped: $prefix"
+                Write-Host "  Path:     $linkPath"
+                Write-Host "  Expected: $target"
+                Write-Host "  Actual:   $rawTarget"
+            }
         }
-
-        $item = Get-Item -LiteralPath $linkPath -Force
-
-        if ($item.LinkType -eq "SymbolicLink" -and $item.Target -eq $target) {
-            Write-Host "Exists OK: $skillName"
-        } else {
-            Write-Host "Exists but not matching, skipped: $skillName"
-            Write-Host "  Path:   $linkPath"
-            Write-Host "  Target: $($item.Target)"
-        }
-    }
+}
 ```
 
 
@@ -234,29 +237,6 @@ Notes:
 - `unlink` removes only matching symlinks that point at the expected vendored skill directories
 - the script refuses to overwrite conflicting existing destinations
 
-To link vendored skills into Codex, extend the existing install pattern to include each vendored `skills/` directory:
-
-```powershell
-# vendor-subtrees:codex-src-roots:start
-$repoRoot = (Resolve-Path ".").Path
-$srcRoots = @(
-    (Join-Path $repoRoot "vendor\openfga-agent-skills\skills"),
-    (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
-)
-# vendor-subtrees:codex-src-roots:end
-$dstRoot = "$HOME\.codex\skills"
-
-New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null
-
-foreach ($srcRoot in $srcRoots) {
-    Get-ChildItem $srcRoot -Directory | ForEach-Object {
-        $linkPath = Join-Path $dstRoot $_.Name
-        if (-not (Test-Path $linkPath)) {
-            New-Item -ItemType SymbolicLink -Path $linkPath -Target $_.FullName | Out-Null
-            Write-Host "Linked: $($_.Name)"
-        } else {
-            Write-Host "Exists: $($_.Name)"
-        }
-    }
-}
-```
+To link vendored skills, add the relevant vendored `skills/` directory to `$srcRoots`
+in the unified local install snippet above. The vendored source-root lines in that
+snippet are refreshed by `python scripts\vendor_subtrees.py refresh-docs`.
