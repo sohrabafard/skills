@@ -287,6 +287,16 @@ If your app uses Octane:
 - Keep queue workers separate from Octane web workers (different Deployments/Pods).
 - Validate idle heartbeat behavior in long-lived producer workers before production rollout.
 
+# Redis in the async plane (boundaries and degradation)
+RabbitMQ is the transport here — Redis never carries these jobs, and Horizon (Redis-queue tooling) stays forbidden. But jobs commonly touch Redis through Laravel job middleware and dedupe logic. Rules:
+
+- Job middleware `RateLimited`, `WithoutOverlapping`, and `Redis::throttle`-style funnels are backed by the cache/Redis. If a job uses them, a Redis outage must not stall or crash consumers:
+  - default fail-open: on cache connection failure, run the job and emit a metric,
+  - fail-closed only when the middleware guards correctness — and then back the invariant with a DB constraint too.
+- Idempotency/dedupe for consumed messages: the DB unique constraint is the primary dedupe (at-least-once safety); a Redis dedupe key (`Cache::add` with TTL) is an optional fast-path in front of it, never a replacement.
+- Workers boot like web apps: no cache/Redis reads in provider `register()`/`boot()`, or a Redis outage prevents queue workers from starting (see `alaa-laravel-architecture` provider discipline).
+- Key design, TTL, flush discipline, and the Redis-down fallback contract live in `alaa-data-layer` (`references/50-redis-laravel-octane.md`); apply them to any Redis touch inside jobs.
+
 # Step 8 — Failure handling (Laravel + RabbitMQ)
 Laravel:
 - Use `failed_jobs` storage (DB) and alert on increases.
@@ -382,6 +392,8 @@ When applying this skill, output should include:
 
 # Anti-patterns
 - Using Horizon for RabbitMQ workers in this repository.
+- Redis-only dedupe for critical side effects (money/legal/audit) without a DB unique constraint.
+- Job middleware backed by Redis with no defined behavior for a Redis outage (consumers stall or crash instead of failing open).
 - Running `rabbitmq:consume` against multiple queues in one process.
 - Leaving timeout/retry defaults unreviewed for long jobs.
 - Enabling DLQ reroute without verifying broker topology.

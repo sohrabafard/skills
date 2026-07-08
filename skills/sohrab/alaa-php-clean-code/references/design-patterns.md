@@ -6,6 +6,7 @@
 - Service pattern
 - Interfaces and dependency injection
 - Repository pattern
+- Decorator pattern
 - Factory pattern
 - Strategy pattern
 - Observer pattern
@@ -122,6 +123,30 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - A generic `BaseRepository` that becomes a dumping ground.
 - Hiding all Eloquent behavior behind thin wrappers with no value.
 - Putting authorization or domain rules in the repository.
+
+## Decorator pattern
+
+### Use when
+- A cross-cutting concern (caching, logging, metrics, retries, tracing) must wrap an existing interface without changing its implementations.
+- Caching a repository: this is the canonical Alaa home for Redis caching — a `Cached<Domain>Repository` implementing the same repository interface and wrapping the store implementation (e.g. `PostgresCommentRepository`).
+- Behavior must be stackable or removable per environment (e.g. no cache decorator in tests).
+
+### Laravel application
+- Implement the same interface as the wrapped class; take it as the first constructor argument.
+- Compose in the service provider binding (closure that builds inner + decorator); callers keep depending on the interface and never know the decorator exists.
+- Cache decorators delegate reads through `Cache::remember`/`flexible` and invalidate on writes right after delegating; on cache-store failure they call the inner implementation directly so a Redis outage never becomes a request failure.
+- Key design, TTL, invalidation, and fallback policy come from `alaa-data-layer` (`references/50-redis-laravel-octane.md`); the decorator seam itself is defined in `alaa-laravel-architecture`.
+
+### Good defaults
+- One concern per decorator; stack two small decorators rather than writing one mixed one.
+- The decorator holds no business rules, no query composition, and no mutable request state (Octane-safe: stateless, context passed per call).
+- Keep the decorator's method list identical to the interface — if it needs extra public methods, the abstraction is wrong.
+
+### Anti-patterns
+- Caching inside the concrete repository (forces every caller through the cache and makes fallback and testing impossible).
+- `Cache::` calls in controllers or services for domain data instead of a decorator.
+- A decorator that swallows inner-layer exceptions other than cache-infrastructure failures.
+- Decorators that add behavior the interface consumer must know about (leaky abstraction).
 
 ## Factory pattern
 

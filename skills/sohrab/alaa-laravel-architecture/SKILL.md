@@ -43,6 +43,8 @@ Keep this top-level file small. Load the references for the full rules, examples
 | Service vs Action vs Job          | Service/Action for synchronous domain flow; Job only when async delivery or queue semantics are required |
 | public IDs or route binding       | public IDs stay stable and should not leak storage-specific keys                                         |
 | cross-module events               | preserve explicit contracts and outbox-safe boundaries                                                   |
+| where caching lives               | decorator over the repository interface, never in Controllers/Services; patterns via `$alaa-data-layer`  |
+| provider register vs boot         | register = bindings only; boot = wiring only; no cache/Redis/DB I/O in either (see full guide)           |
 
 ## Companion routing
 
@@ -51,7 +53,7 @@ Keep this top-level file small. Load the references for the full rules, examples
 - $alaa-trust-gateway-auth
   - Pair when the task also touches gateway-derived identity and trusted header semantics.
 - $alaa-data-layer
-  - Pair when the task also touches schema, query, and transaction decisions.
+  - Pair when the task also touches schema, query, and transaction decisions, or any Redis/cache behavior (its `references/50-redis-laravel-octane.md` owns key design, TTL, invalidation, and Redis-down fallback; this skill owns the decorator seam).
 
 ## Reference navigation
 

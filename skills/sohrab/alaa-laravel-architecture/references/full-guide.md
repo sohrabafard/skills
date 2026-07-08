@@ -83,6 +83,50 @@ When the repository targets Laravel 13:
 - Repository containing business rules.
 - Validation rules inside Controllers or Services.
 
+## Repository contract and binding (mandatory)
+Every repository is an **interface plus a store-named implementation**, bound in a service provider. The interface is what makes the layer testable and gives caching a seam.
+
+```php
+interface CommentRepositoryInterface
+{
+    public function findByPublicId(string $tenantId, string $publicId): ?CommentData;
+    public function create(CommentData $data): CommentData;
+}
+
+final class PostgresCommentRepository implements CommentRepositoryInterface { /* data access only */ }
+```
+
+Binding (provider `register()`):
+
+```php
+public function register(): void
+{
+    $this->app->bind(CommentRepositoryInterface::class, PostgresCommentRepository::class);
+}
+```
+
+Rules:
+- Services depend on the interface, never on the concrete class.
+- The implementation name states the store: `PostgresCommentRepository`, `MongoAuditLogRepository`.
+- A repository layer is **complete** when every domain read/write for that domain goes through the interface — no controller/service touches Eloquent or `DB::` for it directly. Completeness is the precondition for adding caching (see next section).
+
+## Caching seam (decorator over the repository)
+Caching lives in exactly one place: a **decorator** that implements the same repository interface and wraps the store implementation. It is added only after the repository contract above is complete for that domain.
+
+```php
+$this->app->bind(CommentRepositoryInterface::class, function ($app) {
+    return new CachedCommentRepository(
+        $app->make(PostgresCommentRepository::class),
+        $app->make('cache')->store(config('cache.default')),
+    );
+});
+```
+
+- Controllers, Services, and Resources never call `Cache::` or `Redis::` for domain data; they cannot tell whether caching exists.
+- The decorator holds no business rules and no query composition — only cache read/write/invalidate around the inner calls.
+- Write methods invalidate their keys right after delegating to the inner repository.
+- Key design, TTL, invalidation strategy, stampede control, and Redis-down fallback behavior are owned by `alaa-data-layer` (`references/50-redis-laravel-octane.md`); this skill owns *where* the seam sits.
+
 # API contracts (default Alaa/comment-service shape)
 
 ## Request validation (mandatory)
@@ -198,6 +242,23 @@ When returning 403 with a stable `code`, emit a lightweight domain/telemetry eve
 - correlation/request id (if available)
   Do not include secrets or PII.
 
+# Service provider discipline (register vs boot)
+
+## register()
+- Container bindings only: `bind`, `singleton`, `scoped`, contextual bindings, merging config.
+- Never resolve services, never run queries, never touch cache/Redis/session/filesystem, never read `config()` values that other providers may still change.
+
+## boot()
+- Wiring only: event-to-listener bindings, route model bindings, observers, gates/policies, macro registration, publishing.
+- Still **no I/O**: do not read cache, `Redis::`, the database, or external services in `boot()`. A provider that reads Redis at boot turns a Redis outage into a total outage (500-loop; under Octane a worker crash-loop before serving a single request).
+
+## Deferring unavoidable early work
+- Needs a resolved service at bootstrap time: wrap in `$this->app->booting(...)` / `$this->app->booted(...)` closures so it runs late and lazily.
+- Needs a cached/config value on every request: read it lazily at first use inside the consuming class, with a try/catch and safe default; per-request memoization via `Cache::memo()` if it is read repeatedly.
+- Providers that only register bindings should be deferrable (`DeferrableProvider`) when they are heavy.
+
+Rule of thumb: after `php artisan octane:start` with Redis and the database stopped, every worker must still boot and the app must return responses (degraded where necessary). If a provider prevents that, its work is in the wrong place.
+
 # Recommended workflow (deterministic)
 1) Identify endpoints / use-cases and their domain objects.
 2) Define DTOs for inputs (validated) and filters.
@@ -216,6 +277,9 @@ When returning 403 with a stable `code`, emit a lightweight domain/telemetry eve
 
 # Anti-patterns
 - “God controller” with validation, authorization, queries, and business rules mixed together.
+- `Cache::` or `Redis::` calls for domain data in Controllers, Services, or Resources (caching belongs in the repository decorator).
+- Caching added while some code paths still bypass the repository interface (uninvalidatable stale data).
+- Service providers resolving services in `register()` or doing I/O (cache, Redis, DB, HTTP) in `boot()`.
 - Passing arrays between layers instead of DTOs.
 - Repositories containing business rules or authorization decisions.
 - Exposing internal IDs or accepting them in public APIs.

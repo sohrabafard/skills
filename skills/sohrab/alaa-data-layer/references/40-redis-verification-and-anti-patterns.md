@@ -2,6 +2,24 @@
 Use Redis deliberately for caching, rate limiting, and distributed coordination.
 Redis is fast, but memory is finite; design keys and TTLs as a first-class schema.
 
+Language lanes (load the one that matches the service):
+- Laravel 13 + Octane integration, processing uses, and degraded mode: `50-redis-laravel-octane.md`
+- Go services (DB-query cache only, client config, degraded mode): `51-redis-golang.md`
+
+Both lanes share the availability contract below.
+
+## Availability and degraded mode (mandatory)
+Redis is an optimization, not an availability dependency. Every design that adds Redis must answer: "what happens when Redis is slow, flapping, or completely down?"
+
+Baseline rules for every service, any language:
+- A cache read/write error must never fail the request; fall through to the source of truth (DB).
+- Short connect/read timeouts + bounded retries with jitter; a sick Redis must cost milliseconds, not seconds.
+- No hard Redis dependency at process startup or framework boot; connections stay lazy and probe failures stay non-fatal.
+- Locks and rate limiters must have a documented fail-open or fail-closed decision per call site; correctness-critical exclusion is backed by DB constraints, never by Redis alone.
+- Fallback must be observable: a metric/alert fires when the service is running without its cache.
+- Cold-cache recovery is designed (stampede control), not hoped for.
+- The stop-Redis test is part of the Definition of Done: stop Redis, verify the service still serves, then verify clean recovery.
+
 ## Cache key design (mandatory)
 Use namespaced, tenant-aware keys. Recommended shape:
 - `{app}:{env}:{tenant}:{resource}:{id}:{version}`
@@ -99,6 +117,11 @@ When applying this skill, output (at minimum):
 - Redis: hit rate/evictions/key growth signals from your ops tooling
 
 # Anti-patterns
+- Treating Redis as a source of truth for business data.
+- A cache/lock/limiter error that propagates as a request failure (Redis outage becomes service outage).
+- Touching Redis during framework boot or process startup so that a Redis outage prevents the app from starting.
+- Global flushes (`FLUSHALL`, `FLUSHDB`, framework-level cache flush) in production code or deploy scripts.
+- Caching on top of an incomplete repository layer (code paths that bypass the cache and its invalidation).
 - Adding speculative indexes “just in case”.
 - Denormalizing truth tables without measured evidence and documentation.
 - OFFSET pagination on large tables.

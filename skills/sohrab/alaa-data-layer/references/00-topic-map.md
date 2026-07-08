@@ -43,6 +43,14 @@ Use this file to choose the smallest relevant section in [full-guide.md](./full-
 - `# Verification / Definition of Done`
 - `# Anti-patterns`
 
+## Language-lane references (outside full-guide.md)
+
+These live in their own files, not in `full-guide.md`:
+
+- `40-redis-verification-and-anti-patterns.md` also carries `## Availability and degraded mode (mandatory)` — shared by both lanes.
+- `50-redis-laravel-octane.md` — Redis in Laravel 13 + Octane: repository-pattern gate, client/config baseline, boot/register safety, cache decorator, stampede control, processing uses (locks, rate limits, dedupe), invalidation and flush discipline, degraded mode when Redis is down, Octane connection rules.
+- `51-redis-golang.md` — Redis in Go services: DB-query-cache-only policy, repository boundary gate, go-redis v9 configuration, degraded mode (error classification, singleflight, circuit breaker), locks and rate limits.
+
 ## Working rule
 
 - Read only the sections you need from [full-guide.md](./full-guide.md).

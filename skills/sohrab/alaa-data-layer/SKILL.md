@@ -1,6 +1,6 @@
 ---
 name: alaa-data-layer
-description: "Postgres truth-first data-layer policy for multi-tenant services plus Redis cache and lock guidance. Use when schema, migration, query, or Redis behavior changes. Do not use it to introduce a new datastore by default."
+description: "Postgres truth-first data-layer policy for multi-tenant services plus Redis cache and lock guidance, including dedicated Redis lanes for Laravel 13/Octane and Go services with a mandatory repository-pattern gate and Redis-down degraded-mode fallback. Use when schema, migration, query, cache, or Redis behavior changes. Do not use it to introduce a new datastore by default."
 ---
 
 
@@ -43,6 +43,8 @@ Keep this top-level file small. Load the references for the full rules, examples
 | additive migration rollout, large tables, or indexes   | `references/20-schema-migrations-and-performance.md`     |
 | locks, retries, pooling, hot queries, or projections   | `references/30-concurrency-projections-and-pooling.md`   |
 | Redis cache, lock, idempotency, or rate-limit behavior | `references/40-redis-verification-and-anti-patterns.md`  |
+| Redis in a Laravel 13 / Octane service (integration, fallback, flush discipline) | `references/50-redis-laravel-octane.md` |
+| Redis in a Go service (DB-query cache, client config, degraded mode) | `references/51-redis-golang.md` |
 
 ## Companion routing
 
@@ -56,6 +58,10 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair when hot paths, worker lifetime, or memory reuse affect DB or Redis behavior.
 - $alaa-partitioned-table-fk-audit
   - Pair when auditing or hardening a Postgres schema for the id-only-FK-into-a-partitioned-parent bug class (SQLSTATE 42830), or when a migration fails with "no unique constraint matching given keys."
+- $alaa-php-clean-code
+  - Pair when Laravel Redis work needs the repository policy, decorator pattern, or Octane-safe code shape (the repository gate in `references/50-redis-laravel-octane.md`).
+- $alaa-golang
+  - Pair for any Go Redis work; its `references/61-redis-cache-layer.md` is the Go cache-pattern authority that `references/51-redis-golang.md` builds on.
 
 ## Reference navigation
 
@@ -71,6 +77,10 @@ Keep this top-level file small. Load the references for the full rules, examples
   - `references/30-concurrency-projections-and-pooling.md`
 - Redis patterns, verification rules, and anti-patterns:
   - `references/40-redis-verification-and-anti-patterns.md`
+- Redis in Laravel 13 + Octane (repository gate, decorator seam, boot safety, degraded mode):
+  - `references/50-redis-laravel-octane.md`
+- Redis in Go services (DB-query cache only, go-redis config, degraded mode):
+  - `references/51-redis-golang.md`
 - Full preserved guidance, rules, examples, and checklists:
   - `references/full-guide.md`
 

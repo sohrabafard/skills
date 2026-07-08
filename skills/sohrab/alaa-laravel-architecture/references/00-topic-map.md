@@ -13,6 +13,8 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `## Layering responsibilities`
 - `## Allowed flow`
 - `## Not allowed`
+- `## Repository contract and binding (mandatory)`
+- `## Caching seam (decorator over the repository)`
 - `# API contracts (default Alaa/comment-service shape)`
 - `## Request validation (mandatory)`
 - `## Success envelope (mandatory)`
@@ -29,6 +31,7 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `## Optional realtime`
 - `## Observers vs Events`
 - `## AuthorizationDenied event (observability hint)`
+- `# Service provider discipline (register vs boot)`
 - `# Recommended workflow (deterministic)`
 - `# Anti-patterns`
 

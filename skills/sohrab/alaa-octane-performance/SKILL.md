@@ -41,13 +41,15 @@ Keep this top-level file small. Load the references for the full rules, examples
 - Singleton contamination that keeps stale request context alive.
 - Auth, tenant, or policy state that is not reset between requests.
 - Memory growth that tracks request count instead of stable workload shape.
+- Redis `connected_clients` growth that tracks worker uptime (lingering connections).
+- Providers touching cache/Redis in `register()`/`boot()` — a Redis outage becomes a worker crash-loop.
 
 ## Companion routing
 
 - $alaa-observability-soc
   - Pair when the task also touches metrics and traces for long-lived workers.
 - $alaa-data-layer
-  - Pair when the task also touches DB and cache performance decisions.
+  - Pair when the task also touches DB and cache performance decisions; its `references/50-redis-laravel-octane.md` owns Redis integration, flush discipline, and Redis-down fallback for Laravel.
 
 ## Reference navigation
 

@@ -19,6 +19,11 @@ Use this file to choose the smallest relevant section in `full-guide.md`.
 - `## Transactions`
 - `## Async offload`
 - `## Caching`
+- `# Redis and cache connections under Octane (mandatory)`
+- `## Connection lifecycle`
+- `## Sizing`
+- `## Redis-down behavior`
+- `## Per-request vs cross-request caching`
 - `# Laravel 13 + Octane reminders`
 - `# PHP 8.5 performance patterns (Octane-friendly)`
 - `## Core rules`

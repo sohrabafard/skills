@@ -97,6 +97,31 @@ If the codebase uses Octane listeners/hooks, prefer explicit reset hooks for:
     - never share cached data across tenants unless explicitly intended and proven safe
 - If object payloads are cached in Laravel 13, audit `cache.serializable_classes` explicitly and prefer arrays or scalars on hot paths when that is safer.
 
+# Redis and cache connections under Octane (mandatory)
+Redis behaves differently under Octane because connections live as long as the worker, not the request.
+
+## Connection lifecycle
+- Resolved Redis connections are reused across every request the worker serves. That is the intended performance win — do not "fix" it by disconnecting per request without evidence.
+- Do not capture a `Redis` connection object (or a `Cache` store instance) inside your own singletons. Resolve via the facade/manager per use so client retry/reconnect logic applies after drops and worker recycles.
+- Known issue: Octane can leave Redis connections lingering after request termination (laravel/octane#1094). Watch `connected_clients` on the Redis server; if it grows with process uptime, add an `OperationTerminated`/`RequestTerminated` listener that disconnects the Redis manager (mirror of the commented-out DB disconnect in `config/octane.php`).
+- Prefer phpredis with `persistent` + `persistent_id` so worker recycling (`--max-requests`) does not pay a fresh TCP+AUTH handshake per recycle.
+- Configure client-level resilience in `config/database.php`: `max_retries` with `backoff_algorithm` (e.g. `decorrelated_jitter`), explicit `timeout` and `read_timeout`. A worker holding a dead connection must recover on the next call, not hang.
+
+## Sizing
+- `workers × Redis connections per worker` (cache + session + queue + locks connections all count) must stay well under the Redis server's `maxclients`, summed across all services and replicas sharing the instance.
+- Do not raise Octane workers without re-checking both DB pool limits and Redis `maxclients`.
+
+## Redis-down behavior
+- A worker must boot and serve with Redis unreachable. Providers must not touch cache/Redis in `register()`/`boot()` (see `alaa-laravel-architecture` provider discipline); otherwise workers crash-loop before serving a single request.
+- Cache reads on hot paths must fail fast (short timeouts) and fall through to the source of truth; the `failover` cache store and decorator fallback rules live in `alaa-data-layer` `references/50-redis-laravel-octane.md`.
+- Include an Octane-specific check in the DoD: stop Redis, run `octane:start`, confirm workers boot and requests degrade instead of 500-looping.
+
+## Per-request vs cross-request caching
+- Per-request memoization: `Cache::memo()` (scoped binding — resets each Octane request; safe).
+- Cross-request caching: Redis with tenant-scoped keys and explicit TTL.
+- Never statics/globals as a "free cache" — that is the state-leak bug class this skill exists to prevent.
+- Swoole-only `octane` store and `Octane::table()` are per-server RAM caches: fine as L1 for truly server-local data, never a substitute for shared Redis in multi-replica deployments, and always flushed on restart.
+
 # Laravel 13 + Octane reminders
 - Treat Laravel 13 on PHP 8.5 as the default target for new Octane work in this skill pack.
 - If web middleware is touched, prefer `PreventRequestForgery` direct references and Laravel 13 middleware configuration APIs.
@@ -200,6 +225,9 @@ Never auto-commit.
 
 # Anti-patterns
 - Storing tenant/user context in statics/singletons under Octane.
+- Capturing Redis/cache connection objects inside app singletons (stale connections survive drops and recycles).
+- Providers that read cache/Redis in `register()`/`boot()` (Redis outage becomes a worker crash-loop).
+- Redis connection counts that grow with worker uptime and nobody watching `connected_clients`.
 - “Fixing performance” by broad refactors that change unrelated code.
 - Blocking request workers on slow IO (external calls, heavy queries) when offload is feasible.
 - Cache keys that omit tenant identifier (cross-tenant leakage risk).

@@ -190,6 +190,7 @@ In Alaa Laravel code, the Repository pattern is mandatory for application-layer 
 - Avoid vague generic `BaseRepository` abstractions and repository methods that are only decorative pass-throughs. If the operation is simple, the repository method may be simple, but the persistence boundary still belongs in the repository.
 - Existing direct Eloquent outside repositories is legacy debt. Do not expand it; when touching that slice, move the touched persistence access behind a repository unless the task mode explicitly forbids behavior-adjacent cleanup.
 - Allowed exceptions: Eloquent model relationship definitions, scopes/casts/accessors that belong on the model, migrations, factories, seeders, test fixtures/assertions, resources reading already-loaded models, and framework glue where Laravel requires the model API.
+- Caching for domain data lives only in a repository **decorator** (`Cached<Domain>Repository` implementing the same interface), never inside the concrete repository and never as `Cache::` calls in controllers/services. A complete repository layer is the mandatory precondition for adding Redis caching — see `references/design-patterns.md` (Decorator) and `alaa-data-layer` `references/50-redis-laravel-octane.md`.
 
 # Default design decisions
 Keep these defaults visible here; detailed pattern guidance lives in `references/design-patterns.md`.
@@ -222,7 +223,7 @@ Apply SOLID pragmatically rather than mechanically.
 - Prefer extension through composition, small strategies, and focused services before scattering branching across many call sites.
 - Keep subtype contracts compatible, keep interfaces role-based, and prefer a clear concrete class over a forced abstraction when the dependency is local and stable.
 
-Clarity, fewer moving parts, and repo consistency beat textbook purity.
+Clarity, fewer moving parts, and repo consistency beat textbook purity. For per-principle depth with Do/Don't examples (SRP, OCP, LSP, ISP, DIP) read `references/solid-in-practice.md`.
 
 # Laravel defaults
 - Keep controllers thin and deterministic.
@@ -289,7 +290,9 @@ Documentation is part of done when behavior, contracts, setup, env vars, request
 - `references/consistency-and-naming.md`
   Read before renaming, extracting, consolidating, or normalizing code shape.
 - `references/design-patterns.md`
-  Read for MVC, Service, Repository, Factory, Strategy, Observer, Adapter, Facade, Dependency Injection, Singleton, Pipeline, Command, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
+  Read for MVC, Service, Repository, Decorator (incl. cache decorators), Factory, Strategy, Observer, Adapter, Facade, Dependency Injection, Singleton, Pipeline, Command, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
+- `references/solid-in-practice.md`
+  Read for per-principle SOLID depth (SRP, OCP, LSP, ISP, DIP) with Do/Don't PHP examples and the SOLID review checklist.
 - `references/octane-clean-code.md`
   Read for Octane-safe clean-code rules, design-pattern cautions, Swoole-to-RoadRunner portability, state-leak review checks, and validation expectations.
 - `references/php-modern-and-psr.md`

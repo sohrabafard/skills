@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-08
+
+- Added "Redis in the async plane (boundaries and degradation)" section: fail-open defaults for Redis-backed job middleware (`RateLimited`, `WithoutOverlapping`, funnels), DB-first dedupe with optional Redis fast-path, no cache/Redis in provider `register()`/`boot()` for worker boot safety, and routing to `alaa-data-layer` `references/50-redis-laravel-octane.md` for key/TTL/fallback contracts.
+- Added matching anti-patterns (Redis-only dedupe for critical side effects; undefined Redis-outage behavior in job middleware).
+
 ## 2026-06-23
 
 - Updated Laravel 13 guidance to prefer official upstream `vladimir-yuldashev/laravel-queue-rabbitmq` `v15.0.0` or newer instead of the temporary `sohrabafard` fork override.

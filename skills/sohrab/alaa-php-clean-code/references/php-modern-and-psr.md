@@ -47,6 +47,30 @@
   - use only when the repo targets PHP 8.4+ and the benefit is obvious
   - avoid as a default in framework-heavy or magic-heavy code until toolchain support and team conventions are proven
 
+### PHP 8.5 features (when the repo targets PHP 8.5+)
+PHP 8.5 (released 2025-11) is the platform baseline for new Alaa Laravel 13 services. Adopt these deliberately:
+
+- `array_first()` / `array_last()`:
+  - safe default; replaces `reset()`/`end()` pointer tricks and `$arr[array_key_first($arr)]` noise
+  - returns `null` for empty arrays — keep the null path explicit
+- `clone($object, ['prop' => $value])` (clone-with):
+  - safe default for `with*()` methods on `readonly` DTOs and value objects; removes hand-written wither boilerplate
+  - respects visibility; keep withers as named methods so call sites stay intention-revealing
+- `#[\NoDiscard]`:
+  - put it on methods whose return value must be checked (result objects, immutable withers, `attempt()`-style APIs)
+  - fits the platform rule that rate limiters and lock attempts must check their results
+- Pipe operator `|>`:
+  - use carefully; good for short, linear transform chains of named functions/first-class callables
+  - don't rewrite readable Collection chains or simple nested calls just to look modern; one style per file
+- New `Uri` extension:
+  - prefer it over ad-hoc `parse_url()` handling when the repo starts using it consistently
+
+Do / Don't:
+- ✅ Do: `public function withStatus(CommentStatus $status): self { return clone($this, ['status' => $status]); }` on a `readonly` DTO — one line, immutability preserved.
+- ❌ Don't: keep writing full constructor-copy withers on 8.5 repos, or mutate a `readonly`-less DTO in place because withers felt verbose — both re-open the immutability gap clone-with closed.
+- ✅ Do: `#[\NoDiscard] public function attempt(): LockResult` so an ignored lock result becomes a warning.
+- ❌ Don't: chain `|>` across closures with side effects or multi-branch logic — that hides control flow that `match`/named methods show.
+
 ### Avoid by default
 - Dynamic properties in new code.
 - `#[AllowDynamicProperties]` as a convenience escape hatch.

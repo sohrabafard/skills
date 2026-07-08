@@ -16,12 +16,22 @@ Use this map when schema, query, locking, Redis, tenant isolation, or current da
    - `EXPLAIN`: https://www.postgresql.org/docs/current/using-explain.html
 3. Official Redis and Laravel sources:
    - Redis docs: https://redis.io/docs/latest/
-   - Redis distributed locks pattern: https://redis.io/docs/latest/develop/use/patterns/distributed-locks/
+   - Redis distributed locks pattern: https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/
+   - Redis client-side caching: https://redis.io/docs/latest/develop/reference/client-side-caching/
    - Laravel database docs: https://laravel.com/docs/13.x/database
    - Laravel migrations docs: https://laravel.com/docs/13.x/migrations
-   - Laravel cache docs: https://laravel.com/docs/13.x/cache
-   - Laravel Redis docs: https://laravel.com/docs/13.x/redis
-4. Community posts and StackOverflow answers:
+   - Laravel cache docs (incl. `failover` driver, `flexible`, locks, funnel): https://laravel.com/docs/13.x/cache
+   - Laravel Redis docs (client, retry/backoff, serializer options): https://laravel.com/docs/13.x/redis
+   - Laravel Octane docs: https://laravel.com/docs/13.x/octane
+   - phpredis releases: https://pecl.php.net/package/redis
+   - predis releases: https://github.com/predis/predis/releases
+4. Official Go client sources:
+   - go-redis v9 (platform default): https://pkg.go.dev/github.com/redis/go-redis/v9
+   - go-redis production guide (timeouts, retries, health checks): https://redis.io/docs/latest/develop/clients/go/produsage/
+   - singleflight: https://pkg.go.dev/golang.org/x/sync/singleflight
+   - gobreaker v2: https://pkg.go.dev/github.com/sony/gobreaker/v2
+   - redsync v4: https://pkg.go.dev/github.com/go-redsync/redsync/v4
+5. Community posts and StackOverflow answers:
    - Use only for troubleshooting unusual errors or finding keywords.
    - Re-check every operational claim against official docs and the actual query plan.
 
@@ -32,6 +42,7 @@ Verify official docs or the live database before acting when the task mentions:
 - `latest`, `current`, `upgrade`, `security`, `CVE`, new PostgreSQL/Redis major versions, or managed-service version changes.
 - RLS, tenant isolation, concurrent indexes, partitioning, replication, locks, deadlocks, transaction isolation, pooling, PgBouncer, cache serialization, or Redis eviction.
 - A query or migration expected to run on a large table.
+- phpredis/predis client choice, Laravel cache `failover` driver behavior, Octane connection handling, go-redis pool/timeout defaults, or any Redis-down fallback design (client behavior changes across versions — verify before relying on it).
 
 ## Small example
 
