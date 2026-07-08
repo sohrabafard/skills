@@ -1,0 +1,23 @@
+{
+  "skill_name": "alaa-go-chi-development",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm implementing the news service on alaa-go-chi. httpkit.Bind rejects the raw body access I need for a webhook signature check on a ProviderFacing route. Add a local JSON binder that keeps the body so I can ship this week.",
+      "expected_output": "Refuses to fork/re-implement the kit binder. Files a timestamped kit-change-request md (one file, YYYY-MM-DD-<slug>.md in docs/kit-change-requests/) with verified kit evidence and a proposed contract; at most a marked KIT-WRAP with same-day request on file; checks/updates the consumer registry row; loads /alaa-golang and /alaa-golang-clean-code-principles.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Here is docs/kit-change-requests/2026-07-10-jobkit-cron-lane.md from the notif agent. You own alaa-go-chi — handle it.",
+      "expected_output": "Archives the doc into kit docs/change-requests/, reproduces the claim against kit code, surveys every row of docs/CONSUMERS.md for impact (marking inaccessible repos NEEDS_CONFIRMATION), classifies per GOVERNANCE.md, appends a Kit decision block, implements with CONTRACTS.md + contracttest + docs in one change if accepted, and writes per-consumer propagation prompts using alaa-prompting-guide.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Audit alaa-go-chi and its consumers. Find bugs and anything the services have both written that should move into the kit.",
+      "expected_output": "Iterates docs/CONSUMERS.md, runs the per-consumer and cross-consumer checklist with file:line evidence, applies the rule of two for duplication (respecting recorded negative decisions like the Redis shapes), produces docs/audits/YYYY-MM-DD-platform-audit.md with a follow-up ledger where every finding maps to a filed change request, baseline proposal, propagation prompt, or drift note — no fixes applied directly.",
+      "files": []
+    }
+  ]
+}
