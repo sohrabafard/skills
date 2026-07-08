@@ -2,7 +2,7 @@
 
 Scope: reading SMS OTP codes in the browser (login/verification flows) and using device signals safely for device trust. Written for Quasar app-vite v3 apps (SPA/SSR/PWA), Vue 3 Composition API. Research verified 2026-07-08 against MDN, web.dev, developer.chrome.com, Apple developer docs, WICG spec, and vendor primary sources. Refresh before trusting browser-support claims after that date.
 
-Also load: `50-modern-experience.md` for passkey-forward auth UX; `$alaa-vue-typescript-clean-code` for composable shape; `$alaa-trust-gateway-auth` when the auth backend contract is in scope; `$alaa-indexeddb-browser-storage` for storage classification rules.
+Also load: `45-browser-apis-and-permissions.md` for the general permission model and priming UX; `50-modern-experience.md` for passkey-forward auth UX; `$alaa-vue-typescript-clean-code` for composable shape; `$alaa-trust-gateway-auth` when the auth backend contract is in scope; `$alaa-indexeddb-browser-storage` for storage classification rules.
 
 ## 1. The one SMS template that serves every mechanism
 

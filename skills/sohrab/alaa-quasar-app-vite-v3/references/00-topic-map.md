@@ -16,6 +16,7 @@ Load the smallest file that answers the task. One hop deep; each file names its 
 | SSR mental model, request isolation, register-sw hooks, SSR+PWA takeover | `33-ssr-pwa-playbook.md` |
 | SPA vs SSR vs PWA vs BEX vs Capacitor vs Cordova vs Electron | `35-platform-modes.md` |
 | SMS OTP autofill, WebOTP, fingerprinting, device trust, passkeys | `40-webotp-and-device-trust.md` |
+| Browser device APIs + permissions: audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors; priming UX, denial recovery, permission testing, Capacitor split | `45-browser-apis-and-permissions.md` |
 | Mode selection, install UX, perceived performance, modern experience | `50-modern-experience.md` |
 | Which component to use / component families | `60-components-and-layouts.md` |
 | Exact component usage, alternatives, search terms | `61-component-usage-atlas.md` |
@@ -35,6 +36,7 @@ Search terms → file:
 - `__WB_MANIFEST`, `InjectManifest`, `NetworkFirst`, `StaleWhileRevalidate`, `ExpirationPlugin`, `BackgroundSyncPlugin`, `skipWaiting`, `controllerchange`, `navigation preload`, `addRoutes`, `setAppBadge`, `declarative web push`, `kill-switch` → `30`, `32`
 - `ssrContext`, `preFetch`, `useMeta`, `useHydration`, `hydration mismatch`, `QNoSsr` → `31`, `33`
 - `OTPCredential`, `one-time-code`, `otp-credentials`, `@domain #code`, `FingerprintJS`, `BotD`, `device ID`, `passkey`, `WebAuthn` → `40`
+- `getUserMedia`, `MediaRecorder`, `isTypeSupported`, `permissions.query`, `Permissions-Policy`, `requestPermission`, `geolocation`, `watchPosition`, `wakeLock`, `clipboard`, `DeviceMotionEvent`, `SpeechRecognition`, `getDisplayMedia`, priming, permission prompt, `<permission>`/`<geolocation>` element → `45`
 - `QTable`, `QImg`, `QDialog`, `QSelect`, `QUploader`, `QLayout`, `view`, drawers → `61`, `62`, `63`
 - `Notify`, `Dialog`, `Screen`, `ClosePopup`, `Ripple`, `date`, `dom`, `uid` → `64`–`66`
 - `BEX Bridge`, Capacitor, Cordova, Electron preload → `35`

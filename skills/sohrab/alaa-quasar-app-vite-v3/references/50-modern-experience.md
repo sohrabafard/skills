@@ -33,6 +33,7 @@ SSR+PWA combine; verify takeover conditions before enabling. BEX for browser ext
 ## 4. Auth and identity UX
 
 - SMS OTP autofill + WebOTP + device trust: this skill's `40-webotp-and-device-trust.md`.
+- Any permission-gated device API (recording, camera, geolocation, notifications, sensors) and the priming/recovery UX around it: `45-browser-apis-and-permissions.md`.
 - Token storage, silent refresh, protected routes: `$alaa-frontend-developer` `references/21-ssr-auth-and-session-patterns.md`; gateway trust: `$alaa-trust-gateway-auth`.
 - Offer passkey enrollment after successful OTP login; passkeys are Baseline across engines and are the modern trusted-device primitive.
 

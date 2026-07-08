@@ -1,6 +1,6 @@
 ---
 name: alaa-quasar-app-vite-v3
-description: "The complete Quasar CLI + Vite skill: building, upgrading, and modernizing Quasar apps on @quasar/app-vite v3 (the stable production line since 3.0.1, 2026-07-07), plus maintaining v2 repos and migrating them. Covers quasar.config, env, boot/routing, components/layouts/directives/plugins, platform modes (SPA/SSR/PWA/BEX/Capacitor/Electron), full-featured service workers and offline, update UX, WebOTP/SMS OTP autofill, device fingerprinting and device trust, testing/CI, a11y/performance guardrails, and the v2 -> v3 migration playbook. Use when the user mentions Quasar, quasar.config, app-vite, QTable/QImg/QLayout-style symbols, a Quasar upgrade/migration, service worker or offline work in a Quasar app, or OTP autofill. Do not use for plain Vue/Vite apps without Quasar CLI."
+description: "The complete Quasar CLI + Vite skill: building, upgrading, and modernizing Quasar apps on @quasar/app-vite v3 (the stable production line since 3.0.1, 2026-07-07), plus maintaining v2 repos and migrating them. Covers quasar.config, env, boot/routing, components/layouts/directives/plugins, platform modes (SPA/SSR/PWA/BEX/Capacitor/Electron), full-featured service workers and offline, update UX, WebOTP/SMS OTP autofill, device fingerprinting and device trust, browser device APIs and the permission model (audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors; permission priming UX and cross-browser prompt behavior), testing/CI, a11y/performance guardrails, and the v2 -> v3 migration playbook. Use when the user mentions Quasar, quasar.config, app-vite, QTable/QImg/QLayout-style symbols, a Quasar upgrade/migration, service worker or offline work in a Quasar app, OTP autofill, getUserMedia/recording, geolocation, or browser permissions. Do not use for plain Vue/Vite apps without Quasar CLI."
 ---
 
 # Alaa Quasar App-Vite v3
@@ -14,6 +14,7 @@ The single skill for Quasar CLI + Vite work. It absorbed the former `quasar-skil
 - exact Quasar shapes: `quasar.config`, env, boot files, routing, components, layouts, directives, plugins, composables, utils, platform modes
 - production-grade service workers: offline strategies, update lifecycle UX, performance, debugging, push/badging/background sync
 - SMS OTP reading (WebOTP + `one-time-code`), device fingerprinting bounded to device trust, passkey-forward posture
+- browser device APIs and the permission model: audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors — cross-browser prompt behavior, permission priming UX, denial recovery, and the web-vs-Capacitor permission split
 - testing/CI, a11y/performance guardrails, and modern-experience decisions
 
 Written for both Claude/Opus and GPT/Codex agents. High-value rules use ✅ Do / ❌ Don't pairs: the ✅ side is the instruction, the ❌ side is a realistic mistake kept as a guardrail.
@@ -66,6 +67,7 @@ SSR, PWA, service workers:
 Auth and experience:
 
 - WebOTP, SMS autofill, fingerprinting, device trust, passkeys: `references/40-webotp-and-device-trust.md`
+- Browser device APIs + permission model (recording, camera, geolocation, notifications, clipboard, wake lock, sensors; priming UX, denial recovery, permission testing, Capacitor split): `references/45-browser-apis-and-permissions.md`
 - Mode selection, install UX, perceived performance, modern-experience decisions: `references/50-modern-experience.md`
 
 Components and APIs:
@@ -96,6 +98,7 @@ Apply these even if the user names only one surface:
 - Any platform-mode task: read `references/21-cli-vite-and-config.md` and `references/35-platform-modes.md` together.
 - Any offline feature storing structured data (drafts, progress, outbox): route the data design to `$alaa-indexeddb-browser-storage`; the SW owns only Request/Response caching.
 - Any OTP/auth flow: token storage and refresh stay with `$alaa-frontend-developer` `references/21-ssr-auth-and-session-patterns.md` and `$alaa-trust-gateway-auth`; WebOTP code only reads the code into the form.
+- Any use of a permission-gated browser API (`getUserMedia`, geolocation, `Notification.requestPermission`, clipboard read, sensors, ...): load `references/45-browser-apis-and-permissions.md` — request inside a user gesture with a priming step, handle denial with recovery UI, and treat `granted` as a cache that expires.
 - Any component handling data grids, virtualization, uploads, media, dialogs, or browser APIs: also load `references/70-guardrails-a11y-performance-monorepo.md`.
 - Any version-sensitive or upgrade request: read `references/80-upstream-deltas-and-live-checks.md` and refresh live data first.
 - Any Vue/TS code produced: `$alaa-vue-typescript-clean-code` gates apply.
@@ -104,7 +107,7 @@ Apply these even if the user names only one surface:
 
 ## Search rules
 
-Search exact Quasar symbols first (`QTable`, `QImg`, `useMeta`, `ClosePopup`, `Notify`, `extendViteConf`), then task phrases (`boot files`, `ssrContext`, `InjectManifest`, `build.env.folder`, `#q-app`, `OTPCredential`, `skipWaiting`). The per-symbol atlas files (61, 65, 66) carry searchable indexes; `references/85-legacy-skill-coverage.md` maps old `quasar-*` skill names.
+Search exact Quasar symbols first (`QTable`, `QImg`, `useMeta`, `ClosePopup`, `Notify`, `extendViteConf`), then task phrases (`boot files`, `ssrContext`, `InjectManifest`, `build.env.folder`, `#q-app`, `OTPCredential`, `skipWaiting`, `getUserMedia`, `MediaRecorder`, `permissions.query`, `requestPermission`). The per-symbol atlas files (61, 65, 66) carry searchable indexes; `references/85-legacy-skill-coverage.md` maps old `quasar-*` skill names.
 
 ## Companion routing (surviving siblings)
 

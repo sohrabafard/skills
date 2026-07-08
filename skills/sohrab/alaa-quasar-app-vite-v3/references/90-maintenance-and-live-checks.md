@@ -16,7 +16,7 @@ node scripts/check-upstream-versions.mjs
 ## Freshness triggers (verify live before answering)
 
 - Any "latest"/"current" question; any claim after the snapshot date.
-- Browser-support claims in `30` and `40` (Baseline moves; iOS/Safari release cadence; items marked UNVERIFIED in research: Static Routing API outside Chromium, Declarative Web Push in Chromium, testing-extension v3 compatibility, exact default dotenv file list).
+- Browser-support claims in `30`, `40`, and `45` (Baseline moves; iOS/Safari release cadence; permission prompt behavior changes almost yearly — one-time grants, quieter UI, auto-revocation windows, the `<geolocation>`/permission-element rollout). Items marked UNVERIFIED in research: Static Routing API outside Chromium, Declarative Web Push in Chromium, testing-extension v3 compatibility, exact default dotenv file list, exact Safari grant-expiry windows, `<geolocation>` element rollout percentage, camera/mic permission elements.
 - Official sources only: quasar.dev, GitHub releases (quasarframework/quasar), npm registry, MDN, web.dev, developer.chrome.com, webkit.org. Community posts are troubleshooting hints, never migration rules.
 
 ## Posture history (so future edits keep context)
