@@ -50,6 +50,16 @@ Do not use this skill when:
 6. Load only the smallest additional reference file needed for the issue.
 7. Validate with a real build output check instead of trusting config alone.
 
+## Package-manager modes (detect first; never assume yarn)
+
+Read the lockfile before giving any dependency-linking, command, or build-order advice — the manager decides the syntax:
+
+- **pnpm** (`pnpm-lock.yaml` + `pnpm-workspace.yaml`): internal deps use the **`workspace:*`** protocol (`"@alaa/<x>": "workspace:*"`, or `workspace:^` for published packages). **Never write `link:` or a `file:`/relative path.** Members come from the `packages:` glob in `pnpm-workspace.yaml`. Commands: `pnpm --filter <pkg> <script>`, `pnpm -r <script>` (recursive, topological), `pnpm --filter "<pkg>..." build` (package + its dependents), `pnpm dlx`. pnpm's isolated (non-flat) `node_modules` blocks phantom deps, so declare every used dependency explicitly.
+- **yarn Berry (v2+)** (`.yarnrc.yml`): internal deps use `workspace:^` / `workspace:*`; commands are `yarn workspace <pkg> <script>` / `yarn workspaces foreach`.
+- **yarn classic (v1)** / **npm**: internal deps are `link:` / `file:` or `*` resolved by the `workspaces` field; commands are `yarn workspace <pkg> <script>` / `npm -w <pkg> run <script>`.
+
+**Migration rule:** when a package is ported from a different-manager repo, rewrite its internal specifiers to the TARGET manager before it lands. Porting into a pnpm repo means every `link:../x` / `link:packages/x` becomes `workspace:*`; carrying a `link:` into a pnpm workspace is a boundary defect, not a stylistic choice. Peer-dependency and `resolve.dedupe` rules (§20) still apply on top of this — the manager decides the *specifier*, not whether `vue`/`quasar` stay peers.
+
 ## Build order
 
 When a package consumes another workspace package through a public entrypoint or export subpath, build upstream packages first and consumers second.
@@ -57,6 +67,7 @@ When a package consumes another workspace package through a public entrypoint or
 - Derive order from the dependency graph: framework-free/core/model packages -> domain packages/adapters -> aggregate packages -> UI packages -> playground/root app.
 - Do not let source aliases, test aliases, or tsconfig paths hide missing upstream `dist`; package-local build/check scripts should either build required upstream packages first or fail with a clear message.
 - After building a consumer package, validate the built entrypoint from `dist` imports successfully, then check CSS/assets. This catches packages that pass source tests but fail as dist-only consumers.
+- In a pnpm workspace, `pnpm -r build` runs the whole graph in dependency (topological) order, and `pnpm --filter "<pkg>..." build` builds a package plus its dependents — prefer these over a hand-maintained order script.
 
 ## Package-only lane guard
 

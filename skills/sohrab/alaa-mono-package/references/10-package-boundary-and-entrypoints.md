@@ -9,6 +9,7 @@ Use this file when the task touches internal packages or their import paths.
 - Root apps should consume package entrypoints, not package source files directly.
 - Packages should expose stable dist outputs.
 - Imports that reach into `packages/<name>/src/*` are boundary violations unless the repo explicitly allows them.
+- Internal dependency specifiers follow the repo's package manager: in a **pnpm** workspace use `workspace:*` (never a yarn `link:` or a `file:`/relative path); rewrite any `link:` carried over from a yarn repo to `workspace:*` before the package lands.
 
 ## Why this matters
 
