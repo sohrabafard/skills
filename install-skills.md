@@ -4,6 +4,7 @@ From the repository root, use one source-root list and one destination list. Add
 vendor, local pack, or agent home to these arrays.
 
 ```powershell
+cd D:\Sohrab\Project\skills
 $repoRoot = (Resolve-Path ".").Path
 
 $srcRoots = @(
@@ -28,6 +29,25 @@ function Resolve-LinkTargetPath {
     } catch {
         return [System.IO.Path]::GetFullPath($Path)
     }
+}
+
+function Write-LinkDebugStatus {
+    param(
+        [Parameter(Mandatory)][string] $Status,
+        [Parameter(Mandatory)][string] $DestinationName,
+        [Parameter(Mandatory)][string] $SkillName,
+        [Parameter(Mandatory)][string] $Source,
+        [Parameter(Mandatory)][string] $Destination
+    )
+
+    if ($Status -eq "LINK") {
+        Write-Host "$Status [$DestinationName] $SkillName" -ForegroundColor Yellow
+    } else {
+        Write-Host "$Status [$DestinationName] $SkillName"
+    }
+
+    Write-Host "  Source:      $Source"
+    Write-Host "  Destination: $Destination"
 }
 
 foreach ($destination in $destinations) {
@@ -58,27 +78,26 @@ foreach ($srcRoot in $srcRoots) {
 
                 if ($null -eq $item) {
                     New-Item -ItemType SymbolicLink -Path $linkPath -Target $target | Out-Null
-                    Write-Host "Linked: $prefix -> $target"
+                    Write-LinkDebugStatus -Status "LINK" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
                     continue
                 }
 
                 if ($item.LinkType -ne "SymbolicLink") {
-                    Write-Warning "Exists but is not a symlink, skipped: $prefix"
-                    Write-Host "  Path: $linkPath"
+                    Write-LinkDebugStatus -Status "EXIST" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
+                    Write-Warning "Skipped: $prefix exists but is not a symlink"
                     continue
                 }
 
                 $rawTarget = @($item.Target)[0]
                 $actualTarget = Resolve-LinkTargetPath ([string]$rawTarget)
                 if ($actualTarget -eq $expectedTarget) {
-                    Write-Host "Exists OK: $prefix -> $target"
+                    Write-LinkDebugStatus -Status "EXIST" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
                     continue
                 }
 
-                Write-Warning "Exists but target does not match, skipped: $prefix"
-                Write-Host "  Path:     $linkPath"
-                Write-Host "  Expected: $target"
-                Write-Host "  Actual:   $rawTarget"
+                Write-LinkDebugStatus -Status "EXIST" -DestinationName $destination.Name -SkillName $skillName -Source $target -Destination $linkPath
+                Write-Warning "Skipped: $prefix target does not match"
+                Write-Host "  Actual:      $rawTarget"
             }
         }
 }
