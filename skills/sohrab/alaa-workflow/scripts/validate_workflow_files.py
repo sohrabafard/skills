@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Alaa workflow plan/state/phase-prompt artifacts quickly."""
+"""Semantically validate adaptive and legacy Alaa workflow artifacts."""
 
 from __future__ import annotations
 
@@ -8,269 +8,379 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
-REQUIRED_PARENT_PLAN_HEADINGS = [
-    "## Summary",
-    "## Goal",
-    "## Assumptions",
-    "## Constraints",
-    "## Closest existing patterns",
-    "## Phases (with dependencies)",
-    "## Parallel-safe work split",
-    "## Commands to run",
-    "## Phase prompt pack",
-    "## Files touched (append-only log)",
-    "## Done / Remaining",
-    "## Draft-to-final rewrite record",
-]
-
-REQUIRED_LANE_PLAN_HEADINGS = [
-    "## Summary",
-    "## Goal",
-    "## Assumptions",
-    "## Constraints",
-    "## Closest existing patterns",
-    "## Phases (with dependencies)",
-    "## Parallel-safe work split",
-    "## Commands to run",
-    "## Files touched (append-only log)",
-    "## Done / Remaining",
-    "## Draft-to-final rewrite record",
-]
-
-REQUIRED_PHASE_PROMPT_HEADINGS = [
-    "## Summary",
-    "## How to run this cadence",
-    "## Standing rules for every phase prompt",
-    "## Phase prompts",
-    "## Cross-phase review cadence",
-    "## Draft-to-final rewrite record",
-]
-
-REQUIRED_STATE_KEYS = [
+PROFILES = ("auto", "direct", "resumable", "orchestrated", "legacy")
+ADAPTIVE_STATE_KEYS = (
+    "schema_version",
     "task_id",
     "task",
-    "mode",
     "status",
-    "created_at",
-    "updated_at",
     "plan_path",
-    "phase_prompts_path",
-    "continuation_state_path",
-    "state_path",
-    "lanes",
-    "handoff",
-]
+    "current_phase",
+    "next_actions",
+    "blockers",
+    "last_validation",
+    "updated_at",
+)
+UNRESOLVED_RE = re.compile(
+    r"\{\{[^{}]+\}\}|NEEDS_(?:FILL|CONFIRMATION|LIVE_VERIFICATION)|\[(?:todo|question|gap)\]",
+    re.IGNORECASE,
+)
+COMPANION_LABELS = {
+    "prompts": ("prompt pack", "phase prompts", "phase prompt pack"),
+    "checkpoint": ("checkpoint", "continuation state", "state doc"),
+    "state": ("machine state", "json state", "state file"),
+}
+
+
+def error(invariant: str, message: str, remediation: str) -> str:
+    return f"ERROR [{invariant}] {message} Remediation: {remediation}"
+
+
+def warning(invariant: str, message: str, remediation: str) -> str:
+    return f"WARN [{invariant}] {message} Remediation: {remediation}"
+
+
+def portable(path: Path) -> str:
+    return str(path).replace("\\", "/")
 
 
 def newest_file(candidates: Iterable[Path]) -> Path | None:
     files = [path for path in candidates if path.exists()]
-    if not files:
-        return None
-    return max(files, key=lambda path: path.stat().st_mtime)
+    return max(files, key=lambda path: path.stat().st_mtime) if files else None
 
 
 def resolve_auto_plan() -> Path | None:
     plans = list(Path("docs/_agent_plans").glob("*.md")) + list(Path("docs/plan").glob("*.md"))
-    plans = [p for p in plans if not p.name.endswith("__phase-prompts.md")]
-    return newest_file(plans)
+    return newest_file(path for path in plans if not path.name.endswith("__phase-prompts.md"))
 
 
-def resolve_auto_state() -> Path | None:
-    return newest_file(Path(".codex/state").glob("*.json"))
+def read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
 
 
-def resolve_auto_phase_prompts(plan_path: Path | None) -> Path | None:
-    if plan_path is not None:
-        candidate = plan_path.with_name(f"{plan_path.stem}__phase-prompts.md")
-        if candidate.exists():
-            return candidate
-    prompts = list(Path("docs/_agent_plans").glob("*__phase-prompts.md")) + list(Path("docs/plan").glob("*__phase-prompts.md"))
-    return newest_file(prompts)
+def has(content: str, pattern: str) -> bool:
+    return re.search(pattern, content, re.IGNORECASE | re.MULTILINE) is not None
 
 
-def resolve_auto_continuation(plan_path: Path | None) -> Path | None:
-    if plan_path is not None:
-        candidate = Path("docs/agents") / f"{plan_path.stem}-state.md"
-        if candidate.exists():
-            return candidate
-    return newest_file(Path("docs/agents").glob("*-state.md"))
+def detect_profile(content: str) -> str:
+    match = re.search(r"^\s*[-*]?\s*profile\s*:\s*`?(direct|resumable|orchestrated|legacy)`?", content, re.I | re.M)
+    return match.group(1).lower() if match else "legacy"
 
 
-def validate_plan(path: Path) -> list[str]:
-    errors: list[str] = []
-    warnings: list[str] = []
-    content = path.read_text(encoding="utf-8")
-
-    is_lane_plan = content.lstrip().startswith("# Lane Plan")
-    required_headings = REQUIRED_LANE_PLAN_HEADINGS if is_lane_plan else REQUIRED_PARENT_PLAN_HEADINGS
-
-    for heading in required_headings:
-        if heading not in content:
-            errors.append(f"missing required heading: {heading}")
-
-    if "{{" in content or "}}" in content:
-        warnings.append("template placeholders appear to still be present")
-
-    if not re.search(r"\n\s*- \[[ xX-]\] ", content):
-        errors.append("no Markdown checkbox checklist items found")
-
-    phase_section = content.split("## Phases (with dependencies)", 1)[1] if "## Phases (with dependencies)" in content else ""
-    if "Mandatory skills:" not in phase_section:
-        errors.append("phase section does not list mandatory skills")
-    if "Test-first checklist:" not in phase_section:
-        errors.append("phase section does not include a test-first checklist")
-    if "Validation checklist:" not in phase_section:
-        errors.append("phase section does not include a validation checklist")
-    if not is_lane_plan and ("Final Phase" not in phase_section or "Documentation alignment" not in phase_section):
-        errors.append("final documentation alignment phase not found")
-
-    if not is_lane_plan:
-        expected_phase_prompts = path.with_name(f"{path.stem}__phase-prompts.md")
-        if expected_phase_prompts.exists():
-            if str(expected_phase_prompts).replace("\\", "/") not in content and expected_phase_prompts.name not in content:
-                warnings.append(f"expected phase prompt path exists but is not referenced: {expected_phase_prompts}")
-        else:
-            errors.append(f"missing same-stem phase prompt pack: {expected_phase_prompts}")
-
-    expected_continuation = Path("docs/agents") / f"{path.stem}-state.md"
-    if not expected_continuation.exists():
-        warnings.append(f"expected continuation state file not found: {expected_continuation}")
-
-    return [f"ERROR {msg}" for msg in errors] + [f"WARN {msg}" for msg in warnings]
+def detect_status(content: str) -> str:
+    match = re.search(r"^\s*[-*]?\s*(?:current\s+)?status\s*(?::|—|-)\s*`?([^\n`]+)", content, re.I | re.M)
+    return match.group(1).strip().lower() if match else ""
 
 
-def validate_phase_prompts(path: Path, plan_path: Path | None = None) -> list[str]:
-    errors: list[str] = []
-    warnings: list[str] = []
-    content = path.read_text(encoding="utf-8")
-
-    for heading in REQUIRED_PHASE_PROMPT_HEADINGS:
-        if heading not in content:
-            errors.append(f"missing required heading: {heading}")
-
-    for needle in ["/goal", "Claude Opus", "GPT-5.5", "Mandatory skills", "Fix-loop", "subagents"]:
-        if needle.lower() not in content.lower():
-            errors.append(f"phase prompt pack missing required concept: {needle}")
-
-    if "{{" in content or "}}" in content:
-        warnings.append("template placeholders appear to still be present")
-
-    if plan_path and plan_path.name not in content and str(plan_path).replace("\\", "/") not in content:
-        warnings.append(f"phase prompt pack does not reference plan path: {plan_path}")
-
-    return [f"ERROR {msg}" for msg in errors] + [f"WARN {msg}" for msg in warnings]
+def is_complete_status(status: str) -> bool:
+    return any(token in status for token in ("complete", "completed", "done", "closed"))
 
 
-def validate_continuation(path: Path, plan_path: Path | None = None) -> list[str]:
-    errors: list[str] = []
-    warnings: list[str] = []
-    content = path.read_text(encoding="utf-8")
-
-    for heading in ["## Resume protocol", "## Current summary", "## Validation evidence", "## Handoff"]:
-        if heading not in content:
-            errors.append(f"missing required heading: {heading}")
-
-    if plan_path and plan_path.name not in content and str(plan_path).replace("\\", "/") not in content:
-        warnings.append(f"continuation state does not reference plan path: {plan_path}")
-
-    if "main plan" not in content.lower():
-        errors.append("continuation state does not explicitly require reading the main plan")
-
-    return [f"ERROR {msg}" for msg in errors] + [f"WARN {msg}" for msg in warnings]
+def unresolved_messages(content: str, complete: bool, invariant: str) -> list[str]:
+    matches = sorted(set(match.group(0) for match in UNRESOLVED_RE.finditer(content)))
+    if not matches:
+        return []
+    sample = ", ".join(matches[:3])
+    if complete:
+        return [error(invariant, f"Completed artifact contains unresolved markers: {sample}.", "Resolve or explicitly classify every marker before completion.")]
+    return [warning(invariant, f"Draft artifact contains unresolved markers: {sample}.", "Resolve them before execution or completion.")]
 
 
-def validate_state(path: Path) -> list[str]:
+def validate_plan(path: Path, profile: str) -> list[str]:
+    content = read_text(path)
+    status = detect_status(content)
+    complete = is_complete_status(status)
     messages: list[str] = []
+
+    invariants = (
+        ("plan.outcome", r"\b(summary|outcome|goal|objective)\b", "Define the intended outcome and current repository truth."),
+        ("plan.scope", r"\b(scope|in[ -]scope|out[ -]of[ -]scope|constraints?)\b", "Define in-scope, out-of-scope, and constraints."),
+        ("plan.ordered-work", r"\b(ordered work|phases?|implementation plan|tasks?)\b", "Add ordered phases or tasks with dependencies where relevant."),
+        ("plan.acceptance", r"\b(acceptance|done condition|completion criteria|definition of done)\b", "State observable acceptance criteria."),
+        ("plan.validation", r"\b(validation|validate|tests?|commands?|gates?|evidence)\b", "Name validation commands or required evidence."),
+    )
+    for invariant, pattern, remediation in invariants:
+        if not has(content, pattern):
+            level = warning if profile == "legacy" and invariant in {"plan.scope", "plan.acceptance", "plan.validation"} else error
+            messages.append(level(invariant, "Required workflow meaning is missing.", remediation))
+
+    if not has(content, r"(?:^\s*[-*]\s+\[[ xX-]\]|^\s*\d+[.)]\s+|^###\s+.*phase)"):
+        messages.append(error("plan.ordered-work", "No executable ordered work was found.", "Add numbered steps, phases, or checklist items."))
+
+    for invariant, pattern, remediation in (
+        ("plan.status", r"\bstatus\s*(?::|—|-)", "Record the current plan status."),
+        ("plan.blockers", r"\bblockers?\b", "Record blockers explicitly, including 'none known'."),
+    ):
+        if not has(content, pattern):
+            message = f"Legacy plan does not expose {invariant.split('.')[-1]} semantics."
+            if profile == "legacy":
+                messages.append(warning(invariant, message, remediation))
+            else:
+                messages.append(error(invariant, message, remediation))
+
+    messages.extend(unresolved_messages(content, complete, "plan.placeholders"))
+    return messages
+
+
+def extract_reference(content: str, labels: tuple[str, ...]) -> str | None:
+    label_pattern = "|".join(re.escape(label) for label in labels)
+    match = re.search(rf"^\s*[-*]?\s*(?:{label_pattern})\s*:\s*(.+?)\s*$", content, re.I | re.M)
+    if not match:
+        return None
+    value = match.group(1).strip().strip("`").strip()
+    if value.lower() in {"none", "not created", "n/a", "null", ""}:
+        return None
+    return value
+
+
+def path_from_reference(value: str | None, plan_path: Path) -> Path | None:
+    if not value:
+        return None
+    candidate = Path(value)
+    if candidate.is_absolute() or candidate.exists():
+        return candidate
+    adjacent = plan_path.parent / candidate
+    return adjacent if adjacent.exists() else candidate
+
+
+def same_stem_paths(plan_path: Path) -> dict[str, Path]:
+    return {
+        "prompts": plan_path.with_name(f"{plan_path.stem}__phase-prompts.md"),
+        "checkpoint": Path("docs/agents") / f"{plan_path.stem}-state.md",
+        "state": Path(".codex/state") / f"{plan_path.stem}.json",
+    }
+
+
+def legacy_state_references(state_path: Path) -> dict[str, Path]:
+    if not state_path.exists():
+        return {}
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        return [f"ERROR invalid JSON: {exc}"]
-
+        data = json.loads(read_text(state_path))
+    except (json.JSONDecodeError, OSError):
+        return {}
     if not isinstance(data, dict):
-        return ["ERROR state root must be a JSON object"]
+        return {}
+    result: dict[str, Path] = {}
+    for key, aliases in {
+        "checkpoint": ("continuation_state_path", "state_doc"),
+        "prompts": ("phase_prompts_path", "phase_prompts"),
+    }.items():
+        for alias in aliases:
+            value = data.get(alias)
+            if isinstance(value, str) and value:
+                result[key] = Path(value)
+                break
+    return result
 
-    for key in REQUIRED_STATE_KEYS:
-        if key not in data:
-            messages.append(f"ERROR missing required key: {key}")
 
-    handoff = data.get("handoff")
-    if not isinstance(handoff, dict):
-        messages.append("ERROR handoff must be a JSON object")
-    lanes = data.get("lanes")
-    if not isinstance(lanes, dict):
-        messages.append("ERROR lanes must be a JSON object")
+def resolve_companions(plan_path: Path, content: str) -> dict[str, Path | None]:
+    stems = same_stem_paths(plan_path)
+    resolved: dict[str, Path | None] = {}
+    for kind, labels in COMPANION_LABELS.items():
+        explicit = path_from_reference(extract_reference(content, labels), plan_path)
+        resolved[kind] = explicit or (stems[kind] if stems[kind].exists() else None)
 
-    for path_key in ["plan_path", "phase_prompts_path", "continuation_state_path"]:
-        ref = data.get(path_key)
-        if isinstance(ref, str) and ref and not Path(ref).exists():
-            messages.append(f"WARN referenced {path_key} does not exist on disk: {ref}")
+    state_path = resolved["state"]
+    if state_path is not None:
+        for kind, candidate in legacy_state_references(state_path).items():
+            if resolved.get(kind) is None:
+                resolved[kind] = candidate
+    return resolved
 
-    resume = data.get("resume_protocol")
-    if not isinstance(resume, dict):
-        messages.append("ERROR resume_protocol must be a JSON object")
+
+def validate_checkpoint(path: Path, plan_path: Path | None, profile: str) -> list[str]:
+    content = read_text(path)
+    messages: list[str] = []
+    if profile == "legacy":
+        for label, pattern in (
+            ("status", r"\bstatus\b"),
+            ("next action", r"\b(next|remaining|handoff)\b"),
+            ("validation", r"\b(validation|verified|evidence)\b"),
+        ):
+            if not has(content, pattern):
+                messages.append(warning(f"checkpoint.{label}", f"Legacy checkpoint lacks {label} semantics.", f"Add {label} when this record becomes active again."))
     else:
-        must_read = resume.get("must_read_first")
-        plan_path = data.get("plan_path")
-        if isinstance(plan_path, str) and isinstance(must_read, list) and plan_path not in must_read:
-            messages.append("ERROR resume_protocol.must_read_first does not include plan_path")
+        fields = (
+            ("status", r"^\s*[-*]\s*status\s*:"),
+            ("current-phase", r"^\s*[-*]\s*current phase\s*:"),
+            ("last-verified", r"^\s*[-*]\s*last verified result\s*:"),
+            ("blockers", r"^\s*[-*]\s*blockers\s*:"),
+            ("next-action", r"^\s*[-*]\s*next action\s*:"),
+            ("touched-surfaces", r"^\s*[-*]\s*touched surfaces\s*:"),
+        )
+        for name, pattern in fields:
+            if not has(content, pattern):
+                messages.append(error(f"checkpoint.{name}", "Compact checkpoint field is missing.", f"Add the {name.replace('-', ' ')} field without duplicating the plan."))
+    if plan_path and plan_path.name not in content and portable(plan_path) not in content:
+        messages.append(error("checkpoint.plan", "Checkpoint does not reference the selected plan.", "Add the selected plan path."))
+    messages.extend(unresolved_messages(content, is_complete_status(detect_status(content)), "checkpoint.placeholders"))
+    return messages
 
+
+def validate_prompt_pack(path: Path, plan_path: Path | None, profile: str) -> list[str]:
+    content = read_text(path)
+    messages: list[str] = []
+    if profile != "legacy":
+        concepts = (
+            ("roles", r"\bimplementer\b[\s\S]*\bindependent reviewer\b"),
+            ("outcome", r"\boutcome\b"),
+            ("read-first", r"\bread first\b"),
+            ("scope", r"\bscope\b"),
+            ("validation", r"\bvalidation\b"),
+            ("done", r"\bdone\b"),
+            ("blocked", r"\bblocked\b"),
+            ("freshness", r"\bverified on\b[\s\S]*\bverification sources\b[\s\S]*\bruntime/model\b"),
+        )
+        for name, pattern in concepts:
+            if not has(content, pattern):
+                messages.append(error(f"prompts.{name}", "Required role-prompt meaning is missing.", f"Add compact {name.replace('-', ' ')} information."))
+    if plan_path and plan_path.name not in content and portable(plan_path) not in content:
+        messages.append(error("prompts.plan", "Prompt pack does not reference the selected plan.", "Add the selected plan path."))
+    unresolved = sorted(set(match.group(0) for match in UNRESOLVED_RE.finditer(content)))
+    if unresolved:
+        messages.append(error("prompts.freshness", f"Prompt pack is unresolved: {', '.join(unresolved[:3])}.", "Verify official docs and record resolved runtimes, models, sources, and date."))
+    return messages
+
+
+def json_contains_unresolved(value: Any) -> bool:
+    if isinstance(value, str):
+        return UNRESOLVED_RE.search(value) is not None
+    if isinstance(value, list):
+        return any(json_contains_unresolved(item) for item in value)
+    if isinstance(value, dict):
+        return any(json_contains_unresolved(item) for item in value.values())
+    return False
+
+
+def validate_state(path: Path, plan_path: Path | None = None, profile: str = "auto") -> list[str]:
+    try:
+        data = json.loads(read_text(path))
+    except json.JSONDecodeError as exc:
+        return [error("state.json", f"Invalid JSON at line {exc.lineno}, column {exc.colno}.", "Repair the JSON syntax.")]
+    if not isinstance(data, dict):
+        return [error("state.root", "State root is not an object.", "Use one JSON object.")]
+
+    adaptive = profile != "legacy" and (profile != "auto" or data.get("schema_version") == 2)
+    messages: list[str] = []
+    if not adaptive:
+        if not any(key in data for key in ("status", "phases", "next_step", "handoff")):
+            messages.append(warning("state.legacy-status", "Legacy state has no recognizable status surface.", "Add status or next-step data if reactivating it."))
+        if plan_path:
+            declared = data.get("plan_path") or data.get("plan")
+            if isinstance(declared, str) and declared and Path(declared).name != plan_path.name:
+                messages.append(error("state.plan", "Legacy state points to a different plan.", "Select the matching state or correct its explicit plan reference."))
+        return messages
+
+    for key in ADAPTIVE_STATE_KEYS:
+        if key not in data:
+            messages.append(error(f"state.{key}", "Required compact state field is missing.", f"Add {key} without restoring legacy duplicate sections."))
+    if data.get("schema_version") != 2:
+        messages.append(error("state.schema-version", "Adaptive state schema_version is not 2.", "Set schema_version to 2."))
+    if "next_actions" in data and not isinstance(data["next_actions"], list):
+        messages.append(error("state.next-actions", "next_actions is not an array.", "Use an array of concise executable actions."))
+    if "blockers" in data and not isinstance(data["blockers"], list):
+        messages.append(error("state.blockers", "blockers is not an array.", "Use an array, empty when unblocked."))
+    if "last_validation" in data and not isinstance(data["last_validation"], (dict, str)):
+        messages.append(error("state.last-validation", "last_validation has an unsupported type.", "Use a concise object or string result."))
+    if plan_path:
+        declared = data.get("plan_path")
+        if isinstance(declared, str) and declared and Path(declared).name != plan_path.name:
+            messages.append(error("state.plan", "State points to a different plan.", "Correct plan_path or select the matching state."))
+    if json_contains_unresolved(data):
+        complete = is_complete_status(str(data.get("status", "")))
+        level = error if complete else warning
+        messages.append(level("state.placeholders", "State contains unresolved markers.", "Resolve them before completion."))
     return messages
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--plan", help="Path to a plan markdown file, or 'auto'.")
-    parser.add_argument("--state", help="Path to a state JSON file, or 'auto'.")
-    parser.add_argument("--phase-prompts", help="Path to a phase prompt markdown file, or 'auto'.")
-    parser.add_argument("--continuation", help="Path to a continuation markdown file, or 'auto'.")
+    parser.add_argument("--plan", help="Plan path, or auto to select the newest plan only.")
+    parser.add_argument("--profile", choices=PROFILES, default="auto", help="Override profile detection.")
+    parser.add_argument("--state", help="Explicit state path, or auto with a selected plan.")
+    parser.add_argument("--phase-prompts", help="Explicit prompt-pack path, or auto with a selected plan.")
+    parser.add_argument("--continuation", help="Explicit checkpoint path, or auto with a selected plan.")
     return parser.parse_args()
 
 
-def report(kind: str, path: Path | None, messages: list[str]) -> bool:
-    had_error = False
-    if path is None or not path.exists():
-        print(f"ERROR no {kind} file found")
-        return True
-    print(f"{kind.capitalize()}: {path}")
+def report(kind: str, path: Path, messages: list[str]) -> bool:
+    print(f"{kind}: {portable(path)}")
     for message in messages:
         print(message)
-        had_error = had_error or message.startswith("ERROR")
-    return had_error
+    return any(message.startswith("ERROR") for message in messages)
+
+
+def explicit_path(value: str | None, correlated: Path | None, kind: str, plan_path: Path | None) -> Path | None:
+    if value is None:
+        return correlated
+    if value == "auto":
+        if plan_path is None:
+            raise ValueError(f"--{kind} auto requires --plan so artifacts cannot cross-correlate.")
+        return correlated
+    return Path(value)
 
 
 def main() -> int:
     args = parse_args()
-    had_error = False
+    if not any((args.plan, args.state, args.phase_prompts, args.continuation)):
+        print("Nothing to validate. Pass --plan or an explicit companion path.")
+        return 1
 
+    had_error = False
     plan_path: Path | None = None
+    profile = args.profile
+    companions: dict[str, Path | None] = {"prompts": None, "checkpoint": None, "state": None}
+
     if args.plan:
         plan_path = resolve_auto_plan() if args.plan == "auto" else Path(args.plan)
         if plan_path is None or not plan_path.exists():
-            print("ERROR no plan file found")
-            had_error = True
-        else:
-            had_error = report("plan", plan_path, validate_plan(plan_path)) or had_error
+            print(error("plan.path", "Selected plan does not exist.", "Pass an existing plan path."))
+            return 1
+        content = read_text(plan_path)
+        profile = detect_profile(content) if profile == "auto" else profile
+        companions = resolve_companions(plan_path, content)
+        had_error = report("plan", plan_path, validate_plan(plan_path, profile)) or had_error
 
-    if args.phase_prompts:
-        phase_path = resolve_auto_phase_prompts(plan_path) if args.phase_prompts == "auto" else Path(args.phase_prompts)
-        had_error = report("phase prompts", phase_path, validate_phase_prompts(phase_path, plan_path) if phase_path else []) or had_error
-
-    if args.continuation:
-        continuation_path = resolve_auto_continuation(plan_path) if args.continuation == "auto" else Path(args.continuation)
-        had_error = report("continuation", continuation_path, validate_continuation(continuation_path, plan_path) if continuation_path else []) or had_error
-
-    if args.state:
-        state_path = resolve_auto_state() if args.state == "auto" else Path(args.state)
-        had_error = report("state", state_path, validate_state(state_path) if state_path else []) or had_error
-
-    if not args.plan and not args.state and not args.phase_prompts and not args.continuation:
-        print("Nothing to validate. Pass --plan, --state, --phase-prompts, --continuation, or a combination.")
+    try:
+        companions["prompts"] = explicit_path(args.phase_prompts, companions["prompts"], "phase-prompts", plan_path)
+        companions["checkpoint"] = explicit_path(args.continuation, companions["checkpoint"], "continuation", plan_path)
+        companions["state"] = explicit_path(args.state, companions["state"], "state", plan_path)
+    except ValueError as exc:
+        print(error("correlation", str(exc), "Pass an explicit path or select a plan."))
         return 1
 
+    required = {
+        "direct": set(),
+        "resumable": {"checkpoint"},
+        "orchestrated": {"checkpoint", "state"},
+        "legacy": {"prompts", "checkpoint", "state"},
+        "auto": set(),
+    }[profile]
+    validators = {
+        "prompts": lambda path: validate_prompt_pack(path, plan_path, profile),
+        "checkpoint": lambda path: validate_checkpoint(path, plan_path, profile),
+        "state": lambda path: validate_state(path, plan_path, profile),
+    }
+
+    for kind in ("prompts", "checkpoint", "state"):
+        path = companions[kind]
+        was_explicit = {
+            "prompts": args.phase_prompts,
+            "checkpoint": args.continuation,
+            "state": args.state,
+        }[kind] is not None
+        if path is None or not path.exists():
+            if kind in required or was_explicit:
+                remediation = f"Create the correlated {kind} artifact or select a profile that does not require it."
+                print(error(f"artifact.{kind}", f"Profile {profile} requires a correlated {kind} file.", remediation))
+                had_error = True
+            continue
+        had_error = report(kind, path, validators[kind](path)) or had_error
+
     if not had_error:
-        print("Validation completed without blocking errors.")
+        print(f"Validation completed without blocking errors (profile: {profile}).")
     return 1 if had_error else 0
 
 

@@ -1,89 +1,17 @@
 {
+  "schema_version": 2,
   "task_id": "{{task_id}}",
   "task": "{{task}}",
-  "mode": "{{mode}}",
   "status": "planning",
-  "created_at": "{{created_at}}",
-  "updated_at": "{{created_at}}",
   "plan_path": "{{plan_path}}",
-  "phase_prompts_path": "{{phase_prompts_path}}",
-  "continuation_state_path": "{{continuation_state_path}}",
-  "state_path": "{{state_path}}",
-  "parent_task_id": {{parent_task_id_json}},
-  "parent_plan_path": {{parent_plan_path_json}},
-  "lane": {{lane_json}},
-  "current_phase": null,
-  "completed_phases": [],
-  "pending_phases": [],
-  "final_docs_alignment_phase": {
-    "required": true,
-    "status": "pending",
-    "notes": []
+  "current_phase": "Phase 1",
+  "next_actions": [
+    "Complete the plan's repository-grounding fields."
+  ],
+  "blockers": [],
+  "last_validation": {
+    "status": "not_run",
+    "summary": "No validation has run yet."
   },
-  "phase_prompt_pack": {
-    "path": "{{phase_prompts_path}}",
-    "status": "required",
-    "last_verified_at": null
-  },
-  "resume_protocol": {
-    "must_read_first": [
-      "AGENTS.md",
-      "{{plan_path}}",
-      "{{continuation_state_path}}",
-      "{{state_path}}",
-      "{{phase_prompts_path}}"
-    ],
-    "last_main_plan_read_at": null,
-    "last_compaction_or_resume_at": null
-  },
-  "frozen_decisions": [],
-  "constraints": [],
-  "phase_checklists": {},
-  "lanes": {
-    {{lane_key_json}}: {
-      "status": "active",
-      "scope": {{lane_scope_json}},
-      "read_scope": [],
-      "write_scope": [
-        "{{plan_path}}",
-        "{{phase_prompts_path}}",
-        "{{continuation_state_path}}",
-        "{{state_path}}"
-      ],
-      "mandatory_skills": [
-        "$alaa-workflow",
-        "$alaa-low-noise"
-      ],
-      "branch": null,
-      "worktree": null,
-      "last_update": "{{created_at}}",
-      "next_actions": [],
-      "handoff": []
-    }
-  },
-  "background_jobs": [],
-  "touched_files": [],
-  "validation": {
-    "commands_required": [],
-    "last_run": [],
-    "pending": [],
-    "blocked": []
-  },
-  "reviews": [],
-  "risks": [],
-  "draft_to_final_rewrite": {
-    "draft_prepared": false,
-    "final_rewrite_completed": false,
-    "notes": []
-  },
-  "handoff": {
-    "summary": "",
-    "next_actions": [],
-    "blockers": [],
-    "what_to_read_first": [
-      "{{plan_path}}",
-      "{{continuation_state_path}}",
-      "{{phase_prompts_path}}"
-    ]
-  }
+  "updated_at": "{{created_at}}"
 }
