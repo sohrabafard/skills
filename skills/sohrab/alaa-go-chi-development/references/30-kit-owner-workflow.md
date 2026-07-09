@@ -59,6 +59,22 @@ instead of a hope.
 - Versioning: semver; minors never break; breaking → major or env-default-preserving deprecation with the
   `GOVERNANCE.md` deprecation record shape.
 
+### Documentation authoring (part of "moves as one change")
+
+Docs the change touches are held to the same bar as the code. Use `/alaa-docs-farsi` for the writing craft.
+
+- **Non-domain docs are kit templates.** Any doc that is not about one service's own domain — deployment,
+  runtime, environment, contracts, operating procedure, anything a second service would also need — lives as a
+  scaffold template in `scaffold/templates.go` and is generated per service with the name substituted, joins the
+  required skeleton in `contracttest.RequiredDocFiles`, and regenerates its golden through the generator. A
+  consumer repo holds only its domain docs; a non-domain doc written by hand into a service is a defect.
+- **Draft, then polish.** Write a fact-capturing draft, then a final pass that opens with a 2–4 sentence summary
+  (topic → problem → goal → solution idea), keeps deliberate sentence and section rhythm, has no gaps or
+  rambling, and cross-links so each fact lives in exactly one doc (single source of truth) that others link to.
+- **The index moves too.** `docs/INDEX.md` lists the main kit docs; adding, renaming, removing, or repurposing a
+  main doc updates the index in the same change. A generated service's README Documentation section is that
+  service's index and is kept current the same way.
+
 ## 3. Propagation — getting consumers onto the change
 
 After the change ships, walk `docs/CONSUMERS.md` and for each consumer whose impact was `action-required`

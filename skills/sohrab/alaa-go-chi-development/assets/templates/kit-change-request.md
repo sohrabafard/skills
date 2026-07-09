@@ -17,7 +17,8 @@ kit_surface: <package + symbol/contract, e.g. httpkit.Bind, outboxkit relay, PG_
 kind: bug | limitation | extension | breaking-contracttest-after-minor
 severity: blocking | high | normal
 workaround_in_place: none | KIT-WRAP at <file:line, marker date>
-status: filed   # kit owner moves it: filed → under-review → accepted|accepted-amended|rejected|deferred
+status: filed         # lifecycle: filed → under-review → accepted|accepted-amended|rejected|deferred → implemented
+status_updated: YYYY-MM-DD HH:MM   # when status last changed (real date/time from the environment); every status change updates this
 ```
 
 ## 1. What we need (the ask, in one paragraph)
