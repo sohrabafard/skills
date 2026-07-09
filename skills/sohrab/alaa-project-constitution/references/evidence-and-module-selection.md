@@ -14,6 +14,11 @@ set of files that can establish ownership, current behavior, and real validation
 Absence from a limited search is not evidence of absence. Record `UNKNOWN` when the
 inspection surface is incomplete.
 
+Before module selection, inventory the constitutional corpus and choose `THIN_CHARTER` or
+`FULL_CHARTER`. Mature `CONTRACTS.md`, governance, ADR, policy, generated-contract, and
+upstream-framework sources normally require a thin charter that incorporates detail by
+reference instead of copying it.
+
 ## High-signal inventory
 
 | Domain | Common evidence |
@@ -44,6 +49,7 @@ does not prove the repository owns the behavior.
 | Module | Include when | Common false positive |
 |---|---|---|
 | `MONOREPO_PACKAGES_SDK_CLI` | multiple packages/apps, shared libraries, SDK/CLI/scaffold/public artifacts | vendored packages or examples only |
+| `UPSTREAM_KIT_FRAMEWORK_CONTRACTS` | repository consumes a versioned kit/framework/SDK/scaffold/platform contract owned elsewhere | ordinary third-party library with no inherited project policy |
 | `API_CONTRACTS` | repository owns API routes/shapes/errors/auth/versioning or generated clients | it only calls another service's API |
 | `GO_CHI` | Go source/module/binaries; chi/net/http where relevant | Go tool used only during build |
 | `LARAVEL_PHP_OCTANE` | PHP/Laravel application or library source | PHP script copied as utility |
@@ -83,4 +89,3 @@ For each binding rule with project-specific facts, capture:
 - drift/TODO when sources disagree.
 
 Do not include secrets, raw logs, or personal/production data in the ledger.
-

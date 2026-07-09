@@ -3,8 +3,9 @@ TEMPLATE-ONLY: PROJECT CONSTITUTION GENERATION CONTRACT
 
 PURPOSE
 This is a reusable authoring template, not a pre-written project constitution. Copy it
-to a repository root as ./constitution-template.md. An agent creates or updates the
-binding ./CONSTITUTION.md from repository evidence and explicit owner decisions.
+to a repository root as ./constitution-template.md. An agent creates or updates
+./CONSTITUTION.md from repository evidence and explicit owner decisions. The result is
+binding only after its status and ratification evidence say BINDING.
 
 The visible skeleton intentionally contains placeholders instead of generic policy.
 Coverage prompts live in TEMPLATE-ONLY comments and must be removed from the generated
@@ -53,6 +54,27 @@ NON-NEGOTIABLE AUTHORING RULES
     unresolved {{PLACEHOLDERS}} from the final document.
 13. Do not change application code, dependencies, generated products, deployments,
     shared/production systems, secrets, or Git history while authoring the constitution.
+14. Before drafting rules, inventory the repository's existing constitutional corpus:
+    charters, architecture decisions, CONTRACTS.md, GOVERNANCE.md, policies, runbooks,
+    generated contract docs, agent guidance, and upstream framework/kit contracts.
+15. Select one constitution shape:
+    - THIN_CHARTER: use when mature canonical sources already own detailed policy or
+      technical contracts. The constitution defines authority, durable principles, source
+      ownership, incorporation, risk, and amendment rules without restating those sources.
+    - FULL_CHARTER: use when the repository lacks an adequate constitutional corpus and
+      the retained template sections must hold project-specific policy directly.
+    Prefer THIN_CHARTER whenever a full charter would create a second source of truth.
+16. Never copy exact wire shapes, routes, queues, headers, error catalogs, environment
+    keys, metric names, thresholds, commands, or detailed workflows from an existing
+    canonical source merely to make the constitution self-contained. Incorporate the
+    canonical source by reference, state its owner and precedence, and link to it.
+17. For an upstream kit/framework/package contract, record the canonical source and pinned
+    version. Consumers reference and test that contract; they do not copy it into a local
+    editable contract file unless the upstream explicitly owns a generated snapshot format.
+18. Keep current-task authorization separate from durable policy. The prompt's temporary
+    edit boundary belongs in the Sync Impact Report; do not turn phrases such as "this task
+    does not authorize" into constitutional law unless repository evidence or an explicit
+    owner decision establishes the same durable rule.
 
 REQUIRED EVIDENCE WORKFLOW
 Phase A - Preflight and authority map
@@ -60,6 +82,9 @@ Phase A - Preflight and authority map
   context. Inspect Git status when available.
 - In UPDATE mode, read prior rules, stable IDs, exceptions, ratification metadata,
   amendment history, last evidence review, and documented concerns before anything else.
+- Inventory the existing constitutional corpus and classify each source as LOCAL_CANONICAL,
+  INCORPORATED_BY_REFERENCE, UPSTREAM_CANONICAL, GENERATED, ADVISORY, or HISTORICAL.
+- Select THIN_CHARTER or FULL_CHARTER and record the evidence for that choice.
 
 Phase B - Evidence inventory and classification
 - Inventory maintained docs/ADRs, manifests/lockfiles, source roots, routes, schemas,
@@ -67,6 +92,10 @@ Phase B - Evidence inventory and classification
   config, security guidance, telemetry, and runbooks.
 - Prefer targeted search and bounded reads. Never expose secrets or private production data.
 - Build an evidence ledger: claim, source, what it proves, confidence, and freshness.
+- Build a document-role map that assigns one owner to each policy/contract topic. Detect
+  overlapping canonical claims and record drift instead of silently duplicating them.
+- Detect upstream kits/frameworks from manifests, lockfiles, generated scaffolds, consumer
+  guidance, and architecture docs; capture their version pin and conformance gate.
 - Classify every conditional module INCLUDE, EXCLUDE, or UNKNOWN. EXCLUDE needs positive
   evidence of irrelevance or an explicit scope decision.
 
@@ -76,6 +105,8 @@ Phase C - Writing pass 1: evidence-backed draft
   Preserve valid project-specific policy, stable IDs, history, original ratification date,
   and live exceptions. Do not rewrite unchanged policy for style.
 - Fill retained placeholders with concrete, testable, project-specific content.
+- In THIN_CHARTER mode, summarize only load-bearing principles and point exact technical or
+  operational detail to its canonical owner. Do not paraphrase whole contract documents.
 - Keep one Sync Impact Report as the first HTML comment. Do not report completion yet.
 
 Phase D - Writing pass 2: independent constitutional review
@@ -83,14 +114,21 @@ Phase D - Writing pass 2: independent constitutional review
 - Compare it with the prior constitution, template, owner input, applicable guidance,
   canonical docs, manifests, CI, generated outputs, and executable truth.
 - Remove unsupported specificity and generic filler. Verify every MUST and every command.
-- Verify module pruning, TODOs, proposals, exceptions, version/date, authority, bindings,
-  maintenance cadence, amendment history, and guidance drift.
+- Verify module pruning, document-role ownership, non-duplication, upstream pins, TODOs,
+  proposals, exceptions, version/date, authority, bindings, maintenance cadence,
+  amendment history, and guidance drift.
 - Record meaningful refinements in the Sync Impact Report.
 
-Phase E - Binding and validation
-- Ensure root AGENTS.md requires agents to read the constitution.
+Phase E - Status-aware binding and validation
+- Ensure root AGENTS.md requires agents to read the constitution and states its current
+  effect. BINDING policy is mandatory; DRAFT/NEEDS_REVIEW is non-binding review context;
+  SUPERSEDED policy must not remain the active target.
 - Ensure root CLAUDE.md imports @CONSTITUTION.md where supported, or explicitly requires
-  it when imports are unavailable. Keep both as thin adapters, not policy copies.
+  it when imports are unavailable, with the same status-aware effect. Keep both as thin
+  adapters, not policy copies.
+- If the repository has a maintained README documentation map or docs index whose own rules
+  cover new main documents, add or refresh one constitution entry while preserving existing
+  content. If that edit is forbidden, report binding/index drift; never claim it unnecessary.
 - Run safe document checks. Report remaining uncertainty and drift before finishing.
 
 UPDATE / PERIODIC REVIEW RULES
@@ -108,6 +146,10 @@ UPDATE / PERIODIC REVIEW RULES
 INITIAL VERSION POLICY
 - First approved binding constitution: 1.0.0.
 - Owner-requested non-binding draft: 0.1.0 with status DRAFT.
+- DRAFT and NEEDS_REVIEW always have Binding effect NON_BINDING. Their adapters may require
+  reading and review but must not call the document binding or canonical approved policy.
+- BINDING always has Binding effect BINDING and requires ratification evidence.
+- SUPERSEDED always has Binding effect INACTIVE and must point to its successor.
 - Updates preserve the original ratification date and derive version from normative impact.
 - Use the runtime date only when available as evidence; never fabricate history.
 
@@ -126,8 +168,12 @@ Mode: {{CREATE_UPDATE_OR_AUDIT}}
 Constitution path: {{CONSTITUTION_PATH}}
 Version: {{OLD_VERSION_OR_NONE}} -> {{NEW_VERSION}}
 Status: {{DRAFT_BINDING_OR_NEEDS_REVIEW}}
+Binding effect: {{BINDING_NON_BINDING_OR_INACTIVE}}
+Constitution shape: {{THIN_CHARTER_OR_FULL_CHARTER}}
 Template used: {{TEMPLATE_PATH}}
 Prior constitution(s) read: {{PATHS_OR_NONE}}
+Existing constitutional corpus:
+- {{SOURCE_ROLE_AND_INCORPORATION}}
 Owner input used: {{SUMMARY_OR_NONE}}
 Evidence inspected:
 - {{EVIDENCE_PATH_AND_PURPOSE}}
@@ -167,6 +213,8 @@ unknown. Do not guess an approver, date, cadence, or repository root.
 | Field | Value |
 |---|---|
 | Status | {{DRAFT_BINDING_NEEDS_REVIEW_OR_SUPERSEDED}} |
+| Binding effect | {{BINDING_NON_BINDING_OR_INACTIVE}} |
+| Constitution shape | {{THIN_CHARTER_OR_FULL_CHARTER}} |
 | Version | {{SEMVER}} |
 | Ratified | {{YYYY_MM_DD_OR_TODO}} |
 | Last amended | {{YYYY_MM_DD_OR_TODO}} |
@@ -205,6 +253,21 @@ handled; implementation drift must not silently rewrite policy.
 
 {{FACT_PRIORITY_AND_CONFLICT_RULE}}
 
+### 2.5 Constitutional corpus and non-duplication
+
+<!-- TEMPLATE-ONLY:
+List every existing charter, contract, governance doc, architecture decision, policy,
+generated source, and upstream contract that materially governs the project. Assign one
+role and one canonical owner per topic. In THIN_CHARTER mode, incorporate detailed sources
+by reference and state what this constitution intentionally does not duplicate.
+-->
+
+| Source | Classification | Canonical role | Incorporation / precedence | Content not duplicated here |
+|---|---|---|---|---|
+| {{SOURCE_PATH_OR_VERSIONED_URL}} | {{LOCAL_CANONICAL_UPSTREAM_GENERATED_ADVISORY_OR_HISTORICAL}} | {{ROLE}} | {{INCORPORATION_AND_PRECEDENCE}} | {{NO_DUPLICATION_BOUNDARY}} |
+
+{{DUPLICATE_POLICY_AND_DRIFT_RULE}}
+
 ## 3. Project Identity and Evidence Map
 
 <!-- TEMPLATE-ONLY:
@@ -228,9 +291,9 @@ rows and add project-specific rows when useful.
 
 ### 3.2 Canonical source registry
 
-| Domain | Canonical source path(s) | What it owns | Freshness/validation rule |
-|---|---|---|---|
-| {{DOMAIN}} | {{PATHS}} | {{OWNERSHIP}} | {{FRESHNESS_RULE}} |
+| Domain | Canonical source path(s) | What it owns | Consumer / incorporation mode | Freshness/validation rule |
+|---|---|---|---|---|
+| {{DOMAIN}} | {{PATHS}} | {{OWNERSHIP}} | {{LOCAL_REFERENCE_PIN_GENERATED_OR_NA}} | {{FRESHNESS_RULE}} |
 
 ### 3.3 Evidence ledger
 
@@ -271,7 +334,9 @@ contract. State that missing evidence is not proof of absence.
 <!-- TEMPLATE-ONLY:
 Retain all eleven headings. Under each, author only project-specific, testable rules
 supported by evidence or explicit owner policy. A heading may contain a structured TODO
-or a short evidence-backed N/A rationale, but never generic filler.
+or a short evidence-backed N/A rationale, but never generic filler. In THIN_CHARTER mode,
+state durable principles and point detailed rules to their canonical owner; do not copy
+technical catalogs or operating procedures into these sections.
 -->
 
 ### I. Evidence, Freshness, and No Fabrication
@@ -385,6 +450,24 @@ publishing, and consumer proof. -->
 - Evidence and owned surfaces: {{MONOREPO_EVIDENCE_AND_SCOPE}}
 - Binding rules: {{MONOREPO_RULES}}
 - Required validation: {{MONOREPO_VALIDATION}}
+
+### Module UPSTREAM_KIT_FRAMEWORK_CONTRACTS
+
+<!-- TEMPLATE-ONLY:
+Retain when this repository consumes an upstream kit, framework, platform baseline, SDK,
+scaffold, policy pack, or shared contract owned elsewhere. Identify the exact canonical
+source and version pin, inherited versus local ownership, conformance/contract tests,
+upgrade/deprecation/change-request process, and offline-access strategy.
+
+Do not copy the upstream contract into a locally editable file and ask an agent to adapt
+it to the consumer. A permitted generated snapshot must be upstream-owned, reproducible,
+version/provenance-stamped, read-only in the consumer, and drift-checked against the pin.
+-->
+
+- Upstream owner, canonical contract, and version pin: {{UPSTREAM_CONTRACT_SOURCE_AND_PIN}}
+- Inherited versus consumer-owned boundaries: {{UPSTREAM_LOCAL_OWNERSHIP_RULES}}
+- Upgrade, deprecation, divergence, and change-request rules: {{UPSTREAM_CHANGE_RULES}}
+- Required conformance and provenance validation: {{UPSTREAM_VALIDATION}}
 
 ### Module API_CONTRACTS
 
@@ -610,17 +693,24 @@ conditions. Do not prescribe tools or workflows absent from the repository.
 ## 11. AGENTS.md and CLAUDE.md Binding
 
 <!-- TEMPLATE-ONLY:
-The constitution is canonical project policy; runtime guidance files must be thin adapters,
-not duplicate copies. Inspect existing root/nested files and preserve their content.
+Runtime guidance files must be thin, status-aware adapters, not duplicate policy copies.
+Inspect existing root/nested files and preserve their content.
+
+- BINDING: adapters say the constitution is binding within scope.
+- DRAFT or NEEDS_REVIEW: adapters require reading for review/context and explicitly say it
+  is NON_BINDING; previously ratified canonical sources remain in force.
+- SUPERSEDED: adapters point to the successor and do not load this file as active policy.
 
 Fill an AGENTS.md adapter that requires reading the canonical path before planning,
-editing, reviewing, or runtime/deployment changes; states its binding scope; requires
-conflict/drift disclosure; and points to amendment/exception handling.
+editing, reviewing, or runtime/deployment changes; states its current effect; requires
+conflict/drift disclosure; and points to ratification/amendment/exception handling.
 
 For Claude Code, use an exact top-level @CONSTITUTION.md import when supported, plus a
 short binding rule. If imports are unavailable, use an explicit read requirement. Record
 any higher-precedence or nested guidance conflict rather than silently overwriting it.
 -->
+
+Binding effect: {{BINDING_NON_BINDING_OR_INACTIVE}}
 
 ### Root AGENTS.md adapter contract
 

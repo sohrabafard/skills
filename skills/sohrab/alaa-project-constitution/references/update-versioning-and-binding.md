@@ -70,6 +70,11 @@ weaken a constitutional gate; use its amendment or exception process.
 Replace the path with the selected canonical filename. Do not use Markdown import syntax as
 a substitute for the explicit read instruction unless the target agent runtime documents it.
 
+The snippet above is for status `BINDING` only. For `DRAFT` or `NEEDS_REVIEW`, the adapter
+must instead call the constitution a non-binding proposal/read context and say that existing
+ratified canonical sources remain in force. For `SUPERSEDED`, remove the active reference or
+point it to the successor and mark the old document inactive.
+
 Codex loads a root-to-leaf AGENTS.md chain. Nested guidance may add stricter scoped rules;
 it must not silently weaken the root constitution. Report conflicting nested instructions.
 
@@ -91,6 +96,20 @@ use the constitution's amendment or exception process instead of silently weaken
 If CLAUDE.md already imports AGENTS.md, keep that import and add the constitution import or
 an explicit binding rule. Avoid cycles such as AGENTS.md importing CLAUDE.md while CLAUDE.md
 imports AGENTS.md.
+
+The same status rule applies: importing a DRAFT is allowed for context, but its nearby
+adapter must explicitly say `non-binding`; it must not call the draft canonical approved
+policy.
+
+## Existing canonical corpus and upstream contracts
+
+- Prefer a `THIN_CHARTER` when detailed local sources already own contracts/governance.
+- Incorporate those sources by reference and assign one canonical owner per topic.
+- Do not copy an upstream kit/framework contract into a consumer and adapt it locally.
+- Record upstream identity, version pin, inherited/local boundary, contracttest, upgrade,
+  deprecation, and change-request path in `UPSTREAM_KIT_FRAMEWORK_CONTRACTS`.
+- A generated local snapshot is valid only when upstream owns the generator, provenance,
+  read-only semantics, and drift check.
 
 ## Binding edit policy
 
