@@ -11,7 +11,12 @@ Use this file when low-noise behavior depends on current shell behavior, Codex s
    - PowerShell: https://learn.microsoft.com/powershell/
    - Git: https://git-scm.com/docs
    - ripgrep: https://github.com/BurntSushi/ripgrep
-5. Community posts, StackOverflow answers, or issue comments only for troubleshooting a concrete shell/tool failure.
+5. Official skill and prompting guidance when model behavior affects output policy:
+   - OpenAI skills: https://developers.openai.com/codex/skills/
+   - OpenAI model guidance: https://developers.openai.com/api/docs/guides/prompt-guidance
+   - Anthropic skill authoring: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
+   - Anthropic prompting: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
+6. Community posts, StackOverflow answers, or issue comments only for troubleshooting a concrete shell/tool failure.
 
 ## Freshness triggers
 
@@ -19,14 +24,16 @@ Re-check current behavior when the task mentions:
 
 - latest Codex app, CLI, IDE, terminal, PowerShell, Bash, or Windows behavior
 - very large generated logs, new validation runners, or new output caps
-- model changes such as GPT-5.5 affecting reasoning or summarization expectations
+- model changes affecting reasoning, summarization, or verbosity expectations
 - subagent fan-out that could flood the parent thread
 
-## GPT-5.5-ready use guidance
+## Current model-use guidance
 
-- Do not assume a newer model removes the need for bounded reads, concise status, or final validation evidence.
-- Use stronger reasoning to decide what not to print, while preserving enough evidence in repo files or final summaries for review.
-- Avoid model-specific rituals. Prefer concrete changed paths, command results, and blocker notes.
+- Start with the smallest instruction set that reliably preserves task quality; add rules only for a demonstrated gap.
+- Prioritize required facts, evidence, caveats, validation, blockers, and next steps before trimming repetition or optional background. Generic brevity instructions can suppress required artifacts.
+- Treat fewer tokens, calls, or turns as improvements only when the final output still meets its quality bar.
+- State desired output positively and explicitly; avoid model-specific rituals and repeated phrasing.
+- Re-check this guidance when models change. Newer models still need bounded reads, reviewable edits, and validation evidence.
 
 ## Domain-bounded anti-pattern
 
