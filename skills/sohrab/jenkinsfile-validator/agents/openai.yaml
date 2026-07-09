@@ -1,7 +1,0 @@
-interface:
-  display_name: "Jenkinsfile Validator"
-  short_description: "Validate, lint, and test Declarative/Scripted Jenkinsfiles"
-  default_prompt: "Use $jenkinsfile-validator to lint and validate Jenkinsfile pipelines (Declarative/Scripted), check plugins, credentials, and CPS-safety, and report fixes with file/line detail. Read its references for syntax and rules."
-
-policy:
-  allow_implicit_invocation: true

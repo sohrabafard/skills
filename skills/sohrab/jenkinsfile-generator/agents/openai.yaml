@@ -1,7 +1,0 @@
-interface:
-  display_name: "Jenkinsfile Generator"
-  short_description: "Generate Declarative/Scripted Jenkinsfiles, then validate"
-  default_prompt: "Use $jenkinsfile-generator to scaffold production Jenkinsfiles (Declarative/Scripted: stages, agents, Docker/K8s, shared libraries, credentials), then run $jenkinsfile-validator and fix until clean. Read its references for patterns."
-
-policy:
-  allow_implicit_invocation: true

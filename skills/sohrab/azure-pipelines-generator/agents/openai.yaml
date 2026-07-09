@@ -1,7 +1,0 @@
-interface:
-  display_name: "Azure Pipelines Generator"
-  short_description: "Generate Azure DevOps Pipelines YAML, then validate"
-  default_prompt: "Use $azure-pipelines-generator to scaffold production Azure DevOps Pipelines (stages, jobs, steps, templates, service connections), then pair with $azure-pipelines-validator. Read its topic map and docs for the workflow."
-
-policy:
-  allow_implicit_invocation: true

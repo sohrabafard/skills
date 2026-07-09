@@ -1,7 +1,0 @@
-interface:
-  display_name: "LogQL Generator"
-  short_description: "Generate Grafana Loki LogQL log/metric queries and alerts"
-  default_prompt: "Use $logql-generator to plan and write production LogQL: stream selectors, filters, parsers, metric queries, and recording/alerting rules, optimized for performance. Read its references for patterns and the planning template."
-
-policy:
-  allow_implicit_invocation: true

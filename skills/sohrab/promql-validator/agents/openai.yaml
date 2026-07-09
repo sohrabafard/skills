@@ -1,7 +1,0 @@
-interface:
-  display_name: "PromQL Validator"
-  short_description: "Validate, optimize, and explain existing PromQL queries"
-  default_prompt: "Use $promql-validator to check PromQL syntax, detect anti-patterns, surface optimizations, and run its checker scripts. Pair with $promql-generator when authoring. Read its topic map and docs for the workflow."
-
-policy:
-  allow_implicit_invocation: true

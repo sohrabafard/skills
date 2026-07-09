@@ -1,7 +1,0 @@
-interface:
-  display_name: "Azure Pipelines Validator"
-  short_description: "Validate, lint, and security-check Azure DevOps Pipeline YAML"
-  default_prompt: "Use $azure-pipelines-validator to lint and validate Azure DevOps Pipeline YAML (schema, task inputs, hosted images, service connections, security) and report fixes. Pair with $azure-pipelines-generator when authoring."
-
-policy:
-  allow_implicit_invocation: true

@@ -1,7 +1,0 @@
-interface:
-  display_name: "GitHub Actions Generator"
-  short_description: "Generate secure GitHub Actions workflows and custom actions, then validate"
-  default_prompt: "Use $github-actions-generator to scaffold production GitHub Actions workflows and custom actions (least-privilege permissions, SHA-pinned versions, OIDC, matrices, reusable workflows), then run $github-actions-validator and fix until clean. Read its references for patterns."
-
-policy:
-  allow_implicit_invocation: true
