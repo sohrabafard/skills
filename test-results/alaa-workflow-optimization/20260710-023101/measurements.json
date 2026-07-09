@@ -1,0 +1,30 @@
+{
+  "timestamp": "20260710-023101",
+  "baseline": {
+    "skill_chars": 12197,
+    "skill_words": 1658,
+    "default_scaffold_files": 4,
+    "default_scaffold_chars": 21095
+  },
+  "post_change": {
+    "skill_chars": 5143,
+    "skill_words": 689,
+    "skill_nonblank_lines": 51,
+    "default_scaffold_files": 1,
+    "default_plan_bytes": 1376,
+    "compact_four_template_chars": 3878
+  },
+  "reductions": {
+    "skill_chars_percent": 57.8,
+    "default_scaffold_percent": 93.5,
+    "four_template_chars_percent": 81.6
+  },
+  "thresholds": {
+    "skill_char_reduction_at_least_50": true,
+    "skill_nonblank_lines_at_most_100": true,
+    "skill_words_at_most_900": true,
+    "default_one_file": true,
+    "default_at_most_5kb": true,
+    "default_reduction_at_least_70": true
+  }
+}

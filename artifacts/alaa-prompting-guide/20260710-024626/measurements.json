@@ -1,0 +1,30 @@
+{
+  "subject": "alaa-prompting-guide-gpt-5.6-refresh",
+  "timestamp": "2026-07-10T02:46:26+03:30",
+  "scope": "skills/sohrab/alaa-prompting-guide",
+  "before": {
+    "lines": 693,
+    "characters": 72570,
+    "skill_md_lines": 61,
+    "skill_md_characters": 6912
+  },
+  "after": {
+    "lines": 621,
+    "characters": 54719,
+    "skill_md_lines": 32,
+    "skill_md_characters": 2296
+  },
+  "reduction": {
+    "lines": 72,
+    "characters": 17851,
+    "lines_percent": 10.39,
+    "characters_percent": 24.60,
+    "skill_md_lines_percent": 47.54,
+    "skill_md_characters_percent": 66.78
+  },
+  "renamed_reference": {
+    "from": "references/10-gpt-5-5.md",
+    "to": "references/10-gpt-5-6.md"
+  },
+  "intentional_gpt_5_5_mentions": 2
+}

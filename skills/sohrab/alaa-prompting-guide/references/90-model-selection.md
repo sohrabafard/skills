@@ -2,50 +2,25 @@
 
 ## Quick comparison
 
-|                                                | GPT-5.5                                                                            | Claude Sonnet 5                                                                    | Claude Opus 4.8                                                                    | Claude Fable 5                                                                                                |
-|------------------------------------------------|------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| Runtime in this pack                           | Codex app/CLI                                                                      | Claude Code                                                                        | Claude Code                                                                        | Claude Code                                                                                                   |
-| Skill trigger                                  | `$name`                                                                            | `/name`                                                                            | `/name`                                                                            | `/name`                                                                                                       |
-| Positioning                                    | Flagship reasoning model for agentic coding/tool-use                               | Balanced default: best speed/intelligence combination                              | Highest Opus-tier reasoning; strong at bug-finding/review                          | Top capability tier; hardest, longest-running, most ambiguous problems                                        |
-| Reach for it when                              | The task runs inside Codex, or needs `/goal` / `spawn_agents_on_csv` batch fan-out | Default choice for ordinary coding/agentic work                                    | The task is unusually reasoning-heavy, architecture-sensitive, or is a review pass | The task has exceeded Opus 4.8's reliable range, needs multi-day autonomy, or needs Fable-grade vision/enterprise capability |
-| Effort/reasoning control                       | `reasoning.effort`: none/low/medium(default)/high/xhigh                            | `effort`: low/medium/high(default)/xhigh/max                                       | `effort`: low/medium/high(default)/xhigh/max                                       | `effort`: low/medium/high(default)/xhigh (adaptive thinking only)                                             |
-| Durable-objective feature                      | Codex `/goal` (thread-scoped state machine, evidence-checked)                      | Claude Code `/goal` (Stop-hook + evaluator model) — same name, different mechanism | same as Sonnet 5                                                                   | same as Sonnet 5                                                                                              |
-| Recurring/interval feature                     | none found in Codex docs                                                           | `/loop`                                                                            | `/loop`                                                                            | `/loop`                                                                                                       |
-| Subagent delegation                            | explicit only; `default`/`worker`/`explorer` roles, `max_depth` 1 by default       | Agent tool; nested up to depth 5; foreground or background                         | same as Sonnet 5                                                                   | same as Sonnet 5, and documented as more reliable at sustaining parallel subagents than Opus 4.8              |
-| Cost tier (per official docs at research time) | not directly comparable (different vendor pricing model)                           | lowest of the three Claude models                                                  | mid                                                                                | highest — steep premium over Opus 4.8                                                                         |
+| Model | Runtime/trigger | Default use | Effort | Runtime features |
+|---|---|---|---|---|
+| GPT-5.6 | Codex / `$name` | Codex work; Sol for frontier, Terra for balance, Luna for volume | `reasoning.effort`: none–max; medium default | Codex `/goal`; explicit subagents/batch |
+| Sonnet 5 | Claude Code / `/name` | ordinary coding and agentic work | `effort`: low–max; high default | Claude `/goal`, `/loop`, agents |
+| Opus 4.8 | Claude Code / `/name` | deep architecture, review, subtle bugs | `effort`: low–max; high default | same Claude runtime |
+| Fable 5 | Claude Code / `/name` | hardest, longest, most ambiguous work | adaptive `effort`: low–xhigh | same runtime; strongest sustained fan-out |
 
-Do not treat the cost/effort figures as permanently fixed — see each model's own reference file for the exact numbers
-and their "Caveats" section, and re-check `references/00-source-map.md` before quoting a price or limit elsewhere.
+Re-check `00-source-map.md` before quoting costs, limits, defaults, or feature gates. Cross-vendor prices are not directly comparable; among the three Claude tiers, Sonnet is lower, Opus middle, and Fable highest at the referenced research time.
 
 ## Decision helper
 
-1. **Is the target runtime Codex or Claude Code?** This is not optional — it decides the trigger character (
-   `references/05-trigger-syntax.md`) and which feature set applies (`references/11-*` vs `references/41-*`). If the
-   runtime is Codex, the model is GPT-5.5 by definition in this pack's v1 scope.
-2. **If the runtime is Claude Code, which of the three models fits the task?**
-    - Ordinary coding, refactors, most agentic tool-use → **Sonnet 5**.
-    - Deep architecture decisions, multi-step production-readiness review, anything where finding subtle bugs matters
-      more than speed → **Opus 4.8**.
-    - A problem that has already resisted Opus 4.8, a multi-day autonomous run, heavy vision/document analysis,
-      enterprise workflow synthesis, or work at genuinely frontier difficulty → **Fable 5**, and expect to pay for it.
-      Do not use Fable as a routine upgrade when Sonnet 5 or Opus 4.8 already fits.
-3. **Does the task need a durable objective that outlives one prompt?** Use the runtime's own `/goal` (Codex or Claude
-   Code — they are not interchangeable, see each runtime file) rather than trying to simulate persistence with a single
-   giant prompt.
-4. **Does the task decompose into independent lanes?** Authorize subagents/parallel work explicitly — none of these four
-   models fans out on its own without being asked.
-5. **Is this a durable, multi-phase plan that needs a GPT-5.5-implements / Claude-reviews cadence with
-   plan/state/phase-prompt artifacts?** Stop here and hand off to `$alaa-workflow` instead of building that structure ad
-   hoc — it already owns phase prompt packs, continuation state, and the Opus review-prompt shape. This skill's job is
-   making any single prompt to any of the four models good; `$alaa-workflow`'s job is orchestrating a whole multi-phase
-   engagement across two of them. Do not duplicate its plan/state machinery here.
+1. Pick the runtime first; it determines trigger syntax and runtime features. In this v1 scope, Codex means GPT-5.6.
+2. In Claude Code, choose Sonnet for routine work, Opus for reasoning-heavy architecture/review, and Fable only after Opus is insufficient or the work needs multi-day autonomy, heavy vision/doc analysis, or frontier synthesis.
+3. Use the runtime's own `/goal` for a durable objective; Codex and Claude implementations are not interchangeable.
+4. Authorize independent lanes explicitly and require parent synthesis.
+5. Route durable GPT-5.6 implementation plus Claude review engagements with plan/state/phase artifacts to `$alaa-workflow` instead of duplicating its machinery.
 
 ## Companion routing
 
-- `$alaa-workflow` — durable multi-phase plans, phase prompt packs, GPT-5.5-implement + Claude-review cadence,
-  subagent/parallel-lane orchestration across a whole engagement.
-- `$openai-docs` (Codex-side system skill) — freshest GPT-5.5/Codex specifics when this skill's own Codex references are
-  stale; no equivalent bundled skill exists on the Claude side, so lean on `references/20-*` through `references/41-*`
-  plus the official Anthropic docs in `references/00-source-map.md`.
-- `$alaa-low-noise` — pair with any non-trivial prompt-writing session that risks noisy logs or oversized status
-  chatter, same as every other skill in this pack.
+- `$alaa-workflow`: durable multi-phase plans, phase prompts, state, and GPT-5.6 implementation plus Claude review cadence.
+- `$openai-docs`: freshest GPT-5.6/Codex guidance when this skill is stale; use official Anthropic docs for Claude gaps.
+- `$alaa-low-noise`: broad prompt research, validation, or long tool-heavy sessions.

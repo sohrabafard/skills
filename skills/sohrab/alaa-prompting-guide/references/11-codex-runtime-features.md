@@ -1,6 +1,6 @@
-# Codex Runtime Features (the environment GPT-5.5 runs inside)
+# Codex Runtime Features (the environment GPT-5.6 runs inside)
 
-These are product/harness features of the Codex app and CLI, not raw model behavior — they matter whenever a prompt targets GPT-5.5 running in Codex rather than the bare API. Read `references/10-gpt-5-5.md` first for model-level tuning, then use this file for the feature the task actually needs.
+These are Codex app/CLI features, not raw model behavior. Read `10-gpt-5-6.md` first, then only the feature section the task needs.
 
 ## `/goal` — persistent objective mode
 
@@ -18,7 +18,7 @@ Use only <allowed files, tools, or boundaries>. Between iterations, <how Codex s
 If blocked or no valid path remains, report exactly what is blocking progress and what would unblock it.
 ```
 
-For a full worked example (package clean-code pass, explicit subagent/parallel/background authorization, mandatory self-review before declaring done, step-by-step Conventional Commits with no co-author trailer) see this pack's own prior art in a running Codex session, or build one fresh from `references/10-gpt-5-5.md` plus the template above — state one objective, one stopping condition, and a validation loop; a good goal is bigger than one prompt but smaller than an open-ended backlog.
+Build worked examples from `10-gpt-5-6.md` plus the template above: state one objective, one stopping condition, and one validation loop. A goal should be larger than one prompt but smaller than an open-ended backlog.
 
 ## Subagents — explicit delegation and parallel spawning
 

@@ -6,28 +6,63 @@
   "risk": "normal",
   "cases": [
     {
-      "id": "positive-primary",
+      "id": "explicit-long-task",
       "kind": "positive_trigger",
-      "prompt": "Use $alaa-workflow to help with alaa workflow in this repo.",
+      "prompt": "Use $alaa-workflow to coordinate this multi-phase repository migration through implementation, validation, and handoff.",
       "expected_skill": "alaa-workflow"
     },
     {
-      "id": "positive-natural-language",
+      "id": "natural-long-task",
       "kind": "positive_trigger",
-      "prompt": "I need help with alaa workflow and want the skill that owns this workflow.",
+      "prompt": "This change spans several packages and may take multiple sessions. Keep a durable plan and make it resumable.",
       "expected_skill": "alaa-workflow"
     },
     {
-      "id": "sibling-confusion",
-      "kind": "sibling_confusion",
-      "prompt": "I am deciding whether to use alaa-workflow or a nearby skill for alaa workflow work.",
-      "expected_skill": "alaa-workflow",
-      "expected_related": null
+      "id": "resume-existing-plan",
+      "kind": "positive_trigger",
+      "prompt": "Resume the interrupted implementation from the existing plan and checkpoint, then continue from the last verified phase.",
+      "expected_skill": "alaa-workflow"
     },
     {
-      "id": "hard-negative",
+      "id": "native-plan-mode",
+      "kind": "positive_trigger",
+      "prompt": "In Plan Mode, produce an implementation-ready plan for this cross-package migration. Do not create repository files.",
+      "expected_skill": "alaa-workflow"
+    },
+    {
+      "id": "review-only",
+      "kind": "positive_trigger",
+      "prompt": "Review the completed multi-phase migration against its plan and validation evidence. Return findings only; do not create workflow artifacts.",
+      "expected_skill": "alaa-workflow"
+    },
+    {
+      "id": "explicit-prompt-pack",
+      "kind": "positive_trigger",
+      "prompt": "Create a reusable implementer and independent-reviewer prompt pack for each phase, using current runtime guidance.",
+      "expected_skill": "alaa-workflow"
+    },
+    {
+      "id": "delegated-lanes",
+      "kind": "positive_trigger",
+      "prompt": "Split the independent backend and frontend lanes between agents, keep ownership disjoint, and integrate their results under one plan.",
+      "expected_skill": "alaa-workflow"
+    },
+    {
+      "id": "hard-negative-small-review",
       "kind": "hard_negative",
-      "prompt": "Write a product launch email. This should not trigger alaa-workflow even though it mentions tooling.",
+      "prompt": "Review this five-line function for an off-by-one error and answer directly. No plan or handoff is needed.",
+      "expected_skill": null
+    },
+    {
+      "id": "hard-negative-small-edit",
+      "kind": "hard_negative",
+      "prompt": "Rename one local variable in this file and run the focused unit test.",
+      "expected_skill": null
+    },
+    {
+      "id": "hard-negative-unrelated",
+      "kind": "hard_negative",
+      "prompt": "Write a concise product launch email for our customers.",
       "expected_skill": null
     }
   ]

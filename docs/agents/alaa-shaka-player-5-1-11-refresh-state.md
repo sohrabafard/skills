@@ -1,7 +1,7 @@
 # Alaa Shaka Player 5.1.11 Refresh State
 
 - Task name: Alaa Shaka Player 5.1.11 refresh
-- Current status: in progress
+- Current status: complete
 - Objective: update `skills/sohrab/alaa-shaka-player` for Shaka Player `v5.1.11` and add a dedicated `v5.0.8` to `v5.1.11` migration guide.
 - Plan: `docs/_agent_plans/20260628-035730_alaa-shaka-player-5-1-11-refresh.md`
 
