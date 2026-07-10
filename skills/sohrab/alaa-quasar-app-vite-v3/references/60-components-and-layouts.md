@@ -2,13 +2,15 @@
 
 Use this file when the task names a Quasar component, a layout primitive, or a UI family.
 
-For exact “how do I use this component?” guidance, pair this file with `61-component-usage-atlas.md`.
+For exact props, events, slots, and methods, first follow `05-authority-and-api-lookup.md` and query the installed project.
+For component intent, alternatives, common patterns, and gotchas, pair this file with `61-component-usage-atlas.md`.
 For exact layout-shell semantics, pair this file with `62-layout-patterns-and-examples.md`.
 For deterministic `QImg` delivery patterns, pair this file with `63-image-delivery-and-placeholders.md`.
 
 ## Search strategy
 
 - Search the exact component name first, for example `QTable` or `QDialog`.
+- If syntax matters, run the project-local installed-API lookup before relying on an atlas snippet.
 - Then classify by family below.
 - Then open `61-component-usage-atlas.md` for usage notes, alternatives, and better search terms.
 - For large or interactive UI surfaces, also read `70-guardrails-a11y-performance-monorepo.md`.

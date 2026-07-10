@@ -3,6 +3,8 @@
 Use this file when the task names a Quasar plugin, composable, option, or util and the agent needs more than a category list.
 
 This file restores the high-value part of the old API micro-skills: what the API is really for, what it is often confused with, and which SSR or usage traps matter.
+It is not an exhaustive option/method specification. For exact installed plugin APIs, follow `05-authority-and-api-lookup.md` and run the local lookup first.
+For composables and utils, verify installed exports/type declarations plus version-matched official docs instead of calling `quasar describe`.
 
 ## High-value playbooks
 

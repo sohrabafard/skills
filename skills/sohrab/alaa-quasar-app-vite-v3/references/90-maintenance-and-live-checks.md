@@ -4,7 +4,7 @@ This skill is version-sensitive by design. Its authority decays without refreshe
 
 ## Snapshot discipline
 
-- Canonical snapshot lives in `20-v3-config-and-features.md` (dated 2026-07-08). Refresh with:
+- Canonical snapshot lives in `20-v3-config-and-features.md` (dated 2026-07-10). Refresh with:
 
 ```bash
 node scripts/check-upstream-versions.mjs
@@ -12,10 +12,12 @@ node scripts/check-upstream-versions.mjs
 
 - The script reports `latestStableByMajor.v2` and `.v3` for `@quasar/app-vite`. If a v4 line ever appears on `latest`, this whole skill's posture needs re-evaluation, not just a number bump.
 - When any version, import path, config key, or folder changes upstream: grep the whole pack for the old string and update every occurrence plus the snapshot date. Never update the snapshot alone.
+- Exact component/directive/plugin API output is deliberately not snapshotted into this pack. Keep `scripts/query-installed-quasar-api.mjs` version-neutral and delegate to the target project's installed CLI.
 
 ## Freshness triggers (verify live before answering)
 
 - Any "latest"/"current" question; any claim after the snapshot date.
+- Any change to `quasar describe` arguments, output behavior, project detection, or package bin layout used by `scripts/query-installed-quasar-api.mjs`.
 - Browser-support claims in `30`, `40`, and `45` (Baseline moves; iOS/Safari release cadence; permission prompt behavior changes almost yearly — one-time grants, quieter UI, auto-revocation windows, the `<geolocation>`/permission-element rollout). Items marked UNVERIFIED in research: Static Routing API outside Chromium, Declarative Web Push in Chromium, testing-extension v3 compatibility, exact default dotenv file list, exact Safari grant-expiry windows, `<geolocation>` element rollout percentage, camera/mic permission elements.
 - Official sources only: quasar.dev, GitHub releases (quasarframework/quasar), npm registry, MDN, web.dev, developer.chrome.com, webkit.org. Community posts are troubleshooting hints, never migration rules.
 
@@ -23,6 +25,16 @@ node scripts/check-upstream-versions.mjs
 
 - 2026-07-06/07: `@quasar/app-vite` 3.0.0 then 3.0.1 released — v3 became the stable production line after a beta/RC run since 2026-05-06. v2 (last stable 2.6.2) entered maintenance (~until 2027-06 per upstream signals).
 - 2026-07-08: this skill absorbed the full content of the former `quasar-skill-packe` (exact Quasar shapes, atlases, platform modes, guardrails) and `alaa-app-vite-quasar` (v2 playbook, verified delta checklist, testing/CI) — those two skills were retired. If you edit posture here, also sweep `$alaa-frontend-developer` (it cross-references this skill).
+- 2026-07-10: the pack became an explicit control plane rather than an exhaustive API mirror. Exact installed APIs now route through project-local `quasar describe`; atlases remain curated intent, alternatives, gotchas, and search vocabulary. No MCP dependency is required.
+
+## Installed-API helper verification
+
+When changing `scripts/query-installed-quasar-api.mjs`:
+
+- run it against at least one installed app-vite v2 project and one installed app-vite v3 project
+- verify the reported app-vite and Quasar versions match each project's installed package metadata
+- verify a missing/non-Quasar project fails with a specific, actionable error
+- run a narrow symbol query and a `list` query; do not accept a helper that works only for one output shape
 
 ## Dual-runtime authoring rules
 

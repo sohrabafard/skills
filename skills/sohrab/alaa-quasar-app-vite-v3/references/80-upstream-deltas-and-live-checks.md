@@ -7,7 +7,7 @@ Use this file for any "latest", upgrade, migration, or maintenance task.
 - Refresh workflow
 - Source priority
 - Freshness triggers
-- Live snapshot (captured 2026-06-16)
+- Live snapshot (captured 2026-07-10)
 - The `@quasar/app-vite` v2-vs-v3 split (read this first for any config/CLI task)
 - `@quasar/app-vite` v3 breaking changes
 - Quasar 2.20.x framework notes
@@ -16,7 +16,7 @@ Use this file for any "latest", upgrade, migration, or maintenance task.
 - Vue Router 5 notes
 - Vue 3.5 SSR-relevant features
 - Workbox 7.4.x notes
-- Dual-runtime maintenance rules (Claude Opus + GPT-5/Codex)
+- Dual-runtime maintenance rules (Claude Code + GPT-5/Codex)
 - Package-manager guidance
 - Helpful doc endpoints
 
@@ -64,15 +64,15 @@ Re-check official sources when the task includes:
 - SSR middleware, PWA service worker, BEX bridge, Electron/Capacitor mode behavior, or `quasar.config` format
 - a production-only mismatch between dev and build output
 
-## Live snapshot (captured 2026-07-08)
+## Live snapshot (captured 2026-07-10)
 
-From the npm registry on 2026-07-08:
+From the npm registry on 2026-07-10:
 
 - `quasar` -> `2.21.1` (stable)
 - `@quasar/app-vite` (stable / production) -> `3.0.1` (published 2026-07-07; holds the `latest` dist-tag) — **v3 is the production line**
 - `@quasar/app-vite` (maintenance) -> `2.6.2` (last v2 stable, published 2026-06-03; line supported ~until 2027-06)
 - `@quasar/extras` -> `2.0.2` (ESM-only; icon-library cuts — audit before bumping)
-- `vite` -> `8.1.3` (stable)
+- `vite` -> `8.1.4` (stable)
 - `vue` -> `3.5.39` (stable)
 - `vue-router` -> `5.1.0` (stable)
 - `pinia` -> `3.0.4` (stable; v2 or v3 both accepted by app-vite v3)
@@ -150,7 +150,7 @@ The framework (`quasar`) and the CLI (`@quasar/app-vite`) version independently.
 
 ## Vite 8 migration risks
 
-From the official Vite migration guide. All of these are real for Vite 8 (`8.1.3`):
+From the official Vite migration guide. All of these are real for Vite 8 (current stable checked at `8.1.4`):
 
 - Dependency optimization (pre-bundling) uses **Rolldown** instead of esbuild. `optimizeDeps.esbuildOptions` is deprecated and auto-maps to `optimizeDeps.rolldownOptions`.
 - JS transforms and minification moved to **Oxc**. The `esbuild` config option is deprecated in favor of `oxc`; `build.minify: 'esbuild'` is deprecated.
@@ -184,16 +184,16 @@ Baseline since Vue 3.5 (current `3.5.39`); use them to prevent or scope hydratio
 
 - `7.4.0`/`7.4.1` are maintenance/security releases (dependency bumps, Rollup v4). No behavior change for InjectManifest/GenerateSW users. Treat as a safe bump.
 
-## Dual-runtime maintenance rules (Claude Opus + GPT-5/Codex)
+## Dual-runtime maintenance rules (Claude Code + GPT-5/Codex)
 
-This pack is consumed by both Claude Opus 4.x and GPT-5/Codex agents. When editing the pack itself, follow `references/91-agent-authoring-and-dual-runtime.md`. The short version:
+This pack is consumed by both Claude Code and GPT-5/Codex agents. When editing the pack itself, follow `references/91-agent-authoring-and-dual-runtime.md`. The short version:
 
 - Keep `SKILL.md` small and route to references (progressive disclosure). Keep the body well under 500 lines.
 - Keep the `name` and `description` frontmatter accurate; the description is the trigger signal.
-- Make every rule literal and explicitly scoped; modern Opus does not silently generalize a rule, and GPT-5/Codex burns reasoning tokens reconciling vague or contradictory rules.
+- Make every rule literal and explicitly scoped; modern Claude models do not silently generalize every rule, and GPT-5/Codex burns reasoning tokens reconciling vague or contradictory rules.
 - Eliminate contradictions across files. If two rules can conflict, order them into explicit precedence.
 - Pair every "don't" with a concrete "do instead". Avoid ALL-CAPS `CRITICAL`/`MUST` spam; normal imperatives steer modern models better.
-- Prefer instructions over scripts unless determinism or repeated live refresh earns the script (the version checker does).
+- Prefer instructions over scripts unless determinism or repeated live refresh earns the script (the version checker and installed-API bridge do).
 
 ## Package-manager guidance
 

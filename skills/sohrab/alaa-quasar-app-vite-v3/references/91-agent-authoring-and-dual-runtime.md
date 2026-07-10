@@ -1,6 +1,6 @@
 # Agent Authoring and Dual-Runtime Notes
 
-Use this file when **editing or extending this skill pack itself**, not when answering a Quasar question. It captures how the pack is written so it works well for both runtimes that consume it: Claude Opus 4.x and the GPT-5 / Codex family.
+Use this file when **editing or extending this skill pack itself**, not when answering a Quasar question. It captures how the pack is written so it works well for both runtimes that consume it: Claude Code and the GPT-5 / Codex family.
 
 If you only want Quasar guidance, you do not need this file.
 
@@ -9,7 +9,7 @@ If you only want Quasar guidance, you do not need this file.
 - Who consumes this pack
 - The example convention used everywhere in this pack
 - Rules that serve both runtimes
-- Claude Opus 4.x specifics
+- Claude Code consumer specifics
 - GPT-5 / Codex specifics
 - Structure and progressive disclosure
 - Maintenance checklist
@@ -18,12 +18,12 @@ If you only want Quasar guidance, you do not need this file.
 
 Agents loading this pack are almost always one of:
 
-- **Claude Opus 4.x** (current flagship `claude-opus-4-8`), invoking the pack through the Agent Skills mechanism.
-- **GPT-5 / Codex family** (current coding model around `gpt-5.3-codex`; reasoning efforts `low`/`medium`/`high`/`xhigh`, `medium` default). In setups that expose these packs as skills to Codex — this repo ships an `agents/openai.yaml` skill interface per pack — Codex discovers and invokes them through that skill mechanism, driven by `SKILL.md` frontmatter (`name`/`description`) and trigger quality. So frontmatter and `agents/openai.yaml` are first-class, not optional. Where no skill mechanism is available, the same content reaches Codex through repo instructions (`AGENTS.md`) or explicit file references. Either way, write for trigger quality and literal instruction-following.
+- **Claude Code models** invoking the pack through Agent Skills. Keep model-specific tuning in `$alaa-prompting-guide`; this Quasar pack should stay model-family-neutral.
+- **GPT-5 / Codex family** agents. In setups that expose these packs as skills to Codex — this repo ships an `agents/openai.yaml` interface per pack — Codex discovers and invokes them through `SKILL.md` frontmatter (`name`/`description`) and trigger quality. Frontmatter and `agents/openai.yaml` are first-class, not optional. Where no skill mechanism is available, the same content reaches Codex through repo instructions (`AGENTS.md`) or explicit file references. Either way, write for trigger quality and literal instruction-following.
 
-Write for **the more literal, less-inferring reader**. Opus 4.8 applies instructions literally and does not silently generalize scope; GPT-5/Codex follows instructions closely but spends reasoning tokens reconciling vague or contradictory rules. Content that satisfies both is content that is explicit, scoped, and internally consistent.
+Write for **the more literal, less-inferring reader**. Current Claude and GPT/Codex models follow scoped instructions closely and spend unnecessary reasoning on vague or contradictory rules. Content that satisfies both is explicit, scoped, and internally consistent.
 
-Note: model lines move fast. Refer to families ("GPT-5 / Codex", "Opus 4.x") rather than pinning a marketing version like "Codex 5.5", which is not a real model id.
+Note: model lines move fast. Refer to runtime families ("GPT-5 / Codex", "Claude Code") and route exact model behavior to `$alaa-prompting-guide` instead of pinning it in this domain pack.
 
 ## The example convention used everywhere in this pack
 
@@ -61,15 +61,15 @@ Rules for writing these pairs:
 - **One default with an escape hatch, not a menu.** "Use `srcset`/`sizes`; use a single resized URL only when width/height are fixed" beats listing five options with no default.
 - **Consistent terminology.** Pick one term and keep it (always "boot file", always "reference", always "the line" for the app-vite major). Synonyms read as different concepts.
 - **Forward-slash paths**, file references as clickable paths, no `file://`/`vscode://`/`https://` wrappers around local paths.
-- **No time-relative phrasing in rules.** Convert "recently" / "since last month" into the absolute snapshot in `70-...` or an "old pattern" note. The reader cannot resolve relative dates.
+- **No time-relative phrasing in rules.** Convert "recently" / "since last month" into the absolute snapshot in `80-upstream-deltas-and-live-checks.md` or an "old pattern" note. The reader cannot resolve relative dates.
 - **Bias to action, but never silently destructive.** Deliver the working change; confirm before hard-to-reverse operations.
 
-## Claude Opus 4.x specifics
+## Claude Code consumer specifics
 
-- Opus 4.8 interprets prompts **literally**, especially at lower effort. Do not rely on it to generalize a rule from one example to a whole category — spell out the category.
+- Do not rely on one example to generalize a rule to a whole category — spell out the category.
 - **Positive framing wins.** Prefer "do Y" over "don't do X"; when a prohibition is necessary, attach the reason and the positive alternative.
-- **Drop aggressive imperatives.** Modern Opus over-triggers on `CRITICAL:` / `YOU MUST`. Normal imperatives ("Use this when…") steer it better. This pack intentionally avoids caps-lock urgency.
-- **Avoid over-engineering prompts.** Opus tends to add abstractions and files that were not requested; keep instructions to the minimum that preserves the contract.
+- **Drop aggressive imperatives.** Modern Claude models can over-trigger on `CRITICAL:` / `YOU MUST`. Normal imperatives ("Use this when…") steer them better. This pack intentionally avoids caps-lock urgency.
+- **Avoid over-engineering prompts.** Claude models can add abstractions and files that were not requested; keep instructions to the minimum that preserves the contract.
 - Examples are one of the most reliable steering tools; this pack uses small, concrete input/output and do/don't pairs rather than long prose.
 
 ## GPT-5 / Codex specifics
@@ -83,18 +83,21 @@ Rules for writing these pairs:
 ## Structure and progressive disclosure
 
 - `SKILL.md` is the router: triggers, package-manager rule, the app-vite version-detection rule, the convention note, and the routing table. Keep it lean.
+- `references/05-authority-and-api-lookup.md` owns source boundaries, installed-API lookup, fallbacks, and disagreement handling.
 - Detail lives in `references/*.md`, kept **one level deep** from `SKILL.md` so a partial read still captures scope.
 - Any reference over ~100 lines gets a table of contents at the top.
-- The version checker stays a script because live refresh is a determinism-worthy job; everything else stays instructions.
+- The version checker stays a script because live refresh is a determinism-worthy job.
+- The installed-API bridge stays a script because resolving the target project's local CLI and preserving its exit status must be deterministic. Atlases stay references because they provide judgment, not exhaustive API data.
 - Bundled-but-unread files cost zero context until read, so comprehensive references are fine as long as routing keeps them load-on-demand.
 
 ## Maintenance checklist
 
 When you change this pack:
 
-- Did a package version, import path, config key, or folder structure change? Update `70-...`, the `SKILL.md` snapshot, and every reference that shows the old shape (search the whole pack for the old string).
+- Did a package version, import path, config key, or folder structure change? Update `80-upstream-deltas-and-live-checks.md`, the `SKILL.md` snapshot, and every reference that shows the old shape (search the whole pack for the old string).
 - Is the app-vite v2-vs-v3 split still represented correctly in every config/CLI/mode/SSR/PWA example?
 - Does every new rule have a `✅ Do` / `❌ Don't` pair where it earns one?
 - Did you introduce any contradiction with an existing rule?
 - Re-run `node scripts/check-upstream-versions.mjs` and refresh the snapshot date.
+- Re-run `scripts/query-installed-quasar-api.mjs` against representative app-vite v2 and v3 projects plus a missing-project failure case.
 - Would a realistic Quasar prompt still load the right reference via the routing table and `00-topic-map.md`?

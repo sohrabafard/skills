@@ -3,6 +3,7 @@
 Use this file when the task names a Quasar directive and the agent needs more than a symbol list: what the directive is for, what behavior is easy to miss, and which minimal snippet shape is safest to start from.
 
 Only load this file when directive behavior or snippet shape matters. Keep `64-plugins-composables-directives-options-utils.md` as the lighter entry point.
+Treat the examples as curated starting points. For exact values, modifiers, and arguments in the installed project, follow `05-authority-and-api-lookup.md` and query the local directive API.
 
 ## High-value directive playbooks
 

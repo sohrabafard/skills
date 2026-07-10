@@ -2,8 +2,10 @@
 
 Use this file when the task names a Quasar plugin API, composable, directive, global option, or utility helper.
 
-For exact directive usage patterns and minimal snippets, pair this file with `65-directive-usage-atlas.md`.
-For exact plugin, composable, option, and util usage patterns, pair this file with `66-api-usage-atlas.md`.
+For exact installed component/directive/plugin API availability and option/value shapes, first follow `05-authority-and-api-lookup.md`.
+For composables and utils, inspect installed `quasar` exports/type declarations plus version-matched official docs; `quasar describe` does not cover those surfaces.
+For directive intent, gotchas, and minimal snippets, pair this file with `65-directive-usage-atlas.md`.
+For plugin, composable, option, and util intent and SSR traps, pair this file with `66-api-usage-atlas.md`.
 
 ## Plugins
 
@@ -13,7 +15,7 @@ Also load:
 
 - `31-ssr-pwa-and-security.md` for universal apps
 - `70-guardrails-a11y-performance-monorepo.md` for focus, reduced motion, or heavy runtime work
-- `66-api-usage-atlas.md` when exact usage shape matters
+- `66-api-usage-atlas.md` when usage intent or a common snippet shape matters
 
 ## Composables
 

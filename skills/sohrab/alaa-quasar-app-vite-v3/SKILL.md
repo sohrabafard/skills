@@ -1,23 +1,25 @@
 ---
 name: alaa-quasar-app-vite-v3
-description: "The complete Quasar CLI + Vite skill: building, upgrading, and modernizing Quasar apps on @quasar/app-vite v3 (the stable production line since 3.0.1, 2026-07-07), plus maintaining v2 repos and migrating them. Covers quasar.config, env, boot/routing, components/layouts/directives/plugins, platform modes (SPA/SSR/PWA/BEX/Capacitor/Electron), full-featured service workers and offline, update UX, WebOTP/SMS OTP autofill, device fingerprinting and device trust, browser device APIs and the permission model (audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors; permission priming UX and cross-browser prompt behavior), testing/CI, a11y/performance guardrails, and the v2 -> v3 migration playbook. Use when the user mentions Quasar, quasar.config, app-vite, QTable/QImg/QLayout-style symbols, a Quasar upgrade/migration, service worker or offline work in a Quasar app, OTP autofill, getUserMedia/recording, geolocation, or browser permissions. Do not use for plain Vue/Vite apps without Quasar CLI."
+description: "Version-aware control plane for Quasar CLI + Vite work on @quasar/app-vite v3, v2 maintenance, and v2-to-v3 migration. Detects the installed line first; routes exact component, directive, and plugin API questions to the project-local Quasar CLI instead of treating bundled Markdown as exhaustive truth; and covers quasar.config, env, boot/routing, components/layouts, SPA/SSR/PWA/BEX/Capacitor/Electron modes, service workers/offline/update UX, WebOTP/device trust, browser permissions, testing/CI, accessibility, and performance. Use when the user mentions Quasar, quasar.config, app-vite, QTable/QImg/QLayout-style symbols, an upgrade/migration, service workers/offline, OTP autofill, getUserMedia/recording, geolocation, or browser permissions. Do not use for plain Vue/Vite apps without Quasar CLI."
 ---
 
 # Alaa Quasar App-Vite v3
 
 ## Purpose
 
-The single skill for Quasar CLI + Vite work. It absorbed the former `quasar-skill-packe` (exact Quasar API/config/component shapes) and `alaa-app-vite-quasar` (v2-era semantics and the verified v2->v3 delta list), and leads with the v3 era:
+The version-aware control plane for Quasar CLI + Vite work. It absorbed the former `quasar-skill-packe` (Quasar API/config/component guidance) and `alaa-app-vite-quasar` (v2-era semantics and the verified v2->v3 delta list), and leads with the v3 era:
 
 - `@quasar/app-vite` **v3 is the stable production line** (3.0.1 since 2026-07-07); v2 (last stable 2.6.2) is the maintenance line (~until 2027-06) covered here for not-yet-migrated repos.
 - v2 -> v3 migration decision, playbook, and verified delta checklist
-- exact Quasar shapes: `quasar.config`, env, boot files, routing, components, layouts, directives, plugins, composables, utils, platform modes
+- project-local lookup for exact component/directive/plugin APIs, plus curated `quasar.config`, env, boot, routing, layout, composable, util, and platform-mode patterns
 - production-grade service workers: offline strategies, update lifecycle UX, performance, debugging, push/badging/background sync
 - SMS OTP reading (WebOTP + `one-time-code`), device fingerprinting bounded to device trust, passkey-forward posture
 - browser device APIs and the permission model: audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors — cross-browser prompt behavior, permission priming UX, denial recovery, and the web-vs-Capacitor permission split
 - testing/CI, a11y/performance guardrails, and modern-experience decisions
 
 Written for both Claude/Opus and GPT/Codex agents. High-value rules use ✅ Do / ❌ Don't pairs: the ✅ side is the instruction, the ❌ side is a realistic mistake kept as a guardrail.
+
+This pack is not an exhaustive mirror of Quasar documentation. Its references own workflow, decision heuristics, migration deltas, guardrails, and high-value examples. The installed project and official Quasar sources own exact API availability and current upstream behavior.
 
 ## Version posture (the rule that dates fastest)
 
@@ -31,63 +33,43 @@ Written for both Claude/Opus and GPT/Codex agents. High-value rules use ✅ Do /
 node scripts/check-upstream-versions.mjs
 ```
 
-Snapshot 2026-07-08: `@quasar/app-vite` 3.0.1 (stable, `latest`) / v2 2.6.2 (maintenance); quasar 2.21.1; @quasar/extras 2.0.2; vite 8.1.3; vue 3.5.39; vue-router 5.1.0; pinia 3.0.4; workbox-build 7.4.1. Node for v3: `^22.22.0 || ^24 || ^26 || ^28 || ^30`.
+Snapshot 2026-07-10: `@quasar/app-vite` 3.0.1 (stable, `latest`) / v2 2.6.2 (maintenance); quasar 2.21.1; @quasar/extras 2.0.2; vite 8.1.4; vue 3.5.39; vue-router 5.1.0; pinia 3.0.4; workbox-build 7.4.1. Node for v3: `^22.22.0 || ^24 || ^26 || ^28 || ^30`.
+
+## Authority and exact API lookup
+
+Use the authority that matches the question; do not apply one global precedence blindly:
+
+1. The live repository owns its behavior, constraints, conventions, and installed dependency line.
+2. For exact Quasar props, events, slots, methods, directive values, or plugin options, run the bundled `scripts/query-installed-quasar-api.mjs`, which delegates to that project's local `quasar describe` command.
+3. Official Quasar docs and release sources own current upstream concepts, examples, upgrades, and release truth.
+4. This skill's references own reusable workflow, guardrails, migration reasoning, and search vocabulary.
+
+```bash
+node <skill-dir>/scripts/query-installed-quasar-api.mjs --project <repo-root> QTable -p -s -e -m
+```
+
+Read `references/05-authority-and-api-lookup.md` for the complete lookup and fallback contract. This version requires no MCP server; do not block a Quasar task on MCP availability.
 
 ## Token-efficient working model
 
 Do not load everything. Sequence:
 
 1. Read the repo first: lockfile, `package.json`, `quasar.config.*`, and only the mode folders the task touches. Repo-local `AGENTS.md`/`CLAUDE.md` override this skill.
-2. Read `references/00-topic-map.md` unless you already know the exact file; then load only that file and its "Also load" pairings.
-3. For anything version-sensitive or claimed after 2026-07-08, refresh live data (`references/80-upstream-deltas-and-live-checks.md`, `references/90-maintenance-and-live-checks.md`).
+2. If the task asks for an exact Quasar API shape, run the installed-API lookup before trusting an atlas example or model memory.
+3. Read `references/00-topic-map.md` unless you already know the exact file; then load only that file and its "Also load" pairings.
+4. For anything version-sensitive or claimed after 2026-07-10, refresh live data (`references/80-upstream-deltas-and-live-checks.md`, `references/90-maintenance-and-live-checks.md`).
 
-## Routing map
+## Routing
 
-Migration and v2 era:
+Use `references/00-topic-map.md` as the single detailed routing owner. The main groups are:
 
-- v2 -> v3 migration playbook (plan, execute, validate, rollback): `references/10-v2-to-v3-migration.md`
-- Repo-scan template, v2-safety/v3-readiness checklists, and the authoritative verified delta list (§7–8): `references/11-review-and-upgrade-checklist.md`
-- v2 maintenance coding contract (env, aliases, boot, routing, Pinia on v2): `references/12-v2-maintenance-playbook.md`
-- Correct/wrong review-answer examples: `references/13-examples-review-style.md`
-
-v3 config and CLI:
-
-- v3 capability map, env contract, sharp edges, Quasar UI 2.18–2.21 digest: `references/20-v3-config-and-features.md`
-- quasar.config structure, aliases, `extendViteConf`, env files, proxies, lazy loading: `references/21-cli-vite-and-config.md`
-- Exact per-line config/boot/env/alias code shapes (cookbook): `references/22-cli-cookbook-and-examples.md`
-
-SSR, PWA, service workers:
-
-- Service worker implementation depth (strategies, update UX, performance, debugging, push/badging): `references/30-service-worker-excellence.md`
-- SSR rules, hydration tools, SSR/PWA structure, auth/env-secret rules, GenerateSW vs InjectManifest: `references/31-ssr-pwa-and-security.md`
-- Custom-SW change guardrails (single `__WB_MANIFEST`, safe-vs-risky edits, verification minimum): `references/32-pwa-injectmanifest-guard.md`
-- SSR mental model, request isolation, SEO/useMeta, register-sw hooks, SSR+PWA takeover: `references/33-ssr-pwa-playbook.md`
-- SPA vs SSR vs PWA vs BEX vs Capacitor vs Cordova vs Electron structure: `references/35-platform-modes.md`
-
-Auth and experience:
-
-- WebOTP, SMS autofill, fingerprinting, device trust, passkeys: `references/40-webotp-and-device-trust.md`
-- Browser device APIs + permission model (recording, camera, geolocation, notifications, clipboard, wake lock, sensors; priming UX, denial recovery, permission testing, Capacitor split): `references/45-browser-apis-and-permissions.md`
-- Mode selection, install UX, perceived performance, modern-experience decisions: `references/50-modern-experience.md`
-
-Components and APIs:
-
-- Component family routing: `references/60-components-and-layouts.md`
-- Per-component playbooks and searchable index (~70 components): `references/61-component-usage-atlas.md`
-- Layout shells, `view` semantics, drawers, routing-with-layouts: `references/62-layout-patterns-and-examples.md`
-- Deterministic QImg delivery, placeholders, responsive sizing: `references/63-image-delivery-and-placeholders.md`
-- Plugins, composables, directives, options, utils routing: `references/64-plugins-composables-directives-options-utils.md`
-- Directive atlas: `references/65-directive-usage-atlas.md`
-- Plugin/composable/option/util atlas: `references/66-api-usage-atlas.md`
-
-Quality, testing, maintenance:
-
-- A11y, performance audit, monorepo packaging, tree-shaking guardrails: `references/70-guardrails-a11y-performance-monorepo.md`
-- Quasar testing extensions, test layers, CI validation: `references/75-testing-ci-playbook.md`
-- Live version snapshot, v2-vs-v3 split table, Vite 8 / Router 5 / Vue 3.5 notes: `references/80-upstream-deltas-and-live-checks.md`
-- Legacy `quasar-*` skill-name coverage map: `references/85-legacy-skill-coverage.md`
-- Skill maintenance and freshness triggers: `references/90-maintenance-and-live-checks.md`
-- Dual-runtime authoring conventions (when editing this pack): `references/91-agent-authoring-and-dual-runtime.md`
+- exact installed APIs and source disagreements: `05`
+- migration and v2 maintenance: `10`–`13`
+- v3 config, CLI, and code shapes: `20`–`22`
+- SSR, PWA, service workers, and platform modes: `30`–`35`
+- OTP, device trust, browser permissions, and modern experience: `40`–`50`
+- components, layouts, directives, plugins, composables, options, and utils: `60`–`66`
+- quality, testing, live deltas, legacy routing, and pack maintenance: `70`–`91`
 
 ## Mandatory related-topic rules
 
@@ -97,17 +79,17 @@ Apply these even if the user names only one surface:
 - Any SSR, `preFetch`, router, store, boot, middleware, SEO, or auth task: also load `references/31-ssr-pwa-and-security.md`.
 - Any platform-mode task: read `references/21-cli-vite-and-config.md` and `references/35-platform-modes.md` together.
 - Any offline feature storing structured data (drafts, progress, outbox): route the data design to `$alaa-indexeddb-browser-storage`; the SW owns only Request/Response caching.
-- Any OTP/auth flow: token storage and refresh stay with `$alaa-frontend-developer` `references/21-ssr-auth-and-session-patterns.md` and `$alaa-trust-gateway-auth`; WebOTP code only reads the code into the form.
+- Any OTP/auth flow: token storage and refresh stay with `$alaa-frontend-developer`'s `21-ssr-auth-and-session-patterns.md` reference and `$alaa-trust-gateway-auth`; WebOTP code only reads the code into the form.
 - Any use of a permission-gated browser API (`getUserMedia`, geolocation, `Notification.requestPermission`, clipboard read, sensors, ...): load `references/45-browser-apis-and-permissions.md` — request inside a user gesture with a priming step, handle denial with recovery UI, and treat `granted` as a cache that expires.
 - Any component handling data grids, virtualization, uploads, media, dialogs, or browser APIs: also load `references/70-guardrails-a11y-performance-monorepo.md`.
 - Any version-sensitive or upgrade request: read `references/80-upstream-deltas-and-live-checks.md` and refresh live data first.
 - Any Vue/TS code produced: `$alaa-vue-typescript-clean-code` gates apply.
-- Any motion/animation polish: follow `$alaa-frontend-developer` `references/25-modern-css-and-motion.md` (reduced-motion is blocking).
+- Any motion/animation polish: follow `$alaa-frontend-developer`'s `25-modern-css-and-motion.md` reference (reduced-motion is blocking).
 - Anything under `packages/*`: pair `$alaa-mono-package`.
 
 ## Search rules
 
-Search exact Quasar symbols first (`QTable`, `QImg`, `useMeta`, `ClosePopup`, `Notify`, `extendViteConf`), then task phrases (`boot files`, `ssrContext`, `InjectManifest`, `build.env.folder`, `#q-app`, `OTPCredential`, `skipWaiting`, `getUserMedia`, `MediaRecorder`, `permissions.query`, `requestPermission`). The per-symbol atlas files (61, 65, 66) carry searchable indexes; `references/85-legacy-skill-coverage.md` maps old `quasar-*` skill names.
+Search exact Quasar symbols first (`QTable`, `QImg`, `useMeta`, `ClosePopup`, `Notify`, `extendViteConf`). For props/events/slots/methods/options, query the installed API first, then use atlases 61, 65, and 66 for intent, alternatives, gotchas, and better search terms. For conceptual tasks, search phrases such as `boot files`, `ssrContext`, `InjectManifest`, `build.env.folder`, `#q-app`, `OTPCredential`, `skipWaiting`, `getUserMedia`, `MediaRecorder`, `permissions.query`, and `requestPermission`. `references/85-legacy-skill-coverage.md` maps old `quasar-*` skill names.
 
 ## Companion routing (surviving siblings)
 
@@ -124,4 +106,4 @@ Search exact Quasar symbols first (`QTable`, `QImg`, `useMeta`, `ClosePopup`, `N
 
 ## Final response contract
 
-Report: what the repo showed (line, modes, blockers); what you changed or recommend and why it is safe on the repo's line; validation commands actually run with outcomes; what remains (deferred modes, AEs, unverified claims). For migrations, report per mode. Never claim a check passed that did not run.
+Report: what the repo showed (installed line, modes, blockers); which exact-API or official source was queried when syntax mattered; what you changed or recommend and why it is safe on the repo's line; validation commands actually run with outcomes; what remains (deferred modes, AEs, unverified claims). For migrations, report per mode. Never claim a check passed that did not run.

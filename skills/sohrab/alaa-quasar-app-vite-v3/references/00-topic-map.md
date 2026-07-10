@@ -4,6 +4,7 @@ Load the smallest file that answers the task. One hop deep; each file names its 
 
 | Task shape | Load |
 |---|---|
+| Exact component/directive/plugin props, events, slots, methods, values, or options for the installed project | `05-authority-and-api-lookup.md` + run `scripts/query-installed-quasar-api.mjs` |
 | Migrate an app from v2 to v3 (plan or execute) | `10-v2-to-v3-migration.md` + `11-review-and-upgrade-checklist.md` |
 | Maintain a repo still on v2 (env, aliases, boot, routing, Pinia) | `12-v2-maintenance-playbook.md` |
 | Review-answer style, correct/wrong examples | `13-examples-review-style.md` |
@@ -19,7 +20,7 @@ Load the smallest file that answers the task. One hop deep; each file names its 
 | Browser device APIs + permissions: audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors; priming UX, denial recovery, permission testing, Capacitor split | `45-browser-apis-and-permissions.md` |
 | Mode selection, install UX, perceived performance, modern experience | `50-modern-experience.md` |
 | Which component to use / component families | `60-components-and-layouts.md` |
-| Exact component usage, alternatives, search terms | `61-component-usage-atlas.md` |
+| Component intent, alternatives, gotchas, and search terms | `61-component-usage-atlas.md` |
 | Layout shells, `view`, drawers, routing-with-layouts | `62-layout-patterns-and-examples.md` |
 | QImg, placeholders, responsive image delivery | `63-image-delivery-and-placeholders.md` |
 | Plugins, composables, directives, options, utils | `64-plugins-composables-directives-options-utils.md` (+ atlases `65`, `66`) |
@@ -31,6 +32,7 @@ Load the smallest file that answers the task. One hop deep; each file names its 
 
 Search terms → file:
 
+- `quasar describe`, exact props/events/slots/methods/options, installed API, App Extension API, source drift → `05`
 - `#q-app`, `import.meta.env`, `QUASAR_MODE`, `build.env`, `clientPrefix`, `defineEnv`, `vueOptionsAPI`, `filenameBasedRouting`, `Rolldown`, `Hono`, `server-assets` → `20`, `22`
 - `#q-app/wrappers`, `envFolder`, `rawDefine`, `extendManifestJson`, `redirect`, `quasar prepare`, `compatibleWith`, `defineCapacitorConfig`, legacy aliases → `10`, `12`, `22`
 - `__WB_MANIFEST`, `InjectManifest`, `NetworkFirst`, `StaleWhileRevalidate`, `ExpirationPlugin`, `BackgroundSyncPlugin`, `skipWaiting`, `controllerchange`, `navigation preload`, `addRoutes`, `setAppBadge`, `declarative web push`, `kill-switch` → `30`, `32`

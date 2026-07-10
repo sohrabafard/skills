@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Quasar App-Vite v3"
-  short_description: "Quasar app-vite v3 apps, migration, service workers, OTP, device trust"
-  default_prompt: "Use $alaa-quasar-app-vite-v3 to follow its workflow for quasar app-vite v3 apps, migration, service workers, otp, and device trust."
+  short_description: "Version-aware Quasar workflows and local API lookup"
+  default_prompt: "Use $alaa-quasar-app-vite-v3 to inspect the installed Quasar line, query exact APIs locally, and apply the relevant implementation and validation guidance."
 
 policy:
   allow_implicit_invocation: true

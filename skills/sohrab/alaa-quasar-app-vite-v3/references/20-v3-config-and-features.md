@@ -2,7 +2,7 @@
 
 Scope: what `@quasar/app-vite` v3 gives you and the config shapes that differ from everything written in the v2 era. Verified 2026-07-08 against quasar.dev docs, GitHub release notes, and npm metadata. For exact per-surface code shapes (full quasar.config examples, boot files, components), route to `references/22-cli-cookbook-and-examples.md` — this file owns the v3 capability map, not a second cookbook.
 
-## Version truth (snapshot 2026-07-08 — refresh with `node scripts/check-upstream-versions.mjs`)
+## Version truth (snapshot 2026-07-10 — refresh with `node scripts/check-upstream-versions.mjs`)
 
 | Package | Stable | Published | Note |
 |---|---|---|---|
@@ -10,7 +10,7 @@ Scope: what `@quasar/app-vite` v3 gives you and the config shapes that differ fr
 | `@quasar/app-vite` v2 | 2.6.2 | 2026-06-03 | Maintenance line (~until 2027-06); for repos not yet migrated. |
 | `quasar` | 2.21.1 | 2026-07-06 | UI framework. |
 | `@quasar/extras` | 2.0.2 | 2026-07-02 | ESM-only; icon-lib cuts — audit before bumping. |
-| `vite` | 8.1.3 | 2026-07-02 | v3 depends on `vite ^8.1.3`. |
+| `vite` | 8.1.4 | 2026-07-09 | v3 depends on `vite ^8.1.3`. |
 | `vue` | 3.5.39 | 2026-06-25 | 3.6 still beta. |
 | `vue-router` | 5.1.0 | 2026-05-28 | v5 is required by app-vite v3. |
 | `pinia` | 3.0.4 | 2025-11-05 | `^2 || ^3` accepted. |

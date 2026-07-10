@@ -2,12 +2,15 @@
 
 Use this file when the agent needs the layer the old component-specific skills were good at: what the component is for, how it is commonly used, what to search for, and what related component to consider instead.
 
+This atlas is curated decision support, not an exhaustive API specification. For exact props, events, slots, and methods in the target project, follow `05-authority-and-api-lookup.md` and run the installed-API lookup first.
+
 ## How to use this atlas
 
 1. Search the exact component name, such as `QTable` or `QDialog`.
-2. Read the quick purpose, alternatives, and usage notes below.
-3. Use the suggested search terms when you need deeper implementation details or official examples.
-4. Pair this file with:
+2. Query the installed API when the answer depends on an exact prop, event, slot, method, accepted value, or default.
+3. Read the quick purpose, alternatives, and usage notes below.
+4. Use the suggested search terms when you need deeper implementation details or official examples.
+5. Pair this file with:
    - `60-components-and-layouts.md` for family routing
    - `70-guardrails-a11y-performance-monorepo.md` for accessibility and performance risk
    - `31-ssr-pwa-and-security.md` when the route is SSR, PWA, or hydration-sensitive
@@ -328,5 +331,6 @@ These short descriptions are here so the agent can search exact component names 
 ## Notes
 
 - The atlas intentionally restores the strongest part of the old component-specific skills: quick component intent, decision heuristics, gotchas, and search vocabulary, without forcing the agent to scan dozens of tiny files.
+- The atlas does not prove that a prop, event, slot, method, value, or default exists in the target project's installed Quasar line.
 - Legacy helper names like `button-family`, `input-family`, or `overview` should be treated as family guides rather than exact Quasar APIs.
 - If you need the exact old search behavior, search the component symbol here first, then use `85-legacy-skill-coverage.md`.
