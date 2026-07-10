@@ -1,30 +1,34 @@
-# Examples and Anti-patterns
+# Review examples and anti-patterns
 
-Use these examples to guide concrete code review comments and implementation decisions.
+Use for concrete review comments and implementation decisions.
 
-## 1. Quasar CLI vs Vite plugin
+## Contents
 
-Correct recommendation:
+CLI/plugin · versioning · aliases · env · SSR composable · boot · PWA cache · test reporting · final answer.
 
-> This is a Quasar CLI app because it has `quasar.config.ts` and `@quasar/app-vite`. We should configure Vite through `quasar.config.ts`, not by installing `@quasar/vite-plugin` or creating `vite.config.ts`.
-
-Wrong recommendation:
-
-> Install `@quasar/vite-plugin` and configure it in `vite.config.ts`.
-
-## 2. Version recommendation
+## 1. CLI vs Vite plugin
 
 Correct:
 
-> The repo is on `@quasar/app-vite` v2. This change stays compatible with the current lockfile, and I will add a migration note for alias/env changes. v3 is the stable production line now — worth scheduling the migration as its own task via `10-v2-to-v3-migration.md`.
+> This has `quasar.config.ts` and `@quasar/app-vite`, so it is a Quasar CLI app. Configure Vite through `quasar.config.ts`; do not install `@quasar/vite-plugin` or create `vite.config.ts`.
 
 Wrong:
 
-> v3 is stable now, so I upgraded `@quasar/app-vite` and `vue-router` in the same patch.
+> Install `@quasar/vite-plugin` and configure `vite.config.ts`.
 
-(The migration touches imports, env, aliases, and mode folders across the app; bundling it into an unrelated patch ships untested breaking changes.)
+## 2. Versioning
 
-## 3. Alias migration
+Correct:
+
+> The repo is on app-vite v2. Keep this patch lockfile-compatible and note alias/env migration debt. v3 is stable, but schedule it separately via `10-v2-to-v3-migration.md`.
+
+Wrong:
+
+> v3 is stable, so I upgraded app-vite and vue-router in this patch.
+
+That unrelated upgrade leaves imports, env, aliases, and mode folders untested.
+
+## 3. Aliases
 
 Correct new import when supported:
 
@@ -32,49 +36,38 @@ Correct new import when supported:
 import UserAvatar from '@/components/user/UserAvatar.vue'
 ```
 
-Acceptable temporary v2 compatibility when repo has not adopted `@/` and scope is small:
+Acceptable for a small v2 patch lacking `@/`:
 
 ```ts
 import UserAvatar from 'components/user/UserAvatar.vue'
 ```
 
-But add note:
+Add:
 
 ```md
-V3 readiness: this old Quasar alias should be migrated to `@/components/...` in the dedicated alias migration.
+V3 readiness: migrate this alias to `@/components/...` in the dedicated alias migration.
 ```
 
-Wrong:
+Wrong where `@/` already exists:
 
 ```ts
-// New code in a repo that already supports @/
 import UserAvatar from 'components/user/UserAvatar.vue'
 ```
 
-## 4. Env usage
-
-Correct v2 direct access:
+## 4. Env
 
 ```ts
-if (process.env.SERVER) {
-  // server only
-}
+// correct v2
+if (process.env.SERVER) { /* server only */ }
+// correct v3
+if (import.meta.env.QUASAR_SERVER) { /* server only */ }
 ```
 
-Correct v3 target:
-
-```ts
-if (import.meta.env.QUASAR_SERVER) {
-  // server only
-}
-```
-
-Wrong in any build-time replacement system:
+Wrong in build-time replacement systems:
 
 ```ts
 const env = process.env
 const isServer = env.SERVER
-
 const key = 'SERVER'
 if (process.env[key]) {}
 ```
@@ -96,19 +89,15 @@ import { onMounted, ref } from 'vue'
 
 export function usePreferredTheme() {
   const theme = ref<'light' | 'dark'>('light')
-
   onMounted(() => {
     const stored = localStorage.getItem('theme')
-    if (stored === 'dark' || stored === 'light') {
-      theme.value = stored
-    }
+    if (stored === 'dark' || stored === 'light') theme.value = stored
   })
-
   return { theme }
 }
 ```
 
-## 6. Boot file boundaries
+## 6. Boot boundary
 
 Wrong:
 
@@ -118,51 +107,47 @@ let token = localStorage.getItem('token')
 export const api = axios.create({ headers: { Authorization: `Bearer ${token}` } })
 ```
 
-Correct:
+Correct factory, then wire it in boot from client/server-safe token sources:
 
 ```ts
 // src/services/api/createApiClient.ts
 export function createApiClient(options: { token?: string }) {
   return axios.create({
-    headers: options.token
-      ? { Authorization: `Bearer ${options.token}` }
-      : undefined
+    headers: options.token ? { Authorization: `Bearer ${options.token}` } : undefined
   })
 }
 ```
 
-Then wire it in boot with client/server-safe token sources.
+## 7. PWA cache
 
-## 7. PWA cache safety
-
-Wrong Workbox-style intent:
+Wrong:
 
 ```ts
-// Cache all API requests for offline use
+// Cache all API requests offline
 urlPattern: /\/api\//,
 handler: 'CacheFirst'
 ```
 
-Correct approach:
+Correct:
 
 ```ts
-// Cache public/static resources only; explicitly exclude auth/payment/profile APIs.
-// Any API runtime caching must be endpoint-specific and reviewed.
+// Cache only public/static resources; explicitly exclude auth/payment/profile.
+// Review API runtime caching endpoint by endpoint.
 ```
 
-## 8. Testing output
+## 8. Test reporting
 
-Correct review comment:
+Correct:
 
-> I added a Vitest test for `normalizeCourseTitle` because the changed function is pure. I did not add Cypress coverage because this change does not affect a user flow. Validation: `pnpm run test:unit` and `pnpm run typecheck` passed.
+> Added Vitest coverage for pure `normalizeCourseTitle`; Cypress is unnecessary because no user flow changed. `pnpm run test:unit` and `pnpm run typecheck` passed.
 
 Wrong:
 
-> I added no tests because this is a small change.
+> No tests because this is small.
 
-## 9. Codex/Claude final answer style
+## 9. Codex/Claude final answer
 
-Good final response:
+Good:
 
 ```md
 Done.
@@ -185,8 +170,6 @@ Validation:
 - `pnpm run build`: not run because ...
 ```
 
-Bad final response:
+Bad:
 
-```md
-I refactored the code and it should be good now.
-```
+> I refactored the code and it should be good now.

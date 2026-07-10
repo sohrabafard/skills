@@ -1,71 +1,17 @@
 # Plugins, Composables, Directives, Options, and Utils
 
-Use this file when the task names a Quasar plugin API, composable, directive, global option, or utility helper.
+Use when a task names these Quasar APIs. For installed component/directive/plugin shapes, first use `05-authority-and-api-lookup.md`; for composables/utils inspect installed `quasar` exports/types plus version-matched official docs (`quasar describe` does not cover them). Load `65-directive-usage-atlas.md` for directive intent/snippets and `66-api-usage-atlas.md` for plugin/composable/option/util intent and SSR traps.
 
-For exact installed component/directive/plugin API availability and option/value shapes, first follow `05-authority-and-api-lookup.md`.
-For composables and utils, inspect installed `quasar` exports/type declarations plus version-matched official docs; `quasar describe` does not cover those surfaces.
-For directive intent, gotchas, and minimal snippets, pair this file with `65-directive-usage-atlas.md`.
-For plugin, composable, option, and util intent and SSR traps, pair this file with `66-api-usage-atlas.md`.
+| Surface | Exact coverage | Rules/routes |
+| --- | --- | --- |
+| Plugins | `AppFullscreen`, `AppVisibility`, `BottomSheet`, `Dialog`, `Loading`, `Notify`, `Platform` | Load `31-ssr-pwa-and-security.md` for universal apps, `70-guardrails-a11y-performance-monorepo.md` for focus/motion/heavy work, `66` for intent/snippets. Plugin failures may really be component-family failures (`Loading` often pairs with progress/dialogs). |
+| Composables | `useDialogPluginComponent`, `useFormChild`, `useHydration`, `useId`, `useInterval`, `useMeta`, `useQuasar`, `useRenderCache`, `useSplitAttrs`, `useTick`, `useTimeout` | Search exact name; load `31` for SSR-sensitive `useHydration`/`useId`/`useMeta`/`useRenderCache`; load `66` for behavior/snippets. `useMeta` is commonly route/data-flow work. |
+| Directives | `ClosePopup`, `Intersection`, `Morph`, `Mutation`, `Ripple`, `ScrollFire`, `TouchHold`, `TouchPan`, `TouchRepeat`, `TouchSwipe` | Touch requires keyboard/a11y fallback; observers require cleanup/hydration parity; load `65` for behavior/value shapes. |
+| Global options | animations, app icons, internationalization, global node, icon libraries, platform detection, icon sets, language packs, RTL, `Screen`, `SEO`, transitions, `$q` | Always load `21-cli-vite-and-config.md`; also `31` for `SEO`/`Screen`/platform and `66` for `Screen`, SEO/meta, icons/languages, `$q`. |
+| Utils | color, date, DOM, event bus, formatter, morph, scrolling, type checking, other helpers | Date/DOM/scrolling can break SSR render paths; locale/timezone/environment can drift formatter/color output. Load `66` for tree-shaking, imports, DOM timing, or deterministic dates. |
 
-## Plugins
+✅ Do — call composables at `setup()` / `<script setup>` top level so they bind to the component instance.
 
-- `AppFullscreen`, `AppVisibility`, `BottomSheet`, `Dialog`, `Loading`, `Notify`, `Platform`
+❌ Don't — call them in `onMounted`, event handlers, `setTimeout`, or async callbacks; binding and SSR parity may break.
 
-Also load:
-
-- `31-ssr-pwa-and-security.md` for universal apps
-- `70-guardrails-a11y-performance-monorepo.md` for focus, reduced motion, or heavy runtime work
-- `66-api-usage-atlas.md` when usage intent or a common snippet shape matters
-
-## Composables
-
-- `useDialogPluginComponent`, `useFormChild`, `useHydration`, `useId`, `useInterval`
-- `useMeta`, `useQuasar`, `useRenderCache`, `useSplitAttrs`, `useTick`, `useTimeout`
-
-Rules:
-
-- `useHydration`, `useId`, `useMeta`, and `useRenderCache` are SSR-sensitive. Always pair them with `31-ssr-pwa-and-security.md`.
-- ✅ Do — call these composables in `setup()` / `<script setup>` top level so they bind to the right instance.
-- ❌ Don't — call them inside `onMounted`, event handlers, `setTimeout`, or other async callbacks; they will not bind correctly and may break SSR parity.
-- Search by exact composable name before using vague phrases like "hydration helper" or "meta composable".
-- When the task is specifically about composable behavior or snippet shape, also load `66-api-usage-atlas.md`.
-
-## Directives
-
-- `ClosePopup`, `Intersection`, `Morph`, `Mutation`, `Ripple`, `ScrollFire`
-- `TouchHold`, `TouchPan`, `TouchRepeat`, `TouchSwipe`
-
-Rules:
-
-- Touch directives often imply accessibility and keyboard fallback work.
-- DOM-observer directives often imply cleanup and hydration parity concerns.
-- When the task is specifically about a directive's behavior or snippet shape, also load `65-directive-usage-atlas.md`.
-
-## Global options
-
-- animations, app icons, internationalization, global node, icon libraries, platform detection
-- icon sets, language packs, RTL support, Screen plugin, SEO, transitions, the `$q` object
-
-Rules:
-
-- Option-level changes almost always require `21-cli-vite-and-config.md`.
-- `SEO`, `Screen`, and platform detection often also require `31-ssr-pwa-and-security.md`.
-- When the task is specifically about `Screen`, SEO/meta wiring, icon/language packs, or `$q` usage, also load `66-api-usage-atlas.md`.
-
-## Utils
-
-- color, date, DOM, event bus, formatter, morph, scrolling, type checking, and other helpers
-
-Rules:
-
-- Date, DOM, and scrolling helpers often become SSR hazards if used in render paths.
-- Formatter and color helpers can still create hydration drift if locale/timezone or environment assumptions change.
-- When the task is specifically about tree-shaking, import shape, DOM access timing, or date-format determinism, also load `66-api-usage-atlas.md`.
-
-## Easy-to-miss relationships
-
-- Many plugin issues are really component-family issues. Example: `Loading` often pairs with progress indicators and dialogs.
-- `useMeta` is usually a route/data-loading concern, not only a composable concern.
-- `Ripple`, touch directives, and visibility/platform plugins can become reduced-motion or accessibility questions.
-- The model usually knows what directives are, but Quasar-specific popup, touch, and observer directives are worth loading examples for because the directive value shapes and interaction semantics are easy to misremember.
-- The same pattern applies to plugins, composables, options, and utils: the concept is often familiar, but the Quasar-specific shape and SSR implications are worth loading from `66-api-usage-atlas.md` when the exact API matters.
+`Ripple`, touch directives, and visibility/platform plugins can also be reduced-motion/a11y work. Quasar-specific directive/plugin/composable/option/util shapes are easy to misremember; load the relevant atlas whenever exact behavior matters.

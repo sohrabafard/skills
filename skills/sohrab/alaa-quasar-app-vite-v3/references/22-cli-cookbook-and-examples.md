@@ -1,52 +1,27 @@
-# CLI Cookbook and Examples
+# CLI cookbook and examples
 
-Use this file when the agent already knows the topic but needs the exact Quasar-shaped wiring for `quasar.config`, boot files, routing bootstrap, env config, or Vite extension points.
+Load only when exact Quasar shapes matter: `quasar.config`, boot, router bootstrap, env, Vite extensions. It prevents wrapper, side-selection, startup-order, SSR, and v2/v3 shape mistakes; use conceptual files otherwise.
 
-Only load this file when example shape matters. Do not load it for purely conceptual Quasar questions.
+## Contents
 
-## Table of contents
+Line detection · config · env · boot · Vite extensions · router/layout · aliases · Yarn · when to skip examples.
 
-- Why this file exists
-- Confirm the app-vite line before copying any example
-- `quasar.config` base shape
-- Env config (v2 vs v3)
-- Boot file registration and function shape
-- `extendViteConf` vs `vitePlugins`
-- Router/layout ownership
-- Path aliases (v2 vs v3)
-- Yarn-first project workflow
-- What usually does NOT need examples
+## Detect the line first
 
-## Why this file exists
-
-The model usually understands Vite, Vue Router, and app bootstrap concepts. It is still worth giving examples when:
-
-- Quasar wraps the API in a specific function shape
-- server/client mode selection is easy to get subtly wrong
-- boot-file registration, redirect behavior, or Vite extension points need exact syntax
-- the v2 and v3 shapes differ and the wrong one will not run
-- a bad example would create SSR drift, broken startup order, or hard-to-debug config mistakes
-
-## Confirm the app-vite line before copying any example
-
-The import path, config extensions, env keys, and aliases differ between `@quasar/app-vite` v3 (stable/production since `3.0.1`, 2026-07-07) and v2 (maintenance line). Read `@quasar/app-vite` in `package.json` first. The split summary is in `80-upstream-deltas-and-live-checks.md`. New apps default to v3; v2 shapes remain for not-yet-migrated repos. For migration planning or the full upgrade playbook, use `10-v2-to-v3-migration.md` — this file only carries the per-line code shapes.
-
-✅ Do — pick the shape for the detected line.
+Read `@quasar/app-vite` in `package.json`: v3 (stable since 3.0.1, 2026-07-07) and v2 (maintenance) differ in imports, config extensions, env, aliases. Split: `80-upstream-deltas-and-live-checks.md`; migration: `10-v2-to-v3-migration.md`. New apps use v3; unmigrated repos keep v2 shapes.
 
 ```text
-"package.json has @quasar/app-vite ^3.0.1 (stable) -> use `#q-app`, build.env.folder, @/ alias."
-"package.json has @quasar/app-vite ^2.6.2 (maintenance) -> use `#q-app/wrappers`, build.envFolder, src/ alias."
+@quasar/app-vite ^3.0.1 -> #q-app, build.env.folder, @/
+@quasar/app-vite ^2.6.2 -> #q-app/wrappers, build.envFolder, src/
 ```
 
-❌ Don't — emit a single shape from memory without checking, mix v2 and v3 keys in one config, or hand a v2 repo v3 shapes (or vice versa).
+✅ Use the detected line. ❌ Never guess, mix line keys, or hand one line the other's shape.
 
-## `quasar.config` base shape
+## `quasar.config`
 
-- Prefer `defineConfig(ctx => ({ ... }))`.
-- Keep mode-specific branching inside the config function instead of duplicating whole objects.
-- Use `ctx.mode.*`, `ctx.dev`, `ctx.prod` instead of scattered branches.
+Prefer `defineConfig(ctx => ...)`, with `ctx.mode.*`, `ctx.dev`, `ctx.prod` inside one config—not duplicated objects.
 
-✅ Do — v2 (`@quasar/app-vite` ^2, maintenance line): import from `#q-app/wrappers`.
+v2:
 
 ```js
 import { defineConfig } from '#q-app/wrappers'
@@ -60,7 +35,7 @@ export default defineConfig((ctx) => ({
 }))
 ```
 
-✅ Do — v3 (`@quasar/app-vite` ^3, stable/production): import from `#q-app`, `.js` or `.ts` file only.
+v3 (`.js`/`.ts` only):
 
 ```js
 import { defineConfig } from '#q-app'
@@ -68,54 +43,44 @@ import { defineConfig } from '#q-app'
 export default defineConfig((ctx) => ({
   boot: ['axios', ctx.mode.pwa ? 'pwa-update' : ''].filter(Boolean),
   build: {
-    vueOptionsAPI: false, // v3 default; set true only if the app uses Options API
-    env: {
-      folder: 'env',
-      file: ['.env', '.env.local']
-    }
+    vueOptionsAPI: false, // default; true only when Options API is used
+    env: { folder: 'env', file: ['.env', '.env.local'] }
   }
 }))
 ```
 
-❌ Don't — use a `.cjs`/`.mjs` `quasar.config` on v3 (only `.js`/`.ts` are supported), and don't put `envFolder`/`envFiles` (v2) next to `build.env.*` (v3) in the same file.
+❌ On v3, no `.cjs`/`.mjs`; never mix v2 `envFolder/envFiles` with v3 `build.env.*`.
 
-- Good search terms:
-  - `defineConfig`, `#q-app`, `ctx.mode`, `ctx.dev`, `ctx.prod`, `build.env.folder`, `envFolder`
+Search: `defineConfig`, `#q-app`, `ctx.mode`, `ctx.dev`, `ctx.prod`, `build.env.folder`, `envFolder`.
 
-## Env config (v2 vs v3)
+## Env: v2 vs v3
 
-The env surface changed shape in v3, including how client exposure is gated.
-
-✅ Do — v2 (maintenance): point at env files with the flat keys, and use `build.env`/`build.rawDefine` for constants.
+v2 flat files plus injected constants:
 
 ```js
 build: {
   envFolder: 'env',
   envFiles: ['.env', '.env.local'],
-  env: { FEATURE_X: ctx.prod ? 'on' : 'off' } // read as process.env.FEATURE_X
+  env: { FEATURE_X: ctx.prod ? 'on' : 'off' } // process.env.FEATURE_X
 }
 ```
 
-✅ Do — v3 (stable): nest under `build.env`, and expose client vars only through `clientPrefix`.
+v3 nested env with client-prefix boundary:
 
 ```js
 build: {
   env: {
     folder: 'env',
     file: ['.env', '.env.local'],
-    clientPrefix: 'QCLI_' // only QCLI_*-prefixed vars reach client code (default)
+    clientPrefix: 'QCLI_' // only QCLI_* reaches client; this is the default
   },
-  // define globals: non-string values are auto-stringified; wrap a string LITERAL yourself
   define: {
-    __BUILD_TS__: Date.now(),                  // number -> Quasar JSON.stringifies it for you
-    __APP_VERSION__: JSON.stringify('1.0.0')    // string literal -> wrap it (bare strings are raw expressions)
+    __BUILD_TS__: Date.now(), // numbers auto-stringify
+    __APP_VERSION__: JSON.stringify('1.0.0') // wrap genuine string literals
   },
-  // sugar: always stringifies (even strings) and prefixes -> import.meta.env.FEATURE_X
-  defineEnv: { FEATURE_X: ctx.prod ? 'on' : 'off' }
+  defineEnv: { FEATURE_X: ctx.prod ? 'on' : 'off' } // always stringifies -> import.meta.env.FEATURE_X
 }
 ```
-
-✅ Do — read Quasar constants by mode.
 
 ```js
 // v3
@@ -124,47 +89,39 @@ if (import.meta.env.QUASAR_MODE === 'ssr') { /* ... */ }
 if (process.env.MODE === 'ssr') { /* ... */ }
 ```
 
-❌ Don't — keep `'QUASAR_'` as a client prefix in v3 (the docs recommend against it because it collides with framework constants), and don't read `process.env.MODE` in v3 source (it is `import.meta.env.QUASAR_MODE` there).
+❌ Never use `'QUASAR_'` as v3 client prefix (framework collision), or `process.env.MODE` in v3 source.
 
-❌ Don't — double-stringify a `build.define` value. `define: { __BUILD_ID__: JSON.stringify(String(Date.now())) }` is wrong: `Date.now()` is a number, which Quasar already auto-`JSON.stringify`s, so wrapping it bakes in quotes and emits a string literal instead of a number. Pass the number bare (`__BUILD_ID__: Date.now()`); only wrap genuine string literals.
+❌ `define: { __BUILD_ID__: JSON.stringify(String(Date.now())) }` double-stringifies a number and emits a quoted string. Use `define: { __BUILD_ID__: Date.now() }`; wrap only real string literals. In v3, `build.rawDefine` became `build.define`, while v2 `build.env` injection became `build.defineEnv`.
 
-- Good search terms:
-  - `build.env.clientPrefix`, `defineEnv`, `import.meta.env.QUASAR_`, `dotenv`, `rawDefine` (legacy), `build.define stringify`
+Search: `build.env.clientPrefix`, `defineEnv`, `import.meta.env.QUASAR_`, `dotenv`, `rawDefine`, `build.define stringify`.
 
-## Boot file registration and function shape
+## Boot registration and function
 
-- Prefer boot files for startup wiring that should happen before the root app mounts.
-- Use boot entries with `{ path, server, client }` when a boot file should be scoped to one side only.
-- Keep auth headers, SSR-only request state, and sensitive redirects on the server side.
-
-✅ Do — register with side-scoping when needed (same shape in v2 and v3).
+Boot files are pre-mount startup wiring. Use `{ path, server, client }` for side scope; keep auth headers, SSR request state, and sensitive redirects server-side.
 
 ```js
 boot: [
   'axios',
-  { path: 'analytics', server: false }, // client-only
-  { path: 'ssr-auth', client: false }   // server-only
+  { path: 'analytics', server: false },
+  { path: 'ssr-auth', client: false }
 ]
 ```
 
-✅ Do — v2 boot function (maintenance line): import from `#q-app/wrappers`, and return immediately after `redirect()`.
+v2; return immediately after redirect:
 
 ```js
 import { defineBoot } from '#q-app/wrappers'
 
 export default defineBoot(({ app, router, store, ssrContext, redirect }) => {
-  if (ssrContext) {
-    // server-only bootstrap work
-  }
-
+  if (ssrContext) { /* server bootstrap */ }
   if (shouldRedirect) {
     redirect({ path: '/login' })
-    return // return right after redirect()
+    return
   }
 })
 ```
 
-✅ Do — v3 boot function (stable line): identical idea, but import from `#q-app`; `urlPath`/`publicPath` are also provided.
+v3; same rule, with `urlPath`/`publicPath`:
 
 ```js
 import { defineBoot } from '#q-app'
@@ -177,22 +134,17 @@ export default defineBoot(({ app, router, store, ssrContext, urlPath, publicPath
 })
 ```
 
-❌ Don't — call `redirect()` and keep running, throw to redirect, or hand it a manually `publicPath`-prefixed string. Pass a router location or absolute URL and return.
+❌ Never continue after `redirect()`, throw to redirect, or manually prefix a string with `publicPath`; pass a router location or absolute URL and return.
 
-- Good search terms:
-  - `defineBoot`, `ssrContext`, `urlPath`, `publicPath`, `redirect path`, `boot path server false`
+Search: `defineBoot`, `ssrContext`, `urlPath`, `publicPath`, `redirect path`, `boot path server false`.
 
 ## `extendViteConf` vs `vitePlugins`
 
-- Prefer `build.vitePlugins` for straightforward plugin registration.
-- Prefer `build.extendViteConf` when plugin application depends on client/server or mode-specific logic, or when you need to merge config.
-- `extendViteConf` may mutate the passed config object or return a new object to be merged; both work.
-
-✅ Do — return an override (clean) or scope a plugin to one side.
+Use `build.vitePlugins` for simple registration; use `build.extendViteConf` for client/server/mode logic or config merging. `extendViteConf` may mutate or return a merge object.
 
 ```js
 build: {
-  extendViteConf (viteConf, { isServer, isClient }) {
+  extendViteConf(viteConf, { isServer, isClient }) {
     return { resolve: { dedupe: ['vue', 'quasar'] } }
   },
   vitePlugins: [
@@ -202,76 +154,52 @@ build: {
 }
 ```
 
-❌ Don't — replace `viteConf.resolve.alias` wholesale (it drops Quasar's own aliases); merge into it or use `build.alias` instead. On Vite 8, don't reach for the object form of `manualChunks` (removed) — see `70-guardrails-a11y-performance-monorepo.md`.
+❌ Never replace `viteConf.resolve.alias`; merge or use `build.alias`. Vite 8 removed object-form `manualChunks`; see `70-guardrails-a11y-performance-monorepo.md`.
 
-- Good search terms:
-  - `extendViteConf`, `vitePlugins`, `isServer`, `isClient`, `dedupe`, `build.alias`
+Search: `extendViteConf`, `vitePlugins`, `isServer`, `isClient`, `dedupe`, `build.alias`.
 
 ## Router/layout ownership
 
-- Prefer the layout file to own `<router-view />` and the page file to own `<q-page>`.
-- Prefer route-driven layout selection over conditionally swapping layout shells inside page components.
-- Pair with `61-component-usage-atlas.md` when the issue is really about `QLayout`, `QDrawer`, or `QPageContainer`.
-
-✅ Do — nest pages under a layout route.
+Layouts own `<router-view />`; pages own `<q-page>`. Choose layouts by route, not conditional page shells. Pair `61-component-usage-atlas.md` for `QLayout`, `QDrawer`, `QPageContainer`.
 
 ```js
-const routes = [
-  {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
-    ]
-  }
-]
+const routes = [{
+  path: '/',
+  component: () => import('layouts/MainLayout.vue'),
+  children: [{ path: '', component: () => import('pages/IndexPage.vue') }]
+}]
 ```
 
-❌ Don't — render two different layout shells conditionally inside one page component to fake navigation states the URL should own.
+❌ Do not render competing layout shells inside one page for states the URL should own.
 
-- Good search terms:
-  - `routing with layouts and pages`, `router-view`, `children routes`, `layout route shell`
+Search: `routing with layouts and pages`, `router-view`, `children routes`, `layout route shell`.
 
-## Path aliases (v2 vs v3)
-
-✅ Do — v2 (maintenance): use the legacy aliases.
+## Aliases
 
 ```js
+// v2 legacy aliases
 import MyWidget from 'components/MyWidget.vue'
 import { useUserStore } from 'stores/user'
-```
 
-✅ Do — v3 (stable): use the single `@/` alias (points to `/src`).
-
-```js
+// v3 sole @/ alias -> /src
 import MyWidget from '@/components/MyWidget.vue'
 import { useUserStore } from '@/stores/user'
 ```
 
-❌ Don't — write `components/...` or `stores/...` imports in a v3 repo (those aliases were removed; use `@/components/...`, `@/stores/...`), or `@/...` in a v2 repo that does not define it.
+❌ No legacy aliases in v3; no `@/` in v2 unless the repo defines it.
 
-- Good search terms:
-  - `@/ alias`, `path alias`, `boot/`, `stores/`, `@/../`
+Search: `@/ alias`, `path alias`, `boot/`, `stores/`, `@/../`.
 
-## Yarn-first project workflow
+## Yarn-first workflow
 
-- In Quasar repos that use Yarn, prefer existing Yarn scripts for dev, build, and test flows instead of improvising with another package manager.
-- Use raw `quasar ...` commands only when the repo intentionally calls the CLI directly or the user explicitly wants that form.
+In Yarn repos, use existing Yarn dev/build/test scripts. Use raw `quasar ...` only when the repo intentionally does or the user asks.
 
-✅ Do — `yarn build` (or the repo's documented script) in a Yarn repo.
+✅ `yarn build` or documented script. ❌ Never switch to `bun install`/`pnpm dev` merely because upstream supports them.
 
-❌ Don't — switch to `bun install` / `pnpm dev` just because upstream Quasar supports them.
+Search: `yarn.lock`, `yarn workspace`, `yarn dev`, `quasar command through yarn`.
 
-- Good search terms:
-  - `yarn.lock`, `yarn workspace`, `yarn dev`, `quasar command through yarn`
+## Skip examples for
 
-## What usually does NOT need examples
+Generic Vite/Vue Router explanations, obvious non-Quasar one-liners, or broad upgrade notes owned by `80-upstream-deltas-and-live-checks.md`.
 
-- Generic descriptions of what Vite or Vue Router are
-- obvious one-line config explanations with no Quasar-specific shape
-- broad upgrade notes that are better handled in `80-upstream-deltas-and-live-checks.md`
-
-## Notes
-
-- Examples in this file are intentionally small. They exist to prevent shape mistakes, not to replace the Quasar docs.
-- Pair this file with `31-ssr-pwa-and-security.md` whenever boot or routing logic can affect SSR, auth, or hydration.
+Examples stay intentionally small to prevent shape mistakes, not replace official docs. Pair with `31-ssr-pwa-and-security.md` whenever boot/routing affects SSR, auth, or hydration.

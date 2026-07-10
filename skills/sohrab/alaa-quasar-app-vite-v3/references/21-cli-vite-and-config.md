@@ -1,87 +1,62 @@
-# CLI, Vite, and Config
+# CLI, Vite, and config
 
-Use this file for Quasar CLI wiring, `quasar.config`, dev/build behavior, routing/bootstrap, and general Vite integration inside a Quasar app.
+Use for Quasar CLI wiring, `quasar.config`, dev/build, boot/routing, and Vite integration; pair exact wiring with `22-cli-cookbook-and-examples.md`.
 
-For exact "how do I wire this?" guidance, pair this file with `22-cli-cookbook-and-examples.md`.
+Covers config/mode branches; directories, boot, routing, Pinia; Vite extension points; assets, aliases, env, ajax/proxy, browser targets; lazy loading, tests/audits/builds; upgrade-sensitive surfaces.
 
-## Covers
+## Detect app-vite before editing
 
-- `quasar.config` structure and mode-aware branching
-- directory structure, boot files, routing, and Pinia
-- Vite extension points inside Quasar CLI
-- assets, aliases, env files, ajax requests, API proxying, browser compatibility
-- lazy loading, testing/auditing, and build commands
-- upgrade-sensitive config surfaces
-
-## Detect the app-vite line before editing config
-
-`@quasar/app-vite` v2 and v3 have different import paths, config extensions, env keys, and aliases. Read the installed version in `package.json` first. The full split table and migration list live in `80-upstream-deltas-and-live-checks.md`.
-
-✅ Do — branch your guidance on the detected major; new apps default to the stable v3 line.
+Read installed `@quasar/app-vite` in `package.json`; v2/v3 differ in imports, config extensions, env, aliases. Full split/migration: `80-upstream-deltas-and-live-checks.md`.
 
 ```text
-v3 (^3.x, STABLE/production): `#q-app`, `.js`/`.ts` config, build.env.{folder,file,clientPrefix}, @/ alias, Rolldown under /src-*
-v2 (^2.x, maintenance):       `#q-app/wrappers`, `.js/.mjs/.ts/.cjs` config, build.envFolder/envFiles, legacy aliases
+v3 (^3, stable): #q-app; .js/.ts; build.env.{folder,file,clientPrefix}; @/; Rolldown /src-*
+v2 (^2, maintenance): #q-app/wrappers; .js/.mjs/.ts/.cjs; build.envFolder/envFiles; legacy aliases
 ```
 
-❌ Don't — give one config shape "from memory" without checking, or bump a v2 repo onto v3 as a side effect of another task; the wrong line produces a `quasar.config` that fails to load. Migrations run deliberately via `10-v2-to-v3-migration.md`.
+✅ Branch guidance by detected major; new apps use v3. ❌ Never guess one shape or bump v2 incidentally; wrong-line configs fail. Use `10-v2-to-v3-migration.md`.
 
-## Current upstream notes
+## Upstream facts
 
-`@quasar/app-vite` v3 (stable since `3.0.1`, 2026-07-07) introduced these. They matter when reading/maintaining a v3 repo or planning a migration. Treat them as real migration inputs, not invisible patch behavior:
+v3 is stable since 3.0.1 (2026-07-07):
 
-- The CLI bundles **Vite 8** and compiles `/src-*` with **Rolldown** instead of esbuild.
-- `quasar.config` is **`.js` or `.ts` only** (`.cjs`/`.mjs`/`.cts`/`.mts` dropped). Wrappers import from **`#q-app`** (was `#q-app/wrappers`).
-- Env config moved under **`build.env`** (`folder`, `file`, `clientPrefix` default `'QCLI_'`). `build.rawDefine` -> `build.define` (non-string values are auto-`JSON.stringify`ed; wrap string literals yourself); `build.env` -> `build.defineEnv`.
-- Quasar constants are read as **`import.meta.env.QUASAR_*`** (was `process.env.*`).
-- Path aliases collapse to a single **`@/`** (-> `/src`).
-- `build.vueOptionsAPI` defaults to **`false`**; `build.analyze` and `build.polyfillModulePreload` removed.
-- Per-mode dependency isolation: mode deps install in `/src-*` folders. Node **22+**.
-- Pinia is the store (v2 or v3). Vuex is not integrated in the CLI.
+- Vite 8; Rolldown, not esbuild, compiles `/src-*`.
+- Config only `.js`/`.ts` (`.cjs`/`.mjs`/`.cts`/`.mts` dropped); wrappers `#q-app` (v2: `#q-app/wrappers`).
+- Env -> `build.env.{folder,file,clientPrefix}` with default `'QCLI_'`; `build.rawDefine` -> `build.define` (non-strings auto-stringified; wrap string literals); v2 `build.env` injection -> `build.defineEnv`.
+- Constants `process.env.*` -> `import.meta.env.QUASAR_*`; only `@/` alias remains.
+- `build.vueOptionsAPI` defaults `false`; `build.analyze` and `build.polyfillModulePreload` removed.
+- Mode deps install under `/src-*`; Node 22+.
+- Pinia v2/v3 is integrated; Vuex is not.
 
-These carry over from v2 and are still true in v3:
+Still true from v2: CLI is ESM and supports simultaneous multi-mode `quasar dev`/`build`; `build.vitePlugins` filters server/client; `extendViteConf` may mutate or return overrides; Bun, pnpm, Yarn, npm are supported.
 
-- The CLI is ESM and supports multiple simultaneous `quasar dev`/`quasar build` runs for different modes.
-- `build.vitePlugins` supports a server/client run filter; `extendViteConf` may mutate or return overrides.
-- Bun, pnpm, Yarn, and npm are all supported package managers.
+## Rules
 
-## Default rules
-
-- Treat package manager choice as a repository contract. If the repo uses Yarn workspaces or contains `yarn.lock`, prefer Yarn for installs and script execution.
-- Upstream Bun/pnpm support is useful to know about, but it is not a reason to switch an existing Yarn repo.
-- Prefer `defineConfig(ctx => ({ ... }))` and use `ctx.mode.*`, `ctx.dev`, and `ctx.prod` instead of scattering duplicated config branches.
-- Prefer returning an object from `extendViteConf` when you can; mutate only when a plugin truly requires it.
-- When adding aliases, use Quasar's `build.alias` or merge into `viteConf.resolve.alias` without replacing existing aliases.
-- For custom Vue plugin behavior, use `build.viteVuePluginOptions` instead of replacing the Quasar-managed Vue plugin.
-- Keep config changes mode-aware. BEX, SSR, PWA, Electron, and mobile modes often need different plugin application or path handling.
-- Treat Vite 8 behavior changes as real migration inputs. Read `80-upstream-deltas-and-live-checks.md` when toolchain behavior changed after package upgrades.
-
-✅ Do — keep one mode-aware config function and reuse Quasar's alias merge.
+- Package manager is a repo contract: Yarn workspace/`yarn.lock` -> Yarn. Upstream Bun/pnpm support never justifies switching.
+- Prefer `defineConfig(ctx => ({ ... }))` with `ctx.mode.*`, `ctx.dev`, `ctx.prod`, not duplicated config branches.
+- Prefer return overrides from `extendViteConf`; mutate only when required.
+- Add aliases through `build.alias` or merge `viteConf.resolve.alias`; never replace existing aliases.
+- Use `build.viteVuePluginOptions` for custom Vue-plugin behavior; do not replace Quasar's plugin.
+- Keep config mode-aware: BEX/SSR/PWA/Electron/mobile often need different plugins/paths.
+- Treat Vite 8 behavior as migration input; after toolchain upgrades read `80-upstream-deltas-and-live-checks.md`.
 
 ```js
-build: {
-  alias: { '@features': 'src/features' }, // merges; existing aliases stay
-}
+// merges; preserves Quasar aliases
+build: { alias: { '@features': 'src/features' } }
 ```
 
-❌ Don't — overwrite `viteConf.resolve.alias = { ... }` inside `extendViteConf`; that erases Quasar's own aliases and breaks resolution.
+❌ `viteConf.resolve.alias = { ... }` erases Quasar aliases and breaks resolution.
 
-## Common "also load" cases
+## Also load
 
-- Boot files, router, store, or `preFetch` in SSR:
-  - also read `31-ssr-pwa-and-security.md`
-- BEX, Capacitor, Cordova, or Electron:
-  - also read `35-platform-modes.md`
-- Monorepo libraries, peer deps, asset inclusion, or tree-shaking:
-  - also read `70-guardrails-a11y-performance-monorepo.md`
-- Exact `quasar.config`, boot-file, routing, env, or Vite-extension snippet shape:
-  - also read `22-cli-cookbook-and-examples.md`
+- Boot/router/store/`preFetch` with SSR -> `31-ssr-pwa-and-security.md`.
+- BEX/Capacitor/Cordova/Electron -> `35-platform-modes.md`.
+- Monorepo libraries/peers/assets/tree-shaking -> `70-guardrails-a11y-performance-monorepo.md`.
+- Exact config/boot/router/env/Vite shapes -> `22-cli-cookbook-and-examples.md`.
 
-## Easy-to-miss relationships
+## Relationships easy to miss
 
-- `boot files` are often a config question and an SSR question.
-- `routing` is often also about layouts, `preFetch`, or SEO.
-- `envFolder`/`build.env.folder` and secrets become risky when SSR is involved; only client-prefixed vars should reach the client bundle.
-- `vitePlugins` problems after upgrades can come from Vite 8 / Rolldown migration behavior, not from Quasar itself.
-- If a repo still mentions Vuex in Quasar CLI integration, assume it is legacy and verify whether the app is already on Pinia before editing.
-- The agent often knows the concepts here but can still get Quasar-specific function signatures, import paths, or registration shapes slightly wrong, especially across the v2/v3 boundary; load `22-cli-cookbook-and-examples.md` when the code shape matters more than the concept.
+- Boot is often config + SSR; routing often includes layout, `preFetch`, SEO.
+- `envFolder`/`build.env.folder` and secrets become SSR risks; only client-prefixed vars may enter client bundles.
+- `vitePlugins` failures after upgrades may be Vite 8/Rolldown, not Quasar.
+- Vuex references imply legacy: verify Pinia before editing.
+- Concepts may be familiar while Quasar signatures/imports/registration differ across majors; when shape matters, load `22`.

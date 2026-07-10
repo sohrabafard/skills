@@ -1,39 +1,30 @@
-# SSR, PWA, and Security
+# SSR, PWA, and security
 
-Use this file for universal rendering, hydration parity, SSR middleware, SEO, service worker behavior, and server-side auth flows.
+Use for universal rendering, hydration parity, SSR middleware/SEO/auth, and SW/PWA behavior. Pair InjectManifest work with `32-pwa-injectmanifest-guard.md`.
 
-For exact InjectManifest guardrails, change boundaries, and update/offline verification structure, pair this file with `32-pwa-injectmanifest-guard.md`.
+## Scope
 
-## Covers
+- SSR runtime/setup (including v3 server choice), hydration avoidance/Vue 3.5 tools, `ssrContext`, middleware, `preFetch`, QNoSsr, `useHydration`, `useId`, `useMeta`
+- server cookie-to-header auth
+- PWA/Workbox, `GenerateSW` vs `InjectManifest`, offline fallback, updates
 
-- SSR setup and runtime behavior (including the v3 server-framework choice)
-- hydration mismatch avoidance, including Vue 3.5 hydration tools
-- `ssrContext`, SSR middleware, and `preFetch`
-- QNoSsr, `useHydration`, `useId`, `useMeta`
-- server-side auth flows such as cookie-to-header forwarding
-- PWA mode, Workbox, `GenerateSW` vs `InjectManifest`, offline fallback, and update flow
+## app-vite v3 changes
 
-## app-vite v3 SSR/PWA structure changes
+First confirm the app-vite line (`70-...`). In `@quasar/app-vite` v3:
 
-Confirm the app-vite line first (see `70-...`). In `@quasar/app-vite` v3:
+- SSR scaffolding selects **Hono, Express, Fastify, or Koa** and adds `/src-ssr/server-assets`.
+- SSR middleware dev-error hook: **`serve.error()` → `serve.devError()`**.
+- Custom SW moved to **`/src-pwa/sw/`**; `sourceFiles.pwaServiceWorker` defaults to `'src-pwa/sw/custom-sw'`.
 
-- SSR scaffolding asks which server to use: **Hono, Express, Fastify, or Koa**, and adds `/src-ssr/server-assets`.
-- The SSR middleware dev-error hook renamed: **`serve.error()` -> `serve.devError()`**.
-- The custom service worker moved to **`/src-pwa/sw/`** (config key `sourceFiles.pwaServiceWorker` defaults to `'src-pwa/sw/custom-sw'`).
-
-✅ Do — in a v3 repo, edit the custom SW at `src-pwa/sw/custom-sw.{js,ts}` and use `serve.devError()` in SSR middleware.
-
-❌ Don't — assume the v2 `/src-pwa/custom-sw` path or `serve.error()` in a v3 repo; the file and hook moved.
+Use `src-pwa/sw/custom-sw.{js,ts}` and `serve.devError()` in v3; the v2 `/src-pwa/custom-sw` path and `serve.error()` are wrong.
 
 ## SSR rules
 
-- Never use browser-only APIs during SSR render without a runtime guard.
-- Keep server and client DOM output deterministic. Avoid `Date.now()`, `Math.random()`, unstable list order, and viewport-dependent branches in SSR-rendered markup.
-- `ssrContext` exists only on the server side. Use it in boot/router/store/`preFetch` flows only where the server build exposes it.
-- SSR middleware is Express/Hono/Fastify/Koa-compatible middleware depending on the chosen server. Keep the rendering middleware last.
-- Prefer stable markup plus client enhancement over client-only rendering as a workaround for hydration issues.
-
-✅ Do — guard browser-only work to after mount and keep SSR markup stable.
+- Guard browser-only APIs during SSR; use them after mount.
+- Keep server/client DOM deterministic: no `Date.now()`, `Math.random()`, unstable list order, or viewport-dependent SSR markup.
+- `ssrContext` is server-only; use it only in boot/router/store/`preFetch` paths whose server build exposes it.
+- Middleware matches the chosen Express/Hono/Fastify/Koa server; rendering middleware stays last.
+- Prefer stable markup plus client enhancement; client-only rendering does not fix hydration design.
 
 ```js
 import { onMounted, ref } from 'vue'
@@ -41,7 +32,7 @@ const width = ref(0)
 onMounted(() => { width.value = window.innerWidth }) // client-only, post-hydration
 ```
 
-❌ Don't — read `window`/`document`/`localStorage` in `setup()` or in render; it throws on the server or produces server/client drift.
+Never read `window`/`document`/`localStorage` in `setup()` or render; it throws server-side or creates drift:
 
 ```js
 const width = window.innerWidth // crashes during SSR render
@@ -49,79 +40,54 @@ const width = window.innerWidth // crashes during SSR render
 
 ## Vue 3.5 hydration tools
 
-Vue 3.5 (current `3.5.39`) ships the right primitives for the mismatches Quasar apps hit most:
+Vue 3.5 (current `3.5.39`) provides:
 
-- Use **`useId()`** for form/aria ids so server and client agree. This is the correct fix for "id mismatch" hydration warnings.
-- Use **`data-allow-mismatch`** only for genuinely environment-dependent output (e.g. localized dates), optionally scoped (`text`, `class`, `attribute`, ...).
-
-✅ Do — generate stable ids with `useId()` for a custom labeled control.
+- **`useId()`** for matching server/client form/ARIA IDs—the fix for ID mismatch warnings.
+- **`data-allow-mismatch`** only for irreducible environment output such as localized dates; optionally scope it (`text`, `class`, `attribute`, ...). Fix determinism before allowing a mismatch; never apply it broadly.
 
 ```js
 import { useId } from 'vue'
 const id = useId()
 ```
 
-❌ Don't — paper over a real non-deterministic render with `data-allow-mismatch` everywhere; fix the determinism first, then allow only the irreducible difference.
+## Auth/security
 
-## Auth and security rules
+- Token mapping and cookie→backend-header translation stay server-only. Never serialize sensitive tokens into HTML or client JavaScript.
+- v3 client env exposure uses `build.env.clientPrefix` (default `'QCLI_'`); secrets must not use a client prefix.
+- For env/proxy/auth-header tasks, cross-check `21-cli-vite-and-config.md`.
+- `*-html` props, `QEditor`, uploads, and custom slot rendering are content-safety boundaries.
 
-- Keep token mapping server-side only.
-- Do not serialize sensitive tokens into HTML or expose them to client JavaScript.
-- When a Quasar SSR app reads auth cookies and forwards them to backend APIs, that translation belongs in server-only code.
-- In v3, remember client env exposure is gated by `build.env.clientPrefix` (default `'QCLI_'`). Do not give a secret a client-exposed prefix.
-- Any env variable, proxy, or auth header task should cross-check the config/build rules from `21-cli-vite-and-config.md`.
-- Treat `*-html` props, `QEditor`, upload surfaces, and custom slot rendering as content-safety boundaries, not just UI details.
-
-✅ Do — forward an auth cookie to the backend from server-only middleware/boot.
+Correct server-only forwarding (`ssrContext` present):
 
 ```js
-// server-side only (ssrContext present)
 api.defaults.headers.common.Authorization = `Bearer ${tokenFromCookie}`
 ```
 
-❌ Don't — inline a token into the rendered HTML or a client-prefixed env var.
+Never leak a token through rendered HTML or client-prefixed env:
 
 ```js
-// leaks the secret to every browser
 defineEnv: { QCLI_SESSION_TOKEN: token }
 ```
 
 ## PWA rules
 
-Use `GenerateSW` when:
+Use `GenerateSW` for the simplest conventional cache. Use `InjectManifest` only for custom routing, web push, or tightly controlled offline behavior. With InjectManifest:
 
-- you want the simplest service worker path
-- your caching needs are conventional
+- intentionally own v3 `src-pwa/sw/` and exactly one `self.__WB_MANIFEST`;
+- treat SSR HTML navigation caching as high risk;
+- explicitly define update flow, waiting-worker handling, reload semantics, and testable offline fallback.
 
-Use `InjectManifest` when:
+Never choose InjectManifest for a conventional cache and leave boilerplate unmanaged; use `GenerateSW`.
 
-- you need custom routing logic
-- you need service-worker-specific logic such as web push or carefully controlled offline behavior
+## Also load
 
-For `InjectManifest`, keep these habits:
+- SW/PWA config: `32-pwa-injectmanifest-guard.md` + `80-upstream-deltas-and-live-checks.md`
+- SSR UI: `70-guardrails-a11y-performance-monorepo.md`
+- components using browser APIs: `60-components-and-layouts.md` or `64-plugins-composables-directives-options-utils.md`
 
-- own the service worker file intentionally (in v3 it lives under `src-pwa/sw/`)
-- keep exactly one `self.__WB_MANIFEST`
-- treat HTML navigation caching as a high-risk change in SSR apps
-- define update flow, waiting-worker handling, and reload semantics explicitly
-- make offline fallback behavior testable
+## Couplings often missed
 
-✅ Do — choose `InjectManifest` and own one `self.__WB_MANIFEST` when you need custom SW logic.
-
-❌ Don't — pick `InjectManifest` for a conventional cache and then leave the SW boilerplate unmanaged; `GenerateSW` is the right default there.
-
-## Common "also load" cases
-
-- Any service worker or PWA config change:
-  - also read `32-pwa-injectmanifest-guard.md` and `80-upstream-deltas-and-live-checks.md`
-- Any SSR UI issue:
-  - also read `70-guardrails-a11y-performance-monorepo.md`
-- Any component depending on browser APIs:
-  - also read `60-components-and-layouts.md` or `64-plugins-composables-directives-options-utils.md`
-
-## Easy-to-miss relationships
-
-- Many "hydration bugs" are really stale service worker HTML or cached assets.
-- `useMeta` and SEO work are often coupled to SSR timing and route data loading.
-- `QNoSsr` and `useHydration` are not substitutes for fixing unstable SSR output.
-- Upload, media, and scrolling features often need both client-only guards and PWA exclusions.
+- “Hydration” failures may be stale SW-cached HTML/assets.
+- `useMeta`/SEO often depends on SSR timing and route data.
+- `QNoSsr`/`useHydration` do not replace deterministic SSR.
+- Upload/media/scroll features often need both client-only guards and PWA exclusions.

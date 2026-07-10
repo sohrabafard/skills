@@ -1,31 +1,27 @@
-# Platform Modes
+# Platform modes
 
-Use this file when the task is mode-specific or the same Quasar app may run in more than one target.
+Use for mode-specific or multi-target Quasar work. First confirm the `@quasar/app-vite` line (`70-...`); v3 changed mode folders/config.
 
-Confirm the `@quasar/app-vite` line first (see `70-...`); v3 changed several mode folder structures and config shapes.
+## Routing
 
-## Mode routing
+| Mode | Concerns | Also load |
+|---|---|---|
+| SPA | output, lazy loading, routing, SEO trade-offs | `21-cli-vite-and-config.md` |
+| SSR | render/hydration/SEO, `ssrContext`, auth mapping, server choice | `31-ssr-pwa-and-security.md` |
+| PWA | SW, offline/update/manifest, stale assets | `31-ssr-pwa-and-security.md` |
+| BEX | background/content/devtools/popup, bridge, manifest, per-mode `package.json` | `21-cli-vite-and-config.md` |
+| Capacitor | native shell, mobile commands/plugins/icons, live-update policy | `21-cli-vite-and-config.md` |
+| Cordova | legacy shell/plugins/ecosystem assumptions | `21-cli-vite-and-config.md` |
+| Electron | preload/security/Node boundary, packaging/icons | `21-cli-vite-and-config.md` |
 
-| Mode | Primary concerns | Always combine with |
-| --- | --- | --- |
-| SPA | build output, lazy loading, routing, SEO trade-offs | `21-cli-vite-and-config.md` |
-| SSR | server render, hydration, SEO, `ssrContext`, auth mapping, server framework choice | `31-ssr-pwa-and-security.md` |
-| PWA | service worker, offline, update flow, manifest, stale asset risk | `31-ssr-pwa-and-security.md` |
-| BEX | background/content/devtools/popup split, bridge, manifest, per-mode `package.json` | `21-cli-vite-and-config.md` |
-| Capacitor | native shell, mobile build commands, runtime plugins, app icons, live update policy | `21-cli-vite-and-config.md` |
-| Cordova | legacy mobile shell, plugin constraints, older ecosystem assumptions | `21-cli-vite-and-config.md` |
-| Electron | preload scripts, security boundaries, desktop packaging, app icons, Node context | `21-cli-vite-and-config.md` |
+## app-vite v3 facts
 
-## Current upstream notes (app-vite v3)
-
-- **Per-mode dependency isolation:** mode-specific dependencies install inside the `/src-*` folder for that mode. Electron no longer needs its deps duplicated into the build output.
-- **SSR:** the CLI asks which server to scaffold (Hono / Express / Fastify / Koa) and adds `/src-ssr/server-assets`.
-- **BEX:** requires a `/src-bex/package.json` (`"type": "module"`) and defaults to the `chrome` target (no `-t` flag needed). The Quasar Bridge and file inference were rewritten; Chrome HMR is supported.
-- **Capacitor:** v4 and below dropped. `capacitor.config.json` becomes `capacitor.config.ts`/`.js` via `defineCapacitorConfig()`. `quasar dev/build -m ios|android` targets Capacitor.
-- **Electron:** packager v18 and below dropped. Preload now imports `import { quasarRuntime } from '#q-app/electron/preload'` and preload files use the `.cjs` extension; `/src-electron/electron-assets` is added. Multiple preload scripts are supported.
-- SSR development with HTTPS is supported. Multiple CLI instances can run against the same project in different modes.
-
-✅ Do — in a v3 BEX repo, add `/src-bex/package.json` and rely on the default chrome target.
+- Mode dependencies install inside that mode’s `/src-*`; Electron no longer duplicates them into build output.
+- SSR scaffolds Hono/Express/Fastify/Koa and adds `/src-ssr/server-assets`.
+- BEX requires `/src-bex/package.json` with `"type": "module"`; `chrome` is default (no `-t`). Bridge/file inference were rewritten; Chrome HMR works.
+- Capacitor ≤4 was dropped. Replace `capacitor.config.json` with `capacitor.config.ts`/`.js` via `defineCapacitorConfig()`; `quasar dev/build -m ios|android` targets Capacitor.
+- Electron packager ≤18 was dropped. Preload uses `.cjs` and `import { quasarRuntime } from '#q-app/electron/preload'`; `/src-electron/electron-assets` and multiple preload scripts are supported.
+- SSR dev supports HTTPS; multiple CLI instances may run different modes in one project.
 
 ```jsonc
 // src-bex/package.json
@@ -33,23 +29,16 @@ Confirm the `@quasar/app-vite` line first (see `70-...`); v3 changed several mod
   "devDependencies": { "@types/chrome": "^0.1.40" } }
 ```
 
-❌ Don't — keep `capacitor.config.json` or a non-`.cjs` Electron preload in a v3 repo, or reference `#q-app/electron` preload imports from the old path. Those shapes were dropped.
+In v3 never keep `capacitor.config.json`, a non-`.cjs` Electron preload, or the old `#q-app/electron` preload import.
 
-## Selection heuristics
+## Selection/risks
 
-- For new mobile work, favor Capacitor unless the repository already relies on Cordova or the user explicitly needs Cordova. This is an inference from current Quasar CLI defaults and ecosystem direction, not a Quasar deprecation statement.
-- Treat BEX as a multi-surface app, not a normal SPA with one extra file.
-- Treat Electron tasks as both frontend and desktop-security tasks (context isolation, preload boundary, no remote module).
-- Treat SSR + PWA together as a special case because HTML caching and hydration risk interact.
-- If the repo is Yarn-based, prefer Yarn-wrapped project scripts for mode-specific dev/build flows instead of switching package managers because upstream also supports Bun/pnpm.
+- New mobile: prefer Capacitor unless repo/user requires Cordova. This is inferred from CLI defaults/ecosystem direction, not a Quasar deprecation claim.
+- BEX is multi-surface, not SPA-plus-one-file; its messaging, manifest, background/content boundaries, and dynamic assets often change together.
+- Electron is frontend + desktop security: context isolation, preload boundary, no remote module.
+- SSR+PWA is special because HTML caching interacts with hydration.
+- In Yarn repos, prefer Yarn-wrapped mode scripts; do not switch package managers merely because upstream supports Bun/pnpm.
+- Mode work usually changes `quasar.config`, so load `21-cli-vite-and-config.md`. Shared source can carry SSR/PWA effects into Capacitor/Cordova/Electron.
+- With v3 dependency isolation, one-mode “module not found” may mean wrong install location, not bad code.
 
-✅ Do — for new mobile work in a repo with no Cordova history, scaffold Capacitor.
-
-❌ Don't — add Cordova to a greenfield app just because the model remembers it; it is the legacy shell.
-
-## Easy-to-miss relationships
-
-- Platform tasks almost always require `quasar.config` changes, so read `21-cli-vite-and-config.md`.
-- Capacitor, Cordova, and Electron can still be affected by SSR/PWA choices in shared source code.
-- BEX tasks often touch messaging, manifest structure, background/content script boundaries, and dynamic asset loading together.
-- Mode-specific dependency isolation in v3 means "module not found" in one mode can be an install-location problem, not a code problem.
+For greenfield mobile without Cordova history, scaffold Capacitor; do not add the legacy Cordova shell from memory.

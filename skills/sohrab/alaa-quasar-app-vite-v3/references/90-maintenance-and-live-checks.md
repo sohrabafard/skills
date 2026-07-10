@@ -1,41 +1,33 @@
-# Maintenance and live checks
+# Maintenance and Live Checks
 
-This skill is version-sensitive by design. Its authority decays without refreshes.
+This version-sensitive skill loses authority without refreshes.
 
 ## Snapshot discipline
 
-- Canonical snapshot lives in `20-v3-config-and-features.md` (dated 2026-07-10). Refresh with:
+- Canonical snapshot: `20-v3-config-and-features.md`, dated 2026-07-10; refresh with `node scripts/check-upstream-versions.mjs`.
+- The script reports `@quasar/app-vite` `latestStableByMajor.v2`/`.v3`; if `latest` becomes v4, reassess the whole posture, not just versions.
+- Any upstream version/import/config/folder change: search the whole pack for the old string; update every occurrence and snapshot date, never only the snapshot.
+- Do not snapshot component/directive/plugin API output. Keep `scripts/query-installed-quasar-api.mjs` version-neutral and delegate to the target project's CLI.
 
-```bash
-node scripts/check-upstream-versions.mjs
-```
+## Verify live before answering
 
-- The script reports `latestStableByMajor.v2` and `.v3` for `@quasar/app-vite`. If a v4 line ever appears on `latest`, this whole skill's posture needs re-evaluation, not just a number bump.
-- When any version, import path, config key, or folder changes upstream: grep the whole pack for the old string and update every occurrence plus the snapshot date. Never update the snapshot alone.
-- Exact component/directive/plugin API output is deliberately not snapshotted into this pack. Keep `scripts/query-installed-quasar-api.mjs` version-neutral and delegate to the target project's installed CLI.
+- Any latest/current or post-snapshot claim.
+- Any `quasar describe` arguments/output/project detection/package-bin assumption used by the query script.
+- Browser claims in `30`, `40`, `45`: Baseline, iOS/Safari cadence, permission UI/expiry/auto-revocation, `<geolocation>`/permission elements.
+- Still UNVERIFIED: Static Routing API outside Chromium; Declarative Web Push in Chromium; testing-extension v3 compatibility; exact default dotenv list; exact Safari grant-expiry windows; `<geolocation>` rollout percentage; camera/mic permission elements.
 
-## Freshness triggers (verify live before answering)
+Use only quasar.dev, quasarframework/quasar GitHub releases, npm registry, MDN, web.dev, developer.chrome.com, webkit.org. Community posts are troubleshooting hints, never migration rules.
 
-- Any "latest"/"current" question; any claim after the snapshot date.
-- Any change to `quasar describe` arguments, output behavior, project detection, or package bin layout used by `scripts/query-installed-quasar-api.mjs`.
-- Browser-support claims in `30`, `40`, and `45` (Baseline moves; iOS/Safari release cadence; permission prompt behavior changes almost yearly — one-time grants, quieter UI, auto-revocation windows, the `<geolocation>`/permission-element rollout). Items marked UNVERIFIED in research: Static Routing API outside Chromium, Declarative Web Push in Chromium, testing-extension v3 compatibility, exact default dotenv file list, exact Safari grant-expiry windows, `<geolocation>` element rollout percentage, camera/mic permission elements.
-- Official sources only: quasar.dev, GitHub releases (quasarframework/quasar), npm registry, MDN, web.dev, developer.chrome.com, webkit.org. Community posts are troubleshooting hints, never migration rules.
+## Posture history
 
-## Posture history (so future edits keep context)
+- 2026-07-06/07: app-vite `3.0.0` then `3.0.1`; v3 became stable after beta/RC from 2026-05-06. v2 `2.6.2` entered maintenance (approximately through 2027-06).
+- 2026-07-08: absorbed retired `quasar-skill-packe` (Quasar shapes/atlases/modes/guardrails) and `alaa-app-vite-quasar` (v2 playbook/deltas/testing/CI). Posture edits must also sweep `$alaa-frontend-developer`.
+- 2026-07-10: became a control plane, not exhaustive API mirror: exact APIs route to project-local `quasar describe`; atlases retain intent/alternatives/gotchas/search vocabulary; no MCP required.
 
-- 2026-07-06/07: `@quasar/app-vite` 3.0.0 then 3.0.1 released — v3 became the stable production line after a beta/RC run since 2026-05-06. v2 (last stable 2.6.2) entered maintenance (~until 2027-06 per upstream signals).
-- 2026-07-08: this skill absorbed the full content of the former `quasar-skill-packe` (exact Quasar shapes, atlases, platform modes, guardrails) and `alaa-app-vite-quasar` (v2 playbook, verified delta checklist, testing/CI) — those two skills were retired. If you edit posture here, also sweep `$alaa-frontend-developer` (it cross-references this skill).
-- 2026-07-10: the pack became an explicit control plane rather than an exhaustive API mirror. Exact installed APIs now route through project-local `quasar describe`; atlases remain curated intent, alternatives, gotchas, and search vocabulary. No MCP dependency is required.
+## Query-helper verification
 
-## Installed-API helper verification
+When changing `scripts/query-installed-quasar-api.mjs`, test one installed app-vite v2 and v3 project; match reported app-vite/Quasar versions to package metadata; test actionable missing/non-Quasar failure; run both a narrow symbol and `list` query (one output shape is insufficient).
 
-When changing `scripts/query-installed-quasar-api.mjs`:
+## Dual-runtime contract
 
-- run it against at least one installed app-vite v2 project and one installed app-vite v3 project
-- verify the reported app-vite and Quasar versions match each project's installed package metadata
-- verify a missing/non-Quasar project fails with a specific, actionable error
-- run a narrow symbol query and a `list` query; do not accept a helper that works only for one output shape
-
-## Dual-runtime authoring rules
-
-Match `references/91-agent-authoring-and-dual-runtime.md`: frontmatter `name` + `description` only; ✅ Do / ❌ Don't pairs on high-value rules; one default plus escape hatch; no contradictions between files; absolute dates, never "recently"; forward-slash paths; routing tables and search terms in every reference.
+Follow `references/91-agent-authoring-and-dual-runtime.md`: frontmatter only `name` + `description`; high-value ✅ Do/❌ Don't pairs; one default + escape hatch; no cross-file contradictions; absolute dates; forward-slash paths; routing tables and search terms in every reference.

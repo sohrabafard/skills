@@ -1,67 +1,44 @@
-# PWA InjectManifest Guard
+# PWA InjectManifest guard
 
-Use this file when the task changes a custom service worker, the PWA update lifecycle, offline fallback behavior, or any InjectManifest contract in a Quasar app.
+Use when changing a custom SW, PWA update lifecycle, offline fallback, or any Quasar InjectManifest contract. Load with—not instead of—`31-ssr-pwa-and-security.md`.
 
-Load this file together with `31-ssr-pwa-and-security.md`, not instead of it.
+## Versioned location
 
-## File location depends on the app-vite line
+- `@quasar/app-vite` v3: `src-pwa/sw/custom-sw.{js,ts}`; `sourceFiles.pwaServiceWorker` defaults to `'src-pwa/sw/custom-sw'`.
+- v2: `src-pwa/custom-sw.{js,ts}`.
 
-- `@quasar/app-vite` v3: the custom SW lives at `src-pwa/sw/custom-sw.{js,ts}` (config key `sourceFiles.pwaServiceWorker`, default `'src-pwa/sw/custom-sw'`).
-- `@quasar/app-vite` v2: the custom SW lives at `src-pwa/custom-sw.{js,ts}`.
+Open the path matching the installed major. Never create `src-pwa/custom-sw.js` in v3: the CLI reads `src-pwa/sw/`, so that edit is ignored.
 
-✅ Do — open the SW at the path that matches the installed app-vite major before editing.
+## Risks and invariants
 
-❌ Don't — create a new `src-pwa/custom-sw.js` in a v3 repo; the CLI looks under `src-pwa/sw/`, so your changes would be ignored.
+Conceptual SSR/PWA guidance alone does not prevent stale deploys, broken updates, cached-HTML hydration drift, offline fallback regressions, or remote-asset path regressions.
 
-## Why this file exists
+- Keep exactly one `self.__WB_MANIFEST` in the custom SW.
+- HTML navigation caching is high risk in SSR apps.
+- Never implicitly change update flow, waiting-worker behavior, or offline fallback semantics.
+- Preserve established asset-base and placeholder-replacement variables unless intentionally changing the SW contract.
 
-The generic SSR/PWA reference is enough for conceptual questions. It is not enough when the task can accidentally cause:
+## Before editing
 
-- stale deploys
-- broken update flow
-- hydration drift from cached HTML
-- offline fallback regressions
-- remote asset path regressions
+Record:
 
-## Hard invariants
+- behavior that must remain unchanged;
+- exact intended change;
+- install/update/offline-navigation verification;
+- rollback boundary.
 
-- Keep exactly one `self.__WB_MANIFEST` in the custom service worker.
-- Treat HTML navigation caching as a high-risk change in SSR apps.
-- Do not change update flow, waiting-worker behavior, or offline fallback semantics implicitly.
-- Do not change asset-base or placeholder replacement variables casually in a repo that already has a SW contract.
+## Risk boundary
 
-## Change-boundary checklist
+Safe when caching semantics stay unchanged: update-notification UI using the existing flow; offline-page copy; manifest/icon metadata; logging/observability.
 
-Before editing, write down:
+High risk: navigation strategy; broader runtime caching; cache names/version semantics; remote asset resolution; removal/change of skip-waiting or controller-change orchestration.
 
-- what must stay unchanged
-- what exact behavior is being changed
-- how install, update, and offline navigation will be verified
-- what the rollback boundary is
+## Minimum verification
 
-## Safe changes
+- first install;
+- update with an already-installed worker;
+- offline fallback navigation;
+- normal online navigation;
+- remote assets when the repo serves them remotely.
 
-- update-notification UI that uses the existing SW flow
-- offline-page content changes without strategy changes
-- manifest/icon metadata updates
-- logging or observability tweaks that do not change caching behavior
-
-## High-risk changes
-
-- changing navigation strategy
-- broadening runtime caching
-- changing cache names or versioning semantics
-- changing remote asset resolution
-- removing or altering skip-waiting / controller-change orchestration
-
-## Verification minimum
-
-- first install
-- update flow with an already-installed worker
-- offline navigation fallback
-- normal online navigation
-- remote asset loading, if the repo serves assets remotely
-
-## Search terms
-
-- `InjectManifest`, `self.__WB_MANIFEST`, `skipWaiting`, `clientsClaim`, `controllerchange`, `offline fallback`, `navigation caching`
+Search: `InjectManifest`, `self.__WB_MANIFEST`, `skipWaiting`, `clientsClaim`, `controllerchange`, `offline fallback`, `navigation caching`.

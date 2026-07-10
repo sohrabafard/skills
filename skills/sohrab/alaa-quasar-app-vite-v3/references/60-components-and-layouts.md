@@ -1,99 +1,30 @@
 # Components and Layouts
 
-Use this file when the task names a Quasar component, a layout primitive, or a UI family.
+Use when a task names a Quasar component, layout primitive, or UI family. For exact props/events/slots/methods, first use `05-authority-and-api-lookup.md` against the installed project. Pair with `61-component-usage-atlas.md` for intent/alternatives/gotchas, `62-layout-patterns-and-examples.md` for layout-shell semantics, and `63-image-delivery-and-placeholders.md` for deterministic `QImg` delivery.
 
-For exact props, events, slots, and methods, first follow `05-authority-and-api-lookup.md` and query the installed project.
-For component intent, alternatives, common patterns, and gotchas, pair this file with `61-component-usage-atlas.md`.
-For exact layout-shell semantics, pair this file with `62-layout-patterns-and-examples.md`.
-For deterministic `QImg` delivery patterns, pair this file with `63-image-delivery-and-placeholders.md`.
+## Search and routing
 
-## Search strategy
+1. Search the exact symbol (`QTable`, `QDialog`, etc.); if syntax matters, query the installed API.
+2. Route by family below, then load `61-component-usage-atlas.md`.
+3. Also load `70-guardrails-a11y-performance-monorepo.md` for large/interactive surfaces and `31-ssr-pwa-and-security.md` for SSR/PWA routes.
 
-- Search the exact component name first, for example `QTable` or `QDialog`.
-- If syntax matters, run the project-local installed-API lookup before relying on an atlas snippet.
-- Then classify by family below.
-- Then open `61-component-usage-atlas.md` for usage notes, alternatives, and better search terms.
-- For large or interactive UI surfaces, also read `70-guardrails-a11y-performance-monorepo.md`.
-- For SSR/PWA routes, also read `31-ssr-pwa-and-security.md`.
+| Family | Symbols/topics | Also load |
+| --- | --- | --- |
+| Inputs/forms | `QInput`, `QField`, `QForm`, `QSelect`, `QOptionGroup`, `QCheckbox`, `QRadio`, `QToggle`, `QRange`, `QSlider`, `QKnob`, `QColor`, `QDate`, `QTime`, `QFile`, `QUploader`, `QEditor` | `64-plugins-composables-directives-options-utils.md` for validation/Dialog/options; `70` for labels, focus, keyboard |
+| Actions | `QBtn`, `QBtnGroup`, `QBtnToggle`, `QBtnDropdown`, `QFab` | `70` |
+| Data/virtualization | `QTable`, `QMarkupTable`, `QList`, `QItem`, `QTree`, `QTimeline`, `QChat`, `QVirtualScroll`, `QInfiniteScroll` | `70`; `31` on SSR routes |
+| Overlays | `QDialog`, `QMenu`, `QTooltip`, `QPopupEdit`, `QPopupProxy` | `64`, `70` |
+| Media | `QImg`, `QVideo`, `QCarousel`, `QParallax`, `QAvatar` | `31`, `70`; `63` for placeholder/ratio/responsive candidates |
+| Feedback/state | `QAjaxBar`, `QLinearProgress`, `QCircularProgress`, `QInnerLoading`, `QSpinner`, `QSkeleton`, `QBanner`, `QBadge`, `QChip` | `64`, `70` |
+| Layout/pages | `QLayout`, `QDrawer`, `QHeader`, `QFooter`, `QPage`, `QPageScroller`, `QPageSticky`; grid/flex, galleries, layout/page routing | `21-cli-vite-and-config.md`, `31` on SSR routes, `62` |
 
-## Component families
+✅ Do — nest `QPage` inside `QPageContainer` inside `QLayout`.
 
-### Inputs and forms
+❌ Don't — put `QPage` directly in `QLayout` or a route without `QPageContainer`; spacing/scrolling break.
 
-- `QInput`, `QField`, `QForm`, `QSelect`, `QOptionGroup`, `QCheckbox`, `QRadio`, `QToggle`
-- `QRange`, `QSlider`, `QKnob`, `QColor`, `QDate`, `QTime`
-- `QFile`, `QUploader`, `QEditor`
+## Cross-cutting relationships
 
-Also load:
-
-- `64-plugins-composables-directives-options-utils.md` when validation helpers, dialog plugins, or option-level config matter
-- `70-guardrails-a11y-performance-monorepo.md` for labels, focus order, and keyboard behavior
-
-### Buttons, actions, and command surfaces
-
-- `QBtn`, `QBtnGroup`, `QBtnToggle`, `QBtnDropdown`, `QFab`
-
-Also load:
-
-- `70-guardrails-a11y-performance-monorepo.md`
-
-### Data display and virtualized structures
-
-- `QTable`, `QMarkupTable`, `QList`, `QItem`, `QTree`, `QTimeline`, `QChat`
-- `QVirtualScroll`, `QInfiniteScroll`
-
-Also load:
-
-- `70-guardrails-a11y-performance-monorepo.md`
-- `31-ssr-pwa-and-security.md` if the route is SSR-rendered
-
-### Dialogs, menus, and overlays
-
-- `QDialog`, `QMenu`, `QTooltip`, `QPopupEdit`, `QPopupProxy`
-
-Also load:
-
-- `64-plugins-composables-directives-options-utils.md`
-- `70-guardrails-a11y-performance-monorepo.md`
-
-### Media and imagery
-
-- `QImg`, `QVideo`, `QCarousel`, `QParallax`, `QAvatar`
-
-Also load:
-
-- `31-ssr-pwa-and-security.md`
-- `70-guardrails-a11y-performance-monorepo.md`
-- `63-image-delivery-and-placeholders.md` when the task is about placeholder, ratio, or responsive candidate generation
-
-### Feedback and state indicators
-
-- `QAjaxBar`, `QLinearProgress`, `QCircularProgress`, `QInnerLoading`, `QSpinner`, `QSkeleton`
-- `QBanner`, `QBadge`, `QChip`
-
-Also load:
-
-- `64-plugins-composables-directives-options-utils.md`
-- `70-guardrails-a11y-performance-monorepo.md`
-
-### Layout and page primitives
-
-- `QLayout`, `QDrawer`, `QHeader`, `QFooter`, `QPage`, `QPageScroller`, `QPageSticky`
-- Grid/flex foundations, gallery patterns, routing with layouts and pages
-
-✅ Do — respect the nesting: `QPage` inside `QPageContainer` inside `QLayout`.
-
-❌ Don't — place a `QPage` directly in a `QLayout` or in a route component with no `QPageContainer`; spacing and scroll behavior break.
-
-Also load:
-
-- `21-cli-vite-and-config.md`
-- `31-ssr-pwa-and-security.md` for SSR routes
-- `62-layout-patterns-and-examples.md`
-
-## Easy-to-miss relationships
-
-- `QTable`, `QVirtualScroll`, and `QInfiniteScroll` are usually performance questions as much as component questions.
-- `QDialog`, `QMenu`, and `QTooltip` are accessibility and focus-management questions as much as component questions.
-- `QImg`, `QVideo`, and `QUploader` often intersect with SSR, caching, and bandwidth constraints.
-- Layout bugs frequently come from routing, boot-time state, or SSR-only conditions instead of the layout component itself.
+- `QTable`/`QVirtualScroll`/`QInfiniteScroll`: performance as well as components.
+- `QDialog`/`QMenu`/`QTooltip`: accessibility/focus as well as overlays.
+- `QImg`/`QVideo`/`QUploader`: SSR, caching, and bandwidth.
+- Layout bugs often originate in routing, boot state, or SSR conditions.

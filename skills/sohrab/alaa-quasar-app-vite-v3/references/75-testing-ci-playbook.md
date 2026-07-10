@@ -1,167 +1,103 @@
 # Testing and CI Playbook
 
-Use this reference when adding tests, changing test harnesses, or preparing production validation for Quasar CLI with Vite.
+Use when adding tests, changing harnesses, or validating production Quasar CLI + Vite work.
 
-## 1. Testing extension policy
+## Policy and layers
 
-Prefer current specific Quasar testing extensions:
+Prefer current specific extensions:
 
 ```bash
 quasar ext add @quasar/testing-unit-vitest
 quasar ext add @quasar/testing-e2e-cypress
 ```
 
-Use Jest only if the repo already uses it heavily or there is a specific reason.
+Use Jest only when already entrenched or specifically justified; never add deprecated umbrella `@quasar/testing` for new setup.
 
-Do not use the deprecated umbrella `@quasar/testing` extension for new setup.
+Minimum useful layers: type/lint; unit tests for composables/services/stores; interactive component tests; critical-flow E2E smoke; production builds for each supported mode; PWA/SSR checks where those modes exist.
 
-## 2. Test layers
+## Suggested scripts
 
-Minimum useful layers for Alaa frontend apps:
-
-1. Type/lint checks
-2. Unit tests for composables/services/stores
-3. Component tests for interactive Quasar components
-4. E2E smoke tests for critical flows
-5. Production mode build tests for each supported Quasar mode
-6. PWA/SSR-specific checks when those modes exist
-
-## 3. Suggested scripts
-
-Adapt names to the repo convention.
+Adapt names to repo conventions; never overwrite scripts before checking CI references.
 
 ```json
 {
   "scripts": {
-    "dev": "quasar dev",
-    "build": "quasar build",
-    "build:pwa": "quasar build -m pwa",
-    "build:ssr": "quasar build -m ssr",
-    "lint": "eslint .",
-    "typecheck": "vue-tsc --noEmit",
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest",
-    "test:e2e": "cypress run",
+    "dev": "quasar dev", "build": "quasar build",
+    "build:pwa": "quasar build -m pwa", "build:ssr": "quasar build -m ssr",
+    "lint": "eslint .", "typecheck": "vue-tsc --noEmit",
+    "test:unit": "vitest run", "test:unit:watch": "vitest", "test:e2e": "cypress run",
     "validate": "pnpm run lint && pnpm run typecheck && pnpm run test:unit && pnpm run build"
   }
 }
 ```
 
-Do not overwrite existing scripts without checking CI references.
+## Test style
 
-## 4. Unit test style
-
-Correct composable test:
+Unit tests must prove behavior:
 
 ```ts
 import { describe, expect, it } from 'vitest'
 import { normalizeCourseTitle } from '@/services/course/normalizeCourseTitle'
-
 describe('normalizeCourseTitle', () => {
-  it('trims and collapses whitespace', () => {
-    expect(normalizeCourseTitle('  ریاضی   دوازدهم  ')).toBe('ریاضی دوازدهم')
-  })
+  it('trims and collapses whitespace', () => expect(normalizeCourseTitle('  ریاضی   دوازدهم  ')).toBe('ریاضی دوازدهم'))
 })
 ```
 
-Wrong:
+❌ Don't — use `it('works', () => expect(true).toBe(true))`.
 
-```ts
-it('works', () => {
-  expect(true).toBe(true)
-})
-```
-
-## 5. Component tests with Quasar
-
-Mount components with required plugins, router, pinia, and Quasar context. Follow the repo's existing test utility if one exists.
-
-Correct pattern:
+Component tests must mount required Quasar/router/pinia/plugins, preferably through the repo utility:
 
 ```ts
 import { mount } from '@vue/test-utils'
 import { Quasar } from 'quasar'
 import { createTestingPinia } from '@pinia/testing'
 import CourseCard from '@/components/course/CourseCard.vue'
-
 const wrapper = mount(CourseCard, {
-  global: {
-    plugins: [
-      Quasar,
-      createTestingPinia({ stubActions: false })
-    ]
-  },
-  props: {
-    course: { id: 1, title: 'Physics' }
-  }
+  global: { plugins: [Quasar, createTestingPinia({ stubActions: false })] },
+  props: { course: { id: 1, title: 'Physics' } }
 })
 ```
 
-Wrong:
+❌ Don't — `mount(CourseCard)` and silently miss plugin behavior.
 
-```ts
-mount(CourseCard) // fails or silently misses Quasar/plugin behavior
-```
+## E2E priorities
 
-## 6. E2E smoke tests
+Production app load; login/logout when in scope; course list/page; checkout/payment start with test env when in scope; PWA update prompt after PWA changes; rendered SSR HTML after SSR changes. Avoid unstable external production services unless the repo already handles them.
 
-Prioritize flows that prove production readiness:
-
-- app loads in production build
-- login/logout if in scope
-- course page/list opens
-- checkout/payment start if in scope with test env
-- PWA update prompt if PWA changed
-- SSR page returns rendered HTML if SSR changed
-
-Do not make E2E tests depend on unstable external production services unless the repo already has a strategy for it.
-
-## 7. CI validation by task type
-
-Small UI component change:
+## CI by change
 
 ```bash
+# Small UI
 <pm> run lint
 <pm> run typecheck
 <pm> run test:unit -- --runInBand # if applicable
 <pm> run build
-```
 
-PWA change:
-
-```bash
+# PWA
 <pm> run lint
 <pm> run typecheck
 <pm> quasar build -m pwa
-# run Lighthouse or app-specific PWA smoke test on production build when available
-```
+# run Lighthouse or app-specific PWA smoke on the production build when available
 
-SSR change:
-
-```bash
+# SSR
 <pm> run lint
 <pm> run typecheck
 <pm> quasar build -m ssr
 node dist/ssr/index.js
 # curl key routes if shell/network is available
-```
 
-Dependency or Quasar upgrade:
-
-```bash
+# Dependency/Quasar upgrade
 <pm> install --frozen-lockfile
 <pm> quasar info
 <pm> run lint
 <pm> run typecheck
 <pm> run test:unit
 <pm> run build
-<pm> quasar build -m pwa   # if PWA exists
-<pm> quasar build -m ssr   # if SSR exists
+<pm> quasar build -m pwa # if present
+<pm> quasar build -m ssr # if present
 ```
 
-## 8. Reporting validation honestly
-
-Correct final report:
+## Honest reporting
 
 ```md
 Validation run:
@@ -171,8 +107,4 @@ Validation run:
 - pnpm quasar build -m pwa: not run; PWA mode is not present in repo
 ```
 
-Wrong final report:
-
-```md
-Everything should work.
-```
+❌ Don't — report “Everything should work.”

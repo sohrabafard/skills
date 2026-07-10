@@ -1,109 +1,70 @@
 ---
 name: alaa-quasar-app-vite-v3
-description: "Version-aware control plane for Quasar CLI + Vite work on @quasar/app-vite v3, v2 maintenance, and v2-to-v3 migration. Detects the installed line first; routes exact component, directive, and plugin API questions to the project-local Quasar CLI instead of treating bundled Markdown as exhaustive truth; and covers quasar.config, env, boot/routing, components/layouts, SPA/SSR/PWA/BEX/Capacitor/Electron modes, service workers/offline/update UX, WebOTP/device trust, browser permissions, testing/CI, accessibility, and performance. Use when the user mentions Quasar, quasar.config, app-vite, QTable/QImg/QLayout-style symbols, an upgrade/migration, service workers/offline, OTP autofill, getUserMedia/recording, geolocation, or browser permissions. Do not use for plain Vue/Vite apps without Quasar CLI."
+description: "Version-aware control plane for Quasar CLI + Vite work on @quasar/app-vite v3, v2 maintenance, and v2-to-v3 migration. Detect the installed line first; query exact component, directive, and plugin APIs through the project-local Quasar CLI, not bundled Markdown. Covers quasar.config, env, boot/routing, components/layouts, SPA/SSR/PWA/BEX/Capacitor/Electron, service workers/offline/update UX, WebOTP/device trust, browser permissions, testing/CI, accessibility, and performance. Use for Quasar, quasar.config, app-vite, QTable/QImg/QLayout-style symbols, upgrades/migrations, service workers/offline, OTP autofill, getUserMedia/recording, geolocation, or browser permissions; not plain Vue/Vite without Quasar CLI."
 ---
 
 # Alaa Quasar App-Vite v3
 
-## Purpose
+## Purpose and posture
 
-The version-aware control plane for Quasar CLI + Vite work. It absorbed the former `quasar-skill-packe` (Quasar API/config/component guidance) and `alaa-app-vite-quasar` (v2-era semantics and the verified v2->v3 delta list), and leads with the v3 era:
+Version-aware Quasar CLI + Vite control plane, absorbing `quasar-skill-packe` (API/config/components) and `alaa-app-vite-quasar` (v2 semantics and verified deltas), with v3 first:
 
-- `@quasar/app-vite` **v3 is the stable production line** (3.0.1 since 2026-07-07); v2 (last stable 2.6.2) is the maintenance line (~until 2027-06) covered here for not-yet-migrated repos.
-- v2 -> v3 migration decision, playbook, and verified delta checklist
-- project-local lookup for exact component/directive/plugin APIs, plus curated `quasar.config`, env, boot, routing, layout, composable, util, and platform-mode patterns
-- production-grade service workers: offline strategies, update lifecycle UX, performance, debugging, push/badging/background sync
-- SMS OTP reading (WebOTP + `one-time-code`), device fingerprinting bounded to device trust, passkey-forward posture
-- browser device APIs and the permission model: audio recording, camera, geolocation, notifications, clipboard, wake lock, sensors — cross-browser prompt behavior, permission priming UX, denial recovery, and the web-vs-Capacitor permission split
-- testing/CI, a11y/performance guardrails, and modern-experience decisions
+- `@quasar/app-vite` v3 is stable production (3.0.1 since 2026-07-07); v2's last stable is 2.6.2, maintained ~until 2027-06 for unmigrated repos.
+- Owns v2 -> v3 decisions/playbook/deltas; local exact-API lookup; curated config/env/boot/routing/layout/composable/util/mode patterns; production SW/offline/update/performance/debugging/push/badging/background-sync; WebOTP + `one-time-code`, device-trust-bounded fingerprinting/passkey posture; permission-gated browser APIs (audio, camera, geolocation, notifications, clipboard, wake lock, sensors), priming/denial recovery/web-vs-Capacitor; testing/CI/a11y/performance/modern UX.
+- Supports Claude/Opus and GPT/Codex. In ✅ Do / ❌ Don't pairs, ✅ is normative; ❌ preserves a realistic failure guardrail.
 
-Written for both Claude/Opus and GPT/Codex agents. High-value rules use ✅ Do / ❌ Don't pairs: the ✅ side is the instruction, the ❌ side is a realistic mistake kept as a guardrail.
+This is not exhaustive Quasar documentation: references own workflows, heuristics, deltas, guardrails, and high-value examples; the installed project and official Quasar sources own exact API availability/current upstream behavior.
 
-This pack is not an exhaustive mirror of Quasar documentation. Its references own workflow, decision heuristics, migration deltas, guardrails, and high-value examples. The installed project and official Quasar sources own exact API availability and current upstream behavior.
+## Version rules
 
-## Version posture (the rule that dates fastest)
+- New apps use v3. Treat production v2 migration as scheduled engineering via `references/10-v2-to-v3-migration.md`, never an unrelated opportunistic bump.
+- Legitimate blockers (Node floor, incompatible App Extensions, frozen release window) may keep v2 pinned to `@quasar/app-vite@^2`—unpinned installs now pull v3; use `references/12-v2-maintenance-playbook.md` shapes.
+- **Detect the installed major first:** read `@quasar/app-vite` in `package.json` before config/import/env advice. v3/v2 differ on `#q-app`/`#q-app/wrappers`, `import.meta.env.QUASAR_*`/`process.env.*`, `@/`/legacy aliases, and folders.
+- Follow the lockfile's package manager; never switch it during a Quasar task.
+- Before version-sensitive work run `node scripts/check-upstream-versions.mjs`.
 
-- New apps: scaffold on **v3**. Production apps on v2: migration is a scheduled engineering task, planned via `references/10-v2-to-v3-migration.md` — never an opportunistic bump inside an unrelated change.
-- v2 repos with blockers (Node floor, incompatible App Extensions, frozen release windows) stay legitimate: keep them pinned to `@quasar/app-vite@^2` (an unpinned install now pulls v3) and use the v2 shapes in `references/12-v2-maintenance-playbook.md`.
-- **Detect the installed major first** — the highest-impact rule in this skill. Read `@quasar/app-vite` in `package.json` before giving any config/import/env advice. The lines differ in import paths (`#q-app` vs `#q-app/wrappers`), env (`import.meta.env.QUASAR_*` vs `process.env.*`), aliases (`@/` only vs legacy set), and folder layout.
-- Respect the repo's package manager (lockfile); never switch it as part of a Quasar task.
-- Refresh version truth before version-sensitive work:
+Snapshot 2026-07-10: `@quasar/app-vite` 3.0.1 (stable/`latest`), v2 2.6.2 (maintenance); `quasar` 2.21.1; `@quasar/extras` 2.0.2; `vite` 8.1.4; `vue` 3.5.39; `vue-router` 5.1.0; `pinia` 3.0.4; `workbox-build` 7.4.1. v3 Node: `^22.22.0 || ^24 || ^26 || ^28 || ^30`.
 
-```bash
-node scripts/check-upstream-versions.mjs
-```
+## Authority and exact APIs
 
-Snapshot 2026-07-10: `@quasar/app-vite` 3.0.1 (stable, `latest`) / v2 2.6.2 (maintenance); quasar 2.21.1; @quasar/extras 2.0.2; vite 8.1.4; vue 3.5.39; vue-router 5.1.0; pinia 3.0.4; workbox-build 7.4.1. Node for v3: `^22.22.0 || ^24 || ^26 || ^28 || ^30`.
-
-## Authority and exact API lookup
-
-Use the authority that matches the question; do not apply one global precedence blindly:
-
-1. The live repository owns its behavior, constraints, conventions, and installed dependency line.
-2. For exact Quasar props, events, slots, methods, directive values, or plugin options, run the bundled `scripts/query-installed-quasar-api.mjs`, which delegates to that project's local `quasar describe` command.
-3. Official Quasar docs and release sources own current upstream concepts, examples, upgrades, and release truth.
-4. This skill's references own reusable workflow, guardrails, migration reasoning, and search vocabulary.
+Match authority to the question: (1) live repo for behavior/constraints/conventions/installed line; (2) bundled `scripts/query-installed-quasar-api.mjs` -> project-local `quasar describe` for exact props/events/slots/methods/directive values/plugin options; (3) official Quasar docs/releases for current upstream concepts/examples/upgrades/releases; (4) these references for reusable workflow/guardrails/migration/search vocabulary.
 
 ```bash
 node <skill-dir>/scripts/query-installed-quasar-api.mjs --project <repo-root> QTable -p -s -e -m
 ```
 
-Read `references/05-authority-and-api-lookup.md` for the complete lookup and fallback contract. This version requires no MCP server; do not block a Quasar task on MCP availability.
+Read `references/05-authority-and-api-lookup.md` for lookup/fallback. MCP is unnecessary; never block on it.
 
-## Token-efficient working model
+## Token-efficient workflow and routing
 
-Do not load everything. Sequence:
+1. Read repo-local `AGENTS.md`/`CLAUDE.md`, lockfile, `package.json`, `quasar.config.*`, and only touched mode folders; repo instructions override this skill.
+2. For exact APIs, query the installed API before atlas examples/model memory.
+3. Read `references/00-topic-map.md` unless the exact file is known; load only it plus named “Also load” pairings.
+4. For version-sensitive or post-2026-07-10 claims, refresh via `references/80-upstream-deltas-and-live-checks.md` and `references/90-maintenance-and-live-checks.md`.
 
-1. Read the repo first: lockfile, `package.json`, `quasar.config.*`, and only the mode folders the task touches. Repo-local `AGENTS.md`/`CLAUDE.md` override this skill.
-2. If the task asks for an exact Quasar API shape, run the installed-API lookup before trusting an atlas example or model memory.
-3. Read `references/00-topic-map.md` unless you already know the exact file; then load only that file and its "Also load" pairings.
-4. For anything version-sensitive or claimed after 2026-07-10, refresh live data (`references/80-upstream-deltas-and-live-checks.md`, `references/90-maintenance-and-live-checks.md`).
+Detailed routing is owned by `00`: exact APIs/source drift `05`; migration/v2 `10`–`13`; v3 config/CLI/shapes `20`–`22`; SSR/PWA/SW/platform modes `30`–`35`; OTP/device trust/permissions/modern UX `40`–`50`; components/layouts/directives/plugins/composables/options/utils `60`–`66`; quality/testing/live deltas/legacy/maintenance `70`–`91`.
 
-## Routing
+## Mandatory pairings
 
-Use `references/00-topic-map.md` as the single detailed routing owner. The main groups are:
+- Custom SW/InjectManifest -> `references/30-service-worker-excellence.md` + `references/32-pwa-injectmanifest-guard.md`; verify install -> update -> offline.
+- SSR, `preFetch`, router, store, boot, middleware, SEO, or auth -> also `references/31-ssr-pwa-and-security.md`.
+- Platform mode -> `references/21-cli-vite-and-config.md` + `references/35-platform-modes.md`.
+- Structured offline data (drafts/progress/outbox) -> `$alaa-indexeddb-browser-storage`; SW owns only Request/Response caches.
+- OTP/auth -> `$alaa-frontend-developer` `21-ssr-auth-and-session-patterns.md` + `$alaa-trust-gateway-auth`; WebOTP only fills the form, never owns tokens/refresh.
+- Permission-gated APIs (`getUserMedia`, geolocation, `Notification.requestPermission`, clipboard read, sensors, ...) -> `references/45-browser-apis-and-permissions.md`: request in a user gesture after priming, provide denial recovery, treat `granted` as expiring cache.
+- Data grids, virtualization, uploads, media, dialogs, or browser-API components -> also `references/70-guardrails-a11y-performance-monorepo.md`.
+- Version-sensitive/upgrade -> `80` + live refresh. Vue/TS output -> `$alaa-vue-typescript-clean-code`. Motion -> `$alaa-frontend-developer` `25-modern-css-and-motion.md` (reduced motion blocks). `packages/*` -> `$alaa-mono-package`.
 
-- exact installed APIs and source disagreements: `05`
-- migration and v2 maintenance: `10`–`13`
-- v3 config, CLI, and code shapes: `20`–`22`
-- SSR, PWA, service workers, and platform modes: `30`–`35`
-- OTP, device trust, browser permissions, and modern experience: `40`–`50`
-- components, layouts, directives, plugins, composables, options, and utils: `60`–`66`
-- quality, testing, live deltas, legacy routing, and pack maintenance: `70`–`91`
+## Search and companions
 
-## Mandatory related-topic rules
+Search symbols first: `QTable`, `QImg`, `useMeta`, `ClosePopup`, `Notify`, `extendViteConf`. For props/events/slots/methods/options, query installed APIs, then atlases `61`, `65`, `66` for intent/alternatives/gotchas/terms. Concept terms: `boot files`, `ssrContext`, `InjectManifest`, `build.env.folder`, `#q-app`, `OTPCredential`, `skipWaiting`, `getUserMedia`, `MediaRecorder`, `permissions.query`, `requestPermission`. `references/85-legacy-skill-coverage.md` maps old `quasar-*` skill names.
 
-Apply these even if the user names only one surface:
-
-- Any custom service worker or InjectManifest change: load `references/30-service-worker-excellence.md` AND `references/32-pwa-injectmanifest-guard.md` (verification minimum: install -> update -> offline).
-- Any SSR, `preFetch`, router, store, boot, middleware, SEO, or auth task: also load `references/31-ssr-pwa-and-security.md`.
-- Any platform-mode task: read `references/21-cli-vite-and-config.md` and `references/35-platform-modes.md` together.
-- Any offline feature storing structured data (drafts, progress, outbox): route the data design to `$alaa-indexeddb-browser-storage`; the SW owns only Request/Response caching.
-- Any OTP/auth flow: token storage and refresh stay with `$alaa-frontend-developer`'s `21-ssr-auth-and-session-patterns.md` reference and `$alaa-trust-gateway-auth`; WebOTP code only reads the code into the form.
-- Any use of a permission-gated browser API (`getUserMedia`, geolocation, `Notification.requestPermission`, clipboard read, sensors, ...): load `references/45-browser-apis-and-permissions.md` — request inside a user gesture with a priming step, handle denial with recovery UI, and treat `granted` as a cache that expires.
-- Any component handling data grids, virtualization, uploads, media, dialogs, or browser APIs: also load `references/70-guardrails-a11y-performance-monorepo.md`.
-- Any version-sensitive or upgrade request: read `references/80-upstream-deltas-and-live-checks.md` and refresh live data first.
-- Any Vue/TS code produced: `$alaa-vue-typescript-clean-code` gates apply.
-- Any motion/animation polish: follow `$alaa-frontend-developer`'s `25-modern-css-and-motion.md` reference (reduced-motion is blocking).
-- Anything under `packages/*`: pair `$alaa-mono-package`.
-
-## Search rules
-
-Search exact Quasar symbols first (`QTable`, `QImg`, `useMeta`, `ClosePopup`, `Notify`, `extendViteConf`). For props/events/slots/methods/options, query the installed API first, then use atlases 61, 65, and 66 for intent, alternatives, gotchas, and better search terms. For conceptual tasks, search phrases such as `boot files`, `ssrContext`, `InjectManifest`, `build.env.folder`, `#q-app`, `OTPCredential`, `skipWaiting`, `getUserMedia`, `MediaRecorder`, `permissions.query`, and `requestPermission`. `references/85-legacy-skill-coverage.md` maps old `quasar-*` skill names.
-
-## Companion routing (surviving siblings)
-
-- `$alaa-frontend-developer` — broad frontend engineering: SSR auth/session, API data shaping, performance/Web Vitals, QA/release readiness, modern CSS/motion.
-- `$alaa-vue-typescript-clean-code` — mandatory code-quality baseline for any Vue/TS code.
-- `$alaa-indexeddb-browser-storage` — browser storage, offline data, outbox/sync (this skill is its named PWA/Quasar pairing).
-- `$alaa-mono-package` — `packages/*` boundaries; `$alaa-frontend-devops` — CI/Docker/deploy; `$alaa-trust-gateway-auth` — gateway auth; `$playwright`/`$playwright-interactive` — browser validation (opt-in).
+Companions: `$alaa-frontend-developer` (broad frontend, SSR auth/session, data shaping, Web Vitals, QA, CSS/motion); `$alaa-vue-typescript-clean-code` (mandatory Vue/TS); `$alaa-indexeddb-browser-storage` (storage/offline/outbox); `$alaa-mono-package` (`packages/*`); `$alaa-frontend-devops` (CI/Docker/deploy); `$alaa-trust-gateway-auth` (gateway auth); `$playwright`/`$playwright-interactive` (opt-in browser validation).
 
 ## When NOT to use
 
-- Plain Vue/Vite apps without Quasar CLI (`@quasar/vite-plugin` is not app-vite).
-- Broad frontend engineering with no Quasar surface — `$alaa-frontend-developer`.
-- Backend-only or infra-only tasks.
+Do not use for plain Vue/Vite without Quasar CLI (`@quasar/vite-plugin` is not app-vite), broad non-Quasar frontend work (use `$alaa-frontend-developer`), or backend/infra-only tasks.
 
 ## Final response contract
 
-Report: what the repo showed (installed line, modes, blockers); which exact-API or official source was queried when syntax mattered; what you changed or recommend and why it is safe on the repo's line; validation commands actually run with outcomes; what remains (deferred modes, AEs, unverified claims). For migrations, report per mode. Never claim a check passed that did not run.
+Report repo evidence (installed line, modes, blockers); exact-API/official source queried when syntax mattered; safe line-specific change/recommendation and rationale; commands actually run/outcomes; deferred modes, AEs, and unverified claims. For migrations, report each mode. Never claim an unrun check passed.

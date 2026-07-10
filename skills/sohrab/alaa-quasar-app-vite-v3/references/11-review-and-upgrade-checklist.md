@@ -1,19 +1,21 @@
-# Review and Upgrade Checklist
+# Review and upgrade checklist
 
-Use this checklist for code reviews, planning, or migration readiness reviews.
+Use for reviews, plans, and migration readiness.
 
-## 1. Fast repository scan
+## Contents
+Repository scan · v2 safety · v3 readiness · SSR · PWA · tests · canonical deltas · migration template.
 
-- [ ] Package manager identified from lockfile.
+## 1. Repository scan
+- [ ] Lockfile identifies package manager.
 - [ ] `@quasar/app-vite` version identified.
 - [ ] `quasar` UI version identified.
 - [ ] `vue` and `vue-router` versions identified.
-- [ ] Supported modes identified: SPA, PWA, SSR, Capacitor, Electron, BEX.
+- [ ] Modes identified: SPA, PWA, SSR, Capacitor, Electron, BEX.
 - [ ] `quasar.config.*` read.
-- [ ] `potential-bugs.md` checked when present and relevant.
-- [ ] Existing CI/test scripts identified.
+- [ ] Relevant `potential-bugs.md` checked when present.
+- [ ] CI/test scripts identified.
 
-For any nontrivial task, emit a concise assessment before the plan or implementation:
+Before any nontrivial plan/implementation, emit:
 
 ```md
 Repo assessment:
@@ -38,79 +40,72 @@ v3-readiness notes:
 ```
 
 ## 2. v2 production safety
-
 - [ ] No accidental app-vite v3 upgrade.
 - [ ] No unreviewed lockfile churn.
-- [ ] No new `vite.config.*` in Quasar CLI app.
+- [ ] No new `vite.config.*` in a Quasar CLI app.
 - [ ] No generated `.quasar/` edits.
-- [ ] No new browser-only code in SSR server path.
+- [ ] No browser-only code in SSR server paths.
 - [ ] No client-exposed secrets.
 - [ ] No global mutable user/request state.
-- [ ] Build/test commands are appropriate for installed mode(s).
+- [ ] Build/test commands match installed modes.
 
-## 3. v3-readiness checks
+## 3. v3 readiness
+- [ ] New imports prefer `@/` where supported.
+- [ ] No new `components/`, `stores/`, `pages/` aliases unless local compatibility requires them.
+- [ ] Touched legacy aliases are documented migration debt.
+- [ ] Env access is direct/static/codemod-friendly.
+- [ ] v2 `process.env.*` is neither destructured nor dynamically indexed.
+- [ ] v3-only syntax stays on a migration branch/plan.
+- [ ] `#q-app/wrappers` -> `#q-app` is noted, not forced on unsupported v2.
+- [ ] Custom PWA SW can move to `src-pwa/sw/` during migration.
+- [ ] Node/runtime requirements checked before v3.
+- [ ] `vue-router` requirements checked before v3/file routing.
 
-- [ ] New source imports prefer `@/` where repo supports it.
-- [ ] No new old-alias imports like `components/`, `stores/`, `pages/` unless preserving local convention is necessary.
-- [ ] Existing old-alias imports are documented as migration debt if touched.
-- [ ] Env usage is direct/static and easy to codemod.
-- [ ] `process.env.*` v2 constants are not destructured or dynamically indexed.
-- [ ] Any v3-only syntax is isolated to a migration branch or plan.
-- [ ] `#q-app/wrappers` to `#q-app` migration is noted but not forced on v2 unless supported.
-- [ ] PWA custom service worker layout is ready to move to `src-pwa/sw/` during v3 migration.
-- [ ] Node/runtime constraints are checked before v3.
-- [ ] `vue-router` constraints are checked before v3/file-based routing.
-
-## 4. SSR checklist
-
-- [ ] No `window`, `document`, `localStorage`, `sessionStorage`, `navigator` outside client-only guards or mounted hooks.
-- [ ] Factories used for API clients with request-specific headers/cookies.
+## 4. SSR
+- [ ] `window`, `document`, `localStorage`, `sessionStorage`, `navigator` appear only behind client guards/mounted hooks.
+- [ ] API-client factories carry request headers/cookies.
 - [ ] Pinia/router/app instances are per request.
 - [ ] Hydration-sensitive values are deterministic or client-only.
-- [ ] SEO meta handling uses Quasar/Vue-safe APIs.
-- [ ] Server assets and runtime secrets stay server-side.
+- [ ] Meta uses Quasar/Vue-safe APIs.
+- [ ] Server assets and runtime secrets remain server-side.
 
-## 5. PWA checklist
-
-- [ ] Service worker and main-thread registration code are separated.
+## 5. PWA
+- [ ] SW and main-thread registration are separate.
 - [ ] Private/auth/payment APIs are not cached by default.
-- [ ] Large VOD/media assets are not blindly precached.
+- [ ] Large VOD/media is not blindly precached.
 - [ ] Update UX is defined.
 - [ ] Offline UX is defined.
-- [ ] Lighthouse/PWA audit is run on production build when relevant.
+- [ ] Relevant production build gets Lighthouse/PWA audit.
 
-## 6. Testing checklist
-
-- [ ] Lint command exists or repo convention documented.
-- [ ] Typecheck command exists for TypeScript repos.
+## 6. Tests
+- [ ] Lint exists or convention is documented.
+- [ ] TS repos typecheck.
 - [ ] Unit tests cover changed logic.
-- [ ] Component tests mount Quasar plugins where needed.
-- [ ] E2E smoke tests cover affected critical flow when practical.
-- [ ] Mode builds run for each affected mode.
+- [ ] Component tests mount required Quasar plugins.
+- [ ] Practical E2E smoke covers affected critical flow.
+- [ ] Every affected mode builds.
 
-## 7. Verified v2 -> v3 breaking-change deltas (authoritative)
+## 7. Canonical v2 -> v3 deltas
+Verified against the official Quasar CLI with Vite upgrade guide (2026-06-16 snapshot, reconfirmed for stable `3.0.1` on 2026-07-08); refresh for version-sensitive work. v3 has been stable since 3.0.1 (2026-07-07). Use with `10-v2-to-v3-migration.md`.
 
-This is the canonical delta list for this pack. Verified against the official Quasar CLI with Vite upgrade guide (snapshot 2026-06-16, re-confirmed against the stable `3.0.1` guide on 2026-07-08; re-verify for version-sensitive work). v3 is stable since `3.0.1` (2026-07-07) — use this list to execute migrations planned via `10-v2-to-v3-migration.md` and to maintain v3 repos.
-
-- Wrapper import: `#q-app/wrappers` -> `#q-app` (global search/replace; affects `defineConfig`, `defineBoot`, `defineRouter`, `defineStore`, `defineSsrMiddleware`, `definePreFetch`).
-- `quasar.config` extensions: `.js`/`.ts` only (`.cjs`/`.mjs`/`.cts`/`.mts` dropped).
-- Quasar constants: `process.env.{DEV,PROD,DEBUGGING,MODE,TARGET,CLIENT,SERVER}` -> `import.meta.env.QUASAR_{DEV,PROD,DEBUG,MODE,TARGET,CLIENT,SERVER}` (same `QUASAR_` prefix pattern; confirm exact names against the upgrade guide if in doubt).
-- Env config: `build.envFolder`/`build.envFiles` -> `build.env.folder`/`build.env.file`; new `build.env.clientPrefix` (default `'QCLI_'`; do not use `'QUASAR_'`). Only client-prefixed vars reach the client bundle.
-- Define: `build.rawDefine` -> `build.define` (non-string values are auto-`JSON.stringify`ed, like a friendlier Vite `define`; wrap string literals yourself, e.g. `JSON.stringify('1.0.0')`); `build.env` -> `build.defineEnv` (sugar that always stringifies and prefixes keys with `import.meta.env.`).
-- Defaults: `build.vueOptionsAPI` now `false`; `build.analyze` removed (use `rollup-plugin-visualizer`); `build.polyfillModulePreload` removed.
-- Path aliases: only `@/` remains (-> `/src`). `src/`->`@/`, `components/`->`@/components/`, `layouts/`->`@/layouts/`, `pages/`->`@/pages/`, `assets/`->`@/assets/`, `boot/`->`@/boot/`, `stores/`->`@/stores/`, `app/`->`@/../`.
-- SSR: scaffold picks Hono / Express / Fastify / Koa; new `/src-ssr/server-assets`; middleware hook `serve.error()` -> `serve.devError()`.
-- PWA: custom SW moves to `/src-pwa/sw/`; config key `sourceFiles.pwaServiceWorker` defaults to `'src-pwa/sw/custom-sw'`.
-- BEX: requires `/src-bex/package.json` (`"type": "module"`); defaults to the `chrome` target.
+- Imports: `#q-app/wrappers` -> `#q-app` globally, including `defineConfig`, `defineBoot`, `defineRouter`, `defineStore`, `defineSsrMiddleware`, `definePreFetch`.
+- Config extensions: `.js`/`.ts` only; `.cjs`/`.mjs`/`.cts`/`.mts` dropped.
+- Constants: `process.env.{DEV,PROD,DEBUGGING,MODE,TARGET,CLIENT,SERVER}` -> `import.meta.env.QUASAR_{DEV,PROD,DEBUG,MODE,TARGET,CLIENT,SERVER}`; confirm doubtful names against the guide.
+- Env: `build.envFolder`/`build.envFiles` -> `build.env.folder`/`build.env.file`; `build.env.clientPrefix` defaults `'QCLI_'`, never `'QUASAR_'`; only client-prefixed vars enter the bundle.
+- Define: `build.rawDefine` -> `build.define` (non-strings auto-`JSON.stringify`; wrap string literals, e.g. `JSON.stringify('1.0.0')`); v2 `build.env` injection -> `build.defineEnv` (always stringifies and prefixes `import.meta.env.`).
+- Defaults/removals: `build.vueOptionsAPI` now `false`; remove `build.analyze` (use `rollup-plugin-visualizer`) and `build.polyfillModulePreload`.
+- Aliases: only `@/` -> `/src`; map `src/`->`@/`, `components/`->`@/components/`, `layouts/`->`@/layouts/`, `pages/`->`@/pages/`, `assets/`->`@/assets/`, `boot/`->`@/boot/`, `stores/`->`@/stores/`, `app/`->`@/../`.
+- SSR: select Hono/Express/Fastify/Koa; add `/src-ssr/server-assets`; `serve.error()` -> `serve.devError()`.
+- PWA: custom SW -> `/src-pwa/sw/`; `sourceFiles.pwaServiceWorker` defaults `'src-pwa/sw/custom-sw'`.
+- BEX: `/src-bex/package.json` with `"type": "module"`; default target `chrome`.
 - Capacitor: v4 and below dropped; `capacitor.config.json` -> `capacitor.config.ts`/`.js` via `defineCapacitorConfig()`.
-- Electron: packager v18 and below dropped; preload `import { quasarRuntime } from '#q-app/electron/preload'`, preload files `.cjs`; new `/src-electron/electron-assets`.
-- Boot `redirect()` must return immediately after the call (may be async, but return right after).
-- App Extensions: v2 support removed (new Index API); `quasar <ext-id>` -> `quasar run <ext-id>`.
-- Per-mode dependency isolation: mode deps install in `/src-*` folders; pnpm v11 needs `allowBuilds: { rolldown: true, unrs-resolver: true }`.
-- Engines/peers: Node 22+; peers `quasar ^2.16.0`, `vue ^3.2.29`, `vue-router >= 5`, `pinia ^2 || ^3`. Under the hood: Vite 8 + Rolldown.
+- Electron: packager <=18 dropped; preload imports `{ quasarRuntime }` from `#q-app/electron/preload`, preload is `.cjs`, assets move to `/src-electron/electron-assets`.
+- Boot: call `redirect()` and return immediately; async is allowed, later execution is not.
+- AEs: v2 support removed/new Index API; `quasar <ext-id>` -> `quasar run <ext-id>`.
+- Mode isolation: deps install under `/src-*`; pnpm v11 needs `allowBuilds: { rolldown: true, unrs-resolver: true }`.
+- Engines/peers: Node 22+; `quasar ^2.16.0`, `vue ^3.2.29`, `vue-router >= 5`, `pinia ^2 || ^3`; Vite 8 + Rolldown underneath.
 
 ## 8. Migration plan template
-
 ```md
 # app-vite v3 Migration Plan
 

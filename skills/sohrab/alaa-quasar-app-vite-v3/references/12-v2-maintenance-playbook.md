@@ -1,44 +1,38 @@
-# Quasar app-vite v2 Production + v3-Ready Playbook
+# Quasar app-vite v2 production + v3-ready playbook
 
-Use this reference when working on a Quasar CLI with Vite project for Alaa that is **still on the app-vite v2 maintenance line**. Since `3.0.1` (2026-07-07) v3 is the stable production line: the "v3 migration notes" this playbook teaches you to leave behind are no longer future hedges — they are the exact worklist for a migration scheduled via `10-v2-to-v3-migration.md`.
+Use for Alaa Quasar CLI + Vite repos still on v2 maintenance. Since v3.0.1 (2026-07-07), v3 is stable; readiness notes here are the worklist for a dedicated `10-v2-to-v3-migration.md` migration.
 
-## 0. Compatibility policy and agent implementation rules
+## Contents
 
-Some v3-ready changes conflict with a v2 runtime. When they conflict, **production correctness wins**.
+Compatibility · packages · config · aliases · env · boot · routing/state · components/assets/styles · validation.
 
-- On app-vite v2, use syntax that actually works on that repo; prepare for v3 by reducing migration surface, not by prematurely applying v3-only syntax.
-- Add a v3 migration note in docs/plans when a change cannot be made safely on v2.
-- Keep new abstractions small, testable, and tree-shaking-friendly.
+## 0. Compatibility and implementation
 
-Correct for v2 production (and the v3 migration note to leave behind):
+When v2 runtime and v3 readiness conflict, production correctness wins: use installed-line syntax; reduce future surface instead of applying v3-only code; record unsafe deferrals in docs/plans; keep abstractions small, testable, tree-shakable.
 
 ```ts
 if (process.env.CLIENT) { /* browser-only */ }
-// V3 migration note: becomes `import.meta.env.QUASAR_CLIENT` during the app-vite v3 migration.
+// V3 migration: use import.meta.env.QUASAR_CLIENT.
 ```
 
-Wrong on a v2 repo (the v3 form is not injected, so it can break production):
+Never use the uninjected v3 form in v2:
 
 ```ts
 if (import.meta.env.QUASAR_CLIENT) { /* may break v2 */ }
 ```
 
-Agent implementation rules:
+Rules:
 
-- Prefer TypeScript if the repo uses it; do not convert a JS repo without explicit scope. Preserve existing lint/format conventions.
-- Use the wrapper import that matches the installed app-vite major (`#q-app/wrappers` on v2, `#q-app` on v3).
-- Keep mode-specific code in its official folder: PWA `src-pwa/`, SSR `src-ssr/`, Capacitor `src-capacitor/`, Electron `src-electron/`, BEX `src-bex/`.
-- Boot files only for init/plugin wiring/cross-cutting services. Prefer per-request API-client factories over mutable global singletons when SSR exists or may exist.
-- Keep service-worker code isolated from main-thread code. Prefer behavior-focused tests over implementation-detail snapshots.
-- No broad rewrites: preserve local architecture; make minimal, clean, validated changes.
+- Prefer TS only when the repo does; never convert JS without scope. Preserve lint/format.
+- Match wrapper to major: v2 `#q-app/wrappers`, v3 `#q-app`.
+- Keep modes in `src-pwa/`, `src-ssr/`, `src-capacitor/`, `src-electron/`, `src-bex/`.
+- Boot files own init/plugin/cross-cutting wiring, not business logic. For current/potential SSR, prefer request-scoped API-client factories over mutable globals.
+- Isolate SW from main thread; prefer behavior tests to implementation snapshots.
+- Preserve architecture; make minimal, clean, validated changes—no broad rewrites.
 
-## 1. Package and dependency policy
+## 1. Packages
 
-### Production default
-
-For existing production apps, stay on the installed `@quasar/app-vite` v2 line unless the user explicitly asks for migration. Prefer the latest patch/minor in the v2 line only after reading release notes and running validation.
-
-Recommended check sequence:
+Existing production stays on installed v2 unless migration is explicit. Upgrade within v2 only after release-note review and validation.
 
 ```bash
 cat package.json
@@ -46,78 +40,43 @@ pnpm why @quasar/app-vite || yarn why @quasar/app-vite || npm ls @quasar/app-vit
 quasar info || pnpm quasar info || npx quasar info
 ```
 
-### Do not confuse these packages
-
-Correct inside Quasar CLI project:
+Quasar CLI app—correct:
 
 ```json
-{
-  "devDependencies": {
-    "@quasar/app-vite": "^2.6.2"
-  }
-}
+{ "devDependencies": { "@quasar/app-vite": "^2.6.2" } }
 ```
 
-Wrong inside Quasar CLI project when the project is not plain Vue/Vite:
+Not a CLI replacement—wrong unless this is plain Vue/Vite:
 
 ```json
-{
-  "devDependencies": {
-    "@quasar/vite-plugin": "latest"
-  }
-}
+{ "devDependencies": { "@quasar/vite-plugin": "latest" } }
 ```
 
-`@quasar/vite-plugin` is for embedding Quasar into a normal Vite app. It is not a replacement for the app CLI package in a Quasar CLI project.
+`@quasar/vite-plugin` embeds Quasar in ordinary Vite; it does not replace app CLI.
 
-## 2. quasar.config rules
+## 2. `quasar.config`
 
-Quasar CLI owns the Vite config. Do not create `vite.config.ts` unless the repository is not a Quasar CLI app.
-
-Correct:
+Quasar CLI owns Vite; do not add `vite.config.ts` unless this is not a CLI app.
 
 ```ts
-// quasar.config.ts
+// correct v2: quasar.config.ts
 import { defineConfig } from '#q-app/wrappers'
 
-export default defineConfig((ctx) => ({
-  build: {
-    extendViteConf(viteConf) {
-      // minimal Vite-level change here
-    }
-  }
+export default defineConfig(() => ({
+  build: { extendViteConf(viteConf) { /* minimal Vite change */ } }
 }))
 ```
 
-For app-vite v3 migration this import may become `#q-app`. Do not change it in a v2 repo unless the current installed app-vite version supports it and validation passes.
-
-Wrong:
-
 ```ts
-// vite.config.ts in a Quasar CLI app
-export default defineConfig({
-  plugins: [vue(), quasar()]
-})
+// wrong in Quasar CLI: vite.config.ts
+export default defineConfig({ plugins: [vue(), quasar()] })
 ```
 
-## 3. Alias policy
+Migration may change the import to `#q-app`; never do so on v2 unless installed support and validation prove it.
 
-### v2 reality
+## 3. Aliases
 
-Existing app-vite v2 projects often use Quasar folder aliases:
-
-- `src`
-- `app`
-- `components`
-- `layouts`
-- `pages`
-- `assets`
-- `boot`
-- `stores`
-
-### v3-ready direction
-
-For new source imports, prefer `@/` if supported by the repo or if safely added as an alias in v2:
+v2 commonly has `src`, `app`, `components`, `layouts`, `pages`, `assets`, `boot`, `stores`. Prefer `@/` for new imports only when already supported or safely added in v2:
 
 ```ts
 import MainLayout from '@/layouts/MainLayout.vue'
@@ -125,7 +84,7 @@ import LoginPage from '@/pages/auth/LoginPage.vue'
 import { useUserStore } from '@/stores/user'
 ```
 
-Avoid new code with old aliases:
+Avoid adding legacy imports:
 
 ```ts
 import MainLayout from 'layouts/MainLayout.vue'
@@ -133,168 +92,94 @@ import LoginPage from 'pages/auth/LoginPage.vue'
 import { useUserStore } from 'stores/user'
 ```
 
-### Temporary bridge
+Large v2 repos may keep old aliases temporarily; mark migration debt and add no more.
 
-If v2 codebase is large, you may temporarily keep old aliases to avoid a big-bang migration. Mark this as migration debt and do not add more old-style imports.
+## 4. Compile-time env
 
-## 4. Environment variables and compile-time constants
-
-### v2-compatible rule
-
-If the project is app-vite v2 and it already uses `process.env`, use direct static access only:
+On v2, use direct static access:
 
 ```ts
-if (process.env.PROD) {
-  // production-only logic
-}
-
-if (process.env.CLIENT) {
-  // browser-only logic
-}
+if (process.env.PROD) { /* production */ }
+if (process.env.CLIENT) { /* browser */ }
 ```
 
-Wrong in v2:
+Never destructure, dynamically index, or log the object; replacements/tree-shaking/runtime can fail:
 
 ```ts
 const { PROD } = process.env
-const key = 'PROD'
-process.env[key]
+const key = 'PROD'; process.env[key]
 console.log(process.env)
 ```
 
-These patterns are not statically replaceable and may break tree-shaking or runtime behavior.
-
-### v3 migration target
-
-During app-vite v3 migration, Quasar constants move to `import.meta.env.QUASAR_*`:
+Migration target: Quasar constants move to `import.meta.env.QUASAR_*`.
 
 ```ts
-if (import.meta.env.QUASAR_PROD) {
-  // production-only logic
-}
-
-if (import.meta.env.QUASAR_CLIENT) {
-  // browser-only logic
-}
+if (import.meta.env.QUASAR_PROD) { /* production */ }
+if (import.meta.env.QUASAR_CLIENT) { /* browser */ }
 ```
 
-Use the repository version to decide what to write today.
-
-### Public/private env rule
-
-Client-exposed env vars are public. Never place API secrets, service credentials, private tokens, or signing keys in client env.
-
-Correct:
+Client env is public: never include API secrets, service credentials, private tokens, signing keys.
 
 ```env
+# correct
 QCLI_PUBLIC_API_BASE_URL=https://api.example.com
-```
-
-Wrong:
-
-```env
+# wrong
 QCLI_STRIPE_SECRET_KEY=sk_live_...
 QCLI_DB_PASSWORD=...
 ```
 
-Always keep real `.env` files out of git and maintain `.env.example` or `.env.template` with empty/dummy values.
+Git-ignore real `.env`; maintain `.env.example`/`.env.template` with empty/dummy values.
 
 ## 5. Boot files
 
-Use boot files for:
-
-- registering plugins
-- wiring API clients
-- configuring i18n
-- router guards
-- Quasar plugin initialization
-
-Avoid:
-
-- fetching user-specific data at module top level
-- storing per-request state in module singletons
-- browser-only API access during SSR
-- large unrelated business logic
-
-Correct (app-vite v2 — the production line):
+Use for plugin registration, API wiring, i18n, router guards, Quasar plugin init. Avoid top-level user fetches, per-request singleton state, SSR browser APIs, and unrelated business logic.
 
 ```ts
-// src/boot/api.ts
+// v2 src/boot/api.ts
 import { defineBoot } from '#q-app/wrappers'
 import { createApiClient } from '@/services/api/createApiClient'
 
 export default defineBoot(({ app, ssrContext }) => {
-  const api = createApiClient({ ssrContext })
-  app.config.globalProperties.$api = api
+  app.config.globalProperties.$api = createApiClient({ ssrContext })
 })
 ```
 
-In app-vite v2 the wrapper is `#q-app/wrappers` (not the legacy `quasar/wrappers`). During the v3 migration the import becomes `#q-app` — do not switch it on a v2 repo. The boot params (`app`, `router`, `store`, `ssrContext`, `redirect`, and in v3 also `urlPath`/`publicPath`) are documented in `22-cli-cookbook-and-examples.md`.
+v2 uses `#q-app/wrappers`, not legacy `quasar/wrappers`; migration uses `#q-app`, never early. `22-cli-cookbook-and-examples.md` documents `app`, `router`, `store`, `ssrContext`, `redirect`, plus v3 `urlPath`/`publicPath`.
 
-## 6. Routing and code-splitting
+## 6. Routing and state
 
-For traditional route files, lazy-load pages/layouts unless the repo's convention says otherwise:
+Lazy-load traditional layouts/pages unless local convention differs:
 
 ```ts
-const routes = [
-  {
-    path: '/',
-    component: () => import('@/layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('@/pages/IndexPage.vue') }
-    ]
-  }
-]
+const routes = [{
+  path: '/',
+  component: () => import('@/layouts/MainLayout.vue'),
+  children: [{ path: '', component: () => import('@/pages/IndexPage.vue') }]
+}]
 ```
 
-Do not introduce filename-based routing in a production v2 app unless explicitly requested and supported by the installed versions. Treat filename-based routing as a v3 evaluation/migration topic.
+Do not introduce filename routing in production v2 unless explicit and installed versions support it; evaluate during v3 migration.
 
-## 7. Pinia/state policy
-
-- Prefer Pinia for shared state.
-- Store user/request-specific state in store instances, not module-level mutable variables.
-- For SSR, ensure each request gets isolated app/store/router instances.
-- Do not access browser storage at store module import time.
-
-Wrong:
+Prefer Pinia. Keep user/request state in store instances; SSR app/store/router must be per request; never read browser storage during store import.
 
 ```ts
-// module-level user data leaks across SSR requests
+// wrong: leaks across SSR requests
 let currentUser: User | null = null
-```
 
-Correct:
-
-```ts
+// correct
 export const useUserStore = defineStore('user', {
   state: () => ({ currentUser: null as User | null })
 })
 ```
 
-## 8. Components and composables
+## 7. Components, assets, styles
 
-- Use Composition API for new code unless the repo is Options API-heavy and consistency requires otherwise.
-- Keep components focused: presentation in components, data orchestration in composables/stores/services.
-- Avoid hardcoding Quasar mode checks throughout UI; centralize where it remains compile-time safe.
-- Use Quasar components idiomatically (`q-page`, `q-layout`, `q-form`, `q-table`) but keep business components independent where possible.
+- New code uses Composition API unless Options-heavy consistency requires otherwise; components present, composables/stores/services orchestrate.
+- Centralize mode checks where compile-time safe; use `q-page`, `q-layout`, `q-form`, `q-table` idiomatically while keeping business components independent where practical.
+- When supported, prefer `<img src="~@/assets/logo.svg" alt="Alaa" />`; avoid new `~assets/...`.
+- Component-local concerns stay scoped/CSS-variable/Quasar-Sass-based per convention, not global CSS.
 
-## 9. Assets and styles
-
-For v3-ready imports, prefer `@/assets` paths when the repo supports it:
-
-```vue
-<template>
-  <img src="~@/assets/logo.svg" alt="Alaa" />
-</template>
-```
-
-Avoid new `~assets/...` references when preparing for v3.
-
-Do not add global CSS for component-local concerns. Use scoped styles, CSS variables, or Quasar Sass variables according to project convention.
-
-## 10. Validation checklist
-
-Minimum validation after code changes:
+## 8. Validation
 
 ```bash
 <pm> run lint
@@ -303,7 +188,7 @@ Minimum validation after code changes:
 <pm> run build
 ```
 
-If modes exist:
+When relevant modes exist:
 
 ```bash
 <pm> quasar build -m pwa
@@ -311,4 +196,4 @@ If modes exist:
 <pm> quasar build -m capacitor -T android
 ```
 
-Run only relevant commands when time/tooling is limited, and report exactly what was not run.
+When constrained, run only relevant commands and state exactly what was skipped.
