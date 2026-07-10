@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Project Constitution"
   short_description: "Generate and govern project constitutions"
-  default_prompt: "Use $alaa-project-constitution to create or update this repository's root CONSTITUTION.md from constitution-template.md."
+  default_prompt: "Use $alaa-project-constitution to create or update root CONSTITUTION.md from constitution-template.md, ask only essential unresolved decisions, finalize and bind if none are deferred, otherwise leave a draft with exact next steps."

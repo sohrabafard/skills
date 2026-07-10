@@ -17,12 +17,14 @@ A thin charter owns:
 - durable principles and ownership boundaries;
 - the canonical-source registry and incorporation rules;
 - change-risk classification and constitutional gates;
-- ratification, amendment, exception, and periodic-review rules;
-- agent binding status.
+- ratification effect, amendment, exception, and periodic-review rules.
 
 It does not reproduce exact wire formats, routes, headers, queues, event/error catalogs,
 environment keys, metric names, thresholds, command catalogs, or long runbook procedures.
 Those remain with their canonical owners.
+
+Binding delivery remains external to the constitution: AGENTS.md and CLAUDE.md point to the
+file, while CONSTITUTION.md contains no adapter status, import syntax, or runtime instructions.
 
 ### FULL_CHARTER
 
@@ -46,6 +48,10 @@ Classify every material source:
 For each source record its topic, owner, precedence, freshness rule, and what the
 constitution intentionally does not duplicate. Two sources must not both claim canonical
 ownership of the same detail. Record overlap as drift and resolve it before ratification.
+
+Record authority/approval status independently from classification. “Canonical” means the
+source owns a topic; it does not mean a human ratified it. A source may be canonical and
+active while its approver roster or formal ratification remains pending.
 
 ## Upstream kit/framework consumer rule
 
@@ -95,9 +101,9 @@ Surface conflicts and use its amendment or exception process.
 ### DRAFT or NEEDS_REVIEW
 
 ```text
-Read CONSTITUTION.md before work as a non-binding governance proposal. Existing ratified
-canonical sources remain in force. Surface conflicts and do not present the draft as
-approved policy.
+Read CONSTITUTION.md before work as a non-binding governance proposal. Existing canonical
+sources remain authoritative under their current status. Surface conflicts and do not
+present the draft as approved policy.
 ```
 
 ### SUPERSEDED

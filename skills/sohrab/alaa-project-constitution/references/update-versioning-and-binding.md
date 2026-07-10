@@ -70,13 +70,15 @@ weaken a constitutional gate; use its amendment or exception process.
 Replace the path with the selected canonical filename. Do not use Markdown import syntax as
 a substitute for the explicit read instruction unless the target agent runtime documents it.
 
-The snippet above is for status `BINDING` only. For `DRAFT` or `NEEDS_REVIEW`, the adapter
-must instead call the constitution a non-binding proposal/read context and say that existing
-ratified canonical sources remain in force. For `SUPERSEDED`, remove the active reference or
-point it to the successor and mark the old document inactive.
+The snippet above is for status `BINDING` only. For a new `DRAFT` or `NEEDS_REVIEW` result,
+do not add or update a constitution adapter. Leave unrelated AGENTS.md content untouched and
+report binding as deferred. For `SUPERSEDED`, remove the active reference or point it to the
+successor and mark the old document inactive.
 
 Codex loads a root-to-leaf AGENTS.md chain. Nested guidance may add stricter scoped rules;
 it must not silently weaken the root constitution. Report conflicting nested instructions.
+Place the root adapter within the first 8 KiB and keep the adapter itself under 1.5 KiB so
+it remains visible under portable instruction budgets.
 
 ## Thin CLAUDE.md binding
 
@@ -97,9 +99,11 @@ If CLAUDE.md already imports AGENTS.md, keep that import and add the constitutio
 an explicit binding rule. Avoid cycles such as AGENTS.md importing CLAUDE.md while CLAUDE.md
 imports AGENTS.md.
 
-The same status rule applies: importing a DRAFT is allowed for context, but its nearby
-adapter must explicitly say `non-binding`; it must not call the draft canonical approved
-policy.
+Place `@CONSTITUTION.md` within the first 20 lines and keep the binding section under 1.5 KiB.
+Imported content consumes startup context, so a THIN_CHARTER must pass the bundled size gate.
+
+Do not import a new DRAFT or NEEDS_REVIEW constitution. Add `@CONSTITUTION.md` only after
+explicit final ratification. Preserve unrelated imports and guidance.
 
 ## Existing canonical corpus and upstream contracts
 
@@ -113,9 +117,15 @@ policy.
 
 ## Binding edit policy
 
+Binding is a delivery concern, not a constitutional article. Never add an
+"AGENTS.md and CLAUDE.md Binding" section, import syntax, adapter placement, or binding audit
+results to CONSTITUTION.md; keep those details in the runtime guidance files and final report.
+
 - Default review-only tasks to drift reporting.
 - During authorized binding work, make the smallest patch that creates an unambiguous link.
 - Never copy the full constitution into AGENTS.md or CLAUDE.md.
 - Preserve existing guidance language and imports.
 - Report missing roots and nested conflicts.
+- Report portability/context-budget warnings without deleting unrelated guidance.
 - Do not claim binding is active until the selected path and import/read instruction agree.
+- Do not bind when owner decision state is DEFERRED or finalization outcome is DRAFT_UNBOUND.

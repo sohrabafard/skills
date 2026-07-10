@@ -14,10 +14,18 @@ set of files that can establish ownership, current behavior, and real validation
 Absence from a limited search is not evidence of absence. Record `UNKNOWN` when the
 inspection surface is incomplete.
 
-Before module selection, inventory the constitutional corpus and choose `THIN_CHARTER` or
+Before module selection, inventory the constitutional corpus in working state and choose `THIN_CHARTER` or
 `FULL_CHARTER`. Mature `CONTRACTS.md`, governance, ADR, policy, generated-contract, and
 upstream-framework sources normally require a thin charter that incorporates detail by
 reference instead of copying it.
+
+For every governing source, record two independent dimensions:
+
+- ownership classification (`LOCAL_CANONICAL`, `UPSTREAM_CANONICAL`, and so on);
+- authority/approval status proved by the source (`active`, `approved`, `ratified`,
+  `pending`, `unknown`, or another evidence-backed project term).
+
+Never infer ratification from canonical ownership, file naming, code enforcement, or age.
 
 ## High-signal inventory
 
@@ -77,6 +85,10 @@ Accept commands only when they are present in repository truth, such as:
 Do not invent a conventional command because it is common for the stack. If multiple
 commands disagree, report drift and prefer the executable/CI-owned path after verification.
 
+For a `THIN_CHARTER`, list an exact command only once. Prefer the canonical command owner
+(`Makefile`, manifest, CI, runbook) and use compact change-class references rather than
+repeating the same commands under every retained module and again in the validation matrix.
+
 ## Evidence ledger minimum
 
 For each binding rule with project-specific facts, capture:
@@ -87,5 +99,9 @@ For each binding rule with project-specific facts, capture:
 - freshness or last verification date;
 - confidence (`HIGH`, `MEDIUM`, `LOW`);
 - drift/TODO when sources disagree.
+
+Every binding rule that delegates to a contract, guidance file, skill, standard, or runbook
+must name it in the constitution's compact canonical-source list. Do not copy the working
+evidence ledger or source-role classification into the final document.
 
 Do not include secrets, raw logs, or personal/production data in the ledger.
