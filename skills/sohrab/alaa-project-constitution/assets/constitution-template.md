@@ -12,25 +12,80 @@ CANONICAL PATHS
 
 OPERATING MODES
 - CREATE: no prior constitution exists.
-- UPDATE: preserve prior governance and apply only supported normative deltas.
+- UPDATE: treat the existing constitution as the durable prior-decision record, preserve its
+  semantic intent, and apply only supported normative deltas. Do not regenerate from scratch
+  or ask the owner to repeat information already retained there.
 - AUDIT: report drift without editing.
 
 EVIDENCE WORKFLOW
 1. Inspect instructions and Git status; preserve unrelated work.
 2. In UPDATE mode, read the complete existing constitution before this template.
 3. Read this template completely.
-4. Inventory executable truth, canonical contracts/governance, architecture, tests, CI,
+4. Build a prior-decision map from the existing constitution: preserved principles, open
+   TODOs/proposals, exceptions, canonical sources, status/version, and missing provenance.
+5. Inventory executable truth, canonical contracts/governance, architecture, tests, CI,
    generators, runbooks, consumers, security boundaries, and upstream contracts.
-5. Build the evidence ledger, source-role map, module classification, decision gaps,
-   ratification evidence, and binding state as internal working data.
-6. Ask only essential unresolved owner decisions. A deferred answer forces
-   DRAFT/NON_BINDING and prevents new runtime bindings.
-7. Write from repository evidence; never invent facts, owners, limits, contracts, dates,
-   commands, or approval.
-8. Perform two writing passes, then a final constitutional compression pass.
-9. Bind AGENTS.md/CLAUDE.md externally only after BINDING is authorized.
-10. Validate the final document and bindings, then report authoring evidence in the final
+6. Infer the project's intent, owned outcomes, critical journeys, load-bearing qualities,
+   and plausible failure modes from current user context, prior governance, and repo truth.
+7. Investigate applicable cross-cutting risks and current authoritative domain guidance to
+   discover material candidate obligations beyond the user's wording.
+8. Build the evidence ledger, source-role map, module classification, candidate disposition,
+   decision gaps, ratification evidence, and binding state as internal working data.
+9. Ask only essential unresolved owner decisions. A deferred answer makes a new or already
+   non-binding result DRAFT/NON_BINDING and prevents new bindings. During an update to an
+   existing BINDING constitution, preserve that baseline and its adapters unchanged unless
+   the owner explicitly approves replacing it with a draft.
+10. Write binding rules only from repository evidence, still-valid prior governance, or
+   explicit owner decisions; never invent facts, limits, contracts, dates, or approval.
+11. Keep research-derived implementation ideas outside CONSTITUTION.md unless they become a
+   durable owner decision or are delegated to a named canonical source.
+12. Perform two writing passes, then a final constitutional compression pass.
+13. Bind AGENTS.md/CLAUDE.md externally only after BINDING is authorized.
+14. Validate the final document and bindings, then report authoring evidence in the final
     response—not inside CONSTITUTION.md.
+
+INTENT AND RISK DISCOVERY
+- Synthesize four claim classes separately: OBSERVED repository truth; INHERITED prior
+  governance; INFERRED_CANDIDATE risks or practices; OWNER_DECIDED policy.
+- Existing CONSTITUTION.md preserves only context that survived refinement. Never claim to
+  recover a prior chat message or discarded rationale; ask only if missing provenance changes
+  the policy outcome.
+- Write an internal intent statement covering users/consumers, owned outcome, critical user
+  and system journeys, runtime/data surfaces, trust boundaries, and load-bearing qualities.
+- Test each evidenced surface against applicable horizons: correctness/concurrency;
+  availability/overload; connectivity/offline/degraded use; data lifecycle/recovery;
+  security/privacy/abuse; performance/scale/cost; accessibility/localization/compatibility;
+  operations/change safety; and domain-specific continuity.
+- Use relevant counterfactuals such as peak load, concurrent writes, duplicate delivery,
+  dependency outage, restart, stale cache, network interruption, partial rollout, expired
+  identity, storage pressure, and rollback. Do not invent applicability.
+- Research only material gaps. Prefer current standards and official framework, database,
+  browser/platform, protocol, vendor, or regulator sources; then maintained upstream repos
+  and primary research. Use secondary articles only when primary evidence is insufficient.
+- Record source, verification date, applicability, and limitation. External knowledge can
+  reveal a risk or option; it does not prove current behavior or owner intent.
+- Disposition every candidate as REQUIRED_BY_EVIDENCE, OWNER_DECISION_REQUIRED,
+  DELEGATE_TO_CANONICAL_SOURCE, NON_CONSTITUTIONAL_FOLLOW_UP, NOT_APPLICABLE, or UNKNOWN.
+- Ask interactively when a credible choice changes a durable product promise, offline or
+  degraded behavior, security/privacy posture, data lifecycle, compatibility, cost/resource
+  commitment, or operational risk. Recommend one option from evidence and explain trade-offs.
+- Do not turn the result into a generic best-practice catalog. Keep only the smallest durable
+  rules that govern real project decisions, risks, amendments, or exceptions.
+
+INTERACTIVE OWNER DECISIONS
+- Inspect evidence and complete intent/risk discovery before asking anything.
+- Ask only a decision that materially changes project promises, authority, security/privacy,
+  data lifecycle, compatibility, cost, validation, exceptions, status, or ratification and
+  cannot be resolved from current evidence or still-valid prior governance.
+- Ask at most three questions per batch. Normally stop after two batches; if essential gaps
+  remain, record structured blocking TODOs and leave a DRAFT instead of extending the interview.
+- Use 2-3 mutually exclusive options. Put one evidence-backed recommendation first, explain
+  its project-specific reason and trade-off, and include `Decide later`.
+- If evidence cannot support a recommendation, recommend `Decide later` honestly.
+- Pause for the owner's answer; never select an option on the owner's behalf. A deferred or
+  unanswered decision leaves a new/non-binding result DRAFT and unbound. For an existing
+  BINDING baseline, preserve the canonical file, version, status, and adapters unchanged and
+  report the proposed delta outside it unless the owner explicitly chose replacement.
 
 FINAL DOCUMENT IS LAW, NOT AUTHORING TELEMETRY
 The final CONSTITUTION.md MUST contain only durable rules that materially guide project
@@ -105,6 +160,12 @@ canonical source.
 - INFRA_CI_RUNTIME
 - OBSERVABILITY_SOC
 - DOCS_GENERATED_AGENT_GUIDANCE
+
+CROSS-CUTTING COVERAGE GATE
+For every evidenced critical journey and high-risk owned surface, investigate the applicable
+intent/risk horizons above. Positive evidence may exclude a horizon; limited search may not.
+Every material candidate needs provenance and one disposition before drafting. These working
+classifications MUST NOT appear as a checklist, matrix, or research report in CONSTITUTION.md.
 
 MINIMUM FINAL STRUCTURE
 - One H1: project constitution title.

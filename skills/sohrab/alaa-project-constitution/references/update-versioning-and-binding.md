@@ -19,6 +19,13 @@ style. Build an impact map with:
 - TODOs/proposals/exceptions resolved, added, expired, or still open;
 - binding and documentation drift.
 
+Before asking the owner for context, build a prior-decision map from the existing
+constitution: durable intent, project-specific rules, open questions, proposals, exceptions,
+canonical-source pointers, version/status, and recorded rationale. Reuse that map so the
+owner does not have to repeat information already refined into the previous version. The
+prior constitution cannot recover discarded chat context; mark missing provenance as
+unknown and ask only when it changes the normative outcome.
+
 Preserve stable rule IDs, TODO IDs, ratification date, amendment history, and approved
 exceptions when still valid. Do not erase a prior agent's intentional concern merely because
 the new template organizes it differently.
@@ -40,9 +47,12 @@ Use the normative diff, not the file-size diff.
 - `PATCH`: clarifies wording or makes a rule more testable without changing obligations.
 - No bump: evidence review or formatting with no normative text change. Update review metadata.
 
-An unapproved PROPOSAL does not change the binding version until ratified. If a binding
-change lacks an approver, set status `NEEDS_REVIEW` and explain whether prior rules remain in
-force.
+An unapproved PROPOSAL does not change the binding version until ratified. If no binding
+baseline exists, a proposed constitution may use `NEEDS_REVIEW`. If a BINDING baseline
+exists, preserve that canonical file, version, status, and adapters unchanged; keep the
+unapproved delta in working state/final response or an owner-authorized separate proposal
+artifact until resolved. Do not demote the only canonical constitution merely because its
+proposed amendment lacks approval.
 
 ## Filename correction
 

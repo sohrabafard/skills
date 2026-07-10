@@ -98,7 +98,11 @@ Read CONSTITUTION.md before work. It is binding project policy within its ratifi
 Surface conflicts and use its amendment or exception process.
 ```
 
-### DRAFT or NEEDS_REVIEW
+### Existing DRAFT or NEEDS_REVIEW reference (diagnostic only)
+
+Do not create this adapter, substitute it for a BINDING adapter, or newly import a draft.
+The wording below is only for auditing or preserving a pre-existing non-binding reference
+when broader cleanup was not authorized:
 
 ```text
 Read CONSTITUTION.md before work as a non-binding governance proposal. Existing canonical

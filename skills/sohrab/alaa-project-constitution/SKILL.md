@@ -1,6 +1,6 @@
 ---
 name: alaa-project-constitution
-description: Create, update, audit, ratify, or bind a portable repository-root project constitution from constitution-template.md. Use when an agent must generate or maintain CONSTITUTION.md from repository evidence, ask only essential unresolved owner decisions through bounded multiple-choice questions with recommendations and a Decide later option, preserve and semantically version prior governance, select THIN_CHARTER versus FULL_CHARTER, distinguish canonical authority from ratification, prune irrelevant modules, run two-pass refinement, enforce context-budget and non-duplication gates, keep deferred drafts unbound, or automatically align thin AGENTS.md and CLAUDE.md bindings when all essential decisions are complete under the authorized launcher without changing application code.
+description: Create, update, audit, ratify, or bind a portable repository-root project constitution from constitution-template.md. Use when an agent must generate or maintain CONSTITUTION.md by preserving prior governance, inferring project intent from user and repository evidence, researching current domain risks and missing obligations, asking only essential unresolved owner decisions through bounded recommended choices, pruning irrelevant modules, selecting THIN_CHARTER versus FULL_CHARTER, distinguishing authority from ratification, refining twice, keeping deferred drafts unbound, or aligning thin AGENTS.md and CLAUDE.md bindings after authorized finalization without changing application code.
 ---
 
 # Alaa Project Constitution
@@ -8,10 +8,23 @@ description: Create, update, audit, ratify, or bind a portable repository-root p
 Create or update one evidence-backed project constitution. It becomes binding only when
 its status, binding effect, and ratification evidence agree.
 
+## When NOT to use
+
+- Do not use this skill to implement the technical practices it discovers; create or update
+  constitutional policy and report non-constitutional follow-ups only.
+- Do not use it as a generic architecture, security, performance, frontend, or operations
+  review when no constitution lifecycle action is requested.
+- Do not invent a missing root template unless the user explicitly asks to install or create
+  one; use the bundled asset only through the documented install path.
+
 ## Core contract
 
 - Treat the root template as the structure and policy-authoring contract.
 - Treat the existing constitution as prior governance, never as disposable generated text.
+- Treat the existing constitution as the durable record of prior project decisions and
+  context that survived refinement; reuse it before asking the owner to repeat information.
+- Never claim to recover prior prompt details that were not retained in the constitution or
+  another named source.
 - Treat UPDATE as evidence revalidation and focused delta maintenance, never regeneration.
 - Treat executable repository truth as authoritative for current behavior.
 - Detect the repository's existing constitutional corpus before authoring new policy.
@@ -28,13 +41,21 @@ its status, binding effect, and ratification evidence agree.
   decision-state metadata, and AGENTS.md/CLAUDE.md binding mechanics out of CONSTITUTION.md.
 - Treat upstream kit/framework contracts as versioned references, not consumer-local copy.
 - Use repository evidence or explicit owner decisions; never invent project facts.
+- Infer the project's owned outcomes and material failure modes, then research current
+  authoritative domain guidance to discover candidate obligations beyond the user's wording.
+- Keep `OBSERVED`, `INHERITED`, `INFERRED_CANDIDATE`, and `OWNER_DECIDED` claims distinct.
+- External knowledge may identify a risk or option; it does not prove current behavior or
+  authorize a new binding product, security, cost, privacy, or operational commitment.
 - Inspect evidence before asking anything. Ask only owner decisions that materially affect
-  scope, authority, risk, validation, exceptions, status, or ratification and cannot be
-  resolved from repository truth.
+  product promise, scope, authority, security/privacy, cost, data lifecycle, compatibility,
+  risk, validation, exceptions, status, or ratification and cannot be resolved from
+  repository truth or still-valid prior governance.
 - Ask bounded multiple-choice questions with one evidence-backed recommendation and a
   `Decide later` option. Never turn the template into a long interview.
-- Treat any `Decide later` answer as deferred: create a DRAFT/NON_BINDING constitution,
-  record a blocking decision TODO, and do not bind it to AGENTS.md or CLAUDE.md.
+- Treat any `Decide later` answer as deferred. For CREATE or an already non-binding baseline,
+  create DRAFT/NON_BINDING with a blocking TODO and no bindings. For an existing BINDING
+  baseline, preserve it and report the unresolved delta externally unless the owner explicitly
+  approves replacement with a draft.
 - Under the canonical launcher, treat completion of all essential decisions without any
   deferral as authorization to finalize and bind; do not ask a redundant approval question.
 - Keep only relevant conditional modules and remove irrelevant template content.
@@ -51,17 +72,19 @@ its status, binding effect, and ratification evidence agree.
    [references/interactive-decision-workflow.md](references/interactive-decision-workflow.md).
 3. For evidence discovery and module selection, read
    [references/evidence-and-module-selection.md](references/evidence-and-module-selection.md).
-4. When a prior constitution exists or guidance files must be bound, read
+4. For every CREATE/UPDATE operation, read
+   [references/intent-and-risk-discovery.md](references/intent-and-risk-discovery.md).
+5. When a prior constitution exists or guidance files must be bound, read
    [references/update-versioning-and-binding.md](references/update-versioning-and-binding.md).
-5. When the repository already has canonical governance/contracts or consumes an upstream
+6. When the repository already has canonical governance/contracts or consumes an upstream
    kit/framework, read
    [references/constitutional-corpus-and-upstream-contracts.md](references/constitutional-corpus-and-upstream-contracts.md).
-6. When rules depend on current vendor/model/framework/security standards, read
+7. When rules depend on current vendor/model/framework/security standards, read
    [references/freshness-source-map.md](references/freshness-source-map.md) and verify live
    authoritative sources when tools are available.
-7. For every CREATE/UPDATE/BIND operation, read
+8. For every CREATE/UPDATE/BIND operation, read
    [references/output-quality-and-context-budget.md](references/output-quality-and-context-budget.md).
-8. Use [assets/constitution-template.md](assets/constitution-template.md) only when the
+9. Use [assets/constitution-template.md](assets/constitution-template.md) only when the
    repository has no template and the user asked to install or create one.
 
 ## Path resolution
@@ -98,7 +121,10 @@ safe and reversible, prefer CREATE/UPDATE. Use AUDIT only for review/report-only
 4. Read the complete selected template.
 5. Record user-provided scope, owner decisions, desired status, path, and allowed files.
    Do not interpret an ordinary generation/update request as approval or ratification.
-6. If no template exists and template creation was not requested, stop with the missing
+6. In UPDATE mode, build a prior-decision map before searching for new policy: preserved
+   principles, open TODOs/proposals, exceptions, canonical-source pointers, status/version,
+   and any rule whose original rationale is no longer recoverable.
+7. If no template exists and template creation was not requested, stop with the missing
    path and offer the bundled asset as the next action.
 
 ### 2. Build the evidence ledger
@@ -132,7 +158,27 @@ Choose the constitution shape before module classification:
 
 Prefer `THIN_CHARTER` whenever a full document would restate canonical sources.
 
-### 3. Classify modules
+### 3. Infer project intent and expand the risk horizon
+
+Use the intent-and-risk discovery reference to synthesize the current request, prior
+constitution, repository truth, and current authoritative domain knowledge.
+
+1. Write an internal project-intent statement: owned outcome, users/consumers, critical
+   journeys, owned runtime/data surfaces, trust boundaries, and load-bearing qualities.
+2. Test each evidenced surface against applicable correctness/concurrency, availability,
+   overload, connectivity/offline, data-lifecycle, security/privacy, scale/cost,
+   accessibility, operations/change-safety, and domain-specific continuity horizons.
+3. Use counterfactual failure scenarios to find missing concerns, not to invent current
+   implementation or numeric requirements.
+4. Research a material gap with current primary/authoritative sources when available.
+   Record provenance, applicability, date, and uncertainty in working state.
+5. Disposition every candidate as evidence-required law, owner decision, canonical-source
+   delegation, non-constitutional follow-up, not applicable, or unknown.
+
+Do not write generic best-practice catalogs. A candidate becomes binding only through
+repository evidence, still-valid prior governance, or an explicit owner decision.
+
+### 4. Classify modules
 
 Use three states:
 
@@ -148,14 +194,15 @@ When `UPSTREAM_KIT_FRAMEWORK_CONTRACTS` applies, record the canonical upstream s
 consumer version pin, inherited/local ownership split, upgrade path, and conformance test.
 Do not copy the upstream contract into a locally editable consumer file.
 
-### 4. Resolve essential owner decisions interactively
+### 5. Resolve essential owner decisions interactively
 
 Build the decision-gap list only after repository reconnaissance. Ask no question whose
 answer is already evidenced, inherited from a still-valid prior constitution, safely
 omittable, or representable as a non-blocking factual TODO.
 
-- Ask at most three questions initially and one follow-up only when an answer creates a new
-  blocking contradiction. Never exceed four total.
+- Ask at most three questions per batch. Recompute the decision gaps after each answer batch;
+  normally stop after two batches, with one contradiction follow-up allowed. If more
+  essential gaps remain, leave a structured DRAFT rather than running an unbounded interview.
 - Use the runtime's structured question UI when available. Every question has 2-3 mutually
   exclusive choices, puts the recommended choice first with `(Recommended)`, explains the
   project-specific reason and trade-off, and includes `Decide later` (or the exact user-
@@ -171,7 +218,7 @@ omittable, or representable as a non-blocking factual TODO.
 Use the exact filter, question shape, budgets, and edge-case handling from the interactive
 decision reference.
 
-### 5. Writing pass 1
+### 6. Writing pass 1
 
 Create/update the selected output from the template.
 
@@ -181,6 +228,8 @@ Create/update the selected output from the template.
 - Preserve existing project-specific rules, ratification data, amendment history,
   exceptions, decisions, and TODO IDs unless evidence justifies changing them.
 - Fill retained sections with concrete, testable rules and real repository commands.
+- Add only intent-derived rules whose disposition is `REQUIRED_BY_EVIDENCE` or explicitly
+  `OWNER_DECIDED`; keep research notes and implementation follow-ups outside the constitution.
 - In THIN_CHARTER mode, incorporate detailed canonical sources by reference. Do not copy
   wire shapes, route/queue/header/error catalogs, env keys, metric names, thresholds, or
   long operating procedures into the constitution.
@@ -200,11 +249,13 @@ Create/update the selected output from the template.
   binding-status section to CONSTITUTION.md.
 - Do not present completion yet.
 
-### 6. Writing pass 2
+### 7. Writing pass 2
 
 Reopen and reread the entire drafted file from disk. Review it as independent work against:
 
 - the prior constitution and amendment history;
+- the project-intent statement, risk-horizon coverage, candidate dispositions, and research
+  provenance;
 - the root template and user request;
 - applicable AGENTS.md/CLAUDE.md and canonical docs;
 - manifests, code, tests, CI, generated outputs, and safe runtime evidence;
@@ -225,15 +276,19 @@ prevent a concrete failure, name a durable authority boundary, or govern amendme
 exceptions. Remove generation history, terminal/runtime mechanics, tutorial prose, and
 facts already owned by a canonical source.
 
-### 7. Finalize and bind conditionally
+### 8. Finalize and bind conditionally
 
 After Pass 2, use owner decision state as the branch; do not ask another confirmation.
 
 - COMPLETE: the canonical launcher plus completion of every essential question without
-  deferral is the explicit finalization decision. Record that evidence and answer summary
-  in amendment history, set BINDING, then align root bindings in the same run.
-- DEFERRED: set DRAFT/NON_BINDING, leave AGENTS.md and CLAUDE.md unbound to the draft,
-  and provide the exact follow-up prompt needed to resolve TODOs, ratify, and bind later.
+  deferral is the explicit finalization decision. Keep launcher/answer evidence in working
+  state and the final response, record only the durable normative change in any existing
+  amendment record, set BINDING, then align root bindings in the same run.
+- DEFERRED on CREATE or an already non-binding baseline: set DRAFT/NON_BINDING, leave
+  AGENTS.md and CLAUDE.md unbound to the draft, and provide the exact follow-up prompt.
+- DEFERRED while updating an existing BINDING constitution: preserve the binding baseline,
+  version, and adapters unchanged unless the owner explicitly approves replacing it with a
+  draft. Report the proposed delta and unresolved IDs outside the canonical file.
 - A different/noncanonical request does not imply this authorization; require explicit
   finalization intent or leave the result DRAFT.
 
@@ -258,7 +313,7 @@ Binding effect must match status:
 
 Use exact snippets and conflict rules from the update/binding reference.
 
-### 8. Validate
+### 9. Validate
 
 Run the bundled validator:
 
@@ -276,6 +331,10 @@ Also verify:
 - no template-only marker or unexplained `{{PLACEHOLDER}}` remains;
 - every TODO has stable ID, reason, owner, and blocking status;
 - retained modules and commands have repository evidence;
+- every material intent-derived candidate has a recorded disposition and provenance;
+- external research is not presented as proof of current behavior or owner approval;
+- each evidenced critical journey and high-risk surface received an applicable risk-horizon
+  review, with irrelevant horizons explicitly excluded in working state;
 - the constitution shape and canonical-source non-duplication boundary are explicit;
 - upstream contracts are referenced with provenance/version instead of copied locally;
 - the single footer contains version, status, ratification date, last-amended date, and last
@@ -306,6 +365,8 @@ safe document checks unless the user asks for deeper verification.
 - PATCH clarifies without changing required behavior.
 - Evidence refresh with no normative change does not require a version bump.
 - Unapproved policy changes remain PROPOSALs; they do not become binding through generation.
+- When a BINDING baseline exists, an unapproved proposal does not demote or replace it and
+  does not change its version; keep the proposal outside the canonical file until resolved.
 - DRAFT and NEEDS_REVIEW are always NON_BINDING; BINDING requires ratification evidence;
   SUPERSEDED is INACTIVE.
 
@@ -337,11 +398,14 @@ Lead with the outcome. Include:
 
 - mode, canonical path, status, binding effect, shape, and version;
 - detected project type and evidence summary;
+- inferred project intent, critical journeys, investigated risk horizons, and source-backed
+  candidate dispositions;
 - incorporated canonical sources and upstream contract pins;
 - included, removed, and unknown modules;
 - preserved and changed governance;
 - meaningful second-pass refinements;
 - unresolved TODOs, proposals, exceptions, and conflicts;
+- non-constitutional implementation or research follow-ups that were intentionally excluded;
 - questions asked, selected answers, recommendation reasons, and owner decision state;
 - automatic FINAL_BOUND or DRAFT_UNBOUND outcome and its evidence;
 - AGENTS.md/CLAUDE.md binding status;

@@ -8,11 +8,19 @@ set of files that can establish ownership, current behavior, and real validation
 1. Safe executable truth: routes, schemas, migrations, manifests, generated output, tests,
    CI definitions, task runners, and reproducible runtime inspection.
 2. Maintained canonical contracts, ADRs, architecture/security docs, and runbooks.
-3. Existing constitution and agent guidance.
-4. Comments, task notes, memory, examples, and external guidance.
+3. Existing constitution as prior governance and a durable record of retained owner
+   decisions; agent guidance as instruction evidence.
+4. Current standards, official vendor/framework/platform documentation, maintained upstream
+   repositories, and primary research as sources of candidate risks and practices—not proof
+   of project behavior or owner intent.
+5. Comments, task notes, memory, examples, and secondary external guidance.
 
 Absence from a limited search is not evidence of absence. Record `UNKNOWN` when the
 inspection surface is incomplete.
+
+After inventory, use `intent-and-risk-discovery.md` to investigate material requirements
+that may be absent from the current implementation and docs. Keep observed project facts,
+inherited governance, researched candidates, and owner decisions separately labeled.
 
 Before module selection, inventory the constitutional corpus in working state and choose `THIN_CHARTER` or
 `FULL_CHARTER`. Mature `CONTRACTS.md`, governance, ADR, policy, generated-contract, and

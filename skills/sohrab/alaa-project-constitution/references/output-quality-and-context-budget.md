@@ -15,7 +15,9 @@ forward-test failures into acceptance gates for the reusable system.
   ratification. Preserve an existing evidenced BINDING status; otherwise require an explicit
   approval decision or use DRAFT/NEEDS_REVIEW.
 - Ask explicit owner questions only after evidence discovery. A `Decide later` answer makes
-  owner decision state DEFERRED, forces DRAFT/NON_BINDING, and prevents agent-file binding.
+  owner decision state DEFERRED. It forces DRAFT/NON_BINDING for CREATE or an already
+  non-binding baseline; during an existing BINDING update it preserves the binding baseline
+  and adapters unchanged unless the owner explicitly approved replacement with a draft.
 
 ## Closed delegation
 
