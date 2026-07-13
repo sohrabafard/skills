@@ -1,6 +1,8 @@
 # Performance and Realtime
 
-Use this file for performance work, hydration cost, Web Vitals, memory leaks, and realtime UI behavior over WebSocket or SSE.
+Use this file for performance work, hydration cost, memory leaks, and realtime UI behavior over WebSocket or SSE.
+
+For Lighthouse scores, Core Web Vitals targets, metric-by-metric playbooks, and performance budgets, load `41-lighthouse-and-web-vitals.md` — it owns the scoring model; this file owns the bottleneck workflow and realtime rules.
 
 ## Performance workflow
 
@@ -92,6 +94,8 @@ Typical safe wins:
 
 ## Pairing guidance
 
+- Lighthouse scores, Web Vitals targets, and budgets:
+  - Also load `41-lighthouse-and-web-vitals.md`
 - Quasar component/layout-specific performance issues:
   - Pair with `$alaa-quasar-app-vite-v3`
 - Package-output or asset-contract performance regressions:

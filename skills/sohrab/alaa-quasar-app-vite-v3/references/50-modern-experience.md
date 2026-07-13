@@ -23,7 +23,7 @@ Standard Web Push is universal; iOS requires Home-Screen install + gesture. Supp
 
 Lazy route components are baseline; new convention-routed apps may consider `build.filenameBasedRouting` (vue-router v5). Chromium Speculation Rules prefetch/prerender likely next documents; it complements, never replaces, SW precache: speculation accelerates online navigation; SW guarantees offline/repeat. SW-controlled prefetch now traverses the fetch handler.
 
-Use same-document View Transitions for routes/shared elements; scroll-driven reveals only as Tier 3. Motion/taste: `$alaa-ui-ux-design-system` `references/70-motion-and-modern-css.md`. Quasar 2.19+ targets Baseline widely available—Chrome/Edge 111+, Firefox 114+, Safari/iOS 16.4+—so supported CSS Tier 1–2 includes container queries, `:has()`, nesting, `oklch`, `@starting-style`, and popover. Web Vitals: `$alaa-frontend-developer` `references/40-performance-and-realtime.md`.
+Use same-document View Transitions for routes/shared elements; scroll-driven reveals only as Tier 3. Motion/taste: `$alaa-ui-ux-design-system` `references/70-motion-and-modern-css.md`. Quasar 2.19+ targets Baseline widely available—Chrome/Edge 111+, Firefox 114+, Safari/iOS 16.4+—so supported CSS Tier 1–2 includes container queries, `:has()`, nesting, `oklch`, `@starting-style`, and popover. Web Vitals/Lighthouse scoring: `$alaa-frontend-developer` `references/41-lighthouse-and-web-vitals.md`.
 
 ## 4. Auth, offline, and gates
 

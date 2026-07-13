@@ -19,7 +19,7 @@ Extract from the request and the repo before proposing anything visual:
 - tone keywords (trustworthy, playful, premium, technical, calm, bold, ...)
 - density appetite (marketing-spacious vs dashboard-dense)
 - motion appetite (subtle / standard / expressive)
-- hard constraints: existing brand assets, Farsi/RTL requirement, dark-mode requirement, Tailwind vs Bootstrap, Quasar component set, accessibility level
+- hard constraints: existing brand assets, Farsi/RTL requirement, dark-mode requirement, Tailwind vs Bootstrap, Quasar component set, accessibility level, performance target (default: Lighthouse >= 90 mobile — a direction whose hero cannot be server-rendered and budget-fit is not shippable)
 
 Missing answers are decisions, not blanks: choose the most defensible default, state the assumption, and continue.
 

@@ -115,6 +115,8 @@ Apply these even when the user names only one surface:
   - Also load `references/80-icons-assets-and-imagery.md`. No emoji as UI icons; one icon family per product.
 - Any custom interactive widget, overlay, or SPA navigation flow:
   - Also load `references/85-accessibility-patterns.md`; native elements before ARIA.
+- Any hero, imagery, font, effect, or embed decision on a route that will be Lighthouse-scored:
+  - Design inside the performance budgets; the canonical scoring playbook is `$alaa-frontend-developer` `references/41-lighthouse-and-web-vitals.md` (target >= 90 mobile).
 - Any task that ends in shipped UI:
   - Run the gates in `references/90-quality-gates-and-review.md` before calling it done.
 - Any design decision that requires Vue/Quasar/Vite implementation, SSR safety, or verification planning:

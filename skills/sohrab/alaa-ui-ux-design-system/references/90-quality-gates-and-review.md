@@ -16,6 +16,7 @@ A design is not done while any of these fails. They are never traded for aesthet
 8. Tokens, not raw values, in components; one icon family; effects coherent with the declared style.
 9. No layout shift from media, fonts, async content, or hover states.
 10. RTL products: layout verified under `dir="rtl"` with real Farsi content.
+11. Performance-affecting design choices stay inside the Lighthouse budgets: the hero/LCP visual is server-renderable and optimizable (`fetchpriority="high"`, AVIF/WebP), every async surface has reserved space (zero CLS by design), fonts are subset with metric-matched fallbacks, and heavy third-party embeds get facades. Canonical playbook: `$alaa-frontend-developer` `references/41-lighthouse-and-web-vitals.md` — target score >= 90 mobile.
 
 ## Review workflow
 

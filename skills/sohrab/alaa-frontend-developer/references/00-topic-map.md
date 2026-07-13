@@ -14,8 +14,10 @@ Start here when you know the task area but not yet the exact reference file.
   - Load `$alaa-ui-ux-design-system` (this content moved out of this skill)
 - Need service worker, offline fallback, update flow, InjectManifest boundaries, or PWA-facing UI constraints:
   - Open `30-pwa-sw-and-offline.md`
-- Need bundle-size, hydration-cost, Web Vitals, long tasks, memory leaks, WebSocket, or SSE guidance:
+- Need bundle-size, hydration-cost, long tasks, memory leaks, WebSocket, or SSE guidance:
   - Open `40-performance-and-realtime.md`
+- Need Lighthouse score work, Core Web Vitals (LCP/INP/CLS/TBT), metric weights, score-90+ playbooks, or performance budgets:
+  - Open `41-lighthouse-and-web-vitals.md`
 - Need API envelopes, problem details, pagination, filtering, sparse payloads, cache validators, or frontend-driven N+1 prevention:
   - Open `45-api-and-data-shaping.md`
 - Need QA planning, test selection, release-readiness checks, or manual verification steps:

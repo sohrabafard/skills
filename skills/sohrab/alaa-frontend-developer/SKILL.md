@@ -87,8 +87,10 @@ Also load companion skills when needed:
   - `references/20-vue-js-ssr-patterns.md`
 - PWA, service worker, offline fallback, update flow, and safe SW change boundaries:
   - `references/30-pwa-sw-and-offline.md`
-- Performance, runtime efficiency, Web Vitals, WebSocket, and SSE patterns:
+- Performance, runtime efficiency, WebSocket, and SSE patterns:
   - `references/40-performance-and-realtime.md`
+- Lighthouse scoring model, Core Web Vitals (LCP/INP/CLS), score-90+ playbooks, performance budgets:
+  - `references/41-lighthouse-and-web-vitals.md`
 - Frontend-facing API contracts, pagination, caching, sparse payloads, and DB-aware data-shaping:
   - `references/45-api-and-data-shaping.md`
 - QA planning, verification mapping, release readiness, and evidence capture:
@@ -123,6 +125,9 @@ Apply these even when the user names only one surface:
 - Any package, asset, dist-output, or missing-chunk task:
   - Also load `references/10-contract-and-boundaries.md`.
   - Pair with `$alaa-mono-package` when `packages/*` or package outputs are involved.
+- Any Lighthouse, PageSpeed, Core Web Vitals, LCP/INP/CLS/TBT, or "hit score 90/100" task:
+  - Also load `references/41-lighthouse-and-web-vitals.md`; attack metrics by weight (TBT 30% -> LCP 25% -> CLS 25%).
+  - Verify on the production build with mobile throttling, three runs, median — never a single dev-server run.
 - Any API contract, pagination, filter, sort, sparse-field, or cache-validator task:
   - Also load `references/45-api-and-data-shaping.md`.
 - Any UI change that appears "frontend-only" but is really caused by backend query shape, count cost, or missing aggregation:
@@ -150,7 +155,7 @@ Apply these even when the user names only one surface:
 When searching inside this skill pack:
 
 - Start with exact frontend concepts:
-  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`
+  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `TBT`, `CLS`, `lighthouse`, `fetchpriority`, `bfcache`, `speculation rules`, `scheduler.yield`, `lazy hydration`, `performance budget`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`
 - For design terms (`view transitions`, `container queries`, `oklch`, `light-dark`, `prefers-reduced-motion`, `stagger`, tokens, styles, icons), search `$alaa-ui-ux-design-system` instead — that content moved there.
 - Search old skill names in `references/80-legacy-skill-coverage.md` when the task uses prior terminology.
 - Search the companion routing reference when multiple skills could apply and ownership is unclear.

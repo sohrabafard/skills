@@ -28,7 +28,7 @@ Pick one primary set per product; fall back only within the same visual style:
 
 - Format: AVIF/WebP with fallback; SVG for anything geometric.
 - Every image declares dimensions or `aspect-ratio` — zero CLS from media. `object-fit: cover` with a defined focal point for cards/heroes.
-- Lazy-load below the fold; the LCP hero image loads eagerly with high priority.
+- Lazy-load below the fold; the LCP hero image loads eagerly with `fetchpriority="high"` — never `loading="lazy"` on it. The hero visual is a Lighthouse decision: design it so it can ship as an optimizable image/SVG in server HTML, not a JS-composed scene (playbook: `$alaa-frontend-developer` `references/41-lighthouse-and-web-vitals.md`).
 - Responsive `srcset`/`sizes` for content imagery; do not ship desktop pixels to phones.
 - Meaningful images get descriptive `alt`; decorative images get `alt=""` — never missing alt.
 - Consistent treatment (radius from the token scale, same overlay/duotone recipe) so mixed-source photos read as one product.
