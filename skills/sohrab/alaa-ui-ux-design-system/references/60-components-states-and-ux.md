@@ -63,6 +63,9 @@ Rules:
 
 ## Pairing guidance
 
+- Promoting patterns to shared components and component APIs: `55-component-library-and-governance.md`
+- Copy inside these components (labels, errors, empty states): `35-ux-writing-and-microcopy.md`
+- Accessibility patterns behind these rules (focus, ARIA, live regions): `85-accessibility-patterns.md`
 - Motion for state transitions: `70-motion-and-modern-css.md`
 - Icon usage inside components: `80-icons-assets-and-imagery.md`
 - Quasar component selection and APIs: `$alaa-quasar-app-vite-v3`; implementation and QA: `$alaa-frontend-developer`

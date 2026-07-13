@@ -46,6 +46,19 @@ For Farsi-first or bilingual Alaa products this section is mandatory, not option
 - Build tonal ramps in `oklch()` (perceptually uniform lightness steps); derive states with relative color syntax.
 - Status colors (success/warning/destructive/info) are semantic tokens with AA-compliant foregrounds, and never the only signal — always paired with icon or text.
 
+## Starter palettes
+
+Taste-tier anchors, not law — adapt hues to the brand, keep the role structure, and re-verify every pair with a contrast checker before shipping:
+
+| Intent | primary | on-primary | accent (CTA) | background | surface | foreground | muted-fg | border | destructive |
+|---|---|---|---|---|---|---|---|---|---|
+| SaaS / trust | `#2563EB` | `#FFFFFF` | `#EA580C` | `#F8FAFC` | `#FFFFFF` | `#1E293B` | `#64748B` | `#E2E8F0` | `#DC2626` |
+| Dashboard / ops | `#3730A3` | `#FFFFFF` | `#0D9488` | `#F1F5F9` | `#FFFFFF` | `#0F172A` | `#475569` | `#CBD5E1` | `#B91C1C` |
+| Premium (dark-first) | `#E7E5E4` | `#1C1917` | `#C9A962` | `#0C0A09` | `#1C1917` | `#FAFAF9` | `#A8A29E` | `#292524` | `#F87171` |
+| Playful / education | `#7C3AED` | `#FFFFFF` | `#F59E0B` | `#FEFCE8` | `#FFFFFF` | `#292524` | `#57534E` | `#E7E5E4` | `#DC2626` |
+
+Convert chosen values to `oklch()` and derive states per `20-design-tokens-and-theming.md`; record any contrast-driven adjustment next to the token.
+
 ## Contrast gates (blocking)
 
 - Body text vs background >= 4.5:1; large text (>= 24px or 18.7px bold) >= 3:1; UI glyphs and meaningful graphics >= 3:1.

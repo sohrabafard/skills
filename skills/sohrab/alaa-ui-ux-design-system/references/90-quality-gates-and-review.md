@@ -50,6 +50,7 @@ What was not checked gets said explicitly — an unchecked box is a statement, n
 
 ## Pairing guidance
 
+- How to satisfy the accessibility gates well: `85-accessibility-patterns.md`
 - Engineering verification (SSR, hydration, PWA, perf evidence): `$alaa-frontend-developer` `references/50-qa-and-verification.md`
 - Browser-based visual proof: `$playwright` / `playwright_visual`
 - Component/UX pattern details behind the checklist: `60-components-states-and-ux.md`

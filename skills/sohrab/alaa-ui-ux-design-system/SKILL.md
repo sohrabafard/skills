@@ -1,6 +1,6 @@
 ---
 name: alaa-ui-ux-design-system
-description: "Use this skill when the task involves UI/UX design decisions: design systems, design tokens, theming, dark mode, color palettes, typography, spacing, layout, landing-page structure, visual style selection, component states, motion and animation language, modern CSS platform features, icons, imagery, favicons, data-viz design, or accessibility-as-design review for Vue/Quasar apps styled with Tailwind or Bootstrap. Do not use it for pure frontend engineering (SSR, hydration, auth, PWA, performance plumbing) with no visual-design decision."
+description: "Use this skill when the task involves UI/UX design decisions: design systems, design tokens, theming, dark mode, color palettes, typography, spacing, layout, landing-page structure, visual style selection, component states, shared component libraries, UX writing and microcopy, motion and animation language, modern CSS platform features, icons, imagery, favicons, data-viz design, accessibility patterns, or design review for Vue/Quasar apps styled with Tailwind or Bootstrap. Do not use it for pure frontend engineering (SSR, hydration, auth, PWA, performance plumbing) with no visual-design decision."
 ---
 
 # Alaa UI/UX Design System
@@ -10,6 +10,12 @@ description: "Use this skill when the task involves UI/UX design decisions: desi
 Use this as the default design-intelligence skill for the Vue 3 + Quasar + Vite app family, styled with Tailwind or Bootstrap. It owns the visual-design and UX decision layer that `$alaa-frontend-developer` deliberately does not: art direction, design tokens, theming, typography, color, layout aesthetics, motion language, icons/assets, and design-quality review.
 
 This skill provides vocabulary, decision rules, and hard quality gates — not a fixed aesthetic. It must raise the floor (accessibility, consistency, honest trade-offs) without lowering the ceiling (the agent's creative range).
+
+## Cross-agent portability
+
+This skill uses the core Agent Skills format so OpenAI Codex/GPT-5.x agents and Claude (Opus/Sonnet/Fable) agents can all load it. Keep `SKILL.md` frontmatter limited to `name` and `description`; `agents/openai.yaml` is optional Codex UI metadata that other agents ignore. Do not add Claude-only frontmatter unless the skill is intentionally forked.
+
+For every model family, treat this skill as an enforced design contract: outcome-first execution, repository evidence (existing tokens and components) before proposals, small focused changes, and honest validation against the gates. The references are written to be self-sufficient — an agent with no prior design training can follow them; an agent with strong design instincts keeps full creative freedom inside the gates.
 
 ## Design authority model
 
@@ -67,18 +73,24 @@ Do not use this skill when:
   - `references/10-design-workflow.md`
 - Design tokens, semantic color roles, theming, dark mode, spacing/radius/shadow/z-index scales, Tailwind/Bootstrap/Quasar token mapping:
   - `references/20-design-tokens-and-theming.md`
-- Typography (scale, pairing, loading, Farsi/RTL) and color (palette construction, contrast, status colors):
+- Typography (scale, pairing, loading, Farsi/RTL) and color (palette construction, starter palettes, contrast, status colors):
   - `references/30-typography-and-color.md`
+- UX writing and microcopy (voice, buttons, errors, empty states, Farsi register and نیم‌فاصله discipline):
+  - `references/35-ux-writing-and-microcopy.md`
 - Visual style vocabulary with honest trade-offs (minimalism, glassmorphism, brutalism, bento, aurora, ...) and style-coherence rules:
   - `references/40-styles-and-visual-language.md`
 - Layout, responsive rules, page-type layout defaults, landing-page structure and CTA strategy:
   - `references/50-layout-landing-and-ia.md`
+- Shared component libraries, component API design, wrapping Quasar, design-system governance and drift control:
+  - `references/55-component-library-and-governance.md`
 - Component states, forms and feedback, navigation patterns, empty/loading/error design, chart and data-viz design:
   - `references/60-components-states-and-ux.md`
 - Modern CSS platform features (Baseline tiers) and the classy-motion contract (durations, easing, stagger, reduced-motion, compositor rules):
   - `references/70-motion-and-modern-css.md`
 - Icons, brand assets, imagery, favicons/OG images, illustration direction:
   - `references/80-icons-assets-and-imagery.md`
+- Accessibility patterns (semantic structure, native-first ARIA, focus management, keyboard, live regions):
+  - `references/85-accessibility-patterns.md`
 - Blocking quality gates, design review workflow, pre-delivery checklist:
   - `references/90-quality-gates-and-review.md`
 
@@ -95,8 +107,14 @@ Apply these even when the user names only one surface:
 - Any style-selection task:
   - Also load `references/40-styles-and-visual-language.md`; check the style's "do not use for" column before committing.
   - Generated boilerplate (radius, shadows, transitions) must match the chosen style — never inject default rounded-soft styling into a style that forbids it.
+- Any shared/reusable component task (creating, promoting, or changing one):
+  - Also load `references/55-component-library-and-governance.md`; search the existing library before building anything new.
+- Any user-facing copy task (buttons, errors, empty states, notifications) and any Farsi UI text:
+  - Also load `references/35-ux-writing-and-microcopy.md`.
 - Any icon or image task:
   - Also load `references/80-icons-assets-and-imagery.md`. No emoji as UI icons; one icon family per product.
+- Any custom interactive widget, overlay, or SPA navigation flow:
+  - Also load `references/85-accessibility-patterns.md`; native elements before ARIA.
 - Any task that ends in shipped UI:
   - Run the gates in `references/90-quality-gates-and-review.md` before calling it done.
 - Any design decision that requires Vue/Quasar/Vite implementation, SSR safety, or verification planning:
