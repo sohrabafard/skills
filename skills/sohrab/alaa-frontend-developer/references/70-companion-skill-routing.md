@@ -8,9 +8,9 @@ Use this file when the task spans more than one frontend surface and ownership i
   - The single Quasar CLI + Vite skill: exact Quasar APIs, `quasar.config`, boot files, platform modes, components, directives, plugins, upgrade details, `@quasar/app-vite` v3 builds (the stable production line since 3.0.1, 2026-07-07), the v2->v3 migration playbook and verified delta list, v2-era maintenance semantics, service-worker implementation depth, WebOTP/device-trust flows, and modern-experience decisions.
   - Require it whenever Quasar specifics, the app-vite line, a migration, or SW implementation depth matter more than general frontend policy.
 
-- Visual direction beyond implementation constraints
-  - This Sohrab pack does not currently include a dedicated visual-design skill.
-  - Keep pure art direction out of this skill unless a concrete Vue, Quasar, Vite, SSR, accessibility, or implementation constraint is also in scope.
+- `$alaa-ui-ux-design-system`
+  - The pack's dedicated design skill: design direction, tokens, theming, dark mode, typography, color, visual styles, layout and landing structure, component-state and UX design, motion language, modern-CSS design features, icons/assets/imagery, and design-quality gates.
+  - Pair whenever a task involves a visual-design decision or design review; keep this skill for the Vue/Quasar/Vite implementation constraints.
 
 - `$playwright`
   - Use for straightforward real-browser automation flows from the terminal.

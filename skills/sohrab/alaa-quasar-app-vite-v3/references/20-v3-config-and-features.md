@@ -75,4 +75,4 @@ export default defineConfig(() => ({
 - 2.20: smaller/faster build; `Cookies` uses Max-Age; QPopupProxy no longer emits `update:modelValue` from `useAnchor()`.
 - 2.21: QTable `getCellValue(colName, row)`; 2.21.1 fixes Safari page-scroll loss after QDialog close via CSS.
 
-The browser floor puts `$alaa-frontend-developer` `references/25-modern-css-and-motion.md` Tier 1–2 inside Quasar support; use freely in v3.
+The browser floor puts `$alaa-ui-ux-design-system` `references/70-motion-and-modern-css.md` Tier 1–2 inside Quasar support; use freely in v3.

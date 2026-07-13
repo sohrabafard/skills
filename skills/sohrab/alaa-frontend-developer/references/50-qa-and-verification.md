@@ -62,6 +62,8 @@ Prioritize in this order:
 
 ## Accessibility smoke
 
+Minimal engineering-side smoke; the full accessibility and design gates live in `$alaa-ui-ux-design-system` `references/90-quality-gates-and-review.md` — load that for any design-review or shipped-UI task.
+
 - keyboard navigation across primary flows
 - dialog, drawer, and menu focus behavior
 - form labels, helper text, and errors are understandable

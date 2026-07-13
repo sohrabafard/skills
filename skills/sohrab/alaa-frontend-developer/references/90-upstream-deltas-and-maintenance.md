@@ -101,7 +101,7 @@ When updating this skill:
 4. Re-test whether realistic prompts still load this skill implicitly.
 5. Re-verify markdown links and reference paths resolve (no dedicated validator script ships with this skill).
 6. Update `80-legacy-skill-coverage.md` if routing boundaries change.
-7. Re-check Baseline status for the features in `25-modern-css-and-motion.md`; move features between tiers as Baseline and Interop 2026 progress.
+7. Baseline-status maintenance for modern CSS/motion features moved with that content to `$alaa-ui-ux-design-system` (`references/70-motion-and-modern-css.md`); keep the two skills' routing boundaries in sync when either changes.
 
 ## Useful official docs
 

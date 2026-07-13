@@ -1,36 +1,14 @@
-# Design, Browser Debug, and UX
+# Browser Debug and SSR-Safe UI Implementation
 
-Use this file for repo-safe UI design specs, state coverage, accessibility, responsive behavior, and browser-debug decision flow.
+Use this file for the browser-debug decision flow, browser evidence collection, and SSR-safe UI implementation constraints.
 
-For CSS technique selection (container queries, `:has()`, popover, anchor positioning, theming) and any animation/motion work, also load `references/25-modern-css-and-motion.md` — it owns the Baseline tiers and the motion-taste contract.
+Design ownership moved: UI design specs, state coverage, UX/accessibility design checks, visual style, tokens, motion, and design review now live in `$alaa-ui-ux-design-system`. Load that skill for any visual-design decision; this file keeps only the engineering side.
 
 ## When to open this file
 
-- new screen or flow design
-- UI redesign with implementation constraints
-- accessibility or responsive review
 - browser-based debugging after browser usage is allowed
+- implementing a design in a way that must stay SSR-safe
 - offline or update-facing UI changes that should not alter service-worker strategy
-
-## Implementation-safe design deliverables
-
-Define:
-
-- information architecture
-- component plan
-- state coverage:
-  - default
-  - hover
-  - active
-  - disabled
-  - loading
-  - error
-  - empty
-  - partial-data when relevant
-- responsive behavior
-- accessibility expectations
-- short, implementable copy
-- edge cases for slow network, offline, long content, and partial data
 
 ## SSR-aware UI rules
 
@@ -41,14 +19,7 @@ Define:
   - when hydration enhances it
   - how the transition avoids visible mismatch
 
-## Concrete UX and accessibility checks
-
-- headings and landmarks are meaningful
-- keyboard flow is explicit
-- dialogs, drawers, and menus have clear focus entry and exit
-- form labels, helper text, and errors are associated correctly
-- motion does not hide state changes or create layout thrash
-- responsive specs mention overflow, truncation, spacing, and tap targets
+When a proposed design violates these rules, negotiate the design with `$alaa-ui-ux-design-system` guidance rather than breaking SSR to honor it.
 
 ## Browser-debug decision flow
 
@@ -81,8 +52,8 @@ Then:
 
 ## Pairing guidance
 
-- strong visual thesis or art direction:
-  - Keep this skill focused on frontend implementation constraints; treat pure art direction as outside the Sohrab pack unless a separate design skill is explicitly available in the session.
+- UI design specs, state coverage, UX and accessibility design review:
+  - Pair with `$alaa-ui-ux-design-system`
 - exact Quasar component or layout choice:
   - Pair with `$alaa-quasar-app-vite-v3`
 - browser execution:

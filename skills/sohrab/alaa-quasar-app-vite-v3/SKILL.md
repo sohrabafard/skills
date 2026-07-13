@@ -53,7 +53,7 @@ Detailed routing is owned by `00`: exact APIs/source drift `05`; migration/v2 `1
 - OTP/auth -> `$alaa-frontend-developer` `21-ssr-auth-and-session-patterns.md` + `$alaa-trust-gateway-auth`; WebOTP only fills the form, never owns tokens/refresh.
 - Permission-gated APIs (`getUserMedia`, geolocation, `Notification.requestPermission`, clipboard read, sensors, ...) -> `references/45-browser-apis-and-permissions.md`: request in a user gesture after priming, provide denial recovery, treat `granted` as expiring cache.
 - Data grids, virtualization, uploads, media, dialogs, or browser-API components -> also `references/70-guardrails-a11y-performance-monorepo.md`.
-- Version-sensitive/upgrade -> `80` + live refresh. Vue/TS output -> `$alaa-vue-typescript-clean-code`. Motion -> `$alaa-frontend-developer` `25-modern-css-and-motion.md` (reduced motion blocks). `packages/*` -> `$alaa-mono-package`.
+- Version-sensitive/upgrade -> `80` + live refresh. Vue/TS output -> `$alaa-vue-typescript-clean-code`. Motion -> `$alaa-ui-ux-design-system` `70-motion-and-modern-css.md` (reduced motion blocks). `packages/*` -> `$alaa-mono-package`.
 
 ## Search and companions
 

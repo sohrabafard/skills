@@ -1,8 +1,10 @@
-# Modern CSS and motion (classy animation contract)
+# Motion and Modern CSS (classy animation contract)
 
-Scope: the CSS3 platform features that are production-safe in mid-2026 and the motion-design rules that make app-family UIs feel premium and dignified instead of noisy. Verified 2026-07-08 against web-features/Baseline data, MDN, webkit.org, web.dev, and Interop 2026 announcements. Re-verify Baseline claims after that date (features move from Newly to Widely and Interop 2026 is actively converging the "limited" list).
+Scope: the CSS platform features that are production-safe in mid-2026 and the motion-design rules that make app-family UIs feel premium and dignified instead of noisy. Verified 2026-07-08 against web-features/Baseline data, MDN, webkit.org, web.dev, and Interop 2026 announcements. Re-verify Baseline claims after that date (features move from Newly to Widely and Interop 2026 is actively converging the "limited" list).
 
-Pair with: `$alaa-vue-typescript-clean-code` (component/style discipline) and `$alaa-quasar-app-vite-v3` (Quasar transition props, `app.scss`, app-vite v3 builds, and modern app posture).
+Moved here from `$alaa-frontend-developer` `references/25-modern-css-and-motion.md`; this file now owns the Baseline tiers and the motion-taste contract. Theming/token recipes (oklch, `light-dark()`, `@property`) live in `20-design-tokens-and-theming.md`.
+
+Pair with: `$alaa-frontend-developer` (SSR-safe implementation, hydration timing), `$alaa-vue-typescript-clean-code` (component/style discipline), `$alaa-quasar-app-vite-v3` (Quasar transition props, `app.scss`).
 
 ## 1. Adoption tiers — decide by Baseline status, not by fashion
 
@@ -19,22 +21,13 @@ cross-document View Transitions (no Firefox), scroll-driven animations (`animati
 
 ❌ Don't — make comprehension or navigation depend on a Tier 3 effect, or add a JS polyfill for a purely decorative CSS feature.
 
-## 2. Theming recipe (color, tokens, dark mode)
+## 2. Motion intensity tiers
 
-- Define the palette in `oklch()`; derive hover/active/disabled states with relative color syntax, falling back to `color-mix()` where support must reach further back.
-- Theme with `color-scheme: light dark` on `:root` plus `light-dark()` per token — not duplicated selector blocks.
-- Register any custom property you animate (gradient angles, glow strength, numeric tokens) with `@property` — registration is what makes it interpolable.
+Set the tier in the design brief (`10-design-workflow.md`) and record it in MASTER.md; every surface then draws from that tier, so the product has one motion temperament instead of per-page moods.
 
-```css
-:root {
-  color-scheme: light dark;
-  --brand: oklch(0.62 0.19 260);
-  --brand-hover: oklch(from var(--brand) calc(l - 0.07) c h);
-  --surface: light-dark(oklch(0.99 0 0), oklch(0.22 0.02 260));
-  interpolate-size: allow-keywords; /* free Chromium enhancement: animate to auto */
-}
-@property --glow { syntax: "<number>"; inherits: false; initial-value: 0; }
-```
+- Subtle (trust-heavy, dashboards, pro tools): micro-feedback and fades only; no parallax, no scroll choreography, no decorative loops.
+- Standard (SaaS, e-commerce, content): micro-interactions plus purposeful section reveals and view transitions.
+- Expressive (playful, creative, marketing heroes): choreographed staggers, scroll-driven scenes, signature moments — still inside the taste contract and gates below.
 
 ## 3. The modern motion stack (replace library habits with platform primitives)
 
@@ -50,7 +43,7 @@ Entry/exit for `display:none`, popovers, dialogs, toasts — the CSS-first patte
 @starting-style { :popover-open, dialog[open] { opacity: 0; translate: 0 8px; } }
 ```
 
-View Transitions (same-document) — for route changes, shared-element morphs (thumbnail → detail), and batch list reorder/filter; things Vue `<Transition>` cannot morph across components:
+View Transitions (same-document) — for route changes, shared-element morphs (thumbnail -> detail), and batch list reorder/filter; things Vue `<Transition>` cannot morph across components:
 
 - Always feature-detect: `if (!document.startViewTransition) { mutate(); return }`.
 - Vue integration: `document.startViewTransition(async () => { mutateState(); await nextTick() })` — the update callback must not settle until the new DOM is committed.
@@ -62,7 +55,7 @@ Scroll-driven animations (Tier 3): reveal/parallax via `animation-timeline: view
 
 Springs: there is no native `spring()`. Use `linear()` with generated stops (values >1 overshoot) stored as a custom property; use WAAPI or motion.dev only for gesture-driven, interruptible physics.
 
-Sizing to content: `field-sizing: content` for auto-growing inputs/textareas (Tier 2); animate to `height: auto` via `interpolate-size` where available, with the `grid-template-rows: 0fr → 1fr` trick as the cross-browser fallback.
+Sizing to content: `field-sizing: content` for auto-growing inputs/textareas (Tier 2); animate to `height: auto` via `interpolate-size` where available, with the `grid-template-rows: 0fr -> 1fr` trick as the cross-browser fallback.
 
 Anchored UI: CSS anchor positioning can progressively replace hand-rolled tooltip/menu positioning, but keep Quasar's QMenu/QTooltip as the default until Interop 2026 closes the spec gaps.
 
@@ -87,4 +80,4 @@ These are hard defaults for app-family UIs; repo design tokens may override them
 - Also respect `prefers-reduced-transparency` (drop glass/blur) and `prefers-contrast: more` (drop low-contrast decorative motion).
 - Compositor-only rule: animate `transform` and `opacity`; `filter`/`backdrop-filter` sparingly. Never animate layout (`width/height/top/left/margin/font-size`) or paint-heavy properties (`box-shadow` — crossfade a pseudo-element instead). View-transition snapshots make "layout" morphs cheap — prefer them over animating real layout.
 - `will-change` discipline: set just before animating, remove after; never blanket-apply. Use `content-visibility: auto` / `contain` on long pages.
-- Verification: a motion change is not done until it was checked with reduced-motion emulated and (when perf-sensitive) with DevTools performance/layers evidence or a Playwright check per `references/50-qa-and-verification.md`.
+- Verification: a motion change is not done until it was checked with reduced-motion emulated and (when perf-sensitive) with DevTools performance/layers evidence or a Playwright check per `$alaa-frontend-developer` `references/50-qa-and-verification.md`.

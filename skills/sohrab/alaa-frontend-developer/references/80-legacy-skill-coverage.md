@@ -8,7 +8,7 @@ This pack replaces the previous frontend skill cluster and folds the high-value 
   - Primary coverage:
     - `10-contract-and-boundaries.md`
     - `50-qa-and-verification.md`
-    - `60-design-browser-debug-and-ux.md`
+    - `60-browser-debug.md` (design/UX portions moved to `$alaa-ui-ux-design-system`)
 
 - `javascript-pro`
   - Primary coverage:

@@ -29,7 +29,7 @@ This skill replaces a cluster of narrower frontend skills with one routing-first
 
 - `alaa-frontend-developer` owns app-family frontend engineering policy and cross-cutting frontend guardrails.
 - `$alaa-quasar-app-vite-v3` owns everything Quasar CLI + Vite: exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, the `@quasar/app-vite` v3 stable line (production default since 3.0.1, 2026-07-07), the v2->v3 migration playbook, v2-era maintenance semantics, service-worker implementation depth, WebOTP/device-trust flows, and modern-experience decisions.
-- Broader art direction, visual thesis, composition, premium hierarchy, and motion language stay outside this skill unless a concrete frontend implementation task is also in scope.
+- `$alaa-ui-ux-design-system` owns UI/UX design: art direction, visual thesis, design tokens and theming, typography and color, layout aesthetics, component-state and UX design, motion language and modern-CSS design features, icons/assets/imagery, and design-quality review. Load it for any visual-design decision; this skill keeps the implementation constraints.
 - `$playwright`, `$playwright-interactive`, and configured Playwright MCP profiles own browser mechanics and execution loops. Browser automation is opt-in: use it only when the user explicitly asks for browser, Playwright, visual, or responsive validation, a higher-priority repo rule requires it, or static analysis is no longer trustworthy for a browser-only bug. Prefer `playwright_headless` for deterministic headless browser checks and `playwright_visual` for headed visual QA when those MCP profiles are available.
 - `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
 
@@ -53,7 +53,7 @@ Use this skill when the task includes any of the following:
 Do not use this skill when:
 
 - the task is pure Quasar API lookup with no broader frontend engineering decision
-- the task is pure visual art direction with no frontend implementation constraint
+- the task is pure visual design or art direction with no frontend implementation constraint — use `$alaa-ui-ux-design-system`
 - the task is browser automation mechanics only
 - the task is backend-only, infra-only, or unrelated to frontend behavior
 
@@ -68,7 +68,7 @@ Do not use this skill when:
 Also load companion skills when needed:
 
 - exact Quasar API/config/platform behavior, v3 builds, a v2->v3 migration, v2 maintenance, SW depth, or WebOTP/device trust -> `$alaa-quasar-app-vite-v3`
-- visual ambition or art direction -> stay in this skill only when it also requires Vue, Quasar, Vite, SSR, or implementation constraints
+- design systems, tokens, theming, typography, color, styles, layout aesthetics, motion language, icons/assets, or design review -> `$alaa-ui-ux-design-system`; keep this skill loaded for the implementation constraints
 - explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`; when MCP browser tools are configured, route deterministic non-visual checks to `playwright_headless` and headed visual QA to `playwright_visual`
 - Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
 - CI, Docker, artifact, or deployment contract risks -> `$alaa-frontend-devops`
@@ -85,8 +85,6 @@ Also load companion skills when needed:
   - `references/21-ssr-auth-and-session-patterns.md`
 - Vue, JavaScript, SSR, hydration, lifecycle, reactivity, and JSDoc defaults:
   - `references/20-vue-js-ssr-patterns.md`
-- Modern CSS platform features (container queries, :has(), View Transitions, scroll-driven animations, @starting-style, popover, anchor positioning, oklch/light-dark theming) and the classy-motion contract (durations, easing, stagger, reduced-motion, compositor-only rules):
-  - `references/25-modern-css-and-motion.md`
 - PWA, service worker, offline fallback, update flow, and safe SW change boundaries:
   - `references/30-pwa-sw-and-offline.md`
 - Performance, runtime efficiency, Web Vitals, WebSocket, and SSE patterns:
@@ -95,8 +93,10 @@ Also load companion skills when needed:
   - `references/45-api-and-data-shaping.md`
 - QA planning, verification mapping, release readiness, and evidence capture:
   - `references/50-qa-and-verification.md`
-- UI-spec, design-safe implementation, browser-debug flow, and UX edge cases:
-  - `references/60-design-browser-debug-and-ux.md`
+- Browser-debug flow, browser evidence, and SSR-safe UI implementation constraints:
+  - `references/60-browser-debug.md`
+- Design systems, tokens, theming, typography/color, styles, layout, motion, modern-CSS design features, icons/assets, and design review:
+  - `$alaa-ui-ux-design-system` (moved out of this skill)
 - Companion skill ownership and pairing rules:
   - `references/70-companion-skill-routing.md`
 - Mapping from deleted skill names and old shared-doc topics:
@@ -118,7 +118,7 @@ Apply these even when the user names only one surface:
   - If Quasar config or InjectManifest shape matters, pair with `$alaa-quasar-app-vite-v3`.
   - For implementation depth (Workbox recipes, update-UX code, SW debugging, push/badging), pair with `$alaa-quasar-app-vite-v3`.
 - Any animation, transition, motion polish, or modern-CSS-feature task:
-  - Also load `references/25-modern-css-and-motion.md`.
+  - Load `$alaa-ui-ux-design-system` (its `references/70-motion-and-modern-css.md` owns the Baseline tiers and the motion contract).
   - Treat `prefers-reduced-motion` support as a blocking gate, not polish.
 - Any package, asset, dist-output, or missing-chunk task:
   - Also load `references/10-contract-and-boundaries.md`.
@@ -128,9 +128,9 @@ Apply these even when the user names only one surface:
 - Any UI change that appears "frontend-only" but is really caused by backend query shape, count cost, or missing aggregation:
   - Also load `references/45-api-and-data-shaping.md`.
   - Pair with `$alaa-laravel-architecture` or `$alaa-data-layer` when the fix crosses into server implementation.
-- Any visually ambitious landing page or premium UI task:
+- Any visually ambitious landing page, premium UI, design-system, or design-review task:
+  - Pair with `$alaa-ui-ux-design-system` for direction, tokens, styles, layout, and design gates.
   - Use this skill for implementation constraints, SSR safety, Quasar/Vite integration, and verification planning.
-  - Treat pure art direction with no frontend implementation constraint as out of scope.
 - Any explicit browser validation request, visual QA request, or browser-only reproduction:
   - Pair with `$playwright` or `$playwright-interactive`.
   - When MCP browser profiles are configured, prefer `playwright_headless` for deterministic headless smoke checks and `playwright_visual` for headed visual inspection.
@@ -150,7 +150,8 @@ Apply these even when the user names only one surface:
 When searching inside this skill pack:
 
 - Start with exact frontend concepts:
-  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`, `view transitions`, `startViewTransition`, `container queries`, `:has()`, `@starting-style`, `allow-discrete`, `popover`, `anchor positioning`, `oklch`, `light-dark`, `prefers-reduced-motion`, `linear()`
+  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`
+- For design terms (`view transitions`, `container queries`, `oklch`, `light-dark`, `prefers-reduced-motion`, `stagger`, tokens, styles, icons), search `$alaa-ui-ux-design-system` instead — that content moved there.
 - Search old skill names in `references/80-legacy-skill-coverage.md` when the task uses prior terminology.
 - Search the companion routing reference when multiple skills could apply and ownership is unclear.
 - Refresh live package versions with `node scripts/check-upstream-versions.mjs` before version-sensitive changes.
@@ -159,6 +160,7 @@ When searching inside this skill pack:
 
 | If the task is mainly about...                                          | Pair with                        |
 |-------------------------------------------------------------------------|----------------------------------|
+| design systems, tokens, theming, typography, color, styles, layout aesthetics, motion, icons/assets, design review | `$alaa-ui-ux-design-system` |
 | CI, Docker, artifact paths, CDN, or deploy/runtime delivery             | `$alaa-frontend-devops`          |
 | inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
 | `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
