@@ -41,6 +41,13 @@ DEPRECATED_SCRIPT_PATTERNS = (
     "postman.getEnvironmentVariable",
     "postman.getGlobalVariable",
 )
+VARIABLE_SET_RE = re.compile(
+    r"\bpm\.(?:environment|collectionVariables)\.set\(\s*['\"]([^'\"]+)['\"]"
+)
+VARIABLE_ARRAY_SET_RE = re.compile(
+    r"\b(?:setLocal|setVariables|saveVariables)\(\s*\[(?P<body>[^\]]*)\]"
+)
+QUOTED_NAME_RE = re.compile(r"['\"]([^'\"]+)['\"]")
 
 
 def load_json(path: Path) -> Any:
@@ -120,10 +127,20 @@ def is_placeholder(value: Any) -> bool:
 
 def looks_sensitive_key(name: str) -> bool:
     lowered = name.lower()
+    normalized = re.sub(r"[^a-z0-9]", "", lowered)
+    if normalized.endswith("tokenid"):
+        return False
     return any(hint in lowered for hint in SECRET_HINTS)
 
 
-def validate_events(events: list[Any], scope: str, errors: list[str], warnings: list[str]) -> None:
+def validate_events(
+    events: list[Any],
+    scope: str,
+    errors: list[str],
+    warnings: list[str],
+    require_success_guarded_captures: bool,
+    declared_variables: set[str],
+) -> None:
     for index, event in enumerate(events):
         event_scope = f"{scope}.event[{index}]"
         if not isinstance(event, dict):
@@ -155,9 +172,54 @@ def validate_events(events: list[Any], scope: str, errors: list[str], warnings: 
         for pattern in DEPRECATED_SCRIPT_PATTERNS:
             if pattern in script_text:
                 warnings.append(f"{event_scope}: deprecated Postman script API `{pattern}` reduces portability")
+        written_variables = set(VARIABLE_SET_RE.findall(script_text))
+        for array_match in VARIABLE_ARRAY_SET_RE.finditer(script_text):
+            written_variables.update(QUOTED_NAME_RE.findall(array_match.group("body")))
+        guarded_variables = {
+            name
+            for name in written_variables
+            if name not in {"last_request_id", "last_traceparent"}
+            and not name.endswith(("_last_request_id", "_last_traceparent"))
+        }
+        if listen == "test" and require_success_guarded_captures and guarded_variables:
+            success_guard_markers = (
+                "pm.response.code",
+                "pm.response.to.be.success",
+                "pm.response.to.have.status",
+                "pm.expect(pm.response.code",
+            )
+            if not any(marker in script_text for marker in success_guard_markers):
+                errors.append(f"{event_scope}: response-variable capture has no explicit HTTP success guard")
+        for variable_name in sorted(written_variables - declared_variables):
+            errors.append(f"{event_scope}: script writes undeclared variable `{variable_name}`")
 
 
-def walk_items(items: Any, scope: str, errors: list[str], warnings: list[str]) -> None:
+def description_text(value: Any) -> str:
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, dict) and isinstance(value.get("content"), str):
+        return value["content"].strip()
+    return ""
+
+
+def raw_url(value: Any) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict) and isinstance(value.get("raw"), str):
+        return value["raw"]
+    return ""
+
+
+def walk_items(
+    items: Any,
+    scope: str,
+    errors: list[str],
+    warnings: list[str],
+    min_description_chars: int,
+    require_saved_responses: bool,
+    require_success_guarded_captures: bool,
+    declared_variables: set[str],
+) -> None:
     if not isinstance(items, list):
         errors.append(f"{scope}: `item` must be an array")
         return
@@ -178,15 +240,39 @@ def walk_items(items: Any, scope: str, errors: list[str], warnings: list[str]) -
             errors.append(f"{item_scope}: item must contain either `request` or nested `item`")
 
         if child_items is not None:
-            walk_items(child_items, item_scope, errors, warnings)
+            walk_items(
+                child_items,
+                item_scope,
+                errors,
+                warnings,
+                min_description_chars,
+                require_saved_responses,
+                require_success_guarded_captures,
+                declared_variables,
+            )
 
         if request is not None and not isinstance(request, (dict, str)):
             errors.append(f"{item_scope}: request must be an object or URL string")
+
+        if isinstance(request, dict):
+            misplaced_events = request.get("event")
+            if isinstance(misplaced_events, list) and misplaced_events:
+                errors.append(
+                    f"{item_scope}.request.event: executable scripts must use the request item's `event` array"
+                )
+            description = description_text(request.get("description") or item.get("description"))
+            if min_description_chars > 0 and len(description) < min_description_chars:
+                errors.append(
+                    f"{item_scope}: request description has {len(description)} characters; "
+                    f"minimum is {min_description_chars}"
+                )
 
         responses = item.get("response", [])
         if responses is not None and not isinstance(responses, list):
             errors.append(f"{item_scope}: response must be an array when present")
         elif isinstance(responses, list):
+            if request is not None and require_saved_responses and not responses:
+                errors.append(f"{item_scope}: request has no saved response example")
             for response_index, response in enumerate(responses):
                 response_scope = f"{item_scope}.response[{response_index}]"
                 if not isinstance(response, dict):
@@ -194,14 +280,36 @@ def walk_items(items: Any, scope: str, errors: list[str], warnings: list[str]) -
                     continue
                 if "originalRequest" not in response:
                     warnings.append(f"{response_scope}: saved response is missing `originalRequest`")
-                if "code" not in response:
+                elif isinstance(request, dict) and isinstance(response.get("originalRequest"), dict):
+                    original_request = response["originalRequest"]
+                    request_method = str(request.get("method", "GET")).upper()
+                    original_method = str(original_request.get("method", "GET")).upper()
+                    if original_method != request_method:
+                        errors.append(
+                            f"{response_scope}: originalRequest method `{original_method}` "
+                            f"does not match `{request_method}`"
+                        )
+                    request_url = raw_url(request.get("url"))
+                    original_url = raw_url(original_request.get("url"))
+                    if request_url and original_url != request_url:
+                        errors.append(f"{response_scope}: originalRequest URL does not match the request URL")
+                if not isinstance(response.get("code"), int):
                     warnings.append(f"{response_scope}: saved response is missing `code`")
+                if "body" not in response:
+                    warnings.append(f"{response_scope}: saved response is missing `body`")
 
         events = item.get("event", [])
         if events is not None and not isinstance(events, list):
             errors.append(f"{item_scope}: event must be an array when present")
         elif isinstance(events, list):
-            validate_events(events, item_scope, errors, warnings)
+            validate_events(
+                events,
+                item_scope,
+                errors,
+                warnings,
+                require_success_guarded_captures,
+                declared_variables,
+            )
 
 
 def validate_collection(
@@ -210,7 +318,12 @@ def validate_collection(
     allow_external: set[str],
     errors: list[str],
     warnings: list[str],
+    min_description_chars: int,
+    require_saved_responses: bool,
+    require_success_guarded_captures: bool,
 ) -> None:
+    collection_variable_keys = collect_collection_variable_keys(collection)
+    declared_variables = collection_variable_keys | environment_keys | allow_external
     info = collection.get("info")
     if not isinstance(info, dict):
         errors.append("collection: missing `info` object")
@@ -230,13 +343,28 @@ def validate_collection(
     if not isinstance(items, list) or not items:
         errors.append("collection: missing non-empty `item` array")
     else:
-        walk_items(items, "collection", errors, warnings)
+        walk_items(
+            items,
+            "collection",
+            errors,
+            warnings,
+            min_description_chars,
+            require_saved_responses,
+            require_success_guarded_captures,
+            declared_variables,
+        )
 
     top_level_events = collection.get("event", [])
     if top_level_events is not None and isinstance(top_level_events, list):
-        validate_events(top_level_events, "collection", errors, warnings)
+        validate_events(
+            top_level_events,
+            "collection",
+            errors,
+            warnings,
+            require_success_guarded_captures,
+            declared_variables,
+        )
 
-    collection_variable_keys = collect_collection_variable_keys(collection)
     referenced = variable_refs(collection)
     missing = sorted(referenced - collection_variable_keys - environment_keys - allow_external)
     for name in missing:
@@ -314,6 +442,22 @@ def main() -> int:
     )
     parser.add_argument("--skip-schema", action="store_true", help="Skip official schema validation")
     parser.add_argument("--schema-url", default=DEFAULT_SCHEMA_URL, help="Official Postman schema URL")
+    parser.add_argument(
+        "--min-description-chars",
+        type=int,
+        default=0,
+        help="Require every request description to contain at least this many non-whitespace characters",
+    )
+    parser.add_argument(
+        "--require-saved-responses",
+        action="store_true",
+        help="Require every request item to include at least one saved response example",
+    )
+    parser.add_argument(
+        "--require-success-guarded-captures",
+        action="store_true",
+        help="Require response-variable capture scripts to include an explicit HTTP success guard",
+    )
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -340,7 +484,16 @@ def main() -> int:
         if isinstance(env, dict):
             environment_keys.update(extract_environment_keys(env))
 
-    validate_collection(collection, environment_keys, set(args.allow_external_var), errors, warnings)
+    validate_collection(
+        collection,
+        environment_keys,
+        set(args.allow_external_var),
+        errors,
+        warnings,
+        args.min_description_chars,
+        args.require_saved_responses,
+        args.require_success_guarded_captures,
+    )
 
     if not args.skip_schema:
         try_schema_validation(collection, args.schema_url, warnings, errors)

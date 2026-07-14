@@ -21,7 +21,7 @@ Each request item may carry:
 
 - one `request`
 - zero or more attached `response` objects
-- request-level `event`, `variable`, or `description` only when needed
+- item-level `event`, `variable`, or `description` only when needed
 
 ## Structural rules
 
@@ -39,6 +39,8 @@ Use descriptions at the smallest useful level:
 - folder description for bounded-context rules, shared headers, or shared auth details
 - request description for request-specific behavior, parameter notes, body expectations, idempotency, pagination, filtering, and important error behavior
 
+For frontend implementation or penetration-test handoff, each request description should also state the verified auth mode, important headers, variable dependencies, success behavior, material error behavior, and any sequencing or state transition the caller must understand. Do not leave this knowledge only in scripts or saved examples.
+
 Prefer plain Markdown that reads well in Postman-generated docs:
 
 - short paragraphs
@@ -46,6 +48,20 @@ Prefer plain Markdown that reads well in Postman-generated docs:
 - inline code for variable names, headers, and field names
 
 Do not add decorative Markdown or huge walls of prose.
+
+When the collection is a frontend implementation or penetration-test handoff, every request description must be self-contained enough to use without opening the backend repository. Cover, when applicable:
+
+- purpose and user/business outcome
+- public versus service-local path shape
+- auth and trusted-context boundary
+- prerequisites and workflow dependencies
+- path, query, header, and body constraints, including enums and bounds
+- success response semantics and any values saved for later requests
+- important validation, auth, permission, conflict, rate-limit, and dependency errors
+- idempotency, retry, caching, pagination, and side-effect cautions
+- security tests such as tenant/project isolation, spoofed trusted headers, IDOR/BOLA, and replay
+
+Move shared rules to folder or collection descriptions, but do not use shared prose as an excuse to leave request-specific behavior undocumented.
 
 ## Parameter and body notes
 
@@ -57,7 +73,7 @@ Do not add decorative Markdown or huge walls of prose.
 
 The v2.1 schema allows multiple responses on the same item. Use that shape directly:
 
-- attach representative success responses to the real request item
+- attach at least one representative success response to every real request item when the collection is intended as a self-contained API contract
 - attach important error responses to the same request item when they add value
 - avoid duplicating the entire request just to show basic success and error variants
 
@@ -66,6 +82,8 @@ When a saved response is present, keep it coherent:
 - the response should match the current route and method
 - `originalRequest` should reflect the real request
 - status code, headers, and body should match the contract closely enough to be useful
+
+For frontend, pentest, or cross-tool handoffs, attach at least one representative success response to every real request, including bodyless `204` operations. Attach contract-important error examples when the route has validation, auth, authorization, conflict, rate-limit, or dependency behavior that callers must implement or test. Preserve raw HTTP status, headers, body, and `originalRequest` so Postman, Insomnia, and k6 conversion workflows have explicit transport examples.
 
 ## Documentation-quality rules
 

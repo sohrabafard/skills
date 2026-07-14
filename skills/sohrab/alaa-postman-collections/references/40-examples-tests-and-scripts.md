@@ -45,6 +45,26 @@ Use the narrowest shared scope that keeps behavior understandable:
 
 Keep scripts short, readable, and diff-friendly. The official v2.1 schema allows script `exec` content as an array of lines, which is the most reviewable format. Prefer that layout when writing or normalizing scripts.
 
+The executable request-script location is the request item's top-level `event` array. Never place scripts inside `request.event`; that field is outside the v2.1 request schema and clients may display the JSON while silently never executing the script.
+
+## Response-to-variable capture contract
+
+Treat workflow correlation as part of the collection contract:
+
+- identify every token, cookie, public id, operation id/hash, cursor, upload URL/offset, or other response value used by a later request
+- add a success-guarded item-level post-response script that saves each dependency automatically
+- update rotated values such as access and refresh tokens on every successful rotation
+- extract cookies from response cookies or `Set-Cookie` without logging or committing their values
+- write to the exported environment with modern `pm.environment.*`; use `pm.collectionVariables.*` only as a documented portable fallback when useful
+- validate the proven response envelope and fail with a clear test message when a required dependency is absent instead of silently leaving a stale value
+- never overwrite a working variable from an intentional error response
+- correlation-only values such as `last_request_id`, `last_traceparent`, and their aggregate-namespaced forms (for example `tusd_last_request_id`) may be captured on error responses because they are needed for investigation
+- document the saved variable name and the requests that consume it
+
+Run a dependency audit after editing: for each variable used in a later URL, header, query, or body, prove whether it is user/environment input or is populated by an earlier executable script.
+
+Postman v2.1 executes request-specific scripts from the request item's `event` array. Never place executable scripts under `request.event`; that location may survive JSON generation but is not the item event scope used by Postman or compatible importers. Validators and merge generators should reject or explicitly promote this legacy shape.
+
 ## Script lifecycle and runner features
 
 Current Postman scripts can be placed at collection, folder, or request scope.
@@ -54,6 +74,18 @@ Current Postman scripts can be placed at collection, folder, or request scope.
 - Request-level scripts should hold request-specific assertions or response-to-variable saves.
 - Use pre-request scripts for setup such as dynamic headers, generated values, or request skipping.
 - Use post-response scripts for assertions, saved IDs, and response-shape checks.
+
+## Response-to-variable capture contract
+
+When a later request depends on a value returned by an earlier response:
+
+- capture it automatically in the producing request's item-level post-response script
+- save to an environment or collection variable that is declared in the committed artifacts
+- update only after the expected success status and a valid response shape
+- tolerate documented response wrappers or compatibility aliases only when verified from source
+- capture tokens, cookies, IDs, cursors, hashes, and upload locations needed by the documented workflow
+- avoid hard-coded fixture identifiers in dependent requests when a producing request can supply the real value
+- document any contract gap that makes automatic capture impossible instead of inventing a field or route
 
 Runner workflow APIs are powerful but should stay optional:
 
@@ -80,6 +112,8 @@ Official Insomnia docs state that Postman v2.0 and v2.1 scripts should work when
 - prefer modern `pm.environment`, `pm.collectionVariables`, `pm.variables`, and `pm.test`
 - avoid features whose meaning disappears outside Postman
 - be cautious with `pm.execution.*`, package-library imports, Visualizer, Flows, and helper requests when Insomnia portability is a hard requirement
+
+k6 conversion can preserve explicit requests, variables, headers, bodies, and checks, but Postman sandbox correlation must not be the only documentation of a workflow. Keep saved request/response examples and variable dependency notes complete, run a Postman-to-k6 conversion check when k6 is a target, and review the generated script's URLs, auth, bodies, correlation, checks, and environment mapping before claiming k6 readiness.
 
 ## Optional advanced features
 
