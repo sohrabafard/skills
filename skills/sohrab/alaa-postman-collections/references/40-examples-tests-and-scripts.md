@@ -18,6 +18,10 @@ Rules:
 - keep examples small enough to review comfortably
 - remove stale or impossible examples when the repo proves they are wrong
 - remember that saved examples also feed Postman collection documentation; keep them concise, representative, and contract-focused
+- map each meaningful public request and response branch to the canonical public contract; do not leave branch-defining examples only in Postman
+- keep example identifiers, formats, enums, status codes, headers, and envelopes consistent across OpenAPI or the repo's equivalent contract and saved Postman responses
+
+For SDK-ready public APIs, representative does not mean happy-path-only. Add source-backed examples for materially different branches such as discriminated request variants, alternate success statuses, idempotent replay, queued work, empty results, pagination, validation, authorization, conflict, rate limiting, and dependency failure when those behaviors exist.
 
 ## Test-writing rules
 

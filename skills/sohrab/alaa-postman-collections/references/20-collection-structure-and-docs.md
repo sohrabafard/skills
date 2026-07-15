@@ -63,6 +63,18 @@ When the collection is a frontend implementation or penetration-test handoff, ev
 
 Move shared rules to folder or collection descriptions, but do not use shared prose as an excuse to leave request-specific behavior undocumented.
 
+## Public-contract coupling
+
+When the repository owns a public HTTP API, treat Postman descriptions and saved responses as readable projections of the canonical public contract, not as a substitute for it.
+
+- keep operation names, public paths, auth, parameters, schemas, statuses, error codes, and examples aligned across both artifacts
+- update generator inputs first when either artifact is generated
+- attach examples for every meaningful branch identified by the route-and-variant coverage matrix
+- preserve contract-important distinctions such as synchronous versus queued responses, create versus replay, empty versus populated lists, and success versus conflict
+- record implementation or gateway gaps explicitly instead of encoding a guessed behavior in only one artifact
+
+Use `25-public-api-contract-and-sdk-readiness.md` for the mandatory SDK-completeness criteria.
+
 ## Parameter and body notes
 
 - Document only fields the code or verified contract actually supports.

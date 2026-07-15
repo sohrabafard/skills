@@ -11,11 +11,14 @@ This skill owns:
 - request descriptions inside Postman collections
 - Postman examples, saved responses, scripts, tests, variables, and auth inheritance
 - portability notes and validation notes for Postman-to-Insomnia import
+- synchronization of the repository's canonical public API contract whenever the Postman surface represents a public HTTP API
+- source-backed SDK-readiness coverage for public request, response, error, lifecycle, and workflow variants
 
 This skill does not own:
 
 - broad README or runbook updates
 - API behavior design that is not yet implemented
+- speculative contract fields, statuses, errors, or workflows that cannot be verified from repository truth
 - live secret management outside committed artifacts
 - Insomnia-native workspace modeling that has no Postman export requirement
 
@@ -29,19 +32,26 @@ Use this skill when the request includes work such as:
 - "add examples or tests to the collection"
 - "make it import cleanly into Insomnia"
 - "validate the Postman artifact"
+- "make the API contract complete enough to generate an SDK"
 
 ## Source-of-truth order
 
-Use this order unless the repo proves a stronger contract source:
+Separate artifact ownership from API behavior truth.
 
-1. repo-owned Postman generators or scripts, when they exist and are canonical
-2. routes, controllers, handlers, DTOs, validators, serializers, resources, and contract tests
-3. request tests, integration tests, and runtime examples checked into the repo
-4. verified OpenAPI files or other checked-in machine-readable contracts
-5. existing Postman artifacts
+For artifact ownership, repo-owned generators and their declared inputs outrank generated Postman or contract files. Patch the generator source, then regenerate.
+
+For API behavior, use this order unless repo instructions declare a stronger canonical source:
+
+1. canonical IDL/OpenAPI source or contract generator declared by repo instructions
+2. public gateway/ingress contract when it defines the externally reachable surface
+3. routes, controllers, handlers, DTOs, validators, serializers, resources, and contract tests
+4. request tests, integration tests, and runtime examples checked into the repo
+5. existing machine-readable contracts and Postman artifacts
 6. README and prose docs
 
-If code and docs disagree, trust code and verified contracts over stale prose.
+If implementation and contracts disagree, identify the drift and use only the safest verified behavior. Never use a Postman generator as proof that stale request or response behavior is implemented.
+
+When the repository owns a public HTTP API, Postman-only completion is not sufficient. Read `25-public-api-contract-and-sdk-readiness.md`, synchronize the canonical public contract, and prove route-and-variant parity before closing.
 
 If an existing Postman request or prose doc describes behavior that current code does not implement, do not silently keep it as shipped behavior. Report the gap and route any `remaining-task.md` backlog wording to `$alaa-docs-farsi`.
 
@@ -65,6 +75,7 @@ Inspect the smallest relevant set of sources:
 - DTOs, resources, and schema classes
 - request tests, contract tests, or fixtures
 - OpenAPI files when present
+- public gateway routes, prefixes, auth boundaries, and error normalization when they define the external surface
 - README, docs, and example cURL blocks
 - existing `*.postman_collection.json`, `*.postman_environment.json`, or Insomnia exports
 
@@ -77,6 +88,8 @@ Inspect the smallest relevant set of sources:
 - Never rewrite a collection from scratch without checking whether a minimal update is safer.
 - Never hand-edit generator-owned Postman JSON as the durable fix unless the repo has no working generator path and the gap is called out.
 - Never make correctness depend on Postman Vault, cloud publishing, monitors, or paid-only features.
+- Never treat a representative happy-path example as complete contract coverage when meaningful request or response variants exist.
+- Never require an SDK implementer to inspect handlers, DTOs, tests, or Postman scripts to discover public behavior that belongs in the canonical contract.
 - Keep all prose, comments, request descriptions, and example names in simple English.
 
 ## Update-vs-create rule

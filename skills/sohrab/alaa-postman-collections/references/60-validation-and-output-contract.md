@@ -5,18 +5,19 @@
 Validate from cheapest to strongest:
 
 1. confirm the repository truth and the artifact intent still match
-2. when artifacts are generator-owned, rerun the repo generator and review the generated diff
-3. parse the collection and environment JSON locally
-4. run `scripts/validate_postman_artifacts.py` when local JSON artifacts exist
-5. validate against the official Postman Collection Format v2.1 schema when practical
-6. verify variable references, auth inheritance, scripts, and saved responses
-7. reject scripts misplaced under `request.event`; executable request scripts belong to the request item's top-level `event`
-8. audit response-to-variable dependencies so later requests never require undocumented manual copy/paste
-9. for frontend/pentest handoffs, run strict per-request documentation and saved-response coverage checks
-10. run any repo-specific smoke check that materially reduces risk
-11. if local Insomnia import validation is available, use it; otherwise state the gap explicitly
-12. when k6 is a target, convert the collection and inspect generated URLs, auth, bodies, variables, checks, and dynamic correlation
-9. when k6 use is required, convert the collection and review the generated script for URL, auth, body, variable, check, and correlation correctness
+2. when the repo owns a public HTTP API, validate the canonical public contract and its route-and-variant coverage matrix
+3. when artifacts are generator-owned, rerun the repo generator and review the generated diff
+4. parse the collection and environment JSON locally
+5. run `scripts/validate_postman_artifacts.py` when local JSON artifacts exist
+6. validate against the official Postman Collection Format v2.1 schema when practical
+7. verify variable references, auth inheritance, scripts, and saved responses
+8. reject scripts misplaced under `request.event`; executable request scripts belong to the request item's top-level `event`
+9. audit response-to-variable dependencies so later requests never require undocumented manual copy/paste
+10. compare public paths, operations, statuses, schemas, error codes, and examples across the canonical contract and Postman artifacts
+11. for frontend/pentest/SDK handoffs, run strict per-request documentation and saved-response coverage checks
+12. run any repo-specific contract, OpenAPI, route-manifest, generated-client, or smoke check that materially reduces risk
+13. if local Insomnia import validation is available, use it; otherwise state the gap explicitly
+14. when k6 is a target, convert the collection and inspect generated URLs, auth, bodies, variables, checks, and dynamic correlation
 
 ## What to check
 
@@ -38,6 +39,9 @@ At minimum, verify:
 - every response value consumed later is saved by an executable success-guarded script or explicitly documented as operator input
 - frontend/pentest handoffs give every request purpose, access boundary, prerequisites, input constraints, response/error semantics, retry/idempotency notes, and relevant security tests
 - every request has a coherent saved success response when the collection is required to be a self-contained implementation contract
+- every public operation appears in the canonical contract and Postman collection with the same externally reachable method and path
+- every meaningful request and response branch is represented by a schema and source-backed example, or is recorded as an explicit implementation/contract gap
+- an SDK implementer can derive auth, input/output types, error handling, pagination, idempotency, retries, caching, and asynchronous workflows without reading service code
 
 ## Helper script
 
@@ -99,6 +103,8 @@ When using this skill, output:
 
 1. files changed
 2. what changed in the collection and environment artifacts
-3. what validation ran
-4. what still needs manual follow-up
-5. any explicit Insomnia portability or schema-validation gaps
+3. what changed in the canonical public API contract, or why no public contract was in scope
+4. route-and-variant coverage evidence
+5. what validation ran
+6. what still needs manual follow-up
+7. any explicit contract, implementation, Insomnia portability, or schema-validation gaps

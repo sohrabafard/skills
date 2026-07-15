@@ -6,6 +6,10 @@ Use this file to choose the smallest relevant reference file.
 
 - `references/10-scope-and-trigger-rules.md`
 
+## Read whenever the repository owns a public HTTP API
+
+- `references/25-public-api-contract-and-sdk-readiness.md`
+
 ## Read when you need collection layout or documentation rules
 
 - `references/20-collection-structure-and-docs.md`
