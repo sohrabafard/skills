@@ -713,6 +713,7 @@ What not to do:
   - extracted `content_*` permissions own bitmap ids `64-78`.
   - ControlledOps `content_bulk_*` permissions own bitmap ids `79-91`.
   - tusd upload-intake permissions own bitmap ids `92-95`.
+  - entitlement-api admin coarse permissions own bitmap ids `96-104` and are compiled from the catalog-generated Go map.
   - legacy VOD ids remain stable and must not be reused across the extracted content service boundary.
 - VOD keeps legacy service-local permission ids stable; extracted content-service permissions use new catalog-owned ids and are not runtime aliases for VOD permissions.
 - Laravel compatibility pattern: decode the bitmap once in auth middleware, map ids to permission names from service-local config, attach the mapped names to the request-scoped user object, and let `isAbleTo` or policy checks read those normalized permission names.

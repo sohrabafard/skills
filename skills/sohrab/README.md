@@ -118,9 +118,10 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 1. Inspect the repository and existing conventions.
 2. Use `alaa-workflow` for non-trivial, multi-file, risky, or long tasks.
 3. Read `alaa-trust-gateway-auth` first when trusted headers, tenant derivation, or gateway auth semantics are involved.
-4. Apply `alaa-php-clean-code` as the default coding baseline.
-5. Pull in specialist skills only where the task actually enters their scope.
-6. Keep docs, tests, and operational notes aligned before treating the work as done.
+4. Use `alaa-permission-generator` when adding or changing catalog-owned coarse permissions or `config/permissions.php`.
+5. Apply `alaa-php-clean-code` as the default coding baseline.
+6. Pull in specialist skills only where the task actually enters their scope.
+7. Keep docs, tests, and operational notes aligned before treating the work as done.
 
 ### Infra and delivery workflow
 
@@ -147,6 +148,7 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 - `alaa-observability-soc`
 - `alaa-docs-farsi`
 - `alaa-postman-collections`
+- `alaa-permission-generator`
 - `alaa-crockford-base32-codecs`
 
 ### PHP / Laravel and service engineering

@@ -119,6 +119,7 @@ Rules:
   - extracted `content_*` permissions own bitmap ids `64-78`
   - ControlledOps `content_bulk_*` permissions own bitmap ids `79-91`
   - tusd upload-intake permissions own bitmap ids `92-95`
+  - entitlement-api admin coarse permissions own bitmap ids `96-104`
 
 ## Route family expectations
 
@@ -131,6 +132,8 @@ Rules:
 
 ## Companion routing
 
+- $alaa-permission-generator
+  - Mandatory when catalog entries, bitmap IDs, generated PHP configs, generated Go maps, or catalog drift change.
 - $alaa-security-review
   - Mandatory when JWT verification, tenant isolation, token handling, or header-trust risk is in scope.
 - $alaa-laravel-architecture

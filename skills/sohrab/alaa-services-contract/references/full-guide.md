@@ -2465,7 +2465,7 @@ Use this file when an Ala service changes `config/permissions.php`, permission n
 
 ## Current Canonical Outcomes
 
-- Current generated catalog status is `clean` with `95` permissions. Fatal and error drift findings are `0`; current warnings are report-only unless a later policy promotes a scoped warning.
+- Current generated catalog status is `clean` with `104` permissions. Fatal and error drift findings are `0`; current warnings are report-only unless a later policy promotes a scoped warning.
 - `wa_get_watch_stats` owns bitmap id `1`; WA service-local config adoption is deferred until WA has a committed permission-consumer shape.
 - `comment_get_index` owns bitmap id `18`.
 - `comment_get_show` owns bitmap id `40`.
@@ -2473,6 +2473,8 @@ Use this file when an Ala service changes `config/permissions.php`, permission n
 - ControlledOps content bulk permissions own bitmap ids `79-91`.
 - tusd upload-intake permissions own bitmap ids `92-95`: `upload_to_content_service`,
   `upload_to_ticket_service`, `upload_to_auth_service`, and `upload_to_comment_service`.
+- entitlement-api admin coarse permissions own bitmap ids `96-104`; the generated Go map is compiled into the service
+  and remains separate from object-level OpenFGA `can_*` relations.
 
 ## Current Permission Snapshot
 
@@ -2489,6 +2491,7 @@ Use this compact grouping instead of copying the full catalog into prompts:
 | `64-78` | `content` | extracted set, content, and course permissions |
 | `79-91` | `content` | ControlledOps content bulk permissions |
 | `92-95` | `tusd` | upload-intake permissions for content, ticket, auth, and comment handoff |
+| `96-104` | `entitlement` | entitlement-api grant, explain, expansion, reconciliation, and projection admin permissions |
 
 ## Companion Skill Boundary
 
