@@ -24,6 +24,20 @@ Keep runtime changes in the correct layer and keep generated outputs honest.
 - Generated files are outputs and must not be the final authoring surface.
 - `service-ci-kit` owns GitLab CI/CD for Kubernetes or OpenShift deployment, not local Compose or Swarm runtime behavior.
 
+## Cross-runtime shared infrastructure (Laravel + Go)
+
+Local shared infra — Postgres, Redis, RabbitMQ, Adminer — is ONE running instance the whole platform reuses, and it is now emitted by **two** generators that agree on the same contract:
+
+- **Laravel** services get it from `service-runtime-kit` (`render-runtime.sh`).
+- **Go** services built on the `alaa-go-chi` kit get it from that kit's own scaffold (`scaffold/templates.go`), **not** from `service-runtime-kit`.
+
+Both emit the identical shared identity so a Go service and a Laravel service reuse one instance:
+
+- project `${DOCKER_SHARED_INFRA_PROJECT:-alaa-shared-infra}`, network `${DOCKER_SHARED_NETWORK_NAME:-alaa-shared-network}` (external), volumes `${DOCKER_VOLUME_PREFIX:-<service>}-postgres`/`-redis`/`-rabbitmq`, infra set `postgres` + `adminer` + `redis` + `rabbitmq`.
+- **Reuse-if-healthy, no ownership marker.** Each wrapper checks `docker compose -p <project> … ps --format json`; if every service it would provision is already running it **reuses them untouched** (never recreates a peer-booted instance), otherwise it bootstraps. On an indeterminable state it refuses to recreate rather than clobber a peer's data.
+
+Routing: a change to how a **Go** service generates its runtime belongs in the `alaa-go-chi` kit (its `scaffold/templates.go` and `docs/consumer-templates/**`), never in `service-runtime-kit`. A change to the shared *contract* (identity, reuse mechanism, image tags, infra set) must move in **both** generators, or the two fleets stop interoperating.
+
 ## When NOT to use
 
 - Do not use for Kubernetes, OpenShift, Helm, or GitLab CI deployment changes.
@@ -112,6 +126,7 @@ Inspect them freely. Use them to confirm current behavior. But do not keep the f
 
 ## Current Shared Runtime Facts Agents Must Know
 
+- The shared-infra contract is **cross-runtime**: Go services on `alaa-go-chi` generate the same reuse-if-healthy shared infra (project `DOCKER_SHARED_INFRA_PROJECT`, network `DOCKER_SHARED_NETWORK_NAME`, volumes `DOCKER_VOLUME_PREFIX-*`, infra set `postgres`/`adminer`/`redis`/`rabbitmq`, **no** ownership marker) from their own kit scaffold, and reuse one running instance with the Laravel fleet. Keep the two generators' shared identity aligned. See "Cross-runtime shared infrastructure" above.
 - `bash scripts/docker/up-local.sh` defaults to `prod`.
 - Generated runtime outputs are standalone at runtime and should not call back into `../service-runtime-kit`.
 - `scripts/runtime/render-runtime.sh` is the generation-time entrypoint and still depends on `service-runtime-kit`.

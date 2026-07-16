@@ -19,6 +19,14 @@ This skill explains how a normal Ala backend fits into the larger platform:
 - the backend still owns normalized request handling, business authorization, response contracts, and observability inside the service boundary
 - `alaa-permission-catalog` is the normative cross-service source for service-local permission configs, while auth remains the runtime JWT issuer and gateway/OpenFGA remain authorization infrastructure
 
+## Identifier boundary and internal mTLS rollout
+
+- A service may use private database identifiers for service-local storage, joins, ordering, and pagination. A signed opaque cursor may carry such an identifier, but APIs, URLs, events, SDKs, logs intended as public references, and other externally visible contracts must expose only the owning domain's public identifier.
+- Systems outside the owning service database boundary, including OpenFGA, use the canonical public identifier or the contract-defined reversible object identifier derived from it. Do not require another service to resolve or depend on a private database identifier.
+- Internal service-to-service mTLS is deliberately deferred as a coordinated platform rollout until the major system components and internal route contracts are complete. Do not make a feature or service rollout depend on bespoke per-service mTLS terminators, sidecars, certificate mounts, Services, or NetworkPolicies unless the user explicitly reactivates that work or a production exposure requires a new security decision.
+- During the deferral, keep internal routes private, preserve spoofing defenses and documented trusted-ingress rules, and describe the temporary network or header trust assumption accurately. A private network or an identity header is not cryptographic service identity.
+- Read `references/25-end-to-end-flow-and-boundaries.md` for the exact boundary rules.
+
 ## Quick start
 
 1. Read the repo-local `AGENTS.md`.

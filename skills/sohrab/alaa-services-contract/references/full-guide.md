@@ -1784,6 +1784,30 @@ Rules:
 - `/api/ready` is an operational contract and must not turn into a login helper, feature-flag probe, or frontend preflight endpoint
 - the contract must not assume one specific operational caller
 
+## Private and public identifier boundary
+
+Rules:
+- private database identifiers belong to the service that owns the database and may be used for local persistence, joins, query planning, deterministic ordering, and pagination
+- signed opaque cursors may encode private identifiers when needed for stable pagination, but clients must not parse, construct, or depend on cursor contents
+- public APIs, URLs, event contracts, SDKs, client-visible references, and cross-service object references expose the owning domain's public identifier, never its private database identifier
+- another service must not require access to, or synchronous resolution of, an owning service's private identifier
+- OpenFGA and other systems outside the owning database boundary use the canonical public identifier or the contract-defined reversible object identifier derived from it, because the request and authorization boundaries carry public object identity
+- for grant discovery, internal ordering may use `updated_at DESC, grant_stream_id DESC`; the private `grant_stream_id` may appear only inside a signed opaque cursor, while response bodies and public references continue to use public identifiers
+
+## Internal service-to-service mTLS rollout status
+
+Decision:
+- internal service-to-service mTLS is deferred as a coordinated platform initiative until the major system components and their internal route contracts are complete
+- this deferral applies to internal service hops generally; it is not a statement that the earlier entitlement-to-content concern was specifically a gateway-to-service hop
+- do not block a feature or introduce bespoke per-service mTLS terminators, sidecars, certificate mounts, internal Services, or NetworkPolicies solely to complete one service while this deferral is active
+- reactivate mTLS work only through an explicit platform-wide decision, or stop for a new security decision when a route would expose high-risk production traffic beyond the approved private boundary
+
+Interim rules:
+- keep internal routes private and absent from public gateway or frontend discovery surfaces
+- preserve spoofing defenses, trusted-header sanitization, request correlation, timeouts, bounds, and fail-closed behavior required by the owning service contract
+- document the temporary network or trusted-header assumption; do not describe a private network or an identity header as cryptographic service authentication
+- do not invent a repo-local replacement authentication scheme during the deferral
+
 ## Internal hop discipline
 
 Rules:
