@@ -38,13 +38,13 @@ When needed, jump to the matching section in `./full-guide.md`.
 
 ## Use this file when the task is about
 
-- JWT compact claims or claim-to-header mapping
+- JWT compact claims, `rol` role snapshots, or claim-to-header mapping
 - trusted gateway header injection and spoofing defense
 - frontend versus gateway versus backend ownership for auth context
 - request-time authorization at the gateway boundary and how it relates to entitlement-platform
 - public versus service-local route shape behind the gateway
 - downstream request-scoped identity normalization
-- permission bitmap decoding, bit ordering, `X-Access` projection, or catalog-generated service-local permission maps
+- permission bitmap decoding, bit ordering, `X-Access` projection, `X-User-Roles` validation, or catalog-generated service-local permission maps
 - auth-service route families and current v3 client flow
 - deny-code semantics, review checklists, or anti-patterns
 

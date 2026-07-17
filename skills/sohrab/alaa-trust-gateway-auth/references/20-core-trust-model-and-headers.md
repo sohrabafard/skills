@@ -23,7 +23,7 @@ Core meaning:
 
 - call documented gateway-facing routes only
 - send `Authorization: Bearer ...` to the gateway only
-- never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, or any `X-Authz-*` header
+- never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, `X-User-Roles`, or any `X-Authz-*` header
 - never call `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly
 
 ### Gateway
@@ -89,6 +89,7 @@ Before any auth context is injected, the gateway deletes these incoming headers 
 - `X-User-Id`
 - `X-User-Mobile`
 - `X-Access`
+- `X-User-Roles`
 - `X-Access-Token-Id`
 - `X-TOKEN-CLIENT-ID`
 - `X-TOKEN-ISSUED-AT`
@@ -110,6 +111,7 @@ The gateway injects these trusted headers after successful verification:
 - `sub` -> `X-User-Id`
 - `m` -> `X-User-Mobile`
 - `prm` -> `X-Access`
+- `rol` -> `X-User-Roles`
 - `jti` -> `X-Access-Token-Id`
 - `aud` -> `X-TOKEN-CLIENT-ID`
 - `iat` -> `X-TOKEN-ISSUED-AT`
@@ -126,8 +128,10 @@ The gateway injects these trusted headers after successful verification:
 - `loc.sc` -> `X-Location-School`
 
 Only claims that are present are injected.
+New and refreshed Auth access tokens include `rol`, including `[]` for users with no roles. During migration, the gateway tolerates an absent claim for older tokens. A present claim must be a compact JSON array of at most 16 unique bytewise-sorted canonical role names matching `^[a-z][a-z0-9_]{0,47}$` and must not exceed 1024 serialized bytes. The gateway rejects a present invalid claim before forwarding and injects only the normalized compact array.
 `prv` and `av` are compact versioning claims used for invalidation and diagnostics; they are not forwarded as headers by default.
 `X-Access` is only the trusted gateway projection of verified `prm`; downstream service configs determine local permission names from `alaa-permission-catalog` generated outputs.
+`X-User-Roles` is the trusted gateway projection of the verified `rol` issuance-time snapshot. It is role context, not a replacement for the `prm` permission bitmap or service business authorization.
 
 ## Compact claim semantics
 
@@ -137,6 +141,7 @@ Only claims that are present are injected.
 | `sub` | authenticated user id      | user identifier                                    |
 | `m`   | mobile                     | trusted mobile context                             |
 | `prm` | permission bitmap          | compact authorization bitmap                       |
+| `rol` | canonical role-name array  | deterministic issuance-time role snapshot          |
 | `prv` | permission catalog version | invalidation metadata for `prm`                    |
 | `av`  | authz version              | invalidation metadata for authorization state      |
 | `fn`  | first name                 | trusted user first name                            |
@@ -158,7 +163,7 @@ Only claims that are present are injected.
 - Auth-service's `trusted_gateway` guard currently consumes only:
   - `X-User-Id`
   - `X-Project-Id`
-- Auth-service does not currently read `X-Access`, `X-User-Mobile`, `X-Access-Token-Id`, `X-TOKEN-*`, `X-USER-SCOPES`, or the name and location headers on its protected v3 routes.
+- Auth-service does not currently read `X-Access`, `X-User-Roles`, `X-User-Mobile`, `X-Access-Token-Id`, `X-TOKEN-*`, `X-USER-SCOPES`, or the name and location headers on its protected v3 routes.
 - Current auth-service behavior parses trusted `X-User-Id` and `X-Project-Id` as positive integers on protected gateway-backed routes.
 - Current auth-service standard no longer requires any extra backend-only signature header on trusted routes. The trust boundary is the sanitized gateway path plus the required injected identity headers.
 - Target standard after the current platform decision: the shared gateway boundary carries the compact JWT claims above, while auth-service may keep a separate internal numeric project key during migration.

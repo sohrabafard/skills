@@ -72,6 +72,16 @@ In a normal user journey:
 
 From the user point of view, this feels like one product. Inside the platform, each layer keeps a clear responsibility.
 
+## Media timeline unit contract
+
+This contract applies only to media playback positions, media durations, timepoints, and watch analytics. It does not redefine ISO-8601 timestamps, database `created_at`/`updated_at` fields, log fields, metric suffixes, or timeout configuration.
+
+- `content` owns editorial and product playback time in whole seconds: `time_seconds`, `duration_seconds`, `estimated_duration_seconds`, and `last_position_seconds`.
+- The client sends and consumes video-linked `comment.timestamp` values in whole seconds. `comment-service` persists the integer unchanged; it must not silently convert the client contract.
+- `wa` owns analytics event times and watch-segment positions in whole milliseconds, using fields explicitly suffixed `_ms`, including `event_ts_ms`, `start_pos_ms`, `segment_from_ms`, `segment_to_ms`, and `segment_watched_wall_ms`.
+- At the client-to-WA boundary, convert seconds to milliseconds exactly once (`seconds * 1000`). When WA analytics is used to position a content timepoint or a comment/note, convert milliseconds to seconds exactly once (`milliseconds / 1000`) and apply the receiving field's documented integer/rounding policy.
+- Do not infer a unit from a bare field name. New cross-service media timeline fields must use an explicit `_seconds` or `_ms` suffix. A pre-existing bare field keeps its owning client/service contract and must be documented at the integration boundary.
+
 ## How entitlement-platform fits into the Ala stack
 
 - entitlement-platform does not own authentication; the gateway does
@@ -92,7 +102,7 @@ Do not make a normal backend behave like the gateway, the request-time checker, 
 
 Rules:
 - frontend clients call documented gateway-facing routes, not service-local routes discovered from backend repos
-- frontend clients must never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, `X-User-Mobile`, `X-User-Fname`, `X-User-Lname`, or `X-Location-*`
+- frontend clients must never generate or rely on trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, `X-User-Roles`, `X-User-Mobile`, `X-User-Fname`, `X-User-Lname`, or `X-Location-*`
 - trusted headers belong to the gateway-to-service contract, not the public client contract
 - if a route is operational, frontend clients must not treat it as product behavior
 - if a route previously depended on the retired profile blob, move that client integration to the public auth or profile APIs instead of reviving `X-Profile`
@@ -123,6 +133,22 @@ Route-shape reminder:
 - do not pass child route-prefix overrides solely for gateway routing, and do not trim, rewrite, or de-duplicate repeated path segments between the gateway prefix and child-defined route path
 - before claiming a prefix is active in an environment, verify the gateway route table and rendered HAProxy config when available; in the current local convention this usually means checking `D:/Sohrab/Project/gateway/charts/gateway/values*.yaml`, `D:/Sohrab/Project/gateway/docker/values.shared-network.yaml`, and rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`
 - use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
+
+## Role snapshot propagation
+
+Auth issues the compact `rol` access-token claim as a deterministic JSON array of canonical role names. New and refreshed tokens include the claim even when the array is empty. Each role must match `^[a-z][a-z0-9_]{0,47}$`; the array must be bytewise sorted, duplicate-free, contain at most 16 roles, and serialize to at most 1024 bytes of compact JSON.
+
+Gateway rules:
+- delete every client-supplied `X-User-Roles` header on public and protected routes before routing
+- after successful JWT verification, treat an absent `rol` as temporary compatibility with older tokens
+- when `rol` is present, reject malformed JSON, a non-array value, non-string entries, invalid names, unsorted or duplicate values, more than 16 entries, or compact JSON larger than 1024 bytes before proxying
+- inject only the normalized compact JSON array as trusted `X-User-Roles`
+
+Downstream rules:
+- parse `X-User-Roles` only from the sanitized gateway path and validate the same bounds near ingress
+- keep roles request-scoped and distinct from `X-Access`; `rol` is a role-name snapshot while `prm` remains the permission bitmap
+- do not let a public client supply or override role context
+- role changes take effect for new or refreshed access tokens; existing access tokens retain their issuance-time snapshot until refresh, expiry, or revocation
 
 ## Operational caller expectations
 

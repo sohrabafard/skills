@@ -17,6 +17,7 @@ Use these exact header names unless a temporary migration is explicitly document
 - `X-Project-Id`
 - `X-User-Id`
 - `X-Access`
+- `X-User-Roles`
 - `X-Access-Token-Id`
 - `X-User-Mobile`
 - `X-User-Fname`
@@ -54,6 +55,8 @@ Required validation behavior:
 - decode `X-Access` as the base64url permission bitmap
 - map `X-Access` only through the service's generated, committed catalog-owned permission config
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
+- when `X-User-Roles` is present, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
+- keep trusted roles distinct from permissions: `X-User-Roles` projects the verified `rol` role snapshot, while `X-Access` projects the verified `prm` permission bitmap
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `$alaa-trust-gateway-auth`
 - normalize `X-User-Fname` and `X-User-Lname` as nullable trimmed strings
@@ -64,13 +67,14 @@ Actor context must be able to hold at least:
 - trusted project identifier
 - trusted user identifier
 - normalized permission names
+- normalized trusted role names when present
 - trusted access-token identifier when present
 - normalized first and last name values
 - normalized location object with `ostan`, `shahrestan`, `bakhsh`, `shahr`, `shobe`, and `school`
 - trusted mobile when present
 - `request_id`
 - `trace_id`
-- optional derived role when the service uses role inference
+- optional service-local derived role only when explicitly needed; it must not replace or mutate the trusted role snapshot
 
 Auth synchronization rules:
 - keep `$request->user()` and `Auth::user()` consistent

@@ -461,6 +461,7 @@ Headers the gateway rejects from client input:
 - `X-User-Id`
 - `X-User-Mobile`
 - `X-Access`
+- `X-User-Roles`
 - `X-Access-Token-Id`
 - `X-TOKEN-CLIENT-ID`
 - `X-TOKEN-ISSUED-AT`
@@ -481,6 +482,7 @@ Headers the gateway injects after successful verification:
 - `sub` -> `X-User-Id`
 - `m` -> `X-User-Mobile`
 - `prm` -> `X-Access`
+- `rol` -> `X-User-Roles`
 - `jti` -> `X-Access-Token-Id`
 - `aud` -> `X-TOKEN-CLIENT-ID`
 - `iat` -> `X-TOKEN-ISSUED-AT`
@@ -498,16 +500,19 @@ Headers the gateway injects after successful verification:
 
 Rules:
 - only claims that are present are injected
+- new and refreshed Auth access tokens include `rol`, including `[]` for users with no roles; during migration, the gateway tolerates an absent claim for older tokens
+- a present `rol` must be a compact JSON array of at most 16 unique bytewise-sorted canonical role names matching `^[a-z][a-z0-9_]{0,47}$`, must not exceed 1024 serialized bytes, and is rejected before forwarding when invalid
 - `prv` and `av` stay out of the forwarded header contract unless a future revision explicitly adds them
-- the current forwarded identity and token surface is `X-Project-Id`, `X-User-Id`, `X-User-Mobile`, `X-Access`, `X-Access-Token-Id`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, and the `X-Location-*` headers
+- the current forwarded identity and token surface is `X-Project-Id`, `X-User-Id`, `X-User-Mobile`, `X-Access`, `X-User-Roles`, `X-Access-Token-Id`, `X-TOKEN-CLIENT-ID`, `X-TOKEN-ISSUED-AT`, `X-TOKEN-NOT-BEFORE`, `X-TOKEN-EXPIRES-AT`, `X-USER-SCOPES`, `X-User-Fname`, `X-User-Lname`, and the `X-Location-*` headers
 - `X-Access` is only the trusted gateway projection of verified `prm`; downstream service configs determine local permission names from `alaa-permission-catalog` generated outputs
+- `X-User-Roles` is the trusted gateway projection of the verified `rol` issuance-time snapshot; it is distinct from the `prm` permission bitmap and does not replace service business authorization
 
 ### Auth-service local trusted header contract
 
 - Auth-service's `trusted_gateway` guard currently consumes only:
   - `X-User-Id`
   - `X-Project-Id`
-- Auth-service does not currently read `X-Access`, `X-User-Mobile`, `X-Access-Token-Id`, `X-TOKEN-*`, `X-USER-SCOPES`, or the name and location headers on its protected v3 routes.
+- Auth-service does not currently read `X-Access`, `X-User-Roles`, `X-User-Mobile`, `X-Access-Token-Id`, `X-TOKEN-*`, `X-USER-SCOPES`, or the name and location headers on its protected v3 routes.
 - Current auth-service behavior parses trusted `X-User-Id` and `X-Project-Id` as positive integers on protected gateway-backed routes.
 - Current auth-service standard no longer requires any extra backend-only signature header on trusted routes. The trust boundary is the sanitized gateway path plus the required injected identity headers.
 - Target standard after the current platform decision: the shared gateway boundary carries the compact JWT claims above, while auth-service may keep a separate internal numeric project key during migration.

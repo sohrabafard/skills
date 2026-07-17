@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
-  short_description: "Ala service, gateway, TOTP, runtime, notification, and permission contract"
-  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, gateway prefix-map, auth terms/TOTP policy, trust-boundary, permission-catalog, notification messaging contract, observability, runtime, and deployment contract."
+  short_description: "Ala service, gateway, role, runtime, and API contract"
+  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, gateway prefix map, compact role projection, auth terms/TOTP policy, trust boundary, permission catalog, notification messaging, observability, runtime, and deployment contracts."
 
 policy:
   allow_implicit_invocation: true

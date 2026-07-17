@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Source-of-truth for Ala gateway authentication trust and trusted request context. Use when gateway headers, JWT-derived identity, compact claim mapping, permission bitmap claim semantics, X-Access projection, project propagation, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, or downstream trust semantics behind the Ala gateway change. Do not use it as a generic auth skill outside the Ala gateway boundary."
+description: "Source-of-truth for Ala gateway authentication trust and trusted request context. Use when gateway headers, JWT-derived identity, compact claim mapping, rol to X-User-Roles projection, permission bitmap claim semantics, X-Access projection, project propagation, request-time authorization at the gateway boundary, frontend-to-gateway route expectations, or downstream trust semantics behind the Ala gateway change. Do not use it as a generic auth skill outside the Ala gateway boundary."
 ---
 
 
@@ -27,7 +27,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
 - gateway or reverse-proxy auth routing changes
 - trusted header, tenant context, or request identity work
 - compact JWT custom claim reviews
-- `prm`, `prv`, `av`, `X-Access`, or permission-bitmap decoding reviews
+- `rol`, `X-User-Roles`, `prm`, `prv`, `av`, `X-Access`, or permission-bitmap decoding reviews
 - downstream service middleware or policy changes behind the gateway
 
 ## When NOT to use
@@ -50,6 +50,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
 |-------------|----------------------------|--------------------------|
 | `m`         | mobile                     | `X-User-Mobile`          |
 | `prm`       | permission bitmap          | `X-Access`               |
+| `rol`       | canonical role-name array  | `X-User-Roles`           |
 | `prv`       | permission catalog version | not forwarded by default |
 | `av`        | authorization version      | not forwarded by default |
 | `pid`       | public project boundary    | `X-Project-Id`           |
@@ -77,6 +78,7 @@ Keep this top-level file small. Load the references for the full trust model, ro
 | `X-User-Id`             | verified `sub` claim           | authenticated user identifier                        |
 | `X-User-Mobile`         | verified `m` claim             | trusted mobile context                               |
 | `X-Access`              | verified `prm` claim           | compact permission bitmap                            |
+| `X-User-Roles`          | verified `rol` claim           | compact canonical role-name JSON array               |
 | `X-Access-Token-Id`     | verified `jti` claim           | access-token id for session alignment                |
 | `X-TOKEN-CLIENT-ID`     | verified `aud` claim           | token audience metadata                              |
 | `X-TOKEN-ISSUED-AT`     | verified `iat` claim           | token issued-at metadata                             |
@@ -100,6 +102,7 @@ Rules:
 - `prv` and `av` remain raw JWT metadata only unless a future contract explicitly adds a use for them
 - auth remains the only runtime issuer of `prm`, `prv`, and `av`
 - downstream services consume `X-Access` only as the gateway-trusted projection of verified `prm`
+- downstream services consume `X-User-Roles` only as the gateway-trusted projection of the verified `rol` issuance-time snapshot; it is distinct from `X-Access`
 - the gateway is not a backend permission-catalog consumer; it verifies JWTs, strips spoofable headers, injects trusted headers, and delegates resource authorization to `authz-sidecar`/OpenFGA when a route family requires that path
 
 ## Permission bitmap boundary
