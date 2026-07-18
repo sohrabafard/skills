@@ -62,10 +62,14 @@ Is this behavior already in the kit?
     P5 dictates (domain/application/infrastructure), per the clean-code skill.
 ```
 
-"Plausibly shared" errs toward the kit. The framework's recorded exception is instructive: news's Redis corpus
-cache stayed service-local **only because** the two latent Redis shapes were proven different — and that
-reasoning was written down. If you keep something local, write the one-paragraph justification in your service's
-`docs/DECISIONS.md`; an auditor will look for it.
+"Plausibly shared" errs toward the kit. The Redis story shows the split precisely, and it is instructive because
+it moved: the generic Redis *transport* (client, cache-aside adapter, version-key invalidator, degraded readiness)
+was identical across services, so it became kit-owned — `rediskit` (framework §12 decision 6, resolved 2026-07-18).
+Import it; do not re-implement a go-redis client or cache adapter. Only the Redis *domain shapes* that were proven
+genuinely different (news's corpus cache with its visibility predicate, notif's rate-limiter bucket) stay
+service-local — the transport is kit, the shape is yours. That is the general test: abstract the mechanics both
+services share, keep the domain policy each owns. If you keep something local, write the one-paragraph
+justification in your service's `docs/DECISIONS.md`; an auditor will look for it.
 
 ## 3. Building a new consumer (news, notif, future services)
 
@@ -74,6 +78,13 @@ reasoning was written down. If you keep something local, write the one-paragraph
    is part of the contract; keep it, fill the TODOs.
 2. Register the service (§0.3) with status `bootstrapping`.
 3. Wire only the subcommands you use (`serve|consume|dispatch|relay|migrate|seed|topology|ops`).
+   - **Datastore-free services are first-class** (a read-only API over ClickHouse or an external API, kit v0.4.0+):
+     do not ship placeholder `PG_DSN`/`RABBITMQ_URL` values. Declare the absent lanes —
+     `configkit.Load(ctx, configkit.WithoutPostgres(), configkit.WithoutRabbitMQ())` boots with no PG/MQ keys and
+     fails loudly if one is set anyway — and pass the matching `contracttest.DocSurfaces{WithoutPostgres: true,
+     WithoutRabbitMQ: true, WithoutScaffoldRoutes: true}` to `AssertDocsPresent` so the docs gate asserts only the
+     core contracts (envelopes, readiness, correlation, kit metric/event vocabulary) a datastore-free service can
+     truthfully make. See `CONTRACTS.md` → Environment Keys.
 4. Domain implementation follows the service's architecture doc; every contract question resolves against
    `CONTRACTS.md`, not memory.
 5. CI must run the kit-shipped gates from day one: `contracttest`, migration up-down-up, seeder idempotency,

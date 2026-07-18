@@ -13,7 +13,7 @@ type: baseline-proposal
 date: YYYY-MM-DD
 proposing_service: <news | notif | entitlement-api | tusd | platform-audit>
 proposing_repo: <repo path/URL>
-proposed_home: <existing kit package | new package name, e.g. rediskit>
+proposed_home: <existing kit package | new package name, e.g. a new `webhookkit`>
 consumers_needing_it_now: [<service>, ...]
 consumers_predicted: [<service>: <evidence — arch-doc §>, ...]
 severity: blocking | high | normal
@@ -31,7 +31,8 @@ for ProviderFacing routes, parameterized by scheme.">
 <The rule of two, made concrete: where does this logic exist or is it designed to exist, per consumer, with
 file:line or arch-doc § citations? If only one consumer needs it today, why is it still platform-shaped
 (security-sensitive, contract-adjacent, predicted by a designed service)? Check first that the framework/kit
-docs have not already RULED it service-local (e.g. the two Redis shapes) — if they have, present the new
+docs have not already RULED it service-local at this granularity (e.g. the two Redis *domain* shapes stayed
+service-local even though their shared transport was promoted to `rediskit`) — if they have, present the new
 evidence that reopens the question, or do not file.>
 
 ## 3. Proposed kit contract

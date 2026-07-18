@@ -50,8 +50,12 @@ into mode K in the same session, since that path has its own gates.)
    ≥2 places: helpers, middlewares, retry/backoff policies, cache adapters, provider plumbing, validation
    idioms, test harness code, deploy/CI snippets. The rule of two: same shape in two consumers → baseline
    proposal; in one consumer but predicted by a designed-service doc for another → note it as `emerging`.
-   Respect recorded negative decisions — e.g., the framework explicitly ruled the two latent Redis shapes
-   *different* and service-local; do not re-propose settled non-abstractions without new evidence.
+   Respect recorded negative decisions, but read them at the right granularity, and do not re-propose settled
+   non-abstractions without new evidence — the framework ruled the two latent Redis *domain shapes* different and
+   service-local, yet the generic Redis *transport* they share was promoted to `rediskit` (§12 decision 6, resolved
+   2026-07-18). The negative decision covers the domain policy, not the mechanics: do not re-propose the settled
+   shape-level non-abstraction, but do flag any consumer that hand-rolls a go-redis client/cache adapter instead of
+   importing `rediskit`.
 7. **Behavioral divergence on shared contracts.** Same kit surface used with different semantics (different
    error-code choices for the same failure, different lane usage, different readiness severities for the same
    dependency class) — this is drift in consumer space even when no kit code was copied.

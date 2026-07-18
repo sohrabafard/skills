@@ -31,8 +31,8 @@ preferences; violating any of them recreates the fork problem.
 
 1. **Consumers never change the kit.** If a consumer needs an upgrade, finds a bug, or hits a limitation in any
    kit-hosted surface (any package or contract listed in framework §3/§7 — envelopes, middleware, trustkit,
-   pgkit, mqkit, outboxkit, jobkit, seedkit, readykit, obskit, configkit, errkit, httpkit, audiencekit, idkit,
-   runkit, contracttest, the scaffold, CI templates, deploy templates), it does **not** edit kit code, does not
+   pgkit, mqkit, rediskit, outboxkit, jobkit, seedkit, readykit, obskit, configkit, errkit, httpkit, audiencekit,
+   idkit, runkit, contracttest, the scaffold, CI templates, deploy templates), it does **not** edit kit code, does not
    fork, and does not quietly re-implement. It writes one **timestamped change-request document per feature or
    bug** (`YYYY-MM-DD-<slug>.md`) that fully explains the need, the evidence, and the impact. The human owner
    carries that document to the kit-owner agent, who verifies it against all consumers before changing anything.
