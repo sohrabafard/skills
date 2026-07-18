@@ -1,43 +1,48 @@
-# Registry — `docs/CONSUMERS.md` in the alaa-go-chi Repository
+# Consumer Registry — `docs/CONSUMERS.md` in the Kit Repository
 
-The consumer registry is the single list of every service built on (or migrating to) the kit. It is the
-iteration set for kit impact analysis (mode K) and platform audits (mode A): a service missing from this file
-gets no impact analysis, no propagation prompt, and no audit coverage — it will be broken silently by the first
-incompatible kit change. That is why registration is a **law**, not a courtesy.
+The registry is the single inventory of every service built on (or migrating to) the kit, and the iteration set
+for kit impact analysis, propagation, and platform audits. A service missing from it gets no impact analysis, no
+propagation prompt, and no audit coverage — it will be broken silently by the first incompatible kit change.
+Registration is a law, not a courtesy. The registry records inventory; it is **not** execution authority by itself
+— the active phase ([05](05-phase-and-source-truth.md)) decides what may be done with a row.
 
-## Where and what
+## Where and who may edit
 
-- File: `docs/CONSUMERS.md` in the **alaa-go-chi repository** (not in the consumer repo).
-- If the file does not exist yet, the first registering agent creates it from
-  `assets/templates/consumers-registry.md`.
-- This is the **only file in the kit repo a consumer agent may edit**. Registration is explicitly *not* a kit
-  change: no `CONTRACTS.md` entry, no version bump, no kit-owner review needed. Everything else in the kit repo
-  still requires the mode CR document channel.
+- File: `docs/CONSUMERS.md` in the **alaa-go-chi repository**. If absent, the first registering agent creates it
+  from `assets/templates/consumers-registry.md`.
+- This is the only kit-repo file a consumer agent may edit, and only its **own** row. Registration is explicitly
+  not a kit change: no `CONTRACTS.md` entry, no version bump, no owner review.
+- Never delete another service's row — mark it `retired`. Rows are current-state; history lives in git.
 
 ## Row contract
 
-One row per service:
-
 | Field | Meaning |
 |---|---|
-| `service` | canonical service name (`news`, `notif`, `entitlement-api`, `tusd`, …) |
-| `status` | `planned` → `bootstrapping` → `migrating` (existing services) → `active`; also `paused`, `retired` |
+| `service` | canonical service name (`news`, `notif`, `entitlement-api`, `tusd`, `wa-api`, …) |
+| `status` | `planned` → `bootstrapping` → `active`; migrations: `planned-migration` → `migrating` → `active`; also `paused`, `retired` |
 | `repo` | repo path/URL an agent can use to locate the code |
 | `kit_version` | the `git.alaatv.com/vk/alaa-go-chi` version pinned in `go.mod` (`—` until first pin) |
-| `contracttest` | `passing` / `failing` / `local_ci_smoke_passed; runner_contract_pending` / `not-wired` |
-| `surfaces` | kit packages the service actually consumes (helps blast-radius triage; keep honest, not aspirational) |
-| `agent_notes` | one line: pointer to architecture doc, migration inventory, or standing caveat |
+| `contracttest` | `passing` / `failing` / `local_ci_smoke_passed; runner_contract_pending` / `not-wired` / `not-current` |
+| `surfaces` | kit packages the service actually consumes — honest, not aspirational |
+| `agent_notes` | one line: architecture doc pointer, migration inventory, or standing caveat |
 | `registered` / `updated` | dates (`YYYY-MM-DD`) |
 
-## When to touch it
+## During KIT_FIRST_STABILIZATION
 
-- **Register** (add row): in the first session that builds or migrates a service on the kit — before writing
-  service code, per `references/10-consumer-development.md` §0.
-- **Update your own row**: on every kit version bump, status transition, or contracttest state change. Do it in
-  the same session as the change it records; a registry that lags reality misleads the kit owner's impact
-  survey, which is worse than no data because it looks like data.
-- **Kit owner / auditor**: correct any row proven stale, and add `NEEDS_CONFIRMATION`-flagged rows for
-  discovered unregistered consumers.
+- Every row stays `paused`/inventory-only; `contracttest` evidence is `not-current`; notes carry exactly
+  `NOT_ASSESSED_KIT_FIRST` and the do-not-inspect/propagate marker.
+- Do not open a consumer repo to refresh version, surfaces, or status; historical values remain, clearly marked
+  non-current.
+- Adding a newly discovered row is allowed only from already-authorized kit-side evidence — do not inspect the
+  consumer to fill fields; use `NEEDS_CONFIRMATION`.
 
-Keep edits append/update-only — never delete another service's row (mark `retired` instead), and never rewrite
-history: the registry is current-state, and history lives in git.
+## After explicit reactivation
+
+- **Register** in the first session that builds or migrates a service on the kit — before writing service code.
+- **Update your own row** in the same session as every kit-version bump, status transition, or contracttest state
+  change, from verified live evidence only. A registry that lags reality misleads the owner's impact survey —
+  worse than no data, because it looks like data.
+- **Kit owner / auditor**: correct rows proven stale; add `NEEDS_CONFIRMATION`-flagged rows for discovered
+  unregistered consumers.
+
+Registry changes never replace change requests, compatibility analysis, or release evidence.

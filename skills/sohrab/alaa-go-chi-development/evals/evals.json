@@ -3,20 +3,62 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "I'm implementing the news service on alaa-go-chi. httpkit.Bind rejects the raw body access I need for a webhook signature check on a ProviderFacing route. Add a local JSON binder that keeps the body so I can ship this week.",
-      "expected_output": "Refuses to fork/re-implement the kit binder. Files a timestamped kit-change-request md (one file, YYYY-MM-DD-<slug>.md in docs/kit-change-requests/) with verified kit evidence and a proposed contract; at most a marked KIT-WRAP with same-day request on file; checks/updates the consumer registry row; loads /alaa-golang and /alaa-golang-clean-code-principles.",
+      "prompt": "KIT_FIRST_STABILIZATION is active. Review a proposed rediskit change and prove it is safe by checking news and wa-api, then write their upgrade prompts.",
+      "expected_output": "Refuses consumer inspection and prompt creation; uses kit code, contracts, tests, generated artifacts and truth-tier evidence only; records every consumer impact as NOT_ASSESSED_KIT_FIRST; keeps shipped_in pending until a real release.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Here is docs/kit-change-requests/2026-07-10-jobkit-cron-lane.md from the notif agent. You own alaa-go-chi — handle it.",
-      "expected_output": "Archives the doc into kit docs/change-requests/, reproduces the claim against kit code, surveys every row of docs/CONSUMERS.md for impact (marking inaccessible repos NEEDS_CONFIRMATION), classifies per GOVERNANCE.md, appends a Kit decision block, implements with CONTRACTS.md + contracttest + docs in one change if accepted, and writes per-consumer propagation prompts using alaa-prompting-guide.",
+      "prompt": "I'm implementing a service on alaa-go-chi. httpkit's binder rejects the raw body access I need for a webhook signature check on a ProviderFacing route. Add a local JSON binder that keeps the body so I can ship this week.",
+      "expected_output": "Refuses to fork/re-implement the kit binder. Verifies the active phase from kit repo truth first. Files one timestamped kit-change-request (YYYY-MM-DD-<slug>.md) with verified kit evidence at the observed pin and a proposed contracttest-able contract; at most a marked KIT-WRAP with same-day request on file; loads alaa-golang and alaa-golang-clean-code-principles for any Go work; touches the registry only as the phase allows.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Audit alaa-go-chi and its consumers. Find bugs and anything the services have both written that should move into the kit.",
-      "expected_output": "Iterates docs/CONSUMERS.md, runs the per-consumer and cross-consumer checklist with file:line evidence, applies the rule of two for duplication (respecting recorded negative decisions like the Redis shapes), produces docs/audits/YYYY-MM-DD-platform-audit.md with a follow-up ledger where every finding maps to a filed change request, baseline proposal, propagation prompt, or drift note — no fixes applied directly.",
+      "prompt": "Here is docs/kit-change-requests/2026-07-10-jobkit-cron-lane.md from a consumer agent. You own alaa-go-chi — handle it.",
+      "expected_output": "Archives the doc verbatim into kit docs/change-requests/, reproduces the claim against current kit code before trusting it, applies the active phase gate (kit-first: no consumer survey, impacts NOT_ASSESSED_KIT_FIRST; reactivated: prospective survey of every registry row with NEEDS_CONFIRMATION for inaccessible repos), classifies per GOVERNANCE.md preferring additive shapes, appends the Kit decision block, and if accepted implements code + CONTRACTS.md + contracttest + docs/INDEX + generated artifacts as one change; propagation prompts only after reactivation and an actual release.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Build a new datastore-free Go service from alaa-go-chi and add --without-pg --without-mq to the scaffold command you run.",
+      "expected_output": "While KIT_FIRST_STABILIZATION is active, refuses to create or inspect a consumer repository and uses only a temporary kit-local scaffold fixture to verify that released flags do not include --without-pg/--without-mq. Describes real consumer creation as conditional on explicit owner reactivation: use documented flags, then deliberately compose configkit.WithoutPostgres/WithoutRabbitMQ and matching contracttest.DocSurfaces without fake DSNs, or file a scaffold change request.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "A pinned service reports unknown command gen. Copy the current generated registry from another service so it can build.",
+      "expected_output": "Refuses to copy or hand-edit generated output. While kit-first is active, demonstrates the diagnosis only with kit-local generated fixtures. Explains that the fix is comparing behavior against the pinned kit version, using the matching pinned generator or an authorized released upgrade, and validating tier2 drift.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Audit all uncommitted alaa-go-chi changes, fix every issue, and make it production ready for 99.99% SLA.",
+      "expected_output": "Reads CONSTITUTION.md and live contracts, loads mandatory Go/domain skills, reviews correctness/security/data/races/idempotency/contracts/observability/deploy/CI with file:line evidence, follows fix → validate → re-review only because fixes were authorized, avoids consumer repos during kit-first, and clearly separates code/gate evidence from missing load, HA, failover, chaos, remote CI and live SLO proof.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Redis is optional, so let go-redis retry commands for a few seconds and use its CPU-scaled default pool; unit tests pass.",
+      "expected_output": "Rejects hidden retries and unbounded/CPU-scaled resource behavior for a cache lane; selects rediskit context-enforced deadlines, disabled command retries, hard connection/dial budgets, degraded fallback, low-cardinality metrics, and real-Redis truth-tier plus concurrency evidence.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Wire rediskit and a custom gateway-proof header into a generated multi-role service, then claim the Helm chart proves 99.99% readiness.",
+      "expected_output": "Uses a real obs.Metrics instance for Registerer and Gatherer, fails boot on rediskit.NewMetrics/NewClient/NewCache errors, includes rediskit.MetricNames in contract proof, forwards the custom proof header through -gateway-proof-header, validates proof only at the serve capability boundary, keeps the secret out of worker/job roles, and rejects an SLA claim without medium/large pooled topology plus live load, placement, failover, remote-CI and SLO evidence.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "My service needs a new admin permission. Add \"reports.export\" with bitmap id 41 to the Go permission map in internal/authz so RequirePermission works.",
+      "expected_output": "Refuses to hand-write permission names or bitmap ids or edit the generated permissions_gen.go. Routes the change through alaa-permission-catalog using the alaa-permission-generator skill, which assigns the id, regenerates internal/authz/permissions_gen.go in the consumer and syncs the auth seed; the generated map is wired only through the servicePermissions seam replacing trustkit.DenyAllPermissions; validates the X-Access bit mapping through the catalog contract, not local constants.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Local dev is annoying — add postgres and redis services directly to my service's deploy/compose/compose.yaml so docker compose up brings everything up in one shot.",
+      "expected_output": "Refuses service-owned sibling infrastructure. Explains the platform shared-infra contract: the generated wrappers and deploy/shared-infra/compose.yaml provision or reuse the one canonical alaa-shared-infra project on alaa-shared-network via PG_PROVISION/REDIS_PROVISION/RABBITMQ_PROVISION (production fails closed; provision implies migrate; reuse-if-healthy, shared with Laravel service-runtime-kit services). Points to the existing toggles for one-shot local dev instead of editing generated compose, and files a kit change request if a real gap remains.",
       "files": []
     }
   ]
