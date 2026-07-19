@@ -2,12 +2,15 @@
 
 ## Contents
 - Decision posture
+- Pattern recognition diagnostic
 - MVC pattern
 - Service pattern
 - Interfaces and dependency injection
 - Repository pattern
 - Decorator pattern
 - Factory pattern
+- Abstract factory pattern
+- Prototype pattern
 - DTO pattern
 - Value object pattern
 - Builder pattern
@@ -16,9 +19,14 @@
 - Adapter pattern
 - Facade pattern
 - Proxy pattern
+- Bridge pattern
+- Flyweight pattern
 - Composite pattern
 - Iterator pattern
 - State pattern
+- Mediator pattern
+- Memento pattern
+- Visitor pattern
 - Template method pattern
 - Chain of responsibility / Pipeline
 - Singleton pattern
@@ -40,6 +48,40 @@ Prefer the smallest useful abstraction:
 6. pipeline or command/job where workflow shape requires it
 
 Do not stack patterns by habit. Every pattern must remove a real smell: fat controller, duplicated query, provider-specific API leakage, unstable array shape, scattered branching, hidden side effects, or unsafe long-lived worker state. Repository is the exception in Alaa Laravel application code: it is mandatory for persistence access, but it still must be named and shaped around a real aggregate, use case, read model, or persistence boundary.
+
+## Pattern recognition diagnostic
+
+Identify the observable symptom first, then confirm with the discriminating question — a "no" means you
+picked the wrong pattern. This table is the routing layer for the whole catalog below.
+
+| Symptom in the code | Reach for | Confirming question |
+|---|---|---|
+| The same multi-step flow duplicated across classes with variations in individual steps only | Template Method (or a service taking step callbacks) | Is the skeleton stable and are variations strictly step-local? |
+| A growing sequence of checks before an action (auth, throttle, ownership, quota), each able to stop it | Chain of Responsibility (middleware / Pipeline with early return) | May a handler halt the request, and is chain-end behavior defined? |
+| One payload transformed by ordered steps that ALL run (import: parse → normalize → enrich → persist prep) | Pipeline | Does every stage always run and hand the payload on? |
+| An action must be queued, delayed, retried, scheduled, or audited as its own unit | Command (job/Artisan command) | Do you need the action *as data* that travels, not just a method call? |
+| Provider/vendor payload keys, exceptions, or client quirks appearing in services or controllers | Adapter | Is the other side unmodifiable, and must its interface *change shape* to fit yours? |
+| A cross-cutting concern (cache, metrics, logging, retry) must wrap an interface without touching its implementations | Decorator | Same interface, always delegates, one concern per wrapper? |
+| A service constructs or locates its own infrastructure (`new PostgresRepo`, `app()->make`, SDK import in domain code) | Dependency Inversion (interface + provider binding) | Can a fake implement the seam and pass the same contract test? |
+| The same `match`/`if` on a provider/type/mode repeated across call sites | Strategy (+ factory/map for selection) | Do variants share one narrow contract and vary independently of callers? |
+| One exclusive lifecycle expressed as boolean soup or scattered status writes | State (backed enum + one transition authority) | Are there named states with guarded transitions? |
+| Recursive domain trees or composable eligibility rules special-casing leaf vs group | Composite | Can leaf and group honestly share one interface? |
+| Query/report/notification construction that is multi-step and conditional | Builder | Do call sites genuinely assemble different combinations? |
+| A heavy dependency injected widely but rarely used | Proxy (PHP 8.4+ lazy object) | Is there a measured construction cost worth deferring? |
+| Families of related provider objects that must never be mixed across providers | Abstract Factory (suite bound at boot) | Are there ≥2 members whose implementations must match? |
+| Subclasses or long constructors existing only to encode preset field values | Prototype (`clone` / `replicate()` / registry) | Is duplication of a configured object the real need? |
+| Subclass names concatenating two variation axes (`SmsInvoiceNotifier`) | Bridge (abstraction × implementation) | Are the two axes genuinely independent? |
+| Collaborators referencing each other by name in a tangled web | Mediator (orchestrating service) | Can participants stop knowing each other entirely? |
+| Prior state must be restorable (undo, drafts, compensation) | Memento (owner-built snapshot / audit row) | Does the owner build the snapshot, not outsiders? |
+| The same `instanceof` ladder repeated once per operation over stable node classes | Visitor (handler map per operation) | Is the node set stable while operations keep arriving? |
+
+Look-alike disambiguation (the pairs agents most often confuse):
+
+- **Adapter vs Decorator vs Proxy vs Facade**: Adapter *changes* an interface so an incompatible thing fits; Decorator *keeps* the interface and adds behavior, always delegating; Proxy *keeps* the interface but controls whether/when the real object is reached (lazy, guarded, cached); a GoF facade *invents* a simpler interface over a subsystem.
+- **Chain of Responsibility vs Pipeline vs Decorator**: CoR handlers may handle-and-stop, so unhandled requests need defined behavior; Pipeline stages all run, each mutating/transforming the one payload traveling through; Decorator layers always delegate inward.
+- **Command vs Strategy**: Strategy is interchangeable ways of doing the *same* operation, selected by context; Command reifies *that an operation was requested* so it can be queued, logged, retried, or undone.
+- **Template Method vs Strategy**: Template Method fixes the skeleton and lets implementations vary steps; Strategy swaps whole algorithms at runtime behind one contract.
+- **Repository vs DAO-ish query dumping**: a repository is shaped by an aggregate/use case/read model; a class of twenty unrelated query methods is a query junk drawer wearing the name.
 
 ## MVC pattern
 
@@ -133,6 +175,12 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 
 ## Decorator pattern
 
+Decorator exists because inheritance cannot add behavior combinations at runtime: subclassing per
+combination explodes, and the wrapped class may be final. A decorator implements the same interface,
+holds the inner implementation, adds exactly one concern, and always delegates. Stacking order is
+behavior (`retry(cache(repo))` ≠ `cache(retry(repo))`) — compose the stack in one provider binding and
+test the composed order.
+
 ### Use when
 - A cross-cutting concern (caching, logging, metrics, retries, tracing) must wrap an existing interface without changing its implementations.
 - Caching a repository: this is the canonical Alaa home for Redis caching — a `Cached<Domain>Repository` implementing the same repository interface and wrapping the store implementation (e.g. `PostgresCommentRepository`).
@@ -178,6 +226,42 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Using a factory to hide poor object design.
 - Reusing test factories as production construction logic.
 - Building a huge "factory manager" that knows too much about the app.
+
+## Abstract factory pattern
+
+### Use when
+- Whole families of related objects must stay mutually consistent: a payment provider suite (gateway client + webhook verifier + refund handler), an SMS provider suite (sender + delivery-report parser), a storage suite (writer + URL signer). Mixing members of different families is a bug.
+- Variant-selection conditionals are repeating at every creation site for members of the same family.
+
+### Laravel application
+- Define one interface per family member and one suite factory interface with a creation method per member; one concrete suite per provider.
+- Select and bind the concrete suite once at boot (config-driven service provider binding or contextual binding); application code receives the suite, never chooses it.
+- Under Octane the suite factory must be stateless/immutable like any singleton.
+
+### Good defaults
+- Reach for it only when the family is real (≥2 members whose implementations must match). One varying class is plain Strategy + Factory.
+- Keep the suite interface consumer-shaped; do not grow it into a provider god-interface.
+
+### Anti-patterns
+- A "factory of factories" for a single product.
+- Family members resolved independently from config in different places, letting a Mediana sender pair with a Kavenegar report parser.
+
+## Prototype pattern
+
+### Use when
+- Duplicating configured objects is cheaper or safer than reconstructing them: preset report definitions, notification templates, pre-configured query/filter DTOs.
+- Subclasses or long constructors exist only to encode preset field values.
+
+### Laravel application
+- PHP's native `clone` is the mechanism; implement `__clone()` to deep-copy nested mutable objects — default clone is shallow, and a shared nested object is a cross-request leak under Octane.
+- On PHP 8.5, `clone($obj, ['prop' => $v])` is the idiomatic "clone with changes" for `readonly` DTOs — Prototype and the wither pattern converge here.
+- Eloquent's `replicate()` is the model-world prototype: copies attributes, drops identity (`id`, timestamps). Use it instead of hand-copying attribute arrays; review which attributes must be excluded.
+- Keep preset registries explicit: a small map of named, immutable prototype instances cloned on request.
+
+### Anti-patterns
+- Field-by-field reconstruction of an object the language could clone.
+- Cloning objects holding resources, PDO handles, or service references — clone data carriers, not services.
+- Shallow-cloning DTOs whose nested objects then mutate shared state.
 
 ## DTO pattern
 
@@ -265,6 +349,8 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Keep the interface role-based and narrow.
 - Make selection rules explicit and testable.
 - Prefer composition over inheritance between strategies.
+- For a single tiny varying behavior, a first-class callable or closure parameter is the lightweight strategy — a class hierarchy is not required until strategies carry state, dependencies, or multiple methods.
+- Strategy vs State: strategies are independent and unaware of each other; if the "strategies" know each other and trigger switching, you are looking at the State pattern.
 
 ### Anti-patterns
 - One large strategy interface that every implementation barely satisfies.
@@ -273,6 +359,11 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Replacing a simple `match` with an abstraction that adds no flexibility.
 
 ## Observer pattern
+
+The defining signal: the set of interested parties is unknown to the producer or changes over time — the
+producer announces, subscribers decide to care. If the producer must know exactly who reacts and in what
+order, that is a workflow (service/pipeline), not Observer; and if a central object coordinates known
+components, that is Mediator.
 
 ### Use when
 - A model lifecycle event should trigger organized side effects.
@@ -296,6 +387,13 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Depending on request/auth/tenant globals inside observers instead of explicit context.
 
 ## Adapter pattern
+
+The recognition signal: the other side's interface is wrong for you and you cannot (or must not) modify
+it — a provider SDK, a legacy module, an external API. The adapter implements the interface *your*
+application owns, wraps the incompatible target by composition, and translates names, shapes, and errors
+in one place. If provider payload keys or provider exceptions appear in services or controllers, the
+adapter is missing or leaking. (Decorator keeps an interface and adds behavior; Adapter's defining move is
+*changing* an interface to fit.)
 
 ### Use when
 - External provider APIs need a stable internal interface.
@@ -321,7 +419,7 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 ## Facade pattern
 
 ### Two meanings — keep them distinct
-- **GoF facade**: one focused class that gives application code a simple, intention-named API over a complex subsystem (a multi-step provider flow, a legacy module, a cluster of SDK calls). In Alaa Laravel code this is a plain injected service such as `PaymentFacade` or `MediaPipelineFacade`: small methods named by business use case, returning app-owned DTOs, hiding subsystem ordering and quirks. Use it when callers keep re-orchestrating the same subsystem steps.
+- **GoF facade**: one focused class that gives application code a simple, intention-named API over a complex subsystem (a multi-step provider flow, a legacy module, a cluster of SDK calls). In Alaa Laravel code this is a plain injected service such as `PaymentFacade` or `MediaPipelineFacade`: small methods named by business use case, returning app-owned DTOs, hiding subsystem ordering and quirks. Use it when callers keep re-orchestrating the same subsystem steps — the recognition signal is the same init-and-call ritual copy-pasted across call sites. Guard against the known failure mode: a facade that keeps absorbing operations becomes a god object; split refined facades per use-case cluster before that happens.
 - **Laravel `Facade` classes** (`Cache::`, `Queue::`, `Log::`): static proxies to container services — an access mechanism, not the GoF pattern. The rules below govern them.
 
 ### Use when
@@ -359,6 +457,37 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Hand-rolled magic `__get`/`__call` proxy classes on PHP 8.4+ repos where native lazy objects do the job without magic.
 - Lazy proxies around cheap objects — deferral machinery costing more than construction.
 - Identity-sensitive code (`spl_object_id`, strict `===` registry checks) mixed with `newLazyProxy` without an explicit note.
+
+## Bridge pattern
+
+### Use when
+- A class is growing along two independent axes and subclass names start concatenating them (`SmsInvoiceNotifier`, `EmailReceiptNotifier`): every new value on either axis multiplies classes.
+- You want to vary "what is being done" (message/report/export content) independently of "how it is delivered/rendered" (channel, format, backend).
+
+### Laravel application
+- The shape: the abstraction holds a constructor-injected implementation interface and delegates the low-level work; both hierarchies grow independently. Laravel notifications are bridge-shaped already — the Notification (what) is separate from channels (how); prefer that native seam over custom class grids.
+- Typical Alaa seams: report definition × exporter (CSV/XLSX/PDF), document × renderer, alert × delivery channel.
+- Pair with Abstract Factory only when specific abstractions may only work with specific implementations.
+
+### Anti-patterns
+- A subclass grid that doubles when either axis gains a variant — the recognition signal itself.
+- "Bridging" a single-axis variation that plain Strategy already solves; Bridge is Strategy applied to a structural split of two hierarchies, planned up front.
+
+## Flyweight pattern
+
+### Use when — all three conditions must hold (optimization only, never preemptive)
+- The app must keep a huge number of similar objects alive at once; and
+- this measurably exhausts memory; and
+- the objects carry duplicated state that can be extracted and shared.
+
+### Laravel application
+- Rare in request-scoped PHP: requests are short and Octane workers reset. The legitimate cousins: backed enums (interned by the engine — the idiomatic flyweight for closed sets), shared immutable config/value-object instances reused across a long-running import or queue batch.
+- Shared (intrinsic) state must be immutable; per-use (extrinsic) state is passed as method arguments — an Octane rule this pattern happens to restate.
+- If memory pressure in a batch job is the problem, reach first for `lazy()`/`cursor()` streaming (see `laravel-best-practices.md`); flyweight is the answer only when the duplication itself is the cost.
+
+### Anti-patterns
+- Introducing flyweight machinery without a measured memory problem.
+- Mutable "shared" instances — a shared mutable flyweight under Octane is a cross-request data leak by construction.
 
 ## Composite pattern
 
@@ -410,15 +539,67 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Transition rules duplicated in controllers, jobs, and admin panels instead of one authority.
 - Status changed silently as a side effect of unrelated updates (mass assignment reaching `status`).
 
+## Mediator pattern
+
+### Use when
+- A set of collaborators has developed a web of direct references — each knows several others by name, reacts to their changes, and none can be reused or tested alone.
+- Coordination logic for one workflow is smeared across its participants instead of living in one place.
+
+### Laravel application
+- The everyday mediator is a plain orchestrating service: participants (validators, calculators, notifiers) know nothing about each other; the service sequences them. If a "service" mostly relays messages between components that also still talk directly, it is not a mediator — finish the decoupling or remove it.
+- Laravel's event dispatcher is a platform mediator for *decoupled reactions* (listeners don't know the dispatching code); use it for genuinely independent side effects, not to hide a required sequential workflow — a workflow scattered across listeners becomes untraceable.
+- Distinguish from Facade: a facade simplifies an existing subsystem that still works without it; a mediator is the only channel through which participants may interact.
+
+### Anti-patterns
+- The mediator growing into a god object that knows every participant's internals — keep participants' contracts narrow.
+- Event-listener chains that implement an ordered business transaction implicitly (listener A dispatches event B ...). Sequences belong in a service or pipeline where the order is readable.
+
+## Memento pattern
+
+### Use when
+- A prior state must be restorable — undo, draft/restore, compensation on failure — without exposing the object's internals for outsiders to copy.
+
+### Laravel application
+- Persisted snapshots are the platform form: audit tables storing before/after images, versioned drafts, soft-state checkpoints. The row is the memento; the caretaker (history table) never interprets it beyond storage.
+- Eloquent's `getOriginal()` / `getChanges()` are built-in micro-mementos for a model's in-request lifecycle — use them for audit payloads instead of hand-tracking prior values.
+- Pair with Command for undo-style flows: the job stores the pre-image it needs for compensation; keep mementos immutable and lifecycle-bounded (retention policy owned by the data layer).
+- In-memory undo stacks across requests do not exist under Octane — state that must survive the request lives in the database or cache with explicit keys and TTLs.
+
+### Anti-patterns
+- "Snapshots" assembled by reading another object's public getters field-by-field — the owner builds its own snapshot.
+- Unbounded history tables with no retention decision.
+
+## Visitor pattern
+
+### Use when
+- A new operation must run across a stable, heterogeneous object structure (document nodes, rule trees, catalog entries of different classes) without adding that operation to every class — especially when several such operations (export, render, validate, price) keep arriving.
+
+### Laravel application
+- Classic double dispatch (`accept(Visitor)` on every node) is heavy in PHP; prefer the pragmatic form first: a handler map keyed by node class or backed enum (`match` on `$node::class`), one handler object per operation. This keeps the operation consolidated without touching node classes.
+- Reach for real `accept()`-based Visitor only when the structure is deep, recursive, and traversal must accumulate state across nodes (report generation over a rule AST).
+- The trade the classic pattern makes: adding an operation is cheap; adding a node class means updating every visitor/handler map. Choose it only when the node set is stable and operations vary — if nodes vary and operations are stable, use ordinary polymorphism instead.
+
+### Anti-patterns
+- `instanceof` ladders duplicated per operation across services — the exact smell either form of Visitor exists to remove.
+- A visitor demanding public access to every node internal; give nodes intention-named accessors for what operations legitimately need.
+
 ## Template method pattern
+
+Recognize the need: several classes implement nearly the same multi-step algorithm, differing only in
+individual steps (three importers differing only in parsing; three exporters differing only in row
+formatting), and client code branches on which variant it holds. The cure: one owner for the skeleton;
+implementations extend *particular steps*, never the structure or the step order.
 
 ### Use when
 - Several implementations share one fixed algorithm skeleton with small varying steps, and the skeleton itself must stay in one place.
 
 ### Laravel application
 - Use sparingly: an abstract class with a `final` public method calling small `protected` hooks (e.g. an import base: `run()` = validate → transform → persist → report, subclasses supply `transform()`).
+- Distinguish required steps (abstract — subclasses must implement) from optional hooks (no-op default methods placed before/after key steps for extension).
 - Prefer composition first — a service taking strategy/closure steps, or a pipeline — because inheritance couples subclasses to the base class forever. Template method wins only when the skeleton must be un-overridable and implementations are a closed, code-owned set.
 - Keep hooks few and intention-named; a base class with ten abstract methods is an interface pretending to be an algorithm.
+- Watch LSP: a subclass that suppresses a step (overriding it to do nothing where callers expect the step's effect) breaks the skeleton's contract — that is a sign the variant needs a different design, not a quieter override.
+- If callers need to swap the *whole* algorithm at runtime, that is Strategy, not Template Method.
 
 ### Anti-patterns
 - Deep inheritance chains where each level overrides part of the parent's flow.
@@ -428,6 +609,13 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 ## Chain of responsibility / Pipeline
 
 Laravel's middleware stack and `Pipeline` are chain-of-responsibility implementations: each handler receives the payload and the `$next` closure, and decides to handle, transform, pass on, or short-circuit. The pipeline guidance below is the canonical Alaa form of this pattern; reach for a hand-rolled linked chain only when handlers must be discovered/ordered dynamically at runtime, which is rare. Short-circuiting (returning early without calling `$next`) is a first-class outcome — make it explicit and tested, not an exception in disguise.
+
+Two disciplines the classic pattern demands:
+
+- **Chain-end behavior is defined**: a request that no handler claims must have a deliberate result. For authorization-like chains the default is deny; for enrichment chains the default is pass-through. "Fell off the end of the chain" is the classic CoR bug.
+- **Know which of the two shapes you are building**: a *check chain* (CoR proper) where handlers may stop the request, versus a *transform pipeline* where every stage always runs and mutates/replaces the one payload traveling through (sequential mutations over one builder/DTO). Naming the shape decides how failures behave — a stopped check is a normal outcome; a failed transform stage is an error.
+
+Order is contract in both shapes: declare it in one place (middleware groups, the `Pipeline::through([...])` array) and test the composed chain, not just individual pipes.
 
 ## Singleton pattern
 
@@ -450,8 +638,14 @@ Laravel's middleware stack and `Pipeline` are chain-of-responsibility implementa
 - Singleton "current context" services.
 - Static caches that grow forever or omit tenant/project keys.
 - SDK clients mutated with per-request headers or tokens.
+- Hand-rolled `getInstance()` static singletons in app code: they defeat constructor injection and make tests order-dependent (the classic criticisms — hidden coupling, untestability, SRP violation). The container's `singleton()` binding is the only sanctioned mechanism, and only under the lifetime rules above.
 
 ## Pipeline pattern
+
+The shape: sequential mutations over one payload — a single typed DTO/builder object flows through ordered
+stages, each stage transforming or enriching it, and every stage runs. Query-builder composition
+(`$query->when(...)->where(...)`) is this shape inline; `Pipeline::send($payload)->through([...])` is the
+explicit form.
 
 ### Use when
 - A workflow is a sequence of independent, reorderable steps.
@@ -475,6 +669,11 @@ Laravel's middleware stack and `Pipeline` are chain-of-responsibility implementa
 - A payload array whose shape changes silently between steps.
 
 ## Command pattern
+
+The point of Command is turning a method call into a stand-alone object, so the action can travel: be
+serialized onto a queue, delayed, retried, scheduled, logged for audit, or replayed. If you only need to
+*call* behavior synchronously, call a service method; reach for Command when you need the action *as
+data*. (Strategy varies how one thing is done; Command reifies that a thing was requested.)
 
 ### Use when
 - An action should be executed, queued, retried, delayed, logged, or replayed as its own unit.

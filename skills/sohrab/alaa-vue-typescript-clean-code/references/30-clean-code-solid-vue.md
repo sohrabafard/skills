@@ -71,6 +71,7 @@ Do not:
 
 Do:
 
+- Apply the Rule of Three: first time, write it; second time, wince but duplicate; third time, extract. Premature abstraction from two look-alikes is how vague utils are born.
 - Extract duplicate domain rules, mapping, validation, API calls, Quasar option builders, and repeated table column config.
 - Keep duplication if two cases only look similar but change for different reasons.
 
@@ -104,6 +105,39 @@ Do not:
 
 - Use abbreviations, negated booleans, or magic strings where a typed state is clearer.
 - Depend on undocumented ordering, timing, or Quasar internals.
+
+## Code smells — the diagnosis vocabulary
+
+Name the smell before choosing the repair; ranked findings with smell names are precise and non-personal.
+The five classic families, in frontend form (smell → repair):
+
+**Bloaters**
+- Long function / mammoth component → the size budgets in SKILL.md; extract along the standard seams.
+- Primitive obsession: statuses, ids, and money as bare strings/numbers → discriminated unions, branded/template-literal types, typed value helpers.
+- Long parameter list (>3-4) or boolean flags steering behavior → one typed options object, or split the function per flag.
+- Data clumps: the same field group recurring (page/size/sort; from/to) → one interface; test: delete one field — if the rest lose meaning, they belong together.
+
+**OO abusers**
+- Repeated `switch` on the same kind across files → strategy map or Visitor-style handler map with `assertNever`.
+- Temporary state: refs meaningful only during one flow → extract the flow into its own composable owning that state.
+- Refused bequest: a "base" component/composable whose consumers stub half of it → split the contract (ISP) or compose.
+
+**Change preventers**
+- Divergent change: one file edited for many unrelated reasons → split by change axis (the orchestrator split).
+- Shotgun surgery: one conceptual change (a status rename, an event name) touching many files → gather it into one owner: `as const` registry, one mapper, one store. Dual of divergent change — over-fixing one creates the other.
+
+**Dispensables**
+- Comments explaining *what* unclear code does → extract and name after the comment; keep *why* comments.
+- Dead code, unused props/emits, speculative "maybe later" abstractions with one implementation → delete; git remembers.
+- Data class: an interface whose derived logic is re-computed in every consumer → move the derivation into the mapper/composable that owns the type.
+
+**Couplers**
+- Feature envy: a component computing mostly from another module's state → move the computation to that store/composable.
+- Inappropriate intimacy: reaching into child internals, `$parent`, importing another feature's private modules → typed contracts only.
+- Message chains: `store.a.b.c.d` navigation in templates/components → an intention-named getter/computed at the owner.
+- Middle man: a wrapper component/composable that only forwards → remove it; intentional adapters/decorators are exempt.
+
+When NOT to "fix": the smell is a deliberate pattern (strategy maps concentrate switches; adapters concentrate foreign shapes; decorators/middle-men at boundaries are design); the cure would couple more than the smell; or the fix exceeds the task's declared scope — then record it as a follow-up finding instead.
 
 ## Boundary naming alignment
 
@@ -163,5 +197,13 @@ High-level UI depends on typed abstractions:
 - store actions
 - API facades
 - testable adapters
+
+Recognition signals that DIP is being violated (invert at a small typed port when any of these appear):
+
+- A component or composable imports Axios, an SDK client, or `localStorage` directly and cannot be unit-tested without network/browser.
+- Swapping a provider or transport would require editing feature components instead of one binding site.
+- A test needs heavy mocking of a concrete module instead of passing a small fake through props, arguments, or an injection key.
+
+The port belongs to the consumer: define the interface as what the UI needs (three methods, domain-shaped), not as a mirror of what the SDK offers.
 
 Do not scatter concrete Axios/SDK/localStorage calls through feature components.

@@ -163,7 +163,10 @@ If a trigger fires, do not continue the affected part of the task until that ski
 - In normalize-to-Alaa mode, standardize naming and layer roles according to `alaa-laravel-architecture` plus `references/consistency-and-naming.md`.
 
 # Pattern decision order
-Choose the simplest abstraction that fixes the real problem.
+Choose the simplest abstraction that fixes the real problem. When a pattern seems needed but the right one
+is unclear, run the symptom → pattern recognition diagnostic at the top of
+`references/design-patterns.md` — choose by observable smell, then confirm with its discriminating
+question.
 
 1. Start with a plain class, private method extraction, or tighter naming.
 2. Move business flow into a service when a controller, job, listener, or command is doing more than orchestration.
@@ -307,9 +310,11 @@ Documentation is part of done when behavior, contracts, setup, env vars, request
 - `references/consistency-and-naming.md`
   Read before renaming, extracting, consolidating, or normalizing code shape.
 - `references/design-patterns.md`
-  Read for MVC, Service, Repository, Decorator (incl. cache decorators), Factory, Builder, Strategy, Observer, Adapter, Facade, Proxy (incl. PHP 8.4 lazy objects), Composite, Iterator, State, Template Method, Chain of Responsibility / Pipeline, Command, Dependency Injection, Singleton, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
+  Read for the full catalog — MVC, Service, Repository, Decorator (incl. cache decorators), Factory, Abstract Factory, Prototype, Builder, Strategy, Observer, Adapter, Facade, Proxy (incl. PHP 8.4 lazy objects), Bridge, Flyweight, Composite, Iterator, State, Mediator, Memento, Visitor, Template Method, Chain of Responsibility / Pipeline, Command, Dependency Injection, Singleton, DTO, Value Object, Query Object / Filter DTO, and exception translation. It opens with a symptom → pattern recognition diagnostic and look-alike disambiguation — run that before choosing.
 - `references/solid-in-practice.md`
   Read for per-principle SOLID depth (SRP, OCP, LSP, ISP, DIP) with Do/Don't PHP examples and the SOLID review checklist.
+- `references/code-smells-and-refactoring-triggers.md`
+  Read when reviewing, cleaning, or deciding whether/what to refactor: the five smell families (bloaters, OO abusers, change preventers, dispensables, couplers) in Laravel terms, each smell with its treatment, plus the Rule of Three, when-to-refactor triggers, and when NOT to refactor.
 - `references/octane-clean-code.md`
   Read for Octane-safe clean-code rules, design-pattern cautions, Swoole-to-RoadRunner portability, state-leak review checks, and validation expectations.
 - `references/php-modern-and-psr.md`

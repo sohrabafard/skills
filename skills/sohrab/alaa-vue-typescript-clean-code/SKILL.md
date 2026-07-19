@@ -183,7 +183,9 @@ SOLID mapping for Vue:
 
 ## Design pattern selection
 
-Use patterns deliberately and name them in code comments only when it clarifies architecture.
+Use patterns deliberately and name them in code comments only when it clarifies architecture. Before
+picking one, run the symptom → pattern diagnostic at the top of `references/40-patterns-vue-quasar.md`;
+choosing by symptom (what hurts) beats choosing by name.
 
 - **Singleton**: module-level service, API client, event gateway, or worker manager. Do not hide mutable per-user state in SSR-capable singletons.
 - **Dependency injection**: typed injection keys for plugins, replaceable services, deeply nested context, or test seams. Prefer `Symbol` keys.
@@ -200,7 +202,11 @@ Use patterns deliberately and name them in code comments only when it clarifies 
 - **Composite**: recursive component trees (menus, nested comments, tree views) with one typed node contract for leaf and group; guard depth and keys.
 - **Iterator**: prefer array methods and typed collections; generators only for real lazy/streaming traversal; pair unbounded lists with pagination/virtual scrolling.
 - **Template Method**: renderless components and slots as the skeleton with caller-supplied steps; composition over inheritance, never base-class hierarchies.
-- **Chain of Responsibility**: HTTP interceptor chains, router guard sequences, validation chains — ordered, explicit, each handler passes or short-circuits deliberately.
+- **Chain of Responsibility**: HTTP interceptor chains, router guard sequences, validation chains — ordered, explicit, each handler passes or short-circuits deliberately; chain-end behavior defined.
+- **Pipeline**: ordered pure stages that all run, transforming one typed payload (DTO normalization, submit preparation); distinct from CoR because no stage short-circuits on "handled".
+- **Mediator**: host page or orchestrator composable coordinates mediator-blind children (props-in/events-out); never a web of siblings knowing each other.
+- **Memento**: owner-built immutable snapshots for undo/draft-restore/rollback; bounded history, `toRaw` before cloning.
+- **Abstract Factory / Prototype / Bridge / Flyweight / Visitor**: see the catalog — provider suites chosen once; frozen preset registries; two-axis splits; shared immutable config (measured need only); per-operation handler maps over stable unions.
 
 ## Quasar, Vite, Pinia, router, SSR, and PWA rules
 

@@ -7,6 +7,38 @@ owned by `golang-design-patterns` and friends via the `alaa-golang` router (`50-
 never re-derive them here. In Go, most patterns dissolve into interfaces, functions, and composition; the
 platform question is never "how do I implement X" but "which kit or principle already owns X's job".
 
+## Recognize by symptom first
+
+Pick the pattern from the pain you can point at, then confirm with the discriminating question — a "no"
+means a different pattern (or none).
+
+| Observable symptom | Pattern | Confirming question |
+|---|---|---|
+| The same multi-step lifecycle re-written per worker/seeder/consumer | Template Method (kit skeleton) | Does a kit runner already own this skeleton? (P1 — almost always yes) |
+| A growing set of pre-handler checks, each able to reject the request | Chain of Responsibility (middleware) | Declared once at the route family, order visible? (P2) |
+| One payload transformed by ordered steps that ALL run | Pipeline (ordered typed stages) | Does every stage always run and pass the payload on? |
+| An action must leave the process: queued, retried, replayed, audited | Command (outbox message + consumer) | Is the action a snake_case-tagged wire struct written in the producing tx? (P6, P8) |
+| Provider names, payload shapes, or errors leaking into use cases | Adapter (port implementation) | Is the translation confined to the infrastructure adapter? (P4, P5) |
+| A use case imports pgx/amqp/Redis/SDK and cannot be tested with fakes | Dependency Inversion (port) | Can a fake implement the port and pass the same contract test? (P5, P12) |
+| A cross-cutting concern (metrics, cache, logging) needed on an existing port | Decorator (same-interface wrapper) | One concern, contract-identical, always delegates? |
+| Calls must be refused/deferred under failure (breaker open, rate limit) | Proxy | May the wrapper legitimately *not* call the inner port, observably? |
+| `switch` on provider/channel/mode repeated across use cases | Strategy (implementations as data) | One narrow port, selection in one boot/policy site? (P10) |
+| Status booleans multiplying, or status writes scattered across files | State (typed vocabulary + one authority) | Named states, guarded transitions, idempotent replays? (P7, P10) |
+| Provider pieces resolved separately that must match each other | Abstract Factory (suite struct at boot) | ≥2 members whose implementations must pair? (P10) |
+| Adapter names concatenating two variation axes | Bridge (two orthogonal ports) | Are the axes genuinely independent? (P5) |
+| Workers/consumers coordinating with each other directly in-process | Mediator (the use case) / outbox | Should this coordination be a broker fact instead? (P6, P13) |
+| "Restore prior state" or compensation needed after failure | Memento (audit pre-image in the same tx) | Is the pre-image durable and written by its owner? (P6) |
+| The same kind-`switch` repeated once per operation | Visitor (handler map per operation) | Stable kind set, operations keep arriving? (P10) |
+
+## Look-alike disambiguation
+
+- **Adapter vs Decorator vs Proxy vs Facade**: Adapter *changes* an interface to fit the port the application owns; Decorator *keeps* the interface and adds one concern, always delegating; Proxy *keeps* the interface but may refuse or defer the inner call (typed `errkit` denial, never silence); Facade is a simpler surface over a subsystem — on this platform, that is the kit's job (P1), not yours.
+- **CoR vs Pipeline**: middleware handlers may reject-and-stop, and chain-end behavior is kit-defined; pipeline stages all run and transform one payload — pretending a transform pipeline can "short-circuit on handled" hides errors.
+- **Command vs Strategy**: Strategy is interchangeable ways of doing the same operation behind one port; Command reifies *that an operation was requested* so it survives crashes and retries — on this platform, a command that matters is an outbox row, not an in-memory dispatch (P6).
+- **Template Method vs Strategy**: the skeleton is fixed and steps vary → kit runner + your step funcs; the whole algorithm varies at runtime → a port with swappable implementations.
+
+## The map: pattern → kit-era shape
+
 | Pattern | Kit-era shape | Governing principle |
 |---|---|---|
 | Singleton | composition root in `main` wires once; no package-level mutable state | P10 |
@@ -24,6 +56,15 @@ platform question is never "how do I implement X" but "which kit or principle al
 | State | typed status vocabulary + one transition authority | P7, P10 |
 | Template Method | kit owns the skeleton, service fills the steps; funcs, not inheritance | P1 |
 | Chain of Responsibility | the kit-owned middleware chain, declared once | P1, P2 |
+| Pipeline | ordered typed stages over one payload; every stage runs | P5 |
+| Dependency Inversion | P5 itself: ports owned by the application, adapters outside | P5, P12 |
+| Abstract Factory | provider suite = struct of matching port implementations wired at boot | P5, P10 |
+| Prototype | value-copy semantics; explicit deep copies for slices/maps; no clone frameworks | P8 |
+| Bridge | two orthogonal ports (what × how) instead of an adapter matrix | P5 |
+| Flyweight | shared immutable config/lookup tables; optimization only, measured need | P10 |
+| Mediator | the use case is the mediator; no in-process component hubs | P5, P6 |
+| Memento | pre-images persisted as audit rows / receipts, never in-memory undo | P6 |
+| Visitor | exhaustive type/kind switch or handler map on typed constants; no accept() machinery | P10 |
 
 ## Singleton
 
@@ -144,6 +185,68 @@ half-overridden result is exactly the dual behavior P1 forbids.
 The middleware chain is this pattern, and it is declared once, kit-side, in the router builder — recovery,
 correlation, trust parsing, then per-route-family additions (`trustkit.RequirePermission`,
 `RequireTOTP`) readable at the route declaration (P2). Order is contract: trust parsing before permission
-checks, recovery outermost. Services never hand-assemble ad-hoc handler chains or insert middleware that
-re-implements a kit link (P1). Outside HTTP, prefer an explicit ordered slice of typed steps over a linked
-hand-off chain — Go readers should see the order, not chase `next` pointers.
+checks, recovery outermost. Chain-end behavior is defined by the kit (unmatched → canonical 404/405
+envelope; unauthorized → typed denial) — a hand-rolled chain whose unhandled requests fall through
+silently is the classic CoR bug and a P1 violation twice over. Services never hand-assemble ad-hoc handler
+chains or insert middleware that re-implements a kit link (P1). Outside HTTP, prefer an explicit ordered
+slice of typed steps over a linked hand-off chain — Go readers should see the order, not chase `next`
+pointers.
+
+## Pipeline
+
+Sequential transformation of one payload through ordered stages that all run — distinct from CoR because
+no stage short-circuits on "handled"; a stage either transforms the payload or returns a typed error that
+ends the run. The Go shape is deliberately plain: an ordered slice of `func(ctx context.Context, p *Payload) error`
+executed in a loop, declared and tested as one composed unit. Use it where a use case's preparation steps
+(normalize → enrich → validate → stamp) are genuinely independent and reorderable; do not build pipeline
+machinery for two calls, and do not let stages hide IO — side effects stay behind ports (P5) and stage
+order stays visible at the call site.
+
+## Dependency Inversion
+
+Not a pattern to "apply" here — it is P5, already mandatory: the application owns small consumer-shaped
+ports; infrastructure implements them; imports flow inward only. The recognition signals are the useful
+part: a use case that cannot be tested with fakes, a provider swap that edits business files instead of
+one wiring site in `main`, or a port that mirrors pgx/SQL/SDK method names instead of what the use case
+needs — each means the dependency arrow points outward and must be inverted. Contract tests at the port
+(P12) are what keep every implementation, fake, and decorator honestly substitutable.
+
+## The remaining classics, kit-era stances
+
+- **Abstract Factory** — the need is real when a provider requires several *matching* pieces (sender +
+  delivery-report parser + webhook verifier): define the suite as one struct of ports, construct one
+  concrete suite per provider at boot, select by config (P10). Members resolved independently from config
+  in different places is the bug this prevents. No factory-of-factories machinery.
+- **Prototype** — Go's value semantics make copies free; the pattern reduces to: copy deliberately.
+  Slices, maps, and pointers inside copied structs still alias (aliasing depth: `golang-safety`); deep-copy
+  explicitly where mutation follows. Preset wire payloads are plain exported values copied on use. Never
+  build a `Clone()` framework for data that assignment already copies.
+- **Bridge** — when adapter names start concatenating two axes (`BaleTemplateRenderer`,
+  `MedianaPlainRenderer`), split into two orthogonal ports: what is produced (renderer) × how it is
+  delivered (channel client). Each axis grows independently; wiring at boot pairs them. An adapter matrix
+  that doubles per new value on either axis is the recognition signal.
+- **Flyweight** — legitimate only as shared *immutable* lookup tables and config loaded once at boot
+  (P10). Go's real memory answers are streaming, bounded batches, and profiling
+  (`golang-performance`); never introduce sharing machinery without a measured problem.
+- **Mediator** — the use case already plays this role: handlers, workers, and consumers never coordinate
+  with each other directly; they call use cases, and cross-service coordination travels as broker facts
+  (P6, P13). An in-process hub where components subscribe to each other is the Observer ban wearing a
+  different name.
+- **Memento** — "restore prior state" on this platform means durable pre-images: audit rows written in the
+  same transaction (P6), receipts, and status history — never in-memory undo stacks that a crash erases.
+  The originator writes its own pre-image; consumers of audit data never reconstruct it from live tables.
+- **Visitor** — Go has no double dispatch; the honest forms are an exhaustive `switch` on a typed
+  kind/constant (P10) closed by a default that fails loudly, or a handler map keyed by kind — one map per
+  operation. Choose it when operations keep arriving over a stable kind set; if kinds keep arriving,
+  put the behavior on the type instead. `accept()` hierarchies are un-idiomatic here; for AST-scale
+  traversal precedents route to the `alaa-golang` tree.
+
+## Code smells → where the repair lives
+
+Smell vocabulary (bloaters, OO abusers, change preventers, dispensables, couplers) is useful for naming
+review findings; the platform routing for repairs: bloaters and line-level clarity → `golang-code-style`
+via the router; couplers (feature envy, reach-ins, message chains) → P5/P13 (ports, contracts, no
+reach-ins); change preventers (shotgun surgery on codes/events/metrics) → P10 vocabulary constants;
+dispensables (dead code, speculative interfaces with one implementation and no seam) → delete, per the
+kit-first rule that unused shared shapes belong to the kit or nowhere. The Rule of Three applies to
+service-local helpers; anything needed by two services is kit intake (P1), not a third copy.
