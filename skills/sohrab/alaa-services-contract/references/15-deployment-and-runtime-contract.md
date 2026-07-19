@@ -126,21 +126,20 @@ Exact identity — there is no "alaa-infra-share" or "alaa-infra-network"; the o
 
 In-network DNS aliases (containers attached to `alaa-shared-network` connect with these; never container names):
 
-| Dependency | In-network endpoint | Host-published port |
+| Dependency | In-network endpoint | Host-published port (1-prefix rule) |
 | --- | --- | --- |
 | PostgreSQL | `postgres:5432` | `127.0.0.1:15432` |
-| Redis | `redis:6379` | none |
-| RabbitMQ | `rabbitmq:5672` (mgmt `rabbitmq:15672`) | none |
-| ClickHouse | `clickhouse:9000` or `shared-clickhouse:9000` (HTTP `:8123`) | none |
+| Redis | `redis:6379` | `127.0.0.1:16379` |
+| RabbitMQ | `rabbitmq:5672` (mgmt `rabbitmq:15672` in-network) | `127.0.0.1:15672` |
+| ClickHouse | `clickhouse:9000` or `shared-clickhouse:9000` (HTTP `:8123`) | `127.0.0.1:19000` (HTTP `127.0.0.1:18123`) |
 | Adminer | `adminer:8080` | `127.0.0.1:9093` |
 
-The reachability rule that keeps confusing agents: **Redis, RabbitMQ, and ClickHouse have no host-published
-ports by design.** A process running on the host (a `go run`, `go test`, artisan command, or an agent probing
-`localhost`) cannot reach them — that is expected, not evidence the dependency is absent or down. Before
-concluding an infra service is missing: `docker ps --format '{{.Names}}\t{{.Ports}}' | grep alaa-shared-infra`.
-To use them: run the workload as a container attached to `alaa-shared-network` (the generated kit/runtime-kit
-wrappers do this), or for host-run integration tests spin a disposable container with a host port
-(e.g. `docker run --rm -d -p 127.0.0.1:16379:6379 redis:7-alpine`) — never republish the shared containers.
+Owner standardization (2026-07-19): every shared-infra protocol port is host-published on `127.0.0.1` with a
+**"1"-prefixed default** (5432→15432, 6379→16379, 5672→15672, 9000→19000, 8123→18123) through the generators'
+`*_FORWARD_PORT` knobs (service-runtime-kit ≥ v2.2.0 and the alaa-go-chi scaffold agree on these defaults).
+Two hard rules: (1) **services running in Docker always connect to the in-network aliases**, never the
+host-published ports — those exist for host tools, local SDKs, and host-run tests; (2) destructive or
+exact-assertion tests still use a disposable container, never the shared instance's data.
 
 Environment philosophy (owner-finalized 2026-07-19): committed `.env` values and examples are written for the
 **Docker deploy** — in-network aliases (`amqp://…@rabbitmq:5672/`, `redis://redis:6379/0`,
