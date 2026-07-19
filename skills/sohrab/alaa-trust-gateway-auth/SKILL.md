@@ -99,7 +99,7 @@ Rules:
 - the gateway injects trusted headers only from verified claims
 - missing optional compact fields are not fabricated
 - public and service-facing payloads should continue to use `project_id`; `pid` is the compact JWT claim key
-- `prv` and `av` remain raw JWT metadata only unless a future contract explicitly adds a use for them
+- `prv` and `av` are never forwarded as headers; they stay invalidation and diagnostics metadata. The one sanctioned reader outside the gateway is the frontend SDK's unverified UI-hint decoder, whose output is never an authorization decision
 - auth remains the only runtime issuer of `prm`, `prv`, and `av`
 - downstream services consume `X-Access` only as the gateway-trusted projection of verified `prm`
 - downstream services consume `X-User-Roles` only as the gateway-trusted projection of the verified `rol` issuance-time snapshot; it is distinct from `X-Access`
@@ -136,7 +136,8 @@ Rules:
 ## Companion routing
 
 - $alaa-permission-generator
-  - Mandatory when catalog entries, bitmap IDs, generated PHP configs, generated Go maps, or catalog drift change.
+  - Mandatory when catalog entries, bitmap IDs, generated PHP configs, generated Go maps, the generated TypeScript aggregate-consumer catalog, or catalog drift change.
+  - Read its TypeScript aggregate-consumer reference before adding or changing any frontend permission decoding.
 - $alaa-security-review
   - Mandatory when JWT verification, tenant isolation, token handling, or header-trust risk is in scope.
 - $alaa-laravel-architecture

@@ -23,8 +23,9 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
 - `Mode C+ - Permission catalog consumer`
-  - Use when the task is about `config/permissions.php`, permission names, bitmap ids, generated service permission configs, `X-Access` permission mapping, or catalog drift checks.
-  - Read `35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth`.
+  - Use when the task is about `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.
+  - Read `35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth` and `$alaa-permission-generator`.
+  - When the consumer is the frontend, also read `60-frontend-sdk-consumption-contract.md` for the unverified UI-hint boundary.
 - `Mode D - Laravel auth-boundary service`
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
   - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.
@@ -41,7 +42,7 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the task is about how any service sends work to the `notification` service: the `notification.commands` ingress (exchange, queues, routing keys, canonical envelope), the snake_case-everywhere rule (including nested objects), the reserved channel-addressing model, the `entitlement-platform` audience-resolution handshake (`notif.retrieve_users`, `notif.expand_users`, `notif.recipient_chunks`), or the per-service notification matrix.
   - Read `27-notification-service-contract.md` (mirrors the authoritative `notification/docs/async-contracts.md`); pair with `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq` for producers, `$alaa-golang` for Go producers, and `$alaa-observability-soc` for correlation.
 - `Mode F - Frontend coding contract`
-  - Use when frontend or host-app code consumes the `@alaa/*` SDK packages, or when building/consuming Page Kit, UI Kit, app-shell, or widgets: which package to import, app-versus-SDK responsibility for trusted headers/token/refresh, public correlation headers, props-in/events-out widget contracts, three-layer data flow, dist-only package boundaries, or island isolation.
+  - Use when frontend or host-app code consumes the `@alaa/*` SDK packages, or when building/consuming Page Kit, UI Kit, app-shell, or widgets: which package to import, app-versus-SDK responsibility for trusted headers/token/refresh, public correlation headers, UI capability hints and permission-driven rendering, props-in/events-out widget contracts, three-layer data flow, dist-only package boundaries, or island isolation.
   - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `$alaa-frontend-developer`, `$alaa-mono-package`, and `$alaa-security-review`.
 
 ## Cross-cutting references

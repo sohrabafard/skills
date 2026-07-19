@@ -129,7 +129,7 @@ The gateway injects these trusted headers after successful verification:
 
 Only claims that are present are injected.
 New and refreshed Auth access tokens include `rol`, including `[]` for users with no roles. During migration, the gateway tolerates an absent claim for older tokens. A present claim must be a compact JSON array of at most 16 unique bytewise-sorted canonical role names matching `^[a-z][a-z0-9_]{0,47}$` and must not exceed 1024 serialized bytes. The gateway rejects a present invalid claim before forwarding and injects only the normalized compact array.
-`prv` and `av` are compact versioning claims used for invalidation and diagnostics; they are not forwarded as headers by default.
+`prv` and `av` are compact versioning claims used for invalidation and diagnostics; they are not forwarded as headers by default. A public client may read `prm`, `prv`, and `av` from its own token, without signature verification, purely to derive UI capability hints. That read is never an authorization decision, never becomes a header, and must never invalidate a session when it yields no permissions. See the `typescript-consumer` reference in `$alaa-permission-generator`, and `$alaa-services-contract` for how the application consumes the result.
 `X-Access` is only the trusted gateway projection of verified `prm`; downstream service configs determine local permission names from `alaa-permission-catalog` generated outputs.
 `X-User-Roles` is the trusted gateway projection of the verified `rol` issuance-time snapshot. It is role context, not a replacement for the `prm` permission bitmap or service business authorization.
 

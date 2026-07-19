@@ -13,7 +13,7 @@
 9. Align `X-Request-Id`, `traceparent`, queryable `trace_id`, request logging, and stable event/code naming.
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
 11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
-12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, permission names, bitmap ids, `X-Access`, or drift checks.
+12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, generated Go permission maps, the generated TypeScript `permission-catalog.ts`, permission names, bitmap ids, `X-Access`, or drift checks.
 13. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
 14. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
 15. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
@@ -116,6 +116,8 @@ Flag a problem when you see any of these:
 - a normal long-lived service uses Pushgateway for app metrics
 - trusted headers are parsed in controllers, policies, or repositories
 - `config/permissions.php` invents or hand-renumbers bitmap ids instead of consuming `alaa-permission-catalog` generated output
+- a generated Go permission map or the generated TypeScript `permission-catalog.ts` is hand-edited instead of regenerated and reapplied
+- frontend code hand-writes permission strings or bitmap ids, decodes the access token itself, or treats an unverified UI permission hint as an authorization decision
 - permission config changes are applied across multiple services in one implicit phase
 - a service extraction reuses legacy VOD bitmap ids for new `content_*` permissions
 - public `project_id` is normalized to an integer before validation

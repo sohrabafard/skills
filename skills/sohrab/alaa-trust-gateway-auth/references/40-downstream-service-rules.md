@@ -142,18 +142,24 @@ Do not make a normal downstream service behave like the gateway, the request-tim
 - Auth `bit_index` values are zero-based and equal `bitmap_id - 1`.
 - Bits are packed least-significant-bit first inside each byte.
 - Permission meaning comes from the downstream service's generated, committed permission map, not from hard-coded bit labels at the gateway.
-- Downstream `config/permissions.php` maps or generated Go permission maps must be generated from
-  `alaa-permission-catalog` and committed per service; do not hand-maintain local bitmap ids.
+- Downstream `config/permissions.php` maps, generated Go permission maps, and the frontend's generated TypeScript
+  `permission-catalog.ts` must all be generated from `alaa-permission-catalog` and committed by their owning
+  repository; do not hand-maintain local bitmap ids in any of them.
 - Auth-service derives `perm_bm` from catalog-owned `bit_index`, not from mutable local package table IDs.
 - Auth-service compilation precedence is `direct deny > direct allow > role grants`.
-- If a downstream service, gateway extension, or debugging tool inspects raw JWT claims instead of injected headers, treat `prv` and `av` as the companion invalidation metadata for `prm`.
-- Required decode flow:
+- If a downstream service, gateway extension, debugging tool, or the frontend SDK inspects raw JWT claims instead of injected headers, treat `prv` and `av` as the companion invalidation metadata for `prm`.
+- Required decode flow for **server-side trusted-context normalization** of `X-Access`:
   - reject empty or non-base64url values
   - base64url-decode with strict alphabet checking
   - enumerate set bits up to the maximum configured permission id
   - map known ids to permission names from config
   - ignore unknown ids
   - treat the header as invalid if no known permissions remain after mapping
+- That last rule is scoped to server-side normalization of a trusted header, where zero known permissions means the
+  request cannot be authorized. It does **not** apply to the frontend's unverified UI-hint decode of its own token: a
+  valid token with no recognized permissions is a legitimate state there and must never invalidate the session or sign
+  the user out. Reading `prm` from your own token is also not the same as asserting `X-Access`, which a public client
+  must never send.
 - Comment-service currently uses these permission ids:
   - `18` -> `comment_get_index`
   - `19` -> `comment_approve`

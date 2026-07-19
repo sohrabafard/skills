@@ -118,6 +118,36 @@ Rules:
 - keep shared infra names stable across repos so services can discover the same Postgres, Redis, RabbitMQ, ClickHouse, or equivalent dependencies
 - do not create a second copy of shared infra in shared mode
 
+### Shared infra endpoints and reachability (verified 2026-07-19 — read this before claiming an infra service is missing)
+
+Exact identity — there is no "alaa-infra-share" or "alaa-infra-network"; the only canonical names are:
+- Compose project: `alaa-shared-infra` (env knob `DOCKER_SHARED_INFRA_PROJECT`)
+- Docker network: `alaa-shared-network` (env knob `DOCKER_SHARED_NETWORK_NAME`)
+
+In-network DNS aliases (containers attached to `alaa-shared-network` connect with these; never container names):
+
+| Dependency | In-network endpoint | Host-published port |
+| --- | --- | --- |
+| PostgreSQL | `postgres:5432` | `127.0.0.1:15432` |
+| Redis | `redis:6379` | none |
+| RabbitMQ | `rabbitmq:5672` (mgmt `rabbitmq:15672`) | none |
+| ClickHouse | `clickhouse:9000` or `shared-clickhouse:9000` (HTTP `:8123`) | none |
+| Adminer | `adminer:8080` | `127.0.0.1:9093` |
+
+The reachability rule that keeps confusing agents: **Redis, RabbitMQ, and ClickHouse have no host-published
+ports by design.** A process running on the host (a `go run`, `go test`, artisan command, or an agent probing
+`localhost`) cannot reach them — that is expected, not evidence the dependency is absent or down. Before
+concluding an infra service is missing: `docker ps --format '{{.Names}}\t{{.Ports}}' | grep alaa-shared-infra`.
+To use them: run the workload as a container attached to `alaa-shared-network` (the generated kit/runtime-kit
+wrappers do this), or for host-run integration tests spin a disposable container with a host port
+(e.g. `docker run --rm -d -p 127.0.0.1:16379:6379 redis:7-alpine`) — never republish the shared containers.
+
+Environment philosophy (owner-finalized 2026-07-19): committed `.env` values and examples are written for the
+**Docker deploy** — in-network aliases (`amqp://…@rabbitmq:5672/`, `redis://redis:6379/0`,
+`postgres://…@postgres:5432/<db>`, `clickhouse:9000`). When a service deploys to Arvan Kubernetes instead, the
+operator sets that environment's own endpoints (external managed infra hosts, or in-namespace service DNS) —
+the env KEYS are the stable contract, the VALUES are deployment-environment-owned.
+
 ## Canonical service naming and Docker DNS contract
 
 Rules:

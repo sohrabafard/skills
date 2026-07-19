@@ -36,7 +36,9 @@ The `@alaa/*` SDK is layered, and each layer has one job:
   aggregate's public exports**, then import it from `@alaa/sdk` — not to reach into core from the app. Treat widening
   the aggregate surface as the sanctioned path, and pair it with `$alaa-mono-package`.
 - The aggregate's public surface today includes `createAlaaSdk`, `createAlaaSdkFromCore`, `isAlaaSdkError`, the gateway
-  prefix/service-name defaults, the version matrix, and the public types. Consume those; do not re-derive them.
+  prefix/service-name defaults, the version matrix, the UI capability surface (`PERMISSIONS`,
+  `decodeUnverifiedUiAuthorization`, and the `PermissionKey` / `UnverifiedUiAuthorization` types), and the public types.
+  Consume those; do not re-derive them.
 
 ## Responsibility ownership (who owns what)
 
@@ -49,8 +51,11 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
   duplicates either layer. The one thing the SDK cannot police is code that runs *inside* a host-injected custom fetch
   after that final assert (the documented "custom-fetch bypass"); the gateway is the authoritative enforcement there, so
   a host-injected fetch must only ever add public-safe correlation headers (`X-Request-Id` / `traceparent`).
-- **Token attach + refresh** → SDK. The opaque bearer token is attached by the SDK; refresh is SDK-owned and
-  single-flight. The app never re-implements refresh, never queues its own refresh, and never decodes the token.
+- **Token attach + refresh** → SDK. The bearer token is attached by the SDK; refresh is SDK-owned and
+  single-flight. The app never re-implements refresh, never queues its own refresh, and never decodes the token itself —
+  the one sanctioned read is the SDK's own `decodeUnverifiedUiAuthorization` (see *UI capability hints* below).
+- **UI capability hints** → SDK computes, app stores. The SDK owns the unverified decode; the app owns recomputing the
+  snapshot on every token-lifecycle path and exposing typed helpers. Neither owns authorization — the gateway does.
 - **Branded errors + events** → SDK. The app classifies failures with `isAlaaSdkError` and subscribes to the SDK event
   bus; it does not parse raw responses or invent its own error taxonomy from response bodies.
 - **Route/prefix composition** → SDK + config seams (see `25-end-to-end-flow-and-boundaries.md`). The app supplies
@@ -64,10 +69,63 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
 - The app never sends trusted internal gateway headers — `X-Project-Id`, `X-User-Id`, `X-Access`, `X-Profile`,
   `X-User-*`, `X-Location-*`, `X-Gateway-Auth`, `x-access-token-id`, `x-user-scopes`, and the `x-token-*` / `x-authz-*`
   families. Those belong to the gateway-to-service contract, not the public client.
-- The access token is opaque to the client. Do not decode it, branch on its claims, or persist it. Never write a bearer
-  token into a non-HttpOnly cookie, into SSR HTML, or into serialized SSR store state.
+- The access token is opaque to the client for every security purpose. Do not hand-roll a decoder, do not branch on its
+  claims for anything that must be correct, and do not persist it. Never write a bearer token into a non-HttpOnly
+  cookie, into SSR HTML, or into serialized SSR store state.
+- **One bounded exception — UI capability hints.** The SDK may expose a deliberately named unverified decoder (today
+  `decodeUnverifiedUiAuthorization` from `@alaa/sdk`) that reads **only** `prm`, `prv`, and `av` to shape the interface:
+  hide a control, skip a request the caller would be denied. Rules:
+  - It never verifies the signature and is never an authorization decision. The gateway and the owning service stay
+    authoritative; a deny response is the only authoritative answer.
+  - It fails closed, never throws, returns no raw token and no raw claims, logs nothing, and persists nothing.
+  - Compare against generated `PERMISSIONS.*` values — never raw permission strings, never bitmap ids.
+  - An empty permission set is a legitimate ready state. Never treat it as a broken session and never log the user out
+    because a bitmap failed to decode.
+  - Every other claim, including `rol` and `pid`, stays unparsed.
+  - Reading `prm` from your own token is not the same as sending `X-Access`. The header deny-list above is unchanged.
 - `project_id` is a public UUIDv7. Send it only in the request **body** where the contract requires it (for example the
   OTP request), sourced from app config/env (such as `PROJECT_ID`). Never send it as a trusted header from the client.
+
+## UI capability hints in app code
+
+The rules above say what the hints *are*. This is how the app consumes them.
+
+**Shape.** `decodeUnverifiedUiAuthorization(token)` returns a frozen
+`{ state, permissions, catalogVersion?, authorizationVersion? }`. `state` is `unavailable` (no token: SSR first render,
+anonymous, logged out), `invalid` (a token was present but unreadable), or `ready` (claims were read; `permissions` may
+legitimately be empty).
+
+**One recompute point.** The app calls the decoder in exactly one place — wherever it sets the access token (in the
+current host, the auth store's `setAccessToken`). Every lifecycle path funnels through that setter, so login, refresh,
+cross-tab storage sync, hydrate-from-storage, and logout all stay in step with no extra wiring. Never recompute in a
+component, a route guard, or a watcher; never cache a second copy.
+
+**Typed helpers, not raw arrays.** The store exposes `hasPermission(p)`, `hasAnyPermission([...])`, and
+`hasAllPermissions([...])`, each taking generated `PERMISSIONS.*` values. All three return `false` unless `state` is
+`ready`, so a missing or unreadable token degrades to "show nothing extra". Components call the helpers; they do not
+read `permissions` directly, do not import the decoder, and do not import `@alaa/sdk-auth` or any package `src/*` —
+the app's import is `@alaa/sdk`.
+
+**Keep it out of the user model.** Capabilities are session state derived from the token, not user identity. Do not add
+a `permissions` field to the `User` model, do not persist the snapshot separately from the token, and do not send it
+anywhere.
+
+**Staleness is the common bug.** The token is an issuance-time snapshot, so a permission granted on the backend does
+**not** appear in the UI until the next login, token refresh, or reissuance. When an agent is asked "the user has the
+permission but the button is still hidden", the answer is almost always a stale token, not a decoder bug — check
+`catalogVersion` (`prv`) and `authorizationVersion` (`av`) as diagnostics, and confirm against a real backend call.
+Treat `prv`/`av` as diagnostics only: do not branch on them and do not use them as cache keys.
+
+**What the states mean for UI.** `ready` → render by capability. `unavailable` → render the anonymous/loading surface,
+never an error. `invalid` → render exactly as `unavailable`; it is a corrupt stored value, not a security event, and it
+must not sign the user out or block a retry. Under SSR the first render is always `unavailable`, so permission-dependent
+markup must not differ between server and client render in a way that breaks hydration — gate on the client, or render
+the same neutral surface both times.
+
+**Hints reduce dead ends; they never protect anything.** Keep full error handling on every call you might skip: a
+request can still return 403 when the hint said otherwise, and that deny is the authoritative answer. Never use hints
+as the sole basis for a route guard, and never rely on a hidden control as a security measure — anyone can edit the
+stored token, and the decoder does not verify it.
 
 ## SSR and lifecycle rules
 
@@ -101,7 +159,14 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
   `X-Request-Id` / `traceparent`, so the second check guards a hypothetical while leaking the layering. Correct: trust
   the SDK boundary; if you genuinely need the helper, expose it on `@alaa/sdk` first.
 - Re-implementing token refresh, a refresh queue, or token persistence in the app.
-- Decoding the access token or branching on its claims in client code.
+- Hand-rolling a token decoder in app code, or branching on token claims for anything that must be correct. The only
+  sanctioned read is the SDK's unverified UI-hint decoder, and its output may never gate a security decision.
+- Using a UI capability hint as a route guard, as the sole gate on a privileged surface, or as a reason to drop 403
+  handling. Hiding a control is not protecting it.
+- Recomputing the capability snapshot outside the single token setter, caching a second copy, persisting it separately
+  from the token, or hanging it off the `User` model.
+- Treating `state: "invalid"` or an empty permission set as a broken session — signing the user out, forcing a refresh
+  loop, or showing an error instead of the anonymous surface.
 - Sending any trusted gateway header from the browser, or putting `project_id` in a header.
 - Importing a sibling SDK package's `src/*` instead of its public `dist`/entry export.
 - Parsing raw error bodies instead of using `isAlaaSdkError` + the SDK error taxonomy.
@@ -111,8 +176,11 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
 - App SDK imports come only from `@alaa/sdk` and `@alaa/sdk-vue`.
 - No app import of `@alaa/sdk-core` or a domain SDK; no app re-implementation of trust/refresh/error ownership.
 - Outbound client headers are limited to `Authorization: Bearer`, `X-Request-Id`, `traceparent`.
-- No token in cookie/SSR HTML/SSR state; token treated as opaque; `project_id` only in body, from config.
+- No token in cookie/SSR HTML/SSR state; token treated as opaque except for the SDK's unverified UI-hint decode, whose
+  result never gates a security decision; `project_id` only in body, from config.
 - One SDK/core per SSR request; browser SDK reset on logout/actor change.
+- Capability hints recomputed in exactly one place (the token setter); components use the typed helpers with
+  `PERMISSIONS.*` values; every hinted call still handles 403.
 - Client telemetry is redacted/allow-listed; public surface is documented.
 
 ## Companion routing
