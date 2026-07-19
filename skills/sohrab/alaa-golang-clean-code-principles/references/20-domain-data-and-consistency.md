@@ -119,3 +119,16 @@ type BroadcastCmd struct {
     Audience  Audience `json:"audience"`
 }
 ```
+
+Partial updates obey presence, not zero values. A PATCH wire struct distinguishes "field absent" from
+"field explicitly set to its zero value" with pointer fields (`*string`, `*int64`, `*bool`) or explicit
+presence flags — a zero-guard makes legitimate empty/zero/false un-settable, and an absent field must never
+be treated as "clear it".
+
+```go
+// WRONG — zero-guard: clients can never clear the title, and absent looks like empty
+if in.Title != "" { news.Title = in.Title }
+
+// RIGHT — pointer presence: absent keeps stored state; an explicit value (even "") overwrites
+if in.Title != nil { news.Title = *in.Title }
+```

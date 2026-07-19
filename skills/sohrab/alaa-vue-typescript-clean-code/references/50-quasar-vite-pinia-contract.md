@@ -69,9 +69,15 @@ Do not:
 - Read `window`, `document`, `navigator`, `localStorage`, `sessionStorage`, or `matchMedia` at module top level.
 - Store per-request state in singletons.
 
+## Large lists
+
+- Never render unbounded `v-for` lists. Any dataset that can grow uses QTable server-side pagination, `QVirtualScroll`, or an equivalent virtualization/pagination strategy.
+- Choose deliberately: server-side pagination when the backend can page and filter; virtual scrolling for large already-loaded client datasets; infinite scroll only with a bounded in-memory window.
+- Filtering/sorting of large lists belongs server-side or in memoized computed values, never inline in templates.
+
 ## Pinia
 
-Use Pinia for shared mutable state.
+Use Pinia for shared mutable state. Pinia 3+ supports Vue 3 only and removes the `defineStore({ id: ... })` object form — use `defineStore('id', ...)` as shown below.
 
 Do:
 
@@ -108,7 +114,8 @@ Do not:
 ## Router
 
 - Lazy-load route components unless they are critical first-screen code.
-- Keep route guards small; delegate auth and permissions to services/stores.
+- Declare each route's auth/permission posture in typed route `meta` (`requiresAuth`, required permissions); guards read the meta and run as an explicit ordered chain (auth → permission → data preconditions). Per-component scattered auth checks are a review failure — a route whose trust posture cannot be read from its route record is undeclared.
+- Keep route guards small; delegate auth and permissions decisions to services/stores.
 - Type route params at the component boundary.
 - Avoid fetching the same data redundantly in multiple nested components.
 

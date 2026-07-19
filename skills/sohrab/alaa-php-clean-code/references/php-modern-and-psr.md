@@ -22,6 +22,7 @@
 - Passing untyped arrays or `stdClass` as domain data.
 - Hiding important type assumptions in comments instead of the signature.
 - Renaming public parameter names casually when named arguments may be used.
+- Deciding merges or partial updates by truthiness: `$input['count'] ?? $existing` and `$value ?: $default` silently discard legitimate `0`, `false`, `''`, and `[]`. When absent and empty are different facts, check key presence (`array_key_exists`) or `!== null` explicitly.
 
 ## Modern PHP 8.x features
 
@@ -46,6 +47,10 @@
 - Property hooks and asymmetric visibility:
   - use only when the repo targets PHP 8.4+ and the benefit is obvious
   - avoid as a default in framework-heavy or magic-heavy code until toolchain support and team conventions are proven
+- Lazy objects (PHP 8.4+, `ReflectionClass::newLazyGhost()` / `newLazyProxy()`):
+  - use for genuinely expensive, rarely-used dependencies where a measured startup or memory cost justifies deferral
+  - ghost when you control construction and initialization; proxy when a factory must build the real instance (then watch identity — proxy and real instance differ)
+  - do not wrap cheap objects, and do not hand-roll `__get`/`__call` proxy magic where native lazy objects exist; pattern guidance lives in `design-patterns.md` (Proxy)
 
 ### PHP 8.5 features (when the repo targets PHP 8.5+)
 PHP 8.5 (released 2025-11) is the platform baseline for new Alaa Laravel 13 services. Adopt these deliberately:

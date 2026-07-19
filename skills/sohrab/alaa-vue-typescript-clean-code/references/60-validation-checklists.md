@@ -56,6 +56,8 @@ Use these checklists before finalizing code changes.
 
 ## Refactor/review checklist
 
+- Public-contract inventory done before the refactor: published props/emits/slots, store public APIs, route names/paths/query params, storage keys, event names, i18n keys, SDK surfaces — all preserved or the break is explicit and approved.
+- User-triggered mutations are double-fire safe (trigger disabled or request deduped while pending).
 - Public behavior is preserved unless explicitly changed.
 - Violations are ranked: correctness/type safety, Vue Priority A, side effects, state ownership, async/error handling, duplication, readability.
 - Diff is focused and reversible.

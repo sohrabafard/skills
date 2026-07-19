@@ -10,7 +10,7 @@ the specific public Go skill. Duplicating that material here would create exactl
 | Line-level style and clarity | `golang-code-style` |
 | Project layout / monorepos | `golang-project-layout` |
 | Struct/interface design, embedding, receivers | `golang-structs-interfaces` |
-| Design-pattern catalog (functional options, constructors, graceful shutdown, resilience) | `golang-design-patterns` |
+| Design-pattern catalog (functional options, constructors, graceful shutdown, resilience) | `golang-design-patterns` — this pack's `60-design-patterns-kit-era.md` only maps pattern intent to kit surfaces; mechanics stay there |
 | DI stance — manual first; wire/dig/fx/do when present | `golang-dependency-injection` + specific skills |
 | Concurrency, channels, errgroup | `golang-concurrency` |
 | `context` propagation | `golang-context` |

@@ -8,15 +8,22 @@
 - Repository pattern
 - Decorator pattern
 - Factory pattern
+- DTO pattern
+- Value object pattern
+- Builder pattern
 - Strategy pattern
 - Observer pattern
 - Adapter pattern
 - Facade pattern
+- Proxy pattern
+- Composite pattern
+- Iterator pattern
+- State pattern
+- Template method pattern
+- Chain of responsibility / Pipeline
 - Singleton pattern
 - Pipeline pattern
 - Command pattern
-- DTO pattern
-- Value object pattern
 - Query object / filter DTO pattern
 - Exception translation pattern
 - Pattern-selection rule of thumb
@@ -220,6 +227,28 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Heavy framework coupling inside domain value objects.
 - Overusing custom casts that hide queries or extra writes.
 
+## Builder pattern
+
+### Use when
+- Construction is multi-step, conditional, or order-sensitive and a single constructor call (even with named arguments) becomes unreadable.
+- A complex immutable object (report definition, export config, notification payload, search criteria) is assembled from many optional parts.
+- The assembly steps deserve validation before the final object exists.
+
+### Laravel application
+- Laravel itself is builder-heavy: the query builder, `Mail`/`Notification` fluent APIs, `Http::withHeaders()->timeout()->retry()`, and pending-object APIs are builders. Use them idiomatically instead of wrapping them.
+- Write a domain builder only when constructing the object inline is genuinely noisy: a fluent `withX()`/`build()` class whose `build()` validates invariants and returns a `readonly` DTO or value object.
+- On PHP 8.5, prefer named arguments plus `clone($obj, [...])` withers first; reach for a builder only when steps are conditional or shared across call sites.
+
+### Good defaults
+- `build()` is the single place invariants are enforced; a builder that can emit an invalid object is worse than no builder.
+- Keep builders stateless between uses or cheap to construct; under Octane never reuse a mutable builder instance across requests.
+- Return immutable results (`readonly` DTO/value object).
+
+### Anti-patterns
+- A builder wrapping a three-argument constructor.
+- Fluent setters on the domain object itself, leaving it mutable and half-initialized between calls.
+- Builders that hide required fields as optional setters, deferring failures to runtime deep in the flow.
+
 ## Strategy pattern
 
 ### Use when
@@ -291,6 +320,10 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 
 ## Facade pattern
 
+### Two meanings — keep them distinct
+- **GoF facade**: one focused class that gives application code a simple, intention-named API over a complex subsystem (a multi-step provider flow, a legacy module, a cluster of SDK calls). In Alaa Laravel code this is a plain injected service such as `PaymentFacade` or `MediaPipelineFacade`: small methods named by business use case, returning app-owned DTOs, hiding subsystem ordering and quirks. Use it when callers keep re-orchestrating the same subsystem steps.
+- **Laravel `Facade` classes** (`Cache::`, `Queue::`, `Log::`): static proxies to container services — an access mechanism, not the GoF pattern. The rules below govern them.
+
 ### Use when
 - Laravel's facade API keeps framework-edge orchestration readable.
 - The operation is clearly infrastructure-facing, such as cache, log, queue, mail, storage, DB transaction boundaries, or events.
@@ -309,6 +342,92 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Using facades as hidden dependencies in growing domain services.
 - Runtime mutation of config, locale, auth, HTTP defaults, or global state.
 - Treating facade convenience as permission to skip boundaries.
+
+## Proxy pattern
+
+### Use when
+- Access to an object must be controlled or deferred without changing its interface: lazy initialization of expensive services, guarded access, or remote-call stand-ins.
+- A heavy dependency (report engine, warmed SDK client, large object graph) is injected widely but used rarely.
+
+### Laravel application
+- PHP 8.4+ has native lazy objects: `ReflectionClass::newLazyGhost()` (the object initializes itself on first real use) and `ReflectionClass::newLazyProxy()` (a stand-in forwards to a real instance built by a factory). Prefer a ghost when you control construction and initialization; prefer a proxy when another layer must construct the real instance — and then watch object identity, because proxy and real instance are different objects.
+- Laravel's container and Octane already defer most service construction; add explicit lazy objects only when a measured startup or memory cost justifies them.
+- Eloquent relations are effectively lazy proxies for data access; the discipline for them (eager loading, `preventLazyLoading()`) lives in `laravel-best-practices.md`.
+- Distinguish from Decorator: a decorator adds behavior to a real instance; a proxy controls when/whether the real instance exists or is reached.
+
+### Anti-patterns
+- Hand-rolled magic `__get`/`__call` proxy classes on PHP 8.4+ repos where native lazy objects do the job without magic.
+- Lazy proxies around cheap objects — deferral machinery costing more than construction.
+- Identity-sensitive code (`spl_object_id`, strict `===` registry checks) mixed with `newLazyProxy` without an explicit note.
+
+## Composite pattern
+
+### Use when
+- Data or rules are recursive trees and callers should treat a leaf and a group uniformly: category trees, menu/navigation structures, nested comments, organizational units, composable validation or eligibility rules.
+
+### Laravel application
+- Model the node contract as one small interface (e.g. `EligibilityRule::passes(Context $ctx): bool`); leaves implement it directly, and composites (`AllOf`, `AnyOf`) hold `RuleInterface[]` children and implement the same interface. Specification-style rule composition is the highest-value use.
+- For persistent trees, pair the in-memory composite with a deliberate storage strategy (adjacency list, path/materialized path, or a package the repo already uses) — recursion in PHP must not become recursion in queries; load the tree in bounded queries, then compose.
+- Blade/component nesting already gives UI composition; do not force a class-based composite for rendering.
+
+### Good defaults
+- Guard depth and cycles explicitly when input is user-shaped.
+- Keep leaf and composite behavior contract-identical (LSP): callers never type-check for "is this a group".
+
+### Anti-patterns
+- A composite interface with `addChild`/`removeChild` on leaves that throw `NotSupported` — split the mutable-tree API from the evaluation API.
+- Unbounded recursive queries (N+1 per tree level) hidden behind an elegant in-memory composite.
+
+## Iterator pattern
+
+### Use when
+- A traversal should be consumed lazily without materializing the whole dataset, or a custom aggregate should be `foreach`-able without exposing internals.
+
+### Laravel application
+- PHP generators (`yield`) are the idiomatic iterator: streaming file lines, paginated API pages, transformed rows. Laravel's `LazyCollection` (and `lazy()`/`cursor()` on queries) is the framework-native generator wrapper — prefer it over hand-written `Iterator` implementations.
+- Choose the traversal tool by mutation and memory behavior via the large-dataset table in `laravel-best-practices.md` (`chunk`, `chunkById`, `lazy`, `lazyById`, `cursor`).
+- Implement `IteratorAggregate` (returning a generator) on domain collections when a typed collection object earns its keep; implement the low-level `Iterator` interface only for genuinely custom traversal state.
+
+### Anti-patterns
+- Materializing huge arrays and then "optimizing" downstream, when a generator/LazyCollection keeps memory flat.
+- Generators with hidden side effects per step — iteration must be re-runnable or explicitly single-pass.
+- A custom collection class that re-implements twenty Collection methods for one use site.
+
+## State pattern
+
+### Use when
+- A domain lifecycle has real states with guarded transitions: order/enrollment/invoice status, moderation flow, subscription lifecycle, document workflow.
+- Status `if`/`switch` branches are spreading across services and controllers.
+
+### Laravel application
+- Default shape: a backed enum for the state plus one transition authority. Keep a `canTransitionTo(self $to): bool` (or a `match`-based transition table) on the enum, and route every status write through one service/aggregate method that enforces it — never scatter `$model->status = ...` assignments.
+- Behavior that varies heavily per state can move to per-state classes behind one interface (classic State pattern) — usually only when states have many verbs each; for most CRUD-plus-workflow services the enum + transition table is enough.
+- If the repo already uses a state-machine package (e.g. model-states), follow it; do not introduce one for a three-state lifecycle.
+- Persist states as stable string-backed enum values; treat renames as contract changes.
+
+### Anti-patterns
+- Boolean soup (`is_active`, `is_archived`, `is_pending`) representing one exclusive lifecycle.
+- Transition rules duplicated in controllers, jobs, and admin panels instead of one authority.
+- Status changed silently as a side effect of unrelated updates (mass assignment reaching `status`).
+
+## Template method pattern
+
+### Use when
+- Several implementations share one fixed algorithm skeleton with small varying steps, and the skeleton itself must stay in one place.
+
+### Laravel application
+- Use sparingly: an abstract class with a `final` public method calling small `protected` hooks (e.g. an import base: `run()` = validate → transform → persist → report, subclasses supply `transform()`).
+- Prefer composition first — a service taking strategy/closure steps, or a pipeline — because inheritance couples subclasses to the base class forever. Template method wins only when the skeleton must be un-overridable and implementations are a closed, code-owned set.
+- Keep hooks few and intention-named; a base class with ten abstract methods is an interface pretending to be an algorithm.
+
+### Anti-patterns
+- Deep inheritance chains where each level overrides part of the parent's flow.
+- A template base class accumulating shared helpers until it becomes a god base.
+- Using template method where the varying part is data, not behavior (a config array would do).
+
+## Chain of responsibility / Pipeline
+
+Laravel's middleware stack and `Pipeline` are chain-of-responsibility implementations: each handler receives the payload and the `$next` closure, and decides to handle, transform, pass on, or short-circuit. The pipeline guidance below is the canonical Alaa form of this pattern; reach for a hand-rolled linked chain only when handlers must be discovered/ordered dynamically at runtime, which is rare. Short-circuiting (returning early without calling `$next`) is a first-class outcome — make it explicit and tested, not an exception in disguise.
 
 ## Singleton pattern
 

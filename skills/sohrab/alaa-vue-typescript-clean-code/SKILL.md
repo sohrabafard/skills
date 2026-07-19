@@ -70,12 +70,15 @@ Classify the task as one of these modes:
 - **Review**: report violations by severity and give concrete repairs.
 - **Repo-wide normalization**: require explicit permission before broad rewrites; otherwise propose a staged plan.
 
+Before any refactor beyond a single local slice, inventory the public contracts the change can touch, and preserve them unless the task explicitly allows a break: published component props/emits/slots (especially design-system packages consumed from `dist`), store public state/getters/actions used across features, route names/paths/query params, storage and cache keys, emitted event names, i18n keys, and SDK adapter surfaces. A contract change smuggled into a "cleanup" is a blocking finding.
+
 For every change, enforce these invariants:
 
 - Component APIs are explicit: typed props, typed emits, documented slots where non-obvious, and no hidden parent coupling.
 - State has one owner. UI components do not secretly own domain state that belongs in a store, composable, or service.
 - Side effects are isolated and cleaned up. Event listeners, timers, observers, subscriptions, object URLs, pending requests, and watchers are disposed.
 - Async flows expose loading, error, success, cancellation, and race behavior when user-visible.
+- User-triggered mutations are double-fire safe: the trigger is disabled or the request deduped while in flight, and an idempotency key is passed when the backend supports one. A double-clicked submit must never create two records.
 - TypeScript is strict and useful. Avoid `any`; use `unknown` only with narrowing; do not silence errors with casts unless the boundary is proven and localized.
 - Accessibility and UX states are part of the implementation, not optional polish.
 - Validation runs before final response when tools allow it.
@@ -142,6 +145,7 @@ Apply these as coding gates:
 - **Encapsulation**: expose small typed APIs and hide implementation details.
 - **KIC**: clean up resources and keep code physically organized.
 - **DRY**: extract duplicated behavior after the abstraction is stable; do not create vague utilities for accidental similarity.
+- **Boundary naming alignment**: one canonical domain term per concept across its whole artifact family — DTO, mapper, service, store, composable, component, and test center on the same word (`CourseDto` → `mapCourseDtoToCourse` → `useCourseFilters` → `CourseTable` → `course.store.ts`). Do not let synonyms drift across layers, and do not create vague buckets named `utils`, `common`, `helper`, or `manager`.
 - **KISS**: choose the simplest design that handles the real requirements and edge cases.
 - **Code for the next developer**: names, data flow, and tests must make intent obvious.
 
@@ -190,7 +194,13 @@ Use patterns deliberately and name them in code comments only when it clarifies 
 - **Facade**: simple typed API over complex APIs: Quasar plugins, Axios, IndexedDB, upload SDKs, workers, auth, notifications.
 - **Callbacks**: allowed for DOM events, library interop, and hooks; typed, cancellable where needed, and cleaned up.
 - **Promises**: default async abstraction; use `async/await`, `try/catch`, `finally`, abort/race handling, and no floating promises.
-- **Factory/Strategy/Adapter/FSM**: use for variant creation, replaceable behavior, external integration boundaries, and explicit UI/domain state transitions.
+- **Factory/Strategy/Adapter**: use for variant creation, replaceable behavior, and external integration boundaries.
+- **State (FSM)**: explicit UI/domain state transitions modeled as discriminated unions; impossible transitions rejected.
+- **Builder**: fluent construction only for genuinely multi-step, conditional configuration (table column sets, form schemas); plain typed literals with `satisfies` first.
+- **Composite**: recursive component trees (menus, nested comments, tree views) with one typed node contract for leaf and group; guard depth and keys.
+- **Iterator**: prefer array methods and typed collections; generators only for real lazy/streaming traversal; pair unbounded lists with pagination/virtual scrolling.
+- **Template Method**: renderless components and slots as the skeleton with caller-supplied steps; composition over inheritance, never base-class hierarchies.
+- **Chain of Responsibility**: HTTP interceptor chains, router guard sequences, validation chains — ordered, explicit, each handler passes or short-circuits deliberately.
 
 ## Quasar, Vite, Pinia, router, SSR, and PWA rules
 
@@ -199,6 +209,8 @@ Use patterns deliberately and name them in code comments only when it clarifies 
 - Boot files initialize app-level dependencies only. Do not put feature business logic in boot files.
 - Guard browser-only APIs (`window`, `document`, `localStorage`, `navigator`, `ResizeObserver`, service workers) for SSR and call them in `onMounted` or client-only boot files.
 - Use Pinia for shared mutable state. Stores have unique IDs, focused scope, typed state/getters/actions, and return all state in setup stores.
+- Declare per-route auth/permission posture in route `meta`; guards read the meta. Scattered per-component auth checks are a review failure.
+- Never render unbounded lists: server-side pagination or `QVirtualScroll`/virtualized rendering for large datasets.
 - Use route-level lazy loading and dynamic imports for heavy optional components.
 - Keep Vite aliases, env variables, and build configuration typed and minimal.
 - PWA/service-worker behavior must be cache-safe, version-aware, and validated in browser/devtools when touched.

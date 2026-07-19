@@ -175,7 +175,8 @@ Choose the simplest abstraction that fixes the real problem.
 8. Add an adapter when external provider APIs must be hidden behind an internal contract.
 9. Add a pipeline when a workflow is a clear sequence of independent, reorderable steps.
 10. Add a command/job when an action must be queued, retried, delayed, logged, or executed outside the HTTP request.
-11. Add an interface only when there is a real seam: multiple implementations, package boundary, external integration, or a test seam that genuinely helps clarity.
+11. Model a domain lifecycle as an explicit state machine (backed enum + `match` transitions) when statuses have guarded transitions, instead of scattering status `if`s.
+12. Add an interface only when there is a real seam: multiple implementations, package boundary, external integration, or a test seam that genuinely helps clarity.
 
 Do not stack Repository + Factory + Strategy + Interface merely for aesthetics. Every abstraction must earn its keep.
 
@@ -215,6 +216,19 @@ Keep these defaults visible here; detailed pattern guidance lives in `references
 - Avoid hidden IO, hidden queries, hidden mutations, and hidden state.
 - Catch exceptions at real boundaries to translate them. Do not bury failures behind `null`, `false`, or silent logs.
 - Keep public parameter names stable where named arguments may be used.
+- Merge and partial-update logic decides by key presence, never truthiness: `$data['count'] ?? $existing` silently discards a legitimate `0`, `false`, or `''`. Use `array_key_exists`, `$request->has()`, or explicit null checks when absence and empty are different facts.
+- `env()` is read only inside `config/*.php`; application code reads `config()` or receives typed config via constructor. Event names, error codes, cache-key prefixes, queue names, and metric names are enums or class constants, never inline strings — a typo in an inline string is a silent contract or observability hole.
+- Never guess an external fact (provider payloads, other services' contracts, header semantics). Mark it `NEEDS_<PROVIDER>_CONFIRMATION` or `[gap]` instead of inventing it.
+
+# Size and complexity budgets (hard gates, not advice)
+Qualitative SRP guidance is not enough; enforce these numbers on every class you create or materially change (repo-local rules may set stricter numbers — they win):
+
+- A class (controller, service, repository, job, listener, action, support class): **≤ 400 lines**.
+- A single method: **≤ 60 lines**. A controller action stays orchestration-only regardless of length.
+- One primary class per file; its own small value objects, enums, and private helpers ride along only when the repo convention allows it.
+- A constructor taking more than ~5 collaborators signals a class doing too much — split by use case before injecting more.
+
+When a budget is crossed, split BEFORE declaring the work done, along the standard seams: validation → Form Request; business flow → focused service per use case; persistence → repository or query object; branching by provider/algorithm → strategy; construction → factory; cross-cutting wrap → decorator. Files already over budget before your change: never silently grow them; bring the touched responsibility under budget or record explicitly why not.
 
 # SOLID posture
 Apply SOLID pragmatically rather than mechanically.
@@ -227,6 +241,7 @@ Clarity, fewer moving parts, and repo consistency beat textbook purity. For per-
 
 # Laravel defaults
 - Keep controllers thin and deterministic.
+- Declare route posture at registration: auth, permission, throttle, and tenant middleware live on the route or route group, visible where the route is defined — never buried as ad-hoc checks inside controller bodies. A route whose trust posture must be inferred from its handler is a review failure.
 - Use Form Requests for meaningful validation and request authorization.
 - Use API Resources for stable JSON responses.
 - Use policies or gates for authorization.
@@ -255,6 +270,8 @@ All Alaa Laravel apps are treated as Octane apps by default, with Swoole today a
 # Error-handling baseline
 - Throw specific exceptions with clear ownership.
 - Translate exceptions centrally at HTTP, CLI, queue, and integration boundaries.
+- Classify failures before any retry or fallback: definitive denials (validation, authorization, non-transient 4xx) are never retried and never masked by a fallback that looks like success; transient failures (timeouts, 5xx, connection errors) may retry with bounded backoff or degrade explicitly. A 403 must never be swallowed into a code path that behaves like success.
+- Outbound HTTP calls always set explicit `timeout()` and `connectTimeout()`, bound their retries, and retry only transient failures — and only when the remote operation is idempotent or carries an idempotency key.
 - Preserve the previous exception when wrapping low-level failures.
 - Keep client-visible error messages safe and stable.
 - Put debugging detail into structured logs, not into user-facing strings.
@@ -290,7 +307,7 @@ Documentation is part of done when behavior, contracts, setup, env vars, request
 - `references/consistency-and-naming.md`
   Read before renaming, extracting, consolidating, or normalizing code shape.
 - `references/design-patterns.md`
-  Read for MVC, Service, Repository, Decorator (incl. cache decorators), Factory, Strategy, Observer, Adapter, Facade, Dependency Injection, Singleton, Pipeline, Command, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
+  Read for MVC, Service, Repository, Decorator (incl. cache decorators), Factory, Builder, Strategy, Observer, Adapter, Facade, Proxy (incl. PHP 8.4 lazy objects), Composite, Iterator, State, Template Method, Chain of Responsibility / Pipeline, Command, Dependency Injection, Singleton, DTO, Value Object, Query Object / Filter DTO, and exception-translation guidance.
 - `references/solid-in-practice.md`
   Read for per-principle SOLID depth (SRP, OCP, LSP, ISP, DIP) with Do/Don't PHP examples and the SOLID review checklist.
 - `references/octane-clean-code.md`
@@ -312,6 +329,16 @@ Keep this skill single-agent by default. Detailed orchestration guidance lives i
 - Delegate only bounded subtasks with clear ownership and disjoint write scopes.
 - Keep the immediate blocking next step local when possible, and continue non-overlapping local work while delegated work runs.
 - Use `multi_tool_use.parallel` for independent developer-tool reads and safe validations, not for overlapping writes or tools that forbid parallel execution.
+
+# Validation before done
+Run the most relevant available checks before claiming completion, preferring repo scripts and CI-pinned versions:
+
+- Style: `vendor/bin/pint --test` (or the repo's configured formatter).
+- Static analysis: `vendor/bin/phpstan analyse` at the repo's configured level.
+- Tests: targeted `php artisan test --filter=...` or `vendor/bin/pest --filter=...` for changed behavior, then the affected suite.
+- For idempotency-sensitive changes (jobs, listeners, consumers, seeders): a run-twice test proving the second run is a no-op.
+
+If a check cannot run, state the exact blocked command and why. Do not claim validation passed unless it actually ran. Pipeline-level gating stays owned by `alaa-cicd-laravel-postgres`.
 
 # Output contract when applying this skill
 Keep the final report concise but auditable.

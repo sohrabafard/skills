@@ -105,6 +105,9 @@ and **GPT-5.5 (Codex)**:
 - `references/30-runtime-and-observability.md` — P9–P11 with examples.
 - `references/40-testing-and-contracts.md` — P12–P13 + the pre-commit checklist.
 - `references/50-skill-boundaries.md` — exactly what lives in `alaa-golang` and is not repeated here.
+- `references/60-design-patterns-kit-era.md` — decision map: what each classic (GoF) design pattern becomes
+  on this platform (Singleton→composition root, Observer→outbox, Template Method→kit skeletons, …); pattern
+  mechanics stay in `golang-design-patterns` via the router.
 - `references/full-guide.md` — all thirteen principles in one file.
 - `references/90-source-map.md` — canonical sources and freshness triggers.
 

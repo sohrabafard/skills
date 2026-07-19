@@ -105,6 +105,22 @@ Do not:
 - Use abbreviations, negated booleans, or magic strings where a typed state is clearer.
 - Depend on undocumented ordering, timing, or Quasar internals.
 
+## Boundary naming alignment
+
+One canonical domain term per concept, kept identical across the concept's whole artifact family.
+
+Do:
+
+- `CourseDto` → `mapCourseDtoToCourse` → `Course` → `useCourseFilters` → `useCourseStore` → `CourseTable.vue` → `course-table.spec.ts`.
+- Pick one term (`Course`, not sometimes `Lesson`, sometimes `ClassItem`) and keep singular/plural accurate.
+- Rename the whole family together when a rename is in scope; half-renamed families are worse than the old name.
+
+Do not:
+
+- Introduce synonyms for the same business concept across layers.
+- Create files named `utils.ts`, `common.ts`, `helpers.ts`, or `manager.ts` as dumping grounds; name modules by their single responsibility.
+- Use role suffixes (`Service`, `Facade`, `Adapter`) interchangeably for the same role within one repo.
+
 ## SOLID mapping
 
 ### Single Responsibility Principle

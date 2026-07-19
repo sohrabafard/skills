@@ -18,6 +18,7 @@ a whole-package review, read `full-guide.md` instead of assembling pieces.
 | Writing or reviewing tests | `40-testing-and-contracts.md` (P12) |
 | Calling / consuming another service | `40-testing-and-contracts.md` (P13); pair with `alaa-services-contract` |
 | Full feature end to end, or package-level review | `full-guide.md` |
+| Choosing, naming, or reviewing a design pattern | `60-design-patterns-kit-era.md` (map); mechanics via `alaa-golang` → `golang-design-patterns` |
 | "Where does this Go topic live?" | `50-skill-boundaries.md` |
 
 Rule of thumb: if you are about to write a shape the kit might own (an envelope, a table, a middleware, a

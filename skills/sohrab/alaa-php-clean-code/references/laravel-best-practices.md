@@ -52,6 +52,7 @@
 - Use `Queue::route(...)` when queue or connection selection by class would otherwise be repeated across the codebase.
 - Prefer queue attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`, and `#[DeleteWhenMissingModels]` when they keep job policy clearer than scattered properties or repeated worker flags.
 - Use first-party JSON:API resources only when the public contract is actually JSON:API; do not replace an existing stable non-JSON:API envelope by default.
+- Laravel 13 PHP attributes for component/model configuration (declaring what was previously `$table`-style properties): adopt only repo-wide as a deliberate convention choice, never mixed per-file with property-based configuration.
 - Treat Laravel AI SDK, semantic search, and vector search as opt-in capabilities. Do not introduce them unless the user asks for them or the repository already chose them, and route storage or indexing decisions through the relevant companion skills.
 
 ## Requests, validation, and authorization
@@ -64,11 +65,17 @@
 - Keep controllers thin: receive validated input, call the service layer, return resources.
 - Call repositories for persistence access; do not compose Eloquent/query-builder reads or writes in controllers.
 
+### Partial updates (PATCH semantics)
+- For partial updates, decide field-by-field with key presence, never truthiness: `$request->has('title')` / `array_key_exists` on `validated()`, or `$request->safe()->only(...)` restricted to actually-sent keys.
+- A legitimate `0`, `false`, `''`, or `null` sent by the client must overwrite; an omitted field must keep the current value. `$data['x'] ?? $model->x` breaks the first rule.
+- Encode "absent vs null" in the DTO explicitly (e.g. sentinel/optional wrapper or separate presence flags) when the contract distinguishes clearing a field from not touching it.
+
 ### Anti-patterns
 - Reading raw request input in services or repositories.
 - Direct Eloquent/query-builder persistence in controllers.
 - Putting validation rules in controllers or service methods when a Form Request is appropriate.
 - Mixing authorization, validation, and persistence in one method.
+- PATCH handlers that treat missing and falsy the same way.
 
 ## Resources and serialization
 
@@ -126,7 +133,9 @@
 - Use queued listeners and jobs for slow work.
 - When queued work depends on committed rows, use `afterCommit()` or the queue connection's `after_commit` behavior.
 - Keep transaction bodies short and free of external IO.
-- Treat jobs and listeners as idempotent where retries are possible.
+- Treat jobs and listeners as idempotent where retries are possible. Idempotency is a contract, not a hope: retries, redeliveries, and re-runs are the normal consequence of at-least-once queues and crash recovery, so code that is only correct when run once is incorrect.
+- Prove idempotency with a run-twice test: run the job/listener/seeder/consumer twice against the same state and assert the second run is a no-op (same end state, no duplicate rows, no duplicate side effects). Use natural-key upserts (`updateOrCreate`, `ON CONFLICT`-shaped operations) instead of bare inserts for re-runnable writes.
+- Outbound HTTP from jobs and listeners always sets explicit `timeout()`/`connectTimeout()`, bounds retries with backoff, and retries only transient failures — and only when the remote call is idempotent or carries an idempotency key.
 
 ### Anti-patterns
 - Dispatching queued work from inside transactions without commit-aware behavior when the work reads committed data.
@@ -159,6 +168,8 @@ For queue, broker, retry, and DLQ policy, switch to `alaa-async-messaging` or `a
 - Add feature tests for endpoint behavior, authorization, and resource shape.
 - Add unit tests for pure value objects, strategies, and other isolated logic.
 - Add a regression test first for bug fixes when feasible.
+- Add a run-twice test for every re-runnable unit (job, listener, consumer, seeder): second run must be a proven no-op.
 - When the repo uses query-count assertions, use them to guard against accidental N+1 or query inflation.
+- For leak-prone Octane changes, add tests that simulate two different users/tenants in sequence on the same worker (see `octane-clean-code.md`).
 
 Do not claim tests passed unless you actually ran them in the target environment.

@@ -184,6 +184,11 @@ type BroadcastCmd struct {
 }
 ```
 
+Corollary — partial updates obey presence, not zero values: PATCH wire structs use pointer fields
+(`*string`, `*int64`) or presence flags so "absent" (keep stored state) and "explicit zero/empty"
+(overwrite) stay distinguishable; `if in.Title != ""` as an update guard is the Go twin of the
+truthiness-merge bug.
+
 ## P9 — No Naked Goroutines: Every Concurrent Thing Has an Owner and an Exit
 
 A goroutine exists only inside a worker construct that owns its lifecycle: bounded pool, `context`
