@@ -55,7 +55,7 @@ Required validation behavior:
 - decode `X-Access` as the base64url permission bitmap
 - map `X-Access` only through the service's generated, committed catalog-owned permission config
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
-- when `X-User-Roles` is present, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
+- when an existing integration or explicit passive-metadata requirement consumes `X-User-Roles`, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
 - keep trusted roles distinct from permissions: `X-User-Roles` projects the verified `rol` role snapshot, while `X-Access` projects the verified `prm` permission bitmap
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `$alaa-trust-gateway-auth`
@@ -67,14 +67,14 @@ Actor context must be able to hold at least:
 - trusted project identifier
 - trusted user identifier
 - normalized permission names
-- normalized trusted role names when present
 - trusted access-token identifier when present
 - normalized first and last name values
 - normalized location object with `ostan`, `shahrestan`, `bakhsh`, `shahr`, `shobe`, and `school`
 - trusted mobile when present
 - `request_id`
 - `trace_id`
-- optional service-local derived role only when explicitly needed; it must not replace or mutate the trusted role snapshot
+
+Do not add role state to a new actor-context baseline. An existing service may keep normalized role names in a separate passive-metadata field only for documented observability or future-migration use; the field must not participate in authorization or other runtime decisions.
 
 Auth synchronization rules:
 - keep `$request->user()` and `Auth::user()` consistent
@@ -88,12 +88,13 @@ Required support components:
 - permission bitmap decoder and mapper
 - compact trusted user-projection normalizer
 - auth-state synchronizer
-- optional role-derivation helper when needed
 - stable API-error mapping path aligned with `$alaa-trust-gateway-auth`
 
 Implementation rules:
 - do not parse raw trusted headers in controllers, policies, resources, or repositories
 - keep policy and Gate decisions focused on business authorization after auth context is normalized
+- enforce backend access through exact catalog-owned permissions from `X-Access`; use the contract-defined OpenFGA result where resource-level authorization applies
+- do not introduce role resolvers, role-to-permission mappings, role-derived fallbacks, or any role-dependent policy, scope, response, route, validation, feature, or workflow behavior while the freeze in `28-backend-permission-authorization-and-role-freeze.md` is active
 - if the service persists trusted user data, keep mutable projections separate from immutable snapshots
 - do not fabricate display-city fields from compact location ids unless another contract owns that lookup
 

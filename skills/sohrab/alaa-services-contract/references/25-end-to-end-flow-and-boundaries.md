@@ -134,7 +134,7 @@ Route-shape reminder:
 - before claiming a prefix is active in an environment, verify the gateway route table and rendered HAProxy config when available; in the current local convention this usually means checking `D:/Sohrab/Project/gateway/charts/gateway/values*.yaml`, `D:/Sohrab/Project/gateway/docker/values.shared-network.yaml`, and rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`
 - use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
 
-## Role snapshot propagation
+## Role snapshot propagation and provisional backend freeze
 
 Auth issues the compact `rol` access-token claim as a deterministic JSON array of canonical role names. New and refreshed tokens include the claim even when the array is empty. Each role must match `^[a-z][a-z0-9_]{0,47}$`; the array must be bytewise sorted, duplicate-free, contain at most 16 roles, and serialize to at most 1024 bytes of compact JSON.
 
@@ -145,10 +145,14 @@ Gateway rules:
 - inject only the normalized compact JSON array as trusted `X-User-Roles`
 
 Downstream rules:
-- parse `X-User-Roles` only from the sanitized gateway path and validate the same bounds near ingress
-- keep roles request-scoped and distinct from `X-Access`; `rol` is a role-name snapshot while `prm` remains the permission bitmap
+- user-role semantics are not finalized for backend decision-making; read `28-backend-permission-authorization-and-role-freeze.md`
+- authorize with catalog-owned permission bits from trusted `X-Access`, plus the contract-defined OpenFGA decision where applicable
+- do not add role-based authorization, access tiers, policy selection, data scopes, response shaping, routing, validation, or feature behavior
+- a service that passively captures `X-User-Roles` must accept it only from the sanitized gateway path, validate the same bounds near ingress, and keep it distinct from `X-Access`
+- roles may be retained only as non-authoritative observability or future-use metadata; their presence, absence, or freshness must not change request outcomes
 - do not let a public client supply or override role context
 - role changes take effect for new or refreshed access tokens; existing access tokens retain their issuance-time snapshot until refresh, expiry, or revocation
+- do not activate role-based backend behavior until this skill explicitly records finalized role semantics and rollout rules
 
 ## Operational caller expectations
 

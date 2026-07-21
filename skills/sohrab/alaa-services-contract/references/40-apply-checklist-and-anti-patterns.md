@@ -14,11 +14,12 @@
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
 11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
 12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, generated Go permission maps, the generated TypeScript `permission-catalog.ts`, permission names, bitmap ids, `X-Access`, or drift checks.
-13. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
-14. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
-15. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-16. Run focused tests for every changed contract surface.
-17. Report blockers explicitly when exact convergence is not possible.
+13. Verify backend decisions use exact permission checks and do not add role-based authorization or other role-dependent behavior while `28-backend-permission-authorization-and-role-freeze.md` remains active.
+14. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
+15. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
+16. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+17. Run focused tests for every changed contract surface.
+18. Report blockers explicitly when exact convergence is not possible.
 
 ## Short service adoption checklist
 
@@ -73,6 +74,8 @@ When applying this skill to a service, finish by checking:
 - missing invalid `X-User-Id`
 - missing invalid zero-known-permission `X-Access`
 - `X-Access` decoding against the generated, committed service permission config
+- exact permission checks cover allow and deny behavior without a role-derived fallback
+- `X-User-Roles` presence, absence, or value cannot change authorization, access level, scopes, response shape, routing, validation, features, workflows, or side effects
 - catalog drift check before and after permission-config changes when `alaa-permission-catalog` is available
 - invalid `X-User-Mobile`
 - malformed `X-User-Fname` or `X-User-Lname`
@@ -115,6 +118,9 @@ Flag a problem when you see any of these:
 - a public route exposes the internal metrics endpoint
 - a normal long-lived service uses Pushgateway for app metrics
 - trusted headers are parsed in controllers, policies, or repositories
+- a backend uses `rol`, `X-User-Roles`, a stored role snapshot, or a role-derived tier for authorization or any other runtime decision
+- a backend adds a role resolver, role-to-permission map, role-derived fallback, role middleware, or role-dependent tests while the provisional freeze is active
+- a privileged-looking role bypasses a missing permission or OpenFGA denial
 - `config/permissions.php` invents or hand-renumbers bitmap ids instead of consuming `alaa-permission-catalog` generated output
 - a generated Go permission map or the generated TypeScript `permission-catalog.ts` is hand-edited instead of regenerated and reapplied
 - frontend code hand-writes permission strings or bitmap ids, decodes the access token itself, or treats an unverified UI permission hint as an authorization decision
@@ -136,6 +142,8 @@ Flag a problem when you see any of these:
 - leaving `X-Correlation-Id` anywhere in the service after migrating to `X-Request-Id`
 - inventing local event names that conflict with `$alaa-observability-soc`
 - inventing local auth error names that conflict with `$alaa-trust-gateway-auth`
+- treating user roles as backend authority before this skill explicitly finalizes and activates role semantics
+- storing passive role metadata in a way that feeds authorization interfaces, high-cardinality metric labels, or undocumented retention
 - keeping stale compatibility branches, helpers, tests, or docs for removed contract surfaces
 - reintroducing duplicated GitLab CI logic into service repositories instead of updating `service-ci-kit` first
 - scattering trusted-user normalization across controllers, policies, resources, and observers

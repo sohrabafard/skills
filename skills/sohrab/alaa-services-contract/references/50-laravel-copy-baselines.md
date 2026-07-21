@@ -227,6 +227,7 @@ final class ResolveUserMiddleware
 Required helper responsibilities behind this baseline:
 - validate trusted headers exactly according to `$alaa-trust-gateway-auth`
 - decode and map the permission bitmap
+- authorize with exact catalog-owned permissions; do not derive access from user roles
 - normalize compact trusted first and last names
 - normalize compact trusted location ids into one repository-owned structure when needed
 - normalize `X-Access-Token-Id` when the repository uses token-session context
@@ -265,13 +266,17 @@ final readonly class TrustedActorContext
         public ?string $lastName,
         public ?array $location,
         public ?string $tokenId,
-        public ?string $role,
         public string $requestId,
         public string $traceId,
     ) {
     }
 }
 ```
+
+Do not add a role or role-derived tier to this baseline while the provisional freeze in
+`28-backend-permission-authorization-and-role-freeze.md` is active. If an existing service has a documented
+observability or future-migration requirement, keep normalized `userRoles` in a separate optional passive-
+metadata extension that no policy, Gate, query scope, response shaper, route, validator, feature, or workflow reads.
 
 ## Snapshot baseline
 

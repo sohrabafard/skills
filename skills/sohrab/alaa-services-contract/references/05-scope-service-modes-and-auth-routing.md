@@ -117,6 +117,23 @@ Read next:
 - `30-trusted-ingress-and-laravel-contract.md`
 - `$alaa-trust-gateway-auth`
 
+### Mode C+ - Backend authorization and permission catalog consumer
+
+Applies across backend runtimes when a task touches access decisions, permission bits, generated service-local permission configs, bitmap governance, `X-Access`, `X-User-Roles`, catalog drift, or role-derived behavior.
+
+Adds:
+- generated service-local permission configs
+- permission bitmap id governance and `X-Access` permission-name mapping
+- catalog drift checks and one-service-at-a-time apply discipline
+- exact catalog-owned permission checks for backend access decisions
+- no new role-based backend decision logic while the provisional freeze remains active
+- passive role retention only for documented observability or future-migration needs
+
+Read next:
+- `28-backend-permission-authorization-and-role-freeze.md`
+- `35-permission-catalog-and-service-configs.md`
+- `$alaa-trust-gateway-auth`
+
 ### Mode D - Laravel auth-boundary service
 
 Allows:

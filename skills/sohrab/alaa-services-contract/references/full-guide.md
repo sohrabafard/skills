@@ -12,6 +12,7 @@ It mirrors the split references below and should be kept aligned with them in th
 - `25-end-to-end-flow-and-boundaries.md`
 - `26-request-time-authorization-openfga.md`
 - `27-notification-service-contract.md`
+- `28-backend-permission-authorization-and-role-freeze.md`
 - `30-trusted-ingress-and-laravel-contract.md`
 - `32-auth-totp-and-step-up-contract.md`
 - `35-permission-catalog-and-service-configs.md`
@@ -141,16 +142,20 @@ Read next:
 - `30-trusted-ingress-and-laravel-contract.md`
 - `$alaa-trust-gateway-auth`
 
-### Mode C+ - Permission catalog consumer
+### Mode C+ - Backend authorization and permission catalog consumer
+
+Applies across backend runtimes when a task touches access decisions, permission bits, generated service-local permission configs, bitmap governance, `X-Access`, `X-User-Roles`, catalog drift, or role-derived behavior.
 
 Adds:
 - generated service-local permission configs
-- permission bitmap id governance
-- `X-Access` permission-name mapping
-- catalog drift checks
-- one-service-at-a-time apply discipline
+- permission bitmap id governance and `X-Access` permission-name mapping
+- catalog drift checks and one-service-at-a-time apply discipline
+- exact catalog-owned permission checks for backend access decisions
+- no new role-based backend decision logic while the provisional freeze remains active
+- passive role retention only for documented observability or future-migration needs
 
 Read next:
+- `28-backend-permission-authorization-and-role-freeze.md`
 - `35-permission-catalog-and-service-configs.md`
 - `$alaa-trust-gateway-auth`
 
@@ -1780,7 +1785,7 @@ Route-shape reminder:
 - before claiming a prefix is active in an environment, verify the gateway route table and rendered HAProxy config when available; in the current local convention this usually means checking `D:/Sohrab/Project/gateway/charts/gateway/values*.yaml`, `D:/Sohrab/Project/gateway/docker/values.shared-network.yaml`, and rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`
 - use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
 
-## Role snapshot propagation
+## Role snapshot propagation and provisional backend freeze
 
 Auth issues the compact `rol` access-token claim as a deterministic JSON array of canonical role names. New and refreshed tokens include the claim even when the array is empty. Each role must match `^[a-z][a-z0-9_]{0,47}$`; the array must be bytewise sorted, duplicate-free, contain at most 16 roles, and serialize to at most 1024 bytes of compact JSON.
 
@@ -1791,10 +1796,14 @@ Gateway rules:
 - inject only the normalized compact JSON array as trusted `X-User-Roles`
 
 Downstream rules:
-- parse `X-User-Roles` only from the sanitized gateway path and validate the same bounds near ingress
-- keep roles request-scoped and distinct from `X-Access`; `rol` is a role-name snapshot while `prm` remains the permission bitmap
+- user-role semantics are not finalized for backend decision-making; read `28-backend-permission-authorization-and-role-freeze.md`
+- authorize with catalog-owned permission bits from trusted `X-Access`, plus the contract-defined OpenFGA decision where applicable
+- do not add role-based authorization, access tiers, policy selection, data scopes, response shaping, routing, validation, or feature behavior
+- a service that passively captures `X-User-Roles` must accept it only from the sanitized gateway path, validate the same bounds near ingress, and keep it distinct from `X-Access`
+- roles may be retained only as non-authoritative observability or future-use metadata; their presence, absence, or freshness must not change request outcomes
 - do not let a public client supply or override role context
 - role changes take effect for new or refreshed access tokens; existing access tokens retain their issuance-time snapshot until refresh, expiry, or revocation
+- do not activate role-based backend behavior until this skill explicitly records finalized role semantics and rollout rules
 
 ## Operational caller expectations
 
@@ -2105,6 +2114,66 @@ Any service owning users should also publish `user_projection.upsert.v1`.
 
 ---
 
+# Backend Permission Authorization And Role Freeze
+
+Use this file whenever an Ala backend task touches authorization, access levels, policies, Gates, middleware, trusted `X-Access`, trusted `X-User-Roles`, the compact `prm` or `rol` claims, or user-role storage.
+
+## Current decision
+
+User-role semantics are not finalized for backend decision-making. Until this skill explicitly replaces this section with a finalized role contract, every Ala backend service must treat user roles as non-authoritative metadata.
+
+For backend decision semantics, this file takes precedence over older companion-skill examples that derive a service-local role or permission tier. Companion skills still own claim verification, trusted-header projection, and parsing details, but those details do not authorize new role-derived backend behavior.
+
+Backend services must:
+- enforce coarse service access with catalog-owned permission bits received through the gateway-trusted `X-Access` projection of verified `prm`
+- decode `X-Access` through the service's generated, committed permission map from `alaa-permission-catalog`
+- check the exact permission required by the route or business operation
+- continue to rely on the contract-defined gateway/OpenFGA path for resource-level authorization where that path applies
+- keep business invariants, tenant/project boundaries, ownership checks, and data-scope rules explicit after trusted-context normalization
+
+Backend services must not:
+- allow, deny, elevate, downgrade, or select an access level from `rol`, `X-User-Roles`, a role name, or a role-derived tier
+- use roles to choose policies, Gates, scopes, queries, response fields, routes, validation, feature behavior, workflow branches, or side effects
+- add new role resolvers, role-to-permission maps, role-derived permission fallbacks, role middleware, or role-based tests
+- infer permissions from a role or use a broad role such as `admin` to bypass an exact permission or OpenFGA decision
+- treat the presence, absence, order, or freshness of role metadata as an authorization signal
+
+## Allowed passive role handling
+
+A backend is not required to consume or store `X-User-Roles`. If a service already receives role metadata, or has an explicit observability or future-migration need, it may retain the normalized role snapshot only as passive metadata.
+
+Passive handling means:
+- accept role data only from the sanitized gateway path; never from public client input
+- preserve the normalized bounded array without deriving an authorization tier or permission set from it
+- keep absence or staleness from changing request outcomes
+- keep the data request-scoped by default; persist an immutable snapshot only when the service has a documented observability or future-migration purpose
+- apply the platform's privacy, retention, and redaction rules
+- do not place user ids or role arrays in metric labels; use bounded structured logs or trace attributes only when operationally justified
+
+Code added solely for passive role capture must remain isolated from authorization interfaces so a future role contract can activate or remove it without changing current access behavior.
+
+## Existing role-dependent code
+
+Do not silently expand or normalize legacy role-based behavior during unrelated work. When current repository code already uses roles for a backend decision:
+- identify the exact decision and affected routes
+- treat it as contract drift
+- migrate it to exact catalog-owned permissions and applicable OpenFGA checks when that migration is in scope
+- otherwise preserve behavior only as an explicit blocker and do not add new role-dependent paths
+
+## Activation gate
+
+Role-based backend behavior remains frozen until this skill explicitly records all of the following as finalized:
+- authoritative role ownership and lifecycle
+- exact role semantics and allowed backend use cases
+- precedence between roles, permission bits, and OpenFGA decisions
+- freshness, refresh, revocation, and compatibility behavior
+- service rollout and migration rules
+- required tests, observability, privacy, and failure semantics
+
+The existence of `rol`, `X-User-Roles`, stored role snapshots, frontend role hints, or documentation outside this explicit gate does not activate role-based backend decision-making.
+
+---
+
 # Trusted Ingress And Laravel Contract
 
 ## Service modes
@@ -2162,7 +2231,7 @@ Required validation behavior:
 - decode `X-Access` as the base64url permission bitmap
 - map `X-Access` only through the service's generated, committed catalog-owned permission config
 - reject `X-Access` when it maps to zero known permissions after service-local mapping
-- when `X-User-Roles` is present, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
+- when an existing integration or explicit passive-metadata requirement consumes `X-User-Roles`, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
 - keep trusted roles distinct from permissions: `X-User-Roles` projects the verified `rol` role snapshot, while `X-Access` projects the verified `prm` permission bitmap
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
 - handle `X-User-Mobile` exactly according to `$alaa-trust-gateway-auth`
@@ -2174,14 +2243,14 @@ Actor context must be able to hold at least:
 - trusted project identifier
 - trusted user identifier
 - normalized permission names
-- normalized trusted role names when present
 - trusted access-token identifier when present
 - normalized first and last name values
 - normalized location object with `ostan`, `shahrestan`, `bakhsh`, `shahr`, `shobe`, and `school`
 - trusted mobile when present
 - `request_id`
 - `trace_id`
-- optional service-local derived role only when explicitly needed; it must not replace or mutate the trusted role snapshot
+
+Do not add role state to a new actor-context baseline. An existing service may keep normalized role names in a separate passive-metadata field only for documented observability or future-migration use; the field must not participate in authorization or other runtime decisions.
 
 Auth synchronization rules:
 - keep `$request->user()` and `Auth::user()` consistent
@@ -2195,12 +2264,13 @@ Required support components:
 - permission bitmap decoder and mapper
 - compact trusted user-projection normalizer
 - auth-state synchronizer
-- optional role-derivation helper when needed
 - stable API-error mapping path aligned with `$alaa-trust-gateway-auth`
 
 Implementation rules:
 - do not parse raw trusted headers in controllers, policies, resources, or repositories
 - keep policy and Gate decisions focused on business authorization after auth context is normalized
+- enforce backend access through exact catalog-owned permissions from `X-Access`; use the contract-defined OpenFGA result where resource-level authorization applies
+- do not introduce role resolvers, role-to-permission mappings, role-derived fallbacks, or any role-dependent policy, scope, response, route, validation, feature, or workflow behavior while the freeze in `28-backend-permission-authorization-and-role-freeze.md` is active
 - if the service persists trusted user data, keep mutable projections separate from immutable snapshots
 - do not fabricate display-city fields from compact location ids unless another contract owns that lookup
 
@@ -2504,6 +2574,14 @@ Use this file when an Ala service or shared frontend package changes `config/per
 - Treat drift as evidence. Do not let normal import or generate commands silently copy generated configs into source repositories.
 - Source service CI may run catalog drift checks with temporary generated output, but it must not modify source files, stage files, or reinterpret report-only warnings as failures.
 
+## Backend Authorization Decision Rule
+
+- Use the exact generated permission name and bitmap id required by each backend route or business operation.
+- Treat trusted `X-Access`, projected from verified `prm`, as the coarse backend permission input.
+- Keep resource-level OpenFGA authorization and service-local business invariants in their existing contract layers; a permission bit does not replace either one.
+- Do not infer permissions or access levels from `rol`, `X-User-Roles`, stored role snapshots, or role names while the provisional freeze in `28-backend-permission-authorization-and-role-freeze.md` is active.
+- Do not add role-to-permission fallback behavior. Missing or insufficient permissions must fail through the service's permission contract even when role metadata looks privileged.
+
 ## Apply Phase Rules
 
 - Permission config changes must happen through explicit apply phases, one consumer at a time. The frontend aggregate
@@ -2587,11 +2665,12 @@ Use this compact grouping instead of copying the full catalog into prompts:
 10. Align `RequestObservabilityMiddleware` and `ResolveUserMiddleware` semantics where required.
 11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
 12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, generated Go permission maps, the generated TypeScript `permission-catalog.ts`, permission names, bitmap ids, `X-Access`, or drift checks.
-13. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
-14. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
-15. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-16. Run focused tests for every changed contract surface.
-17. Report blockers explicitly when exact convergence is not possible.
+13. Verify backend decisions use exact permission checks and do not add role-based authorization or other role-dependent behavior while `28-backend-permission-authorization-and-role-freeze.md` remains active.
+14. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
+15. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
+16. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+17. Run focused tests for every changed contract surface.
+18. Report blockers explicitly when exact convergence is not possible.
 
 ## Short service adoption checklist
 
@@ -2646,6 +2725,8 @@ When applying this skill to a service, finish by checking:
 - missing invalid `X-User-Id`
 - missing invalid zero-known-permission `X-Access`
 - `X-Access` decoding against the generated, committed service permission config
+- exact permission checks cover allow and deny behavior without a role-derived fallback
+- `X-User-Roles` presence, absence, or value cannot change authorization, access level, scopes, response shape, routing, validation, features, workflows, or side effects
 - catalog drift check before and after permission-config changes when `alaa-permission-catalog` is available
 - invalid `X-User-Mobile`
 - malformed `X-User-Fname` or `X-User-Lname`
@@ -2688,6 +2769,9 @@ Flag a problem when you see any of these:
 - a public route exposes the internal metrics endpoint
 - a normal long-lived service uses Pushgateway for app metrics
 - trusted headers are parsed in controllers, policies, or repositories
+- a backend uses `rol`, `X-User-Roles`, a stored role snapshot, or a role-derived tier for authorization or any other runtime decision
+- a backend adds a role resolver, role-to-permission map, role-derived fallback, role middleware, or role-dependent tests while the provisional freeze is active
+- a privileged-looking role bypasses a missing permission or OpenFGA denial
 - `config/permissions.php` invents or hand-renumbers bitmap ids instead of consuming `alaa-permission-catalog` generated output
 - a generated Go permission map or the generated TypeScript `permission-catalog.ts` is hand-edited instead of regenerated and reapplied
 - frontend code hand-writes permission strings or bitmap ids, decodes the access token itself, or treats an unverified UI permission hint as an authorization decision
@@ -2709,6 +2793,8 @@ Flag a problem when you see any of these:
 - leaving `X-Correlation-Id` anywhere in the service after migrating to `X-Request-Id`
 - inventing local event names that conflict with `$alaa-observability-soc`
 - inventing local auth error names that conflict with `$alaa-trust-gateway-auth`
+- treating user roles as backend authority before this skill explicitly finalizes and activates role semantics
+- storing passive role metadata in a way that feeds authorization interfaces, high-cardinality metric labels, or undocumented retention
 - keeping stale compatibility branches, helpers, tests, or docs for removed contract surfaces
 - reintroducing duplicated GitLab CI logic into service repositories instead of updating `service-ci-kit` first
 - scattering trusted-user normalization across controllers, policies, resources, and observers
@@ -2950,6 +3036,7 @@ final class ResolveUserMiddleware
 Required helper responsibilities behind this baseline:
 - validate trusted headers exactly according to `$alaa-trust-gateway-auth`
 - decode and map the permission bitmap
+- authorize with exact catalog-owned permissions; do not derive access from user roles
 - normalize compact trusted first and last names
 - normalize compact trusted location ids into one repository-owned structure when needed
 - normalize `X-Access-Token-Id` when the repository uses token-session context
@@ -2988,13 +3075,17 @@ final readonly class TrustedActorContext
         public ?string $lastName,
         public ?array $location,
         public ?string $tokenId,
-        public ?string $role,
         public string $requestId,
         public string $traceId,
     ) {
     }
 }
 ```
+
+Do not add a role or role-derived tier to this baseline while the provisional freeze in
+`28-backend-permission-authorization-and-role-freeze.md` is active. If an existing service has a documented
+observability or future-migration requirement, keep normalized `userRoles` in a separate optional passive-
+metadata extension that no policy, Gate, query scope, response shaper, route, validator, feature, or workflow reads.
 
 ## Snapshot baseline
 

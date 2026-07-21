@@ -25,6 +25,14 @@ Use this file when an Ala service or shared frontend package changes `config/per
 - Treat drift as evidence. Do not let normal import or generate commands silently copy generated configs into source repositories.
 - Source service CI may run catalog drift checks with temporary generated output, but it must not modify source files, stage files, or reinterpret report-only warnings as failures.
 
+## Backend Authorization Decision Rule
+
+- Use the exact generated permission name and bitmap id required by each backend route or business operation.
+- Treat trusted `X-Access`, projected from verified `prm`, as the coarse backend permission input.
+- Keep resource-level OpenFGA authorization and service-local business invariants in their existing contract layers; a permission bit does not replace either one.
+- Do not infer permissions or access levels from `rol`, `X-User-Roles`, stored role snapshots, or role names while the provisional freeze in `28-backend-permission-authorization-and-role-freeze.md` is active.
+- Do not add role-to-permission fallback behavior. Missing or insufficient permissions must fail through the service's permission contract even when role metadata looks privileged.
+
 ## Apply Phase Rules
 
 - Permission config changes must happen through explicit apply phases, one consumer at a time. The frontend aggregate

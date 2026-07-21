@@ -23,8 +23,8 @@ Use this file to choose the smallest relevant reference file before loading the 
   - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
   - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
 - `Mode C+ - Permission catalog consumer`
-  - Use when the task is about `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.
-  - Read `35-permission-catalog-and-service-configs.md` and pair with `$alaa-trust-gateway-auth` and `$alaa-permission-generator`.
+  - Use when the task is about backend authorization, access levels, `X-User-Roles`, role-derived behavior, `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.
+  - Read `28-backend-permission-authorization-and-role-freeze.md` for the current backend decision rule and `35-permission-catalog-and-service-configs.md` for catalog consumption; pair with `$alaa-trust-gateway-auth` and `$alaa-permission-generator`.
   - When the consumer is the frontend, also read `60-frontend-sdk-consumption-contract.md` for the unverified UI-hint boundary.
 - `Mode D - Laravel auth-boundary service`
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
