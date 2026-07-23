@@ -45,5 +45,10 @@ for src in "${files[@]}"; do
   changed=$((changed + 1))
 done
 
+version_file="$(cd -- "$script_dir/.." && pwd)/VERSION"
+if [[ -f "$version_file" ]]; then
+  cp "$version_file" "$target_dir/.alaa-codex-orchestrator.version"
+fi
+
 printf '{"Status":"OK","InstalledOrUpdated":%d,"AlreadyCurrent":%d,"TargetDirectory":"%s","BackupDirectory":"%s"}\n' \
   "$changed" "$unchanged" "$target_dir" "$backup_dir"

@@ -1,11 +1,21 @@
 [CmdletBinding()]
 param(
-    [string]$SourceDirectory = (Join-Path (Split-Path -Parent $PSScriptRoot) "agents"),
+    [string]$SourceDirectory,
     [string]$TargetDirectory = (Join-Path $HOME ".codex\agents")
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+if (-not $SourceDirectory) {
+    $scriptRoot = $PSScriptRoot
+    if (-not $scriptRoot -and $PSCommandPath) { $scriptRoot = Split-Path -Parent $PSCommandPath }
+    if (-not $scriptRoot -and $MyInvocation.MyCommand.Path) { $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path }
+    if (-not $scriptRoot) {
+        throw "Cannot resolve the script location in this invocation style; pass -SourceDirectory <skill-root>\agents explicitly."
+    }
+    $SourceDirectory = Join-Path (Split-Path -Parent $scriptRoot) "agents"
+}
 
 function Get-FileHashHex {
     param([Parameter(Mandatory)][string]$Path)
@@ -83,6 +93,11 @@ try {
 finally {
     if ($lockStream) { $lockStream.Dispose() }
     Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue
+}
+
+$versionFile = Join-Path (Split-Path -Parent $source) "VERSION"
+if (Test-Path -LiteralPath $versionFile) {
+    Copy-Item -LiteralPath $versionFile -Destination (Join-Path $target ".alaa-codex-orchestrator.version") -Force
 }
 
 $result = [ordered]@{

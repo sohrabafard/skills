@@ -7,15 +7,12 @@ description: "Production-grade multi-agent coding orchestration for Claude Code 
 
 Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system inside Claude Code. The session model leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
 
-## 0. Mandatory bootstrap: auto-install managed subagents
+## 0. Bootstrap: ensure managed subagents exist (cheap sentinel check first)
 
-Run this before mode resolution or dispatch.
-
-1. Resolve SKILL_ROOT as the directory containing this SKILL.md.
-2. Compare every SKILL_ROOT/agents/*.md with the same-named file in ~/.claude/agents/. Copy missing or differing files into ~/.claude/agents/, backing up any differing previous version under ~/.claude/agents/.alaa-cc-orchestrator-backups/<timestamp>/ first. Never delete or modify unrelated agents or settings.
-3. Claude Code watches ~/.claude/agents/ and picks up new or changed files within seconds, so dispatch proceeds in the same session; no restart is needed.
-4. Report installation only when files changed or installation failed. Do not add setup noise when every file was already current.
-5. If installation is impossible, fall back to general-purpose subagents carrying the matching role prompt from references/delegation-prompts.md plus an explicit per-invocation model override, and say so.
+1. Resolve SKILL_ROOT as the directory containing this SKILL.md. Run exactly one cheap check: compare the content of ~/.claude/agents/.alaa-cc-orchestrator.version with SKILL_ROOT/VERSION. When they match, the agents are current — skip the rest of this section silently, with no file comparisons and no setup narration.
+2. Only when the sentinel is missing or differs, install: copy every SKILL_ROOT/agents/*.md into ~/.claude/agents/, backing up any differing same-named previous version under ~/.claude/agents/.alaa-cc-orchestrator-backups/<timestamp>/ first, then write the content of SKILL_ROOT/VERSION to ~/.claude/agents/.alaa-cc-orchestrator.version. Claude Code watches ~/.claude/agents/ and picks up new files within seconds; no restart is needed. Never delete or modify unrelated agents or settings.
+3. One attempt only. If installation fails for any reason, do not troubleshoot or retry mid-goal: state the failure in one line and continue with general-purpose subagents carrying the matching role prompt from references/delegation-prompts.md plus an explicit per-invocation model override.
+4. Never block or delay dispatch on bootstrap.
 
 ## 1. Operating modes
 

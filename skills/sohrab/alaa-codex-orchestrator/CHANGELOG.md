@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.2
+
+- Bootstrap redesigned: one sentinel-file check per activation (.alaa-codex-orchestrator.version vs VERSION); installer runs only on first install or version change, one attempt, never blocks dispatch.
+- Fixed installer empty-path failure when $PSScriptRoot is unset (robust script-root resolution with explicit -SourceDirectory fallback error).
+- Both installers now write the version sentinel after installing.
+
 ## 2.1.1
 
 - Every agent now begins its final report with a mandatory AGENT | MODEL | EFFORT identity line and flags pin mismatches.

@@ -7,20 +7,14 @@ description: "Production-grade multi-agent coding orchestration for Codex. Use w
 
 Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system. The main thread leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
 
-## 0. Mandatory bootstrap: auto-install managed subagents
+## 0. Bootstrap: ensure managed subagents exist (cheap sentinel check first)
 
-Run this before mode resolution or dispatch.
+1. Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`. Run exactly one cheap check: compare the content of `~/.codex/agents/.alaa-codex-orchestrator.version` with `SKILL_ROOT/VERSION`. When they match, the agents are current — skip the rest of this section silently, with no installer run and no setup narration.
+2. Only when the sentinel is missing or differs, install: copy every `SKILL_ROOT/agents/*.toml` into `~/.codex/agents/` (a plain file copy is sufficient; back up differing same-named files under `~/.codex/agents/.alaa-codex-orchestrator-backups/<timestamp>/` first), then write the content of `SKILL_ROOT/VERSION` to `~/.codex/agents/.alaa-codex-orchestrator.version`. The platform installer scripts (`scripts/Install-AlaaCodexAgents.ps1`, `scripts/install-agents.sh`) do the same with backups and locking and may be used instead, but are optional.
+3. One attempt only. If installation fails for any reason, do not troubleshoot, retry, or read installation docs mid-goal: state the failure in one line, continue with whatever `alaa-*` agents are already installed (or built-in `worker`/`explorer` if none), clearly mark the fallback, and note that one Codex restart may be required for newly installed agents to become discoverable.
+4. Never block or delay dispatch on bootstrap. Installation authority stays limited to this pack's named TOMLs, their backups, and the sentinel file under `~/.codex/agents`. Never delete or modify unrelated files or global configuration.
 
-1. Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`.
-2. Install or update every `SKILL_ROOT/agents/*.toml` into `~/.codex/agents/`:
-   - Windows: run `SKILL_ROOT/scripts/Install-AlaaCodexAgents.ps1`.
-   - macOS/Linux/WSL: run `SKILL_ROOT/scripts/install-agents.sh`.
-3. This installation is mandatory, idempotent, and narrowly authorized by activation of this skill. It may create `~/.codex/agents`, replace only same-named TOMLs shipped by this pack, and back up any differing previous versions under `~/.codex/agents/.alaa-codex-orchestrator-backups/<timestamp>/`. It must never delete or modify unrelated files.
-4. If the sandbox blocks writing outside the workspace, request the narrow approval needed to run the installer. Never bypass the sandbox or widen access beyond the installer and target directory.
-5. Report installation only when files changed or installation failed. Do not add setup noise when every file was already current.
-6. If newly installed custom agents are not discoverable in the current session, attempt no improvised global configuration change. Continue with built-in `worker`/`explorer` only when safe, clearly mark the fallback, and tell the user that one Codex restart may be required for custom-agent discovery.
-
-Read `references/installation.md` only when bootstrap fails or the user asks about installation.
+Read `references/installation.md` only when the user explicitly asks about installation.
 
 ## 1. Operating modes
 
