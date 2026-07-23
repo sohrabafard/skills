@@ -18,7 +18,7 @@ Use this skill before writing, choosing, reviewing, or repairing a prompt for GP
 ## Workflow
 
 1. Identify the target runtime and model. Ask only when neither can be inferred safely.
-2. Read `references/05-trigger-syntax.md` before naming any skill: this pack uses `$name` for Codex and `/name` for Claude Code.
+2. Read `references/05-trigger-syntax.md` before naming any skill: this pack uses `$name` for Codex and `/name` for Claude Code. When the generated prompt must ACTIVATE a skill, also read `references/06-invocation-and-composition.md` and apply it: the trigger opens the message with the exact installed name, the session keeps exactly one role consistent with the invoked skill, `/goal` carries only a compact bounded condition sent separately, and delegation wording authorizes rather than restricts.
 3. Read the target model file: `10-gpt-5-6.md`, `20-opus-4-8.md`, `30-sonnet-5.md`, or `40-fable-5.md`.
 4. For goals, subagents, parallel/background work, or recurring tasks, also read `11-codex-runtime-features.md` or `41-claude-code-runtime-features.md`.
 5. For model choice or cross-model comparison, read `90-model-selection.md`.

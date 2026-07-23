@@ -18,4 +18,5 @@ Codex may also register skills as slash commands, but this pack keeps `$name` fo
 1. Identify the target runtime; ask if it cannot be inferred safely.
 2. Apply one syntax consistently within each runtime-specific section.
 3. In mixed prompt packs, switch syntax section by section.
-4. Read the target skill's `name:` frontmatter instead of guessing its registered name.
+4. Read the target skill's `name:` frontmatter instead of guessing its registered name; in Claude Code, plugin skills resolve under their namespaced form (`/plugin-name:skill-name`).
+5. Syntax is necessary but not sufficient — a trigger only activates when placed correctly. Apply `06-invocation-and-composition.md` for placement, role consistency, and goal splitting.
