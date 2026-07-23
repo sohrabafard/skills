@@ -19,7 +19,7 @@ Stable workflow files must not pin model generations or volatile runtime feature
 - `independent reviewer`: inspects the resulting artifact or diff without inheriting the implementer's conclusions.
 - `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `$alaa-docs-farsi`.
 
-Choose the current runtime and model for each role only after the freshness gate. Use the trigger syntax accepted by that runtime. When a phase runs through `$alaa-codex-orchestrator` or `$alaa-claude-orchestrator`, these prompts feed that skill's role lanes; do not restate its dispatch machinery, review gate, or role agent definitions.
+Choose the current runtime and model for each role only after the freshness gate. Use the trigger syntax accepted by that runtime. When a phase runs through `$alaa-codex-orchestrator` or `$alaa-cc-orchestrator`, these prompts feed that skill's role lanes; do not restate its dispatch machinery, review gate, or role agent definitions.
 
 ## Compact prompt shape
 

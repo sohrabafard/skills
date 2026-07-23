@@ -1,6 +1,6 @@
 ---
-name: alaa-claude-orchestrator
-description: "Multi-model orchestrator/advisor mode for Claude Code (Fable 5 / Opus 4.8 / Sonnet 5). Use when the user states a goal and wants the top-tier session model to lead: either orchestrator mode (plan lanes, dispatch alaa-implementer/alaa-reviewer/alaa-documenter/alaa-researcher subagents pinned to the right model and effort, enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with /alaa-claude-orchestrator plus a goal, or whenever a Claude Code request names advisor or orchestrator mode. Do not use for trivial single-file edits, and route durable multi-phase plan/state engagements to /sohrab-skills:alaa-workflow."
+name: alaa-cc-orchestrator
+description: "Multi-model orchestrator/advisor mode for Claude Code (Fable 5 / Opus 4.8 / Sonnet 5). Use when the user states a goal and wants the top-tier session model to lead: either orchestrator mode (plan lanes, dispatch alaa-implementer/alaa-reviewer/alaa-documenter/alaa-researcher subagents pinned to the right model and effort, enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with /alaa-cc-orchestrator plus a goal, or whenever a Claude Code request names advisor or orchestrator mode. Do not use for trivial single-file edits, and route durable multi-phase plan/state engagements to /sohrab-skills:alaa-workflow."
 ---
 
 # Alaa Claude Orchestrator

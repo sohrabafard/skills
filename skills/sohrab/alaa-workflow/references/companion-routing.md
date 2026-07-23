@@ -3,7 +3,7 @@
 `alaa-workflow` owns workflow admission, plan/state continuity, delegation boundaries, handoff, and review cadence. Pair it with the narrowest owner for technical decisions.
 
 - Prompt design and runtime freshness: `$alaa-prompting-guide`; add `$openai-docs` for current OpenAI guidance.
-- Per-goal multi-model role orchestration: `$alaa-codex-orchestrator` (Codex) or `$alaa-claude-orchestrator` (Claude Code) for a bounded goal or single phase with parallel implementer/reviewer/documenter lanes; the workflow plan stays authoritative.
+- Per-goal multi-model role orchestration: `$alaa-codex-orchestrator` (Codex) or `$alaa-cc-orchestrator` (Claude Code) for a bounded goal or single phase with parallel implementer/reviewer/documenter lanes; the workflow plan stays authoritative.
 - Output discipline: `$alaa-low-noise`.
 - Frontend: `$alaa-frontend-developer` and `$alaa-vue-typescript-clean-code`.
 - Laravel/PHP: `$alaa-laravel-architecture` and `$alaa-php-clean-code`.

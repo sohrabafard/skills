@@ -52,7 +52,7 @@ Delegate only genuinely independent work with disjoint ownership, or high-volume
 
 The parent owns the plan, integration, conflict resolution, and final validation. Put lane ownership inside the parent plan or the delegated prompt; do not create a separate lane-plan artifact. See `references/artifact-lifecycle.md`.
 
-A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `$alaa-codex-orchestrator` (Codex) or `$alaa-claude-orchestrator` (Claude Code) for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
+A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `$alaa-codex-orchestrator` (Codex) or `$alaa-cc-orchestrator` (Claude Code) for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
 
 ## Generate prompts only on request
 

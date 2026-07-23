@@ -110,7 +110,7 @@ foreach ($srcRoot in $srcRoots) {
 ```powershell
 # Claude world — once, applies to every project
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\agents" | Out-Null
-Copy-Item "D:\Sohrab\Project\skills\skills\sohrab\alaa-claude-orchestrator\agents\*.md" "$env:USERPROFILE\.claude\agents\"
+Copy-Item "D:\Sohrab\Project\skills\skills\sohrab\alaa-cc-orchestrator\agents\*.md" "$env:USERPROFILE\.claude\agents\"
 
 # Codex world — once, applies to every project
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\agents" | Out-Null
