@@ -1,6 +1,6 @@
 ---
 name: alaa-cc-orchestrator
-description: "Multi-model orchestrator/advisor mode for Claude Code (Fable 5 / Opus 4.8 / Sonnet 5). Use when the user states a goal and wants the top-tier session model to lead: either orchestrator mode (plan lanes, dispatch alaa-implementer/alaa-reviewer/alaa-documenter/alaa-researcher subagents pinned to the right model and effort, enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with /alaa-cc-orchestrator plus a goal, or whenever a Claude Code request names advisor or orchestrator mode. Do not use for trivial single-file edits, and route durable multi-phase plan/state engagements to /sohrab-skills:alaa-workflow."
+description: "Multi-model orchestrator/advisor mode for Claude Code (Fable 5 / Opus 4.8 / Sonnet 5). Use when the user states a goal and wants the top-tier session model to lead: either orchestrator mode (plan lanes, dispatch alaa-implementer/alaa-reviewer/alaa-documenter/alaa-researcher subagents pinned to the right model and effort, enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with /alaa-cc-orchestrator plus a goal, or whenever a Claude Code request names advisor or orchestrator mode. Do not use for trivial single-file edits, and route durable multi-phase plan/state engagements to /alaa-workflow."
 ---
 
 # Alaa Claude Orchestrator
@@ -23,7 +23,7 @@ Turn one written goal into role-separated, multi-model execution inside Claude C
 ## Shared intake (both modes)
 
 1. Restate the goal as: outcome, success criteria (checkable), constraints, out-of-scope.
-2. Detect lane languages and map each lane to its clean-code skill: PHP/Laravel → /sohrab-skills:alaa-php-clean-code; Vue/Quasar/TypeScript → /sohrab-skills:alaa-vue-typescript-clean-code; Go → /sohrab-skills:alaa-golang-clean-code-principles. Documentation lanes in Ala-style repos → /sohrab-skills:alaa-docs-farsi. Name the matching skill inside each lane dispatch; the role agents have these skills available and load the one named.
+2. Detect lane languages and map each lane to its clean-code skill: PHP/Laravel → /alaa-php-clean-code; Vue/Quasar/TypeScript → /alaa-vue-typescript-clean-code; Go → /alaa-golang-clean-code-principles. Documentation lanes in Ala-style repos → /alaa-docs-farsi. Name the matching skill inside each lane dispatch; the role agents have these skills available and load the one named.
 3. Split the goal into independent lanes with disjoint file sets. Each lane gets: scope (files/modules), acceptance criteria, verification commands, and its clean-code skill. A goal too small to split becomes one lane.
 4. If lanes cannot be made disjoint, serialize the overlapping lanes, or run them with worktree isolation and merge deliberately afterward.
 5. When the goal depends on unfamiliar territory — external APIs, new libraries, unclear contracts, or prior decisions not in context — dispatch `alaa-researcher` lanes in the background during intake and fold the findings into the lane plan before dispatching implementers. Research informs decisions; it never makes them.
@@ -49,7 +49,7 @@ Turn one written goal into role-separated, multi-model execution inside Claude C
 ## Long-horizon goals
 
 - Condition-based continuation: offer `/goal` with the success criteria as the completion condition, always including an explicit turn or time bound inside the condition text.
-- Durable multi-phase engagements needing plan files, resumable state, or phase prompt packs: route to /sohrab-skills:alaa-workflow instead of recreating that machinery here.
+- Durable multi-phase engagements needing plan files, resumable state, or phase prompt packs: route to /alaa-workflow instead of recreating that machinery here.
 - Very large sweeps (repo-wide audits, migrations across hundreds of sites) where control flow itself must be deterministic: propose a workflow run to the user rather than fanning out ad hoc.
 - Context is managed by the runtime; do not stop early, summarize prematurely, or suggest a new session because of context concerns.
 

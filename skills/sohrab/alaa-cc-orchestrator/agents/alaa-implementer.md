@@ -4,9 +4,9 @@ description: Implementation lane worker for orchestrated goals. Use one per inde
 model: sonnet
 effort: xhigh
 skills:
-  - sohrab-skills:alaa-php-clean-code
-  - sohrab-skills:alaa-vue-typescript-clean-code
-  - sohrab-skills:alaa-golang-clean-code-principles
+  - alaa-php-clean-code
+  - alaa-vue-typescript-clean-code
+  - alaa-golang-clean-code-principles
 color: blue
 ---
 

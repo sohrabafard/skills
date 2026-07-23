@@ -6,7 +6,7 @@ Trigger syntax alone does not activate a skill. A generated prompt fails silentl
 
 - An **invocation** activates a skill: the trigger opens the message, or the prompt explicitly instructs "invoke the `<name>` skill now, before any other action."
 - A **mention** is inert: a trigger in backticks mid-sentence ("then use `/name` to…") is a reference the model may ignore. Never rely on a mention when activation is required.
-- In Claude Code, use the exact installed name — plugin skills are namespaced (`/sohrab-skills:alaa-cc-orchestrator`, not `/alaa-cc-orchestrator`). In Codex, a `$name` mention can trigger, but the same placement rule applies: lead with it.
+- In Claude Code, use the exact installed name — plugin skills are namespaced (`/alaa-cc-orchestrator`, not `/alaa-cc-orchestrator`). In Codex, a `$name` mention can trigger, but the same placement rule applies: lead with it.
 - One primary skill trigger per message. Skills the lanes must load are named inside lane dispatch text as instructions ("load `<name>` and apply it"), not as competing triggers at the top level.
 
 ## Role-consistency contract
@@ -40,4 +40,4 @@ Models in this pack under-fan-out by default. Delegation language must authorize
 ## The failure shape to recognize
 
 Bad: a `/goal` block opening "You are the senior implementer…", with "then use `/alaa-cc-orchestrator` to lead the lanes" buried mid-paragraph. Result: the skill never loads and the session implements everything itself.
-Fix: message starts `/sohrab-skills:alaa-cc-orchestrator Orchestrator mode — <goal>`, second sentence assigns the orchestrator role with the do-not-implement negative, lane rules carry the implementation discipline, and a separate short `/goal` holds the completion condition.
+Fix: message starts `/alaa-cc-orchestrator Orchestrator mode — <goal>`, second sentence assigns the orchestrator role with the do-not-implement negative, lane rules carry the implementation discipline, and a separate short `/goal` holds the completion condition.

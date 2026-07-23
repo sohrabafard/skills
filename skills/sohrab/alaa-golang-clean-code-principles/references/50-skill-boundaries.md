@@ -1,7 +1,7 @@
 # Skill Boundaries — What Lives in `alaa-golang` (Referenced, Not Repeated)
 
 This skill deliberately adds **nothing** on the topics below. When a task needs them, load the `alaa-golang`
-router (Codex: `$alaa-golang` · Claude Code: `/alaa-golang` or `/sohrab-skills:alaa-golang`) and let it route to
+router (Codex: `$alaa-golang` · Claude Code: `/alaa-golang` or `/alaa-golang`) and let it route to
 the specific public Go skill. Duplicating that material here would create exactly the drift this pack forbids.
 
 | Topic | Owned by (via the alaa-golang router) |

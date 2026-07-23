@@ -73,7 +73,7 @@ and **GPT-5.5 (Codex)**:
 
 - All instructions are imperative, self-contained markdown; nothing depends on a runtime-specific tool.
 - Skill triggers differ by runtime: in Codex prompts reference companions as `$alaa-golang`,
-  `$alaa-services-contract`; in Claude Code as `/alaa-golang` (or the pack-qualified `/sohrab-skills:alaa-golang`).
+  `$alaa-services-contract`; in Claude Code as `/alaa-golang` (or the pack-qualified `/alaa-golang`).
   When this skill's references name a companion skill, use the trigger character of the runtime you are in —
   see the `alaa-prompting-guide` skill's trigger-syntax reference when writing prompts for another model.
 - Do not assume subagents, background jobs, or plan modes exist; when they do, this skill needs none of them.

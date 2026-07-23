@@ -4,7 +4,7 @@ description: Documentation lane worker for orchestrated goals. Use after the rev
 model: sonnet
 effort: high
 skills:
-  - sohrab-skills:alaa-docs-farsi
+  - alaa-docs-farsi
 color: green
 ---
 

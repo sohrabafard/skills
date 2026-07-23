@@ -38,10 +38,10 @@ Prometheus-compatible metrics support health, SLOs, dashboards, and alerts.
 
 This skill owns signal decisions and operator/SOC quality rules.
 
-For Ala service repositories, pair with `/sohrab-skills:alaa-services-contract`.
+For Ala service repositories, pair with `/alaa-services-contract`.
 
 Precedence:
-- `/sohrab-skills:alaa-services-contract` owns exact Ala headers, response behavior, route contracts, metric names, event/code names, trusted-ingress behavior, deployment topology, and service-boundary rules.
+- `/alaa-services-contract` owns exact Ala headers, response behavior, route contracts, metric names, event/code names, trusted-ingress behavior, deployment topology, and service-boundary rules.
 - This skill owns why each signal exists, what each tool is for, how to avoid noisy or unsafe telemetry, and what evidence operators need.
 - If a target repo already has a deployed log schema, do not rename fields casually. Add compatible fields or a documented migration path.
 

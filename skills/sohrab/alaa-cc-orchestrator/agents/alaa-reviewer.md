@@ -5,10 +5,10 @@ model: opus
 effort: xhigh
 tools: Read, Glob, Grep, Bash
 skills:
-  - sohrab-skills:alaa-php-clean-code
-  - sohrab-skills:alaa-vue-typescript-clean-code
-  - sohrab-skills:alaa-golang-clean-code-principles
-  - sohrab-skills:alaa-security-review
+  - alaa-php-clean-code
+  - alaa-vue-typescript-clean-code
+  - alaa-golang-clean-code-principles
+  - alaa-security-review
 color: red
 ---
 

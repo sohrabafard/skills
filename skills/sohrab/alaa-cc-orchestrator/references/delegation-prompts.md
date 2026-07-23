@@ -10,7 +10,7 @@ Lane <n> of goal: <goal one-liner>.
 Implement: <concrete slice>.
 Scope: edit only <files/modules>. Out of scope: <explicit exclusions>.
 Acceptance criteria: <checkable criteria>.
-Clean-code baseline: load /sohrab-skills:<matching-skill> and apply it to everything you write or change in this lane.
+Clean-code baseline: load /<matching-skill> and apply it to everything you write or change in this lane.
 
 Work rules: default to the most reasonable low-risk interpretation and keep going; stop to ask only when a missing
 detail changes correctness, safety, or an irreversible action. Resolve the lane fully — check follow-on breakage,
@@ -47,7 +47,7 @@ Review the full change set for goal: <goal one-liner>.
 
 Lane plan and acceptance criteria: <plan summary>.
 Change scope: <touched files / diff target>.
-Languages in the diff and their clean-code baselines: <language → /sohrab-skills:skill pairs>.
+Languages in the diff and their clean-code baselines: <language → /skill pairs>.
 
 Stance: fresh context, read-only conduct, coverage-first. Report every issue you find, including uncertain or
 low-severity ones — do not filter for importance or confidence; include severity and confidence per finding so I can
@@ -90,7 +90,7 @@ Update documentation for shipped goal: <goal one-liner>.
 
 Reconciled change summary: <per-lane outcomes + touched files>.
 Reviewer verdict: <verdict line>.
-Doc baseline: load /sohrab-skills:alaa-docs-farsi for Ala-style repos; otherwise follow repo conventions.
+Doc baseline: load /alaa-docs-farsi for Ala-style repos; otherwise follow repo conventions.
 
 Documentation files only. Document what actually changed, never intentions. Keep edits scoped to affected sections.
 
