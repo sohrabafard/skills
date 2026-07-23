@@ -46,6 +46,7 @@ If sources conflict, preserve working repo conventions unless they violate corre
 
 Load only what the task needs:
 
+- Start from `references/05-topic-map.md`: the task → shortest-reading-path table. Match the task to its row and load only the listed files; the bullets below are the per-file detail.
 - Always skim `references/00-source-map.md` for source scope.
 - For component/template/style work, read `references/10-vue-style-contract.md`.
 - For TypeScript or Composition API work, read `references/20-typescript-composition-contract.md`.

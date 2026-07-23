@@ -1,0 +1,33 @@
+{
+ "skill_name": "alaa-vue-typescript-clean-code",
+ "evals": [
+  {
+   "id": 0,
+   "eval_name": "monolithic-component-refactor",
+   "prompt": "In our Quasar (Vite, Vue 3, TypeScript strict, Pinia) app, src/pages/InvoicePage.vue has grown to 700 lines: it fetches invoices with axios directly, holds filter/sort/pagination state, formats currency inline in the template, mutates a prop it receives, and defines three inline sub-components with render-heavy v-if chains. Refactor it into clean production shape. Write the resulting files under outputs/ (page, components, composables, store or service modules as genuinely needed).",
+   "expected_output": "Page reduced to composition: data access moved behind a typed API service/port (no axios import in components); filter/sort/pagination state in a composable or Pinia store with typed state; prop mutation removed (emits/v-model contract); formatting in a util/composable, not the template; sub-components extracted as SFCs with typed props/emits (script setup, Composition API); size/complexity budgets respected; no new abstractions beyond what the refactor needs.",
+   "files": []
+  },
+  {
+   "id": 1,
+   "eval_name": "sdk-port-injection",
+   "prompt": "Our Vue 3 + Quasar app calls a vendor upload SDK (window-global, callback-based, its own error codes) directly from four components, and tests currently cannot run without the real SDK. Wrap it properly and migrate one component as an example. Write the files under outputs/.",
+   "expected_output": "One small typed port (interface) owned by the app; an adapter converting the SDK's callbacks to promises and translating its error codes into typed app errors; injection via a typed Symbol key (or DI-equivalent) so a fake can implement the port in tests; the migrated component depends only on the port; cleanup/cancellation handled; no SDK types or globals leaking into components.",
+   "files": []
+  },
+  {
+   "id": 2,
+   "eval_name": "kind-switch-strategy",
+   "prompt": "In our Quasar app, a notification center renders five notification kinds, and the same switch(kind) appears in four places: icon choice, route target, formatting, and analytics label. New kinds keep being added and one switch always gets missed. Fix the shape. Write the files under outputs/.",
+   "expected_output": "A discriminated union for notification kinds plus per-concern typed handler maps (or one registry) with assertNever exhaustiveness so a new kind fails compilation until every concern is handled; call sites reduced to map lookups; no class hierarchy introduced; concerns stay separate (icon/route/format/analytics not merged into one blob).",
+   "files": []
+  },
+  {
+   "id": 3,
+   "eval_name": "alaa-observed-patterns-gate",
+   "prompt": "Add a 'transfer credit' flow page to our Alaa-style Quasar app: it needs a view mapper from the backend DTO, a flow composable coordinating steps (validate, preview, confirm), a Pinia store slice, and navigation to a result screen. Follow our established repo patterns. Write the files under outputs/.",
+   "expected_output": "Reads and applies the Alaa observed patterns reference: PRVM-style field resolution in the view mapper (no shadow adapters), orchestrator/flow composable owning step coordination with mediator-blind children, typed navigation intents rather than raw router pushes scattered in children, failure classification for error handling, teardown guards on subscriptions/watchers; strict typing throughout; violations of any observed antipattern treated as blocking.",
+   "files": []
+  }
+ ]
+}

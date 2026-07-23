@@ -92,6 +92,35 @@ Also challenge the chosen design, not just the code: which assumptions stop bein
 </adversarial_extension>
 ```
 
+## Researcher dispatch
+
+```xml
+<task>
+Research for goal: <goal one-liner>.
+Question: <the exact question(s) to answer>.
+Sources to prefer: <repo paths, official docs, URLs, project notes>.
+</task>
+
+<research_mode>
+Separate observed facts, reasoned inferences, and open questions.
+Prefer breadth first, then go deeper only where the evidence changes the answer.
+</research_mode>
+
+<citation_rules>
+Attach a source to every fact: file path, URL, or document title.
+Prefer primary and official sources.
+</citation_rules>
+
+<action_safety>
+Read-only. No edits, no decisions, no recommendations unless options were explicitly requested.
+</action_safety>
+
+<compact_output_contract>
+Return: 1. the question as understood 2. observed facts with sources 3. inferences labeled as inferences
+4. open questions 5. options with trade-offs only if requested.
+</compact_output_contract>
+```
+
 ## Documenter dispatch
 
 ```xml

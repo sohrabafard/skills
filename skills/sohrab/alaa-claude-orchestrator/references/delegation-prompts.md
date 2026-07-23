@@ -66,6 +66,23 @@ a simpler or safer approach existed, and the strongest reason this change should
 good intent or likely follow-up work.
 ```
 
+## Researcher dispatch
+
+```text
+Research for goal: <goal one-liner>.
+
+Question: <the exact question(s) to answer>.
+Sources to prefer: <repo paths, official docs, URLs, project notes>.
+
+Stance: read-only, evidence-first. Separate observed facts, reasoned inferences, and open questions. Prefer
+breadth first, then go deeper only where the evidence changes the answer. Attach a source to every fact — file
+path, URL, or document title — and prefer primary and official sources. No edits, no decisions, and no
+recommendations unless options were explicitly requested.
+
+Return, in this order: 1. the question as understood 2. observed facts with sources 3. inferences labeled as
+inferences 4. open questions 5. options with trade-offs only if requested. Keep the report compact.
+```
+
 ## Documenter dispatch
 
 ```text

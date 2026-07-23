@@ -1,6 +1,6 @@
 ---
 name: alaa-claude-orchestrator
-description: "Multi-model orchestrator/advisor mode for Claude Code (Fable 5 / Opus 4.8 / Sonnet 5). Use when the user states a goal and wants the top-tier session model to lead: either orchestrator mode (plan lanes, dispatch alaa-implementer/alaa-reviewer/alaa-documenter subagents pinned to the right model and effort, enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with /alaa-claude-orchestrator plus a goal, or whenever a Claude Code request names advisor or orchestrator mode. Do not use for trivial single-file edits, and route durable multi-phase plan/state engagements to /sohrab-skills:alaa-workflow."
+description: "Multi-model orchestrator/advisor mode for Claude Code (Fable 5 / Opus 4.8 / Sonnet 5). Use when the user states a goal and wants the top-tier session model to lead: either orchestrator mode (plan lanes, dispatch alaa-implementer/alaa-reviewer/alaa-documenter/alaa-researcher subagents pinned to the right model and effort, enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with /alaa-claude-orchestrator plus a goal, or whenever a Claude Code request names advisor or orchestrator mode. Do not use for trivial single-file edits, and route durable multi-phase plan/state engagements to /sohrab-skills:alaa-workflow."
 ---
 
 # Alaa Claude Orchestrator
@@ -10,7 +10,7 @@ Turn one written goal into role-separated, multi-model execution inside Claude C
 ## Requirements
 
 - Session model: Fable 5 at effort `high` for hard or long goals; Opus 4.8 at `high` is acceptable for ordinary goals. If the session runs on a lower tier, tell the user before proceeding.
-- Role agents: definitions ship in this skill's `agents/` folder, but Claude Code discovers agents only in `.claude/agents/` (project) or `~/.claude/agents/` (user) — a file inside the skill folder is invisible to the Agent tool. On activation, check whether the three role agents are available; if not, copy `agents/*.md` from this skill's directory into `~/.claude/agents/` before dispatching. Claude Code watches that directory and picks up new files within seconds, so dispatch can proceed in the same session. Roles and pins: `alaa-implementer` (Sonnet 5, `xhigh`), `alaa-reviewer` (Opus 4.8, `xhigh`, read-only conduct), `alaa-documenter` (Sonnet 5, `high`).
+- Role agents: definitions ship in this skill's `agents/` folder, but Claude Code discovers agents only in `.claude/agents/` (project) or `~/.claude/agents/` (user) — a file inside the skill folder is invisible to the Agent tool. On activation, check whether the four role agents are available; if not, copy `agents/*.md` from this skill's directory into `~/.claude/agents/` before dispatching. Claude Code watches that directory and picks up new files within seconds, so dispatch can proceed in the same session. Roles and pins: `alaa-implementer` (Sonnet 5, `xhigh`), `alaa-reviewer` (Opus 4.8, `xhigh`, read-only conduct), `alaa-documenter` (Sonnet 5, `high`), `alaa-researcher` (Sonnet 5, `medium`, read-only repo and web research).
 - Fallback when the role agents are not installed: say so, then spawn `general-purpose` subagents with the matching role prompt from `references/delegation-prompts.md` and an explicit per-invocation model override (implementer → sonnet, reviewer → opus, documenter → sonnet).
 - Model escalation rule: for an architecture-heavy or unusually subtle lane, override the implementer's model to Opus 4.8 per invocation — the per-invocation model parameter beats the agent file's pin.
 
@@ -26,12 +26,13 @@ Turn one written goal into role-separated, multi-model execution inside Claude C
 2. Detect lane languages and map each lane to its clean-code skill: PHP/Laravel → /sohrab-skills:alaa-php-clean-code; Vue/Quasar/TypeScript → /sohrab-skills:alaa-vue-typescript-clean-code; Go → /sohrab-skills:alaa-golang-clean-code-principles. Documentation lanes in Ala-style repos → /sohrab-skills:alaa-docs-farsi. Name the matching skill inside each lane dispatch; the role agents have these skills available and load the one named.
 3. Split the goal into independent lanes with disjoint file sets. Each lane gets: scope (files/modules), acceptance criteria, verification commands, and its clean-code skill. A goal too small to split becomes one lane.
 4. If lanes cannot be made disjoint, serialize the overlapping lanes, or run them with worktree isolation and merge deliberately afterward.
+5. When the goal depends on unfamiliar territory — external APIs, new libraries, unclear contracts, or prior decisions not in context — dispatch `alaa-researcher` lanes in the background during intake and fold the findings into the lane plan before dispatching implementers. Research informs decisions; it never makes them.
 
 ## Orchestrator mode
 
 1. Present the lane plan in one compact block, then continue without waiting unless the goal is destructive, externally visible, or ambiguous in scope.
 2. Dispatch deliberately wide — this model tier under-spawns by default. Spawn all independent implementer lanes in the same turn; do not spawn a subagent for work the main thread can finish directly. Run long lanes in the background and keep orchestrating while they work.
-3. Build each lane prompt from `references/delegation-prompts.md` (implementer template). One lane, one implementer, one prompt.
+3. Build each lane prompt from `references/delegation-prompts.md` (implementer template). One lane, one implementer, one prompt. When a lane or the reviewer needs external facts mid-goal, dispatch `alaa-researcher` for them instead of letting the lane spend its context searching.
 4. Wait for all lanes. Reconcile: check lane outputs against acceptance criteria, detect cross-lane conflicts, and rerun the affected lane if two lanes touched the same behavior.
 5. Review gate: spawn `alaa-reviewer` with the reviewer template covering the full change set against the lane plan. The reviewer is fresh-context and must not edit anything.
    - `VERDICT: APPROVED` or `APPROVED-WITH-NITS` → proceed. Report nits to the user; fix them only if trivial and in scope.
@@ -42,7 +43,7 @@ Turn one written goal into role-separated, multi-model execution inside Claude C
 ## Advisor mode
 
 1. Deliver: the lane plan; a ready-to-run implementer prompt per lane (from the templates) that the user can paste into any session or worker; the top risks and the assumptions that would change the plan.
-2. Do not spawn implementers or edit code. Spawning `alaa-reviewer` is allowed when the user asks for a review of work they implemented themselves; return the reviewer output with findings first, and make no fixes — ask which findings the user wants fixed.
+2. Do not spawn implementers or edit code. Spawning `alaa-researcher` is allowed freely to ground the advice in evidence. Spawning `alaa-reviewer` is allowed when the user asks for a review of work they implemented themselves; return the reviewer output with findings first, and make no fixes — ask which findings the user wants fixed.
 3. When the user asks "should I…" questions mid-goal, answer with a recommendation plus the strongest counter-argument, grounded in files actually inspected.
 
 ## Long-horizon goals
@@ -71,6 +72,7 @@ Turn one written goal into role-separated, multi-model execution inside Claude C
 - Letting the reviewer fix code, or letting an implementer review its own lane.
 - Reporting "done" from lane summaries without checking evidence, or paraphrasing reviewer findings into something softer.
 - Pre-loading all clean-code skills into every lane — name only the lane's matching skill.
+- Dispatching `alaa-researcher` for facts already in the lead's context, or letting a research lane recommend, decide, or edit.
 
 ## Validation checklist (before the final report)
 

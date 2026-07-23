@@ -24,6 +24,18 @@ discriminating question — if the answer is no, you picked the wrong pattern.
 | Undo, draft restore, or "discard changes" needs a prior state back | Memento (immutable snapshots) | Does the owner produce the snapshot, not outside code? |
 | Families of related implementations that must never be mixed (provider suite: client + parser + validator) | Abstract Factory (suite chosen once) | Are there ≥2 members whose implementations must match? |
 | The same `switch` on a node kind repeated once per operation | Visitor (per-operation handler map + `assertNever`) | Is the kind set stable while operations keep arriving? |
+| One shared service or client needed app-wide (API client, event gateway, worker manager) | Singleton (module-level instance) | Is it stateless or SSR-safe, with no per-user mutable state? |
+| Parts of the UI must react when shared data changes | Observer (props/emits, Pinia subscription) | Is the notification one-way, with every subscription cleaned up? |
+| Access to an expensive or browser resource must be guarded, deferred, or cached | Proxy | Does the wrapper keep the contract but control when the real call happens? |
+| A component juggling several low-level APIs for one high-level intent | Facade (typed service module) | Would one small typed surface hide the subsystem completely? |
+| Object creation with branching or config repeated across call sites | Factory (typed creator) | Does one creator own the branching behind a stable return type? |
+| Multi-step, conditional construction of a config or schema (table columns, form schema) | Builder | Do call sites genuinely assemble different combinations, or would a `satisfies` literal do? |
+| Custom traversal or lazy generation over large or streaming data | Iterator (generator) | Is laziness or streaming real, not aesthetic? |
+| Subclasses, wrappers, or props existing only to encode preset variants | Prototype (frozen preset registry) | Is duplicating a configured object the real need? |
+| Thousands of similar immutable config objects hurting memory | Flyweight (shared frozen config) | Is there a measured memory cost? |
+
+Callbacks and Promises are idioms, not symptom-routed patterns: their rules live in their catalog sections
+below and apply whenever async or interop code is touched.
 
 Look-alike disambiguation (the pairs agents most often confuse):
 

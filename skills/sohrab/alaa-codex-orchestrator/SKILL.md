@@ -1,6 +1,6 @@
 ---
 name: alaa-codex-orchestrator
-description: "Multi-model orchestrator/advisor mode for Codex (GPT-5.6). Use when the user states a goal and wants the Sol main thread to lead: either orchestrator mode (plan, dispatch role subagents — Terra implementers with Sol escalation, a Sol reviewer, a Luna documenter — enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with $alaa-codex-orchestrator plus a goal, or whenever a Codex request names advisor or orchestrator mode. Do not use for trivial single-file edits or for Windows runtime failures (route those to $alaa-codex-runtime-ops)."
+description: "Multi-model orchestrator/advisor mode for Codex (GPT-5.6). Use when the user states a goal and wants the Sol main thread to lead: either orchestrator mode (plan, dispatch role subagents — Terra implementers with Sol escalation, a Sol reviewer, a Luna documenter, a Luna read-only researcher — enforce a review gate, reconcile evidence) or advisor mode (plan, produce lane prompts, and review without delegating). Trigger with $alaa-codex-orchestrator plus a goal, or whenever a Codex request names advisor or orchestrator mode. Do not use for trivial single-file edits or for Windows runtime failures (route those to $alaa-codex-runtime-ops)."
 ---
 
 # Alaa Codex Orchestrator
@@ -10,7 +10,7 @@ Turn one written goal into role-separated, multi-model execution inside Codex: S
 ## Requirements
 
 - Main thread model: `gpt-5.6-sol`, reasoning effort `high`. If the session runs on another model, tell the user before proceeding.
-- Role agents: definitions ship in this skill's `agents/` folder, but Codex discovers agents only in `.codex/agents/` (project) or `~/.codex/agents/` (personal) — a TOML inside the skill folder is invisible to the spawner. On activation, check whether the four role agents are available; if not, copy `agents/*.toml` from this skill's directory into `~/.codex/agents/` (or `.codex/agents/` when the user wants a repo-scoped override) before dispatching. If a freshly copied agent is not visible in this session, tell the user to restart the Codex session once; hot reload is not guaranteed. Roles and pins: `alaa-implementer` (`gpt-5.6-terra`, `high`), `alaa-implementer-sol` (`gpt-5.6-sol`, `high`, escalation lanes), `alaa-reviewer` (`gpt-5.6-sol`, `high`, read-only), `alaa-documenter` (`gpt-5.6-luna`, `high`).
+- Role agents: definitions ship in this skill's `agents/` folder, but Codex discovers agents only in `.codex/agents/` (project) or `~/.codex/agents/` (personal) — a TOML inside the skill folder is invisible to the spawner. On activation, check whether the five role agents are available; if not, copy `agents/*.toml` from this skill's directory into `~/.codex/agents/` (or `.codex/agents/` when the user wants a repo-scoped override) before dispatching. If a freshly copied agent is not visible in this session, tell the user to restart the Codex session once; hot reload is not guaranteed. Roles and pins: `alaa-implementer` (`gpt-5.6-terra`, `high`), `alaa-implementer-sol` (`gpt-5.6-sol`, `high`, escalation lanes), `alaa-reviewer` (`gpt-5.6-sol`, `high`, read-only), `alaa-documenter` (`gpt-5.6-luna`, `high`), `alaa-researcher` (`gpt-5.6-luna`, `high`, read-only research).
 - If the role TOMLs are not installed, say so, then fall back to built-in `worker` (implement) and `explorer` (read) agents using the same lane prompts from `references/delegation-prompts.md`. Note to the user that fallback agents inherit the Sol model and cost more.
 - Optional: raise `[agents] max_threads` in `~/.codex/config.toml` when goals routinely need more than 6 parallel lanes.
 
@@ -26,6 +26,7 @@ Turn one written goal into role-separated, multi-model execution inside Codex: S
 2. Detect lane languages and map each lane to its clean-code skill: PHP/Laravel → `$alaa-php-clean-code`; Vue/Quasar/TypeScript → `$alaa-vue-typescript-clean-code`; Go → `$alaa-golang-clean-code-principles`. Documentation lanes in Ala-style repos → `$alaa-docs-farsi`.
 3. Split the goal into independent lanes with disjoint file sets. Each lane gets: scope (files/modules), acceptance criteria, verification commands, and its clean-code skill. A goal too small to split becomes one lane.
 4. If lanes cannot be made disjoint, serialize the overlapping lanes instead of parallelizing them.
+5. When the goal depends on unfamiliar territory — external APIs, new libraries, unclear contracts, or prior decisions not in context — dispatch `alaa-researcher` lanes in parallel during intake and fold the findings into the lane plan before dispatching implementers. Research informs decisions; it never makes them.
 
 ## Orchestrator mode
 
@@ -38,7 +39,7 @@ Spawn one alaa-implementer per lane, give every lane the same constraints and a 
 is duplicated or dropped, wait for all of them, and reconcile the results yourself before moving on.
 ```
 
-3. Build each lane prompt from `references/delegation-prompts.md` (implementer template). One lane, one implementer, one prompt. Dispatch an architecture-heavy or unusually subtle lane to `alaa-implementer-sol`; every other lane uses `alaa-implementer`.
+3. Build each lane prompt from `references/delegation-prompts.md` (implementer template). One lane, one implementer, one prompt. Dispatch an architecture-heavy or unusually subtle lane to `alaa-implementer-sol`; every other lane uses `alaa-implementer`. When a lane or the reviewer needs external facts mid-goal, dispatch `alaa-researcher` for them instead of letting the lane spend its run searching.
 4. Wait for all lanes. Reconcile: check lane outputs against acceptance criteria, detect cross-lane conflicts, and rerun the affected lane if two lanes touched the same behavior.
 5. Review gate: spawn `alaa-reviewer` with the reviewer template covering the full change set against the lane plan. The reviewer is fresh-context and read-only.
    - `VERDICT: APPROVED` or `APPROVED-WITH-NITS` → proceed. Report nits to the user; fix them only if trivial and in scope.
@@ -49,7 +50,7 @@ is duplicated or dropped, wait for all of them, and reconcile the results yourse
 ## Advisor mode
 
 1. Deliver: the lane plan; a ready-to-run implementer prompt per lane (from the templates) that the user can paste or hand to any worker; the top risks and the assumptions that would change the plan.
-2. Do not spawn implementers or edit code. Spawning `alaa-reviewer` is allowed when the user asks for a review of work they implemented themselves; return the reviewer output with findings first, and make no fixes.
+2. Do not spawn implementers or edit code. Spawning `alaa-researcher` is allowed freely to ground the advice in evidence. Spawning `alaa-reviewer` is allowed when the user asks for a review of work they implemented themselves; return the reviewer output with findings first, and make no fixes.
 3. When the user asks "should I…" questions mid-goal, answer with a recommendation plus the strongest counter-argument, grounded in files actually inspected.
 
 ## Long-horizon goals
@@ -82,6 +83,7 @@ The lane plan from intake becomes the goal's iteration policy. Orchestrator disp
 - Spawning a subagent for work the main thread can finish directly in advisor mode answers.
 - Letting the reviewer fix code, or letting an implementer review its own lane.
 - Reporting "done" from lane summaries without checking evidence, or paraphrasing reviewer findings into something softer.
+- Dispatching `alaa-researcher` for facts already in the lead's context, or letting a research lane recommend, decide, or edit.
 - Merging this skill's job with durable multi-phase plan/state machinery — for that engagement shape, use the alaa-workflow process instead of recreating it here.
 
 ## Validation checklist (before the final report)

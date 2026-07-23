@@ -29,6 +29,13 @@ means a different pattern (or none).
 | Workers/consumers coordinating with each other directly in-process | Mediator (the use case) / outbox | Should this coordination be a broker fact instead? (P6, P13) |
 | "Restore prior state" or compensation needed after failure | Memento (audit pre-image in the same tx) | Is the pre-image durable and written by its owner? (P6) |
 | The same kind-`switch` repeated once per operation | Visitor (handler map per operation) | Stable kind set, operations keep arriving? (P10) |
+| Shared clients or config constructed lazily via package globals | Singleton (boot-owned instance) | Is construction owned once in boot wiring, with no lazy `sync.Once` globals? (P10) |
+| Env/provider/mode construction branching duplicated at call sites | Factory Method (boot constructor) | Does one boot-site constructor own the branching? (P10) |
+| Long positional constructors or half-initialized structs escaping | Builder / functional options | Are invariants enforced before the value escapes? |
+| Recursive domain trees special-casing leaf vs group | Composite | Can leaf and group honestly share one small interface? |
+| Several parties must learn about one domain fact | Observer (outbox event + consumers) | Should listeners be broker consumers instead of in-process calls? (P6, P8) |
+| Hand-rolled traversal state over collections or streams | Iterator (`range`, `iter.Seq`) | Does a typed sequence express it without index bookkeeping? |
+| Callers need a simpler surface over a subsystem | Facade (kit-owned) | Is the kit the right owner of that surface? (P1) |
 
 ## Look-alike disambiguation
 

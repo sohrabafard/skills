@@ -1,0 +1,33 @@
+{
+ "skill_name": "alaa-php-clean-code",
+ "evals": [
+  {
+   "id": 0,
+   "eval_name": "fat-controller-refactor",
+   "prompt": "In our Alaa Laravel 13 service (Octane on Swoole), OrderController@store has grown to 180 lines: it validates the request inline, composes Eloquent queries directly to check stock and create the order, calls Cache::remember for the customer's discount profile, sends a confirmation SMS through the vendor SDK, and returns a hand-built JSON array. Refactor this slice into clean production shape. Write the resulting files under outputs/ (controller, form request, service, repository interface + implementation, DTOs, and anything else the refactor genuinely needs).",
+   "expected_output": "Controller reduced to orchestration only with a Form Request for validation; business flow moved to a service; every persistence access moved behind a repository shaped by the order aggregate (no Eloquent/query-builder in controller or service); discount caching moved into a Cached* repository decorator implementing the same interface (no Cache:: in the service); vendor SMS behind an interface/adapter seam; typed DTOs instead of unvalidated arrays; API Resource for the response; Octane-safe (no static/request-scoped state leaks); no unrelated refactors.",
+   "files": []
+  },
+  {
+   "id": 1,
+   "eval_name": "provider-integration-adapter",
+   "prompt": "Add a second SMS provider (Mediana) alongside our existing Kavenegar integration in an Alaa Laravel 13 service. Selection must be per-tenant from config, and the vendor SDKs throw their own exception types and use different payload shapes. Implement the integration as production-quality files under outputs/: contracts, both provider implementations, selection wiring, and error handling.",
+   "expected_output": "One narrow internal SmsSender interface; each provider behind its own adapter that hides vendor payload shapes and translates vendor exceptions into typed domain exceptions at the boundary; strategy selection resolved once in a provider/boot site (config-driven map or factory), not switch statements at call sites; no vendor SDK types leaking into services; container bindings Octane-safe; tests or a test seam via the interface.",
+   "files": []
+  },
+  {
+   "id": 2,
+   "eval_name": "order-lifecycle-state",
+   "prompt": "Our Alaa Laravel order model has status strings ('draft', 'pending', 'paid', 'shipped', 'cancelled') and the codebase has if/else status checks scattered across four services, two jobs, and a controller; illegal jumps like shipped-then-cancelled have already happened in production. Model the lifecycle properly and refactor the touched call sites. Write the resulting files under outputs/.",
+   "expected_output": "A backed enum with named states and a single transition authority (match-based canTransitionTo/transition), guarded transitions rejecting illegal jumps with a typed domain exception; scattered status ifs replaced by calls into the one authority; transitions persisted through the repository; no new abstraction beyond the state machine itself; migration/backfill note only if column type changes.",
+   "files": []
+  },
+  {
+   "id": 3,
+   "eval_name": "pattern-diagnostic-routing",
+   "prompt": "In our Alaa Laravel 13 codebase, reports are built in six places with nearly identical sequences: fetch rows, normalize, group, format for export. Each place varies only in the normalize step and the export format. A teammate proposes introducing an AbstractReportBuilder base class hierarchy. Review the proposal and implement the right shape under outputs/.",
+   "expected_output": "Rejects the inheritance hierarchy; routes via the symptom diagnostic to Template Method implemented compositionally (a report service taking step callbacks) or Pipeline with step objects for normalize/format variation; one stable skeleton, variations strictly step-local; typed DTO for the report payload; explains in one short note why base-class inheritance was rejected per the skill's composition-over-inheritance and anti-over-engineering rules.",
+   "files": []
+  }
+ ]
+}

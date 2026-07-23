@@ -301,6 +301,8 @@ Documentation is part of done when behavior, contracts, setup, env vars, request
 - Use `alaa-docs-farsi` for the docs workflow when docs artifacts are in scope, but keep the actual output in English unless the user explicitly asks otherwise.
 
 # References to read selectively
+- `references/topic-map.md`
+  Start here: the task → shortest-reading-path table. Match the task to its row and load only the listed files; fall back to the per-file guidance below when no row fits.
 - `references/source-map.md`
   Read when the task uses latest/current/version/security language or depends on official PHP, Laravel, PSR/PER, PHPUnit, Pest, Pint, PHPStan, Rector, or Composer behavior.
 - `references/refactor-modes.md`

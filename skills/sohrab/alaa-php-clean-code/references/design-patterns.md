@@ -74,6 +74,21 @@ picked the wrong pattern. This table is the routing layer for the whole catalog 
 | Collaborators referencing each other by name in a tangled web | Mediator (orchestrating service) | Can participants stop knowing each other entirely? |
 | Prior state must be restorable (undo, drafts, compensation) | Memento (owner-built snapshot / audit row) | Does the owner build the snapshot, not outsiders? |
 | The same `instanceof` ladder repeated once per operation over stable node classes | Visitor (handler map per operation) | Is the node set stable while operations keep arriving? |
+| Business flow accumulating in a controller, job, listener, or command beyond orchestration | Service | Is the caller left with only orchestration after the move? |
+| Application-layer code composing Eloquent/query-builder directly | Repository (mandatory) | Is the boundary shaped by a real aggregate, use case, or read model? |
+| Validated or transferred data traveling as unstable arrays across layers | DTO | Does the shape cross a layer boundary and deserve a stable type? |
+| A domain concept with invariants or behavior passed around as scalars/arrays | Value object | Do the invariants belong to the concept itself, not its consumers? |
+| Construction that enforces invariants or hides meaningful branching at call sites | Factory | Does one creator own the branching behind a stable return type? |
+| Several parts of the system must react to one domain fact | Observer (events/listeners) | Is notification one-way, with listeners queue-safe and idempotent? |
+| Callers juggling several low-level APIs for one high-level intent | Facade (typed service surface) | Would one small typed surface hide the subsystem completely? |
+| Complex filtering or query composition duplicated across call sites | Query object / filter DTO | Is the composition reused or conditional enough to earn its own type? |
+| Vendor exceptions leaking upward through layers | Exception translation | Does each boundary translate once to a typed domain exception? |
+| One shared stateless collaborator constructed repeatedly | Singleton (container binding) | Is it truly stateless and Octane-safe, with no per-request mutable state? |
+| Manual index loops re-implementing traversal over collections | Iterator (Collection / generator) | Is lazy or custom traversal genuinely needed beyond array/Collection methods? |
+| Many similar immutable config objects hurting memory | Flyweight | Is there a measured memory cost? |
+
+MVC itself is not symptom-routed: it is the mandatory baseline shape of every Alaa Laravel slice (see the
+catalog section), and Service and Repository rows above route violations of that baseline back into it.
 
 Look-alike disambiguation (the pairs agents most often confuse):
 
