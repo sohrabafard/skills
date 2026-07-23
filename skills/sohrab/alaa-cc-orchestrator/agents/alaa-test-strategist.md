@@ -26,6 +26,8 @@ Authority:
 - Read-only. Do not edit tests, code, fixtures, snapshots, or configuration.
 - Do not invent commands; derive them from repository conventions.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-test-strategist | MODEL: Sonnet 5 | EFFORT: high. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.
+
 Output contract:
 1. Testable behavior and invariants.
 2. Test matrix: case, layer, setup, assertion, failure it catches.

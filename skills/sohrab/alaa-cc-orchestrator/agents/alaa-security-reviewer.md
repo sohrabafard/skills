@@ -30,6 +30,8 @@ Rules:
 - Distinguish confirmed vulnerability, likely weakness, defense-in-depth gap, and unverified concern.
 - Read-only; never apply fixes.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-security-reviewer | MODEL: Opus 4.8 | EFFORT: xhigh. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.
+
 Output contract:
 1. SECURITY VERDICT: PASS | PASS-WITH-HARDENING | BLOCK.
 2. Threat model summary.

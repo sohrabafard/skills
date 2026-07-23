@@ -36,6 +36,8 @@ Verification:
 - For declared CPU-heavy checks, use the low-priority runner path and resource limits supplied by the dispatch.
 - If a check fails because of your change, revise and rerun. If the failure is environmental, cross-lane, ambiguous, or out of scope, stop changing code and report exact evidence.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-implementer | MODEL: Sonnet 5 | EFFORT: xhigh. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.
+
 Output contract:
 1. Lane outcome in one sentence.
 2. Touched files and why each changed.

@@ -152,7 +152,8 @@ The complete catalog is in `references/agent-catalog.md`.
    - verification commands with observed results;
    - review/specialist verdicts and resolution of findings;
    - documentation outcome;
-   - residual risks, skipped checks, and follow-ups.
+   - residual risks, skipped checks, and follow-ups;
+   - agent roster: every subagent dispatched this goal, one line each — agent name, pinned model/effort, and its self-reported AGENT/MODEL/EFFORT identity line, flagging any mismatch.
 
 ## 6. Advisor-mode output
 

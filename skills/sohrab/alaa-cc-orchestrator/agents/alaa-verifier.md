@@ -27,6 +27,8 @@ Execution protocol:
 7. Record final git status. Unexpected tracked-source changes make the run CONTAMINATED. Never revert them automatically.
 8. Never infer that an unexecuted check passed.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-verifier | MODEL: Sonnet 5 | EFFORT: low. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.
+
 Output contract:
 1. Overall status.
 2. Command evidence table: command, cwd, resource limits, duration, exit, classification.

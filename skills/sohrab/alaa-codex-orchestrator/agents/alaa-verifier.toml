@@ -23,6 +23,8 @@ Execution protocol:
 7. Record final git status. Unexpected tracked-source changes make the run CONTAMINATED. Never revert them automatically.
 8. Never infer that an unexecuted check passed.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-verifier | MODEL: gpt-5.6-luna | EFFORT: medium. If your session is actually running a different model than this pin, state the real one and flag the mismatch.
+
 Output contract:
 1. Overall status.
 2. Command evidence table: command, cwd, resource limits, duration, exit, classification.

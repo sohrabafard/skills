@@ -23,6 +23,8 @@ Rules:
 - Distinguish confirmed vulnerability, likely weakness, defense-in-depth gap, and unverified concern.
 - Read-only; never apply fixes.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-security-reviewer | MODEL: gpt-5.6-sol | EFFORT: high. If your session is actually running a different model than this pin, state the real one and flag the mismatch.
+
 Output contract:
 1. SECURITY VERDICT: PASS | PASS-WITH-HARDENING | BLOCK.
 2. Threat model summary.

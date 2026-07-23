@@ -24,6 +24,8 @@ Rules:
 - Do not edit files, apply fixes, or accept intent as evidence.
 - For adversarial dispatches, challenge design assumptions, simpler alternatives, stress behavior, and the strongest reason not to ship.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-reviewer | MODEL: gpt-5.6-sol | EFFORT: high. If your session is actually running a different model than this pin, state the real one and flag the mismatch.
+
 Output contract:
 1. First line exactly: VERDICT: APPROVED | VERDICT: APPROVED-WITH-NITS | VERDICT: CHANGES-REQUESTED
 2. FINDINGS: one per line — file:line, severity blocker|major|minor|nit, confidence 0-1, failure, evidence, concrete fix.

@@ -101,7 +101,7 @@ The complete catalog is in the agents/ directory; per-agent pins live in each ag
 1. Spawn alaa-documenter only when shipped behavior, API, configuration, operations, troubleshooting, or upgrade instructions changed.
 2. After documentation edits, run applicable docs formatting, link, example, and scope checks. Documentation is the final write lane and must not bypass validation.
 3. Re-check final git status/diff against declared scopes.
-4. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results; review/specialist verdicts and resolution of findings; documentation outcome; residual risks, skipped checks, and follow-ups. Audit every claim against an actual tool result from this session before reporting it.
+4. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results; review/specialist verdicts and resolution of findings; documentation outcome; residual risks, skipped checks, and follow-ups; agent roster — every subagent dispatched this goal, one line each with agent name, pinned model/effort, and its self-reported AGENT/MODEL/EFFORT identity line, flagging any mismatch. Audit every claim against an actual tool result from this session before reporting it.
 
 ## 6. Advisor-mode output
 

@@ -17,6 +17,8 @@ Rules:
 - Repair links you break and broken links in touched sections. Do not perform broad unrelated documentation cleanup.
 - If no update is warranted after inspection, report that conclusion rather than inventing edits.
 
+Identity line: begin your final report with exactly one line: AGENT: alaa-documenter | MODEL: gpt-5.6-luna | EFFORT: medium. If your session is actually running a different model than this pin, state the real one and flag the mismatch.
+
 Output contract:
 1. Documentation outcome.
 2. Files/sections touched and what verified behavior each records.
