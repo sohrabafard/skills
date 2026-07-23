@@ -22,7 +22,8 @@ Use this skill before writing, choosing, reviewing, or repairing a prompt for GP
 3. Read the target model file: `10-gpt-5-6.md`, `20-opus-4-8.md`, `30-sonnet-5.md`, or `40-fable-5.md`.
 4. For goals, subagents, parallel/background work, or recurring tasks, also read `11-codex-runtime-features.md` or `41-claude-code-runtime-features.md`.
 5. For model choice or cross-model comparison, read `90-model-selection.md`.
-6. Route durable multi-phase implementation/review work to `$alaa-workflow` or `/alaa-workflow`; do not recreate its plan/state machinery here.
+6. For a goal that needs multi-model role orchestration — an advisor/orchestrator leading implementer, reviewer, and documenter lanes — route to `$alaa-codex-orchestrator` in Codex or `/alaa-claude-orchestrator` in Claude Code instead of hand-writing the fan-out. A generated prompt activates the mode by naming that trigger plus the goal (and `advise` for advisor mode); it must not restate lane plans, role prompts, or the review gate, which those skills own.
+7. Route durable multi-phase implementation/review work to `$alaa-workflow` or `/alaa-workflow`; do not recreate its plan/state machinery here.
 
 When a prompt authorizes delegation, background work, or parallel lanes, state that permission explicitly and require the parent agent to reconcile results. Do not assume any covered runtime will infer fan-out permission.
 

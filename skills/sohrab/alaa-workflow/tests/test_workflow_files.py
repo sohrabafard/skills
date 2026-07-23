@@ -102,12 +102,51 @@ class WorkflowFilesTest(unittest.TestCase):
             self.assertIn("runtime-a / current-a", content)
             self.assertNotIn("NEEDS_LIVE_VERIFICATION", content)
             implementer = content.split("## Implementer", 1)[1].split("## Independent reviewer", 1)[0]
-            reviewer = content.split("## Independent reviewer", 1)[1]
+            reviewer = content.split("## Independent reviewer", 1)[1].split("## Documenter", 1)[0]
             self.assertLessEqual(len(implementer.split()), 250)
             self.assertLessEqual(len(reviewer.split()), 250)
 
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
             self.assertIn("profile: direct", result.stdout)
+
+    def test_documenter_metadata_is_optional_and_paired(self) -> None:
+        resolved = [
+            "--with-prompts",
+            "--implementer-runtime",
+            "runtime-a",
+            "--implementer-model",
+            "current-a",
+            "--reviewer-runtime",
+            "runtime-b",
+            "--reviewer-model",
+            "current-b",
+            "--verified-on",
+            "2026-07-10",
+            "--verification-source",
+            "https://example.invalid/official-a",
+        ]
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, *resolved, "--documenter-runtime", "runtime-c", "--documenter-model", "current-c")
+            content = (root / str(payload["outputs"][1])).read_text(encoding="utf-8")
+            self.assertIn("## Documenter", content)
+            self.assertIn("runtime-c / current-c", content)
+            documenter = content.split("## Documenter", 1)[1]
+            self.assertLessEqual(len(documenter.split()), 250)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, *resolved)
+            content = (root / str(payload["outputs"][1])).read_text(encoding="utf-8")
+            self.assertIn("not included / not included", content)
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            failure = self.run_script(
+                INIT,
+                ["--task", "Adaptive workflow", "--timestamp", STAMP, *resolved, "--documenter-runtime", "runtime-c"],
+                root,
+                expected=1,
+            )
+            self.assertIn("documenter runtime and model", (failure.stdout + failure.stderr).lower())
 
     def test_with_state_alias_reproduces_legacy_four_file_set(self) -> None:
         with workspace_tempdir() as tmp:

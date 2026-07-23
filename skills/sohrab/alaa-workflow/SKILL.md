@@ -52,9 +52,11 @@ Delegate only genuinely independent work with disjoint ownership, or high-volume
 
 The parent owns the plan, integration, conflict resolution, and final validation. Put lane ownership inside the parent plan or the delegated prompt; do not create a separate lane-plan artifact. See `references/artifact-lifecycle.md`.
 
+A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `$alaa-codex-orchestrator` (Codex) or `$alaa-claude-orchestrator` (Claude Code) for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
+
 ## Generate prompts only on request
 
-Use only two roles: `implementer` and `independent reviewer`. Start from `assets/phase-prompts-template.md`; keep each role to the six required fields and at most 250 words unless the user requests an exhaustive prompt. Before resolving runtime names, model names, feature syntax, or skill-trigger syntax, load `$alaa-prompting-guide` and verify current official documentation. Store the resolved values and verification date in the prompt pack, never in stable skill text. See `references/phase-prompts.md`.
+Use `implementer` and `independent reviewer`; add `documenter` only when the phase alters behavior, APIs, configuration, or operations. Start from `assets/phase-prompts-template.md`; keep each role to the six required fields and at most 250 words unless the user requests an exhaustive prompt. Before resolving runtime names, model names, feature syntax, or skill-trigger syntax, load `$alaa-prompting-guide` and verify current official documentation. Store the resolved values and verification date in the prompt pack, never in stable skill text. See `references/phase-prompts.md`.
 
 ## Review
 

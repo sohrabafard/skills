@@ -92,6 +92,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--implementer-model")
     parser.add_argument("--reviewer-runtime")
     parser.add_argument("--reviewer-model")
+    parser.add_argument("--documenter-runtime")
+    parser.add_argument("--documenter-model")
     parser.add_argument("--verified-on", help="Official-doc verification date in YYYY-MM-DD format.")
     parser.add_argument("--verification-source", action="append", default=[])
 
@@ -137,9 +139,14 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
         args.reviewer_runtime,
         args.reviewer_model,
     ]
+    documenter_fields = [args.documenter_runtime, args.documenter_model]
     if any(fields) and not all(fields):
         raise SystemExit("Provide all implementer/reviewer runtime and model values together.")
-    if not active and (any(fields) or args.verified_on or args.verification_source):
+    if any(documenter_fields) and not all(documenter_fields):
+        raise SystemExit("Provide documenter runtime and model values together.")
+    if any(documenter_fields) and not all(fields):
+        raise SystemExit("Documenter metadata requires the implementer/reviewer metadata.")
+    if not active and (any(fields) or any(documenter_fields) or args.verified_on or args.verification_source):
         raise SystemExit("Prompt verification metadata requires --with-prompts.")
     if not active:
         return {}
@@ -156,6 +163,8 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
             "implementer_model": UNRESOLVED,
             "reviewer_runtime": UNRESOLVED,
             "reviewer_model": UNRESOLVED,
+            "documenter_runtime": UNRESOLVED,
+            "documenter_model": UNRESOLVED,
         }
     if not args.verified_on or not args.verification_source:
         raise SystemExit("Resolved prompt metadata requires --verified-on and at least one --verification-source.")
@@ -173,6 +182,8 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
         "implementer_model": args.implementer_model,
         "reviewer_runtime": args.reviewer_runtime,
         "reviewer_model": args.reviewer_model,
+        "documenter_runtime": args.documenter_runtime or "not included",
+        "documenter_model": args.documenter_model or "not included",
     }
 
 

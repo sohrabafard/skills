@@ -17,8 +17,9 @@ Stable workflow files must not pin model generations or volatile runtime feature
 
 - `implementer`: makes the in-scope change, validates it, and reports blockers.
 - `independent reviewer`: inspects the resulting artifact or diff without inheriting the implementer's conclusions.
+- `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `$alaa-docs-farsi`.
 
-Choose the current runtime and model for each role only after the freshness gate. Use the trigger syntax accepted by that runtime.
+Choose the current runtime and model for each role only after the freshness gate. Use the trigger syntax accepted by that runtime. When a phase runs through `$alaa-codex-orchestrator` or `$alaa-claude-orchestrator`, these prompts feed that skill's role lanes; do not restate its dispatch machinery, review gate, or role agent definitions.
 
 ## Compact prompt shape
 
@@ -39,4 +40,4 @@ Authorize delegation only for independent work or high-volume context isolation.
 
 ## Bootstrap metadata
 
-The initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime/model values together after live verification. Without them, the generated pack remains an explicit draft.
+The initializer accepts optional `--implementer-runtime`, `--implementer-model`, `--reviewer-runtime`, `--reviewer-model`, `--verified-on`, and repeatable `--verification-source` values. Supply all runtime/model values together after live verification. Without them, the generated pack remains an explicit draft. `--documenter-runtime` and `--documenter-model` are optional, must be supplied together, and require the implementer/reviewer metadata; omitting them marks the documenter role as not included.

@@ -6,6 +6,7 @@
 - Verification sources: {{verification_sources}}
 - Implementer runtime/model: {{implementer_runtime}} / {{implementer_model}}
 - Independent reviewer runtime/model: {{reviewer_runtime}} / {{reviewer_model}}
+- Documenter runtime/model: {{documenter_runtime}} / {{documenter_model}}
 
 Before use, load the runtime-correct prompting guide and re-check official documentation when any value above is unresolved or stale.
 
@@ -36,3 +37,19 @@ Before use, load the runtime-correct prompting guide and re-check official docum
 **Done:** Return findings by severity, a verdict, and validation status.
 
 **Blocked:** Name unavailable evidence and the smallest action needed to obtain it.
+
+## Documenter (optional)
+
+Include this role only when the phase alters behavior, APIs, configuration, or operations.
+
+**Outcome:** Align repository documentation with the implemented phase.
+
+**Read first:** Repository instructions, `{{plan_path}}`, the phase diff/artifacts, and the affected documentation.
+
+**Scope:** Documentation files only. Document what actually changed, never intentions. Keep edits inside sections affected by the phase and repair repo-local links broken there.
+
+**Validation:** Verify each documented claim against the diff or artifacts.
+
+**Done:** Documentation matches shipped behavior; list touched doc files with one-line summaries.
+
+**Blocked:** Name the missing change evidence and the smallest action needed to obtain it.
