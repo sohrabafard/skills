@@ -2,8 +2,22 @@
 
 Verify every symbol and default against the live kit before use. Start from `CONTRACTS.md`, `docs/RUNBOOK.md`,
 `docs/scaffold-cli-reference.md`, `go.mod`, `Makefile`, and source; this map is navigation, not an alternate
-contract. Identity: module `git.alaatv.com/vk/alaa-go-chi`; as of this skill revision the latest released tag is
-`v0.3.1` with a breaking `v1.0.0` candidate staged — always read `CHANGELOG.md` for the current state.
+contract. Identity: module `git.alaatv.com/vk/alaa-go-chi`; the declared baseline is `v1.6.1` (D-22) — always read
+`CHANGELOG.md` for the current released state rather than trusting this line.
+
+## Ratified decisions and consumer-tunable env surface (read before designing kit-owned behavior)
+
+Many kit contracts and env knobs are **owner-ratified but staged for implementation across plan phases**. The
+canonical record is the kit repo's `docs/change-requests/2026-07-21-kit-bug-remediation-decision-register.md`: its
+ratified `Owner outcome` blocks (D-01…D-24), the **`Consumer-tunable env surface`** table (every key, default, and
+clamp — `HTTP_*`, `PG_ROLLBACK_TIMEOUT`, `SHUTDOWN_TIMEOUT`/`SHUTDOWN_GRACE_HINT`, `JOB_*`, `OUTBOX_*`, `MQ_PREFETCH`,
+`MQ_WORKER_HEALTH_PORT`, `OBSKIT_TRACE_SAMPLE_RATIO`, …), and the two 2026-07-23 amendment rounds (Opus, then Sol).
+Consult the relevant decision before proposing or coding HTTP bounds / the per-route body override, trust /
+`X-Access` / location, error / log / trace / Sentry vocabulary, MQ / outbox / job behavior, shutdown budgets, boot
+config, or deploy image / CI policy — those values are decided, and diverging is drift. **Ratified ≠ implemented:**
+confirm the status from the plan phases and source before relying on a key, and never present a not-yet-built knob
+as existing. Consumer-facing keys reach consumer repos only via the generated
+`docs/consumer-templates/{AGENTS.md,CLAUDE.md}`.
 
 ## Package index (one line each; details in the concern sections below)
 

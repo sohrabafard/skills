@@ -70,6 +70,18 @@ enter it.
 7. **Evidence honesty.** Never claim production/SLA readiness from unit tests alone; name which load, HA/failover,
    chaos, capacity, truth-tier, remote-CI, and live SLO evidence exists or is missing. Remote CI is
    `runner_contract_pending` until a real runner job passes.
+8. **Consult the ratified decision register before designing kit-owned behavior.** The kit's contract decisions —
+   HTTP read/write/idle/body bounds and the per-route body override, trust / `X-Access` / location semantics,
+   error / readiness / log / trace / Sentry vocabularies, MQ message-id / fingerprint / per-role channels /
+   prefetch, outbox lease-fence-quarantine, job execution budget + PG classifier, shutdown budget/grace, and
+   release / CI / image-digest policy — plus the **consumer-tunable env surface** (every knob, default, and clamp)
+   live in the kit repo's `docs/change-requests/2026-07-21-kit-bug-remediation-decision-register.md` (its ratified
+   `Owner outcome` blocks, the `Consumer-tunable env surface` table, and the two 2026-07-23 amendment rounds). Read
+   the relevant decision before proposing or coding in that area — silently re-deciding or diverging from a ratified
+   value is exactly the drift this skill exists to kill. **Ratified is not implemented:** confirm the implementation
+   status from the plan phases and current source, and never claim an env key or capability exists until code proves
+   it. A consumer-binding value reaches consumer repos only through the generated
+   `docs/consumer-templates/{AGENTS.md,CLAUDE.md}` (laws 1 and 4) — so it must land there, not only in the kit.
 
 ## Mandatory skill routing
 
