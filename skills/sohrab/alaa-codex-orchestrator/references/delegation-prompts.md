@@ -1,149 +1,189 @@
-# Delegation Prompt Templates (Codex / GPT-5.6)
+# Delegation Prompt Templates
 
-Build every dispatch from these templates. Keep XML tag names stable. Trim blocks that do not apply; never add process scripts the lane does not need.
+Use the smallest applicable template. Replace placeholders with concrete repository facts and absolute script paths where required.
 
-## Implementer lane dispatch
-
-```xml
-<task>
-Lane <n> of goal: <goal one-liner>.
-Implement: <concrete slice>.
-Scope: only <files/modules>. Out of scope: <explicit exclusions>.
-Acceptance criteria: <checkable criteria>.
-Clean-code baseline: apply $<matching-skill> to everything you write or change.
-</task>
-
-<structured_output_contract>
-Return: 1. lane outcome in one sentence 2. touched files 3. verification evidence (commands + observed results) 4. residual risks 5. blockers or boundary conflicts.
-</structured_output_contract>
-
-<default_follow_through_policy>
-Default to the most reasonable low-risk interpretation and keep going.
-Stop to ask only when a missing detail changes correctness, safety, or an irreversible action.
-</default_follow_through_policy>
-
-<completeness_contract>
-Resolve the lane fully before stopping. Check follow-on breakage, edge cases, and cleanup, not just the first plausible change.
-</completeness_contract>
-
-<verification_loop>
-Before finalizing, run: <verification commands>. If a check fails, revise instead of reporting the first draft.
-</verification_loop>
-
-<missing_context_gating>
-Do not guess missing repository facts. Retrieve them with tools or state exactly what remains unknown.
-</missing_context_gating>
-
-<action_safety>
-Keep changes tightly scoped to the lane. No unrelated refactors, renames, or cleanup. No destructive commands. Do not commit.
-</action_safety>
-```
-
-For an architecture-heavy or unusually subtle lane, dispatch the same prompt to `alaa-implementer-sol` instead of `alaa-implementer`.
-
-## Fix-cycle dispatch (after CHANGES-REQUESTED)
+## Common dispatch envelope
 
 ```xml
-<task>
-Fix reviewer findings in your lane <n> of goal: <goal one-liner>.
-Findings to resolve (verbatim from reviewer):
-<findings: file:line, severity, what goes wrong, concrete fix>
-Scope and acceptance criteria are unchanged from the original lane.
-</task>
-
-<structured_output_contract>
-Return: 1. per finding — fixed | disputed (with evidence) 2. touched files 3. verification evidence 4. anything the fix newly put at risk.
-</structured_output_contract>
-
-<verification_loop>
-Re-run the lane verification commands after fixing. A disputed finding needs evidence from this repository, not opinion.
-</verification_loop>
+<goal><one-sentence outcome></goal>
+<context><relevant repository facts, prior lane outcomes, and preserved behavior></context>
+<scope>
+  <owned>files/modules or read-only questions</owned>
+  <excluded>explicit exclusions</excluded>
+</scope>
+<acceptance_criteria><numbered checkable criteria></acceptance_criteria>
+<constraints><safety, compatibility, resource, and user constraints></constraints>
+<authority>what the agent may and may not change or execute</authority>
+<output>use the agent's native output contract</output>
 ```
 
-## Reviewer dispatch
+## Explorer
 
 ```xml
-<task>
-Review the full change set for goal: <goal one-liner>.
-Lane plan and acceptance criteria: <plan summary>.
-Change scope: <touched files / diff target>.
-Clean-code baselines in force: <matching $skills per language>.
-</task>
-
-<review_stance>
-Fresh context, read-only, coverage-first. Report every defensible issue with severity and confidence; the orchestrator filters, you do not.
-First line of output must be exactly VERDICT: APPROVED | APPROVED-WITH-NITS | CHANGES-REQUESTED.
-</review_stance>
-
-<grounding_rules>
-Ground every finding in inspected repository state or tool outputs. Label inferences. Never invent files, lines, or behavior.
-</grounding_rules>
-
-<dig_deeper_nudge>
-After the first plausible issue, check second-order failures: empty-state behavior, retries, stale state, partial failure, rollback paths.
-</dig_deeper_nudge>
+<task>Map the execution path and ownership for: <question>.</task>
+<focus>Entry points, symbols, data flow, tests, configuration, repository rules, coupling.</focus>
+<action_safety>Strictly read-only. No external research and no proposed design unless options were requested.</action_safety>
 ```
 
-Add for adversarial reviews (pre-ship pressure test or user-requested challenge):
+## Researcher
 
 ```xml
-<adversarial_extension>
-Also challenge the chosen design, not just the code: which assumptions stop being true under stress, whether a simpler or safer approach existed, and the strongest reason this change should not ship yet. Do not give credit for good intent or likely follow-up work.
-</adversarial_extension>
+<task>Establish the external/version-specific facts needed for: <decision question>.</task>
+<versions><versions derived from repository manifests/locks></versions>
+<source_priority>Repository evidence, then primary/official sources.</source_priority>
+<decision_boundary>Inform the orchestrator; do not decide or edit.</decision_boundary>
 ```
 
-## Researcher dispatch
+## Test strategist
 
 ```xml
-<task>
-Research for goal: <goal one-liner>.
-Question: <the exact question(s) to answer>.
-Sources to prefer: <repo paths, official docs, URLs, project notes>.
-</task>
-
-<research_mode>
-Separate observed facts, reasoned inferences, and open questions.
-Prefer breadth first, then go deeper only where the evidence changes the answer.
-</research_mode>
-
-<citation_rules>
-Attach a source to every fact: file path, URL, or document title.
-Prefer primary and official sources.
-</citation_rules>
-
-<action_safety>
-Read-only. No edits, no decisions, no recommendations unless options were explicitly requested.
-</action_safety>
-
-<compact_output_contract>
-Return: 1. the question as understood 2. observed facts with sources 3. inferences labeled as inferences
-4. open questions 5. options with trade-offs only if requested.
-</compact_output_contract>
+<task>Design the minimal test matrix that proves: <acceptance criteria>.</task>
+<failure_models><plausible broken implementations and failure modes to catch></failure_models>
+<repository_commands><known test commands and helpers></repository_commands>
+<action_safety>Read-only; do not write tests.</action_safety>
 ```
 
-## Documenter dispatch
+## Implementer lane
 
 ```xml
-<task>
-Update documentation for shipped goal: <goal one-liner>.
-Reconciled change summary: <per-lane outcomes + touched files>.
-Reviewer verdict: <verdict line>.
-Doc baseline: $alaa-docs-farsi when installed; otherwise repo conventions.
-</task>
-
-<action_safety>
-Documentation files only. Document what actually changed, never intentions. Keep edits scoped to affected sections.
-</action_safety>
-
-<structured_output_contract>
-Return: 1. outcome in one sentence 2. doc files touched with one-line summaries 3. expected-but-unchanged sections with reasons.
-</structured_output_contract>
+<task>Implement lane <n>: <bounded outcome>.</task>
+<scope><owned files/modules>; exclude <everything else>.</scope>
+<acceptance_criteria><numbered criteria></acceptance_criteria>
+<dependencies><completed lane contracts or none></dependencies>
+<clean_code_skill><matching installed skill or repository baseline></clean_code_skill>
+<verification>
+  <commands><exact targeted commands></commands>
+  <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>
+  <resource_limits><priority, CPU count, workers, timeout></resource_limits>
+</verification>
+<action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-## Reconciliation checklist (main thread, after lanes return)
+Use `alaa-implementer-sol` instead of `alaa-implementer` when the routing matrix says to escalate.
 
-1. Every acceptance criterion mapped to lane evidence — commands and observed results, not intentions.
-2. Cross-lane conflicts: two lanes touching one behavior → rerun the later lane with the earlier lane's outcome in context.
-3. Failed or blocked lanes surfaced as failed; never silently re-implemented in the main thread.
-4. Reviewer verdict quoted verbatim in the final report; every blocker/major finding resolved or explicitly open.
-5. Documenter output spot-checked against the change summary — accuracy, coverage of behavior/API/config changes, links; one correction cycle maximum before reporting.
+## Verifier
+
+```xml
+<task>Independently verify the combined change for: <goal>.</task>
+<repository><absolute worktree path></repository>
+<initial_expectation><expected clean/known git status></initial_expectation>
+<commands>
+  <command id="1" cpu_heavy="true|false" timeout_seconds="...">exact command and cwd</command>
+</commands>
+<artifacts><permitted artifact directory only></artifacts>
+<resource_policy>
+  Windows runner: <absolute SKILL_ROOT>/scripts/Invoke-AlaaLowPriority.ps1
+  Unix runner: <absolute SKILL_ROOT>/scripts/run-low-priority.sh
+  Priority: BelowNormal; CPU count: <n>; only one heavy command at a time.
+</resource_policy>
+<rerun_policy>none | one identical rerun for flake detection</rerun_policy>
+<action_safety>Evidence only. Never fix or alter command semantics.</action_safety>
+```
+
+## Failure analyst
+
+```xml
+<task>Diagnose this verification failure without editing: <status and command>.</task>
+<evidence><verifier output, logs, artifacts, git status, relevant lane summaries></evidence>
+<question>Classify the failure, identify first cause and owner, and propose the smallest falsifying check or fix instruction.</question>
+<diagnostic_authority>Read-only; targeted command only if explicitly listed here.</diagnostic_authority>
+```
+
+## Reviewer
+
+```xml
+<task>Review the complete change for: <goal>.</task>
+<plan><lanes and acceptance criteria></plan>
+<diff_scope><base/head or touched files></diff_scope>
+<verification_evidence><integrated verifier results></verification_evidence>
+<stance>Fresh context, read-only, findings-first, no fixes.</stance>
+<adversarial>true|false</adversarial>
+```
+
+## Architecture critic
+
+```xml
+<task>Pressure-test this proposed architecture before implementation: <plan>.</task>
+<invariants><required correctness, compatibility, security, and operability invariants></invariants>
+<evidence><architecture docs, relevant code paths, external contracts></evidence>
+<question>Find blockers, hidden assumptions, simpler alternatives, rollout/rollback conditions.</question>
+```
+
+## Security reviewer
+
+```xml
+<task>Perform a defensive security review of: <change scope>.</task>
+<trust_boundaries><actors, inputs, privileges, sensitive assets></trust_boundaries>
+<verification><security tests/evidence already run></verification>
+<action_safety>Repository-only, read-only, no external exploitation.</action_safety>
+```
+
+## Migration guardian
+
+```xml
+<task>Gate this schema/data migration: <change>.</task>
+<database><technology/version and deployment model></database>
+<rollout><old/new app and schema sequence></rollout>
+<data_scale><known scale or explicitly unknown></data_scale>
+<question>Check compatibility, locks/load, backfill, validation, rollback/roll-forward, abort thresholds.</question>
+```
+
+## Browser QA
+
+```xml
+<task>Execute browser QA for: <user-visible behavior>.</task>
+<environment><URL, existing server, auth/test data, viewport></environment>
+<scenarios><exact steps and expected results></scenarios>
+<browser_constraint>Preserve --browser chromium and configured profile. Do not start duplicate services.</browser_constraint>
+<artifacts><absolute permitted artifact directory></artifacts>
+```
+
+## Performance profiler
+
+```xml
+<task>Measure: <metric/question>.</task>
+<workload><scenario, data shape, concurrency, warmup></workload>
+<baseline_budget><baseline and pass/fail budget></baseline_budget>
+<environment><comparable environment facts></environment>
+<resource_policy><low-priority runner, CPU count, timeout></resource_policy>
+<artifacts><profile/trace output directory></artifacts>
+```
+
+## Observability reviewer
+
+```xml
+<task>Review production diagnosability for: <change>.</task>
+<failure_states><new/changed success, failure, retry, degraded states></failure_states>
+<telemetry_stack><repo-observed logs/metrics/traces/alerts conventions></telemetry_stack>
+<question>Map states to signals, decisions, alerts, runbooks, privacy/cardinality risks.</question>
+```
+
+## Release guardian
+
+```xml
+<task>Gate release readiness for: <change>.</task>
+<scope><CI, container, config, dependencies, deployment, health, docs as applicable></scope>
+<evidence><build/verification/review results></evidence>
+<question>Identify conditions, ordered rollout, rollback, manual steps, and unverified prerequisites.</question>
+```
+
+## Fix-cycle dispatch
+
+```xml
+<task>Resolve reviewer/specialist findings in original lane <n>.</task>
+<findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
+<original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
+<verification><targeted checks plus affected integrated checks></verification>
+<output>For each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>
+```
+
+## Documenter
+
+```xml
+<task>Update documentation for verified shipped change: <goal>.</task>
+<change_summary><actual behavior, files, configuration/API/operational changes></change_summary>
+<verdicts><review and specialist verdicts></verdicts>
+<scope><expected documentation files/sections></scope>
+<checks><docs formatter, links, examples, scope check></checks>
+<action_safety>Documentation files only; no intended or unverified behavior.</action_safety>
+```
