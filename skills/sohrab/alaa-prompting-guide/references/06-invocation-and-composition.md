@@ -27,6 +27,10 @@ Two single-message shapes both work; choose by whether you want the runtime's ha
 
 **Two messages** are needed only to combine *both* deterministic activation *and* the harness auto-continue, since a leading skill trigger and a leading `/goal` cannot share one message: send the skill-triggering operating prompt first, then a compact `/goal` holding only the completion condition. Never inflate that compact `/goal` back into an operating manual.
 
+## Satisfiable completion conditions
+
+A completion condition must be reachable, or the harness loops until the turn cap. "Zero findings from a fresh adversarial pass" is the canonical unreachable condition: an adversarial reviewer with fresh context reliably finds new defensible items every pass. Bound convergence structurally instead: define DONE by severity threshold (zero open blocker/major findings; minors and nits reported, never looped), cap review-fix cycles explicitly (two is the orchestrator packs' default), make the final adversarial pass a reporting pass whose findings go to the user rather than into another cycle, and pay the full gate set once after the last fix with targeted checks per fix. Every goal-form prompt also carries an explicit turn or time cap as a safety net — the cap is the backstop, the structural bounds are the brake.
+
 ## Authorization polarity
 
 Models in this pack under-fan-out by default. Delegation language must authorize, not merely restrict: "spawn one lane per independent slice in the same turn, without asking" beats "parallel work is authorized only for independent lanes." When an orchestrator skill is invoked, its own fan-out authorization applies — do not override it with restriction-only wording; add constraints (disjoint scopes, single writer per file) as lane rules instead.

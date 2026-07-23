@@ -6,7 +6,7 @@ These are Codex app/CLI features, not raw model behavior. Read `10-gpt-5-6.md` f
 
 A Goal is durable, thread-scoped state that keeps a Codex thread working toward one defined outcome across many turns instead of stopping after a single reply. Continuation only happens when the thread is idle, the goal is active, budget remains, and no user input is queued; **evidence, not speculation, determines completion.** Codex works in checkpoints, keeps a short progress log, and can run independently for hours. It stops when it is confident the stopping condition is verifiably met, when it hits a budget limit, or when it is genuinely blocked — in the last two cases it reports progress and blockers instead of claiming success.
 
-A strong Goal defines six things: **outcome** (what should be true when work concludes), **verification surface** (the test/benchmark/artifact/log that proves it), **constraints** (what must not regress), **boundaries** (which files/tools/resources are in play), **iteration policy** (how Codex picks the next action after each attempt), and **blocked stop condition** (when to halt and what would unblock it).
+A strong Goal defines seven things: **outcome** (what should be true when work concludes), **verification surface** (the test/benchmark/artifact/log that proves it), **constraints** (what must not regress), **boundaries** (which files/tools/resources are in play), **iteration policy** (how Codex picks the next action after each attempt), **blocked stop condition** (when to halt and what would unblock it), and **bounded budget** (an explicit turn or time cap so a stalled or non-converging goal cannot run unbounded).
 
 **Must be enabled first**: Goals are disabled by default. Enable with `[features]\ngoals = true` in `~/.codex/config.toml`, or `codex features enable goals` from the CLI. Manage the lifecycle with `/goal` (view current objective/status), `/goal pause`, `/goal resume`, `/goal clear`.
 
@@ -16,6 +16,7 @@ A strong Goal defines six things: **outcome** (what should be true when work con
 /goal <desired end state> verified by <specific command, test, or artifact>, while preserving <what must not regress>.
 Use only <allowed files, tools, or boundaries>. Between iterations, <how Codex should pick the next action>.
 If blocked or no valid path remains, report exactly what is blocking progress and what would unblock it.
+Stop after <turn or time cap> even if incomplete, reporting progress, evidence so far, and the next step.
 ```
 
 Build worked examples from `10-gpt-5-6.md` plus the template above: state one objective, one stopping condition, and one validation loop. A goal should be larger than one prompt but smaller than an open-ended backlog.
