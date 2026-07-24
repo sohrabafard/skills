@@ -23,7 +23,7 @@ Authority:
 - Read-only. Do not edit or fix.
 - Do not rerun expensive or broad commands unless the dispatch explicitly authorizes a targeted diagnostic command and resource policy.
 
-Identity line: begin your final report with exactly one line: AGENT: alaa-failure-analyst | MODEL: Opus 4.8 | EFFORT: high. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.
+Identity line: begin your final report with exactly one line: AGENT: alaa-failure-analyst | MODEL: Opus 5 | EFFORT: high. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.
 
 Output contract:
 1. Failure classification and confidence.

@@ -20,7 +20,7 @@ A specialist may run earlier when its purpose is plan pressure-testing, especial
 
 - Findings are routed verbatim to the lane that owns the behavior.
 - Cross-cutting findings become a new serialized lane with an explicit scope.
-- Security, migration, or architecture blockers default to an Opus-escalated implementer dispatch.
+- Security, migration, or architecture blockers default to an `alaa-implementer-opus` dispatch.
 - The reviewer/specialist never fixes its own finding.
 
 ## Maximum cycles

@@ -25,9 +25,17 @@ REQUIRED = {
     "alaa-observability-reviewer",
     "alaa-release-guardian",
     "alaa-documenter",
+    "alaa-spec-analyst",
+    "alaa-adversarial-reviewer",
+    "alaa-api-contract-reviewer",
+    "alaa-dependency-auditor",
+    "alaa-accessibility-reviewer",
 }
 VALID_SANDBOX = {"read-only", "workspace-write", "danger-full-access"}
-VALID_EFFORT = {"minimal", "low", "medium", "high", "xhigh"}
+VALID_EFFORT = {"none", "low", "medium", "high", "xhigh", "max"}
+VALID_MODEL = {"gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"}
+# Cross-runtime isolation: this pack must never name another vendor's model family.
+FORBIDDEN = re.compile(r"\b(claude|opus|sonnet|fable|haiku|anthropic)\b", re.I)
 
 errors: list[str] = []
 
@@ -64,6 +72,10 @@ for path in sorted(AGENTS.glob("*.toml")):
         errors.append(f"{path.name}: invalid sandbox_mode {data.get('sandbox_mode')!r}")
     if data.get("model_reasoning_effort") not in VALID_EFFORT:
         errors.append(f"{path.name}: invalid model_reasoning_effort {data.get('model_reasoning_effort')!r}")
+    if data.get("model") not in VALID_MODEL:
+        errors.append(f"{path.name}: invalid model {data.get('model')!r}")
+    if data.get("model_reasoning_effort") == "max":
+        errors.append(f"{path.name}: 'max' is never a pin, only a per-invocation retry")
 
 missing = REQUIRED - names
 extra = names - REQUIRED
@@ -74,6 +86,7 @@ if extra:
 
 for rel in [
     "references/agent-catalog.md",
+    "references/model-effort-policy.md",
     "references/routing-matrix.md",
     "references/delegation-prompts.md",
     "references/resource-policy.md",
@@ -104,6 +117,20 @@ for name in REQUIRED:
 
 if "--browser chromium" not in skill or "--browser chromium" not in (ROOT / "references/resource-policy.md").read_text(encoding="utf-8"):
     errors.append("hard browser chromium preservation rule is missing")
+
+for path in sorted(ROOT.rglob("*")):
+    if not path.is_file() or path.suffix not in {".md", ".toml", ".yaml", ".py", ".sh", ".ps1"}:
+        continue
+    # The sweep's own pattern lives in this file, and CHANGELOG.md is a historical
+    # record that must be able to name what a revision migrated away from. Neither
+    # is ever loaded into an agent's context, so neither can leak at runtime.
+    if path.name in {"validate_pack.py", "CHANGELOG.md"}:
+        continue
+    for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+        hit = FORBIDDEN.search(line)
+        if hit:
+            rel = path.relative_to(ROOT)
+            errors.append(f"cross-runtime leak in {rel}:{lineno}: {hit.group(0)!r}")
 
 if errors:
     print("PACK VALIDATION FAILED", file=sys.stderr)

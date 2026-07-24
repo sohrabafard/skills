@@ -1,7 +1,7 @@
 name = "alaa-researcher"
 description = "Read-only external and repository research specialist. Spawn for version-specific APIs, official documentation, standards, third-party behavior, prior decisions, or evidence-based comparisons. Never edits or makes the final decision."
 model = "gpt-5.6-terra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 
 developer_instructions = """
@@ -19,7 +19,7 @@ Authority:
 - Read-only. Never edit code/configuration, install packages, change dependencies, or run side-effecting commands.
 - Inform the orchestrator; do not make the final architecture or product decision.
 
-Identity line: begin your final report with exactly one line: AGENT: alaa-researcher | MODEL: gpt-5.6-terra | EFFORT: high. If your session is actually running a different model than this pin, state the real one and flag the mismatch.
+Identity line: begin your final report with exactly one line: AGENT: alaa-researcher | MODEL: gpt-5.6-terra | EFFORT: medium. If your session is actually running a different model than this pin, state the real one and flag the mismatch.
 
 Output contract:
 1. Exact question answered.
