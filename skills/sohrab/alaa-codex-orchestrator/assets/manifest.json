@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",

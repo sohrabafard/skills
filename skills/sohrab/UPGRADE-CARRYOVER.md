@@ -223,6 +223,9 @@ HARD RULES
 - Commit messages carry no Co-Authored-By tag.
 
 DELEGATION
+Skill authoring is a judgment lane, not a routine one — every writing lane in this programme
+runs on the escalated implementer, and the named criterion is "authoring an artifact whose
+deliverable is judgment itself". Do not dispatch skill rewrites to the default implementer.
 Spawn one agent per skill or per lane, never several for the same one, and never a subagent
 whose only job is to re-check another subagent. Independent lanes go out together.
 

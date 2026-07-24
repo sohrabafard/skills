@@ -55,7 +55,10 @@ Dispatch `alaa-implementer-opus` only when the lane itself must make non-obvious
 - auth or trust boundary, or cryptographic correctness;
 - schema or data migration coupled to application logic;
 - complex backwards compatibility or rollout;
-- multiple plausible designs with materially different failure behavior.
+- multiple plausible designs with materially different failure behavior;
+- **authoring or rewriting an artifact whose deliverable is judgment itself** — a skill, a prompt, an agent definition, an `AGENTS.md` or `CLAUDE.md`, an architecture document, or a standard other agents will follow.
+
+That last criterion exists because the preceding six describe software surfaces, and a lane can be judgment-dense without touching any of them. Writing a skill is not mechanical application of a ratified decision: deciding what belongs in the body versus a reference, which rules to merge or delete, and whether the result actually meets its own bar is the entire work. A lane like that reads as "no named criterion applies" against a purely software-shaped list, and would then be dispatched to the default implementer — which contradicts the decision-density rule it is supposed to serve. Judge the density, not the file extension.
 
 When uncertain, do not escalate: dispatch the default implementer and let the review gate decide. One justified re-dispatch after evidence is cheaper than habitual escalation.
 

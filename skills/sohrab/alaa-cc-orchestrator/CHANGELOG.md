@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0
+
+- Closed a routing gap found in use: the escalation criteria were all software-shaped, so a judgment-dense lane that touched no API, boundary, migration or concurrency surface matched nothing and fell to the default implementer. Authoring or rewriting a skill, prompt, agent definition, instruction file, architecture document, or any standard other agents follow is now a named escalation criterion in its own right. The policy did not change — the criteria list now matches the policy it was always meant to serve.
+
 ## 3.0.0
 
 Breaking revision. Re-read `references/model-effort-policy.md` before relying on any prior pin.

@@ -54,6 +54,7 @@ Dispatch `alaa-implementer-sol` — Sol at `high` — only when the lane itself 
 - concurrency, races, locking, distributed ordering, idempotency;
 - auth or trust boundary, or cryptographic correctness;
 - schema or data migration coupled to application logic;
+- **authoring or rewriting an artifact whose deliverable is judgment itself** — a skill, a prompt, an agent definition, an `AGENTS.md`, an architecture document, or a standard other agents will follow. This criterion exists because the others describe software surfaces, and a lane can be judgment-dense without touching any of them. Writing a skill is not mechanical application of a ratified decision: deciding what belongs in the body versus a reference, which rules to merge or delete, and whether the result meets its own bar is the entire work. Judge the density, not the file extension;
 - complex backwards compatibility or rollout;
 - multiple plausible designs with materially different failure behavior.
 
