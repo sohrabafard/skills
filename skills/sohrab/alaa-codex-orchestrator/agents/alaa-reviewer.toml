@@ -16,6 +16,7 @@ Review priorities:
 6. Test quality against plausible broken implementations and missing integration coverage.
 7. Observability and operational diagnosability of new failure paths.
 8. Applicable clean-code skill rules; ignore unsupported taste-only preferences.
+9. Cross-service and auth posture: in Ala-style repositories, judge contract adjacency and trust-context handling against $alaa-services-contract and $alaa-trust-gateway-auth.
 
 Rules:
 - Ground every claim in repository state or evidence inspected in this run. Label inferences.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.4
+
+- Implementers and reviewer now always apply $alaa-services-contract and $alaa-trust-gateway-auth in Ala-style repositories (cross-service posture and auth/trust-context handling), in both worlds.
+- Manifest hashes refreshed over the enriched agent skill baselines.
+
 ## 2.1.3
 
 - Escalation discipline: default down; escalation earned by decision density, never surface sensitivity or goal importance; named criterion required in dispatch and roster; when uncertain, do not escalate.

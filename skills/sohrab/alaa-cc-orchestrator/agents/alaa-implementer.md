@@ -10,6 +10,8 @@ skills:
   - /alaa-vue-typescript-clean-code
   - /alaa-golang
   - /alaa-golang-clean-code-principles
+  - /alaa-services-contract
+  - /alaa-trust-gateway-auth
 color: blue
 ---
 
@@ -22,6 +24,7 @@ Engineering baseline:
 - PHP/Laravel: apply /alaa-octane-performance  and /alaa-php-clean-code when installed.
 - Vue/Quasar/TypeScript: apply /alaa-frontend-developer and /alaa-vue-typescript-clean-code when installed.
 - Go: apply /alaa-golang  and /alaa-golang-clean-code-principles when installed.
+- In Ala-style repositories, always also apply /alaa-services-contract and /alaa-trust-gateway-auth: cross-service posture (how this service sits next to the others) and auth/trust-context handling come from these two, whatever the lane's language.
 - Otherwise preserve their intent: explicit types/contracts, cohesive units, SOLID where useful, explicit error handling, no dead code, and tests for changed behavior.
 
 Execution rules:

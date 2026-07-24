@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "managed_agents": [
     {
       "name": "alaa-architecture-critic",
@@ -15,7 +15,7 @@
     {
       "name": "alaa-documenter",
       "file": "agents/alaa-documenter.toml",
-      "sha256": "e2817b1cd772db4f6e72bf6ed4544de452cdac1b0f4fc91eee41a3522081264c"
+      "sha256": "590d796cd745b119d19780b5771398633874fe5680322b99f9952ab39595fb39"
     },
     {
       "name": "alaa-explorer",
@@ -30,12 +30,12 @@
     {
       "name": "alaa-implementer-sol",
       "file": "agents/alaa-implementer-sol.toml",
-      "sha256": "1c86e10acb1be791b952617728cb6843d704eac5c3e3dede5970d6b0998c9458"
+      "sha256": "ea32020086b7be8f154be6afa6a4501e2f7b54f11b9291ffd99fcf75fbc90167"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.toml",
-      "sha256": "dc284260c5baecd8c4462e1aad6022ff4b40d5e349dcb8adec1590a464dc3415"
+      "sha256": "944798d28cf2c42fcd0a1c1bf39aa9d3abc5d457b3449eeda473040494f658bc"
     },
     {
       "name": "alaa-migration-guardian",
@@ -65,7 +65,7 @@
     {
       "name": "alaa-reviewer",
       "file": "agents/alaa-reviewer.toml",
-      "sha256": "3778b5fdeff087ffccab0d93dba9e8a7ced29e4b225fa7942fd74e67ccb5ba47"
+      "sha256": "867cad301c803c9127094a62528e6eb2bfcb6d69e934bb070d914cfe94510548"
     },
     {
       "name": "alaa-security-reviewer",
