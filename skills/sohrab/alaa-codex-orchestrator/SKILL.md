@@ -85,7 +85,7 @@ Use the shipped model pins unless a model is unavailable or the user explicitly 
 - Terra: routine implementation, external research, diagnosis, test strategy, performance, observability, release checks.
 - Sol: architecture-heavy implementation, independent review, security, architecture challenge, migration safety.
 
-Never select Sol merely to wait for commands or collect logs. Escalate to Sol when correctness depends on deep design judgment, trust boundaries, concurrency, data safety, or difficult cross-system reasoning.
+Default down: Terra is the implementation default and Luna the evidence default; Sol is an exception that must be earned per lane. Escalation is earned by decision density, not surface sensitivity: a lane that mechanically applies an already-ratified decision, amended contract value, or precise spec is routine Terra work regardless of which surface it touches, because sensitive surfaces already receive Sol-tier scrutiny through the reviewer and specialist gates. Escalate implementation to Sol only when the lane itself must make non-obvious design decisions meeting a named routing-matrix criterion, and record that criterion in the dispatch and in the agent roster. When uncertain, do not escalate — dispatch Terra; the review gate catches the rare shortfall, and one justified re-dispatch is cheaper than habitual Sol. Never select Sol merely to wait for commands or collect logs.
 
 The complete catalog is in `references/agent-catalog.md`.
 
@@ -101,7 +101,7 @@ The complete catalog is in `references/agent-catalog.md`.
 ### Phase B — Implementation
 
 1. Dispatch one `alaa-implementer` per routine lane.
-2. Dispatch `alaa-implementer-sol` instead for architecture-sensitive, security-sensitive, concurrency-heavy, migration-coupled, or unusually subtle lanes.
+2. Dispatch `alaa-implementer-sol` instead only when the lane meets a named escalation criterion from `references/routing-matrix.md` and must itself make non-obvious design decisions rather than apply already-decided ones; record the criterion in the dispatch and the roster.
 3. Maximum concurrency policy:
    - at most two workspace-writing implementation agents at once;
    - never parallelize overlapping write scopes;
@@ -147,7 +147,7 @@ The complete catalog is in `references/agent-catalog.md`.
    - review/specialist verdicts and resolution of findings;
    - documentation outcome;
    - residual risks, skipped checks, and follow-ups;
-   - agent roster: every subagent dispatched this goal, one line each — agent name, pinned model/effort, and its self-reported AGENT/MODEL/EFFORT identity line, flagging any mismatch.
+   - agent roster: every subagent dispatched this goal, one line each — agent name, pinned model/effort, its self-reported AGENT/MODEL/EFFORT identity line flagging any mismatch, and for every escalated lane the named escalation criterion that earned it.
 
 ## 6. Advisor-mode output
 
@@ -203,5 +203,7 @@ Stop and report partial/blocked state when:
 - treating a rerun that passes after a failure as a clean pass;
 - parallelizing migrations, generated contracts, or shared-state edits;
 - using model tier as a substitute for repository evidence;
+- escalating a lane's model because the goal is important or the surface is sensitive, instead of because the lane meets a named escalation criterion — importance and sensitivity are handled by gates, not tier;
+- dispatching the escalated implementer for CRUD, plumbing, configuration, test-writing, or mechanical application of ratified values;
 - silently falling back to the main thread for implementation;
 - modifying global Codex settings as part of agent installation.

@@ -36,7 +36,7 @@ Do not spawn when the relevant paths and contracts are already established in cu
 
 ## Implementation routing
 
-Use `alaa-implementer` by default. Use `alaa-implementer-sol` when any of these apply:
+Use `alaa-implementer` by default. Escalation is earned by decision density, not surface sensitivity: a lane that mechanically applies an already-ratified decision, amended contract value, or precise spec stays on the default implementer regardless of the surface it touches — the reviewer and specialist gates already provide top-tier scrutiny there. Use `alaa-implementer-sol` only when the lane itself must make non-obvious design decisions and at least one of these applies (record which one in the dispatch):
 
 - public API/event/data contract changes;
 - service boundaries or architecture decisions;
@@ -45,6 +45,8 @@ Use `alaa-implementer` by default. Use `alaa-implementer-sol` when any of these 
 - schema/data migration coupled to application logic;
 - complex backwards compatibility or rollout;
 - multiple plausible designs with materially different failure behavior.
+
+When uncertain, do not escalate: dispatch the default implementer and let the review gate decide — one justified re-dispatch after evidence is cheaper than habitual escalation.
 
 ## Specialist gates
 

@@ -30,6 +30,6 @@ The orchestrator is the main thread, not a custom subagent. These custom agents 
 
 ## Model escalation rules
 
-Use Luna for bounded execution/evidence, Terra for normal engineering judgment, and Sol when the lane's correctness depends on deep architecture, security, concurrency, data safety, or independent owner-level judgment.
+Use Luna for bounded execution/evidence, Terra for normal engineering judgment, and Sol only for lanes that must themselves make non-obvious design decisions or exercise independent owner-level judgment. Escalation is earned by decision density, not surface sensitivity: mechanically applying a ratified decision or precise spec is Terra work on any surface, because gates already review sensitive surfaces at Sol tier. Record the escalation criterion in the dispatch; when uncertain, stay on Terra.
 
-Do not escalate because a command is slow. The verifier remains Luna while the failure analyst or Sol implementer handles difficult reasoning.
+Do not escalate because a command is slow or a goal is important. The verifier remains Luna while the failure analyst or Sol implementer handles difficult reasoning.

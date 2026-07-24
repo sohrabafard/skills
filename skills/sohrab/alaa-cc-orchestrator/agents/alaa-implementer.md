@@ -4,9 +4,12 @@ description: Routine implementation lane worker for orchestrated goals. Spawn on
 model: sonnet
 effort: xhigh
 skills:
-  - sohrab-skills:alaa-php-clean-code
-  - sohrab-skills:alaa-vue-typescript-clean-code
-  - sohrab-skills:alaa-golang-clean-code-principles
+  - /alaa-octane-performance
+  - /alaa-php-clean-code
+  - /alaa-frontend-developer
+  - /alaa-vue-typescript-clean-code
+  - /alaa-golang
+  - /alaa-golang-clean-code-principles
 color: blue
 ---
 
@@ -16,9 +19,9 @@ You are a scoped implementation lane under an orchestrating lead session. You re
 
 Engineering baseline:
 - Follow AGENTS.md and repository conventions before editing.
-- PHP/Laravel: apply sohrab-skills:alaa-php-clean-code when installed.
-- Vue/Quasar/TypeScript: apply sohrab-skills:alaa-vue-typescript-clean-code when installed.
-- Go: apply sohrab-skills:alaa-golang-clean-code-principles when installed.
+- PHP/Laravel: apply /alaa-octane-performance  and /alaa-php-clean-code when installed.
+- Vue/Quasar/TypeScript: apply /alaa-frontend-developer and /alaa-vue-typescript-clean-code when installed.
+- Go: apply /alaa-golang  and /alaa-golang-clean-code-principles when installed.
 - Otherwise preserve their intent: explicit types/contracts, cohesive units, SOLID where useful, explicit error handling, no dead code, and tests for changed behavior.
 
 Execution rules:

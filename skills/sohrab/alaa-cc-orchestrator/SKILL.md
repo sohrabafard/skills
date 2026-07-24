@@ -56,7 +56,7 @@ Use the shipped agent pins unless a model is unavailable or the user explicitly 
 - Sonnet high/xhigh: routine implementation, test strategy, performance, observability, release checks, documentation.
 - Opus high/xhigh: independent review, architecture challenge, security, migration safety, failure analysis, and escalated implementation (per-invocation model override on alaa-implementer).
 
-Never use Opus merely to wait for commands or collect logs. Escalate when correctness depends on deep design judgment, trust boundaries, concurrency, data safety, or difficult cross-system reasoning. Dispatch deliberately wide — this model family under-spawns by default: spawn all independent lanes in the same turn, run long lanes in the background, and keep orchestrating while they work.
+Default down: Sonnet is the implementation default and Sonnet low/medium the evidence default; the Opus escalation is an exception that must be earned per lane. Escalation is earned by decision density, not surface sensitivity: a lane that mechanically applies an already-ratified decision, amended contract value, or precise spec is routine Sonnet work regardless of which surface it touches, because sensitive surfaces already receive Opus-tier scrutiny through the reviewer and specialist gates. Escalate implementation only when the lane itself must make non-obvious design decisions meeting a named routing-matrix criterion, and record that criterion in the dispatch and the agent roster. When uncertain, do not escalate — dispatch Sonnet; the review gate catches the rare shortfall, and one justified re-dispatch is cheaper than habitual Opus. Never use Opus merely to wait for commands or collect logs. Dispatch deliberately wide — this model family under-spawns by default: spawn all independent lanes in the same turn, run long lanes in the background, and keep orchestrating while they work.
 
 The complete catalog is in the agents/ directory; per-agent pins live in each agent file.
 
@@ -72,7 +72,7 @@ The complete catalog is in the agents/ directory; per-agent pins live in each ag
 ### Phase B — Implementation
 
 1. Dispatch one alaa-implementer per routine lane.
-2. For architecture-sensitive, security-sensitive, concurrency-heavy, migration-coupled, or unusually subtle lanes, dispatch alaa-implementer with a per-invocation model override to Opus 4.8 at xhigh effort.
+2. Escalate a lane to the Opus 4.8 xhigh per-invocation override on alaa-implementer only when it meets a named escalation criterion from references/routing-matrix.md and must itself make non-obvious design decisions rather than apply already-decided ones; record the criterion in the dispatch and the roster.
 3. Concurrency policy: at most two workspace-writing implementation agents at once; never parallelize overlapping write scopes; reserve remaining capacity for read-only agents; only one CPU-heavy verification/profiling command at a time.
 4. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
 5. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage.
@@ -98,7 +98,7 @@ The complete catalog is in the agents/ directory; per-agent pins live in each ag
 1. Spawn alaa-documenter only when shipped behavior, API, configuration, operations, troubleshooting, or upgrade instructions changed.
 2. After documentation edits, run applicable docs formatting, link, example, and scope checks. Documentation is the final write lane and must not bypass validation.
 3. Re-check final git status/diff against declared scopes.
-4. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results; review/specialist verdicts and resolution of findings; documentation outcome; residual risks, skipped checks, and follow-ups; agent roster — every subagent dispatched this goal, one line each with agent name, pinned model/effort, and its self-reported AGENT/MODEL/EFFORT identity line, flagging any mismatch. Audit every claim against an actual tool result from this session before reporting it.
+4. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results; review/specialist verdicts and resolution of findings; documentation outcome; residual risks, skipped checks, and follow-ups; agent roster — every subagent dispatched this goal, one line each with agent name, pinned model/effort, its self-reported AGENT/MODEL/EFFORT identity line flagging any mismatch, and for every escalated lane the named escalation criterion that earned it. Audit every claim against an actual tool result from this session before reporting it.
 
 ## 6. Advisor-mode output
 
@@ -137,5 +137,7 @@ Stop and report partial/blocked state when: the same lane is blocked twice by th
 - treating a rerun that passes after a failure as a clean pass;
 - parallelizing migrations, generated contracts, or shared-state edits;
 - using model tier as a substitute for repository evidence;
+- escalating a lane's model because the goal is important or the surface is sensitive, instead of because the lane meets a named escalation criterion — importance and sensitivity are handled by gates, not tier;
+- dispatching the Opus-escalated implementer for CRUD, plumbing, configuration, test-writing, or mechanical application of ratified values;
 - raising the Fable 5 lead above high effort;
 - pre-loading every clean-code skill into every lane — name only the lane's matching skill.

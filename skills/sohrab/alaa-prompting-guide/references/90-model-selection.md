@@ -18,6 +18,7 @@ Re-check `00-source-map.md` before quoting costs, limits, defaults, or feature g
 3. Use the runtime's own `/goal` for a durable objective; Codex and Claude implementations are not interchangeable.
 4. Authorize independent lanes explicitly and require parent synthesis.
 5. Route durable GPT-5.6 implementation plus Claude review engagements with plan/state/phase artifacts to `$alaa-workflow` instead of duplicating its machinery.
+6. Default down when pinning agents, lanes, or efforts: escalation is earned by decision density, not surface sensitivity or goal importance. A lane that mechanically applies an already-ratified value or precise spec is balanced-tier work on any surface; only lanes that must make non-obvious design decisions earn the top tier, and the criterion is recorded wherever the pin is raised. When uncertain, stay lower — review gates catch the rare shortfall, and one justified re-dispatch is cheaper than habitual top-tier defaults.
 
 ## Companion routing
 

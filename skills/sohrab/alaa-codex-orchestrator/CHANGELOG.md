@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.3
+
+- Escalation discipline: default down; escalation earned by decision density, never surface sensitivity or goal importance; named criterion required in dispatch and roster; when uncertain, do not escalate.
+- Anti-patterns extended for habitual top-tier implementation dispatches.
+
 ## 2.1.2
 
 - Bootstrap redesigned: one sentinel-file check per activation (.alaa-codex-orchestrator.version vs VERSION); installer runs only on first install or version change, one attempt, never blocks dispatch.

@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "managed_agents": [
     {
       "name": "alaa-architecture-critic",
