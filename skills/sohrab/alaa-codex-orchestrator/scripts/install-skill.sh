@@ -3,7 +3,7 @@ set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$(cd -- "$script_dir/.." && pwd)"
-target_dir="${1:-$HOME/.agents/skills/alaa-codex-orchestrator}"
+target_dir="${1:-$HOME/.codex/skills/alaa-codex-orchestrator}"
 mkdir -p "$(dirname "$target_dir")"
 
 if [[ "$source_dir" == "$(cd -- "$target_dir" 2>/dev/null && pwd || true)" ]]; then

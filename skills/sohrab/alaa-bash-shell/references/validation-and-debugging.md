@@ -110,6 +110,9 @@ For a portable `/bin/sh` script:
 - syntax with `busybox ash -n` when available
 - `checkbashisms`
 - ShellCheck with `-s sh`
+- ShellCheck with `-s busybox` when Alpine or BusyBox is in the matrix
+
+ShellCheck's `-s` accepts `sh`, `bash`, `dash`, `ksh`, and `busybox` in current releases; `busybox` is absent from older ones, which reject it with `Unknown shell`. Treat that message as a missing capability rather than a finding, and use the dialect that matches the interpreter the script will actually meet rather than the one on the authoring machine.
 
 For a Bash script intended for mixed developer machines:
 

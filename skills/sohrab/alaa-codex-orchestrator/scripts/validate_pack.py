@@ -4,7 +4,32 @@ from __future__ import annotations
 from pathlib import Path
 import re
 import sys
-import tomllib
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python < 3.11
+    try:
+        import tomli as tomllib  # type: ignore
+    except ModuleNotFoundError:
+        tomllib = None
+
+
+_SCALAR = re.compile(r'^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"([^"]*)"\s*$', re.M)
+_BLOCK = re.compile(r'^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"""(.*?)"""', re.M | re.S)
+
+
+def parse_toml(text: str) -> dict:
+    """Parse this pack's agent TOMLs without tomllib.
+
+    The agent files use only top-level string scalars plus one triple-quoted
+    block, so a regex reader is sufficient and keeps the validator runnable on
+    interpreters older than 3.11.
+    """
+    if tomllib is not None:
+        return tomllib.loads(text)
+    data = {key: value for key, value in _BLOCK.findall(text)}
+    data.update({key: value for key, value in _SCALAR.findall(text)})
+    return data
 
 ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
@@ -54,7 +79,7 @@ else:
 names: set[str] = set()
 for path in sorted(AGENTS.glob("*.toml")):
     try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
+        data = parse_toml(path.read_text(encoding="utf-8"))
     except Exception as exc:
         errors.append(f"{path.name}: invalid TOML: {exc}")
         continue

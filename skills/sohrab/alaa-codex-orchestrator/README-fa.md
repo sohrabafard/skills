@@ -6,7 +6,7 @@
 
 ## ویژگی‌های اصلی
 
-- نصب و به‌روزرسانی خودکار ۱۶ subagent داخل `~/.codex/agents`
+- نصب و به‌روزرسانی خودکار ۲۱ subagent داخل `~/.codex/agents`
 - backup گرفتن از نسخه قبلی agentهای هم‌نام
 - عدم تغییر agentها و تنظیمات دیگر کاربر
 - تفکیک implementation، verification، diagnosis، review و documentation
@@ -29,7 +29,7 @@
 این دستور Skill را در مسیر زیر نصب می‌کند:
 
 ```text
-%USERPROFILE%\.agents\skills\alaa-codex-orchestrator
+%USERPROFILE%\.codex\skills\alaa-codex-orchestrator
 ```
 
 سپس Codex را اجرا و Skill را صدا بزن:
@@ -75,7 +75,7 @@ $alaa-codex-orchestrator
 ## تست نصب
 
 ```powershell
-& "$env:USERPROFILE\.agents\skills\alaa-codex-orchestrator\scripts\Get-AlaaCodexAgentStatus.ps1"
+& "$env:USERPROFILE\.codex\skills\alaa-codex-orchestrator\scripts\Get-AlaaCodexAgentStatus.ps1"
 ```
 
 ## اجرای تست با اولویت پایین
@@ -83,7 +83,7 @@ $alaa-codex-orchestrator
 نمونه Go:
 
 ```powershell
-$runner = "$env:USERPROFILE\.agents\skills\alaa-codex-orchestrator\scripts\Invoke-AlaaLowPriority.ps1"
+$runner = "$env:USERPROFILE\.codex\skills\alaa-codex-orchestrator\scripts\Invoke-AlaaLowPriority.ps1"
 
 & $runner `
   -Priority BelowNormal `

@@ -94,7 +94,7 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install tools
         run: sudo apt-get update && sudo apt-get install -y shellcheck shfmt devscripts bats
       - name: Lint
@@ -107,6 +107,8 @@ jobs:
 ```
 
 Use `checkbashisms` only for files that are intended to be POSIX shell.
+
+Two parts of this snippet move independently of the shell code and must be checked before it is copied: the major version of `actions/checkout` (`v7` is the version its README recommends as of 2026-07-24, and this pin has moved several majors in recent years), and whether the runner image's package repositories still carry `shfmt` and `bats` under those names. Install from upstream releases instead when the distribution packages lag the versions the repository expects.
 
 ## 5. Repository review checklist
 

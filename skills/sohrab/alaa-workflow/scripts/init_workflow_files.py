@@ -14,6 +14,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
 PROFILES = ("direct", "resumable", "orchestrated", "legacy")
+DEFAULT_PROFILE = "resumable"
 UNRESOLVED = "NEEDS_LIVE_VERIFICATION"
 
 
@@ -80,7 +81,16 @@ def warn(message: str) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--task", required=True, help="Human task title used for naming and template fill.")
-    parser.add_argument("--profile", choices=PROFILES, help="Artifact profile. Defaults to direct.")
+    parser.add_argument(
+        "--profile",
+        choices=PROFILES,
+        help=(
+            "Artifact profile. Default: resumable, because anything with more than one phase "
+            "needs a checkpoint to survive compaction, a new session, or a fresh agent, and the "
+            "checkpoint costs about ten lines written at four moments. Choose direct deliberately "
+            "for genuinely single-phase bounded work."
+        ),
+    )
     parser.add_argument("--with-prompts", action="store_true", help="Create the same-stem role prompt pack.")
     parser.add_argument("--slug", help="Optional explicit slug.")
     parser.add_argument("--plan-dir", default="auto", help="Plan directory, or auto.")
@@ -114,7 +124,8 @@ def validate_timestamp(stamp: str) -> str:
 
 
 def resolve_profile(args: argparse.Namespace) -> str:
-    profile = args.profile or "direct"
+    aliased = bool(args.with_state or args.state_only)
+    profile = args.profile or DEFAULT_PROFILE
     if args.with_state:
         warn("--with-state is a compatibility alias; use --profile orchestrated or legacy.")
         profile = "legacy" if args.profile is None else ("orchestrated" if profile != "legacy" else profile)
@@ -123,7 +134,10 @@ def resolve_profile(args: argparse.Namespace) -> str:
         profile = "orchestrated" if args.profile is None else profile
     if args.no_continuation:
         warn("--no-continuation is compatibility-only and produces a legacy exception.")
-        if profile != "direct":
+        if args.profile is None and not aliased:
+            # The default is now resumable; a bare --no-continuation keeps its plan-only result.
+            profile = "direct"
+        elif profile != "direct":
             profile = "legacy"
     if args.lane or args.parent_plan:
         warn("--lane/--parent-plan remain transitional; record lane ownership in the parent plan or prompt.")

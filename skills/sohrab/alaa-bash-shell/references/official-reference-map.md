@@ -70,9 +70,10 @@ Re-check official or primary sources when the user asks for latest/current behav
   Purpose: JSON processing  
   URL: https://jqlang.org/manual/
 
-- yq  
+- yq (mikefarah, Go)  
   Purpose: YAML and mixed structured config processing  
-  URL: https://mikefarah.gitbook.io/yq
+  URL: https://mikefarah.gitbook.io/yq  
+  Note: this is not the only program called `yq`. See the implementation warning in `patterns-and-examples.md` before writing flags.
 
 - GNU Parallel  
   Purpose: documented advanced parallel command execution  
@@ -81,3 +82,12 @@ Re-check official or primary sources when the user asks for latest/current behav
 ## Community troubleshooting sources
 
 Use community posts, Stack Overflow answers, and issue comments only for concrete troubleshooting after manuals, tool docs, lint output, and local reproduction are checked. Do not use them as normative portability, security, or style policy.
+
+## Verification status
+
+Links and tool identities reviewed on 2026-07-24. The POSIX entry is Issue 8 (POSIX.1-2024), the current revision at that date. Two categories in this file age faster than the rest and should be re-checked rather than quoted from memory:
+
+- Version-gated behavior: ShellCheck rule numbering and accepted `-s` dialects, `shfmt` flags, `checkbashisms` findings, and Bats assertion helpers all change across releases. Confirm against the installed version, not against this list.
+- Documentation hosting: the `checkbashisms` link resolves through Debian's rolling `testing` suite and will drift with it, and vendor documentation sites move without redirects. A dead link here means the URL is stale, not that the tool is gone.
+
+Nothing in this file records a tool as unmaintained or superseded, because that claim was not verified for any entry. Establish it from the project's own repository before acting on it.

@@ -29,6 +29,8 @@ If the user did not specify a shell, infer from the task:
 
 ## 2. Shell selection
 
+Choose the smallest dialect that still does the job: Bash where its features earn their cost, POSIX `sh` where they do not. A dialect chosen for habit rather than need is a portability liability with no payoff.
+
 ### Choose Bash when you need
 
 - arrays or associative arrays

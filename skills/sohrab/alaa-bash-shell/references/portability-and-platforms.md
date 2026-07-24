@@ -19,7 +19,7 @@ Use this table to choose the shell deliberately.
 | Minimal container with Alpine defaults | POSIX `sh` unless Bash is a declared dependency |
 | Controlled Linux developer environment with richer tooling | Bash |
 
-Do not describe a script as portable just because it happens to work once under Bash.
+Do not describe a script as portable just because it happens to work once under Bash. Do not promise POSIX portability while the script still contains Bash-only syntax or GNU-only external flags: either remove them or withdraw the promise.
 
 ## 2. Bash-only features and portable alternatives
 
@@ -89,6 +89,7 @@ macOS note:
 
 - For Bash scripts, use `#!/usr/bin/env bash`.
 - For POSIX shell scripts, use `#!/bin/sh`.
+- Do not convert a Bash script to `/bin/sh` by changing only the shebang. The syntax, the builtins, and the external utility flags all have to change with it, and the result has to be re-validated against the target matrix.
 - Prefer `getopts` or a manual `case` parser over external `getopt`.
 - Prefer `printf` over `echo -e`.
 - Prefer `command -v tool >/dev/null 2>&1` to check dependencies.

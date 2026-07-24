@@ -6,13 +6,15 @@
 set -euo pipefail
 
 readonly SCRIPT_NAME=${0##*/}
-readonly SCRIPT_DIR=$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+SCRIPT_DIR=$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+readonly SCRIPT_DIR
 readonly TEMPLATE_DIR="${SCRIPT_DIR}/../assets/templates"
 
 kind=""
 output_file=""
 description="TODO: describe this script"
 version="0.1.0"
+target_script=""
 force=0
 
 usage() {
@@ -29,14 +31,20 @@ Required:
 Options:
       --description TX  Short description to place in the template
       --version V       Version string for CLI templates (default: 0.1.0)
+      --target PATH     Script under test for the bats kind
+                        (default: the output name with a .sh extension)
       --force           Overwrite an existing output file
   -h, --help            Show this help and exit
+
+Exit codes:
+  0 success
+  1 runtime or usage failure
 
 Examples:
   ${SCRIPT_NAME} --kind bash-cli --output scripts/sync-cache.sh --description "Synchronize cache metadata"
   ${SCRIPT_NAME} --kind posix-cli --output scripts/prune-cache.sh --description "Prune stale cache entries"
   ${SCRIPT_NAME} --kind bash-lib --output lib/project-common.sh
-  ${SCRIPT_NAME} --kind bats --output tests/sync-cache.bats
+  ${SCRIPT_NAME} --kind bats --output tests/sync-cache.bats --target sync-cache.sh
 EOF
 }
 
@@ -59,23 +67,36 @@ template_for_kind() {
   esac
 }
 
+require_value() {
+  (($# >= 2)) || die "missing value for $1"
+}
+
 main() {
   while (($#)); do
     case "$1" in
       --kind)
-        kind=${2:-}
+        require_value "$@"
+        kind=$2
         shift 2
         ;;
       --output)
-        output_file=${2:-}
+        require_value "$@"
+        output_file=$2
         shift 2
         ;;
       --description)
-        description=${2:-}
+        require_value "$@"
+        description=$2
         shift 2
         ;;
       --version)
-        version=${2:-}
+        require_value "$@"
+        version=$2
+        shift 2
+        ;;
+      --target)
+        require_value "$@"
+        target_script=$2
         shift 2
         ;;
       --force)
@@ -111,17 +132,35 @@ main() {
   namespace=${script_base%.*}
   namespace=${namespace//-/_}
 
-  local escaped_script escaped_description escaped_version escaped_namespace
+  # A .bats file is never its own subject: default the script under test to the
+  # sibling shell script that shares its stem.
+  if [[ -z "${target_script}" ]]; then
+    target_script="${script_base%.*}.sh"
+  fi
+
+  local escaped_script escaped_description escaped_version escaped_namespace escaped_target
   escaped_script=$(escape_sed_replacement "${script_base}")
   escaped_description=$(escape_sed_replacement "${description}")
   escaped_version=$(escape_sed_replacement "${version}")
   escaped_namespace=$(escape_sed_replacement "${namespace}")
+  escaped_target=$(escape_sed_replacement "${target_script}")
 
-  sed -i.bak     -e "s|__SCRIPT_NAME__|${escaped_script}|g"     -e "s|__DESCRIPTION__|${escaped_description}|g"     -e "s|__VERSION__|${escaped_version}|g"     -e "s|__NAMESPACE__|${escaped_namespace}|g"     "${output_file}"
+  sed -i.bak \
+    -e "s|__SCRIPT_NAME__|${escaped_script}|g" \
+    -e "s|__DESCRIPTION__|${escaped_description}|g" \
+    -e "s|__VERSION__|${escaped_version}|g" \
+    -e "s|__NAMESPACE__|${escaped_namespace}|g" \
+    -e "s|__TARGET_SCRIPT__|${escaped_target}|g" \
+    "${output_file}"
 
   rm -f -- "${output_file}.bak"
 
-  chmod +x "${output_file}"
+  # A sourced library refuses to run, so do not advertise it as executable.
+  case "${kind}" in
+    bash-lib) chmod 0644 "${output_file}" ;;
+    *) chmod +x "${output_file}" ;;
+  esac
+
   printf 'Created %s from %s\n' "${output_file}" "${kind}"
 }
 

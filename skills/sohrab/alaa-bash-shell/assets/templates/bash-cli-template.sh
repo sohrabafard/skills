@@ -37,6 +37,7 @@ Description:
 
 Options:
   -h, --help        Show this help and exit
+      --version     Print the version and exit
   -v, --verbose     Increase log verbosity
       --debug       Enable shell tracing
       --dry-run     Print actions without changing files
@@ -89,13 +90,16 @@ parse_args() {
         usage
         exit 0
         ;;
+      --version)
+        printf '%s %s\n' "${SCRIPT_NAME}" "${VERSION}"
+        exit 0
+        ;;
       -v|--verbose)
         VERBOSE=1
         shift
         ;;
       --debug)
         DEBUG=1
-        set -x
         shift
         ;;
       --dry-run)
@@ -119,6 +123,11 @@ parse_args() {
 
 main() {
   parse_args "$@"
+
+  if ((DEBUG)); then
+    export PS4='+${BASH_SOURCE##*/}:${LINENO}:${FUNCNAME[0]:-main}: '
+    set -x
+  fi
 
   if ((VERBOSE)); then
     log INFO "verbose mode enabled"

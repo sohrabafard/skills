@@ -83,7 +83,8 @@ Entry point:
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-readonly SCRIPT_DIR=$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+SCRIPT_DIR=$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+readonly SCRIPT_DIR
 # shellcheck source=../lib/project-common.sh
 source "${SCRIPT_DIR}/../lib/project-common.sh"
 
@@ -121,8 +122,10 @@ Use `jq` and `yq` instead of regex:
 
 ```bash
 jq -r '.items[] | select(.enabled) | .name' -- "${json_file}"
-yq -r '.services[] | select(.enabled == true) | .name' -- "${yaml_file}"
+yq '.services[] | select(.enabled == true) | .name' "${yaml_file}"
 ```
+
+`yq` names two different programs: the Go implementation by mikefarah, which is the one linked from `official-reference-map.md` and the one most container images ship, and a Python wrapper around `jq` by kislyuk. Their flags differ — the Go implementation emits unquoted scalars by default and has no `-r`, while the Python wrapper mirrors `jq` and needs it. Declare which implementation the script requires in the header and the help text, and check the flag against the installed binary before shipping a `yq` invocation.
 
 ## 5. Batch processing pattern
 

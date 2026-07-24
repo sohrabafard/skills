@@ -72,15 +72,20 @@ No manual invocation is needed. Codex does **not** update these files on its own
 
 Skills package instructions, references, scripts, and assets into a directory so Codex can follow a workflow reliably — this skill is one. Structure: required `SKILL.md` (frontmatter with `name` and `description`, plus the body), optional `scripts/`, `references/`, `assets/`, and `agents/openai.yaml`.
 
-Discovery runs across five scopes, highest priority first:
+Discovery runs across these scopes, highest priority first:
 
-| Scope | Path |
-|---|---|
-| Repo (cwd) | `.agents/skills` |
-| Repo (parent) | `../.agents/skills` |
-| Repo (root) | `$REPO_ROOT/.agents/skills` |
-| User | `$HOME/.agents/skills` |
-| System | Bundled by OpenAI |
+| Scope | Path | Status |
+|---|---|---|
+| Repo (cwd) | `.agents/skills` | documented |
+| Repo (parent) | `../.agents/skills` | documented |
+| Repo (root) | `$REPO_ROOT/.agents/skills` | documented |
+| User | `$HOME/.agents/skills` | documented |
+| User | `$HOME/.codex/skills` | **field-verified, undocumented** |
+| System | Bundled by OpenAI | documented |
+
+The `$HOME/.codex/skills` row is not in the official page but works: skills installed there are discovered and trigger normally, verified on Windows where the path is `Join-Path $HOME ".codex\skills"`. Treat the official list as incomplete rather than treating this path as broken. Note that it sits next to `~/.codex/agents/`, which is where agent TOMLs live — so a Codex user who keeps both under `~/.codex/` has one coherent tree, which is likely why this location is in use even though the docs point elsewhere.
+
+When generating install instructions, name `$HOME/.codex/skills` for personal skills unless the user has said otherwise, and `.agents/skills` for repository-scoped skills that travel with a project.
 
 For context efficiency Codex first loads only each skill's name and description. That listing is capped at 2% of the model's context window, or 8,000 characters when the context window is unknown; the full `SKILL.md` loads only once a skill is selected, regardless of that budget. Three invocation paths: `/skills` or a `$name` mention in the CLI and IDE, direct selection in the app, and implicit matching of the prompt against the skill's `description`. That last path is why a skill's `description` must state a clear, assertive trigger scope. `agents/openai.yaml` carries presentation metadata and `allow_implicit_invocation` (default `true`) for skills that should never fire on their own.
 

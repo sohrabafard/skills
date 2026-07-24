@@ -32,6 +32,18 @@ COMPANION_LABELS = {
     "checkpoint": ("checkpoint", "continuation state", "state doc"),
     "state": ("machine state", "json state", "state file"),
 }
+HANDOFF_HEADING_RE = re.compile(r"^#{2,3}\s+handoff package\s*$", re.I | re.M)
+HANDOFF_FIELDS = (
+    "Confirmed facts",
+    "Open assumptions",
+    "Ruled out",
+    "Read first on resume",
+    "Environment notes",
+    "Traps",
+)
+PHASE_FIELDS = ("Depends on", "Owned scope", "Excluded from this phase", "Evidence observed")
+COMBINED_VALIDATION_RE = re.compile(r"^\s*[-*]\s*validation commands\s*/\s*evidence\s*:", re.I | re.M)
+PLANNING_STATUSES = ("planning", "draft", "proposed", "not started")
 
 
 def error(invariant: str, message: str, remediation: str) -> str:
@@ -78,6 +90,36 @@ def is_complete_status(status: str) -> bool:
     return any(token in status for token in ("complete", "completed", "done", "closed"))
 
 
+def is_planning_status(status: str) -> bool:
+    return not status or any(token in status for token in PLANNING_STATUSES)
+
+
+def section_block(content: str, heading: re.Pattern[str]) -> str | None:
+    match = heading.search(content)
+    if not match:
+        return None
+    rest = content[match.end():]
+    end = re.search(r"^#{1,3}\s+", rest, re.M)
+    return rest[: end.start()] if end else rest
+
+
+def field_value(block: str, label: str) -> str | None:
+    match = re.search(rf"^\s*[-*]\s*{re.escape(label)}\b[^:\n]*:\s*(.*)$", block, re.I | re.M)
+    return match.group(1).strip() if match else None
+
+
+def phase_blocks(content: str) -> list[tuple[str, str]]:
+    blocks: list[tuple[str, str]] = []
+    for match in re.finditer(r"^###\s+(.+)$", content, re.M):
+        title = match.group(1).strip()
+        if "phase" not in title.lower():
+            continue
+        rest = content[match.end():]
+        following = re.search(r"^#{1,3}\s+", rest, re.M)
+        blocks.append((title, rest[: following.start()] if following else rest))
+    return blocks
+
+
 def unresolved_messages(content: str, complete: bool, invariant: str) -> list[str]:
     matches = sorted(set(match.group(0) for match in UNRESOLVED_RE.finditer(content)))
     if not matches:
@@ -86,6 +128,73 @@ def unresolved_messages(content: str, complete: bool, invariant: str) -> list[st
     if complete:
         return [error(invariant, f"Completed artifact contains unresolved markers: {sample}.", "Resolve or explicitly classify every marker before completion.")]
     return [warning(invariant, f"Draft artifact contains unresolved markers: {sample}.", "Resolve them before execution or completion.")]
+
+
+def validate_handoff(content: str, profile: str, status: str) -> list[str]:
+    """Check the plan's handoff package, the section that owns what the work has learned."""
+    block = section_block(content, HANDOFF_HEADING_RE)
+    if block is None:
+        return [
+            warning(
+                "plan.handoff",
+                "Plan has no '## Handoff Package' section, so knowledge learned during the work has no home and dies with the conversation.",
+                "Add the six-field handoff package from assets/plan-template.md: confirmed facts, open assumptions, ruled out, read first on resume, environment notes, traps.",
+            )
+        ]
+
+    level = warning if profile == "legacy" else error
+    messages: list[str] = []
+    missing = [label for label in HANDOFF_FIELDS if field_value(block, label) is None]
+    if missing:
+        messages.append(
+            level(
+                "plan.handoff",
+                f"Handoff package is missing required fields: {', '.join(missing)}.",
+                "Keep all six fields present; leave a field empty rather than deleting it.",
+            )
+        )
+    read_first = field_value(block, "Read first on resume")
+    if read_first and UNRESOLVED_RE.search(read_first) and not is_planning_status(status):
+        messages.append(
+            level(
+                "plan.handoff.read-first",
+                f"Plan status '{status}' is past planning but 'Read first on resume' is still unfilled, so a cold start has no entry point.",
+                "List the two or three exact paths a resuming agent must read before touching anything.",
+            )
+        )
+    return messages
+
+
+def validate_phases(content: str, profile: str, adaptive_plan: bool) -> list[str]:
+    """Check that each phase carries dependencies, ownership, exclusions, and observed evidence."""
+    level = error if adaptive_plan and profile != "legacy" else warning
+    messages: list[str] = []
+    for title, block in phase_blocks(content):
+        combined = COMBINED_VALIDATION_RE.search(block) is not None
+        missing = [
+            label
+            for label in PHASE_FIELDS
+            if field_value(block, label) is None and not (combined and label == "Evidence observed")
+        ]
+        if field_value(block, "Validation commands") is None:
+            missing.append("Validation commands")
+        if missing:
+            messages.append(
+                level(
+                    "plan.phase-fields",
+                    f"{title} is missing phase fields: {', '.join(missing)}.",
+                    "Add them per assets/plan-template.md so a fresh agent can own the phase without re-deriving its boundaries.",
+                )
+            )
+        if combined:
+            messages.append(
+                warning(
+                    "plan.phase-fields",
+                    f"{title} uses the superseded 'Validation commands/evidence' field.",
+                    "Split it into 'Validation commands' (what to run) and 'Evidence observed' (what it returned).",
+                )
+            )
+    return messages
 
 
 def validate_plan(path: Path, profile: str) -> list[str]:
@@ -120,6 +229,8 @@ def validate_plan(path: Path, profile: str) -> list[str]:
             else:
                 messages.append(error(invariant, message, remediation))
 
+    messages.extend(validate_handoff(content, profile, status))
+    messages.extend(validate_phases(content, profile, HANDOFF_HEADING_RE.search(content) is not None))
     messages.extend(unresolved_messages(content, complete, "plan.placeholders"))
     return messages
 
@@ -213,8 +324,16 @@ def validate_checkpoint(path: Path, plan_path: Path | None, profile: str) -> lis
         for name, pattern in fields:
             if not has(content, pattern):
                 messages.append(error(f"checkpoint.{name}", "Compact checkpoint field is missing.", f"Add the {name.replace('-', ' ')} field without duplicating the plan."))
-    if plan_path and plan_path.name not in content and portable(plan_path) not in content:
-        messages.append(error("checkpoint.plan", "Checkpoint does not reference the selected plan.", "Add the selected plan path."))
+    if plan_path:
+        declared = extract_reference(content, ("plan",))
+        if declared is None:
+            if plan_path.name not in content and portable(plan_path) not in content:
+                messages.append(error("checkpoint.plan", "Checkpoint does not reference the selected plan.", "Add a '- Plan: `<path>`' field naming the selected plan."))
+            else:
+                level = warning if profile == "legacy" else error
+                messages.append(level("checkpoint.plan", "Checkpoint has no 'Plan:' field, so its link back to the plan is not machine-checkable.", "Add a '- Plan: `<path>`' field naming the selected plan."))
+        elif Path(declared).name != plan_path.name:
+            messages.append(error("checkpoint.plan", f"Checkpoint's Plan field points at a different plan: {declared}.", "Point the Plan field at the selected plan, or select the matching checkpoint."))
     messages.extend(unresolved_messages(content, is_complete_status(detect_status(content)), "checkpoint.placeholders"))
     return messages
 

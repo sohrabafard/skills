@@ -24,7 +24,8 @@ Options:
   -s, --shell DIALECT  Override shell detection (bash, sh, dash, ksh)
       --no-format      Skip shfmt diff checks
       --smoke-help     Run -h and --help smoke tests with the detected shell
-      --matrix         For sh-family targets, also try dash and busybox ash when available
+      --matrix         For sh-family targets, also try dash, busybox ash, and
+                       ShellCheck's busybox dialect when available
   -h, --help           Show this help and exit
 
 Checks:
@@ -100,7 +101,6 @@ run_syntax_check() {
   fi
 
   error "syntax check failed (${runner} -n): ${file}"
-  "${runner}" -n "${file}" || true
   return 1
 }
 
@@ -225,6 +225,22 @@ run_matrix_checks() {
           rc=1
         fi
       fi
+
+      if command -v shellcheck >/dev/null 2>&1; then
+        local busybox_out busybox_rc=0
+        busybox_out=$(shellcheck -s busybox "${file}" 2>&1) || busybox_rc=$?
+
+        if ((busybox_rc == 0)); then
+          note "matrix shellcheck ok (-s busybox): ${file}"
+        elif [[ "${busybox_out}" == *'Unknown shell'* ]]; then
+          # The busybox dialect is absent from older ShellCheck releases.
+          warn "shellcheck has no busybox dialect in this version; skipping ${file}"
+        else
+          printf '%s\n' "${busybox_out}"
+          error "matrix shellcheck failed (-s busybox): ${file}"
+          rc=1
+        fi
+      fi
       ;;
   esac
 
@@ -256,7 +272,11 @@ main() {
   while (($#)); do
     case "$1" in
       -s|--shell)
-        override_shell=${2:-}
+        (($# >= 2)) || {
+          error "missing value for $1"
+          exit 2
+        }
+        override_shell=$2
         shift 2
         ;;
       --no-format)

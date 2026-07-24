@@ -5,133 +5,53 @@ description: Generate, refactor, validate, debug, explain, and port Bash and POS
 
 # Alaa Bash & Shell
 
-One skill for the full shell lifecycle: generate, refactor, validate, debug, explain, and port Bash or POSIX shell code. This skill replaces split generator and validator workflows.
-
-## Use this skill when
-
-- The user wants one or more new or rewritten `.sh` or `.bash` files.
-- The task involves Bash vs POSIX `sh` decisions, portability, or distro-specific behavior.
-- The script must be self-documenting, readable, debuggable, and safe to maintain.
-- The output must include `-h` and `--help`.
-- The work needs static checks, format checks, smoke tests, or debug guidance.
-- The task involves Alpine, BusyBox `ash`, Debian `dash`, macOS, GNU vs BSD tools, or shell-friendly CI.
-
-## When NOT to use
-
-- The target is `zsh`, `fish`, `PowerShell`, or Windows batch.
-- The real solution should be Python, Go, Rust, or another fuller language and shell would only make the implementation brittle.
-- The user is only asking for unrelated terminal usage with no script design, review, portability, or debugging component.
+One skill for the full Bash and POSIX shell lifecycle. Every rule with an owning reference is stated there, not here.
 
 ## First decisions
 
-Before writing or editing code, make these decisions explicit:
+Settle these three before writing or editing a line; they select every reference that follows.
 
-1. **Target shell**
-   - Default to **Bash** for controlled environments, richer ergonomics, arrays, associative arrays, `[[ ]]`, `mapfile`, process substitution, or more maintainable multi-file tooling.
-   - Default to **POSIX `sh`** when the script will run as `/bin/sh`, inside minimal containers, in init/packaging hooks, or across Alpine, Debian, and other constrained systems.
+1. **Target shell.** Bash where arrays, `[[ ]]`, `mapfile`, process substitution, or multi-file tooling earn their cost. POSIX `sh` for `/bin/sh`, minimal containers, init and packaging hooks, Alpine, and Debian. When the user did not say, `generation-workflow.md` owns the inference rule.
+2. **Platform matrix.** Linux only, Linux plus macOS, Alpine or BusyBox, Debian, or mixed GNU/BSD. `/bin/sh` portability and external utility portability are separate questions needing separate answers.
+3. **Artifact shape.** A single CLI, several entrypoints over a shared library, a library-only module, or a script plus Bats coverage. This decides whether shared logic needs a sourced library and whether tests are in scope.
 
-2. **Platform matrix**
-   - Note whether the script must work on Linux only, Linux plus macOS, Alpine, Debian, BusyBox, or mixed GNU/BSD environments.
-   - Treat `/bin/sh` portability and external utility portability as separate concerns.
+## Non-negotiable rules
 
-3. **Artifact shape**
-   - Single CLI script.
-   - Multiple entrypoints with a shared library.
-   - Library-only shell module.
-   - Script plus Bats smoke or regression tests.
-
-## Output contract
-
-Every generated or refactored user-facing CLI script must satisfy this contract unless the user explicitly asks for something narrower:
-
-- Include a correct shebang.
-- Include `-h` and `--help`, and make help exit successfully.
-- Be self-documenting:
-  - concise file header
-  - clear function names
-  - structured function docblocks for non-trivial functions
-  - documented dependencies, environment variables, and exit codes
-- Use the smallest shell dialect that still fits the job.
-- Prefer readable control flow over dense one-liners.
-- Make debugging practical with clear error messages and optional verbose or debug modes where appropriate.
-- Validate before final delivery:
-  - syntax check
-  - ShellCheck when available
-  - `shfmt` when available
-  - `checkbashisms` when targeting `/bin/sh`
-  - smoke `-h`/`--help` execution for CLI scripts
-
-## Default workflow
-
-1. Read the smallest relevant reference files from `references/`.
-2. Decide the target shell and platform matrix.
-3. Start from the closest template in `assets/templates/` when it helps.
-4. Build or refactor in layers:
-   - skeleton and help
-   - argument parsing
-   - validation and dependency checks
-   - business logic
-   - cleanup and exit handling
-   - tests or smoke checks
-5. Run `scripts/validate-shell.sh` when the environment can execute local tools.
-6. If the task covers several scripts, factor shared logic into a sourced library instead of copying helpers between files.
-7. In the final answer, state the shell target, portability assumptions, dependencies, and what was validated.
-
-## Design rules
-
-- Do not switch a script from Bash to `sh` by changing only the shebang.
-- Do not promise POSIX portability if the script uses Bash-only syntax or GNU-only external flags.
-- Prefer shell builtins for simple shell-native tasks, but prefer specialist tools for structured data and heavy search:
-  - `awk` for stateful text transforms
-  - `jq` for JSON
-  - `yq` for YAML or mixed structured formats
-  - `rg` and `fd` for fast repository-scale search
-- Avoid external `getopt` for portable scripts. Prefer a manual `case` parser or `getopts` plus a tiny long-option pre-pass.
-- Use `printf`, not `echo -e`, for predictable output.
-- Be explicit when a dependency is non-portable or optional.
-- When shell becomes an awkward fit, say so and recommend a better implementation language.
+- Every user-facing CLI satisfies `script-contract.md` in full, including `-h` and `--help`. Narrow it only on request, and say which part was dropped.
+- Nothing is delivered unvalidated. `validation-and-debugging.md` owns the check order; run `scripts/validate-shell.sh` where local execution is possible.
+- Shell is glue. When the task matches the leave-shell triggers in `generation-workflow.md`, say so and name the better language before writing code, not after.
+- Terminal usage with no script design, review, portability, or debugging component is not this skill. Answer it directly.
 
 ## Reference navigation
 
-Start with `references/00-topic-map.md`, then read only what the task needs:
+`references/00-topic-map.md` maps task shape to the smallest sufficient set. Rule owners, all under `references/`:
 
-- `references/script-contract.md` for the mandatory script shape and self-documenting rules
-- `references/generation-workflow.md` for build and refactor workflows
-- `references/validation-and-debugging.md` for static checks, smoke tests, and debug tactics
-- `references/portability-and-platforms.md` for Bash vs `sh`, Alpine, Debian, GNU/BSD, and macOS
-- `references/tool-selection-and-performance.md` for command choice and performance heuristics
-- `references/testing-and-ci.md` for Bats, pre-commit, and CI
-- `references/patterns-and-examples.md` for reusable snippets and multi-script patterns
-- `references/official-reference-map.md` for official external docs
+- `script-contract.md` — script shape, help contract
+- `generation-workflow.md` — build and refactor order, defaults, leaving shell
+- `validation-and-debugging.md` — check order, tracing, failures
+- `portability-and-platforms.md` — Bash vs `sh`, Alpine, Debian, GNU/BSD, macOS
+- `tool-selection-and-performance.md` — command choice, performance
+- `testing-and-ci.md` — smoke tests, Bats, pre-commit, CI
+- `patterns-and-examples.md` — reusable snippets
+- `official-reference-map.md` — external docs, freshness triggers
 
 ## Bundled tools
 
-- `scripts/new-script.sh`
-  - Scaffold a new script from a bundled template.
-- `scripts/validate-shell.sh`
-  - Run syntax, ShellCheck, `shfmt`, `checkbashisms`, and optional help smoke checks.
+`scripts/new-script.sh` scaffolds from `assets/templates/`. `scripts/validate-shell.sh` runs syntax, ShellCheck, `shfmt`, `checkbashisms`, the `--matrix` portability pass, and optional `--smoke-help` checks. Prefer both over hand-rolling the equivalent.
 
-## Templates
+## Delegation
 
-- `assets/templates/bash-cli-template.sh`
-- `assets/templates/posix-cli-template.sh`
-- `assets/templates/bash-lib-template.sh`
-- `assets/templates/bats-test-template.bats`
+Delegate only a lane that is genuinely independent and would otherwise flood the parent context. Portability inventory — shebangs, Bashisms, and GNU-only flags across a tree — and lint or format collection are bounded lanes: their criteria are fixed before the lane starts, so they search and report rather than decide. Cross-platform redesign is a judgment lane, because the decision is still open when it starts: how a Bash-only construct becomes portable, or whether the script should stop being shell.
 
-## Subagent strategy
+Pick the model from the kind of judgment the lane requires and the effort from how much search that judgment needs. Do not hardcode a model name here; read `/alaa-prompting-guide` (`$alaa-prompting-guide`), specifically its `references/50-effort-and-thinking.md`, at dispatch time so routing follows the current roster instead of a pin that quietly goes stale.
 
-If multi-agent workflows are enabled, this skill benefits from parallel review passes:
+The parent keeps the final shell choice, every edit, and the validation summary. Do not spawn a lane whose only job is to re-check another lane's output.
 
-- Prefer GPT-5.5 for complex shell refactors or cross-platform orchestration when available; use the strongest approved fallback model if it is not.
-- Use lighter models only for bounded read-only lint review, portability inventory, or smoke-test lanes.
-- one agent for shell-target and portability analysis
-- one agent for static validation and lint findings
-- one agent for smoke tests, Bats coverage, or CI snippets
+## Final report
 
-Keep the parent agent responsible for the final shell choice, final edits, and validation summary.
+State the target shell, the platform matrix and its assumptions, the dependencies and which are non-portable, what was validated and with which tool, and what remains unverified.
 
 ## Failure handling
 
-- If the shell target is ambiguous, infer it from the environment and constraints. Favor Bash unless `/bin/sh`, BusyBox, `dash`, packaging, or strict portability is central.
-- If a requested feature is incompatible with the target shell, either redesign it portably or clearly mark Bash as required.
-- If a validator is unavailable, report that honestly and still do the checks that are possible.
+- A missing validator, an unexercisable platform, or an unrunnable smoke test is a reported gap. Run the checks that remain possible; never report an absent check as passed.
+- A feature incompatible with the target shell is either redesigned portably or declared Bash-only in the help text and the file header. Do not leave the conflict implicit.

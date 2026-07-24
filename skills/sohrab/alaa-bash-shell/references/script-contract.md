@@ -26,7 +26,7 @@ Do not use `#!/bin/sh` for Bash code.
 
 ## 2. Help contract
 
-Every user-facing CLI script must implement `-h` and `--help`.
+Every user-facing CLI script must implement `-h` and `--help`. Both must render the same text and exit with status `0`, so that help is never mistaken for a usage error.
 
 The help output should include:
 

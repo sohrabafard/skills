@@ -2,13 +2,21 @@
 
 ## Skill location
 
-Codex currently discovers user skills under `~/.agents/skills` and repository skills under `.agents/skills`. Place the complete `alaa-codex-orchestrator` directory in one of those locations.
+Place the complete `alaa-codex-orchestrator` directory in a location Codex scans for skills.
 
 Recommended user installation path:
 
 ```text
-~/.agents/skills/alaa-codex-orchestrator/
+~/.codex/skills/alaa-codex-orchestrator/
 ```
+
+On Windows that resolves as:
+
+```powershell
+Join-Path $HOME ".codex\skills"
+```
+
+This path is field-verified — skills installed there are discovered and trigger normally — and it keeps skills alongside `~/.codex/agents/`, so the whole Codex setup lives under one tree. The official documentation instead lists `$HOME/.agents/skills` for user skills plus `.agents/skills` in the current directory, the parent, and the repository root; those work too. Use `.agents/skills` when the skill should travel with a specific repository rather than follow the user.
 
 One-command installation after extracting the ZIP:
 

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$TargetSkillDirectory = (Join-Path $HOME ".agents\skills\alaa-codex-orchestrator")
+    [string]$TargetSkillDirectory = (Join-Path $HOME ".codex\skills\alaa-codex-orchestrator")
 )
 
 Set-StrictMode -Version Latest

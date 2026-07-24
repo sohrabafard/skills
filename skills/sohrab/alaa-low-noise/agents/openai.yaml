@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Low Noise"
-  short_description: "Suppress terminal noise without hiding real work"
-  default_prompt: "Use $alaa-low-noise to keep a complex Codex run quiet, bounded, and fully reviewable."
+  short_description: "Bound context and terminal noise without hiding real work"
+  default_prompt: "Use $alaa-low-noise to keep a complex run context-cheap, quiet, bounded, and fully reviewable."
