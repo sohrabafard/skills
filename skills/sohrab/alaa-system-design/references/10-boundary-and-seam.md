@@ -10,15 +10,16 @@ boundary is real, and when two services should be merged back. Read it during st
    request.
 2. For each journey, list every component it passes through, including the ones the platform inserts —
    gateway, auth, authorization, broker, datastore.
-3. Mark each component `changeable-in-this-release` or not. Changeable means you can merge and deploy the
-   change to it inside this change's release, without another team's release.
+3. Mark each component `changeable-in-this-release` or not, applying the inside/outside rule in `SKILL.md`.
 4. Every component marked not changeable becomes a dependency row carrying its owner and the contract you
-   consume from it. Every changeable component is inside the design.
+   consume from it.
 
 A component you want to change but cannot is the most valuable line in this list, because it is where the
 design's cost actually sits. Name it, name its owner, and decide whether this design proceeds without that
 change or waits for it — recording "we assumed they would change it" is how two teams each wait for the
-other.
+other. When the plan requires an edit inside a dependency, that is either a second design or a contract
+change: split it and name which, because a plan that quietly edits a dependency has no owner on either
+side of the seam.
 
 ## Finding the seam
 

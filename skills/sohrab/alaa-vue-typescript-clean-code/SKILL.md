@@ -218,6 +218,7 @@ choosing by symptom (what hurts) beats choosing by name.
 - Use Pinia for shared mutable state. Stores have unique IDs, focused scope, typed state/getters/actions, and return all state in setup stores.
 - Declare per-route auth/permission posture in route `meta`; guards read the meta. Scattered per-component auth checks are a review failure.
 - Never render unbounded lists: server-side pagination or `QVirtualScroll`/virtualized rendering for large datasets.
+- Never issue one request per rendered item. A fetch, permission check, or store read inside a `v-for` or a `map` over a list whose length is not a constant is the same defect as an N+1 query; `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) owns the resolution and the bound on that list, and this skill owns the composable and component shape the resolution lands on.
 - Use route-level lazy loading and dynamic imports for heavy optional components.
 - Keep Vite aliases, env variables, and build configuration typed and minimal.
 - PWA/service-worker behavior must be cache-safe, version-aware, and validated in browser/devtools when touched.

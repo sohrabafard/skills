@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.2.0
+
+- Wired three doctrine skills into the roles that were already gated on their subjects but had no standard behind them. `alaa-architecture-critic` now reviews against `/alaa-system-design`, `alaa-test-strategist` applies `/alaa-testing-strategy`, and `alaa-performance-profiler` measures against the complexity budget `/alaa-algorithms-data-structures` owns. Each is loaded through the agent's `skills` list and named in its dispatch template, so the standard arrives with the lane rather than depending on the lead remembering it.
+- Phase A now runs a design pass before implementation on three conditions the architecture critic's gate never covered — a change of data owner, a dependency added or removed between components, and a new deployable unit — so the critic reviews a design record with its decisions made instead of a plan that can only be accepted or rejected whole.
+- `alaa-verifier` now names the proof level each `PASS` reached. A check run against an embedded substitute and the same check against the real engine are indistinguishable from the command line, and the level is what tells a reader whether the result needs re-running.
+- Replaced the test strategist's restatement of layer placement, failure-mode ordering, and the broken-implementation challenge with a pointer to the skill that owns them, so the two cannot drift apart.
+
 ## 3.1.1
 
 - Extended the authoring escalation criterion: the wording of these artifacts carries as much judgment as their structure. In a skill the prose is the executable logic — nothing underneath enforces what a sentence failed to say — so drafting the text is the judgment rather than the write-up of it.

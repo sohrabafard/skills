@@ -135,6 +135,13 @@ flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s ca
 - Never invent a repo-local name for a family in the catalog below. A dashboard or alert built on
   `alaa_http_requests_total` breaks silently for the one service that called it something else, which is
   the exact failure this catalog exists to prevent.
+- Observable: the repository's metric-name constants hold no name that does not begin `alaa_`. A bare
+  `http_requests_total`, `db_queries_total`, or `outbox_depth` fails this rule. When the unprefixed name
+  comes from a shared kit or base library, the kit is fixed at the kit and its consumers re-generate, because
+  fixing it per service leaves the next service built on that kit non-conforming on its first day.
+- Whether a histogram carries exemplars is a requirement level, and `$alaa-observability-soc` owns it. This
+  file fixes only the name and the unit. Per-service metric-name and exemplar status is recorded in
+  `95-fleet-conformance.md`.
 - Which labels a metric may carry, and the cardinality budget, belong to `$alaa-observability-soc`. The
   request-middleware label boundary is in `20-operational-and-observability-contract.md`.
 

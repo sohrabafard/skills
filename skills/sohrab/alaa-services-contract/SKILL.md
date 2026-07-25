@@ -67,6 +67,7 @@ identifier-level trigger vocabulary per mode; each reference file names its own 
 | Frontend or host code consuming the `@alaa/*` SDK | `60-frontend-sdk-consumption-contract.md` |
 | Page Kit, UI Kit, app-shell, widgets | `65-frontend-page-kit-and-widgets-contract.md` |
 | Which standard, framework doc, or platform doc outranks which | `90-source-map.md` |
+| Which services follow a rule today, and what a named service must change to follow it | `95-fleet-conformance.md` |
 
 `references/50-laravel-copy-baselines.md` holds copy-oriented Laravel class and helper shapes. Read it only
 after the file that owns the rule, because it carries shapes, not decisions.
@@ -115,6 +116,10 @@ opinion.
   envelope.
 - **`alaa-data-layer`** owns pool mechanics inside a driver and persistence invariants. This skill keeps the
   pool bounds and the acquire timeout.
+- **`alaa-system-design`** owns *when* a contract shape is decided and by what procedure: the rule that the shape is
+  settled in a design record and committed before the code that satisfies it, where the boundary the contract sits on
+  runs, and which component owns each datum crossing it. This skill keeps the shape itself — the envelope, header,
+  event, code, and identifier a decided contract must use. Read it before adding a surface, not while adding one.
 - **`alaa-prompting-guide`** owns model and effort selection.
 
 ## When not to use
@@ -136,3 +141,6 @@ opinion.
   version pin in a contract file goes stale silently and is then copied forward as authoritative.
 - When a change touches a contract owned jointly with a companion skill, update that skill in the same
   effort and record the split in the ownership list above.
+- Record conformance in `references/95-fleet-conformance.md`, never in a rule file. When a change makes a
+  service conform, or a new rule leaves the fleet behind, update that snapshot in the same effort. It is
+  evidence, not contract: it states no rule and overrides none.

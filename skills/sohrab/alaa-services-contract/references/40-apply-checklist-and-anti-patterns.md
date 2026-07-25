@@ -19,7 +19,10 @@
 15. Align every outbound call, retry, connection pool, and ingress admission decision to `22-failure-load-and-deprecation-contract.md` when the task adds or changes any of them.
 16. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
 17. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-18. Run focused tests for every changed contract surface.
+18. Run focused tests for every changed contract surface. A test that would still pass against a plausible broken
+    implementation of that surface does not count as one; `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns how
+    a test is judged to be a test and at which proof level its result may be reported, and this item owns only that
+    the run happened for every surface the change touched.
 19. When the change removes or renames a contract surface, run the deprecation procedure in `22-failure-load-and-deprecation-contract.md` instead of deleting the surface directly.
 20. Report blockers explicitly when exact convergence is not possible, using the three-case rule in `SKILL.md`.
 
@@ -95,6 +98,27 @@ When applying this skill to a service, finish by checking:
 - the deprecation is recorded in this skill, in the owning repo's release notes, and as an issue in every named consuming repository
 - removal happened only after the window ended and every named consumer moved, and it deleted the compatibility code, tests, docs, and API artifacts together
 
+### Response envelopes, codes, and pagination
+- every `4xx` and `5xx` body is `{"error":{"status","code","message","meta"}}`, with `meta` an object and
+  `status` equal to the status line
+- a `4xx` and a `5xx` saved example both exist and both satisfy that shape
+- `/api/ready` `503` uses the readiness envelope, not the error envelope
+- no `4xx` or `5xx` returns an empty body; where the runtime cannot render one, the repository records which
+  component does
+- every emitted code matches `^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$` and appears in one committed registry a test reads
+- list routes accept `cursor` and `limit`, reject `page`, `per_page`, and `offset`, and return
+  `meta.next_cursor` as a string or `null`
+- a `limit` above the documented maximum is rejected, not clamped
+- no payload field carries an auto-increment database id, except the actor identifier received in `X-User-Id`
+- readiness `checks` is an object keyed by check name, not an array
+
+### Async messages
+- every published domain event carries the exact envelope field set, with `payload` holding the domain fields
+- the exchange is `<service>.events` and the routing key equals `message_type` byte-for-byte
+- no domain event is published to the default exchange, and no publisher binding resolves to a log or no-op
+  sink outside a test
+- every consumer sets an explicit prefetch at its construction site or in committed configuration
+
 ### Trusted ingress
 - missing blank invalid `X-Project-Id`
 - missing invalid `X-User-Id`
@@ -166,6 +190,17 @@ Flag a problem when you see any of these:
 - a connection pool is unbounded, has an unbounded acquire wait, or a worker container inherits the HTTP pool default
 - a product request waits in an application-level queue instead of being shed at the in-flight maximum
 - `/api/health` or `/api/ready` is subject to shedding or rate limiting
+- an error body uses a framework default shape such as `{"message": ..., "errors": {...}}`, omits `meta`, or
+  sets `meta` to `null`
+- an error code is lowercase, or exists only in a documentation artifact no test reads
+- a list route reads `per_page`, `page`, or `offset`, or a repository mandates keyset pagination in its own
+  `AGENTS.md` while its code calls an offset paginator or no paginator at all
+- an event envelope uses `event_id`, `event_name`, `event_type`, `event_version`, `payload_version`, `data`,
+  or `headers` instead of the canonical field names
+- a routing key is rewritten from the event name, or a domain event is published to the default exchange
+- a service other than the gateway parses, verifies, or refreshes an end-user bearer token
+- a service that makes authorization decisions has no executable read of `X-Access`
+- an application metric name does not begin `alaa_`
 - a contract surface is deleted or renamed without the deprecation procedure, or a deprecation carries no removal date
 
 ## Anti-patterns

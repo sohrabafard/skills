@@ -62,6 +62,6 @@ Derived fields (counts, last_state, aggregates):
 # Postgres performance principles (performance-first)
 - Prefer simple, predictable queries and stable indexes.
 - Avoid OFFSET pagination on large tables; use keyset pagination.
-- Avoid N+1; fetch in batches and/or eager-load deliberately.
+- Avoid N+1; fetch in batches and/or eager-load deliberately. When the loop's iteration count grows with tenants, rows, or history, `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) owns which of the four resolutions applies and the maximum the batch itself must carry; this file owns the query and index shape the resolution lands on.
 - Indexes speed reads but slow writes; keep the minimum effective set.
 - Prefer constraints (PK/FK/UNIQUE/CHECK) to encode invariants; they are also an optimization tool.

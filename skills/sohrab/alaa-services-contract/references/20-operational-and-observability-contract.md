@@ -1,6 +1,6 @@
 # Operational And Observability Contract
 
-This file owns the exact stable observability surfaces that must not drift across Ala services.
+This file owns the exact stable observability surfaces that must not drift across Ala services, and the broker message envelope and broker names that carry the same correlation across an async hop.
 
 Use `21-alaa-platform-observability-directive.md` together with this file when the task needs an `alaa_*` metric family name, an `OTEL_*` variable and its Ala default, a trace or route naming rule, or the current telemetry shape of a specific service. If these two files appear to conflict, this file owns the exact header, log field, event, code, probe-noise, and middleware invariants.
 
@@ -123,6 +123,82 @@ Rules:
 - Do not invent alternate names for the same event type.
 - Keep `event` and `code` aligned.
 - Keep user-facing messages separate from these machine-readable names.
+
+## Domain event envelope
+
+The event names above name **log records**. This section names **broker messages**: the durable facts a
+service publishes for other services to consume. One service publishing `event_name`, a second `event_type`,
+and a third `event` means no consumer can be written once and no operator can search the fleet for the same
+field, which is the drift this section removes.
+
+Every Ala domain event published to a broker is a JSON object with snake_case keys at every level,
+including nested objects, and carries exactly these fields:
+
+| Field | Required | Value |
+|---|---|---|
+| `message_id` | yes | lowercase UUIDv7; the logical message identity, never the broker delivery tag |
+| `message_type` | yes | the event name, `<service>.<aggregate>.<action>.v<major>`, lowercase snake_case segments |
+| `message_version` | yes | positive integer equal to the `<major>` in `message_type` |
+| `occurred_at` | yes | RFC3339 UTC instant at which the fact became true, not the publish time |
+| `producer_service` | yes | the canonical service identity from `10-core-service-contract.md` |
+| `correlation_id` | yes | the `request_id` of the request that produced the fact; `message_id` when no request produced it |
+| `causation_id` | optional | the `message_id` of the message that caused this one |
+| `idempotency_key` | yes | stable across every republication of the same fact, so a consumer deduplicates on it |
+| `traceparent` | yes | the canonical `traceparent` of the producing request, so the consumer continues the trace |
+| `project_id` | yes | the public UUIDv7 project identifier; `null` only for a fact the owning repository documents as platform-scoped |
+| `aggregate_type` | yes | the owning aggregate, singular lowercase snake_case: `session`, `comment`, `grant` |
+| `aggregate_id` | yes | the public identifier of the aggregate instance |
+| `aggregate_version` | optional | positive integer; required when a consumer must reject an out-of-order state change |
+| `payload` | yes | JSON object carrying the fact's own fields |
+
+Rules:
+- These are the same field names as the notification command envelope in
+  `27-notification-service-contract.md`, deliberately: a service writes one serializer and one consumer
+  base for both. A command carries no `project_id` and no `aggregate_*`; an event carries them. Where the
+  two files disagree about a command, that file wins for commands.
+- `event_id`, `event_name`, `event_type`, `event_version`, `payload_version`, `producer`, `actor`,
+  `resource`, `context`, `data`, and `headers` are not fields of this envelope. A service emitting any of
+  them renames it to the field above with the same meaning, through the deprecation procedure in
+  `22-failure-load-and-deprecation-contract.md`.
+- The envelope carries identity, ordering, and correlation only. The acting user, the changed values, the
+  reason, and every other domain fact go inside `payload`, so that adding a domain field never changes the
+  envelope and a consumer can validate the envelope without knowing the domain.
+- Identifiers inside `payload` follow the public-identifier rule in
+  `25-end-to-end-flow-and-boundaries.md`. A database integer in a payload is a violation there; this
+  section does not create an exception to it.
+- The key set is closed. A service that needs a field the table does not have puts it in `payload` or
+  proposes the field here first; it does not add a top-level key locally.
+
+Observable that decides compliance: one committed fixture per published `message_type` in the producing
+repository, asserted against by a test, whose top-level key set equals the required fields above plus any
+optional field the producer actually sets.
+
+## Broker exchange, routing key, and queue names
+
+- A service publishes its domain events to exactly one durable topic exchange named `<service>.events`,
+  using the canonical service identity: `auth.events`, `content.events`, `comment.events`,
+  `entitlement.events`. A shared exchange named `events` is a contract violation, because two producers
+  then share one namespace and one bad binding pattern delivers another service's traffic.
+- The routing key is the `message_type` value byte-for-byte, with no substitution. Rewriting `.v1` to
+  `.version-1`, `_` to `-`, or any other transformation is forbidden: an operator holding a binding must be
+  able to paste it into a code search and land on the producer.
+- Publishing a domain event to the AMQP default exchange (`""`) with a queue name as the routing key is
+  forbidden, because it binds the producer to one consumer's queue name and a second consumer cannot
+  subscribe without the producer changing.
+- A consumer owns its queues. It names each `<consumer-service>.<producer-service>.<purpose>`, binds it to
+  the producer's exchange with an explicit binding pattern, and declares `<queue>.dlq` as its dead-letter
+  queue. A producer never declares a consumer's queue.
+- A publisher implementation that writes to a log, a file, or a no-op sink outside an automated test is not
+  a publisher: its events do not exist for any consumer, while its own repository docs say they do. In every
+  non-test environment the publisher binding resolves to the broker publisher, and a service that publishes
+  events lists the broker as a `required: true` check in `/api/ready`.
+- Acknowledgement mechanics, publisher confirms, prefetch tuning, and DLQ handling belong to
+  `/alaa-async-messaging` (`$alaa-async-messaging` in Codex). Publish timeout, retry budget, and the durable-outbox path belong to
+  `22-failure-load-and-deprecation-contract.md`. This section owns the names.
+
+Observable that decides compliance: the exchange name, the binding pattern, and the queue names appear in
+committed configuration or topology declaration code in the owning repository, and the routing key passed at
+the publish call site is the same variable that carries `message_type`.
 
 ## Probe-noise rule
 

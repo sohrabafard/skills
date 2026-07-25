@@ -8,7 +8,7 @@ Evidence is an **observed** outcome: a test that ran, an injection that ran, or 
 
 - **The code.** A retry block, a breaker construction, or a timeout constant is a claim about behaviour. Configuration frequently does not reach the client it was written for, a library default silently overrides it, and a wrapper swallows the cancellation.
 - **The configuration value.** A timeout in a config file proves the file contains a number.
-- **A passing test that also passes without the mechanism.** This is the strongest single filter available: **delete the mechanism, run the test, and require it to fail.** A test that passes either way is measuring something else, and its green result is worse than no test because it is used as evidence.
+- **A passing test that also passes without the mechanism.** A test that passes either way is measuring something else, and its green result is worse than no test because it is used as evidence. Proof by removal — the procedure that settles it — and the six levels a result may be reported at are owned by `/alaa-testing-strategy` (`$alaa-testing-strategy` in Codex); read it before accepting any row of the table below as verified, and report each observation at the level actually reached rather than the level it was meant to reach.
 
 State the evidence as "this was injected, this was asserted, this was observed" — the three together. A review accepts nothing that omits the third.
 

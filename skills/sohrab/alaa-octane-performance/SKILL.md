@@ -50,6 +50,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair when the task also touches metrics and traces for long-lived workers.
 - $alaa-data-layer
   - Pair when the task also touches DB and cache performance decisions; its `references/50-redis-laravel-octane.md` owns Redis integration, flush discipline, and Redis-down fallback for Laravel.
+- $alaa-algorithms-data-structures ( /alaa-algorithms-data-structures in Claude Code )
+  - Read it when the hot path's cost grows with tenants, rows, history, or fan-out rather than with worker lifetime. It owns the complexity budget the path is held to, the real bound on the growing dimension, the N+1 family, and the rule that a shape claim needs two input sizes; this skill owns the Octane runtime behaviour that budget is spent inside.
 
 ## Reference navigation
 

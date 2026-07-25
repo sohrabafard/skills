@@ -39,6 +39,14 @@ statement about failure, not about success, so most of what follows is about fai
 | 9 | **Speed of development and debuggability** | What is the one command that runs the tests, the one that runs the service locally, and the one that reproduces a production failure? How long does the feedback loop take? Guidance that makes correct work slow gets bypassed, so a rule that adds a step must remove one or state what it buys. |
 | 10 | **Documentation** | What shipped, how it is operated, and how it fails — where is each of those three written, and which source owns it? What does an on-call responder read at 03:00? Which document must change when this behaviour changes, and what enforces that? |
 
+Two obligations have a named owner for the method that answers them, and this file establishes only that the
+obligation applies. When judging whether obligation 1's proof would fail against a plausible broken
+implementation, which layer a behaviour belongs at, or which of six levels a result may be reported at, read
+`/alaa-testing-strategy` (`$alaa-testing-strategy`). When stating obligation 7's complexity budget, finding the
+real bound on an input dimension, or choosing a structure from its access pattern, read
+`/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`). Route the answer there and cite it;
+an answer written into a constitution binds every future service to one subsystem's decision.
+
 ## Two standing preferences that cut across all ten
 
 **Wrap official capabilities; do not reimplement them.** When a framework, database, broker,

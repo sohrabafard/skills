@@ -78,5 +78,6 @@ a code deploy.
   discrimination rule is `/alaa-reliability-sla`'s and it is about consequence, not importance;
 - a load figure copied from another service because the two look similar;
 - an assumed peak stated with no growth horizon, which designs for the day the design was written;
-- restating a timeout or pool value from the platform contract into the record, which creates a second copy
-  that drifts the next time the contract changes.
+- restating a timeout or pool value from the platform contract, or a piece of `/alaa-reliability-sla`
+  (`$alaa-reliability-sla`) doctrine, into the record instead of citing it, which creates a second copy that
+  drifts the next time the source changes.

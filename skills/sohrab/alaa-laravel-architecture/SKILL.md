@@ -54,6 +54,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair when the task also touches gateway-derived identity and trusted header semantics.
 - $alaa-data-layer
   - Pair when the task also touches schema, query, and transaction decisions, or any Redis/cache behavior (its `references/50-redis-laravel-octane.md` owns key design, TTL, invalidation, and Redis-down fallback; this skill owns the decorator seam).
+- $alaa-system-design ( /alaa-system-design in Claude Code )
+  - Read it before the change, not during it, when the task moves a layer boundary another module calls, changes which module owns a piece of data, adds or removes a dependency between modules, or introduces a cross-module event. It owns the boundary, contract-before-code, and single-writer decisions the defaults above assume are already settled; this skill owns where the settled answer lands in a Laravel layout.
 
 ## Reference navigation
 

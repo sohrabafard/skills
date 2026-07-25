@@ -29,6 +29,21 @@ Use these exact header names unless a temporary migration is explicitly document
 - `X-Location-Shobe`
 - `X-Location-School`
 
+This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet survey the gateway projected
+`pid -> X-Project-Id`, `sub -> X-User-Id`, `prm -> X-Access`, `rol -> X-User-Roles`, `jti -> X-Access-Token-Id`,
+`m -> X-User-Mobile`, `fn`/`ln` -> the name headers, and the location claims to `X-Location-*`, and `comment`,
+`content`, `entitlement-api`, and the `alaa-go-chi` kit each read that same spelling.
+
+- The list is closed. A service reads no trusted identity header outside it, plus the correlation headers
+  owned by `20-operational-and-observability-contract.md` and the step-up headers owned by
+  `32-auth-totp-and-step-up-contract.md`. Reading an undeclared header makes the gateway sanitize list
+  incomplete, and an unsanitized header is a spoofing surface.
+- Adding or removing one of these names requires a gateway claim-projection change plus the deprecation
+  procedure in `22-failure-load-and-deprecation-contract.md`, because the gateway sanitize list, the Postman
+  generator, the public-surface test, and every reader change together or the header becomes forgeable.
+- The obligation to read `X-Access` in any service that authorizes, and the observable that decides it,
+  are owned by `28-backend-permission-authorization-and-role-freeze.md`.
+
 ## How trusted ingress relates to entitlement-platform
 
 - the gateway owns authentication and trusted header injection
@@ -109,6 +124,10 @@ Public request rule:
 - services may persist internal numeric project ids when that is their storage model
 - public Resources and event or API payloads expose the public UUIDv7 and never the internal numeric project
   id. This is absolute; there is no case in which a public payload carries the storage id.
+- observable: every Resource, serializer, and outbox or event builder that writes a `project_id` writes the
+  UUIDv7 string, never the column a foreign key references. An event body carrying `"project_id": 42` is the
+  same violation as a Resource carrying it and is the more damaging one, because a consumer in another
+  service holds no mapping from that integer to a project and cannot recover the scope of the fact.
 - when no mapped row exists for an internal project id, the service omits the field entirely and emits
   `input.validation.failed` with a stable validation code naming the unmapped id. It must not emit `null` as
   if the project were absent, must not fall back to the internal numeric id, and must not invent a
@@ -154,7 +173,8 @@ Exact success envelope rules:
 - `data` must be an array for collections
 - nested child resources stay inline and do not get their own nested `data` wrapper
 - use top-level `meta` only for transport metadata
-- use top-level `links` only for pagination or true document navigation concerns
+- use top-level `links` only for true document navigation; what a collection response carries is owned by
+  the list pagination contract in `25-end-to-end-flow-and-boundaries.md`
 
 Boundary rules:
 - do not return transport-shaped arrays from services

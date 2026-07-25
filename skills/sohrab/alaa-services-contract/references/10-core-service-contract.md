@@ -62,6 +62,81 @@ Rules:
 - Do not require bearer tokens, session cookies, OTP, or end-user state for operational routes.
 - Keep `/api/ready` as an operational contract, not a client product feature.
 
+## Exact error envelope
+
+Every Ala service returns this exact JSON body for every `4xx` and `5xx` response on every route it owns,
+including responses rendered by a framework exception handler and responses produced at the gateway edge:
+
+```json
+{
+  "error": {
+    "status": 422,
+    "code": "INPUT_VALIDATION_FAILED",
+    "message": "One operational English sentence.",
+    "meta": {}
+  }
+}
+```
+
+Rules:
+- The body has exactly one top-level key, `error`. A body whose top level is `message`, `errors`, `code`,
+  `detail`, `title`, or a bare array is a contract violation, because a client that branches on
+  `error.code` cannot read it and every consumer then carries a second parser per service it calls.
+- `error` carries exactly the keys `status`, `code`, `message`, and `meta`, in every error response, with
+  no key omitted. A consumer reads `error.meta` without a presence check.
+- `status` is the integer HTTP status of the response and equals the status line. A body that disagrees
+  with its own status line is a contract violation.
+- `code` is a stable machine-readable identifier from the service's committed registry, under the casing
+  rule in the next section.
+- `message` is one short operational English sentence written for an operator. It is never the branching
+  key, never a localized end-user string, and never a raw exception message or stack fragment when debug
+  mode is off.
+- `meta` is a JSON object. It is `{}` when there is nothing to add. It is never `null`, never a string,
+  and never an array, because a consumer that must first test the type of `meta` cannot share one error
+  reader across services. Field-level validation failures go under `meta.errors`, an object keyed by field
+  name whose values are arrays of message strings.
+- The envelope is identical for validation failures, authentication failures, authorization denials, rate
+  limiting, and unexpected exceptions. Only the four values change.
+- A framework's default error body is replaced, not wrapped. A Laravel `{"message": ..., "errors": {...}}`
+  validation body and a bare `{"code": ..., "message": ...}` body are migrated to the envelope above
+  through the deprecation procedure in `22-failure-load-and-deprecation-contract.md`.
+- An empty body on a `4xx` or `5xx` is a contract violation. When a runtime cannot render a body for a
+  status — a Vector source, a proxy short-circuit — the component in front of it renders the envelope for
+  that status, and the owning repository records in its own `AGENTS.md` which component renders it. Silence
+  is not a contract; a caller cannot distinguish a rejected request from a dropped connection.
+
+Two carve-outs, and no others:
+- `GET /api/ready` answers `503` with the readiness envelope defined below, not with this envelope. It
+  carries its own `code`, and that `code` follows the same casing rule.
+- `/metrics` is a Prometheus text endpoint. A denial there returns the status with a text body, because a
+  scraper does not parse JSON.
+
+Observable that decides compliance: for every `4xx` and `5xx` saved example in the repository's tests and
+Postman collection,
+`jq -e '.error | has("status") and has("code") and has("message") and (.meta | type == "object")'` succeeds,
+and `.error.status` equals the example's own status. A repository holding no `4xx` and no `5xx` saved
+example has not proven the envelope and is non-conforming until it adds one of each.
+
+## Error code registry and casing
+
+Rules:
+- Every `code` this skill governs — in an error body, in a readiness body, in a structured log, in a job
+  or outbox record — matches `^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$`: UPPER_SNAKE ASCII, no lowercase, no hyphen,
+  no dot. Two services spelling one failure `unauthorized` and `AUTH_UNAUTHENTICATED` force every consumer,
+  dashboard, and alert expression to match both spellings forever.
+- The code names the failure, not the transport. `NOT_FOUND` is a code; `404` is not.
+- Every code a service can emit is listed in one committed registry file in the service repository, and a
+  test reads that file and fails when emitted code and registry diverge. A list that lives only in a
+  documentation artifact no test reads is not a registry, because nothing fails when the two disagree.
+- The registry is append-only. Adding a code is a normal change. Renaming or removing one follows the
+  deprecation procedure in `22-failure-load-and-deprecation-contract.md`.
+- The event-to-code pairs for request and operational flows are named in
+  `20-operational-and-observability-contract.md`. They belong in the same registry and satisfy the same
+  pattern; do not keep a second list for them.
+
+Observable that decides compliance: a test enumerates every code the service can emit, asserts each matches
+the pattern above, and asserts each appears in the committed registry file in the same repository.
+
 ## Operational caller expectations
 
 `GET /api/health` and `GET /api/ready` exist for:
@@ -141,7 +216,10 @@ Rules:
 - top-level keys must be exactly `status`, `code`, `checks`, `failed_checks`, `timestamp`, `service`
 - `status` must be `ready` or `not_ready`
 - `code` must be `SERVICE_READY` or `SERVICE_NOT_READY`
-- `checks` must be an object keyed by canonical check name
+- `checks` must be an object keyed by canonical check name. A JSON array of check objects is a contract
+  violation even when every element carries the same four fields, because a consumer reading
+  `checks.database.status` cannot read an array and a shared readiness reader cannot be written once.
+  Observable: `jq -e '.checks | type == "object"'` succeeds on both a ready and a not-ready fixture.
 - `failed_checks` must be a stable ordered array of failed required check names
 - `timestamp` must be ISO-8601 UTC
 - `service` must use the canonical service identity
@@ -219,6 +297,25 @@ Use this example only as a concrete precedent for how a service may express real
   "service": "auth"
 }
 ```
+
+## Frozen operational surfaces
+
+The fleet already agrees here. In the 2026-07-25 fleet survey, `auth`, `comment`, `content`,
+`entitlement-api`, and the shared `alaa-go-chi` kit each serve `GET /api/health` and `GET /api/ready` with
+the same top-level keys, the same `ready` and `not_ready` vocabulary, the same `SERVICE_READY` and
+`SERVICE_NOT_READY` codes, and the same 200/503 split. Convergence that already happened is worth as much
+as convergence still owed, so these surfaces are frozen:
+
+- The two paths, the health keys, the readiness top-level keys, the two status values, the two codes, and
+  the 200/503 split change only through the deprecation procedure in
+  `22-failure-load-and-deprecation-contract.md`. A repository does not renegotiate them locally, and an
+  agent does not improve them.
+- A component whose runtime cannot serve these two paths — an HAProxy edge, a Vector pipeline — records in
+  its own repository which endpoint answers each probe and which component renders the body, and the
+  gateway route table aliases the public path to it. Current per-component status is in
+  `95-fleet-conformance.md`.
+- Adding a check to `checks` is not a change to this surface. Adding, renaming, or removing a top-level key
+  is.
 
 ## Laravel operational baseline
 

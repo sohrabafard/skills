@@ -8,8 +8,7 @@ superseding, or judging a record.
 
 ## Numbering, location, and multi-repository designs
 
-`docs/design/<NNNN>-<slug>.md` in the repository of the component that owns the data, with `NNNN` the next
-integer in that directory. Numbers are never reused, including for records closed as `not-required`, because
+`NNNN` in the record's path is the next integer in that directory. Numbers are never reused, including for records closed as `not-required`, because
 a reused number makes two different decisions share one citation.
 
 When the design spans repositories, exactly one record exists, in the data owner's repository. Every other
@@ -85,5 +84,4 @@ everyone learns to skip.
 
 Two screens. When it does not fit, one of three things is true and each has a fix: the design contains a
 specification, which moves to the contract files; it contains a discussion, which compresses into
-rejected-candidate lines; or it is two designs, which split into two records with two numbers. A long record
-is not more thorough — it is less likely to be read, and an unread record governs nothing.
+rejected-candidate lines; or it is two designs, which split into two records with two numbers.

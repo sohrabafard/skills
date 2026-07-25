@@ -15,6 +15,15 @@ Backend services must:
 - continue to rely on the contract-defined gateway/OpenFGA path for resource-level authorization where that path applies
 - keep business invariants, tenant/project boundaries, ownership checks, and data-scope rules explicit after trusted-context normalization
 
+Observable that decides compliance: in a service that makes any backend authorization decision, an
+executable read of `X-Access` exists at ingress, and the request is denied when the header is absent or
+decodes to zero known permissions. A repository where a search for `X-Access` returns documentation, a
+contract file, or a permissions guide but no executable read, while its routes still allow and deny, is
+deciding access from something else — a role name, a framework guard, a local table — and is non-conforming
+even when every route currently returns the answer an operator expects. A service that makes no
+authorization decision at all, such as a pure ingest pipeline, records that in its own `AGENTS.md`, and this
+rule does not apply to it.
+
 Backend services must not:
 - allow, deny, elevate, downgrade, or select an access level from `rol`, `X-User-Roles`, a role name, or a role-derived tier
 - use roles to choose policies, Gates, scopes, queries, response fields, routes, validation, feature behavior, workflow branches, or side effects

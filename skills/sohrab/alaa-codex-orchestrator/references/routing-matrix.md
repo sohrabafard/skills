@@ -43,6 +43,8 @@ Do not spawn when the relevant paths and contracts are already established in cu
 - concurrency, retry, idempotency, migration, security, or failure-mode testing matters;
 - test layer selection and flake control need design.
 
+`$alaa-testing-strategy` is the doctrine this role applies. Name it in the dispatch, and read it directly when deciding which layer a behaviour is tested at, whether a double is honest enough to stand in for the real dependency, or which of the six proof levels a claim actually reaches.
+
 ## Implementation routing
 
 Use `alaa-implementer` — Terra at `high` — by default. Escalation is earned by decision density, not surface sensitivity: a lane that mechanically applies an already-ratified decision, an amended contract value, or a precise spec stays on the default implementer regardless of the surface it touches — the reviewer and specialist gates already provide Sol-tier scrutiny there.
@@ -69,6 +71,8 @@ Name the lane's matching clean-code skill in the dispatch when one is installed:
 ### Architecture critic
 
 Trigger before implementation for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Skip for a local bug fix whose contract and ownership are established.
+
+`$alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Phase A even when no contract shape changes, and the critic reviews the resulting design record rather than the plan that preceded it.
 
 ### API contract reviewer
 
@@ -103,6 +107,8 @@ Trigger for user-visible browser behavior. Require an exact URL, environment, an
 ### Performance profiler
 
 Trigger only when there is a measurable question, a comparable baseline, and a budget. Do not use as generic optimization advice.
+
+`$alaa-algorithms-data-structures` owns the budget that question is measured against, and it is read before this gate rather than at it: when the change adds a loop, query, fan-out, batch, export, or in-memory collection whose size grows with tenants, rows, history, or events, the budget is stated during implementation planning. A growing path that reaches this gate with no stated bound is reported as a missing budget, not measured into one.
 
 ### Observability reviewer
 

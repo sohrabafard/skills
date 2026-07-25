@@ -14,6 +14,15 @@ The Ala platform is organized in layers with clear ownership:
 
 Rules:
 - do not let services recreate browser-facing trust assumptions on internal hops
+- the gateway is the only component that verifies an end-user access token. `auth` issues tokens, the
+  gateway verifies them, and every other service consumes the trusted headers the gateway projects. No
+  other service parses, validates, introspects, or refreshes a bearer token, and no other service reads
+  `Authorization` on a product route, because a second verifier drifts from the gateway's answer on
+  algorithm, clock skew, issuer, audience, and revocation, and the two then disagree during exactly the
+  incident that needs one answer. Observable: in a backend repository, a search for `Authorization`,
+  `Bearer`, or the JWT library name returns no read on a product route; an outbound `Authorization` header
+  carrying a service credential to a dependency such as OpenFGA is not an end-user token and is out of
+  scope for this rule.
 - keep route ownership clear so frontend, gateway, and backend work stay aligned
 - prefer direct ownership boundaries over convenience coupling across service internals
 - backend services may keep local user projections or immutable request snapshots, but `auth` remains the source of truth for current identity state
@@ -169,6 +178,72 @@ Rules:
 - another service must not require access to, or synchronous resolution of, an owning service's private identifier
 - OpenFGA and other systems outside the owning database boundary use the canonical public identifier or the contract-defined reversible object identifier derived from it, because the request and authorization boundaries carry public object identity
 - for grant discovery, internal ordering may use `updated_at DESC, grant_stream_id DESC`; the private `grant_stream_id` may appear only inside a signed opaque cursor, while response bodies and public references continue to use public identifiers
+
+How to decide whether a field breaks the rule above: for every field in every Resource, DTO, serializer, and
+event payload, if dropping the row's auto-increment `id` column would change that field's value, the field
+carries a private identifier and is a violation. A field named `id` that returns a UUIDv7 `public_id` passes;
+a field named `section_key`, `user_id`, `flagged_by`, or `resolved_by` that returns a table's integer key
+fails, whatever it is named.
+
+There is exactly one fleet-wide exception, and it is the **actor identifier**:
+- The numeric `X-User-Id` the gateway projects from the verified `sub` claim is `auth`'s `users.id`. Every
+  service already receives it, and OpenFGA subjects already encode it as `user:<decimal>`. A payload may
+  carry that value in a field named exactly `user_id` or ending `_user_id`.
+- A service must carry the value it received in `X-User-Id` into such a field, never its own local
+  users-table key, because two services emitting different numbers for one person is the failure this
+  exception is narrow enough to prevent.
+- The exception covers the actor identifier and nothing else. A comment id, a course id, a section id, a
+  grant id, a flag id, or any other domain resource id is a public identifier and is never a database
+  integer on the wire.
+- `auth` owns the change that ends the exception: `users.uuidv7` already exists, and the exception closes
+  when a public user identifier is projected through the gateway and every consumer reads it. Until that
+  change ships, a service that invents its own public user identifier creates a third spelling of one
+  person and is a violation today.
+
+## List pagination contract
+
+Every list route on every Ala service paginates by keyset cursor. Offset pagination is forbidden on any list
+a client can page through, because an offset page silently repeats or skips rows when a row is inserted or
+deleted between two requests, and because deep `OFFSET` makes the database read and discard every skipped
+row on every page.
+
+Request rules:
+- The cursor parameter is `cursor`. Its value is the opaque string the previous response returned, and the
+  client sends it back unchanged.
+- The page-size parameter is `limit`, a positive integer, with a maximum the route documents.
+- A `limit` above the documented maximum is rejected with `400` and code `INPUT_VALIDATION_FAILED`. It is
+  not silently clamped, because a client that asked for 500 and received 100 cannot tell it received a
+  partial answer.
+- `page`, `per_page`, `offset`, and `skip` are not accepted parameters. A service that accepts one today
+  removes it through the deprecation procedure in `22-failure-load-and-deprecation-contract.md`.
+
+Response rules:
+- A collection response body carries `data` as an array and `meta.next_cursor`.
+- `meta.next_cursor` is a string when a further page exists and is `null` on the last page. The key is
+  always present, because a consumer must distinguish "last page" from "this service forgot the cursor",
+  and an omitted key cannot express that difference.
+- `meta` may carry service-declared counters the route documents, such as `meta.counts`. It must not carry
+  `total`, `total_pages`, `current_page`, `last_page`, or `per_page`: those are offset artifacts, and a
+  client that reads them builds page-number navigation the service cannot serve.
+- A `links` object built from page numbers is not emitted for a keyset list. `links` stays available for
+  true document navigation, per `30-trusted-ingress-and-laravel-contract.md`.
+
+Ordering and cursor rules:
+- The query orders by a stable tuple whose final component is unique, and the cursor encodes that tuple, so
+  two rows with equal sort values cannot straddle a page boundary.
+- The cursor is opaque and signed; clients must not parse, construct, or depend on its contents. It may
+  encode private identifiers, per the identifier boundary above.
+
+Scope:
+- A route that returns a bounded set with no paging parameters at all — a fixed catalog, a per-user session
+  list — documents `paginated: false` in its OpenAPI or route documentation and returns `data` with no
+  `meta.next_cursor`. A result set that grows with tenant data may not use that declaration.
+
+Observable that decides compliance: the repository contains a keyset paginator call site for every list
+route, no route validates or reads `per_page`/`page`/`offset`, and a saved example for at least one list
+route shows both a non-null and a `null` `meta.next_cursor`. A repository whose own `AGENTS.md` mandates
+keyset pagination while its list code calls an offset paginator, or calls no paginator at all, is
+non-conforming even though its documentation is correct.
 
 ## Internal service-to-service mTLS rollout status
 

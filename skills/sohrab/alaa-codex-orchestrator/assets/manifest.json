@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -20,7 +20,7 @@
     {
       "name": "alaa-architecture-critic",
       "file": "agents/alaa-architecture-critic.toml",
-      "sha256": "27bd7141593b80eac47b2bd3aef381092347911a04eb3ef82d4c89f7e362715e"
+      "sha256": "c539f7131d7a536e5ef2c3c3e5ff42edaf4d6da01c27a02f51d52868fd88c0fd"
     },
     {
       "name": "alaa-browser-qa",
@@ -70,7 +70,7 @@
     {
       "name": "alaa-performance-profiler",
       "file": "agents/alaa-performance-profiler.toml",
-      "sha256": "37fd7b868a1dfe3183e1fd530cba6fd7549e8ea8e1fc56c316da4f5faee88d27"
+      "sha256": "d6733d8bf639b4d903fb24f55cb451483c14fe9662886b4d48960d3c497ec78a"
     },
     {
       "name": "alaa-release-guardian",
@@ -100,12 +100,12 @@
     {
       "name": "alaa-test-strategist",
       "file": "agents/alaa-test-strategist.toml",
-      "sha256": "997a578b4f4cf6fb35bb04c28d637a3ee4d78616fbc6acf271ec29554715bcb2"
+      "sha256": "d55e36dd85c65085caf70a504e7cac347cc6bb6c986c30013037a8533076a800"
     },
     {
       "name": "alaa-verifier",
       "file": "agents/alaa-verifier.toml",
-      "sha256": "95d59e36f58345aab1f86783515d1bc189e1cfb878c5aadaa161d269459db713"
+      "sha256": "b0cf05da6f6d49e8f0d0a15dfb5121fa9ffa9af4168339406450619cf54cd4b8"
     }
   ]
 }

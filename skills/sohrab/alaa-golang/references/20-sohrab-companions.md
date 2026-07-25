@@ -82,6 +82,10 @@ Use it when the repository needs `.gitlab-ci.yml`, runner, caching, or delivery-
 
 Use it when the Go service or surrounding system needs queues, eventing, retries, DLQs, idempotency, or broker-topology rules.
 
+### alaa-algorithms-data-structures ( `$alaa-algorithms-data-structures` · `/alaa-algorithms-data-structures` )
+
+Use it when a Go path's cost grows with tenants, rows, retained history, or fan-out per event: stating the complexity budget, finding the real bound on the growing dimension from a boundary that enforces it, choosing a structure from the access pattern, or resolving a call that leaves the process inside a loop. It owns that decision; `golang-data-structures`, `golang-performance`, and `golang-benchmark` own the Go mechanics that carry it out, and this router selects between them. A path whose every dimension already has a small maximum enforced in code needs none of it.
+
 ### alaa-data-layer ( `$alaa-data-layer` )
 
 Use it when the change affects schema behavior, cache policy, locking, tenant-scoped data access, or shared data contracts.

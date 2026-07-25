@@ -79,7 +79,7 @@ The catalog is a menu, not a fleet. A typical goal fires one to three roles beyo
 
 1. Dispatch specification, exploration, and research lanes in parallel only when their questions are independent.
 2. Reconcile observed facts and label unresolved assumptions.
-3. Trigger `alaa-architecture-critic` before implementation when the plan changes public contracts, service boundaries, consistency models, concurrency, caching semantics, or distributed workflows.
+3. Trigger `alaa-architecture-critic` before implementation when the plan changes public contracts, service boundaries, consistency models, concurrency, caching semantics, or distributed workflows. Run a design pass under `/alaa-system-design` first, and on three further conditions that gate does not cover — the plan moves which component writes a piece of data, adds or removes a dependency between two components, or creates a new deployable unit. The critic then reviews a design record with its decisions already made; a critic handed an undecided plan can only accept or reject the whole proposal.
 4. Trigger `alaa-api-contract-reviewer` before implementation when a public API, event schema, or shared DTO changes shape, so consumer impact and the deprecation path are decided before code is written rather than after.
 5. Present a compact lane plan, then continue without waiting unless an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
 

@@ -30,6 +30,20 @@ Every Ala service computes one request-scoped deadline at ingress and honours it
 - An unbounded outbound call is a contract violation even when the dependency is healthy. Every HTTP
   client, database driver, cache client, and broker client is constructed with an explicit timeout.
 
+Fleet state, and it does not weaken the rule. In the 2026-07-25 fleet survey no Ala service computed this
+deadline: `auth`, `comment`, `content`, `gateway`, `wa`, and the `alaa-go-chi` kit each reported the
+deadline absent, and `entitlement-platform` propagates a `context.Context` whose deadline nothing at ingress
+sets. The contract is therefore ahead of every repository here, which is stated so that no agent reads a
+neighbour's code and concludes the rule is optional.
+
+- Every change that adds or modifies an outbound call implements the ingress deadline in the same change,
+  for that service. A service does not defer it on the grounds that no neighbour has it yet, because the
+  deadline only bounds a request chain when the first hop sets it.
+- A service that has not yet implemented the deadline still constructs every client with the explicit
+  per-attempt timeouts below. Missing the deadline is one gap; an unbounded client is a second, and neither
+  excuses the other.
+- Per-service status and the migration owner are in `95-fleet-conformance.md`.
+
 ## Outbound timeout defaults
 
 These are the Ala defaults for an internal service-to-service hop. They are configurable per service
@@ -159,6 +173,26 @@ resource and one service's burst becomes every service's outage.
   `21-alaa-platform-observability-directive.md`. A service that bounds its pool without exporting them
   has no way to prove the bound is right.
 
+### Bounded message consumers
+
+Every broker consumer sets an explicit prefetch and an explicit concurrency bound before it consumes its
+first message. A consumer that inherits its client library's default accepts an unbounded number of
+unacknowledged deliveries, so one slow handler pulls the queue's working set into one process's memory and
+the broker stops redelivering those messages to healthy consumers.
+
+- The prefetch value and its tuning belong to `$alaa-async-messaging`. What this file requires is that a
+  value is set explicitly, in committed configuration or at the consumer construction site, for every
+  consumer.
+- A shared consumer abstraction — a kit, a base class, a runner — exposes prefetch as a required
+  construction parameter, not an optional one. An abstraction that offers no way to set it makes every
+  service built on it unbounded at once, so the fix belongs in the abstraction, not in each service.
+- Worker and consumer containers carry their own explicit database pool maximum, under the pool rule above.
+
+Observable that decides compliance: for every consumer in the repository, a committed configuration value or
+a construction argument sets prefetch, and the consumer's construction site shows it. A consumer abstraction
+whose public API has no prefetch parameter fails this rule for the abstraction and for every service using
+it.
+
 ### Shed versus queue at ingress
 
 One rule decides: **synchronous ingress sheds, asynchronous work queues.** A service never holds a
@@ -177,8 +211,8 @@ user-facing request waiting for capacity, and never discards work that has to su
   request wait on a queue in order to avoid shedding it.
 - `alaa_http_requests_in_flight` is the observable that proves the limit is set correctly, and
   `alaa_queue_backlog` is the observable for the queued path. Both are already mandatory.
-- Consumer-side prefetch, concurrency, and DLQ behaviour belong to `$alaa-async-messaging`. Set them
-  there; do not restate them in a service repository.
+- Consumer-side prefetch and concurrency are bounded under `Bounded message consumers` above; their values,
+  tuning, and DLQ mechanics belong to `$alaa-async-messaging`.
 
 ## Deprecating a contract surface
 

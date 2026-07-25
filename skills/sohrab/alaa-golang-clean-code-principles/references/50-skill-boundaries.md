@@ -32,6 +32,12 @@ write Go that belongs on this platform.** When guidance appears to conflict, pla
 `alaa-services-contract` for exact shapes, this skill for kit-era discipline — and a real conflict is a drift
 to record, not to resolve silently.
 
+One boundary that is not a Go one: the complexity budget a growing path is held to, the real bound on an input
+dimension, structure choice from the access pattern, and the N+1 family across database, HTTP, cache, and permission
+calls belong to `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`). Read it when deciding what a
+path is allowed to cost as its input grows; read `golang-data-structures` through the router when the question is how
+a Go map or slice behaves.
+
 Related non-Go companions this skill assumes exist (never re-derive their content): `alaa-services-contract`,
 `alaa-trust-gateway-auth`, `alaa-observability-soc`, `alaa-async-messaging`, `alaa-security-review`,
 `alaa-docker-production`, `alaa-gitlab-ci-cd`.

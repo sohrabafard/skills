@@ -40,6 +40,13 @@ Where the failure mode concerns product-traffic *behaviour* rather than its *vis
 once exhausted, whether to shed load — the behaviour belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla` in
 Codex) and only the visibility belongs here. Name both owners in the change so neither half is dropped.
 
+The same enumeration has a second consumer. `/alaa-testing-strategy` (`$alaa-testing-strategy` in Codex) derives the
+test list for a change from these same modes, extending each row with the test that produces the mode on purpose and
+the layer and proof level it runs at. Produce one list carrying both halves, never two: two lists diverge silently
+because neither names the other's gaps, and each author assumes the other covered the mode. A row with an empty cell
+is the only form in which the gap is visible. The table above stays here and is not restated there or in any
+service repository.
+
 ## Signal strength rubric
 
 Choosing the strength is a separate decision from choosing the signal, and the weaker choice is the default: every

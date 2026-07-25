@@ -26,6 +26,7 @@ design or implement the detail.
 | Threat modelling, vulnerability findings, auth implementation review | `/alaa-security-review` — `$alaa-security-review` |
 | Telemetry schema, dashboards, alert design, SOC workflow | `/alaa-observability-soc` — `$alaa-observability-soc` |
 | API, event, and DTO contract shapes and their compatibility mechanics | `/alaa-services-contract` — `$alaa-services-contract` |
+| The design method that answers a constitutional obligation for one subsystem: bounding it, the seam, contract-before-code, single-writer data ownership, compared candidates, and the design record | `/alaa-system-design` — `$alaa-system-design` |
 | Language-level style, patterns, and refactoring | the per-language clean-code skills, named per stack |
 | Model, effort, prompting, and runtime capability questions | `/alaa-prompting-guide` — `$alaa-prompting-guide` |
 

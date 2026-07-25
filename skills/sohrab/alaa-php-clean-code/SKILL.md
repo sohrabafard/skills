@@ -253,6 +253,7 @@ Clarity, fewer moving parts, and repo consistency beat textbook purity. For per-
 - Use repositories for persistence access from controllers, services, jobs, listeners, commands, policies, actions, pipelines, and adapters.
 - Prevent N+1 by default with deliberate eager loading and resource helpers such as `whenLoaded()`, `whenCounted()`, and `whenAggregated()` when appropriate.
 - For large dataset traversal, use `chunk`, `chunkById`, `lazy`, `lazyById`, or `cursor` deliberately based on mutation and memory behavior.
+- Both rules above carry out a decision this skill does not own. When the collection's size grows with tenants, rows, history, or fan-out, `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) owns the stated bound on that dimension, whether the path streams or materialises, and which N+1 resolution applies; this skill owns the Laravel idiom that carries the answer. A path whose every dimension already has a small maximum enforced in code needs neither.
 - Keep facades near framework edges. Prefer dependency injection in services and domain-facing code.
 - Follow repository folder structure first. If the repository has no strong convention and the task enters architecture territory, defer folder and layer decisions to `alaa-laravel-architecture`.
 

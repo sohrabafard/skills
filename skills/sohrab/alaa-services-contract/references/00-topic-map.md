@@ -8,7 +8,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the task is about whether this skill applies, what it standardizes, how to choose the service mode, auth terms acceptance, auth TOTP setup or step-up routing, or auth-specific frontend routing notes for the `auth` service.
   - Read `05-scope-service-modes-and-auth-routing.md` first.
 - `Mode A - Any Ala backend service`
-  - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, or observability event naming.
+  - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, observability event naming, the exact error envelope, error-code casing and the committed code registry, the domain event envelope, or broker exchange, routing-key, and queue names.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
 - `Mode A+ - Observability names and values`
   - Use when the task needs an exact observability name or value: an `alaa_*` metric family, an `OTEL_*` variable and its Ala default, a trace or route naming rule, an exception field name, or the current telemetry shape of a specific Ala service.
@@ -37,7 +37,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, step-up errors, recovery codes, or SDK/frontend retry behavior.
   - Read `32-auth-totp-and-step-up-contract.md`; pair with `$alaa-trust-gateway-auth` for gateway boundaries and `$alaa-frontend-developer` for client/SDK flows.
 - `Mode E - Platform flow and boundaries view`
-  - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
+  - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, keyset list pagination and the `cursor`/`limit`/`meta.next_cursor` contract, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
   - Read `25-end-to-end-flow-and-boundaries.md`.
 - `Mode E+ - Request-time authorization with OpenFGA`
   - Use when the task is about how the per-resource decision is actually made: `authzRouteGroups`, the gateway -> `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` call and its `tuple_key`, endpoint-category to `can_*` mapping, canonical object id construction, `grant_*` vs `can_*`, the store/model/label pins, or adding or debugging a protected route.
@@ -71,6 +71,10 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Client-side consumption of the `@alaa/*` SDK: import only `@alaa/sdk` + `@alaa/sdk-vue`, app-versus-SDK ownership of trusted headers/token/refresh, the client trust boundary, and correlation headers.
 - `65-frontend-page-kit-and-widgets-contract.md`
   - Page Kit, UI Kit, app-shell, and widget contracts: props-in/events-out, three-layer data flow, dist-only package boundaries, island isolation, and widget security.
+- `95-fleet-conformance.md`
+  - Not a rule file. The 2026-07-25 snapshot of which component satisfies which rule, what each
+    non-conforming component must change, and what the survey could not determine. Read it when sequencing
+    migration work; never cite it as a rule, because the owning reference file is the rule.
 - `90-source-map.md`
   - Official-first source map for version-sensitive standards, framework docs, observability docs, and community-source limits.
 
@@ -79,3 +83,4 @@ Use this file to choose the smallest reference file that owns the rule you need.
 - Start with the smallest file that owns the rule you need.
 - When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `$alaa-observability-soc` owns them.
 - When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `$alaa-reliability-sla` for the doctrine.
+- When you need to know whether a service already follows a rule, read `95-fleet-conformance.md` for the snapshot and the owning reference file for the rule. A conformance line never overrides a rule, and a repository that has moved since the snapshot overrides the snapshot.

@@ -31,7 +31,9 @@ Gate, before a metric or label change merges:
 1. Compute the worst-case series count: multiply the declared distinct-value count of every label, then multiply by
    replica count if any label carries an instance dimension. Record the number in the change.
 2. A change whose worst case cannot be computed is treated as unbounded and is refused. "It is probably small" is an
-   unbounded answer.
+   unbounded answer. When the bound on a label's value set has to be established rather than merely declared, read
+   `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`): it owns the general procedure for finding a
+   real bound on any input dimension and the rule that a bound carries its source. This file owns the ceilings alone.
 3. Answer yes to all four of these, or the value goes to a span or log attribute instead and is reached through
    `trace_id`: is the value set bounded and small **under attack traffic as well as normal traffic**; is it stable across
    releases and tenants; can it be aggregated meaningfully for an SLO or capacity question; is it free of PII and
