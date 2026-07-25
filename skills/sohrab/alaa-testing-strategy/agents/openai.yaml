@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Testing Strategy"
+  short_description: "Test design doctrine: what makes a test a test, layers, doubles, six proof levels, flake, coverage obligations, evidence"
+  default_prompt: "Use $alaa-testing-strategy to design or review tests. Enumerate the failure modes the change introduces once, shared with $alaa-observability-soc, and derive one test per mode rather than starting from the happy path. For every test, name the plausible broken implementation it defends against and prove it by removal: delete or invert the mechanism and require the test to fail. Assert the absence of the effect a refusal was meant to prevent, not only the error code. Place each behaviour at exactly one layer by naming the smallest set of components that must be real for the failure to be producible. Record for each double whether it can drift from the real implementation and what parity suite binds it. Report every claim at the proof level that actually ran - static, unit, parity, local smoke, in-runtime, or live-dependency - and never at a higher one. Classify any intermittent failure as a product defect or a broken test before acting, and never propose a blanket retry. Report named coverage obligations instead of a percentage, and report any check that was not observed to run as not run."
+
+policy:
+  allow_implicit_invocation: true

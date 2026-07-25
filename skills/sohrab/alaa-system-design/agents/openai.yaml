@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa System Design"
+  short_description: "Pre-implementation design method: boundaries, contracts, data ownership, dependency classification, compared candidates, one reviewable record"
+  default_prompt: "Use $alaa-system-design to design a subsystem before it is implemented. Confirm first which of the six trigger conditions fired, and implement directly if none did. Then bound the subsystem and decide extend-versus-new-service against the named conditions, derive the interfaces, data shapes and error surface before any code, give every datum exactly one owner and label every second copy cache or fork, classify every dependency and state the load the design assumes, compare at least two distinct candidates and record each rejection with the condition that would revive it, and state rollout and reversal. Consume the archetypes and counterfactuals from $alaa-project-constitution rather than re-deriving them, cite $alaa-services-contract for platform invariants and $alaa-reliability-sla for failure doctrine instead of restating either, and deliver one design record on the bundled template for review before any implementation lane starts."
+
+policy:
+  allow_implicit_invocation: true

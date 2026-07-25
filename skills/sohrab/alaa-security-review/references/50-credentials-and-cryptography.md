@@ -168,3 +168,5 @@ Each must fail against the broken implementation it names, and the review lists 
 8. A revoked credential fails within the configured staleness bound, with the cache warm.
 9. A credential for a deleted or disabled subject fails.
 10. The response for every case above is identical except for the request identifier.
+
+The method these tests are built on — a test names the broken implementation it defends against, asserts the absence of the effect and not only the error, and is proven by removal — is owned by `/alaa-testing-strategy` (`$alaa-testing-strategy` in Codex). This section owns which credential behaviours must be tested; that skill owns how a test is judged to be one.
