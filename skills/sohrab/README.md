@@ -2,6 +2,8 @@
 
 This pack is a public installable skill set for production-oriented coding agents.
 
+Invoke any skill named here with `/name` in Claude Code and `$name` in Codex; both forms name the same skill.
+
 The current pack mixes two patterns on purpose:
 
 - routing-first umbrella skills where one entrypoint owns a full surface
@@ -9,109 +11,65 @@ The current pack mixes two patterns on purpose:
 
 ## Pack design rules
 
-- `SKILL.md` stays short and easy to scan
-- large rulebooks move into `references/` or existing `docs/` folders
-- `agents/openai.yaml` exists for every shipped skill
+- `agents/openai.yaml` ships with every skill a Codex agent can load; a Claude-Code-only skill with a Codex twin is the only exception
+- no skill states a model name; model, effort, and runtime-capability questions route to `/alaa-prompting-guide` (`$alaa-prompting-guide`)
 - mature surfaces prefer one routing-first owner instead of many tiny near-duplicates
 - companion skills stay explicit where ownership boundaries still matter
+- `AGENTS.md` here owns how a skill is written and structured; this file does not repeat it
 
 ## Core precedence rules
 
+When two skills state the same rule, `AGENTS.md` names the owner and the side that points. It owns those boundaries; the rules below do not repeat them.
+
 ### 1. Arvan-first platform policy
 
-If an infrastructure, Kubernetes, Helm, or deployment task targets ArvanCloud CaaS, the pack-level source of truth is:
-
-- `caas-arvan-kuber`
-
-If generic infra advice conflicts with Arvan constraints, Arvan-first wins unless the user explicitly approves an override.
+If an infrastructure, Kubernetes, Helm, or deployment task targets ArvanCloud CaaS, the pack-level source of truth is `caas-arvan-kuber`. If generic infra advice conflicts with Arvan constraints, Arvan-first wins unless the user explicitly approves an override.
 
 ### 2. Gateway trust policy
 
-If a service lives behind the Ala gateway, the trust-boundary source of truth is:
-
-- `alaa-trust-gateway-auth`
-
-Use it for:
-
-- JWT-derived identity
-- trusted header rules
-- tenant and project boundary propagation
-- downstream service trust decisions
-- auth-service route and error-contract guidance
+If a service lives behind the Ala gateway, the trust-boundary source of truth is `alaa-trust-gateway-auth`: JWT-derived identity, trusted header rules, tenant and project boundary propagation, downstream service trust decisions, and auth-service route and error-contract guidance.
 
 ### 3. Frontend family policy
 
-For the standard Vue 3 + Quasar + Vite app family, start with:
+For the standard Vue 3 + Quasar + Vite app family, start with `alaa-frontend-developer`. Apply `alaa-vue-typescript-clean-code` as the quality baseline whenever coding, review, or refactor touches Vue SFCs, composables, Pinia stores, frontend TypeScript, or package-grade Vue APIs. Then route to the smallest companion skill that owns the next decision:
 
-- `alaa-frontend-developer`
-
-Apply the default Vue / TypeScript quality baseline whenever coding, review, or refactor touches Vue SFCs, composables, Pinia stores, frontend TypeScript, or package-grade Vue APIs:
-
-- `alaa-vue-typescript-clean-code`
-
-Then route to the smallest companion skill that owns the next decision:
-
-- build, deployment, Docker, CI, artifact, public-path, CDN, or proxy concerns:
-  - `alaa-frontend-devops`
-- documentation-only JSDoc or inline-comment work:
-  - `alaa-frontend-doc-annotations`
-- workspace package, `packages/*`, peer dependency, or asset-emission issues:
-  - `alaa-mono-package`
-- Quasar CLI, `quasar.config`, mode-specific, or Quasar upgrade details:
-  - `alaa-quasar-app-vite-v3`
+- build, deployment, Docker, CI, artifact, public-path, CDN, or proxy concerns: `alaa-frontend-devops`
+- documentation-only JSDoc or inline-comment work: `alaa-frontend-doc-annotations`
+- workspace package, `packages/*`, peer dependency, or asset-emission issues: `alaa-mono-package`
+- Quasar CLI, `quasar.config`, mode-specific, or Quasar upgrade details: `alaa-quasar-app-vite-v3`
+- component library, design tokens, or visual governance: `alaa-ui-ux-design-system`
 
 ### 4. PHP / Laravel coding baseline
 
-For PHP / Laravel work, the default coding baseline is:
+For PHP / Laravel work, the default coding baseline is `alaa-php-clean-code`. Use it together with the smallest relevant companion skills: `alaa-laravel-architecture`, `alaa-data-layer`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-octane-performance`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, `alaa-mongodb-patterns`, `alaa-trust-gateway-auth`, `alaa-workflow`.
 
-- `alaa-php-clean-code`
+## Before assuming a service already conforms
 
-Use it together with the smallest relevant companion skills:
-
-- `alaa-laravel-architecture`
-- `alaa-data-layer`
-- `alaa-async-messaging`
-- `alaa-laravel-job-rabbitmq`
-- `alaa-octane-performance`
-- `alaa-security-review`
-- `alaa-observability-soc`
-- `alaa-cicd-laravel-postgres`
-- `alaa-docs-farsi`
-- `alaa-mongodb-patterns`
-- `alaa-trust-gateway-auth`
-- `alaa-workflow`
+`alaa-services-contract/references/95-fleet-conformance.md` records, for the date at its top, which of seven Ala components satisfy which contract rules and what each one that does not must change. Read it before planning a migration, sequencing a fleet change, or writing any sentence that assumes a named service already conforms. It states no rule: the numbered reference file beside each row wins, and where the snapshot and the repository in front of you disagree, the repository is right.
 
 ## Pack-local vs system-level dependencies
 
-The skills in this pack may reference system-level skills, but those are not part of the pack itself.
+Everything under `## Current skill map` ships with the `sohrab` pack and is the portable public install surface. The three below are system-level helpers: referenceable, not pack-local, not replaced by anything in the pack.
 
-### Pack-local skills
-
-These ship with the `sohrab` pack and should be treated as the portable public install surface.
-
-### System-level skills
-
-These may still be referenced when a task needs them:
-
-- `$openai-docs`
-  - for current official OpenAI and Codex guidance, citations, model guidance, prompt updates, CLI or app behavior
-- `$playwright`
-  - for explicit browser automation, navigation, or browser-based QA
-- `$playwright-interactive`
-  - for persistent browser debugging loops when the task explicitly needs interactive browser work
-
-System-level skills are helper dependencies. They are not replaced by pack-local skills, and they are not required for every task.
+- `/openai-docs` (`$openai-docs`) — official OpenAI and Codex guidance, citations, prompt updates, CLI or app behavior
+- `/playwright` (`$playwright`) — explicit browser automation, navigation, or browser-based QA
+- `/playwright-interactive` (`$playwright-interactive`) — persistent browser debugging loops when the task needs interactive browser work
 
 ## Default workflows
 
+These sequences route to owners; they do not restate what an owner decides. Three decisions come before the sequence they sit in, in all three workflows:
+
+- **Design before implementation.** When a change meets any condition in the trigger list owned by `/alaa-system-design` (`$alaa-system-design`), run that pass before writing code; read the list there rather than judging by the size of the change.
+- **Test design.** Test layer, double choice, and the proof level a claim has reached are decided by `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+- **Failure and load behaviour.** Doctrine is `/alaa-reliability-sla` (`$alaa-reliability-sla`); the Ala values those mechanisms are set to are `/alaa-services-contract` (`$alaa-services-contract`).
+
 ### Frontend workflow
 
-1. Start with `alaa-frontend-developer`.
-2. Apply `alaa-vue-typescript-clean-code` for Vue / TypeScript coding, review, refactor, or package-quality decisions.
-3. Route immediately to `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, or `alaa-mono-package` when the task crosses that boundary.
-4. Pair with `alaa-quasar-app-vite-v3` when Quasar-specific behavior or config is part of the root cause.
-5. Keep pure visual art direction outside the Sohrab pack unless a separate design skill is explicitly available in the current session.
-6. Use `$playwright` or `$playwright-interactive` only when browser work is explicitly needed.
+1. Start with `alaa-frontend-developer`, then apply `alaa-vue-typescript-clean-code`.
+2. Route to the companion skill named in precedence rule 3 as soon as the task crosses that boundary.
+3. Pair with `alaa-quasar-app-vite-v3` when Quasar-specific behavior or config is part of the root cause.
+4. Keep pure visual art direction outside this pack unless a separate design skill is available in the session.
+5. Use `$playwright` or `$playwright-interactive` only when browser work is explicitly needed.
 
 ### PHP / Laravel workflow
 
@@ -121,120 +79,118 @@ System-level skills are helper dependencies. They are not replaced by pack-local
 4. Use `alaa-permission-generator` when adding or changing catalog-owned coarse permissions or `config/permissions.php`.
 5. Apply `alaa-php-clean-code` as the default coding baseline.
 6. Pull in specialist skills only where the task actually enters their scope.
-7. Keep docs, tests, and operational notes aligned before treating the work as done.
+7. Keep docs, tests, and operational notes aligned before treating the work as done: `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns aligned for tests, `/alaa-services-contract` (`$alaa-services-contract`) for contract artifacts, `/alaa-observability-soc` (`$alaa-observability-soc`) for operational notes.
 
 ### Infra and delivery workflow
 
-1. Start with the routing-first owner when one exists:
-   - `alaa-k8s-helm`
-   - `alaa-gitlab-ci-cd`
-   - `alaa-bash-shell`
-   - `alaa-makefile`
-   - `alaa-docker-production`
+1. Start with the routing-first owner when one exists: `alaa-k8s-helm`, `alaa-gitlab-ci-cd`, `alaa-bash-shell`, `alaa-makefile`, `alaa-docker-production`.
 2. Apply platform policy from `caas-arvan-kuber`, `alaa-haproxy`, or service-specific companion skills as needed.
 3. Use explicit generator/validator pairs only on surfaces that still keep that split.
 4. Keep operator-facing notes and rollback expectations aligned with the final output.
 
 ## Current skill map
 
+Every folder in this directory appears exactly once below. Groups match `README.fa.md`, which carries a one-line purpose for each skill.
+
 ### Core Ala architecture and policy
 
-- `alaa-workflow`
-- `alaa-prompting-guide`
-- `alaa-low-noise`
+- `alaa-project-constitution`
 - `alaa-services-contract`
-- `alaa-trust-gateway-auth`
+- `alaa-reliability-sla`
 - `alaa-security-review`
 - `alaa-observability-soc`
-- `alaa-docs-farsi`
-- `alaa-postman-collections`
-- `alaa-permission-generator`
-- `alaa-crockford-base32-codecs`
+- `alaa-controlled-ops`
+- `service-runtime-kit-governance`
+- `alaa-system-design`
+- `alaa-testing-strategy`
+- `alaa-algorithms-data-structures`
+- `alaa-prompting-guide`
+- `alaa-low-noise`
+- `alaa-workflow`
+
+### Multi-agent orchestration and cross-session memory
+
+- `alaa-cc-orchestrator`
+- `alaa-codex-orchestrator`
+- `alaa-codex-runtime-ops`
+- `alaa-basic-memory-os`
 
 ### PHP / Laravel and service engineering
 
 - `alaa-php-clean-code`
 - `alaa-laravel-architecture`
-- `alaa-data-layer`
-- `alaa-async-messaging`
-- `alaa-laravel-job-rabbitmq`
 - `alaa-octane-performance`
-- `alaa-cicd-laravel-postgres`
-- `alaa-mongodb-patterns`
-- `service-runtime-kit-governance`
+- `alaa-laravel-job-rabbitmq`
 - `alaa-laravel-public-api-contract-pack`
+- `alaa-laravel-upgrade-all-packages`
+- `alaa-cicd-laravel-postgres`
+- `alaa-permission-generator`
+
+### Go
+
+- `alaa-golang`
+- `alaa-golang-clean-code-principles`
+- `alaa-golang-fiber`
+- `alaa-go-chi-development`
+
+The 46 `golang-*` skills these four route into are upstream subtrees under the repository-root `vendor/`: not pack-local, never edited in place.
+
+### Data and storage
+
+- `alaa-data-layer`
+- `alaa-mongodb-patterns`
+- `alaa-partitioned-table-fk-audit`
+- `alaa-crockford-base32-codecs`
+- `clickhouse-performance-schema-ops`
 
 ### Frontend and frontend delivery
 
 - `alaa-frontend-developer`
 - `alaa-vue-typescript-clean-code`
+- `alaa-quasar-app-vite-v3`
+- `alaa-ui-ux-design-system`
 - `alaa-frontend-devops`
 - `alaa-frontend-doc-annotations`
 - `alaa-mono-package`
-- `alaa-quasar-app-vite-v3`
+- `alaa-indexeddb-browser-storage`
 - `alaa-shaka-player`
-
-### Go and specialized app platforms
-
-- `alaa-golang`
-- `jitsi-platform-architect`
 
 ### Containers, CI/CD, Kubernetes, and platform delivery
 
 - `alaa-docker-production`
-- `alaa-gitlab-ci-cd`
 - `alaa-k8s-helm`
+- `alaa-gitlab-ci-cd`
 - `alaa-haproxy`
 - `caas-arvan-kuber`
-- `tusd-upload-platform`
-- `vector-rust-observability-pipelines`
-
-### Build files, shell, and local automation
-
 - `alaa-bash-shell`
 - `alaa-makefile`
-
-### Artifact-specific CI, IaC, and automation skills
-
 - `ansible-generator`
 - `ansible-validator`
-- `azure-pipelines-generator`
-- `azure-pipelines-validator`
-- `fluentbit-generator`
-- `fluentbit-validator`
-- `github-actions-generator`
-- `github-actions-validator`
-- `jenkinsfile-generator`
-- `jenkinsfile-validator`
-- `terraform-generator`
-- `terraform-validator`
-- `terragrunt-generator`
-- `terragrunt-validator`
 
-### Observability queries and logging configuration
+### Messaging, integration, and trust
 
-- `promql-generator`
-- `promql-validator`
-- `logql-generator`
-- `loki-config-generator`
+- `alaa-async-messaging`
+- `alaa-trust-gateway-auth`
+- `alaa-bale-provider`
+- `alaa-sms-provider-mediana`
+- `tusd-upload-platform`
+- `jitsi-platform-architect`
 
-### Data platform and storage-specialized skills
+### Observability, documentation, and knowledge
 
-- `clickhouse-performance-schema-ops`
+- `alaa-signoz-clickhouse-docs`
+- `vector-rust-observability-pipelines`
+- `alaa-postman-collections`
+- `alaa-docs-farsi`
 
-## Recently consolidated or removed from this pack
+## Consolidated or removed from this pack
 
-These older skill folders are no longer part of the active pack surface:
+These names appeared in earlier versions of the map and have no folder here, checked 2026-07-25. Do not re-add one before its folder exists on disk.
 
-- `dockerfile-generator`
-- `dockerfile-validator`
-- `makefile-generator`
-- `makefile-validator`
-
-Their active replacements are:
-
-- `alaa-docker-production`
-- `alaa-makefile`
+- `dockerfile-*` — replaced by `alaa-docker-production`; `makefile-generator`, `makefile-validator` — replaced by `alaa-makefile`
+- `azure-pipelines-*`, `github-actions-*`, `jenkinsfile-*` — `alaa-gitlab-ci-cd` is the only CI surface this pack ships
+- `terraform-*`, `terragrunt-*` — infrastructure targets route through `caas-arvan-kuber` and `alaa-k8s-helm`
+- `promql-*`, `logql-generator`, `loki-config-generator`, `fluentbit-*` — `alaa-observability-soc` owns signal and gate decisions; `alaa-signoz-clickhouse-docs` and `vector-rust-observability-pipelines` own the query and pipeline surfaces
 
 ## Definition of done
 
@@ -244,16 +200,10 @@ Work in this pack is considered ready when:
 - detailed guidance is preserved in one-hop `references/` or `docs/` files
 - `agents/openai.yaml` exists and matches the current skill intent
 - stale donor skill names are removed from active routing docs
+- the skill map above matches this directory in both directions
 - examples, checklists, and anti-patterns are preserved in simple English
 - system-level helpers are clearly separated from pack-local skills
 
 ## Practical note
 
 When a generic best practice conflicts with the Ala gateway trust model, Arvan platform rules, or the frontend artifact contract, document the reason for the deviation instead of hiding it.
-
-## Routing delta notes
-
-- Top-level `SKILL.md` files bias toward routing-first entrypoints and companion-skill delegation instead of duplicating deeper references.
-- Some mature surfaces now use a single owner skill instead of separate generator/validator pairs.
-- Where a responsibility narrowed, the skill points to the owning companion skill instead of repeating that companion's full rulebook.
-- Fast-entry routers, checklists, and diagnostic maps are preferred when they reduce search and branch-selection time for agents.
