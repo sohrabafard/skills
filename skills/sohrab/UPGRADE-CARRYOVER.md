@@ -163,6 +163,7 @@ A skill is finished when all of these hold:
 - Every instruction appears exactly once across the whole skill.
 - No hardcoded model name, no wrong trigger syntax, no stale tool version.
 - It answers the section 2 questions for its own domain, or explicitly names which it does not own and which skill does.
+- Every rule survives the wording test: could a competent agent follow this sentence exactly and still do the wrong thing? No preference verbs where a constraint was meant, no rule without a stated scope, no abstract noun standing in for an observable condition, no prohibition without its positive replacement. The prose in these files is the executable logic, so phrasing defects become behaviour defects on every future run. `alaa-prompting-guide/references/60-skill-authoring.md` has the full treatment.
 - Its bundled scripts run, and any test suite passes from a fresh checkout.
 - It is not larger than it was, unless it gained a genuinely new capability — and if it did, say so.
 

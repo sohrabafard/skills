@@ -58,7 +58,11 @@ Dispatch `alaa-implementer-opus` only when the lane itself must make non-obvious
 - multiple plausible designs with materially different failure behavior;
 - **authoring or rewriting an artifact whose deliverable is judgment itself** — a skill, a prompt, an agent definition, an `AGENTS.md` or `CLAUDE.md`, an architecture document, or a standard other agents will follow.
 
-That last criterion exists because the preceding six describe software surfaces, and a lane can be judgment-dense without touching any of them. Writing a skill is not mechanical application of a ratified decision: deciding what belongs in the body versus a reference, which rules to merge or delete, and whether the result actually meets its own bar is the entire work. A lane like that reads as "no named criterion applies" against a purely software-shaped list, and would then be dispatched to the default implementer — which contradicts the decision-density rule it is supposed to serve. Judge the density, not the file extension.
+That last criterion exists because the preceding six describe software surfaces, and a lane can be judgment-dense without touching any of them. Writing a skill is not mechanical application of a ratified decision: deciding what belongs in the body versus a reference, which rules to merge or delete, and whether the result actually meets its own bar is the entire work.
+
+The wording carries as much of that weight as the structure. In these artifacts the prose *is* the executable logic — there is no compiler underneath to enforce what a sentence failed to say — so an ambiguous phrasing, a preference verb where a constraint was meant, or a rule with no stated scope becomes wrong behavior on every future run. Drafting that text is the judgment, not the write-up of it.
+
+A lane like this reads as "no named criterion applies" against a purely software-shaped list, and would then be dispatched to the default implementer — contradicting the decision-density rule the list is supposed to serve. Judge the density, not the file extension.
 
 When uncertain, do not escalate: dispatch the default implementer and let the review gate decide. One justified re-dispatch after evidence is cheaper than habitual escalation.
 

@@ -93,6 +93,26 @@ A complete contract answers these, each once:
 
 An anti-pattern list at the end is optional but cheap and effective, because it converts the defects you have actually seen into a checklist the model can match its own behavior against.
 
+## The wording is the mechanism
+
+In ordinary software, prose is commentary wrapped around executable logic, and a clumsy sentence in a comment costs nothing. In a skill the relationship inverts: **the words are the executable logic.** There is no compiler underneath to enforce what the sentence failed to say. A rule phrased ambiguously executes ambiguously, every time the skill loads, in every session, for as long as the file survives. Writing quality here is not polish applied after the thinking; it is the last mile of the thinking, and it is where a correct decision most often turns into incorrect behavior.
+
+Six failure modes account for most of it. Each is invisible in review because the sentence reads fine.
+
+**Preference verbs where a constraint was meant.** "Should ideally", "try to", "prefer to avoid" are read as optional and are the first things dropped when the model is under pressure from a conflicting instruction. If the rule is not negotiable, write it as not negotiable — "never", "must not", "always" — or state it as a fact about the system rather than a request.
+
+**Rules with no stated scope.** "Keep it concise" leaves the model to guess where. Current models, especially at lower effort, apply an instruction precisely where it appears and nowhere else. Name the scope: every section, every file, each finding, the final report only.
+
+**Negative-only instruction.** "Do not use a purple gradient" reliably moves the model to a different fixed default rather than to good judgment, because the instruction removed one option without supplying a decision procedure. Pair every prohibition with what to do instead, or replace it with the positive rule that makes the prohibition unnecessary.
+
+**Abstract nouns standing in for observable conditions.** "Handle errors properly", "ensure good performance", "write clean code" cannot be complied with or violated, so they are decorative. Replace each with the observable: which envelope, which budget, which rule. If you cannot make it observable, you have found a decision you have not actually made yet.
+
+**Constraints buried mid-paragraph.** A rule inside a long explanatory sentence is weighted like explanation. One rule per sentence, and put the rule before its rationale rather than after — the reader who stops early should still have the rule.
+
+**Arbitrary-looking rules with no reason attached.** A rule whose purpose is invisible gets rationalized away the first time the model meets a situation the author did not anticipate. One clause of reason is usually enough to make it survive contact with a novel case. This is also why an example that contradicts the rule is so costly: when prose and example disagree, the example wins.
+
+The test to apply sentence by sentence: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified, however well it reads. That question is worth more than any style rule, and it is the reason skill authoring is a judgment lane rather than a transcription lane — see `80-subagent-authoring.md` for the routing consequence.
+
 ## Defects and fixes
 
 | Defect | Symptom | Fix |
