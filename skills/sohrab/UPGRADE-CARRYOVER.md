@@ -112,6 +112,27 @@ Fifty-one skills remain in `skills/sohrab/`: 43 `alaa-*` plus 8 others in the sa
 
 **Run Batch 1 first and alone.** It defines the doctrine every later batch references. Running a domain batch before it means each domain invents its own version of the quality bar, which is exactly the inconsistency to avoid.
 
+### Waves: what can run in parallel, and what cannot
+
+The batches are not eight independent islands. Several pairs share ownership of the same rule, and if two sessions decide that ownership independently the result is a duplicated or contradicting rule — the exact defect this programme exists to remove. Run them in five waves instead. Inside a wave the batches are genuinely disjoint and can run as parallel chats; between waves, wait.
+
+| Wave | Batches | Why together, why not sooner |
+|---|---|---|
+| 0 | 1 — Doctrine | Defines the quality bar everything else points at |
+| 1 | 4 — Data · 7 — Messaging and trust | Platform contracts. `alaa-data-layer` carries a repository-pattern gate and `alaa-trust-gateway-auth` a trust boundary that the language skills must obey, so these must be settled before those are written |
+| 2 | 2 — PHP · 3 — Go · 5 — Frontend | Language and stack conventions. Each consumes waves 0–1 and touches no other stack |
+| 3 | 6 — Infrastructure and delivery | Consumes the build and runtime conventions the language batches just set; overlaps Batch 2 on CI and container concerns, so it cannot run beside it |
+| 4 | 8 — Observability, docs, knowledge | Owns the repository-level cleanup and the README, so it must see the final inventory |
+
+Known couplings that drive this: Batch 2 shares surface with 4 (data-layer), 7 (queues and trust), and 6 (CI and containers); Batch 5 shares surface with 6 (frontend build and delivery); Batch 8 documents all of them.
+
+### Rules for running batches in parallel
+
+- **Disjoint folders only.** The batch membership already guarantees this. Do not let a session edit a skill outside its batch — if it finds a defect elsewhere, it reports it rather than fixing it.
+- **Nobody but the coordinator edits shared files.** `README.md` and this document belong to the human between waves, and to Batch 8 at the end. A parallel session that edits them will collide.
+- **Commit between waves, not during.** Concurrent sessions writing the same git repository is how a file silently reverts.
+- **Learnings travel through project memory, not through this file.** Each batch writes its own topic file named for its batch; the next wave reads memory automatically. Do not have parallel sessions rewrite the memory index at the same time.
+
 ### Batch 1 — Doctrine and cross-cutting standards *(do first)*
 `alaa-project-constitution`, `alaa-services-contract`, `alaa-security-review`, `alaa-observability-soc`, `alaa-controlled-ops`, `service-runtime-kit-governance`
 Plus: decide and build the section 4 candidates.
@@ -193,10 +214,10 @@ BATCH: 1 — Doctrine and cross-cutting standards
 READ FIRST, before anything else:
 1. D:\Sohrab\Project\skills\skills\sohrab\UPGRADE-CARRYOVER.md — the working contract.
    Section 2 is the quality bar, section 3 the upgrade standard, section 4 the candidate
-   new skills, section 4b the vendored packs, section 5 this batch's membership,
-   section 7 the definition of done.
-2. Project memory — model and effort decisions, the Codex skill install path, the
-   recurring defect classes, and the vendored-pack rule.
+   new skills, section 4b the vendored packs, section 5 this batch's membership and the
+   wave rules, section 7 the definition of done.
+2. Project memory — model and effort decisions, the Codex skill install path, the recurring
+   defect classes, the vendored-pack rule, and why a skill's prose is its executable logic.
 
 PHASE 1 — analyse, then stop.
 Read every skill in this batch in full: SKILL.md, all references, all scripts. Then give me
@@ -213,11 +234,19 @@ Rewrite skill by skill against the definition of done in section 7.
 HARD RULES
 - Never edit anything under vendor/. Those are upstream git subtrees. Wrap them from the
   owning alaa-* skill instead. See section 4b.
+- Never edit a skill outside this batch, and never edit README.md or UPGRADE-CARRYOVER.md.
+  Other batches may be running against the same repository. If you find a defect outside
+  your batch, report it to me instead of fixing it.
 - Never hardcode a model name. Route model and effort questions to /alaa-prompting-guide
   and its references/50-effort-and-thinking.md.
 - Every instruction appears exactly once across a skill. The body holds only what is always
   needed; detail lives one hop away in references/.
 - Trigger syntax: $name for Codex, /name for Claude Code. Cross-runtime skills give both.
+- Apply the wording test to every rule you write: could a competent agent follow this
+  sentence exactly and still do the wrong thing? No preference verbs where a constraint was
+  meant, no rule without a stated scope, no abstract noun standing in for an observable
+  condition, no prohibition without its positive replacement. In these files the prose is
+  the executable logic. See /alaa-prompting-guide references/60-skill-authoring.md.
 - A skill body must not grow unless it gained a genuinely new capability. If it did, say which.
 - Delete nothing on my disk. Move retired files to the repository's _to_delete/ folder and
   tell me what you moved.
@@ -237,6 +266,10 @@ verify what actually landed rather than trusting a successful write, and confirm
 state before declaring the batch done.
 
 FINISH WITH
-What each skill gained, what gaps remain and why, any decision that is mine to make, and
-what the next batch inherits from this one.
+1. What each skill gained, and what gaps remain and why.
+2. Any decision that is mine to make.
+3. A project-memory topic file named for this batch, holding what a later wave needs from
+   it: ownership boundaries you settled, conventions you established, and anything you
+   found that contradicts the carry-over document. Do not rewrite the memory index while
+   other batches may be running.
 ```
