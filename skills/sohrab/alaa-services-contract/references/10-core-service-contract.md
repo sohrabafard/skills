@@ -12,15 +12,13 @@ Rules:
 
 ## Ala service map
 
-This skill should help a new service understand the current Ala service landscape before it aligns itself.
-
 | Service | Primary ownership | Main interaction expectations |
 |---|---|---|
-| `auth` | canonical auth and profile truth, OTP login, token lifecycle, RBAC compilation, trusted profile APIs | downstream services should trust gateway-derived identity and should not duplicate canonical auth or profile ownership |
+| `auth` | canonical auth and profile truth, OTP login, token lifecycle, RBAC compilation, trusted profile APIs | downstream services trust gateway-derived identity and must not duplicate canonical auth or profile ownership |
 | `content` | macroservice for `course`, `set`, and `content`; long-term learning-content source of truth | use `content` for the new educational-content domain model instead of reviving legacy `vod` ownership |
 | `vod` | legacy learning and playback service during migration | keep it aligned to the same platform contract while moving learning-content responsibilities to `content` |
-| `comment` | tenant-scoped comments, replies, likes, moderation, durable outbox publication | frontends and backends should use the comment API or comment events rather than couple to comment tables |
-| `ticket` | support-ticket management, ticket messages, queue-driven notifications, local user projection | protected routes trust gateway-derived context; cross-service consumers should respect ticket ownership and its service-local API |
+| `comment` | tenant-scoped comments, replies, likes, moderation, durable outbox publication | frontends and backends use the comment API or comment events and must not read or write comment tables directly |
+| `ticket` | support-ticket management, ticket messages, queue-driven notifications, local user projection | protected routes trust gateway-derived context; cross-service consumers must go through the ticket API and must not couple to ticket tables |
 | `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
 | `gateway` | HAProxy ingress gateway, JWT verification, trusted-header injection, request-time authz hop, structured gateway logs, and HAProxy metrics | do not force app middleware or app spans onto it; preserve HAProxy metrics and Vector log-pipeline ownership |
 | `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
@@ -74,8 +72,10 @@ Rules:
 - automated tests
 
 Rules:
-- end-user clients should not depend on these routes for product behavior
-- `/api/ready` may be called by gateway, ingress, orchestrators, or runtime validators, but the contract must not assume one specific caller
+- these two routes are operational only; a public client contract, SDK method, or frontend code path must never depend on either for product behavior
+- `/api/ready` may be called by gateway, ingress, orchestrators, or runtime validators, and the contract must not assume one specific caller
+- `/api/ready` must not become a login helper, a feature-flag probe, or a frontend preflight endpoint
+- neither route is ever load-shed or rate-limited; see `22-failure-load-and-deprecation-contract.md`
 
 ## Exact `/api/health` contract
 

@@ -4,24 +4,25 @@ Use this file when the task touches auth TOTP management, optional MFA setup, fo
 
 ## Source priority
 
-For the current auth implementation, trust these sources in order:
+For the current auth implementation, trust these sources in order. Every path is relative to the root of
+the `auth` repository checkout; resolve them there and never hardcode an absolute machine path.
 
-1. `D:\Sohrab\Project\auth\routes\api.php`
-2. `D:\Sohrab\Project\auth\bootstrap\app.php`
-3. `D:\Sohrab\Project\auth\app\Http\Controllers\Api\V3\TotpController.php`
-4. `D:\Sohrab\Project\auth\docs\contracts\auth\endpoints\totp.md`
-5. `D:\Sohrab\Project\auth\docs\contracts\auth\flows\totp-enrollment.md`
-6. `D:\Sohrab\Project\auth\docs\contracts\auth\flows\totp-step-up.md`
-7. `D:\Sohrab\Project\auth\docs\ops\totp-step-up-mechanism.md`
+1. `routes/api.php`
+2. `bootstrap/app.php`
+3. `app/Http/Controllers/Api/V3/TotpController.php`
+4. `docs/contracts/auth/endpoints/totp.md`
+5. `docs/contracts/auth/flows/totp-enrollment.md`
+6. `docs/contracts/auth/flows/totp-step-up.md`
+7. `docs/ops/totp-step-up-mechanism.md`
 
 If implementation and docs disagree, trust route/controller/middleware source first, report contract drift, and align docs plus API artifacts before closing the task.
 
 ## Feature flag and availability
 
 - TOTP management is feature-flagged by `AUTH_TOTP_ENABLED` through `auth.totp.enabled`.
-- When disabled, `/api/v3/totp*` should answer as unavailable, commonly HTTP 404 with `{ "message": "TOTP feature is disabled." }`.
-- Clients should normalize this as `totp_unavailable` and hide or disable TOTP setup UI. Do not treat it as an ordinary missing route.
-- When enabled, self-service setup routes should be usable by authenticated users without forcing every user to enroll.
+- When disabled, `/api/v3/totp*` answers HTTP 404 with body `{ "message": "TOTP feature is disabled." }`.
+- Clients normalize that response as `totp_unavailable` and hide or disable the TOTP setup UI. Never treat it as an ordinary missing route, because a missing route means a deploy defect and this means a flag is off.
+- When enabled, self-service setup routes are usable by any authenticated user, and enrollment is never forced by the flag alone. Only `require_totp:<purpose>` on a route forces it.
 - In image-first or cached-config runtimes, changing `AUTH_TOTP_ENABLED` requires refreshing config and recreating affected app/worker containers as appropriate.
 
 ## Public versus internal route shape
@@ -136,7 +137,7 @@ Downstream service responsibilities:
 
 ## Client challenge handling
 
-Clients and SDKs should model forced TOTP as a challenge-and-retry flow:
+Clients and SDKs model forced TOTP as a challenge-and-retry flow:
 
 - On `TOTP_STEP_UP_REQUIRED`, preserve the original request intent, show a TOTP challenge, call `POST /auth/api/v3/totp/step-up` with the same purpose plus `code` or `recovery_code`, cache the returned `proof_token` until `verified_until`, then retry the original request with public `X-TOTP-Proof`.
 - On `TOTP_REQUIRED`, guide the user through status, enroll, confirm, and then step-up or retry the original action if it still requires proof.
@@ -147,7 +148,7 @@ Clients and SDKs should model forced TOTP as a challenge-and-retry flow:
 
 ## SDK and frontend contract
 
-A public SDK should expose explicit operations for:
+A public SDK exposes explicit operations for:
 
 - `getTotpStatus`
 - `enrollTotp`
@@ -167,18 +168,11 @@ SDK/frontend expectations:
 - Ensure SSR builds do not render browser-only QR libraries on the server without a client-only guard.
 - Never include trusted gateway headers in public SDK examples.
 
-## Review checklist
+## Review
 
-Flag the change when any of these appear:
-
-- A public client sends trusted internal headers.
-- Docs or SDK claim the backend returns a QR image while the implementation only returns `otpauth_uri`.
-- Docs say TOTP is disabled while `AUTH_TOTP_ENABLED=true`, or docs imply forced route TOTP exists without route evidence.
-- A forced-TOTP route lacks challenge-and-retry client guidance.
-- A public client sends raw TOTP code to a downstream service instead of auth.
-- A public client sends trusted backend `X-TOTP-*` metadata instead of public `X-TOTP-Proof`.
-- A service accepts force-TOTP metadata without gateway stripping/verification ownership being documented.
-- TOTP proof is refreshed without a new TOTP code.
-- TOTP is used instead of role/permission/business authorization.
-- Purpose names are unstable, generic, user-controlled, or route-path-derived.
-- OpenAPI, Postman, endpoint docs, flow docs, tests, or SDK contracts are not aligned with route behavior.
+The TOTP and step-up review checklist is owned by `$alaa-security-review`, so that a reviewer who loads
+that skill sees it. This file owns the shapes it triggers against: the public versus internal route shape,
+the `otpauth_uri`-not-an-image setup contract, the purpose naming rules, the proof-token binding
+requirements, the client proof-cache rules, and the gateway and downstream header responsibilities above.
+When a change touches any of those shapes, load `$alaa-security-review` and run its checklist against
+them.

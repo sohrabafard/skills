@@ -168,7 +168,7 @@ Required helper responsibilities behind this baseline:
 
 ## MetricsEmitter baseline expectations
 
-The request middleware metrics emitter should align to the shared metric contract.
+The request middleware metrics emitter uses the exact `alaa_*` family names in `21-alaa-platform-observability-directive.md`; a local family name is contract drift.
 
 Minimum request-middleware metrics:
 - `alaa_http_requests_total`

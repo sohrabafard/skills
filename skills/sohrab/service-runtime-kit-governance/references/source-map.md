@@ -17,10 +17,10 @@ Use this map when runtime-kit behavior, generated Docker runtime files, Compose/
    - RabbitMQ Docker image: https://hub.docker.com/_/rabbitmq
    - Redis Docker image: https://hub.docker.com/_/redis
    - Laravel deployment docs: https://laravel.com/docs/13.x/deployment
-4. Companion skills:
-   - `alaa-docker-production` for image/runtime hardening.
-   - `alaa-laravel-job-rabbitmq` for Laravel RabbitMQ worker behavior.
-   - `alaa-data-layer` for Postgres, PgBouncer, Redis, and data-layer runtime implications.
+4. Companion skills (invoke as `/name` in Claude Code, `$name` in Codex):
+   - `/alaa-docker-production` (`$alaa-docker-production`) for image and runtime hardening.
+   - `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`) for Laravel RabbitMQ worker behavior.
+   - `/alaa-data-layer` (`$alaa-data-layer`) for Postgres, PgBouncer, Redis, and data-layer runtime implications.
 5. Community posts and StackOverflow answers:
    - Troubleshooting only. Verify any Compose, Swarm, network, volume, or health-check claim against official docs and generated output.
 
@@ -30,19 +30,6 @@ Verify the shared kit, generated output, and official docs before acting when th
 
 - `latest`, `current`, `upgrade`, `security`, `CVE`, Docker Compose spec changes, Swarm behavior, secret handling, generated wrappers, stale kit cache, auto-fetch, PgBouncer, RabbitMQ bootstrap, Redis wiring, or helper script refresh.
 
-## Small example
+## Why freshness matters here
 
-Change service-owned runtime input, then rerender:
-
-```bash
-bash scripts/runtime/render-runtime.sh
-bash scripts/runtime/validate-runtime.sh
-```
-
-Anti-pattern:
-
-```bash
-# Editing docker-compose.yml directly as the final fix.
-```
-
-Generated runtime outputs can be overwritten on the next render, so direct edits hide the real ownership problem.
+Generated runtime outputs are overwritten on the next render, so a claim read off a generated file is only as current as the last render. `references/change-routing.md` owns the regenerate command pair.

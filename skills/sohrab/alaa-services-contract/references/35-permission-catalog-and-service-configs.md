@@ -7,7 +7,7 @@ Use this file when an Ala service or shared frontend package changes `config/per
 - `alaa-permission-catalog` is the normative cross-service source of truth for permission names, service ownership, generated permission snapshots, and bitmap ids.
 - Auth is the only runtime issuer of JWT authorization claims: `prm`, `prv`, and `av`.
 - Backend services are generated-config consumers. Their committed `config/permissions.php` files or generated Go
-  service permission maps should come from the catalog output for that service.
+  service permission maps come from the catalog output for that service, and a hand-written map is contract drift.
 - The frontend is an **aggregate consumer**, not an owner. It receives every active permission as generated TypeScript
   (`packages/sdk-auth/src/generated/permission-catalog.ts`), owns no `service_key`, and never influences bitmap
   allocation. Permission owners are registered in the `services` array of `catalog/services.json`; aggregate consumers

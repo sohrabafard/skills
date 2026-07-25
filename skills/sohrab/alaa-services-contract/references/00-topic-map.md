@@ -1,6 +1,6 @@
 # Alaa Services Contract Topic Map
 
-Use this file to choose the smallest relevant reference file before loading the full guide.
+Use this file to choose the smallest reference file that owns the rule you need.
 
 ## Service modes
 
@@ -10,12 +10,16 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `Mode A - Any Ala backend service`
   - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, or observability event naming.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
-- `Mode A+ - Platform observability directive`
-  - Use when the task is about OpenTelemetry exporter setup, OTLP endpoint ownership, queryable `trace_id`, exception delivery to SigNoz when Sentry is absent, Collector gateway topology, Prometheus scrape endpoints, metric-family selection, label/cardinality budgets, queue or dependency instrumentation, exemplars, or a shared telemetry contract across Go, Laravel, HAProxy, Vector, WA, OpenFGA, and future services.
+- `Mode A+ - Observability names and values`
+  - Use when the task needs an exact observability name or value: an `alaa_*` metric family, an `OTEL_*` variable and its Ala default, a trace or route naming rule, an exception field name, or the current telemetry shape of a specific Ala service.
   - Read `20-operational-and-observability-contract.md` and `21-alaa-platform-observability-directive.md`.
+  - Requirement levels, gates, thresholds, alerts, Collector gateway topology, processor placement, sampling policy, label and cardinality budgets, exemplar requirement level, and Sentry policy are not in this skill. Load `$alaa-observability-soc` for those, and treat it as the winner on whether a signal is required.
 - `Mode A++ - Deployment and runtime contract`
   - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
   - Read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
+- `Mode A+++ - Failure, load, and deprecation contract`
+  - Use when the task is about an outbound timeout, a retry budget, backoff and jitter, an idempotency key on an internal call, what a backend does when `auth` / OpenFGA / the notification broker is unreachable, a bounded database connection pool, a pool acquire timeout, the shed-versus-queue decision at ingress, a request deadline, or deprecating and removing any contract surface this skill defines.
+  - Read `22-failure-load-and-deprecation-contract.md`; pair with `$alaa-reliability-sla` for the doctrine behind the values and `$alaa-data-layer` for pool mechanics inside a driver.
 - `Mode B - Laravel backend service`
   - Use when the task is about Laravel API response boundaries, Resources, middleware order, public `project_id` validation and resolution, or Laravel-specific route and command expectations.
   - Read `30-trusted-ingress-and-laravel-contract.md` after the core contract.
@@ -52,9 +56,11 @@ Use this file to choose the smallest relevant reference file before loading the 
 - `27-notification-service-contract.md`
   - Cross-service contract for talking to the `notification` service: the `notification.commands` ingress and canonical envelope (mirrors the authoritative `notification/docs/async-contracts.md`), the snake_case-everywhere rule, the reserved channel-addressing model, the entitlement-owned `notif.*` audience-resolution handshake, the per-service matrix, and Laravel-first/Go producer rules.
 - `20-operational-and-observability-contract.md`
-  - Exact `X-Request-Id` and `traceparent` rules, structured log field contract, event and code naming, metrics-boundary rules, and `RequestObservabilityMiddleware`.
+  - Exact `X-Request-Id` and `traceparent` rules, the structured log field contract, event and code naming, metrics-boundary rules, and `RequestObservabilityMiddleware`.
+- `22-failure-load-and-deprecation-contract.md`
+  - Ala request deadlines, outbound timeout defaults, the retry budget with backoff and jitter, idempotency of a retried call, behaviour when a dependency is unreachable, bounded connection pools, the shed-versus-queue rule at ingress, and the procedure for deprecating a contract surface.
 - `21-alaa-platform-observability-directive.md`
-  - Full telemetry architecture, OTLP/Collector responsibilities, SigNoz/Sentry role split, exception fallback rules, Prometheus scrape rules, shared metric catalog, runtime-specific notes, current service reality, and validation rules for observability work.
+  - The `alaa_*` metric family catalog, `OTEL_*` variable names with their Ala default values, resource and propagation key names, route and operation naming rules, exception and additional field names, the never-log list, Ala Collector placement facts, and the current per-service telemetry reality table.
 - `32-auth-totp-and-step-up-contract.md`
   - Auth TOTP optional enrollment, `AUTH_TOTP_ENABLED`, authenticator QR generation from `otpauth_uri`, forced `require_totp:<purpose>` route rollout, signed proof-token issuance, client-side proof cache rules, gateway verification, downstream `X-TOTP-*` metadata, challenge/retry behavior, and SDK contract expectations.
 - `40-apply-checklist-and-anti-patterns.md`
@@ -71,5 +77,5 @@ Use this file to choose the smallest relevant reference file before loading the 
 ## Working rule
 
 - Start with the smallest file that owns the rule you need.
-- Load `full-guide.md` only when the task is broad enough that split-file navigation would cost more context than it saves.
-- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces and `21` owns the larger telemetry design.
+- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `$alaa-observability-soc` owns them.
+- When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `$alaa-reliability-sla` for the doctrine.

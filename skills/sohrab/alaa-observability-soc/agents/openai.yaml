@@ -1,7 +1,7 @@
 interface:
   display_name: Alaa Observability SOC
-  short_description: OTel, SigNoz, Sentry, alerts, SOC evidence
-  default_prompt: Use $alaa-observability-soc for observability/SOC signal architecture, production-readiness reviews, telemetry privacy, and incident evidence.
+  short_description: Signal requirement levels, budgets, alerting, SOC evidence
+  default_prompt: Use $alaa-observability-soc to decide observability requirement levels and gates - signal choice, cardinality and sampling budgets, burn-rate alerting, retention, Collector and Vector topology, SOC evidence, and production-readiness verdicts. Exact Alaa names and values come from $alaa-services-contract.
   brand_color: "#264653"
 policy:
   allow_implicit_invocation: true

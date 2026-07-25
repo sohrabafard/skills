@@ -35,7 +35,7 @@ Normalized Ala deployment modes:
 | Docker Swarm     | supported Ala runtime mode | multi-node Docker runtime with production-capable service discovery |
 
 Rules:
-- new or refactored Ala services should document the Arvan Kubernetes path and the Docker Compose and Docker Swarm path
+- new or refactored Ala services must document the Arvan Kubernetes path and both Docker paths, Compose and Swarm
 - when a repository cannot support one of the Docker modes yet, report the blocker explicitly instead of silently omitting the mode
 - prefer one wrapper entrypoint such as `scripts/docker/up-local.sh <compose|swarm>` or `dev|compose|swarm|prod` aliases when a repo exposes both modes
 - keep mode names explicit in docs, scripts, and examples
@@ -136,7 +136,9 @@ In-network DNS aliases (containers attached to `alaa-shared-network` connect wit
 
 Owner standardization (2026-07-19): every shared-infra protocol port is host-published on `127.0.0.1` with a
 **"1"-prefixed default** (5432→15432, 6379→16379, 5672→15672, 9000→19000, 8123→18123) through the generators'
-`*_FORWARD_PORT` knobs (service-runtime-kit ≥ v2.2.0 and the alaa-go-chi scaffold agree on these defaults).
+`*_FORWARD_PORT` knobs. This skill owns the canonical names, the endpoint table, and the reuse-or-fail-fast
+obligation; `$service-runtime-kit-governance` owns which generator variable carries each value and which kit
+version ships it. Read that skill for the variable and version, and never pin a kit version in this file.
 Two hard rules: (1) **services running in Docker always connect to the in-network aliases**, never the
 host-published ports — those exist for host tools, local SDKs, and host-run tests; (2) destructive or
 exact-assertion tests still use a disposable container, never the shared instance's data.
@@ -160,7 +162,7 @@ Rules:
 ## Gateway routing contract for Docker runtimes
 
 Rules:
-- in Docker Compose and Docker Swarm, gateway-side backend discovery should use direct DNS against the canonical backend alias
+- in Docker Compose and Docker Swarm, gateway-side backend discovery uses direct DNS against the canonical backend alias
 - do not couple gateway config to replica names, task IDs, or host IP lists
 - keep gateway backend naming aligned with the service-owned canonical alias
 - when a backend is not yet wired into the shared Docker runtime, document the gap instead of inventing alternate names

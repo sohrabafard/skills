@@ -126,20 +126,16 @@ Do not hide these semantics only in prose when the contract format can model the
 
 ## Example coverage
 
-Keep examples deterministic, safe, internally coherent, and portable. Use public-looking placeholders, never real secrets or production data.
+`41-response-contract-and-error-coverage.md` owns which examples exist, how a route's
+error set is enumerated, and how examples are named and kept coherent. Two rules are
+this file's own, because they are about the canonical contract rather than the Postman
+projection:
 
-Cover every meaningful branch that exists, including as applicable:
-
-- each discriminated request type
-- minimum and maximum useful optional-field combinations
-- each success response shape/status
-- create versus idempotent replay or already-existing result
-- synchronous versus asynchronous acceptance
-- populated, empty, and paginated results
-- validation, unauthenticated, forbidden, not-found, conflict, rate-limit, and dependency errors
-- lifecycle transitions such as create, replace/update, revoke/delete, restore, or reconcile
-
-Keep the same example semantics across the canonical contract, Postman saved responses, and standalone JSON/HTTP fixtures. A value changed in one projection must be reconciled in the others.
+- An example never replaces a schema, and a schema never replaces an example. The
+  contract needs both for every meaningful variant.
+- One example's semantics hold across every projection: the canonical contract, the
+  Postman saved response, and any standalone JSON or HTTP fixture. A value changed in one
+  projection is reconciled in the others in the same task.
 
 ## SDK-readiness test
 

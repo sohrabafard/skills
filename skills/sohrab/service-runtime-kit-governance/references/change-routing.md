@@ -64,11 +64,7 @@ bash scripts/runtime/render-runtime.sh
 bash scripts/runtime/validate-runtime.sh
 ```
 
-After any shared runtime-kit change:
-
-1. update the sibling `service-runtime-kit` repo
-2. refresh copied wrappers or bump the kit ref in the service when needed
-3. regenerate and validate in the service repo
+For a shared runtime-kit change, follow `SKILL.md` "Working Method", which owns that sequence including the pre-commit secret check.
 
 ## Bootstrap Troubleshooting
 
@@ -83,7 +79,7 @@ Supported sources, in practice:
 
 Current shared behavior detail:
 
-- when `SERVICE_RUNTIME_KIT_PREFER_SHARED_PARENT=true`, a valid sibling `../service-runtime-kit` should win over a stale repo-local `.service-runtime-kit` cache
+- when `SERVICE_RUNTIME_KIT_PREFER_SHARED_PARENT=true`, a valid sibling `../service-runtime-kit` wins over a repo-local `.service-runtime-kit` cache; confirm which one the wrapper resolved rather than assuming
 
 ## Ownership Reminder
 

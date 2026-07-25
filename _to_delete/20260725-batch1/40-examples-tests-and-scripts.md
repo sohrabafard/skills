@@ -49,7 +49,7 @@ Use the narrowest shared scope that keeps behavior understandable:
 
 Keep scripts short, readable, and diff-friendly. The official v2.1 schema allows script `exec` content as an array of lines, which is the most reviewable format. Prefer that layout when writing or normalizing scripts.
 
-The executable request-script location is the request item's top-level `event` array. Never place scripts inside `request.event`; that field is outside the v2.1 request schema and clients may display the JSON while silently never executing the script.
+The executable request-script location is the request item's top-level `event` array. Never place scripts inside `request.event`; that field is outside the v2.1 request schema and clients may display the JSON while silently never executing the script. A validator or merge generator that meets this legacy shape rejects it or promotes it to the item `event` array; it never passes it through.
 
 ## Response-to-variable capture contract
 
@@ -63,11 +63,13 @@ Treat workflow correlation as part of the collection contract:
 - validate the proven response envelope and fail with a clear test message when a required dependency is absent instead of silently leaving a stale value
 - never overwrite a working variable from an intentional error response
 - correlation-only values such as `last_request_id`, `last_traceparent`, and their aggregate-namespaced forms (for example `tusd_last_request_id`) may be captured on error responses because they are needed for investigation
+- save only to a variable that the committed collection or environment declares
+- tolerate a documented response wrapper or compatibility alias only when the source proves it exists
+- replace a hard-coded fixture identifier in a dependent request with the value an earlier producing request supplies, whenever such a request exists
 - document the saved variable name and the requests that consume it
+- when a missing field or route makes automatic capture impossible, record that contract gap instead of inventing the field or route
 
 Run a dependency audit after editing: for each variable used in a later URL, header, query, or body, prove whether it is user/environment input or is populated by an earlier executable script.
-
-Postman v2.1 executes request-specific scripts from the request item's `event` array. Never place executable scripts under `request.event`; that location may survive JSON generation but is not the item event scope used by Postman or compatible importers. Validators and merge generators should reject or explicitly promote this legacy shape.
 
 ## Script lifecycle and runner features
 
@@ -78,18 +80,6 @@ Current Postman scripts can be placed at collection, folder, or request scope.
 - Request-level scripts should hold request-specific assertions or response-to-variable saves.
 - Use pre-request scripts for setup such as dynamic headers, generated values, or request skipping.
 - Use post-response scripts for assertions, saved IDs, and response-shape checks.
-
-## Response-to-variable capture contract
-
-When a later request depends on a value returned by an earlier response:
-
-- capture it automatically in the producing request's item-level post-response script
-- save to an environment or collection variable that is declared in the committed artifacts
-- update only after the expected success status and a valid response shape
-- tolerate documented response wrappers or compatibility aliases only when verified from source
-- capture tokens, cookies, IDs, cursors, hashes, and upload locations needed by the documented workflow
-- avoid hard-coded fixture identifiers in dependent requests when a producing request can supply the real value
-- document any contract gap that makes automatic capture impossible instead of inventing a field or route
 
 Runner workflow APIs are powerful but should stay optional:
 

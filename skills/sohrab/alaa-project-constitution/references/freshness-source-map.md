@@ -1,58 +1,66 @@
-# Freshness Source Map
+# Freshness and Source Map
 
-Use live authoritative sources when a constitution or generation prompt makes concrete,
-version-sensitive claims. Repository truth remains authoritative for the project's current
-behavior; external docs establish current vendor/runtime capabilities and standards.
+Read this reference whenever a rule depends on a current external value. It owns the research
+source priority, where to look for each class of obligation value, and the freshness rule that
+governs writing any of them into policy.
 
-## OpenAI and Codex
+Repository truth remains authoritative for the project's current behaviour. External sources are
+authoritative for what a standard currently requires and for a vendor's current documented
+semantics — never for what this project does.
 
-- GPT-5.6 model and prompting guidance:
-  <https://developers.openai.com/api/docs/guides/latest-model>
-- Codex prompting:
-  <https://developers.openai.com/codex/prompting>
-- Codex AGENTS.md discovery and precedence:
-  <https://learn.chatgpt.com/docs/agent-configuration/agents-md>
-- Codex skills:
-  <https://learn.chatgpt.com/docs/build-skills>
+## Model, effort, and runtime questions are owned elsewhere
 
-Current durable implications:
+`/alaa-prompting-guide` — `$alaa-prompting-guide` in Codex — is the sole authority for model
+selection, effort and thinking budgets, prompting technique, agent definitions, and runtime
+capability questions. Route every such question there and cite it rather than restating a pin.
+This file deliberately contains no model names, tiers, or effort ladders: a pin copied into a
+second file goes stale silently and then gets copied forward because it looks authoritative.
 
-- Start with an outcome, useful context, output needs, and material boundaries.
-- Prefer the smallest prompt and tool set that reliably meets evaluated success criteria.
-- State autonomy/permission boundaries and required evidence explicitly.
-- Codex automatically loads applicable AGENTS.md; a separate constitution needs an explicit
-  AGENTS.md read rule.
-- Skills use progressive disclosure; keep SKILL.md procedural and move detail to references.
+## Research source priority
 
-## Anthropic and Claude Code
+For any obligation value, prefer in this order:
 
-- Prompting best practices:
-  <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices>
-- Claude Opus 4.8:
-  <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8>
-- Claude Sonnet 5:
-  <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5>
-- Claude Fable 5:
-  <https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5>
-- Claude Code memory/CLAUDE.md imports:
-  <https://code.claude.com/docs/en/memory>
-- Claude Code skills:
-  <https://code.claude.com/docs/en/skills>
+1. current standards, specifications, and guidance from a standards body, regulator, or security
+   body;
+2. official framework, database, browser, platform, protocol, and vendor documentation for the
+   version the project pins;
+3. maintained upstream repositories, reference implementations, and primary research;
+4. reputable engineering articles, and only where a primary source does not answer the question.
 
-Current durable implications:
+Use narrow queries that name the surface and the failure mode, not the topic. Verify every
+version-sensitive claim live when tools are available. Record source URL, verification date,
+applicability, and limitation for each value.
 
-- Use clear, explicit instructions and explain context that changes the decision.
-- Use structured steps only when order/completeness matters; avoid unnecessary scaffolding.
-- CLAUDE.md can import the constitution via `@relative/path`.
-- Keep CLAUDE.md concise and conflict-free; imported content consumes startup context.
-- Claude Code skills and Codex skills share the open Agent Skills structure but have
-  runtime-specific invocation and metadata behavior.
+## Where each obligation's numbers live
 
-## Freshness rule for generated constitutions
+Named authorities, not values. Fetch the current document; if a URL no longer resolves, search
+for the named document from the named publisher rather than substituting a remembered number.
 
-Do not copy volatile model names, prices, token limits, version gates, framework versions,
-browser thresholds, security standards, or vendor behavior into binding policy from memory.
-Verify the current official page when the fact materially affects a rule. Cite or record the
-source path and verification date. If live verification is unavailable, preserve bounded
-uncertainty or a TODO rather than presenting the claim as current.
+| Obligation class | Authority to fetch |
+|---|---|
+| Core Web Vitals metric set and thresholds | The Web Vitals documentation published by the Chrome team on `web.dev` |
+| Lighthouse categories, weighting, and scoring | The Lighthouse scoring documentation for the version the project runs |
+| Field performance data | The Chrome UX Report documentation, plus the project's own RUM provider docs |
+| Accessibility conformance level and version | W3C WAI, for the standard the project targets, at its current version |
+| Structured data types and validation | `schema.org` for the vocabulary, plus the consuming search provider's own structured-data documentation |
+| Robots, crawl, and AI-crawler directives | Each search or AI provider's own crawler documentation, because directive support differs per provider |
+| Service worker and browser storage semantics | MDN plus the relevant W3C/WHATWG specification, checked against the target browser versions |
+| Broker delivery, acknowledgement, and quorum semantics | The broker's own documentation for the pinned version |
+| Scheduler missed-run and concurrency behaviour | The scheduler's or orchestrator's documentation for the pinned version |
+| Warehouse transactional and late-arrival semantics | The warehouse vendor's documentation for the version in use |
+| Auth, token, and transport standards | The relevant RFC or specification at its current status, plus the implementing library's docs |
+| Regulatory retention and personal-data duties | The regulator's own published guidance for the project's jurisdiction |
+| Platform background execution and push limits | The mobile platform vendor's current developer documentation for the target OS versions |
 
+
+## The freshness rule for generated constitutions
+
+Never write a volatile value into binding policy from memory — no metric threshold, category score,
+framework version, browser support level, security-standard version, retention period, price, or
+token limit. Fetch the current official page when the value materially affects a rule, then record
+the value with its source URL and verification date.
+
+When live verification is unavailable, write the rule with the metric or standard named and the
+value carried as a non-blocking factual TODO. State the obligation and defer only the number: a
+named metric with a pending value governs behaviour, while a dropped rule governs nothing. Do not
+present an unverified value as current.

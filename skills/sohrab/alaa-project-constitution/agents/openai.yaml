@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Project Constitution"
-  short_description: "Generate and govern project constitutions"
-  default_prompt: "Use $alaa-project-constitution to create or update root CONSTITUTION.md from constitution-template.md. Reuse prior governance, infer project intent, research material missing risks from current authoritative sources, ask only essential owner decisions with recommendations, and finalize/bind only when none are deferred."
+  short_description: "Author, govern, and bind project constitutions"
+  default_prompt: "Use $alaa-project-constitution to create or update root CONSTITUTION.md using the constitution template bundled with this skill. Reuse prior governance, match the project's archetypes from repository signals, prescribe the obligations an enterprise-grade service of those kinds owes even where the code does not implement them yet, verify every obligation's current value from primary sources, and ask only essential unresolved owner decisions with a recommendation. If I defer none of them, finalize and bind it; otherwise leave it an unbound draft and tell me exactly how to finish it."

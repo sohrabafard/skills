@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Services Contract"
   short_description: "Ala service, gateway, permission, role-freeze, API contract"
-  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, gateway prefix map, backend role freeze, permission-bit authorization, auth terms/TOTP policy, trust boundary, notification messaging, observability, runtime, and deployment contracts."
+  default_prompt: "Use $alaa-services-contract to align this service with the shared Ala API, gateway prefix map, backend role freeze, permission-bit authorization, auth terms/TOTP policy, trust boundary, notification messaging, observability names and values, failure and load contract (timeouts, retries, pools, shedding), contract deprecation procedure, runtime, and deployment contracts."
 
 policy:
   allow_implicit_invocation: true

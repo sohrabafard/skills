@@ -9,12 +9,15 @@ This skill owns:
 - Postman collection JSON artifacts
 - Postman environment JSON artifacts
 - request descriptions inside Postman collections
-- Postman examples, saved responses, scripts, tests, variables, and auth inheritance
+- Postman examples, saved responses, scripts, tests, variables, auth inheritance, and any mock server driven by those examples
 - portability notes and validation notes for Postman-to-Insomnia import
 - synchronization of the repository's canonical public API contract whenever the Postman surface represents a public HTTP API
 - source-backed SDK-readiness coverage for public request, response, error, lifecycle, and workflow variants
+- the doctrine for multi-service aggregate collections, and the scripts under `scripts/` including every copy of them in a consumer repository
 
 This skill does not own:
+
+- the merge program of a repository that aggregates several services' collections, or the service registry, route prefixes, public-route allowlist, and trusted-header set that program reads; those are that repository's facts, and `references/70-aggregate-collections-and-consumer-repos.md` sets the boundary
 
 - broad README or runbook updates
 - API behavior design that is not yet implemented
@@ -53,7 +56,7 @@ If implementation and contracts disagree, identify the drift and use only the sa
 
 When the repository owns a public HTTP API, Postman-only completion is not sufficient. Read `25-public-api-contract-and-sdk-readiness.md`, synchronize the canonical public contract, and prove route-and-variant parity before closing.
 
-If an existing Postman request or prose doc describes behavior that current code does not implement, do not silently keep it as shipped behavior. Report the gap and route any `remaining-task.md` backlog wording to `$alaa-docs-farsi`.
+If an existing Postman request or prose doc describes behavior that current code does not implement, do not silently keep it as shipped behavior. Report the gap and route any `remaining-task.md` backlog wording to `alaa-docs-farsi`.
 
 ## Generated artifact rule
 
@@ -83,14 +86,14 @@ Inspect the smallest relevant set of sources:
 
 - Never invent endpoints, methods, parameters, fields, auth flows, or error cases.
 - Never preserve documented-but-missing behavior as an active Postman contract without clearly marking or reporting the implementation gap.
-- Never commit real secrets.
 - Never treat guessed examples as verified facts.
 - Never rewrite a collection from scratch without checking whether a minimal update is safer.
 - Never hand-edit generator-owned Postman JSON as the durable fix unless the repo has no working generator path and the gap is called out.
-- Never make correctness depend on Postman Vault, cloud publishing, monitors, or paid-only features.
-- Never treat a representative happy-path example as complete contract coverage when meaningful request or response variants exist.
 - Never require an SDK implementer to inspect handlers, DTOs, tests, or Postman scripts to discover public behavior that belongs in the canonical contract.
-- Keep all prose, comments, request descriptions, and example names in simple English.
+
+Secret handling, example coverage, script portability, paid-feature independence, and
+writing language are each owned by the file for that topic rather than restated here.
+`00-topic-map.md` routes to them by what you are about to write.
 
 ## Update-vs-create rule
 

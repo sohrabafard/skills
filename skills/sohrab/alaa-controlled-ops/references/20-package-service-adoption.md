@@ -1,68 +1,45 @@
 # Package And Service Adoption
 
+## The doctrine this file implements
+
+The Ala fleet has one rule for shared components: change the shared component, release it, then bump the pinned reference downstream. `alaa-services-contract/references/15-deployment-and-runtime-contract.md` states it for `service-ci-kit` and `/alaa-services-contract` ($alaa-services-contract) owns it. This file applies that doctrine to a Composer package instead of a CI kit; it does not restate or amend it.
+
+**One deliberate exception.** There, CI performs the release; here a developer performs it by hand, because the Ala Satis instance distributing this package is a local Docker stack with no CI runner attached, so no pipeline can rebuild its index. The approval gate in `SKILL.md` substitutes for CI's review. The exception ends the moment a pipeline can push the tag and rebuild the index: move this sequence into CI then and delete the manual steps, rather than keeping both.
+
+## Configuration
+
+Defaults, not fixed paths. Read each from the environment when set; when a step needs one that is unset, report the missing value and stop rather than guessing a path.
+
+- `SATIS_LOCAL_DIR` — local Ala Satis checkout. Default `D:\satis-local`; its `README.md` is authoritative for that stack.
+- `SATIS_PACKAGES_URL` — Satis index an adopter resolves against. Default `http://satis.alaa.local/packages.json`.
+
 ## Adoption source
 
-Normal service adoption should use a tagged `alaa/controlled-ops` package release from the Ala Satis Composer repository.
+Normal service adoption uses a tagged `alaa/controlled-ops` release from the Ala Satis Composer repository. Reject a lock file recording a path repository unless the current task explicitly asked for local package development: a sibling checkout is a developer-only override, and a committed dependency model requiring `../alaa-controlled-ops` is a defect to report and revert.
 
-Use a sibling checkout only while developing the package itself. Do not commit a service dependency model that requires `../alaa-controlled-ops` unless the user explicitly asks for that temporary state.
+## Release and publish sequence
 
-## Package release checklist
+Use this when the user asks to release, publish, push, or make a new version available to services.
 
-Before asking a service to consume a new package tag:
-
-- run package metadata validation
-- run the package verifier
-- run package PHPUnit tests when dependencies are installed
-- run Composer audit when the advisory endpoint is reachable
-- tag the verified package commit with the intended semantic version
-- after the approved branch/tag push, refresh Satis from `D:\satis-local` with `docker compose --profile build run --rm satis-build`
-
-## Package release and publish workflow
-
-Use this sequence when the user asks to release, publish, push, or make a new `alaa/controlled-ops` package version available to services:
-
-1. Confirm repository truth from the current checkout:
-   - `git status --short --branch`
-   - `git log --oneline --decorate -5`
-   - `git tag --sort=-creatordate`
-   - `git remote -v`
-   - when network access is available, `git ls-remote --tags origin <tag>`
+1. Confirm repository truth from the current checkout: `git status --short --branch`, `git log --oneline --decorate -5`, `git tag --sort=-creatordate`, `git remote -v`, and, when network access is available, `git ls-remote --tags origin <tag>`.
 2. Choose the next semantic version from the actual latest tag and the change type. Do not recreate a tag that already exists locally or remotely; if `HEAD` is already tagged and the remote has that tag, the Git publish step is already done.
-3. Run the package release gates before tagging:
-   - `composer validate --strict`
-   - `php scripts/controlled_ops_verify.php`
-   - `vendor/bin/phpunit` or the platform-specific PHPUnit wrapper after dependencies are installed
-   - `composer audit --locked` when the advisory endpoint is reachable
-   - `git diff --check`
-4. Commit only intentional package changes. Preserve unrelated user edits.
-5. Create an annotated semver tag only after the commit and validation gates are clean:
-   - `git tag -a vX.Y.Z -m "vX.Y.Z"`
-6. Approval gate: before any publishing action, stop and ask the user for explicit approval unless the current request already says approval is not required or publishing is authorized. Publishing actions include:
-   - `git push origin <branch>`
-   - `git push origin vX.Y.Z`
-   - running the Satis build command in `D:\satis-local`
-   - updating a consuming service to the newly published tag as part of the release rollout
-7. Publish after approval:
-   - push the verified branch
-   - push the verified tag
-   - switch to `D:\satis-local`
-   - run `docker compose --profile build run --rm satis-build`
-   - treat `satis-build` as a one-shot builder: it should exit with code `0` after writing `satis-output`; it is not expected to stay `Up`
-8. Verify package availability before service adoption:
-   - confirm the tag exists on the primary remote
-   - when the local Satis web stack is running, check `http://satis.alaa.local/packages.json`
-   - confirm Composer can resolve the tag from Satis, preferably with `composer show alaa/controlled-ops --available -vvv` before update and the consuming service lock after update
+3. Run every package gate in `references/40-validation-and-release-gates.md`. Do not tag while a gate is failing or unrun.
+4. Tag only after the working tree is committed and every gate is clean: `git tag -a vX.Y.Z -m "vX.Y.Z"`.
+5. Stop at the approval gate in `SKILL.md`. It covers exactly four actions: `git push origin <branch>`; `git push origin vX.Y.Z`; the Satis build in `$SATIS_LOCAL_DIR`; updating a consuming service to the new tag.
+6. After approval, push the verified branch, then the verified tag.
+7. After an approved release branch/tag push, refresh the local Ala Satis repository from `D:\satis-local` with `docker compose --profile build run --rm satis-build`; do not stop at Git push and claim the package is available.
+8. `satis-build` is a one-shot builder: it must exit `0` and write `satis-output`, and is not expected to stay `Up`. On any other exit code, stop, report the code with the last twenty lines of output, and tell the user the package is not published. Never continue to adoption on a failed build.
+9. Verify availability before adoption: confirm the tag on the primary remote; when the Satis web stack is running, fetch `$SATIS_PACKAGES_URL` and confirm the tag is listed; confirm `composer show alaa/controlled-ops --available -vvv` resolves it before update, and the adopter's lock after.
 
 Read-only remote checks such as `git ls-remote` may run before the approval gate. Writes, tag pushes, `docker compose --profile build run --rm satis-build` in `D:\satis-local`, and consuming-service release rollouts require the approval gate above.
 
-## Service adoption checklist
+## Adopter adoption checklist
 
 In the consuming service:
 
 - require the approved package constraint
 - run `composer update alaa/controlled-ops --with-dependencies`
-- confirm `composer show alaa/controlled-ops --locked` reports the intended tag and a Satis dist URL
-- reject lock files that record a path repository unless the task explicitly asked for local package development
+- confirm `composer show alaa/controlled-ops --locked` reports the intended tag and a Satis dist URL; on a different tag or a non-Satis dist source, stop, report which of the two it was, and make no code changes against the wrong version
 - bind only the package contracts the service actually adopts
 - keep public API shape and docs under the service repo
 

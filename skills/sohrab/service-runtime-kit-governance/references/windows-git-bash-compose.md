@@ -36,7 +36,7 @@ or:
 MSYS2_ARG_CONV_EXCL='*' bash scripts/docker/up-local.sh prod
 ```
 
-Use the form that matches the current wrapper and shell behavior. Do not make a global shell-profile change unless the user asks for a persistent developer-machine setting.
+Decide between the two forms by trying them in this order. Use `MSYS_NO_PATHCONV=1` first, which is the Git-for-Windows form; re-inspect the rendered Compose config and the in-container value, and if the slash value is still converted, retry with `MSYS2_ARG_CONV_EXCL='*'`, which is the MSYS2 form. Stop at whichever form leaves the intended value intact in the container. Do not make a global shell-profile change unless the user asks for a persistent developer-machine setting.
 
 ## Ownership rule
 

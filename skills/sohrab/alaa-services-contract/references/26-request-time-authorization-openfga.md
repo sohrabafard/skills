@@ -20,8 +20,11 @@ relationship between a user and a specific object, and it changes constantly as
 people buy, get granted, or get denied access. Encoding that in a token would make
 tokens huge and stale. So the platform keeps it in OpenFGA and asks at request time.
 
-The decision is **fail-closed**: if the answer is "no" or the decision cannot be
-reached, the backend is never called.
+The decision is fail-closed on the wire: on a deny, and on any status in the `503 AUTHZ_*` row of the
+table below, the gateway answers and the backend is never called. `$alaa-security-review` owns the general
+fail-closed doctrine and the review trigger; this file owns the exact statuses, codes, and headers that
+implement it here. Timeouts and the no-retry rule for this hop are in
+`22-failure-load-and-deprecation-contract.md`.
 
 ## The two paths (and the single seam)
 
@@ -171,12 +174,14 @@ Authorization: Bearer <preshared-key>   # only when OPENFGA_AUTHN_METHOD=preshar
 | `400` | `AUTHZ_REQUEST_CONTEXT_INVALID`, `AUTHZ_ENDPOINT_CATEGORY_INVALID`, `AUTHZ_OBJECT_ID_INVALID`, `AUTHZ_NORMALIZATION_FAILED` | gateway-owned `400` | `input.validation.failed` |
 | `503` | `AUTHZ_SERVICE_TIMEOUT`, `AUTHZ_SERVICE_UNAVAILABLE`, `AUTHZ_STORE_NOT_PINNED`, `AUTHZ_MODEL_NOT_PINNED` | gateway-owned `503` | `http.request.failed` |
 
-On allow the sidecar returns `X-Authz-Decision-Id`, `X-Authz-Decision-Code`,
-`X-Authz-Model-Id`, `X-Authz-Model-Label`, `X-Authz-Allow-Reason`,
-`X-Authz-Allow-Modifiers`, and a base64url `X-Authz-Decision-Artifact`. The allow-side
-`X-Authz-*` headers copied to the backend are **observability only** — a backend must
-never treat them as an authorization input, and must still enforce its own business
-rules.
+On allow the sidecar returns exactly these headers: `X-Authz-Decision-Id`,
+`X-Authz-Decision-Code`, `X-Authz-Model-Id`, `X-Authz-Model-Label`, `X-Authz-Allow-Reason`,
+`X-Authz-Allow-Modifiers`, and a base64url `X-Authz-Decision-Artifact`.
+
+A backend reads the allow-side `X-Authz-*` headers only to log them, and enforces its own business
+authorization independently. `$alaa-security-review` owns the general rule that allow-side authorization
+metadata is never an authorization input, and the review trigger for a change that would make it one; this
+file owns the exact header names above and the fact that they arrive on allow only.
 
 ## Endpoint category -> permission mapping
 

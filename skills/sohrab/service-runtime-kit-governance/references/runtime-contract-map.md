@@ -15,6 +15,23 @@ Useful shorthand:
 - variables ending in `*_DEFAULT` usually change a generated fallback value
 - variables ending in `*_ENV` usually change which env variable name generated files read from
 
+### Generated Outputs
+
+The generated set under the globs above is `docker-compose.yml`, `docker-compose.dev.yml`, `docker-compose.swarm.yml`, `scripts/docker/up-local.sh`, `scripts/docker/provision-postgres.sh`, `scripts/docker/provision-rabbitmq.sh`, `scripts/docker/ensure-local-secrets.sh`, `scripts/docker/ensure-swarm-runtime-secrets.sh`, `docker/octane/*`, and `docker/pgbouncer/*`. `SKILL.md` "Non-negotiable Rule" holds the constraint and the one allowed exception.
+
+Generation time and run time differ:
+
+- `scripts/runtime/render-runtime.sh` is the generation-time entrypoint and needs `service-runtime-kit` resolvable.
+- Generated outputs are standalone at run time and must not call back into `../service-runtime-kit`; one that does is a shared-kit defect.
+- `bash scripts/docker/up-local.sh` defaults to `prod` when given no mode argument.
+
+## Tuning Values This Skill Does Not Choose
+
+These knobs are configurable only here, but the values are doctrine owned elsewhere. Take the value from the owner; do not pick a number from local reasoning. Trigger prefix: `/name` in Claude Code, `$name` in Codex.
+
+- `PGBOUNCER_POOL_MODE_DEFAULT`, `PGBOUNCER_DEFAULT_POOL_SIZE_DEFAULT`, `PGBOUNCER_MAX_CLIENT_CONN_DEFAULT`, `QUEUE_WORKER_TRIES_DEFAULT`, `QUEUE_WORKER_TIMEOUT_DEFAULT`, `DB_PROVISION_LOCK_TIMEOUT_SECONDS_DEFAULT` — `alaa-reliability-sla` for pool-sizing and retry doctrine; `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` for Ala values.
+- any generated telemetry variable — `alaa-observability-soc`.
+
 ## Service-Owned Files And What They Are For
 
 | File | Role | Typical use |
@@ -51,6 +68,12 @@ These are copied or refreshed by the shared render and bootstrap flow when missi
 
 Treat these as copied shared support assets. If the behavior should change for all services, fix `service-runtime-kit`.
 
+Current render behavior:
+
+- render seeds or refreshes these files, and any missing `runtime/env.*.extra` starter files, on every run
+- render can overwrite generated guidance such as `runtime/README.md`, so a service-local edit to it is lost on the next render; change it in `service-runtime-kit`
+- render attempts local git hook setup automatically when Git and Python are both available
+
 ## `.env`
 
 Keep normal application env here.
@@ -68,7 +91,7 @@ Typical values that belong in `.env`:
 
 Important current behavior:
 
-- if Docker logs should show Laravel logs, set `LOG_CHANNEL=stderr` in `.env`
+- to make Laravel logs visible in `docker logs`, set `LOG_CHANNEL=stderr` in the service `.env`
 - do not solve logging visibility by forcing a shared `LOG_STACK` override in the kit
 - for host-side local tooling, `.env` may still use values such as `REDIS_HOST=127.0.0.1`
 
@@ -175,6 +198,8 @@ Debug note:
 | `PGBOUNCER_POOL_MODE_DEFAULT`, `PGBOUNCER_DEFAULT_POOL_SIZE_DEFAULT`, `PGBOUNCER_MAX_CLIENT_CONN_DEFAULT` | pool behavior defaults | change generated `docker/pgbouncer/pgbouncer.ini` |
 | `PGBOUNCER_AUTH_TYPE_DEFAULT`, `PGBOUNCER_ADMIN_USERS_DEFAULT`, `PGBOUNCER_STATS_USERS_DEFAULT` | auth and operator defaults | change generated PgBouncer config |
 
+Selecting `PGBOUNCER_MODE` is a runtime-topology decision this skill owns: `dedicated` when the service must not share a pooler's client-connection budget with peers, `shared` when it targets the canonical shared PgBouncer, `off` when the app connects straight to Postgres. `PGBOUNCER_POOL_MODE_DEFAULT` is a different decision — see "Tuning Values This Skill Does Not Choose".
+
 ### Queue And RabbitMQ
 
 | Variables | Use for | Generated effect |
@@ -245,6 +270,13 @@ The current kit supports these provisioning and migration hook stages:
 - `after-migrate`
 
 Use hooks for service-specific behavior. Do not fork generated helper scripts just to add a per-service command.
+
+## Kit Version And Staleness
+
+A stale kit emits correct-looking output for the wrong contract, so treat staleness as a first suspect.
+
+- A repo-local `.service-runtime-kit` cache is not harmless: after a fix lands in the shared kit, a stale cache keeps reproducing the old behavior. Confirm which source the wrapper resolved before concluding the shared fix failed.
+- Do not assume a variable present in `runtime/service.runtime.env` is consumed by the kit this service is pinned to. To check one, resolve the kit source in use and search that kit's renderer and templates for the variable name. A variable no template reads is dead configuration, and setting it changes nothing.
 
 ## Required `.env` Validation During Render
 

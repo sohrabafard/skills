@@ -54,7 +54,12 @@ is case-sensitive and is the majority consumer/producer runtime.
 | `notification.command.user_projection.upsert.v1` | `user_projection.upsert.v1` | `user_projection.upsert.v1.failed` |
 
 - Producers publish to `notification.commands` with the matching routing key; the broker publish
-  acknowledgement is the synchronous success boundary.
+  acknowledgement is the synchronous success boundary. A producer never treats an unacknowledged publish as
+  success.
+- Publish timeout, retry budget, and what a producer does when the broker is unreachable — the durable
+  outbox path, and the `notification: required` versus `notification: deferred` route classification that
+  decides whether the user-facing operation fails — are owned by
+  `22-failure-load-and-deprecation-contract.md`. Read it before writing a producer.
 
 ## Canonical command envelope (every command message)
 
@@ -75,8 +80,13 @@ PHP with case-sensitive `json_decode`, so a capitalized nested key silently drop
 
 - Idempotency: ingress deduplicates by `message_id` and by `(message_type, idempotency_key)`; duplicate
   deliveries increment a counter and do not re-run the business action.
-- Compatibility aliases (`family`, `dedupe_key`, `service_id`/`service_name`) exist only for the
-  migration window; new producers must send the canonical fields.
+- Compatibility aliases (`family`, `dedupe_key`, `service_id`/`service_name`) are deprecated as of
+  2026-07-25 and are removed at the earlier of two triggers: the change that onboards the first first-party
+  producer to `notification.commands`, or 2026-12-31. No producer may emit an alias after that point, and no
+  new producer may emit one now. Every producer in the matrix below is still `reserved`, so no first-party
+  producer emits an alias today and the 0-day `reserved` window in
+  `22-failure-load-and-deprecation-contract.md` applies. The onboarding change removes the alias handling
+  from the consumer in the same commit.
 - The command envelope is NOT project-scoped. Targeting is by explicit recipients in the payload, not
   by a `project_id` field.
 
@@ -144,8 +154,9 @@ consumer is wired. The contract-complete envelope is `notification.commands` (wh
 | `wa`                   | Laravel | future delivery channel inside notification | —                                                         | reserved                                                                 |
 | watchtime              | Laravel | producer                                    | `notification.commands`                                   | reserved                                                                 |
 
-Any service that owns users should also publish `user_projection.upsert.v1` to keep notification's
-projection current.
+Every service that owns users must also publish `user_projection.upsert.v1`, so notification can resolve
+ownership. A service that owns users and does not publish it leaves notification unable to attribute a
+stored message, which surfaces as a silent delivery failure rather than an error.
 
 ## Language-specific rules
 

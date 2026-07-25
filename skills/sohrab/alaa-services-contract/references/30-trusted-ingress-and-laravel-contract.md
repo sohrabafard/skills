@@ -107,7 +107,13 @@ Public request rule:
 - the service resolves that UUIDv7 to its internal project key only after validation passes
 - positive integer project ids are not accepted from public clients
 - services may persist internal numeric project ids when that is their storage model
-- public Resources and event or API payloads should expose the public UUIDv7 boundary when a mapped row exists
+- public Resources and event or API payloads expose the public UUIDv7 and never the internal numeric project
+  id. This is absolute; there is no case in which a public payload carries the storage id.
+- when no mapped row exists for an internal project id, the service omits the field entirely and emits
+  `input.validation.failed` with a stable validation code naming the unmapped id. It must not emit `null` as
+  if the project were absent, must not fall back to the internal numeric id, and must not invent a
+  placeholder UUID. An unmapped id is a data defect in the project registry, and hiding it behind a
+  substituted value moves the defect into every downstream consumer.
 
 Trusted context rule:
 - `X-Project-Id` is injected by the gateway from the verified token `pid` claim

@@ -43,7 +43,9 @@ Rules:
 
 ### Components being evaluated
 
-These are not yet stable ownership surfaces, but they should follow the same platform contract where relevant:
+These are not yet stable ownership surfaces. Each must satisfy every surface this skill defines that it
+actually exposes: envelopes, headers, event and code names, readiness shape, metric names, and the failure
+and load contract. Being under evaluation does not exempt a component from a surface it exposes.
 - `notification-core`
 - `realtime-hub`
 - delivery workers
@@ -64,7 +66,7 @@ In a normal user journey:
 - a learner calls a gateway-facing route
 - if the route is protected, the gateway verifies the token, strips spoofed internal headers, injects trusted context such as `X-User-Id` and `X-Project-Id`, and decides whether request-time authorization is also required
 - sign-in and token refresh flows reach `auth`
-- learning-page data should reach `content` in the long-term platform direction, while some migration traffic may still pass through `vod`
+- every new learning-content integration targets `content`; only traffic already migrating may still pass through `vod`, and no new integration is built against `vod`
 - discussion actions reach `comment`
 - support actions reach `ticket`
 - watch or telemetry ingestion reaches `wa`
@@ -106,8 +108,7 @@ Rules:
 - trusted headers belong to the gateway-to-service contract, not the public client contract
 - if a route is operational, frontend clients must not treat it as product behavior
 - if a route previously depended on the retired profile blob, move that client integration to the public auth or profile APIs instead of reviving `X-Profile`
-- for auth terms acceptance, frontend may show a non-removable terms notice or required checkbox before OTP request; successful OTP verification and login is the backend acceptance moment
-- do not look for, call, or create a separate `accept-terms` API in the current auth flow unless the product/legal requirement explicitly changes to auditable terms-version persistence
+- for auth terms acceptance and the retired `accept-terms` flow, read `05-scope-service-modes-and-auth-routing.md`, which owns the auth policy routing
 
 Route-shape reminder:
 - gateway-facing routes may include a service prefix such as `/auth`, `/content`, `/comment`, `/ticket`, `/vod`, `/wa`, or `/entitlement`
@@ -120,7 +121,7 @@ Route-shape reminder:
   - `entitlement` -> `/entitlement`
 - `entitlement` is the `entitlement-api` admin/control-plane surface (a privileged admin/operator SDK such as `@alaa/sdk-entitlement`), not an anonymous end-user route family; the public prefix uses the short key `/entitlement`, never `/entitlement-api`, and the internal service name stays `entitlement-api`. As with every entry here, the gateway repo owns activation — verify the rendered HAProxy route table before relying on it.
 - that first service prefix is a gateway routing prefix, not necessarily a backend route prefix and not necessarily the same concept as a child SDK `servicePrefix`, `apiPrefix`, or fixed ingest path
-- clients and SDKs should compose the public gateway path exactly once through existing public configuration seams, such as service base URLs or child route-prefix options, without changing child SDK/service route definitions just to satisfy gateway routing
+- clients and SDKs compose the public gateway path exactly once, through an existing public configuration seam such as a service base URL or a child route-prefix option, and must not change a child SDK or service route definition in order to satisfy gateway routing
 - trusted internal routes stay service-owned and are not public frontend discovery surfaces
 - operational routes remain separate from product routes even when they share the `/api/*` prefix
 - service-local routes may differ after gateway prefix stripping
@@ -131,7 +132,7 @@ Route-shape reminder:
 - for aggregate SDKs such as `@alaa/sdk`, default `createAlaaSdk(config)`-style factories to the canonical prefix map, but never rewrite service roots supplied through an injected core; the core owner must provide gateway-compatible roots
 - for the current frontend SDK set, auth is special: preserve the auth child route prefix that already includes its service route family and point the auth core base at the gateway root; apply content, comment, tusd, and WA gateway prefixes through shared core `baseUrls`
 - do not pass child route-prefix overrides solely for gateway routing, and do not trim, rewrite, or de-duplicate repeated path segments between the gateway prefix and child-defined route path
-- before claiming a prefix is active in an environment, verify the gateway route table and rendered HAProxy config when available; in the current local convention this usually means checking `D:/Sohrab/Project/gateway/charts/gateway/values*.yaml`, `D:/Sohrab/Project/gateway/docker/values.shared-network.yaml`, and rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`
+- before claiming a prefix is active in an environment, verify the gateway route table and the rendered HAProxy config: in the `gateway` repository, read `charts/gateway/values*.yaml` and `docker/values.shared-network.yaml`, then the rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`. Resolve those paths against the local checkout of `gateway`; never hardcode an absolute machine path into this skill or into a service repository.
 - use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
 
 ## Role snapshot propagation and provisional backend freeze
@@ -156,17 +157,8 @@ Downstream rules:
 
 ## Operational caller expectations
 
-`GET /api/health` and `GET /api/ready` exist for:
-- gateway and ingress probes
-- orchestrators and rollout automation
-- runtime validation scripts
-- smoke checks
-- automated tests
-
-Rules:
-- end-user clients should not depend on these routes for product behavior
-- `/api/ready` is an operational contract and must not turn into a login helper, feature-flag probe, or frontend preflight endpoint
-- the contract must not assume one specific operational caller
+`10-core-service-contract.md` owns who may call `GET /api/health` and `GET /api/ready` and what a client
+must not depend on them for. Read it there.
 
 ## Private and public identifier boundary
 
@@ -194,8 +186,16 @@ Interim rules:
 
 ## Internal hop discipline
 
+Every rule about how long an internal hop may take, how many times it may be retried, whether it may be
+retried at all, and what the caller does when the far side is unreachable lives in
+`22-failure-load-and-deprecation-contract.md`. Read it before writing any internal client. The rules below
+are the correlation and ownership half of the same seam.
+
 Rules:
 - preserve `X-Request-Id` and `traceparent` across internal HTTP hops
+- construct every internal client with an explicit timeout and an explicit retry budget from
+  `22-failure-load-and-deprecation-contract.md`; an internal call with a default or absent timeout is a
+  contract violation even when the dependency is healthy
 - keep trusted header parsing and normalization close to the receiving edge
 - keep operational routes separate from product-facing routes
 - do not proxy another service's `/api/ready` unless that dependency is an explicit approved rollout requirement

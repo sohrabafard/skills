@@ -21,8 +21,9 @@ Use it when:
 - enforcing request and readiness event names and machine-readable codes
 - standardizing `RequestObservabilityMiddleware`
 - standardizing `ResolveUserMiddleware`
-- adding or reviewing the Alaa Platform Observability Directive
-- aligning OpenTelemetry, SigNoz, Sentry, and Prometheus behavior across Go, Laravel, HAProxy, Vector, OpenFGA, and future services
+- fixing an `alaa_*` metric family name, an `OTEL_*` variable and its Ala default value, or a route or operation naming rule
+- setting an outbound timeout, retry budget, idempotency rule, connection-pool bound, or ingress admission rule for an Ala service
+- deprecating and removing any contract surface this skill defines
 - aligning Laravel Resource-first `/api/*` success responses
 - helping a new Ala service understand the current service landscape, ownership boundaries, and expected interaction model before implementation
 - clarifying auth terms acceptance so agents do not search for or invent a retired accept-terms API
@@ -64,21 +65,19 @@ Read next:
 - `10-core-service-contract.md`
 - `20-operational-and-observability-contract.md`
 
-### Mode A+ - Platform observability directive
+### Mode A+ - Observability names and values
 
 Adds:
-- the platform-wide telemetry path
-- OpenTelemetry SDK and OTLP configuration rules
-- queryable `trace_id`
-- exception delivery through SigNoz when Sentry is absent
-- Collector gateway ownership
-- Prometheus scrape rules and metric naming
-- shared metric catalog and validation rules
-- cross-runtime observability guidance for Go, Laravel, HAProxy, Vector, WA, OpenFGA, and future services
+- the `alaa_*` metric family catalog and the metric naming and unit-suffix rules
+- `OTEL_*` variable names with their Ala default values
+- resource, propagation, and route or operation naming rules
+- exception and additional field names, and the never-log list
+- Ala Collector placement facts and the current per-service telemetry reality table
 
 Read next:
 - `20-operational-and-observability-contract.md`
 - `21-alaa-platform-observability-directive.md`
+- `$alaa-observability-soc` for every requirement level, gate, threshold, alert, Collector topology, label budget, exemplar decision, and Sentry policy, which this skill does not own
 
 ### Mode B - Laravel backend service
 
@@ -91,6 +90,21 @@ Adds:
 Read next:
 - `10-core-service-contract.md`
 - `30-trusted-ingress-and-laravel-contract.md`
+
+### Mode A+++ - Failure, load, and deprecation contract
+
+Adds:
+- one request deadline computed at ingress and honoured by every outbound call
+- Ala outbound timeout defaults per hop
+- the retry budget, backoff with full jitter, and the idempotency requirement for a retried call
+- what a backend does when `auth`, OpenFGA, or the notification broker is unreachable
+- bounded database connection pools and the pool acquire timeout
+- the shed-versus-queue rule at ingress
+- the procedure for deprecating and removing a contract surface
+
+Read next:
+- `22-failure-load-and-deprecation-contract.md`
+- `$alaa-reliability-sla` for the doctrine behind these values
 
 ### Mode A++ - Deployment and runtime contract
 
@@ -166,8 +180,7 @@ Read next:
 - Auth terms acceptance is implicit in successful OTP verification and login. Treat `user/accept-terms-and-conditions` as a retired flow, not as a missing current API.
 - The frontend may present a non-removable terms notice or required checkbox before OTP request. The backend acceptance moment is successful `POST /api/v3/otp/verify`, when the service creates the authenticated session.
 - Do not add or search for a separate accept-terms endpoint, request field, `terms_accepted_at`, `terms_version`, or consent table unless the user explicitly asks to change the legal/audit contract. If they do, treat it as a new product/legal contract change that needs docs, Postman, tests, and migration planning.
-- Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. When `AUTH_TOTP_ENABLED=true`, clients can expose setup and recovery-code flows; when disabled, clients should treat the TOTP API as unavailable, not as a generic missing route.
-- The backend returns `secret` and `otpauth_uri` for setup; clients generate the QR code from `otpauth_uri`. Forced route rollout must document the purpose, expected challenge errors, SDK retry behavior, and Postman/OpenAPI examples.
+- Auth TOTP is optional self-service until a route explicitly attaches `require_totp:<purpose>`. Every rule about `AUTH_TOTP_ENABLED`, enrollment, `otpauth_uri`, recovery codes, proof tokens, and forced-route rollout is owned by `32-auth-totp-and-step-up-contract.md`. Read it there rather than restating it in a service repository.
 
 ## Working rule
 
@@ -175,4 +188,4 @@ Read next:
 - When the target is a new or refactored Ala service, read the deployment contract before inventing repo-local GitLab CI behavior.
 - When observability design is part of the task, read `21-alaa-platform-observability-directive.md` early instead of treating metrics or tracing as an afterthought.
 - After choosing a service mode, move to the smallest contract file that owns the exact rule you need.
-- Keep `full-guide.md` as the merged preserved view, not as the only place where agents can discover these onboarding rules.
+- When the task adds or changes an outbound call between services, read `22-failure-load-and-deprecation-contract.md` before writing the client.

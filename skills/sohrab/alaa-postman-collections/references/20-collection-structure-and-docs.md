@@ -1,104 +1,68 @@
-# Collection Structure And Docs
+# Collection Structure
+
+Read this file when creating a collection, or when deciding how to group requests.
+
+Request documentation is owned by `44-request-documentation-blocks.md`. Saved examples
+are owned by `41-response-contract-and-error-coverage.md`. Scripts and tests are owned
+by `42-scripts-and-state-capture.md` and `43-response-tests.md`.
 
 ## Target format
 
-- Produce Postman Collection Format v2.1 JSON.
-- Keep the collection `info` block complete and set `info.schema` to the v2.1 schema URL.
-- Preserve an existing `_postman_id` when the collection already has one. The official schema notes that maintaining the same ID is recommended for an existing collection.
-- Set `info.schema` to the Postman export/import marker `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`. Do not use the schema-host draft URL as the collection marker; it can validate JSON but may make Insomnia report `No importers found for file`.
+- Postman Collection Format v2.1 JSON.
+- `info` is complete: `name`, `description`, and `schema`.
+- `info.schema` is exactly
+  `https://schema.getpostman.com/json/collection/v2.1.0/collection.json`.
+  `50-insomnia-compatibility-and-free-plan-rules.md` gives the string comparison this
+  satisfies and the failure it prevents.
+- Preserve an existing `_postman_id`. The official schema recommends keeping the same ID
+  for an existing collection, and changing it makes every diff look like a new artifact.
 
 ## Core shape
 
-The official v2.1 schema centers the collection around:
+The v2.1 schema centres a collection on `info`, `item`, and optional top-level `event`,
+`variable`, and `auth`.
 
-- `info`
-- `item`
-- optional top-level `event`
-- optional top-level `variable`
-- optional top-level `auth`
-
-Each request item may carry:
-
-- one `request`
-- zero or more attached `response` objects
-- item-level `event`, `variable`, or `description` only when needed
+A request item carries one `request`, zero or more attached `response` objects, and
+item-level `event`, `variable`, or `description` when needed. Nothing executable belongs
+inside `request` itself.
 
 ## Structural rules
 
-- Keep one request item per operation whenever possible.
-- Use folders only when they improve bounded-context grouping, auth grouping, or reviewability.
-- Prefer a flat collection when the API surface is small and obvious.
-- Keep folder depth shallow. Two levels is usually enough.
-- Use predictable naming such as `List Orders`, `Create Order`, `Get Order`, not slang or mixed tense.
+- One request item per operation.
+- Use a folder when it improves bounded-context grouping, auth grouping, or
+  reviewability. Use a flat collection when the surface is small and obvious.
+- Keep folder depth at two levels. A third level hides requests from the person
+  scanning the sidebar.
+- Order requests inside a folder so a plain top-to-bottom run works: the request that
+  produces a value comes before the requests that consume it.
+- Name requests predictably and in one tense: `List Orders`, `Create Order`, `Get Order`.
+  No slang, no mixed tense, no internal codename.
 
-## Description rules
+## Where a shared fact lives
 
-Use descriptions at the smallest useful level:
+- **collection description**: the environment contract, the base URL and prefix model,
+  the auth model at the boundary, pagination and tenancy conventions, and the short list
+  of values a developer must supply before the first request works
+- **folder description**: what is true for that context — its shared headers, its shared
+  auth, its shared error behaviour
+- **request description**: the eight blocks from
+  `assets/request-documentation-block.md`
 
-- collection description for overall auth, environment expectations, paging rules, tenancy, and shared conventions
-- folder description for bounded-context rules, shared headers, or shared auth details
-- request description for request-specific behavior, parameter notes, body expectations, idempotency, pagination, filtering, and important error behavior
-
-For frontend implementation or penetration-test handoff, each request description should also state the verified auth mode, important headers, variable dependencies, success behavior, material error behavior, and any sequencing or state transition the caller must understand. Do not leave this knowledge only in scripts or saved examples.
-
-Prefer plain Markdown that reads well in Postman-generated docs:
-
-- short paragraphs
-- short bullet lists
-- inline code for variable names, headers, and field names
-
-Do not add decorative Markdown or huge walls of prose.
-
-When the collection is a frontend implementation or penetration-test handoff, every request description must be self-contained enough to use without opening the backend repository. Cover, when applicable:
-
-- purpose and user/business outcome
-- public versus service-local path shape
-- auth and trusted-context boundary
-- prerequisites and workflow dependencies
-- path, query, header, and body constraints, including enums and bounds
-- success response semantics and any values saved for later requests
-- important validation, auth, permission, conflict, rate-limit, and dependency errors
-- idempotency, retry, caching, pagination, and side-effect cautions
-- security tests such as tenant/project isolation, spoofed trusted headers, IDOR/BOLA, and replay
-
-Move shared rules to folder or collection descriptions, but do not use shared prose as an excuse to leave request-specific behavior undocumented.
+State a fact at one level only. `44-request-documentation-blocks.md` owns the rule for
+what a request description must still answer for itself.
 
 ## Public-contract coupling
 
-When the repository owns a public HTTP API, treat Postman descriptions and saved responses as readable projections of the canonical public contract, not as a substitute for it.
+When the repository owns a public HTTP API, the collection and the canonical contract are
+two projections of one verified behaviour. Keep operation names, public paths, auth,
+parameters, schemas, statuses, error codes, and examples aligned across both, and patch
+the generator inputs first when either is generated.
+`25-public-api-contract-and-sdk-readiness.md` owns the completeness criteria.
 
-- keep operation names, public paths, auth, parameters, schemas, statuses, error codes, and examples aligned across both artifacts
-- update generator inputs first when either artifact is generated
-- attach examples for every meaningful branch identified by the route-and-variant coverage matrix
-- preserve contract-important distinctions such as synchronous versus queued responses, create versus replay, empty versus populated lists, and success versus conflict
-- record implementation or gateway gaps explicitly instead of encoding a guessed behavior in only one artifact
+## Parameter and body rules
 
-Use `25-public-api-contract-and-sdk-readiness.md` for the mandatory SDK-completeness criteria.
-
-## Parameter and body notes
-
-- Document only fields the code or verified contract actually supports.
-- Add brief notes for required parameters, optional filters, enum values, or mutually exclusive fields when the API behavior is non-obvious.
-- Keep request body examples aligned with validators and serializers, not with stale docs.
-
-## Response attachment rules
-
-The v2.1 schema allows multiple responses on the same item. Use that shape directly:
-
-- attach at least one representative success response to every real request item when the collection is intended as a self-contained API contract
-- attach important error responses to the same request item when they add value
-- avoid duplicating the entire request just to show basic success and error variants
-
-When a saved response is present, keep it coherent:
-
-- the response should match the current route and method
-- `originalRequest` should reflect the real request
-- status code, headers, and body should match the contract closely enough to be useful
-
-For frontend, pentest, or cross-tool handoffs, attach at least one representative success response to every real request, including bodyless `204` operations. Attach contract-important error examples when the route has validation, auth, authorization, conflict, rate-limit, or dependency behavior that callers must implement or test. Preserve raw HTTP status, headers, body, and `originalRequest` so Postman, Insomnia, and k6 conversion workflows have explicit transport examples.
-
-## Documentation-quality rules
-
-- Write in simple, fluent English for engineers and non-engineers alike.
-- Explain auth expectations, tenant headers, pagination, filtering, idempotency, and business constraints when they materially affect request usage.
-- Keep descriptions reviewable. If a request description becomes long, split shared guidance upward to the folder or collection level.
+- Document only fields the code or a verified contract supports.
+- Keep request body examples aligned with the current validator and serializer, not with
+  older documentation.
+- Where API behaviour is non-obvious, the constraint belongs in the request's `## Request`
+  block rather than in a comment inside the body.

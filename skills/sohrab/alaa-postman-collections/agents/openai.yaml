@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Postman Collections"
-  short_description: "Postman and SDK-ready API contract sync"
-  default_prompt: "Use $alaa-postman-collections to synchronize the Postman artifacts and SDK-ready public API contract, then validate complete request and response coverage plus Insomnia portability."
+  short_description: "Postman contracts, scripts, tests, docs, and SDK contract sync"
+  default_prompt: "Use $alaa-postman-collections to bring the Postman artifacts up to a complete contract: a saved example for every success and every real error, post-response scripts that capture tokens and ids so nothing is copied by hand, tests on every response, the eight-heading documentation block on every request, a complete environment with typed secrets, and a synchronized SDK-ready public API contract. Then validate with the bundled scripts and report Insomnia portability."
 
 policy:
   allow_implicit_invocation: true

@@ -1,17 +1,16 @@
 # Source Map
 
-Use this file when observability guidance depends on current standards, backend behavior, model-runtime behavior, or vendor/tooling behavior.
+Load when observability guidance depends on a current standard, a backend behaviour, or a vendor or tooling behaviour
+that may have changed.
 
 ## Source priority
 
-1. Target repo truth: instrumentation code, logging config, metric names, Collector/Vector config, dashboards, alerts, tests, deployment files, runbooks, current docs, and observed telemetry.
-2. Ala platform contracts: this skill and `$alaa-services-contract` for exact Ala service surfaces.
-3. Official or primary standards and vendor docs:
-   - Agent Skills specification: https://agentskills.io/specification
-   - OpenAI Codex skills: https://developers.openai.com/codex/skills
-   - OpenAI GPT-5.5 prompt guidance: https://developers.openai.com/api/docs/guides/prompt-guidance
-   - Anthropic Claude Code skills: https://code.claude.com/docs/en/skills
-   - Anthropic model docs: https://platform.claude.com/docs/en/about-claude/models/overview
+1. **Target repo truth.** Instrumentation code, logging config, metric names, Collector and Vector config, dashboards,
+   alerts, tests, deployment files, runbooks, current docs, and observed telemetry. Repo truth outranks every table in
+   this skill.
+2. **Platform contracts.** `/alaa-services-contract` (`$alaa-services-contract` in Codex) for every Alaa name and value;
+   this skill for every requirement level, gate, and reason.
+3. **Official or primary standards and vendor docs:**
    - W3C Trace Context: https://www.w3.org/TR/trace-context/
    - OpenTelemetry docs: https://opentelemetry.io/docs/
    - OpenTelemetry specs: https://opentelemetry.io/docs/specs/
@@ -26,32 +25,40 @@ Use this file when observability guidance depends on current standards, backend 
    - Sentry OTLP ingestion: https://docs.sentry.io/concepts/otlp/
    - Vector docs: https://vector.dev/docs/
    - Vector OpenTelemetry sink: https://vector.dev/docs/reference/configuration/sinks/opentelemetry/
-4. Community posts, issue threads, and Stack Overflow only for troubleshooting observed failures after official docs and repo truth have been checked.
+4. **Community posts, issue threads, and Stack Overflow** only to explain an observed failure, and only after the two
+   sources above have been checked.
 
 ## Checked baseline for this pack
 
-- Open Agent Skills use `SKILL.md` with `name` and `description`; detailed material should be moved to references and loaded only when needed.
-- GPT-5.5 prompting favors outcome-first contracts, concise descriptions, retrieval budgets, validation loops, and fewer process-heavy absolute rules.
-- Claude Opus 4.8, Sonnet 5, and Fable 5 have model/runtime differences that belong in the app harness or compatibility reference, not as hardcoded business logic in this observability skill.
-- OpenTelemetry is the mandatory vendor-neutral contract for Ala traces, metrics, and logs. Profiles are supported in OTel semantic conventions, but enable profiling per runtime/cost/security need rather than treating every service profile stream as a universal minimum.
-- Collector resilience depends on queues/retries and, for critical hops, persistent storage or durable queues. A central Collector/SOC exporter outage must not block application traffic.
-- Exemplars link aggregate metric points to active traces and are the preferred way to move from percentile latency to representative trace evidence.
-- SigNoz is the primary observability backend for OTel logs, traces, metrics, dashboards, and ClickHouse-backed analysis.
-- Sentry remains the primary application exception/release/profiling workflow when enabled. Recheck Sentry OTLP behavior before replacing SDK-based exception capture with OTLP-only ingestion.
-- Vector remains a good local/sidecar log collection and routing component when disk buffering, transformation, or fan-out is required; recheck sink maturity before relying on beta features.
+- OpenTelemetry is the mandatory vendor-neutral contract for Alaa traces, metrics, and logs. Profiles exist in the
+  semantic conventions but are opt-in per service, not a fleet minimum.
+- Collector resilience rests on sending queues and retries, and on persistent storage or a durable queue for hops where
+  loss is unacceptable. A central Collector or SOC exporter outage must never block application traffic.
+- Exemplars are the supported way to link an aggregate metric point to a representative trace, and the only
+  cardinality-safe one.
+- SigNoz is the primary backend for OTel logs, traces, metrics, dashboards, and ClickHouse-backed analysis.
+- Sentry remains the exception, release, and source-map workflow where enabled. Re-check Sentry's OTLP behaviour before
+  anyone proposes replacing SDK-based exception capture with OTLP-only ingestion.
+- Vector remains the right local and sidecar agent where disk buffering, transformation, or fan-out is needed; check sink
+  maturity before depending on a beta feature.
 
 ## Freshness triggers
 
 Re-check primary docs when the task mentions:
 
-- latest/current OpenTelemetry, semantic conventions, Collector config, OTLP, SigNoz, Sentry, Vector, profiling, exemplars, spanmetrics, or log correlation
-- package/runtime upgrades, model runtime changes, Fable/Opus/Sonnet/GPT compatibility, skill authoring, or agent invocation behavior
-- Sentry OTLP, OpenTelemetry logs/profiles, Collector exporter status, Vector OpenTelemetry sink maturity, or SigNoz schema/query behavior
-- security event catalogs, SOC/SIEM egress, retention, customer-specific audit requirements, regulatory constraints, PII handling, or incident evidence
-- discrepancies between service traces/logs/metrics and backend UI/query results
+- the latest or current behaviour of OpenTelemetry, the semantic conventions, Collector config, OTLP, SigNoz, Sentry,
+  Vector, profiling, exemplars, span metrics, or log correlation
+- Sentry OTLP ingestion, OpenTelemetry logs or profiles, Collector component stability, Vector OpenTelemetry sink
+  maturity, or SigNoz schema and query behaviour
+- native histograms, tail-sampling processor behaviour, or exemplar support on a specific scrape or push path
+- security-event catalogs, SOC or SIEM egress, retention, customer-specific audit requirements, regulatory constraints,
+  PII handling, or incident evidence
+- a discrepancy between what a service emits and what the backend UI or a query returns
 
 ## Domain-bounded anti-pattern
 
-Bad: adding a high-cardinality metric label such as raw URL, user ID, token ID, request ID, email, phone, or trace ID because it helps one debugging session.
+Bad: adding a high-cardinality metric label — raw URL, user ID, token ID, request ID, email, phone, or trace ID — because
+it helps one debugging session.
 
-Good: keep high-cardinality values in logs/traces, expose bounded metric labels, and link signals through `trace_id` or exemplars rather than metric labels.
+Good: keep the high-cardinality value in the trace or log, keep metric labels inside the budget in
+`30-quantitative-budgets.md`, and link the two through an exemplar.

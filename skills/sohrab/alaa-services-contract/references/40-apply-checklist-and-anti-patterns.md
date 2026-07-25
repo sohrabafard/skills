@@ -15,11 +15,13 @@
 11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
 12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, generated Go permission maps, the generated TypeScript `permission-catalog.ts`, permission names, bitmap ids, `X-Access`, or drift checks.
 13. Verify backend decisions use exact permission checks and do not add role-based authorization or other role-dependent behavior while `28-backend-permission-authorization-and-role-freeze.md` remains active.
-14. Align the Alaa Platform Observability Directive when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers.
-15. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
-16. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
-17. Run focused tests for every changed contract surface.
-18. Report blockers explicitly when exact convergence is not possible.
+14. Align the observability names and values in `21-alaa-platform-observability-directive.md` when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers, and take requirement levels and gates from `$alaa-observability-soc`.
+15. Align every outbound call, retry, connection pool, and ingress admission decision to `22-failure-load-and-deprecation-contract.md` when the task adds or changes any of them.
+16. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
+17. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
+18. Run focused tests for every changed contract surface.
+19. When the change removes or renames a contract surface, run the deprecation procedure in `22-failure-load-and-deprecation-contract.md` instead of deleting the surface directly.
+20. Report blockers explicitly when exact convergence is not possible, using the three-case rule in `SKILL.md`.
 
 ## Short service adoption checklist
 
@@ -68,6 +70,30 @@ When applying this skill to a service, finish by checking:
 - Pushgateway is not used for normal long-lived service metrics
 - the service exposes the baseline metric families that apply to it
 - if a Collector gateway is part of the task, queue and exporter failure behavior is observable
+
+### Failure behaviour and load
+- every outbound HTTP, database, cache, and broker client is constructed with an explicit timeout
+- one request deadline is computed at ingress and every outbound per-attempt timeout is clamped to the time remaining
+- the retry budget is at most 3 total attempts, with exponential backoff and full jitter, never a fixed delay
+- no retry exists on the gateway authorization hop or on a readiness dependency probe
+- every retried `POST` carries an `Idempotency-Key` that is byte-identical across retries of one logical operation
+- a route that cannot be made idempotent records `idempotent: false` and its callers retry zero times
+- no client library retry is nested inside this skill's retry budget for the same call
+- an unreachable `auth` never causes a local user projection to answer an authorization or entitlement question
+- an unreachable authorization runtime never causes a backend to allow the request or to check OpenFGA itself
+- an unreachable notification broker leaves the command in a durable outbox, never dropped and never sent over business HTTP
+- the database pool has an explicit maximum, an explicit acquire timeout, and worker containers have their own maximum
+- `replicas * max_connections_per_container` stays at or below 60% of the target Postgres `max_connections`
+- ingress sheds a product request with `503` and `Retry-After: 1` at the in-flight maximum instead of queueing it
+- `/api/health` and `/api/ready` are never shed
+- `alaa_http_requests_in_flight`, `alaa_db_pool_in_use`, and `alaa_queue_backlog` are exported wherever the corresponding bound is set
+
+### Contract deprecation
+- every deprecated surface carries a recorded `Deprecated <date>, removed after <date>` in its owning reference file
+- the replacement surface is documented beside the deprecated one
+- the window meets the minimum for that surface class: 90 days public, 30 days service-to-service, 0 days `reserved`
+- the deprecation is recorded in this skill, in the owning repo's release notes, and as an issue in every named consuming repository
+- removal happened only after the window ended and every named consumer moved, and it deleted the compatibility code, tests, docs, and API artifacts together
 
 ### Trusted ingress
 - missing blank invalid `X-Project-Id`
@@ -134,6 +160,13 @@ Flag a problem when you see any of these:
 - compact trusted name and location headers are re-parsed in multiple layers instead of one normalization path
 - a repository keeps old and new trust contracts active in parallel without an explicit migration blocker
 - a repository invents location-name lookup behavior even though the compact contract only carries ids
+- an outbound internal call has no explicit timeout, or retries a non-idempotent operation with no idempotency key
+- a retry uses a fixed delay, retries a `4xx` other than `429`, or nests inside a client library's own retry
+- a backend allows a request, or performs its own OpenFGA check, because the authorization runtime was unreachable
+- a connection pool is unbounded, has an unbounded acquire wait, or a worker container inherits the HTTP pool default
+- a product request waits in an application-level queue instead of being shed at the in-flight maximum
+- `/api/health` or `/api/ready` is subject to shedding or rate limiting
+- a contract surface is deleted or renamed without the deprecation procedure, or a deprecation carries no removal date
 
 ## Anti-patterns
 
@@ -153,3 +186,8 @@ Flag a problem when you see any of these:
 - reviving the retired profile-blob trust surface instead of consuming the compact header projection
 - pushing observability logic into app code that belongs in the Collector layer
 - treating Sentry as the main observability backend instead of a focused exception, release, and developer-debugging layer
+- calling a dependency with no timeout because it has always been fast
+- retrying a call that has no idempotency guarantee, or generating a fresh idempotency key per attempt
+- absorbing an authorization-runtime outage by allowing the request instead of failing closed
+- keeping a compatibility alias alive past its recorded removal date, or deprecating a surface with no recorded date at all
+- restating a requirement level, gate, or threshold that `$alaa-observability-soc` owns, or a reliability rationale that `$alaa-reliability-sla` owns
