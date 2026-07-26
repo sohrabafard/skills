@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Permission Generator"
-  short_description: "Generate Alaa permissions for backend and frontend"
-  default_prompt: "Use $alaa-permission-generator to register catalog-owned permissions, generate and apply the Laravel, Go, or TypeScript consumer artifact, and validate drift."
+  short_description: "Allocate and generate Alaa coarse permissions for backend and frontend"
+  default_prompt: "Use $alaa-permission-generator to locate alaa-permission-catalog, register catalog-owned permissions, generate the Laravel, Go, or TypeScript consumer artifact, and validate drift with check-drift --strict. Apply an artifact, the auth seed, or a role assignment only when I name it."

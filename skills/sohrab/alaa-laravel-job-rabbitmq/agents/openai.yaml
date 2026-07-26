@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Laravel Job Rabbitmq"
-  short_description: "Laravel RabbitMQ worker design"
-  default_prompt: "Use $alaa-laravel-job-rabbitmq to follow its workflow for laravel rabbitmq worker design."
+  short_description: "Laravel jobs on RabbitMQ: worker modes, ack/nack, delivery limits, failure classes"
+  default_prompt: "Use $alaa-laravel-job-rabbitmq for Laravel queued jobs on RabbitMQ. Follow its hard constraints and route through its topic map."
 
 policy:
   allow_implicit_invocation: true

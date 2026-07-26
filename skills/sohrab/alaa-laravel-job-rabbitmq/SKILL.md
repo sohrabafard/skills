@@ -1,400 +1,207 @@
 ---
 name: alaa-laravel-job-rabbitmq
-description: "Production skill for Laravel jobs on RabbitMQ via vladimir-yuldashev/laravel-queue-rabbitmq, including Laravel 13 official-upstream compatibility, accurate config, safe worker modes, retries/DLQ/idempotency, and Kubernetes/Arvan-ready operations."
+description: "Laravel queued jobs on RabbitMQ through vladimir-yuldashev/laravel-queue-rabbitmq: the queue:work versus rabbitmq:consume decision, config/queue.php driver keys, ack and nack policy, delivery limits and the crash-loop hazard, prefetch sizing, publisher confirms, worker recycling and graceful stop, and eight named failure classes. Use it when writing or reviewing a ShouldQueue job that runs on RabbitMQ, a rabbitmq connection block, a worker command or worker Deployment, or a live queue incident on this driver. Do not use it to choose between Kafka and RabbitMQ, to design event topologies or fan-out, or for Redis queues and Horizon: that is /alaa-async-messaging ($alaa-async-messaging). Queue and vhost names are /alaa-services-contract; retry, backoff, DLQ and idempotency doctrine is /alaa-reliability-sla; broker cluster administration is /caas-arvan-kuber; chart and rollout mechanics are /alaa-k8s-helm."
 ---
 
-
-
-
 # Purpose
-Provide production-grade guidance for Laravel queued jobs on RabbitMQ using `vladimir-yuldashev/laravel-queue-rabbitmq`, with:
-- predictable throughput (queue split, prefetch/concurrency tuning),
-- correctness (idempotency, `after_commit`, timeout/retry alignment),
-- resilience (bounded retries, DLQ strategy, graceful restarts),
-- operational safety on Kubernetes and Arvan CaaS.
 
-This skill complements:
-- `alaa-async-messaging` (architecture + generic RabbitMQ/Kafka guidance)
-- `alaa-octane-performance` (Octane long-lived worker hygiene)
-- `alaa-observability-soc` (logs/metrics/runbooks)
-- `service-runtime-kit-governance` (local Docker Compose/Swarm runtime env generation and Windows Git Bash path-conversion traps)
-- `alaa-workflow` (plan file + phased execution)
+Make Laravel `ShouldQueue` jobs on RabbitMQ behave predictably when things go wrong: no silently lost
+message, no side effect applied twice, and a bounded outcome when the broker or worker disappears mid-flight.
 
-# When to use
-- You want Laravel `ShouldQueue` jobs processed by RabbitMQ (AMQP).
-- You deploy web/worker/scheduler in containers and need safe rollouts.
-- You need high-SLA patterns (idempotency, retries, DLQ, graceful stop).
+**Use it** for a queued job that runs on RabbitMQ, the `rabbitmq` connection in `config/queue.php`, a worker
+command line or Deployment, or a live queue incident on this driver.
 
-## When NOT to use
-- do not use this skill for broker-cluster administration or generic event-stream design that belongs to broader async architecture decisions
-- do not assume Horizon is the control plane for RabbitMQ workers in this repository
-- do not skip Laravel queue, RabbitMQ, or deployment-specific source-of-truth checks when compatibility is version-sensitive
+**Not for** the transport decision, event topology, fan-out or event versioning — that is
+`/alaa-async-messaging` (`$alaa-async-messaging`). **On conflict: broker-specific mechanics of this Laravel
+driver are decided here; messaging architecture and the fleet-wide DLQ replay procedure are decided there.**
 
-# Non-goals
-- Full broker platform engineering (cluster topology/operator lifecycle) beyond app-facing requirements.
-- Event-stream architecture design (see `alaa-async-messaging` for Kafka-first decisions).
+Before acting on a task naming a version, `queue:monitor`, a monitor method, a worker mode, DLX/DLQ, quorum
+queues, prefetch, heartbeat, TLS or failed reroute, work the freshness triggers in `references/source-map.md`
+against installed package source. That list is the trigger — do not substitute your own judgement of whether
+verification is needed.
 
-# Source-of-truth order
-Use sources in this order when generating or reviewing changes.
+## Router
 
-For the detailed official-first map, freshness triggers, and troubleshooting-only community policy, read `references/source-map.md`.
+| You are about to… | Read |
+| --- | --- |
+| write or edit the `rabbitmq` block in `config/queue.php`, or any `RABBITMQ_*` variable in `.env`, a values file or a Compose file | `references/config-queue-rabbitmq.md` |
+| write a worker command line, set a replica count or recycle limit, or change a worker Deployment | `references/running-workers.md` |
+| diagnose a queue that is stalled, looping, storming, duplicating, or failing to publish | `references/failure-classes.md` |
+| assert a driver version, call `queue:monitor`, reason about `retry_after`, or trust a flag default, a config key or the publish path | `references/driver-facts.md` |
+| find a `repositories` VCS override for this package, or are about to add one | `references/fork-divergence.md` |
+| decide which source wins, or hit a freshness trigger | `references/source-map.md` |
 
-1) Official upstream Laravel 13 / PHP 8.5 package source inside consuming repositories:
-   - Composer package: `vladimir-yuldashev/laravel-queue-rabbitmq`
-   - Required baseline: official upstream stable `v15.0.0` or newer
-   - Inspect `vendor/vladimir-yuldashev/laravel-queue-rabbitmq/src/Consumer.php`
-   - Inspect `vendor/vladimir-yuldashev/laravel-queue-rabbitmq/src/Queue/RabbitMQQueue.php`
-   - Inspect the installed package `composer.json`
-   - `.github/workflows/tests.yml`
-   - `CHANGELOG-14x.md`
-   - `README.md`
+## Worker mode
 
-2) Pinned upstream snapshot inside this skill (works even when `vendor/` is empty):
-   - Root: `references/upstream/vyuldashev/9b8df5d4239128ed70b857249513edb30749e63b`
-   - `src/Console/ConsumeCommand.php`
-   - `src/Queue/RabbitMQQueue.php`
-   - `src/Queue/QueueConfigFactory.php`
-   - `src/Queue/Connection/ConfigFactory.php`
-   - `src/Queue/QueueFactory.php`
-   - `README.md`
-   - `CHANGELOG-14x.md`, `CHANGELOG-13x.md`
+The modes use different AMQP primitives, so the difference is behavioural.
 
-3) Installed package in runtime project (if present):
-   - `vendor/vladimir-yuldashev/laravel-queue-rabbitmq/...`
+| | `queue:work rabbitmq` | `rabbitmq:consume rabbitmq` |
+| --- | --- | --- |
+| Primitive | `basic_get`, a round trip per message | `basic_consume`, broker pushes |
+| Queues per process | many, priority list `high,default` | exactly one |
+| Prefetch | not applicable | `basic_qos`, set once before consuming |
+| Unacked window | 1 | the prefetch count |
+| Requeue on worker stop | yes — `close()` can requeue the in-flight job | no — the queue's current-job slot stays empty |
 
-4) Temporary clone fallback (if present):
-   - `.tmp/laravel-queue-rabbitmq/...`
-
-5) Upstream PR/issues (open + closed) for compatibility and operational edge cases:
-   - PR `#652` for Laravel 13 queue monitor compatibility
-
-6) Official docs:
-   - Laravel Queue docs (`after_commit`, `retry_after`, `--timeout`)
-   - RabbitMQ docs (DLX policy, prefetch, heartbeats, quorum queue behavior)
-
-7) Repository policy:
-   - `caas-arvan-kuber` is authoritative for Arvan-specific constraints.
-
-If the repository targets Laravel 13, prefer the official upstream stable package (`v15.0.0` or newer) and do not add a fork VCS override. If a repository still carries an older fork override, remove it and refresh the lockfile back to upstream before changing queue behavior.
-
-If sources conflict:
-- installed official upstream package source > stale fork snapshots for Laravel 13 / PHP 8.5 work,
-- package source code > README examples,
-- official Laravel/RabbitMQ docs > community assumptions,
-- Arvan policy wins for deployment defaults in this repository.
-
-# Upstream facts you must respect
-1) Worker modes:
-- `queue:work` uses `basic_get` and supports multiple queues.
-- `rabbitmq:consume` uses `basic_consume`, is generally faster, and does NOT support multiple queues in one process.
-2) Consume command supports flags such as:
-- `--prefetch-count`, `--prefetch-size`, `--max-priority`, `--json`.
-3) Horizon policy in this repository:
-- Even if the package offers a Horizon mode, this skill forbids Horizon for RabbitMQ workers.
-- RabbitMQ workers must run with `worker=default` and be monitored via broker/app metrics instead.
-4) Queue config supports:
-- exchange routing keys, failed reroute settings, queue quorum flag, heartbeat, TLS options, network protocol, and lazy connection.
-5) Laravel 13 queue monitor compatibility:
-- `queue:monitor` expects `pendingSize`, `delayedSize`, `reservedSize`, and `creationTimeOfOldestPendingJob` on the queue driver.
-- Official upstream `v15.0.0` and newer implement these methods.
-- Current upstream behavior is broker-backed `pendingSize()` plus conservative `0`, `0`, and `null` for delayed/reserved/oldest metrics.
-6) Topology commands are available:
-- `rabbitmq:exchange-declare`
-- `rabbitmq:queue-declare`
-- `rabbitmq:queue-bind`
-- `rabbitmq:queue-delete`
-- `rabbitmq:queue-purge`
-
-# Official upstream policy for multi-service estates
-- Prefer official upstream `vladimir-yuldashev/laravel-queue-rabbitmq` `v15.0.0` or newer for Laravel 13 services.
-- Do not add `sohrabafard` or other fork VCS repository overrides for new Laravel 13 work.
-- If a service still has a fork override from the temporary compatibility window, remove the override and refresh the lockfile back to upstream.
+**`rabbitmq:consume`** when one Deployment serves one queue and throughput matters. **`queue:work`** when one
+process must drain several queues in priority order, or when an unacked window of 1 is worth the round trip.
+Never pass more than one queue to `rabbitmq:consume`: its own help text says there is no support for it, and
+a second queue means a second Deployment.
 
 # Hard constraints
-- Never commit secrets (`.env`, private certs, passwords, tokens).
-- Prefer minimal, reversible diffs; avoid unrelated refactors.
-- Terminal snippets and commands must be English.
-- Assume at-least-once delivery; handlers MUST be idempotent.
-- Keep `--timeout` lower than queue connection `retry_after`.
-- Prefer broker policies (DLX, routing, limits) over hardcoded queue arguments where possible.
-- Do NOT use Horizon for RabbitMQ workers in this repository.
-- Do not duplicate app-local driver copies across services; use the official upstream package.
-- If local Docker Compose on Windows appears to corrupt `RABBITMQ_VHOST=/` or another slash-valued runtime env var, route to `service-runtime-kit-governance`; this skill owns Laravel queue semantics, not Git Bash/MSYS path conversion in generated wrappers.
-- For Arvan targets in this repo:
-  - container resources are mandatory and should keep requests==limits by default,
-  - secret values go in secret files or existing Secrets,
-  - worker scaling is explicit (manual/HPA/KEDA by policy), not guessed.
 
-# Laravel 13 queue-integration notes
-- Keep Laravel-side queue behavior aligned with the Laravel 13 queue docs for routing, retries, timeouts, and failure handling.
-- When queue or connection selection would otherwise be duplicated at dispatch sites, prefer central `Queue::route(...)` rules.
-- For job-local policy, prefer declarative attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, and `#[FailOnTimeout]` when they keep intent clearer than scattered properties, but preserve repository style if it already standardizes on methods or properties.
-- If the repository listens to queue events, update upgrade reviews for `JobAttempted::$exception` and `QueueBusy::$connectionName`.
-- If the repository uses `php artisan queue:monitor`, verify the driver source exposes Laravel 13 monitor methods before rollout.
-- In official upstream `v15.0.0` and newer, `pendingSize()` is meaningful while delayed/reserved/oldest monitor values remain conservative and should not replace broker metrics.
+**1. Delivery is at-least-once; every handler is idempotent.** The guarantee lives in a database uniqueness
+constraint on the business key; a Redis or cache dedupe key is a fast path in front of it, never a
+replacement. Key contract, scope, retention, two-in-flight: `/alaa-reliability-sla`
+(`$alaa-reliability-sla`) `alaa-reliability-sla references/60-idempotency.md`.
 
-# Decision matrix
-1) Use `queue:work` when:
-- you need multi-queue priority lists (`high,default`),
-- you want standard Laravel worker behavior,
-- you prefer fewer operational differences.
-2) Use `rabbitmq:consume` when:
-- you run one queue per deployment/process group,
-- you need stronger throughput tuning via consume prefetch options,
-- you can operate separate worker fleets per queue.
-3) Do not select Horizon mode for RabbitMQ:
-- `RABBITMQ_WORKER` must remain `default`,
-- avoid Horizon-specific assumptions in runbooks and observability.
+**2. Ack and nack policy.** Three outcomes, one route each. **Ack**: the handler completed and Laravel
+deleted the job, or Laravel released it — never call `ack()` from application code. **Reject without
+requeue**: Laravel marked the job failed, and this is the only path that reaches a dead-letter exchange; take
+it deliberately for a non-retryable business error with `$this->fail($e)` rather than throwing and burning
+every attempt. **Reject with requeue**: permitted in exactly one place, the driver's own `close()` on worker
+stop — application code, job middleware and handlers must not call `reject($job, true)`. To retry, call
+`$job->release($delay)`: release increments the attempt count, requeue does not.
 
-# Step 1 — Install the driver
-Install and pin intentionally:
-- `composer require vladimir-yuldashev/laravel-queue-rabbitmq`
-- For Laravel 13 repositories, keep the driver on the newest stable Laravel 13-compatible release and reconcile config keys against the upstream changelog and package source.
-- Do not add a fork repository override for Laravel 13; official upstream `v15.0.0` and newer provide the required compatibility.
-- If a legacy service still has a fork repository override, remove the `repositories` entry and run `composer update vladimir-yuldashev/laravel-queue-rabbitmq --with-all-dependencies`.
-- Keep package major versions controlled during release windows.
-- Ensure `ext-pcntl` is available for full worker behavior in container/runtime images.
+**3. Every queue carries a broker-policy delivery limit; every worker passes an explicit `--tries`.** The
+limit is a quorum-queue policy, never a queue argument — the driver emits no `x-delivery-limit` and silently
+drops an invented one. It is required because a requeue or unacked redelivery returns the identical message
+with its attempt header unchanged, so `--tries` never trips and a job that dies before Laravel can release it
+replays forever; add a `--max-jobs` or `--max-time` recycle and that is a crash loop on one message.
+Derivation: `references/driver-facts.md`. Diagnosis: `references/failure-classes.md` class 8. Values:
+`alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. Doctrine:
+`alaa-reliability-sla references/20-retries.md`.
 
-# Step 2 — Configure `config/queue.php`
-Add an explicit `rabbitmq` connection with source-accurate keys:
+**4. Two timeout relationships bound duplicate execution.** `retry_after` is not one of them; it is inert on
+this connection (`references/driver-facts.md`). Worker `--timeout` times the depth of the unacked window
+stays below the broker's `consumer_timeout` — past it the broker closes the channel and requeues **every**
+delivery in the window, not only the slow one. Pod `terminationGracePeriodSeconds` exceeds worker
+`--timeout` plus the shutdown margin — below that, every rollout SIGKILLs a worker mid-job and replays the
+delivery with its attempt count unchanged. Both values and the margin: the contract file above.
 
-```php
-'rabbitmq' => [
-    'driver' => 'rabbitmq',
-    'queue' => env('RABBITMQ_QUEUE', 'default'),
-    'connection' => env('RABBITMQ_CONNECTION_TYPE', 'default'),
+**5. The prefetch rule.** Prefetch count times p99 handler duration **is** the unacked window, and all of it
+redelivers at once when a channel drops. Choose the count so that window is smaller than the redelivery
+burst the fleet absorbs, and state the count and the measured p99 duration in the change. Passing
+`--prefetch-count` explicitly is required: the package default of `1000` leaves the window unbounded in
+practice. The contract file above requires every consumer to set an explicit prefetch; tuning belongs to
+`/alaa-async-messaging`.
 
-    'hosts' => [
-        [
-            'host' => env('RABBITMQ_HOST', '127.0.0.1'),
-            'port' => (int) env('RABBITMQ_PORT', 5672),
+**6. Publisher confirms — a decision, not silence.** This driver never calls `confirm_select`, so a publish
+reports success once the frame reaches the socket and a broker that dies before persisting it loses the
+message while the application believes it succeeded. The decision: a request-path publish does not wait on a
+confirm, and durability comes from the durable outbox row the contract file above already requires. The
+outbox drain worker is the one place a confirm is required, because that contract forbids deleting an outbox
+row before the broker acknowledges the publish and `basic_publish` is not an acknowledgement. How to add it,
+and its cost: `references/driver-facts.md`.
 
-            // Accept both env schemas:
-            'user' => env('RABBITMQ_USER', env('RABBITMQ_USERNAME', 'guest')),
-            'password' => env('RABBITMQ_PASSWORD', env('RABBITMQ_PASS', 'guest')),
-            'vhost' => env('RABBITMQ_VHOST', '/'),
-        ],
-    ],
+**7. Broker unreachable on the request path.** A request-path publish never blocks the user-facing response
+on broker recovery and never fails the business write; the outbox above is the mechanism. Doctrine:
+`alaa-reliability-sla references/50-degradation.md`. Values: the contract file above. Driver mechanics
+that change the answer — lazy connect, and one host chosen at random per connection with no retry inside a
+publish call — are in `references/driver-facts.md`.
 
-    // Keep default worker mode for RabbitMQ. Do NOT set horizon.
-    'worker' => 'default',
-    'after_commit' => (bool) env('QUEUE_AFTER_COMMIT', true),
+**8. The seam carries the trace.** The trace field travels as a constructor property inside the serialised
+job payload, set at dispatch and read at the top of `handle()`, because this driver exposes no AMQP header
+injection point; the `correlation_id` it already sets is the broker-side join key for the same message. Field
+name: `/alaa-services-contract` (`$alaa-services-contract`). Whether carrying it is required:
+`/alaa-observability-soc` (`$alaa-observability-soc`). Signals this seam uniquely produces, to be registered
+rather than invented — queue depth, consumer count, unacked count, oldest-unacked age, redelivery rate,
+worker restart rate — are named in `alaa-services-contract references/24-metric-registry.md` and levelled by
+`/alaa-observability-soc`.
 
-    // Keep lazy connections enabled for CLI workers; disable only if you must:
-    'lazy' => (bool) env('RABBITMQ_LAZY', true),
-    'secure' => (bool) env('RABBITMQ_SECURE', false),
-    'network_protocol' => env('RABBITMQ_NETWORK_PROTOCOL', 'tcp'),
+**9. Horizon is not the control plane for these workers.** `'worker' => 'default'` on the connection and
+`RABBITMQ_WORKER` unset or `default` everywhere. Horizon is Redis-queue tooling; its dashboard, metrics and
+supervisor semantics do not observe a RabbitMQ queue. Observe these workers through broker metrics, worker
+logs and application metrics, plus `queue:monitor` as a ready-depth threshold alarm and nothing more
+(`references/driver-facts.md`).
 
-    'options' => [
-        'heartbeat' => (int) env('RABBITMQ_HEARTBEAT', 10),
-        'connection_timeout' => (float) env('RABBITMQ_CONNECTION_TIMEOUT', 3.0),
-        'read_timeout' => (float) env('RABBITMQ_READ_TIMEOUT', 3.0),
-        'write_timeout' => (float) env('RABBITMQ_WRITE_TIMEOUT', 3.0),
-        'channel_rpc_timeout' => (float) env('RABBITMQ_CHANNEL_RPC_TIMEOUT', 0.0),
+**10. Dead-lettering and delivery limits come from broker policies, never queue arguments.** A queue argument
+is fixed at declare time and this driver never re-declares an existing queue, so an argument changed in
+config does nothing to a queue that already exists; a policy applies to existing queues and reverts without a
+deploy. Pre-create exchange, queue and binding in infrastructure or a release job before consumers scale.
 
-        // TLS options (paths mounted from Kubernetes Secrets)
-        'ssl_options' => [
-            'cafile' => env('RABBITMQ_SSL_CAFILE'),
-            'local_cert' => env('RABBITMQ_SSL_LOCALCERT'),
-            'local_key' => env('RABBITMQ_SSL_LOCALKEY'),
-            'verify_peer' => (bool) env('RABBITMQ_SSL_VERIFY_PEER', true),
-            'passphrase' => env('RABBITMQ_SSL_PASSPHRASE'),
-        ],
+**11. Every outbound call inside a handler carries a client timeout strictly below the worker `--timeout`**,
+so the handler fails and releases rather than holding the delivery until the broker kills the channel. A
+300-second HTTP call inside a 60-second job violates this. Values: the contract file above.
 
-        // Queue/exchange behavior (driver-specific)
-        'queue' => [
-            // Optional delayed prioritization
-            'prioritize_delayed' => (bool) env('RABBITMQ_PRIORITIZE_DELAYED', false),
-            'queue_max_priority' => (int) env('RABBITMQ_QUEUE_MAX_PRIORITY', 10),
+**12. Secrets never enter the repository.** No `.env`, private key, certificate, password or token in a
+commit; every value comes from a Secret or a secret file.
 
-            // Optional publish to exchange with routing key
-            'exchange' => env('RABBITMQ_EXCHANGE'),
-            'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE', 'direct'),
-            'exchange_routing_key' => env('RABBITMQ_EXCHANGE_ROUTING_KEY', ''),
+**13. Redis touches inside jobs.** RabbitMQ is the transport; Redis never carries these jobs. Job middleware
+backed by Redis (`RateLimited`, `WithoutOverlapping`, `Redis::throttle` funnels) has a defined outage
+behaviour recorded in the change — the fail-closed discriminator is `/alaa-security-review`
+(`$alaa-security-review`), and keys, TTL and the Redis-down fallback contract are
+`alaa-data-layer references/50-redis-laravel-octane.md` (`$alaa-data-layer`). No cache or Redis read in a
+provider `register()` or `boot()`, or a Redis outage stops workers from starting.
 
-            // Optional: reroute failed messages (in addition to Laravel failed_jobs)
-            'reroute_failed' => (bool) env('RABBITMQ_REROUTE_FAILED', false),
-            'failed_exchange' => env('RABBITMQ_FAILED_EXCHANGE', 'amq.direct'),
-            'failed_routing_key' => env('RABBITMQ_FAILED_ROUTING_KEY', '%s.failed'),
-            'quorum' => (bool) env('RABBITMQ_QUEUE_QUORUM', false),
+**14. Uniformity over local preference in job policy.** Use whichever form the repository already uses for
+every job in it — attributes (`#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`) or properties and
+methods. A repository that mixes both standardises on the attribute form and converts the rest in the same
+change. Where queue or connection selection would otherwise repeat across dispatch sites, put it in central
+`Queue::route(...)` rules.
 
-            // Optional custom wrapper for foreign payloads:
-            // 'job' => \App\Queue\Jobs\RabbitMQJob::class,
-        ],
-    ],
-],
-```
+# The one required test
 
-Notes:
-- Keep per-connection `retry_after` in `config/queue.php` greater than worker `--timeout`.
-- If using custom payload formats from external producers, define a custom `job` wrapper class.
-- Prefer one canonical env naming schema; map aliases only during migration.
+**A redelivered message must not double-apply its side effect.** Every handler with a side effect has this
+test; a change adding such a handler without it is incomplete.
 
-# Step 3 — Write jobs for at-least-once execution
-Assume duplicate delivery is possible:
-- enforce idempotency via DB unique keys and dedupe keys,
-- pass IDs and immutable business keys, not large mutable payloads,
-- set explicit client timeouts (HTTP/DB/RPC) inside job handlers.
+Shape: run the job to completion, then run the **same payload with the attempt count unchanged** through the
+same handler again — exactly what a requeue produces — and assert the side effect happened once. The
+assertion is a count or a total: rows written, outbound calls made, ledger balance. "No exception was
+thrown" is not the assertion, because the duplicate path throws nothing. Assert too that the second run
+acked rather than released, so the test fails if someone "fixes" duplication by requeueing.
 
-Typical per-job hardening:
-- `$tries`, `backoff()` or `retryUntil()` for bounded retries,
-- `$timeout` + `$failOnTimeout` where appropriate,
-- explicit handling for non-retryable business errors.
+What makes this a test rather than a replay of the happy path, which layer it belongs at, and whether the
+broker is real or faked: `/alaa-testing-strategy` (`$alaa-testing-strategy`)
+`alaa-testing-strategy references/70-failure-mode-first.md` and
+`alaa-testing-strategy references/30-doubles.md`. Pest and PHPUnit syntax comes from the
+repository-local `pest-testing` skill, which this repository does **not** own and which can change between
+runs — on conflict about what the test must prove, `/alaa-testing-strategy` wins and this rule stands
+regardless of syntax. Real-infrastructure verification of the same property is step 3 of
+`references/running-workers.md`.
 
-# Step 4 — Run workers (local and production)
-## Local
-- `php artisan queue:work rabbitmq --queue=high,default --sleep=1 --tries=5 --timeout=60`
-- `php artisan rabbitmq:consume rabbitmq --queue=high --prefetch-count=50 --timeout=60 --tries=5 --json`
+# Ownership boundary
 
-## Kubernetes with platform-app-php Helm chart
-Recommended:
-- Run web (Octane) and worker separately.
-- Set `QUEUE_CONNECTION=rabbitmq` via envConfig.
-- Use `maxJobs` / `maxTime` to recycle workers and control memory drift.
-- Keep `terminationGracePeriodSeconds` high enough for in-flight jobs to finish.
-- For `rabbitmq:consume`, deploy one queue per worker Deployment (or one Deployment per queue profile).
+This skill owns one thing: the behaviour of Laravel jobs on **this** RabbitMQ driver. Below is owned
+elsewhere, and the named owner wins on conflict.
 
-See: `assets/helm/values.worker.rabbitmq.yaml.example`
-
-# Step 5 — Topology and DLQ strategy
-Prefer topology pre-creation in infra or release jobs:
-- exchanges, queues, bindings, and DLX policies should exist before high-volume workers start,
-- use package commands when needed:
-  - `rabbitmq:exchange-declare`
-  - `rabbitmq:queue-declare`
-  - `rabbitmq:queue-bind`
-- policy-first for DLX is preferred (avoids brittle hardcoded x-args lifecycle).
-
-RabbitMQ reliability baseline:
-- dedicated vhost and least-privilege user per environment,
-- DLX + DLQ for poison messages,
-- quorum queues for critical durability where appropriate,
-- understand quorum caveat: repeated nack/requeue patterns can hurt log growth; delivery-limit matters.
-
-# Step 6 — Runtime resilience
-Laravel side:
-- `after_commit=true` for jobs dispatched inside DB transaction flows,
-- timeout discipline: `job timeout` and `queue:work --timeout` must be below `retry_after`,
-- process manager required (Kubernetes/Supervisor/systemd) to restart failed workers safely.
-
-Connection and heartbeat:
-- keep heartbeat enabled (do not disable unless you intentionally rely on TCP keepalive policy),
-- in Octane producer scenarios, validate long-lived connection behavior under idle periods before production rollout.
-
-# Step 7 — Octane considerations
-If your app uses Octane:
-- Warm the `rabbitmq` connection as suggested by the package docs.
-- Keep queue workers separate from Octane web workers (different Deployments/Pods).
-- Validate idle heartbeat behavior in long-lived producer workers before production rollout.
-
-# Redis in the async plane (boundaries and degradation)
-RabbitMQ is the transport here — Redis never carries these jobs, and Horizon (Redis-queue tooling) stays forbidden. But jobs commonly touch Redis through Laravel job middleware and dedupe logic. Rules:
-
-- Job middleware `RateLimited`, `WithoutOverlapping`, and `Redis::throttle`-style funnels are backed by the cache/Redis. If a job uses them, a Redis outage must not stall or crash consumers:
-  - default fail-open: on cache connection failure, run the job and emit a metric,
-  - fail-closed only when the middleware guards correctness — and then back the invariant with a DB constraint too.
-- Idempotency/dedupe for consumed messages: the DB unique constraint is the primary dedupe (at-least-once safety); a Redis dedupe key (`Cache::add` with TTL) is an optional fast-path in front of it, never a replacement.
-- Workers boot like web apps: no cache/Redis reads in provider `register()`/`boot()`, or a Redis outage prevents queue workers from starting (see `alaa-laravel-architecture` provider discipline).
-- Key design, TTL, flush discipline, and the Redis-down fallback contract live in `alaa-data-layer` (`references/50-redis-laravel-octane.md`); apply them to any Redis touch inside jobs.
-
-# Step 8 — Failure handling (Laravel + RabbitMQ)
-Laravel:
-- Use `failed_jobs` storage (DB) and alert on increases.
-- Use `queue:failed`, `queue:retry`, and incident runbooks for rapid replay and containment.
-
-RabbitMQ (optional):
-- Enable `reroute_failed` only when failed-route topology is verified.
-- Ensure infra has the exchange/queue/bindings for the failed route (do not assume auto-creation).
-- Validate failed routing keys and dead-letter bindings with a forced-failure test.
-
-# Step 9 — Observability without Horizon
-For RabbitMQ production observability, rely on:
-- RabbitMQ broker metrics (ready/unacked/consumers/rates/alarms),
-- worker logs and application metrics,
-- failed job tracking and DLQ signals,
-- Laravel 13 `queue:monitor` threshold alerts once the installed driver source includes the monitor methods.
-
-Operational note for Laravel 13:
-- `php artisan queue:monitor rabbitmq:default --max=100` is useful as a lightweight threshold alarm.
-- Treat `queue:monitor` as a supplement, not your primary RabbitMQ telemetry.
-- In official upstream `v15.0.0` and newer:
-  - `pendingSize()` reflects broker queue depth.
-  - `delayedSize()` and `reservedSize()` currently return `0`.
-  - `creationTimeOfOldestPendingJob()` currently returns `null`.
-- Use broker metrics for ready, unacked, consumers, publish/ack rates, and oldest-message investigations.
-
-# Step 10 — Verification checklist
-- Dispatch a test job and confirm:
-  - message appears in RabbitMQ queue
-  - worker consumes and acks
-  - failure path lands in `failed_jobs` and (if enabled) in the failed route
-- Kill a worker pod during processing:
-  - verify job is retried (at-least-once)
-  - verify idempotency prevents duplicates
-- Load test:
-  - observe queue depth and worker CPU/memory
-  - tune queue split, prefetch, and worker replicas
-
-# Troubleshooting map (high-signal)
-1) Laravel 13 `queue:monitor` failure after driver upgrade lag:
-- Symptom: missing method errors around `pendingSize`, `delayedSize`, `reservedSize`, or `creationTimeOfOldestPendingJob`.
-- Action: update to official upstream `v15.0.0` or newer and remove any legacy fork VCS override.
-2) Queue/Binding missing at worker start:
-- Symptom: `NOT_FOUND` / consume startup errors.
-- Action: pre-create queue+exchange+bindings before scaling consumers.
-3) Accidental Horizon mode enablement:
-- Symptom: `RABBITMQ_WORKER=horizon` appears in env/config for RabbitMQ workers.
-- Action: remove it and force `worker=default`; redeploy workers.
-4) Missed heartbeat / closed channel in long-lived producers:
-- Symptom: heartbeat/channel closed exceptions after idle windows.
-- Action: validate heartbeat strategy + connection lifecycle; use safe reconnect and process restart behavior.
-5) Duplicate job execution:
-- Symptom: same job runs twice.
-- Action: enforce `timeout < retry_after`, idempotency, and bounded retry rules.
-6) `queue:monitor` gives only partial queue insight:
-- Symptom: delayed/reserved/oldest metrics look empty even though the broker shows activity.
-- Action: remember the current upstream driver only maps pending depth richly; use broker metrics for the rest.
-
-# Known upstream change signals (track before major rollout)
-- Historical upstream change signal:
-  - `#652` added Laravel 13 + PHP 8.5 CI coverage, `Consumer::stop()` compatibility, and `RabbitMQQueue` monitor methods. Official upstream stable `v15.0.0` includes the Laravel 13 compatibility path.
-- Open issues:
-  - `#644` worker queue/binding creation expectations mismatch.
-  - `#634` maintenance-mode channel exceptions (`CONNECTION_FORCED`) need graceful handling.
-  - `#615` DLQ setup confusion in real deployments.
-  - `#601` quorum + delayed dead-letter safety discussion.
-- Closed but informative:
-  - `#603` consume command gained `--json` output support.
-  - `#562` multiple queues are for `queue:work`, not `rabbitmq:consume`.
-  - `#591` heartbeat behavior can break in long-lived producer contexts (especially with Octane-style lifecycles).
+- **The ten-point quality bar itself** — `alaa-project-constitution references/quality-bar.md`.
+- **Failure behaviour doctrine** (retries, backoff, deadlines, breakers, degradation, the idempotency
+  contract, error budgets) — `/alaa-reliability-sla` (`$alaa-reliability-sla`). **Every number** it implies —
+  timeout, retry count, prefetch value, delivery limit, threshold, margin —
+  `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
+- **Names**: queue, exchange and vhost names and event-versus-command topology in
+  `alaa-services-contract references/23-queue-and-exchange-registry.md`; log, event and metric names in
+  `alaa-services-contract references/24-metric-registry.md` — `/alaa-services-contract`
+  (`$alaa-services-contract`).
+- **Observability requirement levels, gates and alerts** — `/alaa-observability-soc`
+  (`$alaa-observability-soc`).
+- **Messaging architecture**: transport choice, event design, fan-out, DLQ replay procedure, prefetch tuning
+  — `/alaa-async-messaging` (`$alaa-async-messaging`). Retry and DLQ **strategy** is `/alaa-reliability-sla`,
+  not this skill and not `/alaa-async-messaging`; earlier versions of this file mis-routed it.
+- **Deployment**: chart keys, probes, rollout strategy and autoscaler shapes — `/alaa-k8s-helm`
+  (`$alaa-k8s-helm`); runtime image contents including `ext-pcntl` — `/alaa-docker-production`
+  (`$alaa-docker-production`); broker cluster, vhost and permission administration and Arvan defaults —
+  `/caas-arvan-kuber` (`$caas-arvan-kuber`).
+- **Correctness and testability**: what makes a test a test, layers, doubles, proof strength, flake —
+  `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+- **Security**: fail-closed versus fail-open, threat classes, untrusted input — `/alaa-security-review`
+  (`$alaa-security-review`); trusted headers and tenant derivation — `/alaa-trust-gateway-auth`
+  (`$alaa-trust-gateway-auth`).
+- **Clean code, SOLID and design-pattern selection** — `alaa-php-clean-code references/design-patterns.md`
+  (`$alaa-php-clean-code`).
+- **Complexity budgets, structure choice and the N+1 family inside handlers** —
+  `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+- **Long-lived worker hygiene, cross-request state and memory drift** — `/alaa-octane-performance`
+  (`$alaa-octane-performance`). **Pre-implementation design pass** — `/alaa-system-design`
+  (`$alaa-system-design`). **Generated wrappers and MSYS path conversion** —
+  `/service-runtime-kit-governance` (`$service-runtime-kit-governance`). **Plan files and phasing** —
+  `/alaa-workflow` (`$alaa-workflow`).
 
 # Output contract
-When applying this skill, output should include:
-- exact files changed,
-- exact upstream driver version and why it was chosen,
-- config diffs and why each option exists,
-- deployment/runtime commands,
-- verification checklist and rollback notes,
-- assumptions, monitoring limitations, and unresolved risks.
 
-# References
-- Package repo: https://github.com/vyuldashev/laravel-queue-rabbitmq
-- Package README: https://github.com/vyuldashev/laravel-queue-rabbitmq/blob/master/README.md
-- Upstream PR #652: https://github.com/vyuldashev/laravel-queue-rabbitmq/pull/652
-- Laravel Queue docs: https://laravel.com/docs/13.x/queues
-- RabbitMQ DLX docs: https://www.rabbitmq.com/docs/dlx
-- RabbitMQ prefetch docs: https://www.rabbitmq.com/docs/consumer-prefetch
-- RabbitMQ heartbeat docs: https://www.rabbitmq.com/docs/heartbeats
-- RabbitMQ quorum docs: https://www.rabbitmq.com/docs/quorum-queues
-- RabbitMQ at-least-once DL: https://www.rabbitmq.com/blog/2022/03/29/at-least-once-dead-lettering
-- Troubleshooting-only community note for timeout/retry_after symptoms: https://stackoverflow.com/questions/41991251/what-is-the-difference-queuework-tries-3-and-tries-3
-- GitHub issues list: https://github.com/vyuldashev/laravel-queue-rabbitmq/issues
-
-# Anti-patterns
-- Using Horizon for RabbitMQ workers in this repository.
-- Redis-only dedupe for critical side effects (money/legal/audit) without a DB unique constraint.
-- Job middleware backed by Redis with no defined behavior for a Redis outage (consumers stall or crash instead of failing open).
-- Running `rabbitmq:consume` against multiple queues in one process.
-- Leaving timeout/retry defaults unreviewed for long jobs.
-- Enabling DLQ reroute without verifying broker topology.
-- Treating handlers as exactly-once; ignoring idempotency.
+Report: files changed; the installed driver version and the grep that confirmed its monitor methods; each
+config key changed and the behaviour it produces; the worker mode and why; the prefetch count with the
+measured p99 handler duration behind it; the delivery limit and where its policy is set; the redelivery test
+and its assertion; the rollback step; and every assumption, monitoring limitation and unresolved risk,
+naming which are limits of this driver rather than of the change.

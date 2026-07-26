@@ -1,41 +1,20 @@
-# Alaa Laravel Architecture Topic Map
+# Topic map — the situation you are in, and the one file that answers it
 
-Use this file to choose the smallest relevant section in `full-guide.md`.
+This is the only router in this skill. Match the situation, read that one file, and stop. Reading the whole tree means the task was never scoped.
 
-## Covered sections
+| You are about to… | Read |
+|---|---|
+| add, move, rename, or split a route, Controller, Service, Repository, DTO, Resource, Policy, Observer, or Enum, or decide what a method may accept or return across a boundary | `references/10-layer-map.md` |
+| decide which identifier a response exposes, a route binds on, or a filter accepts | `references/10-layer-map.md` |
+| bind an interface in a service provider, add or move caching for a domain, or explain why a worker boots with a dependency down but not with it up | `references/20-composition-and-boot.md` |
+| emit a domain event, add a listener, write to or publish from an outbox, or decide whether a side effect runs inside the request | `references/30-events-and-outbox-seam.md` |
+| decide what a caller sees when the database, Redis, or the broker is unreachable, or write any `catch` on a dependency failure | `references/40-degraded-mode.md` |
+| diagnose something already wrong in production — stale reads, a stuck outbox row, a worker that will not boot, two endpoints answering in different shapes | `references/50-failure-recovery.md` |
+| add or move one of this skill's surfaces and make it visible in production: an authorization denial, a cache decorator, an outbox transition, a fallback taken | `references/60-telemetry-surfaces.md` |
+| make behaviour vary by environment or scale, add a config key, or read config anywhere near bootstrap | `references/70-config-contract.md` |
+| run the gate, wire it into CI, read a finding, or waive one | `references/80-acceptance-gate.md` |
+| rely on framework-owned behaviour when the task says `latest`, `current`, `upgrade`, `Laravel 13`, `deprecated`, `removed`, or `security`, or when middleware, bootstrap, route precedence, resource serialization, or container behaviour is in scope | `references/source-map.md` |
 
-- `# Purpose`
-- `# Companion skill boundary`
-- `# When to use`
-- `# Constraints`
-- `# Laravel 13 architecture stance`
-- `# Architecture rules (strict)`
-- `## Layering responsibilities`
-- `## Allowed flow`
-- `## Not allowed`
-- `## Repository contract and binding (mandatory)`
-- `## Caching seam (decorator over the repository)`
-- `# API contracts (default Alaa/comment-service shape)`
-- `## Request validation (mandatory)`
-- `## Success envelope (mandatory)`
-- `## Error envelope (stable code + safe message)`
-- `### Error rules`
-- `## Public ID policy (mandatory)`
-- `## Persistence naming vs public contract naming`
-- `## Pagination & filtering`
-- `# Naming conventions (default)`
-- `# Event-driven & outbox rules (Laravel layer)`
-- `## Domain events`
-- `## Listeners`
-- `## Outbox pattern (if present in the repo)`
-- `## Optional realtime`
-- `## Observers vs Events`
-- `## AuthorizationDenied event (observability hint)`
-- `# Service provider discipline (register vs boot)`
-- `# Recommended workflow (deterministic)`
-- `# Anti-patterns`
+## Situations that leave this skill
 
-## Working rule
-
-- Read only the sections you need from `full-guide.md`.
-- Keep this topic map small and update it when major sections are added or renamed.
+Some situations are not this skill's at all: writing a cache key, TTL, index, or migration; deciding whether and how a list paginates; choosing a name, a type, or a pattern inside one file; deriving tenant or user identity; and settling a boundary that does not exist yet. Each is routed by the ownership table in `SKILL.md`, which also states what wins on conflict. That table is the only list of owners in this skill.

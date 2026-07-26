@@ -2,7 +2,7 @@
 
 ## Contents
 - Why consistency matters
-- Preserve-local vs normalize-to-Alaa
+- What each mode does to naming
 - Canonical naming rules
 - Method and variable naming
 - Boundary alignment rules
@@ -13,20 +13,11 @@
 ## Why consistency matters
 One-author consistency comes mostly from naming discipline, repeated layer roles, and predictable boundaries.
 
-The goal is not to make every repository identical by force. The goal is to make each repository internally coherent and, when requested, make it coherent with the broader Alaa convention set.
+Whose convention wins is not decided here: `SKILL.md` owns the uniformity rule, and `refactor-modes.md` owns the blast radius each mode allows. This file owns the naming rules themselves — what a good name looks like, which names to replace, and what the Alaa targets are when normalization is the mode.
 
-## Preserve-local vs normalize-to-Alaa
-### Preserve-local modes
-In `scoped-soft`, `scoped-hard-contract-preserving`, and `whole-project-preserve-local`:
-- start from the repository's existing dialect
-- prefer one local term per concept
-- clean inconsistency without imposing foreign naming
-
-### Normalize-to-Alaa mode
-In `whole-project-normalize-alaa`:
-- standardize toward the architecture skill's canonical layer names where they fit
-- remove vague or duplicated naming families
-- make repeated feature slices look structurally similar across the repo
+## What each mode does to naming
+- In `scoped-soft`, `scoped-hard-contract-preserving`, and `whole-project-preserve-local`: start from the repository's existing dialect, choose one local term per concept, and clean inconsistency without importing a foreign naming family.
+- In `whole-project-normalize-alaa`: converge on the canonical layer names from `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) where they fit, remove vague or duplicated naming families, and make repeated feature slices structurally alike across the repo. Persistence-name normalization in this mode is owned by `refactor-modes.md`.
 
 ## Canonical naming rules
 - Use one domain term per concept. Pick `Student`, `SchoolPost`, `Tenant`, or `Profile`, then keep that term across related classes and tests.

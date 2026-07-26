@@ -1,29 +1,33 @@
-# Example values overlay for `platform-app-php` chart (RabbitMQ workers).
-# This profile is optimized for Arvan-safe defaults and `queue:work` mode.
-# For consume mode (`rabbitmq:consume`), see override example at the end.
+# Example values overlay for the `platform-app-php` chart, RabbitMQ worker profile.
+# Defaults shown are queue:work mode; a consume-mode override is at the end.
+#
+# SCOPE NOTE: the chart-mechanics half of this file (worker block shape, resources,
+# grace period, autoscaler keys) moves to /alaa-k8s-helm ($alaa-k8s-helm) in a later
+# batch. What stays here afterwards is only the RABBITMQ_* env schema and the queue
+# semantics behind each value.
+#
+# Every <PLACEHOLDER> below is a per-service value, not a constant. Numeric values come
+# from alaa-services-contract references/22-failure-load-and-deprecation-contract.md, and
+# names from alaa-services-contract references/23-queue-and-exchange-registry.md. The
+# rules that bound them are SKILL.md constraints 3, 4, 5 and 9.
 
 envConfig:
   APP_ENV: production
   APP_DEBUG: "0"
 
-  # Laravel queue driver selection.
   QUEUE_CONNECTION: rabbitmq
-  # IMPORTANT: do not use Horizon mode for RabbitMQ workers in this repository.
-  # Keep RABBITMQ_WORKER unset or set to default in app config.
-  # Enable dispatch-after-commit for DB-coupled workflows.
   QUEUE_AFTER_COMMIT: "1"
-  # NOTE: Ensure config/queue.php retry_after is greater than worker timeout.
 
   # RabbitMQ connection.
   RABBITMQ_HOST: shared-rabbitmq
   RABBITMQ_PORT: "5672"
-  # Prefer one canonical env key. Keep USERNAME only if your app maps it.
+  # One canonical name per setting. RABBITMQ_USERNAME is not an alias for this; do not add it.
   RABBITMQ_USER: app_worker
-  RABBITMQ_USERNAME: app_worker
-  RABBITMQ_VHOST: "/comment_service"
-  RABBITMQ_QUEUE: "default"
+  # Take the vhost and the queue name from the registry; these are placeholders, not defaults.
+  RABBITMQ_VHOST: "<VHOST_FROM_REGISTRY>"
+  RABBITMQ_QUEUE: "<QUEUE_FROM_REGISTRY>"
 
-  # Connection hardening (driver-supported options).
+  # Connection hardening. A zero heartbeat is a half-open connection waiting to happen.
   RABBITMQ_HEARTBEAT: "10"
   RABBITMQ_CONNECTION_TIMEOUT: "3.0"
   RABBITMQ_READ_TIMEOUT: "3.0"
@@ -33,15 +37,15 @@ envConfig:
   RABBITMQ_SECURE: "0"
   RABBITMQ_NETWORK_PROTOCOL: "tcp"
 
-  # Optional exchange + failed reroute strategy.
-  # Keep disabled unless topology is pre-created and validated.
+  # Exchange and failed-reroute strategy. Left off because dead-lettering comes from a
+  # broker policy (SKILL.md constraint 10), not from driver-emitted queue arguments.
   RABBITMQ_EXCHANGE: ""
   RABBITMQ_EXCHANGE_TYPE: "direct"
   RABBITMQ_EXCHANGE_ROUTING_KEY: ""
   RABBITMQ_REROUTE_FAILED: "0"
-  RABBITMQ_FAILED_EXCHANGE: "amq.direct"
-  RABBITMQ_FAILED_ROUTING_KEY: "%s.failed"
-  RABBITMQ_QUEUE_QUORUM: "0"
+
+  # Quorum queues, so the queue can carry a delivery-limit policy at all.
+  RABBITMQ_QUEUE_QUORUM: "1"
 
 envSecret:
   RABBITMQ_PASSWORD: "REPLACE_ME"
@@ -49,27 +53,27 @@ envSecret:
 
 worker:
   enabled: true
-  # Scale from queue lag + throughput tests, not guesswork.
-  replicaCount: 3
+  # Compute this from measured arrival rate and p99 handler duration, and record both
+  # in the change: references/running-workers.md, "Choosing the replica count".
+  replicaCount: <REPLICAS>
 
-  # Default chart command is queue:work; it relies on QUEUE_CONNECTION=rabbitmq.
+  # Default chart command is queue:work and relies on QUEUE_CONNECTION=rabbitmq.
   queueWork:
-    # Multi-queue priority list is supported in queue:work mode.
-    queue: "high,default"
+    # Multi-queue priority lists work only in queue:work mode.
+    queue: "<HIGH_QUEUE>,<DEFAULT_QUEUE>"
     sleep: 1
-    tries: 5
-    # Keep timeout lower than queue connection retry_after in app config.
-    timeout: 60
-    # Recycle workers periodically to control memory drift.
-    maxJobs: 1000
-    maxTime: 3600
-    # Comma-separated backoff sequence for transient failures.
+    tries: <TRIES>
+    timeout: <TIMEOUT_SECONDS>
+    # Recycle to bound memory drift. Keep high enough that a worker completes many jobs
+    # per lifetime; a low value turns one poison message into a crash loop.
+    maxJobs: <MAX_JOBS>
+    maxTime: <MAX_TIME_SECONDS>
     backoff: "1,5,10,30"
 
-  # Give workers enough time to finish in-flight jobs on SIGTERM rollout.
-  terminationGracePeriodSeconds: 300
+  # Must exceed queueWork.timeout plus the shutdown margin (SKILL.md constraint 4).
+  terminationGracePeriodSeconds: <TIMEOUT_SECONDS_PLUS_MARGIN>
 
-  # Arvan-safe resources: requests == limits.
+  # Arvan-safe resources: requests == limits. Shapes and platform defaults: /caas-arvan-kuber ($caas-arvan-kuber).
   resources:
     requests:
       cpu: 0.5
@@ -80,24 +84,25 @@ worker:
       memory: 1Gi
       ephemeral-storage: 1Gi
 
-# Optional consume mode (higher throughput path):
-# - one queue per deployment/process group
-# - tune prefetch-count with load tests
-# - do NOT pass multiple queues here
+# Optional consume-mode override: one queue per Deployment, prefetch tuned per SKILL.md
+# constraint 5. Do not pass more than one queue here.
+#
+# The command uses /bin/sh with no -o pipefail and no -l: pipefail is not POSIX sh and
+# aborts under dash and BusyBox ash, and a login shell is not available in these images.
+# There is no cd: the chart sets the container workingDir, so a hardcoded application
+# directory here would silently disagree with it.
 #
 # worker:
-#   command: ["/bin/sh","-lc"]
+#   command: ["/bin/sh", "-ec"]
 #   args:
 #     - |
-#       set -euo pipefail
-#       cd "${APP_DIR:-/var/www/html}"
 #       exec php artisan rabbitmq:consume rabbitmq \
-#         --queue=high \
-#         --prefetch-count=50 \
+#         --queue=<QUEUE_FROM_REGISTRY> \
+#         --prefetch-count=<PREFETCH> \
 #         --prefetch-size=0 \
-#         --tries=5 \
-#         --timeout=60 \
+#         --tries=<TRIES> \
+#         --timeout=<TIMEOUT_SECONDS> \
 #         --sleep=1 \
-#         --memory=256 \
-#         --max-time=3600 \
+#         --memory=<MEMORY_MB> \
+#         --max-time=<MAX_TIME_SECONDS> \
 #         --json

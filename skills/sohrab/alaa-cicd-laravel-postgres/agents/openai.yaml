@@ -1,7 +1,7 @@
 interface:
-  display_name: "Alaa Cicd Laravel Postgres"
-  short_description: "Deterministic Laravel CI/CD pipelines"
-  default_prompt: "Use $alaa-cicd-laravel-postgres to follow its workflow for deterministic laravel ci/cd pipelines."
+  display_name: "Alaa CI/CD Laravel Postgres"
+  short_description: "Release gates for Laravel on Postgres: what gates, at what threshold"
+  default_prompt: "Use $alaa-cicd-laravel-postgres to classify every pipeline check as gate or advisory, set its threshold, and wire the test-database isolation, migration reversibility and recovery paths."
 
 policy:
   allow_implicit_invocation: true

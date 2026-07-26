@@ -22,7 +22,7 @@
 - Passing untyped arrays or `stdClass` as domain data.
 - Hiding important type assumptions in comments instead of the signature.
 - Renaming public parameter names casually when named arguments may be used.
-- Deciding merges or partial updates by truthiness: `$input['count'] ?? $existing` and `$value ?: $default` silently discard legitimate `0`, `false`, `''`, and `[]`. When absent and empty are different facts, check key presence (`array_key_exists`) or `!== null` explicitly.
+- Deciding a merge or partial update by truthiness. The rule is in `SKILL.md` under Non-negotiable defaults; PATCH-specific semantics are in `laravel-best-practices.md`.
 
 ## Modern PHP 8.x features
 
@@ -126,8 +126,8 @@ Do / Don't:
 - Avoid unnecessary array copies, large temporary arrays, and broad object graphs.
 - Prefer immutable small objects for stable data.
 - Be cautious with reflection, dynamic magic, and runtime configuration mutation.
-- For application-level dataset traversal, prefer Laravel's `lazy`, `chunk`, `chunkById`, and `cursor` guidance in `laravel-best-practices.md`.
-- For Octane or long-lived worker behavior, switch to `alaa-octane-performance`.
+- For application-level dataset traversal, read `laravel-best-practices.md` under "Large-dataset traversal".
+- For Octane or long-lived worker behaviour, switch to `/alaa-octane-performance` (`$alaa-octane-performance`).
 
 ## Security-sensitive handoff
 This skill includes only the code-level baseline:
@@ -135,7 +135,7 @@ This skill includes only the code-level baseline:
 - avoid trusting client-derived IDs blindly
 - never leak secrets or raw tokens in messages
 
-For auth, tenant boundaries, injection, secrets, abuse controls, or security sign-off, read `alaa-security-review`.
+For auth, tenant boundaries, injection, secrets, abuse controls, or security sign-off, read `/alaa-security-review` (`$alaa-security-review`).
 
 ## Official references
 - PHP manual:

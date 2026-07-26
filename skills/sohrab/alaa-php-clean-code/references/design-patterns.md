@@ -10,7 +10,6 @@
 - Decorator pattern
 - Factory pattern
 - Abstract factory pattern
-- Prototype pattern
 - DTO pattern
 - Value object pattern
 - Builder pattern
@@ -19,14 +18,7 @@
 - Adapter pattern
 - Facade pattern
 - Proxy pattern
-- Bridge pattern
-- Flyweight pattern
-- Composite pattern
-- Iterator pattern
 - State pattern
-- Mediator pattern
-- Memento pattern
-- Visitor pattern
 - Template method pattern
 - Chain of responsibility / Pipeline
 - Singleton pattern
@@ -35,19 +27,12 @@
 - Query object / filter DTO pattern
 - Exception translation pattern
 - Pattern-selection rule of thumb
+- The rare eight (Prototype, Bridge, Flyweight, Composite, Iterator, Mediator, Memento, Visitor) live in `design-patterns-rare.md`
 
 ## Decision posture
 Use design patterns to reduce complexity, not to look advanced. A senior Laravel developer asks: "Where is this code becoming hard to understand, test, change, or keep safe under Octane?"
 
-Prefer the smallest useful abstraction:
-1. better name or private method
-2. focused service
-3. typed DTO or value object
-4. strategy/factory/adapter where variation or external boundaries are real
-5. repository/query object for persistence access and query composition
-6. pipeline or command/job where workflow shape requires it
-
-Do not stack patterns by habit. Every pattern must remove a real smell: fat controller, duplicated query, provider-specific API leakage, unstable array shape, scattered branching, hidden side effects, or unsafe long-lived worker state. Repository is the exception in Alaa Laravel application code: it is mandatory for persistence access, but it still must be named and shaped around a real aggregate, use case, read model, or persistence boundary.
+The order in which to reach for an abstraction is owned by `SKILL.md` under "Pattern decision order" — twelve steps from a better name up to an interface. Do not stack patterns by habit. Every pattern must remove a real smell: fat controller, duplicated query, provider-specific API leakage, unstable array shape, scattered branching, hidden side effects, or unsafe long-lived worker state. Repository is the exception in Alaa Laravel application code: it is mandatory for persistence access, but it still must be named and shaped around a real aggregate, use case, read model, or persistence boundary.
 
 ## Pattern recognition diagnostic
 
@@ -89,6 +74,10 @@ picked the wrong pattern. This table is the routing layer for the whole catalog 
 
 MVC itself is not symptom-routed: it is the mandatory baseline shape of every Alaa Laravel slice (see the
 catalog section), and Service and Repository rows above route violations of that baseline back into it.
+
+Eight rows above route to patterns that are correct rarely — Prototype, Bridge, Flyweight, Composite,
+Iterator, Mediator, Memento, Visitor. Their sections live in `design-patterns-rare.md`; read that file only
+when one of those rows matched a symptom you actually observed.
 
 Look-alike disambiguation (the pairs agents most often confuse):
 
@@ -172,8 +161,7 @@ Business logic becomes reusable and testable without requiring HTTP requests. Co
 - Keep repositories in the persistence layer defined by the repo architecture, or follow the nearest existing repository convention.
 - Let services orchestrate business rules and call repositories for persistence and query composition.
 - Accept typed filter DTOs instead of raw request arrays.
-- Put all touched Eloquent/query-builder read/write composition behind a repository unless the code is an allowed exception.
-- Allowed exceptions: model relationships/scopes/casts/accessors, migrations, factories, seeders, test fixtures/assertions, resources reading already-loaded models, and framework glue where Laravel requires the model API.
+- Put every Eloquent/query-builder read or write that a line in your diff composes behind a repository. The complete list of allowed exceptions is in `laravel-best-practices.md` under "Repository-first persistence" — a model scope, a migration, a factory, a seeder, a test assertion, and a resource reading an already-loaded model are not violations.
 
 ### Good defaults
 - Model the repository around an aggregate, use case, read model, or persistence boundary, not around generic CRUD.
@@ -205,7 +193,7 @@ test the composed order.
 - Implement the same interface as the wrapped class; take it as the first constructor argument.
 - Compose in the service provider binding (closure that builds inner + decorator); callers keep depending on the interface and never know the decorator exists.
 - Cache decorators delegate reads through `Cache::remember`/`flexible` and invalidate on writes right after delegating; on cache-store failure they call the inner implementation directly so a Redis outage never becomes a request failure.
-- Key design, TTL, invalidation, and fallback policy come from `alaa-data-layer` (`references/50-redis-laravel-octane.md`); the decorator seam itself is defined in `alaa-laravel-architecture`.
+- Key design, TTL, and invalidation come from `/alaa-data-layer` (`$alaa-data-layer`), `references/50-redis-laravel-octane.md` — which also owns the "Step 0 — repository-pattern gate" that must pass before any cache decorator is added. The decorator seam in the layer flow is defined by `/alaa-laravel-architecture` (`$alaa-laravel-architecture`).
 
 ### Good defaults
 - One concern per decorator; stack two small decorators rather than writing one mixed one.
@@ -260,23 +248,6 @@ test the composed order.
 ### Anti-patterns
 - A "factory of factories" for a single product.
 - Family members resolved independently from config in different places, letting a Mediana sender pair with a Kavenegar report parser.
-
-## Prototype pattern
-
-### Use when
-- Duplicating configured objects is cheaper or safer than reconstructing them: preset report definitions, notification templates, pre-configured query/filter DTOs.
-- Subclasses or long constructors exist only to encode preset field values.
-
-### Laravel application
-- PHP's native `clone` is the mechanism; implement `__clone()` to deep-copy nested mutable objects — default clone is shallow, and a shared nested object is a cross-request leak under Octane.
-- On PHP 8.5, `clone($obj, ['prop' => $v])` is the idiomatic "clone with changes" for `readonly` DTOs — Prototype and the wither pattern converge here.
-- Eloquent's `replicate()` is the model-world prototype: copies attributes, drops identity (`id`, timestamps). Use it instead of hand-copying attribute arrays; review which attributes must be excluded.
-- Keep preset registries explicit: a small map of named, immutable prototype instances cloned on request.
-
-### Anti-patterns
-- Field-by-field reconstruction of an object the language could clone.
-- Cloning objects holding resources, PDO handles, or service references — clone data carriers, not services.
-- Shallow-cloning DTOs whose nested objects then mutate shared state.
 
 ## DTO pattern
 
@@ -473,70 +444,6 @@ adapter is missing or leaking. (Decorator keeps an interface and adds behavior; 
 - Lazy proxies around cheap objects — deferral machinery costing more than construction.
 - Identity-sensitive code (`spl_object_id`, strict `===` registry checks) mixed with `newLazyProxy` without an explicit note.
 
-## Bridge pattern
-
-### Use when
-- A class is growing along two independent axes and subclass names start concatenating them (`SmsInvoiceNotifier`, `EmailReceiptNotifier`): every new value on either axis multiplies classes.
-- You want to vary "what is being done" (message/report/export content) independently of "how it is delivered/rendered" (channel, format, backend).
-
-### Laravel application
-- The shape: the abstraction holds a constructor-injected implementation interface and delegates the low-level work; both hierarchies grow independently. Laravel notifications are bridge-shaped already — the Notification (what) is separate from channels (how); prefer that native seam over custom class grids.
-- Typical Alaa seams: report definition × exporter (CSV/XLSX/PDF), document × renderer, alert × delivery channel.
-- Pair with Abstract Factory only when specific abstractions may only work with specific implementations.
-
-### Anti-patterns
-- A subclass grid that doubles when either axis gains a variant — the recognition signal itself.
-- "Bridging" a single-axis variation that plain Strategy already solves; Bridge is Strategy applied to a structural split of two hierarchies, planned up front.
-
-## Flyweight pattern
-
-### Use when — all three conditions must hold (optimization only, never preemptive)
-- The app must keep a huge number of similar objects alive at once; and
-- this measurably exhausts memory; and
-- the objects carry duplicated state that can be extracted and shared.
-
-### Laravel application
-- Rare in request-scoped PHP: requests are short and Octane workers reset. The legitimate cousins: backed enums (interned by the engine — the idiomatic flyweight for closed sets), shared immutable config/value-object instances reused across a long-running import or queue batch.
-- Shared (intrinsic) state must be immutable; per-use (extrinsic) state is passed as method arguments — an Octane rule this pattern happens to restate.
-- If memory pressure in a batch job is the problem, reach first for `lazy()`/`cursor()` streaming (see `laravel-best-practices.md`); flyweight is the answer only when the duplication itself is the cost.
-
-### Anti-patterns
-- Introducing flyweight machinery without a measured memory problem.
-- Mutable "shared" instances — a shared mutable flyweight under Octane is a cross-request data leak by construction.
-
-## Composite pattern
-
-### Use when
-- Data or rules are recursive trees and callers should treat a leaf and a group uniformly: category trees, menu/navigation structures, nested comments, organizational units, composable validation or eligibility rules.
-
-### Laravel application
-- Model the node contract as one small interface (e.g. `EligibilityRule::passes(Context $ctx): bool`); leaves implement it directly, and composites (`AllOf`, `AnyOf`) hold `RuleInterface[]` children and implement the same interface. Specification-style rule composition is the highest-value use.
-- For persistent trees, pair the in-memory composite with a deliberate storage strategy (adjacency list, path/materialized path, or a package the repo already uses) — recursion in PHP must not become recursion in queries; load the tree in bounded queries, then compose.
-- Blade/component nesting already gives UI composition; do not force a class-based composite for rendering.
-
-### Good defaults
-- Guard depth and cycles explicitly when input is user-shaped.
-- Keep leaf and composite behavior contract-identical (LSP): callers never type-check for "is this a group".
-
-### Anti-patterns
-- A composite interface with `addChild`/`removeChild` on leaves that throw `NotSupported` — split the mutable-tree API from the evaluation API.
-- Unbounded recursive queries (N+1 per tree level) hidden behind an elegant in-memory composite.
-
-## Iterator pattern
-
-### Use when
-- A traversal should be consumed lazily without materializing the whole dataset, or a custom aggregate should be `foreach`-able without exposing internals.
-
-### Laravel application
-- PHP generators (`yield`) are the idiomatic iterator: streaming file lines, paginated API pages, transformed rows. Laravel's `LazyCollection` (and `lazy()`/`cursor()` on queries) is the framework-native generator wrapper — prefer it over hand-written `Iterator` implementations.
-- Choose the traversal tool by mutation and memory behavior via the large-dataset table in `laravel-best-practices.md` (`chunk`, `chunkById`, `lazy`, `lazyById`, `cursor`).
-- Implement `IteratorAggregate` (returning a generator) on domain collections when a typed collection object earns its keep; implement the low-level `Iterator` interface only for genuinely custom traversal state.
-
-### Anti-patterns
-- Materializing huge arrays and then "optimizing" downstream, when a generator/LazyCollection keeps memory flat.
-- Generators with hidden side effects per step — iteration must be re-runnable or explicitly single-pass.
-- A custom collection class that re-implements twenty Collection methods for one use site.
-
 ## State pattern
 
 ### Use when
@@ -553,50 +460,6 @@ adapter is missing or leaking. (Decorator keeps an interface and adds behavior; 
 - Boolean soup (`is_active`, `is_archived`, `is_pending`) representing one exclusive lifecycle.
 - Transition rules duplicated in controllers, jobs, and admin panels instead of one authority.
 - Status changed silently as a side effect of unrelated updates (mass assignment reaching `status`).
-
-## Mediator pattern
-
-### Use when
-- A set of collaborators has developed a web of direct references — each knows several others by name, reacts to their changes, and none can be reused or tested alone.
-- Coordination logic for one workflow is smeared across its participants instead of living in one place.
-
-### Laravel application
-- The everyday mediator is a plain orchestrating service: participants (validators, calculators, notifiers) know nothing about each other; the service sequences them. If a "service" mostly relays messages between components that also still talk directly, it is not a mediator — finish the decoupling or remove it.
-- Laravel's event dispatcher is a platform mediator for *decoupled reactions* (listeners don't know the dispatching code); use it for genuinely independent side effects, not to hide a required sequential workflow — a workflow scattered across listeners becomes untraceable.
-- Distinguish from Facade: a facade simplifies an existing subsystem that still works without it; a mediator is the only channel through which participants may interact.
-
-### Anti-patterns
-- The mediator growing into a god object that knows every participant's internals — keep participants' contracts narrow.
-- Event-listener chains that implement an ordered business transaction implicitly (listener A dispatches event B ...). Sequences belong in a service or pipeline where the order is readable.
-
-## Memento pattern
-
-### Use when
-- A prior state must be restorable — undo, draft/restore, compensation on failure — without exposing the object's internals for outsiders to copy.
-
-### Laravel application
-- Persisted snapshots are the platform form: audit tables storing before/after images, versioned drafts, soft-state checkpoints. The row is the memento; the caretaker (history table) never interprets it beyond storage.
-- Eloquent's `getOriginal()` / `getChanges()` are built-in micro-mementos for a model's in-request lifecycle — use them for audit payloads instead of hand-tracking prior values.
-- Pair with Command for undo-style flows: the job stores the pre-image it needs for compensation; keep mementos immutable and lifecycle-bounded (retention policy owned by the data layer).
-- In-memory undo stacks across requests do not exist under Octane — state that must survive the request lives in the database or cache with explicit keys and TTLs.
-
-### Anti-patterns
-- "Snapshots" assembled by reading another object's public getters field-by-field — the owner builds its own snapshot.
-- Unbounded history tables with no retention decision.
-
-## Visitor pattern
-
-### Use when
-- A new operation must run across a stable, heterogeneous object structure (document nodes, rule trees, catalog entries of different classes) without adding that operation to every class — especially when several such operations (export, render, validate, price) keep arriving.
-
-### Laravel application
-- Classic double dispatch (`accept(Visitor)` on every node) is heavy in PHP; prefer the pragmatic form first: a handler map keyed by node class or backed enum (`match` on `$node::class`), one handler object per operation. This keeps the operation consolidated without touching node classes.
-- Reach for real `accept()`-based Visitor only when the structure is deep, recursive, and traversal must accumulate state across nodes (report generation over a rule AST).
-- The trade the classic pattern makes: adding an operation is cheap; adding a node class means updating every visitor/handler map. Choose it only when the node set is stable and operations vary — if nodes vary and operations are stable, use ordinary polymorphism instead.
-
-### Anti-patterns
-- `instanceof` ladders duplicated per operation across services — the exact smell either form of Visitor exists to remove.
-- A visitor demanding public access to every node internal; give nodes intention-named accessors for what operations legitimately need.
 
 ## Template method pattern
 

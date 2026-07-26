@@ -1,155 +1,104 @@
 # TypeScript Aggregate Consumer Pattern
 
-Use `input_shape: typescript_permission_catalog`. This is the **aggregate consumer** shape: the consumer reads every
-active permission and owns none of them. The client frontend monorepo is the first of them.
+Read `references/shared-consumer-contract.md` first; the six rules there govern this file and are not repeated. The
+descriptor and the drift severity table are in `references/catalog-workflow.md`. `input_shape` is
+`typescript_permission_catalog`.
 
-## Aggregate consumer versus permission owner
+An aggregate consumer owns nothing: it contributes no source observation to ownership drift, and registering one changes
+no ownership, no `service_key`, and no bitmap allocation. A permission **owner** instead owns a `service_key` and
+receives an artifact holding only its own permissions. The two arrays and the `scope` rule are in
+`references/catalog-workflow.md`.
 
-A permission **owner** owns a `service_key` and a slice of the catalog. It appears in the `services` array of
-`catalog/services.json`, contributes source observations to ownership drift, and receives a generated artifact
-containing only its own permissions.
-
-An aggregate **consumer** owns nothing. It appears in a separate `aggregate_consumers` array so no import or drift rule
-can mistake it for an owner. Registering one never changes permission ownership, `service_key` values, or bitmap
-allocation.
-
-```json
-{
-    "consumer_key": "client",
-    "owner_repo": "client",
-    "source_path": "packages/sdk-auth/src/generated/permission-catalog.ts",
-    "input_shape": "typescript_permission_catalog",
-    "generated_target": "generated/client/packages/sdk-auth/src/generated/permission-catalog.ts",
-    "scope": "all_active"
-}
-```
-
-`scope: all_active` is the only supported scope. Do not add the consumer to any permission's `generated_targets`: that
-field uses `service_key:path` syntax and an aggregate consumer has no `service_key`. Coverage is derived from the scope,
-so a new permission reaches the consumer with no per-permission bookkeeping.
-
-## Generated surface
+## Emitted surface
 
 ```ts
-export const PERMISSIONS = { CONTENT_GET_SETS: "content_get_sets" } as const;
+export const PERMISSIONS = { EXAMPLE_GET_THING: "example_get_thing" } as const;
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
-export const PERMISSION_BY_BITMAP_ID = { 64: PERMISSIONS.CONTENT_GET_SETS } as const satisfies Readonly<Record<number, PermissionKey>>;
-export const BITMAP_ID_BY_PERMISSION = { [PERMISSIONS.CONTENT_GET_SETS]: 64 } as const satisfies Readonly<Record<PermissionKey, number>>;
-export const PERMISSION_CATALOG_ACTIVE_COUNT = 119;
-export const PERMISSION_CATALOG_MAX_BITMAP_ID = 119;
-export const PERMISSION_CATALOG_FINGERPRINT = "sha256:…";
+export const PERMISSION_BY_BITMAP_ID = { 7: PERMISSIONS.EXAMPLE_GET_THING } as const satisfies Readonly<Record<number, PermissionKey>>;
+export const BITMAP_ID_BY_PERMISSION = { [PERMISSIONS.EXAMPLE_GET_THING]: 7 } as const satisfies Readonly<Record<PermissionKey, number>>;
+export const PERMISSION_CATALOG_ACTIVE_COUNT = /* read from the artifact */;
+export const PERMISSION_CATALOG_MAX_BITMAP_ID = /* read from the artifact */;
+export const PERMISSION_CATALOG_FINGERPRINT = /* read from the artifact */;
 ```
 
-Active permissions only, ordered by `bitmap_id`, `bit_index = bitmap_id - 1`, ESM named exports, strict and
-framework-free, generated-file warning header, LF endings. The `satisfies` clauses make the reverse map exhaustive at
-compile time. The fingerprint is a sha256 over `bitmap_id` and `permission_key` pairs, so it moves on real changes and
-not on reformatting.
+The identifier is the permission key upper-cased. Active permissions only, ordered by `bitmap_id`, ESM named exports,
+strict and framework-free, generated-file header, two-space indent, double quotes, no trailing comma, LF only. The
+`satisfies` clauses make both maps exhaustive and type-checked against `PermissionKey` at compile time, so a partial or
+mistyped map fails the build rather than a request. The fingerprint is a sha256 over id-and-key pairs, so it moves on a
+real change and not on reformatting.
 
-## Integration rules
+The last three values are placeholders on purpose — read them from the applied artifact, per the never-freeze-the-scale
+rule in `SKILL.md`.
 
-1. Generation writes only inside `alaa-permission-catalog`, to `generated/<owner-repo>/<source-path>`. Applying to the
-   consumer repository is a separate, explicitly authorized step, exactly as for Laravel and Go consumers.
-2. Commit the applied artifact at the exact `source_path`. Never hand-edit it and never fetch the catalog at runtime.
-3. Match the consumer's formatter profile in the emitter, not by reformatting after generation. Generation fails loudly
-   on a line wider than the consumer's print width, on a permission key that is not a valid identifier, on a duplicate
-   key, and on two keys that collide on one generated identifier.
-4. Keep a single generated map. Do not add a hand-written duplicate, an environment override, or a runtime fetch.
-5. Expose permission **names** across the consumer's public boundary; keep the raw bitmap tables internal. Application
-   code compares against `PERMISSIONS.*`, never raw strings and never bitmap ids.
-6. Generated data and the logic that reads it live in separate files, so the generated artifact stays a pure static
-   registry under the consumer's file-size rules.
+## Emitter refusals
+
+Generation throws, and the CLI exits `2`, on each of these. Via the drift analyzer the same failure surfaces as fatal
+`AGGREGATE_CONSUMER_GENERATION_FAILED`.
+
+| Condition | Message |
+| --- | --- |
+| Non-positive bitmap id | `Cannot emit TypeScript for permission [x] with non-positive bitmap id [n].` |
+| Key not matching `/^[a-z][a-z0-9_]*$/` | `Permission key [x] cannot be emitted as a TypeScript identifier.` |
+| Duplicate key among actives | `Permission key [x] appears more than once in the active catalog.` |
+| Two keys colliding on one identifier | `TypeScript identifier collision: [a] and [b] both map to [X].` |
+| Any line over 80 columns | `Generated TypeScript line exceeds the client formatter print width of 80 columns: [...]` |
+
+The 80-column cap is the consumer's formatter print width and it caps permission-key length. Shorten the key in the
+catalog; never reformat after generation and never widen the cap to fit a key.
+
+## Export surface
+
+Export **names** across the package boundary — `PERMISSIONS`, `PermissionKey`, the decoder, its result type — and keep
+`PERMISSION_BY_BITMAP_ID` and `BITMAP_ID_BY_PERMISSION` one level in, so feature code cannot begin reasoning in bit ids.
+Application code compares against `PERMISSIONS.*`, never a raw string and never a bitmap id. Keep the generated data and
+the logic that reads it in separate files, so the generated artifact stays a pure static registry under the consumer's
+file-size rules.
 
 ## Frontend decoding is a UI hint, not authorization
 
 A browser client may decode `prm`, `prv`, and `av` from its **own** access token to derive UI capability state. Name the
-function so the boundary is unmissable — for example `decodeUnverifiedUiAuthorization`.
+function so the boundary is unmissable, for example `decodeUnverifiedUiAuthorization`.
 
-- It never verifies the token signature and must never gate a security decision. The gateway and the owning service stay
-  authoritative; a deny response is the only authoritative answer.
-- It fails closed: malformed input grants nothing and never throws.
+- It never verifies the token signature and never gates a security decision. The gateway and the owning service stay
+  authoritative, and a deny response is the only authoritative answer.
+- It fails closed: malformed input grants nothing and throws nothing.
 - Unknown, deprecated, and reserved bits grant nothing, so a token issued against a newer catalog degrades to fewer
-  hints instead of failing.
-- A valid token with an empty bitmap is a legitimate ready state. **An empty frontend permission set must never
-  invalidate the session or log the user out.** This is the opposite of the downstream-service rule, where a protected
-  request resolving to zero known permissions is rejected — that rule is server-side trusted-context normalization.
-- Bound the work (token, payload, and bitmap length caps), return no raw token and no raw claims, log nothing, and
-  persist nothing separately from the token.
+  hints.
+- **A valid token with an empty bitmap is a legitimate ready state and must never invalidate the session or log the user
+  out.** This is the deliberate exception to the fail-closed-on-zero rule, which is server-side only.
+- Cap token, payload, and bitmap length; return no raw token and no raw claims; log nothing; persist nothing separately
+  from the token. These caps protect the browser only — the server-side cap is in
+  `references/shared-consumer-contract.md`.
 - Capability changes appear only after login, token refresh, or reissuance, because the token is an issuance-time
-  snapshot. Never send `X-Access` or any other gateway-owned authz header; decoding a claim from your own token is not
-  the same as asserting a trusted header.
+  snapshot.
+- Never send `X-Access` or any other gateway-owned authorization header from a client. Decoding a claim from your own
+  token is not asserting a trusted header; `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) owns that boundary
+  and wins on any conflict.
 
-## Wiring the artifact into the consumer application
+## Wiring into the consumer application
 
-Onboarding shape, in dependency order. The generated file is data; everything below is the consumer repository's code.
-
-1. **Decoder** in the SDK package, next to the generated file, named so the boundary is unmissable. It maps set bits to
-   names via the generated map and returns a small frozen result — a state, the recognized permissions, and optional
-   `prv`/`av`.
-2. **One recompute point** in the application, wherever the access token is set. Every lifecycle path (login, refresh,
-   cross-tab sync, hydration, logout) already funnels through that setter, so a single call there covers all of them
-   with no extra wiring and no watchers.
-3. **Typed helpers** over the stored snapshot — a single-permission check, an any-of check, and an all-of check — each
-   taking generated `PERMISSIONS.*` values and each returning false unless the snapshot decoded successfully.
-4. **Application code** calls only the helpers. It does not call the decoder, read the permission array directly, or
-   import the generated maps.
+Only the first step is this skill's: a **decoder in the SDK package beside the generated file**, named so the boundary is
+unmissable, mapping set bits to names through the generated map and returning a small frozen result — a state, the
+recognized permissions, and optional `prv`/`av`.
 
 ```ts
-// SDK package: exported once
 export function decodeUnverifiedUiAuthorization(token: string | null | undefined): UnverifiedUiAuthorization;
-
-// Application: one recompute point
-setAccessToken(token) {
-  this.accessToken = normalize(token);
-  this.uiAuthorization = decodeUnverifiedUiAuthorization(this.accessToken);
-}
-
-// Application: typed helpers, used by feature code
-hasPermission(PERMISSIONS.CONTENT_PUT_SET);
 ```
 
-Export **names** across the consumer's public boundary (`PERMISSIONS`, the key type, the decoder, its result type) and
-keep the bitmap maps one level in, so feature code cannot start reasoning in bit ids.
-
-Two failure modes to expect when an agent debugs this later:
-
-- *"The backend granted the permission but the UI still hides the control."* The token is an issuance-time snapshot;
-  the hint updates only on the next login, refresh, or reissuance. This is correct behavior, not a decoder bug.
-- *"The decode returned nothing, so we logged the user out."* Wrong by construction — see the UI-hint rules above.
-
-## Ownership boundary
-
-This file owns the catalog side: the descriptor, generation, the emitted surface, drift, apply, and the decoder's
-security contract. How the **application** consumes the result — store ownership, helper semantics, SSR and hydration,
-the three UI states, and the app-side anti-patterns — belongs to `$alaa-services-contract`
-`references/60-frontend-sdk-consumption-contract.md`. Read that before writing application code; do not restate its
-rules here, and do not let the two drift.
-
-## Drift interpretation
-
-Aggregate drift is strict, not warning-only. The applied artifact must match generated output byte for byte.
-
-| Code | Severity |
-| --- | --- |
-| `AGGREGATE_CONSUMER_ARTIFACT_NOT_APPLIED` | warning — not yet applied, does not block |
-| `AGGREGATE_CONSUMER_PERMISSION_MISSING` | fatal |
-| `AGGREGATE_CONSUMER_PERMISSION_EXTRA` | fatal |
-| `AGGREGATE_CONSUMER_BITMAP_ID_MISMATCH` | fatal |
-| `AGGREGATE_CONSUMER_IDENTIFIER_COLLISION` | fatal |
-| `AGGREGATE_CONSUMER_MAP_DESYNC` | fatal |
-| `AGGREGATE_CONSUMER_MALFORMED` | fatal |
-| `AGGREGATE_CONSUMER_GENERATION_FAILED` | fatal |
-| `AGGREGATE_CONSUMER_STALE_METADATA` | error |
-| `AGGREGATE_CONSUMER_MANUAL_EDIT` | error |
-
-CRLF is normalized before comparison, so a Windows checkout does not report false drift.
+Everything after it is application consumption and is owned by
+`alaa-services-contract references/60-frontend-sdk-consumption-contract.md` (`/alaa-services-contract`,
+`$alaa-services-contract`): where the single recompute point sits, the typed helpers over the stored snapshot, store
+ownership, SSR and hydration, the three UI states, and the app-side anti-patterns. Read it before writing application
+code; it wins on conflict. Two rules from this side constrain that code and are not negotiable there: application code
+compares against `PERMISSIONS.*` only, and the decode happens once per token change, never per component render.
 
 ## Tests
 
-- Assert the shipped `catalog/services.json` still registers the consumer, so the proposal cannot silently stop
-  regenerating.
-- Assert deprecated and reserved permissions are excluded and that ordering is by `bitmap_id`.
-- Assert generation is deterministic across input ordering and emits no CRLF.
-- Assert the emitter rejects invalid identifiers, duplicate keys, and over-width output.
-- Assert drift fires for each code above, including a hand edit that preserves the permission set.
-- In the consumer repository: typecheck, unit tests, build, export-surface tests, formatter check, and file-size gate.
-- Re-run catalog import and strict drift after applying, and confirm the aggregate findings drop to zero.
+- The shipped `catalog/services.json` still registers this consumer, so it cannot silently stop regenerating.
+- Deprecated and reserved permissions are absent from the artifact and ordering is by `bitmap_id`.
+- Generation is byte-identical across reversed input ordering and emits no CRLF.
+- The emitter rejects an invalid identifier, a duplicate key, and an over-width line.
+- Drift fires for each `AGGREGATE_CONSUMER_*` code, including a hand edit that preserves the permission set.
+- In the consumer repository: typecheck, unit tests, build, export-surface test, formatter check, and file-size gate,
+  per `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) and `/alaa-mono-package`
+  (`$alaa-mono-package`).

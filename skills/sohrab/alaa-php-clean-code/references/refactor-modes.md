@@ -2,11 +2,12 @@
 
 ## Contents
 - Why task mode matters
-- Default mode selection
+- Choosing the mode
 - `scoped-soft`
 - `scoped-hard-contract-preserving`
 - `whole-project-preserve-local`
 - `whole-project-normalize-alaa`
+- Persistence naming in `whole-project-normalize-alaa`
 - Public-contract inventory
 - Safe sequencing for whole-project work
 - Anti-patterns
@@ -21,14 +22,9 @@ Task mode controls:
 - how aggressively weak abstractions may be removed
 - how broad the documentation and test sweep must be
 
-## Default mode selection
-Use the safest matching rule:
-- New code or a local cleanup with no explicit broad-refactor request -> `scoped-soft`
-- Deeper internal cleanup while preserving public contracts -> `scoped-hard-contract-preserving`
-- Whole-repo cleanup with no explicit normalization request -> `whole-project-preserve-local`
-- Whole-repo standardization toward one Alaa convention set -> `whole-project-normalize-alaa`
+## Choosing the mode
 
-If the request is ambiguous, do not silently escalate from a scoped mode to a whole-project mode.
+`SKILL.md` owns the selection table and the rule against silently escalating a scoped mode into a whole-project one. It also owns the **uniformity rule** that decides, in every mode, whose convention wins: inside an existing repository the repository's own convention wins for code that already exists there, while a new surface with no sibling in the repository takes the house convention. Read that rule before applying any mode below; the mode controls blast radius, not whose convention is right.
 
 ## `scoped-soft`
 ### Use when
@@ -40,7 +36,7 @@ If the request is ambiguous, do not silently escalate from a scoped mode to a wh
 Deliver a clean local slice with minimal collateral change.
 
 ### Required behavior
-- Keep the touched slice fully aligned with `alaa-php-clean-code`.
+- Keep the touched slice fully aligned with this skill.
 - Refactor immediate neighbors only when needed to keep behavior safe, contracts intact, and the local design coherent.
 - Reuse the repository's existing naming and folder conventions unless they directly block clarity.
 - Add or update the nearest meaningful tests.
@@ -106,7 +102,7 @@ Make the whole repository internally consistent while preserving its local diale
 - Choose one local term for each repeated concept and standardize toward that term.
 - Clean duplication, weak abstractions, inconsistent type usage, and naming drift across the repo.
 - Keep the repo's own preferred suffixes and folder names when they are stable and understandable.
-- Use `alaa-workflow` and stage the work in reviewable phases.
+- Use `/alaa-workflow` (`$alaa-workflow`) and stage the work in reviewable phases.
 
 ### Allowed changes
 - broad mechanical renames that preserve repo-local terminology
@@ -128,7 +124,7 @@ Make the whole repository internally consistent while preserving its local diale
 Make the whole repository look and behave like an Alaa-style Laravel codebase while preserving external contracts by default.
 
 ### Required behavior
-- Read `alaa-workflow`, `alaa-laravel-architecture`, and `./consistency-and-naming.md` before broad renames or moves.
+- Read `/alaa-workflow` (`$alaa-workflow`), `/alaa-laravel-architecture` (`$alaa-laravel-architecture`), and `consistency-and-naming.md` before broad renames or moves.
 - Use the architecture skill's canonical layer flow and naming where it applies.
 - Normalize duplicated concepts, generic helpers, manager classes, weak base repositories, raw-array boundaries, and inconsistent naming.
 - Prefer explicit DTO boundaries, constructor injection, small focused services, value objects for real concepts, and clear request/resource/policy edges.
@@ -151,6 +147,15 @@ Make the whole repository look and behave like an Alaa-style Laravel codebase wh
 
 ### Preserve by default
 Even in normalization mode, preserve external contracts unless explicitly allowed to change them.
+
+## Persistence naming in `whole-project-normalize-alaa`
+
+These rules apply in this mode and in no other. In the three other modes the repository's existing persistence naming stands.
+
+- Database-backed identifiers and raw persistence attributes use lower_snake_case, with no exception: migration column names, table names, index and constraint names, raw Eloquent attribute names, `$fillable`, `$casts`, factory and seeder payload keys, query-builder column references, and database-test assertions.
+- A legacy camelCase SQL identifier is debt to remove, not a local convention to preserve. The one thing that keeps it: an existing live database rollout the task must stay compatible with, named in the task.
+- Keep the contract boundary separate from persistence. Resources, transformers, request mappers, and DTOs may preserve outward API keys where contract preservation is required, and a schema name is never bent to match a camelCase API field in order to avoid writing the mapping step.
+- Normal PHP naming stays idiomatic. Methods, local variables, private helpers, and service methods remain camelCase unless the repository has a different explicit convention. Standard PHP camelCase is not itself legacy: the normalization target is persistence naming and schema-coupled attribute drift, nothing wider.
 
 ## Public-contract inventory
 Before a hard refactor or whole-project pass, inventory the touched contracts:

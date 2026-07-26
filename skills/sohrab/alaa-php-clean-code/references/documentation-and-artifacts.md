@@ -11,14 +11,14 @@
 - When to use companion doc skills
 
 ## Documentation language and boundary
-Use `alaa-docs-farsi` for the deterministic workflow that keeps docs, code, and Postman aligned.
+Use `/alaa-docs-farsi` (`$alaa-docs-farsi`) for the deterministic workflow that keeps docs, code, and Postman aligned.
 
 When this skill is the active coding baseline:
 - keep resulting docs in simple, fluent English unless the user explicitly asks for another language
 - keep exact technical identifiers in the same spelling used by the codebase
 - preserve detail; do not flatten useful operational or API nuance just to shorten the docs
 
-Use `openai-docs` when the documentation touches OpenAI APIs, models, prompts, tools, agent workflows, or product capabilities and you need authoritative current references or citations.
+Use `/openai-docs` (`$openai-docs`) when the documentation touches OpenAI APIs, models, prompts, tools, agent workflows, or product capabilities and you need authoritative current references or citations.
 
 ## English docblock rules
 Add enough docblocks to serve two goals:
@@ -139,6 +139,6 @@ A document is stale if it:
 - duplicates another document with conflicting detail
 
 ## When to use companion doc skills
-- Use `alaa-docs-farsi` for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
-- While using `alaa-php-clean-code`, override the docs output language to simple English unless the user explicitly requests Persian or another language.
-- Use `openai-docs` when any document needs official OpenAI references, current model guidance, current prompt guidance, or up-to-date product behavior.
+- Use `/alaa-docs-farsi` (`$alaa-docs-farsi`) for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
+- While using this skill, override the docs output language to simple English unless the user explicitly requests Persian or another language.
+- Use `/openai-docs` (`$openai-docs`) when any document needs official OpenAI references, current model guidance, current prompt guidance, or up-to-date product behavior.

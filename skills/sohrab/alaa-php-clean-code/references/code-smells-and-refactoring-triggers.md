@@ -19,7 +19,7 @@ not a smell — see "When NOT to refactor".
 
 ## Bloaters
 - **Long method**: a controller action or service method past the size budget, or any fragment that needs a comment to explain itself → extract an intention-named private method or a focused service; decompose conditionals. Extra method calls are never the performance problem.
-- **Large class**: a controller/service/job accumulating unrelated verbs → Extract Class along the seams in the SKILL.md budget section (Form Request, service per use case, repository, strategy).
+- **Large class**: a controller/service/job accumulating unrelated verbs → Extract Class along the seams in `SKILL.md` under Size and complexity budgets (Form Request, service per use case, repository, strategy).
 - **Primitive obsession**: money, phone, national id, date ranges, tenant ids traveling as strings/ints; class constants coding a closed set → value object; backed enum. The platform's `TenantId`-style value objects exist for exactly this.
 - **Long parameter list**: more than 3-4 parameters, or boolean flags steering the flow → Introduce Parameter Object (a small DTO), or split the method per flag branch.
 - **Data clumps**: the same field group recurring across signatures (page/perPage/sort, from/to dates) → one typed DTO (`...FilterData`); the test: delete one field — if the rest lose meaning, they belong together.

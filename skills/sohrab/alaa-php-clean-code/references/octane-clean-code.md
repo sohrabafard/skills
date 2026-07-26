@@ -1,122 +1,44 @@
-# Octane-safe clean code
+# Octane-safe pattern shaping
 
-## Contents
-- Core rule
-- Long-lived worker state
-- Dependency injection and container lifetime
-- Pattern-specific Octane cautions
-- Swoole to RoadRunner portability
-- Review checklist
-- Validation expectations
+## What this file is, and what it is not
 
-## Core rule
-Assume every Alaa Laravel service runs under Octane unless repo evidence proves otherwise.
+This file answers one question: **for each design pattern, what shape does it have to take so the Octane worker invariants hold?** It states no invariant of its own.
 
-Under Octane, request workers are long-lived. Code that is clean under PHP-FPM can be unsafe if it stores request-specific state in a static property, singleton, global cache, reused SDK client, mutable facade state, or closure captured by a long-lived object.
+**The invariants live in `/alaa-octane-performance` (`$alaa-octane-performance`), and its wording governs.** That skill owns, and this file does not restate:
 
-Clean code for this fleet must be:
-- explicit about inputs
-- stateless by default
-- tenant-aware
-- reset-aware
-- portable across Swoole and RoadRunner unless runtime-specific code is intentionally in scope
+- the enumerated list of values that may never be retained, and the enumerated sites where retaining them is forbidden;
+- the reset mechanism — the scoped-binding form, the `config/octane.php` flush list, and the request-terminated listener;
+- worker lifecycle, reload, and sizing;
+- the cross-request leak regression test and the mechanic that makes it fail against a leaking implementation;
+- connection and Redis lifecycle, and the cache tiers;
+- Swoole-to-RoadRunner portability, including which Swoole-only APIs may appear where;
+- precedence over the upstream `octane-development` skill, which this repository does not own.
 
-## Long-lived worker state
+Read it before binding any service, adding any static property, reusing any SDK client, or shipping a change to a service that a worker resolves once. If you have read only this file, you have not yet read the invariant — go there.
 
-### Never retain request-specific data
-Do not retain these values in static properties, globals, singletons, service-provider properties, or long-lived closures:
-- `Request`
-- authenticated user or profile
-- tenant/project/school/branch context
-- authorization result
-- locale
-- request headers
-- correlation/request/trace IDs
-- per-request validation result
-- per-request external client headers or tokens
+`SKILL.md` carries the three always-loaded code-shape rules: nothing belonging to one request is retained beyond it; a per-request value arrives as a method argument; a memoization key inside a long-lived object carries the tenant or project identifier.
 
-Pass this data explicitly as method arguments or through a request-scoped DTO/service that the app resets between requests.
+## Per-pattern shaping
 
-### Safe state
-These are usually safe to keep in singletons:
-- immutable configuration read at boot
-- tenant-agnostic stateless services
-- SDK clients with fixed configuration and per-call headers/options
-- compiled maps of strategy classes, enum mappings, or known capability metadata
+Six patterns carry their Octane note inside `design-patterns.md` itself, at the pattern: **Service**, **Observer**, **Adapter**, **Facade**, **Singleton**, and **Pipeline**. Read them there; they are not repeated here.
 
-Even safe singleton state must not grow with request count.
+The rest, one line each:
 
-## Dependency injection and container lifetime
+| Pattern | The shape that holds under a long-lived worker |
+|---|---|
+| MVC | A controller may read request context and must not retain it. It hands validated input to a service or a DTO and keeps nothing on itself. |
+| Repository | A repository never remembers "the current tenant". It takes the tenant or project identifier, or a typed filter DTO, per call — or uses a reset-safe global-scope/RLS approach the repository already sanctions. A repository that resolves tenancy internally leaks it to the next request on that worker. |
+| Factory | A factory may hold an immutable map of strategy or adapter class names. It must not hold a built provider instance that carries request headers, tokens, tenant values, or mutable options — build those per call. |
+| Strategy | A strategy is stateless. Request data arrives as an argument to `execute`, `calculate`, `handle`, or whatever the contract's method is named, never as constructor state. |
+| Builder | A builder is either constructed per use or holds no accumulated state. Never reuse one mutable builder instance across requests: the second request inherits the first request's partial payload. |
+| Proxy / lazy object | A lazy ghost or proxy resolved into a worker-lifetime service initialises once for the worker, not once per request. Only use one for a dependency whose initialised state is request-independent. |
+| DTO / value object | `readonly` makes these safe to share by construction. A mutable DTO reachable from a worker-lifetime object is a leak; `clone` it or make it `readonly`. |
+| Command / job | A job carries scalar IDs and typed payloads plus its tenant or project identifier explicitly, never an ambient one. Its handler is idempotent, because a retry is the normal consequence of an at-least-once queue. |
+| Prototype | Default `clone` is shallow. Implement `__clone()` to deep-copy nested mutable objects, or a shared nested object becomes cross-request state. |
+| Flyweight | Shared intrinsic state is immutable; per-use extrinsic state is a method argument. A mutable shared instance is a cross-request data leak by construction. |
 
-### Good defaults
-- Constructor-inject stable collaborators.
-- Method-pass request-specific context.
-- Use interfaces only for real seams.
-- Bind mutable request-scoped services with the repo's scoped/transient convention.
-- Keep singleton bindings immutable and tenant-agnostic.
+## The one review check this file owns
 
-### Avoid
-- Injecting `Request` into singleton-like services.
-- Storing `auth()->user()`, tenant context, locale, or headers in a service constructor.
-- Reusing an HTTP client while mutating default headers per request.
-- Using the service container inside business logic to hide lifecycle mistakes.
+Every service, factory, strategy, adapter, observer, listener, job, and pipeline step touched by the change is either stateless or reset-safe — name which, per class, before declaring the work done. If you cannot name it for a class, that class is the finding.
 
-## Pattern-specific Octane cautions
-
-### MVC
-Controllers may read request context, but they must not retain it. Keep controllers thin and pass validated inputs into services or DTOs.
-
-### Service pattern
-Services should be stateless orchestrators. If a service needs user or tenant context, pass it to the method instead of storing it on the service.
-
-### Repository pattern
-Repositories are mandatory for application-layer persistence access. They must not remember the "current tenant" internally. Accept tenant/project identifiers or typed filter DTOs explicitly, or use a repo-approved global-scope/RLS approach that is reset-safe.
-
-### Factory pattern
-Factories may keep immutable maps of supported strategies or adapters. Do not cache provider instances when those instances carry request headers, tokens, tenant values, or mutable options.
-
-### Strategy pattern
-Strategies should be stateless. If a strategy needs request data, pass it to `execute`, `calculate`, `handle`, or another explicit method.
-
-### Observer pattern
-Observers run inside the same long-lived app. Keep them stateless, avoid hidden IO in model events unless intentional, and queue slow side effects when the repo policy supports it.
-
-### Adapter pattern
-Adapters should translate external APIs into internal contracts. Do not mutate a shared adapter/client with per-request headers; pass headers/options per call or create a short-lived request-specific client wrapper.
-
-### Facade pattern
-Facades are acceptable near Laravel edges. Avoid using facades to mutate global runtime state during a request. Prefer dependency injection in domain-facing services.
-
-### Singleton pattern
-Singleton is high-risk under Octane. Use it only for immutable, tenant-agnostic, stateless, or expensive SDK-style objects that accept request-specific data per method call. Never store current user, tenant, request, locale, trace, or authorization state in a singleton.
-
-### Pipeline pattern
-Pipeline steps must not retain the payload between requests. Steps should transform or validate the passed payload and then release it.
-
-### Command/job pattern
-Jobs and commands are safer places for slow work, but they still need idempotency, bounded retries, and explicit tenant context. Do not serialize broad object graphs when IDs and typed payloads are enough.
-
-## Swoole to RoadRunner portability
-The fleet is expected to migrate from Swoole to RoadRunner. Keep application code portable:
-- prefer Laravel Octane, Laravel container, PSR, Symfony, and framework abstractions
-- isolate Swoole-only APIs behind runtime-owned adapters when unavoidable
-- do not rely on Swoole task workers from business services unless the runtime design explicitly owns that choice
-- avoid coroutine-specific assumptions in ordinary services, repositories, policies, resources, and jobs
-- validate Octane reset behavior through framework-level hooks instead of server-specific globals where possible
-
-## Review checklist
-Before finalizing PHP/Laravel code, ask:
-- Does any static property, singleton, facade mutation, or closure retain request-specific data?
-- Does every tenant/project-specific query, cache key, memoization key, and policy decision include trusted tenant/project context?
-- Is every touched application-layer persistence read/write behind a repository?
-- Are current user, request, locale, headers, trace IDs, and auth state passed explicitly instead of stored?
-- Are services, factories, strategies, adapters, observers, listeners, jobs, and pipeline steps stateless or reset-safe?
-- Is any Swoole-specific code isolated from domain/application code?
-- Would the same code behave correctly after 10,000 requests handled by the same worker?
-
-## Validation expectations
-- For leak-prone changes, add tests that simulate two different users/tenants/projects in sequence.
-- For cache or memoization changes, prove cache keys cannot cross tenants.
-- For singleton or scoped binding changes, inspect the service provider and the consuming class lifecycle.
-- For RoadRunner migration readiness, search for direct `Swoole`, coroutine, task-worker, and server-specific API usage in touched code.
-- If runtime hooks, worker tuning, memory growth, or hot-path performance are in scope, switch to `alaa-octane-performance`.
+For a leak-prone change, the regression test and what it must assert belong to `/alaa-octane-performance` (`$alaa-octane-performance`). For cache and memoization keys, key design belongs to `alaa-data-layer references/50-redis-laravel-octane.md`.

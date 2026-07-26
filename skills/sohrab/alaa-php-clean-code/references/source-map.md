@@ -6,7 +6,7 @@ Use this map when PHP, Laravel, tooling, or security behavior may have changed s
 
 1. Repository truth:
    - `composer.json`, `composer.lock`, `phpunit.xml`, `pint.json`, `phpstan*`, `rector*`, CI files, and repo-local `AGENTS.md`.
-   - Installed vendor code and generated framework files when present.
+   - Installed vendor code and generated framework files when present. Never edit anything under `vendor/`: those are upstream subtrees, and a local edit is either overwritten or collides.
 2. Official PHP sources:
    - PHP manual: https://www.php.net/manual/
    - PHP 8.5 migration guide: https://www.php.net/manual/en/migration85.php

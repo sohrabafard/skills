@@ -47,7 +47,7 @@ High-level code depends on abstractions it owns; infrastructure implements them.
 - ❌ Don't: `new PostgresCommentRepository()` inside a service, `app()->make(...)` service-location in domain code, or a domain class importing a vendor SDK directly.
 - Recognition signals that DIP is being violated (invert at a small interface when any appear): a service cannot be unit-tested without a database, broker, or vendor API; swapping a provider means editing business classes instead of one binding; a test mocks concrete classes instead of passing a fake through a constructor.
 - The abstraction belongs to the consumer: shape the interface as what the service *needs* (domain-shaped, few methods), not as a mirror of what the infrastructure offers — a port that mirrors pgx/Eloquent/SDK is inverted in name only.
-- DIP is what makes the repository-pattern gate for Redis caching possible: caching can only be inserted at an interface seam that already exists.
+- DIP is what makes the repository-pattern gate for Redis caching possible: caching can only be inserted at an interface seam that already exists. The gate itself is owned by `alaa-data-layer references/50-redis-laravel-octane.md`.
 
 ## SOLID review checklist
 - Can I name the one reason each touched class changes? (SRP)

@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Laravel Architecture"
-  short_description: "Laravel layering and API contracts"
-  default_prompt: "Use $alaa-laravel-architecture to follow its workflow for laravel layering and api contracts."
+  short_description: "Laravel layer map, call graph, and the boundary gate"
+  default_prompt: "Use $alaa-laravel-architecture when a change crosses two Laravel layers or alters the public surface. Read its references/00-topic-map.md, then run scripts/architecture-gate.sh before reporting the change done."
 
 policy:
   allow_implicit_invocation: true

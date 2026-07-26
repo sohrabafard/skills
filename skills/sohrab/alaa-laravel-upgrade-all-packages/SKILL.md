@@ -1,59 +1,53 @@
 ---
 name: alaa-laravel-upgrade-all-packages
-description: "Run a safe, complete Composer (and npm, when present) dependency-upgrade sweep for a Laravel service -- check outdated/audit state, apply the compatible upgrade set, record any blocked major-version constraint via composer why-not, refresh generated Boost artifacts, keep composer.json and package.json constraints honest against the lockfile, sweep stale version strings from docs and state, and pass the full validation gate before declaring done. Use for a scheduled or recurring upgrade-all-packages automation on a Laravel + Composer repo, or any ad-hoc bring-dependencies-current request. Not for Go modules, npm-only, or other non-Composer ecosystems."
+description: "Composer and npm dependency-upgrade sweep for a Laravel service: restore point and test baseline first, then outdated and audit state, the lockfile move, severity-based advisory triage, blocked-bump capture via composer why-not, manifest-versus-lockfile honesty, worker-boot and telemetry verification, and a revertible change. Use for a scheduled upgrade-all-packages run on a Laravel + Composer repo, an ad-hoc bring-dependencies-current request, or an advisory forcing a named dependency to move. Do not use it for a non-Composer ecosystem such as Go modules or an npm-only service; for a repo carrying a dependency-freeze marker until its named owner answers; or when the manifest is alaa/controlled-ops or the run cuts a tag or Satis publish -- that is /alaa-controlled-ops ($alaa-controlled-ops). A major framework migration is /alaa-laravel-architecture ($alaa-laravel-architecture)."
 ---
 
 # Alaa Laravel Upgrade All Packages
 
-## Purpose
+You move a live service's dependency set and prove the service still behaves.
 
-This is a recurring maintenance run that has already happened, independently and in near-identical shape, across most of the Laravel/Composer services in this portfolio. The real risk in this sweep is never the version bump itself -- it is continuity (a prior run left the worktree mid-change and a fresh run must recognize and finish that instead of starting over) and stale prose (old version numbers or "blocked"/"now resolves" language left behind in docs and state after the refresh). Treat both as first-class parts of the job, not afterthoughts.
+## Before the first command
 
-## When to use
+Each item is a stop, not a preference.
 
-- A scheduled or recurring "upgrade all packages" automation fires for a Laravel + Composer repo.
-- The user asks, ad hoc, to bring a Laravel repo's dependencies current.
-
-## When NOT to use
-
-- The repo is not Laravel/Composer-based (Go modules, a plain npm-only service). The constraint model and validation commands are different enough that this procedure does not transfer cleanly -- treat that as a separate, not-yet-written procedure.
-- The repo is intentionally frozen at a dependency baseline for release-stability reasons. Pause and record why instead of silently skipping or silently upgrading anyway.
-- The repo is a monorepo with more than one `composer.json`. Run this procedure once per manifest root rather than assuming a single repo-wide upgrade covers all of them, and say explicitly which root each run covers.
-- The repo wraps Composer behind another entrypoint (a `Makefile` target, a Docker-exec script, a custom CI job). Find and use that wrapper first -- it may set flags, environment, or ordering the raw `composer` commands below would otherwise miss -- and fall back to the raw commands only if no wrapper exists.
+- **Continuity.** `/alaa-workflow` (`$alaa-workflow`) `references/context-continuity.md` owns plan, phasing, state and resume; follow it unchanged. Two facts it cannot know: this sweep's state file is `docs/agents/upgrade-all-packages-execution-state.md`, and a dirty `composer.lock` plus a dirty `vendor/` is an interrupted **resolution**, not an interrupted plan -- diagnose that via `references/40-failure-classes.md` before reading any plan.
+- **Freeze marker.** A frozen dependency baseline is detected by a `docs/agents/dependency-freeze.md` file or an `extra.alaa.dependency-freeze` key in `composer.json` naming the freeze owner and reason. If either exists, change no dependency and report its contents. If a human says the repo is frozen and no marker exists, write the marker from the owner and reason they give and change nothing else, so the next run detects it without asking.
+- **Scope of the run.** `git ls-files '*composer.json' | grep -v '^vendor/'` enumerates manifests: run once per root, name that root in the state file, and derive every path from its absolute path, never from the working directory, which in a monorepo is not the manifest root. Then `grep -rn 'composer \(update\|install\)' Makefile* .gitlab-ci.yml .github .circleci docker 2>/dev/null`: any hit means Composer is wrapped, and the wrapper is what runs, since it may set flags, environment or ordering the raw commands omit.
+- **ControlledOps.** `"name": "alaa/controlled-ops"` in this manifest, or a run that would cut a tag or publish to Satis, belongs to `/alaa-controlled-ops` (`$alaa-controlled-ops`), whose release gates outrank every step here.
+- **Restore point and baseline.** Take both before any mutating command. A sweep with no restore point is not run; with no baseline, no later failure may be called pre-existing.
 
 ## Procedure
 
-1. Check for continuity first, using whichever mechanism this run actually has -- these are equally valid, not a default-plus-exception pair: a Codex automation memory file (`$CODEX_HOME/automations/<id>/memory.md`) if this run was triggered as a Codex automation, or a repo-local `docs/agents/upgrade-all-packages-execution-state.md` state file (per `$alaa-workflow`/`/alaa-workflow` conventions) for a Claude Code run, a `/loop`-triggered run, or any Codex run that also wants a durable in-repo record. If neither file exists, this is a first run: proceed with the sweep and create the repo-local state file before finishing, so the next run -- regardless of which agent or runtime triggers it -- has something to read. If a continuity file already shows modifications matching a prior run's scope sitting in the working tree, treat that as an interrupted run to verify and finish, not to discard or redo.
-2. Load this repo's mandatory skills for dependency work before touching anything -- typically architecture, PHP clean-code, services-contract, low-noise, observability, security-review, trust-gateway-auth, runtime-kit governance, and the Windows/sandbox runtime-ops skill.
-3. Query current state before changing anything: `composer outdated --direct --format=json` and `composer audit --locked`, plus `npm outdated --json` and `npm audit --json` if the repo has a `package.json`.
-4. Apply the safe, compatible upgrade set with `composer update --with-all-dependencies`. When a major-version bump is blocked, run `composer why-not <package> <version>` to get the exact blocking constraint and record it -- do not force the upgrade or guess at the reason.
-5. Refresh any generated artifacts the upgrade affects (for example, Laravel Boost guidelines/skills/MCP regeneration), then align `composer.json`'s direct version constraints with what the lockfile actually resolved to. A green lockfile update does not by itself keep the manifest honest.
-6. If the repo has a `package.json`, give its dependencies the same safe-upgrade treatment as a secondary step, using the same why-not-style investigation for anything blocked. First establish whether the frontend build is decorative dev tooling or actually ships (an SSR/Inertia view layer, a production asset pipeline the app serves) -- if it ships, treat it as equally load-bearing as the Composer side for validation purposes, not as a lesser afterthought.
-7. Sweep docs and state files for stale version strings or outdated "blocked"/"now resolves" language left over from the previous run.
-8. Run the full validation gate and show the actual output, not a bare summary: formatting (for example `vendor/bin/pint --dirty --format agent`), the full test suite, `composer validate --strict`, `composer audit`, and, if the repo has a `package.json`, `npm audit` plus the repo's actual frontend build command when that build ships to production (an `npm audit` pass alone does not prove the build still works).
-9. Update this automation's memory/state file with the run's outcome: versions landed, any blocker recorded, anything left for next time.
+1. Read state: `composer outdated --direct --format=json` and `composer audit --locked --format=json`, plus `npm outdated --json` and `npm audit --json` when a `package.json` exists. A non-empty audit result reorders the work.
+2. Resolve without writing: `composer update --with-all-dependencies --dry-run`. That flag applies whatever the declared constraints permit, including a major bump under a loose constraint; it is not a safe-subset flag. Classify every moved package, and split each major bump into its own change with its own gates.
+3. Apply the remaining set: `composer update --with-all-dependencies --no-interaction --no-progress`. Add, remove or re-constrain nothing this run was not asked to move; that prohibition covers manifest entries only, `require`/`require-dev` and `dependencies`/`devDependencies`. Transitive packages appearing, disappearing or moving version inside `composer.lock` is the designed result of that flag: expected, and exactly what the evidence set must cover, so the lock diff is read and reported in full, never summarised.
+4. When a bump is blocked, run `composer why-not <package> <version>`, record the exact blocking constraint, and leave that package where it is. Never force a bump past a confirmed blocker, never hand-edit `composer.lock`, and do not guess at the reason.
+5. Regenerate what the upgrade invalidated (Laravel Boost guidelines, skills and MCP registration; compiled config, route and view caches), then align each direct constraint in `composer.json` with the version the lockfile actually resolved to. A green lockfile update does not by itself keep the manifest honest.
+6. With a `package.json`, give it the same treatment and the same `why-not`-style capture for anything blocked. Decide first whether the frontend build is production surface or dev-only tooling; that answer sets which gates apply to it.
+7. Verify runtime behaviour now that the lock moved. A test suite runs one request per process and proves nothing about a worker's second request.
+8. Sweep docs and state files for stale version strings and leftover "blocked" or "now resolves" language from the previous run.
+9. Record in the state file: versions landed, every blocker with its `why-not` output, every advisory acceptance record, the proof level reached, and the restore point.
 
-## Validation
+## Gates
 
-- Full test suite passes, or any pre-existing failure is explicitly identified as pre-existing and unrelated to this sweep.
-- `composer validate --strict` and `composer audit` are clean, or every remaining finding is explicitly recorded as an accepted, currently-unfixable upstream issue.
-- If the frontend build ships to production, it actually builds successfully after the npm upgrade, not just passes `npm audit`.
-- `git status --short` / `git diff --stat` / `git diff --check` confirm only the intended dependency, doc, and state files changed.
+Show actual command output. A summary is not evidence, and a gate not run is reported as not run, never as passed.
 
-## Safety rules
+- **Formatter.** Run the formatter the repo declares in `require-dev`, path resolved per `references/40-failure-classes.md` (`laravel/pint` -> `<bin-dir>/pint --dirty --format agent`). None declared reports `formatting gate not available: none declared`.
+- **Test suite.** Green, or a failure matching the baseline under the identity rule in `references/20-breaking-change-detection.md`. A "pre-existing" claim that does not quote the baseline file path is not a claim.
+- **Supply chain.** `composer validate --strict` and `composer audit` clean, or every finding carries the full acceptance record from `references/30-advisory-triage.md`. No agent accepts a finding on its own authority; critical and high have no acceptance path.
+- **Proof strength.** Name the level reached from `/alaa-controlled-ops` (`$alaa-controlled-ops`) `references/40-validation-and-release-gates.md`, "Proof vocabulary". Static inspection never clears a lockfile change under the fleet SLA; `references/20-breaking-change-detection.md` sets the level per class.
+- **Diff.** `git status --short`, `git diff --stat` and `git diff --check` show only intended dependency, generated-artifact, doc and state files, and no scratch or cache directory survives.
 
-- Never install a new package or change an unrelated constraint while running this sweep -- scope strictly to upgrading dependencies already in the manifest.
-- Never force a major-version bump past a confirmed blocking constraint; record the blocker instead.
-- If a Windows Composer/npm cache permission error appears mid-run, use an isolated repo-local cache directory for the duration of the run, then remove it -- see `references/10-memory-and-skill-loading.md` and `$alaa-codex-runtime-ops`/`/alaa-codex-runtime-ops`. Do not escalate broadly or abandon the sweep over this.
-- Do not let this automation silently touch a sibling repo (for example, a shared skills repo it also happens to update) without clearly separating that diff from the target repo's own changes.
+## Routing
 
-## Companion routing
+| You are about to | Read |
+|---|---|
+| Take a restore point, undo a lockfile change, or revert a bump that already reached an environment | `references/10-rollback-and-blast-radius.md` |
+| Capture the baseline, classify a change as major, decide whether the frontend ships, or verify what tests cannot see | `references/20-breaking-change-detection.md` |
+| Act on a `composer audit` or `npm audit` finding, or decide whether and by whom one may be accepted | `references/30-advisory-triage.md` |
+| Hit a resolution conflict, test regression, unwritable artifact, cache permission error, or half-applied update | `references/40-failure-classes.md` |
+| Ship a framework, driver, extension or telemetry bump to a service with a long-lived worker | `references/50-runtime-verification.md` |
+| Decide which skill owns a question this sweep raised, and which wins on conflict | `references/90-ownership-boundary.md` |
 
-- `$alaa-controlled-ops`/`/alaa-controlled-ops` -- if the repo being upgraded is the ControlledOps package itself, or a service adopting it, that skill's release/Satis rules take precedence over this skill's generic steps.
-- `$alaa-codex-runtime-ops`/`/alaa-codex-runtime-ops` -- for Windows sandbox and package-manager cache friction encountered mid-sweep.
-- `$alaa-workflow`/`/alaa-workflow` -- for the repo-local state-file convention when no Codex automation memory file applies, or when this sweep is one phase of a larger plan.
-- `$alaa-php-clean-code`/`/alaa-php-clean-code`, `$alaa-laravel-architecture`/`/alaa-laravel-architecture` -- general Laravel conventions this sweep must not violate.
-
-## Reference navigation
-
-- `references/10-memory-and-skill-loading.md` -- the automation memory-file schema, the standard skill-loading list, and the Windows cache-permission workaround in full.
+`/alaa-workflow` (`$alaa-workflow`) loads on every run. What this skill owns, what it does not, the ten-criterion bar, and the upstream skills this repository does not own are all in `references/90-ownership-boundary.md`.

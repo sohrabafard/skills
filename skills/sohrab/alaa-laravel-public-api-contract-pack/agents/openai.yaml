@@ -1,7 +1,7 @@
 interface:
   display_name: "Laravel Public API Contract Pack"
-  short_description: "Source-backed Laravel API contract packs"
-  default_prompt: "Use $alaa-laravel-public-api-contract-pack to follow its workflow for source-backed Laravel public API contract packs. Build the route inventory, request/response/error/example docs, SDK schema notes, OpenAPI, and Postman artifacts from executable repository truth. Keep the work docs-only unless the user explicitly asks for code changes, separate public client inputs from trusted gateway/backend-only headers, and mark unproven behavior as `NEEDS_BACKEND_CONFIRMATION` or `not_implemented` instead of inventing contracts."
+  short_description: "Source-backed, versioned Laravel API contract packs"
+  default_prompt: "Use $alaa-laravel-public-api-contract-pack to follow its workflow for source-backed Laravel public API contract packs. Capture the route inventory with `php artisan route:list --json` and compare every artifact against that file. Classify each change as additive, breaking, or breaking-for-a-strict-parser; state each write route's retry-safety verdict; state each list route's pagination mode and enforced limit; and emit the endpoint docs, OpenAPI, Postman collection and environment, and SDK input notes as projections of one verified behaviour. Honour the emission gate: write no file of the pack while any route's API version, deprecation status, or sunset date is unresolved, and report those routes instead. Prove the result with `python3 scripts/contract_pack_audit.py`, which must exit 0. Keep the work docs-only unless the user explicitly asks for code changes, separate public client input from trusted gateway-injected headers, and mark a consumer-facing value the repository does not fix with `NEEDS_BACKEND_CONFIRMATION` plus the artifact that proves the surface exists, or `not_implemented` when no route, controller, or passing test exists."
 
 policy:
   allow_implicit_invocation: true
