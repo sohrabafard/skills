@@ -8,11 +8,13 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the task is about whether this skill applies, what it standardizes, how to choose the service mode, auth terms acceptance, auth TOTP setup or step-up routing, or auth-specific frontend routing notes for the `auth` service.
   - Read `05-scope-service-modes-and-auth-routing.md` first.
 - `Mode A - Any Ala backend service`
-  - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, observability event naming, the exact error envelope, error-code casing and the committed code registry, the domain event envelope, or broker exchange, routing-key, and queue names.
+  - Use when the task is about `service` identity, route families, `/api/health`, `/api/ready`, readiness checks, response headers, observability event naming, the exact error envelope, what may and may not go inside `error.meta`, error-code casing and the committed code registry, or the domain event envelope and the test that decides whether it binds.
   - Read `10-core-service-contract.md` and `20-operational-and-observability-contract.md` first.
+  - For a broker exchange, routing key, or queue name — including whether the message is an event or a command — read `23-queue-and-exchange-registry.md`.
 - `Mode A+ - Observability names and values`
-  - Use when the task needs an exact observability name or value: an `alaa_*` metric family, an `OTEL_*` variable and its Ala default, a trace or route naming rule, an exception field name, or the current telemetry shape of a specific Ala service.
+  - Use when the task needs an exact observability name or value: an `OTEL_*` variable and its Ala default, a trace or route naming rule, an exception field name, or the current telemetry shape of a specific Ala service.
   - Read `20-operational-and-observability-contract.md` and `21-alaa-platform-observability-directive.md`.
+  - For a metric name, its type, its labels, its owning service, or the rule that a metric is registered before it is emitted, read `24-metric-registry.md`; it owns every `alaa_*` name.
   - Requirement levels, gates, thresholds, alerts, Collector gateway topology, processor placement, sampling policy, label and cardinality budgets, exemplar requirement level, and Sentry policy are not in this skill. Load `$alaa-observability-soc` for those, and treat it as the winner on whether a signal is required.
 - `Mode A++ - Deployment and runtime contract`
   - Use when the task is about Arvan Kubernetes versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
@@ -37,7 +39,8 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, step-up errors, recovery codes, or SDK/frontend retry behavior.
   - Read `32-auth-totp-and-step-up-contract.md`; pair with `$alaa-trust-gateway-auth` for gateway boundaries and `$alaa-frontend-developer` for client/SDK flows.
 - `Mode E - Platform flow and boundaries view`
-  - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, keyset list pagination and the `cursor`/`limit`/`meta.next_cursor` contract, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
+  - Use also when the task is about the canonical UUIDv7 `project_id` form on an HTTP payload, event envelope, log field, or cache key, or about the recorded actor-identifier debt.
+  - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, keyset list pagination and the `cursor`/`limit`/`meta.next_cursor`/`meta.prev_cursor` contract, the admin-table offset exception, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
   - Read `25-end-to-end-flow-and-boundaries.md`.
 - `Mode E+ - Request-time authorization with OpenFGA`
   - Use when the task is about how the per-resource decision is actually made: `authzRouteGroups`, the gateway -> `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` call and its `tuple_key`, endpoint-category to `can_*` mapping, canonical object id construction, `grant_*` vs `can_*`, the store/model/label pins, or adding or debugging a protected route.
@@ -58,7 +61,11 @@ Use this file to choose the smallest reference file that owns the rule you need.
 - `20-operational-and-observability-contract.md`
   - Exact `X-Request-Id` and `traceparent` rules, the structured log field contract, event and code naming, metrics-boundary rules, and `RequestObservabilityMiddleware`.
 - `22-failure-load-and-deprecation-contract.md`
-  - Ala request deadlines, outbound timeout defaults, the retry budget with backoff and jitter, idempotency of a retried call, behaviour when a dependency is unreachable, bounded connection pools, the shed-versus-queue rule at ingress, and the procedure for deprecating a contract surface.
+  - The gateway-originated request deadline and its env-controlled default, outbound timeout defaults, the retry budget with backoff and jitter, idempotency of a retried call, behaviour when a dependency is unreachable, bounded connection pools, the shed-versus-queue rule at ingress, and the procedure for deprecating a contract surface.
+- `23-queue-and-exchange-registry.md`
+  - The event-versus-command split and its topologies, the naming grammar for every exchange and queue, the registry of every broker name in the fleet with its owner, purpose, publishers, consumers, and status, and the rule that a name is registered before it is declared in code.
+- `24-metric-registry.md`
+  - The `alaa_` prefix rule and naming grammar, the complete registry of every metric name with its type, labels, and owning service, the baseline set every service emits, the rule that a metric is registered before it is emitted, and the fleet's current non-conforming names with what each becomes.
 - `21-alaa-platform-observability-directive.md`
   - The `alaa_*` metric family catalog, `OTEL_*` variable names with their Ala default values, resource and propagation key names, route and operation naming rules, exception and additional field names, the never-log list, Ala Collector placement facts, and the current per-service telemetry reality table.
 - `32-auth-totp-and-step-up-contract.md`

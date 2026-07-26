@@ -2,7 +2,7 @@
 
 This file owns the exact stable observability surfaces that must not drift across Ala services, and the broker message envelope and broker names that carry the same correlation across an async hop.
 
-Use `21-alaa-platform-observability-directive.md` together with this file when the task needs an `alaa_*` metric family name, an `OTEL_*` variable and its Ala default, a trace or route naming rule, or the current telemetry shape of a specific service. If these two files appear to conflict, this file owns the exact header, log field, event, code, probe-noise, and middleware invariants.
+Use `21-alaa-platform-observability-directive.md` together with this file when the task needs an `OTEL_*` variable and its Ala default, a trace or route naming rule, or the current telemetry shape of a specific service, and `24-metric-registry.md` when it needs a metric name. If these two files appear to conflict, this file owns the exact header, log field, event, code, probe-noise, and middleware invariants.
 
 Requirement levels, gates, thresholds, alerts, Collector topology, sampling policy, metric label budgets, and Sentry policy are in neither file. `$alaa-observability-soc` owns them, and it wins on whether a signal is required.
 
@@ -78,7 +78,7 @@ For logs emitted by middleware or operational flows owned by this skill, include
 - `request_id`
 - `trace_id`
 - `traceparent` when useful for propagation debugging or async handoff evidence
-- `project_id` when available
+- `project_id` when available, always in the canonical UUIDv7 form bound by `25-end-to-end-flow-and-boundaries.md`
 - `user_id` when available and safe
 - `http.method`
 - `http.route` or route name
@@ -125,6 +125,39 @@ Rules:
 - Keep user-facing messages separate from these machine-readable names.
 
 ## Domain event envelope
+
+### Scope: which messages this envelope binds
+
+Apply this test before applying anything else in this section, because the envelope binds only half of the
+messages a service produces, and rewriting the other half breaks working code.
+
+**Does any consumer outside this repository read this message?**
+
+- **No.** The message is enqueued and consumed inside this repository — a Laravel job the service dispatches
+  and handles itself, a framework event the service listens to itself, an async continuation of its own
+  request. The framework's own job and event mechanism governs it entirely. This contract states nothing
+  about its body, its serialization, or its field names, and an agent does not convert it. A Laravel job
+  payload is a serialized job by design, and rewriting it into this envelope stops the framework from
+  dispatching it at all.
+- **Yes.** The message crosses to another repository — another service consumes it, or this service is
+  instructing another service to act. The envelope below is binding, with no per-service variation.
+
+Make the boundary observable, not a judgement call. A message is inter-service when a repository other than
+the producing one contains a consumer bound to it: a queue declaration, a listener registration, or a row in
+`23-queue-and-exchange-registry.md` naming a different service in its `Consumes` column. A message is
+internal when the only code that reads it lives in the same repository that writes it — `auth` enqueuing an
+SMS job and `auth` handling it is internal even though the job travels through the shared broker, because no
+second repository binds to that queue.
+
+Two consequences worth stating so they are not rediscovered:
+- Transport does not decide the answer. A message on RabbitMQ can be internal, and an internal message that
+  later gains an out-of-repository consumer becomes inter-service on that day and adopts this envelope in the
+  same change that adds the consumer.
+- The name is governed either way. `23-queue-and-exchange-registry.md` registers the queue name of an
+  internal job as well as an inter-service message, because two services declaring a queue called `default`
+  on one vhost collide whatever is inside their messages.
+
+### The envelope
 
 The event names above name **log records**. This section names **broker messages**: the durable facts a
 service publishes for other services to consume. One service publishing `event_name`, a second `event_type`,
@@ -175,30 +208,12 @@ optional field the producer actually sets.
 
 ## Broker exchange, routing key, and queue names
 
-- A service publishes its domain events to exactly one durable topic exchange named `<service>.events`,
-  using the canonical service identity: `auth.events`, `content.events`, `comment.events`,
-  `entitlement.events`. A shared exchange named `events` is a contract violation, because two producers
-  then share one namespace and one bad binding pattern delivers another service's traffic.
-- The routing key is the `message_type` value byte-for-byte, with no substitution. Rewriting `.v1` to
-  `.version-1`, `_` to `-`, or any other transformation is forbidden: an operator holding a binding must be
-  able to paste it into a code search and land on the producer.
-- Publishing a domain event to the AMQP default exchange (`""`) with a queue name as the routing key is
-  forbidden, because it binds the producer to one consumer's queue name and a second consumer cannot
-  subscribe without the producer changing.
-- A consumer owns its queues. It names each `<consumer-service>.<producer-service>.<purpose>`, binds it to
-  the producer's exchange with an explicit binding pattern, and declares `<queue>.dlq` as its dead-letter
-  queue. A producer never declares a consumer's queue.
-- A publisher implementation that writes to a log, a file, or a no-op sink outside an automated test is not
-  a publisher: its events do not exist for any consumer, while its own repository docs say they do. In every
-  non-test environment the publisher binding resolves to the broker publisher, and a service that publishes
-  events lists the broker as a `required: true` check in `/api/ready`.
-- Acknowledgement mechanics, publisher confirms, prefetch tuning, and DLQ handling belong to
-  `/alaa-async-messaging` (`$alaa-async-messaging` in Codex). Publish timeout, retry budget, and the durable-outbox path belong to
-  `22-failure-load-and-deprecation-contract.md`. This section owns the names.
+`23-queue-and-exchange-registry.md` owns them: the event-versus-command split, the naming grammar for every
+exchange and queue, the prohibition on the AMQP default exchange and on a shared `events` exchange, the
+consumer-owns-its-queues rule, and the registry of every name that exists in the fleet or is owed to it.
+Read it before declaring any topology, and register a new name there before the declaring code merges.
 
-Observable that decides compliance: the exchange name, the binding pattern, and the queue names appear in
-committed configuration or topology declaration code in the owning repository, and the routing key passed at
-the publish call site is the same variable that carries `message_type`.
+This file owns only the field the routing key carries: `message_type`, defined in the table above.
 
 ## Probe-noise rule
 
@@ -227,7 +242,7 @@ Forbidden defaults:
 - query string
 - exception message as a metric label
 
-Use `21-alaa-platform-observability-directive.md` for the exact `alaa_*` metric family names and the metric naming and unit-suffix rules. Use `$alaa-observability-soc` for which families a service is required to expose, the label allow and deny lists beyond the request middleware layer, histogram and exemplar policy, and Collector ownership.
+Use `24-metric-registry.md` for the exact `alaa_*` metric family names and the metric naming and unit-suffix rules. Use `$alaa-observability-soc` for which families a service is required to expose, the label allow and deny lists beyond the request middleware layer, histogram and exemplar policy, and Collector ownership.
 
 ## `RequestObservabilityMiddleware` contract
 

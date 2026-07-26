@@ -185,7 +185,20 @@ carries a private identifier and is a violation. A field named `id` that returns
 a field named `section_key`, `user_id`, `flagged_by`, or `resolved_by` that returns a table's integer key
 fails, whatever it is named.
 
-There is exactly one fleet-wide exception, and it is the **actor identifier**:
+There is exactly one fleet-wide exception, and it is the **actor identifier**. Read what it is before
+reading what it permits: it is **technical debt this contract has recorded and accepted for now, owned by
+`auth`**. It is not a design choice, not a precedent, and not a demonstration that numeric identifiers are
+acceptable when convenient.
+
+The debt exists because `auth` authenticates against its own `users.id` and puts that integer in the token's
+`sub` claim. The gateway projects the claim it was given, so every downstream service receives the integer,
+and OpenFGA subjects already encode it as `user:<decimal>`. No consumer chose this; each inherited it from
+the token. Recording it as debt rather than leaving it as a bare exception is what stops the next agent from
+citing it as precedent — a new numeric identifier for a new domain resource is a violation of the rule
+above, and the existence of this row is an argument against it, not for it. There is no second exception,
+and adding one is a contract change, not a local decision.
+
+The exception, precisely:
 - The numeric `X-User-Id` the gateway projects from the verified `sub` claim is `auth`'s `users.id`. Every
   service already receives it, and OpenFGA subjects already encode it as `user:<decimal>`. A payload may
   carry that value in a field named exactly `user_id` or ending `_user_id`.
@@ -195,17 +208,66 @@ There is exactly one fleet-wide exception, and it is the **actor identifier**:
 - The exception covers the actor identifier and nothing else. A comment id, a course id, a section id, a
   grant id, a flag id, or any other domain resource id is a public identifier and is never a database
   integer on the wire.
-- `auth` owns the change that ends the exception: `users.uuidv7` already exists, and the exception closes
-  when a public user identifier is projected through the gateway and every consumer reads it. Until that
-  change ships, a service that invents its own public user identifier creates a third spelling of one
-  person and is a violation today.
+- `auth` owns the change that ends the debt, and no other service can end it: `users.uuidv7` already
+  exists, and the exception closes when `auth` puts a public user identifier in the token claim, the gateway
+  projects it, and every consumer reads it. Until that change ships, a service that invents its own public
+  user identifier creates a third spelling of one person and is a violation today.
+- The debt's per-service status and the migration item on `auth` are recorded in `95-fleet-conformance.md`.
+  A dated closure record belongs there when the change ships, not in this rule.
+
+### Canonical `project_id` form
+
+`project_id` is a canonical UUIDv7 string on every surface where that field name appears. There is no
+exception, and unlike the actor identifier above, none has ever been accepted.
+
+The four surfaces, named because each one has been got wrong somewhere in the fleet:
+- **HTTP payload** — request bodies, query parameters, DTOs, Resources, and serializers, inbound and
+  outbound.
+- **Event envelope** — the `project_id` field of the domain event envelope in
+  `20-operational-and-observability-contract.md`, and of any command that carries one.
+- **Log field** — the `project_id` structured log field in the same file.
+- **Cache key** — every cache, lock, and rate-limit key whose scope is a project.
+
+A service may still store, join, and index on an internal numeric project key. What it may not do is spell
+that integer `project_id` on any of the four surfaces above. The reason differs per surface and all four
+matter: a consumer in another service holds no mapping from `42` to a project and cannot recover the scope
+of a fact; an operator correlating a log line to an event cannot join two different spellings of one tenant;
+and a cache key built from the storage id cannot be invalidated by any component that holds only the public
+identifier, so two services caching one tenant's data build two key spaces that never invalidate each other.
+
+This is a live violation, not a hypothetical: `auth`'s outbox envelope emits `"project_id": 42`
+(`app/Services/Messaging/RabbitMqOutboxPublisher.php:62-75`, asserted by
+`tests/Feature/OutboxRelayCommandTest.php:71-84`) while `entitlement-api` emits a UUIDv7 in the same field.
+Any consumer that reads both is reading two incompatible types under one name.
+
+When no mapped row exists for an internal project id, the service omits the field entirely and emits
+`input.validation.failed` with a stable validation code naming the unmapped id. It must not emit `null` as
+if the project were absent, must not fall back to the internal numeric id, and must not invent a placeholder
+UUID. An unmapped id is a data defect in the project registry, and substituting a value moves the defect
+into every downstream consumer.
+
+Observable that decides compliance: every Resource, serializer, outbox builder, event builder, log-context
+builder, and cache-key builder that writes `project_id` writes the UUIDv7 string, never the column a foreign
+key references. Search the repository for `project_id` and check the type at each write site; an integer at
+any of them fails.
+
+Laravel-specific validation, the registry lookup, and the resolve-in / resolve-out helper names are owned by
+`30-trusted-ingress-and-laravel-contract.md`.
 
 ## List pagination contract
 
+This file owns the **wire shape**: which parameters a list route accepts, which keys its response carries,
+and which keys it must not. It does not own the **design method** — how to derive an ordering tuple whose
+final component is unique, which composite index serves it, how the continuation predicate is written, what
+the signed cursor carries, and how nullable sort columns, mutable sort values, and backward traversal are
+handled. Those belong to `alaa-keyset-pagination`, invoked as `/alaa-keyset-pagination` in Claude Code and
+`$alaa-keyset-pagination` in Codex. Read that skill before writing or reviewing a paginated query; read this
+section for the keys that cross the wire.
+
 Every list route on every Ala service paginates by keyset cursor. Offset pagination is forbidden on any list
-a client can page through, because an offset page silently repeats or skips rows when a row is inserted or
-deleted between two requests, and because deep `OFFSET` makes the database read and discard every skipped
-row on every page.
+a client can page through, except under the admin-table exception stated below, because an offset page
+silently repeats or skips rows when a row is inserted or deleted between two requests, and because deep
+`OFFSET` makes the database read and discard every skipped row on every page.
 
 Request rules:
 - The cursor parameter is `cursor`. Its value is the opaque string the previous response returned, and the
@@ -218,10 +280,20 @@ Request rules:
   removes it through the deprecation procedure in `22-failure-load-and-deprecation-contract.md`.
 
 Response rules:
-- A collection response body carries `data` as an array and `meta.next_cursor`.
-- `meta.next_cursor` is a string when a further page exists and is `null` on the last page. The key is
-  always present, because a consumer must distinguish "last page" from "this service forgot the cursor",
-  and an omitted key cannot express that difference.
+- A collection response body carries `data` as an array, `meta.next_cursor`, and `meta.prev_cursor`.
+- `meta.next_cursor` is a string when a further page exists and is `null` on the last page. `meta.prev_cursor`
+  is a string when a page exists before the current one and is `null` at the start of the collection. Both
+  keys are present in every collection response, including the first page and the last page, because a
+  consumer must distinguish "no page in that direction" from "this service forgot the cursor", and an
+  omitted key cannot express that difference.
+- The client echoes back whichever of the two cursors it holds in the same `cursor` parameter. Direction is
+  encoded inside the signed cursor, not in the parameter name, so a client cannot pair a forward boundary
+  with a backward request. A route does not document backward pagination until the reversal tests named by
+  `alaa-keyset-pagination` (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`),
+  `references/70-test-list.md`, pass.
+- `has_more` and `type` are not emitted. `has_more` is `next_cursor !== null` by construction, and a second
+  spelling of one fact diverges the first time a service computes it from the row count instead; `type` is
+  constant across every Ala keyset list and only invites clients to branch on it.
 - `meta` may carry service-declared counters the route documents, such as `meta.counts`. It must not carry
   `total`, `total_pages`, `current_page`, `last_page`, or `per_page`: those are offset artifacts, and a
   client that reads them builds page-number navigation the service cannot serve.
@@ -234,14 +306,45 @@ Ordering and cursor rules:
 - The cursor is opaque and signed; clients must not parse, construct, or depend on its contents. It may
   encode private identifiers, per the identifier boundary above.
 
+The admin-table offset exception:
+
+Offset is permitted on a list only when every one of these five conditions holds. Four are checkable from
+the route table and the route's own code; the fifth is checkable from its documentation. A route that
+satisfies four of five uses keyset.
+
+1. The route is mounted under an admin-only path and requires an admin permission checked at request time,
+   from trusted `X-Access` per `28-backend-permission-authorization-and-role-freeze.md`.
+2. The route is absent from the public gateway route table and from every published SDK and client bundle.
+3. The list's size does not grow with tenant data. A table of projects, providers, permission definitions,
+   or configured roles qualifies; a table of comments, courses, tickets, watch events, or notifications does
+   not, however small it is today.
+4. The route enforces a documented maximum reachable offset and a documented maximum page size, and rejects
+   a request above either with `400` and code `INPUT_VALIDATION_FAILED`. It does not clamp.
+5. The route's own documentation records `pagination: offset` together with the named operational
+   requirement that makes exact totals necessary — which report, which operator workflow. "Totals are nice
+   to have" and "an operator asked for totals" are not requirements.
+
+An offset route does not use the `meta` collection envelope, because `total`, `total_pages`, `current_page`,
+`last_page`, and `per_page` are forbidden inside `meta` by the rule above and that rule is not relaxed here.
+It declares its own response envelope in its documentation, so no consumer can mistake one shape for the
+other and no shared client parser has to guess which it received.
+
+Observable that decides whether a route has claimed the exception legitimately: a route emitting `total`,
+`total_pages`, `current_page`, `last_page`, or `per_page` that is reachable without an admin permission, or
+that appears in the public gateway route table, is a violation regardless of what its documentation says.
+The five conditions and their reasoning are owned by `alaa-keyset-pagination`
+(`/alaa-keyset-pagination`, `$alaa-keyset-pagination`), `references/10-route-mode-and-sort-allowlist.md`;
+this section is the contract text that authorizes them.
+
 Scope:
 - A route that returns a bounded set with no paging parameters at all — a fixed catalog, a per-user session
   list — documents `paginated: false` in its OpenAPI or route documentation and returns `data` with no
   `meta.next_cursor`. A result set that grows with tenant data may not use that declaration.
 
 Observable that decides compliance: the repository contains a keyset paginator call site for every list
-route, no route validates or reads `per_page`/`page`/`offset`, and a saved example for at least one list
-route shows both a non-null and a `null` `meta.next_cursor`. A repository whose own `AGENTS.md` mandates
+route that has not recorded the five-condition exception above, no such route validates or reads
+`per_page`/`page`/`offset`, and a saved example for at least one list route shows both a non-null and a
+`null` value for each of `meta.next_cursor` and `meta.prev_cursor`. A repository whose own `AGENTS.md` mandates
 keyset pagination while its list code calls an offset paginator, or calls no paginator at all, is
 non-conforming even though its documentation is correct.
 

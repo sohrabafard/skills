@@ -168,7 +168,7 @@ Required helper responsibilities behind this baseline:
 
 ## MetricsEmitter baseline expectations
 
-The request middleware metrics emitter uses the exact `alaa_*` family names in `21-alaa-platform-observability-directive.md`; a local family name is contract drift.
+The request middleware metrics emitter uses the exact `alaa_*` family names in `24-metric-registry.md`; a local family name is contract drift.
 
 Minimum request-middleware metrics:
 - `alaa_http_requests_total`
@@ -292,4 +292,4 @@ When copying middleware baselines into a Laravel repository, also enforce:
 - `php artisan ops:ready --json`
 - top-level `data` envelope for successful `/api/*` responses
 - `X-Request-Id` and `traceparent` response headers
-- the metric families defined by `21-alaa-platform-observability-directive.md` when the service owns an HTTP metrics boundary
+- the metric families registered in `24-metric-registry.md` when the service owns an HTTP metrics boundary

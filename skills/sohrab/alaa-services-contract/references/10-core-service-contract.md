@@ -93,8 +93,8 @@ Rules:
   mode is off.
 - `meta` is a JSON object. It is `{}` when there is nothing to add. It is never `null`, never a string,
   and never an array, because a consumer that must first test the type of `meta` cannot share one error
-  reader across services. Field-level validation failures go under `meta.errors`, an object keyed by field
-  name whose values are arrays of message strings.
+  reader across services. What may and may not go inside it, and the shape rule that makes it parseable, are
+  owned by `The meta content rule` below.
 - The envelope is identical for validation failures, authentication failures, authorization denials, rate
   limiting, and unexpected exceptions. Only the four values change.
 - A framework's default error body is replaced, not wrapped. A Laravel `{"message": ..., "errors": {...}}`
@@ -116,6 +116,73 @@ Postman collection,
 `jq -e '.error | has("status") and has("code") and has("message") and (.meta | type == "object")'` succeeds,
 and `.error.status` equals the example's own status. A repository holding no `4xx` and no `5xx` saved
 example has not proven the envelope and is non-conforming until it adds one of each.
+
+## The `meta` content rule
+
+`meta` is the only part of the error envelope a client can act on programmatically. `status` tells it the
+transport outcome, `code` tells it which branch to take, `message` is for a human reading a log. `meta`
+carries the detail that makes the branch executable — which field was wrong, how long to wait, which value
+collided, which request to quote in a ticket. Bind its contents or it becomes a dumping ground: today one
+service puts a stack fragment there, another an internal row id, a third nothing at all, and no client can
+write code against any of it.
+
+### What belongs in `meta`
+
+Only machine-usable detail the client needs in order to act on this error. Four kinds, and each is named
+here so a producer does not invent a fifth spelling of one of them:
+
+- **Field-level validation errors** under `meta.errors`: an object keyed by the request field name, whose
+  values are arrays of message strings. This is the shape a form renderer binds to directly.
+- **The retry hint** under `meta.retry_after_seconds`: a non-negative integer, present whenever the failure
+  is transient and the caller may try again. It carries the same number as the `Retry-After` header when
+  both are sent, because a client that reads one and a proxy that reads the other must not disagree.
+- **The conflicting value** under `meta.conflict`: an object naming the field and the value that already
+  exists or that the request contradicts, using public identifiers only. A `409` whose body does not say
+  what conflicted forces the client to re-fetch and diff.
+- **The correlation identifier** under `meta.request_id`: the same value the response's `X-Request-Id`
+  header carries. A support ticket quotes a response body far more often than it quotes a response header.
+
+A service that needs a fifth kind adds it to this list before emitting it, in the same change.
+
+### What must never be in `meta`
+
+Nothing a client should not see, and nothing that describes the inside of the service:
+
+- Raw exception text, exception class names, stack fragments, file paths, and line numbers. `message`
+  already excludes them when debug mode is off; `meta` is not a way back in.
+- SQL text, query fragments, table names, column names, constraint names, and driver error strings. A
+  constraint name tells an attacker the schema and tells the client nothing it can act on.
+- Internal identifiers the public-identifier rule in `25-end-to-end-flow-and-boundaries.md` forbids: an
+  auto-increment row id, an internal numeric `project_id`, an internal queue or job id. That rule has one
+  exception, the actor identifier, and this section creates no second one.
+- Secrets and credentials of every kind: tokens, a full JWT, a raw `X-Access` value, a TOTP secret or code,
+  a recovery code, an API key, a signing key, a connection string.
+- PII beyond what the request itself already carried. Echoing back the mobile number the caller just sent is
+  permitted; adding the account's email, national code, or address is not, because an error body is returned
+  to whoever made the request, including a caller who guessed an identifier.
+- Decoded pagination cursor internals, per `alaa-keyset-pagination`
+  (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`), `references/40-wire-contract-limits-and-errors.md`.
+  An error body is exactly where an attacker probing a cursor codec reads its structure.
+
+### The shape rule
+
+**One `code` always produces the same `meta` key set.** Every response carrying `INPUT_VALIDATION_FAILED`
+carries the same top-level keys inside `meta` as every other response carrying it, in every service that
+emits it. A key that is sometimes present and sometimes absent for one code is a violation; emit it with an
+empty object, an empty array, or `null` inside `meta` instead of omitting it.
+
+The reason is the whole point of binding `meta` at all: a client that must discover the shape per occurrence
+cannot branch on it. It ends up writing `if (meta && meta.errors && typeof meta.errors === 'object')` before
+every read, which is the same defensive parsing the single error envelope exists to remove, moved one level
+down.
+
+`meta` is `{}` for a code that carries no detail, and `{}` is a stable key set like any other — a code whose
+`meta` is empty in one response and populated in the next has two shapes and violates this rule.
+
+Observable that decides compliance: for each `code` the service can emit, a saved error example exists, and
+a test asserts that every response carrying that code produces exactly that example's `meta` key set. A
+service whose examples show one code with two different `meta` key sets fails, and so does a service that
+has no saved example for a code it emits.
 
 ## Error code registry and casing
 
@@ -229,6 +296,25 @@ Each `checks.<name>` item must contain exactly:
 - `required`: boolean
 - `code`: stable machine-readable code
 - `message`: short operational English sentence
+
+All four are present in every item, including an item that is `up`. The two that are dropped in practice
+are the two that carry the information:
+
+- The **key** is the check name, and it is what makes a failure attributable. A consumer reads
+  `checks.database.status` directly, with no scan and no index arithmetic. An array of check objects cannot
+  answer "is the database up" at all when the objects carry no name field — which is the `alaa-go-chi` kit's
+  current shape: `readykit/report.go:11-22` declares `Checks []CheckItem` and `CheckItem` has `Status`,
+  `Required`, `Code`, and `Message` and no name of any kind, so the array says something failed and cannot
+  say what.
+- **`required`** is what separates a degraded optional dependency from a failed mandatory one. `redis` down
+  with `required: false` is a service that still serves traffic more slowly; `database` down with
+  `required: true` is a service that must leave rotation. Without the field both render as one red check,
+  and an orchestrator either restarts a healthy service or leaves a broken one in rotation. `comment` and
+  `content` already emit it inside a name-keyed object, which is the ratified shape; the kit's array is the
+  only evidenced departure from it.
+
+Observable that decides compliance: `jq -e '.checks | type == "object" and (to_entries | all(.value | has("status") and has("required") and has("code") and has("message")))'` succeeds on both a ready and a not-ready
+fixture committed in the repository.
 
 ## Readiness naming and failure rules
 

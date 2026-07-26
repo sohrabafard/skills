@@ -11,34 +11,85 @@ and this file for the values a service must actually ship. Load `$alaa-data-laye
 inside a driver, and `$alaa-async-messaging` for broker prefetch, acknowledgement, and DLQ mechanics.
 
 The event and code names used below are owned by `20-operational-and-observability-contract.md`. The
-metric families are owned by `21-alaa-platform-observability-directive.md`. Do not restate either here.
+metric families are owned by `24-metric-registry.md`. Do not restate either here.
 
 ## Request deadline
 
-Every Ala service computes one request-scoped deadline at ingress and honours it for the whole request.
+One deadline covers a whole request chain, it is created once at the edge, and every hop spends from it.
+A deadline each service invents for itself is not a deadline: three hops each allowing five seconds allow
+fifteen, and the client that gave up after two is no longer there to receive any of it.
 
-- The deadline is `now + route_budget_ms`, computed inside `RequestObservabilityMiddleware` (Laravel) or
-  the equivalent top-level middleware, and stored in the same request-scoped context that already
-  carries `request_id` and `trace_id`.
-- The default `route_budget_ms` is `5000` for a public product route, `2000` for a trusted internal
-  route, and `5000` for `/api/ready`. A route that needs a different budget declares it in the route
-  definition; a service must not raise a budget by editing a global default.
-- `remaining_ms` is the deadline minus now. Every outbound call passes a per-attempt timeout that is the
-  smaller of its own default below and `remaining_ms`.
-- When `remaining_ms` is smaller than the next attempt's timeout, the caller stops, does not attempt the
-  call, and returns `503` with code `DEPENDENCY_UNAVAILABLE` and event `dependency.unavailable`.
-- An unbounded outbound call is a contract violation even when the dependency is healthy. Every HTTP
-  client, database driver, cache client, and broker client is constructed with an explicit timeout.
+### The gateway originates it
 
-Fleet state, and it does not weaken the rule. In the 2026-07-25 fleet survey no Ala service computed this
-deadline: `auth`, `comment`, `content`, `gateway`, `wa`, and the `alaa-go-chi` kit each reported the
-deadline absent, and `entitlement-platform` propagates a `context.Context` whose deadline nothing at ingress
-sets. The contract is therefore ahead of every repository here, which is stated so that no agent reads a
-neighbour's code and concludes the rule is optional.
+- The gateway sets the header `X-Request-Deadline-Ms` on **every** inbound request it forwards, product and
+  operational alike. The value is a positive integer count of milliseconds remaining.
+- The value comes from the environment variable `GATEWAY_REQUEST_DEADLINE_MS`, whose default is `180000` —
+  180 seconds. It is lowered by changing the environment, in the gateway, with no code change and no service
+  change. The default is deliberately generous so that turning the mechanism on breaks nothing; the intended
+  path is to lower it from the environment once the counter named below shows real refusals.
+- The gateway is the **only** component that originates this header. A service does not create one, a client
+  cannot supply one, and the gateway strips any inbound `X-Request-Deadline-Ms` from a client before routing,
+  exactly as it strips every other trusted header. A caller that could set its own deadline could set it to
+  an hour and hold a worker for an hour.
+- No service adds an environment variable that sets, overrides, or extends the edge deadline. This is the
+  same principle the `alaa-go-chi` kit already settled for edge timeouts in its own decision register
+  (`docs/change-requests/2026-07-21-kit-bug-remediation-decision-register.md:102-104,955-960`): the gateway
+  owns the edge leg, a backend's own timeouts are its handler budget and stay at or below the gateway's, and
+  the kit must not add a competing environment variable for a value the gateway owns. A second knob for one
+  budget means the two disagree, and the one that loses does so silently.
 
-- Every change that adds or modifies an outbound call implements the ingress deadline in the same change,
-  for that service. A service does not defer it on the grounds that no neighbour has it yet, because the
-  deadline only bounds a request chain when the first hop sets it.
+### Every service decrements it
+
+A service receiving `X-Request-Deadline-Ms` does four things, in this order:
+
+1. **Read it once at ingress** and store the resulting absolute deadline in the same request-scoped context
+   that already carries `request_id` and `trace_id` — inside `RequestObservabilityMiddleware` for Laravel,
+   or the equivalent top-level middleware. `remaining_ms` is that deadline minus now, and it is what every
+   later step reads.
+2. **Clamp every outbound call.** Each outbound attempt's timeout is the smaller of its own default in the
+   table below and `remaining_ms`. An unbounded outbound call is a contract violation even when the
+   dependency is healthy and even when the deadline header is absent.
+3. **Refuse rather than start work that cannot finish.** When `remaining_ms` is at or below zero, or is
+   smaller than the next attempt's timeout, the service returns `503` with code `DEPENDENCY_UNAVAILABLE` and
+   event `dependency.unavailable` **without making the call**. Starting a call that provably cannot complete
+   spends the dependency's capacity to produce a result nobody will read.
+4. **Forward the decremented value.** Every outbound internal HTTP call carries `X-Request-Deadline-Ms` set
+   to the current `remaining_ms`, alongside `X-Request-Id` and `traceparent`. Forwarding the value it
+   received unchanged restarts the budget at every hop, which is the failure this rule exists to prevent.
+
+**A service called without the header applies its own default**, so a direct call, an internal test, a
+`curl` from a jump host, and a local development run all still work. The defaults are `5000 ms` for a public
+product route, `2000 ms` for a trusted internal route, and `5000 ms` for `/api/ready`. A route that needs a
+different budget declares it in the route definition; a service does not raise a budget by editing a global
+default. These defaults are the floor a service falls back to, not a second edge deadline: when the header is
+present it wins, even when it is smaller than the route default and even when it is larger.
+
+### The observable
+
+`alaa_requests_deadline_exhausted_total` is a counter, per service, of requests refused under step 3 —
+refused for deadline exhaustion without calling the dependency. It is registered in `24-metric-registry.md`
+and is emitted by every service that implements this section.
+
+Read it as a two-sided signal, because a permanent zero means one of two very different things and the
+distinction is the reason the counter exists: either no service honours the deadline at all, in which case
+the mechanism is decorative and the chain is still unbounded, or the budget is so generous that nothing ever
+reaches it, in which case `GATEWAY_REQUEST_DEADLINE_MS` should come down. A rising count is the healthy
+state to aim at: it means the budget is tight enough to bite and the fleet is shedding work it could not
+have finished.
+
+### Fleet state, and it does not weaken the rule
+
+In the 2026-07-25 fleet survey no Ala component implemented any part of this. `auth`, `comment`, `content`,
+`gateway`, `wa`, and the `alaa-go-chi` kit each reported the deadline absent; `entitlement-platform`
+propagates a `context.Context` whose deadline nothing at ingress sets; and the gateway forwards no deadline
+header (`charts/gateway/values.yaml:221-225`). The contract is therefore ahead of every repository here,
+which is stated so that no agent reads a neighbour's code and concludes the rule is optional.
+
+- The gateway's change is the one that unblocks the rest, because a service can only decrement a value
+  something gave it. Until it ships, every service applies its own default under the fallback rule above,
+  which is the behaviour the fallback exists for.
+- Every change that adds or modifies an outbound call implements steps 1 through 4 for that service in the
+  same change. A service does not defer them on the grounds that no neighbour has them yet.
 - A service that has not yet implemented the deadline still constructs every client with the explicit
   per-attempt timeouts below. Missing the deadline is one gap; an unbounded client is a second, and neither
   excuses the other.
@@ -169,9 +220,8 @@ resource and one service's burst becomes every service's outage.
   database into an exhausted worker pool.
 - Worker and queue-consumer containers count against the same ceiling and get their own explicit pool
   maximum. A consumer that inherits the HTTP default silently doubles the fleet's connection footprint.
-- `alaa_db_pool_in_use` and `alaa_db_pool_idle` are already mandatory in
-  `21-alaa-platform-observability-directive.md`. A service that bounds its pool without exporting them
-  has no way to prove the bound is right.
+- `alaa_db_pool_in_use` and `alaa_db_pool_idle` are already registered in `24-metric-registry.md`. A
+  service that bounds its pool without exporting them has no way to prove the bound is right.
 
 ### Bounded message consumers
 
@@ -210,7 +260,7 @@ user-facing request waiting for capacity, and never discards work that has to su
   response returns, so the response reports acceptance rather than completion. Never make a product
   request wait on a queue in order to avoid shedding it.
 - `alaa_http_requests_in_flight` is the observable that proves the limit is set correctly, and
-  `alaa_queue_backlog` is the observable for the queued path. Both are already mandatory.
+  `alaa_queue_backlog` is the observable for the queued path. Both are registered in `24-metric-registry.md`.
 - Consumer-side prefetch and concurrency are bounded under `Bounded message consumers` above; their values,
   tuning, and DLQ mechanics belong to `$alaa-async-messaging`.
 

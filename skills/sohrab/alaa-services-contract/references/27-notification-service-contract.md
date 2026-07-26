@@ -42,17 +42,10 @@ is case-sensitive and is the majority consumer/producer runtime.
 
 ## Canonical command ingress (authoritative)
 
-- Exchange: `notification.commands` (type `direct`). Dead-letter exchange: `notification.commands.dlx`.
+- The exchange, the dead-letter exchange, every ingress queue, and every routing key are registered in
+  `23-queue-and-exchange-registry.md`. Read the topology there; this file owns the envelope and the payloads
+  that travel through it, and the successor-service status of `notif` is recorded there too.
 - Ingress queue connection: `rabbitmq_ingress`. Receipts table: `rabbitmq_command_receipts`.
-- Canonical queues and routing keys:
-
-| Queue                                            | Routing key                 | DLQ routing key                    |
-|--------------------------------------------------|-----------------------------|------------------------------------|
-| `notification.command.sms.send_message.v1`       | `sms.send_message.v1`       | `sms.send_message.v1.failed`       |
-| `notification.command.sms.send_pattern.v1`       | `sms.send_pattern.v1`       | `sms.send_pattern.v1.failed`       |
-| `notification.command.notification.store.v1`     | `notification.store.v1`     | `notification.store.v1.failed`     |
-| `notification.command.user_projection.upsert.v1` | `user_projection.upsert.v1` | `user_projection.upsert.v1.failed` |
-
 - Producers publish to `notification.commands` with the matching routing key; the broker publish
   acknowledgement is the synchronous success boundary. A producer never treats an unacknowledged publish as
   success.
@@ -119,9 +112,9 @@ PHP with case-sensitive `json_decode`, so a capitalized nested key silently drop
 ## Audience-resolution handshake (entitlement-platform)
 
 Separate from the notification command ingress above. These `notif.*` queues are owned and declared by
-`entitlement-platform`; they turn an access-derived object audience into explicit recipients. They use
-the entitlement-owned envelope below (snake_case, with `schema_version`/`command_id`/`project_id`), not
-the notification command envelope.
+`entitlement-platform` and are registered in `23-queue-and-exchange-registry.md`; they turn an
+access-derived object audience into explicit recipients. They use the entitlement-owned envelope below
+(snake_case, with `schema_version`/`command_id`/`project_id`), not the notification command envelope.
 
 - `notif.retrieve_users` (consumed by the entitlement `expansion-worker`): `schema_version`,
   `command_id`, `project_id` (UUIDv7), `notification_id`?, `target_type`, `object_type`
@@ -171,7 +164,8 @@ stored message, which surfaces as a silent delivery failure rather than an error
 
 - Capitalized or Go-default JSON keys in any notification or `notif.*` message.
 - Inventing queues/exchanges or a bespoke envelope instead of `notification.commands` plus the
-  canonical envelope.
+  canonical envelope, or declaring a queue whose name is not registered in
+  `23-queue-and-exchange-registry.md`.
 - Sending serialized Laravel jobs across repositories.
 - Using RabbitMQ as a synchronous query/RPC layer for notification reads.
 - Starting new internal business HTTP integrations with notification.

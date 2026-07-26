@@ -94,7 +94,7 @@ Read next:
 ### Mode A+++ - Failure, load, and deprecation contract
 
 Adds:
-- one request deadline computed at ingress and honoured by every outbound call
+- one request deadline, originated by the gateway from an env-controlled value, decremented per hop, and honoured by every outbound call
 - Ala outbound timeout defaults per hop
 - the retry budget, backoff with full jitter, and the idempotency requirement for a retried call
 - what a backend does when `auth`, OpenFGA, or the notification broker is unreachable

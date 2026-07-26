@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Hard contract for Ala backend services and the shared @alaa/* frontend packages: response envelopes, exact /api/health and /api/ready shapes, trusted gateway headers (X-Project-Id, X-User-Id, X-Access, X-User-Roles), public UUIDv7 identifiers, X-Request-Id and traceparent, event and code names, permission catalogs and bitmap ids, OpenFGA request-time authorization, TOTP step-up, the notification RabbitMQ command envelope, timeouts, retries, connection pools, load shedding, Docker/Swarm/Arvan runtime, shared infra, and the service-ci-kit CI baseline. Use when a change must look identical across services: auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment. Also for @alaa/sdk, @alaa/sdk-vue, Page Kit, UI Kit, app-shell, and widgets. Do not use for feature work inside one service that changes no shared surface; for generic Docker, Kubernetes, HAProxy, Laravel, or Go engineering (use alaa-docker-production, caas-arvan-kuber, alaa-haproxy, alaa-laravel-architecture, alaa-golang); for observability requirement levels, gates, and alerts (use alaa-observability-soc); for reliability doctrine (use alaa-reliability-sla); for security-review verdicts (use alaa-security-review); or for pure UI design (use alaa-frontend-developer)."
+description: "Hard contract for Ala backend services and the shared @alaa/* frontend packages: response envelopes, exact /api/health and /api/ready shapes, trusted gateway headers (X-Project-Id, X-User-Id, X-Access, X-User-Roles), public UUIDv7 identifiers, X-Request-Id and traceparent, event and code names, permission catalogs and bitmap ids, OpenFGA request-time authorization, TOTP step-up, the notification RabbitMQ command envelope, the fleet registry of every broker exchange and queue, the fleet registry of every alaa_ metric name, the gateway-originated request deadline, timeouts, retries, connection pools, load shedding, Docker/Swarm/Arvan runtime, shared infra, and the service-ci-kit CI baseline. Use when a change must look identical across services: auth, content, comment, ticket, gateway, entitlement-platform, wa, notification, assessment. Also for @alaa/sdk, @alaa/sdk-vue, Page Kit, UI Kit, app-shell, and widgets. Do not use for feature work inside one service that changes no shared surface; for generic Docker, Kubernetes, HAProxy, Laravel, or Go engineering (use alaa-docker-production, caas-arvan-kuber, alaa-haproxy, alaa-laravel-architecture, alaa-golang); for observability requirement levels, gates, and alerts (use alaa-observability-soc); for reliability doctrine (use alaa-reliability-sla); for security-review verdicts (use alaa-security-review); or for pure UI design (use alaa-frontend-developer)."
 ---
 
 # Alaa Services Contract
@@ -55,8 +55,10 @@ identifier-level trigger vocabulary per mode; each reference file names its own 
 | Health, readiness, service identity, route families | `10-core-service-contract.md` |
 | Deployment mode, shared infra, registry, CI baseline, fast tests | `15-deployment-and-runtime-contract.md` |
 | Correlation headers, log fields, event and code names, request middleware | `20-operational-and-observability-contract.md` |
-| OTLP exporter env, metric families, Prometheus scraping, per-service telemetry reality | `21-alaa-platform-observability-directive.md` |
-| A timeout, retry, idempotency key, pool bound, load-shedding decision, or deprecating any contract surface | `22-failure-load-and-deprecation-contract.md` |
+| OTLP exporter env, Prometheus scraping, per-service telemetry reality | `21-alaa-platform-observability-directive.md` |
+| A timeout, retry, idempotency key, pool bound, request deadline, load-shedding decision, or deprecating any contract surface | `22-failure-load-and-deprecation-contract.md` |
+| An exchange, queue, or routing-key name, or whether a message is an event or a command | `23-queue-and-exchange-registry.md` |
+| A metric name, its type, its labels, or registering a new one | `24-metric-registry.md` |
 | Gateway prefixes, route ownership, internal hops, public vs private identifiers, internal mTLS status | `25-end-to-end-flow-and-boundaries.md` |
 | Request-time per-resource authorization and its OpenFGA wire contract | `26-request-time-authorization-openfga.md` |
 | Sending work to the `notification` service | `27-notification-service-contract.md` |
@@ -84,6 +86,8 @@ load on a concern no reference file keys on:
 - `alaa-docs-farsi` — when docs, Postman artifacts, or runbooks change.
 - `alaa-frontend-doc-annotations`, `alaa-quasar-app-vite-v3` — the documentation pass on a new public
   frontend surface, and exact Quasar component or SSR shapes.
+- `alaa-keyset-pagination` — before writing or reviewing a paginated list query: the ordering tuple, the
+  index, the continuation predicate, the signed cursor, and the hard cases. This skill keeps the wire shape.
 - `alaa-prompting-guide` — every model, effort, prompt, skill, or agent-definition question. This skill
   names no model anywhere.
 
@@ -116,6 +120,11 @@ opinion.
   envelope.
 - **`alaa-data-layer`** owns pool mechanics inside a driver and persistence invariants. This skill keeps the
   pool bounds and the acquire timeout.
+- **`alaa-keyset-pagination`** owns the pagination design method: choosing the traversal mode, the sort
+  allowlist, the ordering tuple and its unique final component, the composite index, the row-value
+  continuation predicate, the signed cursor's payload and context binding, and the nullable, mutable, and
+  backward-traversal cases. This skill keeps the wire shape those decisions produce — `cursor`, `limit`,
+  `meta.next_cursor`, `meta.prev_cursor`, the forbidden `meta` keys, and the admin-table offset exception.
 - **`alaa-system-design`** owns *when* a contract shape is decided and by what procedure: the rule that the shape is
   settled in a design record and committed before the code that satisfies it, where the boundary the contract sits on
   runs, and which component owns each datum crossing it. This skill keeps the shape itself — the envelope, header,

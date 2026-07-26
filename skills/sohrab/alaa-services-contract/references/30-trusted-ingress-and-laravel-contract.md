@@ -35,8 +35,9 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 `content`, `entitlement-api`, and the `alaa-go-chi` kit each read that same spelling.
 
 - The list is closed. A service reads no trusted identity header outside it, plus the correlation headers
-  owned by `20-operational-and-observability-contract.md` and the step-up headers owned by
-  `32-auth-totp-and-step-up-contract.md`. Reading an undeclared header makes the gateway sanitize list
+  owned by `20-operational-and-observability-contract.md`, the step-up headers owned by
+  `32-auth-totp-and-step-up-contract.md`, and the request-deadline header owned by
+  `22-failure-load-and-deprecation-contract.md`. Reading an undeclared header makes the gateway sanitize list
   incomplete, and an unsanitized header is a spoofing surface.
 - Adding or removing one of these names requires a gateway claim-projection change plus the deprecation
   procedure in `22-failure-load-and-deprecation-contract.md`, because the gateway sanitize list, the Postman
@@ -122,17 +123,10 @@ Public request rule:
 - the service resolves that UUIDv7 to its internal project key only after validation passes
 - positive integer project ids are not accepted from public clients
 - services may persist internal numeric project ids when that is their storage model
-- public Resources and event or API payloads expose the public UUIDv7 and never the internal numeric project
-  id. This is absolute; there is no case in which a public payload carries the storage id.
-- observable: every Resource, serializer, and outbox or event builder that writes a `project_id` writes the
-  UUIDv7 string, never the column a foreign key references. An event body carrying `"project_id": 42` is the
-  same violation as a Resource carrying it and is the more damaging one, because a consumer in another
-  service holds no mapping from that integer to a project and cannot recover the scope of the fact.
-- when no mapped row exists for an internal project id, the service omits the field entirely and emits
-  `input.validation.failed` with a stable validation code naming the unmapped id. It must not emit `null` as
-  if the project were absent, must not fall back to the internal numeric id, and must not invent a
-  placeholder UUID. An unmapped id is a data defect in the project registry, and hiding it behind a
-  substituted value moves the defect into every downstream consumer.
+- which surfaces must carry the UUIDv7 form, that there is no exception to it, what to do when an internal
+  id maps to no row, and the observable that decides it are owned by the canonical `project_id` form rule in
+  `25-end-to-end-flow-and-boundaries.md`, because that rule binds Go services as well as Laravel ones. This
+  file owns only the Laravel resolution mechanics below.
 
 Trusted context rule:
 - `X-Project-Id` is injected by the gateway from the verified token `pid` claim
@@ -151,8 +145,10 @@ Implementation order:
 1. validate the raw public input as string UUIDv7
 2. confirm it maps to an approved project row or registry entry
 3. store the resolved internal id in request attributes or a typed DTO
-4. pass the internal id into services, queries, policies, events, and cache keys
-5. expose the public UUIDv7 again at public response or token boundaries
+4. pass the internal id into services, queries, and policies — the storage-side callers only
+5. write the public UUIDv7, never the internal id, into every event body, structured log field, and cache,
+   lock, or rate-limit key that carries `project_id`, per `25-end-to-end-flow-and-boundaries.md`
+6. expose the public UUIDv7 again at public response or token boundaries
 
 Do not use a trait or request normalizer that converts public `project_id` to an integer before validation. That leaks the storage model into the public contract and allows internal ids such as `1` to become accepted API input.
 

@@ -104,6 +104,7 @@ Every folder in this directory appears exactly once below. Groups match `README.
 - `alaa-system-design`
 - `alaa-testing-strategy`
 - `alaa-algorithms-data-structures`
+- `alaa-keyset-pagination` — cursor/keyset pagination design: deterministic ordering, matching index, cursor integrity and context binding, limits, and the offset exception.
 - `alaa-prompting-guide`
 - `alaa-low-noise`
 - `alaa-workflow`

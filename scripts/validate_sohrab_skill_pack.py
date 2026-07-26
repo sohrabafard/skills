@@ -8,6 +8,20 @@ ROOT = Path(__file__).resolve().parents[1]
 PACK_DIR = ROOT / "skills" / "sohrab"
 
 PATH_RE = re.compile(r"`((?:references|docs|examples|scripts|assets|output|test|tests)/[^`]+)`")
+BACKTICK_RE = re.compile(r"`([^`\n]+)`")
+METRIC_RE = re.compile(r"^alaa_[a-z0-9]+(?:_[a-z0-9]+)*$")
+BROKER_RE = re.compile(
+    r"^(?:"
+    r"[a-z][a-z0-9_]*\.events"
+    r"|[a-z][a-z0-9_]*\.commands(?:\.dlx)?"
+    r"|[a-z][a-z0-9_]*\.jobs\.[a-z0-9_]+"
+    r"|notification\.command\.[a-z0-9_.]+"
+    r"|notif\.[a-z0-9_.]+"
+    r")(?:\.retry|\.dlq)?$"
+)
+REGISTRY_SKILL = "alaa-services-contract"
+METRIC_REGISTRY = "references/24-metric-registry.md"
+QUEUE_REGISTRY = "references/23-queue-and-exchange-registry.md"
 LOCAL_RESOURCE_PREFIXES = ("references/", "examples/", "scripts/", "assets/")
 TARGET_REPO_PREFIXES = ("docs/", "output/", "test/", "tests/")
 
@@ -47,6 +61,52 @@ def should_validate_path(skill_dir: Path, path: str) -> bool:
         return False
 
     return True
+
+
+def check_registries(skill_dir: Path) -> list[str]:
+    """Fail when this skill names a metric, exchange, or queue it never registered.
+
+    A registry nothing checks goes stale. This proves one half: no reference file
+    in alaa-services-contract may name an `alaa_*` metric absent from
+    references/24-metric-registry.md, or a broker exchange or queue absent from
+    references/23-queue-and-exchange-registry.md. The other half - that a service
+    repository emits only registered names - cannot be checked from here and is
+    stated as such in 24-metric-registry.md.
+    """
+    errors: list[str] = []
+    refs = skill_dir / "references"
+    if not refs.is_dir():
+        return errors
+
+    registries = {}
+    for rel in (METRIC_REGISTRY, QUEUE_REGISTRY):
+        path = skill_dir / rel
+        if not path.exists():
+            errors.append(f"{skill_dir.name}: registry file missing -> {rel}")
+            return errors
+        registries[rel] = path.read_text(encoding="utf-8")
+
+    for md in sorted(refs.glob("*.md")):
+        rel_name = f"references/{md.name}"
+        text = md.read_text(encoding="utf-8")
+        for token in BACKTICK_RE.findall(text):
+            token = token.strip()
+            if any(ch in token for ch in "<>*?[]/ \t"):
+                continue
+            if METRIC_RE.match(token):
+                target = METRIC_REGISTRY
+            elif BROKER_RE.match(token):
+                target = QUEUE_REGISTRY
+            else:
+                continue
+            if rel_name == target:
+                continue
+            if f"`{token}`" not in registries[target]:
+                errors.append(
+                    f"{skill_dir.name}: {rel_name} names `{token}` "
+                    f"with no row in {target}"
+                )
+    return sorted(set(errors))
 
 
 def load_skill(skill_dir: Path):
@@ -94,6 +154,8 @@ def main() -> int:
                 errors.append(f"{skill_dir.name}: short_description must be 25-64 chars")
             if ("$" + front["name"]) not in default_prompt:
                 errors.append(f"{skill_dir.name}: default_prompt must mention $" + front["name"])
+        if skill_dir.name == REGISTRY_SKILL:
+            errors.extend(check_registries(skill_dir))
         for topic_map in [skill_dir / "references" / "00-topic-map.md", skill_dir / "docs" / "00-topic-map.md"]:
             if topic_map.exists():
                 topic_raw = topic_map.read_text(encoding="utf-8")

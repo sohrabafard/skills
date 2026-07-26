@@ -15,7 +15,7 @@
 11. Align public `project_id` fields as canonical UUIDv7 inputs resolved server-side after validation, and keep trusted `X-Project-Id` normalization inside one request-context builder.
 12. Align permission configs with `alaa-permission-catalog` generated outputs when the task touches `config/permissions.php`, generated Go permission maps, the generated TypeScript `permission-catalog.ts`, permission names, bitmap ids, `X-Access`, or drift checks.
 13. Verify backend decisions use exact permission checks and do not add role-based authorization or other role-dependent behavior while `28-backend-permission-authorization-and-role-freeze.md` remains active.
-14. Align the observability names and values in `21-alaa-platform-observability-directive.md` when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers, and take requirement levels and gates from `$alaa-observability-soc`.
+14. Align the observability names and values in `21-alaa-platform-observability-directive.md`, the metric names in `24-metric-registry.md`, and the broker names in `23-queue-and-exchange-registry.md` when the task touches logs, traces, metrics, queues, DBs, dependencies, or workers, and take requirement levels and gates from `$alaa-observability-soc`.
 15. Align every outbound call, retry, connection pool, and ingress admission decision to `22-failure-load-and-deprecation-contract.md` when the task adds or changes any of them.
 16. Add or align exact response envelopes, exact headers, exact event names, exact code naming, and exact metric names where the contract owns them.
 17. Update docs, Postman, and runbooks in the same patch when public or operational behavior changes.
@@ -76,7 +76,11 @@ When applying this skill to a service, finish by checking:
 
 ### Failure behaviour and load
 - every outbound HTTP, database, cache, and broker client is constructed with an explicit timeout
-- one request deadline is computed at ingress and every outbound per-attempt timeout is clamped to the time remaining
+- the gateway sets `X-Request-Deadline-Ms` on every forwarded request from `GATEWAY_REQUEST_DEADLINE_MS`, default `180000`, and strips any client-supplied value
+- no service defines an env variable that sets, overrides, or extends the edge deadline
+- each service reads `X-Request-Deadline-Ms` at ingress, clamps every outbound per-attempt timeout to the remainder, refuses with `503 DEPENDENCY_UNAVAILABLE` without calling anything when the remainder is non-positive, and forwards the decremented value on every internal hop
+- a service called without the header falls back to its own route default rather than running unbounded
+- `alaa_requests_deadline_exhausted_total` is exported by every service that implements the deadline
 - the retry budget is at most 3 total attempts, with exponential backoff and full jitter, never a fixed delay
 - no retry exists on the gateway authorization hop or on a readiness dependency probe
 - every retried `POST` carries an `Idempotency-Key` that is byte-identical across retries of one logical operation
@@ -106,18 +110,33 @@ When applying this skill to a service, finish by checking:
 - no `4xx` or `5xx` returns an empty body; where the runtime cannot render one, the repository records which
   component does
 - every emitted code matches `^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$` and appears in one committed registry a test reads
-- list routes accept `cursor` and `limit`, reject `page`, `per_page`, and `offset`, and return
-  `meta.next_cursor` as a string or `null`
+- list routes accept `cursor` and `limit`, reject `page`, `per_page`, and `offset`, and return both
+  `meta.next_cursor` and `meta.prev_cursor` as a string or `null`, with neither key omitted
+- any offset list satisfies all five conditions of the admin-table exception in
+  `25-end-to-end-flow-and-boundaries.md` and declares its own response envelope rather than using `meta`
 - a `limit` above the documented maximum is rejected, not clamped
 - no payload field carries an auto-increment database id, except the actor identifier received in `X-User-Id`
-- readiness `checks` is an object keyed by check name, not an array
+- readiness `checks` is an object keyed by check name, not an array, and every item carries `status`,
+  `required`, `code`, and `message`
+- `error.meta` carries only the four permitted kinds of detail, carries no exception text, SQL, internal
+  identifier, secret, or extra PII, and one `code` always produces one `meta` key set
+- every field named `project_id` is a UUIDv7 string on the HTTP payload, the event envelope, the log field,
+  and the cache key
+- no payload, event, or log carries a database integer under any name other than the recorded actor-identifier debt
 
 ### Async messages
+- the internal-versus-inter-service test in `20-operational-and-observability-contract.md` was applied
+  before any message was reshaped, and no framework-internal job was converted to the domain envelope
 - every published domain event carries the exact envelope field set, with `payload` holding the domain fields
 - the exchange is `<service>.events` and the routing key equals `message_type` byte-for-byte
 - no domain event is published to the default exchange, and no publisher binding resolves to a log or no-op
   sink outside a test
 - every consumer sets an explicit prefetch at its construction site or in committed configuration
+- every exchange and queue name in the repository has a row in `23-queue-and-exchange-registry.md`, and a
+  new name was registered there before the declaring code merged
+- a command goes to the receiver's command queue and an event goes to the producer's own topic exchange
+- every metric name in the repository has a row in `24-metric-registry.md`, and a new name was registered
+  there before the emitting code merged
 
 ### Trusted ingress
 - missing blank invalid `X-Project-Id`
@@ -193,14 +212,23 @@ Flag a problem when you see any of these:
 - an error body uses a framework default shape such as `{"message": ..., "errors": {...}}`, omits `meta`, or
   sets `meta` to `null`
 - an error code is lowercase, or exists only in a documentation artifact no test reads
-- a list route reads `per_page`, `page`, or `offset`, or a repository mandates keyset pagination in its own
-  `AGENTS.md` while its code calls an offset paginator or no paginator at all
+- a list route reads `per_page`, `page`, or `offset` without satisfying all five conditions of the
+  admin-table exception, or a repository mandates keyset pagination in its own `AGENTS.md` while its code
+  calls an offset paginator or no paginator at all
 - an event envelope uses `event_id`, `event_name`, `event_type`, `event_version`, `payload_version`, `data`,
   or `headers` instead of the canonical field names
 - a routing key is rewritten from the event name, or a domain event is published to the default exchange
 - a service other than the gateway parses, verifies, or refreshes an end-user bearer token
 - a service that makes authorization decisions has no executable read of `X-Access`
-- an application metric name does not begin `alaa_`
+- an application metric name does not begin `alaa_`, or is emitted without a row in `24-metric-registry.md`
+- an exchange or queue is declared with no row in `23-queue-and-exchange-registry.md`, or a command is
+  published to the sender's own exchange instead of the receiver's command queue
+- an internal framework job is rewritten into the domain event envelope, or an inter-service message is left
+  in the framework's own shape
+- an error `meta` carries exception text, SQL, a stack fragment, an internal identifier, a secret, or PII the
+  request did not already carry, or one `code` produces two different `meta` key sets
+- a field named `project_id` carries an integer in a payload, an event, a log field, or a cache key
+- a new numeric identifier is added and justified by citing the actor-identifier exception
 - a contract surface is deleted or renamed without the deprecation procedure, or a deprecation carries no removal date
 
 ## Anti-patterns

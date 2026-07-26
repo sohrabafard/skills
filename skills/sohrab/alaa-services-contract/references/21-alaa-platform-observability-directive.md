@@ -1,17 +1,19 @@
 # Alaa Platform Observability Names And Values
 
-Use this file when the task needs an exact observability **name** or **value**: an `alaa_*` metric family,
-an `OTEL_*` environment variable and its Ala default, a trace or route naming rule, an exception field
-name, or the current telemetry shape of a specific Ala service.
+Use this file when the task needs an exact observability **name** or **value**: an `OTEL_*` environment
+variable and its Ala default, a trace or route naming rule, an exception field name, the `/metrics` endpoint
+facts, or the current telemetry shape of a specific Ala service. For a metric name, read
+`24-metric-registry.md` instead; it owns every one.
 
 ## Ownership split, and it is binding
 
 This skill owns every observability **name and value**. `$alaa-observability-soc` owns every **requirement
 level, gate, threshold, and reason**.
 
-- Here: metric family names, log field names, event and code names, `OTEL_*` variable names and their Ala
-  default values, route and operation naming rules, exception field names, and the per-service reality
-  table below.
+- Here: log field names, `OTEL_*` variable names and their Ala default values, route and operation naming
+  rules, exception field names, the `/metrics` endpoint facts, and the per-service reality table below.
+  Metric family names moved to `24-metric-registry.md`; event and code names are owned by
+  `20-operational-and-observability-contract.md`.
 - There: whether a signal is required, which alert or SLO gate it feeds, Collector topology and processor
   placement, sampling policy, metric label allow and deny lists, resource-identity policy, exemplar
   requirement level, Sentry policy, and the data-retention and cardinality budgets.
@@ -123,107 +125,24 @@ token-level correlation use the token `jti`, a short fingerprint, or a stable in
 bodies and PII appear only where an approved, audited flow allows it, masked or minimized; whether a given
 flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s call, not a per-service one.
 
-## Prometheus endpoint and metric naming
+## Prometheus endpoint
 
 - The metrics endpoint path is `/metrics` unless a repository already has a different internal path fixed
   by platform contract. It is internal and is never routed as a public client API.
 - Metrics are scraped. Do not push normal long-lived service metrics, and do not use the Pushgateway for
   them.
-- Every application metric name begins `alaa_`, uses lowercase snake_case, and carries the unit or kind
-  suffix that matches its type: `_total` for a counter, `_seconds` for a duration, `_bytes` for a size, and
-  no suffix for a plain gauge. Base units only — seconds, not milliseconds; bytes, not kilobytes.
-- Never invent a repo-local name for a family in the catalog below. A dashboard or alert built on
-  `alaa_http_requests_total` breaks silently for the one service that called it something else, which is
-  the exact failure this catalog exists to prevent.
-- Observable: the repository's metric-name constants hold no name that does not begin `alaa_`. A bare
-  `http_requests_total`, `db_queries_total`, or `outbox_depth` fails this rule. When the unprefixed name
-  comes from a shared kit or base library, the kit is fixed at the kit and its consumers re-generate, because
-  fixing it per service leaves the next service built on that kit non-conforming on its first day.
-- Whether a histogram carries exemplars is a requirement level, and `$alaa-observability-soc` owns it. This
-  file fixes only the name and the unit. Per-service metric-name and exemplar status is recorded in
-  `95-fleet-conformance.md`.
+- Whether a histogram carries exemplars is a requirement level, and `$alaa-observability-soc` owns it.
 - Which labels a metric may carry, and the cardinality budget, belong to `$alaa-observability-soc`. The
   request-middleware label boundary is in `20-operational-and-observability-contract.md`.
 
-## The `alaa_*` metric family catalog
+## Metric names
 
-These are the canonical family names. A service exposing the behaviour a family measures uses that exact
-name. `$alaa-observability-soc` decides which families a given service is required to expose.
+`24-metric-registry.md` owns every one: the `alaa_` prefix rule, the naming grammar and unit suffixes, the
+complete registered family list, the baseline set every service emits, the rule that a metric is registered
+before it is emitted, and the names in the fleet that are non-conforming today together with what each
+becomes. Do not restate a metric name here; add it there.
 
-### HTTP request
-- `alaa_http_requests_total` — counter, total HTTP requests.
-- `alaa_http_request_duration_seconds` — histogram, end-to-end request duration.
-- `alaa_http_requests_in_flight` — gauge, current in-flight requests. This is the observable behind the
-  ingress admission limit in `22-failure-load-and-deprecation-contract.md`.
-- `alaa_http_request_failures_total` — counter, failed requests.
-
-### Readiness and health
-- `alaa_service_ready` — gauge, `1` when ready and `0` when not ready.
-- `alaa_service_readiness_failures_total` — counter.
-- `alaa_service_restarts_total` — counter, when available from the app boundary or local runtime tracking.
-
-### Authorization and validation
-- `alaa_auth_context_invalid_total`
-- `alaa_authz_denied_total`
-- `alaa_input_validation_failed_total`
-- `alaa_rate_limit_exceeded_total`
-
-### Database
-- `alaa_db_queries_total`
-- `alaa_db_query_duration_seconds`
-- `alaa_db_query_failures_total`
-- `alaa_db_connections_active`
-- `alaa_db_pool_in_use` — the observable behind the pool bound in `22-failure-load-and-deprecation-contract.md`.
-- `alaa_db_pool_idle`
-
-Where the driver and database support them safely: `alaa_db_transactions_total`,
-`alaa_db_transaction_duration_seconds`, `alaa_db_lock_wait_seconds`, `alaa_db_deadlocks_total`.
-
-### Downstream dependency
-- `alaa_dependency_requests_total`
-- `alaa_dependency_request_duration_seconds`
-- `alaa_dependency_request_failures_total`
-- `alaa_dependency_timeouts_total` — counts a per-attempt timeout as defined in
-  `22-failure-load-and-deprecation-contract.md`.
-
-### Queue and async
-- `alaa_queue_messages_published_total`
-- `alaa_queue_messages_consumed_total`
-- `alaa_queue_message_failures_total`
-- `alaa_queue_message_duration_seconds`
-- `alaa_queue_retries_total`
-- `alaa_queue_dead_letter_total`
-- `alaa_queue_backlog` and `alaa_queue_consumer_lag_seconds` where backlog visibility is service-owned or
-  safely available.
-
-### Worker and runtime
-- `alaa_worker_jobs_in_progress`
-- `alaa_worker_restarts_total`
-- `alaa_worker_memory_bytes`
-
-Go services also expose goroutine count, garbage-collection cycles, GC pause duration, and heap usage
-through the official Prometheus Go collectors rather than hand-rolled gauges. Laravel and Octane services
-also expose Octane worker count, worker restart count, queue worker failure count, queue busy signals, and
-long job execution time.
-
-### Service-owned business families
-
-Each service exposes a small set of business metrics under the same naming rules, owned by the service
-that owns the behaviour. The canonical names in use today:
-
-- `auth` — `alaa_auth_login_attempts_total`, `alaa_auth_login_failures_total`,
-  `alaa_auth_token_issued_total`, `alaa_auth_token_validation_failed_total`.
-- `content` and `vod` — `alaa_content_requests_total`, `alaa_content_access_denied_total`,
-  `alaa_video_playback_authorizations_total`.
-- `comment` — `alaa_comment_created_total`, `alaa_comment_deleted_total`,
-  `alaa_comment_moderation_actions_total`.
-- `ticket` — `alaa_ticket_created_total`, `alaa_ticket_reply_created_total`,
-  `alaa_ticket_status_changed_total`.
-- `wa` — `alaa_watch_events_ingested_total`, `alaa_watch_ingest_failures_total`,
-  `alaa_watch_pipeline_backpressure_total`.
-
-Adding a business family adds it to this list in the same change. A per-feature metric tree that is not
-listed here is not part of the contract and will not appear on platform dashboards.
+Per-service metric-name conformance is recorded in `95-fleet-conformance.md`.
 
 ## Collector and Prometheus deployment notes for Ala
 
