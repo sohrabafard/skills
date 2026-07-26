@@ -1,103 +1,60 @@
-# Sohrab Companion Skills
+# House Companions for Go Work
 
-Use this file when the Go task crosses platform, workflow, contract, or trust boundaries that are not owned by generic Go skills.
+The skills a Go task reaches when it crosses out of Go and into workflow, delivery, edge, or documentation. The
+doctrine and platform owners — contracts, reliability, security, trust, data, messaging, observability, kit
+governance, clean code, Fiber, prompting — are in `05-what-this-skill-does-not-own.md` and are not repeated here.
 
-## Clean-code discipline (load first, with the vendor Go skills)
+Trigger forms: Claude Code `/name`, Codex `$name`. Load a skill when the condition in its row holds, and not
+otherwise.
 
-### alaa-golang-clean-code-principles ( `$alaa-golang-clean-code-principles` )
+## Running the work
 
-Load it **before writing, reviewing, or refactoring any Go code** on an `alaa-go-chi` service (news, notification v2,
-entitlement-platform after adoption, and every future Go service), and whenever a task touches the canonical error
-envelope, TrustCtx / trusted headers, route families, outbox or transaction boundaries, idempotency, JSON wire tags,
-UUIDv7 public ids, goroutine lifecycles, config or env loading, metric and log vocabulary, or cross-service contracts.
-It is the mandatory kit-era discipline layer: thirteen named principles (P1–P13) with wrong/right examples and a
-pre-commit checklist. `alaa-golang` teaches you to write good Go; `alaa-golang-clean-code-principles` makes that Go
-belong on this platform. The two are reciprocal — this router owns Go depth and skill selection; the principles skill
-owns platform conformance. When guidance appears to conflict, platform contracts win and a real conflict is a drift to
-record, not to resolve silently.
+| Load | When you are about to… |
+|---|---|
+| `/alaa-workflow` (`$alaa-workflow`) | start Go work that spans more than one session, more than one phase, or more files than one message can track — it holds durable plan and execution state |
+| `/alaa-low-noise` (`$alaa-low-noise`) | run a repository search, a log tail, or a command whose output would fill the context and bury the signal |
+| `/alaa-cc-orchestrator` (`$alaa-cc-orchestrator`) | split Go work into specialist lanes with independent verification and review gates in Claude Code |
+| `/alaa-codex-orchestrator` (`$alaa-codex-orchestrator`) | do the same in Codex |
+| `/alaa-controlled-ops` (`$alaa-controlled-ops`) | run a command that touches a shared system, a live environment, or anything not reversible from the repository |
+| `/alaa-basic-memory-os` (`$alaa-basic-memory-os`) | record a drift note, a decision, or context that a later session must find |
 
-## Workflow and context management
+## Delivery and runtime
 
-### alaa-workflow ( `$alaa-workflow` )
+| Load | When you are about to… |
+|---|---|
+| `/alaa-docker-production` (`$alaa-docker-production`) | write or change a Dockerfile, a Compose file, a Swarm stack, or an image-hardening step for a Go service |
+| `/alaa-k8s-helm` (`$alaa-k8s-helm`) | change a Kubernetes or OpenShift object, a Helm chart, a probe, a rollout strategy, or a Route |
+| `/caas-arvan-kuber` (`$caas-arvan-kuber`) | deploy to Arvan CaaS, where generic Kubernetes guidance does not match the platform |
+| `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) | write or debug `.gitlab-ci.yml`, a runner configuration, a cache, or a pipeline stage |
+| `/alaa-makefile` (`$alaa-makefile`) | add or change a `make` target that other agents or CI will invoke |
+| `/alaa-haproxy` (`$alaa-haproxy`) | change edge routing, TLS termination, header trust, connection limits, or edge rate limiting in front of a Go service |
+| `/service-runtime-kit-governance` (`$service-runtime-kit-governance`) | generate or change local runtime and shared-infrastructure definitions that Go and Laravel services must share |
 
-Use it when the Go task is long, multi-phase, risky, or spread across many files and needs durable plan and execution state.
+## Data and integration surfaces
 
-### alaa-prompting-guide ( `$alaa-prompting-guide` )
+| Load | When you are about to… |
+|---|---|
+| `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`) | design or change a ClickHouse table, a materialized view, or an ingest path |
+| `/alaa-mongodb-patterns` (`$alaa-mongodb-patterns`) | work against MongoDB from a Go service |
+| `/alaa-partitioned-table-fk-audit` (`$alaa-partitioned-table-fk-audit`) | add or change a foreign key on a partitioned Postgres table |
+| `/alaa-crockford-base32-codecs` (`$alaa-crockford-base32-codecs`) | encode or decode a public identifier in Crockford Base32 |
+| `/openfga` (`$openfga`) | model or query relationship-based authorization in OpenFGA |
+| `/tusd-upload-platform` (`$tusd-upload-platform`) | work on resumable upload behaviour or the tusd service |
+| `/alaa-bale-provider` (`$alaa-bale-provider`) · `/alaa-sms-provider-mediana` (`$alaa-sms-provider-mediana`) | integrate with those messaging or SMS providers |
+| `/alaa-mono-package` (`$alaa-mono-package`) | change how a mono-package is structured, published, or consumed |
 
-Use it when you orchestrate the Go work through subagents, `/goal`, `/loop`, or a Workflow — it owns model selection,
-`$` vs `/` trigger syntax, and how to brief, bound, and delegate to subagents. Large Go audits, security sweeps,
-codebase-wide modernization, and staged refactors fan out well to parallel subagents (each a non-overlapping scope);
-read this skill before writing those delegation prompts so each lane gets the same constraints.
+## Documentation and artifacts
 
-### alaa-low-noise ( `$alaa-low-noise` )
+| Load | When you are about to… |
+|---|---|
+| `/alaa-postman-collections` (`$alaa-postman-collections`) | produce or update a Postman collection or an OpenAPI artifact for a Go service |
+| `/alaa-docs-farsi` (`$alaa-docs-farsi`) | write repository documentation or a human-facing note in Persian |
+| `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) | query SigNoz or write a ClickHouse query against telemetry data |
 
-Use it when repo search, logs, or command output could flood context and reduce signal.
+## Rule for every row above
 
-## Go framework companion
+**Rule:** load the companion before writing the code it governs, not to review the code afterwards. A companion loaded
+after the work is done can only find defects; loaded first it prevents them.
 
-### alaa-golang-fiber ( `$alaa-golang-fiber` )
-
-Use it when the repo already uses Fiber, the user explicitly chooses Fiber, or a raw service is large, high-concurrency,
-latency-sensitive, or SLA-heavy enough to justify Fiber's model.
-
-## Observability, security, and trust
-
-### alaa-observability-soc ( `$alaa-observability-soc` )
-
-Use it when Go instrumentation also affects incident evidence, correlation IDs, alert semantics, or SOC-facing observability rules.
-
-### alaa-security-review ( `$alaa-security-review` )
-
-Use it when the Go change affects authn, authz, tenant isolation, secret handling, or any real trust boundary.
-
-### alaa-trust-gateway-auth ( `$alaa-trust-gateway-auth` )
-
-Use it when the Go service consumes trusted gateway headers, verified identity context, or downstream trust semantics.
-
-### alaa-haproxy ( `$alaa-haproxy` )
-
-Use it when the service behavior depends on HAProxy routing, header trust, TLS termination, rate limiting, or edge policy.
-
-## Delivery and platform
-
-### alaa-docker-production ( `$alaa-docker-production` )
-
-Use it when the Go service also needs production Dockerfile, image hardening, Compose, or Swarm guidance.
-
-### alaa-k8s-helm ( `$alaa-k8s-helm` )
-
-Use it when the Go issue extends into Kubernetes, Helm, or OpenShift objects, probes, Routes, rollout behavior, or service exposure.
-
-### caas-arvan-kuber ( `$caas-arvan-kuber` )
-
-Use it when Arvan CaaS-specific delivery constraints matter and generic Kubernetes advice is not enough.
-
-### alaa-gitlab-ci-cd ( `$alaa-gitlab-ci-cd` )
-
-Use it when the repository needs `.gitlab-ci.yml`, runner, caching, or delivery-pipeline design and debugging.
-
-## Data, async, docs, and contracts
-
-### alaa-async-messaging ( `$alaa-async-messaging` )
-
-Use it when the Go service or surrounding system needs queues, eventing, retries, DLQs, idempotency, or broker-topology rules.
-
-### alaa-algorithms-data-structures ( `$alaa-algorithms-data-structures` · `/alaa-algorithms-data-structures` )
-
-Use it when a Go path's cost grows with tenants, rows, retained history, or fan-out per event: stating the complexity budget, finding the real bound on the growing dimension from a boundary that enforces it, choosing a structure from the access pattern, or resolving a call that leaves the process inside a loop. It owns that decision; `golang-data-structures`, `golang-performance`, and `golang-benchmark` own the Go mechanics that carry it out, and this router selects between them. A path whose every dimension already has a small maximum enforced in code needs none of it.
-
-### alaa-data-layer ( `$alaa-data-layer` )
-
-Use it when the change affects schema behavior, cache policy, locking, tenant-scoped data access, or shared data contracts.
-
-### alaa-docs-farsi ( `$alaa-docs-farsi` )
-
-Use it when the Go task also requires durable repository documentation or human-facing notes in Persian.
-
-### alaa-mono-package ( `$alaa-mono-package` )
-
-Use it when the task changes how a mono-package is structured or consumed.
-
-### alaa-services-contract ( `$alaa-services-contract` )
-
-Use it when the Go service must follow pack-wide service contracts for health, readiness, response shape, naming, or operational behavior.
+**Forbidden:** reproducing a companion's rules into a Go service's own documentation. **Rule:** cite the companion by
+name and let it stay the single source.

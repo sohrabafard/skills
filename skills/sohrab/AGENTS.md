@@ -46,7 +46,11 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **A pointer names its triggering condition.** `See also X` routes nothing. `When deciding which layer a behaviour is tested at, read X` is a routing rule.
 
-**Routing convention:** a skill with 8 or fewer references lists them in `SKILL.md` with a condition each. A skill with 9 or more uses `references/00-topic-map.md`. Both patterns are in use and the split is deliberate.
+**Routing convention — one router per skill, never two.** A skill with 8 or fewer references carries the router in `SKILL.md` as a table and ships no `references/00-topic-map.md`. A skill with 9 or more moves the router into `references/00-topic-map.md` and leaves exactly one pointer line in the body. The threshold is about always-loaded cost, not about whether routing matters. `00-topic-map.md` is a house filename that neither Claude Code nor Codex loads on its own — it is reachable only because `SKILL.md` points at it — so a router in the body reaches the agent with no second read and is the better placement whenever the body can afford it. Two routers in one skill is the defect: they drift, and the agent follows whichever it reads first.
+
+**Every router row states an observable condition** — *"You are about to ⟨situation⟩ → read ⟨file⟩"* — never a heading mirror, because `grep '^#'` already produces a heading mirror and it routes nothing.
+
+**Do not add a `00-topic-map.md` to a skill below the threshold, and do not delete one from a skill above it.** Crossing the threshold in either direction *moves* the router; it never duplicates it, and it never drops the routing content. Removing a topic map from a skill that fell below 9 references is correct only when every row survived into the body table.
 
 **Both runtimes matter.** Claude Code and Codex both load these skills. Give both trigger forms at every cross-skill call site — `/name` and `$name`. `agents/openai.yaml` is Codex-only metadata and correctly uses the bare `$`.
 

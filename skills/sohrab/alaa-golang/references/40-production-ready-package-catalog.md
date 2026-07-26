@@ -1,398 +1,209 @@
-# Production-Ready Go Package Catalog for This Stack
+# Package Catalog for This Stack
 
-## High-level overview of your environment
+Read this before adding, replacing, or upgrading a dependency. It names what to reach for in this stack: HTTP APIs
+behind a trusted gateway, PostgreSQL, Redis, ClickHouse, RabbitMQ and Kafka, deployed to Kubernetes or OpenShift.
 
-This catalog is tuned for a specific style of Go system:
+**Rule:** work this ladder in order and stop at the first step that answers the question:
 
-- high-concurrency backend services
-- security-sensitive and observability-sensitive production workloads
-- SLA-minded delivery, with graceful shutdown and explicit failure handling
-- HTTP APIs behind a trusted gateway
-- Redis cache and coordination, PostgreSQL OLTP, ClickHouse analytics
-- deployment on Kubernetes or OpenShift, with local Docker and sometimes Docker Swarm
+1. The standard library.
+2. A package the kit already provides — check `/alaa-go-chi-development` (`$alaa-go-chi-development`)
+   `references/12-kit-capability-map.md` before adding anything that touches transport, storage, messaging,
+   observability, or identity.
+3. A package already in the repository's `go.mod`.
+4. The **default** entry for that role below.
+5. A **conditional** entry below, when its stated condition holds.
+6. `/golang-popular-libraries` (`$golang-popular-libraries`) for discovery, then `/golang-pkg-go-dev`
+   (`$golang-pkg-go-dev`) to check the candidate's versions, licence, importers, and CVEs before proposing it.
 
-This is not a generic “cool Go packages” list. It is a production-first shortlist for your stack.
+**Rule:** apply the change with `/golang-dependency-management` (`$golang-dependency-management`) and run
+`govulncheck ./...` afterwards.
 
-## How this catalog was prepared
+**Forbidden:** adding a dependency without saying, in the same message, which complexity it removes and what the
+standard library would have cost instead.
 
-This catalog was prepared with these rules:
+## HTTP
 
-- standard library first
-- official Go, package, and framework docs before blog-post opinions
-- current Go release state and current package major versions taken into account
-- `awesome-go` used only as a discovery surface, not as the final authority
-- strong bias toward libraries that fit trusted-gateway, observability-heavy, and platform-driven services
-- strong bias against dependencies that add abstraction without reducing real complexity
+`github.com/go-chi/chi/v5` — **default**, supplied by the kit. Which framework a service uses is decided by
+`30-http-api-framework-choice.md`, not here; this file adds no framework criterion.
 
-## How to use this file
+`github.com/go-chi/cors` — **conditional**, when a standalone chi service needs CORS. Mount it top-level
+(`31-chi-api-guide.md`).
 
-- treat **default** as the first package to reach for
-- treat **conditional** as a good choice under clear conditions
-- treat **avoid by default** as a package family to resist unless the repo already standardized on it or the use case is unusually strong
+`github.com/go-chi/httprate`, `golang.org/x/time/rate` — **conditional, and not on the kit.** Admission control is a
+kit-owned surface: see `46-chi-under-load.md` before reaching for either. Off the kit, `x/time/rate` is the in-process
+token bucket and `httprate` the HTTP-level limiter, and the policy they enforce comes from `/alaa-reliability-sla`
+(`$alaa-reliability-sla`).
 
-## HTTP API and edge-facing services
+## Config and logging
 
-### `github.com/go-chi/chi/v5` - default for raw small/simple HTTP services
+`log/slog` — **default**. **Forbidden:** adding a third-party logger to a new service.
 
-Use when you are building a raw small or simple HTTP API in this pack, or when the repo already uses chi.
+`github.com/samber/slog-*` — **conditional**, only as a temporary bridge while migrating a repository off Zap,
+Logrus, or Zerolog. On the kit, config loading is `configkit`'s and logging is `obskit`'s; neither is a service
+decision.
 
-Why:
+`github.com/caarlos0/env/v11` — **conditional** for a standalone service whose config is entirely environment.
+`github.com/knadh/koanf/v2` — **conditional** when config must come from several sources at once.
 
-- stays inside `net/http`
-- easy to test with `httptest`
-- easy to instrument with `otelhttp` and Prometheus
-- fits trusted gateway and reverse-proxy environments well
+## Validation
 
-### `github.com/gofiber/fiber/v3` - default for raw large/high-concurrency HTTP services
+`github.com/go-playground/validator/v10` — **default** for validating a transport struct after decoding.
 
-Use when the repo already uses Fiber, the user explicitly chooses Fiber, or the raw service is large, high-concurrency,
-latency-sensitive, or SLA-heavy enough to justify Fiber's `fasthttp`-oriented model.
+`buf.build/go/protovalidate` — **default** when the contract is protobuf-first; the rules belong in the `.proto`.
+**Forbidden:** duplicating protobuf validation in hand-written Go.
 
-Load `alaa-golang-fiber` ( `$alaa-golang-fiber` ) before implementing or reviewing Fiber code.
+## Outbound HTTP
 
-### `github.com/go-chi/cors` - conditional
+`net/http` with an explicitly configured `http.Client` and a shared `Transport` — **default**. Timeouts and deadline
+propagation are in `45-failure-behavior-at-the-call-site.md`.
 
-Use when a `chi` service needs explicit CORS middleware.
+`resty.dev/v3` — **conditional**, when a service makes many structured calls to one API and request building has
+become the bulk of the code.
 
-Important: mount it as top-level middleware, not deep inside a route group.
-
-### `github.com/go-chi/httprate` - conditional
-
-Use when you want simple HTTP-level rate limiting inside a `chi` service.
-
-Use it for service-local concerns. For shared or global limits across many services, the gateway or a Redis-backed limit strategy is often the right place.
-
-### `golang.org/x/time/rate` - default for in-process limiting
-
-Use when you need token-bucket rate limiting inside handlers, client code, or worker flows without HTTP-specific middleware.
-
-## Config, logging, and service foundation
-
-### `github.com/caarlos0/env/v11` - default for env-first services
-
-Use when config should come mainly from environment variables and map cleanly into structs.
-
-Good fit for containerized services.
-
-### `github.com/knadh/koanf/v2` - conditional
-
-Use when configuration must come from multiple sources such as env, files, flags, Vault, or remote providers.
-
-Prefer it over Viper when you need a richer config story but still want a relatively clean dependency surface.
-
-### `log/slog` - default
-
-Use as the logging baseline.
-
-Do not add a third-party logger by default in new services.
-
-### `github.com/samber/slog-*` - conditional bridge packages
-
-Use only during migration when a repo still depends on Zap, Logrus, or Zerolog and you need a temporary bridge.
-
-## Validation and request contracts
-
-### `github.com/go-playground/validator/v10` - default for HTTP DTO validation
-
-Use when request structs need field and cross-field validation at the transport edge.
-
-It is a strong default for JSON request validation in HTTP APIs.
-
-### `buf.build/go/protovalidate` - default for protobuf-first contracts
-
-Use when request validation belongs in `.proto` schemas and the service is already protobuf-driven.
-
-Prefer it over duplicating protobuf validation logic in hand-written Go.
-
-## HTTP clients and outbound calls
-
-### `net/http` plus a tuned `http.Client` - default
-
-Use by default.
-
-Most production services do not need a third-party HTTP client. They need explicit timeouts, a reusable transport, retries only where safe, and clear observability.
-
-### `resty.dev/v3` - conditional
-
-Use when the service makes many structured HTTP API calls and you want ergonomic request building, retries, and hooks.
-
-Do not adopt it for one or two simple outbound calls.
-
-### `github.com/sony/gobreaker/v2` - conditional
-
-Use when a downstream dependency needs a real circuit breaker and retries plus timeouts are no longer enough.
-
-Keep the policy explicit. Do not hide breaker semantics inside random helpers.
+`github.com/sony/gobreaker/v2` — **conditional, and not on the kit.** A breaker is a kit-owned surface
+(`46-chi-under-load.md`); off the kit, this is the implementation, and whether a breaker is warranted and with which
+thresholds belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
 
 ## PostgreSQL
 
-### `github.com/jackc/pgx/v5` - default
+`github.com/jackc/pgx/v5` — **default** driver and pool, and what the kit's `pgkit` wraps.
 
-Use as the default PostgreSQL driver and toolkit.
+`github.com/sqlc-dev/sqlc` — **default** when the service writes its own SQL and wants generated typed accessors.
 
-Why:
+`github.com/pressly/goose/v3` — **default** migration runner, and what the kit's migrate lane uses.
 
-- high-performance driver
-- PostgreSQL-specific features
-- clean pool support with `pgxpool`
-- can still adapt to `database/sql` if needed
+`atlas` — **conditional**, when schema drift detection and migration review are governance requirements rather than
+build steps. That choice belongs to `/alaa-data-layer` (`$alaa-data-layer`).
 
-### `github.com/sqlc-dev/sqlc` - default when the service owns SQL
-
-Use when you want type-safe generated query code from hand-written SQL.
-
-This is the best default for PostgreSQL services in this stack when you do not want a heavyweight ORM.
-
-### `github.com/pressly/goose/v3` - default for simple migration flows
-
-Use when you want straightforward incremental SQL migrations with low ceremony.
-
-Good fit for service-local migrations that do not need advanced schema planning.
-
-### `atlas` - conditional for governed schema workflows
-
-Use when you need schema planning, migration review, drift detection, or stronger CI controls around database changes.
-
-This is the better choice when database change management is part of platform governance, not just app startup.
-
-### ORM note
-
-Avoid ORM-first design by default in this stack. Prefer `pgx` plus `sqlc`, or `pgx` plus explicit repository code.
+**Forbidden:** an ORM in a PostgreSQL service in this stack. **Rule:** use `pgx` with `sqlc`, or `pgx` with explicit
+repository code.
 
 ## Redis
 
-### `github.com/redis/go-redis/v9` - default
-
-Use as the default Redis client.
-
-Use it for:
-
-- cache lookups
-- short-lived coordination
-- rate-limit state when the service owns that concern
-- distributed locks only when you have explicit correctness rules
-
-For DB-backed data, use Redis as a cache layer by default. The database remains source of truth. Read
-`61-redis-cache-layer.md` before designing keys, TTLs, invalidation, stampede protection, or cache fallback behavior.
-
-After dependency updates, run `govulncheck` because Redis client vulnerabilities do happen.
+`github.com/redis/go-redis/v9` — **default**, and what the kit's `rediskit` wraps. Every rule about how it is used is
+in `61-redis-cache-layer.md`.
 
 ## ClickHouse
 
-### `github.com/ClickHouse/clickhouse-go/v2` - default
+`github.com/ClickHouse/clickhouse-go/v2` — **default**.
 
-Use first for ClickHouse access.
+`github.com/ClickHouse/ch-go` — **conditional**, on an ingest path where a profile has already shown the higher-level
+client to be the bottleneck. **Forbidden:** choosing it without that profile.
 
-Why:
+## Messaging
 
-- official high-level client
-- supports native interface and `database/sql`
-- easier operational fit for most services
+`github.com/rabbitmq/amqp091-go` — **default**, and what the kit's `mqkit` wraps.
 
-### `github.com/ClickHouse/ch-go` - conditional for hot ingest paths
+`github.com/twmb/franz-go` — **default** Kafka client when Kafka is the chosen broker.
 
-Use when you have a specialized high-throughput path and have already proven that the higher-level client is the bottleneck.
+`github.com/ThreeDotsLabs/watermill` — **conditional**, only where a team has decided to adopt its eventing
+abstraction across services. **Forbidden:** adding it for a single consumer.
 
-Do not make `ch-go` the default just because it is lower level.
+## gRPC and protobuf
 
-## Messaging and async delivery
+`google.golang.org/grpc` — **default** for a gRPC service.
 
-### `github.com/rabbitmq/amqp091-go` - default for RabbitMQ
+`connectrpc.com/connect` — **conditional**, when one schema must serve Go backends, browsers, and gRPC-Web clients
+without a hand-written bridge.
 
-Use as the default RabbitMQ client. It is maintained by the RabbitMQ core team.
+`buf` — **default** for protobuf lint, breaking-change detection, and generation. **Forbidden:** raw `protoc`
+command lines in a repository that has more than one `.proto`.
 
-Keep retries, backoff, confirms, idempotency, and dead-letter strategy in your design instead of assuming the client solves them for you.
+`github.com/grpc-ecosystem/go-grpc-middleware/v2` — **conditional**, when interceptor composition has outgrown
+hand-written interceptors.
 
-### `github.com/twmb/franz-go` - default for Kafka
-
-Use as the default Kafka client when Kafka is truly needed.
-
-It is a strong fit for performance-sensitive and feature-complete Kafka work.
-
-### `github.com/ThreeDotsLabs/watermill` - conditional
-
-Use only when the team intentionally wants a higher-level eventing abstraction and has accepted its architectural style.
-
-Avoid it for simple queue consumers where plain broker clients are easier to reason about.
-
-## gRPC, protobuf, and multi-protocol APIs
-
-### `google.golang.org/grpc` - default for pure gRPC
-
-Use when the service is a normal gRPC service and you want the standard transport.
-
-### `connectrpc.com/connect` - conditional but recommended for mixed clients
-
-Use when one schema should serve Go backends, browsers, and gRPC-Web clients cleanly.
-
-This is a very strong choice when you want one contract with fewer edge adapters.
-
-### `buf` - default for protobuf hygiene
-
-Use when raw `protoc` command lines are becoming brittle.
-
-Use it for:
-
-- linting
-- breaking-change checks
-- consistent code generation
-
-### `github.com/grpc-ecosystem/go-grpc-middleware/v2` - conditional
-
-Use when gRPC interceptors for logging, retries, recovery, selection, or validation are becoming non-trivial.
-
-### `go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc` - default for gRPC observability
-
-Use when tracing and metrics are required for gRPC servers or clients.
+`go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc` — **default** for gRPC tracing.
 
 ## GraphQL
 
-### `github.com/99designs/gqlgen` - default for schema-first GraphQL
+`github.com/99designs/gqlgen` — **default**, schema-first with generated resolver contracts.
 
-Use when GraphQL is truly needed and you want generated typed resolver contracts from a schema.
-
-Pair it with `golang-graphql` ( `$golang-graphql` ) and `50-gap-coverage.md` because production GraphQL still needs
-explicit auth, pagination, depth or complexity limits, batching, and error-shaping rules.
-
-### `github.com/graph-gophers/graphql-go` - conditional
-
-Use when the repo already standardizes on it or when its reflection-based model fits an existing codebase better than
-schema-first generated resolver contracts.
-
-Do not choose it just to avoid code generation if the service needs a durable public contract.
+`github.com/graph-gophers/graphql-go` — **conditional**, only when the repository already standardizes on it.
 
 ## Observability
 
-### `go.opentelemetry.io/otel` and the Go OTel SDK - default
+`go.opentelemetry.io/otel` and the Go SDK — **default** for traces and context propagation.
+`go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp` — **default** for HTTP instrumentation.
+`github.com/prometheus/client_golang/prometheus` and `.../promhttp` — **default** for metrics and their endpoint.
 
-Use as the observability baseline for traces and cross-service context propagation.
-
-### `go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp` - default for HTTP services
-
-Use when a `net/http` or `chi` service needs tracing and standard instrumentation hooks.
-
-### `github.com/prometheus/client_golang/prometheus` - default
-
-Use for metrics collection.
-
-### `github.com/prometheus/client_golang/prometheus/promhttp` - default
-
-Use to expose Prometheus metrics endpoints.
+On the kit, all four are wired by `obskit` and the fixed middleware chain. **Forbidden:** instrumenting HTTP again in
+a kit service.
 
 ## Identity and security
 
-### `github.com/coreos/go-oidc/v3/oidc` - default for OIDC verification
+`github.com/coreos/go-oidc/v3/oidc` — **conditional**, only in a service that itself verifies OIDC tokens.
 
-Use when the service itself must verify OIDC ID tokens or work directly with an OIDC provider.
+`github.com/golang-jwt/jwt/v5` — **conditional**, only in a service that owns an authentication boundary.
+**Forbidden:** adding JWT verification to a service that sits behind the trusted gateway; see
+`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
 
-### `github.com/golang-jwt/jwt/v5` - conditional
-
-Use when the service really owns JWT parsing or signing.
-
-Do not make every service depend on it in a trusted-gateway architecture.
-
-Run `govulncheck` after upgrades because JWT libraries do receive security advisories.
-
-### `github.com/MicahParks/keyfunc/v3` - conditional
-
-Use when direct JWT verification must pull keys from a JWKS endpoint and you need a `jwt.Keyfunc` helper for `github.com/golang-jwt/jwt/v5`.
+`github.com/MicahParks/keyfunc/v3` — **conditional**, when a service that already verifies JWTs must fetch keys from
+a JWKS endpoint.
 
 ## Testing
 
-### standard `testing` package and `net/http/httptest` - default
+`testing` and `net/http/httptest` — **default**.
 
-Use first.
+`github.com/stretchr/testify` — **conditional**, when the repository already uses it.
 
-### `github.com/stretchr/testify` - conditional default
+`github.com/testcontainers/testcontainers-go` — **default** for a test that needs a real Postgres, Redis, ClickHouse,
+Kafka, or RabbitMQ.
 
-Use selectively for clearer assertions and targeted mocks.
+`github.com/DATA-DOG/go-sqlmock` — **conditional**, for asserting the exact SQL a repository emits. **Forbidden:**
+using it to prove a query returns correct results — that needs a real database.
 
-Do not let it replace good test design.
+## Repository tools
 
-### `github.com/testcontainers/testcontainers-go` - default for integration tests with real dependencies
+`gopls` — **default** language server; reached through `/golang-gopls` (`$golang-gopls`).
+`golangci-lint` — **default** lint runner. **Rule:** pin its version in CI.
+`govulncheck` — **default** vulnerability gate.
+`buf` — **default** in any protobuf repository.
 
-Use when the test should run against a real Postgres, Redis, ClickHouse, Kafka, or RabbitMQ dependency in Docker.
+## CLI and scheduling
 
-### `github.com/DATA-DOG/go-sqlmock` - conditional
+`github.com/spf13/cobra` — **conditional**, for a tool with a command tree. **Forbidden:** adding it for a service's
+one or two subcommands; on the kit those are already generated.
 
-Use when you need narrow tests for query behavior without a real database.
-
-Prefer real integration tests when behavior depends on actual PostgreSQL semantics.
-
-## Core repo tools
-
-### `gopls` - default
-
-Use as the language server and analyzer surface for Go repos.
-
-It is the default source for editor intelligence, refactors, and many modernizing analyzers.
-
-### `golangci-lint` - default
-
-Use as the main lint runner in CI and local checks.
-
-Pin the version in CI. Do not let the tool drift implicitly.
-
-### `govulncheck` - default
-
-Use after dependency changes and before releases.
-
-### `buf` - default for protobuf repos
-
-Use for protobuf lint, breaking-change checks, and code generation orchestration.
-
-## CLI and background execution
-
-### `github.com/spf13/cobra` - conditional
-
-Use for large or multi-command CLI tools.
-
-Do not add it to every service just because it is popular.
-
-### `github.com/robfig/cron/v3` - conditional
-
-Use for in-process cron only when an external scheduler or queue is not the better fit.
-
-Make ownership, overlap policy, and shutdown behavior explicit.
+`github.com/robfig/cron/v3` — **conditional**, for in-process scheduling when an external scheduler is not available.
+**Rule:** state the job's owner, its overlap policy, and its shutdown behaviour in the same change.
 
 ## Dependency injection
 
-### manual DI - default
+Plain constructors — **default** (`60-service-architecture-patterns.md`).
 
-Use explicit constructors and wiring first.
+`github.com/samber/do/v2` — **conditional**, only when `go.mod` already requires it.
 
-### `github.com/samber/do/v2` - conditional
+`github.com/google/wire` — **not for new work.** The repository was archived in 2025. **Rule:** on an existing Wire
+service, keep it and load `/golang-google-wire` (`$golang-google-wire`).
 
-Use when the repo already uses it or when a real DI container helps enough to justify another abstraction layer.
+## Utilities
 
-If you adopt it, also route to `golang-samber-do` ( `$golang-samber-do` ).
+`github.com/google/uuid` — **conditional** for a standalone service. **Forbidden:** using it to mint a public
+identifier on a kit service; UUIDv7 public ids come from the kit's `idkit`
+(`/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) P8).
 
-### `google/wire` - avoid by default for new work
+## Beyond the default stack
 
-Do not start a new service on Wire. The repository was archived in 2025.
+Reach here only when the standard library, the kit, a `golang-*` skill, and every entry above leave the decision open.
 
-## Small utility packages
+- `k8s.io/client-go` — when the service itself must read or mutate Kubernetes resources.
+- `sigs.k8s.io/controller-runtime` — when the service is a controller or operator. **Forbidden:** a hand-written
+  reconcile loop in a service that is part of the cluster control plane.
+- `ko` — build tool, when fast single-binary container builds matter more than a hand-written Dockerfile. The
+  production image decision belongs to `/alaa-docker-production` (`$alaa-docker-production`).
+- `goreleaser` — release tool, for multi-platform binaries, archives, checksums, and publishing.
 
-### `github.com/google/uuid` - default
+**Rule:** `buf`, `ko`, and `goreleaser` are tools, not runtime dependencies. Pin them in tool directives or install
+steps. **Forbidden:** importing any of them from production code.
 
-Use when you need UUID generation and parsing with a small, familiar package.
+## Not in this stack
 
-## Packages to avoid by default in this stack
+**Forbidden** in a new Ala Go service, each with its replacement:
 
-- ORM-heavy stacks for normal PostgreSQL services
-- custom HTTP frameworks when chi or Fiber already fits the selected service shape
-- framework swaps without a measured reason
-- runtime DI containers when constructors are still manageable
-- low-level data clients before the higher-level official client is proven too slow
-- broad helper libraries that hide context, timeouts, or error behavior
-
-## Practical selection rules
-
-1. Prefer the standard library first.
-2. Preserve the framework already used by the repo.
-3. Prefer chi for raw small/simple HTTP services.
-4. Prefer Fiber for raw large/high-concurrency/SLA-heavy HTTP services.
-5. Prefer `pgx` plus `sqlc` for PostgreSQL.
-6. Prefer official or primary package docs over opinionated blog lists.
-7. Ask whether the dependency removes real complexity or only moves it.
-8. Run `govulncheck` after adding or upgrading important dependencies.
+| Instead of | Use |
+|---|---|
+| an ORM for PostgreSQL | `pgx` with `sqlc` or explicit repository code |
+| a third HTTP framework | the framework `30-http-api-framework-choice.md` selects |
+| a runtime DI container | constructors in the composition root |
+| a low-level data client chosen up front | the official higher-level client, until a profile says otherwise |
+| a helper library that wraps context, timeouts, or error handling | the standard library call, written out |

@@ -1,7 +1,17 @@
 interface:
   display_name: "Alaa Golang Fiber"
-  short_description: "Build production Fiber v3 Go services"
-  default_prompt: "Use $alaa-golang-fiber to build, review, test, or harden a production Fiber v3 Go service."
+  short_description: "Build, debug, or migrate a Fiber v3 Go service on the Ala platform"
+  default_prompt: "Use $alaa-golang-fiber to build or debug a Fiber v3 Go service: app config and server bounds, fiber.Ctx value lifetime and copy rules, routing and middleware order, error mapping, binding and StructValidator, proxy trust, probes, graceful shutdown, handler tests, and Fiber v2-to-v3 migration. Read references/50-kit-conflict-register.md before any Fiber work on a service that would otherwise be an alaa-go-chi kit consumer."
 
 policy:
   allow_implicit_invocation: true
+
+notes:
+  scope: >
+    This skill does not decide chi versus Fiber. That decision is owned by $alaa-golang,
+    reference 30-http-api-framework-choice.md. General Go depth is also $alaa-golang.
+  precondition: >
+    No Ala service runs on Fiber as of 2026-07-26; the alaa-go-chi consumer registry is entirely
+    chi. A new Ala service is a kit consumer on chi unless the project owner has recorded a Fiber
+    exception as a change request through $alaa-go-chi-development. That record is a precondition
+    for service work, not an outcome of it.

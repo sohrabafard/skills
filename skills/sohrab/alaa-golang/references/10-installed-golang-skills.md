@@ -1,246 +1,226 @@
-# Installed Public Go Skills
+# The Vendor Go Skill Roster
 
-Use this file after `full-guide.md` establishes the baseline. Load only the public Go skills that match the real task.
+The complete set of installed public `golang-*` skills and the condition that selects each one. When two of them look
+equally right, `11-orchestration-and-overlap-guide.md` decides.
 
-## General rule
+**Rule:** load a skill by naming it in the trigger form of the runtime you are in — Claude Code `/golang-testing`,
+Codex `$golang-testing`. **Forbidden:** mentioning a vendor directory path in an answer to a user.
 
-When loading a public Go skill, route to it explicitly in this form:
+**Forbidden:** restating a vendor skill's content in this pack or in a repository. **Rule:** load it and follow it.
+These skills are git subtrees; nothing in this pack edits them.
 
-- Use `golang-modernize` ( `$golang-modernize` )
+## Roster audit
 
-Do not mention vendor paths in normal user-facing answers.
+One `###` entry below per `vendor/cc-skills-golang/skills/*/SKILL.md`. Last audited against vendor subtree
+`112a945f0d7489b848705ab6f4fbf8c30c4ff053` (upstream `4881c01d`): `vendor=46 routed=46 missing=0 extra=0`.
 
-This file should have one `###` heading per `vendor/cc-skills-golang/skills/*/SKILL.md`. Last audited against
-vendor subtree `112a945f0d7489b848705ab6f4fbf8c30c4ff053` (upstream `4881c01d`): `vendor=46 routed=46 missing=0 extra=0`.
-
-The three additions since the previous audit are the code-intelligence and refactoring tier: `golang-gopls`,
-`golang-refactoring`, and `golang-pkg-go-dev`. They change how a strong Go agent reads and reshapes a codebase, so
-route to them deliberately, not only when a user names them.
-
-For broad, ambiguous, or cross-cutting Go work, load `golang-how-to` first and then load the primary plus secondary
-skills it selects. Keep Alaa platform, trusted-gateway, repository, cache, and TDD rules from this skill in force.
+This is the only place in this skill that states the roster size or the audit line. **Rule:** when the vendor pack
+adds or removes a skill, update this file's entry list and this audit line, and nothing else.
 
 ## Orchestration
 
-### golang-how-to ( `$golang-how-to` )
+### golang-how-to (`/golang-how-to` · `$golang-how-to`)
 
-Use it as the vendor Go skill orchestrator for broad coding, review, debug, setup, and overlapping-domain tasks. It
-selects primary plus secondary public Go skills, disambiguates competing clusters, and carries the vendor by-category
-catalog.
-
-In Alaa repos, use `golang-how-to` for skill selection only. Do not run its configure mode or edit project
-`CLAUDE.md` / `AGENTS.md` files unless the user explicitly asks to force-load Go skills.
+Load it when the task is broad enough that you cannot name the primary Go skill yourself. It selects a primary plus
+secondaries and carries the vendor catalogue. **Forbidden:** running its configure mode; see
+`11-orchestration-and-overlap-guide.md`.
 
 ## Structure, architecture, and API shape
 
-### golang-project-layout ( `$golang-project-layout` )
+### golang-project-layout (`/golang-project-layout` · `$golang-project-layout`)
 
-Use it for module shape, folder layout, package boundaries, `cmd/`, `internal/`, config placement, workspaces, and test layout.
+Module shape, folder layout, package boundaries, `cmd/` and `internal/`, workspaces, test layout.
 
-### golang-design-patterns ( `$golang-design-patterns` )
+### golang-design-patterns (`/golang-design-patterns` · `$golang-design-patterns`)
 
-Use it for architecture, boundary design, service layering, adapters, ports, constructors, resilience patterns, and graceful shutdown patterns.
+Boundary design, service layering, adapters and ports, constructors, resilience patterns, graceful-shutdown patterns.
 
-### golang-structs-interfaces ( `$golang-structs-interfaces` )
+### golang-structs-interfaces (`/golang-structs-interfaces` · `$golang-structs-interfaces`)
 
-Use it for interface size, receiver choice, type design, method sets, struct tags, embedding, and boundary abstractions.
+Interface size, receiver choice, type design, method sets, struct tags, embedding.
 
-### golang-dependency-injection ( `$golang-dependency-injection` )
+### golang-dependency-injection (`/golang-dependency-injection` · `$golang-dependency-injection`)
 
-Use it when choosing or refactoring a DI approach. Prefer manual constructor injection unless repo complexity justifies a DI tool.
+Choosing or changing a DI approach.
 
-### golang-google-wire ( `$golang-google-wire` )
+### golang-google-wire (`/golang-google-wire` · `$golang-google-wire`)
 
-Use it when the repo imports `github.com/google/wire`, has `wire.Build`, `wire.NewSet`, `wire_gen.go`, or compile-time DI injector files. Do not choose Wire for fresh services by default.
+Load when `go.mod` requires `github.com/google/wire`, or the repository has `wire.Build`, `wire.NewSet`, or
+`wire_gen.go`.
 
-### golang-uber-dig ( `$golang-uber-dig` )
+### golang-uber-dig (`/golang-uber-dig` · `$golang-uber-dig`)
 
-Use it when the repo imports `go.uber.org/dig` or uses a runtime DI container without Fx lifecycle.
+Load when `go.mod` requires `go.uber.org/dig`.
 
-### golang-uber-fx ( `$golang-uber-fx` )
+### golang-uber-fx (`/golang-uber-fx` · `$golang-uber-fx`)
 
-Use it when the repo imports `go.uber.org/fx`, uses Fx modules, lifecycle hooks, or `fx.New` for long-running services.
+Load when `go.mod` requires `go.uber.org/fx`, or the code uses Fx modules or lifecycle hooks.
 
-### golang-code-style ( `$golang-code-style` )
+### golang-code-style (`/golang-code-style` · `$golang-code-style`)
 
-Use it for clarity, local style rules, comment quality, and line-level polish.
+Clarity, comment quality, line-level readability.
 
-### golang-naming ( `$golang-naming` )
+### golang-naming (`/golang-naming` · `$golang-naming`)
 
-Use it for package names, exported identifiers, error names, method names, receiver names, and test names.
+Package, exported identifier, error, method, receiver, and test names.
 
 ## Language, correctness, and debugging
 
-### golang-modernize ( `$golang-modernize` )
+### golang-modernize (`/golang-modernize` · `$golang-modernize`)
 
-Use it for version-aware rewrites, newer standard-library idioms, Go release upgrades, and modernize analyzer output.
+Version-aware rewrites, newer standard-library idioms, release upgrades, modernize analyzer output.
 
-### golang-concurrency ( `$golang-concurrency` )
+### golang-concurrency (`/golang-concurrency` · `$golang-concurrency`)
 
-Use it for goroutines, channels, errgroup, worker pools, backpressure, leaks, and shared-state design.
+Goroutines, channels, `errgroup`, worker pools, backpressure, leaks, shared state.
 
-### golang-context ( `$golang-context` )
+### golang-context (`/golang-context` · `$golang-context`)
 
-Use it for cancellation, deadlines, context propagation, tracing context, and request lifetime.
+Cancellation, deadlines, propagation, request lifetime, `WithoutCancel`.
 
-### golang-safety ( `$golang-safety` )
+### golang-safety (`/golang-safety` · `$golang-safety`)
 
-Use it for nil safety, map/slice hazards, aliasing, numeric conversion, resource lifecycle, and race-prone patterns.
+Nil safety, map and slice hazards, aliasing, numeric conversion, resource lifecycle, race-prone patterns.
 
-### golang-error-handling ( `$golang-error-handling` )
+### golang-error-handling (`/golang-error-handling` · `$golang-error-handling`)
 
-Use it for error creation, wrapping, sentinels, custom error types, logging, propagation, and error-contract design.
+Error creation, wrapping, sentinels, custom types, propagation, error-contract design.
 
-### golang-troubleshooting ( `$golang-troubleshooting` )
+### golang-troubleshooting (`/golang-troubleshooting` · `$golang-troubleshooting`)
 
-Use it for production debugging, compiler/test failures, deadlocks, panics, `pprof`, Delve, and systematic diagnosis.
+Production debugging, compiler and test failures, deadlocks, panics, `pprof`, Delve.
 
 ## Data and dependencies
 
-### golang-database ( `$golang-database` )
+### golang-database (`/golang-database` · `$golang-database`)
 
-Use it for query patterns, pools, transactions, scanning, isolation, locking, migrations, and application-side database access.
+Query patterns, pools, transactions, scanning, isolation, locking, application-side database access.
 
-### golang-data-structures ( `$golang-data-structures` )
+### golang-data-structures (`/golang-data-structures` · `$golang-data-structures`)
 
-Use it when performance or mutation behavior depends on slices, maps, builders, heaps, generic containers, unsafe, or weak pointers.
+How a Go slice, map, builder, heap, generic container, or weak pointer behaves. **Rule:** for what a path is allowed
+to *cost* as its input grows, load `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) instead.
 
-### golang-dependency-management ( `$golang-dependency-management` )
+### golang-dependency-management (`/golang-dependency-management` · `$golang-dependency-management`)
 
-Use it for adding, auditing, upgrading, pinning, tidying, visualizing, or securing dependencies (editing `go.mod`).
+Editing `go.mod`: adding, upgrading, pinning, replacing, tidying, workspaces.
 
-### golang-pkg-go-dev ( `$golang-pkg-go-dev` )
+### golang-pkg-go-dev (`/golang-pkg-go-dev` · `$golang-pkg-go-dev`)
 
-Use it to query pkg.go.dev for a known import path with the `godig` CLI/MCP: available versions, exported symbols and
-signatures, runnable examples, `imported-by`, licenses, and known CVEs — including packages not yet in `go.mod`. It is
-the read-only ecosystem-lookup layer. It does not edit `go.mod` (use `golang-dependency-management`) and cannot see your
-local, resolved build or call sites (use `golang-gopls`).
+Querying pkg.go.dev with `godig` for a known import path: versions, exported symbols, examples, importers, licences,
+CVEs — including a package not yet in `go.mod`.
 
-### golang-popular-libraries ( `$golang-popular-libraries` )
+### golang-popular-libraries (`/golang-popular-libraries` · `$golang-popular-libraries`)
 
-Use it for broad library discovery. Pair it with this pack's package catalog for final production choices.
+Broad library discovery. Pair with `40-production-ready-package-catalog.md` for the final choice in this stack.
 
 ## Transport, protocols, CLIs, and docs
 
-### golang-grpc ( `$golang-grpc` )
+### golang-grpc (`/golang-grpc` · `$golang-grpc`)
 
-Use it for gRPC services, protobuf code generation, interceptors, streaming, TLS/mTLS, bufconn tests, and status errors.
+gRPC services, protobuf generation, interceptors, streaming, TLS and mTLS, `bufconn` tests, status errors.
 
-### golang-graphql ( `$golang-graphql` )
+### golang-graphql (`/golang-graphql` · `$golang-graphql`)
 
-Use it for GraphQL servers, schemas, resolvers, subscriptions, `gqlgen`, `graphql-go`, N+1 prevention, and complexity limits.
+GraphQL servers, schemas, resolvers, subscriptions, `gqlgen`, N+1 prevention, complexity limits.
 
-### golang-cli ( `$golang-cli` )
+### golang-cli (`/golang-cli` · `$golang-cli`)
 
-Use it for CLIs, command lifecycle, flags, config layering, exit codes, I/O, signals, and CLI tests.
+Command lifecycle, flags, config layering, exit codes, I/O, signals, CLI tests.
 
-### golang-spf13-cobra ( `$golang-spf13-cobra` )
+### golang-spf13-cobra (`/golang-spf13-cobra` · `$golang-spf13-cobra`)
 
-Use it when the repo imports `github.com/spf13/cobra`, defines command trees, flags, completions, docs generation, or Cobra command tests.
+Load when `go.mod` requires `github.com/spf13/cobra`.
 
-### golang-spf13-viper ( `$golang-spf13-viper` )
+### golang-spf13-viper (`/golang-spf13-viper` · `$golang-spf13-viper`)
 
-Use it when the repo imports `github.com/spf13/viper`, uses layered config, env binding, config files, hot reload, or Cobra/Viper integration.
+Load when `go.mod` requires `github.com/spf13/viper`.
 
-### golang-swagger ( `$golang-swagger` )
+### golang-swagger (`/golang-swagger` · `$golang-swagger`)
 
-Use it for Swagger/OpenAPI docs with `swaggo/swag`, annotations, generated docs, Swagger UI routes, and framework integrations including chi and Fiber.
+Swagger and OpenAPI with `swaggo/swag`: annotations, generated docs, UI routes, framework integration.
 
-## Code intelligence, navigation, and safe refactoring
+## Code intelligence, navigation, and refactoring
 
-Prefer these over grep-and-hand-edit whenever a question is about the *resolved build* (types, call graphs, interface
-satisfaction) or when reshaping existing code. `grep` finds text; these find meaning.
+### golang-gopls (`/golang-gopls` · `$golang-gopls`)
 
-### golang-gopls ( `$golang-gopls` )
+Semantic code intelligence through `gopls`: definitions, references, call and implementation hierarchies, workspace
+symbol search, package API discovery, post-edit diagnostics, safe rename, and extract/inline/fill/rewrite actions.
+Reach it through the gopls MCP server (`go_*` tools), the native LSP tool, or the CLI. It reasons about the locally
+resolved build, including `replace`d forks.
 
-Use it for semantic code intelligence via `gopls` (the official Go language server): go-to-definition, find references,
-call/implementation hierarchy, workspace symbol search, package API discovery, post-edit diagnostics, safe rename, and
-`extract`/`inline`/`fill`/`rewrite` code actions. Reach it through gopls's own MCP server (`go_*` tools, preferred), the
-native `LSP` tool, or the `gopls` CLI. Load it before any navigation-heavy read or any rename/extract/inline. It reasons
-only about your locally resolved build (`go.sum`, including `replace` forks); for the published ecosystem use
-`golang-pkg-go-dev`.
+### golang-refactoring (`/golang-refactoring` · `$golang-refactoring`)
 
-### golang-refactoring ( `$golang-refactoring` )
-
-Use it for the safe, at-scale *process* of restructuring existing Go: a coverage-adaptive safety net, behavior-preserving
-tool-driven transforms (gopls Rename/Inline/Extract, `gofmt -r`, `eg`, `gopatch`, `go/analysis` fixers), the Fowler
-catalog mapped to Go, breaking import cycles, moving types across packages with type aliases, and a human-in-the-loop
-flow of small stacked PRs. It owns *how* to change code safely; the *target shape* stays owned by `golang-naming`,
-`golang-project-layout`, `golang-code-style`, `golang-design-patterns`, and `golang-modernize` — load it alongside
-whichever of those defines the destination. Never mix a structural change and a behavioral change in one commit.
+The safe, staged process of restructuring existing Go: coverage safety net, behaviour-preserving transforms (gopls
+Rename, Inline, Extract; `gofmt -r`; `eg`; `gopatch`; `go/analysis` fixers), breaking import cycles, moving types with
+aliases, and small stacked PRs. It owns *how*; the target shape is owned elsewhere.
 
 ## Quality, operations, and delivery
 
-### golang-testing ( `$golang-testing` )
+### golang-testing (`/golang-testing` · `$golang-testing`)
 
-Use it for unit, integration, HTTP, fuzz, race, fixture, mock, and coverage patterns.
+Unit, integration, HTTP, fuzz, race, fixture, mock, and coverage mechanics.
 
-### golang-stretchr-testify ( `$golang-stretchr-testify` )
+### golang-stretchr-testify (`/golang-stretchr-testify` · `$golang-stretchr-testify`)
 
-Use it when the repo already uses Testify or when assertions, mocks, and suites are appropriate.
+Load when `go.mod` requires Testify.
 
-### golang-lint ( `$golang-lint` )
+### golang-lint (`/golang-lint` · `$golang-lint`)
 
-Use it for `golangci-lint`, `go vet`, analyzer policy, `nolint` hygiene, staticcheck, revive, and lint configuration.
+`golangci-lint`, `go vet`, analyzer policy, `nolint` hygiene, staticcheck, revive, configuration.
 
-### golang-benchmark ( `$golang-benchmark` )
+### golang-benchmark (`/golang-benchmark` · `$golang-benchmark`)
 
-Use it for `testing.B`, `benchstat`, profiles, regression detection, and measurement methodology.
+`testing.B`, `benchstat`, profiles, regression detection, measurement methodology.
 
-### golang-performance ( `$golang-performance` )
+### golang-performance (`/golang-performance` · `$golang-performance`)
 
-Use it for CPU, memory, I/O, GC, pooling, caching, and hot-path optimization after a bottleneck is proven.
+CPU, memory, I/O, GC, pooling, and hot-path optimisation — after a bottleneck is measured.
 
-### golang-observability ( `$golang-observability` )
+### golang-observability (`/golang-observability` · `$golang-observability`)
 
-Use it for logs, metrics, traces, profiling, dashboards, alerting, and production telemetry.
+Logs, metrics, traces, profiling, dashboards, alerting, production telemetry mechanics.
 
-### golang-security ( `$golang-security` )
+### golang-security (`/golang-security` · `$golang-security`)
 
-Use it for code-level hardening, injection defenses, secrets, crypto, filesystem safety, auth-sensitive code, and threat review.
+Code-level hardening, injection defences, secrets, crypto, filesystem safety, `govulncheck ./...` as the whole-tree
+gate.
 
-### golang-documentation ( `$golang-documentation` )
+### golang-documentation (`/golang-documentation` · `$golang-documentation`)
 
-Use it for package docs, exported comments, examples, README, changelog, and developer-facing Go docs.
+Package docs, exported comments, examples, README, changelog.
 
-### golang-continuous-integration ( `$golang-continuous-integration` )
+### golang-continuous-integration (`/golang-continuous-integration` · `$golang-continuous-integration`)
 
-Use it for CI, GitHub Actions, release gates, dependency automation, security scans, coverage, GoReleaser, and AI review workflows.
+CI, release gates, dependency automation, security scans, coverage, GoReleaser.
 
-## Samber-specific skills
+## Samber packages
 
-Use a Samber skill when the repo imports that package or the user explicitly asks for it.
+**Rule:** load one of these when `go.mod` requires that package, or when the user names it.
 
-### golang-samber-do ( `$golang-samber-do` )
+### golang-samber-do (`/golang-samber-do` · `$golang-samber-do`)
+`github.com/samber/do` and `/v2` dependency injection and service lifecycle.
 
-Use it for `github.com/samber/do` or `github.com/samber/do/v2` dependency injection and service lifecycle.
+### golang-samber-lo (`/golang-samber-lo` · `$golang-samber-lo`)
+`github.com/samber/lo` functional helpers.
 
-### golang-samber-lo ( `$golang-samber-lo` )
+### golang-samber-mo (`/golang-samber-mo` · `$golang-samber-mo`)
+`github.com/samber/mo` Option, Result, Either, Future, IO, Task.
 
-Use it for `github.com/samber/lo` functional helpers.
+### golang-samber-ro (`/golang-samber-ro` · `$golang-samber-ro`)
+`github.com/samber/ro` reactive streams and event pipelines.
 
-### golang-samber-mo ( `$golang-samber-mo` )
+### golang-samber-slog (`/golang-samber-slog` · `$golang-samber-slog`)
+Samber `slog-*` adapters, routing, sampling, and backend handlers.
 
-Use it for `github.com/samber/mo` option, result, either, future, and functional composition types.
+### golang-samber-hot (`/golang-samber-hot` · `$golang-samber-hot`)
+`github.com/samber/hot` in-memory caching.
 
-### golang-samber-ro ( `$golang-samber-ro` )
+### golang-samber-oops (`/golang-samber-oops` · `$golang-samber-oops`)
+`github.com/samber/oops` structured errors.
 
-Use it for `github.com/samber/ro` reactive streams and event-driven pipelines.
+## Ecosystem awareness
 
-### golang-samber-slog ( `$golang-samber-slog` )
+### golang-stay-updated (`/golang-stay-updated` · `$golang-stay-updated`)
 
-Use it for Samber `slog-*` helpers, adapters, routing, sampling, or backend handlers.
-
-### golang-samber-hot ( `$golang-samber-hot` )
-
-Use it for `github.com/samber/hot` in-memory caching.
-
-### golang-samber-oops ( `$golang-samber-oops` )
-
-Use it for `github.com/samber/oops` structured errors.
-
-## Learning-only or ecosystem-radar work
-
-### golang-stay-updated ( `$golang-stay-updated` )
-
-Use it for Go ecosystem awareness, recent changes, learning resources, communities, or discovery-oriented exploration.
+Load when the task is learning or discovery about the Go ecosystem rather than changing code.

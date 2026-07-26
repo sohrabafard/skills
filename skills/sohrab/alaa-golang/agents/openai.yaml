@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Golang"
-  short_description: "Route production Go work and skill clusters"
-  default_prompt: "Use $alaa-golang to route this Go task through $golang-how-to across all 46 vendor Go skills, load $alaa-golang-clean-code-principles for alaa-go-chi services, choose chi or Fiber, use $golang-gopls to read and $golang-refactoring to restructure safely, write latest-Go (1.26) idioms, and enforce repository pattern, Redis cache safety, TDD, observability, security, and 99.99%+ production readiness."
+  short_description: "Front door and router for Go work on the Ala platform"
+  default_prompt: "Use $alaa-golang as the front door for this Go task: read its references/00-topic-map.md and open only the rows that match the situation. Establish the repository's go directive and module path from go.mod before deciding anything. If go.mod requires git.alaatv.com/vk/alaa-go-chi, confirm the active scope phase through $alaa-go-chi-development and load $alaa-golang-clean-code-principles before writing or reviewing a line. Read code with $golang-gopls rather than grep. Route every name and value to $alaa-services-contract, every retry, timeout and degradation decision to $alaa-reliability-sla, and every model, effort and runtime-capability question to $alaa-prompting-guide. Start behaviour changes with a failing test, and finish with the validation gate and the four completion answers in SKILL.md."
 
 policy:
   allow_implicit_invocation: true

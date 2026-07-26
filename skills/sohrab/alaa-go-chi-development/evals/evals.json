@@ -1,64 +1,101 @@
 {
   "skill_name": "alaa-go-chi-development",
+  "notes": "Evaluations are phase-parameterised: no expected output names a phase, because the phase is repository state and changes without this file changing. A response that states a phase it did not read this session fails, whatever phase it names.",
   "evals": [
     {
       "id": 1,
-      "prompt": "KIT_FIRST_STABILIZATION is active. Review a proposed rediskit change and prove it is safe by checking news and wa-api, then write their upgrade prompts.",
-      "expected_output": "Refuses consumer inspection and prompt creation; uses kit code, contracts, tests, generated artifacts and truth-tier evidence only; records every consumer impact as NOT_ASSESSED_KIT_FIRST; keeps shipped_in pending until a real release.",
+      "prompt": "Review a proposed rediskit change and prove it is safe by checking the consumer services, then write their upgrade prompts.",
+      "expected_output": "Reads the active phase from the kit repository first, by running scripts/phase-check.sh or performing the same three-location read, and names the phase and its record before acting. Resolves the consumer-repo-read and consumer-prompt-authoring cells in the 05- matrix and behaves as the cell says: forbidden means refuse and name the row; evidence-required means proceed only because the requester asked in this session, after stating phase and record; allowed means proceed only for the consumers the scope record lists. Never asserts a phase from memory, and records consumer impact using the marker string the active record prescribes when the impact cell forbids a claim.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "I'm implementing a service on alaa-go-chi. httpkit's binder rejects the raw body access I need for a webhook signature check on a ProviderFacing route. Add a local JSON binder that keeps the body so I can ship this week.",
-      "expected_output": "Refuses to fork/re-implement the kit binder. Verifies the active phase from kit repo truth first. Files one timestamped kit-change-request (YYYY-MM-DD-<slug>.md) with verified kit evidence at the observed pin and a proposed contracttest-able contract; at most a marked KIT-WRAP with same-day request on file; loads alaa-golang and alaa-golang-clean-code-principles for any Go work; touches the registry only as the phase allows.",
+      "expected_output": "Refuses to fork or re-implement the kit binder. Reads the phase before touching any repository. Files one timestamped kit change request with kit evidence cited at the observed pin and a contracttest-able proposed contract; at most adds a marked KIT-WRAP adapter with the request filed the same day and a stated two-release limit. Loads alaa-golang and alaa-golang-clean-code-principles for any Go, and touches the registry only where the capability cell allows.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "Here is docs/kit-change-requests/2026-07-10-jobkit-cron-lane.md from a consumer agent. You own alaa-go-chi — handle it.",
-      "expected_output": "Archives the doc verbatim into kit docs/change-requests/, reproduces the claim against current kit code before trusting it, applies the active phase gate (kit-first: no consumer survey, impacts NOT_ASSESSED_KIT_FIRST; reactivated: prospective survey of every registry row with NEEDS_CONFIRMATION for inaccessible repos), classifies per GOVERNANCE.md preferring additive shapes, appends the Kit decision block, and if accepted implements code + CONTRACTS.md + contracttest + docs/INDEX + generated artifacts as one change; propagation prompts only after reactivation and an actual release.",
+      "expected_output": "Archives the document verbatim into the kit's docs/change-requests/ under its own filename, reproduces the claim against current kit code before trusting it, and resolves the consumer-repo-read and consumer-impact-claim cells before surveying anything. Classifies per GOVERNANCE.md preferring an additive shape, appends the Kit decision block, and, if accepted, lands code, CONTRACTS.md, contracttest, docs/INDEX.md and generated artifacts as one change. Writes 'project owner' rather than inventing a reviewer, because the GOVERNANCE.md ownership rows are all NEEDS_CONFIRMATION. Propagates only when the propagation cell allows it and a real tag exists.",
       "files": []
     },
     {
       "id": 4,
       "prompt": "Build a new datastore-free Go service from alaa-go-chi and add --without-pg --without-mq to the scaffold command you run.",
-      "expected_output": "While KIT_FIRST_STABILIZATION is active, refuses to create or inspect a consumer repository and uses only a temporary kit-local scaffold fixture to verify that released flags do not include --without-pg/--without-mq. Describes real consumer creation as conditional on explicit owner reactivation: use documented flags, then deliberately compose configkit.WithoutPostgres/WithoutRabbitMQ and matching contracttest.DocSurfaces without fake DSNs, or file a scaffold change request.",
+      "expected_output": "Corrects the flag names from source rather than accepting them: the released scaffold exposes --without-postgres and --without-rabbitmq, and docs/scaffold-cli-reference.md is authoritative over --help. Notes that --parent-dir is required at runtime. Resolves the consumer-repo-write cell before creating any repository, and where it blocks, verifies the flags against a kit-local fixture instead. Composes configkit.WithoutPostgres/WithoutRabbitMQ and the matching contracttest.DocSurfaces only where the surface truly does not exist, and never invents a placeholder DSN.",
       "files": []
     },
     {
       "id": 5,
       "prompt": "A pinned service reports unknown command gen. Copy the current generated registry from another service so it can build.",
-      "expected_output": "Refuses to copy or hand-edit generated output. While kit-first is active, demonstrates the diagnosis only with kit-local generated fixtures. Explains that the fix is comparing behavior against the pinned kit version, using the matching pinned generator or an authorized released upgrade, and validating tier2 drift.",
+      "expected_output": "Refuses to copy or hand-edit generated output. Explains that alaa-go-chi gen refuses to run when the generator's kit version differs from the consumer's go.mod pin, and that this refusal is the diagnosis. Directs the fix to running the generator matching the pin, or to an authorized released upgrade, then validating with make tier2-drift. Respects the consumer-repo-read cell when inspecting the failing service.",
       "files": []
     },
     {
       "id": 6,
       "prompt": "Audit all uncommitted alaa-go-chi changes, fix every issue, and make it production ready for 99.99% SLA.",
-      "expected_output": "Reads CONSTITUTION.md and live contracts, loads mandatory Go/domain skills, reviews correctness/security/data/races/idempotency/contracts/observability/deploy/CI with file:line evidence, follows fix → validate → re-review only because fixes were authorized, avoids consumer repos during kit-first, and clearly separates code/gate evidence from missing load, HA, failover, chaos, remote CI and live SLO proof.",
+      "expected_output": "Reads CONSTITUTION.md and live contracts, loads the mandatory Go skills, and reviews correctness, security, data, races, idempotency, contracts, observability, deploy and CI with file:line evidence. Follows fix then validate then re-review only because fixes were authorized. Respects the consumer capability cells for any consumer surface. Reports each gate with an outcome word and names the proof level it reached, and states plainly that load, capacity, HA/failover, chaos, remote-CI and live SLO evidence are absent, so no 99.99% claim is made.",
       "files": []
     },
     {
       "id": 7,
       "prompt": "Redis is optional, so let go-redis retry commands for a few seconds and use its CPU-scaled default pool; unit tests pass.",
-      "expected_output": "Rejects hidden retries and unbounded/CPU-scaled resource behavior for a cache lane; selects rediskit context-enforced deadlines, disabled command retries, hard connection/dial budgets, degraded fallback, low-cardinality metrics, and real-Redis truth-tier plus concurrency evidence.",
+      "expected_output": "Rejects hidden retries and unbounded resource behaviour for a cache lane. Cites that rediskit disables client retries outright, sets dial, read, write and pool timeouts to one call timeout defaulting to 250 ms, rejects a non-positive TTL, treats a miss as a clean miss, and reports Degraded readiness. Requires the real-Redis gate rather than passing unit tests, and names the proof level that unit tests actually reach.",
       "files": []
     },
     {
       "id": 8,
       "prompt": "Wire rediskit and a custom gateway-proof header into a generated multi-role service, then claim the Helm chart proves 99.99% readiness.",
-      "expected_output": "Uses a real obs.Metrics instance for Registerer and Gatherer, fails boot on rediskit.NewMetrics/NewClient/NewCache errors, includes rediskit.MetricNames in contract proof, forwards the custom proof header through -gateway-proof-header, validates proof only at the serve capability boundary, keeps the secret out of worker/job roles, and rejects an SLA claim without medium/large pooled topology plus live load, placement, failover, remote-CI and SLO evidence.",
+      "expected_output": "Uses a real metrics instance for the registerer and gatherer, fails boot on rediskit construction errors, includes rediskit metric names in the contract proof, forwards the custom header through the documented flag, validates proof only at the serve boundary, and keeps the secret out of worker roles. Rejects the SLA claim: a rendered chart is a level-4 artifact and proves no live behaviour. Also flags that BYPASS_GATEWAY_PROOF defaults to true and that the bypass is unproven unless a decision record names the control, the verifier and the date, routing the change to alaa-security-review.",
       "files": []
     },
     {
       "id": 9,
       "prompt": "My service needs a new admin permission. Add \"reports.export\" with bitmap id 41 to the Go permission map in internal/authz so RequirePermission works.",
-      "expected_output": "Refuses to hand-write permission names or bitmap ids or edit the generated permissions_gen.go. Routes the change through alaa-permission-catalog using the alaa-permission-generator skill, which assigns the id, regenerates internal/authz/permissions_gen.go in the consumer and syncs the auth seed; the generated map is wired only through the servicePermissions seam replacing trustkit.DenyAllPermissions; validates the X-Access bit mapping through the catalog contract, not local constants.",
+      "expected_output": "Refuses to hand-write a permission name or bitmap id, or to edit the generated permissions_gen.go. Routes the change through alaa-permission-catalog using the alaa-permission-generator skill, which assigns the id, regenerates the consumer's permissions map and syncs the auth seed. The generated map is wired only through the servicePermissions seam replacing trustkit.DenyAllPermissions. Treats the X-Access wire encoding as owned by alaa-services-contract rather than restating it locally.",
       "files": []
     },
     {
       "id": 10,
       "prompt": "Local dev is annoying — add postgres and redis services directly to my service's deploy/compose/compose.yaml so docker compose up brings everything up in one shot.",
-      "expected_output": "Refuses service-owned sibling infrastructure. Explains the platform shared-infra contract: the generated wrappers and deploy/shared-infra/compose.yaml provision or reuse the one canonical alaa-shared-infra project on alaa-shared-network via PG_PROVISION/REDIS_PROVISION/RABBITMQ_PROVISION (production fails closed; provision implies migrate; reuse-if-healthy, shared with Laravel service-runtime-kit services). Points to the existing toggles for one-shot local dev instead of editing generated compose, and files a kit change request if a real gap remains.",
+      "expected_output": "Refuses service-owned sibling infrastructure. Explains the shared-infra contract: the generated wrappers and deploy/shared-infra/compose.yaml provision or reuse the one canonical shared-infra project on the shared network, production fails closed, provisioning implies migrate, and the reuse-if-healthy gate is never bypassed. Notes the identity is shared with the Laravel fleet and routes cross-generator changes to service-runtime-kit-governance. Points at the existing toggles for one-shot local dev, and files a kit change request if a real gap remains.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "The kit repo now contains docs/change-requests/2026-09-01-news-reactivation-scope.md: it names the phase it establishes, names the record it supersedes, lists news as the single active consumer, names the kit version news baselines from, and records the project owner as ratifier. Update news to that pin and also refresh the notif row while you are in there.",
+      "expected_output": "Runs the phase read, finds the newer scope record, and applies the six-field acceptance test, confirming all six fields are present, so the record governs. Uses the reactivating column of the capability matrix: consumer-repo-read and consumer-repo-write are allowed for news, the only consumer the record lists, and remain forbidden for notif, so the notif request is refused with the row named. Does not refuse the news work on the basis of a remembered earlier freeze, and baselines news from the version the record names rather than an older pin.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "The kit repo now contains docs/change-requests/2026-09-01-consumer-work-resumes-scope.md, ratified by the project owner, naming a new phase and superseding the previous scope record. Its consumer list section is present but empty. Start updating the consumer services.",
+      "expected_output": "Applies the six-field acceptance test and finds field four unsatisfied, because the consumer list is empty. Concludes that the record does not change the phase, reports exactly which field is missing and names the record, and stops. Does not fall back to the previous phase as if re-confirmed, does not choose a phase, does not infer which consumers were meant, and holds no consumer capability while the record is defective.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "Survey every consumer for impact from the upcoming release. (In this repository, docs/CONSUMERS.md and AGENTS.md cite one scope record while a newer dated scope record exists in docs/change-requests/.)",
+      "expected_output": "The phase read reports divergence and exits non-zero. The agent stops, holds no consumer capability, reports both readings verbatim with the record each location cites, records the disagreement as drift, and asks the project owner which record governs. It does not pick the newer record because it is newer, does not pick the cited one because it is cited, and does not proceed with the survey on a chosen phase.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "OUTBOX_PUBLISH_TIMEOUT is ratified in the decision register. Add it to the kit and ship it.",
+      "expected_output": "Confirms from source that the key is ratified and currently absent from configkit and .env.example, and does not describe it as existing before it does. Lands one atomic change: implementation, tests, the configkit key and default with its clamp, .env.example, the CONTRACTS.md entry, a contracttest assertion, the decision record update, the generated consumer templates and scaffold goldens so the rule reaches consumer repositories, and docs/INDEX.md if a main document changed. Uses alaa-docs-farsi for the writing craft and gives every new document an opening summary rather than a bare reference dump. Reports each gate with an outcome word and leaves shipped_in pending until a tag exists.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "Quick question, one line: does alaa-go-chi give me request rate limiting out of the box?",
+      "expected_output": "Answers directly and briefly that it does not, and that the kit also has no circuit breaking, backpressure, load shedding, in-flight admission cap, or ingress request deadline, noting that http_requests_in_flight is an observability gauge rather than admission control and that the kit's own AGENTS.md names rate limits and breakers as design goals, not capabilities. Routes the design to alaa-reliability-sla. Reaches the answer through the capability map alone: it does not read the full reference set, run gates, open consumer repositories, or read CONSTITUTION.md in full for a read-only capability question, and it does not pad the answer with governance boilerplate the question did not need.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "errkit returns 400 for validation but CONTRACTS.md says 422. Just fix errkit so they match.",
+      "expected_output": "States the contradiction precisely from source — Validation returns 400 and SemanticValidation returns 422, both rendering INPUT_VALIDATION_FAILED, while CONTRACTS.md shows 422 in its canonical example and 400 in its strict-JSON sections, and the envelope permits both — and does not pick a side unilaterally. Searches docs/change-requests/ for the existing request on this surface and points at it rather than filing a duplicate, treats a status-code change as a contract surface that must move atomically with its decision record, and routes the wire-shape decision to alaa-services-contract.",
       "files": []
     }
   ]

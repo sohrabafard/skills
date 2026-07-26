@@ -37,15 +37,15 @@ Unreachable lowers urgency and never removes the record: the next refactor can m
 
 ## The acceptance record
 
-Medium and low only. Every field is required; a record missing any field is not an acceptance and the finding still blocks.
+Only for a severity that blocks — a severity below the floor is reported and needs no record, because it stops nothing. Every field is required; a record missing any field is not an acceptance and the finding still blocks.
 
 - Advisory identifier, package name, installed version.
 - Severity as reported, and which database reported it.
 - The reachability finding and the command that produced it.
 - Why no upstream fix exists: the upstream issue or merge-request URL. "No fix available" with no link is not a reason.
 - The compensating control, and where it is implemented.
-- **The named human approver.** A person, not a role, not a team, never the agent.
-- **An expiry date.** After it the finding blocks again and the record must be renewed by the same authority. A record with no expiry is a permanent silent exemption, which is the failure this section exists to prevent.
+- **The name of the human who accepted it.** Any human on the team may accept; authority is deliberately broad so a release never waits on one person's availability. **No agent may accept, at any severity, under any deadline.** An agent that meets a blocking advisory prepares the record and stops, then asks a human to accept it. The name is not bureaucracy — it is what makes the human-only rule checkable, because an unsigned record is indistinguishable from one an agent wrote for itself.
+- **An expiry date**, no later than the maximum the repository's committed severity-policy file sets for that severity. After it the finding blocks again and the record must be renewed by a human. A record with no expiry, or one past the maximum, is a permanent silent exemption — which is the failure this section exists to prevent, and it is the failure broad authority makes more likely, not less.
 
 The record lives in the state file `SKILL.md` names, so the next scheduled run reads it and re-checks every expiry before touching a dependency.
 

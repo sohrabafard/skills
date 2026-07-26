@@ -1,0 +1,40 @@
+{
+  "skill_name": "alaa-golang-fiber",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "new-service-routes-to-kit-not-fiber",
+      "prompt": "We're starting a new Ala Go service called 'ledger-api'. It's going to be our highest-traffic internal service by far, and latency matters a lot for it, so I want to build it on Fiber v3 rather than chi for the performance. Set up the project skeleton and the HTTP layer. Put files under outputs/.",
+      "expected_output": "Does NOT start building on Fiber. States plainly that no Ala service runs on Fiber today and names the chi consumer registry evidence (news, notif, entitlement-api, tusd, wa-api), so there is no production precedent. States that a new Ala service is an alaa-go-chi kit consumer on chi, and that choosing Fiber for it is the project owner's decision recorded as a change request through alaa-go-chi-development, never an agent's decision from a traffic or latency estimate. Points at alaa-golang references/30-http-api-framework-choice.md as the owner of the framework decision rather than arguing the merits itself. Surfaces the kit-surface cost (trust postures, error envelope, readiness, route inventory, contracttest) that Fiber would have to re-implement. Asks the owner for the recorded exception before writing service code.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "eval_name": "fiber-server-bounds",
+      "prompt": "Here is the app setup for our Fiber v3 service. Review it and tell me if it's production ready.\n\napp := fiber.New(fiber.Config{\n    ErrorHandler: httpErrorHandler,\n})\n\napp.Use(recover.New())\nregisterRoutes(app, deps)\nlog.Fatal(app.Listen(\":8080\"))\n",
+      "expected_output": "Flags that ReadTimeout, WriteTimeout and IdleTimeout are all unset and that Fiber defaults each of them to 0, meaning unbounded, and names the consequence (a slowloris-style client holds connections open indefinitely). Flags that BodyLimit is unset and defaults to 4 MiB, larger than the platform's 1 MiB request cap. Supplies the reference values HTTP_READ_TIMEOUT 10s, HTTP_WRITE_TIMEOUT 30s, HTTP_IDLE_TIMEOUT 120s, HTTP_MAX_BODY_BYTES 1 MiB, sourced from config with boot-time validation rather than hardcoded, and attributes the values to alaa-services-contract rather than inventing them. Should also flag that Concurrency defaults to 256*1024 and that ListenConfig.GracefulContext is not wired, so there is no graceful shutdown. Does not present any of these as optional or as a preference.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "ctx-value-retention",
+      "prompt": "In our Fiber v3 service I want to warm a cache in the background after a request. Write the handler: read the tenant id from the path param and the trace id from the X-Request-Id header, return 202 immediately, and kick off a goroutine that writes both into our audit buffer for later flushing.",
+      "expected_output": "Wraps BOTH the path param and the header value in utils.CopyString (from github.com/gofiber/utils/v2) at the point of extraction, before the goroutine captures them, and explains that values returned from fiber.Ctx are valid only within the handler. Does not offer 'or enable Immutable' as a per-call-site alternative; if Immutable is mentioned at all it is described as a boot-time, service-wide fiber.Config decision. Does not pass c or c.Context() into the goroutine as its context, or if it derives a context it uses context.WithTimeout over a background context and explains that fiber.Ctx's Deadline/Done/Err are no-ops. Does not use app.GetString/GetBytes as the copy mechanism in a service that has not enabled Immutable.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "structvalidator-adapter-compiles",
+      "prompt": "Wire go-playground/validator/v10 into our Fiber v3 app so that c.Bind().JSON() validates request DTOs automatically. Show me the fiber.Config and any supporting code. Put it in outputs/validator.go.",
+      "expected_output": "Produces a wrapper type with a method Validate(out any) error that delegates to validator.Validate.Struct, and passes a pointer to that wrapper as fiber.Config.StructValidator. Does NOT pass a *validator.Validate directly into StructValidator, which would not compile because the interface method is Validate(out any) error while the library exposes Struct(s any) error. Code is gofmt-clean and the import paths are github.com/go-playground/validator/v10 and github.com/gofiber/fiber/v3. Constructs validator.New() once at boot rather than per request. Ideally notes that StructValidator runs only for struct destinations, so binding into a map skips validation entirely.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "fiber-v3-opentelemetry-truth",
+      "prompt": "We need distributed tracing on our Fiber v3 service so it shows up in our platform traces alongside the chi services. What do we use and what do we have to write ourselves?",
+      "expected_output": "Names the real released package: github.com/gofiber/contrib/v3/otel, installed with go get -u github.com/gofiber/contrib/v3/otel, imported and registered via app.Use, and states that it is compatible with Fiber v3. Does not claim that no Fiber v3 OpenTelemetry middleware exists, and does not recommend github.com/gofiber/contrib/otelfiber/v2, which is v2-only. Separately states that the package supplies server spans but NOT this platform's correlation contract, which requires X-Request-Id and traceparent on every response including error responses and both probes, with an inbound traceparent validated through the TraceContext propagator and replaced when missing or malformed. Concludes that the service ships both the released span middleware and its own correlation middleware, and that on a kit consumer that correlation middleware would be a kit change request through alaa-go-chi-development rather than service-local code. Does not hedge with phrases like 'where the platform supports it'. Cites sources with dates rather than asserting from memory.",
+      "files": []
+    }
+  ]
+}

@@ -1,73 +1,71 @@
 # Change Requests and Baseline Proposals
 
-Two document types carry every consumer→kit need. They are the **only** channel: a consumer never edits the kit,
-and the kit owner never acts on verbal/chat-only requests — if it isn't a file, it didn't happen. Each document must
-be fully self-contained: the reader has none of your session context.
+Two document types carry every consumer-to-kit need, and they are the **only** channel: a consumer never edits
+the kit, and the kit owner never acts on a verbal or chat-only request. If it is not a file, it did not happen.
+Each document is fully self-contained — the reader has none of your session context.
 
-## Which document type?
+**Capability required: none.** Writing a request document is permitted in every phase, because it changes no
+consumer and no kit surface. Filling its impact section is `consumer-impact-claim` and its filing location can be
+a consumer repository; check those cells in the matrix in [05-phase-and-source-truth](05-phase-and-source-truth.md).
+
+## Which document type
 
 | Situation | Document | Template |
 |---|---|---|
-| A kit-owned surface has a bug, limitation, missing option, or behavior you need changed/extended | **Kit change request** | `assets/templates/kit-change-request.md` |
-| New behavior that is platform-shaped or could serve ≥2 consumers | **Baseline proposal** | `assets/templates/baseline-proposal.md` |
+| A kit-owned surface has a bug, a limitation, a missing option, or behaviour you need changed | **Kit change request** | `assets/templates/kit-change-request.md` |
+| New behaviour that is platform-shaped, or that a second service would need unchanged | **Baseline proposal** | `assets/templates/baseline-proposal.md` |
 
-Unsure? If the surface already exists in the kit → change request. If you would be creating something new →
-baseline proposal.
+Unsure? The surface already exists in the kit → change request. You would be creating something new → baseline
+proposal.
 
 ## Non-negotiable rules
 
-1. **One file per independently decidable topic.** Never batch needs — the kit owner must be able to accept one and
-   reject another. Truly inseparable needs cross-link each other explicitly.
-2. **Timestamped name:** `YYYY-MM-DD-<kebab-slug>.md`, date = real authoring date from the environment, never
-   invented. Example: `2026-07-18-baseline-rediskit.md`.
-3. **Location.** During active consumer work: `<consumer-repo>/docs/kit-change-requests/` (the kit owner archives a
-   copy on intake). Design-phase, audit-originated, or kit-first-phase requests: directly in the kit repo under
-   `docs/change-requests/`. Creating a request document is never a kit change.
-4. **Evidence, not opinion.** Every claim about current kit behavior cites a kit file path/symbol, a test name, or a
-   command you ran with its output, against a named `kit_version_observed`. Every claim about your need cites your
-   architecture doc section or code path. Mark anything unverified `NEEDS_CONFIRMATION` — an invented "the kit
-   currently does X" poisons the owner's analysis.
-5. **Propose a contract, not a patch.** State the shape you need (signature, behavior, env key + default, DDL, error
-   code, metric) precisely enough to be contracttest-able, plus the backward-compatibility boundary. The kit owner
-   designs the implementation with whole-platform visibility you don't have.
-6. **Cover operations.** Address security/privacy, idempotency/data consistency, concurrency/resources,
-   observability/cardinality, migration/rollback, and testability — or state n/a explicitly.
-7. **Declare blast radius honestly** (phase-aware — see below). Never assert "breaks nobody" without basis.
-8. **Severity is operational:** `blocking` (a committed feature cannot ship; includes a kit minor breaking
-   contracttest) / `high` (shippable behind a risky or duplicating KIT-WRAP) / `normal` (can wait a release).
-9. **File the same day** you discover the need — especially when you also write a `KIT-WRAP`. A wrap without a filed
-   document is a silent fork.
-10. **Search first.** Check the kit's `docs/change-requests/` for a prior request or recorded (possibly negative)
-    decision on the same topic; re-opening a settled decision requires new evidence.
-
-## Phase-aware impact
-
-During `KIT_FIRST_STABILIZATION`: do not inspect consumers or claim `none`/`additive`/`action-required`; the
-decision records every registered consumer as `NOT_ASSESSED_KIT_FIRST`, and historical requesting-service context
-creates no execution scope. After explicit reactivation: the kit owner surveys the live registry prospectively and
-records verified per-consumer impact; inaccessible evidence is `NEEDS_CONFIRMATION`, never guessed.
+1. **One file per independently decidable topic.** Never batch needs: the owner must be able to accept one and
+   reject another. Needs that genuinely cannot be separated cross-link each other explicitly.
+2. **Timestamped name** `YYYY-MM-DD-<kebab-slug>.md`, where the date is the real authoring date read from the
+   environment and never invented. Example: `2026-07-18-baseline-rediskit.md`.
+3. **Location.** When the `consumer-repo-write` cell allows it: `<consumer-repo>/docs/kit-change-requests/`, and
+   the kit owner archives a copy on intake. Otherwise — design-phase, audit-originated, or written from a kit
+   session — directly in the kit repository under `docs/change-requests/`. Creating a request document is never
+   itself a kit change.
+4. **Evidence, not opinion.** Every claim about current kit behaviour cites a kit `file:line` or symbol, a test
+   name, or a command you ran with its output, against a named `kit_version_observed`. Every claim about your
+   need cites your architecture document section or code path. Mark anything unverified `NEEDS_CONFIRMATION`; an
+   invented "the kit currently does X" poisons the owner's analysis.
+5. **Propose a contract, not a patch.** State the shape you need — signature, behaviour, env key and default,
+   DDL, error code, metric — precisely enough to be `contracttest`-able, plus the backward-compatibility
+   boundary. The owner designs the implementation with whole-platform visibility you do not have.
+6. **Cover operations:** security and privacy, idempotency and data consistency, concurrency and resources,
+   observability and cardinality, migration and rollback, and testability — or state `n/a` explicitly for each.
+7. **Declare blast radius honestly**, within what the `consumer-impact-claim` cell allows. Never assert "breaks
+   nobody" without a basis you can name.
+8. **Severity is operational:** `blocking` — a committed feature cannot ship, which includes a kit minor breaking
+   `contracttest`; `high` — shippable only behind a wrap or a duplication; `normal` — can wait a release.
+9. **File the same day** you discover the need, and always the same day you write a `KIT-WRAP`.
+10. **Search first.** Check `docs/change-requests/` for a prior request or a recorded decision, including a
+    negative one, on the same topic. Re-opening a settled decision requires new evidence, named.
 
 ## Lifecycle
 
-The original request is permanent — decisions are appended, never replace it:
+The original request is permanent; decisions are appended and never replace it.
 
 `filed/proposed → under-review → accepted | accepted-amended | rejected | deferred → implemented → shipped`
 
-During kit-first, accepted work may sit at `implemented-unreleased` with `shipped_in: pending` until a real tag
-exists. Implementation always moves code, tests, `CONTRACTS.md`, generated artifacts, docs/runbook, classification,
+Accepted work may sit at `implemented-unreleased` with `shipped_in: pending` until a real tag exists.
+Implementation always moves code, tests, `CONTRACTS.md`, generated artifacts, docs and runbook, classification,
 and the decision record together.
 
-## What happens next (set expectations correctly)
+## What happens next
 
-The kit owner will verify your evidence against kit code, apply the phase gate (survey consumers only when
-reactivated), classify per `GOVERNANCE.md`, and accept/amend/reject/defer with an appended decision block. If the
-change ships and propagation is active, you receive an update prompt; your job afterward is to upgrade per
+The kit owner verifies your evidence against kit code, applies the phase gate, classifies per `GOVERNANCE.md`,
+and appends an accept, amend, reject, or defer decision block. If the change ships and the `propagation` cell
+allows it, you receive an update prompt; your job afterwards is to upgrade per
 [15-debug-upgrade-migrate](15-debug-upgrade-migrate.md) and delete the corresponding `KIT-WRAP`.
 
-## Quality bar (self-review before handing over)
+## Self-review before handing over
 
 - Could an agent with zero context on your service decide and implement from this file alone?
-- Does every "currently" statement carry a path/test/command citation and the observed kit version?
-- Is the requested contract precise enough to be contracttest-able, with its compatibility boundary stated?
-- Are operations (security, idempotency, concurrency, observability, rollback) addressed or explicitly n/a?
-- Did you search existing requests/decisions first?
+- Does every "currently" statement carry a path, test, or command citation and the observed kit version?
+- Is the requested contract precise enough to be `contracttest`-able, with its compatibility boundary stated?
+- Are security, idempotency, concurrency, observability, and rollback each addressed or explicitly `n/a`?
+- Did you search the existing requests and decisions first?

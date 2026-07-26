@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Golang Clean Code Principles"
+  short_description: "Enforce kit-era P1–P13 on alaa-go-chi Go services"
+  default_prompt: "Use $alaa-golang-clean-code-principles before writing or reviewing any Go code on an alaa-go-chi service: confirm the kit's active scope phase with $alaa-go-chi-development first, then hold P1-P13 — never re-implement a kit-owned surface, declare every route's family, carry identity only in TrustCtx, return typed $errkit errors mapped once at the boundary, keep imports flowing inward, write state and outbox and audit in one transaction, prove idempotency with a run-twice test, tag every wire field snake_case and mint public ids as UUIDv7, own every goroutine through shutdown, load config at boot and vocabulary as constants, keep labels bounded and correlation unbroken, test the boundary you own with contracttest, and carry unknown external facts as [gap] instead of guesses. Name the check that proves each principle, route Go depth through $alaa-golang, and run the pre-commit checklist before finishing."
+
+policy:
+  allow_implicit_invocation: true

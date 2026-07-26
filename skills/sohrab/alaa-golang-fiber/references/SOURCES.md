@@ -1,75 +1,85 @@
-# Fiber Source Map
+# Sources and Freshness Policy
 
-Use these sources when a Fiber detail is version-sensitive or must be exact.
+Read this file when you are about to assert any Fiber API name, signature, default, or
+version-sensitive behavior.
 
-## Official Fiber docs
+## The rule
 
-### https://docs.gofiber.io/
+An API claim in this skill carries a source URL and a verification date, or it is a defect. This is
+not bookkeeping. The version of this skill that this one replaced asserted Fiber APIs with no source
+and no date, and at least one of those assertions was wrong in a way that would not compile:
+`fiber.Config.StructValidator` was shown receiving a `*validator.Validate` directly, which does not
+satisfy the `Validate(out any) error` interface.
 
-Use for current Fiber version, installation, Go version requirement, zero-allocation/context lifetime rules, and basic routing.
+Before you write a Fiber fact, fetch the page. Before you trust a fact already in this skill, check
+its date against how long ago Fiber last released.
 
-### https://docs.gofiber.io/whats_new/
+## Verification state
 
-Use for Fiber v3 changes, migration notes, `ListenConfig`, hooks, routing changes, middleware data access, and v2-to-v3 differences.
+Every Fiber claim currently in this skill was verified on **2026-07-26** against the pages below.
 
-### https://docs.gofiber.io/api/app/
+Versions observed at that verification:
 
-Use for `fiber.App`, `app.Test`, route registration, config, and app behavior.
+| Module | Version | Published |
+| --- | --- | --- |
+| `github.com/gofiber/fiber/v3` | `v3.3.0` | 2026-05-22 |
+| `github.com/gofiber/utils/v2` (direct dependency of the above) | `v2.0.6` required by Fiber; `v2.4.0` latest | Fiber's pin per its `go.mod` |
+| `github.com/gofiber/contrib/v3/otel` | `v1.2.2` | 2026-07-15 |
 
-### https://docs.gofiber.io/api/ctx/
+Minimum Go version for Fiber v3: `1.25`, and Fiber v3.3.0's own `go` directive is `go 1.25.0`.
 
-Use for `fiber.Ctx`, `Locals`, value access, request and response behavior.
+## Which page answers which question
 
-### https://docs.gofiber.io/guide/go-context/
+Prefer the released-v3 pages. `docs.gofiber.io/next/...` is documentation for the **unreleased**
+next version; it is cited here only where the released page did not carry the detail, and each such
+citation is marked in the reference file that uses it.
 
-Use for Go context behavior and integration notes.
+| Question | Page |
+| --- | --- |
+| Fiber version, install, minimum Go version | https://docs.gofiber.io/ |
+| `fiber.Config` fields and defaults, including the server bounds, `Immutable`, `Concurrency`, `TrustProxy`, `TrustProxyConfig`, `ProxyHeader`, `StructValidator`, `ErrorHandler`, `ReadBufferSize` | https://docs.gofiber.io/api/fiber |
+| `fiber.Ctx` value lifetime, the copy helpers, `Ctx` as a `context.Context`, `RequestCtx()` | https://docs.gofiber.io/api/ctx |
+| `app.Test` and `TestConfig`, `App.GetString`, `App.GetBytes` | https://docs.gofiber.io/next/api/app |
+| Binding API, binder set, `StructValidator` behavior on non-struct destinations | https://docs.gofiber.io/api/bind |
+| The `StructValidator` interface and its `go-playground/validator` adapter | https://docs.gofiber.io/guide/validation |
+| v2-to-v3 changes: `Ctx` interface, `Context()` reversal, `Add` signature, `Locals` to `FromContext`, trust-proxy rename | https://docs.gofiber.io/whats_new |
+| Error handling, `fiber.Error`, the `ErrorHandler` contract | https://docs.gofiber.io/guide/error-handling |
+| recover middleware | https://docs.gofiber.io/middleware/recover |
+| requestid middleware and `FromContext` | https://docs.gofiber.io/middleware/requestid |
+| healthcheck middleware and its endpoint constants | https://docs.gofiber.io/middleware/healthcheck |
+| CORS middleware | https://docs.gofiber.io/middleware/cors |
+| limiter middleware, storage semantics, multi-replica behavior | https://docs.gofiber.io/middleware/limiter |
+| `net/http` adaptor and its documented overhead | https://docs.gofiber.io/middleware/adaptor |
+| Released versions, publish dates, and module dependency facts | https://pkg.go.dev/github.com/gofiber/fiber/v3 and https://pkg.go.dev/github.com/gofiber/contrib/v3/otel |
+| `ListenConfig` struct fields and defaults, and Fiber's own `go` directive | https://raw.githubusercontent.com/gofiber/fiber/v3.3.0/listen.go and https://raw.githubusercontent.com/gofiber/fiber/v3.3.0/go.mod |
+| Fiber v3 OpenTelemetry middleware install and registration | https://github.com/gofiber/contrib/blob/main/v3/otel/README.md |
 
-### https://docs.gofiber.io/guide/error-handling/
+Go testing sources, for the test discipline in `30-validation-testing.md`:
+https://pkg.go.dev/testing, https://go.dev/blog/subtests, https://go.dev/doc/security/fuzz/.
 
-Use for returned errors, custom `ErrorHandler`, `fiber.Error`, and recover requirements.
+## Verifying rather than inferring
 
-### https://docs.gofiber.io/guide/validation/
-
-Use for `StructValidator`, bind validation, and validator examples.
-
-### https://docs.gofiber.io/guide/reverse-proxy/
-
-Use for reverse proxy deployment, HTTP/2, proxy headers, and edge setup.
-
-### https://docs.gofiber.io/middleware/healthcheck/
-
-Use for liveness, readiness, startup, and probe response behavior.
-
-### https://docs.gofiber.io/middleware/requestid/
-
-Use for request ID middleware, header behavior, and context helper access.
-
-### https://docs.gofiber.io/middleware/cors/
-
-Use for CORS options and unsafe wildcard/credentials combinations.
-
-### https://docs.gofiber.io/middleware/limiter/
-
-Use for limiter config, storage behavior, and multi-instance cautions.
-
-## Go testing sources
-
-### https://pkg.go.dev/testing
-
-Use for `testing.T`, `testing.F`, `t.Run`, `t.Helper`, `t.Cleanup`, and package-level test behavior.
-
-### https://go.dev/blog/subtests
-
-Use for table-driven subtests, sub-benchmarks, parallel subtest behavior, and focused `go test -run` usage.
-
-### https://go.dev/doc/security/fuzz/
-
-Use for Go fuzzing rules, seed corpus behavior, fast deterministic fuzz targets, and security-sensitive input testing.
+- A missing mention is not evidence of absence. If a page does not state a default, say the default
+  is unverified; do not infer it from another framework or from an older Fiber major.
+- Read the pinned tag, not `main`, when the question is what a released version does. A README on
+  `main` can describe unreleased behavior.
+- When a fact cannot be verified, write it as unverified in the text and name what would settle it.
+  A hedge attached to a rule ("where the platform supports it") is worse than an honest gap, because
+  it reads as permission.
 
 ## Conflict order
 
-1. official Fiber docs
-2. official Go docs
-3. repo-local service contracts and `alaa-golang`
-4. vendored public Go skills
-5. community examples only for troubleshooting concrete symptoms
+When two sources disagree, the earlier entry wins:
+
+1. Official Fiber documentation for the released major, and the tagged source it documents.
+2. Official Go documentation.
+3. Platform contracts: `/alaa-services-contract` (`$alaa-services-contract`) for names and values,
+   `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) for trust semantics, and
+   `/alaa-go-chi-development` (`$alaa-go-chi-development`) for anything kit-governed.
+4. `/alaa-golang` (`$alaa-golang`) for Go depth and framework choice.
+5. Vendored public Go skills.
+6. Community examples, for reproducing a concrete symptom only - never as the basis for a rule.
+
+A platform contract never loses to a framework default. Where Fiber's default and a value owned by
+`/alaa-services-contract` (`$alaa-services-contract`) disagree, the contract value is set explicitly
+in `fiber.Config` and the disagreement is noted in the service's `docs/DECISIONS.md`.

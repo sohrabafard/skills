@@ -1,159 +1,86 @@
-# Live Sources
+# Sources and Freshness
 
-Use these sources when a task depends on current package state, current Go releases, official framework behavior, or current Codex guidance.
+Read this before stating any fact that can change: a version, a default, a release behaviour, a package's status, or a
+kit capability.
 
-## Freshness triggers
+## When to re-verify
 
-Re-check official or primary sources when the user asks for latest/current behavior, a Go release or security fix, a package major version, a framework comparison, a vulnerability, or current Codex/subagent/model guidance.
+**Rule:** go to the primary source, in this session, before you state any of the following:
 
-## Official Go sources
+- a Go release version, a release date, or a behaviour introduced or removed by a release;
+- a package's current major version, its licence, its maintenance status, or a CVE affecting it;
+- a framework's current API or its default behaviour;
+- a capability of the `alaa-go-chi` kit;
+- current guidance from a model or tooling vendor.
 
-### https://go.dev/doc/devel/release
+**Forbidden:** answering any of those from memory, and prefixing a remembered fact with "as of my knowledge". **Rule:**
+either cite the source you read in this session and the date, or say the fact is unverified and name where it would be
+checked.
 
-Use for current stable Go version, supported releases, release dates, and security notes.
+## Kit facts
 
-### https://tip.golang.org/doc/go1.26
+**Rule:** every claim about `alaa-go-chi` is read from the kit repository — the specific `.go` file, `CONTRACTS.md`,
+`GOVERNANCE.md`, `docs/RUNBOOK.md`, `docs/CONSUMERS.md`, or a file under `docs/change-requests/` — and cited by that
+path. Governance and phase questions go to `/alaa-go-chi-development` (`$alaa-go-chi-development`).
 
-Use for the Go 1.26 release notes: language, toolchain, runtime, compiler, standard-library, and security changes. This
-is the canonical source behind `70-go-1.26-and-modern-language.md`; re-read it when a task depends on a specific 1.26
-feature or a `1.26.x` patch. The stable mirror is <https://go.dev/doc/go1.26> once the release ships.
+**Forbidden:** treating a decision record, a change request, a roadmap line, or a design-goal sentence as evidence
+that a capability exists in the kit. **Rule:** ratification is not implementation; find the code, name the file.
 
-### https://go.dev/ref/spec
+## Official Go
 
-Use for the current Go language specification when a syntax, generics, or type-system detail must be exact.
+| Source | Use it for |
+|---|---|
+| `https://go.dev/doc/devel/release` | the current stable release, supported releases, dates, security notes |
+| `https://go.dev/ref/spec` | an exact language, generics, or type-system detail |
+| `https://go.dev/doc/modules/layout` | official module and package layout |
+| `https://pkg.go.dev` | versions, symbols, examples, importers, licences, CVEs for a published path — queried by `godig` |
+| `https://pkg.go.dev/golang.org/x/tools/gopls` | gopls capabilities, MCP tools, code actions, settings |
+| `https://pkg.go.dev/testing` | tests, benchmarks, examples, fuzzing, helpers, cleanup, subtests |
+| `https://go.dev/doc/security/fuzz/` | fuzzing rules, seed corpus, deterministic targets |
 
-### https://go.dev/doc/modules/layout
+The release notes for the version `70-modern-go-baseline.md` was written against are named inside that file, with the
+date they were read.
 
-Use for official module and package layout guidance.
+## HTTP frameworks
 
-### https://pkg.go.dev/golang.org/x/tools/gopls
+| Source | Use it for |
+|---|---|
+| `https://github.com/go-chi/chi` · `https://pkg.go.dev/github.com/go-chi/chi/v5` | chi routing and current API |
+| `https://pkg.go.dev/github.com/go-chi/chi/v5/middleware` | request id, recovery, timeout, throttle behaviour |
+| `https://pkg.go.dev/github.com/go-chi/cors` | CORS middleware behaviour and mounting constraints |
+| `https://docs.gofiber.io/` | Fiber; load `/alaa-golang-fiber` (`$alaa-golang-fiber`) for any Fiber task |
 
-Use for `gopls` capabilities, MCP tools, code actions, and settings behind the `golang-gopls` skill. Prefer semantic
-navigation over grep for questions about the resolved build.
+## Packages in this stack
 
-### https://pkg.go.dev
+`https://pkg.go.dev/github.com/jackc/pgx/v5` · `https://docs.sqlc.dev/` · `https://github.com/pressly/goose` ·
+`https://atlasgo.io/docs` · `https://pkg.go.dev/github.com/redis/go-redis/v9` ·
+`https://clickhouse.com/docs/integrations/go` · `https://pkg.go.dev/github.com/rabbitmq/amqp091-go` ·
+`https://pkg.go.dev/github.com/twmb/franz-go/pkg/kgo` · `https://golang.testcontainers.org/`
 
-Use as the package index queried by `godig` (the `golang-pkg-go-dev` skill): versions, symbols, examples, importers,
-licenses, and known CVEs for a published import path.
+## Observability and security
 
-### https://pkg.go.dev/testing
+`https://opentelemetry.io/docs/languages/go/` ·
+`https://pkg.go.dev/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp` ·
+`https://pkg.go.dev/github.com/prometheus/client_golang/prometheus` ·
+`https://pkg.go.dev/github.com/coreos/go-oidc/v3/oidc` · `https://pkg.go.dev/github.com/golang-jwt/jwt/v5`
 
-Use for Go tests, benchmarks, examples, fuzz tests, `testing.T`, `testing.F`, helpers, cleanup, and subtests.
+## Model, effort, and runtime guidance
 
-### https://go.dev/blog/subtests
+**Rule:** this skill names no model, no effort level, and no runtime capability. Every such question, and every
+vendor source that would answer it, belongs to `/alaa-prompting-guide` (`$alaa-prompting-guide`) and its
+`references/50-effort-and-thinking.md`.
 
-Use for table-driven subtests, sub-benchmarks, focused `go test -run`, and parallel subtest behavior.
+## Which source wins
 
-### https://go.dev/doc/security/fuzz/
+**Rule:** when two sources disagree, take the higher one and record the disagreement:
 
-Use for fuzzing rules, seed corpus behavior, fast deterministic fuzz targets, and security-sensitive input testing.
+1. The repository you are working in — its code, tests, generators, and generated artifacts.
+2. The kit repository's `CONSTITUTION.md`, `GOVERNANCE.md`, `CONTRACTS.md`, and current source.
+3. Official Go documentation.
+4. Official documentation for the package or framework in question.
+5. The installed `golang-*` skills.
+6. The house companion skills.
+7. This skill.
 
-## HTTP framework sources
-
-### https://github.com/go-chi/chi
-
-Use for chi README, route examples, middleware examples, and current project guidance.
-
-### https://pkg.go.dev/github.com/go-chi/chi/v5
-
-Use for chi package API docs and current major version details.
-
-### https://pkg.go.dev/github.com/go-chi/chi/v5/middleware
-
-Use for request ID, recovery, timeout, throttle, and related middleware behavior.
-
-### https://pkg.go.dev/github.com/go-chi/cors
-
-Use for CORS middleware behavior and mounting constraints.
-
-### https://docs.gofiber.io/
-
-Use for Fiber v3 behavior. Load `$alaa-golang-fiber` for Fiber tasks.
-
-## Package sources for this stack
-
-### https://pkg.go.dev/github.com/jackc/pgx/v5
-
-Use for PostgreSQL driver and toolkit details.
-
-### https://docs.sqlc.dev/
-
-Use for `sqlc` code generation, config, and query annotations.
-
-### https://github.com/pressly/goose
-
-Use for Goose migration behavior and current release state.
-
-### https://atlasgo.io/docs
-
-Use for Atlas migration, schema planning, CI, and drift-control guidance.
-
-### https://pkg.go.dev/github.com/redis/go-redis/v9
-
-Use for Redis client API and version state.
-
-### https://clickhouse.com/docs/integrations/go
-
-Use for official ClickHouse Go client guidance.
-
-### https://pkg.go.dev/github.com/rabbitmq/amqp091-go
-
-Use for the RabbitMQ-maintained AMQP client.
-
-### https://pkg.go.dev/github.com/twmb/franz-go/pkg/kgo
-
-Use for Kafka client capabilities and current package surface.
-
-### https://pkg.go.dev/github.com/testcontainers/testcontainers-go
-
-Use for integration-test container orchestration.
-
-### https://golang.testcontainers.org/
-
-Use for the full Testcontainers Go documentation site.
-
-## Observability and security sources
-
-### https://opentelemetry.io/docs/languages/go/
-
-Use for OpenTelemetry Go setup and signal maturity.
-
-### https://pkg.go.dev/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
-
-Use for HTTP instrumentation details.
-
-### https://pkg.go.dev/github.com/prometheus/client_golang/prometheus
-
-Use for Prometheus metrics primitives.
-
-### https://pkg.go.dev/github.com/coreos/go-oidc/v3/oidc
-
-Use for OIDC verification guidance.
-
-### https://pkg.go.dev/github.com/golang-jwt/jwt/v5
-
-Use when a service really owns JWT parsing or signing.
-
-## Official OpenAI and Codex sources
-
-### https://developers.openai.com/codex/skills
-
-Use for current skills behavior, `openai.yaml`, and implicit invocation rules.
-
-### https://developers.openai.com/codex/concepts/subagents
-
-Use for current subagent behavior and configuration.
-
-### https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide
-
-Use for current Codex prompting recommendations.
-
-## Conflict resolution order
-
-1. official Go docs
-2. official Fiber or chi docs
-3. official package docs or primary project docs
-4. official OpenAI and Codex docs
-5. installed public Go skills
-6. Sohrab companion skills
-7. discovery lists and community posts
+**Forbidden:** resolving a disagreement by editing a skill so it agrees. **Rule:** follow the higher source, do the
+work, and report the disagreement with both file names in your final message.

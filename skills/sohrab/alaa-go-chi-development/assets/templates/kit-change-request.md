@@ -1,11 +1,12 @@
 # Kit Change Request: <one-line title>
 
 <!--
-Filename: YYYY-MM-DD-<kebab-slug>.md (real authoring date from the environment, never invented).
+Filename: YYYY-MM-DD-<kebab-slug>.md, using the real authoring date read from the environment, never invented.
 One independently decidable topic per file. Fully self-contained: the reader has none of your session context.
-Location: active consumer work → <consumer-repo>/docs/kit-change-requests/;
-          design-phase, audit-originated, or kit-first-phase → <kit-repo>/docs/change-requests/.
-Preserve this request forever; decisions are appended, never replace it.
+Location: references/20-change-request-workflow.md §Location — it depends on the capability cell, not on habit.
+Preserve this request forever; decisions are appended and never replace it.
+Fill `kit_phase` and `phase_record` from the session-start read (references/05-phase-and-source-truth.md); copy
+what the read returned rather than typing a phase name from memory.
 -->
 
 ```yaml
@@ -16,44 +17,47 @@ requesting_repo: <path/URL | kit repo>
 kit_version_observed: <immutable version/commit from go.mod>
 kit_surface: <package + symbol/contract, e.g. httpkit.Bind, outboxkit relay, PG_SCALE_TIER bands>
 kind: bug | limitation | extension | breaking-contracttest-after-minor
-severity: blocking | high | normal   # blocking = committed feature cannot ship (incl. kit minor broke contracttest)
+severity: blocking | high | normal   # blocking = a committed feature cannot ship, incl. a kit minor breaking contracttest
 workaround_in_place: none | KIT-WRAP at <file:line, marker date>
 status: filed        # filed → under-review → accepted|accepted-amended|rejected|deferred → implemented → shipped
 status_updated: YYYY-MM-DD
+kit_phase: <phase name exactly as the read returned it>
+phase_record: <docs/change-requests/... path the read named>
 related: [<other request files, or none>]
 ```
 
 ## 1. Outcome needed
 
-<One precise paragraph: the behavior you need, not an internal kit patch. E.g. "Bind must optionally expose the
+<One precise paragraph: the behaviour you need, not an internal kit patch. E.g. "Bind must optionally expose the
 raw body for webhook signature verification while keeping the size cap.">
 
-## 2. Current kit behavior and reproduction (verified)
+## 2. Current kit behaviour and reproduction, verified
 
-<What the kit does today at kit_version_observed. Every statement cites kit file:line/symbol, a test name, or a
-command you ran with its output. Bug: minimal reproduction — input, expected, actual. Mark anything unverified
-NEEDS_CONFIRMATION — never guess.>
+<What the kit does today at kit_version_observed. Every statement cites a kit file:line or symbol, a test name, or
+a command you ran with its output. For a bug: minimal reproduction — input, expected, actual. Mark anything
+unverified NEEDS_CONFIRMATION; never guess.>
 
-## 3. Why the requester needs this (grounded)
+## 3. Why the requester needs this, grounded
 
-<Cite the architecture doc section and/or code path that hits the limitation; if blocking, name the committed
-feature that is blocked. Historical consumer context creates no execution scope during KIT_FIRST_STABILIZATION.>
+<Cite the architecture-doc section and/or the code path that hits the limitation. If blocking, name the committed
+feature that is blocked. Historical consumer context explains an origin; it creates no execution scope.>
 
-## 4. Proposed public contract (not a patch)
+## 4. Proposed public contract, not a patch
 
-<The shape you need: signature / behavior / env key + default / DDL / error code / metric. Precise enough to be
+<The shape you need: signature / behaviour / env key + default / DDL / error code / metric. Precise enough to be
 contracttest-able. State explicitly what must stay backward compatible.>
 
 ## 5. Risk and operations
 
-<Security/privacy; transaction/idempotency and data consistency; concurrency/resources; observability/cardinality;
-migration/rollback; failure behavior; testability. State n/a explicitly where true.>
+<Security and privacy; transaction, idempotency and data consistency; concurrency and resources; observability
+and cardinality; migration and rollback; failure behaviour; testability. State n/a explicitly where true.>
 
-## 6. Impact (phase-aware)
+## 6. Impact
 
-<During KIT_FIRST_STABILIZATION: every registry row = NOT_ASSESSED_KIT_FIRST, with no repo inspection.
-After explicit reactivation: per registered consumer (from docs/CONSUMERS.md): none | likely-affected + why |
-NEEDS_CONFIRMATION. Never claim "breaks nobody" without basis.>
+<Writing anything here is the `consumer-impact-claim` capability — check its cell first. When the cell forbids it,
+every registered consumer takes exactly the marker string the active scope record prescribes, with no repository
+inspection. When it permits it, give one line per registered consumer from docs/CONSUMERS.md: none |
+likely-affected + why | NEEDS_CONFIRMATION. Never claim "breaks nobody" without a basis you can name.>
 
 ## 7. Alternatives considered
 

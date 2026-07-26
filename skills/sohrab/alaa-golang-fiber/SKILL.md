@@ -1,81 +1,114 @@
 ---
 name: alaa-golang-fiber
-description: "Use this skill for production Go services that use Fiber or should use Fiber: Fiber v3 APIs, gofiber projects, high-concurrency HTTP services, Fiber middleware, routing, validation, testing, error handling, trusted proxy setup, health/readiness, graceful shutdown, observability, security, or Fiber v2-to-v3 migration. Also use when `github.com/gofiber/fiber/v3` or older Fiber imports appear, when the user explicitly chooses Fiber, or when `$alaa-golang` routes a raw large/high-concurrency Go service to Fiber."
+description: "Fiber v3 work in Ala Go systems: building or debugging a service on github.com/gofiber/fiber/v3, app config and server bounds, fiber.Ctx value lifetime and copy rules, routing, middleware order, error mapping, binding and StructValidator, trusted proxy, probes, graceful shutdown, handler tests, and Fiber v2-to-v3 migration. Also holds the register of alaa-go-chi kit surfaces a Fiber service must re-implement, which is the input specification for a possible future Fiber kit. Use when a repo already imports Fiber, or when the project owner has recorded a Fiber exception. Do not use to pick a framework: alaa-golang reference 30-http-api-framework-choice.md owns that decision and alaa-golang owns general Go depth. A new Ala service is an alaa-go-chi kit consumer on chi unless the owner has recorded a Fiber exception through alaa-go-chi-development."
 ---
 
 # Alaa Golang Fiber
 
-## Purpose
+## Charter
 
-Use this skill to build, review, test, and harden Fiber v3 services for Alaa-style production systems.
+This skill exists for exactly two purposes, set by the project owner:
 
-It assumes high concurrency, strict correctness, security-sensitive request handling, observability, graceful shutdown,
-and `99.99%+` SLA expectations.
+1. Building or debugging a service based on Fiber.
+2. Serving as the input specification for a possible future Fiber-specific kit.
 
-## When NOT to use
+It is not a capacity-planning escape hatch and it is not a rival default. The kit
+(`alaa-go-chi`) runs on chi. Read `references/50-kit-conflict-register.md` before proposing
+any Fiber work that would otherwise be a kit consumer.
 
-- Do not use for non-Go work.
-- Do not use for a chi, `net/http`, gRPC, or CLI task unless the work is a framework comparison or migration review.
-- Do not choose Fiber for a small raw service when chi is simpler and no high-concurrency requirement exists.
-- Do not use Fiber to avoid clean architecture, tests, repository boundaries, or service contracts.
+## Standing facts, verified 2026-07-26
 
-## Framework routing
+State these to the user before writing Fiber code for an Ala service. They are facts, not
+preferences, and an agent that omits them lets the user assume a precedent that does not exist.
 
-Use Fiber when:
+- **No Ala service runs on Fiber.** The kit consumer registry (`docs/CONSUMERS.md` in the
+  `alaa-go-chi` repository) lists `news`, `notif`, `entitlement-api`, `tusd` and `wa-api`. Every
+  one is chi. The string "Fiber" appears zero times in the whole `alaa-go-chi-development`
+  governance skill. A Fiber service on this platform has no production precedent; do not infer
+  one from a neighbouring service's code, and do not copy a kit consumer's transport layer and
+  assume the Fiber equivalent has been reviewed.
+- **Choosing Fiber for a service that would otherwise be a kit consumer is the project owner's
+  decision.** It is recorded as a change request through `/alaa-go-chi-development`
+  (`$alaa-go-chi-development`). It is never an agent's decision, and never a conclusion drawn
+  from a traffic estimate, a benchmark, or a latency target.
+- **The framework-choice procedure is owned elsewhere.** `alaa-golang`
+  `references/30-http-api-framework-choice.md` (`/alaa-golang`, `$alaa-golang`) is the single
+  place that decides chi versus Fiber. This skill states no competing criteria. If you are being
+  asked *which* framework to use, you are in the wrong skill: stop and read that file.
 
-- the repository already uses Fiber
-- the user explicitly asks for Fiber
-- a raw service is expected to be large, high-concurrency, latency-sensitive, or SLA-heavy
-- the team accepts Fiber's `fasthttp` model and has a real reason to prefer it
+## Router
 
-If the repository already uses chi, preserve chi. If a raw service is small or simple, route back to `$alaa-golang` and its chi guide.
+Read the one file that matches what you are about to do. Do not preload the set.
 
-## Fast path
+| You are about to | Read |
+| --- | --- |
+| Create a `fiber.App`, set `fiber.Config`, set server timeouts or body limit, start or stop the listener | `references/10-fiber-v3-core.md` |
+| Register routes, order middleware, mount probes, map an error to a status, configure CORS, a rate limiter, or `TrustProxy` | `references/20-routing-middleware-errors.md` |
+| Change a request or response contract, bind a body, wire a `StructValidator`, or write a handler test | `references/30-validation-testing.md` |
+| Ship, review, or harden a Fiber service: probes, shutdown, timeouts, concurrency, observability, security | `references/40-production-readiness.md` |
+| Upgrade a repo from `github.com/gofiber/fiber/v2` to `/v3`, or read v2-era Fiber code and port it | `references/45-v2-to-v3-migration.md` |
+| Decide what a Fiber service must build that a kit service inherits, or design a Fiber kit | `references/50-kit-conflict-register.md` |
+| Answer a question that may belong to another skill | `references/55-skill-boundaries.md` |
+| Assert any Fiber API name, signature, default, or version-sensitive behavior | `references/SOURCES.md` |
 
-1. Read `references/full-guide.md` for the production baseline.
-2. Read `references/10-fiber-v3-core.md` for Fiber v3 app, context, config, and lifecycle rules.
-3. Read `references/20-routing-middleware-errors.md` for routing, middleware order, errors, CORS, limiter, and proxy rules.
-4. Read `references/30-validation-testing.md` before changing request contracts or behavior.
-5. Read `references/40-production-readiness.md` before shipping, reviewing, or hardening a service.
-6. Read `references/SOURCES.md` when Fiber version, API behavior, or docs freshness matters.
+## Absolute rules
 
-## Mandatory rules
+Each rule below is a constraint. None of them has an agent-granted exception. Where an exception
+exists, the rule names who grants it and in what record.
 
-- Keep handlers thin: bind, validate, call a use case, map result or error, and return.
-- Do not put SQL, Redis, queue clients, or business rules directly in handlers.
-- Do not store values from `fiber.Ctx` beyond the handler lifetime unless you copy them or intentionally enable immutable behavior.
-- Keep domain, use case, and repository packages free of Fiber types.
-- Use repository pattern for DB-backed services.
-- Treat Redis as a cache layer unless the repository explicitly defines another role.
-- Write or update a failing test before behavior-changing implementation.
-- Run focused tests after the change and `go test ./...` before calling the work done.
-- Add `go test -race ./...` for cache, shared state, goroutines, workers, or high-concurrency code.
-- Preserve trusted-gateway and service-contract rules. Do not trust client-supplied identity, tenant, or authorization context.
+- **Copy every `fiber.Ctx`-derived value before it outlives the handler.** Values from `Params`,
+  `Query`, `Get`, `Body`, `Cookies` and their siblings are valid only inside the handler. Wrap
+  each one in `utils.CopyString` or `utils.CopyBytes` at the point you take it. `Immutable` is a
+  boot-time, service-wide `fiber.Config` decision made once by the service owner; it is never a
+  reason to skip a copy at an individual call site. Details and the mechanism:
+  `references/10-fiber-v3-core.md`.
+- **Set `ReadTimeout`, `WriteTimeout` and `IdleTimeout` in `fiber.Config` on every service.** All
+  three default to `0`, which means unbounded. An unset value is a slowloris-open server. Take the
+  values from `/alaa-services-contract` (`$alaa-services-contract`); do not invent them.
+- **Set `BodyLimit` in `fiber.Config` explicitly.** Its default is 4 MiB, which is larger than the
+  platform's request cap.
+- **Never cache an authorization decision.** An exception is granted by `/alaa-security-review`
+  (`$alaa-security-review`) in a recorded decision that states the TTL, the invalidation trigger
+  and the revocation path. Absent that record, resolve authorization per request.
+- **Register `/api/health` and `/api/ready` before any auth, trust, gateway-proof or rate-limit
+  middleware**, so a probe cannot be failed by a dependency of the thing it is probing.
+- **Register every route before the listener starts.** Route-inventory and contract checks read the
+  route table once at boot; a route added afterwards is invisible to them and ships unverified.
+- **Retry only idempotent operations, under a bounded budget.** The retry, timeout, backoff and
+  degradation doctrine is owned by `/alaa-reliability-sla` (`$alaa-reliability-sla`); the numbers
+  are owned by `/alaa-services-contract` (`$alaa-services-contract`).
+- **Keep `fiber` types out of `internal/domain`, `internal/application` and repository code.** The
+  transport package converts; nothing below it imports Fiber.
+- **Write or update a failing test before a behavior-changing edit**, then run the focused test,
+  then `go test ./...`, and add `go test -race ./...` when the change touches shared state,
+  caches, goroutines or workers.
+- **Never edit anything under `vendor/`.**
+- **Route model, reasoning-effort and runtime-capability questions to `/alaa-prompting-guide`
+  (`$alaa-prompting-guide`).** Do not name a model in this skill or in work produced from it.
 
-## Production shape
+## Package layout
 
-For new Fiber services, prefer this boundary:
+A Fiber service uses the same package layout as a kit service and differs only at the transport
+adapter. Uniformity across the fleet outranks local optimality: an operator, a reviewer and an
+auditor should be able to open any Ala Go service and find the same shape.
 
-- `cmd/<service>/main.go`: config, dependency construction, app start, shutdown
-- `internal/transport/http`: Fiber app, routes, middleware, DTOs, error mapping
-- `internal/usecase` or `internal/service`: application behavior and transaction/cache decisions
-- `internal/domain`: domain rules and value objects
-- `internal/repository`: persistence contracts and implementations
-- `internal/platform`: logger, metrics, tracing, clients, and infrastructure adapters
+The layout itself is owned by `alaa-golang` `references/60-service-architecture-patterns.md`
+(`/alaa-golang`, `$alaa-golang`): `internal/domain/`, `internal/application/` with its ports file,
+`internal/infrastructure/composition/`, and a health service package. Read it there; this skill
+does not restate it.
 
-## Reference map
-
-- `references/00-topic-map.md` - choose the smallest file to read next
-- `references/full-guide.md` - complete Fiber service baseline
-- `references/10-fiber-v3-core.md` - Fiber v3 core, context, config, listen, hooks
-- `references/20-routing-middleware-errors.md` - routes, middleware, errors, CORS, limiter, proxy
-- `references/30-validation-testing.md` - binding, validation, tests, TDD, fuzzing
-- `references/40-production-readiness.md` - high concurrency, SLA, security, observability
-- `references/SOURCES.md` - official Fiber and Go source map
+The Fiber-specific seam is one package: the transport adapter that owns the `*fiber.App`, its
+`fiber.Config`, the middleware chain, route registration, request DTOs, and the `ErrorHandler` that
+renders the platform error envelope. Everything that package exposes inward is a plain Go type or a
+`context.Context`.
 
 ## Maintenance rules
 
-- Keep this `SKILL.md` compact.
-- Put examples and detailed policies in `references/`.
-- Keep Fiber v3 claims tied to official docs.
-- Keep the skill ASCII-only unless a source path or product name requires otherwise.
+- Keep this file routing-first. Detail belongs in `references/`.
+- Every Fiber API name, signature or default asserted anywhere in this skill carries a source URL
+  and a verification date, per `references/SOURCES.md`. An unsourced API claim is a defect.
+- State each instruction exactly once across the whole skill. If a rule needs to be visible in two
+  places, put it in one and link the other.
+- Write cross-skill references in both trigger forms, `/skill-name` and `$skill-name`, and name
+  the owning skill beside any path you point at.
+- Keep this skill ASCII-only unless a source path or product name requires otherwise.

@@ -108,58 +108,88 @@ Two consequences for the batch plan:
 
 ## 5. Batch plan
 
-Fifty-one skills remain in `skills/sohrab/`: 43 `alaa-*` plus 8 others in the same namespace. Nothing under `vendor/` is in scope. Group them by shared context so one session's research serves every skill in it.
+Sixty-three skill directories now sit in `skills/sohrab/`: fifty-one assigned to the eight batches below, seven rebuilt before the programme started (section 1), and five created by the programme itself and therefore already at standard — `alaa-reliability-sla`, `alaa-testing-strategy`, `alaa-system-design`, `alaa-algorithms-data-structures`, and `alaa-keyset-pagination`. Nothing under `vendor/` is in scope. Group them by shared context so one session's research serves every skill in it.
 
-**Run Batch 1 first and alone.** It defines the doctrine every later batch references. Running a domain batch before it means each domain invents its own version of the quality bar, which is exactly the inconsistency to avoid.
+### Execution model: one batch at a time, in the numbered order
 
-### Waves: what can run in parallel, and what cannot
+This programme is being run sequentially — one chat per batch, the next started only after the previous is committed. The numbers below **are** the running order. An earlier draft of this document described five parallel waves; that framing is retired, because it never matched how the work is actually done and it invited a reader to start two batches that share a rule.
 
-The batches are not eight independent islands. Several pairs share ownership of the same rule, and if two sessions decide that ownership independently the result is a duplicated or contradicting rule — the exact defect this programme exists to remove. Run them in five waves instead. Inside a wave the batches are genuinely disjoint and can run as parallel chats; between waves, wait.
+### What has already run
 
-| Wave | Batches | Why together, why not sooner |
-|---|---|---|
-| 0 | 1 — Doctrine | Defines the quality bar everything else points at |
-| 1 | 4 — Data · 7 — Messaging and trust | Platform contracts. `alaa-data-layer` carries a repository-pattern gate and `alaa-trust-gateway-auth` a trust boundary that the language skills must obey, so these must be settled before those are written |
-| 2 | 2 — PHP · 3 — Go · 5 — Frontend | Language and stack conventions. Each consumes waves 0–1 and touches no other stack |
-| 3 | 6 — Infrastructure and delivery | Consumes the build and runtime conventions the language batches just set; overlaps Batch 2 on CI and container concerns, so it cannot run beside it |
-| 4 | 8 — Observability, docs, knowledge | Owns the repository-level cleanup and the README, so it must see the final inventory |
+| Batch | Status |
+|---|---|
+| 1 — Doctrine and cross-cutting standards | completed 2026-07-25 |
+| 2 — PHP and Laravel | completed 2026-07-26 |
+| 3 — Go | in flight as of 2026-07-26 |
 
-Known couplings that drive this: Batch 2 shares surface with 4 (data-layer), 7 (queues and trust), and 6 (CI and containers); Batch 5 shares surface with 6 (frontend build and delivery); Batch 8 documents all of them.
+### Renumbering, 2026-07-26
 
-### Rules for running batches in parallel
+Batches 4 through 8 were reordered after Batch 2 finished, because the original wave plan put the platform contracts before the language batches and that ordering had already been overtaken by events. Batches 1, 2 and 3 keep their numbers and memberships; only the three below move.
 
-- **Disjoint folders only.** The batch membership already guarantees this. Do not let a session edit a skill outside its batch — if it finds a defect elsewhere, it reports it rather than fixing it.
-- **Nobody but the coordinator edits shared files.** `README.md` and this document belong to the human between waves, and to Batch 8 at the end. A parallel session that edits them will collide.
-- **Commit between waves, not during.** Concurrent sessions writing the same git repository is how a file silently reverts.
-- **Learnings travel through project memory, not through this file.** Each batch writes its own topic file named for its batch; the next wave reads memory automatically. Do not have parallel sessions rewrite the memory index at the same time.
+| Was | Is now | Subject | Why it moved |
+|---|---|---|---|
+| 4 | **4** | Data and storage | unchanged |
+| 7 | **5** | Messaging, integrations, and trust | a platform contract; must be settled before the frontend batch consumes its trust boundary |
+| 5 | **6** | Frontend | a stack batch; consumes the two platform contracts above |
+| 6 | **7** | Infrastructure and delivery | consumes build and runtime conventions from every stack batch, so it goes after all of them |
+| 8 | **8** | Observability, documentation, knowledge | unchanged; still last |
 
-### Batch 1 — Doctrine and cross-cutting standards *(do first)*
+A note for anyone reading older material: the memory topic files are named for the batch that wrote them, and batches 1–3 are unaffected, so no existing name collides with this renumbering.
+
+### Why this order
+
+Three rules produce it, and each is a dependency rather than a preference.
+
+**Platform contracts before the stacks that obey them.** `alaa-data-layer` carries a repository-pattern gate and `alaa-trust-gateway-auth` a trust boundary that stack skills point at rather than restate. Batch 6 (Frontend) has not run yet, so it can still consume them in the intended order.
+
+**Stacks before infrastructure.** Batch 7 owns how a gate is *expressed* on a runner and in a container; the stack batches own *what* the gate is. The boundary settled in Batch 2 — a stack skill owns gates and predicates and emits no provider YAML, the platform skill owns the YAML and decides no gate — only works if the stack side is written first. This is also why Frontend and Infrastructure must never run at the same time: `alaa-frontend-devops` and `alaa-gitlab-ci-cd` plus `alaa-docker-production` would otherwise decide the same ownership question independently.
+
+**Documentation last.** Batch 8 owns `README.md` and the repository-level cleanup, so it must see the final inventory.
+
+**One consequence to carry into Batches 4 and 5.** They are being rewritten *after* two batches that already point into them. Batch 2 cites `alaa-data-layer references/50-redis-laravel-octane.md` "Step 0" and `alaa-trust-gateway-auth` by name. Before renaming or restructuring a reference file, grep `skills/sohrab/` for inbound pointers to it; keep the filename where that is possible, and where it is not, list every pointer the change breaks in the final report rather than editing a file outside the batch. Batch 8 runs a link check over the whole tree at the end as the backstop.
+
+### If two batches are ever run at once
+
+Not recommended while the order above holds, but if it happens: 4 and 5 are disjoint from each other and from 6; 6 and 7 are **not** disjoint and must never overlap; 8 runs alone. Inside any concurrent run the four rules below are what keep it safe.
+
+### Rules that hold whether batches run one at a time or not
+
+- **Disjoint folders only.** Do not let a session edit a skill outside its batch — if it finds a defect elsewhere, it reports it rather than fixing it.
+- **Nobody but the coordinator edits shared files.** `README.md`, `AGENTS.md` and this document belong to the human between batches, and to Batch 8 at the end.
+- **Commit between batches, not during.** Concurrent sessions writing the same git repository is how a file silently reverts. Committing from the host is faster and more reliable than committing through a mounted device bridge, where `git` on this repository regularly exceeds a 45-second tool ceiling and can leave a stale `index.lock` it has no permission to remove.
+- **Learnings travel through project memory, not through this file.** Each batch writes its own topic file named for its batch and adds one line to the memory index.
+
+### Batch 1 — Doctrine and cross-cutting standards *(done)*
 `alaa-project-constitution`, `alaa-services-contract`, `alaa-security-review`, `alaa-observability-soc`, `alaa-controlled-ops`, `service-runtime-kit-governance`
 Plus: decide and build the section 4 candidates.
 Deliverable beyond the skills themselves: a single named owner for the section 2 quality bar that every other skill can point at instead of restating.
 
-### Batch 2 — PHP and Laravel
+### Batch 2 — PHP and Laravel *(done)*
 `alaa-php-clean-code`, `alaa-laravel-architecture`, `alaa-octane-performance`, `alaa-laravel-job-rabbitmq`, `alaa-laravel-public-api-contract-pack`, `alaa-laravel-upgrade-all-packages`, `alaa-cicd-laravel-postgres`, `alaa-permission-generator`
 
-### Batch 3 — Go
+### Batch 3 — Go *(in flight)*
 `alaa-golang`, `alaa-golang-clean-code-principles`, `alaa-golang-fiber`, `alaa-go-chi-development`
 The 46 vendored `golang-*` skills are out of scope — see section 4b. Define the delegation boundary instead of restating what upstream already covers.
 
 ### Batch 4 — Data and storage
 `alaa-data-layer`, `alaa-mongodb-patterns`, `alaa-partitioned-table-fk-audit`, `alaa-crockford-base32-codecs`, `clickhouse-performance-schema-ops`
+Keep the repository-pattern gate in `alaa-data-layer references/50-redis-laravel-octane.md`: Batch 2 points at it by path and by section name.
 
-### Batch 5 — Frontend
-`alaa-frontend-developer`, `alaa-vue-typescript-clean-code`, `alaa-quasar-app-vite-v3`, `alaa-ui-ux-design-system`, `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, `alaa-mono-package`, `alaa-indexeddb-browser-storage`, `alaa-shaka-player`
-
-### Batch 6 — Infrastructure and delivery
-`alaa-docker-production`, `alaa-k8s-helm`, `alaa-gitlab-ci-cd`, `alaa-haproxy`, `alaa-makefile`, `caas-arvan-kuber`, `ansible-generator`, `ansible-validator`
-
-### Batch 7 — Messaging, integrations, and trust
+### Batch 5 — Messaging, integrations, and trust *(was Batch 7)*
 `alaa-async-messaging`, `alaa-trust-gateway-auth`, `alaa-bale-provider`, `alaa-sms-provider-mediana`, `tusd-upload-platform`, `jitsi-platform-architect`
+`alaa-async-messaging` is named by `alaa-services-contract` as the owner of prefetch values, acknowledgement mechanics, publisher confirms and DLQ replay, and its four reference files contain none of those words. It also restates retry and idempotency doctrine without citing `alaa-reliability-sla`. Nominally the owner, factually empty — fix that first.
+
+### Batch 6 — Frontend *(was Batch 5)*
+`alaa-frontend-developer`, `alaa-vue-typescript-clean-code`, `alaa-quasar-app-vite-v3`, `alaa-ui-ux-design-system`, `alaa-frontend-devops`, `alaa-frontend-doc-annotations`, `alaa-mono-package`, `alaa-indexeddb-browser-storage`, `alaa-shaka-player`
+`alaa-vue-typescript-clean-code` carries a stale hardcoded model name.
+
+### Batch 7 — Infrastructure and delivery *(was Batch 6)*
+`alaa-docker-production`, `alaa-k8s-helm`, `alaa-gitlab-ci-cd`, `alaa-haproxy`, `alaa-makefile`, `caas-arvan-kuber`, `ansible-generator`, `ansible-validator`
+Three stale hardcoded model names live here: `alaa-gitlab-ci-cd`, `alaa-k8s-helm`, `caas-arvan-kuber`. `alaa-gitlab-ci-cd` must also absorb the stack-versus-platform boundary Batch 2 settled: it owns YAML expression and decides no gate.
 
 ### Batch 8 — Observability, documentation, and knowledge
 `alaa-signoz-clickhouse-docs`, `vector-rust-observability-pipelines`, `alaa-docs-farsi`, `alaa-postman-collections`, `alaa-basic-memory-os`
-Plus the repository-level cleanup in section 6.
+Plus the repository-level cleanup in section 6, and a link check that every cross-skill path in `skills/sohrab/` resolves.
 
 ---
 
@@ -169,7 +199,7 @@ Plus the repository-level cleanup in section 6.
 
 **`agents/openai.yaml` coverage.** The README states every shipped skill has one. Verify per batch rather than assuming.
 
-**Root `AGENTS.md` and `CLAUDE.md` are byte-identical duplicates.** One runtime reads each, so two files are legitimate, but keeping two copies in sync by hand guarantees they drift. Decide on a single source with a generation or link step, and cover it when Batch 1 reaches instruction-file doctrine. `alaa-prompting-guide/references/70-agent-instruction-files.md` discusses the trade-offs.
+**Root `AGENTS.md` and `CLAUDE.md` are byte-identical duplicates.** One runtime reads each, so two files are legitimate, but keeping two copies in sync by hand guarantees they drift. Decide on a single source with a generation or link step. Batch 1 did not cover it, so it falls to Batch 8 with the rest of the repository-level cleanup. `alaa-prompting-guide/references/70-agent-instruction-files.md` discusses the trade-offs.
 
 **`install-skills.md` is correct and worth treating as authoritative** for install paths — it already targets `~/.codex/skills`, which is the field-verified location. If any skill's own installation docs disagree with it, the skill is wrong, not this file.
 
@@ -209,13 +239,13 @@ Paste this into a fresh session, changing only the `BATCH` line.
 
 GOAL: upgrade one batch of my skills under D:\Sohrab\Project\skills\skills\sohrab\
 
-BATCH: 1 — Doctrine and cross-cutting standards
+BATCH: 4 — Data and storage
 
 READ FIRST, before anything else:
 1. D:\Sohrab\Project\skills\skills\sohrab\UPGRADE-CARRYOVER.md — the working contract.
    Section 2 is the quality bar, section 3 the upgrade standard, section 4 the candidate
-   new skills, section 4b the vendored packs, section 5 this batch's membership and the
-   wave rules, section 7 the definition of done.
+   new skills, section 4b the vendored packs, section 5 the running order and this batch's
+   membership, section 7 the definition of done.
 2. Project memory — model and effort decisions, the Codex skill install path, the recurring
    defect classes, the vendored-pack rule, and why a skill's prose is its executable logic.
 

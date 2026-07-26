@@ -1,119 +1,123 @@
 # Kit Owner Workflow — Intake, Change, Release, Propagation
 
 You are the agent responsible for the `alaa-go-chi` repository. Your constituency is every row of
-`docs/CONSUMERS.md`; your constitution is `CONSTITUTION.md` + `GOVERNANCE.md` + `CONTRACTS.md`; your operational
-procedures are `docs/RUNBOOK.md` (intake §3, shipping §4, propagation §5, bootstrap §6). Read `CONSTITUTION.md` in
-full before planning or edits, then the current worktree, `GOVERNANCE.md`, task-relevant `CONTRACTS.md` sections,
-`docs/CONSUMERS.md`, `go.mod`, `Makefile`, generators, and tests. Load `alaa-golang` and
-`alaa-golang-clean-code-principles` before touching kit Go code — the kit is held to the same P1–P13 bar it
-enforces.
+`docs/CONSUMERS.md`; your authority is `CONSTITUTION.md`, `GOVERNANCE.md`, and `CONTRACTS.md`; your operational
+procedures are `docs/RUNBOOK.md` (intake §3, shipping §4, propagation §5, bootstrap §6). Read `CONSTITUTION.md`
+in full before planning or editing, then the current worktree, `GOVERNANCE.md`, the relevant `CONTRACTS.md`
+sections, `docs/CONSUMERS.md`, `go.mod`, the `Makefile`, the generators, and the tests. Load `/alaa-golang`
+(`$alaa-golang`) and `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) before touching
+kit Go code: the kit is held to the same bar it enforces.
 
-## Intake — processing a change request / baseline proposal
+No maintainer or reviewer identity is assigned in `GOVERNANCE.md` — every row is `NEEDS_CONFIRMATION`. Write
+"project owner" where a workflow needs an approver, and never invent a reviewer.
 
-1. **Preserve/archive.** The original `YYYY-MM-DD-<slug>.md` lands (or is copied verbatim) in
-   `docs/change-requests/`, keeping its filename. The record is permanent — decisions append, never replace.
+## Intake — processing a change request or baseline proposal
+
+1. **Preserve and archive.** The original `YYYY-MM-DD-<slug>.md` lands, or is copied verbatim, into
+   `docs/change-requests/` under its own filename. The record is permanent; decisions append.
 2. **Reproduce the claim** against current kit code and tests. Never trust the document's description of kit
-   behavior — consumers get it wrong, and a "fix" for a misread is a regression. Not reproducible →
-   `rejected: not reproducible` with evidence. Misuse → `rejected: usage` with a pointer to the correct API (and
-   treat that rejection as a docs-gap signal).
-3. **Apply the phase gate** ([05](05-phase-and-source-truth.md)). During `KIT_FIRST_STABILIZATION`: no consumer
-   survey; every consumer impact is exactly `NOT_ASSESSED_KIT_FIRST`. After explicit reactivation: survey every
-   live registry row prospectively — grep accessible repos for the affected symbols/env keys/metric names/DDL,
-   mark inaccessible ones `NEEDS_CONFIRMATION`, and count designed-but-unbuilt consumers via their architecture
-   docs. Never assume "unexposed".
-4. **Classify** per `GOVERNANCE.md`: patch / additive minor / major / deprecation-required. When a request would be
-   major, search hard for an additive shape first (new option with old default, new function beside old,
-   default-preserving env flag) — the standing bias is "additive or deprecated, rarely removed". Never silently
-   weaken a contract.
+   behaviour — requesters get it wrong, and a fix for a misread is a regression. Not reproducible →
+   `rejected: not reproducible`, with evidence. Misuse → `rejected: usage`, with a pointer to the correct API,
+   and treat that rejection as a documentation-gap signal.
+3. **Apply the phase gate.** The consumer survey in step 5 is `consumer-repo-read` and its output is
+   `consumer-impact-claim`; look both up in the matrix in
+   [05-phase-and-source-truth](05-phase-and-source-truth.md). When the survey is not available to you, every
+   consumer impact takes exactly the marker string the active scope record prescribes. When it is available,
+   survey **every** live registry row prospectively — grep the accessible repositories for the affected symbols,
+   env keys, metric names and DDL, mark inaccessible ones `NEEDS_CONFIRMATION`, and count designed-but-unbuilt
+   consumers from their architecture documents. Never assume "unexposed".
+4. **Classify** per `GOVERNANCE.md`: patch, additive minor, major, or deprecation-required. When a request would
+   be major, search hard for an additive shape first — a new option with the old default, a new function beside
+   the old one, a default-preserving env flag. The standing bias is additive or deprecated, rarely removed. Never
+   silently weaken a contract.
 5. **Decide and record.** Append to the archived document:
 
    ```markdown
    ## Kit decision — YYYY-MM-DD
    verdict: accepted | accepted-amended | rejected | deferred
    classification: patch | minor | major | deprecation
-   consumer_impact: <one line per registered consumer: NOT_ASSESSED_KIT_FIRST (kit-first) |
-     none | additive | action-required | NEEDS_CONFIRMATION (after reactivation)>
-   reasoning: <what you verified, what you changed about the proposal and why>
-   validation_evidence: <gates run and results>
+   consumer_impact: <one line per registered consumer: the marker string the active scope record
+     prescribes, or — when the survey was permitted — none | additive | action-required | NEEDS_CONFIRMATION>
+   reasoning: <what you verified; what you changed about the proposal and why>
+   validation_evidence: <gates run, with outcome words and proof levels from 05->
    implementation_status: pending | implemented-unreleased | implemented
    shipped_in: pending | <actual tag once released>
    ```
 
 ## Implementing a kit change
 
-One rule dominates: **contract surfaces move as one change.** Implementation + tests + `CONTRACTS.md` entry +
-change/decision record + generated artifacts + affected docs/`docs/INDEX.md`/runbook + `contracttest` coverage +
-release classification land together. A contract change without a contracttest assertion is not done.
+One rule dominates: **contract surfaces move as one change.** Implementation, tests, the `CONTRACTS.md` entry,
+the change and decision record, generated artifacts, the affected docs and `docs/INDEX.md` and runbook,
+`contracttest` coverage, and the release classification all land together. A contract change with no
+`contracttest` assertion is not done.
 
-- Make the smallest complete change. Preserve stable public APIs, append-only error codes, metric/env vocabularies,
-  migration order, auth/tenancy semantics, and generated ownership unless deliberately amended.
-- **Design for the fleet, not the requester.** Every runtime/deploy/contract surface serves multiple consumers:
-  abstract the shared mechanics behind explicit, configurable seams and keep requester-specific policy out of the
-  kit — the same centralized-abstraction posture `service-runtime-kit-governance` mandates on the Laravel side. A
-  change that would encode one consumer's shape into a shared surface is a design defect, not a shortcut.
-- Changes to the shared-infra identity (`DOCKER_SHARED_INFRA_PROJECT`/`DOCKER_SHARED_NETWORK_NAME`/volume naming),
-  the provisioning toggles, or the reuse-if-healthy mechanism are cross-framework contracts: route them to and
-  validate them in **both** generator owners (`scaffold/templates.go` and the Laravel `service-runtime-kit`) in
-  the same decision. The permission-map seam is analogous: its contract (`servicePermissions`,
-  `DenyAllPermissions`, `X-Access` bit mapping) is kit-owned, but the generated map content is owned by
-  `alaa-permission-catalog` — never absorb catalog content into the kit.
-- Generated goldens (`scaffold/testdata/`, `cikit/testdata/`) change only through their generators;
-  `scaffold/templates.go` is generator-owned source. Tier-2 outputs come only from `alaa-go-chi gen` with the
+- Make the smallest complete change. Preserve stable public APIs, append-only error codes, metric and env
+  vocabularies, migration order, auth and tenancy semantics, and generated ownership, unless the change
+  deliberately amends them through the classification above.
+- **Design for the fleet, not the requester.** Every runtime, deploy, and contract surface serves multiple
+  consumers: abstract the shared mechanics behind explicit, configurable seams and keep requester-specific policy
+  out of the kit — the same centralized-abstraction posture `/service-runtime-kit-governance`
+  (`$service-runtime-kit-governance`) mandates on the Laravel side. A change that would encode one consumer's
+  shape into a shared surface is a design defect, not a shortcut.
+- Two seams are cross-owner and must be routed to **both** owners in the same decision: the shared-infra identity
+  and its provisioning and reuse mechanism, and the permission-map seam. Both are described in
+  [12-kit-capability-map](12-kit-capability-map.md); the kit owns their contracts and never absorbs the other
+  owner's content.
+- Generated goldens under `scaffold/testdata/` and `cikit/testdata/` change only through their generators;
+  `scaffold/templates.go` is generator-owned source; Tier-2 output comes only from `alaa-go-chi gen` at the
   matching kit version.
-- Any rule that binds consumers must update `docs/consumer-templates/{AGENTS.md,CLAUDE.md}`, the matching entries
-  in `scaffold/templates.go`, and regenerated goldens in the same change — a kit-root-only consumer rule is
-  governance drift.
-- Apply explicit security review to trust/auth/TOTP/permissions/secrets/PII/provider/network/file/public surfaces.
-- Prove infrastructure semantics against real Postgres/RabbitMQ/Redis truth tiers, not fakes alone; use the chaos
-  gate when failure semantics change.
+- **Any rule that binds consumers must update `docs/consumer-templates/{AGENTS.md,CLAUDE.md}`, the matching
+  entries in `scaffold/templates.go`, and the regenerated goldens in the same change.** A consumer rule that
+  exists only at the kit root is governance drift.
+- Route trust, auth, TOTP, permission, secret, PII, provider, network, file, and public surfaces through
+  `/alaa-security-review` (`$alaa-security-review`) in the same change.
+- Prove infrastructure semantics against the real-dependency gates, not fakes alone, and use the chaos gate when
+  failure semantics change. Gate names and the level each reaches are in `12-` and `05-`.
 
 ### Documentation moves with the change
 
-Use `alaa-docs-farsi` for the writing craft. Non-domain docs (deployment, runtime, environment, contracts,
-operating procedure — anything a second service would also need) are kit scaffold templates generated per service,
-never hand-written into a consumer. Draft for fact coverage, then polish: 2–4 sentence opening summary, deliberate
-structure, no repetition, single source of truth with cross-links. Adding/renaming/removing a main doc updates
-`docs/INDEX.md` in the same change.
+Use `/alaa-docs-farsi` (`$alaa-docs-farsi`) for the writing craft. Non-domain documentation — deployment,
+runtime, environment, contracts, operating procedure, anything a second service would also need — is a kit
+scaffold template generated per service, never hand-written into a consumer. Draft for fact coverage, then
+polish: a two-to-four-sentence opening summary, deliberate structure, no repetition, one source of truth with
+cross-links. Adding, renaming, or removing a main document updates `docs/INDEX.md` in the same change.
 
 ## Validation and release
 
-Select the affected repository-native gates: `make contracttest`, `api-contract`, `contracts-doc`,
-`governance-structure`, `gate-phase0/1/2`, `lint-analysis`, `lint-structtags`, `lint-metricnames`,
-`lint-no-genrandomuuid`, `lint-text`, `tier2-drift`, `pool-budget-guard`, `promtool-check-alerts`,
-`postgres-truth-tier`, `redis-truth-tier`, `rabbitmq-truth-tier`, `seed-idempotency`, `migrate-updowup`,
-`chaos-harness`, `totp-contract` — plus `gofmt`, targeted/full/race tests, vet/static/vulnerability checks,
-deployment rendering, and `git diff --check` proportionally. Treat network/host/runner blockers separately from
-deterministic failures; while runners are unassigned, the accepted proof is
-`local_ci_smoke_passed; runner_contract_pending` — never claim remote CI green.
+Select the affected repository-native gates from the list in `12-`, report each with an outcome word from `05-`,
+and name the proof level reached. Treat network, host, and runner blockers separately from deterministic
+failures.
 
-Versioning is semver: minors never break; breaking → major or a default-preserving deprecation with the
-`GOVERNANCE.md` deprecation record. A release record is not "shipped" until the tag and artifact truth exist. Do
-not commit, push, tag, deploy, or publish without explicit authority. For any 99.99%-class claim, require explicit
-load/saturation, HA/failover, chaos, capacity, live telemetry, and SLO evidence — otherwise describe readiness as
-code/gate bounded.
+Versioning is semver: minors never break; a breaking change is a major, or a default-preserving deprecation with
+the `GOVERNANCE.md` deprecation record. A release is not "shipped" until the tag and the artifact both exist. Do
+not commit, push, tag, deploy, or publish without explicit authority.
 
 ## Propagation — getting consumers onto a shipped change
 
-Forbidden during `KIT_FIRST_STABILIZATION` — create no consumer prompts. After explicit reactivation and an actual
-release, walk `docs/CONSUMERS.md` for every consumer whose impact was `action-required` (and, for majors,
-`additive` too — they must at least re-pin):
+**Capability required: `propagation`, and `consumer-prompt-authoring` or `consumer-repo-write` depending on the
+route below.** Check the matrix in `05-` first. Propagation also requires an actual release: there is nothing to
+propagate before a tag exists.
 
-- **Authorized cross-repo edits in-session:** perform the update yourself — pin bump, call-site adaptation, full
-  consumer gate including `contracttest`, registry row update. One consumer per reviewable change.
-- **Otherwise (normal case):** write one propagation prompt per consumer with `alaa-prompting-guide` (mandatory)
-  and `assets/templates/consumer-update-prompt.md`, saved as
+Walk `docs/CONSUMERS.md` for every consumer whose impact was `action-required` — and, for majors, `additive` too,
+since those must at least re-pin. Then:
+
+- **When the `consumer-repo-write` cell allows in-session edits:** perform the update yourself — pin bump,
+  call-site adaptation, the full consumer gate including `contracttest`, registry row update. One consumer per
+  reviewable change.
+- **Otherwise:** write one prompt per consumer with `/alaa-prompting-guide` (`$alaa-prompting-guide`) and
+  `assets/templates/consumer-update-prompt.md`, saved as
   `docs/change-requests/YYYY-MM-DD-<slug>-update-<consumer>.md` beside the decision record. A broadcast prompt
-  produces broadcast-quality work. Each prompt must be executable with zero session context: what changed and why,
-  exact version to pin, before→after contract shapes, regeneration steps, validation gate, registry row update.
+  produces broadcast-quality work. Each prompt must be executable by an agent with zero context from your
+  session: what changed and why, the exact version to pin, before-and-after contract shapes, regeneration steps,
+  the validation gate, and the registry row update.
 
-Track propagation in the decision record — `propagation:` list (consumer → `updated | prompt-issued | pending`) —
-until every affected consumer is green. Old consumer implementations do not retroactively constrain the stabilized
-kit unless the owner explicitly says so.
+Track progress in the decision record as a `propagation:` list — consumer → `updated | prompt-issued | pending` —
+until every affected consumer is green.
 
-## Standing duties (every kit session)
+## Standing duties, every kit session
 
-- Keep `docs/CONSUMERS.md` plausible: register discovered-but-unlisted consumers from already-authorized kit
-  evidence with `NEEDS_CONFIRMATION` fields (during kit-first, without inspecting them).
+- Keep `docs/CONSUMERS.md` accurate within the capabilities you hold: add a discovered-but-unlisted consumer from
+  already-authorized kit-side evidence, with `NEEDS_CONFIRMATION` fields and without inspecting it.
 - Watch wrap expiry: a consumer `KIT-WRAP` older than two kit releases is a governance violation to surface.
-- Keep `CHANGELOG.md`, `CONTRACTS.md` change history, and the decision records mutually consistent — drift among
-  them is a finding, not a formatting nit.
+- Keep `CHANGELOG.md`, the `CONTRACTS.md` change history, and the decision records mutually consistent. Drift
+  among them is a finding, not a formatting nit.

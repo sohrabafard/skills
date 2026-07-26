@@ -1,63 +1,54 @@
-# HTTP API Framework Choice
+# HTTP Framework Decision
 
-Use this file when choosing, reviewing, or justifying the HTTP layer for a Go service.
+Read the repository's `go.mod` and the user's current request, then apply the **first** row below that matches. There
+is no judgment step in this table. Traffic volume, request rate, concurrency, latency target, and SLA figure are not
+inputs to it and must not appear in your reasoning about it.
 
-## Decision order
+| Observed condition | Do this |
+|---|---|
+| `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` **and** the user named Fiber in this request | Stop. Reply that the repository is a kit consumer, so its HTTP framework is a kit-owned surface and changing it is a governance decision, not a code change. Route the request through `/alaa-go-chi-development` (`$alaa-go-chi-development`) as a change request. Write no Fiber code unless the user, after reading that, instructs you to proceed anyway. |
+| `go.mod` requires `github.com/gofiber/fiber/v2` or `github.com/gofiber/fiber/v3` | Fiber. Load `/alaa-golang-fiber` (`$alaa-golang-fiber`). |
+| The user named Fiber in this request and no row above matched | Fiber. Load `/alaa-golang-fiber` (`$alaa-golang-fiber`). |
+| The user asked for a prototype, spike, or benchmark and named Fiber as its subject, or the task is building a Fiber-specific kit | Fiber. Load `/alaa-golang-fiber` (`$alaa-golang-fiber`). |
+| `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` | chi, supplied by the kit's `httpkit`. Read `31-chi-api-guide.md`. |
+| `go.mod` requires `github.com/go-chi/chi/v5` and does not require the kit | chi. Read `31-chi-api-guide.md`; treat the kit's server bounds and middleware chain as the target shape rather than as code you already have. |
+| No row above matched, including a new service with no `go.mod` yet | The kit, and therefore chi. Read `31-chi-api-guide.md` and bootstrap the service through `/alaa-go-chi-development` (`$alaa-go-chi-development`). |
 
-1. If the user explicitly says chi, use chi.
-2. If the user explicitly says Fiber, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ).
-3. If the repo already imports `github.com/go-chi/chi/v5`, preserve chi.
-4. If the repo already imports `github.com/gofiber/fiber/v3` or older Fiber, load `$alaa-golang-fiber` and preserve Fiber.
-5. If the repo is raw and small/simple, recommend chi.
-6. If the repo is raw and large, high-concurrency, latency-sensitive, or SLA-heavy, recommend Fiber and load `$alaa-golang-fiber`.
-7. If the repo is raw and unclear, inspect expected traffic, route count, middleware needs, team preference, and deployment model before choosing.
+## Forbidden
 
-Do not migrate frameworks casually.
+**Forbidden:** selecting Fiber for a service that would otherwise be a kit consumer, on any grounds. The only channel
+for that outcome is an owner decision recorded as a change request through `/alaa-go-chi-development` (`$alaa-go-chi-development`).
 
-## Choose chi when
+**Forbidden:** citing expected traffic, request rate, concurrency, p99 latency, or an SLA percentage as a reason for a
+framework. Those are admission-control and capacity questions, and none of them is answered by the router library.
+**Rule:** when a service's behaviour under load is in question, read `46-chi-under-load.md` — it states what the kit
+already bounds, what it does not, and where each missing control is taken.
 
-- the service is small or simple
-- standard `net/http` semantics are more valuable than framework features
-- `httptest`, `otelhttp`, `promhttp`, and ordinary middleware compatibility matter most
-- the team wants low abstraction and long-term maintainability
-- the repo already uses chi
+**Forbidden:** converting a service from chi to Fiber, or from Fiber to chi, as part of another task. **Rule:** perform
+a framework migration only when the user asks for that migration in the current request; when a migration would help,
+say so and stop.
 
-Read `31-chi-api-guide.md` next.
+**Forbidden:** adding a third HTTP router or web framework to an Ala Go repository. **Rule:** the two supported
+routers are the kit's chi and Fiber; a service needing something neither provides files a change request through
+`/alaa-go-chi-development` (`$alaa-go-chi-development`).
 
-## Choose Fiber when
+## Why this is settled, and on what date
 
-- the repo already uses Fiber
-- the user explicitly chooses Fiber
-- the service is large or high-concurrency
-- strict latency or heavy request volume makes Fiber's model worth the tradeoff
-- the team accepts `fasthttp` semantics and Fiber-specific context rules
+Settled by the project owner on **2026-07-26**, replacing an earlier rule that routed "large, high-concurrency,
+latency-sensitive, or SLA-heavy" services to Fiber.
 
-Load `alaa-golang-fiber` ( `$alaa-golang-fiber` ) next.
+That earlier rule failed on its own terms. The platform quality bar states that every Ala service carries an SLA above
+99.99%, so "SLA-heavy" selected every service, and the rule read literally moved every new Go service off the shared
+kit — the exact duplication the kit exists to end. The rule was also written before `alaa-go-chi` existed and never
+mentioned it.
 
-## Why the split exists
+The kit is chi-based. A service on the kit inherits validated server bounds, a fixed middleware chain, a router that
+refuses an unlabelled route, one error-envelope mapper, and a four-phase shutdown, none of which it has to write or
+maintain. A service off the kit writes and maintains all of it alone, and every fix has to be made again in each copy.
+That inheritance, not router throughput, is what decides the framework.
 
-Chi keeps Go services close to the standard library. That is excellent for small services and for teams that want the simplest possible HTTP stack.
+`alaa-golang-fiber` stays maintained for exactly two purposes the owner named: building or debugging a service that is
+already Fiber, and a possible future Fiber-specific kit. It is not a capacity escape hatch.
 
-Fiber can be a strong choice for larger, high-concurrency services, but it is built on `fasthttp`, not standard `net/http`. That means agents must learn Fiber-specific context, middleware, testing, proxy, and shutdown behavior before editing a Fiber service.
-
-## Red flags
-
-Before choosing chi:
-
-- the repo already has deep Fiber conventions
-- the service is explicitly expected to be very high-concurrency and the team wants Fiber
-
-Before choosing Fiber:
-
-- the service is small and simple
-- the team only wants Fiber because it feels like Express
-- the repo depends heavily on standard `net/http` middleware
-- no one has accepted Fiber-specific context and proxy behavior
-
-## Practical rule
-
-- explicit framework choice: follow it
-- existing framework: preserve it
-- raw small/simple service: chi
-- raw large/high-concurrency service: Fiber
-- migration: architecture work, not routine refactoring
+Do not re-open this decision from a performance argument. If new evidence contradicts it, record the evidence and take
+it to `/alaa-go-chi-development` (`$alaa-go-chi-development`) as a change request; do not resolve it inside a service.

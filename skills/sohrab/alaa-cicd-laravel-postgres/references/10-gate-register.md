@@ -39,7 +39,7 @@ Every check in a pipeline appears below with a class; one present in the pipelin
 
 ## The deviation register
 
-Three rules have an exit — a test engine that is neither SQLite nor production's Postgres, a baseline that grew, and a diff-test exemption. Each requires all three of the following, and an exit missing one is not an exit, so the gate fails: **the reason**, in one sentence naming what forced it; **the approver**, one named person from the repository's review-owner list, never a team; and **the location**, which is the repository's committed deviation register (`AGENTS.md` or the file it names) and never a merge-request comment, because a comment is not readable by the next run. A deviation is re-reviewed by the same approver when the engine version, the framework major, or the exempted file changes.
+Three rules have an exit — a test engine that is neither SQLite nor production's Postgres, a baseline that grew, and a diff-test exemption. Each requires all three of the following, and an exit missing one is not an exit, so the gate fails: **the reason**, in one sentence naming what forced it; **the approver**, the name of the human who accepted it — any human on the team may, and **no agent may, ever**: an agent that meets a blocking finding records what it found and stops, then asks a human, because an unsigned exit is indistinguishable from one the agent wrote for itself; and **the location**, which is the repository's committed deviation register (`AGENTS.md` or the file it names) and never a merge-request comment, because a comment is not readable by the next run. A deviation is re-reviewed by the same approver when the engine version, the framework major, or the exempted file changes.
 
 ## What each script exit obliges
 

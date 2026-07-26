@@ -1,22 +1,21 @@
-# P12–P13 · Testing and Cross-Service Contracts, plus the Pre-Commit Checklist
+# P12–P13 · Testing and Cross-Service Contracts
 
 ## P12 — Tests Prove Behavior at the Boundary You Own
 
 Three tiers, each proving a different boundary, none substituting for another:
 
 - **Use-case tests** run against fakes at ports, table-driven. Where business rules *are* the product (news's
-  grant rules and visibility predicate; notification's routing and etiquette rules), the tables are exhaustive —
+  grant rules and visibility predicate; notification's routing and etiquette rules), the tables are exhaustive:
   every permission × audience combination, every suppression path.
-- **Infrastructure tests** run against real Postgres/RabbitMQ via testcontainers. Anything with
-  Postgres-specific SQL (`ON CONFLICT`, `SKIP LOCKED`, partial indexes, jsonb) is *only* tested here. The
-  SQLite fast lane exists strictly inside its fence (portable-SQL query sets, build-tagged, never a CI
-  substitute — kit framework §5.3).
-- **`contracttest`** runs in every service's CI against the service's own router — correlation headers,
-  canonical envelope on every error status, strict-JSON behavior, readiness exactness, metric-name rules. This
-  is where "no dual behavior" is *proven*, not reviewed.
+- **Infrastructure tests** run against real PostgreSQL, RabbitMQ, Redis, or ClickHouse via testcontainers.
+  Anything with store-specific SQL — `ON CONFLICT`, `FOR UPDATE SKIP LOCKED`, partial indexes, `jsonb` — is
+  **only** tested here. The SQLite fast lane exists strictly inside its fence: portable-SQL query sets,
+  build-tagged, never a substitute for the real-store lane in CI.
+- **`contracttest`** runs in every service's CI against the service's own router, as black-box HTTP. It asserts
+  the trust boundary, the canonical error envelope on every error status, readiness exactness, and the route
+  inventory. This is where "no dual behavior" is *proven*, not reviewed.
 
-Behavior changes start with a failing test. (TDD cadence: `alaa-golang` reference 63; table/testify mechanics:
-`golang-testing`, `golang-stretchr-testify`.)
+Behavior changes start with a failing test.
 
 ```go
 // RIGHT — the shape of an Ala use-case test: table + fake port + errkit assertion
@@ -31,21 +30,28 @@ func TestCreateNews_GrantRules(t *testing.T) {
 }
 ```
 
-The anti-pattern to refuse: a test that mocks the thing it claims to test (mocking the repository *inside* a
-repository test, mocking the envelope renderer inside a contract test). Fakes stand in for what you *don't*
-own in this test; the boundary under test is always real.
+**The one substitution to refuse:** never fake the boundary the test exists to prove. A `contracttest` run whose
+envelope renderer, router, or trust middleware has been replaced by a stand-in proves nothing — it asserts that
+the stand-in behaves like itself. Fakes stand in for what you do *not* own in this test; the boundary under test
+is always the real one.
+
+Everything else about testing is owned elsewhere and is not restated here: which layer a given behavior should
+be tested at, when a fake beats a stub beats a mock, flake control, and coverage policy belong to
+`/alaa-testing-strategy` (`$alaa-testing-strategy`). Table and assertion mechanics belong to `/golang-testing`
+(`$golang-testing`) and `/golang-stretchr-testify` (`$golang-stretchr-testify`) through the `/alaa-golang`
+(`$alaa-golang`) router; the TDD cadence is `/alaa-golang` (`$alaa-golang`) reference 63.
+
+**Proof.** `contracttest` is P12's own gate and it is real: `make contracttest` (`go test ./contracttest/...`)
+in the service, plus the trust-boundary assertions (`contracttest.AssertTrustBoundary` and the TOTP challenge
+assertions) that `make totp-contract` exercises in the kit. A service whose CI does not run `contracttest`
+against its own router has not satisfied P12 regardless of its unit-test count.
 
 ## P13 — Cross-Service Knowledge Travels as Contracts, Never as Reach-Ins
 
 A service that wants another domain's data uses its API or its events — never its tables, never a copied
 predicate, never a guessed payload. Shared logic that *must* be byte-identical across services (the audience
 conjunction) lives in the kit (`audiencekit`) precisely so a second implementation cannot exist. Command and
-event field enumerations are exhaustive by contract, and producer/consumer lists are compared by a drift test.
-
-Unknown external facts — a provider's batch ceiling, an account's header format, an id-to-recipient mapping —
-are marked (`NEEDS_MEDIANA_CONFIRMATION`, `[gap]`, `[question]`) and carried visibly until confirmed. An honest
-`[gap]` outranks a plausible guess, always: the guess ships a silent wrong behavior; the marker ships a visible
-to-do. (Exact platform contracts — envelopes, headers, queues, readiness: the `alaa-services-contract` skill.)
+event field enumerations are exhaustive by contract.
 
 ```go
 // WRONG — reaching into another service's table because "it's right there"
@@ -55,19 +61,24 @@ rows, _ := pool.Query(ctx, `SELECT mobile FROM auth.users WHERE ostan_id = $1`, 
 //   user_projection.upsert.v2 feeds the local projection; expansion reads the local copy.
 ```
 
-## The Pre-Commit Checklist
+**The `[gap]` discipline.** An external fact you have not read from an authoritative source is unknown, and an
+unknown ships as a visible marker, never as a plausible value. Mark it `[gap]`, `[question]`, or
+`NEEDS_<PROVIDER>_CONFIRMATION` in the code, the payload comment, and the pull-request description, and carry it
+until someone confirms it. This applies to a provider's batch ceiling, an account's header format, an
+id-to-recipient mapping, a queue name, a rate limit, a retry ceiling — anything you would otherwise write from
+inference. A guess ships a silent wrong behavior; a marker ships a visible to-do. An honest `[gap]` outranks a
+plausible guess, always. Exact platform contracts — envelopes, headers, queues, readiness — are owned by
+`/alaa-services-contract` (`$alaa-services-contract`); read the fact from there before marking it unknown.
 
-Run this before every commit/PR in an Ala Go service; it is the whole skill in twelve lines.
+**Proof — say this plainly: the gate does not exist yet.** There is no producer/consumer message-type drift test
+in the kit. Verified against kit source 2026-07-26: the nearest gates are `apicontractkit.CoverageDiff`, run by
+`make api-contract` (`go test ./apicontractkit/...`), which proves the router's route inventory and the authored
+OpenAPI spec agree on routes, methods, and path parameters; and `make tier2-drift`, which proves generated files
+still match their generator. Neither compares what one service publishes against what another consumes.
 
-- [ ] Nothing kit-owned re-implemented locally (P1); route postures declared (P2).
-- [ ] No raw trusted headers past the edge; identity types UUIDv7-project / int64-user (P3).
-- [ ] Errors are typed values mapped once at the boundary (P4).
-- [ ] Imports flow inward only; side effects behind ports (P5).
-- [ ] Atomic truths share one transaction; facts leave via the outbox (P6).
-- [ ] Everything re-runnable proven idempotent by a run-twice test (P7).
-- [ ] Every wire field tagged snake_case; every public id UUIDv7 via idkit (P8).
-- [ ] Every goroutine owned, cancellable, drained (P9).
-- [ ] Config injected at boot; vocabulary as constants (P10).
-- [ ] Metrics bounded and kit-named; correlation threads unbroken; dashboards/alerts/runbook exist (P11).
-- [ ] Failing test first; fakes at ports; contracttest green (P12).
-- [ ] No reach-ins; shared logic in the kit; unknowns marked, never invented (P13).
+Two things to do about that. Until the gate exists, prove the pair by hand in the producing service: a test that
+marshals each command and event struct and asserts the resulting JSON key set equals a checked-in golden file,
+plus the same golden file vendored into the consuming service's test — a rename then fails on both sides instead
+of failing silently in production. And file the real gate: one timestamped change request proposing a
+message-type registry with a drift test comparing declared producers against declared consumers, submitted
+through `/alaa-go-chi-development` (`$alaa-go-chi-development`) using its change-request template.

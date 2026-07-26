@@ -1,306 +1,157 @@
-# Chi API Guide
+# chi API Guide
 
-## Table of contents
+How to register routes and write handlers in a chi service. The service's package layout is in
+`60-service-architecture-patterns.md`; server bounds, decode limits, deadlines, and shutdown are in
+`45-failure-behavior-at-the-call-site.md`; this file does not repeat either.
 
-- Why `chi` fits this stack
-- Minimal service shape
-- Router construction
-- Middleware order
-- Trusted gateway integration
-- Validation and request decoding
-- Error mapping
-- Health and readiness
-- Timeouts and shutdown
-- Observability
-- Testing
-- Common mistakes
+## Which mode you are in
 
-## Why `chi` fits small services in this stack
+Read `go.mod` first. The two modes differ in what you are allowed to build, not in style:
 
-`chi` is the best default for raw small or simple HTTP APIs in this pack because it keeps you in `net/http`.
+- **Kit mode** — `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`. The router, the middleware chain, the error
+  envelope, the readiness surface, and the server's bounds already exist. Your job is to add routes and handlers to
+  them.
+- **Standalone mode** — `go.mod` requires `github.com/go-chi/chi/v5` and not the kit. You build those pieces yourself,
+  and the kit's shape is the target you build toward.
 
-That gives you straightforward behavior with:
+Every section below marks which mode it governs.
 
-- `context.Context`
-- `http.Server`
-- `httptest`
-- `otelhttp`
-- `promhttp`
-- reverse proxies and trusted gateway headers
-- standard middleware and standard transports
+## Route registration — kit mode
 
-For small services, that simplicity is more valuable than framework cleverness. For raw large, high-concurrency, or
-SLA-heavy services, load `alaa-golang-fiber` ( `$alaa-golang-fiber` ) and consider Fiber instead.
+**Rule:** register every route through a route family. A route that reaches the mux without a declared family is
+rejected at boot with `ErrUnlabeledRoute` (`httpkit/route_inventory.go`, read 2026-07-26) — the router fails closed, so
+an unlabelled route is a startup failure, not a silently public endpoint.
 
-## Minimal service shape
+**Forbidden:** calling `chi.Router.Get`, `.Post`, `.Handle`, or `.Mount` on the kit's mux directly, and constructing a
+second `chi.Router` alongside it. **Rule:** add the route to the family that matches its posture; which posture a route
+carries is owned by `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) P2.
 
-A clean `chi` service usually looks like this:
+## Route registration — standalone mode
 
-```text
-cmd/<service>/main.go
-internal/app/
-internal/httpserver/
-internal/httpapi/
-internal/domain/
-internal/repository/
-internal/observability/
-internal/config/
-```
-
-Keep these boundaries clear:
-
-- `main.go` wires dependencies and starts the process
-- `httpserver` owns `http.Server`, lifecycle, and shutdown
-- `httpapi` owns routes, middleware, request decoding, and response writing
-- `domain` owns business rules
-- `repository` owns database access behind interfaces
-- Redis cache access stays behind use case, repository decorator, or cache abstractions
-
-## Router construction
-
-Build the router once and pass dependencies in explicitly.
+**Rule:** build the router in one exported function that takes its dependencies as a struct and returns
+`http.Handler`. Nothing else in the service constructs a router.
 
 ```go
 func NewRouter(deps Deps) http.Handler {
     r := chi.NewRouter()
+    r.Use(deps.Recover, deps.Correlation, deps.Trace, deps.AccessLog, deps.BodyCap)
 
-    r.Use(middleware.RequestID)
-    r.Use(middleware.RealIP)
-    r.Use(middleware.Recoverer)
-    r.Use(middleware.Timeout(30 * time.Second))
-
-    r.Get("/healthz", deps.HealthHandler.Health)
-    r.Get("/readyz", deps.HealthHandler.Ready)
+    r.Get("/healthz", deps.Health.Live)
+    r.Get("/readyz", deps.Health.Ready)
 
     r.Route("/api/v1", func(r chi.Router) {
-        r.Mount("/users", NewUserRoutes(deps))
+        r.Mount("/users", newUserRoutes(deps))
     })
-
     return r
 }
 ```
 
-Prefer `Route`, `Group`, and `Mount` over giant flat route files.
+**Rule:** group routes with `Route`, `Group`, and `Mount` by resource or bounded context, one file per group.
+**Forbidden:** a single file registering routes for more than one resource.
 
-## Middleware order
+**Forbidden:** reading a dependency from a package-level variable inside a handler. **Rule:** every dependency arrives
+through the handler's struct, constructed once in `NewRouter`'s caller.
 
-Middleware order matters.
+## Middleware — kit mode
 
-A safe default order is:
+**Verified fact (`httpkit/middleware.go`, read 2026-07-26):** the chain is fixed and ordered — recover, correlation,
+span, access-log and metrics, body cap. It is not configurable, not reorderable, and not partially adoptable.
 
-1. request ID
-2. real IP or trusted forwarding logic
-3. panic recovery
-4. timeout or deadline middleware
-5. auth or trusted-gateway context middleware
-6. logging and tracing middleware that should see the final context
-7. rate limiting or endpoint-specific controls where needed
+**Forbidden:** re-adding recovery, request-id, tracing, access logging, metrics, or a body cap in a service. Each one
+duplicates a chain layer, and two recoverers or two access logs produce two different answers about the same request.
 
-Notes:
+**Rule:** service-specific middleware mounts inside a route family, which places it after the whole chain, so it runs
+with correlation and span context already present.
 
-- put panic recovery before business handlers
-- keep timeout middleware early so downstream work sees the deadline
-- keep auth and trusted-gateway extraction before handlers that need identity
-- do not mount global CORS in the wrong place; `go-chi/cors` is designed as top-level middleware
+## Middleware — standalone mode
 
-## Trusted gateway integration
+**Rule:** order the chain outermost-first: recover, then correlation and request id, then tracing span, then access
+logging and metrics, then the body cap, then authentication, then route-specific middleware.
 
-In this platform, many services sit behind a trusted gateway.
+The order is forced by three facts, not by taste: recovery must be outermost or a panic in another layer escapes it;
+correlation must precede logging and tracing or their records carry no id; the body cap must precede any handler that
+reads the body.
 
-That means your `chi` middleware should usually:
+**Forbidden:** mounting CORS inside a route group — `github.com/go-chi/cors` is written to run as top-level
+middleware and behaves differently anywhere else.
 
-- reject or ignore client-supplied internal headers unless they came from the trusted edge
-- extract trusted identity and tenant context from the gateway contract, not from raw client claims
-- keep that extracted auth context in request context using typed keys or a dedicated request-scoped struct
-- avoid re-verifying JWTs in every service unless the service is truly exposed or is part of the auth boundary
+**Forbidden:** using `middleware.Throttle` as a rate limiter. It caps concurrent handler executions in one process and
+knows nothing about clients; see `46-chi-under-load.md` for what the platform actually does about admission control.
 
-Do not smear gateway semantics across every handler. Put them in one middleware layer.
+## Handler shape — both modes
 
-## Validation and request decoding
+**Rule:** a handler does exactly five things, in this order, and nothing else:
 
-Keep request decoding and validation at the edge.
+1. bind path, query, and header parameters into a transport struct;
+2. decode the body — `httpkit.Bind` in kit mode, the four checks in `45-failure-behavior-at-the-call-site.md`
+   section 5 in standalone mode;
+3. validate the transport struct;
+4. call exactly one use-case method with the request-scoped context;
+5. map the result or the error to a response.
 
-A good pattern is:
+**Forbidden:** SQL, Redis calls, broker publishes, business rules, transaction control, or `go func()` inside a
+handler. Each has an owner: the repository, the cache decorator, the outbox, the use case, and — for goroutines —
+`/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) P9.
 
-1. decode request body or params into a transport DTO
-2. validate the DTO
-3. map to a domain input struct
-4. call application logic
-5. map result to response DTO
-
-Example skeleton:
-
-```go
-type CreateUserRequest struct {
-    Email string `json:"email" validate:"required,email"`
-    Name  string `json:"name" validate:"required,min=2,max=100"`
-}
-
-func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-    var req CreateUserRequest
-    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-        writeError(w, r, ErrBadRequest)
-        return
-    }
-
-    if err := h.validator.Struct(req); err != nil {
-        writeValidationError(w, r, err)
-        return
-    }
-
-    out, err := h.app.CreateUser(r.Context(), app.CreateUserInput{
-        Email: req.Email,
-        Name:  req.Name,
-    })
-    if err != nil {
-        writeMappedError(w, r, err)
-        return
-    }
-
-    writeJSON(w, http.StatusCreated, out)
-}
-```
-
-Do not leak validator errors or database errors directly to the client.
+**Rule:** keep the transport struct separate from the domain input struct and map between them explicitly. A single
+struct shared by the wire and the domain makes every wire change a domain change.
 
 ## Error mapping
 
-Keep one central error-mapping layer.
+**Kit mode. Rule:** return a typed `errkit` error from the use case and let the kit's single mapper render it.
+**Forbidden:** calling `http.Error`, writing a status code by hand, or building a response envelope in a handler.
 
-Do not let every handler decide status codes ad hoc.
+**Standalone mode. Rule:** define domain error values in the domain package, map them to status codes and response
+shapes in exactly one transport-layer function, and call that function from every handler.
+**Forbidden:** a `switch` on error type in more than one handler.
 
-A good pattern is:
-
-- domain errors map to stable application error codes
-- transport layer maps those codes to HTTP status codes and response envelopes
-- logs keep internal detail, responses keep safe detail
-
-Example mapping idea:
-
-```text
-ErrBadRequest       -> 400
-ErrUnauthorized     -> 401
-ErrForbidden        -> 403
-ErrNotFound         -> 404
-ErrConflict         -> 409
-ErrRateLimited      -> 429
-ErrUnavailable      -> 503
-ErrInternal         -> 500
-```
+**Forbidden, both modes:** putting a driver error, a validator error, or an error string into a response body. **Rule:**
+log the original with the correlation id and return the mapped code. The codes and the envelope shape belong to
+`/alaa-services-contract` (`$alaa-services-contract`).
 
 ## Health and readiness
 
-Expose both `healthz` and `readyz`.
+**Rule:** expose two distinct endpoints answering two distinct questions — liveness answers "should this process keep
+running", readiness answers "should this instance receive traffic now". A readiness check that always mirrors liveness
+is not a readiness check.
 
-Use them differently:
+**Rule:** readiness turns negative before the drain begins, so the load balancer stops sending work before the process
+stops accepting it. On the kit that ordering is `runkit`'s `stop_intake` phase and you do not implement it.
 
-- `healthz` answers: is the process alive enough to stay running?
-- `readyz` answers: should the platform send this instance new traffic right now?
+**Kit mode. Forbidden:** hand-writing a readiness envelope or a check registry; the kit owns both. Register your
+check with the kit's readiness surface and give it a severity. **Verified fact (`rediskit/doc.go`, read 2026-07-26):**
+the kit reports Redis readiness at degraded rather than required severity, so a Redis blip does not remove the
+instance from rotation.
 
-During shutdown, readiness should flip before the drain window starts.
+The path names, the envelope shape, and which dependencies are required versus degraded belong to
+`/alaa-services-contract` (`$alaa-services-contract`).
 
-## Timeouts and shutdown
+## Testing chi handlers
 
-Use `http.Server` explicitly and keep shutdown deterministic.
+The test-first sequence is in `63-tdd-and-testing-discipline.md`. What is specific to chi:
 
-```go
-srv := &http.Server{
-    Addr:              cfg.HTTPAddr,
-    Handler:           handler,
-    ReadHeaderTimeout: 5 * time.Second,
-    IdleTimeout:       60 * time.Second,
-}
-```
-
-Recommended shutdown order:
-
-1. fail readiness
-2. stop accepting new work
-3. cancel the root context for workers and background loops
-4. call `srv.Shutdown(ctx)`
-5. wait for goroutines and worker pools to finish
-6. close downstream resources after workers stop using them
-
-Important: `middleware.Timeout` only helps if downstream code respects `ctx.Done()`.
-
-## Observability
-
-A good `chi` service should have all of these from day one:
-
-- request ID propagation
-- structured logs with `slog`
-- request and dependency metrics
-- tracing with OpenTelemetry
-- explicit health and readiness endpoints
-
-Useful building blocks:
-
-- `go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp`
-- `github.com/prometheus/client_golang/prometheus`
-- `github.com/prometheus/client_golang/prometheus/promhttp`
-- `github.com/go-chi/chi/v5/middleware`
-
-For request logging, do not stop at a colorful local logger. Make sure logs are structured and production-usable.
-
-## Testing
-
-One reason `chi` fits this stack well is that testing stays simple.
-
-Use `httptest` and build handlers as plain `http.Handler` values.
+**Rule:** test the router, not the handler function, whenever a test depends on a path parameter, a middleware, or a
+route family — `chi.URLParam` reads from the routing context, which only exists once the request has passed through
+the router.
 
 ```go
-req := httptest.NewRequest(http.MethodGet, "/api/v1/users/42", nil)
 rec := httptest.NewRecorder()
-handler.ServeHTTP(rec, req)
-
-if rec.Code != http.StatusOK {
-    t.Fatalf("unexpected status: %d", rec.Code)
-}
+req := httptest.NewRequest(http.MethodGet, "/api/v1/users/0192f3c1-...", nil)
+router.ServeHTTP(rec, req) // the router, so URL params and middleware are real
 ```
 
-Test at three levels:
+**Rule:** assert the status code, the response body's shape, and the `Content-Type` header. A test that asserts only
+the status passes when the envelope is wrong.
 
-- handler tests for decoding, validation, auth context, and response codes
-- application tests for business logic
-- integration tests for database, Redis, and other dependencies
+**Kit mode. Rule:** the kit's `contracttest` package asserts the trust boundary, the error envelope, readiness, and
+the route inventory as black-box HTTP conformance. Run it; do not write a service-local reimplementation of any of
+those four assertions.
 
-## Common mistakes
+## Before you call a chi change done
 
-### Giant route files
-
-Split routes by bounded context or resource. Use `Mount` and `Route`.
-
-### Fat handlers
-
-Handlers should decode, validate, call app logic, and write responses. They should not hold real business logic.
-
-### Stringly typed context values
-
-Use typed keys or a request-scoped auth/context object.
-
-### Missing server timeouts
-
-Do not rely only on reverse proxies. Configure `http.Server` timeouts explicitly.
-
-### Ignoring `ctx.Done()`
-
-Timeout middleware does not magically stop your work unless your code listens to the context.
-
-### Re-verifying JWTs everywhere
-
-In a trusted-gateway architecture, most services should trust validated upstream context instead of each becoming an auth service.
-
-### Router-level convenience middleware without checking behavior
-
-Examples:
-
-- `RedirectSlashes` can be surprising around proxies and file-serving use cases
-- CORS middleware should usually be mounted at the top level, not deep in a route group
-- concurrency throttling middleware is not the same thing as per-user or distributed rate limiting
-
-## What to load next
-
-- `golang-context` ( `$golang-context` ) for request lifetime rules
-- `golang-observability` ( `$golang-observability` ) for logs, metrics, traces, and profiling
-- `golang-testing` ( `$golang-testing` ) for handler and integration testing
-- `alaa-trust-gateway-auth` ( `$alaa-trust-gateway-auth` ) when gateway-derived identity is part of the design
+- Every new route is registered through a family (kit) or inside one router construction function (standalone).
+- No handler contains SQL, Redis, a publish, a transaction, or a goroutine.
+- Every decode goes through `httpkit.Bind` (kit) or carries all four checks from
+  `45-failure-behavior-at-the-call-site.md` section 5 (standalone).
+- Every error leaves through the single mapper.
+- Route-level tests exercise the router, and the kit's contract tests pass.
