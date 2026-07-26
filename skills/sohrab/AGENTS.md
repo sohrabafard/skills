@@ -69,6 +69,8 @@ Apply it to every sentence you write: **could a competent agent follow this exac
 
 ## The description is the highest-leverage line in a skill
 
+**Hard limit: 1024 characters. Author target: 950.** Plugin validation rejects anything longer outright, and it is stricter than the 1536-character listing cap the Claude Code documentation gives — that number governs how much of an entry survives truncation in the listing, not whether the skill installs at all. Write to 950 so adding one clause later does not break the build. `scripts/validate_sohrab_skill_pack.py` fails on the hard limit and warns past the target.
+
 Neither runtime loads a body to decide whether to load that body. Write all three parts: what it is as a leading noun phrase so truncation cannot remove it; when to use it in the verbs a user would actually type; and when **not** to use it, naming the alternative skill. A description without a negative over-triggers, and over-triggering is what makes a library unusable.
 
 ## Before you finish

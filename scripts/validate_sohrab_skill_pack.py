@@ -63,6 +63,36 @@ def should_validate_path(skill_dir: Path, path: str) -> bool:
     return True
 
 
+# Plugin validation rejects a description over this length. It is stricter than the
+# 1536-character listing cap documented for Claude Code, so this is the binding number.
+DESCRIPTION_HARD_MAX = 1024
+# Author target, leaving headroom so adding one clause later does not fail the build.
+DESCRIPTION_TARGET_MAX = 950
+
+
+SKILL_NAME_RE = re.compile(r"[/$]?\b((?:alaa|golang|caas|ansible|clickhouse|jitsi|service|tusd|vector|playwright|openfga|openai)[a-z0-9-]*)\b")
+
+
+def local_reference_paths(skill_dir: Path, text: str):
+    """Yield bundled-resource paths that this skill owns.
+
+    A cross-skill pointer names the owning skill on the same line before the path —
+    `alaa-services-contract` `references/22-...md`. Resolving such a path inside the
+    citing skill is wrong, so the line is skipped once another skill is named on it.
+    """
+    own = skill_dir.name
+    for line in text.splitlines():
+        paths = PATH_RE.findall(line)
+        if not paths:
+            continue
+        named = {n for n in SKILL_NAME_RE.findall(line) if n != own and (skill_dir.parent / n).is_dir()}
+        if named:
+            continue
+        for path in paths:
+            if should_validate_path(skill_dir, path):
+                yield path
+
+
 def check_registries(skill_dir: Path) -> list[str]:
     """Fail when this skill names a metric, exchange, or queue it never registered.
 
@@ -133,13 +163,31 @@ def main() -> int:
             continue
         if not front.get("name") or not front.get("description"):
             errors.append(f"{skill_dir.name}: frontmatter must include name and description")
-        if "## When NOT to use" not in body and "## When NOT to Use" not in body and "## Do NOT Use" not in body:
-            errors.append(f"{skill_dir.name}: missing When NOT to use section")
+        else:
+            # Plugin validation rejects a description over 1024 characters outright, which is a
+            # harder limit than the 1536-character listing cap in the Claude Code docs. Measure the
+            # collapsed single-line form, because a folded YAML scalar is counted that way.
+            desc_len = len(" ".join(str(front["description"]).split()))
+            if desc_len > DESCRIPTION_HARD_MAX:
+                errors.append(
+                    f"{skill_dir.name}: description is {desc_len} chars, over the "
+                    f"{DESCRIPTION_HARD_MAX}-char plugin-validation limit"
+                )
+            elif desc_len > DESCRIPTION_TARGET_MAX:
+                warnings.append(
+                    f"{skill_dir.name}: description is {desc_len} chars, within "
+                    f"{DESCRIPTION_HARD_MAX - desc_len} of the {DESCRIPTION_HARD_MAX}-char limit; "
+                    f"keep it at or under {DESCRIPTION_TARGET_MAX} so one added clause cannot break the build"
+                )
+        # Accept any casing and either phrasing. The rule is that the body states a negative
+        # scope somewhere; forcing one exact spelling only produced false failures.
+        if not re.search(r"^#+\s+.*\b(when\s+not\s+to\s+use|do\s+not\s+use)\b", body, re.I | re.M):
+            errors.append(f"{skill_dir.name}: missing a 'When not to use' or 'Do not use' section")
         lines = body.count("\n") + 1
         if lines > 120:
             warnings.append(f"{skill_dir.name}: top-level body is {lines} lines")
-        for match in PATH_RE.findall(body):
-            if should_validate_path(skill_dir, match) and not (skill_dir / match).exists():
+        for match in local_reference_paths(skill_dir, body):
+            if not (skill_dir / match).exists():
                 errors.append(f"{skill_dir.name}: referenced path does not exist -> {match}")
         openai_path = skill_dir / "agents" / "openai.yaml"
         if not openai_path.exists():
@@ -159,8 +207,8 @@ def main() -> int:
         for topic_map in [skill_dir / "references" / "00-topic-map.md", skill_dir / "docs" / "00-topic-map.md"]:
             if topic_map.exists():
                 topic_raw = topic_map.read_text(encoding="utf-8")
-                for rel in PATH_RE.findall(topic_raw):
-                    if should_validate_path(skill_dir, rel) and not (skill_dir / rel).exists():
+                for rel in local_reference_paths(skill_dir, topic_raw):
+                    if not (skill_dir / rel).exists():
                         errors.append(f"{skill_dir.name}: topic map path missing -> {rel}")
     if errors:
         print("Errors:")
