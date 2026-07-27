@@ -58,6 +58,8 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **Deterministic work ships as a script**, referenced from the body with its exact invocation, its exit-code meanings, and what a failure obliges the agent to do. A regenerated implementation is not deterministic.
 
+**More than one implementation of one wire format ships a conformance harness.** When a skill carries the same format in several runtimes — a codec, a signature, a cursor, an identifier — it ships a runnable harness that drives every implementation over one corpus and fails on any disagreement, and the body names its exact invocation. A contract document asserting that the implementations agree is not evidence that they do: the Crockford Base32 bundle shipped four implementations under a contract claiming parity, and the first execution of all four together found five divergences, two of which produced colliding identifiers at the edge. A harness that skips an absent runtime reports the skip and does not report a pass it did not observe.
+
 ## The wording test
 
 Apply it to every sentence you write: **could a competent agent follow this exactly and still do the wrong thing?** If yes, the sentence is underspecified however well it reads. Six failures account for most of it:

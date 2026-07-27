@@ -2,6 +2,10 @@
  * Cross-runtime JavaScript reference implementation for the pure lowercase
  * Crockford Base32 codec bundle owned by `alaa-crockford-base32-codecs`.
  *
+ * Wire format owner: `references/10-shared-codec-contract.md` in that skill. Change
+ * this file only together with the PHP, shell, and HAProxy Lua implementations, then
+ * run `scripts/codec-conformance.sh` from that skill.
+ *
  * Integer strategy:
  * - positive integers encode as minimal unsigned Crockford Base32 digits
  * - negative integers encode as `-` plus the minimal unsigned magnitude
@@ -152,10 +156,16 @@ class CrockfordBase32Codec {
   /**
    * Encode one UTF-8 JavaScript string as lowercase Crockford Base32.
    *
+   * Unpaired surrogates are rejected rather than replaced with U+FFFD, because
+   * `TextEncoder` substitutes silently and that would encode bytes the other three
+   * runtimes refuse to produce.
+   *
    * @param {string} value
    * @returns {string}
    */
   static encodeString(value) {
+    this.assertWellFormedText(value);
+
     return this.encodeBytes(new TextEncoder().encode(value));
   }
 
@@ -166,7 +176,40 @@ class CrockfordBase32Codec {
    * @returns {string}
    */
   static decodeString(encoded) {
-    return new TextDecoder('utf-8', { fatal: true }).decode(this.decodeBytes(encoded));
+    try {
+      return new TextDecoder('utf-8', { fatal: true }).decode(this.decodeBytes(encoded));
+    } catch (error) {
+      if (error instanceof TypeError && error.message.startsWith('Invalid Crockford')) {
+        throw error;
+      }
+
+      throw new TypeError('Decoded payload is not valid UTF-8.');
+    }
+  }
+
+  /**
+   * Reject strings holding an unpaired UTF-16 surrogate code unit.
+   *
+   * @param {string} value
+   * @returns {void}
+   */
+  static assertWellFormedText(value) {
+    for (let index = 0; index < value.length; index += 1) {
+      const unit = value.charCodeAt(index);
+
+      if (unit < 0xd800 || unit > 0xdfff) {
+        continue;
+      }
+
+      const next = value.charCodeAt(index + 1);
+
+      if (unit <= 0xdbff && next >= 0xdc00 && next <= 0xdfff) {
+        index += 1;
+        continue;
+      }
+
+      throw new TypeError('Text input is not valid UTF-8.');
+    }
   }
 
   /**
@@ -210,11 +253,6 @@ class CrockfordBase32Codec {
    */
   static decodeUuidV7(encoded) {
     const bytes = this.decodeBytes(encoded);
-
-    if (bytes.length !== 16) {
-      throw new TypeError('UUIDv7 payload must decode to exactly 16 bytes.');
-    }
-
     this.assertUuidV7Bytes(bytes);
 
     return this.bytesToUuid(bytes);
@@ -286,17 +324,30 @@ class CrockfordBase32Codec {
   }
 
   /**
-   * Coerce integer input into an arbitrary-precision `bigint`.
+   * Parse integer input into an arbitrary-precision `bigint`.
+   *
+   * String input must match `-?[0-9]+` with no surrounding whitespace, sign `+`,
+   * base prefix, separator, or non-ASCII digit. Bare `BigInt(value)` would accept
+   * every one of those forms plus non-string types, which the other three runtimes
+   * reject.
    *
    * @param {bigint | number | string} value
    * @returns {bigint}
    */
   static toBigInt(value) {
-    if (typeof value === 'number' && !Number.isInteger(value)) {
-      throw new TypeError('Integer input must not contain a fractional component.');
+    if (typeof value === 'bigint') {
+      return value;
     }
 
-    return typeof value === 'bigint' ? value : BigInt(value);
+    if (typeof value === 'number' && Number.isInteger(value)) {
+      return BigInt(value);
+    }
+
+    if (typeof value === 'string' && /^-?[0-9]+$/.test(value)) {
+      return BigInt(value);
+    }
+
+    throw new TypeError('Integer input must be a canonical base-10 integer.');
   }
 
   /**
@@ -333,7 +384,7 @@ class CrockfordBase32Codec {
     const bytes = this.toUint8Array(bytesLike);
 
     if (bytes.length !== 16) {
-      throw new TypeError('UUID byte payload must contain exactly 16 bytes.');
+      throw new TypeError('UUID payload must contain exactly 16 bytes.');
     }
 
     const hex = Array.from(bytes, (value) => value.toString(16).padStart(2, '0')).join('');
@@ -355,6 +406,10 @@ class CrockfordBase32Codec {
    */
   static assertUuidV7Bytes(bytesLike) {
     const bytes = this.toUint8Array(bytesLike);
+
+    if (bytes.length !== 16) {
+      throw new TypeError('UUID payload must contain exactly 16 bytes.');
+    }
 
     if ((bytes[6] >> 4) !== 7) {
       throw new TypeError('UUID payload must be version 7.');

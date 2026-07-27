@@ -14,7 +14,27 @@ Use this file when codec work depends on current UUID, runtime crypto, or HAProx
    - PHP `random_bytes`: https://www.php.net/manual/en/function.random-bytes.php
    - Python `uuid`: https://docs.python.org/3/library/uuid.html
    - HAProxy Lua API: https://www.haproxy.com/documentation/haproxy-lua-api/
-4. Community implementations only for troubleshooting. Do not copy codec behavior from a gist or StackOverflow answer unless it is reconciled against the contract and tests.
+   - Lua 5.1 to 5.4 reference manuals: https://www.lua.org/manual/
+4. This skill's `scripts/codec-conformance.sh`, whose output is the only evidence that
+   a claim about cross-runtime agreement still holds.
+5. Community implementations only for troubleshooting. Do not copy codec behavior from a gist or StackOverflow answer unless it is reconciled against the contract and tests.
+
+## Version-sensitive points to re-verify
+
+Check each against the primary source before restating it, because each one changed
+the implementation once already:
+
+- the context list for `core.now()` in the HAProxy Lua API, which excludes
+  sample-fetch and converter context and therefore decides whether the Lua UUIDv7
+  generator gets a millisecond clock
+- which Lua version the target HAProxy build links, read from the `Built with Lua version`
+  line of `haproxy -vv`. HAProxy supports only 5.3 and above (`INSTALL` section 4.7), so a
+  build reporting 5.1 or LuaJIT is unsupported and the deployment question is the build, not
+  the module. Testing under an interpreter other than the one that line reports tests a
+  different language, and it is also what decides whether bitwise-operator syntax parses
+  at all.
+- RFC 9562 section 6.2 counter methods, which the Lua generator relies on for
+  ordering when the clock resolution is one second
 
 ## Freshness triggers
 

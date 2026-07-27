@@ -1,135 +1,146 @@
-# Redis patterns (cache, locks, rate limiting) for high throughput
-Use Redis deliberately for caching, rate limiting, and distributed coordination.
-Redis is fast, but memory is finite; design keys and TTLs as a first-class schema.
+# Redis: the shared contract, verification, and review signatures
 
-Language lanes (load the one that matches the service):
-- Laravel 13 + Octane integration, processing uses, and degraded mode: `50-redis-laravel-octane.md`
-- Go services (DB-query cache only, client config, degraded mode): `51-redis-golang.md`
+Redis is fast and its memory is finite, so keys and TTLs are designed as a schema, not accumulated. This file holds
+what is true of Redis in every service on the fleet. The lane files hold the mechanics: Laravel 13 and Octane in
+`50-redis-laravel-octane.md`, a Go service on `alaa-go-chi` in `51-redis-golang.md`. Load the one that matches the
+service.
 
-Both lanes share the availability contract below.
+## Availability contract (both lanes)
 
-## Availability and degraded mode (mandatory)
-Redis is an optimization, not an availability dependency. Every design that adds Redis must answer: "what happens when Redis is slow, flapping, or completely down?"
+Redis is an optimization. It becomes an availability dependency only if a service is written so that it is. Every
+design that adds Redis answers one question before it ships: what does this path do when Redis is slow, flapping,
+or gone?
 
-Baseline rules for every service, any language:
-- A cache read/write error must never fail the request; fall through to the source of truth (DB).
-- Short connect/read timeouts + bounded retries with jitter; a sick Redis must cost milliseconds, not seconds.
-- No hard Redis dependency at process startup or framework boot; connections stay lazy and probe failures stay non-fatal.
-- Locks and rate limiters must have a documented fail-open or fail-closed decision per call site; correctness-critical exclusion is backed by DB constraints, never by Redis alone.
-- Fallback must be observable: a metric/alert fires when the service is running without its cache.
-- Cold-cache recovery is designed (stampede control), not hoped for.
-- The stop-Redis test is part of the Definition of Done: stop Redis, verify the service still serves, then verify clean recovery.
+- **A cache read or write error never fails the request.** The path falls through to the source of truth. This is
+  also a contract obligation: `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`
+  requires that a dependency marked `required: false` in `/api/ready` not fail a product request.
+- **Redis calls are bounded so a sick Redis costs milliseconds.** Why a timeout, a retry budget, a backoff, or a
+  breaker exists and how to shape it is `/alaa-reliability-sla` (`$alaa-reliability-sla`). The env keys and
+  defaults for the Redis budgets, and what the kit compiles in today, are `60-configuration-and-kit-gaps.md`. This
+  file states no number.
+- **Nothing connects to Redis at process start or framework boot as a precondition for serving.** Connections stay
+  lazy and probe failures stay non-fatal, so a Redis outage cannot stop workers from booting.
+- **Every lock and every limiter states its behaviour when Redis is unreachable, at its call site.** The deciding
+  question is `/alaa-reliability-sla`'s: when this dependency cannot answer, does proceeding without it let
+  something through that must not get through? Yes makes it a gate that fails closed, and the review belongs to
+  `/alaa-security-review` (`$alaa-security-review`). No makes it a contributor that fails open, under
+  `/alaa-reliability-sla`. Correctness-critical exclusion is backed by a database constraint, never by Redis alone.
+- **Running without the cache is visible.** Emit the fallback signal; do not let a silent fallback double the
+  database load unnoticed. The metric, event, log-field, and error-code names are `/alaa-services-contract`
+  (`$alaa-services-contract`) `references/24-metric-registry.md`, and when the name you need is not registered
+  there you request its registration rather than inventing one. Requirement levels, gates, and alerting are
+  `/alaa-observability-soc` (`$alaa-observability-soc`).
+- **Cold-cache recovery is designed.** After an outage every key is missing at once; the stampede control below is
+  what keeps the database standing while it refills.
 
-## Cache key design (mandatory)
-Use namespaced, tenant-aware keys. Recommended shape:
+## Cache key design
+
+Namespaced and tenant-aware. Shape:
+
 - `{app}:{env}:{tenant}:{resource}:{id}:{version}`
-  Example:
-- `comment-service:prod:project_123:thread:01J...:v1`
+- Example: `comment-service:prod:project_123:thread:01J…:v1`
 
 Rules:
-- Always include tenant in multi-tenant caches.
-- Always include a version segment (`v1`, `v2`) to enable safe “version bump” invalidation.
-- Normalize high-cardinality inputs (avoid raw URLs/user agents as-is).
 
-## TTL discipline (mandatory)
-- Every cache key MUST have an explicit TTL.
-- Prefer short TTLs for volatile data.
-- If correctness is strict, prefer event-driven invalidation (below) over long TTLs.
-- Never rely on in-process globals for caching under Octane; caching must be explicit and key-based.
+- Include the tenant in every multi-tenant cache key. A key without it serves one tenant's row to another, and the
+  response is a well-formed `200`.
+- Include a version segment so a shape change can be rolled out by bumping it instead of by flushing.
+- Normalize high-cardinality inputs before they enter a key; a raw URL or user-agent string produces unbounded key
+  growth that only shows up as memory pressure weeks later.
 
-## Invalidation strategy (prefer event-driven)
-- Keep invalidation rules close to the write path:
-    - On write: emit domain event → invalidate relevant keys.
-- Avoid global flushes in production.
-- If tags are used (when available), document tag semantics and tenant isolation.
-- Prefer “version bump” invalidation for wide fan-out keys when precise invalidation is too expensive:
-    - move `:v1` → `:v2` in the key schema and let old keys expire.
+## TTL discipline
 
-## Locks (baseline)
-Use Redis locks for short critical sections, not for long workflows.
-- `SET key value NX PX <ttl_ms>`
+- Every cache entry has an explicit TTL. On the Go kit this is enforced: `rediskit/cache.go:65-67` returns
+  `ErrMissingTTL` for a non-positive TTL. Reason: an entry with no expiry outlives the truth it copies, and a
+  missed invalidation then never heals.
+- Shorter TTLs for volatile data; event-driven invalidation where correctness is strict.
+- Spread the expiry of wide fan-out keys so they do not all expire in the same second. The jitter value is a
+  platform value and belongs to `alaa-services-contract`
+  `references/22-failure-load-and-deprecation-contract.md`; request its registration there if it is not yet
+  recorded.
+- Never cache in a process-level global as a substitute for a keyed entry. Under a long-lived worker that is a
+  cross-request state leak, not a cache.
 
-Mandatory:
-- TTL = worst-case critical section time + buffer
-- retry with backoff + jitter
-- define behavior on failure (return error vs queue retry)
+## Invalidation
 
-Failure modes to document:
-- lock not acquired (contention)
-- lock expires mid-work (TTL too low)
-- process crash (lock released via TTL)
+- Invalidate at the write path: the write commits to the database first, then the exact affected keys are deleted.
+  Delete rather than write-through, unless a measurement says otherwise, because a delete cannot store a value the
+  transaction later rolled back.
+- Every cached key has a named owner and a named invalidation trigger. A key whose trigger cannot be named is not
+  cached.
+- For wide fan-out, bump the version segment and let the old keys expire.
+- No global flush in production code or in a deploy script. On a shared instance it destroys other concerns'
+  data, and the cold-cache stampede that follows can take the database down.
 
-## Idempotency keys (edge dedupe)
-For “exactly-once-like” behavior at the edge:
-- Write a dedupe key with TTL:
-    - `SET idempo:<key> <result_ref> NX EX <seconds>`
-      But for critical side effects (money/legal/audit):
-- also enforce dedupe with a DB unique constraint (preferred)
+## Locks
+
+Redis locks bound a short critical section. They are an efficiency device: there is no fencing token, so a holder
+paused past its TTL and a new holder can both believe they hold the lock.
+
+- `SET key value NX PX <ttl_ms>`, with an owner token, and a release that checks the token before deleting.
+- The TTL covers the worst-case critical section plus a margin, because a lock that expires mid-work is
+  indistinguishable from no lock at all.
+- Retry with backoff and jitter; shaping that is `/alaa-reliability-sla` `references/20-retries.md`.
+- Document three failure modes at the call site: not acquired, expired mid-work, holder crashed.
+- Correctness-critical exclusion lives in Postgres — a unique constraint, or `FOR UPDATE SKIP LOCKED` per
+  `30-concurrency-projections-and-pooling.md`.
+
+## Idempotency keys at the edge
+
+- `SET idempo:<key> <result_ref> NX EX <seconds>` gives set-if-absent dedupe at the edge.
+- For a side effect involving money, legal record, or audit, the dedupe is additionally enforced by a database
+  unique constraint. Reason: a Redis key can be evicted under memory pressure, and an evicted dedupe key means the
+  side effect runs twice.
 
 ## Rate limiting
-Prefer token bucket or sliding window.
-Rules:
-- limits must be tenant-aware (and user-aware if required)
-- use atomic operations (Lua script or known atomic patterns)
-- document:
-    - scope (per IP / per user / per tenant)
-    - window/refill rate
-    - reject behavior (HTTP status + stable internal error code)
+
+- Token bucket or sliding window, computed atomically — a Lua script or a known-atomic command sequence. A
+  read-then-write limiter under-counts at exactly the concurrency it exists to control.
+- Limits are tenant-aware, and user-aware where the surface needs it.
+- State the scope, the window or refill rate, and the reject behaviour at the call site. The HTTP status and the
+  stable error code for a rejection are `/alaa-services-contract`.
 
 ## Memory and eviction safety
-- Monitor:
-    - `maxmemory` and eviction policy
-    - hit rate, evictions, key cardinality, top memory keys
-- Avoid storing large payloads; store IDs and fetch from DB when needed.
-- Avoid unbounded key growth:
-    - add TTL
-    - normalize keys
-    - cap lists/sets by trimming
 
-Operationally useful commands (examples):
-- `INFO memory`
-- `MEMORY STATS`
-- `SCAN 0 MATCH <pattern> COUNT 1000` (sampling, not full scan in prod peak)
-- `SLOWLOG GET`
+- Watch `maxmemory`, the eviction policy, hit rate, evictions, key cardinality, and the largest keys.
+- Store identifiers and small DTOs, not object graphs; fetch the rest from the database.
+- Cap growth: TTL on every key, normalized keys, trimmed lists and sets.
+- Useful commands: `INFO memory`, `MEMORY STATS`, `SCAN 0 MATCH <pattern> COUNT 1000` for sampling, `SLOWLOG GET`.
+  Do not run an unbounded `SCAN` or a `KEYS` during peak.
 
-# Verification / Definition of Done
-When applying this skill, output (at minimum):
-1) Truth vs projection decision:
-- which tables are truth, which are projections (if any)
-- any intentional denormalization and the measured query evidence for it
-2) The exact query patterns driving indexes (or a short list of endpoints/jobs).
-3) Proposed schema/index/constraint changes + why (tie each to a query/invariant).
-4) Migration-safe steps (online/lock notes; phased rollout; rollback).
-5) If projections/derived fields exist:
-- update strategy (async/outbox vs trigger)
-- idempotency/dedupe strategy
-- rebuild/refresh strategy (if materialized)
-6) If PgBouncer is used:
-- pool mode (session vs transaction) and any session-state hazards
-- prepared-statement stance (validated or avoided)
-7) If Redis is involved:
-- key formats + TTL choices
-- invalidation hooks (which writes/events invalidate which keys)
-- lock/rate-limit patterns + timeouts
-- failure modes + what to monitor
-8) How to verify:
-- Postgres: `EXPLAIN (ANALYZE, BUFFERS)` (and `pg_stat_statements` if available)
-- Redis: hit rate/evictions/key growth signals from your ops tooling
+## Definition of done
 
-# Anti-patterns
-- Treating Redis as a source of truth for business data.
-- A cache/lock/limiter error that propagates as a request failure (Redis outage becomes service outage).
-- Touching Redis during framework boot or process startup so that a Redis outage prevents the app from starting.
-- Global flushes (`FLUSHALL`, `FLUSHDB`, framework-level cache flush) in production code or deploy scripts.
-- Caching on top of an incomplete repository layer (code paths that bypass the cache and its invalidation).
-- Adding speculative indexes “just in case”.
-- Denormalizing truth tables without measured evidence and documentation.
-- OFFSET pagination on large tables.
-- Unbounded Redis keys (no TTL).
-- Cache keys that omit tenant identifier (cross-tenant leakage risk).
-- Non-tenant-scoped queries in multi-tenant systems.
-- Cross-tenant reads/writes through non-audited code paths.
-- Long transactions that include network IO.
-- `CREATE INDEX CONCURRENTLY` inside a transaction.
-- Using Redis alone for idempotency on critical side effects without DB dedupe.
-- Using Redis locks for long workflows (lock TTL will betray you).
+Report these, and produce the proof rather than describing it. Which level of proof each claim needs is
+`/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md`; this file states which
+claims need proving.
+
+1. Truth versus projection: which tables are truth, which are derived, and the measured evidence behind any
+   deliberate denormalization.
+2. The query patterns driving each proposed index, tied to an endpoint or a job.
+3. The schema, index, and constraint changes, each tied to a query or an invariant.
+4. The migration steps with their lock behaviour, phasing, and rollback, per
+   `20-schema-migrations-and-performance.md`.
+5. For projections: update strategy, dedupe strategy, and rebuild or refresh strategy.
+6. For PgBouncer: the pool mode, the session-state hazards checked, and the prepared-statement stance per
+   `30-concurrency-projections-and-pooling.md`.
+7. For Redis: key formats, TTLs, the invalidation trigger for each key, the lock and limiter behaviour when Redis
+   is down, and the signals emitted.
+8. Verification actually run: `EXPLAIN (ANALYZE, BUFFERS)` for the queries, and the service serving correctly with
+   Redis stopped and then restarted. An untested fallback is a rumour, so this one is proven against a real Redis,
+   not a fake.
+
+## Review signatures
+
+What these look like in a diff, so they are caught before they ship:
+
+- A `try`/`catch` around a cache call whose `catch` rethrows or returns the error to the caller.
+- A cache read in a service provider, a constructor, an `init`, or a health-check-free startup path.
+- `FLUSHALL`, `FLUSHDB`, or a framework-level cache flush anywhere outside a test.
+- `Cache::remember(` or a Redis client call inside a controller, a handler, or a service that also has a
+  repository for the same domain — those call sites bypass the invalidation the decorator performs.
+- A cache key literal with no tenant segment and no version segment.
+- A `Set` or `SETEX` with no TTL argument, or a TTL computed from a nullable that can reach zero.
+- A retry loop around a Redis command on the request path.
+- A new index in a migration with no query named in the same change.
+- A `CREATE INDEX CONCURRENTLY` inside a transaction-wrapped migration.
+- A transaction that performs an HTTP call, publishes to a broker, or sleeps.

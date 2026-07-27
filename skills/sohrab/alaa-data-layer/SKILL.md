@@ -1,92 +1,59 @@
 ---
 name: alaa-data-layer
-description: "Postgres truth-first data-layer policy for multi-tenant services plus Redis cache and lock guidance, including dedicated Redis lanes for Laravel 13/Octane and Go services with a mandatory repository-pattern gate and Redis-down degraded-mode fallback. Use when schema, migration, query, cache, or Redis behavior changes. Do not use it to introduce a new datastore by default."
+description: "Postgres-truth data-layer policy for the Ala fleet: which store owns a fact, tenant-scoped schema and index design, migrations that do not lock a live table, query and pool tuning, and Redis run as a cache the request survives losing. Use when changing a table, column, constraint, index, or migration; when a query, lock, pool, or projection is slow or contended; when adding, keying, or invalidating a cache entry, Redis lock, idempotency key, or rate limiter; when deciding what a request does while Postgres or Redis is degraded; and when setting a data-store timeout or pool size. Do not use it to add a datastore nobody asked for, or for a refactor with no schema, query, or cache surface. Route cursor pagination to /alaa-keyset-pagination, ClickHouse schema to /clickhouse-performance-schema-ops, MongoDB to /alaa-mongodb-patterns, outbox and consumer mechanics to /alaa-async-messaging, timeout and retry doctrine to /alaa-reliability-sla."
 ---
-
-
-
 
 # Alaa Data Layer
 
-## Purpose
+Decide which store owns a fact, what shape it takes in Postgres, how it changes under load, and what a request does
+when a store is slow or gone. It owns data-store mechanics — schema, constraint, index, migration, query,
+transaction, pool, cache key, TTL, invalidation — and no doctrine, no telemetry name, and no platform value beyond
+the keys in `references/60-configuration-and-kit-gaps.md`.
 
-Use this skill when the task needs the data-layer or Redis policy owned by Alaa Data Layer.
+## When not to use
 
-Keep this top-level file small. Load the references for the full rules, examples, and checklists.
+A refactor that changes no schema, query, or cache surface. A request to add a datastore nobody asked for — say so
+and stop.
 
-## When to use
+## Rules that hold on every task
 
-- schema, constraint, or migration design
-- tenant boundary or index strategy work
-- query, locking, pooling, or projection tuning
-- Redis cache, lock, idempotency, or rate-limit design
+1. Postgres holds business truth; Redis and ClickHouse hold derived, rebuildable copies. A store that can be
+   evicted or flushed cannot be the record of what happened.
+2. Read the service's configured lanes before applying a Postgres rule: `alaa-go-chi docs/CONSUMERS.md:23` runs
+   `wa-api` on ClickHouse with no pgkit and no rediskit.
+3. Every cache entry carries an explicit TTL, enforced at `rediskit/cache.go:65-67`. An entry with no expiry
+   outlives the truth it copies.
+4. Every index names the query or invariant justifying it. An unjustified index is write cost buying no read.
+5. Every migration reverses, or records inside itself why it cannot and how that is mitigated. An irreversible
+   migration turns a rollback into an incident.
+6. Every tenant-scoped query filters by tenant, and every uniqueness rule on such a table is tenant-aware. The
+   failure is a cross-tenant read returning a well-formed `200`.
+7. Never invent a metric, log-field, event, or error-code name; take it from `/alaa-services-contract`
+   (`$alaa-services-contract`) and request registration there when it is missing. An invented name diverges across
+   services.
+8. Verify a platform claim against kit source, never a decision log. Two knobs in
+   `references/60-configuration-and-kit-gaps.md` are ratified and absent from code.
+9. Never commit a connection string, password, or certificate. A credential in git history outlives the commit
+   that removed it, so the only fix is rotation.
 
-## When NOT to use
+## References — read the row you match
 
-- do not use it to introduce a new datastore that the user did not request
-- do not use it for framework-only refactors with no schema, query, or Redis surface
+| You are about to … | Read |
+|---|---|
+| pick the store for a fact, design a table, or tenant-scope a query or unique key | `references/10-postgres-design-and-tenant-boundaries.md` |
+| touch a table that already holds production rows | `references/20-schema-migrations-and-performance.md` |
+| tune a query, claim rows, build a projection, size a pool, or handle a saturated Postgres | `references/30-concurrency-projections-and-pooling.md` |
+| key, expire, invalidate, lock, or rate-limit in Redis, in any language | `references/40-redis-verification-and-anti-patterns.md` |
+| add or change Redis in a Laravel or Octane service | `references/50-redis-laravel-octane.md` |
+| add or change Redis in a Go service on `alaa-go-chi` | `references/51-redis-golang.md` |
+| set a data-store timeout, pool size, or retry count, or find no environment key for it | `references/60-configuration-and-kit-gaps.md` |
+| repeat a version-sensitive claim about Postgres, Redis, pgx, or a Laravel cache API | `references/source-map.md` |
 
-## Quick start
+## Not owned here
 
-1. Read the repo-local `AGENTS.md`.
-2. Apply `$alaa-workflow` when the task is long or risky.
-3. Read `references/00-topic-map.md`.
-4. Read `references/source-map.md` when latest/current/version/security-sensitive database or Redis behavior matters.
-5. Load only the reference file that matches the current decision.
-6. Pair with the listed companion skills before changing architecture, security, async, or runtime behavior outside this skill's ownership.
-
-## Fast entry
-
-| Symptom or decision                                    | Start with                                               |
-|--------------------------------------------------------|----------------------------------------------------------|
-| tenant boundaries, public IDs, or core schema shape    | `references/10-postgres-design-and-tenant-boundaries.md` |
-| additive migration rollout, large tables, or indexes   | `references/20-schema-migrations-and-performance.md`     |
-| locks, retries, pooling, hot queries, or projections   | `references/30-concurrency-projections-and-pooling.md`   |
-| Redis cache, lock, idempotency, or rate-limit behavior | `references/40-redis-verification-and-anti-patterns.md`  |
-| Redis in a Laravel 13 / Octane service (integration, fallback, flush discipline) | `references/50-redis-laravel-octane.md` |
-| Redis in a Go service (DB-query cache, client config, degraded mode) | `references/51-redis-golang.md` |
-
-## Companion routing
-
-- $alaa-laravel-architecture
-  - Pair when the task also changes module boundaries, DTO flow, or public API contracts.
-- $alaa-security-review
-  - Pair when the task also changes tenant isolation, sensitive data handling, or abuse controls.
-- $alaa-async-messaging
-  - Pair when projections, outbox consumers, retries, or job safety are part of the design.
-- $alaa-octane-performance
-  - Pair when hot paths, worker lifetime, or memory reuse affect DB or Redis behavior.
-- $alaa-partitioned-table-fk-audit
-  - Pair when auditing or hardening a Postgres schema for the id-only-FK-into-a-partitioned-parent bug class (SQLSTATE 42830), or when a migration fails with "no unique constraint matching given keys."
-- $alaa-php-clean-code
-  - Pair when Laravel Redis work needs the repository policy, decorator pattern, or Octane-safe code shape (the repository gate in `references/50-redis-laravel-octane.md`).
-- $alaa-golang
-  - Pair for any Go Redis work; its `references/61-redis-cache-layer.md` is the Go cache-pattern authority that `references/51-redis-golang.md` builds on.
-
-## Reference navigation
-
-- Section map and fast routing:
-  - `references/00-topic-map.md`
-- Official-first source map and freshness triggers:
-  - `references/source-map.md`
-- Postgres design, integrity, tenant boundaries, and identifier policy:
-  - `references/10-postgres-design-and-tenant-boundaries.md`
-- Migration rollout, large-table safety, and performance-first schema work:
-  - `references/20-schema-migrations-and-performance.md`
-- Concurrency, projections, query optimization, and pooling rules:
-  - `references/30-concurrency-projections-and-pooling.md`
-- Redis patterns, verification rules, and anti-patterns:
-  - `references/40-redis-verification-and-anti-patterns.md`
-- Redis in Laravel 13 + Octane (repository gate, decorator seam, boot safety, degraded mode):
-  - `references/50-redis-laravel-octane.md`
-- Redis in Go services (DB-query cache only, go-redis config, degraded mode):
-  - `references/51-redis-golang.md`
-- Full preserved guidance, rules, examples, and checklists:
-  - `references/full-guide.md`
-
-## Maintenance rules
-
-- Keep this file routing-first and plain.
-- Put detailed rules into `references/` instead of growing this file.
-- Keep the topic map aligned with the actual headings in the full guide.
-- Keep every new example, checklist, and anti-pattern in simple English.
+Timeout, retry, backoff, breaker, backpressure, and degradation doctrine: `/alaa-reliability-sla`
+(`$alaa-reliability-sla`). Every platform value this skill does not state, and every telemetry or error-code name:
+`/alaa-services-contract` (`$alaa-services-contract`). The ten-point quality bar: `/alaa-project-constitution`
+(`$alaa-project-constitution`) `references/quality-bar.md`. Model and effort: `/alaa-prompting-guide`
+(`$alaa-prompting-guide`). Every other owner — pagination, ClickHouse, MongoDB, the broker, testing, system
+design, kit changes — is named at the rule it governs inside `references/`.

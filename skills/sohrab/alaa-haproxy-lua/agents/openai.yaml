@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa HAProxy Lua"
+  short_description: "Lua inside HAProxy: execution model, failure visibility, testing, patterns, performance, security"
+  default_prompt: "Use $alaa-haproxy-lua for any .lua file HAProxy loads. Establish the runtime facts first with haproxy -vv, recording +LUA and the Built with Lua version line. Decide whether a native sample fetch, converter, ACL, map, or stick table already produces the value, and delete the Lua when one does. Choose lua-load or lua-load-per-thread from whether state must be shared, before writing code. Never call os.clock(), which is process CPU time and neither a clock nor entropy; take wall-clock time from core.now(). Never signal failure by returning nil, which becomes a boolean-false sample that sets the variable and renders as 0; call error(message, 0) and pair every fallible handler with an explicit rejection rule at its call site. Guard every registration behind a core check and return the module table, so the module loads under a mock core in a unit test. Validate with scripts/check_haproxy_lua.py, then the unit test under the interpreter haproxy -vv named, then haproxy -c -f. Route configuration directives to $alaa-haproxy and the shared codec contract to $alaa-crockford-base32-codecs."
+
+policy:
+  allow_implicit_invocation: true

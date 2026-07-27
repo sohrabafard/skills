@@ -1,13 +1,22 @@
 -- Pure lowercase Crockford Base32 codecs for bytes, integers, strings, and UUIDv7 values.
 --
--- This module is shaped for HAProxy `lua-load` / `lua-load-per-thread` usage.
--- It registers reusable converters when the HAProxy `core` object is available
--- while still returning a plain Lua table for non-HAProxy callers.
+-- Wire format owner: skill `alaa-crockford-base32-codecs`,
+-- `references/10-shared-codec-contract.md`. Change this file only together with the
+-- PHP, JavaScript, and shell implementations, then run
+-- `scripts/codec-conformance.sh` from that skill.
 --
--- Integer strategy:
--- - positive integers encode as minimal unsigned Crockford Base32 digits
--- - negative integers encode as `-` plus the minimal unsigned magnitude
--- - zero always encodes as `0`
+-- Runtime support: HAProxy supports only Lua 5.3 and above (HAProxy INSTALL, 4.7),
+-- so LuaJIT is not a supported HAProxy target; check `haproxy -vv` before deploying.
+-- This module additionally runs under a standalone 5.1 or 5.2 interpreter for
+-- testing and CLI use. Every bit operation below is
+-- written as arithmetic on values under 2^48 so the module parses and runs on
+-- interpreters without the 5.3 bitwise operators.
+--
+-- HAProxy notes: the module registers converters and one fetch when the global `core`
+-- object is present. Converters propagate errors instead of returning `nil`, so a
+-- malformed input fails the sample rather than yielding an empty value. HAProxy
+-- execution model, `lua-load` choice, and edge failure handling belong to
+-- `/alaa-haproxy-lua` (`$alaa-haproxy-lua`), not to this file.
 
 local M = {}
 
@@ -18,7 +27,29 @@ for index = 1, #ALPHABET do
     LOOKUP[ALPHABET:sub(index, index)] = index - 1
 end
 
-local seeded = false
+local POW2 = {}
+
+do
+    local value = 1
+
+    for index = 0, 48 do
+        POW2[index] = value
+        value = value * 2
+    end
+end
+
+local function fail(message)
+    -- Level 0 keeps the absolute source path and line number out of HAProxy logs.
+    error(message, 0)
+end
+
+local function shift_right(value, bits)
+    return math.floor(value / POW2[bits])
+end
+
+local function low_bits(value, bits)
+    return value % POW2[bits]
+end
 
 local function normalize_encoded(value)
     local normalized = string.lower(value):gsub("%-", "")
@@ -29,29 +60,190 @@ local function normalize_encoded(value)
     return normalized
 end
 
+-- UTF-8 validation follows RFC 3629: overlong forms, surrogate code points, and code
+-- points above U+10FFFF are rejected, matching `TextDecoder(fatal)` and Python `str`.
+local function is_valid_utf8(text)
+    local index = 1
+    local length = #text
+
+    while index <= length do
+        local first = text:byte(index)
+        local following, lower, upper
+
+        if first < 0x80 then
+            following, lower, upper = 0, 0x80, 0xBF
+        elseif first >= 0xC2 and first <= 0xDF then
+            following, lower, upper = 1, 0x80, 0xBF
+        elseif first == 0xE0 then
+            following, lower, upper = 2, 0xA0, 0xBF
+        elseif first >= 0xE1 and first <= 0xEC then
+            following, lower, upper = 2, 0x80, 0xBF
+        elseif first == 0xED then
+            following, lower, upper = 2, 0x80, 0x9F
+        elseif first >= 0xEE and first <= 0xEF then
+            following, lower, upper = 2, 0x80, 0xBF
+        elseif first == 0xF0 then
+            following, lower, upper = 3, 0x90, 0xBF
+        elseif first >= 0xF1 and first <= 0xF3 then
+            following, lower, upper = 3, 0x80, 0xBF
+        elseif first == 0xF4 then
+            following, lower, upper = 3, 0x80, 0x8F
+        else
+            return false
+        end
+
+        if index + following > length then
+            return false
+        end
+
+        for offset = 1, following do
+            local continuation = text:byte(index + offset)
+            local minimum = offset == 1 and lower or 0x80
+            local maximum = offset == 1 and upper or 0xBF
+
+            if continuation < minimum or continuation > maximum then
+                return false
+            end
+        end
+
+        index = index + following + 1
+    end
+
+    return true
+end
+
+local random_source = nil
+local clock_source = nil
+local seeded = false
+
+local function seed_from_urandom()
+    local handle = io.open("/dev/urandom", "rb")
+
+    if handle == nil then
+        return nil
+    end
+
+    local chunk = handle:read(6)
+    handle:close()
+
+    if chunk == nil or #chunk < 6 then
+        return nil
+    end
+
+    local seed = 0
+
+    for index = 1, #chunk do
+        seed = (seed * 256) + chunk:byte(index)
+    end
+
+    return seed
+end
+
+local function seed_from_process_state()
+    -- Table addresses vary per process under ASLR, which separates states that would
+    -- otherwise share a one-second `os.time()` seed.
+    local address = tostring({})
+    local mixed = 0
+
+    for index = 1, #address do
+        mixed = ((mixed * 31) + address:byte(index)) % 1000000007
+    end
+
+    return (os.time() * 1000) + mixed
+end
+
 local function ensure_seeded()
     if seeded then
         return
     end
 
-    local seed = os.time() + math.floor(os.clock() * 1000000)
-    math.randomseed(seed)
+    math.randomseed(seed_from_urandom() or seed_from_process_state())
     math.random()
     math.random()
     math.random()
     seeded = true
 end
 
-local function random_bytes(count)
-    ensure_seeded()
-
-    local parts = {}
-
-    for index = 1, count do
-        parts[index] = string.char(math.random(0, 255))
+local function random_byte()
+    if random_source ~= nil then
+        return math.floor(random_source()) % 256
     end
 
-    return table.concat(parts)
+    ensure_seeded()
+
+    return math.random(0, 255)
+end
+
+--- Replace the random byte source, which the conformance harness uses for determinism.
+-- @param source function returning one integer in the range 0..255, or nil to restore
+--   the module default.
+function M.set_random_source(source)
+    random_source = source
+end
+
+--- Replace the millisecond clock, which the conformance harness uses for determinism.
+-- @param source function returning milliseconds since the Unix epoch, or nil to
+--   restore the module default.
+function M.set_clock(source)
+    clock_source = source
+end
+
+--- Report the timestamp source that `generate_uuid_v7` will use.
+-- @return string one of "injected", "core.now", or "os.time".
+function M.clock_source_name()
+    if clock_source ~= nil then
+        return "injected"
+    end
+
+    if core ~= nil and core.now ~= nil and pcall(core.now) then
+        return "core.now"
+    end
+
+    return "os.time"
+end
+
+local function now_milliseconds()
+    if clock_source ~= nil then
+        return math.floor(clock_source())
+    end
+
+    -- `core.now()` is documented for body, init, task, and action context. The UUIDv7
+    -- fetch runs in sample-fetch context, so the call is guarded and falls back to
+    -- `os.time()` at one-second resolution when it is unavailable.
+    if core ~= nil and core.now ~= nil then
+        local ok, snapshot = pcall(core.now)
+
+        if ok and type(snapshot) == "table" and type(snapshot.sec) == "number" then
+            return (snapshot.sec * 1000) + math.floor((snapshot.usec or 0) / 1000)
+        end
+    end
+
+    return os.time() * 1000
+end
+
+local last_milliseconds = -1
+local sequence = 0
+
+-- RFC 9562 section 6.2 method 1: a 12-bit counter in `rand_a` keeps identifiers from
+-- one process strictly increasing even when the clock resolution is coarse.
+local function next_timestamp_and_sequence()
+    local milliseconds = now_milliseconds()
+
+    if milliseconds > last_milliseconds then
+        last_milliseconds = milliseconds
+        sequence = (random_byte() * 8) + shift_right(random_byte(), 5)
+
+        return milliseconds, sequence
+    end
+
+    sequence = sequence + 1
+
+    if sequence > 4095 then
+        last_milliseconds = last_milliseconds + 1
+        sequence = 0
+    end
+
+    return last_milliseconds, sequence
 end
 
 local function trim_leading_decimal_zeros(value)
@@ -65,20 +257,22 @@ local function trim_leading_decimal_zeros(value)
 end
 
 local function normalize_integer_input(value)
-    local text = tostring(value)
+    local text
 
     if type(value) == "number" then
-        local integer = math.tointeger(value)
-
-        if integer == nil then
-            error("Integer input must be a Lua integer value.")
+        if value ~= value or value == math.huge or value == -math.huge or value ~= math.floor(value) then
+            fail("Integer input must be a canonical base-10 integer.")
         end
 
-        text = tostring(integer)
+        text = string.format("%.0f", value)
+    elseif type(value) == "string" then
+        text = value
+    else
+        fail("Integer input must be a canonical base-10 integer.")
     end
 
     if not text:match("^%-?%d+$") then
-        error("Integer input must be a canonical base-10 integer.")
+        fail("Integer input must be a canonical base-10 integer.")
     end
 
     local negative = text:sub(1, 1) == "-"
@@ -159,7 +353,7 @@ end
 
 local function split_signed_encoded_integer(encoded)
     if encoded == nil or encoded == "" then
-        error("Integer payload cannot be empty.")
+        fail("Integer payload cannot be empty.")
     end
 
     local negative = encoded:sub(1, 1) == "-"
@@ -167,11 +361,11 @@ local function split_signed_encoded_integer(encoded)
     magnitude = normalize_encoded(magnitude)
 
     if magnitude == "" then
-        error("Integer payload cannot be empty.")
+        fail("Integer payload cannot be empty.")
     end
 
     if #magnitude > 1 and magnitude:sub(1, 1) == "0" then
-        error("Integer payload must use a minimal Crockford Base32 representation.")
+        fail("Integer payload must use a minimal Crockford Base32 representation.")
     end
 
     return negative, magnitude
@@ -185,7 +379,7 @@ local function decode_unsigned_base32_to_decimal(encoded)
         local value = LOOKUP[character]
 
         if value == nil then
-            error(string.format("Invalid Crockford Base32 integer character [%s].", character))
+            fail(string.format("Invalid Crockford Base32 integer character [%s].", character))
         end
 
         decimal = multiply_decimal_string_by_32_and_add(decimal, value)
@@ -215,8 +409,8 @@ end
 local function uuid_to_bytes(uuid)
     local normalized = string.lower(uuid)
 
-    if not normalized:match("^[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$") then
-        error("UUID must be in canonical 8-4-4-4-12 hexadecimal form.")
+    if not normalized:match("^%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$") then
+        fail("UUID must be in canonical 8-4-4-4-12 hexadecimal form.")
     end
 
     local compact = normalized:gsub("%-", "")
@@ -231,21 +425,23 @@ end
 
 local function assert_uuid_v7_bytes(bytes)
     if #bytes ~= 16 then
-        error("UUID payload must contain exactly 16 bytes.")
+        fail("UUID payload must contain exactly 16 bytes.")
     end
 
-    local version = string.byte(bytes, 7) >> 4
-    local variant = string.byte(bytes, 9) & 0xC0
+    local version = shift_right(string.byte(bytes, 7), 4)
+    local variant_byte = string.byte(bytes, 9)
+    local variant = variant_byte - low_bits(variant_byte, 6)
 
     if version ~= 7 then
-        error("UUID payload must be version 7.")
+        fail("UUID payload must be version 7.")
     end
 
     if variant ~= 0x80 then
-        error("UUID payload must use the RFC 4122 variant bits.")
+        fail("UUID payload must use the RFC 4122 variant bits.")
     end
 end
 
+--- Encode raw bytes as lowercase Crockford Base32 without padding.
 function M.encode_bytes(bytes)
     if bytes == "" then
         return ""
@@ -256,25 +452,26 @@ function M.encode_bytes(bytes)
     local parts = {}
 
     for index = 1, #bytes do
-        buffer = (buffer << 8) | string.byte(bytes, index)
+        buffer = (buffer * 256) + string.byte(bytes, index)
         bit_count = bit_count + 8
 
         while bit_count >= 5 do
             bit_count = bit_count - 5
-            local value = (buffer >> bit_count) & 31
+            local value = low_bits(shift_right(buffer, bit_count), 5)
             parts[#parts + 1] = ALPHABET:sub(value + 1, value + 1)
-            buffer = buffer & ((1 << bit_count) - 1)
+            buffer = low_bits(buffer, bit_count)
         end
     end
 
     if bit_count > 0 then
-        local value = (buffer << (5 - bit_count)) & 31
+        local value = low_bits(buffer * POW2[5 - bit_count], 5)
         parts[#parts + 1] = ALPHABET:sub(value + 1, value + 1)
     end
 
     return table.concat(parts)
 end
 
+--- Decode lowercase or alias-normalized Crockford Base32 into raw bytes.
 function M.decode_bytes(encoded)
     local normalized = normalize_encoded(encoded)
 
@@ -291,26 +488,27 @@ function M.decode_bytes(encoded)
         local value = LOOKUP[character]
 
         if value == nil then
-            error(string.format("Invalid Crockford Base32 character [%s].", character))
+            fail(string.format("Invalid Crockford Base32 character [%s].", character))
         end
 
-        buffer = (buffer << 5) | value
+        buffer = (buffer * 32) + value
         bit_count = bit_count + 5
 
         while bit_count >= 8 do
             bit_count = bit_count - 8
-            parts[#parts + 1] = string.char((buffer >> bit_count) & 0xFF)
-            buffer = buffer & ((1 << bit_count) - 1)
+            parts[#parts + 1] = string.char(low_bits(shift_right(buffer, bit_count), 8))
+            buffer = low_bits(buffer, bit_count)
         end
     end
 
     if bit_count > 0 and buffer ~= 0 then
-        error("Invalid Crockford Base32 payload padding bits.")
+        fail("Invalid Crockford Base32 payload padding bits.")
     end
 
     return table.concat(parts)
 end
 
+--- Encode one signed integer as sign plus minimal unsigned Crockford Base32 digits.
 function M.encode_int(value)
     local negative, magnitude = normalize_integer_input(value)
     local encoded = encode_unsigned_decimal_to_base32(magnitude)
@@ -322,6 +520,7 @@ function M.encode_int(value)
     return encoded
 end
 
+--- Decode one signed Crockford Base32 integer into canonical base-10 text.
 function M.decode_int(encoded)
     local negative, magnitude = split_signed_encoded_integer(encoded)
     local decimal = decode_unsigned_base32_to_decimal(magnitude)
@@ -333,34 +532,49 @@ function M.decode_int(encoded)
     return decimal
 end
 
+--- Encode one UTF-8 byte string as lowercase Crockford Base32.
 function M.encode_string(value)
+    if not is_valid_utf8(value) then
+        fail("Text input is not valid UTF-8.")
+    end
+
     return M.encode_bytes(value)
 end
 
+--- Decode one Crockford Base32 payload back into a UTF-8 byte string.
 function M.decode_string(encoded)
-    return M.decode_bytes(encoded)
+    local decoded = M.decode_bytes(encoded)
+
+    if not is_valid_utf8(decoded) then
+        fail("Decoded payload is not valid UTF-8.")
+    end
+
+    return decoded
 end
 
+--- Generate one canonical UUIDv7 string for correlation use.
 function M.generate_uuid_v7()
-    local bytes = random_bytes(16)
-    local milliseconds = (os.time() * 1000) + math.floor((os.clock() * 1000) % 1000)
+    local milliseconds, counter = next_timestamp_and_sequence()
     local parts = {}
-
-    for index = 1, 16 do
-        parts[index] = bytes:sub(index, index)
-    end
+    local remaining = milliseconds
 
     for index = 6, 1, -1 do
-        parts[index] = string.char(milliseconds & 0xFF)
-        milliseconds = milliseconds >> 8
+        parts[index] = string.char(low_bits(remaining, 8))
+        remaining = shift_right(remaining, 8)
     end
 
-    parts[7] = string.char((string.byte(parts[7]) & 0x0F) | 0x70)
-    parts[9] = string.char((string.byte(parts[9]) & 0x3F) | 0x80)
+    parts[7] = string.char(0x70 + shift_right(counter, 8))
+    parts[8] = string.char(low_bits(counter, 8))
+    parts[9] = string.char(0x80 + low_bits(random_byte(), 6))
+
+    for index = 10, 16 do
+        parts[index] = string.char(random_byte())
+    end
 
     return bytes_to_uuid(table.concat(parts))
 end
 
+--- Encode one canonical UUIDv7 string as lowercase Crockford Base32.
 function M.encode_uuid_v7(uuid)
     local bytes = uuid_to_bytes(uuid)
     assert_uuid_v7_bytes(bytes)
@@ -368,6 +582,7 @@ function M.encode_uuid_v7(uuid)
     return M.encode_bytes(bytes)
 end
 
+--- Decode one Crockford Base32 UUID payload back into canonical UUIDv7 text.
 function M.decode_uuid_v7(encoded)
     local payload = M.decode_bytes(encoded)
     assert_uuid_v7_bytes(payload)
@@ -375,54 +590,38 @@ function M.decode_uuid_v7(encoded)
     return bytes_to_uuid(payload)
 end
 
-local function safe_wrapper(name, callback)
-    return function(...)
-        local ok, result = pcall(callback, ...)
-
-        if ok then
-            return result
-        end
-
-        if core ~= nil and core.Warning ~= nil then
-            core.Warning(string.format("crockford-base32-codec.lua %s failed: %s", name, result))
-        end
-
-        return nil
-    end
-end
-
 if core ~= nil and core.register_converters ~= nil then
-    core.register_converters("crockford_b32_encode_bytes", safe_wrapper("encode_bytes", function(value)
+    core.register_converters("crockford_b32_encode_bytes", function(value)
         return M.encode_bytes(value or "")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_decode_bytes", safe_wrapper("decode_bytes", function(value)
+    core.register_converters("crockford_b32_decode_bytes", function(value)
         return M.decode_bytes(value or "")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_encode_string", safe_wrapper("encode_string", function(value)
+    core.register_converters("crockford_b32_encode_string", function(value)
         return M.encode_string(value or "")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_decode_string", safe_wrapper("decode_string", function(value)
+    core.register_converters("crockford_b32_decode_string", function(value)
         return M.decode_string(value or "")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_encode_int", safe_wrapper("encode_int", function(value)
+    core.register_converters("crockford_b32_encode_int", function(value)
         return M.encode_int(value or "0")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_decode_int", safe_wrapper("decode_int", function(value)
+    core.register_converters("crockford_b32_decode_int", function(value)
         return M.decode_int(value or "")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_encode_uuidv7", safe_wrapper("encode_uuid_v7", function(value)
+    core.register_converters("crockford_b32_encode_uuidv7", function(value)
         return M.encode_uuid_v7(value or "")
-    end))
+    end)
 
-    core.register_converters("crockford_b32_decode_uuidv7", safe_wrapper("decode_uuid_v7", function(value)
+    core.register_converters("crockford_b32_decode_uuidv7", function(value)
         return M.decode_uuid_v7(value or "")
-    end))
+    end)
 end
 
 if core ~= nil and core.register_fetches ~= nil then

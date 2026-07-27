@@ -9,6 +9,11 @@ use InvalidArgumentException;
 /**
  * Pure lowercase Crockford Base32 codecs for bytes, integers, strings, and UUIDv7 values.
  *
+ * Wire format owner: skill `alaa-crockford-base32-codecs`,
+ * `references/10-shared-codec-contract.md`. Change this file only together with the
+ * JavaScript, shell, and HAProxy Lua implementations, then run
+ * `scripts/codec-conformance.sh` from that skill.
+ *
  * Integer strategy:
  * - positive integers encode as their minimal unsigned Crockford Base32 digits
  * - negative integers encode as `-` plus the minimal unsigned magnitude
@@ -22,6 +27,12 @@ final class CrockfordBase32Codec
     {
     }
 
+    /**
+     * Encode raw bytes as lowercase Crockford Base32 without padding.
+     *
+     * Pass raw binary, not hexadecimal text. Use `hex2bin()` first when the caller
+     * holds a hex string.
+     */
     public static function encodeBytes(string $binary): string
     {
         if ($binary === '') {
@@ -51,6 +62,9 @@ final class CrockfordBase32Codec
         return $encoded;
     }
 
+    /**
+     * Decode lowercase or alias-normalized Crockford Base32 into raw bytes.
+     */
     public static function decodeBytes(string $encoded): string
     {
         $normalized = self::normalizeEncoded($encoded);
@@ -88,6 +102,12 @@ final class CrockfordBase32Codec
         return $decoded;
     }
 
+    /**
+     * Encode one signed integer as sign plus minimal unsigned Crockford Base32 digits.
+     *
+     * Pass magnitudes above PHP's native integer range as decimal strings so no
+     * precision is lost before the codec sees the value.
+     */
     public static function encodeInt(int|string $value): string
     {
         [$isNegative, $magnitude] = self::normalizeIntegerInput($value);
@@ -100,6 +120,9 @@ final class CrockfordBase32Codec
         return '-' . $encoded;
     }
 
+    /**
+     * Decode one signed Crockford Base32 integer into canonical base-10 text.
+     */
     public static function decodeInt(string $encoded): string
     {
         [$isNegative, $magnitude] = self::splitSignedEncodedInteger($encoded);
@@ -112,16 +135,35 @@ final class CrockfordBase32Codec
         return '-' . $decimal;
     }
 
+    /**
+     * Encode one UTF-8 string as lowercase Crockford Base32.
+     */
     public static function encodeString(string $value): string
     {
+        if (! self::isValidUtf8($value)) {
+            throw new InvalidArgumentException('Text input is not valid UTF-8.');
+        }
+
         return self::encodeBytes($value);
     }
 
+    /**
+     * Decode one Crockford Base32 payload back into a UTF-8 string.
+     */
     public static function decodeString(string $encoded): string
     {
-        return self::decodeBytes($encoded);
+        $decoded = self::decodeBytes($encoded);
+
+        if (! self::isValidUtf8($decoded)) {
+            throw new InvalidArgumentException('Decoded payload is not valid UTF-8.');
+        }
+
+        return $decoded;
     }
 
+    /**
+     * Generate one canonical UUIDv7 string from `random_bytes` and the system clock.
+     */
     public static function generateUuidV7(): string
     {
         $bytes = random_bytes(16);
@@ -138,6 +180,9 @@ final class CrockfordBase32Codec
         return self::bytesToUuid($bytes);
     }
 
+    /**
+     * Encode one canonical UUIDv7 string as lowercase Crockford Base32.
+     */
     public static function encodeUuidV7(string $uuid): string
     {
         $bytes = self::uuidToBytes($uuid);
@@ -146,14 +191,12 @@ final class CrockfordBase32Codec
         return self::encodeBytes($bytes);
     }
 
+    /**
+     * Decode one Crockford Base32 UUID payload back into canonical UUIDv7 text.
+     */
     public static function decodeUuidV7(string $encoded): string
     {
         $bytes = self::decodeBytes($encoded);
-
-        if (strlen($bytes) !== 16) {
-            throw new InvalidArgumentException('UUIDv7 payload must decode to exactly 16 bytes.');
-        }
-
         self::assertUuidV7Bytes($bytes);
 
         return self::bytesToUuid($bytes);
@@ -171,13 +214,91 @@ final class CrockfordBase32Codec
     }
 
     /**
+     * Validate UTF-8 per RFC 3629.
+     *
+     * Overlong forms, surrogate code points, and code points above U+10FFFF are
+     * rejected so this helper matches `TextDecoder(fatal)` and Python `str` exactly.
+     * The check is written without mbstring or PCRE UTF mode so a minimal PHP build
+     * behaves identically.
+     */
+    private static function isValidUtf8(string $bytes): bool
+    {
+        $index = 0;
+        $length = strlen($bytes);
+
+        while ($index < $length) {
+            $first = ord($bytes[$index]);
+
+            if ($first < 0x80) {
+                $following = 0;
+                $lower = 0x80;
+                $upper = 0xBF;
+            } elseif ($first >= 0xC2 && $first <= 0xDF) {
+                $following = 1;
+                $lower = 0x80;
+                $upper = 0xBF;
+            } elseif ($first === 0xE0) {
+                $following = 2;
+                $lower = 0xA0;
+                $upper = 0xBF;
+            } elseif ($first >= 0xE1 && $first <= 0xEC) {
+                $following = 2;
+                $lower = 0x80;
+                $upper = 0xBF;
+            } elseif ($first === 0xED) {
+                $following = 2;
+                $lower = 0x80;
+                $upper = 0x9F;
+            } elseif ($first >= 0xEE && $first <= 0xEF) {
+                $following = 2;
+                $lower = 0x80;
+                $upper = 0xBF;
+            } elseif ($first === 0xF0) {
+                $following = 3;
+                $lower = 0x90;
+                $upper = 0xBF;
+            } elseif ($first >= 0xF1 && $first <= 0xF3) {
+                $following = 3;
+                $lower = 0x80;
+                $upper = 0xBF;
+            } elseif ($first === 0xF4) {
+                $following = 3;
+                $lower = 0x80;
+                $upper = 0x8F;
+            } else {
+                return false;
+            }
+
+            if ($index + $following >= $length) {
+                return false;
+            }
+
+            for ($offset = 1; $offset <= $following; $offset++) {
+                $continuation = ord($bytes[$index + $offset]);
+                $minimum = $offset === 1 ? $lower : 0x80;
+                $maximum = $offset === 1 ? $upper : 0xBF;
+
+                if ($continuation < $minimum || $continuation > $maximum) {
+                    return false;
+                }
+            }
+
+            $index += $following + 1;
+        }
+
+        return true;
+    }
+
+    /**
      * @return array{0: bool, 1: string}
      */
     private static function normalizeIntegerInput(int|string $value): array
     {
         $text = (string) $value;
 
-        if (! preg_match('/^-?\d+$/', $text)) {
+        // `\A` and `\z` anchor the whole subject. `$` would accept a trailing newline
+        // and let that byte reach the decimal long division as an extra digit zero.
+        if (preg_match('/\A-?[0-9]+\z/', $text) !== 1) {
             throw new InvalidArgumentException('Integer input must be a canonical base-10 integer.');
         }
 
@@ -293,7 +414,7 @@ final class CrockfordBase32Codec
     {
         $normalized = strtolower($uuid);
 
-        if (! preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/', $normalized)) {
+        if (preg_match('/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/', $normalized) !== 1) {
             throw new InvalidArgumentException('UUID must be in canonical 8-4-4-4-12 hexadecimal form.');
         }
 
@@ -301,7 +422,7 @@ final class CrockfordBase32Codec
         $bytes = hex2bin($hex);
 
         if ($bytes === false) {
-            throw new InvalidArgumentException('Unable to decode UUID hex.');
+            throw new InvalidArgumentException('UUID must be in canonical 8-4-4-4-12 hexadecimal form.');
         }
 
         return $bytes;
@@ -323,6 +444,10 @@ final class CrockfordBase32Codec
 
     private static function assertUuidV7Bytes(string $bytes): void
     {
+        if (strlen($bytes) !== 16) {
+            throw new InvalidArgumentException('UUID payload must contain exactly 16 bytes.');
+        }
+
         if ((ord($bytes[6]) >> 4) !== 7) {
             throw new InvalidArgumentException('UUID payload must be version 7.');
         }

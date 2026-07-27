@@ -1,105 +1,149 @@
-# Redis in Go services (DB-query cache only, resilient client, degraded mode)
+# Redis in a Go service on alaa-go-chi
 
-Use this file when a Go service (Go 1.26 era) adds or changes Redis usage.
+Read this when a Go service adds or changes Redis usage: a cache in front of a repository read, a lock, an
+idempotency key, or a rate limiter.
 
-Verified baseline (2026-07): `github.com/redis/go-redis/v9` v9.21.x (platform default client), `golang.org/x/sync/singleflight`, `sony/gobreaker/v2` v2.4.x, `go-redsync/redsync/v4`, Redis server 8.x. Re-verify with `references/source-map.md` when versions matter.
+Every configuration claim below was read from `alaa-go-chi` source in this repository, not from a design document
+or a decision log. Re-read the cited file before repeating a claim; `references/source-map.md` says which claims
+are version-sensitive. Cache-aside shape, key naming, serialization, and the Go cache test list are
+`/alaa-golang` (`$alaa-golang`) `references/61-redis-cache-layer.md`; that file is the pattern authority and this
+one does not restate it.
 
-Pattern authority: `alaa-golang` → `references/61-redis-cache-layer.md` owns cache-aside, key design, TTL, invalidation, stampede, and cache tests for Go. This file adds the platform data-layer policy, client configuration, and the degraded-mode contract. Do not restate 61 — load it.
+## Platform policy — cache database reads, not computation
 
-## Platform policy — cache DB reads, not computation
+- Use Redis as cache-aside in front of repository database reads: hot lookups, expensive aggregates, high-QPS list
+  heads. Postgres stays the only source of truth, which `rediskit/doc.go:12-13` states as a kit invariant.
+- Do not cache function results, rendered payloads, or business computation whose inputs are already in memory. In
+  Go the recompute is cheaper than the network hop, and every extra cached shape adds an invalidation liability
+  that outlives the person who added it.
+- Locks, rate limits, and idempotency keys are separate deliberate uses under `40-redis-verification-and-anti-patterns.md`,
+  not caching, and they are not introduced because Redis happens to be wired.
+- A Laravel service may additionally use Redis for sessions, queues, and processing primitives; a Go service on
+  this kit may not. See `50-redis-laravel-octane.md` for that lane.
 
-Go is fast enough that recomputation is almost never the bottleneck; the database is.
+## Repository boundary gate
 
-- ✅ Do: use Redis as cache-aside in front of repository DB reads (hot lookups, expensive aggregates, high-QPS list heads). Postgres stays the only source of truth.
-- ❌ Don't: cache function results, rendered payloads, or business computation outputs whose inputs are already in memory. In Go the recompute is cheaper than the network hop, and every extra cached shape adds an invalidation liability.
-- Coordination primitives (locks, rate limits, idempotency keys) are separate, deliberate uses — allowed when the design needs cross-instance coordination, under the rules in `61-redis-cache-layer.md` and `40-redis-verification-and-anti-patterns.md`. They are not "caching" and must not be introduced casually.
-- This differs from Laravel, where Redis also serves processing paths (sessions, queues, funnels) — see `50-redis-laravel-octane.md`.
+Caching attaches at the repository seam and nowhere else.
 
-## Repository boundary gate (mandatory)
+1. The read being cached goes through a repository interface owned by the use case — principle P5 in
+   `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`), which forbids a Redis import in
+   `domain` or `application`.
+2. The cache lives in a repository decorator or the use case. A handler that imports the Redis client fails this
+   gate.
+3. When the repository layer is incomplete, finish it first through `/alaa-golang` (`$alaa-golang`) and add the
+   cache afterwards. Reason: a cache in front of a partial repository has call sites that bypass both the read and
+   its invalidation, so readers see a mix of fresh and stale rows with no error anywhere.
 
-Same gate as every platform service: caching attaches to the repository seam, never to handlers.
+## Use the kit client; do not construct your own
 
-1. The read being cached goes through a repository interface (port) owned by the use case (P5, `$alaa-golang-clean-code-principles`).
-2. The cache lives in a repository decorator or the use case — handlers never import the Redis client (`alaa-golang` reference 60/61).
-3. If the repository layer is incomplete, stop and finish it first via `$alaa-golang` before adding cache code.
+`rediskit.NewClient` is the only Redis client a kit consumer builds. `rediskit/config.go:84-85` states that the
+timeout, retry, and connection budgets are kit invariants that a deployment URL must not weaken, and
+`config.go:86-99` overrides them on every construction. Writing `redis.NewClient(&redis.Options{...})` in a service
+therefore produces a second, unreviewed timeout policy on the same shared Redis.
 
-## Client configuration (go-redis v9)
+What the kit fixes today, read from source:
 
-Defaults are tuned for generic workloads, not hot paths. Set these explicitly:
+| Setting | Value in the kit | Where |
+|---|---|---|
+| DialTimeout, ReadTimeout, WriteTimeout, PoolTimeout | all `250ms`, one constant | `rediskit/config.go:15,87-90` |
+| MaxRetries | `-1`, retries disabled | `rediskit/config.go:91` |
+| MinRetryBackoff, MaxRetryBackoff | `-1` | `rediskit/config.go:92-93` |
+| DialerRetries | `1` | `rediskit/config.go:94` |
+| PoolSize, MaxIdleConns | `32` | `rediskit/config.go:20,96-97` |
+| MaxActiveConns | `32`, equal to PoolSize | `rediskit/config.go:23,98` |
+| MaxConcurrentDials | `4` | `rediskit/config.go:25,99` |
+| MinIdleConns, ConnMaxIdleTime | never set | absent from `rediskit/config.go` |
+| ContextTimeoutEnabled | `true` | `rediskit/config.go:86` |
 
-```go
-rdb := redis.NewClient(&redis.Options{
-    Addr:            cfg.RedisAddr,
-    // Fail fast: a cache read must cost milliseconds even when Redis is sick.
-    DialTimeout:     1 * time.Second,          // don't go below ~1s on cloud networks
-    ReadTimeout:     300 * time.Millisecond,   // from your latency budget
-    WriteTimeout:    300 * time.Millisecond,
-    // Retries with backoff for transient blips (defaults: 3, 8ms→512ms).
-    MaxRetries:      3,
-    // Pool: default PoolSize is 10×GOMAXPROCS; size from measured concurrency × latency.
-    PoolSize:        cfg.RedisPoolSize,
-    MinIdleConns:    cfg.RedisMinIdle,          // avoid cold-dial bursts on spiky traffic
-    ConnMaxIdleTime: 5 * time.Minute,
-    // PoolTimeout defaults to ReadTimeout+1s — with a bounded pool this is the
-    // backstop that turns a hung Redis into a fast error instead of goroutine pileup.
-})
-```
+Two consequences follow and neither is optional. The dial budget is 250 ms, which is below what DNS plus TCP plus
+TLS costs on a cloud network, so the first command after a pod start or a connection reap can fail on dial alone —
+treat that as an expected degradation until `REDIS_DIAL_TIMEOUT` exists, and do not compensate with a retry loop.
+The env keys and the corrective change requests are in `60-configuration-and-kit-gaps.md`; the only Redis keys that
+exist today are `REDIS_URL`, `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASS`, `REDIS_DB`.
 
-- Pass a per-call `context.WithTimeout` from the request context; never call Redis with `context.Background()` on a request path.
-- Monitor `rdb.PoolStats()` (Hits, Misses, Timeouts, TotalConns) — `redis: connection pool timeout` means slow commands or an undersized pool; fix the cause, don't just raise PoolSize.
-- Sizing: `replicas × PoolSize` must stay well under the server's `maxclients` across all services sharing the instance.
-- `rueidis` (auto-pipelining, server-assisted client-side caching) is opt-in for extreme-QPS read paths only when the repo explicitly adopts it; go-redis v9 stays the default (`alaa-golang` reference 40).
+Pass a per-call context derived from the request context. `rediskit` applies its own 250 ms ceiling on top
+(`rediskit/client.go:80-82`), so a request that has less budget left than that still governs.
 
-## Degraded mode — Redis down must not take the service down (mandatory)
+## Degraded mode — Redis down must not take the service down
 
-The request path must survive a full Redis outage by falling through to Postgres. Cache errors are logged and counted, never returned.
+The request path survives a full Redis outage by falling through to Postgres. This is a contract obligation, not a
+local preference: `alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md` requires that a
+dependency marked `required: false` in `/api/ready` never fails a product request. `rediskit/readiness.go:17`
+registers the Redis check at `SeverityDegraded`, so a Redis blip degrades the pod instead of draining it.
 
-1. **Classify errors first**: `errors.Is(err, redis.Nil)` is a miss (normal). Everything else (dial errors, `context.DeadlineExceeded`, pool timeout) is a cache failure → read from the DB through the inner repository.
+1. **Error classification is already done for you.** `rediskit/cache.go:46-58` returns a missing key as a clean miss
+   — `(nil, false, nil)` — and returns a transport error to the caller. Do not re-check for `redis.Nil` in the
+   decorator; `rediskit/client.go:88-91` has already translated it.
+2. **The fallback decision is yours, and it belongs in the decorator.** `rediskit/doc.go:8-10` places what to cache,
+   the cache-aside read path, and single-flight policy in consumer domain code. On a transport error the decorator
+   reads through the inner repository and records the failure; it never returns the cache error to its caller,
+   because that converts a cache outage into a service outage.
+3. **Bound the origin load during the outage.** With the cache gone, every read reaches Postgres.
+   `22-…` requires at most one origin computation per cache key in flight per instance, with later callers waiting
+   on it until the deadline. `rediskit/doc.go:9` assigns that single-flight to consumer domain code, and
+   `golang.org/x/sync` is an indirect dependency in `go.mod` today, so adopting `singleflight` is a direct
+   dependency addition. Take the package decision to `/alaa-golang` (`$alaa-golang`)
+   `references/40-production-ready-package-catalog.md`.
+4. **Whether to add a circuit breaker is a doctrine question, not a configuration one.** The kit contains no
+   breaker: `gobreaker`, `redsync`, `redis_rate`, `rueidis`, and any `CircuitBreaker` symbol are absent from every
+   `.go` file, from `go.mod`, and from `go.sum`. Whether this dependency warrants one, and how to shape it, is
+   `/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/30-breakers-and-bulkheads.md`. When the answer is
+   yes, decide with `/alaa-go-chi-development` (`$alaa-go-chi-development`) whether it belongs in the kit rather
+   than in one service, because a breaker built once per service produces a different outage posture per service on
+   one shared Redis.
+5. **Never block startup on Redis.** Construct the client at boot and let the first command discover the outage.
+   The readiness probe already reports Redis state at degraded severity; a fatal `Ping` in `main` converts a Redis
+   outage into a fleet-wide crash loop.
+6. **Writes during an outage are best-effort.** A missed `Set` costs a later miss and a missed `Delete` heals when
+   the TTL expires, which is the reason `rediskit/cache.go:65-67` rejects a `Set` with a non-positive TTL as
+   `ErrMissingTTL` rather than storing it.
+7. **Whether the dependency fails open or fails closed is one question, asked once per call site.** When this
+   dependency cannot answer, does proceeding without it let something through that must not get through?
+   `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns that question and the fail-open contributor case;
+   `/alaa-security-review` (`$alaa-security-review`) owns the fail-closed gate case. A cache read is always a
+   contributor. A rate limiter in front of an abuse-sensitive surface may not be.
 
-```go
-func (r *CachedUserRepo) ByID(ctx context.Context, tenantID, id string) (User, error) {
-    val, err := r.rdb.Get(ctx, userKey(tenantID, id)).Result()
-    switch {
-    case err == nil:
-        if u, ok := decodeUser(val); ok { return u, nil } // decode failure → treat as miss
-    case !errors.Is(err, redis.Nil):
-        r.metrics.CacheFallback.Inc() // real failure: count it, fall through
-    }
-    u, err := r.inner.ByID(ctx, tenantID, id) // DB is the source of truth
-    if err != nil { return User{}, err }
-    r.setAsync(u) // best-effort SET with its own short timeout; errors only logged
-    return u, nil
-}
-```
+## Observability
 
-2. **Protect the DB during the outage**: with the cache gone, all reads hit Postgres. `singleflight` around the DB load collapses concurrent misses per key per instance — this is what makes "just fall back to the DB" safe at high concurrency.
-3. **Stop paying the timeout on long outages**: wrap Redis calls in a circuit breaker (`sony/gobreaker/v2`). Open circuit → skip Redis entirely (straight to DB + singleflight); half-open probes restore caching automatically. Use `IsExcluded` (or equivalent) so caller-side `context.Canceled` does not trip the breaker.
-4. **Never block startup on Redis**: construct the client lazily/optimistically; readiness may report Redis state, but liveness and serving must not require it. `Ping` belongs in a background health loop feeding the breaker and metrics, not in `main()` as a fatal check.
-5. **Writes during outage**: cache SETs and invalidation DELs are best-effort. Because keys are versioned and TTL-bounded (61), a missed invalidation heals by TTL — that is why every key must have a TTL.
-6. **Observability**: emit cache_hit / cache_miss / cache_error / db_fallback / breaker_state metrics (`alaa-golang` 61 vocabulary). A silent fallback that doubles DB load is an incident waiting to be discovered late.
-7. **Test it**: unit-test the fallback with a failing fake; integration-test by stopping Redis (Testcontainers) and asserting requests still succeed and the DB sees singleflight-collapsed load. The stop-Redis test is part of the DoD.
+Wire the kit's ports rather than defining counters. `rediskit/metrics.go` already registers cache-read outcomes
+with a bounded `hit|miss|error` label (`CacheResult`, `metrics.go:53-59`), transport operation counts and
+durations, and pool statistics; `WithCacheMetrics` and the client's metrics option attach them. A parallel
+service-local counter double-counts the same event under a second name.
 
-- ✅ Do: treat every Redis error except `redis.Nil` as "cache unavailable → use DB", with metrics.
-- ❌ Don't: `return err` from a repository read because a cache GET failed — that converts a cache outage into a service outage.
-- ❌ Don't: retry Redis in a loop on the request path. The client already retries with backoff; beyond that, fail over to the DB.
+Metric, log-field, event, and error-code names are `/alaa-services-contract` (`$alaa-services-contract`); its
+`references/24-metric-registry.md` is the register. That register lists `alaa_db_*` families for a service with a
+database and lists no Redis cache family today, so a service adopting the kit's Redis metrics requests their
+registration rather than assuming they are covered. Requirement levels, gates, and alerting belong to
+`/alaa-observability-soc` (`$alaa-observability-soc`).
 
-## Locks and rate limits (when the design truly needs them)
+## Locks and rate limits
 
-- Locks: `SET key value NX PX` semantics via `redsync/v4` or raw commands with owner token + check-and-del release. Redis locks are for efficiency (skip duplicate work), not correctness — no fencing tokens exist; correctness-critical exclusion belongs in Postgres (unique constraints, `FOR UPDATE SKIP LOCKED`) per `30-concurrency-projections-and-pooling.md`.
-- Rate limits: Lua-based GCRA/sliding-window (e.g. `go-redis/redis_rate/v10` — functional but dormant since 2023; pin and review) or server-side primitives on Redis ≥ 8.8 (`INCREX`). On Redis failure rate limiters fail open with a metric unless the limit guards abuse-critical surface — then document the fail-closed choice.
-- Both must define behavior when Redis is down, same as the cache path.
+- A Redis lock is an efficiency device, not a correctness device: it has no fencing token, so a holder paused past
+  its TTL and a new holder can both believe they hold it. Correctness-critical exclusion lives in Postgres —
+  a unique constraint, or `FOR UPDATE SKIP LOCKED` per `30-concurrency-projections-and-pooling.md`.
+- The kit ships no lock and no rate limiter. `redsync` and `redis_rate` are absent from `go.mod` and `go.sum`, so
+  either is a new direct dependency; route the package choice to `/alaa-golang`
+  `references/40-production-ready-package-catalog.md` and the fail-open or fail-closed decision to the question in
+  point 7 above.
+- Every lock and every limiter states, at its call site, what happens when Redis is unreachable. A call site that
+  does not state it inherits whatever the client library does, which is a decision nobody made.
 
-## Verification / Definition of Done (Go + Redis)
+## Proof this needs before it ships
 
-In addition to the generic Redis DoD in `40-redis-verification-and-anti-patterns.md` and the test list in `alaa-golang` 61, report:
+State the level, then produce it. What counts as a test at each level is `/alaa-testing-strategy`
+(`$alaa-testing-strategy`) `references/40-proof-strength.md`; this file states only which level applies.
 
-1. Confirmation that caching fronts DB reads only (no computation caching), attached at the repository decorator/use-case seam.
-2. Client config: timeouts, pool sizing rationale, per-call context deadlines.
-3. Degraded mode: error classification, singleflight placement, breaker settings, startup independence, and the result of the stop-Redis test.
-4. Metrics wired: hit/miss/error/fallback/breaker.
+- The decorator's fallback on a transport error: level 2, a unit test with a fake that returns an error.
+- The cache-hit, clean-miss, and invalidate-on-write paths: level 2.
+- Service behaviour with Redis actually stopped and then restarted: level 6, against a real Redis. A fallback that
+  has only been unit-tested is a claim about a fake, not about the service.
 
 ## Companion routing
 
-- `$alaa-golang` — reference 61 (cache authority), 60 (repository seam), 40 (package catalog).
-- `$alaa-golang-clean-code-principles` — P5 (no Redis imports in domain/application), P12 (boundary tests).
-- `$alaa-observability-soc` — metric and alert vocabulary for fallback/breaker signals.
+- `/alaa-golang` (`$alaa-golang`) — `references/61-redis-cache-layer.md` cache-aside authority, `60-…` repository
+  seam, `40-…` package catalog.
+- `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) — P5 ports, P7 idempotency and its
+  run-twice proof, P12 boundary tests.
+- `/alaa-go-chi-development` (`$alaa-go-chi-development`) — every change to `rediskit` itself, and the change
+  requests in `60-configuration-and-kit-gaps.md`.
+- `/alaa-reliability-sla` (`$alaa-reliability-sla`) — timeout, retry, breaker, and degradation doctrine.

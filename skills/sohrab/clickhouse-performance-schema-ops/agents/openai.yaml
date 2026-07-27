@@ -1,7 +1,7 @@
 interface:
-  display_name: "Clickhouse Performance Schema Ops"
-  short_description: "ClickHouse performance and schema operations"
-  default_prompt: "Use $clickhouse-performance-schema-ops to follow its workflow for clickhouse performance and schema operations."
+  display_name: "ClickHouse Performance, Schema, Ingest, and Operations"
+  short_description: "ClickHouse table design, ingest shape, query tuning, and read-lane failure behaviour"
+  default_prompt: "Use /clickhouse-performance-schema-ops ($clickhouse-performance-schema-ops) for ClickHouse schema, ingest, query, and operations work. Name which audience the task is in before proposing DDL: the ingest-pipeline repository owns the DDL, and a kit consumer on the readonly=2 chkit lane cannot execute DDL at all. Route the task through references/00-topic-map.md, and run scripts/review_clickhouse_ddl.py over any CREATE TABLE you write or review and paste its output."
 
 policy:
   allow_implicit_invocation: true
