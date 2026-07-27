@@ -238,9 +238,7 @@ Paste this into a fresh session, changing only the `BATCH` line.
 /alaa-cc-orchestrator  Advisor mode first. Orchestrator mode only after I approve the analysis.
 
 GOAL: upgrade one batch of my skills under D:\Sohrab\Project\skills\skills\sohrab\
-
-BATCH: 4 — Data and storage
-
+Batch 5 — Messaging, integrations, and trust
 READ FIRST, before anything else:
 1. D:\Sohrab\Project\skills\skills\sohrab\UPGRADE-CARRYOVER.md — the working contract.
    Section 2 is the quality bar, section 3 the upgrade standard, section 4 the candidate
@@ -248,20 +246,41 @@ READ FIRST, before anything else:
    membership, section 7 the definition of done.
 2. Project memory — model and effort decisions, the Codex skill install path, the recurring
    defect classes, the vendored-pack rule, and why a skill's prose is its executable logic.
-
+   
 PHASE 1 — analyse, then stop.
-Read every skill in this batch in full: SKILL.md, all references, all scripts. Then give me
-one table for the whole batch showing, per skill: which of the ten criteria in section 2 it
-already satisfies, which it fails, and which it should not own because another skill does.
-Add the defect classes from section 3 that you actually found. Then say, in one short
-paragraph each, whether the section 4 candidate skills are genuinely missing or already
-covered — grounded in what you read, not in what the names suggest.
-Change no file in this phase. End your turn and wait for my approval.
+Read every skill in this batch in full: SKILL.md, all references, all scripts.
+Write the full analysis to a single draft file in English, at the root of the skills
+directory above, as the working input Phase 2 will execute from. Name it
+UPGRADE-BATCH-<N>-ANALYSIS.md, where <N> is the batch number declared at the top of this
+prompt. That file — not the terminal — holds: one table for
+the whole batch showing, per skill, which of the ten criteria in section 2 it already
+satisfies, which it fails, and which it should not own because another skill does; the defect
+classes from section 3 that you actually found; and one short paragraph per section 4
+candidate skill saying whether it is genuinely missing or already covered — grounded in what
+you read, not in what the names suggest.
+Also decide whether any new skill is genuinely required to close a gap you actually observed.
+Propose a new skill only when an existing skill cannot own the gap without violating its own
+boundary. Name the gap and the evidence for it. Inventing a skill to look thorough is a
+failure of this step; concluding that no new skill is needed is a valid and welcome outcome.
+In the terminal, do not reprint the analysis. Give me instead a short, readable Persian
+briefing — concise, but written in complete, connected sentences I can follow — with exactly
+three sections:
+1. In-scope work you have decided on yourself and will carry out.
+2. In-scope proposals that wait on my decision — each with your own recommendation and the
+   reason for it.
+3. Out-of-scope items that will need my follow-up or my decision later.
+Create no file other than that draft, and change no skill file in this phase. End your turn
+and wait for my approval.
 
 PHASE 2 — execute, after I approve.
-Rewrite skill by skill against the definition of done in section 7.
+Rewrite skill by skill against the definition of done in section 7, working from the draft
+file you produced in Phase 1 and from whatever I approved or corrected in my reply.
 
 HARD RULES
+- Speak to me in the terminal in fluent, natural Persian. Everything you write into a file —
+  skills, prompts, references, scripts, commit messages, the Phase 1 draft — is in fluent,
+  natural English. This split is absolute: no Persian inside artifacts, no English-only
+  reporting to me.
 - Never edit anything under vendor/. Those are upstream git subtrees. Wrap them from the
   owning alaa-* skill instead. See section 4b.
 - Never edit a skill outside this batch, and never edit README.md or UPGRADE-CARRYOVER.md.
@@ -288,18 +307,16 @@ runs on the escalated implementer, and the named criterion is "authoring an arti
 deliverable is judgment itself". Do not dispatch skill rewrites to the default implementer.
 Spawn one agent per skill or per lane, never several for the same one, and never a subagent
 whose only job is to re-check another subagent. Independent lanes go out together.
-
 DELIVERY
 Write files directly into the skill directories. My mount forbids unlink, so `unzip -o` fails —
 extract with a Python loop that truncates each target in place. The repository is under git;
 verify what actually landed rather than trusting a successful write, and confirm the tree
 state before declaring the batch done.
-
-FINISH WITH
+FINISH WITH — in Persian, in the same three-section shape as Phase 1
 1. What each skill gained, and what gaps remain and why.
 2. Any decision that is mine to make.
 3. A project-memory topic file named for this batch, holding what a later wave needs from
    it: ownership boundaries you settled, conventions you established, and anything you
-   found that contradicts the carry-over document. Do not rewrite the memory index while
-   other batches may be running.
+   found that contradicts the carry-over document. Write this file in English. Do not
+   rewrite the memory index while other batches may be running.
 ```
