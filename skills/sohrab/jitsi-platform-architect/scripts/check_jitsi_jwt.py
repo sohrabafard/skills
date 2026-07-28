@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Assert the Jitsi join-token claim contract and the room-name entropy rules.
+"""Assert the Jitsi join-token claim contract and the room-name rules.
+
+The room-name rules are capacity and predictability checks, not an entropy
+measurement. Alphabet and length prove only what a name COULD carry if it were
+drawn uniformly at random; no check on a single value can prove that the
+generator actually supplied that unpredictability. The contract remains a
+CSPRNG mapped uniformly onto the room alphabet, and the assurance for it is
+generator-level design evidence, never this script's output.
 
 This checks the shape of a token, not its authenticity. It never verifies a
 signature, and it must not be used as an admission control. Signature
@@ -118,6 +125,27 @@ def load_profile(path: str | None) -> dict:
     return profile
 
 
+def smallest_period(name: str) -> int:
+    """The length of the shortest pattern whose repetition writes the name.
+
+    Computed with the Knuth-Morris-Pratt border array, so `abababa` has period
+    2 even though 7 is not a multiple of 2. A uniformly generated name has a
+    period equal to its own length except with negligible probability, so a
+    short period is decisive evidence against uniform generation.
+    """
+    if not name:
+        return 0
+    border = [0] * len(name)
+    k = 0
+    for i in range(1, len(name)):
+        while k and name[i] != name[k]:
+            k = border[k - 1]
+        if name[i] == name[k]:
+            k += 1
+        border[i] = k
+    return len(name) - border[-1]
+
+
 def required_room_length(profile: dict) -> int:
     alphabet = profile.get("room_alphabet") or CROCKFORD_LOWER
     bits = profile.get("room_min_entropy_bits", 128)
@@ -156,8 +184,33 @@ def check_room_name(name, profile: dict) -> list[tuple[str, str]]:
     if len(name) < needed:
         findings.append((
             "ROOM_NAME_TOO_SHORT",
-            f"room name is {len(name)} characters; {needed} are needed for "
-            f"{profile.get('room_min_entropy_bits', 128)} bits in this alphabet",
+            f"room name is {len(name)} characters, below the {needed} a uniformly "
+            f"generated name in this alphabet needs to reach a capacity of "
+            f"{profile.get('room_min_entropy_bits', 128)} bits; length bounds capacity "
+            f"only and proves nothing about the generator",
+        ))
+
+    # Pathological-value checks. Each rejects only values that a uniform
+    # generator produces with negligible probability (far below 1e-20 at the
+    # required length), so no plausible random identifier is rejected merely
+    # for containing repeated characters.
+    period = smallest_period(name)
+    if len(name) >= 2 and period <= len(name) // 2:
+        findings.append((
+            "ROOM_NAME_REPEATED",
+            f"room name is a repetition of the {period}-character pattern "
+            f"{name[:period]!r}; no uniform generator plausibly produced it",
+        ))
+    # The diversity floor is meaningful only against a large alphabet: with a
+    # configured 2- or 4-symbol alphabet, a perfectly uniform value has few
+    # distinct characters by construction, so the check would reject every
+    # correct name. The period check above stays active for every alphabet.
+    if len(alphabet) >= 8 and len(name) >= 8 and len(set(name)) <= 3:
+        findings.append((
+            "ROOM_NAME_LOW_DIVERSITY",
+            f"room name uses only {len(set(name))} distinct characters across "
+            f"{len(name)} positions; no uniform generator over this "
+            f"{len(alphabet)}-symbol alphabet plausibly produced it",
         ))
 
     if name.isdigit():
@@ -290,9 +343,9 @@ def read_token(args: argparse.Namespace) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def report(findings: list[tuple[str, str]], subject: str) -> int:
+def report(findings: list[tuple[str, str]], subject: str, pass_note: str | None = None) -> int:
     if not findings:
-        print(f"PASS {subject}")
+        print(f"PASS {subject}" + (f": {pass_note}" if pass_note else ""))
         return 0
     for code, message in findings:
         print(f"FAIL {code} {message}")
@@ -300,10 +353,25 @@ def report(findings: list[tuple[str, str]], subject: str) -> int:
     return 1
 
 
+# A pass on one value proves the format and the predictability heuristics, and
+# nothing about the generator. Say so in the output, so a green run is never
+# quoted as evidence of entropy.
+ROOM_PASS_NOTE = (
+    "format and predictability heuristics passed for this value; a single sample "
+    "cannot establish generator entropy - the CSPRNG/uniform-generation contract "
+    "must be shown with generator-level design evidence"
+)
+
+TOKEN_PASS_NOTE = (
+    "claim shape and room-name heuristics passed; signature authenticity and "
+    "generator entropy are out of this script's scope"
+)
+
+
 def run(args: argparse.Namespace) -> int:
     profile = load_profile(args.profile)
     if args.room_name is not None:
-        return report(check_room_name(args.room_name, profile), "room-name")
+        return report(check_room_name(args.room_name, profile), "room-name", ROOM_PASS_NOTE)
     token = read_token(args)
     for claim in ("iss", "aud", "sub"):
         if claim not in profile:
@@ -311,7 +379,7 @@ def run(args: argparse.Namespace) -> int:
                 f"profile does not declare {claim}; a profile that declares no {claim} cannot assert one. "
                 "Add it, or state in the deliverable why this deployment does not bind it."
             )
-    return report(check_token(token, profile), "token")
+    return report(check_token(token, profile), "token", TOKEN_PASS_NOTE)
 
 
 SELF_TEST_PROFILE = {
@@ -448,6 +516,43 @@ def self_test() -> int:
     expect_bad_input("header not object", "WzFd." + encode_token({}, good_payload()).split(".")[1] + ".sig")
 
     expect_codes("good room name", check_room_name(GOOD_ROOM, SELF_TEST_PROFILE), None)
+    expect_codes(
+        "repeated single character",
+        check_room_name("a" * 26, SELF_TEST_PROFILE),
+        "ROOM_NAME_REPEATED",
+    )
+    expect_codes(
+        "short repeated pattern",
+        check_room_name("ab" * 13, SELF_TEST_PROFILE),
+        "ROOM_NAME_REPEATED",
+    )
+    expect_codes(
+        "odd-length repeated pattern",
+        check_room_name("ab" * 13 + "a", SELF_TEST_PROFILE),
+        "ROOM_NAME_REPEATED",
+    )
+    expect_codes(
+        "two-block low diversity",
+        check_room_name("a" * 12 + "b" * 14, SELF_TEST_PROFILE),
+        "ROOM_NAME_LOW_DIVERSITY",
+    )
+
+    # With a configured small alphabet, low diversity is the correct shape of a
+    # uniform value and must not be rejected. The Thue-Morse prefix is
+    # overlap-free, so it is also immune to the period check.
+    small_alphabet_profile = dict(SELF_TEST_PROFILE)
+    small_alphabet_profile["room_alphabet"] = "ab"
+    thue_morse = "".join("ab"[bin(i).count("1") % 2] for i in range(128))
+    expect_codes(
+        "binary alphabet, non-periodic full-length name",
+        check_room_name(thue_morse, small_alphabet_profile),
+        None,
+    )
+    expect_codes(
+        "binary alphabet still rejects a constant name",
+        check_room_name("a" * 128, small_alphabet_profile),
+        "ROOM_NAME_REPEATED",
+    )
     expect_codes("empty room name", check_room_name("", SELF_TEST_PROFILE), "ROOM_NAME_EMPTY")
     expect_codes("non-string room name", check_room_name(5, SELF_TEST_PROFILE), "ROOM_NAME_NOT_STRING")
     expect_codes("wildcard room name", check_room_name("*", SELF_TEST_PROFILE), "ROOM_NAME_WILDCARD")
@@ -510,6 +615,11 @@ def build_parser() -> argparse.ArgumentParser:
             "The room-name pattern rules are heuristics. On a 26-character Crockford Base32 name they\n"
             "flag a random name well under once in a thousand. The correct response to a coincidental\n"
             "match is to regenerate the name, which costs nothing; never widen the rule to admit it.\n"
+            "\n"
+            "Alphabet and length prove only capacity: what a name of this shape could carry if it were\n"
+            "drawn uniformly at random. No check on a single value proves the generator's entropy. The\n"
+            "contract stays what it is - a CSPRNG mapped uniformly onto the room alphabet - and the\n"
+            "assurance for it is generator-level design evidence and review, never a PASS from here.\n"
             "\n"
             "Profile keys (JSON): iss, aud, sub (required for token mode), allowed_algs,\n"
             "max_lifetime_seconds, platform_access_token_kids, room_min_entropy_bits, room_alphabet.\n"

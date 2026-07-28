@@ -1,5 +1,18 @@
 # Register (a): the official tusd binary against S3-compatible storage.
 #
+# Interpolation is fail-closed on purpose. Compose expands ${VAR} at RENDER
+# time from the shell and from --env-file, never from the service-level
+# env_file, so a bare ${VAR} silently renders an empty argument such as
+# `-max-size=` - and an empty cap is an unlimited upload configuration.
+# Every mandatory variable therefore uses ${VAR:?message}, which aborts the
+# render when the variable is unset or empty.
+#
+# Supported invocation - copy assets/env/tusd-s3.env.example to a deployment
+# env file, fill every value, then pass it at render time:
+#
+#   docker compose --env-file tusd-s3.env -f tusd-s3.compose.yaml config
+#   docker compose --env-file tusd-s3.env -f tusd-s3.compose.yaml up -d
+#
 # TUSD_IMAGE has no default on purpose. The version pin lives in exactly one
 # place in this skill - references/10-source-map.md - so a bump is one edit
 # there plus one in the deployment's own environment. A floating tag makes a
@@ -8,8 +21,6 @@ services:
   tusd-s3:
     image: ${TUSD_IMAGE:?set TUSD_IMAGE to a pinned tusd release; see references/10-source-map.md}
     restart: unless-stopped
-    env_file:
-      - ../env/tusd-s3.env.example
     command:
       - "-host=0.0.0.0"
       - "-port=8080"
@@ -19,32 +30,35 @@ services:
       # Mandatory. An unset -max-size means unlimited: every size check in the
       # handler is gated on MaxSize > 0, so the only remaining ceiling is the
       # store's own MaxObjectSize of 5 TiB.
-      - "-max-size=${TUSD_MAX_SIZE}"
+      - "-max-size=${TUSD_MAX_SIZE:?set the server-side upload cap in bytes; empty means unlimited}"
       # Uncomment unless the product exposes cancellation through tus.
       # - "-disable-termination"
-      - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN}"
+      - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN:?set the exact browser origin; empty disables the origin check}"
       - "-cors-allow-headers=Authorization,X-Request-Id,traceparent,Tus-Resumable,Upload-Length,Upload-Defer-Length,Upload-Metadata,Upload-Offset"
       - "-cors-expose-headers=Location,Upload-Offset,Upload-Length,Upload-Defer-Length,Upload-Metadata,Upload-Expires,Tus-Resumable,Tus-Version,Tus-Extension,Tus-Max-Size,X-Request-Id,traceparent"
-      - "-hooks-http=${TUSD_HOOKS_HTTP}"
+      - "-hooks-http=${TUSD_HOOKS_HTTP:?set the hook endpoint; empty disables creation-time authorization}"
       - "-hooks-http-forward-headers=X-Project-Id,X-User-Id,X-Access,X-Access-Token-Id,X-Request-Id,traceparent"
       - "-hooks-enabled-events=pre-create,post-create,post-receive,pre-finish,post-finish,pre-terminate,post-terminate"
-      - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL}"
+      - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL:?set the progress hook interval, for example 2s}"
       - "-log-format=json"
       - "-metrics-path=/metrics"
-      - "-network-timeout=${TUSD_NETWORK_TIMEOUT}"
-      - "-shutdown-timeout=${TUSD_SHUTDOWN_TIMEOUT}"
-      - "-request-completion-timeout=${TUSD_REQUEST_COMPLETION_TIMEOUT}"
-      - "-acquire-lock-timeout=${TUSD_ACQUIRE_LOCK_TIMEOUT}"
-      - "-s3-bucket=${TUSD_S3_BUCKET}"
-      - "-s3-endpoint=${TUSD_S3_ENDPOINT}"
-      - "-s3-object-prefix=${TUSD_S3_OBJECT_PREFIX}"
-      - "-s3-part-size=${TUSD_S3_PART_SIZE}"
-      - "-s3-min-part-size=${TUSD_S3_MIN_PART_SIZE}"
-      - "-s3-concurrent-part-uploads=${TUSD_S3_CONCURRENT_PART_UPLOADS}"
+      - "-network-timeout=${TUSD_NETWORK_TIMEOUT:?set the network timeout, for example 60s}"
+      - "-shutdown-timeout=${TUSD_SHUTDOWN_TIMEOUT:?set the shutdown budget, for example 30s}"
+      - "-request-completion-timeout=${TUSD_REQUEST_COMPLETION_TIMEOUT:?set the completion timeout, for example 15s}"
+      - "-acquire-lock-timeout=${TUSD_ACQUIRE_LOCK_TIMEOUT:?set the lock timeout, for example 20s}"
+      - "-s3-bucket=${TUSD_S3_BUCKET:?set the target bucket}"
+      - "-s3-endpoint=${TUSD_S3_ENDPOINT:?set the S3 or MinIO endpoint URL}"
+      - "-s3-object-prefix=${TUSD_S3_OBJECT_PREFIX:?set the tenant or project prefix}"
+      - "-s3-part-size=${TUSD_S3_PART_SIZE:?set the part size in bytes}"
+      - "-s3-min-part-size=${TUSD_S3_MIN_PART_SIZE:?set the minimum part size in bytes}"
+      - "-s3-concurrent-part-uploads=${TUSD_S3_CONCURRENT_PART_UPLOADS:?set the concurrent part upload count}"
+    # Credentials interpolate from the SAME deployment env file passed with
+    # --env-file, so they cannot silently render empty and there is no
+    # service-level env_file for an empty value to override.
     environment:
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:?set the storage access key in the deployment env file}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:?set the storage secret key in the deployment env file}
+      AWS_REGION: ${AWS_REGION:?set the storage region}
     ports:
       # Loopback only. The front door is the sole public entry point.
       - "127.0.0.1:${TUSD_BIND_PORT:-1080}:8080"

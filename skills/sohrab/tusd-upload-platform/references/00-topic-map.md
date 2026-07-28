@@ -37,9 +37,9 @@ Assets are starting points that carry this skill's protocol decisions. Adapt hos
 | register upload code in a Quasar app with SSR enabled | `assets/client/quasar.boot.uploads.ts` | client-only boot; boot convention belongs to the frontend skill |
 | scrub upload material out of Sentry events before they leave the browser | `assets/client/quasar.boot.sentry.ts` | pass the same base path used by the app |
 | exclude upload routes from a service worker, or wire the boot files into `quasar.config.ts` | `assets/client/quasar.config.snippet.ts` | PWA denylist is built from the app's base path |
-| run the tusd binary against S3 or MinIO | `assets/docker-compose/tusd-s3.compose.yaml` | register (a); `-max-size` is mandatory and the image must be pinned by `TUSD_IMAGE` |
-| run the tusd binary against local disk for staging and relay | `assets/docker-compose/tusd-staging.compose.yaml` | register (a); same two obligations |
-| fill in the environment for either Compose file | `assets/env/tusd-s3.env.example`, `assets/env/tusd-staging.env.example` | `TUSD_IMAGE` is deliberately empty; take the pin from `references/10-source-map.md` |
+| run the tusd binary against S3 or MinIO | `assets/docker-compose/tusd-s3.compose.yaml` | register (a); `-max-size` is mandatory and the image must be pinned by `TUSD_IMAGE`; render with `docker compose --env-file <deployment-env> -f tusd-s3.compose.yaml config` — interpolation never reads a service-level `env_file`, so mandatory values are `${VAR:?}` and an absent value aborts the render |
+| run the tusd binary against local disk for staging and relay | `assets/docker-compose/tusd-staging.compose.yaml` | register (a); same obligations and the same `--env-file` invocation |
+| fill in the environment for either Compose file | `assets/env/tusd-s3.env.example`, `assets/env/tusd-staging.env.example` | copy to a deployment env file and pass it with `--env-file`; `TUSD_IMAGE` is deliberately empty; take the pin from `references/10-source-map.md` |
 | put HAProxy in front of tusd | `assets/haproxy/tusd-reverse-proxy.cfg` | read the `timeout client` note in `references/70-front-door.md` before shipping it |
 | alert on an upload plane | `assets/prometheus/tusd-alert-rules.yml` | every threshold is a variable; set it from a measured baseline before enabling |
 | persist the ownership record for an upload | `assets/schemas/upload-record.schema.json` | the machine form of the single record in `references/40-authorization.md` |

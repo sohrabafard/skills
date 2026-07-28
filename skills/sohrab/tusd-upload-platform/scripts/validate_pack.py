@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate the tusd-upload-platform skill pack.
 
-Nine checks run against a skill directory. Each violation names the file, the
+Ten checks run against a skill directory. Each violation names the file, the
 line where one exists, what is wrong, and what the agent must do about it.
 
 Exit codes
@@ -48,6 +48,16 @@ CODEX_TRIGGER = re.compile(r"\$([a-z][a-z0-9]*(?:-[a-z0-9]+)+)")
 # A three-part release string. `github.com/tus/tusd/v2` has two parts and does
 # not match; `v2.9.2` does.
 VERSION_STRING = re.compile(r"\bv\d+\.\d+\.\d+")
+
+# A Compose interpolation with whatever follows the variable name. Compose
+# expands these at render time from the shell and --env-file, never from a
+# service-level env_file, so a bare ${VAR} silently renders an empty argument.
+INTERPOLATION = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)([^}]*)\}")
+
+# Variables that must abort the render when absent, with no default of any
+# kind: a default upload cap - including 0, which tusd treats as unlimited -
+# is a policy decision no asset may make on the deployment's behalf.
+NEVER_DEFAULT = frozenset({"TUSD_MAX_SIZE"})
 
 PACK_PATH = re.compile(r"`((?:references|assets|scripts)/[^`]+)`")
 
@@ -269,6 +279,52 @@ def check_required_flags(root: Path) -> list[Violation]:
     return out
 
 
+def check_fail_closed_interpolation(root: Path) -> list[Violation]:
+    """4b - every Compose interpolation is fail-closed or has a default.
+
+    A bare ${VAR} in a Compose file renders as an empty string when the
+    variable is absent from the render-time environment, because the
+    service-level env_file is applied to the container only, never to
+    interpolation. An empty `-max-size=` is an unlimited upload configuration,
+    so every variable must either abort the render (${VAR:?message}) or carry
+    a deliberate default (${VAR:-value}).
+    """
+    out: list[Violation] = []
+    directory = root / "assets" / "docker-compose"
+    if not directory.is_dir():
+        return out
+    for path in sorted(directory.glob("*.y*ml")):
+        for number, line in enumerate(read(path).splitlines(), start=1):
+            # Comments are stripped before Compose interpolates, so a ${VAR}
+            # mentioned in one is documentation, not a rendered value.
+            if line.lstrip().startswith("#"):
+                continue
+            for match in INTERPOLATION.finditer(line):
+                name, modifier = match.group(1), match.group(2)
+                if name in NEVER_DEFAULT:
+                    if not modifier.startswith(":?"):
+                        out.append(Violation(
+                            "fail-closed-interpolation", rel(root, path), number,
+                            f"${{{name}{modifier}}} carries a default or is bare; {name} "
+                            "must abort the render when absent, because any default - "
+                            "including 0, which tusd treats as unlimited - silently "
+                            "removes the upload cap",
+                            f"write ${{{name}:?message}} with no default",
+                        ))
+                    continue
+                if modifier.startswith(":?") or modifier.startswith(":-"):
+                    continue
+                out.append(Violation(
+                    "fail-closed-interpolation", rel(root, path), number,
+                    f"${{{name}{modifier}}} is not fail-closed: when {name} is missing "
+                    "from the render-time environment it silently becomes an empty "
+                    "argument, and an empty -max-size means unlimited uploads",
+                    f"write ${{{name}:?message}} so the render aborts, or "
+                    f"${{{name}:-default}} if the value is deliberately optional",
+                ))
+    return out
+
+
 def check_version_in_one_file(root: Path) -> list[Violation]:
     """5 - the release version string lives in exactly one file."""
     holders: dict[str, int] = {}
@@ -416,6 +472,7 @@ CHECKS = (
     ("topic-map", check_topic_map_covers_pack),
     ("image-pin", check_image_pinned),
     ("required-flags", check_required_flags),
+    ("fail-closed-interpolation", check_fail_closed_interpolation),
     ("version-single-source", check_version_in_one_file),
     ("client-route-literal", check_no_route_literal_in_client),
     ("description", check_description),
@@ -485,7 +542,7 @@ def build_fixture(directory: Path) -> None:
     (directory / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
         "services:\n  tusd:\n    image: ${TUSD_IMAGE:?pin it}\n    command:\n"
         '      - "-behind-proxy"\n      - "-disable-download"\n'
-        '      - "-max-size=${TUSD_MAX_SIZE}"\n',
+        '      - "-max-size=${TUSD_MAX_SIZE:?set the cap}"\n',
         encoding="utf-8",
     )
     (directory / "agents" / "openai.yaml").write_text(
@@ -512,7 +569,22 @@ MUTATIONS = {
     ),
     "required-flags": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
         read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
-            '      - "-max-size=${TUSD_MAX_SIZE}"\n', ""
+            '      - "-max-size=${TUSD_MAX_SIZE:?set the cap}"\n', ""
+        ),
+        encoding="utf-8",
+    ),
+    "fail-closed-interpolation": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
+        read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
+            "${TUSD_MAX_SIZE:?set the cap}", "${TUSD_MAX_SIZE}"
+        ),
+        encoding="utf-8",
+    ),
+    # A defaulted cap is as unsafe as a bare one: 0 means unlimited in tusd,
+    # so `:-0` must fire the same check even though `:-` is fail-closed for
+    # every other variable.
+    "fail-closed-interpolation@default-cap": lambda d: (d / "assets" / "docker-compose" / "tusd.compose.yaml").write_text(
+        read(d / "assets" / "docker-compose" / "tusd.compose.yaml").replace(
+            "${TUSD_MAX_SIZE:?set the cap}", "${TUSD_MAX_SIZE:-0}"
         ),
         encoding="utf-8",
     ),
@@ -559,11 +631,14 @@ def self_test() -> int:
             print("ok    clean fixture is clean")
 
         for name, mutate in MUTATIONS.items():
+            # A key may carry an `@variant` suffix so one check can have
+            # several mutations; the expected check name is the part before it.
+            expected = name.split("@", 1)[0]
             case = workspace / name
             shutil.copytree(clean, case)
             mutate(case)
             fired = {v.check for v in run_checks(case)}
-            if name in fired:
+            if expected in fired:
                 print(f"ok    {name} fires when broken")
             else:
                 failures += 1

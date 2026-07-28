@@ -1,13 +1,23 @@
 # Register (a): the official tusd binary writing to local staging disk, for
 # the stage-then-relay topology in references/30-topologies.md.
 #
+# Interpolation is fail-closed on purpose; see the note in
+# tusd-s3.compose.yaml. Compose expands ${VAR} at render time from the shell
+# and from --env-file, never from a service-level env_file, so every
+# mandatory variable uses ${VAR:?message} and the render aborts rather than
+# emitting an empty argument such as `-max-size=`.
+#
+# Supported invocation - copy assets/env/tusd-staging.env.example to a
+# deployment env file, fill every value, then pass it at render time:
+#
+#   docker compose --env-file tusd-staging.env -f tusd-staging.compose.yaml config
+#   docker compose --env-file tusd-staging.env -f tusd-staging.compose.yaml up -d
+#
 # TUSD_IMAGE has no default on purpose; see the note in tusd-s3.compose.yaml.
 services:
   tusd-staging:
     image: ${TUSD_IMAGE:?set TUSD_IMAGE to a pinned tusd release; see references/10-source-map.md}
     restart: unless-stopped
-    env_file:
-      - ../env/tusd-staging.env.example
     command:
       - "-host=0.0.0.0"
       - "-port=8080"
@@ -15,22 +25,22 @@ services:
       - "-behind-proxy"
       - "-disable-download"
       # Mandatory. An unset -max-size means unlimited.
-      - "-max-size=${TUSD_MAX_SIZE}"
+      - "-max-size=${TUSD_MAX_SIZE:?set the server-side upload cap in bytes; empty means unlimited}"
       # Uncomment unless the product exposes cancellation through tus.
       # - "-disable-termination"
-      - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN}"
+      - "-cors-allow-origin=${TUSD_CORS_ALLOW_ORIGIN:?set the exact browser origin; empty disables the origin check}"
       - "-cors-allow-headers=Authorization,X-Request-Id,traceparent,Tus-Resumable,Upload-Length,Upload-Defer-Length,Upload-Metadata,Upload-Offset"
       - "-cors-expose-headers=Location,Upload-Offset,Upload-Length,Upload-Defer-Length,Upload-Metadata,Upload-Expires,Tus-Resumable,Tus-Version,Tus-Extension,Tus-Max-Size,X-Request-Id,traceparent"
-      - "-hooks-http=${TUSD_HOOKS_HTTP}"
+      - "-hooks-http=${TUSD_HOOKS_HTTP:?set the hook endpoint; empty disables creation-time authorization}"
       - "-hooks-http-forward-headers=X-Project-Id,X-User-Id,X-Access,X-Access-Token-Id,X-Request-Id,traceparent"
       - "-hooks-enabled-events=pre-create,post-create,post-receive,pre-finish,post-finish,pre-terminate,post-terminate"
-      - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL}"
+      - "-progress-hooks-interval=${TUSD_PROGRESS_HOOKS_INTERVAL:?set the progress hook interval, for example 2s}"
       - "-log-format=json"
       - "-metrics-path=/metrics"
-      - "-network-timeout=${TUSD_NETWORK_TIMEOUT}"
-      - "-shutdown-timeout=${TUSD_SHUTDOWN_TIMEOUT}"
-      - "-request-completion-timeout=${TUSD_REQUEST_COMPLETION_TIMEOUT}"
-      - "-acquire-lock-timeout=${TUSD_ACQUIRE_LOCK_TIMEOUT}"
+      - "-network-timeout=${TUSD_NETWORK_TIMEOUT:?set the network timeout, for example 60s}"
+      - "-shutdown-timeout=${TUSD_SHUTDOWN_TIMEOUT:?set the shutdown budget, for example 30s}"
+      - "-request-completion-timeout=${TUSD_REQUEST_COMPLETION_TIMEOUT:?set the completion timeout, for example 15s}"
+      - "-acquire-lock-timeout=${TUSD_ACQUIRE_LOCK_TIMEOUT:?set the lock timeout, for example 20s}"
       - "-upload-dir=/data/uploads"
       - "-dir-perms=0750"
       - "-file-perms=0640"
