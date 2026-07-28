@@ -87,6 +87,13 @@ nothing rather than inventing a near-miss name.
 | `alaa_input_validation_failed_total` | counter | platform-wide | request validation failures |
 | `alaa_rate_limit_exceeded_total` | counter | platform-wide | requests rejected by a rate limit |
 
+### Pagination
+| Metric | Type | Labels | Owner | Measures |
+|---|---|---|---|---|
+| `alaa_pagination_client_failures_total` | counter | `http_route`, `purpose`, `code` | any service with keyset pagination | client-recoverable pagination failures by bounded route, code-owned purpose, and stable error code |
+| `alaa_pagination_server_failures_total` | counter | `http_route`, `purpose`, `category` | any service with keyset pagination | pagination server failures by bounded route, code-owned purpose, and bounded failure category |
+| `alaa_pagination_reply_hydration_nodes` | gauge | `purpose`, `truncated` | any service with bounded reply hydration | reply nodes materialized for a keyset page, split only by code-owned purpose and bounded truncation state |
+
 ### Database
 | Metric | Type | Owner | Measures |
 |---|---|---|---|

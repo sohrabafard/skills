@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Async Messaging"
-  short_description: "Kafka and RabbitMQ async design"
-  default_prompt: "Use $alaa-async-messaging to follow its workflow for kafka and rabbitmq async design."
+  short_description: "RabbitMQ outbox, ack, prefetch, DLQ, replay"
+  default_prompt: "Use $alaa-async-messaging to design or review a RabbitMQ publisher, consumer, transactional outbox, dead-letter route, or replay on the Ala fleet."
 
 policy:
   allow_implicit_invocation: true

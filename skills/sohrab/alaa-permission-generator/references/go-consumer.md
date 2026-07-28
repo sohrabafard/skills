@@ -34,26 +34,34 @@ func DecodePermissionSet(
 ) (Set, error)
 ```
 
-Implement it once, in a non-generated file in the same package. It accepts only non-empty input, unpacks bits per rule 3
-of the shared contract, ignores ids above `maxPermissionID` or absent from the map, and returns an error when zero known
-permissions resolve.
+Do not implement it. `assets/permission-bitmap/permission_bitmap.go` is that file, carrying exactly these signatures so
+the generated `Decode` compiles against it unchanged; copy it into the package and change only the package clause. The
+shipped Go consumer predates it and hand-writes its own, which is the duplication `SKILL.md` now forbids.
 
 ## Integration rules
 
 1. Use the generated constants in middleware and route registration. No permission name string literal and no numeric
    id appears anywhere else in the service.
-2. Production decoding calls the generated `Decode`. **Do not export a decoder interface, a decoder variable, or a
+2. **Cap the encoded bitmap length at the trusted-context boundary, before decoding.** This is rule 3 of the decode-cost
+   section in `references/shared-consumer-contract.md`, and it is restated here because a Go implementer reading only
+   this file would otherwise ship an uncapped decode, as the shipped Go consumer did. Call
+   `DecodePermissionSetWithLimits` with the value from
+   `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`; the no-limit form applies the
+   canonical fallback bound rather than no bound, so neither path is unbounded.
+3. Production decoding calls the generated `Decode`. **Do not export a decoder interface, a decoder variable, or a
    decoder function field from any package.** If a test needs a substitute, the seam is unexported and its only
    production implementation is the generated `Decode`. An exported interface with a live production implementation is
    the override path rule 2 of the shared contract forbids, whatever its stated purpose.
-3. Exported map accessors return a copy, as the generated `PermissionNamesByID` does, so a caller cannot mutate
+4. Exported map accessors return a copy, as the generated `PermissionNamesByID` does, so a caller cannot mutate
    package state.
 
 ## Tests
 
 - Every id and name in the generated map round-trips, and `MaxPermissionID()` equals the highest id in **this** file.
 - A bitmap containing this service's lowest and highest ids decodes, including an id in the second byte and one above 64.
-- Unknown-only, empty, padded, and invalid-character input each fail closed with an error and no partial set.
+- Unknown-only, empty, padded, over-length, and invalid-character input each fail closed with an error and no partial
+  set. These cases and their error precedence are already pinned in `scripts/permission-bitmap-corpus.json`; the package
+  test proves this service's wiring, not the decoder.
 - An unknown bit mixed with a known bit keeps the known permission.
 - A mutation of the map returned by `PermissionNamesByID()` does not change a later call's result.
 - The committed generated file matches a fresh generation.

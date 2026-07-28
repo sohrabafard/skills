@@ -113,9 +113,9 @@ correctness never depends on the lock; only duplicated effort does.
 **Forbidden:** caching a secret, a token, a password, a credential, or a raw trusted header.
 
 **Forbidden:** caching an authorization decision. Permission state changes and revocation must take effect
-immediately; a cached "yes" outlives the revocation that should have stopped it. Take any need to cache authorization
-to `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) and `/alaa-security-review` (`$alaa-security-review`)
-before writing code.
+immediately; a cached "yes" outlives the revocation that should have stopped it. Take whether a decision may be
+cached at all to `/alaa-security-review` (`$alaa-security-review`), and what a service may believe about the trusted
+header that decision arrived on to `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`), before writing code.
 
 ## Signals
 

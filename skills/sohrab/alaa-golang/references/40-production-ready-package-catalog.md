@@ -1,7 +1,7 @@
 # Package Catalog for This Stack
 
 Read this before adding, replacing, or upgrading a dependency. It names what to reach for in this stack: HTTP APIs
-behind a trusted gateway, PostgreSQL, Redis, ClickHouse, RabbitMQ and Kafka, deployed to Kubernetes or OpenShift.
+behind a trusted gateway, PostgreSQL, Redis, ClickHouse and RabbitMQ, deployed to Kubernetes or OpenShift.
 
 **Rule:** work this ladder in order and stop at the first step that answers the question:
 
@@ -94,7 +94,13 @@ client to be the bottleneck. **Forbidden:** choosing it without that profile.
 
 `github.com/rabbitmq/amqp091-go` — **default**, and what the kit's `mqkit` wraps.
 
-`github.com/twmb/franz-go` — **default** Kafka client when Kafka is the chosen broker.
+`github.com/twmb/franz-go` — **not on this fleet.** RabbitMQ is the only broker this platform runs: the exchange
+and queue registry holds no Kafka topic, the service kit ships no Kafka package, no `KAFKA_*` environment key exists,
+and the registered async metric family is entirely `alaa_queue_*` and `alaa_outbox_*`. Adopting Kafka is an owner
+decision, recorded as a kit change request through `/alaa-go-chi-development` (`$alaa-go-chi-development`) before any
+service imports a client. Whether a message needs a broker at all and which transport carries it belong to
+`/alaa-async-messaging` (`$alaa-async-messaging`). Use this client and no other on the day a service is told to speak
+Kafka, because a second Kafka client in the fleet doubles the tuning surface for one transport.
 
 `github.com/ThreeDotsLabs/watermill` — **conditional**, only where a team has decided to adopt its eventing
 abstraction across services. **Forbidden:** adding it for a single consumer.
@@ -146,8 +152,8 @@ a JWKS endpoint.
 
 `github.com/stretchr/testify` — **conditional**, when the repository already uses it.
 
-`github.com/testcontainers/testcontainers-go` — **default** for a test that needs a real Postgres, Redis, ClickHouse,
-Kafka, or RabbitMQ.
+`github.com/testcontainers/testcontainers-go` — **default** for a test that needs a real Postgres, Redis,
+ClickHouse, or RabbitMQ.
 
 `github.com/DATA-DOG/go-sqlmock` — **conditional**, for asserting the exact SQL a repository emits. **Forbidden:**
 using it to prove a query returns correct results — that needs a real database.

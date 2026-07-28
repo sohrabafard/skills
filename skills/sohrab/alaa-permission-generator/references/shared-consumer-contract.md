@@ -44,6 +44,9 @@ The decode runs on every protected request in a high-concurrency service, so its
   trusted-context object every later check reads. No handler, policy, middleware, or repository decodes again.
 - Store the result as a **set keyed by permission name** so a check is a single hash lookup, not a scan. Never compare
   by bitmap id in application code, and never re-derive names inside a loop over resources — that is the N+1 shape.
+- **Take the decoder from `assets/permission-bitmap/` rather than writing one.** All three canonical implementations
+  already satisfy every rule in this file, and `scripts/bitmap-conformance.sh` proves they agree case by case. See
+  `SKILL.md`.
 - **Cap the encoded bitmap length server-side, at the boundary, before decoding.** The client-side caps described for
   the browser consumer do not protect a service; an untrusted-length input decoded without a cap is unbounded work.
   The cap value belongs to `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`; the bound

@@ -52,8 +52,9 @@ and stop.
 ## Not owned here
 
 Timeout, retry, backoff, breaker, backpressure, and degradation doctrine: `/alaa-reliability-sla`
-(`$alaa-reliability-sla`). Every platform value this skill does not state, and every telemetry or error-code name:
-`/alaa-services-contract` (`$alaa-services-contract`). The ten-point quality bar: `/alaa-project-constitution`
-(`$alaa-project-constitution`) `references/quality-bar.md`. Model and effort: `/alaa-prompting-guide`
-(`$alaa-prompting-guide`). Every other owner — pagination, ClickHouse, MongoDB, the broker, testing, system
-design, kit changes — is named at the rule it governs inside `references/`.
+(`$alaa-reliability-sla`). Buckets, object keys, bucket lifecycle policy, storage credentials, and presigned
+URLs: `/alaa-minio-object-storage` (`$alaa-minio-object-storage`). Every platform value this skill does not
+state, and every telemetry or error-code name: `/alaa-services-contract` (`$alaa-services-contract`). The
+ten-point quality bar: `/alaa-project-constitution` (`$alaa-project-constitution`) `references/quality-bar.md`.
+Model and effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`). Every other owner — pagination, ClickHouse,
+MongoDB, the broker, testing, system design, kit changes — is named at the rule it governs inside `references/`.

@@ -120,6 +120,10 @@ opinion.
   envelope.
 - **`alaa-data-layer`** owns pool mechanics inside a driver and persistence invariants. This skill keeps the
   pool bounds and the acquire timeout.
+- **`/alaa-minio-object-storage`** (`$alaa-minio-object-storage`) owns the object store as a platform component: the
+  bucket, the tenant scope carried inside an object key, lifecycle and retention policy, storage-credential supply and
+  rotation, and presigned-URL issuance. Load it when shaping a bucket, writing a lifecycle or retention policy,
+  scoping an object key to a tenant, granting or rotating a storage credential, or issuing a presigned URL.
 - **`alaa-keyset-pagination`** owns the pagination design method: choosing the traversal mode, the sort
   allowlist, the ordering tuple and its unique final component, the composite index, the row-value
   continuation predicate, the signed cursor's payload and context binding, and the nullable, mutable, and

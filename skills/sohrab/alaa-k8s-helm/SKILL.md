@@ -144,13 +144,14 @@ Always verify uncertain permissions with `kubectl auth can-i` or `oc auth can-i`
 - Prefer Services plus Ingress, Gateway API, or Routes over direct Pod exposure.
 - Use Pods directly only for one-off debug or batch cases. Long-running apps belong behind controllers.
 - Prefer OCI registries for chart distribution unless the user is locked into classic chart repositories.
+- Take the bucket, the bucket policy, the lifecycle rules, and the credential posture behind an object-storage volume or an S3 secret from `/alaa-minio-object-storage` (`$alaa-minio-object-storage`), and keep only the Kubernetes expression of that decision here, because a Secret, a PVC, or a CSI volume carries whatever storage policy it is handed and enforces none of it.
 
 ## Subagent strategy
 
 When the environment supports multi-agent workflows, use them only when the task is broad enough to benefit.
 
-- Prefer GPT-5.5 for complex chart/platform orchestration when available; use the strongest approved fallback model if it is not.
-- Use lighter models only for bounded read-only inventory, static validation, or log/event summarization lanes.
+- Take every model and reasoning-effort choice from `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no model here, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative.
+- Describe a lane by the judgment it needs rather than by a tier: chart and platform orchestration decides trade-offs across releases and needs the escalated lane, and bounded read-only inventory, static validation, or log summarization applies a fixed procedure and does not.
 - **Inventory agent**: inspect existing charts, manifests, CRDs, and platform signals.
 - **Validator agent**: run static checks, render charts, and summarize blocking failures.
 - **Platform-fit agent**: map the target to vanilla Kubernetes, OpenShift, or a managed namespace platform and flag access constraints.

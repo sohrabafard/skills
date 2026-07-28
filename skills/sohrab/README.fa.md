@@ -69,6 +69,8 @@
 | `alaa-partitioned-table-fk-audit` | جدول partition شده و بازبینی کلید خارجی |
 | `alaa-crockford-base32-codecs` | کدگذاری شناسه با Crockford Base32 |
 | `clickhouse-performance-schema-ops` | کارایی و schema در ClickHouse |
+| `alaa-minio-object-storage` | ذخیره‌سازی شیء روی MinIO و S3: طراحی bucket و کلید شیء، lifecycle، اعتبارنامه و URL امضاشده |
+| `alaa-arvan-object-storage` | تفاوت‌های ذخیره‌سازی شیء ابر آروان با MinIO و S3 |
 
 ## ۶. Frontend
 
@@ -101,7 +103,7 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-async-messaging` | معماری async: Kafka برای رویداد، RabbitMQ برای job |
+| `alaa-async-messaging` | معماری async روی RabbitMQ: تنها broker ناوگان؛ prefetch و ack و confirm، outbox، DLQ و replay |
 | `alaa-trust-gateway-auth` | صدور و اعتبارسنجی token و هدرهای معتمد در gateway |
 | `alaa-bale-provider` | یکپارچه‌سازی با پیام‌رسان بله |
 | `alaa-sms-provider-mediana` | ارسال پیامک با مدیانا |

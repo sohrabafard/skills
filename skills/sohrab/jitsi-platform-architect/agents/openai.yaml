@@ -1,4 +1,7 @@
 interface:
   display_name: "Jitsi Platform Architect"
-  short_description: "Design secure self-hosted Jitsi platforms"
-  default_prompt: "Use $jitsi-platform-architect to evaluate, integrate, customize, scale, or deploy Jitsi Meet for a security-sensitive product platform."
+  short_description: "Secure self-hosted Jitsi for online classes"
+  default_prompt: "Use $jitsi-platform-architect to design, secure, size, embed, deploy or debug self-hosted Jitsi as the online-class subsystem of the Ala platform."
+
+policy:
+  allow_implicit_invocation: true

@@ -15,7 +15,7 @@ Load one when its condition holds. Claude Code form first, Codex form second. Co
 - `/alaa-security-review` ($alaa-security-review) — read before adding, rotating, or relocating any credential the release path touches: Git remote authentication, deploy keys, or registry credentials for the Satis build. Never write one into a tracked file, a tag message, or your report.
 - `/alaa-observability-soc` ($alaa-observability-soc) — owns the contract for the package's audit, structured-log, metric, progress, and lifecycle-outbox value objects. Read before adding, renaming, or widening the cardinality of a field on one of them.
 - `/service-runtime-kit-governance` ($service-runtime-kit-governance) — local runtime generation, Docker wrappers, and generated-output diff discipline.
-- `/alaa-trust-gateway-auth` ($alaa-trust-gateway-auth) — gateway context, headers, permission bitmaps, TOTP proof.
+- `/alaa-trust-gateway-auth` ($alaa-trust-gateway-auth) — gateway context and trusted headers. The permission bit contract, its id allocation, and the canonical decoders are `/alaa-permission-generator` ($alaa-permission-generator); the TOTP proof's contract shape is `/alaa-services-contract` ($alaa-services-contract) `references/32-auth-totp-and-step-up-contract.md`.
 - `/alaa-php-clean-code` ($alaa-php-clean-code) — Laravel and PHP code quality boundaries.
 - `/alaa-data-layer` ($alaa-data-layer) — persistence, transactions, Postgres truth.
 - `/alaa-prompting-guide` ($alaa-prompting-guide) — every model and reasoning-effort question. Pin no model name in this skill or in work produced under it.

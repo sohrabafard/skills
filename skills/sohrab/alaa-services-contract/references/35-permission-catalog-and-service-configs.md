@@ -55,7 +55,9 @@ Use this file when an Ala service or shared frontend package changes `config/per
 
 ## Current Canonical Outcomes
 
-- Current generated catalog status is `clean` with `119` active permissions, highest bitmap id `119`. Fatal and error drift findings are `0`; current warnings are report-only unless a later policy promotes a scoped warning. Aggregate-consumer findings are the exception and are never report-only.
+- Read the active-permission count and the highest bitmap id from `alaa-permission-catalog` `catalog/permissions.json`, which is the only current source for either number, because both change whenever a permission is added and a number frozen into this file is stale from that addition onward. The id ranges listed below and in the snapshot table are stable and may be relied on; the count and the maximum may not.
+- Read a service's own maximum bitmap id from that service's generated permission map, and the catalog's maximum from the catalog, because a generated map carries only the ids that service knows and its maximum is not the catalog's maximum.
+- Current generated catalog status is `clean`. Fatal and error drift findings are `0`; current warnings are report-only unless a later policy promotes a scoped warning. Aggregate-consumer findings are the exception and are never report-only.
 - The generated TypeScript artifact pins these numbers in client code as `PERMISSION_CATALOG_ACTIVE_COUNT`, `PERMISSION_CATALOG_MAX_BITMAP_ID`, and `PERMISSION_CATALOG_FINGERPRINT`; a stale value is an `AGGREGATE_CONSUMER_STALE_METADATA` error, so verify against the catalog rather than against this list.
 - `wa_get_watch_stats` owns bitmap id `1`; WA service-local config adoption is deferred until WA has a committed permission-consumer shape.
 - `comment_get_index` owns bitmap id `18`.
@@ -67,8 +69,9 @@ Use this file when an Ala service or shared frontend package changes `config/per
 - entitlement-api admin coarse permissions own bitmap ids `96-107`; the generated Go map is compiled into the service
   and remains separate from object-level OpenFGA `can_*` relations.
 - news permissions own bitmap ids `108-119`.
-- The `client` frontend is the only registered aggregate consumer. It consumes all `119` active permissions and owns
-  none of them.
+- auth admin and scope permissions own bitmap ids `120-130`.
+- The `client` frontend is the only registered aggregate consumer. It consumes every active permission in the
+  catalog and owns none of them.
 
 ## Current Permission Snapshot
 
@@ -87,6 +90,7 @@ Use this compact grouping instead of copying the full catalog into prompts:
 | `92-95`       | `tusd`    | upload-intake permissions for content, ticket, auth, and comment handoff                      |
 | `96-107`      | `entitlement` | entitlement-api grant, explain, expansion, reconciliation, projection, query, and access-rule admin permissions |
 | `108-119`     | `news`    | news send-scope, edit/remove, root, and visibility-diagnostics permissions                    |
+| `120-130`     | `auth`    | auth admin and scope permissions                                                              |
 
 ## Companion Skill Boundary
 

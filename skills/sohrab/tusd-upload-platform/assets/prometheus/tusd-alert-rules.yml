@@ -1,14 +1,27 @@
+# Alert rules for an upload plane.
+#
+# Every threshold below is a variable, written as a recording-rule-style
+# placeholder rather than a number, because a threshold copied from a
+# template is stale the day it is written and fires either constantly or
+# never. Set each one from a measured baseline before enabling the rule, and
+# record where the baseline came from. See references/80-observability.md.
+#
+# Substitute before use:
+#   $UPLOAD_5XX_RATE_THRESHOLD    errors per second, from p99 of a normal week
+#   $UPLOAD_CONNECTIONS_THRESHOLD open connections, from peak normal concurrency
+#   $UPLOAD_TEMP_DISK_WARN_RATIO  first disk threshold from 35-storage-lifecycle
+#   $UPLOAD_REAPER_BACKLOG_RUNS   consecutive runs of growth that count as stalled
 groups:
   - name: tusd
     rules:
       - alert: TusdHigh5xxRate
-        expr: sum by (job, instance) (rate(tusd_errors_total{status=~"5.."}[5m])) > 0.5
+        expr: sum by (job, instance) (rate(tusd_errors_total{status=~"5.."}[5m])) > $UPLOAD_5XX_RATE_THRESHOLD
         for: 10m
         labels:
           severity: warning
         annotations:
-          summary: "tusd is returning elevated 5xx responses"
-          description: "Inspect tusd logs, hook failures, proxy changes, and storage latency. Tune the threshold to your baseline."
+          summary: "Upload plane is returning elevated 5xx responses"
+          description: "Check hook failures, front-door changes and object-store latency. Class 1 and 4 in references/50-failure-modes.md."
 
       - alert: TusdHookErrors
         expr: sum by (job, instance, hooktype) (increase(tusd_hook_errors_total[10m])) > 0
@@ -16,8 +29,8 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "tusd hooks are failing"
-          description: "Hook failures often indicate auth service, policy, or connectivity issues."
+          summary: "Upload hooks are failing"
+          description: "Any growth matters: a fail-closed hook is denying uploads and a fail-open hook is losing records silently. Alert per hooktype, never on the aggregate."
 
       - alert: TusdS3SemaphoreSaturated
         expr: tusd_s3_upload_semaphore_demand >= tusd_s3_upload_semaphore_limit
@@ -25,14 +38,36 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "tusd S3 part upload concurrency is saturated"
-          description: "Consider tuning part-upload concurrency, scaling workers, or investigating slow object-store requests."
+          summary: "Part-upload concurrency is saturated"
+          description: "Uploads are queuing behind the object store. Check store latency before raising concurrency; raising it also raises temp-disk demand."
 
       - alert: TusdOpenConnectionsHigh
-        expr: tusd_connections_open > 500
+        expr: tusd_connections_open > $UPLOAD_CONNECTIONS_THRESHOLD
         for: 15m
         labels:
           severity: warning
         annotations:
-          summary: "tusd has many open connections"
-          description: "Threshold is a placeholder. Set it from your normal concurrency baseline."
+          summary: "Unusually many open upload connections"
+          description: "Set the threshold from peak normal concurrency. Multiply it by the per-upload temp-disk demand to check the volume can still absorb it."
+
+      - alert: TusdTempDiskPressure
+        expr: |
+          (1 - (node_filesystem_avail_bytes{mountpoint="/tmp"} / node_filesystem_size_bytes{mountpoint="/tmp"}))
+            > $UPLOAD_TEMP_DISK_WARN_RATIO
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Upload temp disk is filling"
+          description: "S3 mode buffers about 1 GiB per in-flight upload at upstream defaults. The required response at the next threshold is to refuse new creations and let in-flight uploads drain. Class 8 in references/50-failure-modes.md."
+
+      - alert: TusdRetentionReaperFallingBehind
+        expr: |
+          increase(upload_retention_eligible_total[1h])
+            > increase(upload_retention_reclaimed_total[1h])
+        for: $UPLOAD_REAPER_BACKLOG_RUNS
+        labels:
+          severity: warning
+        annotations:
+          summary: "Unfinished uploads are accumulating faster than they are reclaimed"
+          description: "The reaper is losing to arrival rate, or it has stopped. Without this alert the first symptom is a full disk or an object-storage bill. See references/35-storage-lifecycle.md."

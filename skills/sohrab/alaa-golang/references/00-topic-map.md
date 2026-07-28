@@ -48,6 +48,7 @@ owns it — gives the test that decides whether this skill fills the gap itself.
 | add a repository, a query, or a transaction boundary | `60-service-architecture-patterns.md`, then `/golang-database` (`$golang-database`) |
 | read from or write to Redis | `61-redis-cache-layer.md` |
 | change a schema, a migration, a pooling lane, or tenant-scoped access | `/alaa-data-layer` (`$alaa-data-layer`) |
+| choose or configure an S3 or MinIO client library | `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) |
 | paginate a list endpoint or a query over a growing table | `/alaa-keyset-pagination` (`$alaa-keyset-pagination`) |
 | write a queue consumer, a publisher, an outbox relay, or DLQ handling | `/alaa-async-messaging` (`$alaa-async-messaging`) |
 | write a path whose cost grows with rows, tenants, retained history, or fan-out per event; or find a database, HTTP, cache, or permission call inside a loop | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |

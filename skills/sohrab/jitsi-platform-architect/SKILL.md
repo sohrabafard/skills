@@ -1,119 +1,88 @@
 ---
 name: jitsi-platform-architect
-description: "Use this skill when the task is to evaluate, integrate, customize, secure, scale, or deploy self-hosted Jitsi Meet and Jitsi Videobridge for a product platform, especially with external auth or JWT, trust-gateway or OpenFGA-style authorization, Vue or Quasar or Vite frontend embedding (SSR, SPA, or PWA), room lifecycle, webhooks or event-driven analytics, recording or Jibri, Kubernetes or OpenShift, Docker Compose or Swarm, or high-concurrency and SLA planning. Do not use it for end-user meeting help, generic WebRTC theory, or unrelated conferencing products unless making a direct architectural comparison."
+description: "Self-hosted Jitsi Meet and Videobridge as an Ala subsystem for online classes: the join-token trust domain from the platform's authorization decision onward, room-name entropy, guest-domain lockdown, recording governance, capacity, embedding, and live-conference failure classes. Use when designing, securing, sizing, embedding, deploying or debugging self-hosted Jitsi — minting or renewing a Jitsi JWT, naming a room, assigning a moderator, starting or retaining a recording, exposing JVB or TURN, choosing a substrate, or diagnosing a mid-conference drop. Jitsi is planned here and not yet deployed, so nothing in this skill is evidence about what the platform runs. Do not use it for end-user meeting help, generic WebRTC theory, or another conferencing product except in a direct comparison. Route gateway header trust to /alaa-trust-gateway-auth, frontend code shape to /alaa-vue-typescript-clean-code, substrate mechanics to /alaa-k8s-helm."
 ---
 
 # Jitsi Platform Architect
 
-## What this skill assumes
+Self-hosted Jitsi as one Ala subsystem, carrying online classes. **A class is not a meeting**: its scheduled
+start, known roster, teacher-moderator, gradeable recording and pre-known headcount each change a decision below.
+It owns everything after the platform decides a caller may join room R as role X — the derived token,
+room-name entropy, guest-domain lockdown, moderator assignment, recording governance, and the media plane's
+substrate demands.
 
-- The product is platform-centric and Jitsi is one subsystem inside a larger system.
-- Identity, tenancy, billing, policy, and analytics belong to the platform, not to Jitsi.
-- The platform may be security-sensitive, multi-tenant, and exposed to large concurrency.
-- The answer must separate what is officially supported, what is community-supported, and what is an engineering workaround.
+**Status.** No Jitsi deployment exists in this repository today. Every rule here is a decision to make, not an
+observation, so nothing here is evidence about what the platform operates.
 
-## Use boundaries
+## When not to use
 
-Use this skill for:
+End-user meeting help, generic WebRTC theory, or another conferencing product unless the task asks for a
+comparison. Editing Jitsi's source, unless maintaining a fork.
 
-- architecture and product-fit decisions around Jitsi
-- trust-gateway and JWT admission design
-- frontend embedding, branding, and feature exposure
-- eventing, watch-time analytics, and recording workflows
-- Docker, Kubernetes, and OpenShift deployment choices
-- scaling, stability, observability, and security reviews
+## Rules that hold on every task
 
-## When NOT to use
+1. A room name is an opaque server-generated identifier with at least 128 bits of entropy from a cryptographically
+   secure source, rendered as 26 lowercase Crockford Base32 characters. Knowing the room name is enough to be in
+   the room.
+2. Never derive a room name from a tenant, school, class, course id, teacher, date, timetable slot, sequential id
+   or UUIDv7; the human title stays in platform metadata. Each is public or enumerable, and UUIDv7 leads with a
+   timestamp the published start time discloses.
+3. The `room` claim equals exactly one room identifier — never `*`, a prefix wildcard, or a list. A token
+   matching more than one room admits its holder to every class it matches.
+4. Anonymous authentication is disabled and the guest domain locked before the first real class, verified by
+   joining with no token from a clean profile and observing the refusal. A configuration file is not evidence: an
+   upgrade can silently restore a default.
+5. No platform access token, refresh token or gateway header ever reaches Jitsi; mint a token scoped to one
+   conference. Jitsi components log and forward the token, so a platform credential inside one reaches every
+   media-plane operator.
+6. The mint endpoint verifies its own caller and never treats a trusted header alone as authorization to mint. A
+   directly reachable service receives forged headers from anything that can open its port.
+7. No recording starts without a server-side authorization check and a notice rendered before capture begins. A
+   class recording captures minors in many jurisdictions, and consent never displayed cannot be evidenced later.
+8. Never state an upstream Jitsi fact without its row in `references/90-source-map.md`, and re-read any row older
+   than 90 days before using it. An undated fact reads as authoritative and gets copied forward until it is wrong.
 
-- basic end-user instructions for joining or running meetings
-- generic browser troubleshooting without a platform angle
-- unrelated conferencing tools unless the task explicitly asks for comparison
-- direct source-code modifications inside Jitsi itself unless the task is clearly about maintaining a Jitsi fork
+## References — read the row you match
 
-## Default stance
+| You are about to … | Read |
+|---|---|
+| mint, renew or size a join token; name a room; lock the guest domain; assign a moderator | `references/10-architecture-and-jwt-trust.md` |
+| diagnose a dropped conference, vanished participant, stopped recording or missing bridge; plan a drain | `references/20-failure-classes.md` |
+| choose a substrate, expose JVB or TURN, brief a cluster team | `references/30-deployment-substrate.md` |
+| embed in Vue, Quasar or Vite, or weigh the IFrame API against `lib-jitsi-meet` | `references/40-embedding-contract.md` |
+| consume a meeting event, compute attendance, start or retain a recording | `references/50-events-recording-governance.md` |
+| size a component, plan the top-of-period join burst, state an availability target | `references/60-scale-and-capacity.md` |
+| repeat any claim about Jitsi behaviour, a config key, release or support tier | `references/90-source-map.md` |
 
-- Keep control plane and media plane separate in your reasoning.
-- Keep identity and authorization in the platform; Jitsi should consume a narrower meeting-scoped artifact.
-- Prefer short-lived room-scoped JWTs over passing raw platform access tokens into Jitsi.
-- Prefer the IFrame API for product embedding unless the task truly requires lower-level media control or a custom meeting UI.
-- Treat JVB, TURN, and Jibri as separate capacity domains.
-- Never promise 99.99% from a topology that still has obvious single points of failure.
+## Check the contract
 
-## First-pass workflow
+```
+python3 scripts/check_jitsi_jwt.py --self-test
+python3 scripts/check_jitsi_jwt.py --token-file <path> --profile <profile.json>
+python3 scripts/check_jitsi_jwt.py --room-name <name>
+```
 
-1. Classify the request: architecture/auth, frontend/embed, events/analytics, deployment, or reliability/security.
-2. Capture the hard constraints: tenants, roles, room lifecycle, recording, concurrency, regions, browser/mobile support, SSR/PWA, cluster privileges, and data retention.
-3. Load only the reference files that match the request.
-4. Produce a deliverable with explicit decisions, tradeoffs, prerequisites, and risks.
-5. Run the validation checklist before finalizing.
+Exit `0` held; `1` a rule broke — fix the mint path or the generator, never the sample; `2` bad input, never a
+pass; `3` the self-test failed, so no result here can be trusted. It asserts claim shape, never a signature: a
+signed token can still open a classroom.
 
-## Reference selection
+## Every deliverable states
 
-- Architecture, auth, trust-gateway, room lifecycle: `references/architecture-and-auth.md`
-- Vue/Quasar/Vite embedding, UI customization, SSR/PWA: `references/frontend-vue-quasar-vite.md`
-- Webhooks, event triggers, watch-time analytics, recording signals: `references/events-webhooks-and-analytics.md`
-- Docker, Swarm, Kubernetes, OpenShift, and deployment choice: `references/deployment-platforms.md`
-- Scale, stability, security, observability, and SLA planning: `references/scaling-stability-security.md`
-- Official source priority and freshness rules: `references/source-map.md`
+- which service mints, what it verifies about its caller, and the lifetime in seconds;
+- how room identifiers are generated, stored, retired;
+- the recording policy: who may start one, where artifacts land, retention, who is told;
+- where public UDP terminates, how TURN is provided, whether the substrate carries more than one bridge;
+- the peak join rate from the timetable, with the date it was read;
+- the remaining single points of failure and the prerequisites the app team cannot satisfy alone.
 
-## Working rules
+## Not owned here
 
-- Make the platform the system of record for rooms, attendance, analytics, policies, and artifacts.
-- Do not describe the gateway as authorizing each RTP packet. The gateway decides admission; Jitsi enforces session behavior.
-- For self-hosted eventing, assume rich client-side events and component-level hooks, not a universal server-side webhook bus.
-- For SSR, never instantiate Jitsi during server render. Load it only in a client-only lifecycle.
-- For PWA, treat the meeting route as network-sensitive and design for reconnects, permissions, visibility changes, and heartbeat-based analytics.
-- For restricted Kubernetes or OpenShift environments, validate UDP/L4 exposure and pod security constraints before recommending an in-cluster media plane.
-- For Docker Swarm, be conservative. Recommend it only when the organization already standardizes on Swarm and understands the UDP/media networking implications.
-- When a detail is version-sensitive, re-check the current upstream docs and releases before finalizing the answer.
-
-## Deliverable patterns
-
-Choose the lightest output that still resolves the task:
-
-- Architecture memo: context, topology, auth flow, room lifecycle, event model, risks, phased rollout.
-- Frontend integration plan: component pattern, token flow, config overrides, event bridge, cleanup, SSR/PWA caveats.
-- Deployment plan: chosen platform, public/private ports, TLS, TURN/JVB/Jibri placement, observability, rollout, rollback.
-- Risk review: top failure modes, blockers, validations, and load-test priorities.
-- Decision matrix: when to choose Jitsi, when to extend it, and when to compare against classroom-first alternatives.
-
-## Validation checklist
-
-Before finalizing, verify that the answer:
-
-- clearly separates control plane from media plane
-- states where JWTs are minted and which claims matter
-- states where public UDP terminates and how TURN is provided
-- states whether recording is supported, queued, or intentionally omitted
-- states whether analytics are client-derived, server-derived, or both
-- states whether the proposed deployment can really support multiple JVBs
-- calls out cluster-team or infra prerequisites that the app team cannot satisfy alone
-- makes the remaining single points of failure obvious
-
-## Common mistakes to avoid
-
-- Treating Jitsi like a normal HTTP microservice.
-- Assuming gateway header injection directly controls the media plane.
-- Hiding blockers around UDP, host networking, LoadBalancer behavior, or cluster privileges.
-- Using client-side events alone for billing-grade watch-time or compliance logs.
-- Co-locating Jibri with critical JVB nodes without isolation and queueing.
-- Embedding `external_api.js` in SSR output or referencing `window` during server render.
-- Exposing JVB private REST or Colibri endpoints publicly.
-- Copying outdated scaling tutorials without checking the current handbook.
-
-## Freshness rules
-
-- Prefer the official Jitsi handbook and upstream GitHub repositories first.
-- Use `jitsi-contrib` resources for Kubernetes and Helm guidance.
-- Use community issues and PRs mainly for operational pitfalls, not as the primary truth source.
-- Re-check release state before asserting current chart behavior, config keys, packaging behavior, or deployment limitations.
-
-## Subagent Strategy
-
-When the environment supports multi-agent workflows, split substantial work into at most three focused read-only tracks:
-
-1. architecture/auth and room lifecycle
-2. frontend embedding, branding, and analytics/event ingestion
-3. deployment, scaling, and operational risk
-
-Merge only converged conclusions and keep unresolved constraints explicit.
+Everything up to "this caller may join room R as role X", the trusted header set, and edge strip-and-reject:
+`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). Endpoint shapes, envelopes, error codes, telemetry names
+and platform values: `/alaa-services-contract` (`$alaa-services-contract`). Doctrine lives with its owner:
+retries, timeouts, breakers and degradation `/alaa-reliability-sla` (`$alaa-reliability-sla`); fail-closed and
+threat classes `/alaa-security-review` (`$alaa-security-review`); telemetry levels `/alaa-observability-soc`
+(`$alaa-observability-soc`); the quality bar `/alaa-project-constitution` (`$alaa-project-constitution`); model
+and effort `/alaa-prompting-guide` (`$alaa-prompting-guide`); test layer `/alaa-testing-strategy`
+(`$alaa-testing-strategy`). Every other owner — substrate, edge, frontend, data, messaging,
+orchestration — is named at the rule it governs inside `references/`.

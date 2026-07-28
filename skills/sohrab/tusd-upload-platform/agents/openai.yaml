@@ -1,4 +1,6 @@
 interface:
   display_name: "tusd Upload Platform"
-  short_description: "Production tusd and Vue upload specialist"
-  default_prompt: "Use $tusd-upload-platform to design, review, or debug a production tusd upload flow with Vue frontend and Ala gateway integration."
+  short_description: "Resumable tus and tusd upload platform"
+  default_prompt: "Use $tusd-upload-platform to design, review, or debug a resumable upload plane: size caps, retention, hook failure posture, per-method authorization, resume correctness, storage lifecycle, the front door, and the browser client."
+policy:
+  allow_implicit_invocation: true

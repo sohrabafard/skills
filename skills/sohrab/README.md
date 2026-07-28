@@ -143,6 +143,8 @@ The 46 `golang-*` skills these four route into are upstream subtrees under the r
 - `alaa-partitioned-table-fk-audit`
 - `alaa-crockford-base32-codecs`
 - `clickhouse-performance-schema-ops`
+- `alaa-minio-object-storage`
+- `alaa-arvan-object-storage`
 
 ### Frontend and frontend delivery
 

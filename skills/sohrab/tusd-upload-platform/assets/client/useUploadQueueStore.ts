@@ -1,26 +1,25 @@
 import { defineStore } from 'pinia'
+import { isTerminalUploadState, type UploadState } from './uploadStates'
 
-export type UploadQueueStatus =
-  | 'queued'
-  | 'creating-session'
-  | 'uploading'
-  | 'paused'
-  | 'completed-upload'
-  | 'processing'
-  | 'ready-asset'
-  | 'failed'
-  | 'cancelled'
-  | 'expired'
-
+/**
+ * Multi-upload queue for screens that upload more than one file or keep
+ * progress alive across navigation.
+ *
+ * This skill owns only the tus-protocol facts in this file: the state list,
+ * which fields are safe to persist, and the rule that live `tus.Upload`
+ * instances never enter store state. Store shape, naming and module layout
+ * belong to the frontend skill for the project.
+ */
 export interface UploadQueueItem {
   appUploadId: string
   displayName?: string
   size: number
   mimeType?: string
-  status: UploadQueueStatus
+  status: UploadState
   progressPercent: number
   bytesUploaded: number
   bytesTotal: number
+  /** A safe code, never a message and never a URL. */
   safeErrorCode?: string
   createdAt: string
   updatedAt: string
@@ -32,7 +31,8 @@ export const useUploadQueueStore = defineStore('uploadQueue', {
   }),
 
   getters: {
-    activeItems: (state) => state.items.filter((item) => item.status === 'uploading' || item.status === 'paused'),
+    activeItems: (state) =>
+      state.items.filter((item) => item.status === 'uploading' || item.status === 'paused'),
     failedItems: (state) => state.items.filter((item) => item.status === 'failed'),
   },
 
@@ -46,7 +46,10 @@ export const useUploadQueueStore = defineStore('uploadQueue', {
       this.items[index] = { ...this.items[index], ...item, updatedAt: new Date().toISOString() }
     },
 
-    patch(appUploadId: string, patch: Partial<Omit<UploadQueueItem, 'appUploadId' | 'createdAt'>>) {
+    patch(
+      appUploadId: string,
+      patch: Partial<Omit<UploadQueueItem, 'appUploadId' | 'createdAt'>>,
+    ) {
       const item = this.items.find((existing) => existing.appUploadId === appUploadId)
       if (!item) return
       Object.assign(item, patch, { updatedAt: new Date().toISOString() })
@@ -56,12 +59,16 @@ export const useUploadQueueStore = defineStore('uploadQueue', {
       this.items = this.items.filter((item) => item.appUploadId !== appUploadId)
     },
 
+    /** Drop everything that will not change again on its own. */
     clearFinished() {
-      this.items = this.items.filter(
-        (item) => item.status !== 'ready-asset' && item.status !== 'completed-upload' && item.status !== 'cancelled',
-      )
+      this.items = this.items.filter((item) => !isTerminalUploadState(item.status))
     },
 
+    /**
+     * Required on logout, account switch and project switch. Leaving items
+     * behind is how a stored resume candidate from one tenant is offered
+     * inside another.
+     */
     clearForLogoutOrProjectSwitch() {
       this.items = []
     },

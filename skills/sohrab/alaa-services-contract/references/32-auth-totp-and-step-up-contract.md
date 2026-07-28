@@ -90,12 +90,14 @@ The target cross-service flow is signed proof-token based:
 {
   "purpose": "content.bulk_delete",
   "verified_until": "2026-07-04T12:05:00Z",
-  "proof_token": "<opaque signed proof token>"
+  "proof_token": "<signed proof token>"
 }
 ```
 
 The proof token must bind at least user, project or tenant context where applicable, purpose, proof id, issued time,
-expiry, and issuer. The token must be opaque to public clients. Public docs and examples must use placeholders only.
+expiry, and issuer. The proof token is a compact JWT signed by Auth. A public client treats it as an opaque bearer
+credential, parses none of its claims and acts on none of them, because only the gateway's signature verification
+makes any claim inside it trustworthy. Public docs and examples must use placeholders only.
 
 ## Client proof cache
 
@@ -116,17 +118,35 @@ Rules:
 Public clients retry force-TOTP routes with only:
 
 ```http
-X-TOTP-Proof: <opaque signed proof token>
+X-TOTP-Proof: <signed proof token>
 ```
 
 Gateway responsibilities:
 
 - Strip any inbound trusted backend `X-TOTP-*` headers from public requests.
-- Verify `X-TOTP-Proof` signature, issuer, expiry, user/session binding, project binding where applicable, and purpose.
+- Verify the `X-TOTP-Proof` token's `alg` against an allow-list before verifying its signature, then
+  verify the signature, `typ`, `aud`, and `iss`, and check `exp` and `nbf` against the configured
+  clock skew, because an algorithm chosen by the presenter defeats signature verification and a
+  shared signing key makes `aud` the control that separates a proof from an access token.
+- Bind the proof to the authenticated access token by requiring the proof's `sub` and `pid` to equal
+  the access token's `sub` and `pid`, and inject no metadata when either differs, because an
+  unbound proof is spendable by any authenticated caller who obtains it.
+- Require `purpose` to be present and non-empty and forward it verbatim as `X-TOTP-PURPOSE`, because
+  the gateway holds no route-to-purpose map and only the route's own service knows which purpose it
+  requires.
 - Forward only gateway-verified backend metadata to the downstream service:
   - `X-TOTP-PURPOSE`
   - `X-TOTP-VERIFIED-UNTIL`
   - `X-TOTP-PROOF-ID`
+- Send `X-TOTP-VERIFIED-UNTIL` as the proof's `exp` in Unix epoch seconds. The step-up response body's
+  `verified_until` carries that same instant as an ISO 8601 string, so a service parses this header as an integer and
+  never reuses a parser written against the response body.
+
+The gateway injects those three headers only when the proof is fully valid, and injects nothing when the proof is
+absent, expired, unbound, or wrongly signed. It returns no TOTP error and blocks no request in either case, because
+it holds no route-to-purpose map and so cannot know whether the route being called requires step-up at all. An absent
+proof and an invalid proof are therefore indistinguishable to the downstream service, and the service denies the
+step-up-protected operation in both cases.
 
 Downstream service responsibilities:
 

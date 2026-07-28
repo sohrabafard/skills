@@ -32,7 +32,8 @@ The kit owns the mechanism. The rules that mechanism must satisfy belong elsewhe
 |---|---|---|
 | Envelopes, readiness bodies, header names, `X-Access` wire encoding, deadlines, code and metric registries | `httpkit`, `errkit`, `readykit`, `trustkit`, `obskit` | `/alaa-services-contract` (`$alaa-services-contract`) |
 | Retries, timeouts, breakers, shedding, degradation, error budgets, SLOs | `jobkit`, `mqkit`, `rediskit`, `runkit` | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| Trusted headers, `TrustCtx`, TOTP step-up, tenancy | `trustkit` | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`); verdicts `/alaa-security-review` (`$alaa-security-review`) |
+| Trusted headers, `TrustCtx`, tenancy | `trustkit` | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`); verdicts `/alaa-security-review` (`$alaa-security-review`) |
+| TOTP step-up | `trustkit` | trust semantics `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`); contract shape `/alaa-services-contract` (`$alaa-services-contract`) `references/32-auth-totp-and-step-up-contract.md`; verdicts `/alaa-security-review` (`$alaa-security-review`) |
 | Permission names and bitmap ids | the `servicePermissions` seam | `/alaa-permission-generator` (`$alaa-permission-generator`), catalog `alaa-permission-catalog` |
 | Postgres, pooling lanes, migrations, Redis | `pgkit`, `rediskit` | `/alaa-data-layer` (`$alaa-data-layer`) |
 | RabbitMQ, outbox, consumers, DLQ, idempotency | `mqkit`, `outboxkit`, `jobkit` | `/alaa-async-messaging` (`$alaa-async-messaging`) |

@@ -59,6 +59,8 @@ Keep this top-level file small. Load the references for the full rules, examples
   - Pair when the task also touches pipeline alignment for image builds.
 - $alaa-security-review
   - Pair when the task also touches runtime hardening and secret handling.
+- $alaa-minio-object-storage (`/alaa-minio-object-storage` in Claude Code)
+  - Pair when the task decides what a MinIO container's bucket, policy, lifecycle rules, or credentials must be, as opposed to how the container is expressed.
 
 ## Reference navigation
 

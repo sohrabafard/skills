@@ -14,15 +14,15 @@ vocabulary. This skill owns allocation in the catalog and emission into consumer
 The catalog is a repository of its own, separate from every service repository. Resolve its root in this order:
 
 1. A path supplied in the request — a catalog-root argument, or a plain path the requester names. This wins.
-2. Otherwise `D:/Sohrab/Project/alaa-permission-catalog`, a sibling of the service repositories under
-   `D:/Sohrab/Project`.
+2. Otherwise a directory named `alaa-permission-catalog` beside the current service checkout, because the catalog is a
+   sibling of the service repositories rather than a child of any one of them.
 
-Confirm a candidate root by the presence of `scripts/permission_catalog.php`. Running it needs PHP 8.2 or newer and
+Confirm a candidate root by the presence of `alaa-permission-catalog/scripts/permission_catalog.php`. Running it needs PHP 8.2 or newer and
 nothing else: the project has zero runtime dependencies and that entrypoint carries its own autoloader, so **do not run
 `composer install`** — invoke the entrypoint directly.
 
-**Hard stop, and the most important rule here.** If no candidate root contains `scripts/permission_catalog.php`, stop
-and ask the requester where the catalog is. Do not hand-write, infer, reconstruct, or copy by eye a permission map, a
+**Hard stop, and the most important rule here.** If no candidate root contains `alaa-permission-catalog/scripts/permission_catalog.php`, report
+every path you tried, stop, and ask the requester where the catalog is. Do not hand-write, infer, reconstruct, or copy by eye a permission map, a
 `bitmap_id`, an auth seed row, a `config/permissions.php`, a `permissions_gen.go`, or a `permission-catalog.ts`. A
 hand-built permission map is the outcome every other rule here exists to prevent; "catalog root not found, need the
 path" is the correct report.
@@ -67,30 +67,69 @@ only when the request names it.
   contract; ignore unknown bits and fail closed on zero known permissions; never hand-edit a generated file;
   re-validate after applying. They are stated once in `references/shared-consumer-contract.md`, with the observability
   and per-request cost rules. Read it before writing or reviewing any consumer code.
+- **`MaxPermissionID()` is per-file, not per-catalog.** Each generated Go map returns the highest id in *that service's*
+  map — `tusd` returns 95, `news` returns 119, `wa` returns 1 — and the generated `Decode` passes it as the decode
+  bound, so an id above a service's own generated maximum is dropped by that service even while auth issues it. Apply
+  the consuming service's generated map in the same change as the auth seed, because a seed-only change leaves the
+  service unable to see the permission it was just granted.
 - **Never freeze the scale.** No permission count, maximum id, or fingerprint goes into code, a comment, a test, or a
   report. Read them from `catalog/permissions.json`, from `generated/reports/permission-catalog-summary.md` and
   `generated/reports/permission-drift-report.json`, or from `PERMISSION_CATALOG_ACTIVE_COUNT`,
   `PERMISSION_CATALOG_MAX_BITMAP_ID`, and `PERMISSION_CATALOG_FINGERPRINT` at the end of the generated TypeScript
-  artifact. Every id range written in the project's `docs/` is stale against the catalog.
+  artifact. **The id ranges the project's `docs/` state are not the problem; their incompleteness is.** Every range
+  those documents name — `64-78`, `79-91`, `92-95`, `96-107` — was still correct on 2026-07-27, so treating all of them
+  as stale makes a reader re-derive a range that was right. What no catalog document mentions is the `news` block at ids
+  `108-119` or the `auth` admin and scope block at ids `120-130`, so a reader who stops at `docs/` concludes the catalog
+  ends at 107. Read the current count and maximum from the sources named above, never from a document and never from
+  this paragraph.
+
+## One decoder, not one per service
+
+`alaa-permission-catalog` allocates ids and emits maps; it holds no encoder and no decoder in any language. The bit
+unpacking, the base64url handling, the error taxonomy, and the question "does this bitmap grant permission N" therefore
+live outside it, and until this skill shipped them they lived in a hand-written file inside each consuming service. That
+is the shape that produced the Crockford Base32 incident this repository already paid for: four implementations under
+one contract, and the first run of all four together found five divergences.
+
+**A service does not hand-write a permission-bitmap decoder.** It copies the canonical implementation for its language
+from this skill, which is generated-adjacent source a service does not edit locally.
+
+| Language | Asset | Copied into, changing only |
+| --- | --- | --- |
+| Go | `assets/permission-bitmap/permission_bitmap.go` | the package holding `permissions_gen.go`; the package clause |
+| PHP | `assets/permission-bitmap/PermissionBitmap.php` with `PermissionBitmapException.php` | the namespace reading `config/permissions.php`; the namespace |
+| TypeScript | `assets/permission-bitmap/permission-bitmap.ts` | the SDK package beside `permission-catalog.ts`; nothing |
+
+- **Fix a defect in a canonical implementation here, then re-propagate it to every consumer**, because a fix applied
+  only where the bug surfaced leaves every other service running the bug.
+- **Run `scripts/bitmap-conformance.sh` before a change to any canonical implementation ships**, and record its output,
+  because a change proved in one runtime is not proved in the others. It drives every implementation whose toolchain is
+  present over `scripts/permission-bitmap-corpus.json`, prints `pass`, `fail`, or `skipped: <runtime> not installed` per
+  runtime, and never reports a pass for a runtime it did not run. **A skipped runtime is unproved, not passing.**
+- **Add a new input class to the corpus rather than to one language's test file**, because a corpus case binds all three
+  implementations and a test-file case binds one. The corpus carries `corpus_sha256` over its case array; the harness
+  recomputes it on every run and exits `6` on a mismatch, so a drifted copy is visible instead of silent.
+- The canonical implementations carry the encoded-length cap that `references/shared-consumer-contract.md` requires, as
+  a fallback bound plus an explicit-cap entry point. The value a service enforces is owned by
+  `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
+
+The durable fix is for the catalog tool to emit the decoder beside the map, so there is one source rather than one
+source plus a propagation discipline. `references/catalog-decoder-emission-proposal.md` states that change request, what
+it would break, and what deciding it needs. It is a proposal, and this skill does not edit that repository.
 
 ## Which reference to read
 
-| You are about to | Read |
-| --- | --- |
-| Run any catalog command, gate CI on one, or explain an exit code | `references/command-surface.md` |
-| Add or edit a permission entry, register an owner or aggregate consumer, or interpret a drift finding | `references/catalog-workflow.md` |
-| Rename, deprecate, reserve, or withdraw a permission that has already shipped | `references/lifecycle.md` |
-| Write or review any consumer that reads the permission bitmap, in any language | `references/shared-consumer-contract.md` |
-| Touch `config/permissions.php`, Laravel authorization, or trusted-context middleware | `references/laravel-consumer.md` |
-| Touch `permissions_gen.go`, a Go decoder, or a Go authz package | `references/go-consumer.md` |
-| Touch `permission-catalog.ts`, the frontend SDK, or UI capability hints | `references/typescript-consumer.md` |
-| Diagnose a non-zero exit, a blocking finding, or a clean result you doubt | `references/failure-modes.md` |
+Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task in front of you.
 
 Load `/alaa-services-contract` (`$alaa-services-contract`) and `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
 for every implementation. Add `/alaa-golang` (`$alaa-golang`) for Go, `/alaa-laravel-architecture`
 (`$alaa-laravel-architecture`) and `/alaa-php-clean-code` (`$alaa-php-clean-code`) for Laravel, or
 `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) and `/alaa-mono-package` (`$alaa-mono-package`)
 for TypeScript. Add `/alaa-security-review` (`$alaa-security-review`) whenever a consumer reads token claims.
+
+## When not to use
+
+Do not use this skill to decide whether a caller may act on a resource, or what a service may believe about the header a permission arrived on — that is `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). Do not use it for object-level relationship authorization, which is the vendored `openfga` skill. Do not use it for the TOTP step-up contract, which is `/alaa-services-contract` (`$alaa-services-contract`) `references/32-auth-totp-and-step-up-contract.md`. Do not use it to write the application code that consumes a decoded permission set; take that shape from the owning language skill.
 
 ## Ownership boundary
 

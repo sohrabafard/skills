@@ -43,6 +43,7 @@ Where a row's condition fires, read that skill before editing the affected code,
 | Retry, jittered backoff, retry budget, breaker, bulkhead, admission control, degradation and idempotency **doctrine** | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
 | Octane runtime facts and every absolute worker invariant: which values may never be retained and where, the reset mechanism, worker lifecycle and reload, the leak regression test, connection and Redis lifecycle, cache tiers, worker sizing, runtime portability | `/alaa-octane-performance` (`$alaa-octane-performance`) |
 | Schema, migrations, indexes, query plans, transactions, pooling, Redis primitives, cache key design, TTL, invalidation | `/alaa-data-layer` (`$alaa-data-layer`) |
+| S3 or MinIO client library choice and configuration | `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) |
 | The repository-pattern gate preceding any caching, and its completeness definition | `alaa-data-layer references/50-redis-laravel-octane.md`, "Step 0 — repository-pattern gate" |
 | Trusted headers, JWT-derived identity, tenant and project derivation, downstream auth propagation | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
 | Object-level relationship authorization | `/openfga` (`$openfga`) |

@@ -2,118 +2,114 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.com/schemas/upload-record.schema.json",
   "title": "UploadRecord",
+  "description": "The machine form of the single ownership record described in references/40-authorization.md. One row per upload. The transfer layer is never the source of truth for anything in it.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "id",
-    "uploadId",
-    "ownerSubject",
+    "appUploadId",
     "tenantId",
-    "targetType",
-    "status",
+    "ownerSubject",
+    "targetService",
+    "state",
+    "declaredSize",
     "createdAt"
   ],
   "properties": {
-    "id": {
+    "appUploadId": {
       "type": "string",
-      "description": "Application-owned primary key for the upload record."
+      "description": "Application-owned identifier. Carries real entropy and is never derived from a filename."
     },
-    "uploadId": {
-      "type": "string",
-      "description": "tusd upload ID or the ID portion extracted from the tus URL."
+    "transferUploadId": {
+      "type": ["string", "null"],
+      "description": "The transfer layer's own upload id, taken from the Location header of the creation response."
     },
+    "resourcePath": {
+      "type": ["string", "null"],
+      "description": "The path the client was given. Treated as a capability: never logged, never exported, re-checked on every method."
+    },
+    "tenantId": { "type": "string" },
+    "projectId": { "type": ["string", "null"] },
     "ownerSubject": {
       "type": "string",
-      "description": "Authenticated user or service subject that owns the upload."
+      "description": "Authenticated actor that owns the upload."
     },
-    "tenantId": {
-      "type": "string"
+    "accessTokenId": {
+      "type": ["string", "null"],
+      "description": "Token id, for revocation correlation."
     },
-    "projectId": {
-      "type": ["string", "null"]
-    },
-    "targetType": {
+    "targetService": {
       "type": "string",
-      "enum": ["minio_s3", "upstream_tusd", "other"]
+      "description": "The service this upload is destined for. Re-checked against the caller's permission at completion, from this stored value and never from the client's."
     },
-    "status": {
-      "type": "string",
-      "enum": [
-        "initiated",
-        "uploading",
-        "uploaded_to_staging",
-        "relay_queued",
-        "relaying",
-        "ready",
-        "failed",
-        "terminated"
-      ]
-    },
+    "purpose": { "type": ["string", "null"] },
     "declaredSize": {
-      "type": ["integer", "null"],
-      "minimum": 0
+      "type": "integer",
+      "minimum": 1,
+      "description": "The size the client declared. Upload-Length must equal it exactly."
     },
     "receivedSize": {
       "type": ["integer", "null"],
       "minimum": 0
     },
-    "filename": {
-      "type": ["string", "null"]
+    "allowedMetadata": {
+      "type": "object",
+      "description": "Allowlisted metadata values only, normalised to strings. Never raw client metadata.",
+      "additionalProperties": { "type": "string" }
     },
-    "requestedContentType": {
-      "type": ["string", "null"]
+    "storageTarget": {
+      "type": "string",
+      "enum": ["object_store", "local_staging", "upstream_provider", "other"]
+    },
+    "objectKey": {
+      "type": ["string", "null"],
+      "description": "Server-generated. Contains no client-supplied segment and no filename, and includes the tenant or project prefix."
+    },
+    "state": {
+      "type": "string",
+      "description": "Control-plane state. Distinct from the client-visible state list in assets/client/uploadStates.ts, which is shorter and exists for the UI.",
+      "enum": [
+        "created",
+        "uploading",
+        "uploaded",
+        "relay_queued",
+        "relaying",
+        "processing",
+        "ready",
+        "failed",
+        "terminated",
+        "expired"
+      ]
+    },
+    "declaredContentType": {
+      "type": ["string", "null"],
+      "description": "Client-declared. A hint, never authoritative."
     },
     "validatedContentType": {
-      "type": ["string", "null"]
-    },
-    "traceId": {
-      "type": ["string", "null"]
-    },
-    "s3Bucket": {
-      "type": ["string", "null"]
-    },
-    "s3Key": {
-      "type": ["string", "null"]
-    },
-    "localPath": {
-      "type": ["string", "null"]
-    },
-    "upstreamUploadUrl": {
       "type": ["string", "null"],
-      "format": "uri"
+      "description": "Determined server-side. The only content type anything downstream may trust."
     },
-    "upstreamAssetUrl": {
-      "type": ["string", "null"],
-      "format": "uri"
-    },
-    "relayJobId": {
-      "type": ["string", "null"]
-    },
+    "processingJobId": { "type": ["string", "null"] },
+    "providerAssetId": { "type": ["string", "null"] },
+    "finalAssetId": { "type": ["string", "null"] },
     "failureCode": {
-      "type": ["string", "null"]
-    },
-    "failureMessage": {
-      "type": ["string", "null"]
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "updatedAt": {
       "type": ["string", "null"],
-      "format": "date-time"
+      "description": "A stable code. Never a raw provider message."
     },
+    "requestId": { "type": ["string", "null"] },
+    "traceId": { "type": ["string", "null"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": ["string", "null"], "format": "date-time" },
     "lastActivityAt": {
       "type": ["string", "null"],
-      "format": "date-time"
+      "format": "date-time",
+      "description": "Drives the retention threshold for unfinished uploads."
     },
-    "finishedAt": {
+    "finishedAt": { "type": ["string", "null"], "format": "date-time" },
+    "terminatedAt": { "type": ["string", "null"], "format": "date-time" },
+    "expiresAt": {
       "type": ["string", "null"],
-      "format": "date-time"
-    },
-    "terminatedAt": {
-      "type": ["string", "null"],
-      "format": "date-time"
+      "format": "date-time",
+      "description": "The value sent to the client as Upload-Expires. A client that never receives it retries into a 404."
     }
   }
 }

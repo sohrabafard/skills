@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa SMS Provider Mediana"
-  short_description: "Mediana/IPPanel SMS provider contract"
-  default_prompt: "Use $alaa-sms-provider-mediana to implement, review, debug, or test Alaa SMS channel integrations with Mediana/IPPanel Edge API using env-configured endpoints, Authorization auth, correct send variants, phone normalization, response parsing, and safe validation."
+  short_description: "Mediana/IPPanel Edge SMS provider contract"
+  default_prompt: "Use $alaa-sms-provider-mediana to implement, review, debug, or test an Alaa SMS integration against the Mediana/IPPanel Edge API: environment-driven endpoints, Authorization auth, the send mode this task needs, the pattern_values-to-params mapping, one channel-aware phone normaliser, ambiguous-send handling, and the payload validator with its conformance corpus."
 
 policy:
   allow_implicit_invocation: true

@@ -1,181 +1,138 @@
 ---
 name: alaa-bale-provider
-description: "Use this skill when implementing, reviewing, debugging, documenting, or testing integrations with Bale Safir channel/message APIs: normal text messages, OTP messages, template messages, secure messages, inline buttons, file uploads, phone-number normalization, idempotency request_id, api-access-key auth, error handling, or provider/channel code for the Bale messaging app. Do not use for unrelated Telegram, SMS, email, or generic notification work unless Bale Safir behavior is involved."
+description: "Bale Safir messaging-provider contract for Alaa services: the send_message and upload_file wire shapes, text, OTP, template, media and secure messages, inline url/web_app/copy_text buttons, the upload two-step, api-access-key auth, 989xxxxxxxxx phone normalisation, the request_id idempotency key, Safir error codes, and failure classes. Use when implementing, reviewing, debugging, documenting or testing Bale provider or channel code, and when a Bale send is failing, timing out, rate-limited, returning error_data, duplicating messages, or down. Do not use for Telegram, email, WhatsApp, push, Bale mini-app UI, or generic notification architecture; SMS through Mediana/IPPanel is /alaa-sms-provider-mediana ($alaa-sms-provider-mediana). Do not use for retry, backoff or timeout policy — that is /alaa-reliability-sla ($alaa-reliability-sla); queue, worker and DLQ behaviour is /alaa-async-messaging ($alaa-async-messaging)."
 ---
 
 # Alaa Bale Provider
 
 ## Purpose
 
-Use this skill as the exact Bale Safir API contract for Alaa message-provider work. Keep Bale behavior separate from
-generic notification architecture and from other providers such as SMS, Telegram, WhatsApp, or email.
+The Bale Safir wire contract and failure behaviour for Alaa provider and channel code. Bale ships shortly,
+into `auth` or into `notif` once the Go chi kit is finalised, so every rule here is live.
 
-## Start sequence
+**The command envelope for a Bale send does not exist yet, and this skill does not invent one.** Observed:
+`alaa-services-contract references/23-queue-and-exchange-registry.md:183-194` documents `auth`'s direct
+Mediana path and names no Bale client; `alaa-services-contract references/27-notification-service-contract.md:86-95`
+lists four command families, none for Bale. The notification contract closes that gap; a shape invented
+here becomes a second source of truth the day the real one lands.
 
-1. Read repo-local `AGENTS.md`, `CLAUDE.md`, or closer agent instructions before editing code.
-2. Inspect existing notification, channel, provider, HTTP-client, config, queue, retry, and template conventions before
-   introducing new names.
-3. Read `references/bale-safir-api.md` before implementing or reviewing payload shape, phone formatting, file upload,
-   errors, idempotency, or message variants.
-4. Read `references/examples.md` when adding tests, fixtures, docs, Postman requests, or concrete curl examples.
-5. Use `scripts/validate_bale_payload.py` on generated JSON fixtures or example payloads when possible.
+## Router
 
-## Hard API rules
+| You are about to | Read |
+|---|---|
+| Build a `send_message` or `upload_file` body, or look up a Safir error code | `references/10-wire-contract.md` |
+| Write a test, fixture, curl or Postman request, or check a response shape | `references/20-examples-and-rejects.md` |
+| Diagnose a send that failed, timed out, was throttled, or returned `error_data` | `references/30-failure-classes.md` |
+| Normalise a number, explain a `code 8` `InvalidPhone`, or change either validator | `references/40-phone-and-conformance.md` |
+| Commit a JSON fixture or example payload | `scripts/validate_bale_payload.py` |
 
-- Send messages with `POST https://safir.bale.ai/api/v3/send_message` and JSON body.
-- Upload files with `POST https://safir.bale.ai/api/v3/upload_file` and multipart form-data field `file`.
-- Include the `api-access-key` header on every Safir request. Never hard-code or commit the key.
-- Include `Content-Type: application/json` for `send_message`; let the HTTP client set multipart boundaries for
-  `upload_file`.
-- Keep `bot_id` numeric in the request body.
-- Send `phone_number` as Alaa-canonical digits only: `98` plus the ten-digit Iranian mobile number, with no leading `0`,
-  no `+`, no spaces, no hyphens, and no Persian or Arabic digits.
-- Normalize user-entered numbers before building the payload. For example, `09123830000` must be sent as `989123830000`.
-- Prefer `request_id` for every non-test send. Reuse the same `request_id` for retries of the same intended delivery; do
-  not reuse it for different recipients or different messages.
-- Put exactly one primary message variant in `message_data`: `message`, `otp_message`, or `template_message`.
-  `is_secure` is an optional modifier, not a primary message variant.
-- Do not invent unsupported fields such as `chat_id`, `parse_mode`, `callback_data`, `disable_notification`, or
-  Telegram-style button callbacks unless current Bale docs or repo truth prove them.
+## What this skill does not own
 
-## Message variant rules
+- Retry legality, backoff, budgets, idempotency mechanics → `/alaa-reliability-sla` (`$alaa-reliability-sla`)
+- Timeout **values**, metric and event **names**, the command envelope → `/alaa-services-contract` (`$alaa-services-contract`)
+- Telemetry requirement levels and gates → `/alaa-observability-soc` (`$alaa-observability-soc`)
+- Queue, prefetch, ack point, DLQ, outbox behind an async send → `/alaa-async-messaging` (`$alaa-async-messaging`)
+- Secret storage, rotation, threat classes → `/alaa-security-review` (`$alaa-security-review`)
+- SMS through Mediana/IPPanel → `/alaa-sms-provider-mediana` (`$alaa-sms-provider-mediana`)
+- Mini-app UI beyond the `web_app` button payload → `/alaa-frontend-developer` (`$alaa-frontend-developer`)
+- Code shape → `/alaa-php-clean-code` (`$alaa-php-clean-code`), `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`)
 
-### Normal text message
+RabbitMQ is this platform's only broker; do not design an outbox here.
 
-Use `message_data.message.text`.
+## Wire rules
 
-```json
-{
-  "bot_id": 1,
-  "phone_number": "989100000000",
-  "message_data": {
-    "message": {
-      "text": "متن"
-    }
-  }
-}
-```
+- Read the host from `BALE_SAFIR_BASE_URL` (default `https://safir.bale.ai`) and the key from
+  `BALE_SAFIR_API_ACCESS_KEY`. Endpoints are configurable defaults, because a literal URL in a call site
+  cannot be pointed at a sandbox without a code change.
+- `POST $BALE_SAFIR_BASE_URL/api/v3/send_message` as `application/json`; `POST .../api/v3/upload_file` as
+  `multipart/form-data` in field `file`, letting the client set the boundary.
+- Put `api-access-key` on every request, and keep `bot_id` numeric.
+- Send `phone_number` as `989` plus nine digits: no `+`, no leading `0`, no separators, no Persian or
+  Arabic digits.
+- This vendor's wire form is `989xxxxxxxxx` and Mediana's is `+989xxxxxxxxx`, and both render one platform
+  input form, so one shared normalisation function serving both channels is a defect unless it takes the
+  target channel as a parameter — a number rendered for the wrong channel is rejected by the vendor at best
+  and misdelivered at worst.
+- Put exactly one primary variant in `message_data`; `is_secure` is a modifier, not a variant. The
+  variant-selection table is the first section of `references/10-wire-contract.md`.
+- Send only the fields `references/10-wire-contract.md` documents. `chat_id`, `parse_mode`, `callback_data`
+  and `disable_notification` are Telegram fields Safir does not define; the validator names each one.
 
-### OTP message
+## Idempotency
 
-Use `message_data.otp_message.otp`. The OTP must be a numeric string. Do not wrap it in a normal text message and do not
-add custom copy-button markup unless Bale docs or repo truth require a custom fallback.
+**`request_id` is the delivery's durable public id, unchanged across every retry of that delivery.**
 
-```json
-{
-  "bot_id": 2040665828,
-  "phone_number": "989100900000",
-  "message_data": {
-    "otp_message": {
-      "otp": "123456"
-    }
-  }
-}
-```
+Never derive it from request content. A key built from recipient, template, or message body cannot
+distinguish an honest retry from an intentional repeat, so it suppresses the second real operation: two
+legitimate OTPs to one recipient collapse into one and the user cannot log in. Mechanics:
+`alaa-reliability-sla references/60-idempotency.md`.
 
-### Template message
+Scope it by **tenant or project, operation identity, and the key, all three together** — a global namespace
+is a cross-tenant leak, not a duplicate-suppression bug, because one tenant's key colliding with another's
+returns the first tenant's result to the second.
 
-Use `message_data.template_message.template_id` plus `text_fields`. The template must already exist in Bale Business
-Panel and the keys in `text_fields` must exactly match the variables defined for that template.
+Persist it before the first call, so a retry after a crash finds the same value.
 
-```json
-{
-  "bot_id": 1,
-  "phone_number": "989100000000",
-  "message_data": {
-    "template_message": {
-      "template_id": "t1",
-      "text_fields": {
-        "user": "test",
-        "course": "test",
-        "content_title": "test",
-        "content_link": "test",
-        "ticket_url": "test"
-      }
-    }
-  }
-}
-```
+## Secrets
 
-### Media message
+Keep `api-access-key`, OTP values, and full phone numbers out of **logs, traces, exceptions, screenshots,
+and final reports** — all five, because a value redacted in logs and printed in a stack trace is not
+redacted. Mask a phone number as `98912****000`, and never log an OTP or the key at any level.
 
-Upload the file first, then send `message_data.message.file_id`. Add `message_data.message.text` only when a caption is
-intended.
+## Failure behaviour
 
-### Inline buttons
+**A read timeout on `send_message` is retryable only with an unchanged `request_id`, because Safir may have
+delivered.** The request bytes were written, so a timeout is the absence of information rather than
+evidence of failure, and a retry carrying a fresh key is a second send — on an OTP path, two codes.
 
-Use `message.reply_markup.inline_keyboard` as an array of rows. Each button must include `text` and at least one action
-from `url`, `web_app`, or `copy_text`; prefer exactly one action per button to avoid ambiguity. Bale Safir docs do not
-define callback buttons.
+A connect refusal must not share that code path: it proves non-execution, so it is retryable with or
+without a key. Code catching one broad transport exception has lost the distinction, and the duplicates
+appear only when Safir is slow rather than down. `references/30-failure-classes.md` has all nine classes.
 
-### Secure message
+## Observability
 
-Set `message_data.is_secure` to `true` only for message or template sends that should be protected. Do not apply it to
-OTP unless current Bale docs or repo truth explicitly support that combination.
+Instrument every Safir call with the four `alaa_dependency_*` families named at `/alaa-services-contract`
+(`$alaa-services-contract`) `references/24-metric-registry.md:107-110` — `requests_total`,
+`request_duration_seconds`, `request_failures_total`, `timeouts_total`. Count a read timeout in the timeout
+family, not only the failure family, because the ambiguous outcome is the one an operator must find.
 
-## Implementation rules
-
-- Follow the existing repository provider/channel abstraction. If there is no existing abstraction, introduce the
-  smallest provider boundary that can send, validate, log, and test Bale requests without coupling callers to raw Safir
-  payloads.
-- Keep provider config environment-driven. Prefer existing config naming conventions; when no convention exists, propose
-  names such as `BALE_SAFIR_BASE_URL`, `BALE_SAFIR_API_ACCESS_KEY`, and `BALE_SAFIR_BOT_ID` and document them in the
-  repo.
-- Put phone normalization and payload building in deterministic, unit-tested code. Do not let callers manually
-  concatenate `98` in multiple places.
-- Keep OTP values, API keys, full phone numbers, and template personal data out of logs. Redact or hash sensitive values
-  in errors and observability.
-- Treat provider sends as side-effecting. Do not run live send tests unless the user or repo explicitly authorizes live
-  external calls and provides safe test recipients.
-- For queues or retries, make `request_id` stable across retry attempts and store enough state to distinguish transport
-  retry from a new business send.
-- For template messages, validate that required template field names are present when the repo has local template
-  metadata. If metadata is unavailable, mark missing certainty as `NEEDS_BALE_TEMPLATE_CONFIRMATION` instead of
-  inventing fields.
-
-## Error handling rules
-
-- Treat non-2xx HTTP responses, timeouts, and connection failures as transport/provider failures.
-- When a Safir JSON response contains `error_data`, map each `ErrorInfo` item by `phone_number`, `code`, and
-  `description`.
-- Treat `message_id` with empty or null `error_data` as the success path.
-- Preserve unknown Bale error codes as provider errors with raw code and description; do not collapse them into generic
-  failure if the exact code is useful.
-- Use the documented code map from `references/bale-safir-api.md` for known codes.
+Never label a metric with a phone number, `request_id`, `message_id`, or OTP: the first is PII and all four
+are unbounded, so any of them turns a counter into a per-delivery time series.
 
 ## Validation
 
-Before finishing Bale provider work, run the smallest meaningful checks available:
+```bash
+python3 scripts/validate_bale_payload.py --self-test
+python3 scripts/validate_bale_payload.py --mode request|response FILE.json
+python3 scripts/validate_bale_payload.py --normalize '0912 383 0000' --channel bale
+```
 
-- payload-builder unit tests for text, OTP, template, secure, file, and inline-button payloads
-- phone normalization tests for `0912...`, `+98912...`, `98912...`, Persian digits, spaces, and invalid numbers
-- error mapping tests for documented Safir error codes
-- idempotency tests proving retry keeps the same `request_id`
-- config and secret-loading tests without real secrets
-- `scripts/validate_bale_payload.py` against committed JSON examples or fixtures
-- repo-native lint, type checks, and targeted tests
+Run `--self-test` before relying on any other run.
 
-If live integration testing is authorized, use a dedicated test bot, safe test phone number, synthetic OTP, and a unique
-`request_id`. Record the exact command and redact secrets.
+| Exit | Obliges |
+|---|---|
+| `0` | Continue. |
+| `1` | Payload or number rejected: fix it. Never edit the validator to make it pass. |
+| `2` `3` `4` | Usage error, missing file, invalid JSON: fix the invocation, path, or fixture. |
+| `5` | Stop. The script is untrustworthy and every earlier green run with it is void. |
+| `6` | Stop. Corpus missing or checksum mismatch; reconcile against the Mediana copy. |
 
-## When NOT to use
+Also required: payload-builder tests per variant in scope, corpus-driven normalisation tests, error-mapping
+tests for the documented codes, a test proving a retry reuses the same `request_id`, and one proving
+`message_id` with non-empty `error_data` is not success. Layering: `/alaa-testing-strategy`
+(`$alaa-testing-strategy`).
 
-- Do not use for Telegram Bot API, SMS, email, WhatsApp, or other providers unless the task compares them with Bale.
-- Do not use for generic notification architecture when no Bale Safir behavior, payload, config, or channel routing is
-  in scope.
-- Do not use to design Bale mini-app UI except for the `web_app` button payload needed in Safir messages.
+Every send is side-effecting. Make a live send only when the user authorises it and names a test bot and a
+safe recipient; then use a synthetic OTP, and record the command redacted.
 
-## Reference navigation
+## Provenance
 
-- Complete Safir contract, structures, error codes, upload rules, and idempotency: `references/bale-safir-api.md`
-- User-provided and common curl/JSON examples: `references/examples.md`
-- JSON fixture validator: `scripts/validate_bale_payload.py`
+**A vendor fact carrying no read date is re-verified against live Safir documentation before it is relied
+on for a production change**, recording the URL and date in the same edit, because an undated fact looks
+authoritative and gets copied forward. `references/10-wire-contract.md` marks every table
+`unverified as of 2026-07-27`.
 
-## Completion checks
+## When not to use
 
-- Bale payloads use canonical `98` phone numbers and no extra phone characters.
-- `api-access-key` is loaded from config/secrets and redacted in logs.
-- `request_id` behavior is stable for retries where idempotency matters.
-- Message variant selection is explicit and tests cover the variants in scope.
-- Template field names are exact and not guessed.
-- Error handling preserves `message_id`, `error_data`, code, description, and recipient context.
+- Telegram, SMS, email, WhatsApp, or push, unless it is being compared with Bale.
+- Notification architecture with no Bale payload, config, or routing in scope.

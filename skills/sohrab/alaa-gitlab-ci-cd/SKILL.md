@@ -172,8 +172,8 @@ Use local scripts first for cheap feedback. Use CI Lint or `glab ci lint` when y
 
 If multi-agent mode is available and the task is large, split work by concern:
 
-- Prefer GPT-5.5 for complex CI/CD orchestration when available; use the strongest approved fallback model if it is not.
-- Use lighter models only for read-only inventory, template comparison, or mechanical validation lanes.
+- Take every model and reasoning-effort choice from `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no model here, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative.
+- Describe a lane by the judgment it needs rather than by a tier: CI/CD orchestration decides trade-offs across pipelines and needs the escalated lane, and read-only inventory, template comparison, or mechanical validation applies a fixed procedure and does not.
 - Pipeline semantics and YAML generation.
 - Runner or Kubernetes executor configuration.
 - Security and version verification.

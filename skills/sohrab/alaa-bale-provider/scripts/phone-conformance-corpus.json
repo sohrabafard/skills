@@ -1,0 +1,498 @@
+{
+  "corpus_version": "3",
+  "purpose": "The single shared Iranian mobile-number normalisation conformance corpus for the Alaa messaging providers. It began as the union of the two corpora that alaa-sms-provider-mediana and alaa-bale-provider built independently, preserving every input from both. It now also pins the display-separator rule the two providers settled on: whitespace, format and dash characters are matched by Unicode category rather than by an enumerated list, the solidus is stripped as a hand-typed separator, and the international prefix is removed only when the country code 98 follows it.",
+  "shared_copies": [
+    "skills/sohrab/alaa-sms-provider-mediana/scripts/phone-conformance-corpus.json",
+    "skills/sohrab/alaa-bale-provider/scripts/phone-conformance-corpus.json"
+  ],
+  "drift_rule": "The two copies are byte-identical by design. A difference between them is a defect to report, not a local customisation to keep. Change both in one commit or change neither. A document that asserts the two channels agree is not evidence that they agree; only running both validators against this one file is.",
+  "channels": {
+    "mediana": "+989xxxxxxxxx - the Mediana/IPPanel Edge wire form, with the plus sign.",
+    "bale": "989xxxxxxxxx - the Bale Safir wire form, the same digits with no plus sign."
+  },
+  "null_means": "The input must be rejected, with a non-zero exit and a stated reason, for both channels. It must never be rendered onto either wire.",
+  "canonicalization": "One rule governs both copies of this file so they cannot drift apart again. On disk: json.dump(document, handle, ensure_ascii=True, indent=2) followed by a single trailing newline, so the file is pure ASCII, every non-ASCII character appears as a \\uXXXX escape, and the bytes survive any platform, editor, or transfer path unchanged. Checksum: corpus_sha256 is the lowercase hex SHA-256 of json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8') - that is, of the parsed cases re-serialised with the real characters in UTF-8 rather than with the on-disk escapes. The digest therefore describes the data and not one language's JSON escaping convention, so a Go, PHP, or JavaScript implementation can reproduce it without reimplementing Python's escaper. Case order is part of the hashed bytes and is fixed: accepted cases first (mediana_expected is not null), then rejected cases, and within each group ascending by Unicode code point of input. A merge that follows this order rebuilds the identical file. Reproduce the checksum from this file alone: python3 -c \"import hashlib,json,sys; d=json.load(open(sys.argv[1],encoding='utf-8')); print(hashlib.sha256(json.dumps(d['cases'],ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest())\" phone-conformance-corpus.json",
+  "corpus_sha256": "7a4250cf64e730d51ef92512975e864cbcfa5da919f658e0f974c50e8d54b548",
+  "cases": [
+    {
+      "input": "\t09123830000\n",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Leading tab and trailing newline from a pasted value."
+    },
+    {
+      "input": "  +989123830000  ",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Canonical value with surrounding whitespace."
+    },
+    {
+      "input": "(0912) 383-0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Parentheses around the operator prefix."
+    },
+    {
+      "input": "+98 (912) 383-0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Parentheses around the operator code plus mixed spaces and hyphens."
+    },
+    {
+      "input": "+98 912 383 0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Plus form with spaces."
+    },
+    {
+      "input": "+989123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "E.164 with the plus sign. The form most third-party address books export."
+    },
+    {
+      "input": "0098 912 383 0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "International access code with spaces."
+    },
+    {
+      "input": "00989123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "International access code 0098 standing in for the plus."
+    },
+    {
+      "input": "0912\u000b3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Vertical tab U+000B. Category Cc, so only str.isspace() catches it; an enumerated whitespace list that stopped at the tab, the newline and U+00A0 rejected it."
+    },
+    {
+      "input": "0912 383 0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Spaces as display separators. This is the grouping the Alaa client shows on /login: src/i18n/fa/auth/login.ts:10 and src/i18n/en-US/auth/login.ts:10 both set the mobile placeholder to 0912 345 6789 with ASCII spaces U+0020."
+    },
+    {
+      "input": "0912-383-0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "ASCII hyphen-minus separators."
+    },
+    {
+      "input": "0912.383.0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Full stops as separators."
+    },
+    {
+      "input": "0912/383/0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Solidus separators. A person types this by hand, the ten digits stay unambiguous once the solidus is removed, so the solidus is stripped like any other separator."
+    },
+    {
+      "input": "09123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Domestic trunk form. The most common form a user types into an Alaa form field."
+    },
+    {
+      "input": "09123830000\ufeff",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Trailing zero-width no-break space U+FEFF, the byte-order mark."
+    },
+    {
+      "input": "0912_383_0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Underscores as separators."
+    },
+    {
+      "input": "0912\u00853830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Next line U+0085. A C1 control that str.isspace() reports as whitespace, which is why the whitespace test is str.isspace() and not the Cc category."
+    },
+    {
+      "input": "0912\u00a03830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Non-breaking space U+00A0."
+    },
+    {
+      "input": "0912\u16803830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Ogham space mark U+1680. Category Zs and outside the U+2000 block, so a list built from the U+2000 spaces alone misses it."
+    },
+    {
+      "input": "0912\u20073830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Figure space U+2007. Category Zs, and the space a digit-grouping display layer picks because it is exactly one digit wide."
+    },
+    {
+      "input": "0912\u200c3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Zero-width non-joiner U+200C inside the number."
+    },
+    {
+      "input": "0912\u200c383\u200c0000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "ZWNJ U+200C inside the number. Persian keyboards emit it, it survives most copy-paste paths, and the Persian copy on the client's /login page carries it (src/i18n/fa/auth/login.ts:15 and :26), so a value pasted from that page can hold it."
+    },
+    {
+      "input": "0912\u200d3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Zero-width joiner U+200D inside the number."
+    },
+    {
+      "input": "0912\u20133830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "En dash U+2013 used as a separator."
+    },
+    {
+      "input": "0912\u20143830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Em dash U+2014 used as a separator."
+    },
+    {
+      "input": "0912\u20283830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Line separator U+2028. The only member of category Zl, and one of the four inputs on which the two providers disagreed before the category rule replaced the list."
+    },
+    {
+      "input": "0912\u20293830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Paragraph separator U+2029. The only member of category Zp."
+    },
+    {
+      "input": "0912\u202f3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Narrow no-break space U+202F. Category Zs, and the space several locales use between digit groups."
+    },
+    {
+      "input": "0912\u205f3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Medium mathematical space U+205F. Category Zs."
+    },
+    {
+      "input": "0912\u206f3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "U+206F NOMINAL DIGIT SHAPES, a deprecated format character. Category Cf, like ZWNJ, so a category rule removes it and an enumerated list does not."
+    },
+    {
+      "input": "0912\u30003830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Ideographic space U+3000. Category Zs, and one of the four inputs on which the two providers disagreed before the category rule replaced the list."
+    },
+    {
+      "input": "0912\uff0d3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Fullwidth hyphen-minus U+FF0D. Category Pd and outside the U+2010 to U+2015 run, so the dash class is matched by category too."
+    },
+    {
+      "input": "9123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Bare national significant number, no trunk zero and no country code."
+    },
+    {
+      "input": "989123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Country code with no plus. Already Bale's wire form; Mediana still needs the plus added."
+    },
+    {
+      "input": "\u00a00912\u00a0383\u00a00000\u00a0",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Non-breaking spaces U+00A0, which a plain str.strip() on space does not remove."
+    },
+    {
+      "input": "\u061c09123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Arabic letter mark U+061C, a zero-width format character."
+    },
+    {
+      "input": "\u0660\u0669\u0661\u0662\u0663\u0668\u0663\u0660\u0660\u0660\u0660",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Arabic-Indic digits U+0660-U+0669. Same trap as the Persian-Indic case, different code block."
+    },
+    {
+      "input": "\u0669\u0661\u0662\u0663\u0668\u0663\u0660\u0660\u0660\u0660",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Arabic-Indic digits with no trunk zero."
+    },
+    {
+      "input": "\u06f0\u06f0\u06f9\u06f8\u06f9\u06f1\u06f2\u06f3\u06f8\u06f3\u06f0\u06f0\u06f0\u06f0",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Persian-Indic digits carrying the 0098 access code."
+    },
+    {
+      "input": "\u06f0\u06f912\u06f3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Persian-Indic and ASCII digits mixed in one string."
+    },
+    {
+      "input": "\u06f0\u06f9\u06f1\u06f2\u06f3\u06f8\u06f3\u06f0\u06f0\u06f0\u06f0",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Persian-Indic digits U+06F0-U+06F9. Python str.isdigit() returns True for these, so a digit check that is not an explicit ASCII pattern accepts them."
+    },
+    {
+      "input": "\u06f9\u06f1\u06f2\u06f3\u06f8\u06f3\u06f0\u06f0\u06f0\u06f0",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Persian-Indic digits in the bare national form, so folding and prefix reduction must both run."
+    },
+    {
+      "input": "\u200b09123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Leading zero-width space U+200B."
+    },
+    {
+      "input": "\u200b09123830000\ufeff",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Zero-width space U+200B leading and BOM U+FEFF trailing."
+    },
+    {
+      "input": "\u200e+98\u200f9123830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Bidi marks LRM U+200E and RLM U+200F around the country code, as pasted from a right-to-left document."
+    },
+    {
+      "input": "\u200f0912 383 0000\u200e",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Right-to-left and left-to-right marks around a spaced number."
+    },
+    {
+      "input": "\u202b09123830000\u202c",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "U+202B/U+202C bidi embedding and pop, as emitted by a right-to-left editor wrapping a number."
+    },
+    {
+      "input": "\u202e0912\u202d3830000",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "U+202E/U+202D bidi overrides inside the number."
+    },
+    {
+      "input": "",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Empty string. There is no number to render."
+    },
+    {
+      "input": "   ",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Whitespace only. Distinct from empty: a naive truthiness check treats this as present."
+    },
+    {
+      "input": "+09123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Plus sign in front of the domestic trunk zero. The trunk zero occupies the position the country code belongs in, so this is not a number in international form."
+    },
+    {
+      "input": "+14155550123",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Non-Iranian country code. Neither channel is provisioned for it."
+    },
+    {
+      "input": "+14155550132",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "A number outside Iran. This normaliser renders Iranian mobiles only."
+    },
+    {
+      "input": "+9123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Plus sign with no country code behind it. Removing the plus unconditionally would turn a malformed number into a well-formed one."
+    },
+    {
+      "input": "+9809123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "International prefix combined with the trunk zero."
+    },
+    {
+      "input": "+982112345678",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "The same landline in country-code form."
+    },
+    {
+      "input": "+98212345678",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Non-mobile national prefix behind the country code."
+    },
+    {
+      "input": "+98BANK",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "An alphabetic sender label. A sender is never a recipient."
+    },
+    {
+      "input": "0009123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "International access code 00 in front of the trunk zero, with no country code between them."
+    },
+    {
+      "input": "009123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "International access code 00 with no country code behind it. Removing the 00 unconditionally would accept a number that names no country."
+    },
+    {
+      "input": "02112345678",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Tehran landline. Valid Iranian number, not a mobile, so no messaging channel can deliver it."
+    },
+    {
+      "input": "02188776655",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Tehran landline. The national significant number does not start with 9."
+    },
+    {
+      "input": "08123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "National significant number starts with 8, which is not a mobile prefix."
+    },
+    {
+      "input": "0912383000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Ten digits with a trunk zero: one digit short. Reject rather than pad."
+    },
+    {
+      "input": "09123830000, 09123830001",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Two numbers in one string. One input renders one recipient."
+    },
+    {
+      "input": "09123830000/09123830001",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Two numbers separated by a solidus. Stripping the solidus concatenates them into an over-length string, which the length check refuses exactly as it refuses two numbers separated by a space."
+    },
+    {
+      "input": "091238300000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Twelve characters: one digit longer than a national mobile number."
+    },
+    {
+      "input": "091238300001",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Twelve digits starting 09: one digit long."
+    },
+    {
+      "input": "0912383000a",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "A trailing letter. Letters are not separators and are not stripped."
+    },
+    {
+      "input": "8123830000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "National significant number starting with 8 rather than 9."
+    },
+    {
+      "input": "98912383000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Eleven digits starting 98: one digit short on the country-code form."
+    },
+    {
+      "input": "989123830000 989123830001",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Two numbers in one field. Stripping separators concatenates them into an over-length string; accepting it would send to a fabricated recipient."
+    },
+    {
+      "input": "9891238300000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Country code plus eleven digits: one digit too long."
+    },
+    {
+      "input": "9891238300001",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Thirteen digits starting 98: one digit long on the country-code form."
+    },
+    {
+      "input": "\u06f0\u06f9\u06f1\u06f2\u06f3\u06f8\u06f3\u06f0\u06f0\u06f0",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Persian-Indic digits, one digit short. Folding must happen before the length check."
+    },
+    {
+      "input": "\u0966\u096f\u0967\u0968\u0969\u096e\u0969\u0966\u0966\u0966\u0966",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Devanagari digits. Only Persian-Indic and Arabic-Indic digits are folded."
+    },
+    {
+      "input": "\u2007\u2028\u3000",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Unicode whitespace only. Distinct from the ASCII whitespace-only case: nothing here is an ASCII space, and nothing survives cleanup."
+    },
+    {
+      "input": "\u200b\u200c\u200d",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Zero-width characters only. Nothing survives cleanup."
+    },
+    {
+      "input": "\u200c\u200b",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Zero-width characters only, which reduces to empty after stripping."
+    },
+    {
+      "input": "\u2070\u2079\u00b9\u00b2\u00b3\u2078\u00b3\u2070\u2070\u2070\u2070",
+      "mediana_expected": null,
+      "bale_expected": null,
+      "note": "Superscript digits. Python's str.isdigit() accepts these, so a normaliser built on it would pass them."
+    }
+  ]
+}

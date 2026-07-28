@@ -200,11 +200,21 @@ Usage pattern:
 
 - Use for image hardening when Arvan deployment failures are rooted in image/runtime behavior.
 
+### Object storage
+
+1) `/alaa-minio-object-storage` (`$alaa-minio-object-storage`)
+2) `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`)
+
+Usage pattern:
+
+- Use `/alaa-minio-object-storage` when deciding the bucket, policy, lifecycle, or credential posture behind an object-storage volume or an S3 secret; this skill keeps only the Kubernetes and Arvan expression of that decision.
+- Use `/alaa-arvan-object-storage` when creating or configuring an ArvanCloud object-storage bucket, pointing a workload's S3 client at an `arvanstorage.ir` endpoint, or making a bucket publicly readable.
+
 ## Agent prompting best practices (high-signal)
 
 When invoking this skill, prompt and execute in this structure:
 
-For complex Codex orchestration, prefer GPT-5.5 when available; fall back to the strongest approved Codex model when it is not. Use lighter models only for read-only inventory, static rendering checks, or narrow troubleshooting lanes.
+Take every model and reasoning-effort choice from `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no model here, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative. Describe a lane by the judgment it needs rather than by a tier: platform orchestration decides trade-offs across clusters and needs the escalated lane, and read-only inventory, static rendering checks, or narrow troubleshooting applies a fixed procedure and does not.
 
 1) Objective
 - Define exact artifact and scope.

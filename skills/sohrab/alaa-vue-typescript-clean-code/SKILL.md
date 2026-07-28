@@ -11,9 +11,9 @@ Use this skill to make Vue 3 + Quasar + Vite + TypeScript code production-grade,
 
 ## Cross-agent portability
 
-This skill uses the core Agent Skills format so both OpenAI Codex/GPT-5.5 agents and Claude Opus/Claude Code agents can load it. Keep `SKILL.md` frontmatter limited to `name` and `description`; `agents/openai.yaml` is optional Codex UI metadata and should be ignored by other compatible agents. Do not add Claude-only frontmatter such as `context`, `model`, or hooks unless the skill is intentionally forked for Claude only.
+This skill uses the core Agent Skills format so both Codex and Claude Code agents can load it, and it names no model, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative; take every model and reasoning-effort choice from `/alaa-prompting-guide` (`$alaa-prompting-guide`). Keep `SKILL.md` frontmatter limited to `name` and `description`; `agents/openai.yaml` is optional Codex UI metadata and should be ignored by other compatible agents. Do not add Claude-only frontmatter such as `context`, `model`, or hooks unless the skill is intentionally forked for Claude only.
 
-For both model families, treat this skill as an enforced coding contract. Prefer outcome-first execution, small focused edits, repository evidence, and honest validation over process-heavy narration.
+In either runtime, treat this skill as an enforced coding contract. Prefer outcome-first execution, small focused edits, repository evidence, and honest validation over process-heavy narration.
 
 ## When to use
 

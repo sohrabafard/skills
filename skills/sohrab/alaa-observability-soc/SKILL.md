@@ -55,6 +55,9 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
   timeouts, retries, circuit breaking, graceful degradation, idempotency. This skill owns load of the telemetry plane only.
 - `/alaa-security-review` (`$alaa-security-review`) owns security controls. Pair it when event semantics, policy decisions, customer data,
   authn/authz, abuse, or incident response are in scope.
+- `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) owns the object store's failure classes and the
+  storage-side facts a signal describes. Pair it when deciding what to measure about an object store, or when proving
+  an object-storage failure class is visible; this skill owns the requirement level and the gate over those signals.
 - Clean code, SOLID, and design-pattern judgment belong to the per-language clean-code skills; algorithm and
   data-structure choice belongs to `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`). This skill reviews neither.
 

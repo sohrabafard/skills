@@ -1,0 +1,530 @@
+{
+  "corpus_name": "alaa-permission-bitmap",
+  "corpus_version": 1,
+  "owner_skill": "alaa-permission-generator",
+  "corpus_sha256": "812623e38d32436e67c58b7eaf62bfb44a067be2d230830bcf93cbf48af615a7",
+  "corpus_sha256_recipe": "sha256 over json.dumps(cases, sort_keys=True, separators=(\",\",\":\"), ensure_ascii=False) encoded UTF-8, with no trailing newline",
+  "contract": {
+    "id_base": "permission ids are 1-based and bit_index equals bitmap_id minus 1",
+    "bit_order": "bits are packed least-significant-bit first within each byte, so id 1 is bit 0 of byte 0, id 8 is bit 7 of byte 0, and id 9 is bit 0 of byte 1",
+    "id_formula": "permission_id = byte_index * 8 + bit_index + 1",
+    "wire_format": "raw bytes in unpadded base64url, with no padding character and with the unused low-order bits of the final character required to be zero",
+    "unknown_bits": "a set bit whose id exceeds this consumer's own maximum, or that has no entry in this consumer's map, is dropped silently and is not an error",
+    "fail_closed": "a server-side protected request resolving to zero known permissions is rejected; a browser client deriving unverified UI hints treats an empty set as a legitimate ready state instead",
+    "error_precedence": "empty_bitmap, then invalid_decode_bound, then bitmap_too_long, then invalid_bitmap, then no_known_permissions",
+    "default_max_encoded_length": 1024
+  },
+  "operations": {
+    "decode_ids": "decode the bitmap to permission ids; driver answer is OK| followed by the ids joined with commas, or ERR| followed by the error code",
+    "decode_set": "decode the bitmap to the permission names in names_by_id; driver answer is OK| followed by the names sorted and joined with commas, or ERR| followed by the error code",
+    "has": "answer whether the bitmap grants permission; driver answer is OK|true or OK|false and never an error, because this entry point fails closed. A has case sets max_permission_id to the highest id in names_by_id and leaves max_encoded_length null, so an implementation whose convenience wrapper derives the bound from the map answers the same as one taking it explicitly."
+  },
+  "fields": {
+    "max_encoded_length": "null means the implementation's default-cap entry point is exercised rather than an explicit cap"
+  },
+  "cases": [
+    {
+      "case_id": "frozen-92",
+      "op": "decode_ids",
+      "note": "tusd upload_to_content_service, id 92, from the service's committed frozen vectors",
+      "access": "AAAAAAAAAAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|92"
+    },
+    {
+      "case_id": "frozen-93",
+      "op": "decode_ids",
+      "note": "tusd upload_to_ticket_service, id 93",
+      "access": "AAAAAAAAAAAAAAAQ",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|93"
+    },
+    {
+      "case_id": "frozen-94",
+      "op": "decode_ids",
+      "note": "tusd upload_to_auth_service, id 94",
+      "access": "AAAAAAAAAAAAAAAg",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|94"
+    },
+    {
+      "case_id": "frozen-95",
+      "op": "decode_ids",
+      "note": "tusd upload_to_comment_service, id 95",
+      "access": "AAAAAAAAAAAAAABA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|95"
+    },
+    {
+      "case_id": "frozen-92-95",
+      "op": "decode_ids",
+      "note": "all four tusd upload permissions in one bitmap",
+      "access": "AAAAAAAAAAAAAAB4",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|92,93,94,95"
+    },
+    {
+      "case_id": "boundary-id-1",
+      "op": "decode_ids",
+      "note": "id 1 is bit 0 of byte 0; a decoder answering gAA here is most-significant-bit-first and is wrong",
+      "access": "AQA",
+      "max_permission_id": 16,
+      "max_encoded_length": null,
+      "expect": "OK|1"
+    },
+    {
+      "case_id": "boundary-id-8",
+      "op": "decode_ids",
+      "note": "id 8 is bit 7 of byte 0, the last bit of the first byte",
+      "access": "gAA",
+      "max_permission_id": 16,
+      "max_encoded_length": null,
+      "expect": "OK|8"
+    },
+    {
+      "case_id": "boundary-id-9",
+      "op": "decode_ids",
+      "note": "id 9 is bit 0 of byte 1, the first bit of the second byte",
+      "access": "AAE",
+      "max_permission_id": 16,
+      "max_encoded_length": null,
+      "expect": "OK|9"
+    },
+    {
+      "case_id": "boundary-id-16",
+      "op": "decode_ids",
+      "note": "id 16 is bit 7 of byte 1",
+      "access": "AIA",
+      "max_permission_id": 16,
+      "max_encoded_length": null,
+      "expect": "OK|16"
+    },
+    {
+      "case_id": "boundary-id-1-and-9",
+      "op": "decode_ids",
+      "note": "one id in each of the first two bytes, proving the byte stride is 8",
+      "access": "AQE",
+      "max_permission_id": 16,
+      "max_encoded_length": null,
+      "expect": "OK|1,9"
+    },
+    {
+      "case_id": "wider-low-id-kept",
+      "op": "decode_ids",
+      "note": "a 17-byte bitmap carrying ids 1 and 130 decodes at max 95 and keeps id 1",
+      "access": "AQAAAAAAAAAAAAAAAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|1"
+    },
+    {
+      "case_id": "wider-high-id-dropped",
+      "op": "decode_ids",
+      "note": "a set bit above the service's own maximum is dropped silently and is not an error",
+      "access": "AAAAAAAAAAAAAAAIAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|92"
+    },
+    {
+      "case_id": "wider-all-above-max",
+      "op": "decode_ids",
+      "note": "every set bit above the maximum yields an empty id list, not an error",
+      "access": "AAAAAAAAAAAAAAB4",
+      "max_permission_id": 1,
+      "max_encoded_length": null,
+      "expect": "OK|"
+    },
+    {
+      "case_id": "wider-second-byte-above-max",
+      "op": "decode_ids",
+      "note": "id 9 is outside a max of 8 and is dropped",
+      "access": "AAE",
+      "max_permission_id": 8,
+      "max_encoded_length": null,
+      "expect": "OK|"
+    },
+    {
+      "case_id": "zero-bitmap-ids",
+      "op": "decode_ids",
+      "note": "an all-zero bitmap sets no id and is not a decode error",
+      "access": "AAAAAAAAAAAAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|"
+    },
+    {
+      "case_id": "zero-bitmap-set",
+      "op": "decode_set",
+      "note": "an all-zero bitmap resolves zero known permissions and is rejected server-side",
+      "access": "AAAAAAAAAAAAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "expect": "ERR|no_known_permissions"
+    },
+    {
+      "case_id": "reject-empty",
+      "op": "decode_ids",
+      "note": "empty input is rejected",
+      "access": "",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|empty_bitmap"
+    },
+    {
+      "case_id": "reject-padded",
+      "op": "decode_ids",
+      "note": "padded input is rejected because '=' is outside the unpadded base64url alphabet",
+      "access": "AA==",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-length-1",
+      "op": "decode_ids",
+      "note": "a length congruent to 1 modulo 4 is a length no base64 encoding produces",
+      "access": "A",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-length-5",
+      "op": "decode_ids",
+      "note": "the same wrong-length rule at the next quantum",
+      "access": "AAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-punctuation",
+      "op": "decode_ids",
+      "note": "a character outside the unpadded base64url alphabet is rejected",
+      "access": "not-valid-base64url!",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-standard-base64-plus",
+      "op": "decode_ids",
+      "note": "'+' belongs to standard base64 and is outside base64url",
+      "access": "AA+A",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-standard-base64-slash",
+      "op": "decode_ids",
+      "note": "'/' belongs to standard base64 and is outside base64url",
+      "access": "AA/A",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-embedded-space",
+      "op": "decode_ids",
+      "note": "an embedded space is rejected rather than trimmed",
+      "access": "AA A",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-non-zero-trailing-bits",
+      "op": "decode_ids",
+      "note": "the unused low-order bits of the final character must be zero, so one encoded form maps to one byte string",
+      "access": "AQB",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "reject-non-zero-trailing-bits-2char",
+      "op": "decode_ids",
+      "note": "the same rule at a two-character remainder, where four bits are unused",
+      "access": "AB",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|invalid_bitmap"
+    },
+    {
+      "case_id": "cap-explicit-too-long",
+      "op": "decode_ids",
+      "note": "an input longer than the caller's cap is rejected before any bit work",
+      "access": "AAAAAAAAAAAAAAB4",
+      "max_permission_id": 95,
+      "max_encoded_length": 8,
+      "expect": "ERR|bitmap_too_long"
+    },
+    {
+      "case_id": "cap-explicit-exact",
+      "op": "decode_ids",
+      "note": "an input exactly at the cap is admitted, so the cap is inclusive",
+      "access": "AAAAAAAAAAAAAAB4",
+      "max_permission_id": 95,
+      "max_encoded_length": 16,
+      "expect": "OK|92,93,94,95"
+    },
+    {
+      "case_id": "cap-default-at-limit",
+      "op": "decode_ids",
+      "note": "1024 characters is admitted by the default cap",
+      "access": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "OK|"
+    },
+    {
+      "case_id": "cap-default-over-limit",
+      "op": "decode_ids",
+      "note": "1028 characters is rejected by the default cap, so the default is a real bound",
+      "access": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "expect": "ERR|bitmap_too_long"
+    },
+    {
+      "case_id": "precedence-empty-beats-bound",
+      "op": "decode_ids",
+      "note": "empty input is reported before an invalid decode bound",
+      "access": "",
+      "max_permission_id": 0,
+      "max_encoded_length": null,
+      "expect": "ERR|empty_bitmap"
+    },
+    {
+      "case_id": "precedence-bound-beats-length",
+      "op": "decode_ids",
+      "note": "an invalid decode bound is reported before the length cap",
+      "access": "AAAAAAAAAAAAAAB4",
+      "max_permission_id": 0,
+      "max_encoded_length": 4,
+      "expect": "ERR|invalid_decode_bound"
+    },
+    {
+      "case_id": "precedence-length-beats-alphabet",
+      "op": "decode_ids",
+      "note": "the length cap is reported before the alphabet check, because the cap exists to avoid unbounded work",
+      "access": "AA!AAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": 4,
+      "expect": "ERR|bitmap_too_long"
+    },
+    {
+      "case_id": "precedence-zero-cap",
+      "op": "decode_ids",
+      "note": "a non-positive cap is an invalid decode bound, not a rejection of the input",
+      "access": "AQA",
+      "max_permission_id": 16,
+      "max_encoded_length": 0,
+      "expect": "ERR|invalid_decode_bound"
+    },
+    {
+      "case_id": "names-all-four",
+      "op": "decode_set",
+      "note": "four known ids resolve to four names",
+      "access": "AAAAAAAAAAAAAAB4",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "expect": "OK|upload_to_auth_service,upload_to_comment_service,upload_to_content_service,upload_to_ticket_service"
+    },
+    {
+      "case_id": "names-unknown-only",
+      "op": "decode_set",
+      "note": "a bitmap resolving to zero known permissions is rejected on a protected request",
+      "access": "AQAAAAAAAAAAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "expect": "ERR|no_known_permissions"
+    },
+    {
+      "case_id": "names-mixed-known-unknown",
+      "op": "decode_set",
+      "note": "an unknown bit mixed with a known bit keeps the known permission",
+      "access": "AQAAAAAAAAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "expect": "OK|upload_to_content_service"
+    },
+    {
+      "case_id": "names-blank-entry-ignored",
+      "op": "decode_set",
+      "note": "a blank name in the map is treated as unknown rather than granting an empty permission",
+      "access": "AAAAAAAAAAAAAAAY",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "   ",
+        "93": "upload_to_ticket_service"
+      },
+      "expect": "OK|upload_to_ticket_service"
+    },
+    {
+      "case_id": "names-all-blank",
+      "op": "decode_set",
+      "note": "a map whose every matching name is blank resolves zero known permissions",
+      "access": "AAAAAAAAAAAAAAAY",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "",
+        "93": "   "
+      },
+      "expect": "ERR|no_known_permissions"
+    },
+    {
+      "case_id": "names-single-permission-service",
+      "op": "decode_set",
+      "note": "a service whose generated map holds one id decodes that id",
+      "access": "AQ",
+      "max_permission_id": 1,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "1": "wa_get_watch_stats"
+      },
+      "expect": "OK|wa_get_watch_stats"
+    },
+    {
+      "case_id": "names-above-single-permission-max",
+      "op": "decode_set",
+      "note": "a service whose maximum is 1 cannot see id 92 even though auth issues it",
+      "access": "AAAAAAAAAAAAAAAI",
+      "max_permission_id": 1,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "1": "wa_get_watch_stats"
+      },
+      "expect": "ERR|no_known_permissions"
+    },
+    {
+      "case_id": "has-granted",
+      "op": "has",
+      "note": "a granted permission answers true",
+      "access": "AAAAAAAAAAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "permission": "upload_to_content_service",
+      "expect": "OK|true"
+    },
+    {
+      "case_id": "has-not-granted",
+      "op": "has",
+      "note": "a permission the bitmap does not set answers false",
+      "access": "AAAAAAAAAAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "permission": "upload_to_auth_service",
+      "expect": "OK|false"
+    },
+    {
+      "case_id": "has-empty-fails-closed",
+      "op": "has",
+      "note": "empty input answers false rather than raising",
+      "access": "",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "permission": "upload_to_content_service",
+      "expect": "OK|false"
+    },
+    {
+      "case_id": "has-padded-fails-closed",
+      "op": "has",
+      "note": "padded input answers false rather than raising",
+      "access": "AA==",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "permission": "upload_to_content_service",
+      "expect": "OK|false"
+    },
+    {
+      "case_id": "has-unknown-only-fails-closed",
+      "op": "has",
+      "note": "a bitmap with no known permission answers false",
+      "access": "AQAAAAAAAAAAAAAA",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "permission": "upload_to_content_service",
+      "expect": "OK|false"
+    },
+    {
+      "case_id": "has-unknown-name-fails-closed",
+      "op": "has",
+      "note": "a permission name absent from this service's map answers false",
+      "access": "AAAAAAAAAAAAAAAI",
+      "max_permission_id": 95,
+      "max_encoded_length": null,
+      "names_by_id": {
+        "92": "upload_to_content_service",
+        "93": "upload_to_ticket_service",
+        "94": "upload_to_auth_service",
+        "95": "upload_to_comment_service"
+      },
+      "permission": "content_get_sets",
+      "expect": "OK|false"
+    }
+  ]
+}

@@ -1,248 +1,97 @@
 ---
 name: alaa-async-messaging
-description: "Async architecture for Alaa services: Kafka for events + RabbitMQ for jobs (recommended hybrid), optional Redis/Horizon for Laravel queues, with idempotency, retries, DLQ, and ops guardrails (prefetch/heartbeat/quorum poison control)."
+description: "RabbitMQ message-plane architecture for the Ala fleet: the seam between a database commit and a published message, the transactional outbox and its operational surface, publisher confirms, the acknowledgement point, prefetch and consumer concurrency, dead-letter topology, and the DLQ replay procedure. Use it when adding or reviewing a publisher, a consumer, an outbox relay, a queue or exchange declaration, a dead-letter route, a redelivery or replay decision, or a live message-plane incident, and when deciding whether a fact must survive the broker being unreachable. Do not use it for Laravel driver mechanics such as config/queue.php keys or worker commands, which are /alaa-laravel-job-rabbitmq; for retry, backoff, deadline or idempotency doctrine, which is /alaa-reliability-sla; for queue, exchange, metric and event names or any platform value, which are /alaa-services-contract; or for a service that has no broker lane."
 ---
 
+# Alaa Async Messaging
 
+RabbitMQ is the only broker this fleet runs. This skill owns the seam between a database transaction and a
+message on it: how a fact leaves a committed transaction, when a consumer acknowledges, how many deliveries
+it holds unacknowledged, where a failed message goes, and how it is replayed. One property holds through
+every failure below — no committed fact is lost, no user-facing request waits on broker recovery, and no
+redelivery produces a second business effect.
 
+## Gate — does this service have a broker lane
 
-# Purpose
-Provide a production-ready workflow for asynchronous processing in an event-driven, multi-tenant system:
+Read the service's configured lanes first. `alaa-go-chi docs/CONSUMERS.md:23` runs `wa-api` with no `mqkit`
+and no `outboxkit`: no configured broker connection means no message plane, so say so and stop rather than
+adding a broker for a rule to apply to. `tusd` is the mirror — a broker-free upload plane that still runs an
+outbox dispatched to RabbitMQ from a separate command.
 
-- Kafka for immutable domain/integration events (replayable event stream).
-- RabbitMQ for background jobs/tasks (work-queue semantics).
-- Optional Redis/Horizon when you explicitly want Horizon ergonomics for Redis-backed queues.
+## Hard constraints
 
-This skill is intentionally opinionated toward:
-- Reliability (at-least-once, idempotency, bounded retries, DLQ)
-- Correctness (dispatch-after-commit, outbox publishing, dedupe keys)
-- Predictable throughput (queue/topic separation, concurrency sizing, backpressure)
-- Operational clarity (templates + runbooks + verification)
-- Security (least privilege, TLS where required, network segmentation)
+1. **Every handler is safe to run twice, and the guarantee is a uniqueness constraint in the same store as
+   the effect.** Delivery is at-least-once, and a check in code has a window that concurrency hits.
+2. **Every consumer sets an explicit prefetch and concurrency bound at its construction site.** A library
+   default holds unbounded unacknowledged deliveries, stranding the queue's working set in one process.
+3. **A consumer commits its receipt row and business effect first, and acknowledges second.** A crash between
+   ack and commit loses the message; the reverse order only redelivers, which rule 1 has made safe.
+4. **Every declared queue declares a dead-letter target in the same change, with redelivery bounded by a
+   delivery limit.** Without both, a poison message loops forever or is dropped, and both look healthy.
+5. **A message is published only after the transaction that made its fact true commits, and a fact that must
+   survive an unreachable broker goes to a durable outbox row inside that transaction.** Publishing inside it
+   exposes a row that may roll back; publishing after commit without the row loses the fact on a crash.
+6. **Every exchange, queue and routing-key name comes from `alaa-services-contract
+   references/23-queue-and-exchange-registry.md`, registered before the declaring code merges.** An
+   unregistered queue is one nobody drains, and it grows until the broker refuses publishes for the vhost.
+7. **A message body is untrusted input: validate it against a schema, and take tenant, actor and scope from
+   it only when no trusted source carries them.** The broker authenticates the connection, never the payload.
 
-# When to use
-- Designing event-driven + async architecture (Kafka + RabbitMQ).
-- Add / migrate / harden queue infrastructure (RabbitMQ, Redis/Horizon, hybrid).
-- Tune throughput (worker counts, queue splits, prefetch/heartbeats, retries/backoff).
-- Implement DLQ / failure rerouting, idempotency, outbox-consumer dedupe.
-- Prepare production deployment: Supervisor / systemd / Docker / Kubernetes patterns.
-- Add observability: structured logs, job tags, metrics, dashboards, runbooks.
+## References — read the row you match
 
-## When NOT to use
-- do not use this skill for synchronous request-response flows with no queue, event, or broker design decision
-- do not use Kafka or RabbitMQ guidance here to justify bypassing the repository's data, security, or trust-boundary rules
-- do not use Redis or Horizon guidance here as a substitute for RabbitMQ-specific operational controls when RabbitMQ owns the job plane
+| You are about to … | Read |
+|---|---|
+| choose event versus command, or name a broker object | `references/10-transport-and-topology.md` |
+| publish, or tune an outbox relay | `references/20-publishing-and-the-outbox.md` |
+| write a consumer, set prefetch, or place its ack | `references/30-consuming-ack-and-prefetch.md` |
+| route a dead letter, or replay a DLQ | `references/40-dead-letter-and-replay.md` |
+| diagnose a stall, backlog, duplicate, stuck row, or filling DLQ | `references/50-failure-classes.md` |
+| instrument a publisher, consumer or relay | `references/60-telemetry-and-proof.md` |
+| work a Laravel queue plane, or weigh Horizon against RabbitMQ | `references/70-laravel-redis-and-horizon.md` |
+| repeat a version-sensitive claim about RabbitMQ or the kit | `references/90-source-map.md` |
 
-# Key split (recommended)
-- Kafka: events (facts, replayable, multi-consumer).
-- RabbitMQ: jobs/tasks (do work, competing consumers, ack/nack, DLQ).
+`references/queues-best-practices.md` is a content-free redirect, not a ninth reference.
 
-Rationale:
-- Don’t force Kafka to behave like a work queue for “do work once” commands.
-- Don’t force RabbitMQ to behave like an append-only event log / source of truth.
+## When not to use this skill, and what owns each thing instead
 
-# Key constraint: Horizon and RabbitMQ (important)
-- Laravel Horizon is designed for **Redis-backed** queues and operationally depends on Redis.
-- Horizon is NOT a process manager/monitor for RabbitMQ queues by default.
-- Do not assume “Horizon replaces RabbitMQ monitoring”.
+- Retry, backoff, deadline, breaker, degradation and request-side idempotency, as doctrine carrying no Ala
+  value: `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+- Every broker, metric, event and error-code **name**, and every platform **value**:
+  `/alaa-services-contract` (`$alaa-services-contract`).
+- Laravel driver mechanics — `config/queue.php`, worker commands, `queue:work` versus `rabbitmq:consume`:
+  `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`); on conflict, mechanics there, architecture here.
+- Event emission layer and timing: `/alaa-laravel-architecture` (`$alaa-laravel-architecture`). Outbox claim
+  query: `/alaa-data-layer` (`$alaa-data-layer`). Telemetry levels: `/alaa-observability-soc`
+  (`$alaa-observability-soc`). Fail-closed controls: `/alaa-security-review` (`$alaa-security-review`).
+  Quality bar: `/alaa-project-constitution` (`$alaa-project-constitution`). Model and effort:
+  `/alaa-prompting-guide` (`$alaa-prompting-guide`).
+- A kit capability that does not exist: file
+  `alaa-go-chi-development assets/templates/kit-change-request.md` and stop —
+  `/alaa-go-chi-development` (`$alaa-go-chi-development`).
 
-If you run RabbitMQ for jobs:
-- Monitor RabbitMQ with broker metrics/management tooling and app logs/metrics.
-- Use DLQ + retry policies + idempotency; do not rely on Horizon for RabbitMQ visibility.
+## Required tests
 
-If you want Horizon ergonomics:
-- Use Redis queues for the subset of jobs you want Horizon to manage/observe.
+Both ship with every change to a consumer or dead-letter route; assertions in `references/60-telemetry-and-proof.md`.
 
-## Hybrid: Redis/Horizon + RabbitMQ at the same time (allowed, but must be explicit)
-You can run both:
-- Redis + Horizon for “Horizon-managed” Laravel jobs (ergonomics + dashboard).
-- RabbitMQ workers/consumers for “RabbitMQ-managed” jobs (broker semantics + DLQ).
+- **A redelivery test** delivers one message twice to the real handler and asserts one business effect and
+  one receipt row. Idempotency established by inspection is not established.
+- **A dead-letter test** fails the handler past the delivery limit and asserts the message lands on
+  `<queue>.dlq` with key `<live-key>.failed`. An unexercised dead-letter route is a hope.
 
-Rules:
-- Be explicit about job routing:
-    - do not rely on a single global `QUEUE_CONNECTION` if you need both backends
-    - route per-job/per-queue using Laravel job connection/queue settings (e.g., job `$connection` / `$queue` or dispatch options)
-- Run separate worker fleets:
-    - `php artisan horizon` for Redis queues
-    - `php artisan queue:work rabbitmq ...` (or driver consume command) for RabbitMQ queues
-- Keep retries/backoff and timeouts consistent across both planes.
-- Document which classes/queues go to Redis vs RabbitMQ to avoid “silent misrouting”.
+## Gate script
 
-# Constraints
-- Never commit secrets (`.env`, certs, passwords).
-- Use least-privilege credentials, separate vhosts per environment, and network segmentation.
-- Prefer minimal diffs; do not refactor unrelated app code.
-- For non-trivial tasks, follow `alaa-workflow` and create/update the plan file (or constrained-mode alternative).
+```sh
+sh scripts/check-consumer-bounds.sh --root .
+```
 
-# Laravel 13 messaging notes
-- Default Laravel target in this skill pack is Laravel 13 on PHP 8.5.
-- When queue or connection selection would otherwise be repeated across dispatch sites, prefer central `Queue::route(...)` rules.
-- Prefer queue and listener attributes such as `#[Tries]`, `#[Backoff]`, `#[Timeout]`, `#[FailOnTimeout]`, or `#[DeleteWhenMissingModels]` when they make retry or lifecycle policy clearer than scattered properties, while preserving repository style where it is already consistent.
-- When reviewing upgrade work, update queue-event listeners and monitoring code for `JobAttempted::$exception` and `QueueBusy::$connectionName`.
+Exit **0** no findings. Exit **1** findings with file and line: resolve every one before reporting the change
+complete. Exit **2** could not determine — no broker lane or no recognisable declaration: run the three
+checks by hand and report each, because exit 2 is never a pass. Detection is narrow like the kit's
+pooled-lane analyzer, so a constant or a wrapper escapes it; `--self-test` runs the fixtures.
 
-# Step 1 — Repository discovery checklist
-1) Identify current stack:
-- Laravel version + installed packages (Horizon? RabbitMQ driver? Kafka client?)
-- `config/queue.php`, `config/horizon.php` (if present)
-- `.env.example` keys (QUEUE_CONNECTION, Redis/RabbitMQ/Kafka vars)
-2) Identify runtime/deploy model:
-- VM + Supervisor? systemd? Docker Compose? Kubernetes?
-3) Identify requirements:
-- Ordering requirements? duplicates acceptable?
-- Peak throughput and job durations
-- Failure tolerance: DLQ? replay? retention?
-4) Identify constraints:
-- Must-use Kafka? Must-use RabbitMQ? Optional Redis/Horizon?
-- Multi-tenancy considerations (tenant must be scoped in handlers)
+## What you report
 
-If unclear, assume conservative defaults and document assumptions.
-
-# Step 2 — Choose a golden-path architecture
-
-## Option E (recommended): Kafka for events + RabbitMQ for jobs
-- Publish domain/integration events to Kafka (replayable).
-- Enqueue jobs/tasks to RabbitMQ (work queues with DLQ).
-- Use outbox to Kafka when correctness matters (publish after DB commit).
-
-## Option A: Redis queue + Horizon
-Pros: best Laravel ergonomics; strong dashboard.
-Cons: Redis ops/HA; Horizon Redis Cluster constraints.
-
-## Option B: RabbitMQ as Laravel queue backend
-Pros: rich broker features; strong routing.
-Cons: driver compatibility variability; Horizon monitoring does not apply by default.
-
-# Step 3 — Kafka event plane (when used)
-
-## What goes to Kafka
-Immutable events (facts) that may need replay and multiple consumers.
-
-Rules:
-- Partition key should preserve ordering where it matters (tenant_id + aggregate_id/business key).
-- Consumers assume at-least-once and must be idempotent.
-- Prefer outbox publishing for correctness (write DB → commit → publish).
-- Do not publish “do work once” commands here unless you intentionally model them as events and handle idempotency/replay accordingly.
-
-# Step 4 — RabbitMQ job plane (when used)
-
-## What goes to RabbitMQ
-Jobs/tasks with work-queue semantics (competing consumers, bounded retries, DLQ).
-
-## Poison-message controls (mandatory)
-- Always define DLX/DLQ routing for critical queues.
-- Retries must be bounded; poison messages must not loop forever.
-- Prefer quorum queues for critical workloads; ensure poison-message behavior is explicitly handled (bounded redelivery + DLQ routing).
-- For ordered/critical queues, prefer conservative `prefetch` (often prefetch=1) to reduce blast radius.
-
-## Heartbeats/timeouts (mandatory)
-- Set broker/client heartbeats and timeouts to detect dead connections.
-- Align consumer timeouts with job timeouts to avoid duplicate work.
-- Ensure graceful stop and sufficient stop timeouts in Supervisor/systemd.
-
-# Step 5 — Implementation playbooks
-
-## Playbook A — Redis + Horizon (baseline)
-Actions:
-1) Ensure Horizon is installed and configured:
-- commit `config/horizon.php` changes
-- ensure Redis connectivity and env vars documented
-
-2) Configure supervisors:
-- choose `balance` strategy appropriate for workload
-- set `tries`, `timeout`, `backoff`
-- align timeouts to prevent duplicates:
-    - `timeout` MUST be a few seconds LESS than `retry_after`
-
-3) Secure Horizon dashboard:
-- restrict via auth gate / IP allowlist
-- never expose publicly without protection
-
-4) Deploy/run:
-- Supervisor/systemd/K8s runs `php artisan horizon`
-- on deploy, run `php artisan horizon:terminate` so workers reload code safely
-
-Templates:
-- `assets/systemd/horizon.service.example`
-- `assets/supervisor/horizon.conf.example`
-
-## Playbook B — RabbitMQ as queue backend (baseline)
-Assumes a RabbitMQ queue driver integrated with Laravel queues.
-
-Actions:
-1) Verify driver in `composer.json` and driver docs.
-2) Configure `config/queue.php` rabbitmq connection (driver-specific).
-3) Update `.env.example` with placeholders (no secrets).
-4) Choose worker command:
-- Most compatible: `php artisan queue:work rabbitmq --queue=...`
-- If supported and validated: `php artisan rabbitmq:consume --queue=...` (push-based, often faster)
-
-5) Correctness:
-- Ensure dispatch-after-commit for DB-coupled jobs (`after_commit=true`) so jobs cannot run before transaction commit.
-
-6) Failure handling:
-- Laravel failed_jobs storage enabled (when supported by your driver and expected by your ops).
-- Broker-side DLQ routing (DLX/DLQ) for critical queues.
-
-7) Broker hardening (baseline):
-- vhost per environment
-- per-app user, least privilege
-- disable/restrict guest
-- TLS for non-local traffic if required
-- define DLX/DLQ policies for critical queues
-
-Templates:
-- systemd:
-    - `assets/systemd/queue-work-rabbitmq@.service.example`
-    - `assets/systemd/rabbitmq-consume@.service.example`
-- supervisor:
-    - `assets/supervisor/queue-work-rabbitmq.conf.example`
-    - `assets/supervisor/rabbitmq-consume.conf.example`
-- docker (local/dev only):
-    - `assets/docker/docker-compose.rabbitmq-redis.yml.example`
-
-# Reliability rules (mandatory)
-- Every handler must be idempotent.
-- Retries must use bounded attempts + jittered backoff.
-- Poison messages go to DLQ with enough context to debug.
-- Request path must not block on slow consumers.
-
-# Step 6 — Shared reliability patterns (mandatory)
-- At-least-once is the default (Kafka and RabbitMQ).
-- Handlers must be idempotent (unique constraints, dedupe keys, upserts).
-- Bounded retries + exponential backoff + jitter.
-- Dispatch after commit for DB-coupled jobs/events.
-- Keep payloads small: pass IDs/business keys, not huge serialized models.
-
-# Step 7 — Verification / Definition of Done
-- Architecture decision documented (Kafka events vs RabbitMQ jobs; optional Horizon).
-- DLQ strategy verified (force-fail path).
-- Kafka event produced and consumed end-to-end (idempotent consumer).
-- RabbitMQ job processed end-to-end (force-fail lands in DLQ/failed store).
-- Prefetch/heartbeat/timeout alignment reviewed.
-- Tenant scoping proven in handlers.
-- Runbook notes captured.
-
-# References in this skill pack
-- `references/source-map.md`
-- `references/queues-best-practices.md`
-- `references/rabbitmq-topology-and-policies.md`
-- `references/troubleshooting.md`
-
-Read `references/source-map.md` before relying on latest/current/version/security-sensitive queue, broker, Laravel Horizon, Kafka, RabbitMQ, Redis, retry, or DLQ behavior.
-
-# Anti-patterns
-- Using Kafka as a “do work once” job queue without careful semantics.
-- Using RabbitMQ as the event log source of truth.
-- Infinite retries or missing DLQ.
-- Non-idempotent handlers.
-- Publishing events before DB commit without outbox/after-commit discipline.
-- Cross-tenant processing without explicit tenant scoping.
-
-## Fast entry
-
-| If the task is mainly about...                     | Start with                                        |
-|----------------------------------------------------|---------------------------------------------------|
-| event facts, replay, or multi-consumer fanout      | the Kafka split and outbox sections               |
-| background jobs, retries, or DLQ handling          | the RabbitMQ / work-queue sections                |
-| Redis + Horizon ergonomics                         | the hybrid Redis/Horizon rules                    |
-| throughput, prefetch, heartbeat, or poison control | the ops guardrails and troubleshooting references |
+Report each, or that it does not apply and why: the prefetch set and the measured handler p99 behind it; the
+acknowledgement route per outcome — ack, requeue, reject-without-requeue; the dead-letter target for every
+queue touched; for a replay, the precondition proving the cause was gone and the count replayed; and every
+absent kit capability and what replaced it.
