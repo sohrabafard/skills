@@ -134,19 +134,26 @@ Gateway responsibilities:
 - Require `purpose` to be present and non-empty and forward it verbatim as `X-TOTP-PURPOSE`, because
   the gateway holds no route-to-purpose map and only the route's own service knows which purpose it
   requires.
-- Forward only gateway-verified backend metadata to the downstream service:
-  - `X-TOTP-PURPOSE`
-  - `X-TOTP-VERIFIED-UNTIL`
-  - `X-TOTP-PROOF-ID`
+- Set exactly these four backend-only headers, and no other `X-TOTP-*` name. This is the complete set a
+  service behind the gateway may believe; a reader of this table needs no other list.
+
+| Header | Set when | What a service may believe |
+|---|---|---|
+| `X-TOTP-PURPOSE` | the proof is fully valid | the verified `purpose` the proof was issued for |
+| `X-TOTP-VERIFIED-UNTIL` | the proof is fully valid | the verified `exp`, in Unix epoch seconds |
+| `X-TOTP-PROOF-ID` | the proof is fully valid | the verified `jti` |
+| `X-TOTP-PROOF-REJECTED` | a proof was presented and none of the three above was set | why the proof bought nothing. Advisory only: it may change a message and must never change a decision. Owned by **Rejected-proof advisory header** below |
+
 - Send `X-TOTP-VERIFIED-UNTIL` as the proof's `exp` in Unix epoch seconds. The step-up response body's
   `verified_until` carries that same instant as an ISO 8601 string, so a service parses this header as an integer and
   never reuses a parser written against the response body.
 
-The gateway injects those three headers only when the proof is fully valid, and injects nothing when the proof is
-absent, expired, unbound, or wrongly signed. It returns no TOTP error and blocks no request in either case, because
-it holds no route-to-purpose map and so cannot know whether the route being called requires step-up at all. An absent
-proof and an invalid proof are therefore indistinguishable to the downstream service, and the service denies the
-step-up-protected operation in both cases.
+The gateway injects the first three headers only when the proof is fully valid, and injects none of them when
+the proof is absent, expired, unbound, or wrongly signed. It returns no TOTP error and blocks no request in
+either case, because it holds no route-to-purpose map and so cannot know whether the route being called requires
+step-up at all. The step-up decision is therefore identical with and without the advisory header: a service that
+requires step-up denies the operation whenever the three verified headers are absent, and reads
+`X-TOTP-PROOF-REJECTED` only to say why it denied.
 
 Downstream service responsibilities:
 
@@ -154,6 +161,136 @@ Downstream service responsibilities:
 - Never trust public `X-TOTP-*` metadata.
 - Enforce only route/business purpose policy against gateway-verified proof metadata after normal authentication,
   authorization, tenant, and business checks remain in place.
+- Read `X-TOTP-PROOF-REJECTED` only to choose a message. A service that never reads it behaves exactly as it
+  did before the header existed.
+
+## Rejected-proof advisory header
+
+`X-TOTP-PROOF-REJECTED` closes one blind spot and grants no new authority. Without it, a request whose proof
+the gateway rejected reaches a service byte-identical to a request that carried no proof at all, so a
+signing-key rotation, an issuer rename, or an audience change makes every step-up route re-challenge forever
+with the cause visible only in the gateway's `totp_proof_status` log field. Every gateway fact in this
+section is verified in the `gateway` repository at the path given beside it.
+
+Rules:
+
+- **Only the gateway sets it**, on the same footing as the three verified headers: the gateway strips any
+  inbound spelling from client input before any decision, so a client cannot forge it. The three verified
+  names are configured at `charts/gateway/values.yaml:228-230` and stripped at `:268-270`, and the
+  `x-totp-` prefix sweep at `haproxy/lua/authz-sidecar.lua:496` already covers every `X-TOTP-*` name except
+  the public `X-TOTP-Proof` carrier itself. A new name is added to both places or it is forgeable.
+- **It appears exactly when a proof was presented and bought nothing** — the request carried
+  `X-TOTP-Proof` and the gateway set none of the three verified headers. It is absent on a fully valid
+  proof and absent when no proof was presented. There is no fourth case, deliberately: making its presence
+  the exact complement of injection is what removes the indistinguishability, and any carve-out would
+  recreate a state — proof presented, nothing injected, nothing said — that a service still cannot tell
+  apart from no proof at all.
+- **It is advisory and non-blocking.** A service must not change an allow or deny decision, a route, a
+  permission check, a tenant scope, or a side effect on its presence, absence, or value. It may change only
+  a message. That is what keeps the gateway's TOTP handling non-blocking end to end: a wrong value here
+  changes a sentence, never a decision, so a mistyped key path or a stale audience list still costs a
+  re-challenge and nothing more — which is the property that made this header acceptable where a gateway
+  error was not.
+- **A service that does not read it behaves exactly as before.** Adding the header changes no existing
+  service's behaviour on its own.
+
+### The value vocabulary
+
+The value is one of the seventeen codes below and nothing else. Each is the gateway's `totp_proof_status`
+value for the same outcome, uppercased under a `TOTP_PROOF_` prefix, so the header value is derivable and
+the two vocabularies cannot drift. Derivation is not registration: a new status is added to this table
+before the gateway ships it, because a mechanical rule produces a spelling, not a registered code.
+
+The gateway applies its status rules in order and the last match wins
+(`charts/gateway/templates/configmap.yaml:835-836`), so a proof that trips more than one condition reports
+only the last matching one. Read the value as *a* reason, never as the complete list of what is wrong.
+
+| Header value | Gateway `totp_proof_status` | Meaning |
+|---|---|---|
+| `TOTP_PROOF_PRESENT_UNVERIFIED` | `present_unverified` | the verification rules did not reach a conclusion for a proof on an authenticated request. A gateway defect state, not a client one; a non-zero rate is an incident |
+| `TOTP_PROOF_UNAUTHENTICATED_ROUTE` | `unauthenticated_route` | the proof arrived on a request the gateway did not authenticate — a public path carrying no bearer, or a protected path whose bearer failed verification. A statement about the request, not the route |
+| `TOTP_PROOF_DISALLOWED_ALG` | `disallowed_alg` | the proof's `alg` is not on the allow-list, checked before the signature so a presenter cannot choose the algorithm |
+| `TOTP_PROOF_INVALID_SIGNATURE` | `invalid_signature` | signature verification failed. The value a signing-key rotation produces fleet-wide and at once |
+| `TOTP_PROOF_BAD_TYPE` | `bad_type` | `typ` is not the expected proof type |
+| `TOTP_PROOF_BAD_AUDIENCE` | `bad_audience` | `aud` is not the expected audience — the control that separates a proof from an access token signed by the same key |
+| `TOTP_PROOF_BAD_ISSUER` | `bad_issuer` | `iss` is not the expected issuer |
+| `TOTP_PROOF_MISSING_CLAIM_SUB` | `missing_claim_sub` | required claim `sub` absent |
+| `TOTP_PROOF_MISSING_CLAIM_PID` | `missing_claim_pid` | required claim `pid` absent |
+| `TOTP_PROOF_MISSING_CLAIM_PURPOSE` | `missing_claim_purpose` | required claim `purpose` absent |
+| `TOTP_PROOF_MISSING_CLAIM_JTI` | `missing_claim_jti` | required claim `jti` absent |
+| `TOTP_PROOF_MISSING_CLAIM_IAT` | `missing_claim_iat` | required claim `iat` absent |
+| `TOTP_PROOF_MISSING_CLAIM_NBF` | `missing_claim_nbf` | required claim `nbf` absent |
+| `TOTP_PROOF_MISSING_CLAIM_EXP` | `missing_claim_exp` | required claim `exp` absent |
+| `TOTP_PROOF_EXPIRED` | `expired` | `exp` is at or before now. The ordinary case — a user who paused mid-flow — and the one whose message quality this header exists to fix |
+| `TOTP_PROOF_NOT_YET_VALID` | `not_yet_valid` | `nbf` is further ahead than the configured clock skew |
+| `TOTP_PROOF_CONTEXT_MISMATCH` | `context_mismatch` | the proof's `sub` or `pid` does not equal the access token's |
+
+There is one status value per required claim rather than one folded `missing_claim`, because an issuer that
+stopped emitting `pid` and one that stopped emitting `jti` have different fixes
+(`charts/gateway/templates/configmap.yaml:859-865`).
+
+Two `totp_proof_status` values never appear in this header, and their absence is the contract: `absent`,
+because no proof was presented, and `validated`, because the three verified headers were injected instead.
+
+`context_mismatch` deliberately does not say which binding failed. The gateway records that in a separate
+log field, because a `sub` mismatch is an attack shape and a `pid` mismatch is usually a client that
+switched project without clearing its proof cache as this file's cache rules require — a distinction for an
+operator, not for a value a service may only print.
+
+### Why the value is UPPER_SNAKE while the log field stays lowercase
+
+Two surfaces, two rules, and they do not conflict.
+
+`totp_proof_status` is a structured log field whose value is a status word. The gateway emits no TOTP error,
+so nothing in that field reaches a client, and it stays lowercase — the gateway states exactly this at
+`charts/gateway/templates/configmap.yaml:831-833`. Nothing here changes it.
+
+`X-TOTP-PROOF-REJECTED` carries a machine-readable code across a service boundary, and a service that
+surfaces it copies the value verbatim into an error envelope. That puts the value under the code rule in
+`10-core-service-contract.md`, section **Error code registry and casing**: every code this skill governs
+matches `^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$`. A lowercase value would arrive in a public `error.meta` as the one
+lowercase code in the fleet, and every client and SOC expression would have to match two casings for one
+vocabulary forever.
+
+The `TOTP_PROOF_` prefix is not decoration. `EXPIRED` alone says nothing about what expired once it sits in
+an envelope beside other codes; the prefix is what makes each value self-describing at its destination.
+
+### `TOTP_PROOF_*` is gateway-owned, and ownership is by enumeration rather than by prefix
+
+Decided: the seventeen codes above belong to the `gateway` repository's committed code registry, not to
+`auth`'s.
+
+- `10-core-service-contract.md` binds every code to one committed registry in the repository that can emit
+  it, with a test that fails when emitted code and registry diverge. Only the gateway can emit these —
+  `auth` never sees the retry that carries the proof — so listing them in `auth`'s registry would add rows
+  that `auth`'s own test can never exercise, which is the split-registry failure that rule exists to
+  prevent.
+- The prefix is not the ownership boundary, because `auth` already carries `TOTP_PROOF_TOKEN_UNAVAILABLE`
+  in `app/Enums/ApiErrorCode.php`. Ownership is by the enumeration above: those seventeen values are the
+  gateway's and are the complete `X-TOTP-PROOF-REJECTED` vocabulary; every other `TOTP_*` code, including
+  that one, is `auth`'s. Do not "fix" the overlap by renaming either side — a rename of a public code costs
+  a 90-day window under `22-failure-load-and-deprecation-contract.md` and buys nothing a reader needs.
+- What a client branches on is decided by position, not by prefix, and position is unambiguous even where
+  the prefixes overlap. `auth`'s TOTP codes appear as a top-level `error.code`. A gateway
+  `TOTP_PROOF_*` value never does: it never sets an HTTP status, never appears in `error.code`, and appears
+  only as advisory detail inside `meta`.
+
+### Surfacing it to a client is a fleet-coordinated change, not a per-service one
+
+Reading the header is optional. Putting its value in a client-visible envelope is not, once any service
+does it. `10-core-service-contract.md` binds one `meta` key set to one `code` in **every** service that
+emits it, and `TOTP_STEP_UP_REQUIRED` is emitted by many. So:
+
+- The key is `meta.proof_rejected`: a string carrying one registered value from the table above, or `null`.
+- A service that emits `TOTP_STEP_UP_REQUIRED` carries that key on every such response, `null` when the
+  gateway set no header. A key present on some of them and absent on others is the two-shapes-for-one-code
+  defect that rule exists to prevent.
+- Adoption is therefore one coordinated change across every service that emits `TOTP_STEP_UP_REQUIRED`, not
+  fourteen independent ones. Until it is made, a service that reads the header uses it for service-local
+  logging only and adds no key to the envelope.
+
+The counter that makes a rejection spike visible without log search is
+`alaa_gateway_totp_proof_verifications_total`, registered in `24-metric-registry.md`.
 
 ## Client challenge handling
 
@@ -193,6 +330,6 @@ SDK/frontend expectations:
 The TOTP and step-up review checklist is owned by `$alaa-security-review`, so that a reviewer who loads
 that skill sees it. This file owns the shapes it triggers against: the public versus internal route shape,
 the `otpauth_uri`-not-an-image setup contract, the purpose naming rules, the proof-token binding
-requirements, the client proof-cache rules, and the gateway and downstream header responsibilities above.
-When a change touches any of those shapes, load `$alaa-security-review` and run its checklist against
-them.
+requirements, the client proof-cache rules, the gateway and downstream header responsibilities above, and
+the advisory-and-non-blocking rule on `X-TOTP-PROOF-REJECTED`. When a change touches any of those shapes,
+load `$alaa-security-review` and run its checklist against them.

@@ -35,10 +35,14 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 `content`, `entitlement-api`, and the `alaa-go-chi` kit each read that same spelling.
 
 - The list is closed. A service reads no trusted identity header outside it, plus the correlation headers
-  owned by `20-operational-and-observability-contract.md`, the step-up headers owned by
+  owned by `20-operational-and-observability-contract.md`, the four step-up headers owned by
   `32-auth-totp-and-step-up-contract.md`, and the request-deadline header owned by
   `22-failure-load-and-deprecation-contract.md`. Reading an undeclared header makes the gateway sanitize list
   incomplete, and an unsanitized header is a spoofing surface.
+- Not every gateway-set header is an assertion a service may act on. Three of the four step-up headers state
+  a verified fact; the fourth, `X-TOTP-PROOF-REJECTED`, is advisory and may change only a message, never an
+  allow or deny decision. That file carries the distinction and the enumerated values, so read it rather
+  than inferring the rule from the `X-` prefix.
 - Adding or removing one of these names requires a gateway claim-projection change plus the deprecation
   procedure in `22-failure-load-and-deprecation-contract.md`, because the gateway sanitize list, the Postman
   generator, the public-surface test, and every reader change together or the header becomes forgeable.
