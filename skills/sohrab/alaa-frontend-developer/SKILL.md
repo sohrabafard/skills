@@ -1,182 +1,91 @@
 ---
 name: alaa-frontend-developer
-description: "Use this skill when the task involves Vue, Quasar, or Vite frontend implementation in an app that follows the standard app-family contract or SSR, hydration, client-only guards, deterministic rendering, or cleanup safety. Do not use it when the task is pure Quasar API lookup with no broader frontend engineering decision."
+description: "Frontend engineering policy and routing hub for the Vue 3 + Quasar + Vite app family: SSR and hydration determinism, cleanup safety, SSR auth and session posture, PWA and service-worker policy, the canonical Lighthouse and Core Web Vitals playbook, and the client-side half of resilience, security, observability, configuration and input contracts. Use when implementing or reviewing frontend code in such an app; when a UI symptom may really come from SSR, hydration, auth, caching, backend query shape or bundle cost; and when choosing which frontend companion skill to load. Do not use it for exact Quasar API or quasar.config lookup (/alaa-quasar-app-vite-v3), Vue and TypeScript code quality (/alaa-vue-typescript-clean-code), visual design, RTL layout or Persian typography (/alaa-ui-ux-design-system), CI, Docker or deploy (/alaa-frontend-devops), browser storage mechanics (/alaa-indexeddb-browser-storage), or browser automation mechanics (/playwright)."
 ---
-
-
-
 
 # Alaa Frontend Developer
 
-## Purpose
-
-Use this as the default frontend engineering skill for the standard Vue 3 + Quasar + Vite app family.
-
-This skill replaces a cluster of narrower frontend skills with one routing-first entry point that keeps context small while preserving coverage for:
-
-- frontend implementation and repo-safe UI changes
-- JavaScript and Vue engineering rules
-- SSR and hydration safety
-- SSR auth, session, token-storage, and protected-route patterns
-- frontend-facing API contracts and data-shaping rules
-- PWA, service worker, offline, and update-flow boundaries
-- performance and realtime UI behavior
-- QA and verification planning
-- browser-debug decision flow
-- package and asset-contract awareness
-
-## Ownership
-
-- `alaa-frontend-developer` owns app-family frontend engineering policy and cross-cutting frontend guardrails.
-- `$alaa-quasar-app-vite-v3` owns everything Quasar CLI + Vite: exact Quasar APIs, `quasar.config`, platform modes, component/layout lookup, the `@quasar/app-vite` v3 stable line (production default since 3.0.1, 2026-07-07), the v2->v3 migration playbook, v2-era maintenance semantics, service-worker implementation depth, WebOTP/device-trust flows, and modern-experience decisions.
-- `$alaa-ui-ux-design-system` owns UI/UX design: art direction, visual thesis, design tokens and theming, typography and color, layout aesthetics, component-state and UX design, motion language and modern-CSS design features, icons/assets/imagery, and design-quality review. Load it for any visual-design decision; this skill keeps the implementation constraints.
-- `$playwright`, `$playwright-interactive`, and configured Playwright MCP profiles own browser mechanics and execution loops. Browser automation is opt-in: use it only when the user explicitly asks for browser, Playwright, visual, or responsive validation, a higher-priority repo rule requires it, or static analysis is no longer trustworthy for a browser-only bug. Prefer `playwright_headless` for deterministic headless browser checks and `playwright_visual` for headed visual QA when those MCP profiles are available.
-- `$openai-docs` owns authoritative current OpenAI and Codex product guidance.
-
-## When to use
-
-Use this skill when the task includes any of the following:
-
-- Vue, Quasar, or Vite frontend implementation in an app that follows the standard app-family contract
-- SSR, hydration, client-only guards, deterministic rendering, or cleanup safety
-- auth, session, login, logout, silent refresh, cookie, bearer-token, or protected-route behavior
-- API envelopes, pagination, filtering, sorting, sparse payloads, or cache-validator behavior that affects frontend correctness or efficiency
-- frontend behavior around PWA, service workers, offline fallback, or update UX
-- performance, hydration cost, Web Vitals, or runtime efficiency
-- WebSocket or SSE lifecycle, reconnect behavior, or realtime UI state
-- QA planning, verification mapping, release-readiness checks, or browser-debug evidence collection
-- package asset emission, dist-only package consumption, or browser-asset contract risks
-- choosing which companion frontend skill to load for a mixed frontend task
+Execution contract for frontend work in the standard Vue 3 + Quasar + Vite app family. Every line here is a gate or a route. The only override is a repo-local `AGENTS.md` rule or an explicit user instruction that contradicts a named line; cite the file and line you are overriding.
 
 ## When NOT to use
 
-Do not use this skill when:
+Stop and route when the change touches **only** one of these, with no SSR, hydration, auth-posture, service-worker-policy or Web-Vitals decision in it: an exact Quasar API or `quasar.config` key; Vue or TypeScript code quality; a visual or UX decision; a CI, container or deploy step; browser storage mechanics; browser-automation mechanics. The ownership table below names the owner and the file for each.
 
-- the task is pure Quasar API lookup with no broader frontend engineering decision
-- the task is pure visual design or art direction with no frontend implementation constraint — use `$alaa-ui-ux-design-system`
-- the task is browser automation mechanics only
-- the task is backend-only, infra-only, or unrelated to frontend behavior
+## Owned here
 
-## Quick start
+SSR and hydration determinism and cleanup safety; which auth and session posture the repo is on and the client-side half of it; PWA and service-worker **policy** — what may change and what must not; the canonical Lighthouse and Core Web Vitals model in `references/41-lighthouse-and-web-vitals.md`, which two siblings route into instead of restating; the browser-automation gate and browser-debug evidence discipline; and the client-side expression of every contract below.
 
-1. Read the repo-local `AGENTS.md`.
-2. Apply `$alaa-low-noise`.
-3. Start with `references/00-topic-map.md` unless you already know the exact reference to load.
-4. Load only the smallest relevant reference file.
-5. Follow that file's pairing guidance before making changes.
+Do not use it for pure Quasar API lookup, pure visual design, browser-automation mechanics, or a task with no frontend surface.
 
-Also load companion skills when needed:
+## Ownership — one table, route and never restate
 
-- exact Quasar API/config/platform behavior, v3 builds, a v2->v3 migration, v2 maintenance, SW depth, or WebOTP/device trust -> `$alaa-quasar-app-vite-v3`
-- design systems, tokens, theming, typography, color, styles, layout aesthetics, motion language, icons/assets, or design review -> `$alaa-ui-ux-design-system`; keep this skill loaded for the implementation constraints
-- explicit browser validation or reproduction -> `$playwright` or `$playwright-interactive`; when MCP browser tools are configured, route deterministic non-visual checks to `playwright_headless` and headed visual QA to `playwright_visual`
-- Ala gateway or trusted-header auth model -> `$alaa-trust-gateway-auth`
-- CI, Docker, artifact, or deployment contract risks -> `$alaa-frontend-devops`
-- package boundary or asset emission risks -> `$alaa-mono-package`
-- shared Crockford Base32 or UUIDv7 codec parity across frontend, backend, shell, or edge layers -> `$alaa-crockford-base32-codecs`
-- documentation-only annotation pass -> `$alaa-frontend-doc-annotations`
-- OpenAI or Codex docs, examples, or maintenance guidance -> `$openai-docs`
+| The subject is | Load and enter at |
+|---|---|
+| exact Quasar API, `quasar.config`, platform modes, v2→v3 migration, SW depth, WebOTP, installed versions | `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) `references/00-topic-map.md` |
+| TypeScript, SOLID, decomposition, Pinia shape, Vue patterns, strictness gates | `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) `references/00-topic-map.md` |
+| visual design, tokens, motion, failure-state design, RTL layout, Persian typography | `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) `references/00-topic-map.md` |
+| CI gates, artifact identity, serving, caching, public path, deploy failure | `/alaa-frontend-devops` (`$alaa-frontend-devops`) `references/00-topic-map.md` |
+| `packages/*` boundaries, exports maps, peer deps, asset reachability, release gates, `dist/ssr` paths | `/alaa-mono-package` (`$alaa-mono-package`) `references/00-topic-map.md` |
+| browser storage mechanics, quota, eviction, migrations, request cache, drafts, outbox, offline media | `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`) `references/00-topic-map.md` |
+| video or audio playback, DRM, in-app download, ads, player analytics | `/alaa-shaka-player` (`$alaa-shaka-player`) `references/00-topic-map.md` |
+| a documentation-only diff, JSDoc, `NOTE:` annotations, annotation staleness | `/alaa-frontend-doc-annotations` (`$alaa-frontend-doc-annotations`) `references/10-annotation-boundaries.md` |
+| the digit and text normalization form | `/alaa-input-normalization` (`$alaa-input-normalization`) `references/20-browser-binding.md` |
+| test design, layers, doubles, proof levels | `/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md` |
+| timeout, retry, backoff, breaker, shedding, degradation, idempotency | `/alaa-reliability-sla` (`$alaa-reliability-sla`) `references/00-topic-map.md` |
+| threat classes, review triggers, fail-closed doctrine | `/alaa-security-review` (`$alaa-security-review`) `references/25-browser-trust-and-output.md` |
+| log fields, metric names, envelope keys, error codes, SDK consumption | `/alaa-services-contract` (`$alaa-services-contract`) `references/60-frontend-sdk-consumption-contract.md` |
+| the requirement level of any telemetry, and its budgets | `/alaa-observability-soc` (`$alaa-observability-soc`) `references/20-instrumentation-gates.md` |
+| the quality bar itself | `/alaa-project-constitution` (`$alaa-project-constitution`) `references/quality-bar.md` |
+| cursor and keyset pagination contract | `/alaa-keyset-pagination` (`$alaa-keyset-pagination`) `references/40-wire-contract-limits-and-errors.md` |
+| complexity budgets, structure choice, the N+1 family | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) `references/10-complexity-budget.md` |
+| boundary and seam design before implementation | `/alaa-system-design` (`$alaa-system-design`) `references/10-boundary-and-seam.md` |
+| identifier codec parity — run the harness, do not reason about it | `/alaa-crockford-base32-codecs` (`$alaa-crockford-base32-codecs`) `scripts/codec-conformance.sh` |
+| the permission bitmap and its decoder | `/alaa-permission-generator` (`$alaa-permission-generator`) `assets/permission-bitmap/permission-bitmap.ts` |
+| gateway verification, trusted headers, downstream trust | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) `references/20-claims-headers-and-sentinels.md` |
+| object storage, presigned URLs, `STORAGE_*`, resumable upload | `/alaa-minio-object-storage` (`$alaa-minio-object-storage`), `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`), `/tusd-upload-platform` (`$tusd-upload-platform`) |
+| query shape, index, or aggregate cost behind a slow screen | `/alaa-data-layer` (`$alaa-data-layer`), `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) |
+| real-browser execution, or a stateful debugging loop | `/playwright` (`$playwright`), `/playwright-interactive` (`$playwright-interactive`); profile choice in this skill's `references/70-companion-skill-routing.md` |
+| authoritative OpenAI or Codex product behaviour | `/openai-docs` (`$openai-docs`) |
+| model and effort selection | `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md` |
 
-## Routing map
+Two owners appear to apply: `references/70-companion-skill-routing.md`.
 
-- Standard app-family contract, boundaries, monorepo rules, SSR auth/session boundaries, and workflow defaults:
-  - `references/10-contract-and-boundaries.md`
-- SSR auth, session, token-storage, refresh, BFF, and gateway-aware frontend patterns:
-  - `references/21-ssr-auth-and-session-patterns.md`
-- Vue, JavaScript, SSR, hydration, lifecycle, reactivity, and JSDoc defaults:
-  - `references/20-vue-js-ssr-patterns.md`
-- PWA, service worker, offline fallback, update flow, and safe SW change boundaries:
-  - `references/30-pwa-sw-and-offline.md`
-- Performance, runtime efficiency, WebSocket, and SSE patterns:
-  - `references/40-performance-and-realtime.md`
-- Lighthouse scoring model, Core Web Vitals (LCP/INP/CLS), score-90+ playbooks, performance budgets:
-  - `references/41-lighthouse-and-web-vitals.md`
-- Frontend-facing API contracts, pagination, caching, sparse payloads, and DB-aware data-shaping:
-  - `references/45-api-and-data-shaping.md`
-- QA planning, verification mapping, release readiness, and evidence capture:
-  - `references/50-qa-and-verification.md`
-- Browser-debug flow, browser evidence, and SSR-safe UI implementation constraints:
-  - `references/60-browser-debug.md`
-- Design systems, tokens, theming, typography/color, styles, layout, motion, modern-CSS design features, icons/assets, and design review:
-  - `$alaa-ui-ux-design-system` (moved out of this skill)
-- Companion skill ownership and pairing rules:
-  - `references/70-companion-skill-routing.md`
-- Mapping from deleted skill names and old shared-doc topics:
-  - `references/80-legacy-skill-coverage.md`
-- Live upstream deltas, prompt-maintenance rules, and skill-maintenance workflow:
-  - `references/90-upstream-deltas-and-maintenance.md`
+## Non-negotiable gates
 
-## Mandatory cross-topic rules
+1. **SSR determinism.** No hydration mismatch, no browser global on an SSR render path, no per-request state in a module-level singleton. A change that reintroduces one is reverted, not documented.
+2. **TypeScript under `strict`.** All new and modified frontend code is TypeScript. JavaScript is permitted only in a file already inside the repo's `allowJs` set.
+3. **No client-side authorization decision.** A permission read in the browser selects what to render; the server decides what is allowed. A route guard, a `v-if`, or a decoded bitmap is never the enforcement point.
+4. **No token in persistent browser storage.** Do not add a new write of an access token to `localStorage` or `sessionStorage`; hold it in a module-scoped variable owned by exactly one auth module.
+5. **Browser automation is opt-in.** Open it only when the user asks for browser, visual or responsive validation; when a repo rule requires reproduction; or when one static pass is complete and you can name the one observation source cannot produce — exact console warning text, a computed style value, or an HTTP status. State that observation first.
+6. **No service-worker strategy drift.** Do not add or widen a runtime-cache route matcher, change placeholder substitution, or alter registration and lifecycle orchestration unless that change is what was asked for.
+7. **No second envelope and no second error format.**
+8. **A performance budget breach blocks merge.** It clears only by a recorded exception in the repo's budget config naming the route, the new ceiling, and the approving maintainer.
+9. **Proof before "done".** Select the proof level for the change surface and run it. A repo with no runner for that level is a blocking finding, not a waiver.
 
-Apply these even when the user names only one surface:
+## Router
 
-- Any SSR, hydration, router, store, boot, auth, or browser-only API task:
-  - Also load `references/20-vue-js-ssr-patterns.md`.
-- Any auth, session, token storage, silent refresh, protected-route, or gateway-backed frontend task:
-  - Also load `references/21-ssr-auth-and-session-patterns.md`.
-  - If trusted headers, gateway verification, or downstream auth context matter, pair with `$alaa-trust-gateway-auth`.
-- Any service worker, offline, update UX, or caching task:
-  - Also load `references/30-pwa-sw-and-offline.md`.
-  - If Quasar config or InjectManifest shape matters, pair with `$alaa-quasar-app-vite-v3`.
-  - For implementation depth (Workbox recipes, update-UX code, SW debugging, push/badging), pair with `$alaa-quasar-app-vite-v3`.
-- Any animation, transition, motion polish, or modern-CSS-feature task:
-  - Load `$alaa-ui-ux-design-system` (its `references/70-motion-and-modern-css.md` owns the Baseline tiers and the motion contract).
-  - Treat `prefers-reduced-motion` support as a blocking gate, not polish.
-- Any package, asset, dist-output, or missing-chunk task:
-  - Also load `references/10-contract-and-boundaries.md`.
-  - Pair with `$alaa-mono-package` when `packages/*` or package outputs are involved.
-- Any Lighthouse, PageSpeed, Core Web Vitals, LCP/INP/CLS/TBT, or "hit score 90/100" task:
-  - Also load `references/41-lighthouse-and-web-vitals.md`; attack metrics by weight (TBT 30% -> LCP 25% -> CLS 25%).
-  - Verify on the production build with mobile throttling, three runs, median — never a single dev-server run.
-- Any API contract, pagination, filter, sort, sparse-field, or cache-validator task:
-  - Also load `references/45-api-and-data-shaping.md`.
-- Any UI change that appears "frontend-only" but is really caused by backend query shape, count cost, or missing aggregation:
-  - Also load `references/45-api-and-data-shaping.md`.
-  - Pair with `$alaa-laravel-architecture` or `$alaa-data-layer` when the fix crosses into server implementation.
-- Any visually ambitious landing page, premium UI, design-system, or design-review task:
-  - Pair with `$alaa-ui-ux-design-system` for direction, tokens, styles, layout, and design gates.
-  - Use this skill for implementation constraints, SSR safety, Quasar/Vite integration, and verification planning.
-- Any explicit browser validation request, visual QA request, or browser-only reproduction:
-  - Pair with `$playwright` or `$playwright-interactive`.
-  - When MCP browser profiles are configured, prefer `playwright_headless` for deterministic headless smoke checks and `playwright_visual` for headed visual inspection.
-  - Do not select `MCP_DOCKER` only to get a headless browser when a Playwright headless profile is available.
-- Any frontend task without explicit browser permission:
-  - Prefer source inspection, tests, logs, static DOM/CSS reasoning, and existing screenshots or artifacts.
-  - Do not open browser automation merely because the task is frontend, Quasar, Vite, visual, or responsive.
-  - If browser execution becomes necessary because static evidence is insufficient, state that pivot and the target route/check before opening it.
-- Any task that depends on the `@quasar/app-vite` version line (v2 vs v3), a v3 build, a v2->v3 migration, or an exact per-line `quasar.config`/boot/component shape:
-  - Require `$alaa-quasar-app-vite-v3`; v3 is the stable production line since 3.0.1 (2026-07-07), and that skill also owns the v2 maintenance semantics and the migration playbook.
-- Any "latest", maintenance, migration, or skill-authoring task:
-  - Load `references/90-upstream-deltas-and-maintenance.md`.
-  - Use `$openai-docs` for OpenAI or Codex-specific claims.
+One router, one hop: `references/00-topic-map.md`. Every row there states a situation observable before acting. Do not route from this file.
 
-## Search rules
+## Also load — these fire even when the user named one surface only
 
-When searching inside this skill pack:
+| The diff touches | Also load |
+|---|---|
+| SSR, hydration, a router guard, a store, a boot file, any browser-only API | `references/20-vue-js-ssr-patterns.md` |
+| login, logout, refresh, a token, a protected route, an SSR request carrying identity | `references/21-ssr-auth-and-session-patterns.md` |
+| a service worker, an offline path, an update prompt | `references/30-pwa-sw-and-offline.md` |
+| a text input, a submit path, a validator, a formatter | `references/22-input-validation-and-normalization.md` |
+| content a user or a third party supplied, or a permission read in a component | `references/25-frontend-security.md` |
+| a `fetch`, a mutation, a retry, or state that can be stale or partial | `references/46-resilience-and-degradation.md` |
+| a client-side event, an error report, or a trace header | `references/47-frontend-observability.md` |
+| a `VITE_*` name or any other injected value | `references/48-config-and-environment.md` |
+| a date, a number, or a currency formatted during SSR | `references/55-i18n-locale-and-rtl.md` |
+| a claim that something is tested, or a change about to be called done | `references/05-proof-and-tests.md` |
+| Lighthouse, PageSpeed, Web Vitals, LCP/INP/CLS/TBT, or "hit 90" | `references/41-lighthouse-and-web-vitals.md`; attack by weight, TBT 30% → LCP 25% → CLS 25%; production build, mobile throttling, three runs, median |
+| a UI symptom that is really backend query shape, count cost, or missing aggregation | `references/45-api-and-data-shaping.md` |
+| an animation, a transition, or a CSS feature that may not ship everywhere | `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) `references/70-motion-contract.md` and `references/72-modern-css-baseline-tiers.md`; `prefers-reduced-motion` is a blocking gate |
 
-- Start with exact frontend concepts:
-  - `hydration`, `onMounted`, `AbortController`, `BFF`, `token-mediating backend`, `silent refresh`, `localStorage`, `network-only`, `offline fallback`, `controllerchange`, `WebSocket`, `SSE`, `LCP`, `INP`, `TBT`, `CLS`, `lighthouse`, `fetchpriority`, `bfcache`, `speculation rules`, `scheduler.yield`, `lazy hydration`, `performance budget`, `cursor pagination`, `ETag`, `If-None-Match`, `problem details`, `sparse fields`
-- For design terms (`view transitions`, `container queries`, `oklch`, `light-dark`, `prefers-reduced-motion`, `stagger`, tokens, styles, icons), search `$alaa-ui-ux-design-system` instead — that content moved there.
-- Search old skill names in `references/80-legacy-skill-coverage.md` when the task uses prior terminology.
-- Search the companion routing reference when multiple skills could apply and ownership is unclear.
-- Refresh live package versions with `node scripts/check-upstream-versions.mjs` before version-sensitive changes.
+## Workflow and maintenance
 
-## Companion chooser
+Read the repo-local `AGENTS.md`; apply `/alaa-low-noise` (`$alaa-low-noise`); inspect the existing pattern first; name the root cause before choosing a fix; make the smallest change that removes it; run the proof level gate 9 selects.
 
-| If the task is mainly about...                                          | Pair with                        |
-|-------------------------------------------------------------------------|----------------------------------|
-| design systems, tokens, theming, typography, color, styles, layout aesthetics, motion, icons/assets, design review | `$alaa-ui-ux-design-system` |
-| CI, Docker, artifact paths, CDN, or deploy/runtime delivery             | `$alaa-frontend-devops`          |
-| inline comments or JSDoc only                                           | `$alaa-frontend-doc-annotations` |
-| `packages/*`, peer deps, asset emission, or workspace package contracts | `$alaa-mono-package`             |
-| Quasar CLI, `quasar.config`, platform modes, exact Quasar APIs, v3 builds, v2->v3 migration, v2 maintenance, SW depth, WebOTP, device trust | `$alaa-quasar-app-vite-v3` |
-| live OpenAI or Codex product behavior                                   | `$openai-docs`                   |
-
-## Maintenance rules
-
-- Keep this skill focused on one job: frontend engineering for the standard Vue 3 + Quasar + Vite app family.
-- Prefer progressive disclosure and route to references instead of growing `SKILL.md`.
-- Add scripts only when the task is deterministic and repeated enough to justify them.
-- Keep descriptions precise enough for reliable implicit invocation.
-- Re-test the skill against realistic prompts after changing routing or ownership boundaries.
-- Repo-local `AGENTS.md` and user instructions always override this shared skill.
+In this skill: search keys and retired-name aliases are in `references/00-topic-map.md`; sources and maintenance in `references/95-sources-and-maintenance.md`. It ships no scripts.

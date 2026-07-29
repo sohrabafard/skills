@@ -1,75 +1,102 @@
-# IndexedDB decision record
+# IndexedDB decision record — <feature>
 
-Date:
-Owner:
-Feature:
-Status: proposed | accepted | rejected | superseded
+Date: `<ISO date>` · Owner: `<name>` · Status: `proposed | accepted | rejected | superseded`
 
-## Context
+Every `<...>` is filled before review. A blank row is a finding, not a default.
 
-## Decision
+## Context and decision
+
+- What the user can do that they could not before: `<...>`
+- What is stored on the device, in one sentence: `<...>`
+- Decision: `<...>`
 
 ## Data classification
 
-| Data | Class | Source of truth | Lifetime | Recoverable? |
+Classes come from `assets/data-classification-policy.yaml`, not from prose.
+
+| Field or record | Class | Source of truth | Lifetime | Recoverable from the server? |
 |---|---|---|---|---|
+| `<...>` | `<...>` | `<...>` | `<...>` | `<yes / no — if no, name the user-visible recovery>` |
 
-## Alaa SDK and gateway boundary
+Answered explicitly:
 
-- SDK/gateway client:
-- Protected API path:
-- Browser-sent headers limited to `Authorization: Bearer`, `X-Request-Id`, and `traceparent`? yes/no
-- Trusted gateway headers, decoded JWT claims, and authz decisions stored? no
-- `project_id` used only as public UUIDv7 body field when required? yes/no
-- `accountKey` used only as local namespace? yes/no
+- Any secret, token, decoded JWT claim, trusted gateway header, permission bitmap or
+  authorization decision stored? **`<must be: no>`** — `references/61-authority-boundary.md`.
+- Does anything branch on a stored value to decide what a user may do? **`<must be: no>`** — if yes,
+  that is an authorization decision: `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
+- Any `pii_moderate_high` field stored? `<if yes, name the review under /alaa-security-review
+  ($alaa-security-review) and its outcome>`
+- Any user-entered text stored or compared? `<if yes, name where it is normalized —
+  /alaa-input-normalization ($alaa-input-normalization)>`
 
-## Browser capability tiers
+## Capability tiers
 
-| Tier | Behavior | Fallback |
+| Tier | What this feature does | What the user is told |
 |---|---|---|
+| 0 | `<...>` | `<no offline language>` |
+| 1 | `<...>` | `<...>` |
+| 2 | `<...>` | `<...>` |
+| 3 | `<...>` | `<...>` |
 
 ## Schema
 
-### DB
+- Database and version: `<registered name>` — names are `/alaa-services-contract`
+  (`$alaa-services-contract`)
+- Object stores: `<...>`
 
-### Object stores
+| Index | Key path | The read it serves | Stated bound |
+|---|---|---|---|
+| `<...>` | `<...>` | `<...>` | `<O(log n + k) / ...>` |
 
-### Indexes
+- Every key-path segment verified against the record type: `<yes — name the type>`
+- Every user-scoped store has an `accountKey`-prefixed index: `<yes>`
+- Record types: `<...>`
 
-### Record types
+## Quota, budget and eviction
 
-## Quota and eviction plan
-
-- Estimated records:
-- Estimated bytes:
-- Soft budget:
-- Hard budget:
-- Cleanup order:
-- Persistence request timing:
-
-## Security and privacy
-
-- Secrets stored? no
-- Tokens/JWT claims/trusted headers/authz decisions stored? no
-- Local entitlement/profile/project data used as authority? no
-- PII stored?
-- Logout purge:
-- Account switch behavior:
-- Record validation:
+- Budget file: `<path to the filled storage-budget-policy.md>`
+- Estimated records and bytes per account after one year: `<...>`
+- Cleanup order when the cap is reached: `<...>`
+- When persistence is requested, and what the UI says when it is refused: `<...>`
+- What the user sees the moment the browser deletes the whole origin: `<...>`
 
 ## Migration and concurrency
 
-- New DB version:
-- Upgrade path:
-- Blocked/versionchange UX:
-- Multi-tab coordination:
+- New database version and the branch added: `<...>`
+- Upgrade path from the oldest supported version: `<...>`
+- What a second open tab sees, and the blocked UX: `<...>`
+- Does the service worker touch these stores? `<if yes, it opens with no version argument —
+  references/41-multitab-versionchange-and-locks.md>`
+- Cross-context jobs and the Web Lock name each holds: `<...>`
 
-## Sync/conflict/recovery
+## Failure classes
 
-## Test matrix
+| Class | What this feature does | What the user sees |
+|---|---|---|
+| quota exceeded | `<...>` | `<...>` |
+| origin evicted | `<...>` | `<...>` |
+| upgrade blocked | `<...>` | `<...>` |
+| transaction aborted | `<...>` | `<...>` |
+| storage unavailable, private mode | `<...>` | `<...>` |
 
-## Observability
+## Proof
 
-## Risks
+Levels are `/alaa-testing-strategy` (`$alaa-testing-strategy`); lanes are
+`assets/browser-test-matrix.yaml`.
 
-## Follow-up
+| Level | Test | What it does not bound |
+|---|---|---|
+| 2 | `<...>` | any real engine |
+| 4 | `<...>` | `<...>` |
+| 5 | `<lane>` | anything beyond that device |
+
+## Telemetry
+
+Event names are `/alaa-services-contract` (`$alaa-services-contract`); requirement levels and
+gates are `/alaa-observability-soc` (`$alaa-observability-soc`).
+
+| Event | Registered? | Level | Fields, all bucketed and payload-free |
+|---|---|---|---|
+| `<...>` | `<yes>` | `<...>` | `<...>` |
+
+## Consequences and open decisions

@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa UI/UX Design System"
   short_description: "Design intelligence for Vue/Quasar apps"
-  default_prompt: "Use $alaa-ui-ux-design-system to follow its workflow for UI/UX design, design tokens, theming, and design review in Vue/Quasar apps."
+  default_prompt: "Use $alaa-ui-ux-design-system to follow its workflow for UI/UX design, design tokens, theming, RTL and Persian rendering, and design review in Vue/Quasar apps."
 
 policy:
   allow_implicit_invocation: true

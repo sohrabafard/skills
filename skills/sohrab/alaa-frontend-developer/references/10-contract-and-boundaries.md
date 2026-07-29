@@ -1,111 +1,72 @@
 # Contract and Boundaries
 
-This file defines the default contract for the standard app family that uses Vue 3 + Quasar + Vite. Treat these as defaults, not universal laws: if a repo-local `AGENTS.md` or explicit user instruction differs, that higher-priority rule wins.
+The default contract for the standard app family on Vue 3 + Quasar + Vite. These are constraints. The only
+override is a repo-local `AGENTS.md` rule or an explicit user instruction that contradicts a named line
+here; cite the file and line you are overriding.
 
 ## Standard app-family contract
 
-- Vue 3 + Quasar + Vite frontend stack
-- ESM-first
-- JavaScript plus JSDoc by default unless the repo already standardizes on TypeScript
-- Yarn-first behavior when the repo uses Yarn or has `yarn.lock`
-- SSR and PWA may both be enabled, so browser-only assumptions are not safe by default
-
-## Always optimize for
-
-- SSR correctness and hydration safety
-- deterministic rendering
-- minimal bundle size
-- route-level code splitting and lazy loading
-- Quasar tree-shaking friendliness
-- accessibility and semantic HTML
-- SEO-safe SSR output when SSR is enabled
-- low operational risk in build and deploy flows
-- compatibility with weaker networks and mobile devices
+- Vue 3 + Quasar + Vite, ESM-first.
+- **All new and modified frontend code is TypeScript under `strict`.** Run the gates in
+  `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) `references/00-topic-map.md`.
+  JavaScript is permitted only in a file already inside the repo's `allowJs` set. TypeScript 6 is the
+  fleet line; TypeScript 7 and its native compiler are not adopted, because Quasar has not declared
+  support — that ruling and the toolchain live in that skill, not here.
+- Yarn-first when the repo has a `yarn.lock`.
+- SSR and PWA may both be on, so a browser-only assumption is never safe by default.
 
 ## Hard constraints
 
-- Do not break SSR or introduce hydration mismatches.
-- Do not rely on browser-only APIs during SSR render paths.
-- Do not add unnecessary complexity or hidden side effects.
-- Do not perform drive-by refactors.
-- Do not change root package-manager scripts unless explicitly requested by maintainers.
-- Do not silently change service-worker caching strategy, public asset paths, or build output contracts.
+- Do not break SSR or introduce a hydration mismatch.
+- Do not touch a browser-only API on an SSR render path.
+- Do not store per-request mutable state in a module-level singleton.
+- Do not perform a drive-by refactor, and do not change root package-manager scripts unless the
+  maintainer asked.
+- Do not change service-worker caching strategy, public asset paths, or build output contracts as a side
+  effect of another change.
 
-## Required workflow defaults
+## Always optimize for
 
-1. Read repo-local `AGENTS.md`.
-2. Apply `$alaa-low-noise`.
-3. Inspect existing patterns before changing behavior.
-4. Identify the root cause or decision point before choosing a fix.
-5. Make the smallest safe change.
-6. Run the lightest meaningful verification or write a concrete manual verification plan.
+SSR correctness and hydration safety; deterministic rendering; route-level code splitting and
+tree-shaking; accessibility and semantic HTML; SEO-safe SSR output when SSR is on; low operational risk in
+build and deploy; and behaviour on a weak network and a slow device.
+
+## Required workflow
+
+Stated once, in `SKILL.md` under "Workflow and maintenance". Do not restate it here or in a review
+comment. The proof level it ends on is selected by `05-proof-and-tests.md`.
 
 ## SSR auth and session boundary
 
-Do not assume one auth model across every app.
-
-Before changing auth, protected-route, or SSR data-fetch behavior, inspect:
-
-- login and logout flows
-- refresh endpoint shape
-- fetch wrappers and boot files
-- token storage and rotation behavior
-- whether the app talks directly to APIs, through a BFF, or through a trusted gateway
-
-Common supported patterns in this skill pack:
-
-- BFF or proxying backend-for-frontend with cookie-backed session
-- token-mediating backend that stores refresh capability server-side and returns short-lived access tokens to the browser
-- server-only cookie-to-Authorization bridge for SSR requests
-- gateway-backed bearer flow where the browser sends an access token and the gateway injects trusted downstream headers
-- browser-only OAuth public client with Authorization Code + PKCE when the repo truly uses that model
-
-Safe default boundary:
-
-- keep secrets and refresh capability out of SSR HTML and initial state
-- prefer server-side sessions or BFF/token-mediating patterns when available
-- if the browser must hold an access token, prefer in-memory storage over persistent browser storage
-- route exact auth/storage decisions through `21-ssr-auth-and-session-patterns.md`
+One line only: before changing auth, protected-route or SSR data-fetch behaviour, read
+`21-ssr-auth-and-session-patterns.md`. It owns the five supported postures, the decision order, the
+storage rule and the refresh contract. Do not restate any of it here or in a component.
 
 ## Browser automation boundary
 
-- Prefer static inspection, logs, and source reasoning unless:
-  - the user explicitly asks for browser validation, or
-  - a higher-priority repo rule requires browser reproduction before fixing
-- When browser work is allowed, use isolated sessions and collect only the smallest evidence set that proves the issue
+Static inspection, logs, tests and source reasoning first. The three conditions that open a browser, and
+the observation you must name before you do, are gate 5 in `SKILL.md`; the evidence discipline is
+`60-browser-debug.md`.
 
-## Monorepo and package boundary
+## Package and artifact boundary
 
-When the repo uses workspace packages:
+Whether a package asset is reachable from an entry, which dependencies are peers, what a package emits,
+and where the SSR runtime entry and the browser assets land are all decided by `/alaa-mono-package`
+(`$alaa-mono-package`) — `references/10-package-boundary-and-entrypoints.md` for entrypoints,
+`references/20-peer-deps-dedupe-and-build-output.md` for the peer-dependency contract,
+`references/30-assets-css-and-ssr-client-assets.md` for asset reachability and the `dist/ssr` paths. This
+skill consumes that result and does not restate it. When an artifact reaches a server or a CDN,
+`/alaa-frontend-devops` (`$alaa-frontend-devops`) `references/00-topic-map.md` owns the delivery gate.
 
-- Root apps should consume package entrypoints, not package source files directly.
-- Packages should emit stable dist outputs.
-- Shared dependencies such as `vue` and `quasar` should be externalized, typically via `peerDependencies`.
-- Runtime CSS and assets must stay in the bundling graph so final browser assets land in the final client-assets output.
+The one thing this skill does state: a route's public or base path has exactly one source of truth in the
+app, and it is validated at boot — see `48-config-and-environment.md`.
 
-## Build and artifact contract
+## Pairing
 
-Default app-family deployment contract:
-
-- SSR runtime entry remains `dist/ssr/index.js`
-- Final browser assets must be emitted under `dist/ssr/client/assets`
-- If the app serves assets remotely, keep one canonical public/base-path source of truth and treat changes as deployment-critical
-
-## Pairing guidance
-
-- Exact Quasar config, component, or platform behavior:
-  - Pair with `$alaa-quasar-app-vite-v3`
-- CI, Docker, proxy, or deploy-artifact issues:
-  - Pair with `$alaa-frontend-devops`
-- `packages/*` boundaries, asset emission, or externalization:
-  - Pair with `$alaa-mono-package`
-- SSR auth, token storage, refresh, BFF, or session decisions:
-  - Also load `21-ssr-auth-and-session-patterns.md`
-- Frontend-facing API envelopes, pagination, filter/sort, cache validators, or sparse payload design:
-  - Also load `45-api-and-data-shaping.md`
-- Ala gateway verification, trusted headers, or downstream auth context:
-  - Pair with `$alaa-trust-gateway-auth`
-- Ala backend API implementation or data-shape fixes:
-  - Pair with `$alaa-laravel-architecture` or `$alaa-data-layer` when the frontend issue crosses into server work
-- Documentation-only JSDoc and inline annotation passes:
-  - Pair with `$alaa-frontend-doc-annotations`
+- Exact Quasar config, component or platform behaviour: `/alaa-quasar-app-vite-v3`
+  (`$alaa-quasar-app-vite-v3`) `references/00-topic-map.md`.
+- Frontend-facing envelopes, pagination, filters, cache validators: `45-api-and-data-shaping.md`.
+- A frontend issue that has become server work: `/alaa-laravel-architecture`
+  (`$alaa-laravel-architecture`) or `/alaa-data-layer` (`$alaa-data-layer`).
+- Documentation-only passes: `/alaa-frontend-doc-annotations` (`$alaa-frontend-doc-annotations`)
+  `references/10-annotation-boundaries.md`.

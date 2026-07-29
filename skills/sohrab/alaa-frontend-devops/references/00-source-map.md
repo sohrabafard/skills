@@ -1,52 +1,41 @@
 # Source Map
 
-Use this file when frontend delivery guidance depends on current tool behavior, release notes, security posture, or deployment semantics.
+This file is the source-provenance ledger for this skill, not a router. The router is `references/00-topic-map.md`.
 
-## Source Priority
+Open this file before asserting a version, a security posture, or a claim about current tool behaviour that this skill does not already state.
 
-Prefer sources in this order:
+## Source priority
 
-1. Repo-local files: `package.json`, lockfile, CI workflow, Dockerfile, Compose files, proxy config, and deploy docs.
-2. Official framework and tool docs:
-   - Quasar CLI with Vite docs: https://quasar.dev/quasar-cli-vite/
-   - Quasar upgrade guide: https://quasar.dev/quasar-cli-vite/upgrade-guide/
-   - Vite docs and migration guide: https://vite.dev/
-   - Vue docs and release policy: https://vuejs.org/
-   - Workbox docs: https://developer.chrome.com/docs/workbox
-3. Official release and package metadata:
-   - npm registry data for `vue`, `quasar`, `@quasar/app-vite`, `vite`, and `workbox-build`
-   - upstream GitHub releases and changelogs when package metadata is not enough
-4. Platform docs for the deployment target: GitHub Actions, GitLab CI, Docker, Nginx, HAProxy, Kubernetes, CDN, or hosting vendor docs.
-5. Community posts, StackOverflow answers, and issue comments only as troubleshooting clues.
+Consult in this order and stop at the first that answers the question.
 
-## Freshness Triggers
+1. Repo-local artifacts, because they are the only evidence of what this repository actually does: `package.json` (`engines`, `packageManager`, `scripts`), the lockfile, `quasar.config.*`, the CI file, the Dockerfile, the Compose file, and the emitted build tree itself.
+2. The in-fleet owner of the subject. Platform expression questions do not go to vendor documentation first; they go to the owning skill, which already carries the fleet's ruling. The full list with file paths is `references/90-companion-boundary.md`.
+3. Official upstream documentation for the tool that emits or serves the artifact:
+   - Quasar CLI with Vite: https://quasar.dev/quasar-cli-vite/
+   - Vite: https://vite.dev/
+   - Node.js release schedule: https://nodejs.org/en/about/previous-releases
+   - Compose variable interpolation: https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/
+   - Subresource Integrity: https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+   - Content Security Policy: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+4. Official release notes and registry metadata when upstream prose is ambiguous about a version boundary.
+5. Community posts, issue comments, and answers, as candidate failure modes to reproduce locally. Never as the source of a rule.
 
-Re-check official sources before changing advice when the task includes:
+## Freshness triggers
 
-- "latest", "current", "upgrade", "migration", "security", "CVE", "breaking change", or "release"
-- Node, Vite, Quasar CLI, Workbox, or SSR runtime version bumps
-- cache behavior, public path, CDN asset base, service-worker update flow, or remote asset serving
-- Docker base-image changes, lockfile changes, CI image changes, or package-manager changes
-- production-only SSR failures, hydration mismatch after deploy, or missing chunks after release
+Re-verify against sources 1 to 3 before changing advice when the task contains any of: "latest", "current", "upgrade", "migration", "security", "CVE", "breaking change", "release", a Node or Vite or Quasar version bump, a change to cache behaviour or asset base or service-worker update flow, a base-image change, a lockfile change, or a production-only failure that did not reproduce in staging.
 
-## Community Troubleshooting Boundary
+## Recording a claim
 
-Use community material to find possible failure modes, not as the source of final guidance.
+Every version-sensitive or behaviour-sensitive claim written into this skill carries a `read: <ISO date>` marker on the same line, and a source URL where one exists. A claim that could not be verified ships as `read: unverified as of <ISO date>` and stays in the file. Deleting an unverified claim removes the record that it was ever asked; keep it and mark it.
 
-Good use:
+"Not documented" means searched in sources 1 to 3 and not found. It is not proof that the behaviour is absent.
 
-- finding a known proxy timeout symptom
-- identifying a common CDN cache-invalidation mistake
-- discovering a package-manager edge case to verify locally
+## Community-evidence boundary
 
-Bad use:
+Acceptable: using a forum thread to identify a proxy timeout symptom, a CDN invalidation mistake, or a package-manager edge case, then reproducing it locally and writing the rule from the reproduction.
 
-- changing Node or Quasar support policy based on a forum answer
-- copying a Dockerfile workaround without checking official image and package docs
-- treating a single GitHub issue comment as proof of current behavior
+Not acceptable: changing a Node or Quasar support statement from a forum answer; copying a Dockerfile or proxy workaround without the owning skill's ruling; treating one issue comment as proof of current behaviour.
 
-## Small Anti-Pattern
+## Anti-pattern
 
-Anti-pattern: fixing missing chunks by disabling cache everywhere.
-
-Better path: verify `publicPath` or asset base, immutable hashed assets, HTML cache policy, service-worker update semantics, and rollback behavior. A cache bypass can hide the real artifact-contract bug and make the next release harder to debug.
+Disabling caching everywhere to make missing chunks go away. That hides an artifact-contract defect and makes the next release harder to diagnose. Run `scripts/verify-artifact-contract.mjs` against the emitted tree first; it tells you whether the HTML points at assets that exist.

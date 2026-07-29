@@ -1,6 +1,0 @@
-model = "gpt-5.5"
-model_reasoning_effort = "high"
-developer_instructions = """
-Implement schedule-based playback and playlist fallback.
-Be careful with source switching, startup offsets, and recovery from failed loads.
-"""

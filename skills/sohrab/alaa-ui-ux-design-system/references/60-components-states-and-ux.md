@@ -1,71 +1,72 @@
-# Components, States, and UX Patterns
+# Components, Interaction States and UX Patterns
 
-Use this file when designing components, forms, navigation, feedback, and data visualization.
+Read this file when designing a component's interaction, a form, a navigation surface, or a chart. **Data and failure states — empty, stale, error, permission-denied, offline, degraded — are in `15-designed-failure-states.md` and are not repeated here.** This file covers what a component does under the user's hand.
 
-## State coverage (design deliverable, not afterthought)
+## Interaction state coverage
 
-Every interactive component ships with all applicable states designed:
+Every interactive component ships with all applicable interaction states designed:
 
-- default, hover, focus-visible, active/pressed, disabled
-- loading, error, empty, partial-data (when relevant)
+`default` · `hover` · `focus-visible` · `active/pressed` · `disabled` · `read-only` · `selected` · `busy`
 
 Rules:
 
-- Hover/press feedback changes color, opacity, or elevation — never layout bounds (no jitter).
-- Focus-visible ring 2–4px from the `ring` token; never removed without a stronger replacement.
-- Disabled: reduced emphasis (opacity ~0.4–0.5), semantic `disabled` attribute, no pointer affordance. Read-only is visually and semantically distinct from disabled.
-- Press feedback within ~100ms; buttons disable and show progress during async work.
-- Touch targets >= 44x44px with >= 8px gaps; extend the hit area when the visual is smaller. `cursor: pointer` on clickable web elements; never hover-only interactions.
+- **Hover and press change colour, opacity or elevation — never layout bounds.** A hover that changes size, padding or border width shifts the layout under the cursor.
+- **Focus-visible ring 2 to 4px from the `ring` token**, with a visible offset so it is not swallowed by the control's own border. Never removed without a stronger replacement.
+- **Disabled** reduces emphasis and carries the semantic disabled state, with no pointer affordance. It always states its reason (`15-designed-failure-states.md`).
+- **Read-only is visually and semantically distinct from disabled.** Read-only content is selectable and copyable; disabled content is not. Rendering them identically is a defect because the user's next action differs.
+- **Press feedback within 100 ms.** A control that starts async work disables itself and shows progress for the duration.
+- **Touch targets at least 44x44 CSS px with at least 8px between them.** Extend the hit area when the visual mark is smaller rather than enlarging the mark. This is deliberately stricter than the WCAG 2.2 Level AA minimum; see `90-quality-gates-and-review.md`.
+- `cursor: pointer` on every clickable element. No interaction exists only on hover — there is no hover on touch.
 
-## Forms and feedback
+## Forms
 
-- Visible label per field — placeholder is never the label. Helper text below complex fields.
-- Validate on blur, not on keystroke; after failed submit, focus the first invalid field.
-- Errors sit below the related field, state cause + fix ("Password needs 8+ characters"), and announce via `aria-live`/`role="alert"`. Multiple errors get a summary with anchors.
-- Semantic input types (`email`, `tel`, `number`) and autocomplete attributes so keyboards and autofill work.
-- Destructive actions: danger token, spatially separated from primary actions, confirm before irreversible ones, prefer undo ("Deleted — Undo") over confirmation walls for bulk actions.
-- Multi-step flows show progress and allow going back; long forms auto-save; confirm before dismissing unsaved sheets/modals.
-- Loading: skeletons over spinners for content areas past ~300ms; reserve space so nothing jumps (CLS). Success gets brief visible confirmation.
-- Toasts: auto-dismiss 3–5s, never steal focus, `aria-live="polite"`.
+- **A visible label per field. A placeholder is never the label** — it disappears exactly when the user needs it, and it fails for every user who returns to a partly-filled form.
+- Helper text below complex fields, before the error, not instead of it.
+- **Validate on blur, not on keystroke.** Validating as the user types marks a correct entry as wrong halfway through. After a failed submit, focus moves to the first invalid field.
+- Errors sit below their field, state cause and fix, and are announced (`85-accessibility-patterns.md`). Multiple errors also get a summary with anchors to each field.
+- **Semantic input types and autocomplete attributes** so the right keyboard appears and autofill works. On a Persian product this includes the LTR islands from `05-rtl-and-persian.md` section 4.
+- **A field with a canonical form declares its maximum length**, so a paste that carries separators or formatting is visibly truncated instead of silently submitted.
+- Destructive actions use the destructive role, are spatially separated from primary actions, and prefer undo over a confirmation wall for bulk operations. Irreversible actions confirm, and the confirming button names the action.
+- Multi-step flows show progress and allow going back. Long forms auto-save. Dismissing a sheet or modal with unsaved input confirms first.
 
-## Navigation patterns
+## Navigation
 
-- Placement is consistent across all pages; current location visibly marked (active token, not color alone).
-- Back is predictable and preserves scroll/filter/input state; never silently reset the stack.
-- Bottom nav (mobile) max 5 items, icon + label, top-level destinations only. Sidebar for >= 1024px; drawer holds secondary navigation, not primary actions.
-- Don't mix tab bar + sidebar + bottom nav at the same hierarchy level.
-- Modals are for focused tasks, never primary navigation; every modal/sheet has an obvious dismiss and an escape route.
-- Breadcrumbs for hierarchies 3+ levels deep; overflow menus instead of cramming actions.
-- Key screens deep-linkable; destructive items (logout, delete account) spatially separated from normal nav.
+- Placement is consistent across every page; the current location is marked by more than colour.
+- **Back is predictable and preserves scroll position, filters and input state.** Never silently reset the stack.
+- Bottom navigation on mobile: at most five items, icon plus label, top-level destinations only. Sidebar from 1024px. A drawer holds secondary navigation, never primary actions.
+- Do not mix a tab bar, a sidebar and bottom navigation at one hierarchy level.
+- Modals are for focused tasks, never for primary navigation. Every modal and sheet has an obvious dismiss and an escape route.
+- Breadcrumbs from three levels deep. Overflow menus instead of cramming actions.
+- Key screens are deep-linkable. Destructive items — sign out, delete account — are spatially separated from ordinary navigation.
+- Direction-bearing navigation affordances follow `05-rtl-and-persian.md` sections 2 and 3.
 
-## Empty, error, and edge states
+## Charts and data visualization
 
-- Empty states teach: what this area is + one action to fill it — never a blank region or a lonely "No data".
-- Error states offer recovery (retry, edit, support link), not dead ends; timeouts say so and offer retry.
-- Design for the ugly cases before shipping: long titles, long words (Farsi compounds included), zero items, one item, thousands of items, slow network, offline.
-
-## Charts and data-viz design
-
-- Chart type answers the question: trend -> line; comparison -> bar; part-to-whole -> stacked bar (pie only <= 5 categories with distinct proportions); distribution -> histogram; relationship -> scatter.
-- Color is never the only encoding — add labels, patterns, or shape; data series vs background >= 3:1, data labels >= 4.5:1.
-- Direct-label small datasets; legends sit next to the chart; tooltips show exact values; gridlines low-contrast so data leads.
-- Tabular numerals everywhere numbers align; locale-aware number/date formatting (Persian digits decision per `30-typography-and-color.md`).
-- Provide a table alternative or text summary for screen readers; entrance animation respects reduced-motion and never delays readability.
-- Empty/error/loading chart states designed like any component — a bare axis frame is not a state.
+- **The chart type answers the question:** trend to a line; comparison to a bar; part-to-whole to a stacked bar, with a pie only for five or fewer categories with clearly distinct proportions; distribution to a histogram; relationship to a scatter.
+- **Colour is never the only encoding.** Add a label, a pattern or a shape. Data series against background at least 3:1; data labels at the body threshold.
+- Direct-label small datasets. Legends sit next to the chart, not below the fold. Tooltips show exact values. Gridlines stay low-contrast so the data leads.
+- Tabular numerals wherever numbers align. Locale-aware number and date formatting per `05-rtl-and-persian.md` sections 7 and 8; axis order under RTL per section 5.
+- **Ship a table alternative or a text summary.** A chart that cannot be read by a screen reader has no accessible content at all, and a summary sentence is usually enough.
+- Entrance animation respects reduced motion and never delays readability.
+- **A chart designs its empty, loading and error states like any other component** (`15-designed-failure-states.md`). A bare axis frame is not a state.
 
 ## Anti-patterns
 
-- Components delivered with only the default state ("happy-path design").
-- Placeholder-as-label forms; errors listed only at the top of the page.
-- Pie charts with 8 slices; red/green as the only status encoding.
-- Empty regions with no explanation or action; error toasts with no recovery.
-- Layout-shifting hover effects and focus outlines removed "for aesthetics".
+- Components delivered with only the default state.
+- Placeholder-as-label forms.
+- Errors listed only at the top of the page.
+- Disabled and read-only rendered identically.
+- Validation firing on every keystroke.
+- A pie chart with eight slices; red and green as the only status encoding.
+- Hover-only interactions and focus outlines removed for aesthetics.
+- A layout-shifting hover effect.
 
-## Pairing guidance
+## Pairing
 
-- Promoting patterns to shared components and component APIs: `55-component-library-and-governance.md`
-- Copy inside these components (labels, errors, empty states): `35-ux-writing-and-microcopy.md`
-- Accessibility patterns behind these rules (focus, ARIA, live regions): `85-accessibility-patterns.md`
-- Motion for state transitions: `70-motion-and-modern-css.md`
-- Icon usage inside components: `80-icons-assets-and-imagery.md`
-- Quasar component selection and APIs: `$alaa-quasar-app-vite-v3`; implementation and QA: `$alaa-frontend-developer`
+- Data and failure states: `15-designed-failure-states.md`
+- Long lists, latency and concurrent edits: `65-lists-latency-and-concurrency.md`
+- Promoting a pattern to a shared component: `55-component-library-and-governance.md`
+- Copy inside these components: `35-ux-writing-and-microcopy.md`
+- Focus, ARIA and live regions behind these rules: `85-accessibility-patterns.md`
+- Motion for state transitions: `70-motion-contract.md`
+- Icons inside components: `80-icons-assets-and-imagery.md`

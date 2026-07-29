@@ -1,63 +1,77 @@
 # Accessibility Patterns
 
-Use this file for accessibility implementation patterns beyond the blocking gates. The gates live in `90-quality-gates-and-review.md`; this file is how to satisfy them well. Accessibility here is design quality, not compliance paperwork — it usually improves the UI for everyone.
+Read this file when adding a click handler to a non-button, opening an overlay, changing route in a single-page app, or writing ARIA. The blocking thresholds live in `90-quality-gates-and-review.md`; this file is how to satisfy them well.
+
+**Conformance target: WCAG 2.2 Level AA.** WCAG 2.2 is the current W3C Recommendation and is also ISO/IEC 40500:2025; WCAG 3.0 remains a working draft and is not a target (`w3.org/WAI/standards-guidelines/wcag/`, `read: 2026-07-28`). Where this pack is stricter than 2.2 AA it says so explicitly rather than implying the standard requires it.
 
 ## Semantic structure
 
-- Exactly one `h1` per page; heading levels sequential (no h2 -> h4 jumps); headings describe sections, not styling.
-- Landmarks: `header`, `nav`, `main`, `footer`, `aside` — one `main` per page; name repeated landmarks (`aria-label="pagination"`).
-- Skip link ("Skip to main content") as the first focusable element on content-heavy pages; visible on focus.
-- Language attributes: `lang="fa"` with `dir="rtl"` for Farsi pages; mark inline foreign-language spans (`<span lang="en">`) so screen readers switch voices.
+- Exactly one `h1` per page. Heading levels are sequential, with no jump from `h2` to `h4`. Headings describe sections, not styling.
+- Landmarks — `header`, `nav`, `main`, `footer`, `aside` — with one `main` per page and a name on each repeated landmark.
+- A skip link as the first focusable element on content-heavy pages, visible on focus.
+- **Language attributes:** the page language and direction on the root element, and an inline language attribute on any span in another language, so a screen reader switches voice. Direction mechanics are in `05-rtl-and-persian.md`.
 
-## Native-first, ARIA second
+## Native first, ARIA second
 
-- Reach for native elements before ARIA: `button`, `a`, `details/summary`, `dialog`, `select`, real checkboxes. Quasar components carry most ARIA wiring — prefer them over hand-rolled widgets.
-- A `div` with `@click` is a defect: no focus, no keyboard, no role. If it acts like a button, it is a `button`.
-- ARIA only fills genuine gaps (custom comboboxes, live regions) and follows the APG pattern exactly — half-applied ARIA is worse than none.
-- Links navigate, buttons act: never a link styled as a button performing a destructive action.
+- Reach for `button`, `a`, `details`/`summary`, `dialog`, `select` and real form controls before ARIA. Framework components carry most of the wiring already; prefer them to hand-rolled widgets.
+- **A `div` with a click handler is a defect:** no focus, no keyboard, no role, no accessible name. If it acts like a button, it is a button.
+- ARIA fills genuine gaps only — a custom combobox, a live region — and then follows the authoring-practices pattern exactly. Half-applied ARIA is worse than none, because it promises behaviour that is not there.
+- **Links navigate, buttons act.** Never a link styled as a button performing a destructive action.
 
 ## Focus management
 
-- Dialogs/sheets/drawers: focus moves in on open (first sensible element), stays trapped while open, and returns to the trigger on close. Quasar dialogs handle most of this — verify, don't assume, for custom overlays.
-- SPA route changes: after navigation, move focus to the main content or new `h1` and announce the page change via a polite live region — otherwise screen-reader users hear nothing.
-- After failed form submit: focus the first invalid field (`60-components-states-and-ux.md`).
-- Never `outline: none` without a stronger `:focus-visible` replacement; focus order follows visual order (beware CSS `order`/`flex-direction: row-reverse` breaking it — relevant in RTL work).
+- **Dialogs, sheets and drawers:** focus moves in on open to the first sensible element, stays trapped while open, and **returns to the trigger on close**. Verify this for every custom overlay rather than assuming the framework did it.
+- **Route changes in a single-page app:** after navigation, move focus to the main content or the new heading and announce the change through a polite live region. Without this a screen-reader user hears nothing at all when the page changes.
+- After a failed form submit, focus the first invalid field.
+- **Never remove an outline without a stronger `:focus-visible` replacement.** Focus order follows visual order; `order` and `row-reverse` break that, and are twice as easy to get wrong under RTL.
+- A focused element is never hidden behind a sticky bar (`50-layout-landing-and-ia.md`).
 
-## Keyboard patterns
+Relevant success criteria: 2.4.3 focus order, 2.4.7 focus visible, 2.4.11 focus not obscured (minimum) — the last is new in 2.2 and is the sticky-bar case.
 
-- Standard keys behave standardly: `Esc` closes overlays, `Enter`/`Space` activate, arrows move within composite widgets (menus, tabs, radio groups), `Tab` moves between widgets, not within them.
-- No keyboard traps: everything reachable is also leavable.
-- Custom drag-and-drop and gesture interactions ship a keyboard/visible-control alternative.
-- Roving tabindex (or `aria-activedescendant`) for composite widgets so `Tab` doesn't crawl through 50 menu items.
+## Keyboard
 
-## Live regions and announcements
+- Standard keys behave standardly: `Esc` closes an overlay, `Enter` and `Space` activate, arrows move within a composite widget, `Tab` moves between widgets rather than within them.
+- **No keyboard traps.** Everything reachable is leavable.
+- Drag-and-drop and gesture interactions ship a keyboard or visible-control alternative (2.5.7 dragging movements, 2.5.1 pointer gestures).
+- Roving tabindex, or an active-descendant relationship, for composite widgets so `Tab` does not crawl through fifty menu items.
 
-- `aria-live="polite"` for async results, toasts, and background updates; `role="alert"` only for errors needing immediate attention.
-- Announce state, not noise: "3 results found", not every keystroke of a filter. One live region per concern; do not spam re-renders through it.
-- Loading beyond a moment announces start and completion, not just a visual skeleton.
+## Live regions
 
-## Zoom, reflow, and adaptation
+- A polite live region for async results, toasts and background updates; an assertive alert role only for errors needing immediate attention.
+- **Announce state, not noise.** "3 results found", not every keystroke of a filter. One live region per concern; never rebroadcast the whole application state through one.
+- Loading that runs beyond a moment announces its start and its completion, not only its skeleton.
 
-- 200% browser zoom and 320px-wide reflow lose no content or function — no horizontal scroll, no clipped controls.
-- Layout survives increased text spacing (WCAG 1.4.12) — avoid fixed-height text containers.
-- `prefers-reduced-motion` per `70-motion-and-modern-css.md`; `prefers-contrast: more` and forced-colors mode must not erase borders and focus indicators.
+## Zoom, reflow and adaptation
+
+- 200% browser zoom and 320px-wide reflow lose no content and no function: no horizontal scroll, no clipped control (1.4.10 reflow, 1.4.4 resize text).
+- Layout survives increased text spacing (1.4.12 text spacing) — avoid fixed-height text containers.
+- `prefers-reduced-motion` per `70-motion-contract.md`. `prefers-contrast: more` and forced-colours mode must not erase borders or focus indicators.
 
 ## Verification
 
-- Minimum pass: keyboard-only walk of primary flows + automated scan (axe or equivalent) when tooling exists + screen-reader smoke of new flows (VoiceOver/NVDA).
-- Automated scanners catch at most ~40% of issues — they supplement the keyboard/SR pass, never replace it.
-- Browser-based checks follow `$alaa-frontend-developer` browser gating.
+**Minimum pass, with no self-granted exception:**
+
+1. A keyboard-only walk of every primary flow.
+2. An automated scan. Run the repository's own integration if it has one; otherwise run `npx @axe-core/cli <url>`. **If neither can run in this environment, say so in the delivery note and list which flows were walked by keyboard instead. An unrun scan is reported, never assumed clean.**
+3. A screen-reader smoke test of any new flow.
+
+**An automated scan finds a minority of accessibility defects** — the classes it can detect mechanically, such as missing names, contrast on solid backgrounds, and structural errors. It does not detect a wrong reading order, a misleading label, or a trap. It supplements the keyboard and screen-reader passes and never replaces them. (The frequently-quoted "about 40%" figure has no primary source this pack can cite, so it is stated qualitatively rather than as a number.)
+
+Test design and the proof levels this sits inside are owned by `/alaa-testing-strategy` (`$alaa-testing-strategy`); browser-based checks follow `/alaa-frontend-developer` (`$alaa-frontend-developer`) browser gating. What artefact each check must produce is in `95-design-proofs.md`.
 
 ## Anti-patterns
 
-- `div`/`span` click targets; `role="button"` on things that should be `<button>`.
-- ARIA sprinkled to silence a linter without the matching keyboard behavior.
-- Focus styles removed globally; modals that drop focus back to `<body>` on close.
-- One giant `aria-live` region rebroadcasting the whole app state.
-- Farsi pages without `lang`/`dir`, or mixed-direction text left to the browser to guess.
+- `div` and `span` click targets; `role="button"` on something that should be a `<button>`.
+- ARIA added to silence a linter without the matching keyboard behaviour.
+- Focus styles removed globally; a modal that drops focus back to the document body on close.
+- One giant live region rebroadcasting application state.
+- A Persian page with no language or direction attribute, or mixed-direction text left to the browser to guess — the positive replacement is in `05-rtl-and-persian.md` section 1.
+- Reporting an accessibility pass when the scan did not run.
 
-## Pairing guidance
+## Pairing
 
-- The blocking gate list and review flow: `90-quality-gates-and-review.md`
-- Form and navigation a11y specifics: `60-components-states-and-ux.md`
-- Motion-related preferences: `70-motion-and-modern-css.md`
+- The blocking thresholds: `90-quality-gates-and-review.md`
+- Form and navigation specifics: `60-components-states-and-ux.md`
+- Direction, language and bidi: `05-rtl-and-persian.md`
+- Motion preferences: `70-motion-contract.md`
+- What each check must leave behind: `95-design-proofs.md`

@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Frontend Doc Annotations"
-  short_description: "Frontend JSDoc and inline comment pass"
-  default_prompt: "Use $alaa-frontend-doc-annotations to follow its workflow for frontend jsdoc and inline comment pass."
+  short_description: "Documentation-only JSDoc and comment pass for Vue and Quasar"
+  default_prompt: "Use $alaa-frontend-doc-annotations to run a documentation-only annotation pass: JSDoc and inline comments only, the build output byte-identical before and after, then run scripts/check-annotations.mjs and report its findings."
 
 policy:
   allow_implicit_invocation: true

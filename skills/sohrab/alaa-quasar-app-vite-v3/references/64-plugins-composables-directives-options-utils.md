@@ -1,6 +1,6 @@
 # Plugins, Composables, Directives, Options, and Utils
 
-Use when a task names these Quasar APIs. For installed component/directive/plugin shapes, first use `05-authority-and-api-lookup.md`; for composables/utils inspect installed `quasar` exports/types plus version-matched official docs (`quasar describe` does not cover them). Load `65-directive-usage-atlas.md` for directive intent/snippets and `66-api-usage-atlas.md` for plugin/composable/option/util intent and SSR traps.
+You are using a Quasar plugin, composable, directive, global option, or util and do not know which file covers it. This table indexes those surfaces; skill-level routing is `references/00-topic-map.md`. For installed component/directive/plugin shapes, first use `05-authority-and-api-lookup.md`; for composables/utils inspect installed `quasar` exports/types plus version-matched official docs (`quasar describe` does not cover them). Load `65-directive-usage-atlas.md` for directive intent/snippets and `66-api-usage-atlas.md` for plugin/composable/option/util intent and SSR traps.
 
 | Surface | Exact coverage | Rules/routes |
 | --- | --- | --- |

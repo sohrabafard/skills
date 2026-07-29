@@ -1,336 +1,69 @@
 ---
 name: alaa-shaka-player
-description: "Use this skill when a task involves production Shaka Player work in Vue 3 + Quasar + Vite, including playback architecture, HLS or DASH, DRM, ads, overlays, analytics, migration from another player, or version migration such as Shaka 5.0.8 to 5.1.11. Do not use it for simple MP4-only playback or non-Vue stacks."
+description: Complete Shaka Player capability atlas at v5.2.3 - lifecycle, DASH and HLS, native-HLS on Safari, adaptive bitrate, tracks and language selection, subtitles and TextDisplayer, playback rate and trick play, live and low latency, unstable-network resilience and retry budgets, source switching, the networking engine and request filters, DRM (Widevine, PlayReady, FairPlay), offline in-app download, ads (VAST, VMAP, IMA, interstitials), getStats analytics, the UI library, the shaka.util.Error taxonomy, and the Vue 3 + Quasar + Vite binding. Use when writing, reviewing, debugging, or upgrading code that constructs shaka.Player, calls player.configure(), registers a networking filter, or handles a Shaka event or error. Do not use for a plain <video> element with no adaptive manifest; for player-skin art direction, which is /alaa-ui-ux-design-system; for the IndexedDB substrate, which is /alaa-indexeddb-browser-storage; or for retry and degradation doctrine, which is /alaa-reliability-sla.
 ---
-
-
-
 
 # Alaa Shaka Player
 
 ## Purpose
 
-Use this skill to design, migrate, implement, review, or debug a production-grade
-Shaka Player integration in Vue 3 + Quasar + Vite applications.
+Shaka is the playback engine; Vue and Quasar are the product shell; ads, analytics and overlays are modules that consume player events. This skill is the complete map of what Shaka does at **v5.2.3 (released 2026-07-27)** - exact API names, config keys, event strings, error codes, and a working snippet per capability. It states the Shaka-side binding of doctrine other skills own.
 
-The default thesis is:
+## Router
 
-- Shaka is the playback engine.
-- Vue + Quasar is the UI and product shell.
-- Analytics, ads, overlays, markers, and conductor logic stay outside the core.
+`references/00-topic-map.md` is the only router in this skill. Read it first and load the one or two rows that match what is in front of you.
 
-This keeps playback changes testable, UI work replaceable, and operational
-failures easier to localize.
+## Portability and model routing
 
-## Ownership and pairing
-
-- `alaa-shaka-player` owns playback-engine architecture, Shaka-specific config,
-  streaming and DRM caveats, player-module boundaries, and player-specific QA.
-- Pair with `$alaa-frontend-developer` for SSR and hydration safety, browser-only
-  guards, repo-safe Vue or Quasar implementation, API-shaping implications, and
-  app-family conventions.
-- Keep premium or art-directed player-shell decisions in this skill only when
-  they also require concrete Vue, Quasar, Vite, Shaka, accessibility, or
-  responsive implementation constraints.
-- Pair with `$playwright` for browser execution. Prefer headless runs for event,
-  API, retry, analytics, and networking validation; prefer visual mode for
-  layout, captions, overlays, ads, accessibility, focus states, and responsive
-  QA.
-- Use `$alaa-low-noise` when the task spans many player files, noisy logs, or a
-  large browser matrix.
-- Use `$openai-docs` only when the task is about Codex or OpenAI maintenance,
-  skill authoring guidance, or workflow upgrades. Do not use it as the source of
-  truth for Shaka behavior.
-
-## Upstream baseline
-
-As of **2026-06-28**:
-
-- The Shaka Player GitHub releases API shows `v5.1.11`, published on
-  **2026-06-24**, as the latest release checked for this skill.
-- `v5.1` introduces structured preference arrays for audio, text, and video.
-  The older individual preference fields still work with deprecation warnings
-  but should be migrated before the next major release.
-- Recent 5.x release notes and official docs still matter for HLS, DASH, DRM,
-  ABR, networking, ads, UI controls, captions, MediaSession, and TV-platform
-  behavior. Re-check before repeating old workarounds.
-- Open PR and issue notes are troubleshooting inputs only until confirmed by an
-  official release, merged code, or a focused local reproduction.
-
-Do not hard-code old 5.0.x versions in new work. For version-sensitive tasks,
-always read `references/UPSTREAM_WATCHLIST.md` before choosing a pinned version
-or recommending a workaround.
-
-For upgrades from the skill's older `v5.0.8` coverage baseline, read
-`references/MIGRATION_5_0_8_TO_5_1_11.md` before editing application code.
-Base migration claims on official Shaka release notes/changelog and official
-Shaka docs; do not infer product behavior from source-code diffs alone.
-
-## When to use
-
-Use this skill when:
-
-- You are migrating from Video.js or another player wrapper to Shaka.
-- Your stack is Vue 3 + Quasar + Vite.
-- HLS is primary, or DASH is present as a secondary or DRM path.
-- The player needs one or more of:
-  - adaptive bitrate and manual quality override
-  - subtitles or alternate audio
-  - FairPlay, Widevine, or other DRM integration
-  - VAST or VMAP ads
-  - watch-time analytics or QoE telemetry
-  - quiz overlays, cuepoints, or timeline markers
-  - playlist or schedule-driven playback
-  - TV, set-top-box, or remote-control behavior
+This skill names no model and no reasoning effort. Take both from `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`, at the time you run the lane. Frontmatter is `name` and `description` only; `agents/openai.yaml` is Codex-only UI metadata. Output discipline follows `/alaa-low-noise` (`$alaa-low-noise`).
 
 ## When NOT to use
 
-- A plain `<video>` tag is enough.
-- The task is MP4-only with no engine-level streaming control.
-- The project is not Vue 3 + Quasar + Vite.
-- The real need is visual polish only and the playback engine is already settled.
-
-## Quick start
-
-1. Read the repo-local `AGENTS.md`.
-2. Apply `$alaa-low-noise` if the task is non-trivial.
-3. Pair with `$alaa-frontend-developer` for any real implementation task in a
-   Vue or Quasar app.
-4. Read `references/README.md`.
-5. Read `references/ARCHITECTURE.md` and
-   `references/PATTERNS_AND_ANTI_PATTERNS.md`.
-6. Read only the specialized references you actually need:
-   - `HLS_NOTES.md`
-   - `ABR_AND_TRACKS.md`
-   - `ADS_VAST_VMAP.md`
-   - `ANALYTICS_WATCHTIME.md`
-   - `QUIZ_OVERLAY.md`
-   - `TIMELINE_MARKERS.md`
-   - `PLAYLIST.md`
-   - `CONDUCTOR_SCHEDULE.md`
-   - `TROUBLESHOOTING.md`
-   - `QA_MODES.md`
-   - `MIGRATION_5_0_8_TO_5_1_11.md`
-   - `UPSTREAM_WATCHLIST.md`
-
-## Inputs to collect before implementation
-
-Collect these inputs before locking the architecture:
-
-1. Playback inventory
-   - HLS VOD
-   - HLS live
-   - DASH, if any
-   - external text tracks
-   - multiple audio tracks
-   - DRM scheme and provider requirements
-
-2. Platform matrix
-   - Chrome, Edge, Firefox
-   - Safari macOS
-   - iOS Safari
-   - Android Chrome or WebView
-   - WKWebView, STB, or TV platforms, if relevant
-
-3. Product feature inventory
-   - Ads: VAST, VMAP, preroll, midroll, postroll
-   - Quiz: required or optional, seek policy, scoring
-   - Markers: notes, comments, bookmarks, deep links
-   - Playlist or schedule-driven playback
-   - analytics heartbeat contract and backend endpoints
-
-4. Operational constraints
-   - startup latency and rebuffer tolerance
-   - mobile memory budget
-   - token refresh and signed URL policy
-   - retry and fallback policy
-   - observability and incident-debug expectations
-
-## Output expectations
-
-The implementation should usually produce some combination of:
-
-- a small player component such as `ShakaPlayer.vue`
-- a non-reactive core wrapper such as `useShakaCore`
-- separate services for analytics, ads, overlays, markers, or conductor logic
-- a lab page or isolated demo surface for fast iteration
-- a migration plan and QA checklist
-
-Adapt names and file extensions to the host repo:
-
-- Prefer `.js` plus JSDoc if the repo is JavaScript-first.
-- Use `.ts` only if the repo already uses TypeScript or the user asks for it.
-
-Do not force the example file names or TypeScript into a repo that does not use
-them.
+The media is a single progressive MP4 with no manifest, no DRM, no track selection and no telemetry, and a bare `<video>` element already plays it.
 
 ## Non-negotiable rules
 
-1. Use the current basic usage shape.
-   - Prefer `new shaka.Player()` and `await player.attach(videoEl)`.
-   - Install polyfills before support checks.
+1. **Pin an exact `shaka-player` version in `package.json`** — no `^`, no `~`, no `latest`. Three vendor endpoints disagreed about "latest" on 2026-07-28 (conflict C1 in `references/05-provenance-and-freshness.md`). Before changing the pin, re-read that file's re-read rule and record the new release URL and today's date in it.
+2. **Construct the Player with no arguments, then `await player.attach(video)`.** `new shaka.Player(video)` still works in 5.2.3 and logs a deprecation warning; it also hides the async attach step, which is the step that fails on iOS Safari when the element is not ready. Call `shaka.polyfill.installAll()` before `shaka.Player.isBrowserSupported()`, and register the `error` listener before `load()`.
+3. **Never place the Player instance in Vue reactivity.** Upstream states that Vue's reactive Proxy converts Shaka's internal values into Proxies and this fails at load time. Hold it in a module- or closure-scoped `let`, or in a `$`- or `_`-prefixed field. If the instance must enter a container you are not allowed to change, wrap it with `markRaw` and name that container's path in the PR description.
+4. **Before the component unmounts, release in this order:** clear every interval and timeout, remove every listener you registered on the player, on the `<video>` element and on `document`, then `await player.destroy()`. `onBeforeUnmount` must not return until `destroy()` resolves. After `destroy()` the instance is dead — every method throws `LOAD_INTERRUPTED` (7000).
+5. **Write the v6-ready preference spelling in every new or touched line:** `preferredAudio`, `preferredText`, `preferredVideo` as arrays. The fifteen individual `preferred*` scalars are deprecated for removal in v6.0 and are already absent from the shipped `.d.ts`, so they do not type-check. Set `abr.restrictions` (soft) rather than top-level `restrictions` (hard) unless a written requirement demands a hard cap; the hard form can fail playback outright with `RESTRICTIONS_CANNOT_BE_MET` (4012).
+6. **Set all three retry budgets explicitly.** Shaka's `maxAttempts` default is `2`. Configure `manifest.retryParameters`, `streaming.retryParameters` and `drm.retryParameters` with values taken from `/alaa-reliability-sla` (`$alaa-reliability-sla`), `references/20-retries.md`, and keep `fuzzFactor` at `0.5` — it exists to stop client stampedes.
+7. **A credential never travels as a component prop.** A manifest URL that carries a signature, and any bearer token, enter the player only through a request filter that reads a token *getter*, so the filter can refresh on retry. Never print a Shaka error object into the DOM or a log line: `error.data` for a network error carries the failing URI and its query string.
+8. **Request every telemetry event name, field name and metric name from `/alaa-services-contract` (`$alaa-services-contract`).** This skill states which *quantities* playback can produce; it defines no name. Do not invent one and do not ship one that is not in that contract.
 
-2. Keep Shaka out of Vue reactivity.
-   - Use a plain variable, closure state, or `markRaw` only if needed.
-   - Never store the player inside reactive `ref()` or `reactive()` state.
+## Ownership and boundary
 
-3. Keep browser-only logic client-side.
-   - Dynamically import Shaka in client code.
-   - Initialize in `onMounted()` or another client-only path.
-   - Never access media APIs during SSR.
+This skill owns: the `player.configure()` surface and its safe defaults for this stack; the `shaka.util.Error` taxonomy and which Shaka mechanism handles each category; player lifecycle inside a Vue/Quasar SPA; DASH/HLS/DRM behaviour per browser and platform; the Shaka side of offline download; version migration across Shaka releases. Everything below is cited, never restated.
 
-4. Destroy aggressively and completely.
-   - Destroy the player on unmount or route leave.
-   - Remove listeners, timers, observers, and polling.
-   - Abort outstanding app-level work.
+| Ground | Owner |
+|---|---|
+| Retry, backoff, timeout, degradation doctrine | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
+| Every event, field and metric name in a payload | `/alaa-services-contract` (`$alaa-services-contract`) |
+| Telemetry requirement levels and gates | `/alaa-observability-soc` (`$alaa-observability-soc`) |
+| Threat classes, review triggers, fail-closed doctrine | `/alaa-security-review` (`$alaa-security-review`) |
+| A client-supplied opaque value carries no trust | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
+| Presigned media URLs, TTL and the `STORAGE_*` contract | `/alaa-minio-object-storage` (`$alaa-minio-object-storage`), `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) |
+| IndexedDB quota, eviction, persistence, mid-session eviction | `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`) |
+| Vue component, composable and Pinia store shape; TypeScript strictness | `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) |
+| Quasar and Vite build, SSR and PWA config | `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`), `/alaa-frontend-developer` (`$alaa-frontend-developer`) |
+| Test design and the six proof levels | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
+| Digit and text normalization of any user input | `/alaa-input-normalization` (`$alaa-input-normalization`) |
+| Colour, type, motion and component styling of a skin | `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`) |
+| Spawning, pinning and sandboxing parallel lanes | `/alaa-cc-orchestrator` (`$alaa-cc-orchestrator`), `/alaa-codex-orchestrator` (`$alaa-codex-orchestrator`) |
+| JSDoc and annotation shape on emitted files | `/alaa-frontend-doc-annotations` (`$alaa-frontend-doc-annotations`) |
+| Browser execution and evidence capture | `/playwright` (`$playwright`) |
+| Where a skill is installed | repository `install-skills.md` |
 
-5. Keep networking auth and retries explicit.
-   - Register filters before `load()`.
-   - Since request filters run on every attempt in v5.x, use that to refresh
-     expired credentials safely.
+## Implementation order
 
-6. Prefer 5.1 structured media preferences in new or touched code.
-   - Use `preferredAudio`, `preferredText`, and `preferredVideo`.
-   - Replace old individual preference fields when migrating from 5.0.x.
-   - Treat deprecation warnings as migration work, not harmless noise.
+1. Read `references/00-topic-map.md` and load the rows that match the task.
+2. Confirm the installed version and read `references/80-version-migration-and-release-deltas.md` for anything removed between it and 5.2.3. Run `scripts/check-shaka-api.mjs` against the repository.
+3. Write or repair the core wrapper: import, polyfill, support check, attach, `configure()`, filters, error classification, teardown (`references/20-core-lifecycle.md`, `references/15-configure-surface-and-safe-defaults.md`).
+4. Add the capability the task actually asked for, one reference file at a time.
+5. Add the resilience policy (`references/35-unstable-networks-and-resilience.md`) — it is not optional on a mobile network.
+6. Prove it with the mode `references/90-qa-modes-and-checklist.md` selects, and record the deliverables below.
 
-7. Treat ads and product logic as optional modules.
-   - Do not bury ad or analytics state inside the core wrapper.
-   - A failed ad flow must not permanently block content playback.
+## Output expectations
 
-8. Do not assume the latest issue discussion is already fixed.
-   - Re-check current release notes before carrying forward a workaround.
-
-## Recommended architecture
-
-### Layer 1: Core playback wrapper
-
-Responsibilities:
-
-- dynamically import Shaka
-- install polyfills
-- check browser support
-- create and attach the player
-- register networking filters
-- configure DRM, buffering, and telemetry hooks
-- load sources
-- forward errors, retries, and stats
-- manage lifecycle and cleanup
-
-This belongs in a wrapper such as `useShakaCore`.
-
-### Layer 2: Product feature modules
-
-Keep these separate from the playback core:
-
-- `AnalyticsTracker`
-  - watch-time heartbeat
-  - interaction telemetry
-  - QoE snapshots
-
-- `QuizEngine`
-  - cuepoint-driven quiz logic
-  - pause and resume policy
-  - seek policy enforcement
-
-- `TimelineMarkers`
-  - notes
-  - comments
-  - bookmarks
-  - share links
-
-- `PlaybackConductor`
-  - schedule-based playback
-  - wall-clock source switching
-  - playlist fallback
-
-- `AdsManager`
-  - ad container setup
-  - ad request orchestration
-  - preroll, midroll, postroll handling
-  - timeout and fail-open recovery
-
-### Layer 3: UI layer
-
-Use Vue + Quasar for:
-
-- playback controls
-- subtitles and track menus
-- overlays
-- marker interaction
-- quiz flows
-- stats and debug panels
-
-If the user asks for a high-end watch experience, use this skill for the
-playback-engine, Shaka UI integration, accessibility, responsiveness, and
-verification boundaries. Treat pure visual direction with no playback or
-frontend implementation constraint as outside this skill.
-
-## QA mode selection
-
-Pick the lightest reliable QA mode for the request:
-
-- API, event, retry, heartbeat, and auth-filter verification:
-  use headless validation first
-- controls layout, overlays, ad rendering, captions, focus, and breakpoints:
-  use visual browser validation
-
-Read `references/QA_MODES.md` before testing if the mode is not obvious.
-
-## Multi-agent guidance
-
-If multi-agent mode is explicitly enabled, split by concern:
-
-- core
-- ads
-- analytics
-- overlay
-- conductor
-- QA
-- visual design, only when UI or UX polish is in scope
-
-Keep roles narrow and merge results into one coherent architecture instead of
-letting each agent invent its own player shape.
-
-See:
-
-- `prompts/MULTI_AGENT_PROMPT.md`
-- `references/MULTI_AGENT_SETUP.md`
-- `assets/config-examples/`
-
-## Default implementation order
-
-Follow this order unless the repo forces a different sequence:
-
-1. verify current Shaka release and watchlist notes
-2. create a safe lab page or isolated harness
-3. implement the core wrapper
-4. implement the player component
-5. add a migration flag or adapter layer if replacing an old player
-6. add analytics and track controls
-7. add overlays and markers
-8. add ads
-9. add conductor or playlist logic
-10. run the QA checklist
-11. roll out gradually
-
-## Skill file map
-
-- `prompts/`
-  - ready-to-use prompts for single-agent and multi-agent runs
-- `references/`
-  - targeted architecture, QA, and upstream runbooks
-- `assets/templates/`
-  - code templates
-- `assets/config-examples/`
-  - example multi-agent role configs
-- `scripts/scaffold.sh`
-  - helper to copy starter templates
-
-## Installation note
-
-This skill is distributed as a standalone folder. Keep it in a Codex-discoverable
-skills location, typically `~/.codex/skills/alaa-shaka-player` or a repo-local
-skills directory.
-
-See `INSTALL.md` for concrete placement examples.
+Every player change ships with: the `player.configure()` block it changed, with each non-default value traced to the reference that justifies it; the error classes it newly handles and what the user sees for each; the telemetry quantities it emits and the `/alaa-services-contract` names requested for them; and the QA evidence `references/90-qa-modes-and-checklist.md` requires. Emit `.ts` and `.vue` with `lang="ts"` following `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`). If the host repository is JavaScript-only, say so and stop before generating files.

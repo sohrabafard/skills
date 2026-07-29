@@ -11,3 +11,6 @@ __pycache__/
 # Prevents a broad `git add` from pulling in thousands of unrelated files.
 /other/
 /.idea
+
+# FUSE mount artifacts left by delete-while-open on a mount that forbids unlink.
+.fuse_hidden*

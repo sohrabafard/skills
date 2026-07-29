@@ -66,11 +66,17 @@ FORBIDDEN_FIELDS = {
     "disable_notification": "Telegram field. Safir documents no notification suppression; remove it.",
 }
 
-# Digit folding: Persian-Indic U+06F0-U+06F9 and Arabic-Indic U+0660-U+0669.
-DIGIT_FOLD = {}
-for _offset in range(10):
-    DIGIT_FOLD[ord("۰") + _offset] = str(_offset)
-    DIGIT_FOLD[ord("٠") + _offset] = str(_offset)
+# Digit folding is by Unicode general category Nd, one code point to one ASCII digit.
+# Never enumerate digit families: an enumerated list is a defect class, not a fix, and this
+# fold covered two families only until 2026-07-28. Category No is deliberately excluded --
+# superscripts are No, not Nd, so a superscript string is still rejected.
+# The fold and its canonical implementations are owned by /alaa-input-normalization
+# ($alaa-input-normalization); this is a local mirror kept runnable, not a second contract.
+DIGIT_FOLD = {
+    cp: str(unicodedata.digit(chr(cp)))
+    for cp in range(0x110000)
+    if unicodedata.category(chr(cp)) == "Nd"
+}
 
 # ---- The display-separator rule. The identical block ships in the sibling provider skill. ----
 # A character is display formatting, and not a digit of the number, when its Unicode general

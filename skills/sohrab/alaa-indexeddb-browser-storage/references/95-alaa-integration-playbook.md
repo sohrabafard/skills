@@ -1,205 +1,88 @@
-# Alaa integration playbook
+# Integration with the `client` repository
 
-## Architectural alignment
+## What is already there, read 2026-07-28
 
-Alaa-style client storage must respect platform service ownership:
+Read it before designing a new layer.
 
-- Client applications call public routes through the gateway.
-- Gateway/auth paths remain the trust boundary for identity and protected access.
-- Frontend applications consume protected APIs through `@alaa/sdk` / `@alaa/sdk-vue`; storage modules must not own bearer attachment, refresh, trusted-header rejection, or route-prefix composition.
-- `auth` owns identity/profile/session truth.
-- `content` owns course/set/content learning-content truth.
-- legacy playback/domain responsibilities may still exist during migration.
-- `wa` owns watch/analytics ingestion.
-- `tusd` owns resumable upload transfer lifecycle, while target services own domain attachment.
-- Comments, tickets, notifications, and other domains own their own state.
+| File | What it is |
+|---|---|
+| `src/storage/browserKeyValueStorage.ts` | the generic facade: IndexedDB-first key-value store behind `BrowserKeyValueStorage<TRecord>`, with a `localStorage` fallback and a no-op for SSR |
+| `src/sdk/browserResponseCache.ts` | the L2 response cache on that facade, entry-capped, `localStorage` fallback deliberately disabled |
+| `src/content-show/waOutboxStorage.ts` | watch-analytics outbox records, TTL-bounded and capped per record |
+| `src/content-show/useContentShowWaOutbox.ts` | the flush composable |
+| `src/stores/authPermissions.ts` | the unverified UI authorization snapshot — **in memory, never persisted** (`61-authority-boundary.md`) |
 
-IndexedDB should improve frontend resilience and UX, not replace these service boundaries.
+Two properties are correct and must not be regressed: **the response cache has no `localStorage`
+fallback**, deliberately, because pushing a cached API payload into a synchronous, size-limited,
+always-readable store is a worse trade than missing the cache; and **the permission snapshot is never
+written to storage**, being derived from the session and recomputed when a new token arrives.
 
-Browser storage must never fabricate or persist trusted internal headers such as `X-Project-Id`, `X-User-Id`, `X-Access`, or `X-Authz-*`. Browser clients may send only `Authorization: Bearer`, `X-Request-Id`, and `traceparent` through the approved SDK/gateway contract.
+Three live gaps, each an instance of a rule in this pack, none fixed by this skill:
 
-## Recommended Alaa client DB
+- `browserKeyValueStorage.ts` calls `store.getAll()` with no bound and filters the whole result by key
+  prefix in JavaScript — `O(n)` in the store's size on every `list()`
+  (`50-transactions-performance-and-query-patterns.md`). Acceptable while the stores are small; not
+  acceptable as a draft or offline-media store grows.
+- No application path calls `navigator.storage.estimate()` or `persist()`, and no application code handles
+  `QuotaExceededError`; the only quota handling in the tree is inside Workbox. A feature storing anything
+  the user is asked to rely on needs both (`30-…`, `31-…`).
+- Nothing uses `BroadcastChannel` or `navigator.locks`, so multi-tab coordination is absent, and
+  `openKeyValueDb` rejects on `blocked` rather than surfacing the reload UX (`41-…`).
+
+## Names are not this skill's to mint
+
+Every database, store, index, configuration key and event **name** is a value, and values are
+`/alaa-services-contract` (`$alaa-services-contract`). Register a new one there before the code using it
+merges. The names below are what the repository already has, recorded so a new feature matches rather than
+invents.
 
 ```text
-DB: alaa-client-storage
-Version: integer
-Namespace: accountKey = publicProjectId:userId or anonymous-session
+existing databases:  alaa.content-show.wa-outbox   (store: outbox)
+                     client-response-cache          (store: responses)
 ```
 
-`accountKey` is a local storage partition key for cleanup and cache isolation only. It is not proof of identity, project authority, or entitlement. `project_id` remains a public UUIDv7 body field only where an API contract requires it; the browser must not promote it into `X-Project-Id`.
+`accountKey` composition is one registered value and one only. The repository composes a content-show scope
+key as `accountKey|scopeKey` by string join; **a delimiter-joined identifier has no escaping rule, so no
+segment may contain the delimiter.** If a segment could, encode it — `/alaa-crockford-base32-codecs`
+(`$alaa-crockford-base32-codecs`) — rather than choosing a rarer delimiter.
 
-Suggested stores:
+## What storage may not do
 
-| Store | Owner concept | Use |
-|---|---|---|
-| `meta` | client storage | schema/capability metadata |
-| `storage_items` | client storage | quota cleanup metadata |
-| `api_cache_entries` | gateway-backed APIs | TTL/ETag/revision cache metadata |
-| `learning_state` | content/learning UX | local resume, last viewed, local progress snapshot |
-| `wa_outbox` | wa | watch/analytics events waiting for ingestion |
-| `drafts` | comment/ticket/quiz/etc | unsynced user drafts |
-| `upload_resume_state` | tusd + target service | upload session metadata and cleanup |
-| `notification_state` | notification/realtime | local read/unread display cache |
-| `sync_cursors` | client sync | per-service cursors/checkpoints |
-| `capabilities` | client storage | runtime feature probe result |
+The gateway and auth path is the trust boundary: storage code never owns bearer attachment, refresh,
+trusted-header handling or route composition (`/alaa-trust-gateway-auth`, `$alaa-trust-gateway-auth`).
+Every protected call from storage-backed sync goes through the application's SDK client, never a
+service-local route, an authorization sidecar or a policy engine. The backend owns identity, content truth,
+entitlement and analytics ingestion; the device holds a cache, a buffer and unsent work.
 
-## Use cases
-
-### Learning state
-
-Store:
-
-- courseId, setId, contentId, lessonId
-- local position/progress snapshot
-- last opened timestamp
-- server revision when available
-- sync status
-
-Rules:
-
-- The backend remains source of truth for official progress.
-- Local state can make resume instant.
-- Conflicts follow server progress rules.
-- Purge on logout/account switch.
-
-### Watch analytics outbox
-
-Store events when offline or network fails:
-
-```ts
-type WatchAnalyticsOutboxItem = {
-  id: string;
-  accountKey: string;
-  eventType: string;
-  contentId: string;
-  occurredAt: string;
-  body: unknown;
-  idempotencyKey: string;
-  status: 'pending' | 'inflight' | 'done' | 'failed' | 'dead';
-  attempts: number;
-  nextAttemptAt: string;
-};
-```
-
-Rules:
-
-- Use idempotency keys.
-- Bound queue by count/age/bytes.
-- Drop only according to analytics retention policy.
-- Never block learning UI on low-priority event flush.
-- Do not store unnecessary PII in event payload.
-
-### API/cache metadata
-
-For course/content metadata:
-
-- Cache only server-shaped DTOs or normalized records.
-- Use TTL and server validators.
-- Treat project, profile, and entitlement data as display/cache hints only.
-- Do not cache access authority as truth.
-- Invalidate when project/account/content revision changes.
-
-### Drafts
-
-For comments, tickets, quiz answers, support messages:
-
-- Save local drafts with explicit accountKey and target entity.
-- Never silently delete unsynced drafts.
-- On submit success, delete only after server acknowledgment.
-- On account switch/logout, apply user-visible policy.
-
-### Upload resume metadata
-
-For resumable uploads:
-
-- Store upload URL/session ID, target service, local file fingerprint, offset, expiresAt.
-- Target service must authorize/claim attachment server-side.
-- Cleanup expired/completed sessions.
-- Do not store full sensitive attachments in IndexedDB unless reviewed.
-
-### Notifications/realtime
-
-For local notification state:
-
-- Cache read/unread and last delivered cursor for UX.
-- Server remains source of truth.
-- Reconcile on app boot and reconnect.
-- Use IndexedDB to avoid losing local read interactions under flaky network.
-
-## Alaa security rules
-
-- Do not store auth tokens in IndexedDB.
-- Do not store decoded JWT claims, `X-Access`, trusted gateway headers, or OpenFGA/authz decisions in IndexedDB.
-- Do not trust client-cached entitlement for protected access.
-- All protected API calls go through the SDK/gateway/session model.
-- Storage sync must not call service-local routes, `authz-sidecar`, `entitlement-spoa`, or OpenFGA directly.
-- Any local record read from IndexedDB must be treated as untrusted input.
-- User-scoped data must include accountKey and be purged on logout/account switch.
-
-## Recommended package boundary
-
-Create a frontend package/module such as:
+## Where a storage module goes
 
 ```text
 src/storage/
-  index.ts
-  db.ts
-  capabilities.ts
-  quota.ts
-  schemas.ts
-  migrations.ts
-  stores/
-    learning-state.ts
-    wa-outbox.ts
-    drafts.ts
-    api-cache.ts
-    upload-resume-state.ts
-  sync/
-    outbox-runner.ts
-    leases.ts
-  testing/
-    fixtures.ts
+  browserKeyValueStorage.ts     # exists
+  capabilities.ts               # the probe and the persisted tier
+  quota.ts                      # estimate, persistence request, budget thresholds from config
+  migrations.ts                 # version branches and the journal
+  stores/                       # one module per store, exposing domain methods only
+  sync/outbox-runner.ts  sync/reaper.ts
+  testing/fixtures.ts
 ```
 
-Expose only domain-safe methods:
+Expose domain methods, never a raw `IDBDatabase`, outside `src/storage/`. File size, naming and composition
+are `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`); Vue and Quasar integration is
+`/alaa-frontend-developer` (`$alaa-frontend-developer`).
 
-```ts
-storage.learningState.save(snapshot)
-storage.learningState.getLast(accountKey)
-storage.waOutbox.enqueue(event)
-storage.waOutbox.flush({ signal })
-storage.drafts.save(draft)
-storage.drafts.listByTarget(accountKey, target)
-storage.quota.getStatus()
-storage.clearUserData(accountKey)
-```
+## When a storage change needs an ADR
 
-Avoid exposing raw `IDBDatabase` to feature code unless the storage module itself is being developed.
+Write one from `assets/alaa-indexeddb-adr.md` when any holds: the feature stores more than 50 MB per
+account; it stores user-generated unsynced work; the product will tell the user something is available
+offline; it stores anything classified `pii_moderate_high`; the change is a destructive migration; local
+data affects what the user is shown about access, billing or entitlement; or the feature adds a second
+database or a named storage bucket.
 
-## Implementation sequence
+## Consumers, and the file that owns each seam
 
-1. Add storage capability probe.
-2. Add storage facade and schema v1.
-3. Add data classification and accountKey cleanup enforcement.
-4. Implement one low-risk store first, e.g., learning state or drafts.
-5. Add quota metadata and cleanup.
-6. Add outbox pattern for analytics/events.
-7. Add multi-tab upgrade UX.
-8. Add real browser tests, including Safari/iOS if target users require it.
-9. Add privacy-safe telemetry.
-10. Expand to more features only after reliability evidence.
-
-## Alaa-specific ADR trigger
-
-Create an ADR when:
-
-- feature stores more than 50 MB per user/device
-- feature stores user-generated unsynced data
-- feature relies on offline mode
-- feature stores moderate/high PII
-- feature needs Safari/iOS parity
-- feature needs background sync
-- schema migration is destructive
-- local data affects billing/access/entitlement UI
-
-Use `assets/alaa-indexeddb-adr.md`.
+| Consumer | This skill owns | The other side |
+|---|---|---|
+| request caching | the IndexedDB record, its TTL, validator, budget and cleanup — `70-cache-and-drafts.md` | service worker, Cache API, Workbox, Background Sync: `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`), `references/30-service-worker-excellence.md` |
+| the browser outbox | the row, its states, the claim, the reaper, the bounds — `71-browser-outbox.md` | the server-side outbox, its three row states, dedupe and DLQ replay: `/alaa-async-messaging` (`$alaa-async-messaging`), `references/20-publishing-and-the-outbox.md` |
+| in-app download | quota, persistence, eviction, concurrency, partial-download detection — `72-offline-media-store.md` | what the player stores, fetches and licenses: `/alaa-shaka-player` (`$alaa-shaka-player`) |

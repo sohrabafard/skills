@@ -1,141 +1,78 @@
 ---
 name: alaa-ui-ux-design-system
-description: "Use this skill when the task involves UI/UX design decisions: design systems, design tokens, theming, dark mode, color palettes, typography, spacing, layout, landing-page structure, visual style selection, component states, shared component libraries, UX writing and microcopy, motion and animation language, modern CSS platform features, icons, imagery, favicons, data-viz design, accessibility patterns, or design review for Vue/Quasar apps styled with Tailwind or Bootstrap. Do not use it for pure frontend engineering (SSR, hydration, auth, PWA, performance plumbing) with no visual-design decision."
+description: "Use this skill when the task involves UI/UX design decisions: design systems, design tokens, theming, dark mode, color palettes, typography, spacing, layout, landing-page structure, visual style selection, component states and designed failure states, shared component libraries, UX writing and microcopy, RTL and Persian typography, motion language, modern CSS platform features, icons, imagery, favicons, data-viz design, accessibility patterns, render and asset budgets, or design review for Vue/Quasar apps styled with Tailwind or Bootstrap. Do not use it for pure frontend engineering (SSR, hydration, auth, PWA, performance plumbing) with no visual-design decision, for exact Quasar API or config lookup, or when the repo already has a complete design system and the task only applies its existing tokens mechanically."
 ---
 
 # Alaa UI/UX Design System
 
 ## Purpose
 
-Use this as the default design-intelligence skill for the Vue 3 + Quasar + Vite app family, styled with Tailwind or Bootstrap. It owns the visual-design and UX decision layer that `$alaa-frontend-developer` deliberately does not: art direction, design tokens, theming, typography, color, layout aesthetics, motion language, icons/assets, and design-quality review.
+The design-intelligence layer for the Vue 3 + Quasar + Vite app family, styled with Tailwind or Bootstrap. It owns art direction, tokens, theming, typography, color, layout, RTL and Persian rendering, motion, icons, and design-quality review.
 
-This skill provides vocabulary, decision rules, and hard quality gates — not a fixed aesthetic. It must raise the floor (accessibility, consistency, honest trade-offs) without lowering the ceiling (the agent's creative range).
-
-## Cross-agent portability
-
-This skill uses the core Agent Skills format so OpenAI Codex/GPT-5.x agents and Claude (Opus/Sonnet/Fable) agents can all load it. Keep `SKILL.md` frontmatter limited to `name` and `description`; `agents/openai.yaml` is optional Codex UI metadata that other agents ignore. Do not add Claude-only frontmatter unless the skill is intentionally forked.
-
-For every model family, treat this skill as an enforced design contract: outcome-first execution, repository evidence (existing tokens and components) before proposals, small focused changes, and honest validation against the gates. The references are written to be self-sufficient — an agent with no prior design training can follow them; an agent with strong design instincts keeps full creative freedom inside the gates.
-
-## Design authority model
-
-Every rule in this pack belongs to exactly one tier. Never confuse them:
-
-1. **Gates (blocking, non-negotiable):** WCAG contrast, visible focus, keyboard reachability, `prefers-reduced-motion`, touch-target minimums, color-never-the-only-signal, zoom never disabled, one consistent icon family, tokens instead of raw hex in components. A design is not done while a gate fails.
-2. **Defaults (strong, overridable by repo tokens or explicit user direction):** spacing scale, duration/easing tokens, type scale, breakpoint set, z-index scale, landing section orders. Override deliberately, not by drift.
-3. **Taste (guidance, free creative space):** style selection, palette personality, imagery, composition, voice. This pack informs these choices with honest trade-offs; it never mandates them. When the user asks for something bold, be bold — inside the gates.
-
-## Ownership
-
-- `alaa-ui-ux-design-system` owns design direction, tokens/theming, typography/color, visual style, layout and landing structure, component-state and UX design, motion language, modern-CSS design features, icons/assets/imagery, and design-quality gates.
-- `$alaa-frontend-developer` owns frontend engineering: SSR/hydration safety, auth/session, PWA/SW, performance and realtime plumbing, API shaping, QA planning, browser-debug flow. Pair with it whenever a design decision must be implemented in the app family.
-- `$alaa-vue-typescript-clean-code` owns component code quality; `$alaa-quasar-app-vite-v3` owns exact Quasar APIs, transition props, `app.scss`, and build behavior.
-- `$playwright` / `playwright_visual` own visual verification in a real browser; browser use stays opt-in per `$alaa-frontend-developer` rules.
-- React, React Native, and non-web desktop UI stacks are out of scope. The target stack is Vue 3 + Quasar, with Tailwind or Bootstrap per repo.
-
-## When to use
-
-Use this skill when the task includes any of the following:
-
-- creating or evolving a design system, design tokens, or theme (including dark mode)
-- choosing a visual style, color palette, font pairing, spacing scale, or layout direction
-- designing a new page, landing page, dashboard, or flow — structure, hierarchy, CTA strategy
-- component visual design: states, forms, feedback, navigation patterns, empty/error/loading states
-- animation, transitions, motion polish, or modern-CSS design features (View Transitions, container queries, `oklch`, `light-dark()`, scroll-driven animations)
-- icons, brand assets, imagery, favicons, Open Graph images, or illustration direction
-- chart and data-visualization design decisions
-- reviewing existing UI for visual consistency, UX quality, or accessibility-as-design
-- a UI "looks unprofessional" and the cause is unclear
+The floor is the gate list in `references/90-quality-gates-and-review.md`. No rule in this pack may forbid a visual choice that passes every gate in that list.
 
 ## When NOT to use
 
-Do not use this skill when:
+Stop and route when the task carries **no visual-design decision** — frontend engineering, SSR, auth, PWA plumbing or performance work; when it needs an exact Quasar API, prop or config key, by the deciding test that a rule surviving a change of component library is this skill's and a rule naming a Quasar symbol is not; or when the repository already has a complete design system and the task only applies its existing tokens mechanically. The ownership section below names each owner.
 
-- the task is pure frontend engineering with no visual decision — use `$alaa-frontend-developer`
-- the task is exact Quasar API/config lookup — use `$alaa-quasar-app-vite-v3`
-- the task is backend, infra, or non-visual work
-- the repo already has a complete design system and the task only applies existing tokens mechanically
+## Design authority model
 
-## Quick start
+Every rule in this pack belongs to exactly one tier. Never confuse them.
 
-1. Read the repo-local `AGENTS.md` and any existing design-system artifacts (`DESIGN.md`, `design-system/`, theme/token files, `tailwind.config`/`@theme`, Bootstrap variable overrides, `app.scss`). Existing repo tokens outrank this skill's defaults.
-2. Apply `$alaa-low-noise`.
-3. Scale the process to the task — do not run the full workflow for a small tweak:
-   - new product, site, or major redesign -> full design brief and direction per `references/10-design-workflow.md`
-   - new page or feature in an existing system -> page-level spec; reuse existing tokens and style
-   - component tweak or bug -> follow existing tokens; load only the single relevant reference
-4. Start with `references/00-topic-map.md` unless you already know the exact reference to load, and load only the smallest relevant reference file.
-5. Before delivering, run the gates in `references/90-quality-gates-and-review.md`.
+1. **Gates (blocking):** the numbered list in `references/90-quality-gates-and-review.md`. A design is not done while one fails, and none is skippable by disclosure.
+2. **Defaults (overridable by a repo token file or explicit user direction, never by drift):** spacing scale, duration and easing tokens, type scale, breakpoints, z-index scale, landing section order.
+3. **Taste (free creative space):** style selection, palette personality, imagery, composition, voice. This pack supplies trade-offs; it never mandates. When the user asks for bold, be bold inside the gates.
 
-## Routing map
+## Ownership and disclaimers
 
-- Design workflow, product-type-to-direction mapping, design brief, persisted design decisions (master + page overrides):
-  - `references/10-design-workflow.md`
-- Design tokens, semantic color roles, theming, dark mode, spacing/radius/shadow/z-index scales, Tailwind/Bootstrap/Quasar token mapping:
-  - `references/20-design-tokens-and-theming.md`
-- Typography (scale, pairing, loading, Farsi/RTL) and color (palette construction, starter palettes, contrast, status colors):
-  - `references/30-typography-and-color.md`
-- UX writing and microcopy (voice, buttons, errors, empty states, Farsi register and نیم‌فاصله discipline):
-  - `references/35-ux-writing-and-microcopy.md`
-- Visual style vocabulary with honest trade-offs (minimalism, glassmorphism, brutalism, bento, aurora, ...) and style-coherence rules:
-  - `references/40-styles-and-visual-language.md`
-- Layout, responsive rules, page-type layout defaults, landing-page structure and CTA strategy:
-  - `references/50-layout-landing-and-ia.md`
-- Shared component libraries, component API design, wrapping Quasar, design-system governance and drift control:
-  - `references/55-component-library-and-governance.md`
-- Component states, forms and feedback, navigation patterns, empty/loading/error design, chart and data-viz design:
-  - `references/60-components-states-and-ux.md`
-- Modern CSS platform features (Baseline tiers) and the classy-motion contract (durations, easing, stagger, reduced-motion, compositor rules):
-  - `references/70-motion-and-modern-css.md`
-- Icons, brand assets, imagery, favicons/OG images, illustration direction:
-  - `references/80-icons-assets-and-imagery.md`
-- Accessibility patterns (semantic structure, native-first ARIA, focus management, keyboard, live regions):
-  - `references/85-accessibility-patterns.md`
-- Blocking quality gates, design review workflow, pre-delivery checklist:
-  - `references/90-quality-gates-and-review.md`
+This skill owns design direction, tokens, typography and color, visual style, layout and IA, component and failure-state design, RTL and Persian rendering, motion, icons and imagery, render budgets, and the design gates. It owns none of the following and cites rather than restates them:
 
-## Mandatory cross-topic rules
+| Ground | Owner |
+|---|---|
+| The quality bar itself, breaking-change doctrine | `/alaa-project-constitution` (`$alaa-project-constitution`) |
+| Every registered name and value: metric and event names, permission-bit meanings, Jalali-vs-Gregorian wire format | `/alaa-services-contract` (`$alaa-services-contract`) |
+| Folding Persian, Arabic and other non-ASCII digits to ASCII at every input boundary | `/alaa-input-normalization` (`$alaa-input-normalization`) |
+| The permission-bitmap decoder | `/alaa-permission-generator` (`$alaa-permission-generator`) |
+| The server-side authorization boundary | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
+| Requirement levels for anything emitted from the UI | `/alaa-observability-soc` (`$alaa-observability-soc`) |
+| Threat classes for untrusted content, `v-html`, paste | `/alaa-security-review` (`$alaa-security-review`) |
+| Degradation doctrine behind offline, slow and partial states | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
+| Test design and the proof levels behind any check named here | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
+| Visual-regression baseline storage and CI wiring | `/alaa-frontend-devops` (`$alaa-frontend-devops`) |
+| Combinatorial-explosion doctrine behind the theme matrix | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
+| Pre-implementation design of a page or flow before pixels | `/alaa-system-design` (`$alaa-system-design`) |
+| Frontend engineering, Lighthouse scoring, browser gating | `/alaa-frontend-developer` (`$alaa-frontend-developer`) |
+| Component code shape, typing, composables | `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) |
+| Runtime and effort doctrine across agent families | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
+| Output discipline | `/alaa-low-noise` (`$alaa-low-noise`) |
 
-Apply these even when the user names only one surface:
+**The Quasar seam, deciding test:** a rule that would still hold if the component library were replaced belongs here; a rule that names a Quasar prop, plugin, directive or config key belongs to `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`). The token that feeds `app.scss` is ours; the `setCssVar` call and the `transition-show` prop name are not.
 
-- Any new palette, theme, or dark-mode task:
-  - Also load `references/20-design-tokens-and-theming.md`; express every color as a semantic token.
-  - Dark mode is designed together with light mode and contrast-tested separately — never inverted mechanically.
-- Any animation, transition, or motion task:
-  - Also load `references/70-motion-and-modern-css.md`.
-  - Treat `prefers-reduced-motion` support as a blocking gate, not polish.
-- Any style-selection task:
-  - Also load `references/40-styles-and-visual-language.md`; check the style's "do not use for" column before committing.
-  - Generated boilerplate (radius, shadows, transitions) must match the chosen style — never inject default rounded-soft styling into a style that forbids it.
-- Any shared/reusable component task (creating, promoting, or changing one):
-  - Also load `references/55-component-library-and-governance.md`; search the existing library before building anything new.
-- Any user-facing copy task (buttons, errors, empty states, notifications) and any Farsi UI text:
-  - Also load `references/35-ux-writing-and-microcopy.md`.
-- Any icon or image task:
-  - Also load `references/80-icons-assets-and-imagery.md`. No emoji as UI icons; one icon family per product.
-- Any custom interactive widget, overlay, or SPA navigation flow:
-  - Also load `references/85-accessibility-patterns.md`; native elements before ARIA.
-- Any hero, imagery, font, effect, or embed decision on a route that will be Lighthouse-scored:
-  - Design inside the performance budgets; the canonical scoring playbook is `$alaa-frontend-developer` `references/41-lighthouse-and-web-vitals.md` (target >= 90 mobile).
-- Any task that ends in shipped UI:
-  - Run the gates in `references/90-quality-gates-and-review.md` before calling it done.
-- Any design decision that requires Vue/Quasar/Vite implementation, SSR safety, or verification planning:
-  - Pair with `$alaa-frontend-developer`; it owns the engineering constraints and QA workflow.
+React, React Native and non-web desktop stacks are out of scope.
 
-## Companion chooser
+## Router
 
-| If the task is mainly about...                                       | Pair with                        |
-|----------------------------------------------------------------------|----------------------------------|
-| implementing the design in Vue/Quasar/Vite, SSR safety, QA planning  | `$alaa-frontend-developer`       |
-| component code quality, composables, typing                          | `$alaa-vue-typescript-clean-code`|
-| exact Quasar components, transitions, `app.scss`, build              | `$alaa-quasar-app-vite-v3`       |
-| headed visual QA, screenshots, responsive checks                     | `$playwright` / `playwright_visual` |
-| CI/deploy impact of asset or theme changes                           | `$alaa-frontend-devops`          |
+`references/00-topic-map.md` is the only router in this skill. Open it unless you already know the exact reference file, then load the smallest one that answers the question.
+
+## Five rules that hold without reading any file
+
+1. A color, spacing, radius, shadow or z-index value written into a component is a defect; components consume semantic tokens only.
+2. Contrast, visible focus, keyboard reach and `prefers-reduced-motion` block delivery. They are never traded for aesthetics and never waived by disclosure.
+3. Direction is set with the `dir` attribute and CSS. Never insert U+200E, U+200F or U+2066-U+2069 into content, and never treat a rendered Persian digit as evidence of the stored value.
+4. Hiding or disabling a control is a presentation choice and never a security control. The server re-checks every action.
+5. A design rule with no tool that reports its violation is a preference. Run `scripts/check-design-system.mjs` before claiming a token, theme, contrast or RTL-icon rule holds.
+
+## Entry protocol
+
+This is not the design procedure; the only ordered design procedure in this pack is in `references/10-design-workflow.md`. Before routing:
+
+1. Read the repo-local `AGENTS.md` and the repo's own token and theme sources. Repo tokens outrank every default in this pack.
+2. Apply `/alaa-low-noise` (`$alaa-low-noise`).
+3. Open `references/00-topic-map.md`.
 
 ## Maintenance rules
 
-- Keep this skill focused on one job: design intelligence for the Vue 3 + Quasar app family with Tailwind or Bootstrap.
-- Keep exactly one copy of every rule; route instead of duplicating between references.
-- Re-check Baseline status for the features in `references/70-motion-and-modern-css.md` as Baseline and Interop cycles progress (last verified 2026-07-08).
-- Keep gates, defaults, and taste clearly separated when adding rules; never promote taste to a gate.
-- Repo-local `AGENTS.md`, existing repo design tokens, and user instructions always override this shared skill.
+- Keep exactly one copy of every rule. Route instead of duplicating between references.
+- Platform-version claims live only in `references/72-modern-css-baseline-tiers.md`, each with its own `read:` date. Re-verify that file when a task depends on a Tier 2 or Tier 3 feature, or when its stamps are more than 90 days older than today.
+- Never promote a taste-tier rule to a gate; a new gate needs a check in `scripts/check-design-system.mjs` or a named manual proof in `references/95-design-proofs.md`.
+- Repo-local `AGENTS.md`, existing repo tokens, and user instructions override this shared skill.

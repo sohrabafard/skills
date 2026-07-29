@@ -1,6 +1,6 @@
 # Image Delivery and Placeholders
 
-Use for deterministic `QImg` delivery, placeholders, responsive candidates, or SSR-safe sizing; do not assume a shared image server/pipeline.
+You are about to emit an image URL, a `srcset`, a placeholder, or a reserved size. Do not assume a shared image server or resize pipeline exists; check the repository first.
 
 ## Rules
 

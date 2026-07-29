@@ -1,7 +1,0 @@
-model = "gpt-5.5"
-model_reasoning_effort = "high"
-developer_instructions = """
-Build the smallest correct Shaka playback core for Vue 3 + Quasar + Vite.
-Prioritize lifecycle correctness, clean teardown, networking filters, and a clear API.
-Avoid embedding product-specific logic in the core wrapper.
-"""

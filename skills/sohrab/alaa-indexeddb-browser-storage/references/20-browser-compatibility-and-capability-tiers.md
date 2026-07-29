@@ -1,148 +1,71 @@
 # Browser compatibility and capability tiers
 
-## Compatibility stance
+Branch on the object returned by `detectBrowserStorageCapabilities()`
+(`examples/browser-capabilities.ts`), never on `navigator.userAgent`.
 
-IndexedDB is widely available in modern browsers, but feature depth, quota policy, persistence, private mode behavior, transaction timing, and embedded webview behavior differ.
+**A user-agent check is permitted only when a test in this repository reproduces the engine bug it works
+around, the code comment links that test by path, and the change that fixes or retires the bug deletes the
+check.** Product analytics may read the user agent; storage behaviour must not branch on it.
 
-Use this policy:
+## API support, read 2026-07-28
 
-1. Feature-detect at runtime.
-2. Probe by opening and writing to a tiny test DB when reliability matters.
-3. Prefer capability tiers over browser names.
-4. Use user-agent/version checks only as a last-resort workaround for a reproduced engine bug.
-5. Keep a server-resync or graceful-degradation path.
+From caniuse.com or MDN on 2026-07-28. Re-read before repeating any of them
+(`05-source-priority-and-freshness.md`).
 
-## Browser family notes researched 2026-06-29
+| Capability | Support | Rule |
+|---|---|---|
+| `indexedDB` global | universal | check existence, then run a real open-and-write probe; presence of the global is not evidence the store works |
+| `getAll` / `getAllKeys` | widely available | only with a bound or count; cursor fallback in `examples/idb-core.ts` |
+| `getAllRecords` | **not Baseline**, limited availability (MDN) | never require it; ship the `getAll`+`getAllKeys` or cursor fallback in the same change |
+| `IDBTransaction.durability` | Chrome 83+, Firefox 126+, Safari 15+ (93.54%) | feature-detect the options object; fall back to the engine default |
+| `IDBTransaction.commit()` | Chrome 76+, Firefox 74+, Safari 15+ (94.18%) | optional; auto-commit is correct without it |
+| `indexedDB.databases()` | Chrome 72+, Edge 79+, Safari 14+, **Firefox 126+** (93.61%) | diagnostics and cleanup only, never a control-flow dependency |
+| `navigator.storage.estimate()` | Baseline since 2023-09; available in workers | both numbers are approximations — `30-quota-model-and-budgets.md` |
+| `navigator.storage.persist()` / `persisted()` | Baseline since 2021-12; secure context; **not available in Web Workers** | what actually grants it is in `30-quota-model-and-budgets.md` |
+| `BroadcastChannel` | Chrome 54+, Firefox 38+, Safari 15.4+ (94.82%) | baseline for this fleet; ship no `storage`-event or polling fallback |
+| Web Locks (`navigator.locks`) | Chrome 69+, Firefox 96+, Safari 15.4+ (94.21%); workers and service workers | baseline; the lease-record fallback in `41-multitab-versionchange-and-locks.md` applies only to a runtime the probe reports without it |
+| OPFS `getDirectory()` | Chrome 86+, Firefox 111+, Safari 15.2+ (93.51%) | large binary content; pair with a persistence request |
+| Storage Buckets | Chromium 122+ only; **absent in every Firefox and every Safari** (70.28%) | `25-storage-buckets-api.md`; never a requirement |
+| Background Sync | Chrome 49+, Edge 79+; **absent in every Firefox and every Safari/iOS** (77.48%) | owned by `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`); never the only flush trigger |
 
-| Browser/engine | Practical guidance |
-|---|---|
-| Chromium: Chrome, Edge, many Android browsers | Strong IndexedDB support. Quota is large but not guaranteed. Chrome changed default readwrite durability to relaxed from Chrome 121. Chrome has ongoing storage optimizations; do not depend on exact internal storage format. |
-| Firefox/Gecko | Strong support. Firefox has relaxed durability guarantees since Firefox 40. Persistent storage can change quota behavior significantly. Test ESR if enterprise users matter. |
-| Safari/WebKit | Support exists, but WebKit storage policy, proactive eviction, iOS behavior, and embedded WKWebView limits require special testing. Safari 17/iOS 17 introduced updated quota and Storage API support. Earlier Safari versions may use an initial 1 GiB prompt behavior. |
-| iOS/iPadOS browsers | Historically WebKit-based for all third-party browsers; EU iOS 17.4+ may allow alternate engines. Treat actual engine behavior as runtime-detected, not brand-detected. |
-| Embedded webviews | Quotas and persistence may be smaller than browser apps. Test Capacitor/WKWebView/Android WebView separately from mobile browser. |
-| Private/incognito modes | Quotas may be smaller; data usually disappears when the private session ends. Always detect and degrade. |
-| Old IE/legacy Edge | Do not build new features around them. If required, run a separate compatibility review and use a minimal fallback. |
+## Engine notes, read 2026-07-28
+
+- **Chromium.** Default `readwrite` durability became `relaxed` in **Chrome 121**. Do not assume a
+  completed transaction is on disk after a power loss.
+- **Gecko.** Prompts the user when a site requests persistent storage. Firefox reached relaxed default
+  durability before Chrome did; the exact version is `unverified as of 2026-07-28` and the previously
+  stated "Firefox 40" is withdrawn for want of a source.
+- **WebKit.** The quota model changed at macOS 14 / iOS 17 (`30-quota-model-and-budgets.md`). WebKit ends
+  an idle transaction sooner than Chromium; the version boundary and a bug reference are
+  `unverified as of 2026-07-28`, so prove it with the `inactivity-return-check` lane rather than citing it.
+- **Embedded webviews** (WKWebView, Android WebView, Capacitor). A non-browser WebKit app gets roughly a
+  quarter of the browser-app origin quota. Test the embedded runtime, not the mobile browser.
+- **Private and incognito.** Storage usually works and is usually deleted at session end. MDN gives no
+  figure for a reduced quota, so that claim is `unverified as of 2026-07-28`: probe, never promise
+  persistence.
+
+iOS and iPadOS third-party browsers were historically all WebKit; whether alternate engines now ship there
+under EU rules is `unverified as of 2026-07-28`. Detect behaviour at runtime; do not brand-detect.
 
 ## Capability tiers
 
-### Tier 0 — No reliable local DB
+The probe returns a tier and the application persists it to the `capabilities` store. **Any code path that
+writes to IndexedDB and is reachable by a user calls the probe before its first write.**
 
-Conditions:
+| Tier | Condition, as the probe observes it | What the product may promise |
+|---|---|---|
+| 0 | `indexedDB` absent, or the open-and-write probe fails | in-memory state for this tab only; server-first operations; **no offline language anywhere in the UI** |
+| 1 | probe succeeds; `estimate` absent | drafts, preferences, small caches, a bounded outbox; sizes fixed by the budget file rather than by measurement |
+| 2 | tier 1 plus `estimate` | measured budgets, LRU cleanup against real free space, a persistence request after real user intent, storage-usage UI |
+| 3 | tier 2 plus a worker, plus OPFS or Cache API, plus `BroadcastChannel` and Web Locks | offline media, large prefetch, worker-side serialisation and local index rebuilds |
 
-- `indexedDB` missing.
-- Opening/writing a tiny test DB fails.
-- Private mode or policy blocks storage.
-- User/browser clears storage aggressively.
+Tier 3 is reachable: `examples/browser-capabilities.ts` returns it when those probes pass, and
+`scripts/capability_contract_conformance.py` fails if any tier in `assets/capability-tier-contract.json`
+has no reachable code path or no lane in `assets/browser-test-matrix.yaml`.
 
-Allowed UX:
+**The capability object's field set is declared once**, in `examples/browser-capabilities.ts`. This file
+does not restate it; the harness enforces that the example, the JSON contract and the test matrix agree.
 
-- In-memory session state only.
-- Server-first operations.
-- No offline promise.
-- Small non-sensitive fallback only when explicitly accepted.
-
-### Tier 1 — Core IndexedDB
-
-Required capabilities:
-
-- Open DB.
-- Create object stores/indexes in upgrade transaction.
-- Read/write simple structured-clone records.
-- Use cursors and key ranges.
-- Handle transaction errors.
-
-Allowed UX:
-
-- Drafts, preferences, small local caches, resumable UI state.
-- Conservative outbox with clear retry limits.
-- Small, evictable offline metadata.
-
-### Tier 2 — Modern storage management
-
-Additional capabilities:
-
-- `navigator.storage.estimate()`.
-- `navigator.storage.persist()` and `navigator.storage.persisted()` when available.
-- `getAll` / `getAllKeys` or equivalent fallback.
-- Better multi-tab coordination with `BroadcastChannel` or similar.
-
-Allowed UX:
-
-- User-visible storage budgets.
-- Persistent-storage request after user demonstrates intent.
-- More reliable offline-critical state.
-- LRU cleanup with estimated free space.
-
-### Tier 3 — Enhanced offline/local-first
-
-Additional capabilities may include:
-
-- Workers for heavy serialization/query processing.
-- OPFS or Cache API for large file/resource storage.
-- Background Sync / Periodic Sync when supported.
-- `navigator.locks`, `BroadcastChannel`, or robust app-level coordination.
-- Larger device/storage budget based on runtime estimates.
-
-Allowed UX:
-
-- Rich offline mode.
-- Larger prefetch/caches.
-- Faster local search/index refresh.
-- Better background sync and resumability.
-
-## API feature guidance
-
-| Feature | Rule |
-|---|---|
-| `indexedDB` global | Check existence, then perform real open/write probe. |
-| `IDBObjectStore.getAll()` | Use for bounded reads; fallback to cursor. |
-| `IDBObjectStore.getAllKeys()` | Widely available in modern browsers; fallback to cursor for old/buggy environments. |
-| `IDBObjectStore.getAllRecords()` | Experimental/limited; never require it for production. Use only behind feature detection. |
-| `IDBTransaction.durability` / transaction options | Feature-detect. Default behavior differs historically. Use `strict` sparingly for critical migrations/checkpoints. |
-| `indexedDB.databases()` | Nice-to-have for diagnostics/cleanup, not required. Feature-detect. |
-| `IDBDatabase.close()` | Always close stale connections on `versionchange`. |
-| `IDBTransaction.commit()` | Feature-detect; do not require. Let auto-commit work. |
-
-## Runtime feature probe contract
-
-Every serious feature should expose a capability object like:
-
-```ts
-interface BrowserStorageCapabilities {
-  indexedDb: 'unavailable' | 'core' | 'modern';
-  testedWrite: boolean;
-  estimate: boolean;
-  persist: boolean;
-  persisted: boolean | 'unknown';
-  getAll: boolean;
-  getAllKeys: boolean;
-  getAllRecords: boolean;
-  transactionDurability: boolean;
-  databases: boolean;
-  broadcastChannel: boolean;
-  workerIdb: boolean | 'unknown';
-  privateModeLikely: boolean | 'unknown';
-}
-```
-
-Use `examples/browser-capabilities.ts` as the implementation starting point.
-
-## Version handling rules
-
-- Document minimum browser policy per product release, but execute by capability.
-- For iOS/Safari, test real devices or a trusted device cloud for offline-critical flows.
-- For Android WebView/Capacitor, test the embedded runtime, not just Chrome mobile.
-- For Firefox ESR or enterprise browsers, include at least one ESR lane when B2B/school environments matter.
-- For private/incognito, do not promise persistence.
-- If using a new API such as `getAllRecords`, implement a fallback in the same PR.
-
-## Progressive enhancement examples
-
-| Feature | Tier 1 | Tier 2 | Tier 3 |
-|---|---|---|---|
-| Learning progress cache | Last open page only | Course-level recent state | Larger local timeline/search |
-| Draft answers | Save drafts | Persist request after repeated use | Background sync and conflict UI |
-| Analytics outbox | Small bounded queue | Quota-aware queue and batch sync | Worker-based serialization and backoff |
-| Content metadata cache | TTL cache | ETag/If-None-Match + storage budget | Prefetch with user/device-aware limits |
-| Attachments/upload metadata | Resume state only | Cleanup + retry telemetry | Worker/OPFS integration when appropriate |
+What changes across tiers is how much is retained and how fast it returns — never whether the user can
+finish the task. Offline media is offered at tier 3 only, with the eviction warning in
+`72-offline-media-store.md`.

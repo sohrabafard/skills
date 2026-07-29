@@ -1,6 +1,6 @@
 # Layout Patterns and Examples
 
-Use for `quasar-layout-*` shell behavior: `QLayout`, `view`, drawers, containerized layouts, and layout/page route ownership.
+You are building or fixing an app shell: `QLayout` `view`, drawers, a containerized layout, or which component owns `QPageContainer` and `<router-view />`. This file owns layout and page ownership; no other file in this pack restates it.
 
 ## Playbooks
 

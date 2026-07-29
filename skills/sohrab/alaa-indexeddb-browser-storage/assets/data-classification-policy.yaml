@@ -1,46 +1,67 @@
+# The machine-readable form of references/60-data-classification.md.
+# scripts/validate_skill_pack.py fails if this file and that table disagree.
+# Every `owner` names the skill that decides the harder question, in both trigger forms.
+last_researched: "2026-07-28"
 classes:
   public_cache:
     examples: ["public course metadata", "static config", "thumbnail metadata"]
     indexeddb: allowed
     ttl_required: true
     logout_purge: optional_unless_account_scoped
+    owner: null
   user_private_low_risk:
     examples: ["preferences", "last opened lesson", "UI state"]
     indexeddb: allowed
     ttl_required: recommended
     logout_purge: required_when_account_scoped
+    owner: null
   user_generated_unsynced:
     examples: ["draft comment", "draft ticket", "draft quiz answer"]
     indexeddb: allowed_with_recovery
     ttl_required: policy_defined
     logout_purge: user_visible_policy_required
+    never_silently_deleted: true
+    owner: null
   analytics_outbox:
     examples: ["watch event", "UX telemetry retry item"]
     indexeddb: allowed_minimized_bounded
     ttl_required: true
     logout_purge: required_when_account_scoped
+    reference: "references/71-browser-outbox.md"
+    owner: null
   pii_moderate_high:
     examples: ["support content", "profile fields", "school identifiers"]
-    indexeddb: security_review_required
+    indexeddb: not_by_default
     ttl_required: true
     logout_purge: required
+    requires_review_by: "/alaa-security-review ($alaa-security-review)"
+    adr_must_record:
+      - "where the encryption key is generated"
+      - "where the key is stored"
+      - "whether JavaScript in this origin can read the key"
+    owner: "/alaa-security-review ($alaa-security-review)"
   secret_or_credential:
-    examples: ["access token", "refresh token", "session secret", "decoded JWT claim", "payment secret"]
+    examples: ["access token", "refresh token", "session secret", "decoded JWT claim", "payment secret", "private key"]
     indexeddb: forbidden
     ttl_required: not_applicable
     logout_purge: not_enough
+    owner: "/alaa-trust-gateway-auth ($alaa-trust-gateway-auth)"
   trusted_gateway_context:
     examples: ["X-Project-Id", "X-User-Id", "X-Access", "X-Authz-*"]
     indexeddb: forbidden_as_client_authored_authority
     display_cache: allowed_only_from_server_response_with_ttl
+    owner: "/alaa-trust-gateway-auth ($alaa-trust-gateway-auth)"
   authorization_truth:
-    examples: ["paid access grant", "entitlement source of truth", "OpenFGA decision", "authz-sidecar decision"]
+    examples: ["permission bitmap", "paid access grant", "entitlement source of truth", "authorization decision"]
     indexeddb: forbidden_as_authority
     display_cache: allowed_with_ttl_and_server_revalidation
+    bitmap_rule: "Neither the encoded bitmap nor the decoded snapshot is written to IndexedDB, and no storage code decodes one. references/61-authority-boundary.md"
+    owner: "/alaa-permission-generator ($alaa-permission-generator) for the contract and the canonical decoder; /alaa-trust-gateway-auth ($alaa-trust-gateway-auth) for the trust property"
 rules:
-  - "Validate all records read from IndexedDB before use."
-  - "Namespace account-scoped records by accountKey for cleanup and cache isolation only."
-  - "Purge user-private records on logout/account switch unless user-visible retention policy says otherwise."
-  - "Never store tokens, session secrets, decoded JWT claims, trusted gateway headers, or authz decisions."
-  - "Do not trust local entitlement, profile, or project cache for protected backend access."
-  - "Use Alaa SDK/gateway-backed clients for sync; do not call service-local authz paths or OpenFGA from browser storage."
+  - "Validate every record read from IndexedDB before use, including inside cleanup jobs."
+  - "Namespace account-scoped records by accountKey, which is a storage partition and never identity, project authority or entitlement."
+  - "Purge user-private records on logout and account switch in one transaction, or journalled with a boot-time check."
+  - "Never store a token, session secret, decoded JWT claim, trusted gateway header, permission bitmap or authorization decision."
+  - "A cached value may render. It may not decide. If replacing it with its opposite would grant access, it is authority and may not be cached."
+  - "Normalize user-entered text before storing or comparing it: /alaa-input-normalization ($alaa-input-normalization)."
+  - "Event and field names are /alaa-services-contract ($alaa-services-contract); requirement levels are /alaa-observability-soc ($alaa-observability-soc)."

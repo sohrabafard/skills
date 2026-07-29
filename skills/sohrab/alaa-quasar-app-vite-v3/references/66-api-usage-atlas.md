@@ -1,6 +1,6 @@
 # API Usage Atlas
 
-Use for Quasar plugin/composable/option/util intent, confusion points, and SSR traps—not exhaustive shapes. Query installed plugin APIs via `05-authority-and-api-lookup.md`; for composables/utils inspect installed exports/types plus version-matched official docs, not `quasar describe`.
+You are calling a Quasar plugin, composable, global option, or util and need intent, confusion points, and SSR traps; not exhaustive shapes. Query installed plugin APIs via `05-authority-and-api-lookup.md`; for composables/utils inspect installed exports/types plus version-matched official docs, not `quasar describe`.
 
 ## Playbooks
 
@@ -23,7 +23,7 @@ Search: `useHydration`, `isHydrated`, `QNoSsr`, `client-only`, `useId`.
 
 ### `Dialog`, `Notify`, `Loading`
 
-Use respectively for modal decisions/short blocking flows, transient feedback, and global/blocking loading. Treat `html: true` and other rich-content options as security boundaries.
+Use respectively for modal decisions and short blocking flows, transient feedback, and global blocking loading. **Never bind user-controlled text to `html: true`, to a `*-html` prop, or to `QEditor` output without passing it through the repository's sanitizer first; if none exists, render it as text.** The rule and its owner are `references/31-ssr-pwa-and-security.md`.
 
 ```js
 Notify.create({ message: userText }) // Do: escaped by default
@@ -55,7 +55,7 @@ These are build/config choices. Check mode-specific asset pipelines; preserve re
 
 ### Animations/transitions
 
-Treat as performance/a11y choices; respect reduced motion and do not globally add animation packages without intent. Search: `animations`, `transitions`, `reduced motion`, `global animation config`.
+Treat as performance and accessibility choices. Reduced motion, easing, and duration are owned by `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`), `references/70-motion-contract.md`; do not add a global animation package without an intent recorded there. Search: `animations`, `transitions`, `reduced motion`, `global animation config`.
 
 ### `date` utils
 

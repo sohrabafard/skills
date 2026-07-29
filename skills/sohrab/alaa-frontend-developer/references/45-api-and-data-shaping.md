@@ -1,98 +1,53 @@
-# API and Data Shaping
+# API and Data Shaping — the client-side half
 
-Use this file when frontend work depends on request and response shape, pagination, filtering, sorting, cache behavior, or payload efficiency.
+What a screen asks the API for, and the cost that request imposes. The wire contract itself is not here.
 
-This file owns frontend-facing API contract guidance. It does not replace backend implementation skills.
+- Envelope shape, error codes, field names, problem-details usage, SDK consumption:
+  `/alaa-services-contract` (`$alaa-services-contract`) `references/10-core-service-contract.md` and
+  `references/60-frontend-sdk-consumption-contract.md`. Do not invent a second envelope or a second error
+  format for one endpoint.
+- Cursor and keyset pagination — the cursor format, its integrity, the sort allowlist, the tie-breaker
+  rule, the limits and the error for an unsupported sort: `/alaa-keyset-pagination`
+  (`$alaa-keyset-pagination`) `references/30-cursor-format-integrity-and-context.md` and
+  `references/40-wire-contract-limits-and-errors.md`.
+- Query shape, indexes and aggregate cost once the fix crosses into the server: `/alaa-data-layer`
+  (`$alaa-data-layer`) and `/alaa-laravel-architecture` (`$alaa-laravel-architecture`).
 
-## Start here
+## Before changing what a screen requests
 
-Before changing an API contract, inspect:
+Inspect the current call sites, the repo's existing error handling, the current pagination and sorting
+behaviour, the payload size and the duplicate-request pattern — and ask whether the reported "frontend
+bug" is really a query-shape or aggregation problem on the server.
 
-- current frontend call sites
-- current error-handling conventions
-- current pagination and sorting behavior
-- payload size and duplicate request patterns
-- whether the reported "frontend bug" is really a backend query-shape or aggregation problem
+## The client-side cursor delta
 
-## Contract defaults
+The contract is the pagination skill's. What this skill owns is what the client does with it:
 
-- Prefer one stable envelope style per repo.
-- If the repo already uses raw resources, JSON:API, or another established envelope, stay consistent.
-- If the repo already uses Problem Details for errors, keep using it instead of inventing a second error format.
-- Keep list ordering explicit and deterministic.
+- A cursor is opaque. Do not parse it, do not derive a page number from it, and do not construct one.
+- Keep the cursor with the list state it belongs to, and drop it when the sort or filter changes — a
+  cursor issued under one ordering is meaningless under another.
+- Never render a total page count from a cursor-paginated endpoint; the endpoint does not have one.
+- Deduplicate on the stable id when appending, because a concurrent insert can return a row the client
+  already holds.
 
-## Error-shape guidance
+## Cost rules the UI owes the backend
 
-Preferred qualities:
+- No request per row. A list that fans out one request per item is the N+1 family —
+  `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) `references/40-call-in-a-loop.md`
+  — and the fix is a batch lookup or an aggregate endpoint, not a faster spinner.
+- Debounce server-backed search and typeahead, and abort the superseded request
+  (`20-vue-js-ssr-patterns.md`).
+- Split a compact list payload from the expensive detail payload; fetch detail when the record opens.
+- Do not ask for an exact total count on a hot path unless the product requires the number.
+- Keep nested expansion bounded: request named includes, not every relation the screen "might need later".
+- Ask for a server-computed facet, count or summary when it replaces many client-driven requests.
 
-- stable machine-readable code or type
-- human-readable message or title
-- source or field details for validation errors
-- request or correlation identifier when the platform supports it
+## Cache and revalidation, as the client sees it
 
-Pattern: Problem Details style error
-
-```json
-{
-  "type": "https://api.example.com/problems/invalid-filter",
-  "title": "Invalid filter",
-  "status": 400,
-  "detail": "Unsupported sort key: score",
-  "instance": "/reports?page[size]=20&sort=score"
-}
-```
-
-## Pagination defaults
-
-Prefer cursor or keyset pagination when:
-
-- the list is large
-- rows can be inserted or deleted while users paginate
-- stable low-latency pagination matters
-
-Cursor rules:
-
-- sort by a stable unique order
-- if the primary sort field is not unique, append a unique tie-breaker
-- reject unsupported sort combinations instead of silently returning unstable pagination
-
-Offset pagination is acceptable when:
-
-- datasets are small
-- page-number UX is more important than raw scale
-- exact totals are cheap enough and part of the product requirement
-
-## Filtering and sparse payloads
-
-- Allow only explicit filter and sort keys.
-- Reject unknown filters with a structured error.
-- Prefer sparse fieldsets or projection parameters for list endpoints with large records.
-- Prefer explicit include or expand semantics over dumping every related entity into every response.
-- Keep nested expansion bounded and documented.
-
-Pattern: lightweight list response
-
-```json
-{
-  "data": [
-    { "id": "42", "title": "Budget 2026", "status": "published" }
-  ],
-  "meta": {
-    "nextCursor": "eyJpZCI6IjQyIn0",
-    "hasMore": true
-  }
-}
-```
-
-## Cache and revalidation guidance
-
-- Hashed static assets can be cached aggressively.
-- Personalized HTML and authenticated API responses are usually `private`.
-- Prefer `no-cache, private` plus validators when the resource may be revalidated safely.
-- Reserve `no-store` for truly sensitive responses that must never be written to browser or intermediary caches.
-- Use `ETag` or `Last-Modified` when revalidation can save meaningful bandwidth or backend cost.
-
-Pattern: conditional API response shape
+Hashed static assets cache aggressively. Personalized HTML and authenticated API responses are `private`.
+Prefer `private, no-cache` plus a validator where revalidation is safe; reserve `no-store` for a response
+that must never be written to any cache. Use `ETag` or `Last-Modified` when revalidation saves meaningful
+bandwidth or backend cost.
 
 ```http
 GET /api/profile
@@ -105,59 +60,22 @@ ETag: "profile-v42"
 Cache-Control: private, no-cache
 ```
 
-## Frontend-aware DB efficiency rules
-
-When the UI drives backend load, the frontend contract should help the backend stay efficient:
-
-- avoid one-request-per-row patterns
-- prefer batch lookups and aggregate endpoints for dashboards
-- debounce server-backed search and typeahead
-- split list summaries from heavy detail payloads
-- avoid exact total counts on hot paths unless they are product-critical
-- align cursor and sort behavior with fields the backend can index efficiently
-- ask for server-computed facets, counts, or summaries when they replace many client-driven requests
-
-## Patterns
-
-Pattern: explicit include budget
-
-- Good: `GET /posts?include=author,thumbnail`
-- Better when large graphs exist: document which includes are allowed and cap the expansion depth
-
-Pattern: list plus detail split
-
-- list endpoint returns compact preview fields
-- detail endpoint returns expensive relations only when the user opens the record
-
-Pattern: cache-friendly polling
-
-- repeated reads use validators such as `ETag`
-- server returns `304` when data is unchanged
-- UI avoids re-render churn on unchanged payloads
+On a `304`, the UI reuses the held value and does not re-render — a re-render on unchanged data is the
+polling cost that looks like a performance bug. Response bodies kept across a reload belong in
+`/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`) `references/70-cache-and-drafts.md`,
+not in an ad-hoc module-level map.
 
 ## Anti-patterns
 
-- Inventing a new error envelope for one endpoint
-- Cursor pagination without a stable unique sort
-- Returning giant nested graphs because the frontend "might need them later"
-- Forcing the UI to load totals, counts, and heavy details for every list row
-- Using offset pagination on hot, fast-changing feeds without understanding the duplicate/skip trade-off
-- Marking every authenticated response `no-store` when `private, no-cache` plus validators would work
-- Treating a backend query problem as a pure frontend spinner problem
+Inventing an error envelope for one endpoint. Parsing a cursor. Rendering a total for a cursor endpoint.
+Loading totals, counts and heavy details for every list row. Marking every authenticated response
+`no-store` when `private, no-cache` plus a validator would work. Treating a backend query problem as a
+spinner problem.
 
-## Pairing guidance
-
-- SSR auth, protected data, or token-aware request flows:
-  - Also load `21-ssr-auth-and-session-patterns.md`
-- When the real fix is backend schema, index, query-plan, or contract implementation work:
-  - Pair with `$alaa-laravel-architecture` for Ala Laravel API implementation work
-  - Pair with `$alaa-data-layer` for indexing, pagination cost, or query-shape work
-
-## Useful standards and references
+## References
 
 - RFC 9457 Problem Details for HTTP APIs:
-  - [https://www.rfc-editor.org/rfc/rfc9457.html](https://www.rfc-editor.org/rfc/rfc9457.html)
-- MDN HTTP caching guide:
-  - [https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)
-- JSON:API cursor pagination profile:
-  - [https://jsonapi.org/profiles/ethanresnick/cursor-pagination/](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/)
+  [rfc-editor.org](https://www.rfc-editor.org/rfc/rfc9457.html) — read: unverified as of 2026-07-28.
+- MDN HTTP caching:
+  [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching) — read:
+  unverified as of 2026-07-28.

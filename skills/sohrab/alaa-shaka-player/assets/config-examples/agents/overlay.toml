@@ -1,6 +1,0 @@
-model = "gpt-5.5"
-model_reasoning_effort = "medium"
-developer_instructions = """
-Implement quiz and marker flows as UI-facing modules.
-Keep the playback core unaware of overlay business rules whenever possible.
-"""

@@ -68,9 +68,12 @@ display separators**, because it is the last place before the wire that sees the
 
 Applied in this order, for both channels:
 
-1. Fold Persian-Indic (`U+06F0`-`U+06F9`) and Arabic-Indic (`U+0660`-`U+0669`) digits to ASCII. Fold no
-   other digit family, because folding every Unicode digit accepts Devanagari and superscript digits that
-   no Iranian subscriber types and no vendor renders.
+1. Fold every code point of Unicode general category `Nd` to its ASCII digit, one to one. Do not
+   enumerate digit families: an enumerated list is a defect class rather than a fix, and this step
+   covered two families only until 2026-07-28. Category `No` is excluded, so superscript digits are not
+   folded and an input carrying them is still rejected by step 5. The fold, its canonical implementations
+   and its corpus are owned by `/alaa-input-normalization` (`$alaa-input-normalization`); call that
+   implementation rather than writing a digit table.
 2. Remove every display separator, using the category rule stated in the next section.
 3. Reject an input that is empty once the separators are gone, because a value with no digits names no
    recipient.
@@ -150,11 +153,12 @@ case now.
 is `{"input", "mediana_expected", "bale_expected", "note"}`, and an expected value of `null` means the input
 must be rejected with a non-zero exit and a stated reason.
 
-The corpus holds **80 cases: 48 that must render and 32 that must be rejected.** It covers the three
+The corpus holds **80 cases: 49 that must render and 31 that must be rejected.** It covers the three
 accepted input forms, the bare national number, the `0098` access code, Persian-Indic and Arabic-Indic
 digits, mixed digit families, zero-width and bidirectional characters, one member of every separator
 category in the table above, the solidus, both wrong lengths, a landline, a foreign number, a sender label,
-superscript and Devanagari digits, two numbers in one field separated by a space and by a solidus, a
+superscript digits that must be rejected and Devanagari digits that must render, two numbers in one
+field separated by a space and by a solidus, a
 malformed international prefix in four shapes, the empty string, an ASCII whitespace-only string, a Unicode
 whitespace-only string, and a zero-width-only string.
 
@@ -163,7 +167,13 @@ whose 16 shared inputs agreed on every expected value, giving the union of 63 in
 category rule, the solidus ruling and the international-prefix rule closed the last disagreements between
 the two implementations and added 17 cases, giving 80.
 
-`corpus_sha256` is now `7a4250cf64e730d51ef92512975e864cbcfa5da919f658e0f974c50e8d54b548`.
+On 2026-07-28 the Devanagari case was re-ratified from rejected to rendered, moving the split from 48/32
+to 49/31. It had been recorded as rejected while this step folded two families only; the browser package
+in `client` already folds every `Nd` family, so the recorded rejection described a path no browser user
+could reach. The superscript case is unaffected and still rejected, because superscripts are category
+`No` rather than `Nd`.
+
+`corpus_sha256` is now `80dcb3723e83d848236ab0cbfbfc62447eec524c62a434737d85682aa653d7dc`.
 
 **The identical file ships in `alaa-sms-provider-mediana/scripts/`.** It is duplicated on purpose: the
 `AGENTS.md` conformance rule requires that more than one implementation of one wire format ships a runnable

@@ -1,6 +1,0 @@
-model = "gpt-5.5"
-model_reasoning_effort = "high"
-developer_instructions = """
-Focus on precise watch-time accumulation, interaction tracking, and QoE telemetry.
-Make hidden-tab policy explicit. Keep analytics code modular and backend-friendly.
-"""

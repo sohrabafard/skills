@@ -1,5 +1,5 @@
 {
-  "corpus_version": "3",
+  "corpus_version": "4",
   "purpose": "The single shared Iranian mobile-number normalisation conformance corpus for the Alaa messaging providers. It began as the union of the two corpora that alaa-sms-provider-mediana and alaa-bale-provider built independently, preserving every input from both. It now also pins the display-separator rule the two providers settled on: whitespace, format and dash characters are matched by Unicode category rather than by an enumerated list, the solidus is stripped as a hand-typed separator, and the international prefix is removed only when the country code 98 follows it.",
   "shared_copies": [
     "skills/sohrab/alaa-sms-provider-mediana/scripts/phone-conformance-corpus.json",
@@ -12,7 +12,7 @@
   },
   "null_means": "The input must be rejected, with a non-zero exit and a stated reason, for both channels. It must never be rendered onto either wire.",
   "canonicalization": "One rule governs both copies of this file so they cannot drift apart again. On disk: json.dump(document, handle, ensure_ascii=True, indent=2) followed by a single trailing newline, so the file is pure ASCII, every non-ASCII character appears as a \\uXXXX escape, and the bytes survive any platform, editor, or transfer path unchanged. Checksum: corpus_sha256 is the lowercase hex SHA-256 of json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8') - that is, of the parsed cases re-serialised with the real characters in UTF-8 rather than with the on-disk escapes. The digest therefore describes the data and not one language's JSON escaping convention, so a Go, PHP, or JavaScript implementation can reproduce it without reimplementing Python's escaper. Case order is part of the hashed bytes and is fixed: accepted cases first (mediana_expected is not null), then rejected cases, and within each group ascending by Unicode code point of input. A merge that follows this order rebuilds the identical file. Reproduce the checksum from this file alone: python3 -c \"import hashlib,json,sys; d=json.load(open(sys.argv[1],encoding='utf-8')); print(hashlib.sha256(json.dumps(d['cases'],ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest())\" phone-conformance-corpus.json",
-  "corpus_sha256": "7a4250cf64e730d51ef92512975e864cbcfa5da919f658e0f974c50e8d54b548",
+  "corpus_sha256": "80dcb3723e83d848236ab0cbfbfc62447eec524c62a434737d85682aa653d7dc",
   "cases": [
     {
       "input": "\t09123830000\n",
@@ -267,6 +267,12 @@
       "note": "Persian-Indic digits in the bare national form, so folding and prefix reduction must both run."
     },
     {
+      "input": "\u0966\u096f\u0967\u0968\u0969\u096e\u0969\u0966\u0966\u0966\u0966",
+      "mediana_expected": "+989123830000",
+      "bale_expected": "989123830000",
+      "note": "Devanagari digits U+0966-U+096F. The fold covers every Unicode general-category Nd family, so this renders. Ratified 2026-07-28; it was recorded as rejected while the fold covered two families only. The superscript case stays rejected because superscripts are category No, not Nd."
+    },
+    {
       "input": "\u200b09123830000",
       "mediana_expected": "+989123830000",
       "bale_expected": "989123830000",
@@ -463,12 +469,6 @@
       "mediana_expected": null,
       "bale_expected": null,
       "note": "Persian-Indic digits, one digit short. Folding must happen before the length check."
-    },
-    {
-      "input": "\u0966\u096f\u0967\u0968\u0969\u096e\u0969\u0966\u0966\u0966\u0966",
-      "mediana_expected": null,
-      "bale_expected": null,
-      "note": "Devanagari digits. Only Persian-Indic and Arabic-Indic digits are folded."
     },
     {
       "input": "\u2007\u2028\u3000",

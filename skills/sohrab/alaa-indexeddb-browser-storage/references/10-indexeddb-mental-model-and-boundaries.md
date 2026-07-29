@@ -1,116 +1,74 @@
-# IndexedDB mental model and boundaries
+# IndexedDB mental model and storage-API choice
 
-## What IndexedDB is
+## What it is
 
-IndexedDB is a browser-provided, asynchronous, transactional, object-oriented database scoped to an origin. It stores
-structured-clone-compatible JavaScript values, including objects and blobs, inside object stores keyed by primary keys
-and optional indexes.
-
-Think of it as:
+An origin-scoped, asynchronous, transactional store of structured-clone-compatible values, in object stores
+addressed by primary key and by secondary indexes. Available in the window, in dedicated and shared workers,
+and in service workers (`WorkerGlobalScope.indexedDB`); MDN, read 2026-07-28. Every operation is
+asynchronous; no synchronous API exists.
 
 ```text
 Origin: https://app.example
 └── Browser-managed storage bucket
-    ├── IndexedDB databases
-    │   ├── object stores
-    │   ├── indexes
-    │   └── records
+    ├── IndexedDB databases → object stores → indexes → records
     ├── Cache API entries
     ├── OPFS files
     └── other origin storage
 ```
 
-IndexedDB is not SQL. It has no joins, no server-grade query planner, no global transactions across origins, no
-permission model inside one origin, and no guarantee that data survives user deletion or browser eviction.
+**The bucket, not the database, is the unit of quota and of eviction.** That single fact drives most of this
+pack: a large Cache API download shrinks what IndexedDB can hold, and an eviction takes both at once.
+
+No joins, no query planner, no cross-origin transactions, no permission model inside one origin, and no
+guarantee a value survives the user clearing site data.
 
 ## Core constructs
 
-- Database: named database with integer version.
-- Object store: keyed collection of records; key can be inline via keyPath or out-of-line.
-- Index: secondary lookup structure over one key path or array key path.
-- Transaction: readonly/readwrite/versionchange scope over one or more object stores.
-- Request: asynchronous operation with success/error events.
-- Cursor: streaming iteration over keys/values/ranges.
-- Structured clone: serialization mechanism; not all JS values are storable.
-- Origin: scheme + host + port boundary; quota generally applies to the origin/bucket, not a single DB.
+**Database** — a name and a positive integer version, not a semantic string. **Object store** — a keyed
+collection; the key is inline via `keyPath` or supplied out of line. **Index** — a secondary lookup over
+one key path or an array key path, maintained on every write. **Transaction** — `readonly`, `readwrite` or
+`versionchange`, scoped to a named set of stores. **Request** — one asynchronous operation. **Cursor** —
+streaming iteration over keys, values or a range. **Structured clone** — the serialisation; functions, DOM
+nodes and prototype-bearing class instances do not survive it.
 
-## What IndexedDB is good for
+## Choosing the storage API
 
-Use IndexedDB for:
+Decide by how you will retrieve the value, not by how large it feels.
 
-- Durable-ish app data that is too large or structured for `localStorage`.
-- Offline state, drafts, local user progress, and pending sync outbox.
-- Metadata catalogs for cached resources.
-- Queryable local collections with indexes.
-- App-state snapshots that can be refetched or resynced.
-- Cross-worker/main-window storage coordination when designed carefully.
+| You will retrieve it by … | Store it in | Because |
+|---|---|---|
+| primary key or index, as a structured record | IndexedDB | the only origin store with secondary indexes and transactions |
+| matching an HTTP `Request` to a `Response` | Cache API | request/response pairs; routing is `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) |
+| byte range, or streaming a large file | OPFS `navigator.storage.getDirectory()` | random access and sync access handles in workers; Chrome 86+, Firefox 111+, Safari 15.2+, caniuse read 2026-07-28 |
+| a fixed key, one tab, tiny, dies with the tab | `sessionStorage` | synchronous and tab-scoped |
+| a fixed key, tiny, and a synchronous main-thread read is affordable | `localStorage` | it blocks the main thread; keep it under a few kilobytes |
 
-## What IndexedDB is not good for
+**Do not write a value larger than 1 MB to IndexedDB unless that value has a line in the feature's
+`storage-budget-policy.md`.** Large values amplify clone cost, quota consumption and engine quirks;
+`assets/storage-budget-policy-template.md` is the file that line goes in.
 
-Do not use IndexedDB for:
+Media downloaded for offline playback is its own case: `72-offline-media-store.md`.
 
-- Access tokens, refresh tokens, session secrets, payment secrets, or private keys that become dangerous if JavaScript
-  can read them.
-- JWT claims, `X-Access`, OpenFGA/authz decisions, or source-of-truth entitlement, authorization, billing, identity,
-  project, or irreversible business truth.
-- Large raw files when Cache API or OPFS is a better abstraction.
-- Full-text search without an index/search layer.
-- Analytics data lake replacement.
-- Highly relational query workloads that need joins and server-side constraints.
-- Guaranteed write-on-unload behavior.
+## What must never be stored here
 
-## Storage API decision framework
+Any script in the origin reads this database. Tokens, session secrets, decoded JWT claims, permission
+bitmaps, entitlement decisions and trusted gateway headers therefore have no correct form here.
+`61-authority-boundary.md` states the replacement for each and names its owner.
 
-| Need                                               | Preferred API                                                  | Notes                                                                                      |
-|----------------------------------------------------|----------------------------------------------------------------|--------------------------------------------------------------------------------------------|
-| Structured records, indexes, offline state, outbox | IndexedDB                                                      | Primary focus of this skill                                                                |
-| Static network resources and HTTP response caching | Cache API                                                      | Usually via Service Worker                                                                 |
-| File-like large binary content                     | OPFS or Cache API                                              | Use IndexedDB for metadata when needed                                                     |
-| Small tab-scoped values                            | sessionStorage                                                 | Synchronous; keep tiny                                                                     |
-| Small cross-navigation non-sensitive strings       | localStorage only if unavoidable                               | Synchronous; blocks main thread; tiny only                                                 |
-| Public client request context                      | SDK/gateway contract                                           | Alaa browser code sends only approved public headers through `@alaa/sdk` / `@alaa/sdk-vue` |
-| Credentials/session authority                      | SDK-owned bearer attachment plus gateway/auth refresh contract | Not IndexedDB; do not add app-side token persistence or app-managed refresh                |
+## Before you create an object store
 
-## Source-of-truth rule
+Answer all six in `assets/indexeddb-decision-record-template.md`.
 
-Before creating an IndexedDB object store, answer:
+1. Can this value be reconstructed from a server response? If not, name the user-visible recovery.
+2. What does the user see the moment the browser deletes the whole origin?
+3. Which class in `assets/data-classification-policy.yaml` does it fall in?
+4. What bounds its size — a record count, a byte cap, or a retention window?
+5. Which index answers the read you are adding it for, and what is that read's stated bound?
+6. Does anything branch on this value to decide what a user may do? If yes, stop: that is an authorization
+   decision and it belongs to `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
 
-1. Can this data be reconstructed from the server?
-2. What is the user-visible harm if it disappears?
-3. Is there a resync path?
-4. Is the backend still authoritative?
-5. Is the data safe to expose to any script running in the origin?
-6. For Alaa, is this only a cache/display hint rather than auth, project, entitlement, or identity authority?
+## Progressive enhancement, stated as behaviour
 
-If the answer to 5 is no, do not store it in IndexedDB without a security review.
-If the answer to 6 is no, do not store it in IndexedDB; use the Alaa SDK/gateway/server contract instead.
-
-## Progressive enhancement principle
-
-Design for consistent core behavior:
-
-- Baseline browsers get core functionality and safe degradation.
-- Modern browsers get persistent-storage requests, better quota estimates, improved bulk APIs, background sync, workers,
-  or OPFS where applicable.
-- Powerful devices get larger local budgets, larger prefetch windows, and better local search/indexing.
-- Low-end or private-mode environments get smaller budgets, fewer retained records, and clear UX about reduced offline
-  reliability.
-
-## Agent design default
-
-When a user asks for an IndexedDB feature, the agent should produce a decision record before code:
-
-```text
-Feature:
-Data classes:
-Source of truth:
-Required lifetime:
-Object stores:
-Indexes:
-Quota budget:
-Eviction recovery:
-Security posture:
-Browser capability tiers:
-Migration plan:
-Test matrix:
-```
+The same core task completes on every supported browser. What changes across tiers is how much is retained
+and how fast it returns, never whether the user can finish.
+`20-browser-compatibility-and-capability-tiers.md` gives the tiers and the probe that selects one.

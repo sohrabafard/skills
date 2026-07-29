@@ -1,54 +1,44 @@
 # Source priority and freshness
 
-## Research policy
+Every figure in this pack is a dated reading of a source, not a property of the web.
 
-Browser storage behavior changes by browser engine, browser version, operating system, privacy mode, storage pressure, and embedder. For any task that asks for current limits, version support, Safari/iOS behavior, experimental APIs, or “latest” behavior, refresh sources before implementation.
+## Re-read the source before stating any of these
 
-## Source hierarchy
+A quota figure or byte cap for any engine; a browser version at which an API became available; Safari,
+WebKit, iOS or iPadOS behaviour of any kind; whether an API is experimental, origin-trial or Baseline; what
+grants persistent storage in a named browser; eviction timing or ordering.
 
-Use this order:
+Re-read anyway when the date in `99-sources-and-maintenance.md` is over six months old, when the change
+ships to production across broad browsers, or when the proposal is a browser-specific workaround.
 
-1. W3C/WHATWG specs for API semantics and terminology.
-2. MDN Web Docs for cross-browser API behavior, compatibility, quota/eviction guides, and security notes.
-3. Browser-vendor docs for engine-specific policy:
-   - Chrome Developers / Chromium docs.
-   - WebKit blog / WebKit bugs for Safari/WebKit.
-   - Firefox/MDN/Bugzilla for Gecko-specific behavior.
-4. Can I Use / Browser Compatibility Data for support tables and usage share.
-5. Official library docs for wrappers (`idb`, Dexie, localForage, RxDB) when the task uses those libraries.
-6. Issue trackers and community reports for bug symptoms only. Treat them as signals, not final truth, unless reproduced.
+## Source order
 
-## Freshness gates
+1. W3C and WHATWG specifications for API semantics and terminology.
+2. MDN for cross-browser behaviour, the quota and eviction guide, and Baseline status.
+3. Engine-vendor publications for engine policy: Chrome for Developers and Chromium docs; the WebKit blog
+   and bug tracker; MDN and Bugzilla for Gecko.
+4. Can I Use and Browser Compatibility Data for per-version tables.
+5. Official documentation for `idb`, Dexie, localForage or RxDB when the task uses one.
+6. Issue trackers and community reports as symptom signals only. One becomes a rule here after a test in
+   this repository reproduces it.
 
-Refresh official sources when any of these are true:
+## How a claim is recorded
 
-- User asks for browser versions, current quotas, Safari/iOS behavior, storage persistence, experimental APIs, or “latest”.
-- Source data is older than 6 months for compatibility/quota claims.
-- The feature involves large offline storage, persistent storage, private mode, embedded webview, third-party iframe, or mobile Safari.
-- The code will be released to production across broad browsers.
-- A browser-specific workaround is proposed.
+Every browser claim carries a source and a `read: <ISO date>`. Three states, and they are distinct:
 
-## What to record after research
+- **Stated with a source and a read date.** Someone read that source on that date.
+- **`unverified as of <ISO date>`.** Retained because deleting it would lose the caution it carries.
+  Never dropped, never asserted.
+- **`not documented (searched <ISO date>)`.** Searched and not found. Not proof of absence.
 
-For each browser-sensitive decision, record:
+An unattributed number is the failure this section prevents: it survives every refresh because nobody knows
+which source to re-read.
 
-- Research date.
-- Sources checked.
-- Browser/OS versions or channels.
-- Whether the claim is official, compatibility-data-backed, or empirical.
-- Fallback behavior if the claim is wrong.
-- Tests required to confirm in the target environment.
+## Conflict
 
-## Never overfit to one source
+If documentation and observed behaviour disagree, record the conflict in the feature's ADR, branch on a
+runtime probe rather than on the documentation, and add a test in the lane where it appeared.
+`assets/browser-test-matrix.yaml` names the lanes.
 
-Do not implement a rule just because one blog post says so. Convert any community-reported bug into a test or feature probe. If official docs and empirical behavior conflict, document the conflict, prefer feature detection, and add a runtime fallback.
-
-## Skill-authoring compatibility
-
-This pack follows agent-skill best practices:
-
-- Keep `SKILL.md` routing-first and concise.
-- Put heavy context into `references/`.
-- Put deterministic reusable code in `scripts/` or `examples/`.
-- Use explicit workflows, checklists, and output contracts.
-- Prefer source-linked maintenance notes over model-memory claims.
+Skill structure, register, model and effort are not this skill's ground: `/alaa-prompting-guide`
+(`$alaa-prompting-guide`), and effort specifically its `references/50-effort-and-thinking.md`.

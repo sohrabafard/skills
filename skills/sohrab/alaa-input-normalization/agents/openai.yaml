@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa Input Normalization"
+  short_description: "Fold non-ASCII digits to ASCII at every input boundary"
+  default_prompt: "Use $alaa-input-normalization for folding Persian, Arabic and every other non-ASCII decimal digit to ASCII at the browser submit path and in every backend service's request middleware. Read references/10-normalization-contract.md before changing any implementation, copy the canonical implementation from assets/input-normalization/ rather than writing a digit table, then run scripts/normalization-conformance.sh and record its output."
+
+policy:
+  allow_implicit_invocation: true

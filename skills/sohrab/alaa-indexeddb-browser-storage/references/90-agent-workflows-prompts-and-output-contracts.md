@@ -1,207 +1,139 @@
 # Agent workflows, prompt patterns, and output contracts
 
-## Agent behavior principles
+## How to work a storage task
 
-For GPT-style and Claude-style coding agents:
+In order, because each step constrains the next. Skipping to the schema produces stores nobody can purge
+and indexes nobody can use.
 
-- Use precise role, scope, and stop criteria.
-- Gather enough context, then act; do not over-search once the path is clear.
-- Use progressive disclosure: load only relevant reference files.
-- Prefer checklists and decision records for complex storage work.
-- Make assumptions explicit when a detail is missing and not blocking.
-- Verify code changes with tests or deterministic checks.
-- For current browser/version facts, refresh official sources and cite/record them.
-- Never hide uncertainty about browser-specific behavior; convert uncertainty into feature detection and tests.
+1. **Classify the data and name its source of truth** (`60-data-classification.md`). If the class is
+   forbidden, stop and say so; there is no schema to design.
+2. **State the capability tier assumed and what happens one tier down**
+   (`20-browser-compatibility-and-capability-tiers.md`).
+3. **Design the schema from the reads**; each read names its index and its stated bound
+   (`50-transactions-performance-and-query-patterns.md`).
+4. **State the budget and the cleanup that frees it** (`30-quota-model-and-budgets.md`).
+5. **State the migration branch and what a second tab and the service worker see**
+   (`40-schema-and-migrations.md`, `41-multitab-versionchange-and-locks.md`).
+6. **State the recovery when the origin is evicted** (`32-eviction-and-recovery.md`).
 
-## Default task workflow
+Then implement, then prove at the levels in `80-testing-and-proof-levels.md`.
 
-For any IndexedDB feature request:
+## Output contracts
 
-```text
-1. Classify the feature.
-2. Identify data classes and source of truth.
-3. For Alaa, identify the SDK/gateway client and prove storage code will not own token attach, refresh, trusted headers, or authz decisions.
-4. Select capability tiers and fallback behavior.
-5. Design schema/object stores/indexes.
-6. Define quota budget and cleanup policy.
-7. Define security/privacy rules.
-8. Define migration/multi-tab plan.
-9. Define sync/offline/conflict behavior if relevant.
-10. Implement with short transactions and feature detection.
-11. Test with unit + browser matrix.
-12. Add observability and operational notes.
-```
-
-## Output contract: architecture answer
-
-Use this structure:
+**Architecture answer**
 
 ```markdown
 ## Decision
-
-## Data and source of truth
-
-## Browser capability tier and fallback
-
-## IndexedDB design
-
-### DB
-### Object stores
-### Indexes
-### Record schemas
-
-## Quota / persistence / eviction
-
-## Security and privacy
-
-## Migration and multi-tab
-
-## Sync / conflict / recovery
-
-## Testing and observability
-
+## Data class and source of truth
+## Capability tier and one-tier-down behaviour
+## Schema — database and version, object stores, indexes each with the read it serves and that read's bound, record types
+## Budget, cleanup, and eviction recovery
+## Authority boundary — what is stored, what is never stored, what a stored value may decide
+## Migration and concurrency — branches, blocked UX, service-worker connection
+## Failure classes and what the user sees for each
+## Proof — the level of each test and what it does not bound
 ## Risks and open decisions
 ```
 
-## Output contract: code review
+**Code review**
 
 ```markdown
-## Review result
-
-## Confirmed issues
-
-## Browser compatibility risks
-
-## Quota/eviction risks
-
-## Security/privacy risks
-
-## Migration/concurrency issues
-
-## Patch recommendation
-
-## Required tests
+## Verdict
+## Confirmed defects, each with file and line
+## Index key paths checked against their record types
+## Reads without a stated bound
+## Failure classes not handled
+## Authority-boundary violations
+## Concurrency — versionchange, blocked, service worker, locks
+## Configuration values written as literals
+## Required tests, by level
 ```
 
-## Output contract: implementation plan
+**Implementation plan**
 
 ```markdown
 ## Goal
-
 ## Assumptions
-
 ## Files to change
-
-## Schema changes
-
+## Schema change and migration branch
 ## Capability detection
-
-## Write/read paths
-
-## Cleanup and quota handling
-
-## Migration path
-
-## Tests
-
-## Rollout and telemetry
+## Read and write paths, with bounds
+## Budget and cleanup
+## Failure handling per class
+## Tests, by level
+## Telemetry and rollout
 ```
 
-## Prompt pattern: feature design
+## Prompt patterns
+
+Both trigger forms appear in each; use the one your runtime accepts.
+
+**Feature design**
 
 ```text
-Use $alaa-indexeddb-browser-storage.
-Design an IndexedDB feature for [feature].
-Constraints:
-- supported browsers: [list]
-- data classes: [draft/cache/outbox/etc]
-- offline requirement: [none/basic/critical]
-- sensitive data: [yes/no]
-- expected records/bytes: [estimate]
-For Alaa, keep protected calls behind @alaa/sdk or @alaa/sdk-vue and do not store trusted gateway headers or authz decisions.
-Return a decision record, schema, quota plan, fallback tiers, security notes, and test matrix. Do not write implementation code unless necessary.
+Use /alaa-indexeddb-browser-storage ($alaa-indexeddb-browser-storage).
+Design the browser storage for [feature].
+Constraints: supported browsers [list]; data classes [list]; offline requirement
+[none | best-effort | critical]; expected records and bytes per account after one year [estimate].
+Return the architecture-answer contract from references/90. State the bound on every read.
+Do not write implementation code unless I ask for it.
 ```
 
-## Prompt pattern: implementation
+**Implementation**
 
 ```text
-Use $alaa-indexeddb-browser-storage.
-Implement [feature] in this repo.
-Before editing, inspect current storage utilities and AGENTS.md.
-Use feature detection, short transactions, quota handling, and migration-safe schema changes.
-Do not store tokens/secrets, decoded JWT claims, trusted gateway headers, or authz decisions.
-Use the approved Alaa SDK/gateway path for protected sync; do not call service-local authz paths or OpenFGA from browser storage.
-Add or update tests for fresh install, upgrade, quota error, and unavailable storage.
-Summarize files changed and remaining risks.
+Use /alaa-indexeddb-browser-storage ($alaa-indexeddb-browser-storage).
+Implement [feature] in this repository. Read AGENTS.md and the existing storage module before editing.
+Every write awaits transaction completion and classifies QuotaExceededError.
+Every index key path is verified against the record type it indexes.
+Every configurable value is read from configuration, not written as a literal.
+Store no token, JWT claim, permission bitmap, entitlement or trusted gateway header.
+Add tests for fresh install, upgrade, blocked upgrade, quota error, and logout purge.
+Report files changed, the bound on each read added, and remaining risks.
 ```
 
-## Prompt pattern: browser compatibility audit
+**Browser compatibility audit**
 
 ```text
-Use $alaa-indexeddb-browser-storage.
-Audit this IndexedDB code for Chrome/Edge, Firefox, Safari/iOS, private mode, and embedded webview differences.
-Search official sources if making current compatibility claims.
-Return: capability gaps, fallback plan, test matrix, and recommended code changes.
+Use /alaa-indexeddb-browser-storage ($alaa-indexeddb-browser-storage).
+Audit this storage code for Chromium, Gecko, WebKit, private mode and embedded webviews.
+Re-read the source for every version or quota claim before repeating it; mark anything you cannot
+verify as unverified with today's date rather than dropping or asserting it.
+Return capability gaps, the fallback for each, the test lanes required, and the code changes.
 ```
 
-## Prompt pattern: quota/resilience audit
+**Quota and eviction audit**
 
 ```text
-Use $alaa-indexeddb-browser-storage.
-Audit storage quota and eviction resilience for [feature].
-Check budgets, cleanup order, QuotaExceededError handling, persistence request timing, private-mode behavior, and user-visible recovery.
-Return concrete patch suggestions and tests.
+Use /alaa-indexeddb-browser-storage ($alaa-indexeddb-browser-storage).
+Audit quota and eviction resilience for [feature]: the budget file, the cleanup order,
+QuotaExceededError handling on every write, when persistence is requested, boot recovery after
+eviction, and what the user is told in each case.
+Return concrete patches and the tests that would have caught each gap.
 ```
 
-## Prompt pattern: security audit
+**Storage security audit**
 
 ```text
-Use $alaa-indexeddb-browser-storage.
-Review local browser storage for secrets, decoded JWT claims, trusted gateway headers, PII, entitlement authority, authz/OpenFGA decisions, cache poisoning, logout purge, shared-device risk, and XSS exposure.
-Return must-fix issues, acceptable data classes, and a revised storage policy.
+Use /alaa-indexeddb-browser-storage ($alaa-indexeddb-browser-storage).
+Review browser storage for stored secrets, JWT claims, permission bitmaps, trusted gateway headers,
+entitlement used as authority, PII, unvalidated reads, shared-device exposure, and the logout purge.
+Route anything needing a security decision rather than a fact to /alaa-security-review
+($alaa-security-review) instead of deciding it here.
+Return must-fix defects with file and line, the acceptable data classes, and the revised policy.
 ```
 
-## Clarification policy
+## Asking versus assuming
 
-Ask clarifying questions only when a missing detail changes the safety or architecture materially, such as:
-
-- whether data is secret/PII
-- whether offline persistence is critical
-- required browser support including Safari/iOS/webview
-- expected data volume
-- whether server has idempotency/conflict APIs
-
-If not blocking, proceed with explicit assumptions and mark them as assumptions.
+Ask only when the answer changes the architecture or the safety posture: whether the data is secret or PII;
+whether offline is critical or a convenience; whether WebKit and iOS are supported; expected volume per
+account after a year; whether the server offers idempotency and conflict responses. Otherwise proceed and
+mark each assumption. An assumption stated is checkable; a question asked is a turn spent.
 
 ## Agent anti-patterns
 
-- Jumping straight to Dexie/raw IDB code without data classification.
-- Assuming IndexedDB quota is "unlimited".
-- Assuming `navigator.storage.estimate()` is exact.
-- Promising offline durability in private mode.
-- Implementing a feature only tested in Chrome.
-- Storing auth tokens because "IndexedDB is not localStorage".
-- Storing decoded JWT claims, trusted gateway headers, or `X-Access` as local context.
-- Calling `authz-sidecar`, `entitlement-spoa`, OpenFGA, or service-local protected routes directly from browser storage sync.
-- Using user-agent checks as primary logic.
-- Ignoring `blocked`/`versionchange`.
-- Running fetch inside a transaction.
-- Treating local entitlement cache as authoritative.
-- Omitting cleanup and quota tests.
-
-## Review rubric
-
-Score each from 0 to 2:
-
-| Area | 0 | 1 | 2 |
-|---|---|---|---|
-| Source of truth | unclear | partially defined | server/client boundaries explicit |
-| Security | secrets/PII risk | partial controls | classification + purge + validation |
-| Compatibility | Chrome-only | some fallback | capability tiers + tests |
-| Quota | ignored | catches errors | budgets + cleanup + UX |
-| Migration | ad hoc | upgrade works one path | tested multi-version + blocked handling |
-| Transactions | unsafe awaits | mostly safe | short, batched, transaction-complete-aware |
-| Offline/sync | fragile | retry basic | idempotent, bounded, conflict-aware |
-| Observability | none | errors only | privacy-safe metrics and runbooks |
-
-Require score 2 for security and quota before production storage-heavy rollout.
+Writing schema before classifying the data. Assuming quota is unlimited or `estimate()` exact. Promising
+offline durability without checking `persisted()`. Shipping a feature exercised only in Chrome. Storing a
+token because "IndexedDB is not localStorage". Persisting or decoding a permission bitmap in storage code.
+Ignoring `blocked` and `versionchange`. A `fetch` inside a transaction. A cursor scan where an index would
+answer. Reporting a check that was not run.

@@ -1,20 +1,27 @@
 {
-  "last_researched": "2026-06-29",
+  "last_researched": "2026-07-28",
+  "note": "The capability field set is declared once, in examples/browser-capabilities.ts. This file names the tiers and the features that must be feature-detected, and joins each to the test lanes in browser-test-matrix.yaml. scripts/capability_contract_conformance.py fails on any disagreement between the three.",
   "tiers": {
     "tier0_no_reliable_local_db": {
+      "reached_when": "indexedDb === 'unavailable' || testedWrite === false",
       "requirements": [
         "IndexedDB missing or open/write probe fails"
       ],
       "allowed_features": [
-        "in-memory state",
+        "in-memory state for this tab",
         "server-first operations"
       ],
       "forbidden_promises": [
         "durable offline",
-        "survives browser close"
+        "survives browser close",
+        "available offline"
+      ],
+      "lanes": [
+        "private-incognito"
       ]
     },
     "tier1_core_indexeddb": {
+      "reached_when": "testedWrite === true && estimate === false",
       "requirements": [
         "open DB",
         "create stores/indexes",
@@ -24,58 +31,217 @@
       "allowed_features": [
         "drafts",
         "small cache",
-        "basic outbox",
+        "bounded outbox",
         "learning state snapshots"
       ],
       "fallbacks": [
-        "bounded storage",
+        "fixed caps from the budget file rather than measurement",
         "manual retry",
         "server resync"
+      ],
+      "lanes": [
+        "chromium-desktop-stable",
+        "android"
       ]
     },
     "tier2_modern_storage_management": {
+      "reached_when": "tier1 && estimate === true",
       "requirements": [
-        "StorageManager estimate",
-        "persist or persisted when available",
+        "navigator.storage.estimate",
+        "persist or persisted where available",
         "bulk APIs or cursor fallbacks"
       ],
       "allowed_features": [
-        "quota-aware cleanup",
+        "measured budgets",
+        "LRU cleanup against real free space",
         "storage usage UX",
-        "larger offline metadata"
+        "persistence request after user intent"
       ],
       "fallbacks": [
-        "skip persistence request",
+        "skip the persistence request",
         "smaller budget"
+      ],
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr",
+        "safari-macos"
       ]
     },
     "tier3_enhanced_offline": {
+      "reached_when": "tier2 && workerIdb === true && (opfs === true || CacheStorage present) && broadcastChannel === true && locks === true",
       "requirements": [
-        "workers and/or OPFS/Cache API and/or background sync where relevant"
+        "worker IndexedDB",
+        "OPFS or Cache API",
+        "BroadcastChannel",
+        "Web Locks"
       ],
       "allowed_features": [
-        "rich offline",
-        "larger prefetch",
-        "background sync",
-        "worker-based processing"
+        "offline media",
+        "large prefetch",
+        "worker-side serialisation",
+        "local index rebuilds"
       ],
       "fallbacks": [
-        "tier2 behavior"
+        "tier2 behaviour"
+      ],
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos",
+        "ios-ipados-webkit"
       ]
     }
   },
   "must_feature_detect": [
-    "indexedDB open/write",
-    "navigator.storage.estimate",
-    "navigator.storage.persist",
-    "IDBObjectStore.getAll",
-    "IDBObjectStore.getAllKeys",
-    "IDBObjectStore.getAllRecords",
-    "transaction durability options",
-    "indexedDB.databases",
-    "BroadcastChannel",
-    "navigator.locks",
-    "OPFS",
-    "Background Sync"
+    {
+      "feature": "indexedDB open/write",
+      "capability_field": "testedWrite",
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr",
+        "safari-macos",
+        "ios-ipados-webkit",
+        "android",
+        "private-incognito",
+        "low-end-device"
+      ]
+    },
+    {
+      "feature": "navigator.storage.estimate",
+      "capability_field": "estimate",
+      "lanes": [
+        "safari-macos",
+        "chromium-desktop-stable",
+        "private-incognito"
+      ]
+    },
+    {
+      "feature": "navigator.storage.persist",
+      "capability_field": "persist",
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr",
+        "ios-ipados-webkit"
+      ]
+    },
+    {
+      "feature": "navigator.storage.persisted",
+      "capability_field": "persisted",
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr",
+        "ios-ipados-webkit"
+      ],
+      "note": "a distinct read from persist(): the request may be refused, so the answer is stored and the UI branches on it"
+    },
+    {
+      "feature": "IDBObjectStore.getAll",
+      "capability_field": "getAll",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos"
+      ]
+    },
+    {
+      "feature": "IDBObjectStore.getAllKeys",
+      "capability_field": "getAllKeys",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos"
+      ]
+    },
+    {
+      "feature": "IDBObjectStore.getAllRecords",
+      "capability_field": "getAllRecords",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos",
+        "firefox-desktop-stable-esr"
+      ],
+      "note": "not Baseline; a fallback ships in the same change"
+    },
+    {
+      "feature": "transaction durability options",
+      "capability_field": "transactionDurability",
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr"
+      ]
+    },
+    {
+      "feature": "indexedDB.databases",
+      "capability_field": "databases",
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr"
+      ]
+    },
+    {
+      "feature": "BroadcastChannel",
+      "capability_field": "broadcastChannel",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos"
+      ]
+    },
+    {
+      "feature": "navigator.locks",
+      "capability_field": "locks",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos"
+      ]
+    },
+    {
+      "feature": "OPFS",
+      "capability_field": "opfs",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos",
+        "ios-ipados-webkit"
+      ]
+    },
+    {
+      "feature": "worker IndexedDB",
+      "capability_field": "workerIdb",
+      "lanes": [
+        "chromium-desktop-stable",
+        "low-end-device"
+      ]
+    },
+    {
+      "feature": "Background Sync",
+      "capability_field": "backgroundSync",
+      "lanes": [
+        "chromium-desktop-stable",
+        "firefox-desktop-stable-esr",
+        "ios-ipados-webkit"
+      ],
+      "note": "Chromium only; absent in every Firefox and every Safari/iOS, caniuse read 2026-07-28"
+    },
+    {
+      "feature": "Storage Buckets",
+      "capability_field": "storageBuckets",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos"
+      ],
+      "note": "Chromium 122+ only; never a requirement"
+    },
+    {
+      "feature": "service worker present",
+      "capability_field": "serviceWorker",
+      "lanes": [
+        "chromium-desktop-stable",
+        "safari-macos"
+      ]
+    },
+    {
+      "feature": "private mode weak signal",
+      "capability_field": "privateModeLikely",
+      "lanes": [
+        "private-incognito"
+      ],
+      "note": "a UX hint only; never a gate and never a fingerprint"
+    }
   ]
 }

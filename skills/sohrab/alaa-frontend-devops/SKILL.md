@@ -1,92 +1,36 @@
 ---
 name: alaa-frontend-devops
-description: "Use this skill when the task involves CI workflow changes for a frontend repository or Dockerfile or Compose changes that affect frontend build or runtime delivery. Do not use it when the task is frontend logic only and has no build or deploy impact."
+description: "Use this skill when the task involves CI or pipeline gates for a frontend repository, Dockerfile or Compose changes that affect frontend build or runtime delivery, the build artifact contract, public path or asset base, cache policy, build provenance, what may be compiled into a client bundle, or a frontend deploy failure or rollback. Do not use it when the task is frontend logic only and has no build or deploy impact, or when the task is package-boundary specific and belongs to alaa-mono-package."
 ---
-
-
-
 
 # Alaa Frontend DevOps
 
-## Purpose
-
-Use this skill for frontend delivery work that can break the build, artifact contract, or deployed runtime even when the code change looks small.
-
-This skill owns:
-
-- CI and pipeline safety for SSR or PWA frontends
-- Docker and container build discipline for frontend delivery
-- artifact and public-path contracts
-- reverse proxy and remote asset serving concerns
-- deploy-time verification, rollback, and cache-safety checks
-
-## When to use
-
-Use this skill when the task includes any of the following:
-
-- CI workflow changes for a frontend repository
-- Dockerfile or Compose changes that affect frontend build or runtime delivery
-- asset output issues, missing chunks, or bad client asset paths
-- remote asset hosting or CDN-style asset base changes
-- reverse proxy, cache header, or asset serving problems
-- SSR runtime delivery issues caused by build, deploy, or infra configuration
+Frontend delivery: what a build must emit, and what happens to that artifact afterwards — where it lands, how it is served, how it is traced to a commit, and how it is undone.
 
 ## When NOT to use
 
-Do not use this skill when:
+Stop and route when the task has **no build, artifact, serving or deploy impact**; when it is package-boundary work — an `exports` condition, a peer contract, a specifier, or whether an asset is reachable from an entry; or when it is how a gate is *expressed* on a runner, in an image or as a proxy directive rather than what the gate asserts. The ownership section below names each owner.
 
-- the task is frontend logic only and has no build or deploy impact
-- the task is purely visual design or browser QA
-- the task is package-boundary specific and belongs to `$alaa-mono-package`
+## Ownership: stack versus platform
 
-## Quick start
+`alaa-frontend-devops` owns the frontend delivery gate register — for each gate, the predicate it asserts, the command that evaluates it, and the artifact it inspects — and writes no provider YAML and no Dockerfile: `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how a gate is expressed on a runner and decides no gate, `/alaa-docker-production` (`$alaa-docker-production`) owns how the build and runtime images and any Compose file are expressed and decides no gate, and `/alaa-haproxy` (`$alaa-haproxy`) owns how a cache or routing decision is expressed as a directive and decides no policy.
 
-1. Read the repo-local `AGENTS.md`.
-2. Apply `$alaa-low-noise`.
-3. Read `references/00-source-map.md` when the task is version-sensitive, security-sensitive, or about current deploy behavior.
-4. Read `references/10-build-contract-and-artifacts.md` first for delivery-contract work.
-5. Load only the smallest additional reference file needed for the task.
-6. Validate in the same environment shape that would catch the delivery risk.
+Seam with the package graph: `/alaa-mono-package` (`$alaa-mono-package`) owns everything that determines what enters the bundling graph — a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry. This skill owns everything that happens to that graph's output after `build` exits.
 
-## Verification matrix
+Every other owner this skill depends on is listed with its file path in `references/90-companion-boundary.md`. Do not write in another owner's ground: state the obligation the frontend needs, and route.
 
-| Delivery shape   | Must verify                                                                          |
-|------------------|--------------------------------------------------------------------------------------|
-| SPA              | final asset paths, cache headers, and fallback routing                               |
-| SSR              | server entry, client manifest, cookies/session flow, and hydration-safe deploy shape |
-| PWA              | service worker scope, update UX, offline boundaries, and asset versioning            |
-| package-consumer | emitted JS/CSS assets, peer dependencies, and import paths                           |
+## Three rules that never cost a hop
 
-## Companion routing
+1. **A client bundle is a public artifact.** Every emitted chunk is downloadable by anyone, permanently, and minification conceals nothing. No credential, key, internal hostname, or personal datum may reach one. What is allowed, and the gate that proves it, is `references/35-client-bundle-security.md`.
+2. **Every shipped artifact carries the commit that produced it.** If you cannot answer "which commit produced the bundle currently serving production" from the deployment alone, rollback is a guess. The provenance file and its keys are `references/25-artifact-identity-and-provenance.md`.
+3. **Verify outputs, not exit codes.** A build that exits 0 has proved nothing about what it emitted. Run `scripts/verify-artifact-contract.mjs <dist-root>` and read the exit code: 0 passes, 1 is a contract failure, 2 means the tree could not be read and is not a pass.
 
-- Frontend implementation policy and SSR behavior:
-  - pair with `$alaa-frontend-developer`
-- Workspace package asset emission or `packages/*` boundaries:
-  - pair with `$alaa-mono-package`
-- Quasar config, platform mode, or exact Quasar build behavior:
-  - pair with `$alaa-quasar-app-vite-v3`
-- Documentation-only deployment notes or inline doc updates:
-  - pair with `$alaa-frontend-doc-annotations`
-- Current OpenAI or Codex product facts that affect build or tool integration:
-  - pair with `$openai-docs`
+## Before you finish
 
-## Reference navigation
+A delivery change ships with its rollback unit, its rollback command, its precondition, and its irreversible part written down. "Be ready to describe what to revert" is not a rollback path. See `references/40-verification-and-rollback.md`.
 
-- Official-first source priority, freshness triggers, and community-troubleshooting boundary:
-  - `references/00-source-map.md`
-- Build contract, artifact rules, SSR runtime entry, and final asset expectations:
-  - `references/10-build-contract-and-artifacts.md`
-- CI, Docker, cache keys, install layers, and deterministic builds:
-  - `references/20-ci-docker-and-cache.md`
-- Reverse proxies, public path, remote assets, and runtime serving:
-  - `references/30-proxies-public-path-and-remote-assets.md`
-- Verification, release checks, rollback, and deployment-safe closeout:
-  - `references/40-verification-and-rollback.md`
+## Navigation
 
-## Maintenance rules
+The router is `references/00-topic-map.md`. Open it, match your situation to one row, read that one file.
 
-- Keep this skill focused on frontend delivery and deploy safety.
-- Prefer one-hop references instead of growing this file.
-- Keep examples plain and portable; do not hard-code one repo unless the example is explicitly repo-scoped.
-- Re-check official sources before updating version, security, or current-behavior guidance.
-- If current OpenAI or Codex guidance affects tool usage or maintenance advice, re-check `$openai-docs` before updating this skill.
+Model selection and reasoning effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.

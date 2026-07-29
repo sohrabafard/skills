@@ -1,7 +1,12 @@
+### Codex-only UI metadata. No model key and no reasoning-effort key are emitted here.
+### Take both from $alaa-prompting-guide, references/50-effort-and-thinking.md,
+### at the time you run the lane. A pin written here goes stale silently and is
+### copied forward because it looks authoritative.
+
 interface:
   display_name: "Alaa Shaka Player"
-  short_description: "Shaka 5.1 migration and Quasar player pack"
-  default_prompt: "Use $alaa-shaka-player to plan or implement a Shaka 5.1 player migration in a Vue 3 + Quasar + Vite app."
+  short_description: "Shaka Player capability atlas for Quasar and Vue apps"
+  default_prompt: "Use $alaa-shaka-player to plan, implement, review, or debug Shaka Player work in a Vue 3 + Quasar + Vite app."
 
 policy:
   allow_implicit_invocation: true

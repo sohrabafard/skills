@@ -73,6 +73,12 @@ Rules that hold on the transitions:
   `alaa-data-layer references/30-concurrency-projections-and-pooling.md` — `/alaa-data-layer`
   (`$alaa-data-layer`).
 
+The browser-side outbox is `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`),
+`references/71-browser-outbox.md`. Its state set is deliberately different from this file's
+`pending | claimed | published`: a browser claim mutates a status field in place and is released
+only by a reaper, because the claiming context can cease to exist. `idempotencyKey` and at-least-once
+delivery are shared vocabulary; `sending`, the reaper, `conflict` and `abandoned` are browser-only.
+
 ## Relay tuning
 
 Two environment keys exist and no others: `OUTBOX_BATCH` (default `100`) and `OUTBOX_TICK` (default `500ms`)

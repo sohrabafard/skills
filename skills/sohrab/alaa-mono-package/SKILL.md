@@ -1,121 +1,44 @@
 ---
 name: alaa-mono-package
-description: "Use this skill when the task involves changes under `packages/*`, clean-island package lanes, package-local `AGENTS.md` instructions, or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact."
+description: "Use this skill when the task involves changes under `packages/*`, a package's `exports` map or public entrypoints, internal dependency specifiers, peer dependencies or a duplicated runtime, package CSS and asset emission, workspace build order, clean-island package lanes, package-local `AGENTS.md` instructions, or changes to how the root app consumes an internal package. Do not use it when the task is generic CI or deployment work with no package-boundary impact, or when the question is where a built artifact lands and how it is served, which belongs to alaa-frontend-devops."
 ---
-
-
-
 
 # Alaa Mono Package
 
-## Purpose
-
-Use this skill to protect workspace package boundaries in frontend monorepos.
-
-This skill owns:
-
-- `packages/*` consumption rules
-- clean-island package write boundaries
-- dist-only package entrypoints
-- peer dependency and dedupe expectations
-- package CSS and asset emission into the final browser build
-- verification of missing-chunk and missing-asset problems caused by package boundaries
-
-## When to use
-
-Use this skill when the task includes:
-
-- changes under `packages/*`
-- clean-island package lanes where only one package or package family is writable
-- changes to how the root app consumes an internal package
-- package build output or entrypoint changes
-- package CSS, font, image, or asset emission
-- missing assets or missing chunks related to internal packages
+Workspace package contracts: what a package declares, what it emits, and what therefore enters the application's bundling graph.
 
 ## When NOT to use
 
-Do not use this skill when:
+Stop and route when the task has **no package-boundary impact** — generic CI, container or deployment work — or when the question is where a built artifact lands, how it is served, how it is traced to a commit, or how it is rolled back. This skill owns what enters the bundling graph; the seam below names who owns the rest.
 
-- the task is generic CI or deployment work with no package-boundary impact
-- the task is frontend logic only inside the root app
-- the repo does not use workspace packages
+## Ownership and the seam
 
-## Quick start
+`alaa-mono-package` owns everything that determines what enters the bundling graph — a package's declared exports, its peer contract, its specifiers, and whether its CSS and assets are reachable from an entry — while `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns everything that happens to that graph's output after `build` exits: where it lands, how it is served, how it is traced to a commit, and how it is rolled back.
 
-1. Read the repo-local `AGENTS.md`.
-2. If the task touches or consumes a package, search for and read the nearest package-local `AGENTS.md` even when working from the root app.
-3. Capture the explicit writable package boundary before editing; when the user says "clean island", "only this package", "do not change other packages", or another agent owns sibling worktrees, treat sibling packages, the root app, `src/*`, legacy files, and root config as read-only unless the user widens scope.
-4. Read `references/00-source-map.md` when the task is version-sensitive, package-manager-sensitive, or security-sensitive.
-5. Read `references/10-package-boundary-and-entrypoints.md`.
-6. Load only the smallest additional reference file needed for the issue.
-7. Validate with a real build output check instead of trusting config alone.
+Exactly one rule straddles that seam: package assets in the final client asset output. This skill owns whether the asset is reachable from an entry (`references/30-assets-css-and-ssr-client-assets.md`); `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns whether the output landed where the deployment serves it (`alaa-frontend-devops` `references/10-build-contract-and-artifacts.md`). Neither restates the other.
 
-## Package-manager modes (detect first; never assume yarn)
+Every other owner this skill depends on is listed with its file path in `references/90-companion-boundary.md`. This skill states no version value of its own; it routes every range to its owner.
 
-Read the lockfile before giving any dependency-linking, command, or build-order advice — the manager decides the syntax:
+## Read the lockfile first
 
-- **pnpm** (`pnpm-lock.yaml` + `pnpm-workspace.yaml`): internal deps use the **`workspace:*`** protocol (`"@alaa/<x>": "workspace:*"`, or `workspace:^` for published packages). **Never write `link:` or a `file:`/relative path.** Members come from the `packages:` glob in `pnpm-workspace.yaml`. Commands: `pnpm --filter <pkg> <script>`, `pnpm -r <script>` (recursive, topological), `pnpm --filter "<pkg>..." build` (package + its dependents), `pnpm dlx`. pnpm's isolated (non-flat) `node_modules` blocks phantom deps, so declare every used dependency explicitly.
-- **yarn Berry (v2+)** (`.yarnrc.yml`): internal deps use `workspace:^` / `workspace:*`; commands are `yarn workspace <pkg> <script>` / `yarn workspaces foreach`.
-- **yarn classic (v1)** / **npm**: internal deps are `link:` / `file:` or `*` resolved by the `workspaces` field; commands are `yarn workspace <pkg> <script>` / `npm -w <pkg> run <script>`.
+Before writing any dependency specifier or running any workspace command, read the lockfile that exists in the repository. The manager decides the syntax, and a specifier written for the wrong manager installs a second copy instead of linking the workspace one. Detect; never assume. The protocols and filter syntax are `references/15-package-manager-modes.md`.
 
-**Migration rule:** when a package is ported from a different-manager repo, rewrite its internal specifiers to the TARGET manager before it lands. Porting into a pnpm repo means every `link:../x` / `link:packages/x` becomes `workspace:*`; carrying a `link:` into a pnpm workspace is a boundary defect, not a stylistic choice. Peer-dependency and `resolve.dedupe` rules (§20) still apply on top of this — the manager decides the *specifier*, not whether `vue`/`quasar` stay peers.
+## Three rules that never cost a hop
 
-## Build order
+1. **Never import `packages/<name>/src/**` from outside that package.** It works locally every time, which is why it survives review. What it silently bypasses, and how to enforce the ban, are in `references/10-package-boundary-and-entrypoints.md`.
+2. **`vue`, `quasar`, `vue-router`, and `pinia` are peers of every internal package, never dependencies**, and each must resolve to exactly one real path across the workspace.
+3. **A package is not done until every condition its `exports` declares has been imported under that condition.** A declared condition pointing at a file that is absent or throws produces no error in the package that declares it; it fails in the consumer. Run `scripts/verify-package-entrypoints.mjs`; exit code 2 means unbuilt or unreadable and is not a pass.
 
-When a package consumes another workspace package through a public entrypoint or export subpath, build upstream packages first and consumers second.
+## The clean-island lane guard
 
-- Derive order from the dependency graph: framework-free/core/model packages -> domain packages/adapters -> aggregate packages -> UI packages -> playground/root app.
-- Do not let source aliases, test aliases, or tsconfig paths hide missing upstream `dist`; package-local build/check scripts should either build required upstream packages first or fail with a clear message.
-- After building a consumer package, validate the built entrypoint from `dist` imports successfully, then check CSS/assets. This catches packages that pass source tests but fail as dist-only consumers.
-- In a pnpm workspace, `pnpm -r build` runs the whole graph in dependency (topological) order, and `pnpm --filter "<pkg>..." build` builds a package plus its dependents — prefer these over a hand-maintained order script.
+Apply this when the user says "clean island", "only this package", "do not change other packages", or when another agent owns a sibling lane.
 
-## Package-only lane guard
+1. Write down the allowed package path or package family before editing. Every path outside it — the root application, sibling packages, root configuration, the lockfile — is read-only until the user names an additional path.
+2. Inspect the changed-file list before and after, including untracked files.
+3. If a required fix lies outside the allowance, report the exact path and leave it unmade. Root-application validation runs as a consumer check without editing root-application code.
 
-Use this guard when a task is part of parallel package work or the user freezes the write surface to one package.
+## Navigation
 
-1. Write down the allowed package path or package family before editing.
-2. Inspect the live diff before and after changes with a changed-file list, including untracked files.
-3. If a required fix appears outside the allowed package, stop and report the exact outside file instead of editing it.
-4. Before final response, verify every changed file is inside the allowed package boundary or is an explicitly allowed package-owned doc/test/build artifact.
-5. If root-app validation is needed, run it as a consumer check without changing root-app code.
+The router is `references/00-topic-map.md`, and it routes both by what you are about to do and by the symptom you are seeing. Open it, match one row, read that one file.
 
-## Symptom map
-
-| Symptom                                       | Likely cause to check first                        |
-|-----------------------------------------------|----------------------------------------------------|
-| peer dependency conflict                      | package boundary or peer version contract drift    |
-| missing CSS in consumer app                   | asset emission or package export wiring            |
-| wrong SSR asset path                          | public-path or dist contract mismatch              |
-| duplicate runtime dependency                  | workspace hoisting or peer vs dependency confusion |
-| package works locally but fails after publish | dist-only artifact or export-map mismatch          |
-
-## Companion routing
-
-- Frontend implementation policy:
-  - pair with `$alaa-frontend-developer`
-- Build, artifact, or deployment contract issues:
-  - pair with `$alaa-frontend-devops`
-- Quasar config or Vite bundling behavior:
-  - pair with `$alaa-quasar-app-vite-v3`
-- Packages consumed by a Quasar app-vite v3 app (peer expectations: `vue-router >= 5`, `pinia ^2 || ^3`, Node 22+, Vite 8/Rolldown) or a v2->v3 migration touching `packages/*`:
-  - pair with `$alaa-quasar-app-vite-v3`
-
-## Reference navigation
-
-- Official-first source priority, freshness triggers, and community-troubleshooting boundary:
-  - `references/00-source-map.md`
-- Package boundaries, entrypoints, and dist-only consumption:
-  - `references/10-package-boundary-and-entrypoints.md`
-- Peer dependencies, dedupe, and package build output:
-  - `references/20-peer-deps-dedupe-and-build-output.md`
-- CSS, asset emission, and final browser asset placement:
-  - `references/30-assets-css-and-ssr-client-assets.md`
-- Audit steps and validation loop:
-  - `references/40-audit-and-verification.md`
-
-## Maintenance rules
-
-- Keep this skill about package contracts, not generic frontend logic.
-- Keep examples portable across monorepos.
-- Treat community package-manager notes as troubleshooting-only until official docs and local artifacts confirm them.
-- Re-check bundler and package-manager guidance before changing the dependency rules in this skill.
+Model selection and reasoning effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.

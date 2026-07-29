@@ -1,49 +1,61 @@
 # Component Library and Design-System Governance
 
-Use this file when building or evolving shared/reusable UI components, or when deciding how a design system lives and changes over time. This is what makes the system a system instead of a folder of pages.
+Read this file when building or evolving a shared component, or when deciding how a design system lives and changes over time. This is what makes the system a system instead of a folder of pages.
 
 ## When to promote a pattern to a shared component
 
-- Rule of three: the third real occurrence of a pattern earns a shared component; the first two stay local. Premature abstraction is as costly as copy-paste divergence.
-- Promote when the pattern carries design decisions (states, spacing, variants) that must stay synchronized; keep purely structural one-offs local.
-- Before promoting, design the full state coverage (`60-components-states-and-ux.md`) and pass the gates (`90-quality-gates-and-review.md`) — a shared component multiplies its defects.
+- **Rule of three:** the third real occurrence earns a shared component; the first two stay local. Premature abstraction costs as much as copy-paste divergence.
+- Promote when the pattern carries design decisions — states, spacing, variants — that must stay synchronized. Keep purely structural one-offs local.
+- Before promoting, design the full state coverage (`60-components-states-and-ux.md`, `15-designed-failure-states.md`) and pass the gates (`90-quality-gates-and-review.md`). A shared component multiplies its defects by its usage count.
 
-## Component API design (Vue)
+## Component API design
 
-- Variants are small closed sets mapped to tokens: `variant: 'primary' | 'secondary' | 'ghost' | 'destructive'`, `size: 'sm' | 'md' | 'lg'` drawn from the token scales. Consumers pick meaning; the component resolves visuals.
-- Never accept raw visual values as props (`color="#2563EB"`, `rounded="12px"`) — that reopens the raw-hex hole tokens closed. Escape hatch is `class`/`style` passthrough, used consciously.
-- Avoid boolean explosion (`primary`, `outlined`, `dense`, `flat` all together): mutually exclusive looks are one enum prop, not four booleans.
-- Slots for composition (content, icon, actions); props for configuration. Follow the Vue style guide via `$alaa-vue-typescript-clean-code` for naming, typing, and emits.
-- Multi-word names with one consistent app namespace per repo (e.g. `AppButton`, `UiCard`) — follow the repo's existing convention; never introduce a second one.
+- **Variants are small closed sets mapped to tokens:** `variant: 'primary' | 'secondary' | 'ghost' | 'destructive'`, `size: 'sm' | 'md' | 'lg'`, drawn from the token scales. Consumers pick meaning; the component resolves visuals.
+- **Never accept raw visual values as props** (`color="#2563EB"`, `rounded="12px"`). That reopens the raw-value hole tokens closed, one component at a time.
+- **The escape hatch has a boundary.** `class` and `style` passthrough may set **placement only**: margin, grid area, width, order, alignment. A passthrough that sets colour, background, radius, shadow, border, font size or font weight is a defect — add a variant instead. This is checkable by reading the call site, which "used consciously" was not.
+- **Avoid boolean explosion.** Mutually exclusive looks are one enum prop, not four booleans that can all be true at once.
+- **Slots for composition** (content, icon, actions); **props for configuration**. A prop that takes a chunk of content wants to be a slot.
+- **A direction-bearing icon is never a physical name in the prop.** `icon="next"` resolves; `icon="arrow-left"` does not. See `05-rtl-and-persian.md` section 2.
+- **Every prop that renders untrusted content is documented as such**, and the component states what it does with it (`25-untrusted-content-and-ui-authority.md`).
+- Multi-word names with one app namespace per repo (`AppButton`, `UiCard`). Follow the repo's existing convention; never introduce a second one.
+- Naming, typing, emits and composable shape are owned by `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`).
 
-## Quasar posture: wrap, don't fork
+## Quasar posture: wrap, do not fork
 
-- Build the app-family identity as one thin wrapper layer over Quasar components (tokens via `app.scss` + wrapper components for recurring configurations). Never fork Quasar component internals or restyle per usage.
-- If a wrapper only forwards props with no design decision, delete it — wrappers exist to encode decisions.
-- Component visuals come from the token layer; a shared component with hardcoded values is drift with a nice name.
+- Build the app-family identity as one thin wrapper layer over the framework's components: tokens plus wrapper components that encode recurring configurations. Never fork a component's internals, and never restyle per usage.
+- **If a wrapper only forwards props and encodes no design decision, delete it.** Wrappers exist to hold decisions, not to add a layer.
+- Component visuals come from the token layer. A shared component with hardcoded values is drift with a nice name.
+- Which framework component to wrap, and its exact API, is owned by `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`).
 
-## Documentation and discoverability
+## Documentation
 
-- Each shared component documents: purpose, variants and when to use each, state coverage, accessibility notes (focus, labels, keyboard), and one ✅/❌ usage pair. Keep it next to the code (docblock or co-located md; Storybook/Histoire only if the repo already uses it).
-- MASTER.md lists the shared components with one-line purposes so agents and humans find them before rebuilding them.
+Each shared component documents, next to its code: purpose; every variant and when to use each; state coverage including the failure states it handles; accessibility notes (focus behaviour, accessible name, keyboard); whether it renders untrusted content; and one correct and one incorrect usage example. `MASTER.md` lists the shared components with one-line purposes so an agent finds one before rebuilding it.
+
+The repository's own annotation and docblock conventions are owned by `/alaa-frontend-doc-annotations` (`$alaa-frontend-doc-annotations`); this file states only what must be recorded, not the format.
 
 ## Change management and drift control
 
-- Tokens change in one place and propagate; a visual refresh that edits components one by one is drift, not a refresh.
-- Never fork a shared component per page ("CheckoutButton" that is `AppButton` with one hardcoded color). Page-level needs become a variant, a page override in `design-system/pages/`, or a conscious local component — decided, not drifted.
-- Deprecate loudly: when a variant/component is replaced, mark it deprecated in its doc and MASTER.md, migrate usages, then delete. Two live generations of the same pattern is a defect.
-- Contract changes to widely-used shared components (renamed props, removed variants) are breaking changes: search all usages first, migrate in the same change, note it in MASTER.md.
+- **Tokens change in one place and propagate.** A visual refresh that edits components one by one is drift, not a refresh.
+- **Never fork a shared component per page.** A `CheckoutButton` that is `AppButton` with one hardcoded colour is the canonical example. A page-level need becomes a variant, a page override in `design-system/pages/`, or a deliberate local component — decided, never drifted.
+- **Deprecate loudly:** mark the replaced variant deprecated in its doc and in `MASTER.md`, migrate every usage, then delete it. Two live generations of one pattern is a defect.
+- **A contract change to a widely-used component is a breaking change:** search all usages first, migrate in the same change, record it in `MASTER.md`. What "breaking" obliges beyond that — versioning, notice, coordination across repos — is owned by `/alaa-project-constitution` (`$alaa-project-constitution`).
+- **Dead and near-dead tokens are drift too.** A token with zero usages is an abstraction nobody wanted; a token with one usage is a component token in the wrong place. Review both when the system is edited.
 
 ## Anti-patterns
 
-- Snowflake components: five nearly-identical cards because nobody checked the library first.
-- Prop APIs that mirror CSS instead of meaning (`bgColor`, `borderRadius` props).
-- A "design system" that is only a Figma/board artifact with no token or component counterpart in the repo.
-- Wrapping every Quasar component preemptively; abstraction without a decision to encode.
-- Silent divergence: editing a shared component's look for one page's need.
+- Snowflake components: five nearly-identical cards because nobody searched the library.
+- Prop APIs that mirror CSS instead of meaning (`bgColor`, `borderRadius`).
+- A `class` passthrough carrying a colour.
+- A "design system" that is only a design-tool artefact with no token or component counterpart in the repo.
+- Wrapping every framework component preemptively.
+- Silently editing a shared component's look for one page's need.
+- A component documented as "self-explanatory".
 
-## Pairing guidance
+## Pairing
 
-- State coverage and UX rules for the components themselves: `60-components-states-and-ux.md`
-- Token layer these components consume: `20-design-tokens-and-theming.md`
-- Code quality, typing, composables: `$alaa-vue-typescript-clean-code`; exact Quasar APIs: `$alaa-quasar-app-vite-v3`
+- Interaction states and forms: `60-components-states-and-ux.md`
+- Data and failure states: `15-designed-failure-states.md`
+- The token layer these components consume: `20-design-tokens-and-theming.md`
+- Untrusted-content props: `25-untrusted-content-and-ui-authority.md`
+- Direction-bearing props: `05-rtl-and-persian.md`
+- Code quality, typing, composables: `/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`)

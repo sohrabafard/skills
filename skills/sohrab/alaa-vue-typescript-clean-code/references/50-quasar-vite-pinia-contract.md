@@ -1,48 +1,25 @@
-# Quasar, Vite, Pinia, router, SSR, and PWA contract
+# Quasar, Vite, Pinia, and router contract
 
-## Quasar SFCs
+The Vue-shaped rules for the app shell. Quasar CLI semantics, `quasar.config` options, app-vite line
+detection, service-worker depth, and browser-permission flows are
+`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`) and are not decided here.
 
-Use Composition API with `<script setup lang="ts">` for new SFCs. Use Quasar components directly unless a wrapper creates a stable design-system contract.
+## Quasar components and boot files
 
-Do:
+Use Quasar components directly. Wrap one only to create a stable design-system contract — a wrapper that
+just renames props adds a file, a test, and a version to maintain, and hides the upstream documentation
+from the next reader.
 
-```vue
-<QBtn
-  color="primary"
-  :loading="isSubmitting"
-  label="Save"
-  @click="submit"
-/>
-```
+Use `useQuasar()` inside setup; register app-wide plugins through `quasar.config.*`.
 
-Do not:
+A boot file initializes app-level dependencies only: HTTP client setup, Pinia, router, and plugin
+registration, session restore, i18n. A feature workflow or page-specific logic in a boot file runs on every
+page load of the app, including the ones that do not need it, and is a review failure.
 
-- Wrap every Quasar component just to rename props.
-- Put business logic in Quasar table slot templates.
-- Depend on undocumented Quasar DOM internals.
+## SSR safety — the shape rule
 
-## Quasar plugins and boot files
-
-Use `quasar.config.*` for app-wide Quasar plugins. Use `useQuasar()` inside setup.
-
-Boot files are for initialization only:
-
-- HTTP client setup
-- Pinia/router/plugin registration
-- auth/session restore
-- i18n setup
-- global app properties when unavoidable
-
-Do not:
-
-- Put feature workflows or page-specific business logic in boot files.
-- Access browser-only APIs in universal boot files without client guards.
-
-## SSR safety
-
-SSR-capable code must not touch browser globals during render.
-
-Do:
+**A browser global is read inside `onMounted`, inside an explicitly client-only boot file, or behind the
+build-time client guard — never at module top level, and never during render.**
 
 ```ts
 onMounted(() => {
@@ -50,36 +27,19 @@ onMounted(() => {
 })
 ```
 
-or guard (match the installed `@quasar/app-vite` line — the constant differs):
+The guard *constant* differs by `@quasar/app-vite` line, and picking it is not this skill's decision: read
+the installed line and the correct constant from
+`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`). Do not copy a guard constant from memory or from
+another repository.
 
-```ts
-// app-vite v3 (stable line since 3.0.1):
-if (import.meta.env.QUASAR_CLIENT) {
-  // browser-only code
-}
+Per-request state is never stored in a module-level singleton (`44-creational-and-async-idioms.md`).
 
-// app-vite v2 (maintenance line):
-if (process.env.CLIENT) {
-  // browser-only code
-}
-```
-
-Do not:
-
-- Read `window`, `document`, `navigator`, `localStorage`, `sessionStorage`, or `matchMedia` at module top level.
-- Store per-request state in singletons.
-
-## Large lists
-
-- Never render unbounded `v-for` lists. Any dataset that can grow uses QTable server-side pagination, `QVirtualScroll`, or an equivalent virtualization/pagination strategy.
-- Choose deliberately: server-side pagination when the backend can page and filter; virtual scrolling for large already-loaded client datasets; infinite scroll only with a bounded in-memory window.
-- Filtering/sorting of large lists belongs server-side or in memoized computed values, never inline in templates.
+SSR authentication and session handling, PWA and offline policy, and Web Vitals are
+`/alaa-frontend-developer` (`$alaa-frontend-developer`). A service-worker change is verified per
+`/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`); this skill does not accept a service-worker change
+as validated by typecheck and lint alone.
 
 ## Pinia
-
-Use Pinia for shared mutable state. Pinia 3+ supports Vue 3 only and removes the `defineStore({ id: ... })` object form — use `defineStore('id', ...)` as shown below.
-
-Do:
 
 ```ts
 export const useCourseStore = defineStore('course', () => {
@@ -97,54 +57,36 @@ export const useCourseStore = defineStore('course', () => {
 })
 ```
 
-Rules:
-
-- Store ID is unique and stable.
-- Store scope is focused by domain/feature.
-- Actions own shared-state mutations and side effects.
-- Setup stores return all state needed by SSR/devtools/plugins.
+- The store id is unique and stable. It is a persistence and devtools key, so renaming it is a breaking
+  change.
+- Scope is one domain or feature. One god store makes every feature's tests depend on every other feature.
+- Actions own shared-state mutations and side effects; a component does not mutate a shared array directly
+  where an action exists.
+- A setup store returns everything SSR, devtools, and plugins need. State not returned is invisible to
+  hydration, and the symptom is a value that is correct on the server and empty in the browser.
 - Stores do not import components.
-
-Do not:
-
-- Create one god store.
-- Let components directly mutate shared arrays/objects when an action is required.
-- Hide store state by not returning it from setup stores.
+- The Pinia major gate, including which `defineStore` signature survives, is
+  `20-typescript-composition-contract.md`.
 
 ## Router
 
-- Lazy-load route components unless they are critical first-screen code.
-- Declare each route's auth/permission posture in typed route `meta` (`requiresAuth`, required permissions); guards read the meta and run as an explicit ordered chain (auth → permission → data preconditions). Per-component scattered auth checks are a review failure — a route whose trust posture cannot be read from its route record is undeclared.
-- Keep route guards small; delegate auth and permissions decisions to services/stores.
-- Type route params at the component boundary.
-- Avoid fetching the same data redundantly in multiple nested components.
+- Lazy-load route components unless they are critical first-screen code, and use dynamic imports for heavy
+  optional components.
+- Declare each route's auth and permission posture in typed route `meta`, and let guards read the meta as
+  an explicit ordered chain. A route whose trust posture cannot be read from its route record is
+  undeclared, and scattered per-component auth checks are a review failure. **What a guard's conclusion is
+  worth — and specifically that it is a UI decision and not an authorization decision — is
+  `72-frontend-security-binding.md`**, with the doctrine owned by
+  `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
+- Type route params at the component boundary; `route.params.id` is `string | string[]` until you narrow it.
+- Do not fetch the same data redundantly in several nested components on one route.
+- Route `meta` is typed by augmentation, per `24-typescript-project-and-antipatterns.md`.
 
 ## Vite
 
-- Keep aliases minimal and aligned with tsconfig.
-- Use dynamic imports for heavy optional components.
-- Keep env access behind typed config modules.
-- Do not expose secrets through `VITE_*` variables; anything shipped to client is public.
-
-## PWA/service workers
-
-When touching PWA behavior:
-
-- Confirm cache strategy and invalidation.
-- Avoid caching authenticated or user-specific API responses unless explicitly designed.
-- Version caches and handle update prompts where user data could be stale.
-- Validate install/offline behavior in browser devtools when possible.
-
-## Browser APIs
-
-Wrap browser APIs in composables or facades:
-
-- storage
-- resize/intersection observers
-- media devices
-- clipboard
-- notifications
-- web workers
-- IndexedDB
-
-All wrappers must handle absence, permission denial, cleanup, and SSR safety.
+- Keep aliases minimal and identical to the `tsconfig` paths, so the editor, the typechecker, and the
+  bundler agree.
+- Keep environment access behind one typed config module rather than reading `import.meta.env` across the
+  codebase; the env type declaration is in `24-typescript-project-and-antipatterns.md`.
+- Which variables may exist, and the rule that a `VITE_*` value is public, are
+  `72-frontend-security-binding.md`.

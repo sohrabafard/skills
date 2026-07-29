@@ -1,6 +1,6 @@
 # Authority and installed API lookup
 
-Use for exact Quasar syntax or repository/skill/upstream disagreement. This control plane stores durable workflow, deltas, heuristics, guardrails, and high-value examples—not a frozen API copy; exact availability belongs to the target's installed line.
+You are about to assert an exact prop, event, slot, method, directive value, or plugin option name, or the repository, this skill, and upstream disagree. This control plane stores durable workflow, deltas, heuristics, guardrails, and high-value examples—not a frozen API copy; exact availability belongs to the target's installed line.
 
 | Question | Authority | Fallback |
 |---|---|---|
@@ -16,7 +16,7 @@ On disagreement, report drift and use the authority for that question; never sil
 
 1. Find app root; read lockfile and `package.json`.
 2. Confirm installed `@quasar/app-vite` and `quasar`; a declared range is not installed-version proof.
-3. For components/directives/plugins, run `scripts/query-installed-quasar-api.mjs` with minimal filters.
+3. For components, directives, and plugins, run `node <skill-dir>/scripts/query-installed-quasar-api.mjs` with minimal filters. It takes `--help` and `--self-test`; exit code 2 means the bridge could not run, which is never a clean result.
 4. `-f` narrows; it never proves completeness. Query concepts separately or retry unfiltered—nested plugin config/method-option objects may not appear under `-p`.
 5. For composables/utils, inspect installed exports/types plus version-matched docs; `quasar describe` does not cover them.
 6. Use atlases for intent, alternatives, gotchas, a11y, performance, and vocabulary.

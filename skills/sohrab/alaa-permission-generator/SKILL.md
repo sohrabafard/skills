@@ -112,6 +112,13 @@ from this skill, which is generated-adjacent source a service does not edit loca
 - The canonical implementations carry the encoded-length cap that `references/shared-consumer-contract.md` requires, as
   a fallback bound plus an explicit-cap entry point. The value a service enforces is owned by
   `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
+- **The frontend is a consumer of `assets/permission-bitmap/permission-bitmap.ts`, never the author of a second
+  decoder.** A client-side permission read is a UI hint and never an authorization decision:
+  `alaa-vue-typescript-clean-code references/72-frontend-security-binding.md` — `/alaa-vue-typescript-clean-code`
+  (`$alaa-vue-typescript-clean-code`) — and
+  `alaa-ui-ux-design-system references/25-untrusted-content-and-ui-authority.md` — `/alaa-ui-ux-design-system`
+  (`$alaa-ui-ux-design-system`) — both state that framing, and the affordance rule (hide, disable-with-reason, or
+  show-and-fail) is owned by the design-system skill.
 
 The durable fix is for the catalog tool to emit the decoder beside the map, so there is one source rather than one
 source plus a propagation discipline. `references/catalog-decoder-emission-proposal.md` states that change request, what

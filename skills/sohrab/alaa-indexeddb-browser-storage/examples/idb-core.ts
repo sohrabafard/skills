@@ -1,9 +1,15 @@
 /**
- * Minimal IndexedDB helpers.
- * These are examples for agents to adapt, not a required library.
+ * Minimal IndexedDB helpers. Examples for agents to adapt, not a required library.
+ * Requires TypeScript >= 5.2 for `IDBTransactionOptions` in `lib.dom`.
+ * Rules enforced here: references/50-transactions-performance-and-query-patterns.md
  */
 
-export type UpgradeHandler = (db: IDBDatabase, tx: IDBTransaction, oldVersion: number, newVersion: number | null) => void;
+export type UpgradeHandler = (
+  db: IDBDatabase,
+  tx: IDBTransaction,
+  oldVersion: number,
+  newVersion: number | null,
+) => void;
 
 export function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -12,6 +18,7 @@ export function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
   });
 }
 
+/** Resolve on transaction completion, never on request success. */
 export function txDone(tx: IDBTransaction): Promise<void> {
   return new Promise((resolve, reject) => {
     tx.oncomplete = () => resolve();
@@ -24,41 +31,105 @@ export function isQuotaExceededError(error: unknown): boolean {
   return error instanceof DOMException && error.name === 'QuotaExceededError';
 }
 
-export async function openIndexedDb(options: {
+/** The failure classes of references/31-quota-exceeded-and-cleanup.md, as a discriminant. */
+export type StorageFailureClass =
+  | 'quota-exceeded'
+  | 'constraint'
+  | 'transaction-inactive'
+  | 'aborted'
+  | 'unavailable'
+  | 'unknown';
+
+export function classifyStorageFailure(error: unknown): StorageFailureClass {
+  if (!(error instanceof DOMException)) return 'unknown';
+  switch (error.name) {
+    case 'QuotaExceededError':
+      return 'quota-exceeded';
+    case 'ConstraintError':
+      return 'constraint';
+    case 'TransactionInactiveError':
+      return 'transaction-inactive';
+    case 'AbortError':
+      return 'aborted';
+    case 'NotSupportedError':
+    case 'InvalidStateError':
+    case 'SecurityError':
+      return 'unavailable';
+    default:
+      return 'unknown';
+  }
+}
+
+/** Only these two are worth a single retry. See references/31, class 4. */
+export function isRetryableStorageFailure(kind: StorageFailureClass): boolean {
+  return kind === 'quota-exceeded' || kind === 'unknown';
+}
+
+export interface OpenOptions {
   name: string;
-  version: number;
-  upgrade: UpgradeHandler;
+  /**
+   * Omit the version in a service worker: it must never initiate an upgrade.
+   * references/41-multitab-versionchange-and-locks.md
+   */
+  version?: number;
+  upgrade?: UpgradeHandler;
   onBlocked?: () => void;
   onVersionChange?: () => void;
   onClose?: () => void;
-}): Promise<IDBDatabase> {
+}
+
+export async function openIndexedDb(options: OpenOptions): Promise<IDBDatabase> {
   if (!('indexedDB' in globalThis)) {
     throw new DOMException('IndexedDB is not available', 'NotSupportedError');
   }
 
-  const request = indexedDB.open(options.name, options.version);
+  const request =
+    options.version === undefined
+      ? indexedDB.open(options.name)
+      : indexedDB.open(options.name, options.version);
 
+  // A throw inside the event handler escapes into event dispatch. Capture it and
+  // reject the open explicitly instead of relying on an incidental abort.
+  let upgradeError: unknown;
   request.onupgradeneeded = (event) => {
-    const db = request.result;
-    const tx = request.transaction;
-    if (!tx) throw new Error('Missing IndexedDB upgrade transaction');
-    options.upgrade(db, tx, event.oldVersion, event.newVersion);
+    try {
+      const tx = request.transaction;
+      if (!tx) throw new Error('Missing IndexedDB upgrade transaction');
+      options.upgrade?.(request.result, tx, event.oldVersion, event.newVersion);
+    } catch (error) {
+      upgradeError = error;
+      request.transaction?.abort();
+    }
   };
 
   request.onblocked = () => options.onBlocked?.();
 
-  const db = await requestToPromise(request);
+  let db: IDBDatabase;
+  try {
+    db = await requestToPromise(request);
+  } catch (error) {
+    throw upgradeError ?? error;
+  }
+  if (upgradeError) {
+    db.close();
+    throw upgradeError;
+  }
 
+  // Close first, unconditionally. Any prompt happens after, or the upgrade in the
+  // other context stays blocked for as long as the user ignores it.
   db.onversionchange = () => {
     db.close();
     options.onVersionChange?.();
   };
-
   db.onclose = () => options.onClose?.();
 
   return db;
 }
 
+/**
+ * The callback must be synchronous: an await inside an open transaction makes it
+ * go inactive. Returning a Promise aborts rather than failing later and elsewhere.
+ */
 export async function withTransaction<T>(
   db: IDBDatabase,
   stores: string | string[],
@@ -69,8 +140,6 @@ export async function withTransaction<T>(
   const tx = createTransaction(db, stores, mode, txOptions);
   const result = fn(tx);
 
-  // Transaction callbacks must be synchronous. Await external work before
-  // creating the transaction; then queue IDB requests inside the callback.
   if (result && typeof (result as PromiseLike<unknown>).then === 'function') {
     tx.abort();
     throw new Error('IndexedDB transaction callback must not return a Promise');
@@ -89,16 +158,22 @@ function createTransaction(
   try {
     return txOptions ? db.transaction(stores, mode, txOptions) : db.transaction(stores, mode);
   } catch {
-    // Older browsers may not accept transaction options.
+    // Older engines reject the options argument. Fall back to the engine default.
     return db.transaction(stores, mode);
   }
 }
 
+/**
+ * Bounded read. O(log n + count) via getAll, or O(log n + count) via cursor where
+ * getAll is unavailable. Never unbounded: references/50, complexity budgets.
+ */
 export async function getAllBounded<T>(
   source: IDBObjectStore | IDBIndex,
   query?: IDBValidKey | IDBKeyRange,
   count = 100,
 ): Promise<T[]> {
+  if (count <= 0) throw new RangeError('getAllBounded requires a positive count');
+
   if ('getAll' in source && typeof source.getAll === 'function') {
     return requestToPromise(source.getAll(query as never, count)) as Promise<T[]>;
   }
@@ -119,6 +194,12 @@ export async function getAllBounded<T>(
   });
 }
 
+/** The range that selects every record under one account prefix. references/50. */
+export function accountRange(accountKey: string): IDBKeyRange {
+  return IDBKeyRange.bound([accountKey], [accountKey, []]);
+}
+
+/** Tier-0 detection: the global existing is not evidence the store works. */
 export async function probeIndexedDbWrite(dbName = '__idb_probe__'): Promise<boolean> {
   if (!('indexedDB' in globalThis)) return false;
 
@@ -126,9 +207,9 @@ export async function probeIndexedDbWrite(dbName = '__idb_probe__'): Promise<boo
     const db = await openIndexedDb({
       name: dbName,
       version: 1,
-      upgrade(db) {
-        if (!db.objectStoreNames.contains('probe')) {
-          db.createObjectStore('probe', { keyPath: 'id' });
+      upgrade(database) {
+        if (!database.objectStoreNames.contains('probe')) {
+          database.createObjectStore('probe', { keyPath: 'id' });
         }
       },
     });
@@ -141,6 +222,7 @@ export async function probeIndexedDbWrite(dbName = '__idb_probe__'): Promise<boo
     indexedDB.deleteDatabase(dbName);
     return true;
   } catch {
+    // Private mode, a blocking policy, or a full disk. All mean the same to the caller.
     return false;
   }
 }

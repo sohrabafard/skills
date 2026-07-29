@@ -1,15 +1,35 @@
+# Codex-only surface. Trigger tokens here stay $-form by design; every other file in
+# this pack carries both `/name` and `$name` at each call site.
 interface:
-  display_name: "Alaa IndexedDB Browser Storage"
-  short_description: "IndexedDB, browser storage, quota, offline sync"
-  default_prompt: "Use $alaa-indexeddb-browser-storage to design IndexedDB/browser-storage features that preserve Alaa SDK-owned auth, gateway trust boundaries, quota handling, migrations, and testing."
+  display_name: "Alaa IndexedDB and Browser Storage"
+  short_description: "Browser storage: IndexedDB, quota, eviction, migrations"
+  default_prompt: "Use $alaa-indexeddb-browser-storage for browser-side persistence: IndexedDB schema and migrations, origin quota and budgets, best-effort versus persistent storage, eviction and recovery, multi-tab and service-worker concurrency, index and cursor cost, and which data classes may land on a device. State the bound on every read and the failure class of every write."
 
 policy:
   allow_implicit_invocation: true
   primary_domains:
     - indexeddb
     - browser-storage
-    - offline-state
-    - local-cache
-    - outbox-sync
-    - quota-eviction
-    - client-storage-security
+    - storage-quota-and-eviction
+    - client-schema-migration
+    - multitab-and-service-worker-concurrency
+    - offline-cache-outbox-and-media-store
+    - client-data-classification
+  # Without these, this skill fires on every neighbouring skill's tasks.
+  not_this_skill:
+    - domain: service-worker routing, Cache API, Workbox, PWA update flow
+      route_to: $alaa-quasar-app-vite-v3
+    - domain: what a media player stores, fetches and licenses; shaka.offline surface
+      route_to: $alaa-shaka-player
+    - domain: token, session and trusted-header handling
+      route_to: $alaa-trust-gateway-auth
+    - domain: server-side store selection, query shape, indexes
+      route_to: $alaa-data-layer
+    - domain: retry, backoff, timeout and degradation doctrine
+      route_to: $alaa-reliability-sla
+    - domain: the server-side outbox, its row states, dedupe and DLQ replay
+      route_to: $alaa-async-messaging
+    - domain: every registered name and platform value
+      route_to: $alaa-services-contract
+    - domain: model and effort
+      route_to: $alaa-prompting-guide

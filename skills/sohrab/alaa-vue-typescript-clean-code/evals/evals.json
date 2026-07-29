@@ -12,7 +12,7 @@
    "id": 1,
    "eval_name": "sdk-port-injection",
    "prompt": "Our Vue 3 + Quasar app calls a vendor upload SDK (window-global, callback-based, its own error codes) directly from four components, and tests currently cannot run without the real SDK. Wrap it properly and migrate one component as an example. Write the files under outputs/.",
-   "expected_output": "One small typed port (interface) owned by the app; an adapter converting the SDK's callbacks to promises and translating its error codes into typed app errors; injection via a typed Symbol key (or DI-equivalent) so a fake can implement the port in tests; the migrated component depends only on the port; cleanup/cancellation handled; no SDK types or globals leaking into components.",
+   "expected_output": "One small typed port (interface) owned by the app and shaped by what the UI needs rather than by the SDK's method list; an adapter converting the SDK's callbacks to promises and translating its error codes into typed app errors; the adapter is the only file permitted an `any` and it names the library and version in a comment; injection via a typed Symbol key so a fake can implement the port in tests; the migrated component depends only on the port; cleanup and cancellation handled; no SDK types or globals leaking into components.",
    "files": []
   },
   {
@@ -26,7 +26,42 @@
    "id": 3,
    "eval_name": "alaa-observed-patterns-gate",
    "prompt": "Add a 'transfer credit' flow page to our Alaa-style Quasar app: it needs a view mapper from the backend DTO, a flow composable coordinating steps (validate, preview, confirm), a Pinia store slice, and navigation to a result screen. Follow our established repo patterns. Write the files under outputs/.",
-   "expected_output": "Reads and applies the Alaa observed patterns reference: PRVM-style field resolution in the view mapper (no shadow adapters), orchestrator/flow composable owning step coordination with mediator-blind children, typed navigation intents rather than raw router pushes scattered in children, failure classification for error handling, teardown guards on subscriptions/watchers; strict typing throughout; violations of any observed antipattern treated as blocking.",
+   "expected_output": "Reads and applies the Alaa observed patterns reference: PRVM-style field resolution in the view mapper (no shadow adapters), orchestrator/flow composable owning step coordination with mediator-blind children, typed navigation intents rather than raw router pushes scattered in children, failure classification before any optimistic fallback, teardown guards on every exposed async surface including read controllers; strict typing throughout; violations of any observed antipattern treated as blocking.",
+   "files": []
+  },
+  {
+   "id": 4,
+   "eval_name": "negative-trigger-backend-only",
+   "prompt": "Our Laravel API's invoice endpoint is slow: the controller runs a query inside a foreach over line items, and the Postgres index on invoice_lines(invoice_id) may be missing. Optimize the query and the controller. There is no frontend change in this task.",
+   "expected_output": "Declines to apply this skill and says why in one line: the task changes no Vue, TypeScript, component, store, route, or frontend contract, which is the stated When-NOT-to-use boundary. Routes the work instead: /alaa-php-clean-code or /alaa-laravel-architecture for the controller, /alaa-data-layer for the query and index, /alaa-algorithms-data-structures for the N+1. Does NOT produce Vue guidance, does NOT invent a frontend angle to stay relevant, and does NOT emit the size budgets, SOLID mapping, or pattern catalog. Naming both trigger forms for each routed skill is correct; naming a model is not.",
+   "files": []
+  },
+  {
+   "id": 5,
+   "eval_name": "double-submit-and-abort-race",
+   "prompt": "Our Quasar checkout page has two live bugs. A fast double-click on the Pay button creates two orders. And the coupon-code field fires a validation request per keystroke, so an older response sometimes overwrites a newer one and shows the wrong discount. Fix both. Write the files under outputs/, with tests.",
+   "expected_output": "Double submit: one pending promise per action key held by the composable that owns the verb, so the second call does not start a second request; the trigger disabled for the whole in-flight window and re-enabled only in finally; the idempotency key question routed to /alaa-reliability-sla ($alaa-reliability-sla) rather than invented, and no retry count, backoff, or timeout number chosen locally. Coupon field: debounce living in the composable rather than the template, previous request aborted via AbortController before the replacement starts, isAbortError checked first in the catch so a cancelled request writes no error state, timer and controller disposed on unmount. Tests fail when the dedupe, the abort, or the teardown guard is removed, and fake timers are used for the debounce.",
+   "files": []
+  },
+  {
+   "id": 6,
+   "eval_name": "v-html-untrusted-content",
+   "prompt": "Product wants course descriptions to support rich text. Instructors type them in a WYSIWYG editor and the API returns them as an HTML string. Render them on the course page in our Quasar app. Write the files under outputs/.",
+   "expected_output": "Treats instructor-supplied HTML as untrusted regardless of the editor. States that v-html sets innerHTML and does not escape, and prefers a non-HTML rendering path (structured data or a restricted Markdown/allowed-node renderer) where it fits. If raw HTML is genuinely required, routes through the repository's single sanctioned sanitiser path and names /alaa-security-review ($alaa-security-review) as the owner of which sanitiser that is; refuses to hand-write a regex, tag blocklist, or attribute stripper; sanitises at render rather than only at write time. Does not conclude that a WYSIWYG, a backend validation step, or a trusted-author assumption makes the content safe.",
+   "files": []
+  },
+  {
+   "id": 7,
+   "eval_name": "route-to-owner-not-decided-here",
+   "prompt": "Add an activity feed to our Quasar dashboard. It should page through /api/activity, retry failed page loads a couple of times, cache pages for a while so back-navigation is instant, and show a permission-gated 'moderate' button on each row. Give me the composable and the component.",
+   "expected_output": "Produces the Vue shape and explicitly declines to decide four things locally, naming an owner for each with both trigger forms: the paging contract and cursor to /alaa-keyset-pagination ($alaa-keyset-pagination); the retry count, backoff, and timeout to /alaa-reliability-sla ($alaa-reliability-sla) with the values in /alaa-services-contract ($alaa-services-contract); the cache TTL value to /alaa-services-contract while keeping the cache as an adapter-layer decorator with a user- and tenant-scoped key; and the permission read framed as a UI hint that never authorizes, with the bitmap contract and decoder cited to /alaa-permission-generator ($alaa-permission-generator) and never reimplemented. Choosing a retry count, a page size, or a TTL number in the produced code is a failure even if the number is reasonable.",
+   "files": []
+  },
+  {
+   "id": 8,
+   "eval_name": "over-budget-file-must-not-grow",
+   "prompt": "src/composables/useEnrollmentFlow.ts is already 612 lines. Add one more thing to it: a 'resend confirmation email' action with its own pending and error state, wired to enrollmentApi.resendConfirmation(). It is only about 30 lines, just append it at the end.",
+   "expected_output": "Refuses to grow the file. States the rule as a rule, not a preference: a file already over the 400-line budget does not grow by even one line. Extracts the new responsibility into its own composable under budget and composes it, or if extraction is genuinely impossible, stops and reports the blocker with the file and its current line count. Does not append the code with an explanatory comment, a TODO, or a 'documented exception' note; does not silently split unrelated parts of the file beyond the touched responsibility; and does not treat the user's 'just append it' as authorization to bypass the budget.",
    "files": []
   }
  ]

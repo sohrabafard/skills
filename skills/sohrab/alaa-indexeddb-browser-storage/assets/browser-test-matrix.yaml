@@ -1,25 +1,80 @@
-last_researched: "2026-06-29"
-policy: "Use capability detection first; use this matrix to choose real test lanes."
+last_researched: "2026-07-28"
+policy: >-
+  Capability detection decides behaviour at runtime; this matrix decides which real
+  browsers a change must run in before it merges. Each lane names the tiers it can
+  observe and the feature-detect targets it covers, so
+  scripts/capability_contract_conformance.py can join it to capability-tier-contract.json.
+  A lane that cannot be run reports SKIP, never PASS.
+proof_levels:
+  note: >-
+    Levels are /alaa-testing-strategy ($alaa-testing-strategy). Level 2 is
+    examples/vitest-idb-pattern.test.ts, level 3 is the conformance harness, level 4
+    is examples/playwright-quota-smoke.spec.ts, level 5 is the device lanes below.
 lanes:
   - name: chromium-desktop-stable
+    level: 4
     browsers: ["Chrome stable", "Edge stable"]
+    tiers: [0, 1, 2, 3]
+    covers_features:
+      - "indexedDB open/write"
+      - "navigator.storage.estimate"
+      - "navigator.storage.persist"
+      - "navigator.storage.persisted"
+      - "IDBObjectStore.getAll"
+      - "IDBObjectStore.getAllKeys"
+      - "IDBObjectStore.getAllRecords"
+      - "transaction durability options"
+      - "indexedDB.databases"
+      - "BroadcastChannel"
+      - "navigator.locks"
+      - "OPFS"
+      - "worker IndexedDB"
+      - "Background Sync"
+      - "Storage Buckets"
+      - "service worker present"
     tests:
       - fresh-install
       - schema-upgrade
       - blocked-upgrade-two-tabs
+      - service-worker-and-tab-concurrent-write
       - quota-error-cleanup
       - outbox-offline-online
+      - outbox-orphan-reap
+      - logout-purge-indexed
       - persistent-storage-request
   - name: firefox-desktop-stable-esr
-    browsers: ["Firefox stable", "Firefox ESR when enterprise/school support matters"]
+    level: 5
+    browsers: ["Firefox stable", "Firefox ESR when enterprise or school support matters"]
+    tiers: [1, 2]
+    covers_features:
+      - "indexedDB open/write"
+      - "navigator.storage.persist"
+      - "navigator.storage.persisted"
+      - "IDBObjectStore.getAllRecords"
+      - "transaction durability options"
+      - "indexedDB.databases"
+      - "Background Sync"
     tests:
       - fresh-install
       - schema-upgrade
-      - persistent-storage-permission
+      - persistent-storage-permission-prompt
       - relaxed-durability-assumptions
       - outbox-offline-online
   - name: safari-macos
-    browsers: ["Safari current", "Safari previous major when supported"]
+    level: 5
+    browsers: ["Safari current", "Safari previous major where supported"]
+    tiers: [0, 2, 3]
+    covers_features:
+      - "indexedDB open/write"
+      - "navigator.storage.estimate"
+      - "IDBObjectStore.getAll"
+      - "IDBObjectStore.getAllKeys"
+      - "IDBObjectStore.getAllRecords"
+      - "BroadcastChannel"
+      - "navigator.locks"
+      - "OPFS"
+      - "Storage Buckets"
+      - "service worker present"
     tests:
       - fresh-install
       - schema-upgrade
@@ -27,35 +82,63 @@ lanes:
       - storage-estimate
       - private-browsing
       - inactivity-return-check
+      - transaction-inactivity-timing
   - name: ios-ipados-webkit
-    browsers: ["iOS Safari", "iPadOS Safari", "third-party iOS browser if product supports it"]
+    level: 5
+    browsers: ["iOS Safari", "iPadOS Safari", "third-party iOS browser where the product supports it"]
+    tiers: [0, 2, 3]
+    covers_features:
+      - "indexedDB open/write"
+      - "navigator.storage.persist"
+      - "navigator.storage.persisted"
+      - "OPFS"
+      - "Background Sync"
     tests:
       - fresh-install
       - offline-critical-flow
+      - offline-media-download-and-evict
       - storage-pressure-manual
       - private-browsing
       - app-background-foreground
+      - seven-day-no-interaction-truncation
   - name: android
-    browsers: ["Chrome Android", "Android WebView/Capacitor runtime when applicable"]
+    level: 5
+    browsers: ["Chrome Android", "Android WebView or Capacitor runtime where applicable"]
+    tiers: [1, 2]
+    covers_features:
+      - "indexedDB open/write"
+      - "navigator.storage.estimate"
     tests:
       - fresh-install
       - low-storage-device
       - background-foreground
       - outbox-retry
   - name: private-incognito
+    level: 4
     browsers: ["Chrome Incognito", "Edge InPrivate", "Firefox Private", "Safari Private"]
+    tiers: [0]
+    covers_features:
+      - "indexedDB open/write"
+      - "navigator.storage.estimate"
+      - "private mode weak signal"
     tests:
       - idb-open-write-probe
       - reduced-quota-behavior
       - session-end-data-loss
       - offline-promise-disabled
   - name: low-end-device
-    browsers: ["low-end Android", "old iPad if supported"]
+    level: 5
+    browsers: ["low-end Android", "older iPad where supported"]
+    tiers: [1]
+    covers_features:
+      - "indexedDB open/write"
+      - "worker IndexedDB"
     tests:
       - db-open-performance
       - batch-write-performance
-      - cursor-pagination
+      - cursor-pagination-bound
       - quota-cleanup
+      - worker-offload-threshold-16ms
 required_for_storage_heavy_release:
   - chromium-desktop-stable
   - firefox-desktop-stable-esr

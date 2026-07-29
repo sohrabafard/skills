@@ -1,61 +1,64 @@
-# Layout, Landing Structure, and Information Architecture
+# Layout, Landing Structure and Information Architecture
 
-Use this file for page layout rules, responsive behavior, page-type defaults, and landing-page structure.
+Read this file when setting a breakpoint, a container width, a section order, or the placement of a call to action.
 
 ## Layout defaults
 
-- Mobile-first; systematic breakpoints (375 / 768 / 1024 / 1440) — never per-component ad-hoc breakpoints.
-- Consistent max content width per page type on desktop; readable measure inside it. No horizontal scroll at any supported width; verify 375px explicitly.
-- 4/8px spacing rhythm from the token scale (`20-design-tokens-and-theming.md`); vertical rhythm tiers (e.g. 16/24/32/48) by hierarchy level — sibling sections get equal spacing.
-- Gutters grow with viewport; edge-to-edge only for deliberate full-bleed sections.
-- `min-h-dvh` over `100vh`; `viewport` meta never disables zoom.
-- Layered z-index from the token scale only.
-- Fixed headers/bars reserve space for underlying content (scroll-padding, content insets); nothing hides behind sticky UI.
-- Hierarchy via size, spacing, and contrast — color is reinforcement, never the only carrier.
-- RTL: build with logical properties from the start (`30-typography-and-color.md`); a Farsi flip must be a `dir` switch, not a redesign.
+- Mobile-first. Systematic breakpoints (375 / 768 / 1024 / 1440); never a per-component ad-hoc breakpoint.
+- One consistent maximum content width per page type on desktop, with a readable measure inside it. No horizontal scroll at any supported width; verify 375px explicitly.
+- 4/8 spacing rhythm from the token scale (`20-design-tokens-and-theming.md`). Vertical rhythm tiers by hierarchy level; sibling sections get equal spacing.
+- Gutters grow with the viewport. Edge-to-edge only for a deliberate full-bleed section.
+- `min-h-dvh` over `100vh`. The viewport meta never disables zoom.
+- Layering from the z-index token scale only.
+- Fixed headers and bars reserve space for the content beneath them, using scroll padding and content insets. Nothing hides behind sticky UI, including the focus ring of a control scrolled to by keyboard.
+- Hierarchy comes from size, spacing and contrast. Colour reinforces it and never carries it alone.
+- **Build with logical properties from the start** (`05-rtl-and-persian.md` section 5). A direction flip must be a `dir` switch, never a redesign.
 
-## Page-type layout defaults
+## Page-type defaults
 
-Defaults tier — deviate deliberately:
+Defaults tier — deviate deliberately and say so.
 
-- Dashboard / ops: full-width or 1400px, 12-column, dense spacing tier, persistent sidebar >= 1024px, tables and cards over decoration.
-- Landing / marketing: centered container, spacious tier, section-based, one signature visual moment.
-- Checkout / critical flows: single narrow column, zero decorative distraction, step indicator, conservative motion.
-- Auth: centered narrow card (360–420px), minimal chrome, one action per screen.
-- Pricing: side-by-side comparison (stack on mobile), one recommended tier highlighted, FAQ below.
-- Settings / forms: left section-nav plus single-column form region; group related fields.
-- Blog / docs / editorial: measure-first single column, sticky in-page TOC on wide screens.
+- **Dashboard / ops:** full-width or a 1400px maximum, twelve columns, dense spacing tier, persistent sidebar from 1024px, tables and cards over decoration.
+- **Landing / marketing:** centred container, spacious tier, section-based, one signature visual moment.
+- **Checkout / critical flows:** a single narrow column, zero decorative distraction, a step indicator, conservative motion, no third-party embeds (`45-render-and-asset-budgets.md`).
+- **Authentication:** a centred narrow card (360-420px), minimal chrome, one action per screen.
+- **Pricing:** side-by-side comparison stacking on mobile, one recommended tier highlighted, questions below.
+- **Settings / forms:** a section navigation beside a single-column form region; related fields grouped.
+- **Blog / docs / editorial:** measure-first single column, in-page contents sticky on wide screens.
 
 ## Landing-page structure
 
-Section-order playbook (default, reorder with reasons):
+Default section order; reorder with reasons.
 
-1. Hero — value proposition in one sentence, one primary CTA, one supporting visual
-2. Social proof strip — logos, counts, or ratings (proof before claims)
-3. Problem -> solution framing
-4. Features / benefits — bento or alternating rows; benefits phrased as outcomes
-5. Deep proof — testimonials with name+role+photo (3–5), case numbers, demo
-6. Pricing (when public)
-7. FAQ — objection handling
-8. Final CTA — repeat the primary action; nothing new after it
+1. Hero — the value proposition in one sentence, one primary action, one supporting visual
+2. Social proof strip — logos, counts or ratings; proof before claims
+3. Problem to solution framing
+4. Features and benefits — bento or alternating rows; benefits phrased as outcomes
+5. Deep proof — testimonials with name, role and photo (three to five), case numbers, a demo
+6. Pricing, when public
+7. Questions — objection handling
+8. Final call to action — repeat the primary action; nothing new after it
 
-CTA strategy:
+Call-to-action strategy:
 
-- Exactly one primary CTA per screenful; secondary actions visually subordinate (ghost/link).
-- The accent color is spent only on CTAs (`30-typography-and-color.md`); repeated final CTA closes the page.
-- CTA copy is a verb with an outcome ("Start learning free"), not "Submit".
-- Above-the-fold must stand alone: value proposition + CTA + proof visible without scrolling on 375px.
+- **Exactly one primary action per screenful.** Secondary actions are visually subordinate.
+- The accent role is spent only on primary actions (`32-starter-palettes.md`), never on decoration.
+- The wording rule for the action itself is in `35-ux-writing-and-microcopy.md` and is not repeated here.
+- **Above the fold must stand alone:** value proposition, action and one piece of proof visible without scrolling at 375px.
 
 ## Anti-patterns
 
 - Fixed pixel container widths that break between breakpoints; desktop-first retrofitted to mobile.
-- Equal visual weight on competing CTAs; accent color spent on decoration.
-- Landing pages that state features without proof, or bury the CTA below unexplained sections.
-- Dense dashboard patterns on marketing pages and vice versa (one spacing tier per page type).
-- Sections whose internal spacing exceeds the spacing between sections (rhythm inversion).
+- Equal visual weight on competing actions; the accent spent on decoration.
+- A landing page that states features without proof, or buries the action below unexplained sections.
+- Dense dashboard rhythm on a marketing page, or marketing rhythm on a dashboard.
+- Sections whose internal spacing exceeds the spacing between sections.
+- A sticky bar that covers the element the keyboard just focused.
 
-## Pairing guidance
+## Pairing
 
-- Spacing/density tokens: `20-design-tokens-and-theming.md`
-- Component-level states and forms inside these layouts: `60-components-states-and-ux.md`
-- Responsive verification in a real browser: `$playwright` / `playwright_visual` via `$alaa-frontend-developer` QA gating
+- Spacing and density tokens: `20-design-tokens-and-theming.md`
+- Direction and logical properties: `05-rtl-and-persian.md`
+- Components and forms inside these layouts: `60-components-states-and-ux.md`
+- Hero image and embed weight: `45-render-and-asset-budgets.md`
+- Responsive verification in a real browser: `95-design-proofs.md`

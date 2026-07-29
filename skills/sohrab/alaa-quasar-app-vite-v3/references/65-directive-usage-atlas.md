@@ -1,6 +1,6 @@
 # Directive Usage Atlas
 
-Load only when directive behavior/snippet shape matters; use `64-plugins-composables-directives-options-utils.md` as the light entry. Examples are curated starts—query the installed directive API via `05-authority-and-api-lookup.md` for exact values/modifiers/arguments.
+You are about to write `v-close-popup`, `v-intersection`, `v-ripple`, or a touch directive, or one of them is not firing as expected. Use `64-plugins-composables-directives-options-utils.md` as the light entry. Examples are curated starts—query the installed directive API via `05-authority-and-api-lookup.md` for exact values/modifiers/arguments.
 
 ## Playbooks
 

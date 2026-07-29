@@ -42,13 +42,16 @@ CORPUS_FILENAME = "phone-conformance-corpus.json"
 
 CHANNEL_PREFIX = {"mediana": "+98", "bale": "98"}
 
-# Persian-Indic digits start at U+06F0; Arabic-Indic digits start at U+0660.
-# No other Unicode digit family is folded: accepting every digit family accepts
-# superscripts and Devanagari, which no Iranian subscriber types.
-_DIGIT_FOLD = {}
-for _zero in (0x06F0, 0x0660):
-    for _offset in range(10):
-        _DIGIT_FOLD[chr(_zero + _offset)] = chr(ord("0") + _offset)
+# Digit folding is by Unicode general category Nd, one code point to one ASCII digit.
+# Never enumerate digit families: an enumerated list is a defect class, not a fix, and this
+# fold covered two families only until 2026-07-28. Category No is deliberately excluded --
+# superscripts are No, not Nd, so a superscript string is still rejected.
+# The fold and its canonical implementations are owned by /alaa-input-normalization
+# ($alaa-input-normalization); this is a local mirror kept runnable, not a second contract.
+def _fold_digit(char: str) -> str:
+    if unicodedata.category(char) == "Nd":
+        return str(unicodedata.digit(char))
+    return char
 
 # ---- The display-separator rule. The identical block ships in the sibling provider skill. ----
 # A character is display formatting, and not a digit of the number, when its Unicode general
@@ -119,7 +122,7 @@ def fold_and_strip(raw: str) -> str:
     """
     out = []
     for char in raw:
-        folded = _DIGIT_FOLD.get(char, char)
+        folded = _fold_digit(char)
         if is_display_separator(folded):
             continue
         out.append(folded)
