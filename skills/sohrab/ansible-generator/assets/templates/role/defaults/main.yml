@@ -1,29 +1,41 @@
 ---
-# Role: [ROLE_NAME]
-# Default variables (lowest priority - can be easily overridden)
+# Role: ROLE_NAME
+# Default variables. Lowest precedence: a caller may override any of these.
+#
+# Placeholder convention: replace every ROLE_NAME with the role's name and every
+# CHANGE_ME_* token with a real value. Both are bare YAML tokens, so this file
+# parses before substitution and scripts/check_templates.py can prove it.
+# The full convention is in references/scaffold.md.
 
 # Package and service names
-  [ role_name ]_package_name: [ package_name ]
-  [ role_name ]_service_name: [ service_name ]
+ROLE_NAME_package_name: "CHANGE_ME_package"
+ROLE_NAME_service_name: "CHANGE_ME_service"
 
-# User and group
-  [ role_name ]_user: [ service_user ]
-  [ role_name ]_group: [ service_group ]
+# Account the service runs as
+ROLE_NAME_user: "CHANGE_ME_service_user"
+ROLE_NAME_group: "CHANGE_ME_service_group"
 
 # Directories
-  [ role_name ]_config_dir: /etc/[service_name]
-  [ role_name ]_data_dir: /var/lib/[service_name]
-  [ role_name ]_log_dir: /var/log/[service_name]
+ROLE_NAME_config_dir: "/etc/CHANGE_ME_service"
+ROLE_NAME_data_dir: "/var/lib/CHANGE_ME_service"
+ROLE_NAME_log_dir: "/var/log/CHANGE_ME_service"
 
-# Configuration
-  [ role_name ]_port: [ default_port ]
-  [ role_name ]_bind_address: 0.0.0.0
-  [ role_name ]_max_connections: 100
+# Network. Bind to the loopback interface by default. A wider bind is an
+# explicit decision the caller makes, not a default the role ships.
+ROLE_NAME_port: 8080
+ROLE_NAME_bind_address: "127.0.0.1"
+ROLE_NAME_max_connections: 100
+
+# File modes. No mode grants write to other.
+ROLE_NAME_config_mode: "0644"
+ROLE_NAME_secret_mode: "0600"
+ROLE_NAME_dir_mode: "0755"
 
 # Feature flags
-  [ role_name ]_enable_ssl: false
-  [ role_name ]_enable_monitoring: true
-  [ role_name ]_enable_backup: true
+ROLE_NAME_enable_ssl: false
+ROLE_NAME_enable_monitoring: true
+ROLE_NAME_enable_backup: true
 
-# Version (if applicable)
-  [ role_name ]_version: latest
+# Version. Pin it: "latest" makes the run non-reproducible and trips
+# ansible-lint's package-latest rule.
+ROLE_NAME_version: "CHANGE_ME_version"

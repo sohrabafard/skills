@@ -78,6 +78,14 @@ construction; that is not a defect in the services, it is what a new rule looks 
 | 17 | `meta.prev_cursor` present and `null` at the start of a collection | `25-end-to-end-flow-and-boundaries.md` | none | all; the key did not exist before today, and the kit does not yet always render `meta.next_cursor` either |
 | 18 | The gateway originates `X-Request-Deadline-Ms` from `GATEWAY_REQUEST_DEADLINE_MS` | `22-failure-load-and-deprecation-contract.md` | none | `gateway`; every other service is blocked on it and falls back to its own route default until it ships |
 
+Two obligations added 2026-07-29, when the TOTP step-up rejection surface was registered. The emitting half
+of #19 landed the same day; the rest of both rows is still ahead of the fleet.
+
+| # | Rule | Owning file | Conforms | Does not conform |
+|---|---|---|---|---|
+| 19 | The gateway sets `X-TOTP-PROOF-REJECTED` on a presented-and-rejected proof, and a service acts on it only to change a message | `32-auth-totp-and-step-up-contract.md` | `gateway` (emits it, sanitizes it from client input, and proves presence, value, and absence at runtime) | no backend reads it, and no service that emits `TOTP_STEP_UP_REQUIRED` carries `meta.proof_rejected` yet — that key lands fleet-wide in one change or not at all |
+| 20 | The gateway exports `alaa_gateway_totp_proof_verifications_total` | `24-metric-registry.md` | none | `gateway`; its Vector configuration has no `log_to_metric` transform, so step-up rejection alerting is log-search-only while the `auth` half of the same flow is a counter |
+
 Corrections to note, because the evidence did not support the first reading:
 - #3: `entitlement-api` is keyset (`cursor` and `limit` reach the query services), but its survey shows
   responses wrapped only as `{"data":...}` by `writeData`; a `meta.next_cursor` field is not evidenced. It is

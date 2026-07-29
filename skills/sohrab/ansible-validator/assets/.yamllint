@@ -1,86 +1,100 @@
 ---
-# yamllint configuration for Ansible files
+# yamllint configuration owned by ansible-validator.
+#
+# Verified 2026-07-29 against yamllint 1.38.0. Re-derive the rule list with
+#   yamllint --list-rules
+#
+# Two settings in this file used to contradict assets/.ansible-lint, and
+# scripts/check_assets.sh now asserts that they no longer do:
+#
+#   truthy.allowed-values used to include yes, no, on and off, so yamllint
+#   passed `become: yes` while ansible-lint failed the same line with
+#   yaml[truthy]. Only true and false are permitted now, which is what
+#   ansible-lint's production profile requires.
+#
+#   document-start.present used to be false, so yamllint reported the leading
+#   `---` that every conventional Ansible file carries as forbidden, and
+#   scripts/validate_role.sh then grepped that specific warning back out. That
+#   grep is gone and the leading `---` is required here.
 
 extends: default
 
 rules:
-  # Line length - Allow longer lines for readability
+  # Long lines are legible; broken YAML is not. This is a warning so that it
+  # does not gate, and ansible-lint carries yaml[line-length] in warn_list for
+  # the same reason.
   line-length:
     max: 160
     level: warning
 
-  # Indentation - Ansible standard is 2 spaces
   indentation:
     spaces: 2
-    indent-sequences: yes
-    check-multi-line-strings: no
+    indent-sequences: true
+    check-multi-line-strings: false
 
-  # Comments - Allow comments to go over line length
   comments:
     min-spaces-from-content: 1
-    require-starting-space: yes
-    ignore-shebangs: yes
+    require-starting-space: true
+    ignore-shebangs: true
 
-  # Trailing spaces - No trailing spaces
   trailing-spaces: {}
 
-  # Empty lines - Reasonable limits
   empty-lines:
     max: 2
     max-start: 0
     max-end: 1
 
-  # Brackets - Consistent spacing
   brackets:
     min-spaces-inside: 0
     max-spaces-inside: 1
 
-  # Braces - Consistent spacing
   braces:
     min-spaces-inside: 0
     max-spaces-inside: 1
 
-  # Colons - Standard Ansible formatting
   colons:
     max-spaces-before: 0
     max-spaces-after: 1
 
-  # Commas - Standard formatting
   commas:
     max-spaces-before: 0
     min-spaces-after: 1
     max-spaces-after: 1
 
-  # Truthy values - Allow yes/no for readability
+  # Only true and false. yes, no, on and off are the values ansible-lint's
+  # yaml[truthy] rejects, and the two tools must not disagree.
   truthy:
-    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
-    check-keys: yes
+    allowed-values: ['true', 'false']
+    check-keys: true
 
-  # Document start - Optional for Ansible
+  # Every conventional Ansible file opens with '---'. Requiring it here means
+  # no downstream script has to filter a warning about it.
   document-start:
-    present: no
+    present: true
 
-  # Document end - Not required
   document-end:
-    present: no
+    present: false
 
-  # Key duplicates - Error on duplicates
   key-duplicates: {}
 
-  # Hyphens - Consistent spacing
   hyphens:
     max-spaces-after: 1
 
-  # New lines - Unix style
+  # LF only. A CRLF file leaves a carriage return on the last field of every
+  # line a shell driver parses, so every comparison fails while the rendered
+  # bytes look identical. scripts/lib/common.sh stops on CRLF for the same
+  # reason.
   new-lines:
     type: unix
 
-  # Quoted strings - Allow both styles
   quoted-strings:
     quote-type: any
-    required: no
+    required: false
 
-# Ignore certain paths
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: false
+
 ignore: |
   .git/
   venv/
@@ -90,3 +104,4 @@ ignore: |
   .molecule/
   .cache/
   .tox/
+  test/roles/

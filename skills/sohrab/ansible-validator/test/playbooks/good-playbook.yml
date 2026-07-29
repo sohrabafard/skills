@@ -1,97 +1,53 @@
 ---
-# Example of a well-written Ansible playbook
-# This playbook follows best practices and should pass all validation
-
-- name: Configure web server
+# Fixture: a playbook that must exit 0 on every checker in this skill.
+# Expected findings: none. See expected-findings.md in this directory.
+- name: Configure a web server
   hosts: webservers
   become: true
+  gather_facts: true
+
   vars:
-    nginx_port: 80
-    nginx_user: www-data
-    app_version: "1.0.0"
+    web_package: nginx
+    web_service: nginx
+    web_config_dir: /etc/nginx
 
   tasks:
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: true
-        cache_valid_time: 3600
-      when: ansible_os_family == "Debian"
-      tags:
-        - packages
-
-    - name: Install nginx web server
-      ansible.builtin.apt:
-        name: nginx
+    - name: Ensure the web package is installed
+      ansible.builtin.package:
+        name: "{{ web_package }}"
         state: present
-      when: ansible_os_family == "Debian"
       tags:
-        - packages
-        - nginx
+        - install
 
-    - name: Create nginx configuration directory
+    - name: Ensure the configuration directory exists
       ansible.builtin.file:
-        path: /etc/nginx/sites-available
+        path: "{{ web_config_dir }}"
         state: directory
         owner: root
         group: root
-        mode: '0755'
+        mode: "0755"
       tags:
-        - configuration
-        - nginx
+        - configure
 
-    - name: Configure nginx virtual host
+    - name: Deploy the web server configuration
       ansible.builtin.template:
-        src: templates/vhost.conf.j2
-        dest: /etc/nginx/sites-available/default
+        src: nginx.conf.j2
+        dest: "{{ web_config_dir }}/nginx.conf"
         owner: root
         group: root
-        mode: '0644'
-        validate: nginx -t -c %s
-      notify:
-        - Reload nginx
+        mode: "0644"
+      notify: Reload the web server
       tags:
-        - configuration
-        - nginx
+        - configure
 
-    - name: Enable nginx site
-      ansible.builtin.file:
-        src: /etc/nginx/sites-available/default
-        dest: /etc/nginx/sites-enabled/default
-        state: link
-      notify:
-        - Reload nginx
+    - name: Record the deployment marker
+      ansible.builtin.command: /usr/bin/true
+      changed_when: false
       tags:
-        - configuration
-        - nginx
-
-    - name: Ensure nginx is started and enabled
-      ansible.builtin.systemd:
-        name: nginx
-        state: started
-        enabled: true
-      tags:
-        - services
-        - nginx
-
-    - name: Configure firewall to allow HTTP
-      ansible.builtin.iptables:
-        chain: INPUT
-        protocol: tcp
-        destination_port: "{{ nginx_port }}"
-        jump: ACCEPT
-        comment: Allow HTTP traffic
-      when: ansible_os_family == "Debian"
-      tags:
-        - security
-        - firewall
+        - configure
 
   handlers:
-    - name: Reload nginx
-      ansible.builtin.systemd:
-        name: nginx
+    - name: Reload the web server
+      ansible.builtin.service:
+        name: "{{ web_service }}"
         state: reloaded
-
-    - name: Restart nginx
-      ansible.builtin.systemd:
-        name: nginx
-        state: restarted

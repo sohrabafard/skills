@@ -1,0 +1,7 @@
+---
+# OS-specific variables for the Debian family, loaded by tasks/main.yml through
+# include_vars on ansible_os_family.
+
+demo_nginx_package_name: "nginx"
+demo_nginx_service_name: "nginx"
+demo_nginx_config_dir: "/etc/nginx"

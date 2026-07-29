@@ -1,0 +1,11 @@
+---
+# Role: demo_nginx
+# Role variables. High precedence: a caller cannot practically override these.
+# Anything a caller may legitimately change belongs in defaults/main.yml instead.
+
+# Values derived from the defaults above
+demo_nginx_full_config_path: "{{ demo_nginx_config_dir }}/config.yml"
+demo_nginx_pid_file: "/run/{{ demo_nginx_service_name }}.pid"
+
+# Internal constants that are not configuration
+demo_nginx_config_owner: root

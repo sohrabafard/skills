@@ -1,0 +1,6 @@
+# Fixture: well-formed YAML with no leading document start. Under the
+# pre-repair configuration pair this was counted as a failure, because
+# assets/.yamllint forbade the '---' that every conventional Ansible file has
+# and validate_role.sh then grepped that warning back out.
+app_name: fixture
+app_port: 8080

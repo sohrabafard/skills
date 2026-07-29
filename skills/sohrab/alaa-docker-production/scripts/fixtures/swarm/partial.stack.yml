@@ -1,0 +1,50 @@
+# Fixture: rollout control that is present but wrong. This is the second-most common shape after
+# "absent entirely", and it is more dangerous, because the file looks configured.
+name: fixture-partial-stack
+
+services:
+  platform-app-php:
+    image: registry.example.invalid/alaa/comment-service:1.4.2
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/octane/healthcheck.sh"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 45s
+    secrets:
+      - source: comment_app_key_v3
+        target: app_key
+        uid: "1000"
+        gid: "1000"
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        order: stop-first
+        delay: 10s
+        failure_action: pause
+      rollback_config:
+        parallelism: 1
+        order: start-first
+        monitor: 30s
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+        reservations:
+          cpus: "1.0"
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 10s
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
+    name: alaa-shared-network
+
+secrets:
+  comment_app_key_v3:
+    external: true

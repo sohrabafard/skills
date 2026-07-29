@@ -1,0 +1,67 @@
+# Shell runner building against the host's own Docker daemon.
+#
+# This is the path a fleet takes when the build host is dedicated, the daemon is
+# already there, and BuildKit-in-Kubernetes is not available. It is the least
+# isolated build path in this skill: the job runs as the runner user, and that
+# user is in the `docker` group, which is equivalent to root on this host.
+#
+# Use it only when all four hold, and say so in the answer:
+#   1. The host runs no other tenant's jobs.
+#   2. The runner is tagged and only the intended projects carry that tag.
+#   3. The jobs that use it run on protected refs only.
+#   4. The daemon is not exposed on a network socket.
+# If any one fails, use k8s-buildkit-rootless instead.
+#
+# Image content belongs to /alaa-docker-production ($alaa-docker-production).
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: never
+
+default:
+  # No `image:` key: a shell runner has no build container. The toolchain is
+  # whatever is installed on the host, so the pin lives in the host's own
+  # provisioning, not in this file. State the required versions in the answer.
+  tags:
+    - shell-build
+  interruptible: true
+  timeout: 30 minutes
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  variables:
+    DOCKER_BUILDKIT: "1"
+    BUILDKIT_PROGRESS: plain
+    CACHE_IMAGE: $CI_REGISTRY_IMAGE:buildcache-$CI_COMMIT_REF_SLUG
+
+stages:
+  - build
+
+build-image:
+  stage: build
+  timeout: 30 minutes
+  needs: []
+  # The registry is a shared target: two pipelines pushing the same tag race.
+  resource_group: registry-$CI_PROJECT_PATH_SLUG
+  # Decided rather than inherited: an interrupted push publishes no manifest, so
+  # cancelling this job on a superseding commit leaves nothing half-written.
+  interruptible: true
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+    # --cache-from is the half that makes BUILDKIT_INLINE_CACHE do anything: an
+    # inline cache that is written and never imported leaves every build cold.
+    - |
+      docker buildx build \
+        --pull \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --cache-from "type=registry,ref=${CACHE_IMAGE}" \
+        --cache-to "type=registry,ref=${CACHE_IMAGE},mode=max" \
+        --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" \
+        --push \
+        .
+  after_script:
+    # The build directory persists on this host between jobs and between
+    # projects. Anything left behind is readable by the next job that lands here.
+    - docker logout "$CI_REGISTRY"

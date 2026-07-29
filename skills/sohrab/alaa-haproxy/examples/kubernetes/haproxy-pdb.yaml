@@ -1,3 +1,12 @@
+# haproxy-pdb.yaml
+# Charter: keep at least one HAProxy pod serving during a voluntary disruption.
+# Preconditions: `minAvailable: 1` with `replicas: 2` allows one pod down at a time. With
+#   replicas raised, raise this too or a drain can take the estate to a single pod.
+#   PodDisruptionBudget sizing is decided by /alaa-k8s-helm ($alaa-k8s-helm) together with the
+#   availability target, which is decided by /alaa-reliability-sla ($alaa-reliability-sla).
+# Failure mode: a PDB constrains VOLUNTARY disruption only. A node failure, an OOM kill or an
+#   eviction under memory pressure ignores it entirely, so a PDB is not an availability
+#   guarantee and must not be counted as one.
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

@@ -1,20 +1,17 @@
 ---
-# Variables specific to webservers group
+# Variables for the webservers group.
 
-# Web server configuration
 web_server: nginx
 web_port: 80
 web_ssl_port: 443
 web_document_root: /var/www/html
 
-# Application settings
-app_name: myapp
-app_version: "1.0.0"
+app_name: CHANGE_ME_app
+app_version: "CHANGE_ME_version"
 app_port: 8080
 app_user: www-data
 app_group: www-data
 
-# SSL/TLS
 enable_ssl: true
-ssl_certificate: /etc/ssl/certs/{{ ansible_fqdn }}.crt
-ssl_certificate_key: /etc/ssl/private/{{ ansible_fqdn }}.key
+ssl_certificate: "/etc/ssl/certs/{{ ansible_fqdn }}.crt"
+ssl_certificate_key: "/etc/ssl/private/{{ ansible_fqdn }}.key"

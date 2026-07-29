@@ -1,3 +1,20 @@
+# haproxy-deployment.yaml
+# Charter: run the ConfigMap above as a standalone HAProxy workload.
+# Preconditions: image pin verified 2026-07-29. Re-derive with
+#   `docker run --rm haproxy:lts haproxy -v`, or read the supported-tags list at
+#   https://hub.docker.com/_/haproxy/ - the `lts` tag now resolves to the 3.4 line, not 3.2.
+#   Digest pinning, base-image hardening and pull policy are decided by
+#   /alaa-docker-production ($alaa-docker-production).
+# Failure mode - the drain ordering, which is the defect this file exists to get right:
+#   HAProxy's soft-stop (SIGUSR1) CLOSES THE LISTENERS immediately. If the pod is still in the
+#   Service's endpoint list when that happens, new connections arrive at a closed listener and
+#   are refused. Endpoint removal is asynchronous and is not complete when preStop starts.
+#   Therefore the preStop hook SLEEPS FIRST and signals second. Signal-then-sleep - the ordering
+#   that reads as "start draining, then wait" - produces connection refusals on every rollout,
+#   and they appear as client-side 502s that no HAProxy log explains.
+#   The sleep must be longer than endpoint propagation in this cluster and
+#   terminationGracePeriodSeconds must exceed the sleep plus the time in-flight requests need to
+#   finish: 15 + drain must stay under 45 here. Measure propagation rather than assuming it.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,8 +34,10 @@ spec:
       labels:
         app: haproxy
       annotations:
-        # Recommended: add a checksum annotation in Helm to trigger rollout on config changes
-        # checksum/haproxy-config: "<sha256>"
+        # A config change must roll the pods. Without a checksum annotation the ConfigMap
+        # update lands in the volume minutes later and no pod reloads, so the old config
+        # keeps serving with no indication that the deploy did not take.
+        # checksum/haproxy-config: "replace-with-sha256-of-the-configmap"
         {}
     spec:
       securityContext:
@@ -26,7 +45,7 @@ spec:
         runAsUser: 99
         runAsGroup: 99
         fsGroup: 99
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -38,34 +57,47 @@ spec:
                   app: haproxy
       containers:
       - name: haproxy
-        image: haproxy:3.2.15
+        # Current LTS as of 2026-07-29. `-W -db` replaces the `master-worker` global
+        # directive, which is deprecated from 3.3.
+        image: haproxy:3.4.1
+        imagePullPolicy: IfNotPresent
         args: ["-W", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
         ports:
         - name: http
           containerPort: 8080
         - name: metrics
           containerPort: 8405
+        - name: health
+          containerPort: 8406
+        # HTTP against monitor-uri, so the probe reflects backend availability and can fail.
         readinessProbe:
-          tcpSocket:
-            port: 8080
+          httpGet:
+            path: /haproxy-ready
+            port: health
           initialDelaySeconds: 3
           periodSeconds: 5
+          failureThreshold: 2
+        # Liveness restarts the process. It must not depend on backend health, or a backend
+        # incident becomes a restart loop on the proxy that was still serving errors correctly.
         livenessProbe:
           tcpSocket:
-            port: 8080
+            port: http
           initialDelaySeconds: 10
           periodSeconds: 10
+          failureThreshold: 6
         lifecycle:
           preStop:
             exec:
               command:
               - /bin/sh
               - -ec
-              # Pair this with a readiness strategy that stops new traffic first.
-              - kill -USR1 1 || true; sleep 15
+              # Sleep first: wait for endpoint removal to propagate. Signal second.
+              - sleep 15; kill -USR1 1 || true
         resources:
           requests:
             cpu: 250m
@@ -81,6 +113,11 @@ spec:
           mountPath: /run/haproxy
         - name: lib
           mountPath: /var/lib/haproxy
+        # Writable /dev/shm. Required only by the 3.3 persistent-stats pattern
+        # (examples/haproxy/15-persistent-stats-3.3.cfg), whose shm-stats-file path must be
+        # writable under readOnlyRootFilesystem: true. Harmless otherwise.
+        - name: shm
+          mountPath: /dev/shm
       volumes:
       - name: cfg
         configMap:
@@ -89,3 +126,7 @@ spec:
         emptyDir: {}
       - name: lib
         emptyDir: {}
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Mi

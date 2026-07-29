@@ -1,4 +1,10 @@
 # Exclude local and non-chart files from packaged Helm charts.
+#
+# Every directory pattern is anchored with a leading slash. Helm's matcher is
+# Go's filepath.Match, which has no `**`, and an unanchored directory pattern
+# matches at ANY depth -- so an unanchored `tests/` would also strip
+# `templates/tests/` and silently delete the chart's smoke tests.
+# See https://helm.sh/docs/chart_template_guide/helm_ignore_file/
 .DS_Store
 .git/
 .gitignore
@@ -14,7 +20,14 @@
 *~
 README.md
 CONTRIBUTING.md
-docs/
-test/
-tests/
-coverage/
+/docs/
+/test/
+/tests/
+/coverage/
+# Never package a rendered manifest: `helm template` output can contain every
+# decoded Secret the chart produces.
+rendered.yaml
+*.rendered.yaml
+values.secret.yaml
+*.secret.yaml
+*.secrets.yaml

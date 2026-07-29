@@ -294,3 +294,17 @@ defines. Removing or renaming one follows this procedure. There is no informal p
 
 Emergency removal for a security defect skips the window, and only the window. Steps 1, 4, and 5 still
 apply, and the recorded removal date is the date of the change.
+
+### Recorded exceptions
+
+An exception is one named change with a date and a reason. It suspends no clause of the procedure for
+anything else, and a later change may not cite it as precedent without being added here.
+
+- **2026-07-29 — the `gateway` error-code rename to UPPER_SNAKE runs no window.** The platform owner
+  decided that the gateway will not serve a legacy lowercase spelling alongside the new one, and that
+  clients move in lockstep once the backend services and the gateway are final. The reason the 90-day
+  public window does not apply: the fleet is pre-GA and every consumer of these codes is first-party and
+  released together, so the window would protect no consumer that exists. Steps 1, 4, and 5 of the
+  procedure still apply — announce and date it, notify the three, and remove the old spelling together with
+  its compatibility code, tests, docs, and API artifacts in one change. This exception covers that one
+  rename and no other surface.

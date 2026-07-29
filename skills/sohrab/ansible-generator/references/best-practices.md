@@ -1,895 +1,243 @@
-# Ansible Best Practices
+# Authoring rules
 
-## Directory Structure
+Read this before writing the first task.
 
-### Standard Playbook Structure
+**This file is not the ruleset.** The ruleset an Ansible artifact is measured
+against is `ansible-validator references/best_practices.md`
+(`/ansible-validator`, `$ansible-validator`), because a rule is only real if
+something reports its violation, and only that skill ships checkers. This file
+holds the subset that applies while you are typing, where knowing the rule early
+is cheaper than being told about it afterwards. Every entry cites the rule it
+corresponds to on that side.
 
-```
-playbook.yml
-roles/
-  common/
-    tasks/
-      main.yml
-    handlers/
-      main.yml
-    templates/
-    files/
-    vars/
-      main.yml
-    defaults/
-      main.yml
-    meta/
-      main.yml
-inventory/
-  production/
-    hosts
-    group_vars/
-    host_vars/
-  staging/
-    hosts
-    group_vars/
-    host_vars/
-```
+Nothing here is restated from there. Where you want the full statement, the
+reason, or the command that reports a violation, follow the citation.
 
-### Role Structure
+---
 
-Each role should have:
+## What this skill decides, and what it does not
 
-- `tasks/main.yml` - Main task list
-- `handlers/main.yml` - Handlers triggered by tasks
-- `templates/` - Jinja2 templates
-- `files/` - Static files to copy
-- `vars/main.yml` - Role-specific variables (high priority)
-- `defaults/main.yml` - Default variables (low priority, overridable)
-- `meta/main.yml` - Role dependencies and metadata
+| Question | Owner |
+|---|---|
+| Which module, and how to call it | this skill, `references/module-patterns.md` |
+| What a module name maps to today | `ansible-validator references/module_alternatives.md` |
+| Jinja filters, lookups, template control | this skill, `references/jinja-and-lookups.md` |
+| The rule a finding is measured against | `ansible-validator references/best_practices.md` |
+| Variable precedence | `ansible-validator references/best_practices.md` rule 6.2 |
+| Security predicates and Vault mechanics | `ansible-validator references/security_checklist.md` |
+| `.ansible-lint` and `.yamllint` | `ansible-validator assets/` |
+| Molecule | `ansible-validator references/molecule.md` |
+| Check-mode procedure | `ansible-validator references/best_practices.md` section 10 |
+| Version-sensitive claims and the freshness procedure | `ansible-validator references/source-map.md` |
+| Retry, timeout, `serial`, `forks`, degradation | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
+| Whether a missing dependency stops the run | `/alaa-security-review` (`$alaa-security-review`) when the missing thing is a security control; `/alaa-reliability-sla` (`$alaa-reliability-sla`) when it is an availability dependency |
+| Complexity budget for a loop or fan-out that grows | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
 
-## Naming Conventions
+## A1. Shape of a task
 
-### Files and Directories
-
-- Use lowercase with underscores: `install_nginx.yml`, `backup_database.yml`
-- Playbook files: descriptive names ending in `.yml`
-- Role names: short, descriptive, lowercase with underscores
-
-### Variables
-
-- Use descriptive names: `nginx_port`, `db_backup_dir`, `app_version`
-- Prefix role-specific variables with role name: `nginx_worker_processes`
-- Use snake_case, not camelCase or kebab-case
-- Group related variables with common prefixes
-
-### Tasks
-
-- Use descriptive names that explain what the task does
-- Start with a verb: "Install nginx", "Copy configuration file", "Start service"
-
-## Task Writing Best Practices
-
-### Always Use State Declaration
+Write every task in this shape and most of the ruleset is satisfied before you
+run anything:
 
 ```yaml
-# Good
-- name: Ensure nginx is installed
-  ansible.builtin.package:
-    name: nginx
-    state: present
-
-# Bad
-- name: Install nginx
-  ansible.builtin.package:
-    name: nginx
-```
-
-### Use Fully Qualified Collection Names (FQCN)
-
-```yaml
-# Good - FQCN (Ansible 2.10+)
-- name: Copy configuration file
-  ansible.builtin.copy:
-    src: nginx.conf
-    dest: /etc/nginx/nginx.conf
-
-# Avoid - Short names (deprecated)
-- name: Copy configuration file
-  copy:
-    src: nginx.conf
-    dest: /etc/nginx/nginx.conf
-```
-
-### Idempotency
-
-- All tasks should be idempotent (safe to run multiple times)
-- Use `state: present/absent` instead of imperative commands
-- Avoid using `command` or `shell` modules when builtin modules exist
-- When using `command`/`shell`, use `creates`, `removes`, or `changed_when`
-
-```yaml
-# Good - idempotent
-- name: Create directory
+- name: Ensure the configuration directory exists
   ansible.builtin.file:
-    path: /opt/app
+    path: "{{ myrole_config_dir }}"
     state: directory
-    mode: '0755'
-
-# Bad - not idempotent
-- name: Create directory
-  ansible.builtin.command: mkdir -p /opt/app
-```
-
-### Error Handling
-
-```yaml
-- name: Attempt to start service
-  ansible.builtin.service:
-    name: myapp
-    state: started
-  register: service_result
-  failed_when: false
-  changed_when: service_result.rc == 0
-
-- name: Handle service failure
-  ansible.builtin.debug:
-    msg: "Service failed to start: {{ service_result.msg }}"
-  when: service_result.failed
-```
-
-## Variables and Facts
-
-### Variable Precedence (High to Low)
-
-1. Extra vars (`-e` in CLI)
-2. Task vars
-3. Block vars
-4. Role and include vars
-5. Set_facts / registered vars
-6. Play vars
-7. Play vars_files
-8. Role defaults
-9. Inventory vars (host_vars, group_vars)
-
-### Using Variables
-
-```yaml
-# Use default values
-- name: Set port with default
-  ansible.builtin.set_fact:
-    app_port: "{{ custom_port | default(8080) }}"
-
-# Combine variables
-- name: Create full path
-  ansible.builtin.set_fact:
-    config_path: "{{ base_dir }}/{{ app_name }}/config.yml"
-```
-
-## Conditionals and Loops
-
-### When Statements
-
-```yaml
-- name: Install on Debian-based systems
-  ansible.builtin.apt:
-    name: nginx
-    state: present
-  when: ansible_os_family == "Debian"
-
-- name: Install on RedHat-based systems
-  ansible.builtin.yum:
-    name: nginx
-    state: present
-  when: ansible_os_family == "RedHat"
-```
-
-### Loops
-
-```yaml
-# Good - using loop
-- name: Install packages
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - nginx
-    - postgresql
-    - redis
-
-# Complex loop with dict
-- name: Create users
-  ansible.builtin.user:
-    name: "{{ item.name }}"
-    groups: "{{ item.groups }}"
-    state: present
-  loop:
-    - { name: 'alice', groups: 'admin,developers' }
-    - { name: 'bob', groups: 'developers' }
-```
-
-## Handlers
-
-### Naming and Usage
-
-```yaml
-# In tasks/main.yml
-- name: Copy nginx configuration
-  ansible.builtin.copy:
-    src: nginx.conf
-    dest: /etc/nginx/nginx.conf
-  notify: Restart nginx
-
-# In handlers/main.yml
-- name: Restart nginx
-  ansible.builtin.service:
-    name: nginx
-    state: restarted
-```
-
-### Handler Best Practices
-
-- Handlers run once at the end of a play
-- Use descriptive names
-- Listen to multiple notifications with same handler name
-- Use `meta: flush_handlers` to run handlers immediately if needed
-
-## Templates
-
-### Jinja2 Templates
-
-```yaml
-# Task
-- name: Deploy configuration from template
-  ansible.builtin.template:
-    src: app_config.j2
-    dest: /etc/app/config.yml
-    mode: '0644'
-    backup: yes
-```
-
-```jinja2
-# Template file: templates/app_config.j2
-server:
-  port: {{ app_port }}
-  host: {{ ansible_default_ipv4.address }}
-
-database:
-  host: {{ db_host }}
-  port: {{ db_port | default(5432) }}
-  name: {{ db_name }}
-
-{% if enable_ssl %}
-ssl:
-  enabled: true
-  cert: {{ ssl_cert_path }}
-  key: {{ ssl_key_path }}
-{% endif %}
-```
-
-## Advanced Jinja2 Templating
-
-### Common Filters
-
-#### Data Format Conversion
-
-```yaml
-- name: Convert to JSON
-  ansible.builtin.copy:
-    content: "{{ my_dict | to_json }}"
-    dest: /tmp/config.json
-
-- name: Convert to YAML
-  ansible.builtin.copy:
-    content: "{{ my_dict | to_yaml }}"
-    dest: /tmp/config.yml
-
-- name: Convert to pretty JSON
-  ansible.builtin.copy:
-    content: "{{ my_dict | to_nice_json }}"
-    dest: /tmp/config.json
-
-# Parse JSON/YAML strings
-- name: Parse JSON string
-  ansible.builtin.set_fact:
-    parsed_data: "{{ json_string | from_json }}"
-
-- name: Parse YAML string
-  ansible.builtin.set_fact:
-    parsed_data: "{{ yaml_string | from_yaml }}"
-```
-
-#### String Manipulation
-
-```yaml
-# Regex operations
-- name: Replace text
-  ansible.builtin.set_fact:
-    new_string: "{{ original | regex_replace('^old', 'new') }}"
-
-- name: Extract with regex
-  ansible.builtin.set_fact:
-    extracted: "{{ text | regex_search('version: (\\d+\\.\\d+)', '\\1') }}"
-
-# Case conversion
-- name: Convert case
-  ansible.builtin.set_fact:
-    upper: "{{ text | upper }}"
-    lower: "{{ text | lower }}"
-    title: "{{ text | title }}"
-
-# String operations
-- name: String operations
-  ansible.builtin.set_fact:
-    trimmed: "{{ '  text  ' | trim }}"
-    replaced: "{{ text | replace('old', 'new') }}"
-    split_list: "{{ 'a,b,c' | split(',') }}"
-    joined: "{{ ['a', 'b', 'c'] | join('-') }}"
-```
-
-#### Hashing and Encoding
-
-```yaml
-# Hash values
-- name: Generate hashes
-  ansible.builtin.set_fact:
-    md5_hash: "{{ 'mystring' | hash('md5') }}"
-    sha256_hash: "{{ 'mystring' | hash('sha256') }}"
-
-# Password hashing
-- name: Hash password
-  ansible.builtin.user:
-    name: myuser
-    password: "{{ user_password | password_hash('sha512', 'mysecretsalt') }}"
-
-# Encoding
-- name: Encode/decode
-  ansible.builtin.set_fact:
-    base64_encoded: "{{ 'text' | b64encode }}"
-    base64_decoded: "{{ encoded_value | b64decode }}"
-    url_encoded: "{{ url_string | urlencode }}"
-```
-
-#### List and Dict Operations
-
-```yaml
-# List operations
-- name: List operations
-  ansible.builtin.set_fact:
-    unique_items: "{{ my_list | unique }}"
-    sorted_items: "{{ my_list | sort }}"
-    first_item: "{{ my_list | first }}"
-    last_item: "{{ my_list | last }}"
-    list_length: "{{ my_list | length }}"
-    flattened: "{{ nested_list | flatten }}"
-
-# Dict operations
-- name: Dict operations
-  ansible.builtin.set_fact:
-    dict_keys: "{{ my_dict | dict2items }}"
-    dict_values: "{{ my_dict | list }}"
-    combined: "{{ dict1 | combine(dict2) }}"
-
-# Extract values
-- name: Extract from list of dicts
-  ansible.builtin.set_fact:
-    names: "{{ users | map(attribute='name') | list }}"
-    ids: "{{ items | map(attribute='id') | list }}"
-```
-
-#### Network Filters
-
-```yaml
-# IP address operations (requires netaddr Python package)
-- name: IP operations
-  ansible.builtin.set_fact:
-    is_valid: "{{ ip_address | ipaddr }}"
-    network: "{{ ip_address | ipaddr('network') }}"
-    netmask: "{{ ip_address | ipaddr('netmask') }}"
-    broadcast: "{{ ip_address | ipaddr('broadcast') }}"
-    host_ip: "{{ ip_address | ipaddr('address') }}"
-
-# CIDR operations
-- name: CIDR operations
-  ansible.builtin.set_fact:
-    hosts_in_network: "{{ '192.168.1.0/24' | ipaddr('size') }}"
-    first_host: "{{ '192.168.1.0/24' | ipaddr('1') | ipaddr('address') }}"
-```
-
-#### File and Math Filters
-
-```yaml
-# File size formatting
-- name: Format file size
-  ansible.builtin.debug:
-    msg: "File size: {{ file_stat.stat.size | filesizeformat }}"
-
-# Math operations
-- name: Math operations
-  ansible.builtin.set_fact:
-    sum: "{{ [1, 2, 3] | sum }}"
-    min: "{{ [5, 2, 8] | min }}"
-    max: "{{ [5, 2, 8] | max }}"
-    rounded: "{{ 3.14159 | round(2) }}"
-    absolute: "{{ -42 | abs }}"
-```
-
-#### Default and Mandatory Values
-
-```yaml
-# Provide defaults
-- name: Use default values
-  ansible.builtin.set_fact:
-    port: "{{ custom_port | default(8080) }}"
-    config: "{{ app_config | default({}) }}"
-
-# Nested defaults (Ansible 2.8+)
-- name: Nested default
-  ansible.builtin.set_fact:
-    value: "{{ foo.bar.baz | default('fallback') }}"
-
-# Mandatory values
-- name: Require variable
-  ansible.builtin.set_fact:
-    required_value: "{{ must_be_defined | mandatory }}"
-```
-
-### Lookup Plugins
-
-#### File and Environment Lookups
-
-```yaml
-# Read file content
-- name: Read SSH public key
-  ansible.builtin.authorized_key:
-    user: deploy
-    key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub') }}"
-
-# Environment variables
-- name: Get environment variable
-  ansible.builtin.set_fact:
-    home_dir: "{{ lookup('env', 'HOME') }}"
-    path: "{{ lookup('env', 'PATH') }}"
-
-# Pipe command output
-- name: Get command output
-  ansible.builtin.set_fact:
-    current_date: "{{ lookup('pipe', 'date +%Y-%m-%d') }}"
-    git_commit: "{{ lookup('pipe', 'git rev-parse HEAD') }}"
-```
-
-#### Template and URL Lookups
-
-```yaml
-# Template lookup
-- name: Inline template
-  ansible.builtin.set_fact:
-    greeting: "{{ lookup('template', 'greeting.j2') }}"
-
-# URL content
-- name: Fetch URL content
-  ansible.builtin.set_fact:
-    remote_content: "{{ lookup('url', 'https://api.example.com/config') }}"
-```
-
-#### Password and Random Lookups
-
-```yaml
-# Generate random password
-- name: Generate password
-  ansible.builtin.set_fact:
-    random_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
-
-# Random choice
-- name: Pick random item
-  ansible.builtin.set_fact:
-    random_server: "{{ lookup('random_choice', ['server1', 'server2', 'server3']) }}"
-```
-
-#### Query vs Lookup
-
-```yaml
-# lookup returns comma-separated string
-- name: Using lookup
-  ansible.builtin.debug:
-    msg: "{{ lookup('file', 'file1.txt', 'file2.txt') }}"
-  # Returns: "content1,content2"
-
-# query always returns list
-- name: Using query
-  ansible.builtin.debug:
-    msg: "{{ query('file', 'file1.txt', 'file2.txt') }}"
-  # Returns: ["content1", "content2"]
-
-# Prefer query for loops
-- name: Loop with query
-  ansible.builtin.debug:
-    msg: "{{ item }}"
-  loop: "{{ query('inventory_hostnames', 'all') }}"
-```
-
-### Template Control Structures
-
-#### Loops in Templates
-
-```jinja2
-{# templates/config.j2 #}
-# User list
-{% for user in users %}
-user {{ user.name }}:
-  uid: {{ user.uid }}
-  groups: {{ user.groups | join(',') }}
-{% endfor %}
-
-# Conditional in loop
-{% for item in items if item.enabled %}
-  - {{ item.name }}: {{ item.value }}
-{% endfor %}
-
-# Loop with index
-{% for server in servers %}
-server_{{ loop.index }}: {{ server.hostname }}
-{% endfor %}
-```
-
-#### Conditionals in Templates
-
-```jinja2
-{# templates/app_config.j2 #}
-{% if environment == 'production' %}
-log_level: warning
-max_connections: 1000
-{% elif environment == 'staging' %}
-log_level: info
-max_connections: 500
-{% else %}
-log_level: debug
-max_connections: 100
-{% endif %}
-
-# Complex conditions
-{% if ansible_os_family == 'Debian' and ansible_distribution_major_version|int >= 20 %}
-use_modern_config: true
-{% endif %}
-
-# Check if defined
-{% if custom_setting is defined %}
-custom_setting: {{ custom_setting }}
-{% endif %}
-
-# Check if none
-{% if database_host is none %}
-database_host: localhost
-{% else %}
-database_host: {{ database_host }}
-{% endif %}
-```
-
-#### Whitespace Control
-
-```jinja2
-{# Remove whitespace before #}
-{%- if condition %}
-content
-{% endif %}
-
-{# Remove whitespace after #}
-{% if condition -%}
-content
-{% endif %}
-
-{# Remove both #}
-{%- if condition -%}
-content
-{%- endif -%}
-```
-
-#### Macros and Includes
-
-```jinja2
-{# Define macro #}
-{% macro render_user(name, uid) -%}
-user: {{ name }}
-uid: {{ uid }}
-{%- endmacro %}
-
-{# Use macro #}
-{{ render_user('alice', 1000) }}
-{{ render_user('bob', 1001) }}
-
-{# Include other template #}
-{% include 'header.j2' %}
-
-{# Import macros from other template #}
-{% from 'macros.j2' import render_user %}
-```
-
-### Advanced Template Patterns
-
-#### Multi-line Strings
-
-```jinja2
-server {
-    listen 80;
-    server_name {{ server_name }};
-
-    {% if ssl_enabled %}
-    listen 443 ssl;
-    ssl_certificate {{ ssl_cert_path }};
-    ssl_certificate_key {{ ssl_key_path }};
-    {% endif %}
-
-    location / {
-        proxy_pass http://{{ backend_host }}:{{ backend_port }};
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-#### Complex Data Structures
-
-```jinja2
-{# Nested loops for complex config #}
-{% for service in services %}
-[{{ service.name }}]
-{% for key, value in service.config.items() %}
-{{ key }} = {{ value }}
-{% endfor %}
-
-{% endfor %}
-
-{# Generate from dict #}
-{% for key, value in app_settings.items() %}
-export {{ key | upper }}="{{ value }}"
-{% endfor %}
-```
-
-## Security Best Practices
-
-### Sensitive Data
-
-```yaml
-# Use no_log for sensitive operations
-- name: Set database password
-  ansible.builtin.user:
-    name: dbadmin
-    password: "{{ db_password | password_hash('sha512') }}"
-  no_log: true
-
-# Use ansible-vault for secrets
-# Encrypt with: ansible-vault encrypt secrets.yml
-# Include encrypted vars
-- name: Include vault variables
-  ansible.builtin.include_vars:
-    file: secrets.yml
-```
-
-### File Permissions
-
-```yaml
-- name: Copy sensitive file
-  ansible.builtin.copy:
-    src: private_key
-    dest: /etc/ssl/private/app.key
-    mode: '0600'
-    owner: root
-    group: root
-```
-
-## Tags
-
-### Using Tags
-
-```yaml
-- name: Install packages
-  ansible.builtin.package:
-    name: nginx
-    state: present
+    owner: "{{ myrole_user }}"
+    group: "{{ myrole_group }}"
+    mode: "0755"
   tags:
-    - packages
-    - nginx
-    - install
-
-# Run with: ansible-playbook playbook.yml --tags "install"
-# Skip with: ansible-playbook playbook.yml --skip-tags "install"
+    - configure
 ```
 
-### Tag Categories
+Five properties, and the rule each one satisfies:
 
-- `install` - Installation tasks
-- `configure` - Configuration tasks
-- `update` - Update tasks
-- `backup` - Backup tasks
-- `always` - Always run (special tag)
-- `never` - Never run unless explicitly called (special tag)
+| Property | Rule |
+|---|---|
+| a `name` starting with a capital and a verb | validator rules 2.1, 2.2 |
+| a fully qualified action | validator rule 3.1 |
+| an end state, not an operation | validator rule 4.1 |
+| an explicit, quoted `mode` on anything written | validator rules 8.1, 8.2 |
+| a role-prefixed variable | validator rule 2.3 |
 
-## Playbook Structure
+Quote every mode. An unquoted `0644` is the integer 420 in YAML, and the module
+then applies a mode nobody wrote.
 
-### Complete Playbook Example
+## A2. Booleans are `true` and `false`
+
+`yes`, `no`, `on` and `off` are rejected by ansible-lint's `yaml[truthy]` under
+the production profile. `python3 scripts/check_templates.py <path>` reports them
+in anything this skill emits, which is why this is now a rule here rather than a
+checklist line nothing enforced.
+
+## A3. Choosing the module
+
+Ask, in this order:
+
+1. **Is there a module for this operation?** Use it.
+   `references/module-patterns.md` is organised by operation for exactly this
+   question.
+2. **Is the module in a collection?** Declare the collection in
+   `requirements.yml` with a version floor, and use it. A missing collection is
+   an environment defect to fix in the environment.
+3. **Is there genuinely no module?** Then `ansible.builtin.command`, with
+   `changed_when`, `creates` or `removes`. `ansible.builtin.shell` only when the
+   command needs a pipe, a redirect, a glob or a shell variable, and say which in
+   a comment.
+
+**Do not substitute `ansible.builtin.command` for a collection module to avoid a
+dependency.** Shelling out to `psql` instead of using
+`community.postgresql.postgresql_db` destroys idempotency, check-mode support
+and error semantics in one move, and it is what this skill instructed until
+2026-07-29. Validator rules 3.4 and 3.5.
+
+**Write the name the module has today.** Three names this skill taught had left
+ansible-core and worked only through a compatibility redirect, so the example
+ran where the collection happened to be installed and failed where it was not.
+Verify offline with
+`python3 <ansible-validator>/scripts/check_module_currency.py <path>`.
+
+## A4. Defaults versus vars
+
+`defaults/main.yml` holds what a caller may override. `vars/main.yml` holds what
+a caller must not. The difference is precedence, not convention:
+`vars/main.yml` outranks almost everything a caller can set. Validator rule 6.1;
+the 21-step precedence table is validator rule 6.2, and this file carries no
+second copy of it. The nine-item table that used to live here placed `set_fact`
+*below* task, block and role vars, which is the reverse of the truth.
+
+Write a default that is safe when nobody thinks about it:
+
+- Bind to `127.0.0.1`, not `0.0.0.0`. A wider bind is the caller's explicit
+  decision, not the role's default.
+- Do not default a version to `latest`. It makes the run non-reproducible and
+  trips `package-latest`.
+- Default every mode to a value that denies write to `other`.
+
+## A5. Declare the interface
+
+Every variable a role reads from outside itself goes in
+`meta/argument_specs.yml` with a type and either `required: true` or a default.
+That is validation at the boundary: a missing variable becomes a refusal before
+the first task rather than a Jinja error part-way through a partly applied run.
+Validator rule 1.3; `assets/templates/role/meta/argument_specs.yml` is the
+worked template.
+
+## A6. Where `no_log` goes while you are writing
+
+Set `no_log: true` on a task at the moment you write a module argument or a
+registered result that can hold a value sourced from a vault file, from
+`lookup('env', ...)`, or from a variable whose name matches
+`(pass|secret|token|key|credential)`. Adding it afterwards means the value has
+already been in a log.
+
+`--diff` prints the content of a templated file, and that output is produced by
+the file module rather than by the argument logger, so `no_log` does not
+suppress it. A template that renders a secret needs `diff: false` on that task.
+Validator rule 8.4 and `ansible-validator references/security_checklist.md`
+section S2.
+
+The Vault commands themselves — `encrypt_string`, vault IDs, rekeying, where a
+vaulted value lives, how a decrypt failure behaves — are that checklist's
+section S3. This skill carries no second copy.
+
+## A7. Multi-OS
 
 ```yaml
----
-- name: Deploy web application
-  hosts: webservers
-  become: yes
-  vars:
-    app_version: "1.2.3"
-    app_port: 8080
-
-  pre_tasks:
-    - name: Update package cache
-      ansible.builtin.apt:
-        update_cache: yes
-        cache_valid_time: 3600
-      when: ansible_os_family == "Debian"
-
-  roles:
-    - common
-    - nginx
-    - application
-
-  post_tasks:
-    - name: Verify application is running
-      ansible.builtin.uri:
-        url: "http://localhost:{{ app_port }}/health"
-        status_code: 200
-      register: health_check
-      until: health_check.status == 200
-      retries: 5
-      delay: 10
-
-  handlers:
-    - name: Restart application
-      ansible.builtin.service:
-        name: myapp
-        state: restarted
+- name: Load the OS-family variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - always
 ```
 
-## Testing and Validation
+with `vars/Debian.yml` and `vars/RedHat.yml` beside it. That keeps package and
+service names out of the task list and makes adding a family a new file rather
+than a new branch.
 
-### Check Mode (Dry Run)
+State what happens on a family the role does not name. A role that silently
+skips every task on an unlisted OS reports success having done nothing.
+Validator rule 7.4.
+
+## A8. Handlers
+
+Notify a handler for anything that restarts or reloads a service; do not put the
+restart in the task list. A handler runs once at the end of the play however
+many tasks notified it, so ten configuration changes produce one restart.
+
+The `notify` string and the handler's `name` must match exactly, including case.
+Nothing static reports a mismatch: `--syntax-check` passes, ansible-lint passes,
+and only a real run errors. `ansible-validator references/failure-classes.md`
+class F is the diagnosis procedure.
+
+When a later task in the same play depends on the restart, force it:
 
 ```yaml
-# Run in check mode
-ansible-playbook playbook.yml --check
-
-# Task that always runs in check mode
-- name: Get service status
-  ansible.builtin.command: systemctl status nginx
-  check_mode: no
-  changed_when: false
+- name: Apply pending handlers before the health check
+  ansible.builtin.meta: flush_handlers
 ```
 
-### Diff Mode
+## A9. Tags
 
-```yaml
-# Show differences
-ansible-playbook playbook.yml --check --diff
+Give every task at least one tag from a small, stated set: `install`,
+`configure`, `service`, plus `always` for the `include_vars` everything else
+depends on. Tags are how an operator re-runs one part of a play during an
+incident, and a play with no tags is all-or-nothing at exactly the wrong moment.
+
+## A10. Failure behaviour, at authoring time
+
+Write these in as you go, because retro-fitting them means re-reading the play:
+
+- A group of tasks that must be undone on failure goes in a
+  `block`/`rescue`/`always`. `always` removes the lock file, the temporary
+  directory and the maintenance flag.
+- A `command` or `shell` states `changed_when`, `creates` or `removes`.
+- A read-only command states `changed_when: false`, and its own `failed_when`
+  when a non-zero return code is expected.
+- A health check states `until`, `retries` and `delay`. A health check with no
+  `until` either passes on the first poll or fails the play, which is a race.
+- A play that must not half-apply across a fleet states `any_errors_fatal: true`
+  or a `max_fail_percentage`.
+
+What the numbers should be is `/alaa-reliability-sla`'s
+(`$alaa-reliability-sla`). Write the mechanism; let that skill choose the value.
+
+## A11. Performance decisions you make while writing
+
+- `gather_facts: false` unless the play reads an `ansible_*` fact. When it reads
+  fewer than three, `gather_subset` naming exactly those.
+- `update_cache` with `cache_valid_time` rather than an unconditional refresh.
+- A task that takes minutes runs `async` with `poll: 0`, and is polled by
+  `ansible.builtin.async_status`.
+- A loop whose length grows with the inventory, the tenant count or history has
+  a stated bound. `/alaa-algorithms-data-structures`
+  (`$alaa-algorithms-data-structures`) owns complexity budgets.
+
+Validator section 9 carries the project-level settings — pipelining, fact
+caching and its single `fact_caching_timeout` value of 86400, `forks`, `serial`
+— and this file does not restate them. The `ansible.cfg` this skill emits
+carries a comment naming that file as the owner instead of a second number; it
+shipped 3600 against the validator's 86400 until 2026-07-29.
+
+## A12. Documentation, written with the code
+
+A playbook opens with a header comment stating what it does, which hosts it
+targets, the required and optional variables with their defaults, and the exact
+command to run it. A role has a `README.md` with the variable table, one worked
+example and the platform list. Every variable in `defaults/main.yml` has a
+comment saying what it controls and in what units.
+
+`assets/templates/role/README.md` and
+`assets/templates/playbook/basic_playbook.yml` are the shapes.
+
+## A13. Before you hand it over
+
+```bash
+python3 scripts/check_templates.py <the files you generated>
+bash <ansible-validator>/scripts/validate_playbook.sh <playbook>   # or validate_role.sh
+bash <ansible-validator>/scripts/scan_secrets.sh <target>
+python3 <ansible-validator>/scripts/check_task_safety.py <target>
 ```
 
-### Assert and Validate
-
-```yaml
-- name: Verify configuration
-  ansible.builtin.assert:
-    that:
-      - ansible_distribution in ['Ubuntu', 'Debian', 'CentOS', 'RedHat']
-      - app_port | int > 0
-      - app_port | int < 65536
-    fail_msg: "Invalid configuration"
-    success_msg: "Configuration validated"
-```
-
-## Performance Optimization
-
-### Gathering Facts
-
-```yaml
-# Disable fact gathering when not needed
-- name: Quick task
-  hosts: all
-  gather_facts: no
-  tasks:
-    - name: Ping hosts
-      ansible.builtin.ping:
-
-# Gather specific facts
-- name: Gather minimal facts
-  hosts: all
-  gather_facts: yes
-  gather_subset:
-    - '!all'
-    - '!min'
-    - network
-```
-
-### Parallelism
-
-```yaml
-# Set forks in ansible.cfg or via CLI
-# ansible-playbook playbook.yml --forks 20
-
-# Control serial execution
-- name: Rolling update
-  hosts: webservers
-  serial: 2  # Update 2 hosts at a time
-```
-
-### Async Tasks
-
-```yaml
-- name: Long running task
-  ansible.builtin.command: /opt/long_running_script.sh
-  async: 3600  # Maximum runtime
-  poll: 0  # Fire and forget
-  register: long_task
-
-- name: Check on long task
-  ansible.builtin.async_status:
-    jid: "{{ long_task.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 30
-  delay: 10
-```
-
-## Documentation
-
-### Playbook Documentation
-
-```yaml
----
-# playbook.yml
-# Description: Deploy and configure web application
-# Requirements:
-#   - Ansible 2.10+
-#   - Target hosts: Ubuntu 20.04+ or RHEL 8+
-# Variables:
-#   - app_version: Application version to deploy (required)
-#   - app_port: Port for application (default: 8080)
-#   - enable_ssl: Enable SSL/TLS (default: false)
-# Usage:
-#   ansible-playbook -i inventory/production playbook.yml -e "app_version=1.2.3"
-```
-
-### Role Documentation (meta/main.yml)
-
-```yaml
----
-galaxy_info:
-  role_name: nginx
-  author: Your Name
-  description: Install and configure nginx
-  license: MIT
-  min_ansible_version: 2.10
-  platforms:
-    - name: Ubuntu
-      versions:
-        - focal
-        - jammy
-    - name: EL
-      versions:
-        - 8
-        - 9
-  galaxy_tags:
-    - web
-    - nginx
-
-dependencies: []
-```
-
-## Common Pitfalls to Avoid
-
-1. **Not using FQCN** - Always use fully qualified collection names
-2. **Hard-coded values** - Use variables for configuration
-3. **Not handling different OS** - Check `ansible_os_family` or `ansible_distribution`
-4. **Ignoring idempotency** - Tasks should be safe to run multiple times
-5. **Not using handlers** - Restart services via handlers, not direct tasks
-6. **Sensitive data in plain text** - Use ansible-vault for secrets
-7. **Not using tags** - Tags enable selective execution
-8. **Not validating** - Always run with `--check` first
-9. **Complex logic in playbooks** - Move complex logic to roles
-10. **Not documenting variables** - Document required and optional vars
-
-## Module Selection Priority
-
-1. **Builtin modules first**: Use `ansible.builtin.*` modules when available
-2. **Collection modules**: Use official collection modules (e.g., `community.general.*`)
-3. **Custom modules**: Only when no suitable module exists
-4. **Avoid `command`/`shell`**: Use specific modules instead of raw commands
+Exit 0 is the only pass. Exit 2 means a check could not run, which is not a
+pass. `references/playbook.md` states the stopping condition for the
+fix-and-re-run loop.

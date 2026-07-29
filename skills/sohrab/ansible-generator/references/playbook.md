@@ -1,813 +1,316 @@
-# ansible-generator — full playbook
+# The generation procedure
 
-Complete workflow, checklists, examples, and rules for this skill. `SKILL.md` is the slim router; this file holds the depth. Load it when you actually execute the skill. Sibling reference files live next to this one under `references/`.
+Read this when actually generating anything. `SKILL.md` is the router; this file
+carries the procedure by artifact type, the validation handoff and the delivery
+format. Nothing here restates the body.
 
+The validator this file hands to throughout is `ansible-validator`
+(`/ansible-validator`, `$ansible-validator`); `<ansible-validator>` below stands
+for that skill's directory.
 
-# Ansible Generator
+---
 
-## Overview
+## 1. Playbooks
 
-Generate production-ready Ansible resources (playbooks, roles, tasks, inventory files) following current best practices,
-naming conventions, and security standards. All generated resources are automatically validated using `$ansible-validator`
-to ensure syntax correctness and lint compliance.
+**Triggered by:** "create a playbook to…", "build a playbook for…", "automate
+…".
 
-## Source freshness
+**Procedure.**
 
-- Read `references/source-map.md` before handling latest/current/version/security-sensitive Ansible, collection, ansible-lint, or Molecule behavior.
-- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless the official/primary source map confirms the guidance.
+1. Establish four things before writing a line: the end state, the host group,
+   which tasks need privilege escalation, and which OS families must work. A
+   playbook written without the last one silently does nothing on an unlisted
+   family.
+2. Start from `assets/templates/playbook/basic_playbook.yml`.
+   `references/scaffold.md` states the placeholder convention.
+3. Write tasks in the shape of `references/best-practices.md` section A1, using
+   `references/module-patterns.md` to pick the module.
+4. Put the health check in `post_tasks` with `until`, `retries` and `delay`.
+5. Run the delivery gate in section 6 below.
 
-## When NOT to use
-
-- Do not use for validating or debugging existing Ansible content without generation needs; use `ansible-validator`.
-- Do not use for Terraform, Helm, Dockerfile, or CI/CD authoring unless Ansible is the main artifact.
-- Do not use for one-off shell automation that should remain a script.
-
-## Core Capabilities
-
-### 1. Generate Ansible Playbooks
-
-Create complete, production-ready playbooks with proper structure, error handling, and idempotency.
-
-**When to use:**
-
-- User requests: "Create a playbook to...", "Build a playbook for...", "Generate playbook that..."
-- Scenarios: Application deployment, system configuration, backup automation, service management
-
-**Process:**
-
-1. Understand the user's requirements (what needs to be automated)
-2. Identify target hosts, required privileges, and operating systems
-3. Use `assets/templates/playbook/basic_playbook.yml` as structural foundation
-4. Reference `references/best-practices.md` for implementation patterns
-5. Reference `references/module-patterns.md` for correct module usage
-6. Generate the playbook following these principles:
-    - Use Fully Qualified Collection Names (FQCN) for all modules
-    - Ensure idempotency (all tasks safe to run multiple times)
-    - Include proper error handling and conditionals
-    - Add meaningful task names starting with verbs
-    - Use appropriate tags for task categorization
-    - Include documentation header with usage instructions
-    - Add health checks in post_tasks when applicable
-7. **ALWAYS validate** the generated playbook using the $ansible-validator skill
-8. If validation fails, fix the issues and re-validate
-
-**Example structure:**
+**Shape.**
 
 ```yaml
 ---
-# Playbook: Deploy Web Application
-# Description: Deploy nginx web server with SSL
+# Playbook: deploy_web.yml
+# Description: Install nginx and render its configuration
 # Requirements:
-#   - Ansible 2.10+
-#   - Target hosts: Ubuntu 20.04+
+#   - ansible-core 2.19 or newer on the control node
+#   - Target hosts: Ubuntu 22.04+, Debian 12+, EL 9+
 # Variables:
-#   - app_port: Application port (default: 8080)
+#   - app_port: port the application listens on (optional, default 8080)
+#   - app_version: version to deploy (required)
 # Usage:
-#   ansible-playbook -i inventory/production deploy_web.yml
+#   ansible-playbook -i inventory/production deploy_web.yml \
+#     -e "app_version=1.4.2" --check --diff --limit web1.example.com
 
-- name: Deploy and configure web server
+- name: Deploy and configure the web server
   hosts: webservers
-  become: true
   gather_facts: true
 
   vars:
     app_port: 8080
-    nginx_version: latest
 
   pre_tasks:
-    - name: Update package cache
+    - name: Refresh the package cache on the Debian family
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
+      become: true
       when: ansible_os_family == "Debian"
+      tags:
+        - always
 
   tasks:
     - name: Ensure nginx is installed
       ansible.builtin.package:
         name: nginx
         state: present
+      become: true
       tags:
         - install
-        - nginx
 
-    - name: Deploy nginx configuration
+    - name: Render the nginx configuration
       ansible.builtin.template:
         src: templates/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
-        mode: '0644'
+        owner: root
+        group: root
+        mode: "0644"
         backup: true
-        validate: 'nginx -t -c %s'
+        validate: "/usr/sbin/nginx -t -c %s"
+      become: true
       notify: Reload nginx
       tags:
         - configure
 
   post_tasks:
-    - name: Verify nginx is responding
+    - name: Verify nginx answers on the health endpoint
       ansible.builtin.uri:
-        url: "http://localhost:{{ app_port }}/health"
+        url: "http://127.0.0.1:{{ app_port }}/health"
         status_code: 200
       register: health_check
       until: health_check.status == 200
       retries: 5
       delay: 10
+      tags:
+        - verify
 
   handlers:
     - name: Reload nginx
       ansible.builtin.service:
         name: nginx
         state: reloaded
+      become: true
 ```
 
-### 2. Generate Ansible Roles
+`validate:` runs the service's own configuration checker against the candidate
+file before it replaces the live one, so a bad render cannot take the service
+down. `%s` is the candidate's path. Include it whenever the service ships a
+checker.
 
-Create complete role structures with all required components organized following Ansible Galaxy conventions.
+`become` is on the tasks that need it, not on the play. A play-level `become`
+escalates every read-only command too, and an audit cannot then tell which tasks
+genuinely needed root.
 
-**When to use:**
+## 2. Roles
 
-- User requests: "Create a role for...", "Generate a role to...", "Build role that..."
-- Scenarios: Reusable component creation, complex service setup, multi-environment deployments
+**Triggered by:** "create a role for…", "make this reusable".
 
-**Process:**
+**Procedure.**
 
-1. Understand the role's purpose and scope
-2. Copy and customize the complete role structure from `assets/templates/role/`:
-    - `tasks/main.yml` - Main task execution logic
-    - `handlers/main.yml` - Event handlers (service restarts, reloads)
-    - `templates/` - Jinja2 configuration templates
-    - `files/` - Static files to copy
-    - `vars/main.yml` - Role-specific variables (high priority)
-    - `vars/Debian.yml` and `vars/RedHat.yml` - OS-specific variables
-    - `defaults/main.yml` - Default variables (easily overridable)
-    - `meta/main.yml` - Role metadata and dependencies
-    - `README.md` - Role documentation
-3. Replace all `[PLACEHOLDERS]` with actual values:
-    - `[ROLE_NAME]` - The role name (lowercase with underscores)
-    - `[role_name]` - Variable prefix for role variables
-    - `[PLAYBOOK_DESCRIPTION]` - Description of what the role does
-    - `[package_name]`, `[service_name]` - Actual package/service names
-    - `[default_port]` - Default port numbers
-    - All other placeholders as needed
-4. Implement role-specific logic following best practices:
-    - Use OS-specific variables via `include_vars`
-    - Prefix all role variables with role name
-    - Create handlers for all service changes
-    - Include validation in template tasks
-    - Add comprehensive tags
-5. Create proper role documentation in README.md
-6. **ALWAYS validate** the role using the $ansible-validator skill
-7. Fix any validation errors and re-validate
+1. Copy `assets/templates/role/`, substitute, and delete what the role does not
+   use. `references/scaffold.md` has the end-to-end commands.
+2. Fill `meta/argument_specs.yml` first. Deciding the interface before the
+   implementation is what stops a role reading six undeclared variables.
+3. Prefix every role variable with the role name.
+4. Put OS-specific package and service names in `vars/<family>.yml` and load
+   them with `include_vars`, rather than branching in the task list.
+5. Put every service restart behind a handler.
+6. Write `README.md` from the template as you go.
+7. Run the delivery gate in section 6.
 
-**Role variable naming convention:**
+## 3. Task files
 
-- Prefix: `{{ role_name }}_`
-- Examples: `nginx_port`, `nginx_worker_processes`, `postgres_max_connections`
+**Triggered by:** "create tasks to…", "extract this into a task file".
 
-### 3. Generate Task Files
-
-Create focused task files for specific operations that can be included in playbooks or roles.
-
-**When to use:**
-
-- User requests: "Create tasks to...", "Generate task file for..."
-- Scenarios: Reusable task sequences, complex operations, conditional includes
-
-**Process:**
-
-1. Define the specific operation to automate
-2. Reference `references/module-patterns.md` for correct module usage
-3. Generate task file with:
-    - Descriptive task names (verb-first)
-    - FQCN for all modules
-    - Proper error handling
-    - Idempotency checks
-    - Appropriate tags
-    - Conditional execution where needed
-4. **ALWAYS validate** using the $ansible-validator skill
-
-**Example:**
+A task file is a bare list of tasks, with no `hosts` and no `tasks:` key. It is
+included with `ansible.builtin.include_tasks` (evaluated at run time, so it can
+be conditional and looped) or `ansible.builtin.import_tasks` (evaluated at parse
+time, so tags and `when` propagate differently). Choose `include_tasks` when the
+inclusion itself depends on a variable.
 
 ```yaml
 ---
-# Tasks: Database backup operations
+# Tasks: back up the application database
 
-- name: Create backup directory
+- name: Ensure the backup directory exists
   ansible.builtin.file:
-    path: "{{ backup_dir }}"
+    path: "{{ db_backup_dir }}"
     state: directory
-    mode: '0755'
     owner: postgres
     group: postgres
+    mode: "0750"
 
-- name: Dump PostgreSQL database
-  ansible.builtin.command: >
-    pg_dump -h {{ db_host }} -U {{ db_user }} -d {{ db_name }}
-    -f {{ backup_dir }}/{{ db_name }}_{{ ansible_date_time.date }}.sql
-  environment:
-    PGPASSWORD: "{{ db_password }}"
+- name: Dump the database
+  community.postgresql.postgresql_db:
+    name: "{{ db_name }}"
+    state: dump
+    target: "{{ db_backup_dir }}/{{ db_name }}_{{ ansible_date_time.date }}.sql"
+    login_host: "{{ db_host }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ vault_db_password }}"
   no_log: true
-  changed_when: true
 
-- name: Compress backup file
-  ansible.builtin.archive:
-    path: "{{ backup_dir }}/{{ db_name }}_{{ ansible_date_time.date }}.sql"
-    dest: "{{ backup_dir }}/{{ db_name }}_{{ ansible_date_time.date }}.sql.gz"
+- name: Compress the dump
+  community.general.archive:
+    path: "{{ db_backup_dir }}/{{ db_name }}_{{ ansible_date_time.date }}.sql"
+    dest: "{{ db_backup_dir }}/{{ db_name }}_{{ ansible_date_time.date }}.sql.gz"
     format: gz
+    mode: "0600"
     remove: true
 
-- name: Remove old backups
+- name: Find backups past the retention window
   ansible.builtin.find:
-    paths: "{{ backup_dir }}"
+    paths: "{{ db_backup_dir }}"
     patterns: "*.sql.gz"
-    age: "{{ backup_retention_days }}d"
-  register: old_backups
+    age: "{{ db_backup_retention_days }}d"
+  register: expired_backups
 
-- name: Delete old backup files
+- name: Remove the expired backups
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
-  loop: "{{ old_backups.files }}"
+  loop: "{{ expired_backups.files }}"
+  loop_control:
+    label: "{{ item.path }}"
 ```
 
-### 4. Generate Inventory Files
+Two things this example does that the previous version did not: it uses the
+collection module instead of shelling out to `pg_dump` with `PGPASSWORD` in the
+environment, and it uses `community.general.archive` rather than
+`ansible.builtin.archive`, which is no longer a builtin. Both collections are <!-- check-module-currency:ignore -->
+declared in `requirements.yml`.
 
-Create inventory configurations with proper host organization, group hierarchies, and variable management.
+How long backups are retained, and what happens when the dump fails, are
+`/alaa-reliability-sla`'s (`$alaa-reliability-sla`). Schema shape and migration
+ordering are `/alaa-data-layer`'s (`$alaa-data-layer`).
 
-**When to use:**
+## 4. Inventories
 
-- User requests: "Create inventory for...", "Generate inventory file..."
-- Scenarios: Environment setup, host organization, multi-tier architectures
+**Triggered by:** "create an inventory for…", "set up the hosts file".
 
-**Process:**
+Start from `assets/templates/inventory/`. INI form for a flat inventory, YAML
+when the group hierarchy is deep enough that `[group:children]` stops being
+readable.
 
-1. Understand the infrastructure topology
-2. Use `assets/templates/inventory/` as foundation:
-    - `hosts` - Main inventory file (INI or YAML format)
-    - `group_vars/all.yml` - Global variables for all hosts
-    - `group_vars/[groupname].yml` - Group-specific variables
-    - `host_vars/[hostname].yml` - Host-specific variables
-3. Organize hosts into logical groups:
-    - Functional groups: `webservers`, `databases`, `loadbalancers`
-    - Environment groups: `production`, `staging`, `development`
-    - Geographic groups: `us-east`, `eu-west`
-4. Create group hierarchies with `[group:children]`
-5. Define variables at appropriate levels (all → group → host)
-6. Document connection settings and requirements
+- One inventory directory per environment. Sharing one inventory between
+  production and staging and switching on a variable means a mistyped `--limit`
+  reaches production.
+- Group by function (`webservers`, `databases`), then compose environments with
+  `[env:children]`.
+- Variables go in `group_vars/` and `host_vars/`, where they can carry comments,
+  not in `[group:vars]` blocks.
+- A host variable that is the same on every host belongs in `group_vars`.
 
-**Inventory format preference:**
+For a cloud fleet use a dynamic inventory plugin — `amazon.aws.aws_ec2`,
+`azure.azcollection.azure_rm`, `google.cloud.gcp_compute` — rather than a static
+file that drifts. Declare the collection and keep the plugin configuration in
+`inventory/<env>/<name>.aws_ec2.yml`.
 
-- Use INI format for simple, flat inventories
-- Use YAML format for complex, hierarchical inventories
+## 5. Projects
 
-**Dynamic Inventory (Cloud Environments):**
-For AWS, Azure, GCP, and other cloud providers, use dynamic inventory plugins:
+Start from `assets/templates/project/`. `references/scaffold.md` has the
+commands and states which of those files this skill owns and which it copies.
 
-- AWS EC2: `plugin: amazon.aws.aws_ec2` with filters and keyed_groups
-- Azure: `plugin: azure.azcollection.azure_rm` with resource group filters
-- Enables automatic host discovery based on tags, regions, and resource groups
-- See `references/module-patterns.md` for detailed examples
+## 6. The delivery gate
 
-### 5. Generate Project Configuration Files
+Every artifact this skill produces passes this gate before it is presented.
 
-**When to use:**
-
-- User requests: "Set up Ansible project", "Initialize Ansible configuration"
-- Scenarios: New project initialization, standardizing project structure
-
-**Process:**
-
-1. Use templates from `assets/templates/project/`:
-    - `ansible.cfg` - Project configuration (forks, timeout, paths)
-    - `requirements.yml` - Collections and roles dependencies
-    - `.ansible-lint` - Lint rules for code quality
-2. Customize based on project requirements
-3. Document usage instructions
-
-### 6. Role Argument Specifications (Ansible 2.11+)
-
-When generating roles, include `meta/argument_specs.yml` for automatic variable validation:
-
-- Define required and optional variables
-- Specify types (str, int, bool, list, dict, path)
-- Set default values and choices
-- Enable automatic validation before role execution
-- Template available at `assets/templates/role/meta/argument_specs.yml`
-
-### 7. Handling Custom Modules and Collections
-
-When generating Ansible resources that require custom modules, collections, or providers that are not part of
-ansible.builtin:
-
-**Detection:**
-
-- User mentions specific collections (e.g., "kubernetes.core", "amazon.aws", "community.docker")
-- User requests integration with external tools/platforms
-- Task requires modules not in ansible.builtin namespace
-
-**Process:**
-
-1. **Identify the collection/module:**
-    - Extract collection name and module name
-    - Determine if version-specific information is needed
-
-2. **Search for current documentation using WebSearch:**
-   ```
-   Search query pattern: "ansible [collection.name] [module] [version] documentation examples"
-   Examples:
-   - "ansible kubernetes.core k8s module latest documentation"
-   - "ansible amazon.aws ec2_instance 2024 examples"
-   - "ansible community.docker docker_container latest documentation"
-   ```
-
-3. **Analyze search results for:**
-    - Current module parameters and their types
-    - Required vs optional parameters
-    - Version compatibility and deprecation notices
-    - Working examples and best practices
-    - Collection installation requirements
-
-4. **If Context7 MCP is available:**
-    - First try to resolve library ID using `mcp__context7__resolve-library-id`
-    - Then fetch documentation using `mcp__context7__get-library-docs`
-    - This provides more structured and reliable documentation
-
-5. **Generate resource using discovered information:**
-    - Use correct FQCN (e.g., `kubernetes.core.k8s`, not just `k8s`)
-    - Apply current parameter names and values
-    - Include collection installation instructions in comments
-    - Add version compatibility notes
-
-6. **Include installation instructions:**
-   ```yaml
-   # Requirements:
-   #   - ansible-galaxy collection install kubernetes.core:2.4.0
-   # or in requirements.yml:
-   # ---
-   # collections:
-   #   - name: kubernetes.core
-   #     version: "2.4.0"
-   ```
-
-**Example with custom collection:**
-
-```yaml
----
-# Playbook: Deploy Kubernetes Resources
-# Requirements:
-#   - Ansible 2.10+
-#   - Collection: kubernetes.core >= 2.4.0
-#   - Install: ansible-galaxy collection install kubernetes.core
-# Variables:
-#   - k8s_namespace: Target namespace (default: default)
-#   - k8s_kubeconfig: Path to kubeconfig (default: ~/.kube/config)
-
-- name: Deploy application to Kubernetes
-  hosts: localhost
-  gather_facts: false
-  vars:
-    k8s_namespace: production
-    k8s_kubeconfig: ~/.kube/config
-
-  tasks:
-    - name: Create namespace
-      kubernetes.core.k8s:
-        kubeconfig: "{{ k8s_kubeconfig }}"
-        state: present
-        definition:
-          apiVersion: v1
-          kind: Namespace
-          metadata:
-            name: "{{ k8s_namespace }}"
-      tags:
-        - namespace
-
-    - name: Deploy application
-      kubernetes.core.k8s:
-        kubeconfig: "{{ k8s_kubeconfig }}"
-        state: present
-        namespace: "{{ k8s_namespace }}"
-        definition:
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: myapp
-          spec:
-            replicas: 3
-            selector:
-              matchLabels:
-                app: myapp
-            template:
-              metadata:
-                labels:
-                  app: myapp
-              spec:
-                containers:
-                  - name: myapp
-                    image: myapp:1.0.0
-                    ports:
-                      - containerPort: 8080
-      tags:
-        - deployment
-```
-
-## Validation Workflow
-
-**CRITICAL:** Every generated Ansible resource MUST be validated before presenting to the user.
-
-### Validation Process
-
-1. **After generating any Ansible file**, immediately invoke the `$ansible-validator` skill:
-   ```
-   Skill: $ansible-validator
-   ```
-
-2. **The $ansible-validator skill will:**
-    - Validate YAML syntax
-    - Run ansible-lint for best practices
-    - Perform ansible-playbook --syntax-check
-    - Execute in check mode (dry-run) when applicable
-    - Report any errors, warnings, or issues
-
-3. **If validation fails:**
-    - Analyze the reported errors
-    - Fix the issues in the generated file
-    - Re-validate until all checks pass
-
-4. **If validation succeeds, present the result formally:**
-
-   **Required Presentation Format:**
-   ```
-   ## Generated [Resource Type]: [Name]
-
-   **Validation Status:** ✅ All checks passed
-   - YAML syntax: Passed
-   - Ansible syntax: Passed
-   - Ansible lint: Passed
-
-   **Summary:**
-   - [Brief description of what was generated]
-   - [Key features/sections included]
-   - [Any notable implementation decisions]
-
-   **Usage:**
-   ```bash
-   [Exact command to run the playbook/role]
-   ```
-
-   **Prerequisites:**
-    - [Any required collections or dependencies]
-    - [Target system requirements]
-   ```
-
-   This formal presentation ensures the user clearly understands:
-   - That validation was successful
-   - What was generated and why
-   - How to use the generated resource
-   - Any prerequisites or dependencies
-
-### When to Skip Validation
-
-Only skip validation when:
-
-- Generating partial code snippets (not complete files)
-- Creating examples for documentation purposes
-- User explicitly requests to skip validation
-
-## Best Practices to Enforce
-
-Reference `references/best-practices.md` for comprehensive guidelines. Key principles:
-
-### Mandatory Standards
-
-1. **FQCN (Fully Qualified Collection Names):**
-    - ✅ Correct: `ansible.builtin.copy`, `community.general.ufw`
-    - ❌ Wrong: `copy`, `ufw`
-
-2. **Idempotency:**
-    - All tasks must be safe to run multiple times
-    - Use `state: present/absent` declarations
-    - Avoid `command`/`shell` when builtin modules exist
-    - When using `command`/`shell`, use `creates`, `removes`, or `changed_when`
-
-3. **Naming:**
-    - Task names: Descriptive, start with verb ("Ensure", "Create", "Deploy")
-    - Variables: snake_case with descriptive names
-    - Role variables: Prefixed with role name
-    - Files: lowercase with underscores
-
-4. **Security:**
-    - Use `no_log: true` for sensitive operations
-    - Set restrictive file permissions (600 for secrets, 644 for configs)
-    - Never commit passwords/secrets in plain text
-    - Reference ansible-vault for secrets management
-
-5. **Error Handling:**
-    - Include `when` conditionals for OS-specific tasks
-    - Use `register` to capture task results
-    - Add `failed_when` and `changed_when` for command modules
-    - Include `validate` parameter for configuration files
-
-6. **Performance:**
-    - Disable fact gathering when not needed: `gather_facts: false`
-    - Use `update_cache` with `cache_valid_time` for package managers
-    - Implement async tasks for long-running operations
-
-7. **Documentation:**
-    - Add header comments to playbooks with requirements and usage
-    - Document all variables with descriptions and defaults
-    - Include examples in role README files
-
-### Module Selection Priority
-
-**IMPORTANT:** Always prefer builtin modules over collection modules when possible. This ensures:
-
-- Better validation compatibility (validation environments may not have collections installed)
-- Fewer external dependencies
-- More reliable playbook execution across environments
-
-**Priority Order:**
-
-1. **Builtin modules (`ansible.builtin.*`)** - ALWAYS first choice
-    - Check `references/module-patterns.md` for builtin alternatives before using collections
-    - Example: Use `ansible.builtin.command` with `psql` instead of `community.postgresql.postgresql_db` if collection
-      isn't essential
-2. **Official collection modules** (verified collections) - Second choice, only when builtin doesn't exist
-3. **Community modules** (`community.*`) - Third choice
-4. **Custom modules** - Last resort
-5. **Avoid `command`/`shell`** - Only when no module alternative exists
-
-### Handling Collection Dependencies in Validation
-
-When validation fails due to missing collections (e.g., "couldn't resolve module/action"):
-
-1. **First, check if a builtin alternative exists:**
-    - Many collection modules have `ansible.builtin.*` equivalents
-    - Example: Instead of `community.postgresql.postgresql_db`, use `ansible.builtin.command` with `psql` commands
-    - Example: Instead of `community.docker.docker_container`, use `ansible.builtin.command` with `docker` CLI
-
-2. **If collection is required (no builtin alternative):**
-    - Document the collection requirement clearly in the playbook header
-    - Add installation instructions in comments
-    - Consider providing both approaches (collection-based and builtin fallback)
-
-3. **If validation environment lacks collections:**
-    - Rewrite tasks using `ansible.builtin.*` modules with equivalent CLI commands
-    - Use `changed_when` and `creates`/`removes` for idempotency with command modules
-    - Document that the collection-based approach is preferred in production
-
-**Example - Builtin fallback for PostgreSQL:**
-
-```yaml
-# Preferred (requires community.postgresql collection):
-# - name: Create database
-#   community.postgresql.postgresql_db:
-#     name: mydb
-#     state: present
-
-# Builtin fallback (works without collection):
-- name: Check if database exists
-  ansible.builtin.command:
-    cmd: psql -tAc "SELECT 1 FROM pg_database WHERE datname='mydb'"
-  become: true
-  become_user: postgres
-  register: db_check
-  changed_when: false
-
-- name: Create database
-  ansible.builtin.command:
-    cmd: psql -c "CREATE DATABASE mydb"
-  become: true
-  become_user: postgres
-  when: db_check.stdout != "1"
-  changed_when: true
-```
-
-## Resources
-
-### References (Load on Skill Invocation)
-
-**IMPORTANT:** These reference files should be **read at the start of generation** to inform implementation decisions.
-Do not just rely on general knowledge - explicitly read the references to ensure current best practices are applied.
-
-- `references/best-practices.md` - Comprehensive Ansible best practices guide
-    - Directory structures, naming conventions, task writing
-    - Variables, handlers, templates, security
-    - Testing, performance optimization, common pitfalls
-    - **When to read:** At the start of generating any Ansible resource
-    - **How to use:** Extract relevant patterns for the specific resource type being generated
-
-- `references/module-patterns.md` - Common module usage patterns and examples
-    - Complete examples for all common ansible.builtin modules
-    - Collection module examples (docker, postgresql, etc.)
-    - Copy-paste ready code snippets
-    - **When to read:** When selecting modules for tasks
-    - **How to use:** Find the correct module and parameter syntax for the operation needed
-
-### Assets (Templates as Reference Structures)
-
-Templates serve as **structural references** showing the expected format and organization. You do NOT need to literally
-copy and paste them - use them as guides for the correct structure, sections, and patterns.
-
-- `assets/templates/playbook/basic_playbook.yml` - Reference playbook structure
-    - Shows: pre_tasks, tasks, post_tasks, handlers organization
-    - Shows: Header documentation format
-    - Shows: Variable declaration patterns
-- `assets/templates/role/*` - Reference role directory structure
-    - Shows: Required files and their organization
-    - Shows: Variable naming conventions
-    - `meta/argument_specs.yml` - Role variable validation (Ansible 2.11+)
-- `assets/templates/inventory/*` - Reference inventory organization
-    - Shows: Host grouping patterns
-    - Shows: group_vars/host_vars structure
-- `assets/templates/project/*` - Reference project configuration
-    - `ansible.cfg` - Project-level Ansible configuration
-    - `requirements.yml` - Collections and roles dependencies
-    - `.ansible-lint` - Linting rules configuration
-
-**How to use templates:**
-
-1. **Review** the relevant template to understand the expected structure
-2. **Generate** content following the same organizational pattern
-3. **Replace** all `[PLACEHOLDERS]` with actual values appropriate for the task
-4. **Customize** logic based on user requirements
-5. **Remove** unnecessary sections that don't apply
-6. **Validate** the result using $ansible-validator skill
-
-## Typical Workflow Example
-
-**User request:** "Create a playbook to deploy nginx with SSL"
-
-**Process:**
-
-1. ✅ Understand requirements:
-    - Deploy nginx web server
-    - Configure SSL/TLS
-    - Ensure service is running
-    - Target: Linux servers (Ubuntu/RHEL)
-
-2. ✅ Reference resources:
-    - Check `references/best-practices.md` for playbook structure
-    - Check `references/module-patterns.md` for nginx-related modules
-    - Use `assets/templates/playbook/basic_playbook.yml` as base
-
-3. ✅ Generate playbook:
-    - Use FQCN for all modules
-    - Include OS-specific conditionals
-    - Add SSL configuration tasks
-    - Include validation and health checks
-    - Add proper tags and handlers
-
-4. ✅ Validate:
-    - Invoke `$ansible-validator` skill
-    - Fix any reported issues
-    - Re-validate if needed
-
-5. ✅ Present to user:
-    - Show validated playbook
-    - Explain key sections
-    - Provide usage instructions
-    - Mention successful validation
-
-## Common Patterns
-
-### Multi-OS Support
-
-```yaml
-- name: Install nginx (Debian/Ubuntu)
-  ansible.builtin.apt:
-    name: nginx
-    state: present
-  when: ansible_os_family == "Debian"
-
-# NOTE: For RHEL 8+, use ansible.builtin.dnf instead of yum
-# ansible.builtin.yum is deprecated in favor of dnf for modern RHEL/CentOS
-- name: Install nginx (RHEL 8+/CentOS 8+)
-  ansible.builtin.dnf:
-    name: nginx
-    state: present
-  when: ansible_os_family == "RedHat"
-```
-
-### Template Deployment with Validation
-
-```yaml
-- name: Deploy configuration
-  ansible.builtin.template:
-    src: app_config.j2
-    dest: /etc/app/config.yml
-    mode: '0644'
-    backup: true
-    validate: '/usr/bin/app validate %s'
-  notify: Restart application
-```
-
-### Async Long-Running Tasks
-
-```yaml
-- name: Run database migration
-  ansible.builtin.command: /opt/app/migrate.sh
-  async: 3600
-  poll: 0
-  register: migration
-
-- name: Check migration status
-  ansible.builtin.async_status:
-    jid: "{{ migration.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 360
-  delay: 10
-```
-
-### Conditional Execution
-
-```yaml
-- name: Configure production settings
-  ansible.builtin.template:
-    src: production.j2
-    dest: /etc/app/config.yml
-  when:
-    - env == "production"
-    - ansible_distribution == "Ubuntu"
-```
-
-## Error Messages and Troubleshooting
-
-### If $ansible-validator reports errors:
-
-1. **Syntax errors:** Fix YAML formatting, indentation, or structure
-2. **Lint warnings:** Address best practice violations (FQCN, naming, etc.)
-3. **Undefined variables:** Add variable definitions or defaults
-4. **Module not found:** Check FQCN or add collection requirements
-5. **Task failures in check mode:** Add `check_mode: no` for tasks that must run
-
-### If custom module/collection documentation is not found:
-
-1. Try alternative search queries with different versions
-2. Check official Ansible Galaxy for collection
-3. Look for module in ansible-collections GitHub org
-4. Consider using alternative builtin modules
-5. Ask user if they have specific version requirements
-
-## Final Checklist (MANDATORY)
-
-Before presenting any generated Ansible resource to the user, verify all items:
-
-- [ ] **Reference files read** - Consulted `references/best-practices.md` and `references/module-patterns.md`
-- [ ] **FQCN used** - All modules use fully qualified names (`ansible.builtin.*`, not bare names)
-- [ ] **Booleans correct** - Use `true`/`false` (NOT `yes`/`no`) to pass ansible-lint
-- [ ] **RHEL 8+** - Use `ansible.builtin.dnf` (NOT `ansible.builtin.yum`) for modern RHEL/CentOS
-- [ ] **Idempotent** - All tasks safe to run multiple times
-- [ ] **Security** - `no_log: true` on sensitive tasks, proper file permissions
-- [ ] **Validated** - $ansible-validator skill invoked and passed
-- [ ] **Formal presentation** - Output formatted per template below
-
-### Required Output Format
-
-After validation passes, ALWAYS present results in this exact format:
-
-```markdown
-## Generated [Resource Type]: [Name]
-
-**Validation Status:** ✅ All checks passed
-- YAML syntax: Passed
-- Ansible syntax: Passed
-- Ansible lint: Passed
-
-**Summary:**
-- [Brief description of what was generated]
-- [Key features/sections included]
-- [Any notable implementation decisions]
-
-**Usage:**
 ```bash
-[Exact command to run the playbook/role]
+# 1. This skill's own check: parses, canonical booleans, no stray placeholder.
+python3 scripts/check_templates.py <the files you generated>
+
+# 2. The sibling's checks. Exit 0 is the only pass.
+bash    <ansible-validator>/scripts/validate_playbook.sh <playbook>   # or validate_role.sh <role>
+bash    <ansible-validator>/scripts/scan_secrets.sh      <target>
+python3 <ansible-validator>/scripts/check_task_safety.py <target>
+python3 <ansible-validator>/scripts/check_module_currency.py <target>
 ```
 
-**Prerequisites:**
+**The accept condition:** exit `0` from every command, with zero ansible-lint
+failures. Exit `1` is findings to fix. Exit `2` means a check could not run,
+which is not a pass and must be reported as blocked.
 
-- [Any required collections or dependencies]
-- [Target system requirements]
+**The stopping condition:** if two consecutive fix-and-re-run cycles do not
+reduce the failure count, stop and report the remaining findings rather than
+continuing. An unbounded loop on a finding you cannot move is worse than a
+report that names it.
+
+**What is exempt from the gate:** an inline snippet of fewer than ten lines
+shown in conversation, and a fragment quoted inside documentation. Every file
+that is written to disk goes through the gate. There is no user-consent exemption:
+"the user asked me to skip validation" is not a property of the artifact, and an
+unvalidated file is unvalidated whoever asked for it.
+
+## 7. Delivery format
+
+State these four things once, when handing over. Do not repeat the block
+elsewhere in the same response.
 
 ```
+Generated <type>: <name>
 
----
+Checks:  check_templates 0 | validate_* 0 | scan_secrets 0 | check_task_safety 0
+Summary: <what it does, and the one implementation decision worth knowing>
+Usage:   <the exact command, with --check --diff --limit on the first run>
+Needs:   <collections with floors, target platform requirements>
+```
 
-## Summary
+When a check exited 2, say so in place of its number and say why. A gate that
+could not run is not a gate that passed.
 
-Always follow this sequence when generating Ansible resources:
+## 8. When the artifact reaches another skill's ground
 
-1. **Understand** - Clarify user requirements
-2. **Reference** - Check best-practices.md and module-patterns.md
-3. **Generate** - Use templates and follow standards (FQCN, idempotency, naming)
-4. **Search** - For custom modules/collections, use WebSearch to get current docs
-5. **Validate** - ALWAYS use $ansible-validator skill
-6. **Fix** - Resolve any validation errors
-7. **Present** - Deliver validated, production-ready Ansible code
+- **A play that applies a Kubernetes manifest** uses `kubernetes.core.k8s` with
+  a `definition` sourced from a file. This skill writes the task; it does not
+  write the manifest body. `/alaa-k8s-helm` (`$alaa-k8s-helm`) owns the
+  manifest and the chart.
 
-Generate Ansible resources that are:
-- ✅ Idempotent and safe to run multiple times
-- ✅ Following current best practices and naming conventions
-- ✅ Using FQCN for all modules
-- ✅ Properly documented with usage instructions
-- ✅ Validated and lint-clean
-- ✅ Production-ready and maintainable
+  ```yaml
+  - name: Apply the application manifest
+    kubernetes.core.k8s:
+      kubeconfig: "{{ k8s_kubeconfig }}"
+      namespace: "{{ k8s_namespace }}"
+      state: present
+      definition: "{{ lookup('file', 'files/deployment.yml') | from_yaml }}"
+  ```
+
+- **A play that configures a container host** installs the engine, places
+  `/etc/docker/daemon.json` and manages the unit. It templates a Compose file
+  authored under `/alaa-docker-production`'s (`$alaa-docker-production`) rules;
+  it does not invent one, and it does not generate Compose YAML inline.
+- **A play that templates an HAProxy configuration** owns the `template:` task,
+  its `validate:` argument and the reload handler. `/alaa-haproxy`
+  (`$alaa-haproxy`) chooses the directives.
+- **A play invoked from a CI job**: the boundary is the `ansible-playbook`
+  command line. The arguments are `/alaa-gitlab-ci-cd`'s
+  (`$alaa-gitlab-ci-cd`); everything the command reads is this skill's.
+
+## 9. Troubleshooting the generation loop
+
+`ansible-validator references/failure-classes.md` is the diagnosis index:
+symptom, the one command that tells you which cause it is, the smallest retry,
+and when to escalate. The three classes this skill produces most often:
+
+| What the validator reported | Class | Usual cause here |
+|---|---|---|
+| the file does not parse | A | a bracketed placeholder, or a key indented under a bare `---` |
+| `couldn't resolve module/action` | B | a collection used but not declared in `requirements.yml`, or a name that left core |
+| `'x' is undefined` | C | a variable used but not declared in `meta/argument_specs.yml` |
+
+For a module name specifically, look nothing up on the web: run
+`python3 <ansible-validator>/scripts/check_module_currency.py`, which reads
+ansible-core's own routing table offline. For anything else version-sensitive,
+`ansible-validator references/source-map.md` carries the primary sources, the
+pinned values and the command that re-derives each one.

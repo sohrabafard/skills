@@ -1,210 +1,152 @@
 #!/usr/bin/env bash
+#
+# test_role.sh - run a Molecule scenario against a role.
+#
+# Molecule `converge` runs the role for real inside a container it creates. This
+# script therefore never runs on its own initiative. It runs when a human asked
+# for a test, and it refuses to start until the caller has confirmed that the
+# machine is a disposable test host. references/molecule.md states that rule
+# once and this script enforces it.
+#
+# Requires bash 4.0 or newer. Exit codes: 0 clean, 1 findings, 2 could not run,
+# 64 usage error.
 
-# Ansible Role Testing Script with Molecule
-# Automatically installs molecule in temporary venv if not available
+set -uo pipefail
 
-set -e
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-ROLE_DIR="$1"
-SCENARIO="${2:-default}"
+av_print_help() {
+    cat <<'EOF'
+test_role.sh - run one Molecule scenario against a role.
 
-COLOR_GREEN='\033[0;32m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_RED='\033[0;31m'
-COLOR_BLUE='\033[0;34m'
-COLOR_RESET='\033[0m'
+Usage:
+  bash scripts/test_role.sh <role-directory> [scenario] --i-confirm-disposable-host
+  bash scripts/test_role.sh --self-test
 
-# Usage check
-if [ -z "$ROLE_DIR" ]; then
-    echo "Usage: $0 <role-directory> [scenario]"
-    echo ""
-    echo "Arguments:"
-    echo "  role-directory  Path to the Ansible role"
-    echo "  scenario        Molecule scenario name (default: default)"
-    exit 1
-fi
+Scenario defaults to "default".
 
-if [ ! -d "$ROLE_DIR" ]; then
-    echo -e "${COLOR_RED}Error: Role directory not found: $ROLE_DIR${COLOR_RESET}"
-    exit 1
-fi
+What it asserts, in order, with every stage run and tallied so that the summary
+and the teardown always execute:
+  dependency    role and collection requirements resolve
+  syntax        the scenario's converge playbook parses
+  create        the platform instances come up
+  prepare       the prepare playbook runs, when the scenario declares one
+  converge      the role applies cleanly
+  idempotence   a second apply changes nothing. This uses Molecule's own
+                `idempotence` action, which compares every host. The pre-repair
+                version ran `converge` again and grepped for "changed=0", which
+                passed whenever any one host of four reported no change.
+  verify        the verify playbook passes
+  destroy       the instances are torn down, whatever happened above
 
-# Get absolute path to role
-ROLE_ABS_PATH=$(cd "$ROLE_DIR" && pwd)
+Why the confirmation flag: `molecule create` starts privileged containers with
+/sys/fs/cgroup mounted read-write on whatever machine you are on. Running that
+without asking is exactly the class of action that needs authorisation. If you
+are not on a disposable test host, do not pass the flag; report that Molecule
+is configured, that you are not running it, and why.
 
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-echo -e "${COLOR_BLUE}Ansible Role Testing with Molecule${COLOR_RESET}"
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-echo ""
-echo "Role: $ROLE_ABS_PATH"
-echo "Scenario: $SCENARIO"
-echo ""
+Additional options:
+      --i-confirm-disposable-host
+                            Required. Asserts that this machine is a disposable
+                            test host whose containers may be created and
+                            destroyed.
 
-# Check if molecule is configured
-if [ ! -d "$ROLE_ABS_PATH/molecule/$SCENARIO" ]; then
-    echo -e "${COLOR_YELLOW}⚠ Molecule scenario '$SCENARIO' not found${COLOR_RESET}"
-    echo ""
-    echo "Available scenarios:"
-    if [ -d "$ROLE_ABS_PATH/molecule" ]; then
-        ls -1 "$ROLE_ABS_PATH/molecule/"
-    else
-        echo "  None - molecule not initialized"
-    fi
-    echo ""
-    echo "Initialize molecule with:"
-    echo "  cd $ROLE_ABS_PATH"
-    echo "  molecule init scenario --driver-name docker"
-    exit 1
-fi
-
-# Function to run molecule command
-run_molecule() {
-    if [ -n "$TEMP_VENV" ]; then
-        # Using temporary venv
-        "$TEMP_VENV/bin/molecule" "$@"
-    else
-        # Using system molecule
-        molecule "$@"
-    fi
+EOF
+    av_common_flag_help
 }
 
-# Check if molecule is available in system
-TEMP_VENV=""
-CLEANUP_VENV=0
+CONFIRMED=0
 
-if command -v molecule >/dev/null 2>&1; then
-    echo -e "${COLOR_GREEN}✓ Using system molecule${COLOR_RESET}"
-    echo ""
-else
-    echo -e "${COLOR_YELLOW}⚠ Molecule not found in system${COLOR_RESET}"
-    echo "Creating temporary environment with molecule..."
-    echo ""
+run_self_test() {
+    local here="$0" fx
+    fx="$(av_fixture_dir)"
+    echo "self-test: test_role.sh"
+    av_expect_exit 64 "no argument is a usage error" bash "$here"
+    av_expect_exit 0  "--help exits clean" bash "$here" --help
+    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/fixtures/roles/no_such_role" default --i-confirm-disposable-host
+    av_expect_exit 64 "missing confirmation is a usage error" bash "$here" "$fx/fixtures/roles/clean_role"
+    av_expect_exit 2  "a role with no molecule/ cannot run" bash "$here" "$fx/fixtures/roles/clean_role" default --i-confirm-disposable-host
+    av_self_test_summary
+}
 
-    # Create temporary venv
-    TEMP_VENV=$(mktemp -d -t ansible-molecule.XXXXXX)
-    CLEANUP_VENV=1
+ARGS=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --i-confirm-disposable-host) CONFIRMED=1; shift ;;
+        *) ARGS+=("$1"); shift ;;
+    esac
+done
+av_parse_common_flags ${ARGS+"${ARGS[@]}"}
 
-    # Setup cleanup trap
-    cleanup() {
-        if [ $CLEANUP_VENV -eq 1 ] && [ -n "$TEMP_VENV" ]; then
-            echo ""
-            echo "Cleaning up temporary environment..."
-            rm -rf "$TEMP_VENV"
-        fi
-    }
-    trap cleanup EXIT INT TERM
-
-    # Create venv and install molecule
-    echo "Installing molecule and dependencies (this may take a minute)..."
-    python3 -m venv "$TEMP_VENV" >/dev/null 2>&1
-
-    # Activate venv and install
-    source "$TEMP_VENV/bin/activate"
-
-    # Install molecule with docker driver and ansible
-    pip install --quiet --upgrade pip setuptools wheel
-    pip install --quiet molecule molecule-docker ansible-core ansible-lint yamllint
-
-    echo -e "${COLOR_GREEN}✓ Temporary molecule environment ready${COLOR_RESET}"
-    echo ""
+if [ "$AV_SELF_TEST" -eq 1 ]; then
+    run_self_test
 fi
 
-cd "$ROLE_ABS_PATH"
+if [ "${#AV_ARGS[@]}" -lt 1 ]; then
+    av_usage_error "a role directory is required"
+fi
 
-# List molecule scenarios
-echo -e "${COLOR_BLUE}Available Scenarios:${COLOR_RESET}"
-run_molecule list -s "$SCENARIO"
+ROLE_PATH="${AV_ARGS[0]}"
+SCENARIO="${AV_ARGS[1]:-default}"
+
+if [ ! -d "$ROLE_PATH" ]; then
+    av_cannot_run "role directory not found: $ROLE_PATH"
+fi
+ROLE_ABS="$(cd "$ROLE_PATH" && pwd)"
+
+if [ "$CONFIRMED" -ne 1 ]; then
+    av_usage_error "--i-confirm-disposable-host is required. Molecule creates privileged containers on this machine; confirm that this machine is a disposable test host, or report that Molecule is configured and that you are not running it."
+fi
+
+if [ ! -d "$ROLE_ABS/molecule/$SCENARIO" ]; then
+    av_cannot_run "molecule scenario '$SCENARIO' not found under $ROLE_ABS/molecule/. Create one with 'molecule init scenario' from inside the role, then configure the driver as references/molecule.md describes."
+fi
+
+MOLECULE_BIN="$(av_resolve_tool molecule)" || av_cannot_run "molecule is not available and no tool environment could be created. Install it with: python3 -m pip install 'molecule>=25.0' 'molecule-plugins[docker]'"
+
+av_banner "Molecule scenario: $SCENARIO"
+echo "Role: $ROLE_ABS"
 echo ""
 
-# Run molecule test
-echo -e "${COLOR_BLUE}Running Molecule Test Sequence...${COLOR_RESET}"
-echo ""
+cd "$ROLE_ABS" || av_cannot_run "could not enter $ROLE_ABS"
 
-# Full test sequence with better error handling
 STAGE_ERRORS=0
 
 run_stage() {
-    local stage=$1
-    local description=$2
-
-    echo -e "${COLOR_BLUE}[$stage] $description${COLOR_RESET}"
-    echo "-----------------------------------"
-
-    if run_molecule "$stage" -s "$SCENARIO"; then
-        echo -e "${COLOR_GREEN}✓ $description completed${COLOR_RESET}"
-        echo ""
+    local stage="$1" description="$2" required="${3:-required}"
+    printf "%b[%s] %s%b\n" "$COLOR_BLUE" "$stage" "$description" "$COLOR_RESET"
+    if "$MOLECULE_BIN" "$stage" -s "$SCENARIO"; then
+        printf "  %bok%b  %s\n\n" "$COLOR_GREEN" "$COLOR_RESET" "$description"
         return 0
-    else
-        echo -e "${COLOR_RED}✗ $description failed${COLOR_RESET}"
-        echo ""
-        STAGE_ERRORS=$((STAGE_ERRORS + 1))
-        return 1
     fi
+    if [ "$required" = optional ]; then
+        printf "  %b--%b  %s did not run; the scenario does not declare it\n\n" "$COLOR_YELLOW" "$COLOR_RESET" "$description"
+        return 0
+    fi
+    printf "  %bfail%b %s\n\n" "$COLOR_RED" "$COLOR_RESET" "$description"
+    STAGE_ERRORS=$((STAGE_ERRORS + 1))
+    return 0
 }
 
-# Run test stages
-# Note: molecule lint was removed in v5+, linting is now done separately
-# run_stage "lint" "Lint Check"
-run_stage "syntax" "Syntax Check"
-run_stage "create" "Create Test Instances"
-run_stage "converge" "Run Role (Converge)"
+# Every stage is invoked with its failure tallied rather than propagated, so
+# that destroy and the summary always run. Under the pre-repair `set -e` the
+# first failing stage killed the script, leaving the test containers running
+# and printing no summary at all.
+run_stage dependency "Resolve dependencies" optional
+run_stage syntax     "Syntax check"
+run_stage create     "Create instances"
+run_stage prepare    "Prepare instances" optional
+run_stage converge   "Apply the role"
+run_stage idempotence "Idempotence (second apply changes nothing)"
+run_stage verify     "Verification playbook"
 
-# Idempotence test (critical for Ansible roles)
-echo -e "${COLOR_BLUE}[Idempotence] Idempotence Test${COLOR_RESET}"
-echo "-----------------------------------"
-if run_molecule converge -s "$SCENARIO" 2>&1 | grep -q "changed=0"; then
-    echo -e "${COLOR_GREEN}✓ Idempotence test passed${COLOR_RESET}"
-else
-    echo -e "${COLOR_RED}✗ Idempotence test failed - role is not idempotent${COLOR_RESET}"
-    STAGE_ERRORS=$((STAGE_ERRORS + 1))
-fi
+printf "%b[destroy] Tear down instances%b\n" "$COLOR_BLUE" "$COLOR_RESET"
+"$MOLECULE_BIN" destroy -s "$SCENARIO" || printf "  %bwarning%b destroy failed; instances may still be running. Run 'molecule destroy -s %s' from %s.\n" "$COLOR_YELLOW" "$COLOR_RESET" "$SCENARIO" "$ROLE_ABS"
 echo ""
 
-# Verify stage
-run_stage "verify" "Verification Tests"
-
-# Cleanup
-echo -e "${COLOR_BLUE}[Cleanup] Destroying Test Instances${COLOR_RESET}"
-echo "-----------------------------------"
-run_molecule destroy -s "$SCENARIO" || true
-echo ""
-
-# Summary
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-echo -e "${COLOR_BLUE}Test Summary${COLOR_RESET}"
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-
-if [ $STAGE_ERRORS -eq 0 ]; then
-    echo -e "${COLOR_GREEN}✓ All tests passed successfully!${COLOR_RESET}"
-    echo ""
-    echo "The role is ready for use."
-    echo ""
-    if [ -n "$TEMP_VENV" ]; then
-        echo "Note: Molecule was installed in a temporary environment for this test."
-        echo "To install permanently: pip install molecule molecule-docker"
-    fi
-    exit 0
-else
-    echo -e "${COLOR_RED}✗ Tests failed with $STAGE_ERRORS error(s)${COLOR_RESET}"
-    echo ""
-    echo "Debug with:"
-    echo "  cd $ROLE_ABS_PATH"
-    if [ -n "$TEMP_VENV" ]; then
-        echo "  # Using temporary venv:"
-        echo "  source $TEMP_VENV/bin/activate"
-        echo "  molecule converge -s $SCENARIO  # Run without cleanup"
-        echo "  molecule login -s $SCENARIO     # SSH into test instance"
-        echo "  molecule verify -s $SCENARIO    # Re-run verification"
-        echo "  molecule destroy -s $SCENARIO   # Clean up when done"
-        echo "  deactivate"
-        echo ""
-        echo "Or install molecule permanently:"
-        echo "  pip install molecule molecule-docker"
-    else
-        echo "  molecule converge -s $SCENARIO  # Run without cleanup"
-        echo "  molecule login -s $SCENARIO     # SSH into test instance"
-        echo "  molecule verify -s $SCENARIO    # Re-run verification"
-        echo "  molecule destroy -s $SCENARIO   # Clean up when done"
-    fi
-    exit 1
+if [ $STAGE_ERRORS -gt 0 ]; then
+    av_add_error "$STAGE_ERRORS Molecule stage(s) failed" "references/molecule.md"
 fi
+
+av_summary "test_role" "$ROLE_ABS"
+exit $?

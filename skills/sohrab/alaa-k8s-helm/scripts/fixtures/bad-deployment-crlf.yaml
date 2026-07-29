@@ -1,0 +1,42 @@
+# Fixture: every failure class check_manifests.py must catch, in one file.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: legacy-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: legacy-worker
+  template:
+    metadata:
+      labels:
+        app: legacy-worker
+    spec:
+      hostNetwork: true
+      hostPID: true
+      volumes:
+        - name: node-root
+          hostPath:
+            path: /
+      containers:
+        - name: worker
+          image: registry.example.com/legacy-worker:latest
+          ports:
+            - name: http
+              containerPort: 80
+          securityContext:
+            privileged: true
+            runAsUser: 1001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: legacy-worker
+spec:
+  selector:
+    app: legacy-worker
+  ports:
+    - name: http
+      port: 80
+      targetPort: metrics

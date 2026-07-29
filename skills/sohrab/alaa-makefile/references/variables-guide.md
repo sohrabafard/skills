@@ -1,605 +1,209 @@
-# Makefile Variables Guide
+# Makefile variables
 
-## Overview
+**Owner of:** `=`, `:=`, `::=`, `?=`, `+=`, `!=`, override precedence, `export`/`unexport`/`override`,
+the environment boundary, and `$(shell …)` caching. No other file in this skill states these rules.
 
-This guide covers variable definition, assignment operators, automatic variables, standard GNU variables, and best
-practices for variable management in Makefiles.
+## The five assignment operators
 
-## Variable Assignment Operators
+| Operator | Expansion | Use it for |
+|---|---|---|
+| `:=` | immediate, once, at the point of assignment | every project-owned value, and everything computed |
+| `=` | deferred, re-expanded on every reference | only a value that must see a variable defined later |
+| `?=` | deferred, and only if the variable is not already set | every value a user, the environment or the runner may override |
+| `+=` | follows the flavour of the original assignment | extending a list |
+| `!=` | runs a shell command once and assigns the output | a shell result, where `:=` with `$(shell …)` also works |
 
-Make supports four assignment operators, each with different behavior:
-
-### 1. Recursive Assignment (=)
-
-```makefile
-# Evaluated every time the variable is used
-FILES = $(wildcard *.c)
-OBJECTS = $(FILES:.c=.o)
-
-# Each use of $(OBJECTS) re-expands $(FILES) and re-runs wildcard
-target: $(OBJECTS)
-	$(CC) $(OBJECTS) -o target
-```
-
-**Characteristics:**
-
-- Right-hand side evaluated every time variable is used
-- Can reference variables defined later
-- Can cause infinite recursion
-- Less efficient for frequently-used variables
-
-**When to use:**
-
-- Variables that reference other variables that might change
-- Simple string values
-- When you need delayed evaluation
-
-### 2. Simple Assignment (:=)
+### `:=` is the default
 
 ```makefile
-# Evaluated once when defined
-FILES := $(wildcard *.c)
-OBJECTS := $(FILES:.c=.o)
-
-# $(OBJECTS) contains the fixed list from definition time
-target: $(OBJECTS)
-	$(CC) $(OBJECTS) -o target
-```
-
-**Characteristics:**
-
-- Right-hand side evaluated immediately
-- More efficient for computed values
-- Cannot reference variables defined later
-- Prevents infinite recursion
-
-**When to use:**
-
-- Variables with computed values (wildcards, substitutions)
-- Frequently-referenced variables
-- Most project-specific variables (SOURCES, OBJECTS, TARGET)
-
-### 3. Conditional Assignment (?=)
-
-```makefile
-# Only assigns if variable is not already defined
-CC ?= gcc
-CFLAGS ?= -Wall -O2
-PREFIX ?= /usr/local
-
-# Users can override:
-# make CC=clang
-# export CC=clang; make
-```
-
-**Characteristics:**
-
-- Assigns only if variable undefined or empty
-- Respects environment variables
-- Respects command-line overrides
-- Essential for user-configurable variables
-
-**When to use:**
-
-- User-overridable variables (CC, CFLAGS, PREFIX)
-- Default values that users might want to change
-- All tool and configuration variables
-
-### 4. Append Assignment (+=)
-
-```makefile
-# Append to existing value
-CFLAGS ?= -Wall -O2
-CFLAGS += -I./include
-CFLAGS += -DDEBUG
-
-# Result: CFLAGS = -Wall -O2 -I./include -DDEBUG
-```
-
-**Characteristics:**
-
-- Adds to existing variable value
-- Preserves type of original assignment (= vs :=)
-- Automatically adds space between values
-
-**When to use:**
-
-- Adding project-specific flags to user flags
-- Building lists incrementally
-- Extending default values
-
-## Comparison of Assignment Operators
-
-```makefile
-# Recursive (=): Re-evaluated each use
-VAR1 = $(shell date)
-# VAR1 changes every time it's used!
-
-# Simple (:=): Evaluated once
-VAR2 := $(shell date)
-# VAR2 is fixed to the date when defined
-
-# Conditional (?=): Only if undefined
-VAR3 ?= default
-# VAR3 = "default" unless already set
-
-# Append (+=): Add to existing
-VAR4 := first
-VAR4 += second
-# VAR4 = "first second"
-```
-
-## Standard GNU Variables
-
-GNU Coding Standards define standard variable names that should be used:
-
-### Compiler and Tools
-
-```makefile
-# C Compiler
-CC ?= gcc
-
-# C++ Compiler
-CXX ?= g++
-
-# Linker (usually same as CC)
-LD ?= $(CC)
-
-# Archiver (for creating .a libraries)
-AR ?= ar
-
-# Ranlib (for indexing .a libraries)
-RANLIB ?= ranlib
-
-# Install program
-INSTALL ?= install
-
-# Install program for data files
-INSTALL_DATA ?= $(INSTALL) -m 644
-
-# Install program for executables
-INSTALL_PROGRAM ?= $(INSTALL) -m 755
-
-# Remove files
-RM ?= rm -f
-
-# Yacc/Bison
-YACC ?= bison -y
-
-# Lex/Flex
-LEX ?= flex
-
-# pkg-config
-PKG_CONFIG ?= pkg-config
-```
-
-### Compiler Flags
-
-```makefile
-# C Preprocessor flags (for includes, defines)
-CPPFLAGS ?=
-
-# C Compiler flags
-CFLAGS ?= -Wall -Wextra -O2
-
-# C++ Compiler flags
-CXXFLAGS ?= -Wall -Wextra -O2
-
-# Linker flags (for library paths, etc.)
-LDFLAGS ?=
-
-# Libraries to link (-lname)
-LDLIBS ?=
-
-# Yacc/Bison flags
-YFLAGS ?=
-
-# Lex/Flex flags
-LFLAGS ?=
-```
-
-**Best practices for flags:**
-
-```makefile
-# Preserve user-defined flags
-CFLAGS ?= -Wall -Wextra -O2
-# Add project-specific flags
-CFLAGS += -I./include -I./src
-CFLAGS += -DPROJECT_VERSION=\"$(VERSION)\"
-
-# Use pkg-config for libraries
-CFLAGS += $(shell $(PKG_CONFIG) --cflags openssl)
-LDLIBS += $(shell $(PKG_CONFIG) --libs openssl)
-```
-
-### Installation Directories
-
-```makefile
-# Installation prefix
-PREFIX ?= /usr/local
-
-# Executable prefix (usually same as PREFIX)
-EXEC_PREFIX ?= $(PREFIX)
-
-# Binary directory
-BINDIR ?= $(EXEC_PREFIX)/bin
-
-# Library directory
-LIBDIR ?= $(EXEC_PREFIX)/lib
-
-# Include directory
-INCLUDEDIR ?= $(PREFIX)/include
-
-# Data root directory
-DATAROOTDIR ?= $(PREFIX)/share
-
-# Read-only data directory
-DATADIR ?= $(DATAROOTDIR)
-
-# System configuration directory
-SYSCONFDIR ?= $(PREFIX)/etc
-
-# Variable data directory
-LOCALSTATEDIR ?= $(PREFIX)/var
-
-# Man pages directory
-MANDIR ?= $(DATAROOTDIR)/man
-MAN1DIR ?= $(MANDIR)/man1
-MAN2DIR ?= $(MANDIR)/man2
-# ... etc
-
-# Info pages directory
-INFODIR ?= $(DATAROOTDIR)/info
-
-# Documentation directory
-DOCDIR ?= $(DATAROOTDIR)/doc/$(PROJECT)
-
-# DESTDIR for staged installations (package building)
-DESTDIR ?=
-```
-
-**Usage in install target:**
-
-```makefile
-install: $(TARGET)
-	$(INSTALL) -d $(DESTDIR)$(BINDIR)
-	$(INSTALL_PROGRAM) $(TARGET) $(DESTDIR)$(BINDIR)/
-	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
-	$(INSTALL_DATA) lib$(PROJECT).a $(DESTDIR)$(LIBDIR)/
-	$(INSTALL) -d $(DESTDIR)$(MAN1DIR)
-	$(INSTALL_DATA) docs/$(PROJECT).1 $(DESTDIR)$(MAN1DIR)/
-```
-
-## Automatic Variables
-
-Automatic variables are set by make for each rule:
-
-### Basic Automatic Variables
-
-| Variable | Description                         | Example                         |
-|----------|-------------------------------------|---------------------------------|
-| `$@`     | Target file name                    | `hello` in rule for `hello`     |
-| `$<`     | First prerequisite                  | `hello.c` in `hello.o: hello.c` |
-| `$^`     | All prerequisites (no duplicates)   | `hello.o utils.o`               |
-| `$+`     | All prerequisites (with duplicates) | Rarely needed                   |
-| `$?`     | Prerequisites newer than target     | For conditional rebuild         |
-| `$*`     | Stem of pattern match               | `hello` in `%.o: %.c`           |
-
-### Directory and File Components
-
-| Variable | Description             |
-|----------|-------------------------|
-| `$(@D)`  | Directory part of `$@`  |
-| `$(@F)`  | File part of `$@`       |
-| `$(<D)`  | Directory part of `$<`  |
-| `$(<F)`  | File part of `$<`       |
-| `$(*D)`  | Directory part of `$*`  |
-| `$(*F)`  | File part of `$*`       |
-| `$(^D)`  | Directory parts of `$^` |
-| `$(^F)`  | File parts of `$^`      |
-
-### Examples
-
-```makefile
-# Basic usage
-hello: hello.o utils.o
-	$(CC) $(LDFLAGS) $^ -o $@
-	# Expands to: gcc -o hello hello.o utils.o
-
-# Pattern rule
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-	# For hello.c: gcc -Wall -c hello.c -o hello.o
-
-# Creating output directory
-build/%.o: src/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
-	# $(@D) = "build"
-```
-
-### Advanced Automatic Variables Usage
-
-```makefile
-# Dependency generation with automatic variables
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) \
-		-MMD -MP \
-		-MF $(@:.o=.d) \
-		-c $< -o $@
-	# $@ = build/obj/main.o
-	# $< = src/main.c
-	# $(@:.o=.d) = build/obj/main.d
-```
-
-## Variable Substitution and Functions
-
-### Pattern Substitution
-
-```makefile
-# $(var:pattern=replacement)
-SOURCES := src/main.c src/utils.c src/helper.c
-OBJECTS := $(SOURCES:.c=.o)
-# OBJECTS = src/main.o src/utils.o src/helper.o
-
+SOURCES := $(wildcard src/*.c)
 OBJECTS := $(SOURCES:src/%.c=build/%.o)
-# OBJECTS = build/main.o build/utils.o build/helper.o
+VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 ```
 
-### Text Functions
+With `=`, each of those re-runs its right-hand side at every reference. `VERSION = $(shell git …)` forks
+git once per use; `BUILD_TIME = $(shell date +%s)` gives a *different* value in two targets of the same
+run. `scripts/validate_makefile.sh` reports `NAME = $(shell …)` as a finding for exactly this reason.
+
+`::=` is the POSIX spelling of `:=` and behaves identically in GNU Make. Write `:=` unless the file
+declares `.POSIX:`.
+
+### `?=` marks the override boundary
 
 ```makefile
-# $(wildcard pattern)
-SOURCES := $(wildcard src/*.c)
-
-# $(patsubst pattern,replacement,text)
-OBJECTS := $(patsubst %.c,%.o,$(SOURCES))
-
-# $(filter pattern...,text)
-C_FILES := $(filter %.c,$(SOURCES))
-
-# $(filter-out pattern...,text)
-NO_TEST := $(filter-out %_test.c,$(SOURCES))
-
-# $(sort list)
-SORTED := $(sort $(SOURCES))
-
-# $(dir names...)
-DIRS := $(dir $(SOURCES))
-
-# $(notdir names...)
-FILES := $(notdir $(SOURCES))
-
-# $(basename names...)
-NAMES := $(basename $(SOURCES))
-
-# $(suffix names...)
-EXTS := $(suffix $(SOURCES))
-
-# $(addprefix prefix,names...)
-FULL_PATHS := $(addprefix $(SRCDIR)/,$(FILES))
-
-# $(addsuffix suffix,names...)
-OBJ_FILES := $(addsuffix .o,$(NAMES))
+PREFIX ?= /usr/local
+COMPOSE_MODE ?= prod
+CI_KIT ?= .service-ci-kit/ci/scripts
 ```
 
-### Shell Function
+`?=` assigns only when the variable is unset **or set to the empty string from the environment**. It is
+the correct operator for anything a developer, an environment file or a runner job may need to change:
 
-```makefile
-# $(shell command)
-GIT_VERSION := $(shell git describe --tags --always 2>/dev/null)
-DATE := $(shell date +%Y-%m-%d)
-CPU_COUNT := $(shell nproc 2>/dev/null || echo 1)
-
-# Use := to evaluate once
-VERSION := $(shell cat VERSION.txt)
+```console
+make ci/deploy CI_KIT=/opt/kit/ci/scripts
+CI_KIT=/opt/kit/ci/scripts make ci/deploy
 ```
 
-### Conditional Functions
+A value the file owns takes `:=`, so an accidental environment variable of the same name cannot change
+the build. Choosing `?=` for a project-owned value is how an unrelated exported variable silently
+rewrites a command.
+
+### Fail closed rather than defaulting
+
+A variable whose absence must stop the run does not get a default:
 
 ```makefile
-# $(if condition,then-part,else-part)
-DEBUG := 1
-CFLAGS := $(if $(DEBUG),-g -O0,-O2)
-
-# $(or conditions...)
-CC := $(or $(CC),gcc)
-
-# $(and conditions...)
-BUILD_TESTS := $(and $(ENABLE_TESTS),$(HAVE_CHECK))
+IMAGE ?= $(error IMAGE is not set)
+API_TOKEN ?= $(error API_TOKEN is not set; export it or use the secret store)
 ```
 
-## Environment Variables
+`$(error …)` inside `?=` is deferred, so it fires when the variable is *referenced*, not when the file is
+parsed — a target that does not use `IMAGE` still runs. That is the intended behaviour. Use it for any
+value whose wrong default is worse than a stopped build: a registry, an image tag, a credential, a
+destination host, a size cap. `security-guide.md` owns the credential case;
+`/alaa-security-review` (`$alaa-security-review`) decides what must fail closed.
 
-### Interaction with Environment
+### `+=` inherits the original flavour
 
 ```makefile
-# Make variables override environment by default
-CC = gcc  # Overrides CC from environment
+CFLAGS ?= -Wall -Wextra -O2   # deferred
+CFLAGS += -Iinclude           # still deferred
 
-# Use ?= to respect environment
-CC ?= gcc  # Uses environment CC if set
-
-# Export variables to recipes
-export CC
-export CFLAGS
-
-# Unexport variables
-unexport INTERNAL_VAR
+DIRS := build
+DIRS += build/obj             # still immediate
 ```
 
-### Checking Environment Variables
+Appending to a variable that was never assigned creates a deferred one. Assign first, then append.
+
+## Override precedence
+
+From strongest to weakest, the value that wins is:
+
+1. `make VAR=value` on the command line.
+2. An `override VAR = value` directive in the Makefile.
+3. A plain assignment in the Makefile.
+4. `VAR ?= value` in the Makefile, when the variable is otherwise unset.
+5. The environment, when `-e` is passed or when the Makefile used `?=`.
+6. Make's built-in default, for the variables that have one.
+
+`override` exists so a Makefile can add to a flag the user also set:
 
 ```makefile
-# Check if variable is defined
-ifndef CC
-CC := gcc
+override CFLAGS += -DPROJECT_VERSION=\"$(VERSION)\"
+```
+
+Without `override`, a command-line `CFLAGS=...` discards the addition silently. Use `override` only for
+a value the file must contribute; using it to defeat a deliberate user override is a defect.
+
+## The environment boundary
+
+```makefile
+export DATABASE_URL          # visible to every recipe's shell
+unexport HISTFILE            # explicitly withheld
+```
+
+`export` with no argument exports everything, and `.EXPORT_ALL_VARIABLES:` does the same. Both send every
+Make variable — including any that holds a credential — to every subprocess, and both are reported by
+the validator. Export the specific names the recipes need.
+
+Inside a recipe, `$(VAR)` is a Make variable expanded before the shell sees the line, and `$$VAR` is a
+shell variable the shell expands itself. A loop that writes `$file` sees an empty Make variable:
+
+```makefile
+# wrong: $file is a Make variable, and it is empty
+check:
+	for f in *.sh; do shellcheck $f; done
+
+# right
+check:
+	for f in *.sh; do shellcheck "$$f"; done
+```
+
+Quote every expansion that reaches a shell command. `$(FILES)` with a space in a path becomes two
+arguments; `"$(FILES)"` becomes one. Where a value comes from outside the repository, quoting is not
+sufficient on its own — `security-guide.md` owns validation of untrusted values.
+
+## Guarding at the boundary
+
+```makefile
+ifndef CI_KIT
+$(error CI_KIT is not set)
 endif
 
-# Check if variable is empty
-ifeq ($(strip $(CC)),)
-$(error CC is not defined)
+ifeq ($(strip $(COMPOSE_MODE)),)
+$(error COMPOSE_MODE must be dev or prod)
 endif
 ```
 
-## Target-Specific Variables
+Conditional directives are evaluated at parse time and are not indented with a tab — a tab makes them
+part of the preceding recipe. GNU Make 4.4 adds `$(intcmp a,b,lt,eq,gt)` for numeric comparison and
+`$(let name,value,body)` for a scoped local; both raise the file's floor to 4.4, which
+`scripts/validate_makefile.sh` reports against the locally installed make.
+
+## Standard variable names
+
+Use the GNU names where a GNU meaning exists, because packagers and CI images already set them:
+`PREFIX`, `DESTDIR`, `BINDIR`, `LIBDIR`, `SYSCONFDIR`, `INSTALL`, `RM`. `DESTDIR` is prepended by the
+packager and is never given a value in the Makefile:
 
 ```makefile
-# Variables can be set for specific targets
-debug: CFLAGS += -g -O0 -DDEBUG
-debug: $(TARGET)
-
-release: CFLAGS += -O3 -DNDEBUG
-release: $(TARGET)
-
-# Pattern-specific variables
-tests/%: CFLAGS += -DTESTING
-tests/%: LDLIBS += -lcheck
-```
-
-## Best Practices
-
-### 1. Variable Naming
-
-```makefile
-# Use UPPERCASE for user-overridable variables
-CC ?= gcc
 PREFIX ?= /usr/local
+BINDIR ?= $(PREFIX)/bin
 
-# Use lowercase or mixed case for internal variables
-sources := $(wildcard src/*.c)
-target_name := myapp
-
-# Use descriptive names
-SOURCES := $(wildcard src/*.c)  # Good
-S := $(wildcard src/*.c)         # Bad
+install: all
+	install -d $(DESTDIR)$(BINDIR)
+	install -m 755 $(TARGET) $(DESTDIR)$(BINDIR)/
 ```
 
-### 2. Variable Organization
+The compiler variables — `CC`, `CXX`, `AR`, `RANLIB`, `CFLAGS`, `CXXFLAGS`, `CPPFLAGS`, `LDFLAGS`,
+`LDLIBS`, `YACC`, `LEX` — and the full documentation-directory set are in `native-toolchain.md`, because
+nothing on this fleet compiles native code.
+
+Shared names that cross a service boundary — log field names, the `alaa_*` metric catalog, `OTEL_*`
+values and defaults, host-port assignments — are decided by `/alaa-services-contract`
+(`$alaa-services-contract`), not here. Which generator variable expresses a runtime value is decided by
+`/service-runtime-kit-governance` (`$service-runtime-kit-governance`).
+
+## Naming
+
+Upper case for anything overridable, lower case for a purely internal value. Full words: `SOURCES`, not
+`S`. Do not reuse a name make already owns — assigning `MAKEFLAGS` replaces make's own flags rather than
+adding to them, which is why the preamble uses `+=`, and assigning `MAKE` breaks every sub-make.
+
+## Target-specific and pattern-specific values
 
 ```makefile
-# Group related variables
-# ============================================
-# User Configuration
-# ============================================
-CC ?= gcc
-CFLAGS ?= -Wall -O2
-PREFIX ?= /usr/local
+ci/deploy: COMPOSE_MODE := prod
+ci/deploy: ; bash $(CI_KIT)/deploy.sh
 
-# ============================================
-# Project Configuration
-# ============================================
-PROJECT := myapp
-VERSION := 1.0.0
-SOURCES := $(wildcard src/*.c)
+test/%: VERBOSE := 1
 ```
 
-### 3. Preserve User Flags
+A target-specific value applies to that target **and to everything it depends on**, which is the usual
+surprise. When a prerequisite is shared with another target, the value leaks into it; give the shared
+work its own target rather than relying on the inherited value.
+
+## Quiet mode
 
 ```makefile
-# WRONG: Overwrites user flags
-CFLAGS = -Wall -O2
+VERBOSE ?= 0
+ifeq ($(VERBOSE),1)
+Q :=
+else
+Q := @
+endif
 
-# RIGHT: Provides default, respects user override
-CFLAGS ?= -Wall -O2
-
-# Add project-specific flags
-CFLAGS += -I./include
+build:
+	$(Q)$(COMPOSE) build
 ```
 
-### 4. Use pkg-config
+`make build VERBOSE=1` shows the commands. Do not apply `$(Q)` to a command that fronts a gate;
+`ci-entrypoint.md` owns that prohibition.
 
-```makefile
-# WRONG: Hardcoded paths
-CFLAGS += -I/usr/include/openssl
-LDLIBS += -L/usr/lib -lssl -lcrypto
+## What this file does not decide
 
-# RIGHT: Use pkg-config
-PKG_CONFIG ?= pkg-config
-CFLAGS += $(shell $(PKG_CONFIG) --cflags openssl)
-LDLIBS += $(shell $(PKG_CONFIG) --libs openssl)
-```
-
-### 5. Use := for Computed Values
-
-```makefile
-# WRONG: Re-computes every use (slow)
-SOURCES = $(wildcard src/*.c)
-OBJECTS = $(SOURCES:.c=.o)
-
-# RIGHT: Computes once (fast)
-SOURCES := $(wildcard src/*.c)
-OBJECTS := $(SOURCES:.c=.o)
-```
-
-## Complete Example
-
-```makefile
-# ============================================
-# User-Overridable Variables
-# ============================================
-CC ?= gcc
-CFLAGS ?= -Wall -Wextra -O2
-LDFLAGS ?=
-LDLIBS ?=
-PREFIX ?= /usr/local
-DESTDIR ?=
-
-# ============================================
-# pkg-config Dependencies
-# ============================================
-PKG_CONFIG ?= pkg-config
-PACKAGES := openssl zlib
-
-CFLAGS += $(shell $(PKG_CONFIG) --cflags $(PACKAGES))
-LDLIBS += $(shell $(PKG_CONFIG) --libs $(PACKAGES))
-
-# ============================================
-# Project Configuration
-# ============================================
-PROJECT := myapp
-VERSION := 1.0.0
-SRCDIR := src
-BUILDDIR := build
-
-# Computed values (use :=)
-SOURCES := $(wildcard $(SRCDIR)/*.c)
-OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
-DEPENDS := $(OBJECTS:.o=.d)
-TARGET := $(BUILDDIR)/$(PROJECT)
-
-# Git version
-GIT_VERSION := $(shell git describe --tags --always 2>/dev/null || echo "unknown")
-CFLAGS += -DVERSION=\"$(GIT_VERSION)\"
-
-# ============================================
-# Build Rules
-# ============================================
-all: $(TARGET)
-
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(@D)
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
-
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
-
--include $(DEPENDS)
-
-# ============================================
-# Target-Specific Variables
-# ============================================
-debug: CFLAGS += -g -O0 -DDEBUG
-debug: $(TARGET)
-
-release: CFLAGS += -O3 -DNDEBUG -s
-release: $(TARGET)
-```
-
-## References
-
-- [GNU Make Manual - Variables](https://www.gnu.org/software/make/manual/html_node/Using-Variables.html)
-- [GNU Make Manual - Automatic Variables](https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html)
-- [GNU Coding Standards - Makefile Conventions](https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html)
+- The preamble and `MAKEFLAGS` lines themselves: `makefile-structure.md`.
+- `.PHONY` and the standard targets that use these variables: `targets-guide.md`.
+- Automatic variables `$@ $< $^ $*`: `patterns-guide.md`.
+- Caching a `$(shell …)` for speed rather than correctness: `optimization-guide.md`.
+- Credential handling and untrusted-value validation: `security-guide.md`.

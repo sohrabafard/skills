@@ -1,0 +1,15 @@
+# Line endings for everything this skill ships and everything it writes.
+#
+# Without these entries a Windows checkout with core.autocrlf=true rewrites LF to
+# CRLF. Two things then break and neither is visible in a diff: the `#!/usr/bin/env
+# bash` shebang gains a trailing carriage return and the kernel cannot spawn the
+# interpreter, and a recipe line's last argument gains a carriage return so a
+# command fails with a message whose rendered bytes look correct.
+*.sh        text eol=lf
+*.mk        text eol=lf
+Makefile    text eol=lf
+makefile    text eol=lf
+GNUmakefile text eol=lf
+*.md        text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf

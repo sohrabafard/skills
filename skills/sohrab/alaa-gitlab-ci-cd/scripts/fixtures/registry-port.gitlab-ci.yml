@@ -1,0 +1,10 @@
+# A private registry with an explicit port. The port colon is not a tag separator.
+stages:
+  - build
+
+build:
+  stage: build
+  timeout: 10 minutes
+  image: registry.example.com:5000/team/php
+  script:
+    - make build

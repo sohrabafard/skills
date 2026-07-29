@@ -1,0 +1,21 @@
+# Fixture: every interpolation in this file is correct. check-compose-interpolation must report
+# zero findings against it. Do not "fix" anything here; a change makes the self-test meaningless.
+name: fixture-clean
+
+services:
+  platform-app-php:
+    image: ${SERVICE_IMAGE:-service:1.4.2}
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY:?APP_KEY must come from the service .env; pass it with --env-file}
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must come from the service .env}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD must come from the service .env}
+      DB_PROVISION_ADMIN_PASSWORD: ${DB_PROVISION_ADMIN_PASSWORD:?admin credential must come from the service .env}
+      # class-B members are permitted a default as long as it is not the disabling one
+      API_RATE_LIMIT: ${API_RATE_LIMIT:-60}
+      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-16M}
+      TLS_VERIFY_PEER: ${TLS_VERIFY_PEER:-true}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-10.0.0.0/8}
+      OTEL_EXPORTER_OTLP_TIMEOUT: ${OTEL_EXPORTER_OTLP_TIMEOUT:-500}

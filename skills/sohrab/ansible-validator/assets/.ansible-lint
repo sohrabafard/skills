@@ -1,14 +1,29 @@
 ---
-# ansible-lint configuration
+# ansible-lint configuration owned by ansible-validator.
+#
+# This is the pair's single ansible-lint configuration. ansible-generator
+# (/ansible-generator, $ansible-generator) does not ship one; its project
+# scaffold copies this file and names this skill as the owner in a header
+# comment. Two forks of one config, configured
+# differently for the same repository, means the result depends on which one an
+# agent happened to pick.
+#
+# Verified 2026-07-29 against ansible-lint 26.6.0. Re-derive the rule list with
+#   ansible-lint -L
+# and the profile list with
+#   ansible-lint --help | grep -- --profile
+# scripts/check_assets.sh asserts that every rule named in enable_list below
+# actually fires on the fixture built to violate it. Run it after any edit here.
 
-# Enable offline mode for faster linting (no external checks)
-offline: false
-
-# Use default profile with some customization
-# Profiles: min, basic, moderate, safety, shared, production
+# Profiles, from least to most strict: min, basic, moderate, safety, shared,
+# production. production is the bar for anything that reaches a managed host.
 profile: production
 
-# Exclude paths (glob patterns)
+# offline: true keeps ansible-lint from reaching the network mid-validation,
+# which is the correct setting in a locked-down runner. Set it to false only
+# when the run must resolve a collection it does not have.
+offline: true
+
 exclude_paths:
   - .git/
   - .github/
@@ -19,105 +34,71 @@ exclude_paths:
   - .molecule/
   - .cache/
   - .tox/
-  - test/
-  - tests/fixtures/
+  # test/roles/ holds vendored third-party roles that this skill does not own
+  # and does not lint. test/playbooks/ and test/fixtures/ are this skill's own
+  # fixtures and are deliberately NOT excluded: a fixture corpus that the lint
+  # config hides is a corpus that proves nothing.
+  - test/roles/
 
-# Skip certain rules (by tag or rule ID)
+# Empty. A rule this skill wants off belongs in warn_list with the reason, so
+# that the finding is still visible.
 skip_list: []
-  # Skip git-related rules if not using git
-  # - git-latest
 
-  # Skip YAML formatting if using yamllint separately
-  # - yaml[line-length]
-
-  # Uncomment to skip experimental rules
-  # - experimental
-
-# Enable specific rules explicitly
+# Rules this configuration turns on beyond the profile default. Each one is
+# covered by a fixture under test/fixtures/lint/ and asserted by
+# scripts/check_assets.sh.
 enable_list:
-  - name[casing]           # Enforce task naming conventions
-  - name[missing]          # All tasks should be named
-  - fqcn[action-core]     # Use FQCN for builtin modules
-  - no-changed-when       # command/shell should have changed_when
-  - no-handler            # Tasks should notify handlers
-  - var-naming            # Variable naming conventions
+  - name[missing]        # every task is named
+  - name[casing]         # task names start with a capital letter
+  - fqcn[action-core]    # every action is fully qualified
+  - no-changed-when      # command and shell state their changed condition
+  - no-handler           # a service restart goes through a handler
+  - var-naming           # variables are snake_case and role-prefixed
+  - no-log-password      # a task handling a password sets no_log
+  - risky-file-permissions  # a file task states an explicit mode
 
-# Warn instead of error for certain rules
+# Rules that report without failing the run. name[casing] is deliberately NOT
+# here: it is in enable_list above, and listing a rule in both places is a
+# contradiction the reader has to resolve.
 warn_list:
-  - yaml[line-length]     # Line length is a warning
-  - name[casing]          # Task naming is a warning
-  - role-name             # Role naming is a warning
-  - galaxy[tags]          # Galaxy tags are a warning
+  - yaml[line-length]    # long lines are legible; broken YAML is not
+  - role-name            # a vendored role's name is not this project's to fix
+  - galaxy[tags]         # galaxy_tags matter at publication, not at apply time
 
-# Task naming conventions
-task_name_prefix: "{path}:"
+# Task naming.
+#
+# task_name_prefix takes {stem}, the file stem, and nothing else. The value
+# "{path}:" was shipped here until 2026-07-29; {path} is not a valid
+# substitution key, ansible-lint caught the resulting KeyError, printed
+# "Ignored exception from NameRule.matchtasks" and continued with NameRule
+# dead. Measured on test/playbooks/bad-playbook.yml: 19 failures and zero
+# name[missing] with that line, 21 failures and two name[missing] without it.
+# The config disabled the two rules its own enable_list asked for.
+#
+# No prefix is enforced now. To enforce one, use {stem} and add a fixture to
+# test/fixtures/lint/ so scripts/check_assets.sh can prove it fires:
+# task_name_prefix: "{stem} | "
 
-# Variable naming pattern (snake_case recommended)
+# Variables are snake_case, and a role's variables carry the role name as a
+# prefix. references/best_practices.md states the naming rule; this makes it
+# reportable.
 var_naming_pattern: '^[a-z_][a-z0-9_]*$'
 
-# Offline mode (faster, no external checks)
-# offline: true
-
-# Mock modules that might not be available
+# Modules that may not be installed in the validation environment. A mocked
+# module is a module ansible-lint will not resolve; keep this list to what the
+# project actually uses and declare the rest in requirements.yml instead.
 mock_modules:
   - community.general.ufw
 
-# Mock roles that might not be available
-# mock_roles:
-#   - custom.role
+# loop_var_prefix configures the loop-var-prefix rule, which is opt-in. Setting
+# the option without enabling the rule does nothing, which is what this file did
+# before 2026-07-29. Enable the rule alongside it if you want it enforced:
+# enable_list:
+#   - loop-var-prefix
+# loop_var_prefix: "{role}_"
 
-# Custom rules directory (if you have custom rules)
-# rulesdir:
-#   - .ansible-lint-rules/
-
-# Parseable output format
-# parseable: true
-
-# Quiet mode (only errors)
-# quiet: false
-
-# Show progress
-# progressbar: true
-
-# Verbosity level (0-2)
-# verbosity: 1
-
-# Write output to file
-# output_file: ansible-lint.log
-
-# Use color in output
-# colored: true
-
-# Exit with error code 0 even if violations found (useful for CI)
-# strict: false
-
-# Generate SARIF output (for GitHub Code Scanning)
+# SARIF output for a code-scanning gate. The two aggregate scripts pass
+# --format json themselves; set this when ansible-lint is invoked directly from
+# a CI job that uploads SARIF. /alaa-gitlab-ci-cd ($alaa-gitlab-ci-cd) owns
+# where the artifact goes and how long it is retained.
 # sarif_file: ansible-lint.sarif
-
-# Additional kinds to lint
-# kinds:
-#   - playbook: "*.yml"
-#   - tasks: "**/tasks/*.yml"
-#   - vars: "**/vars/*.yml"
-#   - meta: "**/meta/*.yml"
-#   - yaml: ".yamllint"
-
-# Loop variable prefix (for better readability)
-loop_var_prefix: "{role}_"
-
-# Minimum required Ansible version
-# This enforces compatibility checks
-# min_ansible_version: "2.9"
-
-# Tags to run or skip
-# tags:
-#   - yaml
-#   - security
-
-# Only check specific directories
-# include_paths:
-#   - playbooks/
-#   - roles/
-
-# Use project-specific config
-# project: true

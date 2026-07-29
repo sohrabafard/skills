@@ -1,199 +1,88 @@
 #!/usr/bin/env bash
+#
+# validate_playbook_security.sh - Checkov security scan of one playbook file.
+#
+# Requires bash 4.0 or newer. Exit codes: 0 clean, 1 findings, 2 could not run,
+# 64 usage error. "Checkov could not produce a report" is exit 2 and never a
+# pass, because a security check that did not run is not a passing check.
 
-# Ansible Playbook Security Validation Script using Checkov
-# Automatically installs checkov in temporary venv if not available
+set -uo pipefail
 
-set -e
+AV_LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib"
+source "$AV_LIB/common.sh"
+source "$AV_LIB/checkov_scan.sh"
 
-PLAYBOOK="$1"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(dirname "$SCRIPT_DIR")"
+av_print_help() {
+    cat <<'EOF'
+validate_playbook_security.sh - Checkov security scan of one playbook.
 
-COLOR_GREEN='\033[0;32m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_RED='\033[0;31m'
-COLOR_BLUE='\033[0;34m'
-COLOR_RESET='\033[0m'
+Usage:
+  bash scripts/validate_playbook_security.sh <playbook.yml> [options]
+  bash scripts/validate_playbook_security.sh --self-test
 
-# Usage check
-if [ -z "$PLAYBOOK" ]; then
-    echo "Usage: $0 <playbook.yml|playbook-directory>"
-    exit 1
-fi
+What it asserts:
+  Checkov reports zero failed checks under --framework ansible,secrets for the
+  named file, and only for the named file.
 
-if [ ! -f "$PLAYBOOK" ] && [ ! -d "$PLAYBOOK" ]; then
-    echo -e "${COLOR_RED}Error: Playbook or directory not found: $PLAYBOOK${COLOR_RESET}"
-    exit 1
-fi
+Why both frameworks: --framework ansible carries twelve TLS, HTTPS and GPG
+policies and models no credential shape. Against the six secrets planted in
+test/fixtures/secrets/planted-secrets.yml it reported zero on 2026-07-29;
+--framework secrets reported all six. Running the ansible framework alone is a
+security scan that cannot see a leaked AWS key.
 
-# Get absolute path
-if [ -f "$PLAYBOOK" ]; then
-    PLAYBOOK_ABS=$(cd "$(dirname "$PLAYBOOK")" && pwd)/$(basename "$PLAYBOOK")
-    SCAN_TYPE="file"
-else
-    PLAYBOOK_ABS=$(cd "$PLAYBOOK" && pwd)
-    SCAN_TYPE="directory"
-fi
+Additional options:
+      --frameworks LIST     Override the framework list (default ansible,secrets).
 
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-echo -e "${COLOR_BLUE}Ansible Security Validation (Checkov)${COLOR_RESET}"
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-echo ""
-echo "Scanning: $PLAYBOOK_ABS"
-echo ""
-
-# Check for checkov and setup venv if needed
-TEMP_VENV=""
-CLEANUP_VENV=0
-USE_SYSTEM_CHECKOV=1
-
-# Function to run checkov command
-run_checkov() {
-    if [ -n "$TEMP_VENV" ]; then
-        "$TEMP_VENV/bin/checkov" "$@"
-    else
-        checkov "$@"
-    fi
+EOF
+    av_common_flag_help
 }
 
-# Check if checkov is available
-if ! command -v checkov >/dev/null 2>&1; then
-    USE_SYSTEM_CHECKOV=0
+run_self_test() {
+    local here="$0" fx
+    fx="$(av_fixture_dir)"
+    echo "self-test: validate_playbook_security.sh"
+    av_expect_exit 64 "no argument is a usage error" bash "$here"
+    av_expect_exit 0  "--help exits clean" bash "$here" --help
+    av_expect_exit 2  "missing target cannot run" bash "$here" "$fx/playbooks/does-not-exist.yml"
+    av_expect_exit 2  "missing tool cannot run" env AV_NO_BOOTSTRAP=1 AV_UNAVAILABLE_TOOLS=checkov bash "$here" "$fx/playbooks/good-playbook.yml"
+    av_expect_exit 1  "planted secrets are reported" bash "$here" "$fx/fixtures/secrets/planted-secrets.yml"
+    av_expect_exit 0  "good playbook is clean" bash "$here" "$fx/playbooks/good-playbook.yml"
+    av_self_test_summary
+}
+
+ARGS=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --frameworks)
+            [ $# -ge 2 ] || { echo "Usage error: --frameworks needs a value" >&2; exit 64; }
+            AV_CHECKOV_FRAMEWORKS="$2"; shift 2 ;;
+        *) ARGS+=("$1"); shift ;;
+    esac
+done
+av_parse_common_flags ${ARGS+"${ARGS[@]}"}
+
+if [ "$AV_SELF_TEST" -eq 1 ]; then
+    run_self_test
 fi
 
-# Create temp venv if checkov is missing
-if [ $USE_SYSTEM_CHECKOV -eq 0 ]; then
-    echo -e "${COLOR_YELLOW}⚠ checkov not found in system${COLOR_RESET}"
-    echo ""
-    echo "Creating temporary environment with checkov..."
-    echo ""
+if [ "${#AV_ARGS[@]}" -lt 1 ]; then
+    av_usage_error "a playbook path is required"
+fi
 
-    # Create temporary venv
-    TEMP_VENV=$(mktemp -d -t checkov-validator.XXXXXX)
-    CLEANUP_VENV=1
+TARGET="${AV_ARGS[0]}"
+if [ ! -f "$TARGET" ]; then
+    av_cannot_run "playbook not found: $TARGET"
+fi
+av_assert_no_crlf "$TARGET"
+TARGET_ABS="$(cd "$(dirname "$TARGET")" && pwd)/$(basename "$TARGET")"
 
-    # Setup cleanup trap
-    cleanup() {
-        if [ $CLEANUP_VENV -eq 1 ] && [ -n "$TEMP_VENV" ]; then
-            echo ""
-            echo "Cleaning up temporary environment..."
-            rm -rf "$TEMP_VENV"
-        fi
-    }
-    trap cleanup EXIT INT TERM
-
-    # Create venv and install checkov
-    echo "Installing checkov (this may take a minute)..."
-    python3 -m venv "$TEMP_VENV" >/dev/null 2>&1
-
-    # Activate venv and install
-    source "$TEMP_VENV/bin/activate"
-
-    # Install checkov
-    pip install --quiet --upgrade pip setuptools wheel
-    pip install --quiet checkov
-
-    echo -e "${COLOR_GREEN}✓ Temporary environment ready${COLOR_RESET}"
-    echo ""
-else
-    echo -e "${COLOR_GREEN}✓ Using system checkov${COLOR_RESET}"
+if [ "$AV_FORMAT" = "text" ]; then
+    av_banner "Ansible Playbook Security Scan"
+    echo "Target: $TARGET_ABS"
     echo ""
 fi
 
-ERRORS=0
-WARNINGS=0
-
-# Security Scan with Checkov
-echo -e "${COLOR_BLUE}[1/1] Security Scan (Checkov)${COLOR_RESET}"
-echo "-----------------------------------"
-
-# Prepare checkov command based on scan type
-if [ "$SCAN_TYPE" = "file" ]; then
-    # For single file, scan the directory containing it
-    SCAN_DIR=$(dirname "$PLAYBOOK_ABS")
-    CHECKOV_ARGS=("-d" "$SCAN_DIR" "--framework" "ansible" "--compact" "--quiet")
-else
-    # For directory, scan it directly
-    CHECKOV_ARGS=("-d" "$PLAYBOOK_ABS" "--framework" "ansible" "--compact" "--quiet")
-fi
-
-# Run checkov and capture output
-if CHECKOV_OUTPUT=$(run_checkov "${CHECKOV_ARGS[@]}" 2>&1); then
-    CHECKOV_EXIT=0
-else
-    CHECKOV_EXIT=$?
-fi
-
-# Parse checkov output
-if echo "$CHECKOV_OUTPUT" | grep -q "Passed checks:"; then
-    # Extract statistics (macOS compatible - using awk instead of grep -P)
-    PASSED=$(echo "$CHECKOV_OUTPUT" | grep "Passed checks:" | awk -F': ' '{print $2}' | awk -F',' '{print $1}' || echo "0")
-    FAILED=$(echo "$CHECKOV_OUTPUT" | grep "Failed checks:" | awk -F': ' '{print $2}' | awk -F',' '{print $1}' || echo "0")
-    SKIPPED=$(echo "$CHECKOV_OUTPUT" | grep "Skipped checks:" | awk -F': ' '{print $2}' | awk -F',' '{print $1}' || echo "0")
-
-    echo -e "Security Scan Results:"
-    echo -e "  ${COLOR_GREEN}Passed:${COLOR_RESET}  $PASSED checks"
-    echo -e "  ${COLOR_RED}Failed:${COLOR_RESET}  $FAILED checks"
-    echo -e "  ${COLOR_YELLOW}Skipped:${COLOR_RESET} $SKIPPED checks"
-    echo ""
-
-    if [ "$FAILED" -gt 0 ]; then
-        echo -e "${COLOR_RED}✗ Security issues detected${COLOR_RESET}"
-        echo ""
-        echo "Failed Checks:"
-        echo "$CHECKOV_OUTPUT" | grep -A 3 "Check:" | grep -v "^--$" || true
-        echo ""
-        echo "Common Security Issues:"
-        echo "  - CKV_ANSIBLE_1: URI module disabling certificate validation"
-        echo "  - CKV_ANSIBLE_2: get_url disabling certificate validation"
-        echo "  - CKV_ANSIBLE_3: yum disabling certificate validation"
-        echo "  - CKV_ANSIBLE_5: apt installing packages without GPG signature"
-        echo "  - CKV2_ANSIBLE_1/2: Using HTTP instead of HTTPS"
-        echo ""
-        echo "For detailed policy documentation, visit:"
-        echo "  https://www.checkov.io/5.Policy%20Index/ansible.html"
-        ERRORS=$((ERRORS + 1))
-    else
-        echo -e "${COLOR_GREEN}✓ All security checks passed${COLOR_RESET}"
-    fi
-elif echo "$CHECKOV_OUTPUT" | grep -q "No Ansible files found"; then
-    echo -e "${COLOR_YELLOW}⚠ No Ansible files found to scan${COLOR_RESET}"
-    WARNINGS=$((WARNINGS + 1))
-else
-    echo -e "${COLOR_RED}✗ Checkov scan failed${COLOR_RESET}"
-    echo "$CHECKOV_OUTPUT"
-    ERRORS=$((ERRORS + 1))
-fi
-
-echo ""
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-echo -e "${COLOR_BLUE}Security Validation Summary${COLOR_RESET}"
-echo -e "${COLOR_BLUE}========================================${COLOR_RESET}"
-
-if [ $ERRORS -eq 0 ] && [ $WARNINGS -eq 0 ]; then
-    echo -e "${COLOR_GREEN}✓ No security issues detected!${COLOR_RESET}"
-    if [ -n "$TEMP_VENV" ]; then
-        echo ""
-        echo "Note: checkov was installed in a temporary environment."
-        echo "To install permanently: pip3 install checkov"
-    fi
-    exit 0
-elif [ $ERRORS -eq 0 ]; then
-    echo -e "${COLOR_YELLOW}⚠ Scan completed with $WARNINGS warning(s)${COLOR_RESET}"
-    if [ -n "$TEMP_VENV" ]; then
-        echo ""
-        echo "Note: checkov was installed in a temporary environment."
-        echo "To install permanently: pip3 install checkov"
-    fi
-    exit 0
-else
-    echo -e "${COLOR_RED}✗ Security validation failed with $FAILED security issue(s)${COLOR_RESET}"
-    echo ""
-    echo "Recommendations:"
-    echo "  1. Review failed security checks above"
-    echo "  2. Consult Checkov policy documentation for remediation"
-    echo "  3. Use HTTPS URLs for downloads and enable certificate validation"
-    echo "  4. Ensure package signatures are verified (GPG)"
-    echo "  5. Follow security best practices from references/security_checklist.md"
-    exit 1
-fi
+av_checkov_stage "$TARGET_ABS" file
+av_security_epilogue
+av_summary "validate_playbook_security" "$TARGET_ABS"
+exit $?

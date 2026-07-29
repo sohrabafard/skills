@@ -1,0 +1,31 @@
+# Tool floors for ansible-validator, re-baselined 2026-07-29.
+#
+# Each floor is the oldest release this skill's checkers are known to behave
+# correctly against. setup_tools.sh compares the detected versions against these
+# and exits 1 when a floor is not met. The cached tool environment created by
+# scripts/lib/common.sh installs exactly this file, so the hash of this file is
+# the cache key: change a floor and the next run rebuilds the environment.
+#
+# Re-derive the current release of each line with:
+#   python3 -m pip index versions <name>
+# or
+#   curl -s https://pypi.org/pypi/<name>/json | python3 -c \
+#     "import json,sys;print(json.load(sys.stdin)['info']['version'])"
+#
+# Current releases on 2026-07-29: ansible-core 2.21.2, ansible-lint 26.6.0,
+# yamllint 1.38.0, molecule 26.6.0, molecule-plugins 26.7.15, checkov 3.3.8.
+#
+# ansible-core 2.20 and newer require Python 3.12 or newer on the control node.
+# On a Python 3.11 control node pip silently resolves ansible-core 2.19.x, which
+# leaves security-only support in November 2026. setup_tools.sh reports that.
+
+ansible-core>=2.19
+ansible-lint>=26.0
+yamllint>=1.35
+checkov>=3.3
+PyYAML>=6.0
+
+# Molecule is optional: it is only needed to run role scenarios. Install it with
+#   python3 -m pip install "molecule>=25.0" "molecule-plugins[docker]"
+# molecule-docker (last released 2022-09-29) is the retired route; the current
+# driver package is molecule-plugins. See references/molecule.md.

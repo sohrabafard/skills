@@ -1,0 +1,12 @@
+---
+# Fixture: check_assets.sh asserts that a leading '---' is clean under
+# assets/.yamllint. Before the repair the config forbade it and
+# validate_role.sh grepped the resulting warning back out, which is the skill
+# papering over a contradiction it created.
+- name: Fixture play with a conventional document start
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "fixture"

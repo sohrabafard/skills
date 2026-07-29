@@ -1,158 +1,205 @@
-# Runner shell and Kubernetes executors
+# Runner: shell and Kubernetes executors
+
+Runner architecture and configuration. Failure triage lives in
+`validation-and-debugging.md`; image pinning syntax lives in
+`cache-artifacts-and-pinning.md`.
 
 ## Table of contents
 
-- Shell runner operating model
-- Shell runner hardening
+- Choosing an executor
+- Shell runner operating model and hardening
 - Kubernetes executor operating model
-- Helm and embedded TOML
-- Kubernetes RBAC and namespace design
-- Kubernetes executor hardening
-- Read-only and restricted clusters
-- Troubleshooting checklist
+- Helm values versus embedded TOML
+- `concurrent` and per-runner limits
+- Image pull secrets and the helper image
+- Distributed cache
+- RBAC and namespace design
+- Restricted and read-only clusters
 
-## Shell runner operating model
+## Choosing an executor
 
-Shell runner executes jobs directly on the host as the runner service account. That is simple and fast, but the isolation boundary is weak.
+| Use | When |
+|---|---|
+| Kubernetes executor | the default. Each job is a fresh pod, isolation is real, capacity is elastic, and cleanup is the cluster's problem |
+| shell executor | the job needs a tool that only exists on a specific host, or a daemon that host already runs, **and** the host serves no other tenant, the runner is tagged so only the intended projects reach it, and the jobs that use it run on protected refs |
+| Docker executor | a single host that should still give each job a container boundary |
 
-Use shell runners only when all of these are true:
+A shell runner executes the job script directly on the host as the runner user.
+The build directory persists between jobs and between projects that share the
+host, so anything a job writes there — a cached credential, a `.git/config`, a
+temp file — is readable by the next job that lands on it.
 
-- The host is trusted.
-- The projects are trusted.
-- Host-level access is acceptable.
-- You need host-native tools or extremely low overhead.
+## Shell runner operating model and hardening
 
-Good fits:
+Baseline for a shell runner:
 
-- Internal automation on a controlled server.
-- Deployment jobs that need local host tooling.
-- Build jobs that require direct host integration and are not multi-tenant.
-
-## Shell runner hardening
-
-Use this baseline:
-
-- Dedicate the host to trusted workloads.
-- Use explicit runner tags and pin jobs to them.
-- Avoid `GIT_STRATEGY: fetch` on shared or less-trusted hosts.
-- Set explicit `builds_dir` and `cache_dir` when filesystem placement matters.
-- Keep the runner user out of powerful host groups unless the workflow genuinely needs them.
-- Treat membership in `docker`, `libvirt`, `vboxusers`, or similar groups as privileged access.
-- Keep deploy credentials protected and limit protected jobs to protected refs.
+- Dedicate the host. "Trusted" means: the projects that can reach this runner are
+  trusted, the branches that can reach it are trusted, host-level access by a job
+  is acceptable, and no other tenant shares the host.
+- Tag the runner and pin the intended jobs to that tag, so placement is a
+  decision rather than a coincidence.
+- Set `builds_dir` and `cache_dir` explicitly, so the persistent surface has a
+  named location that can be audited and cleaned.
+- Use `GIT_STRATEGY: clone` rather than `fetch` on any host that more than one
+  project or more than one branch can reach; `fetch` reuses a working tree the
+  previous job left behind.
+- Keep the runner user out of powerful host groups. Membership in `docker`,
+  `libvirt` or `vboxusers` is equivalent to root on that host — which is exactly
+  what the host-daemon build path in `container-build-strategies.md` requires, and
+  why that path carries four preconditions.
+- Restrict deploy credentials to protected variables, and the jobs that use them
+  to protected refs.
 
 ## Kubernetes executor operating model
 
-The Kubernetes executor creates a pod per job. A typical pod contains the build container plus helper and service containers as needed.
+The executor creates one pod per job. The pod contains a **build** container, a
+**helper** container that clones the repository and uploads artifacts, and, on
+clusters that need it, an **init-permissions** container. Service containers join
+the same pod.
 
-Use the Kubernetes executor when you need:
+Three consequences that change designs:
 
-- Stronger isolation than a shell runner.
-- Elastic capacity.
-- Cluster-native scheduling.
-- Per-job pods and easier cleanup.
+- Everything the job writes outside a configured cache or artifact path is gone
+  when the pod is.
+- All the containers in the pod pull images. A registry credential that reaches
+  only one of them fails the pod, not the job's script.
+- Pod startup time is part of every job's duration. On a slow cluster it can
+  exceed a fast job's runtime, which is an argument for fewer, larger jobs rather
+  than a wide graph of small ones.
 
-## Helm and embedded TOML
+## Helm values versus embedded TOML
 
-The GitLab Runner Helm chart is the standard way to run Kubernetes executor runners.
+The GitLab Runner Helm chart is the standard deployment. `values.yaml` is YAML;
+the `runners.config` value inside it is **embedded TOML**. Writing YAML syntax
+inside `runners.config` produces a chart that installs and a runner that ignores
+the block. `validate_runner_config.py` parses the embedded block and reports
+`embedded-toml` when it is not valid TOML.
 
-Important rule:
+Use `assets/templates/values-k8s-runner.yaml` as the baseline. The Helm chart
+itself — templating, releases, upgrade strategy — is `/alaa-k8s-helm`
+(`$alaa-k8s-helm`)'s subject; this file covers only the runner's own values.
 
-- `values.yaml` is YAML.
-- `runners.config` inside that YAML is embedded TOML.
+Register with a runner **authentication token** (prefix `glrt-`), through
+`runnerToken` or `runnerTokenSecret`. Registration tokens are the legacy workflow
+and instance administrators have been able to disable them since GitLab 17.0.
 
-Do not write YAML syntax inside `runners.config`.
+## `concurrent` and per-runner limits
 
-Use `assets/templates/values-k8s-runner.yaml` as the baseline structure.
+`concurrent` is process-wide: the total number of jobs this runner process runs at
+once, across every `[[runners]]` entry. `limit` inside a `[[runners]]` entry caps
+one entry's share of that total.
 
-## Kubernetes RBAC and namespace design
+Derive the number, do not copy it. Take the host's CPU count divided by the cores
+the heaviest job needs; take the host's memory divided by the heaviest job's peak
+resident size; use the lower of the two, and leave one slot's worth of headroom
+for the runner process itself. On a Kubernetes executor the ceiling is the
+cluster's schedulable capacity for the runner's namespace, not the manager pod's.
 
-Decide namespace behavior first:
+State the derivation in the answer. A `concurrent` value with no stated basis is
+a number that nobody can safely change later.
+`validate_runner_config.py` reports `concurrent-unset` and `concurrent-zero`.
 
-### Fixed namespace
+Concurrency also interacts with cache: two jobs running at once under the same
+cache key race on the archive. Give concurrently-running jobs distinct keys, or
+give the readers `policy: pull`.
 
-Use when:
+## Image pull secrets and the helper image
 
-- Simpler RBAC matters more than isolation.
-- The runner serves a small number of trusted workloads.
-- Namespace sprawl would be a problem.
+```toml
+[runners.kubernetes]
+  image = "registry.example.com:5000/ci/toolchain:1.8.3"
+  helper_image = "registry.example.com:5000/mirror/gitlab-runner-helper:x86_64-v19.1.2"
+  image_pull_secrets = ["registry-pull"]
+```
 
-### Namespace per job
+- **`image_pull_secrets`** is an array of `docker-registry` secret names in the
+  runner's namespace. Every container in the job pod — build, helper and
+  init-permissions — pulls, so all of them need it. The manager pod's own pull
+  configuration does **not** apply to job pods: they are separate pods created by
+  the executor. A design that authenticates the manager and forgets the job pods
+  fails at pod creation with an image-pull error and no job log.
+  `validate_runner_config.py` reports `kube-image-pull-secrets`.
+- **`helper_image`** overrides the helper container's image. Left unset, it is
+  pulled from GitLab's own registry at job time, which fails in a cluster with
+  restricted egress. Mirror it into the registry the cluster can reach and pin the
+  mirrored reference. The tag carries the architecture and the runner version
+  (`x86_64-v19.1.2`); keep it in step with the runner's own version, and re-derive
+  the current tag from the helper image's tag list rather than from memory.
+- **`helper_image_flavor`** selects the helper's base (`alpine`, a specific
+  `alpineN.NN`, or `ubuntu`). Pin a specific Alpine flavour rather than
+  `alpine-latest` for the same reason any other tag is pinned.
+- **`allowed_images` and `allowed_services`** are wildcard allowlists. Unset means
+  `*/*:*` — every image. An entry that wildcards a whole registry or a whole
+  namespace (`docker.io/library/*:*`) is an allowlist in form only; list the
+  repositories the runner actually serves. `validate_runner_config.py` reports
+  `kube-allowlist-too-broad`.
+- **`allowed_pull_policies` and `pull_policy`.** `pull_policy` is the runner's
+  own default; `allowed_pull_policies` is what a pipeline may request. A
+  `pull_policy` outside the allowlist makes every job fail at pod creation —
+  `validate_runner_config.py` reports `kube-pull-policy-conflict`. Prefer
+  `always` on any runner more than one project can reach: with `if-not-present`, a
+  layer already cached on the node under a reused tag is served to the next
+  project.
 
-Use when:
+## Distributed cache
 
-- Stronger isolation is needed.
-- The cluster and RBAC policy can create and delete namespaces safely.
+Add a `[runners.cache]` block with a `Type` and its credentials on any
+Kubernetes-executor runner whose pipelines use `cache:`. Without it the cache is
+written to a pod that then disappears, so every cache key in every pipeline on
+that runner is a no-op that still costs upload time.
 
-When you enable namespace-per-job behavior, call out the RBAC requirement explicitly.
+```toml
+[runners.cache]
+  Type = "s3"
+  Shared = false
+  [runners.cache.s3]
+    ServerAddress = "REPLACE_WITH_OBJECT_STORE_ENDPOINT"
+    BucketName = "gitlab-runner-cache"
+    BucketLocation = "REPLACE_WITH_REGION"
+    AuthenticationType = "access-key"
+```
 
-## Kubernetes executor hardening
+`Shared = true` puts every project's cache in one bucket path, which is a
+cross-project read path; leave it false unless a single trusted tenant uses the
+runner. Bucket naming, lifecycle rules and credential rotation for the store
+belong to `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) or
+`/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`).
 
-Use these defaults whenever possible:
+`validate_runner_config.py` reports `kube-cache-not-distributed`.
 
-- Dedicated runner namespace.
-- Dedicated service account.
-- Explicit runner tags.
-- `allowed_images`, `allowed_services`, and `allowed_pull_policies`.
-- Dedicated node selectors for privileged runners or daemon-based builds.
-- Separate privileged and unprivileged runner fleets.
-- Explicit `poll_timeout` and cleanup expectations for slower clusters.
+## RBAC and namespace design
 
-If the runner is privileged:
+Decide namespace behaviour before writing anything else.
 
-- Treat it as high-risk.
-- Keep it off general-purpose nodes.
-- Use protected projects or protected refs.
-- Avoid mixing untrusted workloads onto the same runner fleet.
+**Fixed namespace** — one namespace for every job pod. Simpler RBAC, no
+cluster-scoped rights, namespace count stays constant. Correct when the runner
+serves a small set of trusted projects.
 
-## Read-only and restricted clusters
+**Namespace per job** (`namespace_per_job = true`) — stronger isolation, and it
+requires cluster-scoped create and delete rights on namespaces. Confirm the
+service account has them before shipping, and say so in the answer, because the
+failure mode is every job failing at pod creation.
 
-Some clusters enforce read-only or restricted security contexts.
+Give the runner a dedicated namespace and a dedicated, named service account.
+Where `rbac.create` is false, name `serviceAccount.name` explicitly; otherwise the
+chart falls back to the namespace default account, whose rights nobody declared.
 
-In those environments:
+Do not assume a runner job may create or read namespaces, or run
+`helm --create-namespace`, unless live evidence shows the service account has that
+scope. When a job hits an RBAC denial, check whether the namespace identity the
+job used matches the one the role binding names before broadening any privilege.
+What a specific managed platform permits is that platform's skill to state; for
+Arvan-managed Kubernetes that is `/caas-arvan-kuber` (`$caas-arvan-kuber`).
 
-- Ensure writable locations for logs and scripts.
-- Consider `logs_base_dir` and `scripts_base_dir`.
-- Provide writable volumes or `emptyDir` mounts where required.
-- Validate container `HOME`, temp paths, and credential file paths.
-- Do not assume root or privileged mode is available.
+## Restricted and read-only clusters
 
-## Troubleshooting checklist
+Where the cluster enforces a restricted or read-only container filesystem:
 
-### Job never starts
-
-Check:
-
-- Runner tags vs job tags.
-- Runner paused or offline state.
-- Project visibility or scope.
-- Protected ref vs protected runner mismatch.
-
-### Pod created slowly or times out
-
-Check:
-
-- `poll_timeout`.
-- Cluster capacity.
-- API server latency.
-- Admission webhooks.
-- Image pull time or registry access.
-
-### Pod starts but scripts fail immediately
-
-Check:
-
-- Image entrypoint and shell availability.
-- Writable filesystem assumptions.
-- Secret mount paths.
-- Service container health.
-- DNS or network policy.
-
-### DinD or daemon-based build fails on Kubernetes
-
-Check:
-
-- Runner privileged mode.
-- Correct DinD service alias and port.
-- TLS vs non-TLS variables.
-- Shared cert volume or socket volume if the design requires it.
-- Node isolation for privileged workloads.
+- Set `logs_base_dir` and `scripts_base_dir` to a writable path (`/tmp` with an
+  `emptyDir`, typically).
+- Check that `HOME`, the temp directory and any credential file path the job
+  writes are writable.
+- Do not assume root, and do not assume privileged mode is available.
+- Where a privileged runner is unavoidable, put it on its own fleet with its own
+  node selector and keep untrusted projects off it. `validate_runner_config.py`
+  reports `kube-privileged` and `kube-privileged-node-selector`.

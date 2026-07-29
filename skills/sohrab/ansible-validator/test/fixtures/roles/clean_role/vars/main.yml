@@ -1,0 +1,2 @@
+---
+clean_role_pid_file: /run/nginx.pid

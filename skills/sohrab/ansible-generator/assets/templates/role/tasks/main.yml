@@ -1,52 +1,56 @@
 ---
-# Role: [ROLE_NAME]
-# Tasks: Main task list
+# Role: ROLE_NAME
+# Main task list.
 
-- name: Include OS-specific variables
+- name: Load the OS-family variables
   ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
   tags:
     - always
 
-- name: Ensure [package/service] is installed
+- name: Ensure the package is installed
   ansible.builtin.package:
-    name: "{{ [role_name]_package_name }}"
+    name: "{{ ROLE_NAME_package_name }}"
     state: present
   tags:
     - install
     - packages
 
-- name: Create required directories
+- name: Ensure the service directories exist
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '0755'
-    owner: "{{ [role_name]_user }}"
-    group: "{{ [role_name]_group }}"
+    owner: "{{ ROLE_NAME_user }}"
+    group: "{{ ROLE_NAME_group }}"
+    mode: "{{ ROLE_NAME_dir_mode }}"
   loop:
-    - "{{ [role_name]_config_dir }}"
-    - "{{ [role_name]_data_dir }}"
-    - "{{ [role_name]_log_dir }}"
+    - "{{ ROLE_NAME_config_dir }}"
+    - "{{ ROLE_NAME_data_dir }}"
+    - "{{ ROLE_NAME_log_dir }}"
   tags:
     - configure
     - directories
 
-- name: Deploy configuration file
+- name: Deploy the service configuration
   ansible.builtin.template:
     src: config.j2
-    dest: "{{ [role_name]_config_dir }}/config.yml"
-    mode: '0644'
-    owner: "{{ [role_name]_user }}"
-    group: "{{ [role_name]_group }}"
-    backup: yes
-    validate: "[validation_command] %s"
-  notify: Restart [service_name]
+    dest: "{{ ROLE_NAME_full_config_path }}"
+    owner: "{{ ROLE_NAME_user }}"
+    group: "{{ ROLE_NAME_group }}"
+    mode: "{{ ROLE_NAME_config_mode }}"
+    backup: true
+    # validate runs the service's own config checker against the candidate file
+    # before it replaces the live one, so a bad render cannot take the service
+    # down. %s is the path of the candidate. Delete this line only if the
+    # service ships no checker.
+    validate: "CHANGE_ME_validate_command %s"
+  notify: Restart the service
   tags:
     - configure
 
-- name: Ensure service is started and enabled
+- name: Ensure the service is started and enabled
   ansible.builtin.service:
-    name: "{{ [role_name]_service_name }}"
+    name: "{{ ROLE_NAME_service_name }}"
     state: started
-    enabled: yes
+    enabled: true
   tags:
     - service

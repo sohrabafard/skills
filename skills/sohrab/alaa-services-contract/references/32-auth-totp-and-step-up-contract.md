@@ -134,6 +134,9 @@ Gateway responsibilities:
 - Require `purpose` to be present and non-empty and forward it verbatim as `X-TOTP-PURPOSE`, because
   the gateway holds no route-to-purpose map and only the route's own service knows which purpose it
   requires.
+- Send `X-TOTP-VERIFIED-UNTIL` as the proof's `exp` in Unix epoch seconds. The step-up response body's
+  `verified_until` carries that same instant as an ISO 8601 string, so a service parses this header as an integer and
+  never reuses a parser written against the response body.
 - Set exactly these four backend-only headers, and no other `X-TOTP-*` name. This is the complete set a
   service behind the gateway may believe; a reader of this table needs no other list.
 
@@ -143,10 +146,6 @@ Gateway responsibilities:
 | `X-TOTP-VERIFIED-UNTIL` | the proof is fully valid | the verified `exp`, in Unix epoch seconds |
 | `X-TOTP-PROOF-ID` | the proof is fully valid | the verified `jti` |
 | `X-TOTP-PROOF-REJECTED` | a proof was presented and none of the three above was set | why the proof bought nothing. Advisory only: it may change a message and must never change a decision. Owned by **Rejected-proof advisory header** below |
-
-- Send `X-TOTP-VERIFIED-UNTIL` as the proof's `exp` in Unix epoch seconds. The step-up response body's
-  `verified_until` carries that same instant as an ISO 8601 string, so a service parses this header as an integer and
-  never reuses a parser written against the response body.
 
 The gateway injects the first three headers only when the proof is fully valid, and injects none of them when
 the proof is absent, expired, unbound, or wrongly signed. It returns no TOTP error and blocks no request in
@@ -196,7 +195,7 @@ Rules:
 
 ### The value vocabulary
 
-The value is one of the seventeen codes below and nothing else. Each is the gateway's `totp_proof_status`
+The value is one of the eighteen codes below and nothing else. Each is the gateway's `totp_proof_status`
 value for the same outcome, uppercased under a `TOTP_PROOF_` prefix, so the header value is derivable and
 the two vocabularies cannot drift. Derivation is not registration: a new status is added to this table
 before the gateway ships it, because a mechanical rule produces a spelling, not a registered code.
@@ -223,6 +222,7 @@ only the last matching one. Read the value as *a* reason, never as the complete 
 | `TOTP_PROOF_MISSING_CLAIM_EXP` | `missing_claim_exp` | required claim `exp` absent |
 | `TOTP_PROOF_EXPIRED` | `expired` | `exp` is at or before now. The ordinary case — a user who paused mid-flow — and the one whose message quality this header exists to fix |
 | `TOTP_PROOF_NOT_YET_VALID` | `not_yet_valid` | `nbf` is further ahead than the configured clock skew |
+| `TOTP_PROOF_ISSUED_IN_FUTURE` | `issued_in_future` | `iat` is further ahead than the configured clock skew. `exp` and `nbf` do not cover this: they bound when the proof stops and starts being usable, while only `iat` states when the second factor was actually presented, which is the fact a step-up window measures. Reported after `not_yet_valid` because the two normally co-occur and this is the more diagnostic of the pair — an issuer clock running ahead, rather than a client presenting a proof early |
 | `TOTP_PROOF_CONTEXT_MISMATCH` | `context_mismatch` | the proof's `sub` or `pid` does not equal the access token's |
 
 There is one status value per required claim rather than one folded `missing_claim`, because an issuer that
@@ -257,7 +257,7 @@ an envelope beside other codes; the prefix is what makes each value self-describ
 
 ### `TOTP_PROOF_*` is gateway-owned, and ownership is by enumeration rather than by prefix
 
-Decided: the seventeen codes above belong to the `gateway` repository's committed code registry, not to
+Decided: the eighteen codes above belong to the `gateway` repository's committed code registry, not to
 `auth`'s.
 
 - `10-core-service-contract.md` binds every code to one committed registry in the repository that can emit
@@ -266,7 +266,7 @@ Decided: the seventeen codes above belong to the `gateway` repository's committe
   that `auth`'s own test can never exercise, which is the split-registry failure that rule exists to
   prevent.
 - The prefix is not the ownership boundary, because `auth` already carries `TOTP_PROOF_TOKEN_UNAVAILABLE`
-  in `app/Enums/ApiErrorCode.php`. Ownership is by the enumeration above: those seventeen values are the
+  in its own `app/Enums/ApiErrorCode.php`. Ownership is by the enumeration above: those eighteen values are the
   gateway's and are the complete `X-TOTP-PROOF-REJECTED` vocabulary; every other `TOTP_*` code, including
   that one, is `auth`'s. Do not "fix" the overlap by renaming either side — a rename of a public code costs
   a 90-day window under `22-failure-load-and-deprecation-contract.md` and buys nothing a reader needs.
@@ -285,8 +285,8 @@ emits it, and `TOTP_STEP_UP_REQUIRED` is emitted by many. So:
 - A service that emits `TOTP_STEP_UP_REQUIRED` carries that key on every such response, `null` when the
   gateway set no header. A key present on some of them and absent on others is the two-shapes-for-one-code
   defect that rule exists to prevent.
-- Adoption is therefore one coordinated change across every service that emits `TOTP_STEP_UP_REQUIRED`, not
-  fourteen independent ones. Until it is made, a service that reads the header uses it for service-local
+- Adoption is therefore one coordinated change across every service that emits `TOTP_STEP_UP_REQUIRED`,
+  never one service at a time. Until it is made, a service that reads the header uses it for service-local
   logging only and adds no key to the envelope.
 
 The counter that makes a rejection spike visible without log search is

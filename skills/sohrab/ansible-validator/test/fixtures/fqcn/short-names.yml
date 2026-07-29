@@ -1,0 +1,21 @@
+---
+# Fixture: check_fqcn.py --self-test asserts that the short names below are
+# reported with their current FQCN. Do not fix this file.
+- name: Fixture play using short module names
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Install a package
+      apt:
+        name: nginx
+        state: present
+
+    - name: Add an authorized key
+      authorized_key:
+        user: deploy
+        key: "{{ deploy_public_key }}"
+
+    - name: Create an archive
+      archive:
+        path: /opt/app
+        dest: /tmp/app.tar.gz

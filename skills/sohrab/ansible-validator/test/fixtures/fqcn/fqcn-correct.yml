@@ -1,0 +1,21 @@
+---
+# Fixture: check_fqcn.py --self-test asserts zero findings here, and asserts in
+# particular that neither the 'group:' parameter of a template task nor the
+# 'gather_facts:' play keyword is reported. The pre-repair grep-based checker
+# reported both.
+- name: Fixture play whose every action is fully qualified
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Write a configuration file
+      ansible.builtin.template:
+        src: app.conf.j2
+        dest: /etc/app/app.conf
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Ensure the service is running
+      ansible.builtin.service:
+        name: app
+        state: started

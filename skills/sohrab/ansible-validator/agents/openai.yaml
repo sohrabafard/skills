@@ -1,7 +1,7 @@
 interface:
   display_name: "Ansible Validator"
-  short_description: "Validate, lint, dry-run, and security-audit Ansible automation"
-  default_prompt: "Use $ansible-validator to lint (ansible-lint), check-mode dry-run, run Molecule, security-audit, and report fixes for Ansible playbooks/roles/collections. Read its references for the full workflow."
+  short_description: "Validate, lint, security-audit and dry-run Ansible"
+  default_prompt: "Use $ansible-validator when every Ansible file you need already exists and your job is to produce a verdict about it. Run its scripts rather than the tools by hand: setup_tools.sh, then validate_playbook.sh or validate_role.sh, then check_fqcn.sh and check_module_currency.py, then all three security commands (validate_*_security.sh, scan_secrets.sh, check_task_safety.py). Exit 0 is clean, 1 is findings, 2 is could-not-run and is never a pass. Report PASS, FAIL or BLOCKED with the reference line behind each finding. When a file that does not yet exist has to exist when you are done, use $ansible-generator instead."
 
 policy:
   allow_implicit_invocation: true

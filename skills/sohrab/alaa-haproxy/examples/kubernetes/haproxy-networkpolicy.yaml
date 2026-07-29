@@ -1,3 +1,19 @@
+# haproxy-networkpolicy.yaml
+# Charter: bound what may reach HAProxy and what HAProxy may reach.
+# Preconditions: REPLACE EVERY PLACEHOLDER LABEL BELOW before applying. The values here name
+#   namespaces by label, not by name, so they are inert until they match something real. A
+#   policy that selects nothing denies nothing extra and permits nothing extra - it is the
+#   Ingress/Egress policyTypes that make the pod default-deny, and an unreplaced selector then
+#   denies the traffic you meant to allow.
+#   NetworkPolicy design and the label scheme are decided by /alaa-k8s-helm ($alaa-k8s-helm);
+#   whether this exposure is acceptable is decided by /alaa-security-review
+#   ($alaa-security-review). What this file carries is the port set the HAProxy config implies.
+# Failure mode: the previous form of this file used `namespaceSelector: {}`, which matches
+#   EVERY namespace and therefore let any pod in the cluster reach both the traffic port and
+#   the metrics port. An empty selector is the maximally permissive selector, not the empty one.
+#   Egress must additionally permit the peers port when examples/haproxy/12-peers-global-rate-limit.cfg
+#   is in use and the backend TLS port when examples/haproxy/18 or 19 is in use; omitting them
+#   blocks peer sync silently, which fails the rate limit open by the node count.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -10,20 +26,65 @@ spec:
   - Ingress
   - Egress
   ingress:
+  # Traffic. Replace with the namespaces that legitimately originate requests, or delete the
+  # `from` block entirely when the traffic arrives from outside the cluster through the
+  # LoadBalancer Service.
   - from:
-    - namespaceSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          haproxy-client: "true"
     ports:
     - protocol: TCP
       port: 8080
+  # Scrape. Only the monitoring namespace.
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
     - protocol: TCP
       port: 8405
+  # Peer sync, when peers are in use. Only the other HAProxy pods.
+  - from:
+    - podSelector:
+        matchLabels:
+          app: haproxy
+    ports:
+    - protocol: TCP
+      port: 1024
+  # The health port carries no data and must stay reachable by the kubelet, which does not
+  # originate from a pod and is therefore not covered by any namespaceSelector. Leaving this
+  # rule without a `from` block permits it from anywhere; narrowing it to the node CIDR is a
+  # cluster-specific decision.
+  - ports:
+    - protocol: TCP
+      port: 8406
   egress:
+  # DNS.
   - to:
-    - namespaceSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
     ports:
     - protocol: UDP
       port: 53
     - protocol: TCP
       port: 53
+  # Backends. Replace with the namespaces that actually host them.
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          haproxy-backend: "true"
+    ports:
     - protocol: TCP
       port: 8080
+    - protocol: TCP
+      port: 8443
+  # Peer sync, when peers are in use.
+  - to:
+    - podSelector:
+        matchLabels:
+          app: haproxy
+    ports:
+    - protocol: TCP
+      port: 1024

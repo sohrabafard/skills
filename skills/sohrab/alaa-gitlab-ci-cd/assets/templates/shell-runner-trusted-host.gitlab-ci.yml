@@ -1,20 +1,27 @@
-# Trusted host only. Do not use this pattern for untrusted multi-tenant workloads.
+# Shell runner on a trusted, dedicated host. Do not use this shape for untrusted
+# or multi-tenant workloads; see the runner reference for the four conditions a
+# shell runner requires.
 workflow:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH
+    - when: never
 
 default:
   tags:
     - shell-trusted
   interruptible: true
+  timeout: 20 minutes
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   variables:
+    # clone, not fetch: on a persistent host a fetched working tree carries
+    # whatever the previous job left in it.
     GIT_STRATEGY: clone
     PIP_CACHE_DIR: .cache/pip
-  cache:
-    key: ${CI_PROJECT_PATH_SLUG}-${CI_DEFAULT_BRANCH}
-    paths:
-      - .cache/pip
 
 stages:
   - test
@@ -22,16 +29,42 @@ stages:
 
 test:
   stage: test
+  timeout: 15 minutes
+  needs: []
+  cache:
+    # Keyed on the lockfile, so the key changes exactly when the cached contents
+    # should. A key built from the branch name is identical on every branch, and
+    # on a persistent shell runner that lets one branch poison every other.
+    key:
+      files:
+        - requirements.txt
+    paths:
+      - .cache/pip
+    policy: pull-push
   script:
     - python3 -m venv .venv
     - . .venv/bin/activate
-    - pip install -r requirements.txt
+    # --require-hashes refuses any dependency whose hash is not pinned in the
+    # requirements file, on a host that can also deploy.
+    - pip install --require-hashes -r requirements.txt
     - pytest -q
 
 deploy:
   stage: deploy
+  timeout: 20 minutes
+  # Not safe to cancel: it mutates the deployment target.
+  interruptible: false
+  needs:
+    - job: test
+      artifacts: false
+  # Named after the target it protects, not after the pipeline. A group named
+  # for the pipeline would serialise every job in it.
   resource_group: production
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH tests which branch this is, not
+    # whether that branch is protected. Protected-variable and protected-runner
+    # access follow protection, not the default-branch name. Where the deploy
+    # credential is a protected variable, add $CI_COMMIT_REF_PROTECTED == "true".
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
   script:
     - ./scripts/deploy.sh

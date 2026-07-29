@@ -1,0 +1,4 @@
+# Fixture: deliberately incomplete. Missing .env and docker/.local-secrets.
+.git
+node_modules
+vendor

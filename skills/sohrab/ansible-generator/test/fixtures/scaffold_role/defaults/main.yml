@@ -1,0 +1,37 @@
+---
+# Role: demo_nginx
+# Default variables. Lowest precedence: a caller may override any of these.
+#
+
+# Package and service names
+demo_nginx_package_name: "nginx"
+demo_nginx_service_name: "nginx"
+
+# Account the service runs as
+demo_nginx_user: "www-data"
+demo_nginx_group: "www-data"
+
+# Directories
+demo_nginx_config_dir: "/etc/nginx"
+demo_nginx_data_dir: "/var/lib/nginx"
+demo_nginx_log_dir: "/var/log/nginx"
+
+# Network. Bind to the loopback interface by default. A wider bind is an
+# explicit decision the caller makes, not a default the role ships.
+demo_nginx_port: 8080
+demo_nginx_bind_address: "127.0.0.1"
+demo_nginx_max_connections: 100
+
+# File modes. No mode grants write to other.
+demo_nginx_config_mode: "0644"
+demo_nginx_secret_mode: "0600"
+demo_nginx_dir_mode: "0755"
+
+# Feature flags
+demo_nginx_enable_ssl: false
+demo_nginx_enable_monitoring: true
+demo_nginx_enable_backup: true
+
+# Version. Pin it: "latest" makes the run non-reproducible and trips
+# ansible-lint's package-latest rule.
+demo_nginx_version: "1.26.2"

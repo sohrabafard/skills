@@ -1,0 +1,48 @@
+# One resource group over a needs: graph, a bare retry, an interruptible migration,
+# a job nothing needs, and a resource-group holder with no timeout.
+stages:
+  - build
+  - bootstrap
+  - deploy
+
+.base:
+  interruptible: true
+  retry: 1
+  resource_group: release
+
+build_app:
+  extends: .base
+  stage: build
+  timeout: 15 minutes
+  needs: []
+  script:
+    - ./build.sh
+
+bootstrap_keys:
+  extends: .base
+  stage: bootstrap
+  timeout: 10 minutes
+  needs:
+    - job: build_app
+      artifacts: false
+  script:
+    - ./bootstrap.sh
+
+migrate_db:
+  extends: .base
+  stage: bootstrap
+  timeout: 10 minutes
+  needs:
+    - job: build_app
+      artifacts: false
+  script:
+    - ./migrate.sh
+
+deploy_app:
+  extends: .base
+  stage: deploy
+  needs:
+    - job: migrate_db
+      artifacts: false
+  script:
+    - ./deploy.sh

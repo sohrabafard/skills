@@ -1,125 +1,149 @@
-# <CHART/APP NAME> — Arvan CaaS Deployment Guide
+# APPLICATION NAME — deployment guide for Arvan CaaS
+
+Replace every capitalised placeholder before handing this to an operator. A placeholder left in place is a decision nobody made.
+
+Two skills own the material behind this guide: `/caas-arvan-kuber` (`$caas-arvan-kuber`) for Arvan platform facts, and `/alaa-k8s-helm` (`$alaa-k8s-helm`) for chart authoring, the validation gate register, and the manifest checker invoked below.
 
 ## What this is
-One paragraph describing the service and why it exists.
 
-## Platform compatibility
+One paragraph: what the service does and why it exists.
 
-- Primary target: ArvanCloud CaaS (Cloud Container)
-- Compatible with: standard Kubernetes (portable defaults)
-- Optional: OpenShift via explicit toggles only
+## Platform target
 
-OpenAPI baseline used for this package:
+- Primary: ArvanCloud CaaS (Cloud Container)
+- Portable to: standard Kubernetes, through the toggles in `values.yaml`
+- OpenShift: only behind the explicit `openshift.enabled` toggle
 
-- `references/arvan-caas-openAPI-1.25.json`
-- `references/openapi-1.25-capability-matrix.md`
-- `references/arvan-rbac-namespace-facts.md` (for alias/canonical namespace RBAC incidents)
+**Kubernetes line this package was built for: LINE.** Record what the discovery below reported on the day this file was written, and re-run it before any upgrade. Arvan publishes no version, so the cluster is the only source.
 
 ## Prerequisites
 
-- Namespace/project access on Arvan
-- One of:
-  - Arvan panel + manifest deploy,
-  - `kubectl` configured,
-  - Arvan CLI (`arvan paas`) / Cloud Shell
-- Helm v3 (for chart-based deployments)
-- Values files:
-  - `values.yaml` (non-secret)
-  - `values.secret.yaml` (secret, not committed)
+- Namespace access on Arvan. **The namespace already exists**; nothing here creates one.
+- One of: the Arvan panel with manifest deploy, a configured `kubectl`, or the Arvan CLI.
+- **Helm 4** (current major). Helm 3.21 still works until Helm 3 reaches end of life on 2027-02-10, and the flag names differ between the two — see "Rollback safety flag" below.
+- Values files: `values.yaml` (non-secret, committed) and `values.secret.yaml` (secret, **never** committed).
 
-## Preflight (run before every install/upgrade)
+## Before every install or upgrade
 
 ```bash
-bash .codex/skills/caas-arvan-kuber/scripts/verify-cluster.sh <namespace> [runner-serviceaccount]
-bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh ./helm/<chart> <namespace> values.yaml values.secret.yaml rendered.yaml [values.<env>.yaml]
-kubectl apply --dry-run=client -f rendered.yaml
+# 1. Which line is this cluster on, and does it have what the release needs?
+bash scripts/verify-cluster.sh NAMESPACE RUNNER_SERVICEACCOUNT
+
+# 2. Render deterministically. The output holds every decoded Secret, so the
+#    script creates it mode 0600 and deletes it on exit unless --keep is passed.
+bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
+  --values values.yaml --values values.ENV.yaml \
+  --secret-values values.secret.yaml \
+  --out build/rendered.yaml --keep
+
+# 3. Gate it.
+python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml --profile arvan
+kubectl apply --dry-run=server -f build/rendered.yaml
+
+# 4. Remove the render as soon as step 3 has passed.
+rm -f build/rendered.yaml
 ```
 
-## Install / Upgrade (Helm)
+`build/rendered.yaml` contains credentials in decodable form. It must be listed in this repository's `.gitignore` before the first render — see "Files that must never be committed".
+
+## Install and upgrade
 
 ```bash
-helm upgrade --install <release> ./helm/<chart> \
-  -n <namespace> --create-namespace \
+helm upgrade --install RELEASE ./helm/CHART \
+  -n NAMESPACE \
   -f values.yaml \
-  -f values.<env>.yaml \
+  -f values.ENV.yaml \
   -f values.secret.yaml \
-  --wait --timeout 10m --rollback-on-failure
+  --wait --timeout TIMEOUT "$ROLLBACK_FLAG"
 ```
+
+**No `--create-namespace`.** The namespace exists, and a namespace-scoped identity is usually forbidden from creating or even reading the Namespace object. Passing the flag turns a working deployment into a permission error.
+
+**TIMEOUT** is not a magic number. Derive it from the CI job timeout minus the time the job needs afterwards, and never let it exceed the job timeout, or the job is killed mid-rollout with the release in a pending state. `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns the value.
+
+**Rollback safety flag.** The flag was renamed in Helm 4, and each name fails on the other major:
+
+```bash
+if helm version --template '{{.Version}}' | grep -q '^v4'; then
+  ROLLBACK_FLAG=--rollback-on-failure
+else
+  ROLLBACK_FLAG=--atomic
+fi
+```
+
+Helm 4 still accepts `--atomic` on `helm upgrade` with a deprecation warning, and **removed it from `helm install`**; Helm 3 does not know `--rollback-on-failure` at all.
 
 ## Rollback
 
 ```bash
-helm history <release> -n <namespace>
-helm rollback <release> <revision> -n <namespace>
+helm history RELEASE -n NAMESPACE
+helm rollback RELEASE REVISION -n NAMESPACE
 ```
 
 ## Uninstall
 
 ```bash
-helm uninstall <release> -n <namespace>
+helm uninstall RELEASE -n NAMESPACE
 ```
 
-## Arvan safety requirements
+Uninstalling does not delete PVCs created from `volumeClaimTemplates`. List them and decide deliberately; on Arvan, deleting a disk is irreversible.
 
-1) Every container must declare resources.
-- On Arvan targets, keep `requests == limits`.
-- Include `ephemeral-storage` when required by policy.
+## Arvan requirements this package must keep satisfying
 
-2) Secret handling:
-- never commit `values.secret.yaml`,
-- never use `--set` for secret values,
-- never print secrets in logs.
+1. **Resources on every container, with `requests` equal to `limits`.** Include `ephemeral-storage` when the namespace LimitRange expects it.
+2. **Secrets** live in a Kubernetes `Secret` or in `values.secret.yaml`. Never in `values.yaml`, never in `--set`, never in a log.
+3. **Scaling**: the HPA applies to stateless Deployments only. A workload with persistent storage cannot be scaled manually or automatically while the storage is attached.
+4. **Config mounts** go into a dedicated directory such as `/etc/APP/config`. Mounting onto a directory the image populates replaces its contents.
 
-3) Scaling:
-- HPA by default for stateless workloads only.
-- Stateful/PVC-backed workloads: use manual replica/instance runbook.
+The normative statement of each is in `caas-arvan-kuber references/arvan-constraints.md`.
 
-4) Config mounts:
-- mount secrets/configmaps into dedicated subdirectories to avoid shadowing existing files.
+## Private registry
 
-## Private registry pattern
+Use a `kubernetes.io/dockerconfigjson` Secret and `imagePullSecrets`, in one of two modes:
 
-Use `kubernetes.io/dockerconfigjson` and `imagePullSecrets` with two supported modes:
+1. the chart creates the Secret from `values.secret.yaml`, or
+2. the chart references a Secret that already exists and does not overwrite it.
 
-1) Helm-managed secret from `values.secret.yaml`
-2) Existing secret reference (chart does not create/overwrite)
+Runner-side pull configuration is not this file's business: `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns it.
 
-For GitLab Runner:
+## Files that must never be committed
 
-- ensure executor job pods render `image_pull_secrets`,
-- pin helper image to a reachable registry path.
+Add all of these to `.gitignore` before the first render:
 
-## Values layering (recommended)
+```gitignore
+values.secret.yaml
+*.secret.yaml
+*.secrets.yaml
+rendered.yaml
+*.rendered.yaml
+build/rendered.yaml
+```
 
-Order:
-
-1) `values.yaml`
-2) `values.<env>.yaml` (optional, non-secret)
-3) `values.secret.yaml` (last)
-
-## Verify deployment
+## Verify a deployment
 
 ```bash
-kubectl -n <namespace> get pods
-kubectl -n <namespace> get svc,ingress
-kubectl -n <namespace> describe pod <pod>
-kubectl -n <namespace> logs <pod>
+kubectl -n NAMESPACE get pods
+kubectl -n NAMESPACE get svc,ingress
+kubectl -n NAMESPACE rollout status deploy/NAME
+kubectl -n NAMESPACE describe pod POD
+kubectl -n NAMESPACE logs POD
 ```
 
-## Fast debug commands
+## Fast debugging
 
 ```bash
-helm get values <release> -n <namespace> -a
-helm get manifest <release> -n <namespace> > release.rendered.yaml
-kubectl -n <namespace> get events --sort-by=.metadata.creationTimestamp
+helm get values RELEASE -n NAMESPACE -a
+kubectl -n NAMESPACE get events --sort-by=.lastTimestamp
 ```
 
-## RBAC identity debug note
+`helm get manifest` writes the same secret-bearing content as a render. If you need it, send it to a mode-0600 file and delete it afterwards.
 
-If authorization failures look inconsistent, collect both namespace forms and principal identity before changing RBAC:
+## When authorization looks inconsistent
 
-- alias namespace (human-friendly)
-- canonical namespace (hash-prefixed when present)
-- principal evaluated: `system:serviceaccount:<namespace>:<name>`
+If a job is forbidden while the Helm release looks healthy, collect both namespace forms and the exact principal before changing any RoleBinding:
 
-Use `references/arvan-rbac-namespace-facts.md` as the factual model.
+- alias namespace (the one you type)
+- canonical namespace (hash-prefixed, when it is observable)
+- the principal being evaluated: `system:serviceaccount:NAMESPACE:NAME`
+
+`caas-arvan-kuber references/arvan-rbac-namespace-facts.md` holds the model and the conclusive token-based check. Do not broaden a RoleBinding before running it.

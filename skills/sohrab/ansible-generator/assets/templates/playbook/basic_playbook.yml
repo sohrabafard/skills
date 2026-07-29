@@ -1,60 +1,81 @@
 ---
-# Playbook: [PLAYBOOK_NAME]
-# Description: [PLAYBOOK_DESCRIPTION]
+# Playbook: CHANGE_ME_playbook_name
+# Description: CHANGE_ME_what_this_playbook_does
 # Requirements:
-#   - Ansible [MIN_VERSION]+
-#   - Target hosts: [OS_REQUIREMENTS]
+#   - ansible-core 2.19 or newer on the control node
+#   - Control-node Python 3.12 or newer for ansible-core 2.20 and newer
+#   - Target hosts: CHANGE_ME_supported_platforms
 # Variables:
-#   - [VAR_NAME]: [VAR_DESCRIPTION] (required/optional, default: [DEFAULT_VALUE])
+#   - CHANGE_ME_var_name: CHANGE_ME_description (required, no default)
+#   - CHANGE_ME_optional_var: CHANGE_ME_description (optional, default shown below)
 # Usage:
-#   ansible-playbook -i inventory/[ENV] [PLAYBOOK_FILE] -e "[REQUIRED_VARS]"
+#   ansible-playbook -i inventory/CHANGE_ME_env CHANGE_ME_playbook.yml \
+#     -e "CHANGE_ME_var_name=value" --check --diff --limit CHANGE_ME_host
+#
+# Placeholder convention: every CHANGE_ME_* token is a bare YAML scalar, so this
+# file parses before substitution. scripts/check_templates.py proves that and
+# reports any token left behind after substitution.
 
-- name: [ Play description ]
-  hosts: [ TARGET_HOSTS ]
-  become: [ yes/no ]
-  gather_facts: [ yes/no ]
+- name: CHANGE_ME_play_description
+  hosts: CHANGE_ME_target_group
+  # become at play level escalates every task, including read-only ones. Prefer
+  # become on the tasks that need it; set this true only when most tasks do.
+  become: false
+  # Fact gathering is one module execution per host before any task runs. Leave
+  # this true only when the play reads an ansible_* fact; when it reads fewer
+  # than three, set gather_subset to name exactly those.
+  gather_facts: true
 
   vars:
-    # Define play-level variables
-      [ var_name ]: [ value ]
+    CHANGE_ME_var_name: CHANGE_ME_value
 
   pre_tasks:
-    - name: Update package cache (Debian/Ubuntu)
+    - name: Refresh the package cache on the Debian family
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         cache_valid_time: 3600
+      become: true
       when: ansible_os_family == "Debian"
       tags:
         - always
 
-    - name: Update package cache (RHEL/CentOS)
-      ansible.builtin.yum:
-        update_cache: yes
+    # ansible.builtin.yum no longer exists as a module: the name survives only  # check-module-currency:ignore
+    # as an action redirect to dnf, so a task written for RHEL 7 now runs dnf,
+    # which RHEL 7 does not have. Write dnf and state the RHEL 8+ scope.
+    - name: Refresh the package cache on the RedHat family
+      ansible.builtin.dnf:
+        update_cache: true
+      become: true
       when: ansible_os_family == "RedHat"
       tags:
         - always
 
   tasks:
-    - name: [ Task description ]
-      ansible.builtin.[module]:
-        [ parameter ]: [ value ]
+    - name: CHANGE_ME_task_description
+      ansible.builtin.package:
+        name: CHANGE_ME_package
+        state: present
+      become: true
       tags:
-        - [ tag_name ]
+        - CHANGE_ME_tag
 
   post_tasks:
-    - name: Verify deployment
+    - name: Verify the service answers
       ansible.builtin.uri:
-        url: "http://localhost:[PORT]/health"
+        url: "http://127.0.0.1:{{ CHANGE_ME_port }}/health"
         status_code: 200
       register: health_check
       until: health_check.status == 200
+      # retries and delay bound how long a slow start is tolerated. What the
+      # numbers should be for this service's SLA is /alaa-reliability-sla's
+      # ($alaa-reliability-sla), not this playbook's.
       retries: 5
       delay: 10
       tags:
         - verify
 
   handlers:
-    - name: [ Handler description ]
+    - name: CHANGE_ME_handler_description
       ansible.builtin.service:
-        name: [ service_name ]
+        name: CHANGE_ME_service
         state: restarted

@@ -1,9 +1,17 @@
-# More opinionated production-oriented values patterns.
-# Adjust key names to the actual chart you use.
+# values-production-example.yaml
+# Charter: the same value set at production scale, with spread and autoscaling added.
+# Preconditions: everything stated in values-example.yaml applies here and is not repeated.
+#   Image tag verified 2026-07-29; re-derive with `docker run --rm haproxy:lts haproxy -v`.
+# Failure mode: `topologySpreadConstraints` with `whenUnsatisfiable: DoNotSchedule` will leave
+#   pods Pending rather than violate the spread. On a cluster with fewer zones than replicas
+#   that means an autoscale-up that never lands, and the HPA reports the desired count as met
+#   while capacity has not changed. Confirm the zone count before setting DoNotSchedule.
+#   `minAvailable: 2` with `minReplicas: 3` allows exactly one pod down; raise both together or
+#   a node drain stalls indefinitely against the budget.
 
 image:
   repository: haproxy
-  tag: "3.2.15"
+  tag: "3.4.1"
   pullPolicy: IfNotPresent
 
 replicaCount: 3
@@ -24,6 +32,8 @@ service:
   type: LoadBalancer
   externalTrafficPolicy: Local
   annotations:
+    # Provider-specific. Replace or delete; an annotation the provider does not recognise is
+    # ignored without error and the Service is created with provider defaults.
     service.beta.kubernetes.io/example: "replace-me"
   ports:
     http: 80
@@ -55,6 +65,9 @@ autoscaling:
   minReplicas: 3
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
 topologySpreadConstraints:
   - maxSkew: 1
@@ -74,6 +87,17 @@ affinity:
             matchLabels:
               app: haproxy
 
+probes:
+  readiness:
+    httpGet:
+      path: /haproxy-ready
+      port: 8406
+    failureThreshold: 2
+  liveness:
+    tcpSocket:
+      port: 8080
+    failureThreshold: 6
+
 metrics:
   serviceMonitor:
     enabled: true
@@ -92,18 +116,28 @@ podSecurityContext:
 containerSecurityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
 
 extraVolumes:
   - name: run
     emptyDir: {}
   - name: lib
     emptyDir: {}
+  - name: shm
+    emptyDir:
+      medium: Memory
+      sizeLimit: 64Mi
 
 extraVolumeMounts:
   - name: run
     mountPath: /run/haproxy
   - name: lib
     mountPath: /var/lib/haproxy
+  - name: shm
+    mountPath: /dev/shm
+
+terminationGracePeriodSeconds: 45
 
 lifecycle:
   preStop:
@@ -111,4 +145,4 @@ lifecycle:
       command:
         - /bin/sh
         - -ec
-        - kill -USR1 1 || true; sleep 20
+        - sleep 20; kill -USR1 1 || true

@@ -1,150 +1,72 @@
 ---
 name: alaa-haproxy
-description: "Use this skill when the task involves HAProxy design, config, tuning, troubleshooting, observability, security, or production delivery. It is the HAProxy source of truth for this pack and covers both the current HAProxy 3.2 LTS line and the newer 3.3 line, with live official-source verification for version-sensitive guidance."
+description: "HAProxy configuration, tuning, troubleshooting, delivery and upgrade work: turning a routing, TLS, caching, rate-limiting, load-balancing or drain decision into HAProxy directives, choosing between supported branches, and reading the Runtime API. Use when authoring or reviewing an haproxy.cfg, when a change must be proved with haproxy -c -f, when stick tables, peers, QUIC, mTLS, compression or the Prometheus exporter are in scope, or when planning a branch upgrade. Do not use to decide caching policy, owned by /alaa-frontend-devops ($alaa-frontend-devops); for HAProxy Lua, owned by /alaa-haproxy-lua ($alaa-haproxy-lua); for Kubernetes chart authorship, owned by /alaa-k8s-helm ($alaa-k8s-helm); for pipeline YAML, owned by /alaa-gitlab-ci-cd ($alaa-gitlab-ci-cd)."
 ---
 
 # Alaa HAProxy
 
-## Purpose
+## What this skill decides
 
-Use this skill when the task needs HAProxy-specific design, configuration, deployment, tuning, observability, troubleshooting, upgrade planning, or security guidance.
+How a routing, caching, TLS, rate-limiting, load-balancing, observability or drain decision is
+**expressed as an HAProxy directive**, and which HAProxy branch a config targets. It is the
+HAProxy source of truth for this pack.
 
-This skill is the HAProxy source of truth for this pack. It covers both:
+## What this skill does not decide, and when not to use it
 
-- HAProxy `3.2`, which is still marked `LTS` in the official docs index
-- HAProxy `3.3`, which is newer but not marked `LTS`
+`alaa-haproxy` owns how a cache or routing decision is expressed as an HAProxy directive — the
+`http-response set-header Cache-Control` rule, the `cache` section, the `compression` settings, the
+path rewrite, the deep-link fallback, and the ACL or map that selects a backend — and it decides
+no policy: which `Cache-Control` value belongs to which response class is decided by
+`/alaa-frontend-devops` (`$alaa-frontend-devops`), `alaa-frontend-devops
+references/30-serving-caching-and-public-path.md`, because that policy follows from whether the
+build gave the file a content-hashed name and the build owns that. **When a caching or routing
+task arrives here without a stated policy, ask for the policy and emit no directive rather than
+choosing a default.**
 
-## Live version policy
+Every other boundary — the owner, and the condition under which that owner decides — is in
+`references/90-companion-boundary.md`. Three that come up in almost every task, so that silence is
+never mistaken for authority:
 
-- Check `https://docs.haproxy.org/` first to confirm branch status.
-- Check `https://www.haproxy.org/download/3.2/src/` and `https://www.haproxy.org/download/3.3/src/` next to confirm the latest released patch in each branch.
-- At the time of this refresh:
-  - `3.2` is still labeled `LTS` in the docs index
-  - `3.2.15` is present in the official `3.2` release directory dated `2026-03-19`
-  - `3.3.6` is present in the official `3.3` release directory dated `2026-03-19`
-- Do not assume a distro package, Docker tag, or old memory is fresher than those official locations.
-
-## When to use
-
-- HAProxy config authoring or review
-- L4 or L7 load-balancing design
-- TLS termination, mTLS, certificate loading, SNI, HTTP/2, or HTTP/3 work
-- Runtime API, stats socket, logs, metrics, traces, or incident triage
-- performance tuning, connection reuse, stick tables, peers, maps, canaries, or rate limiting
-- container, Kubernetes, Helm, or CI delivery patterns for HAProxy
-- upgrade planning or mixed-estate guidance across `3.2` and `3.3`
-
-## When NOT to use
-
-- do not use this skill for generic reverse-proxy advice when HAProxy-specific behavior is not the decision surface
-- do not assume a directive exists just because it exists in another HAProxy branch
-- do not expose admin sockets, master CLI access, or certificate material to untrusted paths
-
-## Source priority
-
-Use sources in this order:
-
-1. Live official HAProxy branch status and release directories
-2. Official HAProxy `3.2` or `3.3` configuration and management manuals for the branch you actually run
-3. Official HAProxy container, ingress, and chart docs
-4. This skill's `references/` files
-5. This skill's bundled examples
-
-If sources conflict:
-
-- live official docs beat older memory
-- `haproxy -vv` and `haproxy -c -f ...` beat assumptions
-- repository topology and trust boundaries beat generic snippets
+- **HAProxy Lua is not this skill's subject.** `/alaa-haproxy-lua` (`$alaa-haproxy-lua`) owns
+  `lua-load`, `http-request lua.<name>`, Lua converters and fetches, and Lua-backed SPOE. Route
+  there the moment a task would write or debug any of them.
+- **What a timeout, retry or degradation should be** is decided by `/alaa-reliability-sla`
+  (`$alaa-reliability-sla`). This skill states which timeouts exist and how they are written.
+- **What a change lets through when it fails** is decided by `/alaa-security-review`
+  (`$alaa-security-review`) whenever the answer to *when this dependency cannot answer, does
+  proceeding without it let something through that must not get through?* is yes.
 
 ## Quick start
 
-1. Confirm whether the target estate is `3.2`, `3.3`, or mixed.
-2. Inspect the running build with `haproxy -vv`.
-3. Validate config changes with `haproxy -c -f <cfg>`.
-4. Start from the closest bundled example.
-5. Read the upgrade section before moving anything from `3.2` to `3.3`.
+1. Establish the branch that will actually run the config. `references/10-version-and-branch.md`
+   holds the branch table and the upgrade path; **3.4 is the current LTS**.
+2. Run `haproxy -vv` on that binary. It answers which features exist before any directive relies
+   on one.
+3. Open `references/00-topic-map.md`. It maps the task to exactly one reference and names the
+   example config to start from.
+4. Run `haproxy -c -f <cfg>` on a binary of that branch. A config checked on the wrong branch has
+   not been checked.
+5. Run both checkers below. `haproxy -c -f` proves the file parses; it does not prove the file is
+   correct, and the two most expensive HAProxy mistakes — a `defaults` section that governs a
+   proxy you did not intend, and a `peers` section that never activates — both pass it.
 
-## Branch strategy
+## Checkers
 
-- Prefer `3.2` when the requirement is "stay on LTS".
-- Use `3.3` when you explicitly want newer features and you accept that it is not the current LTS branch.
-- For mixed estates, keep branch-specific examples and upgrade notes visible in review comments and rollout plans.
+```
+python3 scripts/check_defaults_scope.py examples/haproxy
+python3 scripts/check_examples.py --haproxy $(command -v haproxy)
+```
 
-## Important `3.3` additions to account for
+Both take `--help` and `--self-test`. Exit codes are **0 clean, 1 findings, 2 could not run**; a
+missing binary or an unreadable path is 2, never 0. Full contract and the gate register:
+`references/80-gate-register.md`.
 
-- expanded ACME workflow, including DNS-01 support via the HAProxy Data Plane API workflow
-- backend HTTP/3 over QUIC support
-- persistent stats across reloads
-- automatic backend SNI handling controls
-- `ssl-passphrase-cmd` for passphrase-protected private keys
-- `jwt_verify_cert` for certificate-backed JWT verification flows
-- `tcp-md5sig` for TCP proxying in router or BGP-adjacent scenarios
-- experimental ECH support
-- Linux kTLS support
-- some `3.2` naming or operational patterns now have deprecations or preferred replacements in `3.3`
+## Maintenance
 
-## Companion routing
-
-- `$caas-arvan-kuber`
-  - Pair when HAProxy runs on Arvan CaaS or Kubernetes delivery is the main constraint.
-- `$alaa-docker-production`
-  - Pair when image hardening, container attack surface, or Dockerfile behavior matters.
-- `$alaa-observability-soc`
-  - Pair when logs, metrics, traces, alerting, or incident evidence requirements extend beyond HAProxy itself.
-- `$alaa-security-review`
-  - Pair when HAProxy changes alter trust boundaries, mTLS policy, exposure, or admin surface.
-- `$alaa-trust-gateway-auth`
-  - Pair when HAProxy is part of an Ala gateway auth or trusted-header path.
-- `$alaa-crockford-base32-codecs`
-  - Pair when HAProxy Lua work needs shared Crockford Base32, UUIDv7, or pure codec helpers that must match backend, frontend, or CLI code.
-
-## Reference navigation
-
-- Fast router and example map:
-  - `references/00-topic-map.md`
-- Full preserved guidance, production checklists, branch comparison, and upgrade notes:
-  - `references/full-guide.md`
-- Platform delivery patterns for containers, Kubernetes, Helm, and CI:
-  - `references/20-platform-delivery.md`
-- Security and observability checklist:
-  - `references/30-security-observability.md`
-- Official links and live-source checkpoints:
-  - `references/SOURCES.md`
-
-## Example bundles
-
-- HAProxy configs:
-  - `examples/haproxy/01-baseline-http-tls.cfg`
-  - `examples/haproxy/03-quic-http3.cfg`
-  - `examples/haproxy/04-rate-limit-stick-table.cfg`
-  - `examples/haproxy/10-prometheus-runtime-api.cfg`
-  - `examples/haproxy/11-proxy-protocol-chain.cfg`
-  - `examples/haproxy/12-peers-global-rate-limit.cfg`
-  - `examples/haproxy/13-canary-map-routing.cfg`
-  - `examples/haproxy/14-http3-backend-3.3.cfg`
-  - `examples/haproxy/15-persistent-stats-3.3.cfg`
-  - `examples/haproxy/16-server-tls-sni-auto-3.3.cfg`
-  - `examples/haproxy/17-ktls-3.3.cfg`
-  - `examples/haproxy/18-tiered-edge-gateway.cfg`
-  - `examples/haproxy/19-tls-bridge-mtls-backend.cfg`
-- Kubernetes:
-  - `examples/kubernetes/haproxy-configmap.yaml`
-  - `examples/kubernetes/haproxy-deployment.yaml`
-  - `examples/kubernetes/haproxy-service.yaml`
-  - `examples/kubernetes/haproxy-pdb.yaml`
-  - `examples/kubernetes/haproxy-networkpolicy.yaml`
-  - `examples/kubernetes/haproxy-hpa.yaml`
-  - `examples/kubernetes/haproxy-servicemonitor.yaml`
-- Helm:
-  - `examples/helm/values-example.yaml`
-  - `examples/helm/values-production-example.yaml`
-- CI:
-  - `examples/gitlab-ci/gitlab-ci-snippet.yml`
-  - `examples/github-actions/haproxy-validate.yml`
-
-## Maintenance rules
-
-- Keep this file routing-first and plain.
-- Put dense operational detail into `references/full-guide.md`.
-- Keep source dates and branch status aligned with current official HAProxy sources.
-- Add new examples only when they represent a distinct production pattern.
+- Keep this file routing-first. Every rule lives in exactly one reference; a rule written twice is
+  a defect.
+- Every version-sensitive value in this skill is listed in `references/SOURCES.md` beside the one
+  command or URL that re-derives it. Update both together, or neither.
+- Add an example only when it represents a production pattern no existing example covers, and give
+  it the same header every other example has: charter, minimum branch, preconditions, variables,
+  failure mode. `scripts/check_examples.py` enforces that header.

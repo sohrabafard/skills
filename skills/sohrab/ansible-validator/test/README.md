@@ -1,384 +1,149 @@
-# Ansible Testing
+# The test corpus
 
-This directory contains test materials for validating the ansible-validator skill, including both playbooks and roles.
+This directory is the pair's fixture corpus. `ansible-generator`
+(`/ansible-generator`, `$ansible-generator`) keeps one scaffold fixture of its
+own and routes here for everything else.
 
-## Directory Structure
+Every fixture is referenced by a `--self-test` in `scripts/`. Run the whole set
+with:
+
+```bash
+bash scripts/self_test.sh
+```
+
+From a fresh checkout with `scripts/requirements.txt` installed, that exits 0
+and reports 63 assertions. Exit 2 means the toolchain is missing, not that the
+skill is broken.
+
+## Layout
 
 ```
 test/
-├── README.md              # This file
-├── playbooks/             # Example playbooks for testing
-│   ├── good-playbook.yml  # Well-written playbook
-│   └── bad-playbook.yml   # Playbook with issues
-└── roles/                 # Test roles
-    └── geerlingguy.mysql/ # Production-quality MySQL role
+├── README.md
+├── playbooks/
+│   ├── good-playbook.yml          must exit 0 on every checker
+│   ├── bad-playbook.yml           must exit 1, with the findings listed below
+│   └── expected-findings.md       what each checker must report on bad-playbook
+├── fixtures/
+│   ├── secrets/                   scan_secrets.sh and the Checkov frameworks
+│   ├── yaml/                      the inverted-YAML-stage regression
+│   ├── roles/                     validate_role.sh, clean and broken
+│   ├── tasks/                     check_task_safety.py
+│   ├── lint/                      check_assets.sh
+│   ├── fqcn/                      check_fqcn.py
+│   ├── modules/                   check_module_currency.py
+│   └── extract/                   extract_ansible_info.py
+└── roles/
+    └── geerlingguy.mysql/         vendored third-party integration fixture
 ```
 
-## Test Playbooks
+## Why each fixture exists
 
-### good-playbook.yml
+A fixture whose only job is to be present proves nothing. Each of these exists
+because a shipped defect got past every check until it did.
 
-A well-written Ansible playbook that follows best practices:
+| Fixture | The defect it pins down |
+|---|---|
+| `fixtures/yaml/broken-with-doc-start.yml`, `fixtures/roles/broken_yaml_role/` | `validate_role.sh` read `grep`'s exit status instead of `yamllint`'s. Since `grep` exits 0 whenever it printed anything, and every conventional Ansible file starts with `---` which the old `.yamllint` flagged, the YAML stage of role validation could never report a failure. It printed five `syntax error` lines and then `YAML syntax check passed`. |
+| `fixtures/yaml/clean-no-doc-start.yml` | the other half of the same contradiction: a clean file with no `---` was counted as a failure. |
+| `fixtures/secrets/planted-secrets.yml` | `scan_secrets.sh` wrote extended regular expressions and called basic `grep`, so `AKIA[A-Z0-9]{16}` matched a literal `{16}` and the highest-signal credential shape in the list was undetectable. Six credentials, one per shape; the self-test asserts all six by name. |
+| `fixtures/secrets/vaulted-clean.yml` | the symmetric defect: a correctly vaulted playbook was reported as two secrets and exited 1. A scanner that red-lights the correct pattern gets switched off. |
+| `fixtures/lint/unnamed-task.yml`, `lowercase-task-name.yml` | `assets/.ansible-lint` set `task_name_prefix: "{path}:"`; `{path}` is not a valid substitution key, ansible-lint swallowed the `KeyError`, and `NameRule` died silently. The config disabled the two rules its own `enable_list` asked for. |
+| `fixtures/lint/truthy-yes.yml`, `document-start.yml` | the two shipped lint configs contradicted each other about `become: yes` and about the leading `---`. |
+| `fixtures/tasks/unsafe-tasks.yml` | nothing in the toolchain reported `mode: '0777'` on a directory or `{{ user_input }}` inside `shell:`. Both pass a production-profile lint run and Checkov's ansible framework. |
+| `fixtures/fqcn/fqcn-correct.yml` | `check_fqcn.sh` reported the `group:` parameter of a template task and the `gather_facts:` play keyword as modules. |
+| `fixtures/modules/stale-fqcns.md` | three of the 34 `ansible.builtin.*` names the generator taught had left core and worked only through a redirect: an 8.8% defect rate that nothing reported. |
+| `fixtures/extract/block-nesting.yml` | `extract_ansible_info.py` listed `block`, `rescue` and `always` in its skip set and `continue`d before the recursion below it, so no module inside a `block:` was ever seen. |
+| `fixtures/roles/clean_role/` | the positive control. A role with no findings must exit 0, or the negative fixtures prove nothing. |
 
-- All tasks are named
-- Uses appropriate modules instead of shell/command
-- Proper file permissions
-- No hardcoded secrets
-- Uses handlers correctly
-- Implements tags for granular execution
-- OS-specific tasks have conditionals
+## The playbook pair
 
-**Expected validation results:** Should pass all checks (yamllint, ansible-lint, syntax check)
+`playbooks/good-playbook.yml` exits 0 on every checker.
 
-### bad-playbook.yml
+`playbooks/bad-playbook.yml` exits 1, and `playbooks/expected-findings.md`
+records which checker reports each defect. That file is the contract: when a
+checker stops reporting one of them, the corresponding assertion fails.
 
-A poorly-written playbook with multiple issues:
+Do not fix either playbook. `bad-playbook.yml` is deliberately wrong.
 
-- Hardcoded password (security issue)
-- Tasks without names
-- Using shell instead of modules
-- Missing changed_when for commands
-- Command injection risk (unquoted variables)
-- Missing file permissions
-- Deprecated with_items
-- Handler name mismatch
-- Overly permissive file permissions (777)
-- Disabled SSL verification
-- Missing OS conditionals
+## The vendored role: `roles/geerlingguy.mysql/`
 
-**Expected validation results:** Should fail multiple checks and report numerous issues
+**Status: kept, as a third-party integration fixture with stated provenance.**
 
-## Test Role: geerlingguy.mysql
+**Provenance.**
 
-This is a well-maintained, production-quality Ansible role by Jeff Geerling for installing and configuring MySQL.
+| Field | Value |
+|---|---|
+| Upstream | https://github.com/geerlingguy/ansible-role-mysql |
+| Galaxy name | `geerlingguy.mysql` |
+| Licence | MIT. The upstream `LICENSE` file must travel with the vendored tree; vendoring the code without it is a redistribution defect rather than a testing question. |
+| Why it is here | It is a large, well-built, multi-platform role with real Molecule configuration. Validating a first-party fixture proves the checkers run; validating a real role proves they run on something nobody wrote for them. |
+| Pin | recorded in `roles/geerlingguy.mysql/.fixture-version`, one line: the upstream tag, or the literal `unestablished` |
 
-**Source:** https://github.com/geerlingguy/ansible-role-mysql
+**The pin is `unestablished` as of 2026-07-29.** The tree was vendored into this
+repository before 2026-03-12 with no pin recorded, and the upstream tag it came
+from cannot be recovered from the vendored files alone — they carry no version
+string. Its `vars/Debian-13.yml` and `vars/RedHat-10.yml` place it on a recent
+line, and nothing more precise than that is established. Do not write a tag into
+`.fixture-version` by inference; the only thing that establishes the pin is the
+refresh below, which replaces the tree with a known tag. Until that runs, treat
+this fixture as evidence that the checkers run on third-party code, not as a
+regression baseline against a known upstream state.
 
-**Features:**
-
-- Complete role structure (tasks, defaults, handlers, meta, templates, vars)
-- Molecule testing configured
-- Multi-platform support (Debian, RedHat, Ubuntu, etc.)
-- Comprehensive variable management
-- Well-documented
-
-This role serves as an excellent example for:
-
-- Proper role structure
-- Best practices implementation
-- Molecule testing setup
-- Multi-OS compatibility patterns
-
-## Testing Commands
-
-### Playbook Testing
+**Refresh rule.** Re-sync at most once per calendar quarter, and only in a
+change that does nothing else:
 
 ```bash
-# Validate good playbook (should pass)
-bash ../scripts/validate_playbook.sh playbooks/good-playbook.yml
-
-# Validate bad playbook (should fail with multiple errors)
-bash ../scripts/validate_playbook.sh playbooks/bad-playbook.yml
-
-# Extract modules from playbook
-bash ../scripts/extract_ansible_info_wrapper.sh playbooks/good-playbook.yml
-bash ../scripts/extract_ansible_info_wrapper.sh playbooks/bad-playbook.yml
-
-# Individual validation steps
-yamllint -c ../assets/.yamllint playbooks/good-playbook.yml
-ansible-playbook --syntax-check playbooks/good-playbook.yml  # if ansible installed
-ansible-lint -c ../assets/.ansible-lint playbooks/good-playbook.yml  # if ansible-lint installed
+rm -rf test/roles/geerlingguy.mysql
+ansible-galaxy role install geerlingguy.mysql,<tag> -p test/roles --force
+printf '%s\n' '<tag>' > test/roles/geerlingguy.mysql/.fixture-version
+bash scripts/validate_role.sh test/roles/geerlingguy.mysql
 ```
 
-### Role Testing
+A refresh that changes the validator's verdict on this role is a finding about
+the validator or about the role, and it is investigated before the refresh is
+merged. A refresh with no pin recorded is reverted.
+
+**Scope.** `assets/.ansible-lint` excludes `test/roles/` from directory scans,
+because this skill does not own third-party code and will not report findings
+about it during a project scan. Explicit file and directory targets bypass
+`exclude_paths`, so the command above still lints it deliberately.
+`test/playbooks/` and `test/fixtures/` are **not** excluded: a fixture corpus
+the lint config hides is a corpus that proves nothing.
+
+**Do not add more vendored roles by `git clone`.** One pinned integration
+fixture answers the question "do the checkers work on code nobody wrote for
+them". A second answers nothing new and doubles the licence surface. If a
+specific defect needs a second real role, add it with a pin, a licence file and
+a line in the table above saying which defect it pins down.
+
+## Adding a fixture
+
+A new fixture is added together with the assertion that consumes it. The
+assertion states the exit code, and where the exit code alone would not prove
+the point — because several findings could carry the same code — it also asserts
+the finding by name, as `scan_secrets.sh --self-test` does for its six shapes.
+
+## Running one checker against the corpus
 
 ```bash
-# Comprehensive role validation
-bash ../scripts/validate_role.sh roles/geerlingguy.mysql
-
-# This checks:
-# - Role directory structure
-# - YAML syntax (yamllint)
-# - Ansible syntax (if ansible is installed)
-# - Ansible lint (if ansible-lint is installed)
-# - Molecule configuration
+bash scripts/validate_playbook.sh test/playbooks/good-playbook.yml       # 0
+bash scripts/validate_playbook.sh test/playbooks/bad-playbook.yml        # 1
+bash scripts/validate_role.sh     test/fixtures/roles/clean_role         # 0
+bash scripts/validate_role.sh     test/fixtures/roles/broken_yaml_role   # 1
+bash scripts/scan_secrets.sh      test/fixtures/secrets/planted-secrets.yml  # 1
+bash scripts/scan_secrets.sh      test/fixtures/secrets/vaulted-clean.yml    # 0
+python3 scripts/check_task_safety.py    test/fixtures/tasks/unsafe-tasks.yml # 1
+python3 scripts/check_fqcn.py           test/fixtures/fqcn/short-names.yml   # 1
+python3 scripts/check_module_currency.py test/fixtures/modules/stale-fqcns.md # 1
+bash scripts/check_assets.sh                                              # 0
 ```
 
-### Extract Module Information
-
-```bash
-# Extract modules from role
-bash ../scripts/extract_ansible_info_wrapper.sh roles/geerlingguy.mysql
-
-# Extract modules from playbook
-bash ../scripts/extract_ansible_info_wrapper.sh playbooks/good-playbook.yml
-```
-
-### Run Molecule Tests
-
-```bash
-# Run full molecule test suite
-# Note: Molecule will be automatically installed in a temporary venv if not already installed
-bash ../scripts/test_role.sh roles/geerlingguy.mysql
-
-# Or run molecule directly (if installed)
-cd roles/geerlingguy.mysql
-molecule test
-```
-
-**Note:** The `test_role.sh` script automatically handles molecule installation. If molecule is not found on your
-system, the script will:
-
-1. Create a temporary Python virtual environment
-2. Install molecule, ansible-core, ansible-lint, and yamllint
-3. Run the full test suite
-4. Clean up the temporary environment automatically
-
-No permanent installation required!
-
-## Expected Validation Results
-
-### Structure Check
-
-- ✅ All required directories present (tasks/)
-- ✅ All recommended directories present (defaults/, handlers/, meta/, templates/, vars/)
-- ✅ Molecule directory configured
-- ✅ Main YAML files exist
-
-### YAML Syntax
-
-- ✅ All YAML files are syntactically correct
-- ⚠️ Some warnings about line length (acceptable)
-- ⚠️ Minor trailing spaces in CI workflow files
-
-### Ansible Lint
-
-- Should pass most checks (role follows best practices)
-- May have minor warnings about formatting
-
-### Molecule
-
-- Configured with default scenario
-- Tests across multiple platforms (Ubuntu, Debian, Rocky Linux)
-- Includes idempotency checks
-
-## Adding More Test Roles
-
-To add additional test roles for validation:
-
-```bash
-# Download from Ansible Galaxy
-cd test/roles
-ansible-galaxy role install namespace.rolename -p .
-
-# Or clone from GitHub
-git clone https://github.com/author/ansible-role-name.git author.rolename
-```
-
-### Recommended Test Roles
-
-Popular, well-maintained roles for testing:
-
-```bash
-# Web servers
-git clone https://github.com/geerlingguy/ansible-role-apache.git geerlingguy.apache
-git clone https://github.com/geerlingguy/ansible-role-nginx.git geerlingguy.nginx
-
-# Databases
-git clone https://github.com/geerlingguy/ansible-role-postgresql.git geerlingguy.postgresql
-git clone https://github.com/geerlingguy/ansible-role-redis.git geerlingguy.redis
-
-# Languages/Runtimes
-git clone https://github.com/geerlingguy/ansible-role-php.git geerlingguy.php
-git clone https://github.com/geerlingguy/ansible-role-nodejs.git geerlingguy.nodejs
-
-# DevOps tools
-git clone https://github.com/geerlingguy/ansible-role-docker.git geerlingguy.docker
-git clone https://github.com/geerlingguy/ansible-role-kubernetes.git geerlingguy.kubernetes
-```
-
-## Integration Testing
-
-### Test the Full Validation Pipeline
-
-```bash
-#!/bin/bash
-# test_all_roles.sh - Validate all roles in test directory
-
-for role in roles/*; do
-    if [ -d "$role" ]; then
-        echo "Validating $(basename $role)..."
-        bash ../scripts/validate_role.sh "$role"
-        echo ""
-    fi
-done
-```
-
-### Test Module Extraction
-
-```bash
-#!/bin/bash
-# extract_all_modules.sh - Extract modules from all roles
-
-for role in roles/*; do
-    if [ -d "$role" ]; then
-        echo "=== $(basename $role) ==="
-        bash ../scripts/extract_ansible_info_wrapper.sh "$role"
-        echo ""
-    fi
-done
-```
-
-## Common Role Issues to Test
-
-The validation scripts can detect:
-
-1. **Structure Issues:**
-    - Missing required directories (tasks/)
-    - Missing main.yml files
-    - Incorrect file naming
-
-2. **Syntax Issues:**
-    - Invalid YAML syntax
-    - Indentation problems
-    - Missing colons or quotes
-
-3. **Best Practice Violations:**
-    - Tasks without names
-    - Hard-coded values instead of variables
-    - Missing handlers
-    - Improper use of command vs. shell
-
-4. **Security Issues:**
-    - Hard-coded secrets
-    - Overly permissive file modes
-    - Missing no_log on sensitive tasks
-
-5. **Documentation Issues:**
-    - Missing README.md
-    - Missing role metadata (meta/main.yml)
-    - Missing variable documentation
-
-## Molecule Testing Details
-
-The geerlingguy.mysql role includes molecule configuration:
-
-```
-molecule/
-└── default/
-    ├── molecule.yml       # Molecule configuration
-    ├── converge.yml       # Playbook to test the role
-    └── verify.yml         # Verification tests
-```
-
-### Running Molecule Tests
-
-```bash
-cd roles/geerlingguy.mysql
-
-# Full test sequence
-molecule test
-
-# Individual stages
-molecule create       # Create test instances
-molecule converge     # Run the role
-molecule verify       # Run verification tests
-molecule destroy      # Clean up
-
-# Debug mode
-molecule converge
-molecule login        # SSH into test instance
-```
-
-## Creating Your Own Test Role
-
-To create a minimal test role:
-
-```bash
-mkdir -p test/roles/mytest/tasks
-cat > test/roles/mytest/tasks/main.yml <<EOF
----
-- name: Install package
-  apt:
-    name: vim
-    state: present
-  when: ansible_os_family == "Debian"
-EOF
-
-# Validate it
-bash scripts/validate_role.sh test/roles/mytest
-```
-
-## CI/CD Integration
-
-These test roles can be used in CI/CD pipelines:
-
-```yaml
-# .github/workflows/validate-roles.yml
-name: Validate Ansible Roles
-
-on: [push, pull_request]
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          pip install ansible ansible-lint yamllint
-
-      - name: Validate all roles
-        run: |
-          for role in test/roles/*; do
-            bash scripts/validate_role.sh "$role"
-          done
-```
-
-## Troubleshooting
-
-### Role validation fails with "ansible-playbook not found"
-
-Install Ansible:
-
-```bash
-pip install ansible
-```
-
-### Molecule tests fail with "docker not found"
-
-The test_role.sh script will automatically install molecule in a temporary venv, but you still need Docker installed for
-molecule to create test containers:
-
-```bash
-# macOS
-brew install docker
-
-# Start Docker Desktop
-open -a Docker
-
-# Linux
-sudo apt-get install docker.io    # Debian/Ubuntu
-sudo yum install docker           # RHEL/CentOS
-```
-
-Note: Molecule itself doesn't need to be installed - the script handles that automatically.
-
-### YAML lint warnings about line length
-
-This is acceptable for readability. Adjust `.yamllint` if needed:
-
-```yaml
-rules:
-  line-length:
-    max: 200  # Increase limit
-    level: warning
-```
-
-## Resources
-
-- [Ansible Galaxy](https://galaxy.ansible.com/) - Find more roles to test
-- [Molecule Documentation](https://molecule.readthedocs.io/) - Learn about role testing
-- [Jeff Geerling's Roles](https://github.com/geerlingguy?tab=repositories&q=ansible-role) - High-quality example roles
-- [Ansible Best Practices](https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html)
+## Using the corpus in CI
+
+The job that runs `bash scripts/self_test.sh` is `/alaa-gitlab-ci-cd`'s
+(`$alaa-gitlab-ci-cd`): the image, the caching of the tool environment, the
+`rules:` that decide when it runs, and how long the report is kept. This skill
+owns what the script asserts and what its exit codes mean. Gate on exit 0; treat
+exit 2 as a hard stop, because a self-test that could not run has proved
+nothing.

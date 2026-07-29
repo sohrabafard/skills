@@ -1,15 +1,40 @@
+# Shell runner on a trusted, dedicated host.
+#
+# A shell runner executes job scripts directly on the host as the runner user.
+# Use it only where the host, the projects and every branch that can reach it are
+# trusted. On any other host use the Kubernetes executor.
+
+# One slot per job this host can run at once. Derive it, do not copy it: take the
+# host's CPU count, divide by the cores the heaviest job needs, and take the
+# lower of that and (host memory / heaviest job's peak RSS). Leave one slot's
+# worth of headroom for the runner process itself.
 concurrent = 4
-check_interval = 0
+
+# 0 means the runner uses its own default polling interval (3 seconds).
+check_interval = 3
 
 [[runners]]
   name = "shell-trusted"
   url = "https://gitlab.example.com/"
+  # Runner authentication token, prefix "glrt-". Registration tokens are the
+  # legacy workflow and instance administrators have been able to disable them
+  # since GitLab 17.0.
   token = "glrt-REPLACE_WITH_AUTH_TOKEN"
   executor = "shell"
   shell = "bash"
+  # Named explicitly because the build directory persists between jobs and
+  # between projects on a shell runner. Anything a job writes here outlives it.
   builds_dir = "/srv/gitlab-runner/builds"
   cache_dir = "/srv/gitlab-runner/cache"
   environment = ["FF_USE_FASTZIP=true"]
 
   [runners.cache]
+    # A shell runner's cache lives on this host, so it is shared between every
+    # project that runs here and it does not exist on any other host. Set Type
+    # to object storage when more than one host serves the same jobs.
+    Type = "local"
+    # 0 means no limit on an uploaded cache archive. That is a real setting, not
+    # a placeholder: a job can fill this host's disk with one cache. Replace it
+    # with a byte ceiling derived from the cache_dir volume size, or delete the
+    # line and accept the runner's own default.
     MaxUploadedArchiveSize = 0

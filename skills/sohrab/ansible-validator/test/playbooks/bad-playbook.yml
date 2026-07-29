@@ -1,84 +1,55 @@
 ---
-# Example of a poorly-written Ansible playbook
-# This playbook has multiple issues that should be caught by validation
-
-- name: Setup server
-  hosts: all
+# Fixture: a playbook that must exit 1 on validate_playbook.sh, scan_secrets.sh,
+# check_fqcn.sh and check_task_safety.py. Every defect below is listed in
+# expected-findings.md with the checker that reports it. Do not fix this file.
+- hosts: all
   become: yes
+
   vars:
-    password: "hardcoded_password_123"  # SECURITY ISSUE: Hardcoded password
+    db_password: "hunter2-plaintext"
+    search_term: "{{ user_supplied }}"
 
   tasks:
-    # ISSUE: Task without name
-    - apt:
+    - shell: mkdir -p /opt/app
+
+    - name: install nginx
+      apt:
         name: nginx
 
-    # ISSUE: Using shell instead of module
-    - name: Create directory
-      shell: mkdir -p /opt/myapp
-
-    # ISSUE: No changed_when for command
-    - name: Check service
+    - name: Run a status command
       command: systemctl status nginx
 
-    # ISSUE: Unquoted variable in shell (command injection risk)
-    - name: Process file
-      shell: cat {{ user_file }}
+    - name: Search the log for a user-supplied term
+      shell: "grep {{ search_term }} /var/log/app.log"
 
-    # ISSUE: Missing mode on file
-    - name: Create config
+    - name: Write a world-writable directory
+      file:
+        path: /opt/app/incoming
+        state: directory
+        mode: '0777'
+
+    - name: Copy a secret with a permissive mode
       copy:
-        src: config.yml
-        dest: /etc/app/config.yml
+        src: app.key
+        dest: /etc/app/app.key
+        mode: '0666'
 
-    # ISSUE: Using deprecated with_items
     - name: Install packages
       apt:
         name: "{{ item }}"
       with_items:
-        - git
         - curl
+        - vim
 
-    # ISSUE: Unnecessary become on read-only task
-    - name: Read file
-      slurp:
-        src: /etc/hostname
-      become: yes
-
-    # ISSUE: Handler name mismatch
-    - name: Update config
-      template:
-        src: app.conf.j2
-        dest: /etc/app.conf
-      notify: restart service  # Handler doesn't exist
-
-    # ISSUE: No when condition for OS-specific package manager
-    - name: Install package
-      yum:
-        name: httpd
-
-    # ISSUE: Overly permissive file permissions
-    - name: Create script
-      copy:
-        src: script.sh
-        dest: /usr/local/bin/script.sh
-        mode: '0777'  # World writable!
-
-    # ISSUE: Disabled SSL verification
-    - name: Download file
+    - name: Fetch a release over an unvalidated connection
       get_url:
-        url: https://example.com/file.tar.gz
-        dest: /tmp/file.tar.gz
-        validate_certs: no  # Security issue
+        url: http://example.com/app.tar.gz
+        dest: /tmp/app.tar.gz
+        validate_certs: no
+      notify: restart nginx service
 
-    # ISSUE: Using short module name instead of FQCN
-    - name: Install package
-      package:
-        name: vim
-
-  # ISSUE: Handler name doesn't match notification
   handlers:
-    - name: restart nginx
-      systemd:
+    - name: Restart nginx
+      service:
         name: nginx
         state: restarted

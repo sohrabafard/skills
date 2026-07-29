@@ -1,50 +1,90 @@
+# Minimal correct pipeline. Every keyword here is present because leaving it out
+# has a named consequence, stated in the comment above it.
+#
+# Which checks belong in the `test` stage is not decided here. That belongs to
+# the skill that owns the stack: /alaa-frontend-devops ($alaa-frontend-devops)
+# for a frontend repository, /alaa-cicd-laravel-postgres
+# ($alaa-cicd-laravel-postgres) for a PHP or Laravel service. This file shows
+# how a check is expressed once that skill has decided it must exist.
+#
+# Image pins verified 2026-07-29. Re-derive with:
+#   https://hub.docker.com/_/php/tags?name=cli-alpine
+
+# Without workflow:rules one push can create both a branch pipeline and a merge
+# request pipeline, and the terminal arm keeps every other event out.
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_TAG
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: never
 
 default:
-  image: alpine:3.20
+  # A version tag, not a floating one. Use "@sha256:<digest>" instead where the
+  # exact bytes must not change between two runs of the same pipeline.
+  image: php:8.5.8-cli-alpine3.24
+  # Safe to cancel: nothing here mutates anything outside the pipeline.
   interruptible: true
+  # Without this the project-wide timeout applies, which the pipeline author
+  # cannot see from this file.
+  timeout: 20 minutes
+  # A bare "retry: 2" retries an assertion failure and turns a defect into a
+  # flake. This list retries infrastructure and nothing else.
   retry:
     max: 1
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
-  before_script:
-    - apk add --no-cache bash git
 
 stages:
-  - lint
-  - test
   - build
+  - test
 
-cache:
-  key: ${CI_PROJECT_PATH_SLUG}-${CI_DEFAULT_BRANCH}
-  paths:
-    - .cache/
-
-lint:
-  stage: lint
-  script:
-    - echo "replace with your real lint command"
-
-unit-test:
-  stage: test
-  needs:
-    - lint
-  script:
-    - echo "replace with your real test command"
-
-build:
+# One job builds the cache and pushes it; every other job pulls it. Without
+# explicit policies, the default pull-push makes every job re-upload the cache.
+warm_cache:
   stage: build
-  needs:
-    - unit-test
-  artifacts:
-    expire_in: 7 days
+  timeout: 15 minutes
+  needs: []
+  cache:
+    # The key is derived from the lockfile, so it changes exactly when the cached
+    # contents should change. GitLab accepts at most two paths under key:files.
+    key:
+      files:
+        - composer.lock
     paths:
-      - dist/
+      - vendor/
+    policy: push
   script:
-    - mkdir -p dist
-    - echo "replace with your real build command" > dist/README.txt
+    - composer install --no-interaction --no-progress --prefer-dist
+  artifacts:
+    # Unset means the instance-wide retention applies. Say what you mean.
+    expire_in: 1 day
+    paths:
+      - vendor/
+
+unit_tests:
+  stage: test
+  timeout: 15 minutes
+  # A stage boundary orders jobs; a needs: edge is a precondition. This job may
+  # start the moment warm_cache finishes, without waiting for the whole stage.
+  needs:
+    - job: warm_cache
+      artifacts: true
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - vendor/
+    # This job reads the cache and must not re-upload it.
+    policy: pull
+    # Up to five fallbacks; each is tried in order when the exact key misses.
+    fallback_keys:
+      - $CI_DEFAULT_BRANCH-vendor
+  script:
+    - php artisan test --parallel
+  artifacts:
+    expire_in: 1 week
+    when: always
+    reports:
+      junit: build/report.junit.xml

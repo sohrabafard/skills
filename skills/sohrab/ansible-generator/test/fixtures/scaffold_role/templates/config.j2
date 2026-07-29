@@ -1,0 +1,23 @@
+# Configuration for {{ demo_nginx_service_name }}
+# Managed by Ansible. Edits made by hand are overwritten on the next run.
+# Rendered on {{ ansible_date_time.iso8601 | default('an ungathered host') }}
+# Host: {{ inventory_hostname }}
+
+[service]
+port = {{ demo_nginx_port }}
+bind_address = {{ demo_nginx_bind_address }}
+max_connections = {{ demo_nginx_max_connections }}
+
+{% if demo_nginx_enable_ssl %}
+[tls]
+enabled = true
+certificate = {{ demo_nginx_ssl_cert }}
+private_key = {{ demo_nginx_ssl_key }}
+{% endif %}
+
+[logging]
+directory = {{ demo_nginx_log_dir }}
+level = {{ demo_nginx_log_level | default('info') }}
+
+[data]
+directory = {{ demo_nginx_data_dir }}

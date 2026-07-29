@@ -1,0 +1,6 @@
+# Fixture: the build-context contract that goes with good/Dockerfile.
+.git
+.env
+node_modules
+vendor
+docker/.local-secrets

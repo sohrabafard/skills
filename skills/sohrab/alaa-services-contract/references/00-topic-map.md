@@ -36,7 +36,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
   - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.
 - `Mode D+ - Auth TOTP management and forced route step-up`
-  - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, step-up errors, recovery codes, or SDK/frontend retry behavior.
+  - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, the four backend-only `X-TOTP-*` headers including the advisory `X-TOTP-PROOF-REJECTED` and its `TOTP_PROOF_*` value vocabulary, step-up errors, recovery codes, or SDK/frontend retry behavior.
   - Read `32-auth-totp-and-step-up-contract.md`; pair with `$alaa-trust-gateway-auth` for gateway boundaries and `$alaa-frontend-developer` for client/SDK flows.
 - `Mode E - Platform flow and boundaries view`
   - Use also when the task is about the canonical UUIDv7 `project_id` form on an HTTP payload, event envelope, log field, or cache key, or about the recorded actor-identifier debt.
@@ -69,7 +69,7 @@ Use this file to choose the smallest reference file that owns the rule you need.
 - `21-alaa-platform-observability-directive.md`
   - The `alaa_*` metric family catalog, `OTEL_*` variable names with their Ala default values, resource and propagation key names, route and operation naming rules, exception and additional field names, the never-log list, Ala Collector placement facts, and the current per-service telemetry reality table.
 - `32-auth-totp-and-step-up-contract.md`
-  - Auth TOTP optional enrollment, `AUTH_TOTP_ENABLED`, authenticator QR generation from `otpauth_uri`, forced `require_totp:<purpose>` route rollout, signed proof-token issuance, client-side proof cache rules, gateway verification, downstream `X-TOTP-*` metadata, challenge/retry behavior, and SDK contract expectations.
+  - Auth TOTP optional enrollment, `AUTH_TOTP_ENABLED`, authenticator QR generation from `otpauth_uri`, forced `require_totp:<purpose>` route rollout, signed proof-token issuance, client-side proof cache rules, gateway verification, the four downstream `X-TOTP-*` headers and which of them a service may act on, the gateway-owned `TOTP_PROOF_*` rejection vocabulary, challenge/retry behavior, and SDK contract expectations.
 - `40-apply-checklist-and-anti-patterns.md`
   - Use before finalizing a contract change or skill-driven implementation review.
 - `50-laravel-copy-baselines.md`

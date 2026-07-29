@@ -1,267 +1,117 @@
-# Ansible Lint Configuration
-# For full documentation: https://ansible.readthedocs.io/projects/lint/
-
 ---
-# Exclude paths from linting
+# ansible-lint configuration for this project.
+#
+# OWNER: ansible-validator (/ansible-validator, $ansible-validator), at its
+# assets/.ansible-lint. This file is a copy of that one. Do not edit it here.
+# Change it in ansible-validator, where scripts/check_assets.sh proves that
+# every rule named in enable_list still fires on a fixture built to violate it,
+# then copy the result back. A second, divergent fork of this file is how a
+# project ends up with a lint result that depends on which copy an agent picked.
+#
+# The 267-line version this scaffold shipped until 2026-07-29 was rejected
+# outright by ansible-lint with exit 3 ("'severity' was unexpected", from a
+# per-rule severity block that is not a supported option), so every scaffolded
+# project was unlintable until a human deleted 113 lines of it.
+# ansible-lint configuration owned by ansible-validator.
+#
+# This is the pair's single ansible-lint configuration. ansible-generator
+# (/ansible-generator, $ansible-generator) does not ship one; its project
+# scaffold copies this file and names this skill as the owner in a header
+# comment. Two forks of one config, configured
+# differently for the same repository, means the result depends on which one an
+# agent happened to pick.
+#
+# Verified 2026-07-29 against ansible-lint 26.6.0. Re-derive the rule list with
+#   ansible-lint -L
+# and the profile list with
+#   ansible-lint --help | grep -- --profile
+# scripts/check_assets.sh asserts that every rule named in enable_list below
+# actually fires on the fixture built to violate it. Run it after any edit here.
+
+# Profiles, from least to most strict: min, basic, moderate, safety, shared,
+# production. production is the bar for anything that reaches a managed host.
+profile: production
+
+# offline: true keeps ansible-lint from reaching the network mid-validation,
+# which is the correct setting in a locked-down runner. Set it to false only
+# when the run must resolve a collection it does not have.
+offline: true
+
 exclude_paths:
-  - .cache/
   - .git/
   - .github/
-  - test/fixtures/
-  - collections/
-  - roles/external/
-  - '*.md'
-  - '*.txt'
+  - venv/
+  - .venv/
+  - __pycache__/
+  - '*.pyc'
+  - .molecule/
+  - .cache/
+  - .tox/
+  # test/roles/ holds vendored third-party roles that this skill does not own
+  # and does not lint. test/playbooks/ and test/fixtures/ are this skill's own
+  # fixtures and are deliberately NOT excluded: a fixture corpus that the lint
+  # config hides is a corpus that proves nothing.
+  - test/roles/
 
-# Enable offline mode (don't check for newer versions)
-offline: false
+# Empty. A rule this skill wants off belongs in warn_list with the reason, so
+# that the finding is still visible.
+skip_list: []
 
-# Set output format: rich, plain, md, json, codeclimate, or sarif
-# format: rich
-
-# Return success if only warnings are found
-# quiet: false
-
-# Parseable output with severity levels
-# parseable: true
-
-# Use color in terminal output
-# colored: true
-
-# Path to custom rules directory
-# rulesdir:
-#   - ./custom-rules/
-
-# Show rule IDs in output
-# verbosity: 1
-
-# Skip list - rules to skip
-skip_list:
-  # Skip line length check (may be too strict for some projects)
-  - yaml[line-length]
-
-  # Skip name casing rule (allow flexibility in task naming)
-  # - name[casing]
-
-  # Skip checks for old Ansible syntax (if maintaining legacy playbooks)
-  # - syntax-check[specific-tag]
-
-  # Skip risky file permissions warning (if intentional)
-  # - risky-file-permissions
-
-  # Skip no-changed-when for command/shell (if acceptable)
-  # - no-changed-when
-
-  # Skip jinja spacing rules (if preferred)
-  # - jinja[spacing]
-
-  # Skip meta information checks
-  # - meta-no-info
-  # - meta-no-tags
-
-  # Skip package latest checks (if using latest is intentional)
-  # - package-latest
-
-# Warn list - rules to warn but not fail
-warn_list:
-  - experimental  # Warn about experimental features
-  - no-changed-when  # Warn when command/shell tasks lack changed_when
-  - no-handler  # Warn when using bare variables in notify
-  - unnamed-task  # Warn about tasks without names
-  - command-instead-of-module  # Warn when shell/command could be replaced with module
-  - command-instead-of-shell  # Warn when command could use shell for pipes/redirects
-  - deprecated-bare-vars  # Warn about bare variables (use {{ }})
-  - deprecated-local-action  # Warn about deprecated local_action syntax
-  - risky-shell-pipe  # Warn about shell tasks using pipes without pipefail
-
-# Enable rules (override defaults)
+# Rules this configuration turns on beyond the profile default. Each one is
+# covered by a fixture under test/fixtures/lint/ and asserted by
+# scripts/check_assets.sh.
 enable_list:
-  - args  # Check for correct module arguments
-  - empty-string-compare  # Check for empty string comparisons
-  - no-free-form  # Check for free-form parameters
-  - no-jinja-when  # Check for Jinja2 in when conditions
-  - no-log-password  # Check for passwords without no_log
-  - no-same-owner  # Check for same owner/group
-  - yaml  # YAML syntax checks
+  - name[missing]        # every task is named
+  - name[casing]         # task names start with a capital letter
+  - fqcn[action-core]    # every action is fully qualified
+  - no-changed-when      # command and shell state their changed condition
+  - no-handler           # a service restart goes through a handler
+  - var-naming           # variables are snake_case and role-prefixed
+  - no-log-password      # a task handling a password sets no_log
+  - risky-file-permissions  # a file task states an explicit mode
 
-# Tags to run or skip
-# tags: []
-# skip_tags: []
+# Rules that report without failing the run. name[casing] is deliberately NOT
+# here: it is in enable_list above, and listing a rule in both places is a
+# contradiction the reader has to resolve.
+warn_list:
+  - yaml[line-length]    # long lines are legible; broken YAML is not
+  - role-name            # a vendored role's name is not this project's to fix
+  - galaxy[tags]         # galaxy_tags matter at publication, not at apply time
 
-# Ansible-lint profile: min, basic, moderate, safety, shared, production
-# profile: production
+# Task naming.
+#
+# task_name_prefix takes {stem}, the file stem, and nothing else. The value
+# "{path}:" was shipped here until 2026-07-29; {path} is not a valid
+# substitution key, ansible-lint caught the resulting KeyError, printed
+# "Ignored exception from NameRule.matchtasks" and continued with NameRule
+# dead. Measured on test/playbooks/bad-playbook.yml: 19 failures and zero
+# name[missing] with that line, 21 failures and two name[missing] without it.
+# The config disabled the two rules its own enable_list asked for.
+#
+# No prefix is enforced now. To enforce one, use {stem} and add a fixture to
+# test/fixtures/lint/ so scripts/check_assets.sh can prove it fires:
+# task_name_prefix: "{stem} | "
 
-# Kinds of files to lint
-kinds:
-  - yaml: "*.yaml"
-  - yaml: "*.yml"
-  - playbook: "**/playbooks/*.yml"
-  - playbook: "**/playbooks/*.yaml"
-  - tasks: "**/tasks/*.yml"
-  - tasks: "**/tasks/*.yaml"
-  - handlers: "**/handlers/*.yml"
-  - handlers: "**/handlers/*.yaml"
-  - vars: "**/vars/*.yml"
-  - vars: "**/vars/*.yaml"
-  - vars: "**/defaults/*.yml"
-  - vars: "**/defaults/*.yaml"
-  - meta: "**/meta/main.yml"
-  - meta: "**/meta/main.yaml"
-  - requirements: "**/requirements.yml"
-  - requirements: "**/requirements.yaml"
+# Variables are snake_case, and a role's variables carry the role name as a
+# prefix. references/best_practices.md states the naming rule; this makes it
+# reportable.
+var_naming_pattern: '^[a-z_][a-z0-9_]*$'
 
-# Mock modules or roles you want to skip during linting
-# mock_modules:
-#   - my_custom_module
-#   - another_custom_module
+# Modules that may not be installed in the validation environment. A mocked
+# module is a module ansible-lint will not resolve; keep this list to what the
+# project actually uses and declare the rest in requirements.yml instead.
+mock_modules:
+  - community.general.ufw
 
-# mock_roles:
-#   - mynamespace.my_custom_role
+# loop_var_prefix configures the loop-var-prefix rule, which is opt-in. Setting
+# the option without enabling the rule does nothing, which is what this file did
+# before 2026-07-29. Enable the rule alongside it if you want it enforced:
+# enable_list:
+#   - loop-var-prefix
+# loop_var_prefix: "{role}_"
 
-# Loop variable naming pattern
-# loop_var_prefix: "^(__|{role}_)"
-
-# Minimum Ansible version to check against
-# min_ansible_version: "2.15"
-
-# Maximum line length (default: 160)
-# max_line_length: 160
-
-# Enforce task naming based on module name
-# task_name_prefix: "{module_name} | "
-
-# Strict mode - treat warnings as errors
-# strict: false
-
-# Profiles define different strictness levels
-# Available profiles: min, basic, moderate, safety, shared, production
-# Uncomment to use:
-# profile: production
-
-# Write violations to file
-# write_list:
-#   - all
-#   - rule-id
-
-# Use specific Ansible version for checking
-# use_default_rules: true
-
-# Enable/disable specific rule categories
-# Any rule not listed is enabled by default
-rules:
-  # Command module rules
-  command-instead-of-module:
-    severity: MEDIUM
-  command-instead-of-shell:
-    severity: LOW
-
-  # Naming rules
-  name[casing]:
-    severity: MEDIUM
-  name[missing]:
-    severity: HIGH
-  name[play]:
-    severity: MEDIUM
-  name[template]:
-    severity: LOW
-
-  # YAML rules
-  yaml[brackets]:
-    severity: MEDIUM
-  yaml[colons]:
-    severity: MEDIUM
-  yaml[commas]:
-    severity: LOW
-  yaml[document-start]:
-    severity: LOW
-  yaml[empty-lines]:
-    severity: LOW
-  yaml[indentation]:
-    severity: MEDIUM
-  yaml[key-duplicates]:
-    severity: HIGH
-  yaml[line-length]:
-    max: 160
-    severity: LOW
-  yaml[new-line-at-end-of-file]:
-    severity: LOW
-  yaml[trailing-spaces]:
-    severity: LOW
-  yaml[truthy]:
-    severity: MEDIUM
-
-  # Jinja2 rules
-  jinja[spacing]:
-    severity: LOW
-  jinja[invalid]:
-    severity: HIGH
-
-  # Variable rules
-  var-naming[no-reserved]:
-    severity: HIGH
-  var-naming[no-jinja]:
-    severity: MEDIUM
-  var-naming[pattern]:
-    severity: MEDIUM
-
-  # Security rules
-  no-log-password:
-    severity: VERY_HIGH
-  risky-file-permissions:
-    severity: HIGH
-  risky-octal:
-    severity: MEDIUM
-  risky-shell-pipe:
-    severity: MEDIUM
-
-  # Best practices
-  no-changed-when:
-    severity: MEDIUM
-  no-handler:
-    severity: LOW
-  package-latest:
-    severity: LOW
-  deprecated-bare-vars:
-    severity: MEDIUM
-  deprecated-module:
-    severity: HIGH
-  deprecated-command-syntax:
-    severity: MEDIUM
-
-  # Meta rules
-  meta-no-info:
-    severity: LOW
-  meta-no-tags:
-    severity: LOW
-  meta-incorrect:
-    severity: HIGH
-  meta-runtime[unsupported-version]:
-    severity: HIGH
-  meta-runtime[invalid-version]:
-    severity: VERY_HIGH
-
-  # Galaxy rules
-  galaxy[no-changelog]:
-    severity: LOW
-  galaxy[no-runtime]:
-    severity: MEDIUM
-  galaxy[version-incorrect]:
-    severity: HIGH
-  galaxy[version-missing]:
-    severity: MEDIUM
-  galaxy[tags]:
-    severity: LOW
-
-  # Schema validation
-  schema[meta]:
-    severity: VERY_HIGH
-  schema[playbook]:
-    severity: VERY_HIGH
-  schema[tasks]:
-    severity: VERY_HIGH
-  schema[vars]:
-    severity: HIGH
-
-# Additional options
-# progressive: false  # Enable progressive mode
-# project_dir: .  # Project directory
+# SARIF output for a code-scanning gate. The two aggregate scripts pass
+# --format json themselves; set this when ansible-lint is invoked directly from
+# a CI job that uploads SARIF. /alaa-gitlab-ci-cd ($alaa-gitlab-ci-cd) owns
+# where the artifact goes and how long it is retained.
+# sarif_file: ansible-lint.sarif

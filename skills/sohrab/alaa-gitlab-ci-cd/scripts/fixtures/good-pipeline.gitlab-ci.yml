@@ -1,0 +1,53 @@
+# Clean fixture: every rule in validate_gitlab_ci.py must stay silent on this file.
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: never
+
+default:
+  image: php:8.5.8-cli-alpine3.24
+  interruptible: true
+  timeout: 20 minutes
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - vendor/
+    policy: pull
+
+stages:
+  - build
+  - test
+
+warm_cache:
+  stage: build
+  timeout: 15 minutes
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - vendor/
+    policy: push
+  script:
+    - composer install --no-interaction --no-progress
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - vendor/
+
+unit_tests:
+  stage: test
+  timeout: 15 minutes
+  needs:
+    - job: warm_cache
+      artifacts: true
+  script:
+    - php artisan test --parallel

@@ -1,34 +1,60 @@
-# Requires a privileged Kubernetes runner and a shared /certs/client volume in runner config.
+# Docker-in-Docker over TLS on a Kubernetes runner.
+#
+# Prerequisite this template cannot satisfy for you: the runner must permit
+# privileged containers and must mount a shared /certs/client volume into both
+# the build and the service container. Use this path only when the job needs
+# Docker daemon behaviour. For an image build alone, k8s-buildkit-rootless is the
+# unprivileged alternative.
+#
+# Image pins verified 2026-07-29 against https://endoflife.date/docker-engine —
+# Docker Engine 29 and 25.0 are the supported lines; 25.0 support ends
+# 2026-12-04. Re-derive the exact tag with:
+#   https://hub.docker.com/_/docker/tags?name=29.6
 workflow:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH
+    - when: never
 
 default:
   tags:
     - k8s
     - dind
-  image: docker:24.0.5-cli
+  image: docker:29.6.2-cli
+  interruptible: true
+  timeout: 30 minutes
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  # A top-level `services:` block is deprecated in favour of `default:`.
+  services:
+    - name: docker:29.6.2-dind
+      alias: docker
+      variables:
+        HEALTHCHECK_TCP_PORT: "2376"
 
 variables:
   DOCKER_DRIVER: overlay2
+  # The port, the cert directory and the client cert path must agree with each
+  # other and with the daemon's TLS mode, or the CLI reports "Cannot connect to
+  # the Docker daemon" with no further detail.
   DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: /certs
   DOCKER_CERT_PATH: /certs/client
-
-services:
-  - name: docker:24.0.5-dind
-    alias: docker
-    variables:
-      HEALTHCHECK_TCP_PORT: "2376"
 
 stages:
   - build
 
 build-image:
   stage: build
+  timeout: 30 minutes
+  needs: []
   script:
     - docker info
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
     - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+  after_script:
+    - docker logout "$CI_REGISTRY"

@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa Docker Production"
-  short_description: "Docker/Compose/Swarm delivery contract"
-  default_prompt: "Use $alaa-docker-production to apply production Docker, Compose, and Swarm delivery rules for hardening, shared runtime design, registry strategy, secret handling, and stable service discovery."
+  short_description: "Dockerfile, Compose and Swarm authorship contract"
+  default_prompt: "Use $alaa-docker-production to author or review a Dockerfile and its .dockerignore, a Compose file, or a Swarm stack file: layer order and multi-stage separation, non-root final stage and runtime hardening, build secrets and attestations, registry and mirror strategy with pinning, secret delivery as file mounts, healthcheck and shutdown values, rollout control, resource limits and worker sizing. It also owns the fail-closed interpolation invariant: a mandatory variable is ${VAR:?message}, a deliberately optional one is ${VAR:-default}, and a variable in the fleet safety-control register takes :? with no default permitted. It expresses images and runtime files and decides no delivery gate."
 
 policy:
   allow_implicit_invocation: true

@@ -1,439 +1,81 @@
 ---
 name: caas-arvan-kuber
-description: "Arvan-first Kubernetes, Helm, and CI/CD guidance for production workloads on Arvan CaaS. Use when manifests, charts, or delivery flows must obey Arvan constraints. Do not use generic Kubernetes defaults when live Arvan facts disagree."
+description: Arvan CaaS platform facts for Kubernetes and Helm workloads - the namespace-scoped API surface, alias-versus-canonical namespace RBAC identity, the requests-equal-limits admission parity, panel-managed domain, public IP and disk lifecycle, and the exposure annotations Arvan does not document. Use it only when a manifest, chart, or deployment decision would be different on Arvan than on a stock Kubernetes cluster at the same minor version. Do not use it for generic Kubernetes or Helm authoring, validation, or debugging, which alaa-k8s-helm owns, including when the target cluster happens to be Arvan. Do not use it to write GitLab Runner configuration or to decide pipeline gates. Do not invent undocumented Arvan behaviour when live discovery can answer the question.
 ---
 
+# Arvan CaaS platform facts
 
+## The deciding test, stated in the same words on both sides of this seam
 
+Load `/caas-arvan-kuber` (`$caas-arvan-kuber`) only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise load `/alaa-k8s-helm` (`$alaa-k8s-helm`), including when the target cluster happens to be Arvan.
 
-## Mission
+Being on Arvan is not by itself a reason to load this skill. The four facts that pass the test are the namespace-only API surface, alias-versus-canonical namespace RBAC identity, the requests-equal-limits admission parity, and the panel-managed domain, public-IP, and disk lifecycle. Each is stated once, in `references/arvan-constraints.md`.
 
-Produce production-grade Kubernetes, Helm, and CI/CD deliverables that work correctly on Arvan CaaS first, while staying portable to standard Kubernetes with minimal toggles.
+## Step 1, before anything else: find out which line the target is on
 
-This skill is the single source of truth for Arvan work in this repository. It includes platform constraints, practical operating patterns, and RBAC identity facts.
-
-## Source of truth and precedence
-
-Use sources in this order:
-
-1) `references/arvan-caas-openAPI-1.25.json` (machine-readable API baseline)
-2) Live discovery from target cluster (`kubectl api-resources`, `kubectl api-versions`, `kubectl auth can-i`)
-3) `references/openapi-1.25-capability-matrix.md`
-4) `references/arvan-rbac-namespace-facts.md`
-5) `references/arvan-constraints.md`
-6) `references/arvan-links.md` (documentation map)
-
-If sources conflict:
-
-- OpenAPI + live discovery override generic Kubernetes memory.
-- Namespace-scoped safety overrides convenience.
-- Arvan-first defaults apply unless the user explicitly asks to override.
-
-## Live facts beat local references
-
-When live cluster discovery and local reference files disagree, prefer current platform facts from the target cluster and then update the local understanding accordingly.
-
-
-## Internet and search usage
-
-Agents are allowed and encouraged to use internet search when it improves correctness, especially for:
-
-1) recently changed platform behavior, APIs, or docs,
-2) troubleshooting signatures and current best practices,
-3) CI/CD or registry behavior that may vary by version.
-
-Rules for web research:
-
-- Prefer primary/official sources first (Arvan docs, Kubernetes docs, Helm docs, GitLab docs).
-- Use `references/SOURCES.md` as the one-hop official-first source map when current behavior matters.
-- Verify dates/versions and align with the local OpenAPI baseline.
-- Keep citations/links in outputs when decisions depend on online findings.
-- Never leak secrets while browsing or sharing commands.
-
-## When to use this skill
-
-Use this skill for:
-
-- Helm chart creation/hardening for Arvan CaaS
-- Kubernetes manifest authoring for Arvan panel, GitOps, or `kubectl`
-- Deployment and rollout troubleshooting on Arvan
-- GitLab Runner, namespace-scoped RBAC, imagePullSecret, and identity issues
-- CI/CD changes that must enforce Arvan-safe rendering and deployment gates
-
-## When NOT to use
-- do not use this skill for generic Kubernetes guidance when the target platform is not Arvan and its constraints are irrelevant
-- do not invent undocumented Arvan behavior when live discovery can answer the question directly
-- do not let generic Helm or Kubernetes defaults override verified Arvan limits, RBAC facts, or exposure patterns
-
-## Arvan-first non-negotiables
-
-1) Every container must have explicit resources.
-- Prefer Arvan-safe default parity: `requests == limits`.
-- CPU values must use decimal cores (for example `0.2`) instead of millicores (`200m`).
-- Memory must default to `2x` CPU and use integer `Mi` or whole `Gi` (for example `0.2 -> 400Mi`, `0.5 -> 1Gi`, `2 -> 4Gi`).
-- Include `ephemeral-storage` when policy/LimitRange expects it.
-
-2) Secrets never leak.
-- Keep secrets in Kubernetes `Secret` or `values.secret.yaml` (gitignored).
-- Never output secrets in logs, templates, notes, CI, or `--set`.
-- Support both modes:
-  - Helm-managed secret generation
-  - Existing secret reference (no overwrite)
-
-3) HPA by workload type.
-- Default HPA only for stateless `Deployment`.
-- Stateful/PVC-backed workloads default to manual scaling knobs and runbooked operations.
-
-4) Namespace-scoped RBAC first.
-- Prefer `Role` + `RoleBinding`.
-- Avoid cluster-scoped resources unless explicitly requested and approved.
-- Assume deployment happens in an existing namespace; do not add namespace creation or cluster-scoped namespace checks to Arvan CI flows.
-
-5) Config mount safety.
-- Do not mount secrets/configmaps onto busy app directories.
-- Use dedicated mount directories.
-
-6) API version selection must be discovery-aware.
-- Prefer `networking.k8s.io/v1` and `autoscaling/v2`.
-- Fallback only when live discovery requires.
-
-7) CPU generation scheduling is optional and value-driven.
-- Affinity presets are opt-in, not forced by default.
-
-8) HTTP exposure needs an explicit exposure mode.
-- `ClusterIP` only solves in-cluster connectivity.
-- For stable public HTTP/HTTPS apps on Arvan, prefer `service.type=LoadBalancer` plus service annotations for the public domain and pool when the cluster already uses that pattern.
-- A known working Arvan pattern is `LoadBalancer` service plus `arvancloud.ir/domain` and, when needed, `metallb.universe.tf/ip-allocated-from-pool`.
-- Support `ingress` mode separately as `ClusterIP` plus `Ingress`; keep ingress annotations configurable and do not hardcode undocumented platform annotations as universal requirements.
-- When Arvan terminates TLS at the edge, keep in-cluster ingress/service traffic on HTTP unless a real in-cluster certificate flow is required.
-
-## OpenAPI-driven capability baseline (Arvan 1.25)
-
-From `references/arvan-caas-openAPI-1.25.json`:
-
-- `openapi`: `3.0.3`
-- `info.title`: `Arvan CaaS`
-- `info.version`: `1.25`
-- Paths: `134`
-- Operations: `299`
-- Namespaced paths: all paths are namespaced in this spec
-
-Supported groups/resources include:
-
-- `core/v1`: pods, services, configmaps, secrets, pvc, serviceaccounts, events, endpoints, resourcequotas, limitranges
-- `apps/v1`: deployments, statefulsets, replicasets
-- `autoscaling/v1|v2|v2beta2`: hpa
-- `batch/v1`: jobs, cronjobs
-- `networking.k8s.io/v1`: ingresses
-- `rbac.authorization.k8s.io/v1`: roles, rolebindings
-
-Treat as unsupported unless discovery proves otherwise:
-
-- `DaemonSet`
-- `NetworkPolicy`
-- `PodDisruptionBudget`
-- `StorageClass`
-- `ClusterRole`, `ClusterRoleBinding`
-- `CRD` APIs
-- OpenShift Route/BuildConfig APIs
-
-Full matrix:
-
-- `references/openapi-1.25-capability-matrix.md`
-
-## RBAC identity facts for Arvan (merged from arvan-caas-rbac-facts)
-
-Load this reference when RBAC signals are inconsistent:
-
-- `references/arvan-rbac-namespace-facts.md`
-
-Required reasoning model:
-
-1) Distinguish alias namespace and canonical namespace identities when both appear.
-2) State exact principal under RBAC evaluation: `system:serviceaccount:<namespace>:<name>`.
-3) Do not treat Helm release visibility as proof of runtime API authorization.
-4) Do not treat `kubectl auth can-i --as=...` alone as conclusive, because impersonation rights may be missing for the caller.
-5) If uncertainty remains, mark it explicitly and request verifiable evidence before changing RBAC policy.
-
-## Companion skills orchestration (use with this skill)
-
-Use these skills together when applicable. `caas-arvan-kuber` sets policy; companion skills perform domain-specialized generation/validation.
-
-### Kubernetes and Helm core
-
-1) `alaa-k8s-helm`
-
-Usage pattern:
-
-1) Build or refine templates/manifests with `alaa-k8s-helm`.
-2) Apply Arvan constraints from this skill.
-3) Validate with `alaa-k8s-helm`.
-4) If runtime issues occur, use `alaa-k8s-helm` with Arvan RBAC/namespace facts.
-
-### Bash and automation
-
-1) `alaa-bash-shell`
-2) `alaa-makefile`
-
-Usage pattern:
-
-- Use when creating helper scripts for render checks, rollout checks, or troubleshooting.
-- Ensure scripts remain non-mutating by default for discovery stages.
-
-### CI/CD pipelines
-
-1) `alaa-gitlab-ci-cd`
-2) `github-actions-generator` + `github-actions-validator`
-3) `jenkinsfile-generator` + `jenkinsfile-validator`
-
-Usage pattern:
-
-- Add deterministic gates: `helm lint`, `helm template`, optional dry-run validation.
-- Keep registry credentials in secret stores, never in plain variables.
-- Pin tool and image versions.
-
-### Container build inputs
-
-1) `alaa-docker-production`
-
-Usage pattern:
-
-- Use for image hardening when Arvan deployment failures are rooted in image/runtime behavior.
-
-### Object storage
-
-1) `/alaa-minio-object-storage` (`$alaa-minio-object-storage`)
-2) `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`)
-
-Usage pattern:
-
-- Use `/alaa-minio-object-storage` when deciding the bucket, policy, lifecycle, or credential posture behind an object-storage volume or an S3 secret; this skill keeps only the Kubernetes and Arvan expression of that decision.
-- Use `/alaa-arvan-object-storage` when creating or configuring an ArvanCloud object-storage bucket, pointing a workload's S3 client at an `arvanstorage.ir` endpoint, or making a bucket publicly readable.
-
-## Agent prompting best practices (high-signal)
-
-When invoking this skill, prompt and execute in this structure:
-
-Take every model and reasoning-effort choice from `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no model here, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative. Describe a lane by the judgment it needs rather than by a tier: platform orchestration decides trade-offs across clusters and needs the escalated lane, and read-only inventory, static rendering checks, or narrow troubleshooting applies a fixed procedure and does not.
-
-1) Objective
-- Define exact artifact and scope.
-
-2) Constraints
-- List active Arvan constraints and API limits.
-
-3) Discovery
-- Capture known/unknown state.
-- Run read-only checks first.
-
-4) Plan
-- Write a short implementation plan with explicit tradeoffs.
-
-5) Implement
-- Use smallest safe change set.
-- Keep portability toggles explicit.
-
-6) Validate
-- Lint/render/dry-run and inspect for secret leakage.
-
-7) Deliver
-- Provide operator actions and rollback/troubleshooting commands.
-
-Prompting anti-patterns:
-
-- Generating unsupported APIs from memory without discovery
-- Assuming cluster-admin privileges in namespace-scoped environments
-- Producing templates that omit resources
-- Returning stateful scaling changes without runbook and safety notes
-
-## Prompt templates (copy and adapt)
-
-### Template: Helm/K8s implementation
-
-```text
-Goal: <deliverable>
-Target namespace: <ns>
-Workload type: <stateless|stateful>
-Arvan constraints to enforce:
-- resources requests==limits (+ ephemeral-storage if required)
-- namespace-scoped RBAC
-- no secret leakage
-- HPA only if stateless
-Discovery summary:
-- supported APIs: <...>
-- quota/limitrange: <...>
-- RBAC can-i: <...>
-Implement:
-- files to modify: <...>
-Validate:
-- helm lint/template or kubectl dry-run commands
-Deliver:
-- install/upgrade/rollback commands
-```
-
-### Template: RBAC incident triage
-
-```text
-Incident: <forbidden error excerpt>
-Namespace forms observed:
-- alias: <...>
-- canonical: <... or unknown>
-Principal evaluated:
-- system:serviceaccount:<namespace>:<name>
-Evidence collected:
-- rolebinding subjects
-- current auth can-i results
-- runner/job pod events
-Reasoning:
-- Kubernetes guarantee vs Arvan observation vs uncertainty
-Next action:
-- minimal and verifiable remediation
-```
-
-## Execution loop (mandatory)
-
-### Phase 0: Discovery
-
-Run read-only checks first:
+Arvan publishes no Kubernetes version anywhere, and the vendored spec this skill carries describes a 1.25-era surface. The platform may still be on that line or may have moved. **Never assume which; discover it.** This needs only read access:
 
 ```bash
-bash .codex/skills/caas-arvan-kuber/scripts/verify-cluster.sh <namespace> [runner-serviceaccount]
+kubectl api-versions | tr -d '\r' | sort > /tmp/arvan-api-versions.txt
+grep -qx 'autoscaling/v2beta2'                  /tmp/arvan-api-versions.txt && echo 'PINNED LINE: at most Kubernetes 1.25'
+grep -qx 'flowcontrol.apiserver.k8s.io/v1beta3' /tmp/arvan-api-versions.txt && echo 'at most Kubernetes 1.31'
+grep -qx 'resource.k8s.io/v1'                   /tmp/arvan-api-versions.txt && echo 'CURRENT LINE: Kubernetes 1.34 or newer'
+kubectl version -o json 2>/dev/null | grep -i gitVersion    # authoritative when the server allows it
+kubectl api-resources --namespaced=false -o name 2>&1 | head  # empty or forbidden means a namespace-only surface
+kubectl auth can-i --list -n NS                               # what this identity may actually do
 ```
 
-Optional OpenAPI summary regeneration:
+`autoscaling/v2beta2` is the discriminator: it was removed upstream in Kubernetes 1.26, so a server that still serves it is on the pinned line and a server that does not is not. Name the answer in the deliverable before writing a manifest, because a manifest built for the wrong line is accepted by one cluster and rejected by the other.
 
-```bash
-bash .codex/skills/caas-arvan-kuber/scripts/summarize-openapi.sh references/arvan-caas-openAPI-1.25.json
-```
+`bash scripts/verify-cluster.sh NS [runner-serviceaccount]` runs this plus the RBAC evidence in one read-only pass and **exits non-zero** when a required API or permission is absent.
 
-Additional checks:
+## Source precedence
 
-```bash
-kubectl config current-context
-kubectl -n <ns> get resourcequota,limitrange
-kubectl api-resources --namespaced=true -o name
-kubectl api-versions | grep -E "autoscaling/v2|autoscaling/v2beta2|autoscaling/v1"
-kubectl api-versions | grep -i networking.k8s.io
-kubectl -n <ns> auth can-i create deployments
-kubectl -n <ns> auth can-i create rolebindings
-```
+Live discovery outranks every local file, because a local file describes a snapshot and the cluster is the fact.
 
-If shell access is unavailable:
+1. Live discovery on the target (the commands above, plus quota and LimitRange).
+2. `references/arvan-capability-matrix.md` — two columns: the pinned line, the current upstream stable, and where they differ.
+3. `references/arvan-constraints.md`, then `references/arvan-rbac-namespace-facts.md`.
+4. `references/arvan-caas-openAPI-1.25.json` — **machine-readable only, roughly 1.5 MB. Never open it. `scripts/summarize-openapi.sh` is its only permitted reader.**
 
-- state assumptions clearly,
-- generate conservative Arvan-safe output with toggles,
-- provide explicit operator verification commands.
+## Companion boundaries, and when not to use this skill
 
-### Phase 1: Plan
+| Owner | Decides |
+|---|---|
+| `/alaa-k8s-helm` (`$alaa-k8s-helm`) | chart and manifest authoring, validation, runtime debugging; owns the gate register at its `references/validation-workflows.md` and ships `scripts/check_manifests.py`. Build and validate there, apply the Arvan facts from here. |
+| `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) | GitLab Runner configuration in full: the `[runners.kubernetes]` block, `image_pull_secrets`, helper-image pinning, the manager-versus-executor pull split. This skill states no runner setting. |
+| `/alaa-docker-production` (`$alaa-docker-production`) | how the image is built and hardened, and tag and digest policy. |
+| `/alaa-reliability-sla` (`$alaa-reliability-sla`) | every timeout, retry, and degradation value, including Helm's `--wait --timeout` and its relation to the CI job timeout. |
+| `/alaa-security-review` (`$alaa-security-review`) | fail-closed doctrine, and the handling of any artifact holding a decoded Secret. |
+| `/alaa-observability-soc` (`$alaa-observability-soc`), `/alaa-services-contract` (`$alaa-services-contract`) | whether a signal is required, and every shared name and value. |
+| `/alaa-testing-strategy` (`$alaa-testing-strategy`) | what a smoke test must assert. |
+| `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`), `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) | the bucket, endpoint, policy, and credentials behind an S3 Secret; this skill keeps only its Kubernetes expression. |
+| `/alaa-bash-shell` (`$alaa-bash-shell`), `/alaa-makefile` (`$alaa-makefile`) | helper scripts and local invocation; keep discovery helpers non-mutating. |
+| `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md` | model and reasoning effort. No model name appears in this skill, because one written into a skill goes stale silently and is copied forward because it looks authoritative. |
 
-State:
+Two runner-adjacent rules stay here because they are Arvan consequences, not runner settings: a job must not rely on `kubectl create namespace`, `kubectl get namespace`, or `helm --create-namespace` unless discovery proves the runner holds that scope; and an RBAC denial inside a job is an alias-versus-canonical identity question before it is a permissions question.
 
-- what will change and why,
-- which Arvan constraints are active,
-- which OpenAPI or RBAC facts affect design.
+**Stack versus platform (D8).** This skill owns the Arvan platform facts that change a manifest or a deployment decision, and contributes Arvan-only **predicates** to the gate register in `alaa-k8s-helm references/validation-workflows.md`: no rendered container omits resources and `requests` equals `limits`; no rendered document uses a kind absent from the discovered line's column of the capability matrix; no rendered manifest references a cluster-scoped object. It owns **no gate placement and no runner configuration**.
 
-### Phase 2: Implement
+## Reference list, with the condition that opens each file
 
-Implementation rules:
+| File | Open it when |
+|---|---|
+| `references/arvan-constraints.md` | writing or reviewing any manifest, chart, or values file for Arvan |
+| `references/arvan-capability-matrix.md` | deciding whether a kind or `apiVersion` is available, after Step 1 |
+| `references/arvan-rbac-namespace-facts.md` | an authorisation signal is inconsistent: the release looks healthy and a job is forbidden |
+| `references/arvan-execution-loop.md` | starting a delivery task, or recovering from a failed delivery step |
+| `references/arvan-task-templates.md` | you want a prompt scaffold for a Helm implementation, an RBAC triage, or an exposure choice |
+| `references/SOURCES.md` | current Arvan, Kubernetes, Helm, or GitLab behaviour matters, or a web search is about to run |
 
-- Explicit resources on every container.
-- `requests == limits` default on Arvan targets.
-- Probes for app workloads.
-- Stateless: `Deployment` with optional HPA.
-- Stateful/PVC-backed: `StatefulSet` or operator CR, no default HPA.
-- Service first; for public HTTP apps on Arvan, prefer an explicit exposure mode: `LoadBalancer/public-ip` when you want the gateway-style pattern, `ClusterIP + Ingress` when you explicitly want ingress mode.
-- OpenShift Route only behind explicit toggle and API availability.
-- Secrets via secret values or existing secret refs only.
-- RBAC namespace-scoped by default.
-
-### Phase 3: Validate
-
-Helm path:
-
-```bash
-bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh <chart_dir> <namespace> [values.yaml] [values.secret.yaml] [rendered.yaml] [extra-values...]
-```
-
-Manifest path:
-
-```bash
-kubectl apply --dry-run=client -f rendered.yaml
-```
-
-Always verify:
-
-- no secrets were printed,
-- resources exist for all containers,
-- APIs in manifests are supported by discovery.
-
-### Phase 4: Deliver
-
-Deliverables must include:
-
-- minimal change set,
-- copy/paste install/upgrade/rollback commands,
-- README and RUNBOOK updates for operator handoff when scope is production/stateful.
-
-## Arvan operation details to preserve in outputs
-
-1) Panel accepts multi-document YAML separated by `---`.
-2) Platform docs indicate resource defaults can be applied when missing.
-3) Domain flows usually rely on Arvan CDN-managed DNS and active CDN.
-4) Persistent storage lifecycle actions can be disruptive and must be documented.
-5) Config mount path mistakes can shadow application files and cause startup failures.
-
-## GitLab Runner on Arvan (important)
-
-1) Job pods include multiple containers (`build`, `helper`, `init-permissions`) and all need pull access.
-2) Ensure executor job pods render `image_pull_secrets`.
-3) Keep helper image pinned and reachable in restricted egress environments.
-4) Separate manager pod pull config from executor job pod pull config.
-5) Do not rely on `kubectl create namespace`, `kubectl get namespace`, or `helm --create-namespace` in runner jobs unless live evidence proves the runner has that scope.
-6) For RBAC denials, evaluate alias/canonical namespace identity mismatch before broadening privileges.
-
-## CI/CD rules (portable + Arvan-safe)
-
-1) Use immutable image tags and prefer digest pinning for production.
-2) Keep CI tooling images pinned and mirrored where necessary.
-3) Never print registry/API secrets in logs.
-4) Standard validation gates before deploy:
-- `helm lint`
-- `helm template`
-- optional schema validation (`kubeconform`/`kubeval`)
-- optional `kubectl apply --dry-run=client`
-5) Ensure migration/init/hook jobs also meet resource constraints.
+Scripts: `verify-cluster.sh` (read-only discovery that fails on a missing capability), `render-helm.sh` (deterministic render, mode-0600 output, removed on exit), `summarize-openapi.sh` (`--check` fails when the matrix and the spec have drifted apart). Each takes `--help` and `--self-test` and exits `0` clean, `1` findings, `2` could not run. Assets: the two operator templates, emitted when the scope is production or stateful, and `assets/values.secret.yaml.example`.
 
 ## Definition of done
 
-Done means:
-
-1) Artifacts are compatible with OpenAPI/discovery constraints.
-2) Containers have explicit resources with Arvan parity defaults.
-3) Stateful storage and scaling constraints are documented.
-4) Routing approach is explicit and compatible (`Ingress`/`LoadBalancer`; optional Route toggle only when supported).
-5) Secret handling is safe end-to-end.
-6) RBAC-sensitive changes consider alias/canonical namespace identity evidence.
-7) Operator docs are copy/paste ready.
-
-## Package resources (progressive disclosure)
-
-Read only what is needed:
-
-- `references/arvan-constraints.md`
-- `references/arvan-caas-openAPI-1.25.json`
-- `references/openapi-1.25-capability-matrix.md`
-- `references/arvan-rbac-namespace-facts.md`
-- `references/arvan-links.md`
-- `references/SOURCES.md`
-- `assets/README.operator.md.template`
-- `assets/RUNBOOK.operator.md.template`
-- `assets/values.secret.yaml.example`
-- `scripts/verify-cluster.sh`
-- `scripts/render-helm.sh`
-- `scripts/summarize-openapi.sh`
-- `agents/openai.yaml`
-
-Rule:
-
-- Reuse assets/scripts before writing ad-hoc alternatives.
-- Keep secrets out of non-secret files and terminal output.
+1. The discovered line is named in the deliverable, with the command output that established it.
+2. `python3 alaa-k8s-helm scripts/check_manifests.py rendered.yaml --profile arvan` exits 0.
+3. Every kind used appears in the discovered line's column of the capability matrix, or the deliverable says why discovery overrode it.
+4. The exposure mode is explicit and matches what the cluster already uses.
+5. No decoded secret exists outside a mode-0600 file removed on exit, and every filename that can hold one is in the repository's ignore rules.
+6. An RBAC-sensitive change states both namespace forms and the principal evaluated.
+7. Stateful storage and scaling constraints reach the operator README and RUNBOOK.

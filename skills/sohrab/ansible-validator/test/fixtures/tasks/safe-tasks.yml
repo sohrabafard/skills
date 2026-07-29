@@ -1,0 +1,21 @@
+---
+# Fixture: check_task_safety.py --self-test asserts zero findings here.
+- name: Create a configuration directory with a mode that denies write to other
+  ansible.builtin.file:
+    path: /etc/app
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Write a secret with the secret mode
+  ansible.builtin.copy:
+    src: app.key
+    dest: /etc/app/app.key
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Search a log for a term that is quoted before it reaches the shell
+  ansible.builtin.shell: "grep {{ search_term | quote }} /var/log/app.log"
+  changed_when: false

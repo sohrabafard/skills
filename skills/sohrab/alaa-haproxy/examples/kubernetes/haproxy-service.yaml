@@ -1,3 +1,14 @@
+# haproxy-service.yaml
+# Charter: publish the traffic port externally and the metrics port cluster-internally.
+# Preconditions: the three port numbers must match haproxy-configmap.yaml and
+#   haproxy-deployment.yaml. The metrics Service is only scrapable because the config binds
+#   8405 on all interfaces; see the failure-mode note in haproxy-configmap.yaml.
+# Failure mode: `externalTrafficPolicy: Local` preserves the client source address, which is
+#   what makes a `src`-keyed rate limiter correct - and it also means a node with no HAProxy pod
+#   blackholes traffic sent to it. Pair it with the anti-affinity in the Deployment, or with a
+#   DaemonSet, and never with a replica count below the node count you expect the load balancer
+#   to spread across. Whether the source address is required here is decided by what the
+#   frontend does with it: see examples/haproxy/04-rate-limit-stick-table.cfg.
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,7 +24,7 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 8080
+    targetPort: http
 ---
 apiVersion: v1
 kind: Service
@@ -29,4 +40,4 @@ spec:
   ports:
   - name: metrics
     port: 8405
-    targetPort: 8405
+    targetPort: metrics

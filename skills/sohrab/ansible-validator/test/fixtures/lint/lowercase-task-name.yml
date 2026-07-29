@@ -1,0 +1,9 @@
+---
+# Fixture: check_assets.sh asserts that name[casing] fires on this file.
+- name: Fixture play with a lowercase task name
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: lowercase first letter
+      ansible.builtin.debug:
+        msg: "the name starts with a lowercase letter"

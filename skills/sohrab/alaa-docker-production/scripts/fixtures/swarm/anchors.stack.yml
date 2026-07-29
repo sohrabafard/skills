@@ -1,0 +1,10 @@
+# Fixture: YAML this checker refuses to guess at. Anchors and aliases change what a service
+# actually contains, and a checker that silently ignored them would report "clean" on a file whose
+# real content it never saw. Exit 2, never exit 0.
+x-common: &common
+  image: service:1.0.0
+services:
+  platform-app-php:
+    <<: *common
+    deploy:
+      replicas: 2

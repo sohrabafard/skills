@@ -1,543 +1,152 @@
-# Makefile Structure and Organization
+# Makefile structure
 
-## Overview
+**Owner of:** the hardening preamble, `.DELETE_ON_ERROR`, `.SUFFIXES`, `.POSIX`, file section order,
+`include` and modular `.mk` files, and the recursive-versus-non-recursive decision. No other file in
+this skill states these rules.
 
-This guide covers the organization and structure of well-designed Makefiles, including variable definitions, target
-organization, pattern rules, and modular design patterns.
+## The hardening preamble
 
-## Basic Makefile Structure
-
-A well-organized Makefile follows this general structure:
-
-```makefile
-# 1. Header and metadata
-# 2. Special targets (.POSIX, .DELETE_ON_ERROR, .SUFFIXES)
-# 3. User-overridable variables
-# 4. Project-specific variables
-# 5. .PHONY declarations
-# 6. Default target (all)
-# 7. Build rules
-# 8. Install rules
-# 9. Clean rules
-# 10. Test rules
-# 11. Help target
-```
-
-## 1. Header and Metadata
+Every Makefile in this fleet opens with these six lines, in this order, before any variable:
 
 ```makefile
-# Project: MyApp
-# Description: Brief description of the project
-# Author: Your Name
-# License: MIT
-# Version: 1.0.0
-
-# Ensure POSIX compatibility (optional)
-.POSIX:
-
-# Delete target files if recipe fails
+SHELL := bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
 .DELETE_ON_ERROR:
-
-# Disable built-in suffix rules
-.SUFFIXES:
-
-# Custom suffixes if needed
-.SUFFIXES: .c .o .h
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
 ```
 
-### Special Targets Explained
+A file that omits a line carries a comment directly above the gap naming the environment that forbids
+it. "Simplicity" is not such an environment.
 
-- **.POSIX**: Declares intent for POSIX compliance (optional, increases portability)
-- **.DELETE_ON_ERROR**: If a recipe fails, delete the target file (prevents corrupted builds)
-- **.SUFFIXES**: Clear built-in suffix rules, then optionally declare custom ones
+| Line | What it prevents | Floor |
+|---|---|---|
+| `SHELL := bash` | recipes silently running under `dash` (Debian) or `ash` (Alpine), where `source`, `[[`, arrays and `declare` fail | all |
+| `.ONESHELL:` | each recipe line running in its own shell, so `cd` and shell variables do not survive to the next line | 3.82 |
+| `.SHELLFLAGS := -eu -o pipefail -c` | the recipe reporting its **last** command's status while an earlier command failed; an unset variable expanding to empty; a failure in any pipe stage but the last being discarded | 3.82 |
+| `.DELETE_ON_ERROR:` | a failed recipe leaving a partial target file that the next run treats as up to date | all |
+| `--warn-undefined-variables` | a typo in a variable name expanding to the empty string and silently changing a command | 4.0 |
+| `--no-builtin-rules` | make inventing a rule for a target you did not write, and searching roughly ninety built-in suffix rules per target | 4.0 |
 
-## 2. Variable Organization
+`.ONESHELL:` and `.SHELLFLAGS` belong together and never apart. `.ONESHELL` without `-e` is this
+skill's single worst silent-success mode; `ci-entrypoint.md` demonstrates it with a runnable fixture.
 
-### User-Overridable Variables (use ?=)
+On `.DELETE_ON_ERROR`, the GNU manual is explicit that the behaviour it enables is what you want and
+that you must ask for it: *"This is almost always what you want make to do, but it is not historical
+practice; so for compatibility, you must explicitly request it."*
 
-Variables that users should be able to override from the command line or environment:
+Add `.SUFFIXES:` with no prerequisites when the file defines any pattern or suffix rule. It clears the
+built-in suffix list so make stops searching it. Add `.POSIX:` only when the file is genuinely written
+to the POSIX `make` subset, which on this fleet means it must run under BSD make or an Alpine default
+shell; `.POSIX:` with GNU-only syntax below it is a false claim.
+
+## Section order
 
 ```makefile
-# Compiler and tools
-CC ?= gcc
-CXX ?= g++
-LD ?= $(CC)
-AR ?= ar
-RANLIB ?= ranlib
-INSTALL ?= install
-RM ?= rm -f
-MKDIR_P ?= mkdir -p
-
-# Compiler flags
-CFLAGS ?= -Wall -Wextra -O2
-CXXFLAGS ?= -Wall -Wextra -O2
-CPPFLAGS ?=
-LDFLAGS ?=
-LDLIBS ?=
-
-# Installation paths (GNU conventions)
-PREFIX ?= /usr/local
-EXEC_PREFIX ?= $(PREFIX)
-BINDIR ?= $(EXEC_PREFIX)/bin
-LIBDIR ?= $(EXEC_PREFIX)/lib
-INCLUDEDIR ?= $(PREFIX)/include
-DATAROOTDIR ?= $(PREFIX)/share
-DATADIR ?= $(DATAROOTDIR)
-MANDIR ?= $(DATAROOTDIR)/man
-
-# DESTDIR for staged installations
-DESTDIR ?=
+# 1. First-line comment: what this file fronts, and any dialect decision
+# 2. The hardening preamble
+# 3. .SUFFIXES: and .POSIX: when they apply
+# 4. User-overridable variables         (?=)          — variables-guide.md
+# 5. Project-owned variables            (:=)          — variables-guide.md
+# 6. include / -include                 (this file)
+# 7. .PHONY declarations                              — targets-guide.md
+# 8. The default target, documented with ##           — targets-guide.md
+# 9. Everything else, grouped by lifecycle stage
+# 10. The help target                                 — targets-guide.md
 ```
 
-**Why ?= instead of =:**
+The default goal is the first non-special target in the file, so the ordering above is load-bearing:
+moving a rule above `all` silently changes what `make` with no argument does. Special targets whose
+names begin with a dot are never candidates for the default goal, so the preamble does not interfere.
 
-- `?=` only sets the variable if not already defined
-- Allows users to override: `make CC=clang CFLAGS="-O3 -march=native"`
-- Respects environment variables
-
-### Project-Specific Variables (use :=)
-
-Variables internal to the Makefile that should not be overridden:
+## Includes and modular `.mk` files
 
 ```makefile
-# Project configuration
-PROJECT := myapp
-VERSION := 1.0.0
-TARGET := $(PROJECT)
-
-# Directory structure
-SRCDIR := src
-INCDIR := include
-BUILDDIR := build
-OBJDIR := $(BUILDDIR)/obj
-DEPDIR := $(BUILDDIR)/deps
-
-# Source files (use wildcards or explicit lists)
-SOURCES := $(wildcard $(SRCDIR)/*.c)
-HEADERS := $(wildcard $(INCDIR)/*.h)
-
-# Derived file lists
-OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-DEPENDS := $(OBJECTS:.o=.d)
+include config.mk          # fails if config.mk is missing
+-include local.mk          # silently skipped if local.mk is missing
 ```
 
-**Why := instead of =:**
+The `-` prefix on `include` is not the `-` prefix on a recipe line. On `include` it means "this file is
+optional"; on a recipe line it means "discard this command's exit status", which is a blocking defect
+(`ci-entrypoint.md`). Use `-include` for a developer's untracked local overrides and for generated
+dependency files, and plain `include` for anything the build genuinely requires, so a missing shared
+fragment fails at parse time rather than producing a subtly different build.
 
-- `:=` performs immediate expansion (evaluated once)
-- `=` performs recursive expansion (evaluated each use)
-- `:=` is more efficient for computed values
-
-### Variable Expansion Example
+Split a Makefile when a section has its own lifecycle: `ci.mk` for gate targets, `runtime.mk` for
+container targets, `dev.mk` for local conveniences. Keep the preamble in the top-level file only;
+repeating it in an included fragment makes the effective `.SHELLFLAGS` depend on include order.
 
 ```makefile
-# Wrong: = causes recursive expansion
-FILES = $(wildcard *.c)
-# Expands every time $(FILES) is used
-
-# Right: := evaluates once
-FILES := $(wildcard *.c)
-# Evaluated immediately, more efficient
+include mk/ci.mk
+include mk/runtime.mk
+-include mk/local.mk
 ```
 
-## 3. Target Organization
+`$(MAKEFILE_LIST)` holds every file make has read, in order, so a help target built on it documents the
+included fragments too without further work.
 
-### .PHONY Declarations
+## Recursive versus non-recursive make
 
-Declare all non-file targets as .PHONY to ensure they always run:
+Non-recursive is the default. A single make process sees one dependency graph, so it rebuilds exactly
+what changed and parallelises correctly.
 
 ```makefile
-.PHONY: all clean install uninstall test check help
-.PHONY: build dist distclean format lint
+# Non-recursive: one process, one graph
+SRC := $(wildcard src/*.c) $(wildcard lib/*.c)
+OBJ := $(SRC:%.c=build/%.o)
 ```
 
-**Why .PHONY is critical:**
+Recursive make gives each sub-directory its own process and its own graph. The processes cannot see each
+other's prerequisites, so a change in `lib/` does not rebuild what depends on it in `src/`, and a
+parallel build can start a dependent before its dependency finishes. Peter Miller's *Recursive Make
+Considered Harmful* is the canonical statement of why.
 
-- Without .PHONY, if a file named "clean" exists, `make clean` won't run
-- .PHONY tells make these targets don't create files
-- Improves make performance by skipping unnecessary stat() calls
-
-### Default Target
-
-The first target in the Makefile is the default (run when `make` is called without arguments):
+Two cases where recursion is nonetheless correct: a genuinely separate build system in a sub-directory
+that you do not own, and a target that fronts another repository's Makefile. In both, use `$(MAKE)`:
 
 ```makefile
-## Build all targets
-.PHONY: all
-all: $(TARGET)
+## Build the vendored component with its own build system
+vendor/build:
+	$(MAKE) -C third_party/thing
 ```
 
-**Best practices:**
+`$(MAKE)` propagates `-j` through the jobserver, propagates `-n` so a dry run stays dry, and propagates
+`MAKEFLAGS`. Bare `make` propagates none of them: under `make -n` it *executes*, and under `make -j` the
+sub-build serialises. The validator reports bare `make` in a recipe.
 
-- Name it `all`
-- Make it the first target after variable definitions
-- It should build everything but not install or clean
-
-## 4. Build Rules
-
-### Explicit Rules
+Never write `for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done`. The loop is one recipe line, so a failure
+in the first directory is invisible unless the shell is running under `-e`, and the directories cannot
+run in parallel. Use a phony target per directory instead, which restores both:
 
 ```makefile
-# Link the executable
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(@D)
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+SUBDIRS := lib1 lib2 lib3
+.PHONY: $(SUBDIRS)
+$(SUBDIRS):
+	$(MAKE) -C $@
+
+lib2: lib1        # express the real ordering as prerequisites
 ```
 
-### Pattern Rules (Preferred)
-
-Pattern rules use `%` to match multiple files:
-
-```makefile
-# Compile C source files to object files
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-# Alternative without directories:
-%.o: %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-```
-
-### Automatic Variables
-
-| Variable | Meaning                                     |
-|----------|---------------------------------------------|
-| `$@`     | Target file name                            |
-| `$<`     | First prerequisite                          |
-| `$^`     | All prerequisites (with duplicates removed) |
-| `$+`     | All prerequisites (with duplicates)         |
-| `$?`     | Prerequisites newer than target             |
-| `$*`     | Stem of pattern match                       |
-| `$(@D)`  | Directory part of target                    |
-| `$(@F)`  | File part of target                         |
-
-**Example using automatic variables:**
-
-```makefile
-# Without automatic variables (verbose):
-hello: hello.o utils.o
-	gcc -o hello hello.o utils.o
-
-# With automatic variables (concise):
-hello: hello.o utils.o
-	$(CC) -o $@ $^
-```
-
-## 5. Dependency Management
-
-### Manual Dependencies
-
-```makefile
-main.o: main.c common.h
-utils.o: utils.c utils.h common.h
-```
-
-**Problems:**
-
-- Tedious to maintain
-- Easy to get out of sync
-- Error-prone for large projects
-
-### Automatic Dependency Generation (Recommended)
-
-```makefile
-# Generate dependencies automatically during compilation
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
-
-# Include generated dependency files
--include $(DEPENDS)
-```
-
-**Flags explained:**
-
-- `-MMD`: Generate dependency file (.d)
-- `-MP`: Add phony targets for headers (prevents errors if header deleted)
-- `-include`: Include files, ignoring errors if they don't exist yet (first build)
-
-## 6. VPATH and Source Organization
-
-### VPATH for Source Directories
-
-```makefile
-# Search for source files in multiple directories
-VPATH = src:include:lib
-
-# Make will search these directories for prerequisites
-main.o: main.c common.h
-	$(CC) -c $< -o $@
-```
-
-### vpath Directive (More Specific)
-
-```makefile
-# Search pattern-specific paths
-vpath %.c src
-vpath %.h include
-vpath %.o build/obj
-
-%.o: %.c
-	$(CC) -c $< -o $@
-```
-
-**When to use VPATH:**
-
-- Multi-directory projects
-- Separating source and build directories
-- Organizing headers separately
-
-## 7. Include Directives
-
-### Modular Makefiles
-
-Split large Makefiles into smaller, focused files:
-
-```makefile
-# Main Makefile
-include config.mk
-include rules.mk
-include targets.mk
-```
-
-**config.mk** (variables):
-
-```makefile
-CC := gcc
-CFLAGS := -Wall -O2
-PREFIX := /usr/local
-```
-
-**rules.mk** (pattern rules):
-
-```makefile
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-```
-
-**targets.mk** (phony targets):
-
-```makefile
-.PHONY: clean
-clean:
-	$(RM) *.o $(TARGET)
-```
-
-### Conditional Includes
-
-```makefile
-# Include file if it exists
--include config.mk
-
-# Include multiple files
--include $(DEPENDS)
-```
-
-**`-` prefix**: Suppress errors if file doesn't exist
-
-## 8. Multi-Directory Projects
-
-### Non-Recursive Make (Recommended)
-
-**Single Makefile approach:**
-
-```makefile
-# Directory structure:
-# project/
-#   Makefile
-#   src/
-#     main.c
-#     utils.c
-#   lib/
-#     libfoo.c
-
-SRCDIR := src
-LIBDIR := lib
-BUILDDIR := build
-
-SRC_SOURCES := $(wildcard $(SRCDIR)/*.c)
-LIB_SOURCES := $(wildcard $(LIBDIR)/*.c)
-ALL_SOURCES := $(SRC_SOURCES) $(LIB_SOURCES)
-
-OBJECTS := $(ALL_SOURCES:%.c=$(BUILDDIR)/%.o)
-
-$(TARGET): $(OBJECTS)
-	$(CC) $^ -o $@
-
-$(BUILDDIR)/%.o: %.c
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
-```
-
-**Advantages:**
-
-- Single make invocation
-- Accurate dependency tracking
-- Parallel builds work correctly
-- Easier to maintain
-
-### Recursive Make (Avoid if Possible)
-
-```makefile
-# Top-level Makefile
-SUBDIRS := src lib tests
-
-.PHONY: all
-all:
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
-
-.PHONY: clean
-clean:
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
-```
-
-**Problems with recursive make:**
-
-- Incorrect dependency tracking across directories
-- Slower (multiple make invocations)
-- Parallel builds can break
-- See: "Recursive Make Considered Harmful" paper
-
-## 9. Recipe Formatting
-
-### Silent Commands
-
-```makefile
-# @ prefix suppresses command echo
-clean:
-	@echo "Cleaning build artifacts..."
-	@$(RM) *.o
-
-# Without @:
-clean:
-	echo "Cleaning..."  # This line is printed
-	$(RM) *.o          # This line is printed
-```
-
-### Multi-Line Recipes
-
-```makefile
-# Each line is a separate shell invocation
-bad:
-	cd subdir
-	make all  # ERROR: cd didn't persist!
-
-# Solution 1: Use && to chain commands
-good:
-	cd subdir && make all
-
-# Solution 2: Use semicolons
-good2:
-	cd subdir; make all
-
-# Solution 3: Use backslash continuation
-good3:
-	cd subdir && \
-	make all
-```
-
-### Error Handling
-
-```makefile
-# - prefix ignores errors
-clean:
-	-$(RM) *.o  # Continue even if rm fails
-
-# Without -:
-clean:
-	$(RM) *.o  # Make stops if rm fails
-```
-
-## 10. Complete Example
-
-```makefile
-# Project: example
-# Description: Example project structure
-
-.DELETE_ON_ERROR:
-.SUFFIXES:
-
-# Variables
-CC ?= gcc
-CFLAGS ?= -Wall -Wextra -O2
-PREFIX ?= /usr/local
-
-PROJECT := example
-VERSION := 1.0.0
-SRCDIR := src
-BUILDDIR := build
-OBJDIR := $(BUILDDIR)/obj
-
-SOURCES := $(wildcard $(SRCDIR)/*.c)
-OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-DEPENDS := $(OBJECTS:.o=.d)
-TARGET := $(BUILDDIR)/$(PROJECT)
-
-# Phony targets
-.PHONY: all clean install test help
-
-# Default target
-all: $(TARGET)
-
-# Build rules
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(@D)
-	@echo "  LD      $@"
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(@D)
-	@echo "  CC      $<"
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
-
--include $(DEPENDS)
-
-# Install
-install: $(TARGET)
-	install -d $(DESTDIR)$(PREFIX)/bin
-	install -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(PROJECT)
-
-# Clean
-clean:
-	$(RM) -r $(BUILDDIR)
-
-# Test
-test: $(TARGET)
-	@echo "Running tests..."
-	@$(TARGET) --test
-
-# Help
-help:
-	@echo "$(PROJECT) v$(VERSION)"
-	@echo ""
-	@echo "Targets:"
-	@echo "  all      - Build the project (default)"
-	@echo "  install  - Install to PREFIX (default: /usr/local)"
-	@echo "  clean    - Remove build artifacts"
-	@echo "  test     - Run tests"
-	@echo "  help     - Show this message"
-	@echo ""
-	@echo "Variables:"
-	@echo "  CC=$(CC)"
-	@echo "  CFLAGS=$(CFLAGS)"
-	@echo "  PREFIX=$(PREFIX)"
-```
-
-## Best Practices Summary
-
-1. **Use .DELETE_ON_ERROR** to prevent corrupted builds
-2. **Declare .PHONY** for all non-file targets
-3. **Use ?= for user-overridable variables** (CC, CFLAGS, PREFIX)
-4. **Use := for project variables** (SOURCES, OBJECTS)
-5. **Use automatic variables** ($@, $<, $^) for concise rules
-6. **Generate dependencies automatically** (-MMD -MP)
-7. **Prefer non-recursive make** over recursive make
-8. **Use pattern rules** (%.o: %.c) over suffix rules
-9. **Create directories automatically** (@mkdir -p $(@D))
-10. **Document targets** with ## comments for help output
-
-## References
-
-- [GNU Make Manual - Makefile Structure](https://www.gnu.org/software/make/manual/html_node/Makefile-Contents.html)
-- [GNU Coding Standards - Makefile Conventions](https://www.gnu.org/prep/standards/html_node/Makefile-Conventions.html)
-- [Recursive Make Considered Harmful](http://aegis.sourceforge.net/auug97.pdf)
+## Recipe line mechanics
+
+With `.ONESHELL:` set, every line of a recipe runs in one shell, so `cd` persists and a shell variable
+set on one line is visible on the next. Without it, each line is a separate shell and neither survives —
+which is the reason the preamble sets it. Because `.SHELLFLAGS` supplies `-e`, a failure on any line ends
+the recipe.
+
+`@` suppresses the echo of a command. Use it on `echo`, `printf` and `sed`, and on nothing that can
+fail: silencing a command removes it from the log, and the command is what a reader needs when it fails.
+
+A backslash continues a logical line. There must be no character after the backslash, not even a space.
+Inside a recipe, `$$` is a literal dollar for the shell and `$` alone is a make expansion; this is the
+single most common source of an empty shell variable in a loop.
+
+## What this file does not decide
+
+- Which assignment operator a variable takes: `variables-guide.md`.
+- `.PHONY`, standard targets and order-only prerequisites: `targets-guide.md`.
+- Pattern rules and automatic variables: `patterns-guide.md`.
+- `.NOTPARALLEL`, `.WAIT` and intermediate-file handling: `optimization-guide.md`.
+- Gate fronting and verdict propagation: `ci-entrypoint.md`.
+- C, C++ and Java compilation structure: `native-toolchain.md`.

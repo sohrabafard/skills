@@ -1,17 +1,52 @@
+# A CI/CD component: a `spec:` header document, then the configuration document.
+# Every input is typed, so a wrong value is rejected when the pipeline is created
+# rather than discovered when the job runs.
+#
+# Components and the CI/CD Catalog have been generally available since GitLab
+# 17.0. Reference a published component by tag or commit SHA, not by branch.
+#
+# Image pin verified 2026-07-29. Re-derive with: https://alpinelinux.org/releases/
 spec:
   inputs:
     job-prefix:
+      type: string
       default: app
+      regex: '^[a-z][a-z0-9-]{0,30}$'
     image:
-      default: alpine:3.20
+      type: string
+      default: alpine:3.24
     stage:
+      type: string
       default: test
+    coverage:
+      type: boolean
+      default: false
+    runner-tag:
+      type: string
+      default: k8s
+      options:
+        - k8s
+        - shell-trusted
     test-command:
-      default: echo "override test-command when including this component"
+      type: array
+      default:
+        - echo "override test-command when including this component"
 ---
-$[[ inputs.job-prefix ]]-test:
+"$[[ inputs.job-prefix ]]-test":
   stage: $[[ inputs.stage ]]
   image: $[[ inputs.image ]]
+  tags:
+    - $[[ inputs.runner-tag ]]
   interruptible: true
-  script:
-    - sh -lc '$[[ inputs.test-command ]]'
+  timeout: 15 minutes
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  variables:
+    COVERAGE_ENABLED: "$[[ inputs.coverage ]]"
+  # An array input becomes the script list directly. Interpolating a free-text
+  # string into `sh -lc '...'` would let a quote in the input break the command,
+  # so the input is typed as an array and each element is one command.
+  script: $[[ inputs.test-command ]]

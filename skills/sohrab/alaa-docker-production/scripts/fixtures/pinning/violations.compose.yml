@@ -1,0 +1,16 @@
+# Fixture: six image references, six findings, one per rule shape.
+name: fixture-violating-pinning
+
+services:
+  cache:
+    image: redis:latest
+  app:
+    image: myapp
+  postgres:
+    image: postgres:18
+  service:
+    image: ${COMMENT_DOCKER_IMAGE:-comment-service:latest}
+  ssr:
+    image: node:20-alpine
+  legacy-php:
+    image: php:8.1-fpm-alpine

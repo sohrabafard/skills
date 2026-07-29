@@ -173,6 +173,7 @@ platform dashboards.
 | `alaa_auth_token_refresh_failures_total` | counter | `auth` | failed refreshes | `MetricsRegistry.php:234` |
 | `alaa_auth_totp_step_up_total` | counter | `auth` | TOTP step-up challenges completed | `MetricsRegistry.php:235` |
 | `alaa_auth_totp_step_up_failures_total` | counter | `auth` | failed TOTP step-ups | `MetricsRegistry.php:236` |
+| `alaa_gateway_totp_proof_verifications_total` | counter | `gateway` | TOTP step-up proof verifications, by outcome | registered ahead of emission; labels and production path below |
 | `alaa_content_requests_total` | counter | `content` | content requests served | emitted in `content` |
 | `alaa_content_access_denied_total` | counter | `content` | content access denials | emitted in `content` |
 | `alaa_content_filter_executions_total` | counter | `content` | filter-pipeline executions | emitted in `content` |
@@ -204,6 +205,36 @@ platform dashboards.
 | `alaa_authz_openfga_request_duration_seconds` | histogram | `authz-sidecar` | OpenFGA check duration | owed rename of `authz_sidecar_openfga_request_duration_seconds` |
 | `alaa_authz_cache_requests_total` | counter | `authz-sidecar` | decision-cache hits and misses | owed rename of `authz_sidecar_cache_requests_total` |
 
+### `alaa_gateway_totp_proof_verifications_total`: its label, and where it is produced
+
+The two `auth` TOTP rows above cover the half of step-up that `auth` runs. The gateway half —
+verifying the proof a client retries with — had no counter at all, so a signing-key rotation showed as a
+rising counter on `auth` only if codes were also failing there, while the gateway's `invalid_signature`
+spike was reachable by log search alone. This row is the gateway half.
+
+- **Labels: `status`, `service`, `env`.** `status` is the proof-verification outcome; its value set is the
+  status vocabulary owned by `32-auth-totp-and-step-up-contract.md`, closed there and chosen by gateway
+  configuration. Add no `route`, `user`, `project`, `purpose`, or proof-id label: the question this counter
+  answers is fleet-wide, and the gateway log already carries `route`, `path`, `user_id`, `project_id`,
+  `request_id`, and `trace_id` on the same line for the attribution half.
+- **Increment rule: once per request that carried `X-TOTP-Proof`.** A request with no proof increments
+  nothing, because counting those would restate `alaa_http_requests_total` under a second name.
+- **Worst-case series: 19 status values x 1 `service` x 1 `env` = 19 per environment.** That is the
+  eighteen rejection values closed in `32-auth-totp-and-step-up-contract.md` plus `validated`, and it
+  excludes only `absent`, which the increment rule above never counts. It holds under attack traffic
+  because nothing in the request can add a value to the label: every value is a `str()` literal in the
+  gateway's own configuration. Recount it against that configuration whenever a status is added — the
+  figure was 18 until `issued_in_future` shipped. Ceilings are `$alaa-observability-soc`,
+  `references/30-quantitative-budgets.md`.
+- **One counter, not two.** A separate failures counter would be `status != "validated"` on this one, and a
+  second spelling of one measurement is what the registering rule above forbids. Keeping `validated` in the
+  label is also what gives a rejection rate its denominator.
+- **Produced by the Vector pipeline, not by HAProxy.** The path is a `log_to_metric` transform in the
+  gateway repository's `observability/vector/gateway-vector.yaml` over the `totp_proof_status` field of the
+  gateway request log, exported through a `prometheus_exporter` sink. HAProxy's own Prometheus endpoint
+  cannot produce it — `totp_proof_status` is a per-transaction variable, not a stats counter — and the
+  metrics that endpoint does emit keep their upstream names under the prefix rule above.
+
 ## Reserved and owed names
 
 A name here is registered and is not emitted by any service today. Registered means no other service may
@@ -213,6 +244,7 @@ reuse the name for a different measurement; it does not mean the metric exists.
 |---|---|---|
 | `alaa_auth_token_validation_failed_total` | reserved | Named by this contract before the registry existed; `auth` does not emit it. Either `auth` emits it or the row is removed through the deprecation procedure. Do not build an alert on it. |
 | `alaa_requests_deadline_exhausted_total` | owed by every service | No service computes the request deadline yet, so no service emits this counter. A permanent zero on it means one of two things and the operator must distinguish them: nobody honours the deadline, or the budget is so generous nothing ever reaches it. |
+| `alaa_gateway_totp_proof_verifications_total` | owed by `gateway` | Registered ahead of emission, which is the order this file requires. On 2026-07-29 the gateway's `observability/vector/gateway-vector.yaml` carries no `log_to_metric` transform and its only `prometheus_exporter` sink exports Vector's own internal metrics, so the series does not exist. A missing series means "the transform is not built", not "no proof was rejected"; build no alert on it until the transform lands. |
 
 ## Names that exist today and are non-conforming
 

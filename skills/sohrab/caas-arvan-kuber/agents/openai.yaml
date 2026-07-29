@@ -1,7 +1,7 @@
 interface:
-  display_name: "Caas Arvan Kuber"
-  short_description: "Arvan-first Kubernetes and Helm delivery"
-  default_prompt: "Use $caas-arvan-kuber to follow its workflow for arvan-first kubernetes and helm delivery."
+  display_name: "CaaS Arvan Kuber"
+  short_description: "Arvan CaaS platform facts for Kubernetes and Helm"
+  default_prompt: "Use $caas-arvan-kuber when a manifest, chart, or deployment decision would be different on Arvan CaaS than on stock Kubernetes at the same minor version; otherwise use $alaa-k8s-helm."
 
 policy:
   allow_implicit_invocation: true

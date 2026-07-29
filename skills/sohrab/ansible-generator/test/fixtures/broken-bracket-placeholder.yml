@@ -1,0 +1,8 @@
+---
+# Fixture: the bracketed placeholder convention this scaffold used until
+# 2026-07-29. YAML reads `[ role_name ]` as a one-element flow sequence, so the
+# line below is a mapping key that begins with a sequence and the file does not
+# load. Six of the eight template YAML files failed exactly this way.
+# check_templates.py --self-test asserts that it is reported. Do not fix it.
+  [ role_name ]_package_name: [ package_name ]
+  [ role_name ]_port: [ default_port ]

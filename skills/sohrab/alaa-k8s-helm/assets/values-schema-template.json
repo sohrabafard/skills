@@ -1,20 +1,28 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
   "title": "Helm values schema template",
+  "description": "Starting point for values.schema.json. It rejects a values file that omits the image or the resource block, and it rejects a resource block that omits cpu or memory on either side, so a chart cannot ship resource-less containers through the schema. Copy it into the chart and extend it; do not relax the required lists.",
   "type": "object",
   "additionalProperties": true,
+  "required": ["image", "resources"],
   "properties": {
     "replicaCount": {
       "type": "integer",
-      "minimum": 0,
-      "default": 1
+      "minimum": 1,
+      "default": 1,
+      "description": "Set this or enable autoscaling, never both: a static replica count and an HPA on the same workload fight on every reconcile. Zero is not permitted here; scale to zero is a deliberate choice that belongs in its own value."
     },
     "image": {
       "type": "object",
       "required": ["repository"],
       "properties": {
-        "repository": { "type": "string" },
+        "repository": { "type": "string", "minLength": 1 },
         "tag": { "type": "string" },
+        "digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "description": "Preferred over tag for production; a tag can move under you."
+        },
         "pullPolicy": {
           "type": "string",
           "enum": ["Always", "IfNotPresent", "Never"],
@@ -24,10 +32,68 @@
     },
     "resources": {
       "type": "object",
+      "required": ["requests", "limits"],
       "properties": {
-        "requests": { "type": "object" },
-        "limits": { "type": "object" }
+        "requests": {
+          "type": "object",
+          "required": ["cpu", "memory"],
+          "properties": {
+            "cpu": { "type": ["string", "number"] },
+            "memory": { "type": "string" },
+            "ephemeral-storage": { "type": "string" }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "required": ["cpu", "memory"],
+          "properties": {
+            "cpu": { "type": ["string", "number"] },
+            "memory": { "type": "string" },
+            "ephemeral-storage": { "type": "string" }
+          }
+        }
       }
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "properties": {
+        "runAsNonRoot": { "type": "boolean", "default": true },
+        "fsGroup": { "type": "integer", "minimum": 1 },
+        "seccompProfile": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "enum": ["RuntimeDefault", "Localhost"], "default": "RuntimeDefault" }
+          }
+        }
+      }
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context. runAsUser is deliberately absent: a fixed UID breaks on any platform that assigns an arbitrary one.",
+      "properties": {
+        "allowPrivilegeEscalation": { "type": "boolean", "default": false, "const": false },
+        "readOnlyRootFilesystem": { "type": "boolean", "default": true },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "drop": { "type": "array", "items": { "type": "string" }, "default": ["ALL"] },
+            "add": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "probes": {
+      "type": "object",
+      "properties": {
+        "readiness": { "$ref": "#/definitions/probe" },
+        "liveness": { "$ref": "#/definitions/probe" },
+        "startup": { "$ref": "#/definitions/probe" }
+      }
+    },
+    "terminationGracePeriodSeconds": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Must be at least the preStop sleep plus the longest in-flight request; see /alaa-k8s-helm ($alaa-k8s-helm) references/failure-and-load.md."
     },
     "service": {
       "type": "object",
@@ -37,18 +103,14 @@
           "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"],
           "default": "ClusterIP"
         },
-        "port": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 65535,
-          "default": 80
-        },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535, "default": 80 },
         "targetPort": {
           "oneOf": [
             { "type": "integer", "minimum": 1, "maximum": 65535 },
             { "type": "string" }
           ]
-        }
+        },
+        "annotations": { "type": "object" }
       }
     },
     "ingress": {
@@ -56,6 +118,7 @@
       "properties": {
         "enabled": { "type": "boolean", "default": false },
         "className": { "type": "string" },
+        "annotations": { "type": "object" },
         "hosts": { "type": "array" },
         "tls": { "type": "array" }
       }
@@ -68,10 +131,7 @@
         "tls": {
           "type": "object",
           "properties": {
-            "termination": {
-              "type": "string",
-              "enum": ["edge", "passthrough", "reencrypt"]
-            }
+            "termination": { "type": "string", "enum": ["edge", "passthrough", "reencrypt"] }
           }
         }
       }
@@ -82,7 +142,13 @@
         "enabled": { "type": "boolean", "default": false },
         "size": { "type": "string" },
         "storageClass": { "type": "string" },
-        "accessModes": { "type": "array", "items": { "type": "string" } }
+        "accessModes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany", "ReadWriteOncePod"]
+          }
+        }
       }
     },
     "autoscaling": {
@@ -90,22 +156,53 @@
       "properties": {
         "enabled": { "type": "boolean", "default": false },
         "minReplicas": { "type": "integer", "minimum": 1 },
-        "maxReplicas": { "type": "integer", "minimum": 1 }
-      }
+        "maxReplicas": { "type": "integer", "minimum": 1 },
+        "targetCPUUtilizationPercentage": { "type": "integer", "minimum": 1, "maximum": 100 }
+      },
+      "dependencies": {
+        "maxReplicas": ["minReplicas"]
+      },
+      "description": "JSON Schema draft-07 cannot compare maxReplicas against minReplicas. /alaa-k8s-helm ($alaa-k8s-helm) scripts/check_manifests.py asserts maxReplicas >= minReplicas on the rendered HPA, which is where it is checkable."
     },
     "podDisruptionBudget": {
       "type": "object",
       "properties": {
         "enabled": { "type": "boolean", "default": false },
-        "minAvailable": {},
-        "maxUnavailable": {}
-      }
+        "minAvailable": { "type": ["integer", "string"] },
+        "maxUnavailable": { "type": ["integer", "string"] }
+      },
+      "oneOf": [
+        { "required": ["minAvailable"], "not": { "required": ["maxUnavailable"] } },
+        { "required": ["maxUnavailable"], "not": { "required": ["minAvailable"] } },
+        { "properties": { "enabled": { "const": false } } }
+      ],
+      "description": "The API rejects a PodDisruptionBudget that sets both fields."
     },
     "serviceAccount": {
       "type": "object",
       "properties": {
         "create": { "type": "boolean", "default": true },
-        "name": { "type": "string" }
+        "name": { "type": "string" },
+        "automountServiceAccountToken": {
+          "type": "boolean",
+          "default": false,
+          "description": "Leave false unless the workload calls the Kubernetes API."
+        }
+      }
+    }
+  },
+  "definitions": {
+    "probe": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "path": { "type": "string" },
+        "port": { "oneOf": [{ "type": "integer" }, { "type": "string" }] },
+        "initialDelaySeconds": { "type": "integer", "minimum": 0 },
+        "periodSeconds": { "type": "integer", "minimum": 1 },
+        "timeoutSeconds": { "type": "integer", "minimum": 1 },
+        "failureThreshold": { "type": "integer", "minimum": 1 },
+        "successThreshold": { "type": "integer", "minimum": 1 }
       }
     }
   }

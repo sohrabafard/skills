@@ -1,0 +1,8 @@
+---
+# Fixture: broken YAML behind a leading '---'. validate_role.sh --self-test
+# asserts exit 1 on this role. Before the repair it printed the parser errors
+# and then "YAML syntax check passed". Do not fix this file.
+- name: A task whose mapping is broken
+  ansible.builtin.debug:
+    msg: "one"
+   extra_key: two

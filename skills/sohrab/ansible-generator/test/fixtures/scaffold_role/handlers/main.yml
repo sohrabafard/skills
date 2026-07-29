@@ -1,0 +1,15 @@
+---
+# Role: demo_nginx
+# Handlers. A handler runs once at the end of the play, however many tasks
+# notified it. When a later task in the same play depends on the restart, force
+# it with "- ansible.builtin.meta: flush_handlers".
+
+- name: Restart the service
+  ansible.builtin.service:
+    name: "{{ demo_nginx_service_name }}"
+    state: restarted
+
+- name: Reload the service
+  ansible.builtin.service:
+    name: "{{ demo_nginx_service_name }}"
+    state: reloaded

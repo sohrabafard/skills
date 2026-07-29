@@ -1,0 +1,26 @@
+---
+# Fixture: check_task_safety.py --self-test asserts that both
+# mode[world-writable] and command[unquoted-jinja] fire here. Nothing else in
+# this toolchain reports either one: ansible-lint's yaml[octal-values] fires on
+# the unquoted form only, and neither the production profile nor Checkov's
+# ansible framework models command injection. Do not fix this file.
+- name: Create a world-writable directory
+  ansible.builtin.file:
+    path: /opt/app/incoming
+    state: directory
+    mode: '0777'
+
+- name: Copy a secret with a mode that grants write to other
+  ansible.builtin.copy:
+    src: app.key
+    dest: /etc/app/app.key
+    mode: '0666'
+
+- name: Search a log for an unquoted user-supplied term
+  ansible.builtin.shell: "grep {{ search_term }} /var/log/app.log"
+  changed_when: false
+
+- name: Run a command whose cmd value interpolates an unquoted variable
+  ansible.builtin.command:
+    cmd: "/usr/local/bin/report --for {{ tenant_name }}"
+  changed_when: false

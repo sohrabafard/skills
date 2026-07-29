@@ -1,5 +1,16 @@
+# GitLab Runner Helm chart values for a Kubernetes-executor runner.
+#
+# values.yaml is YAML. Everything under `runners.config` is embedded TOML.
+#
+# Pins verified 2026-07-29:
+#   alpine 3.24 is the current stable branch, supported to 2028-06-01
+#     (https://alpinelinux.org/releases/)
+#   gitlab-runner-helper x86_64-v19.1.2 is the newest published helper tag
+#     (https://hub.docker.com/r/gitlab/gitlab-runner-helper/tags)
 gitlabUrl: https://gitlab.example.com/
 
+# Runner authentication token, prefix "glrt-". Use runnerTokenSecret instead when
+# the token must live in a Kubernetes secret rather than in this file.
 runnerToken: "glrt-REPLACE_WITH_AUTH_TOKEN"
 
 rbac:
@@ -15,17 +26,49 @@ runners:
   config: |
     [[runners]]
       executor = "kubernetes"
+
+      [runners.cache]
+        # A Kubernetes job runs in a new pod, so a cache written to that pod's
+        # filesystem does not exist for the next job. Without a distributed
+        # cache, every `cache:` key in every pipeline on this runner is a no-op.
+        Type = "s3"
+        Shared = false
+        [runners.cache.s3]
+          ServerAddress = "REPLACE_WITH_OBJECT_STORE_ENDPOINT"
+          BucketName = "gitlab-runner-cache"
+          BucketLocation = "REPLACE_WITH_REGION"
+          AuthenticationType = "access-key"
+
       [runners.kubernetes]
         namespace = "gitlab-runner"
         service_account = "gitlab-runner"
-        image = "alpine:3.20"
+        # The default job image, used when a pipeline declares no `image:`.
+        image = "alpine:3.24"
+        # Pinned and, in a restricted-egress cluster, mirrored: the helper
+        # container clones the repository and uploads artifacts, so a job fails
+        # at pod creation if it cannot be pulled.
+        helper_image = "gitlab/gitlab-runner-helper:x86_64-v19.1.2"
+        # A job pod starts a build container, a helper container and an
+        # init-permissions container, and all three pull. The manager pod's own
+        # pull configuration does not apply to them.
+        image_pull_secrets = ["registry-pull"]
         poll_timeout = 600
         cleanup_resources_timeout = "10m"
         privileged = false
         helper_image_autoset_arch_and_os = true
+        pull_policy = ["always"]
         allowed_pull_policies = ["always"]
-        allowed_images = ["alpine:*", "docker.io/library/*:*", "moby/buildkit:*"]
-        allowed_services = ["docker:*", "docker.io/library/docker:*"]
+        # An allowlist that admits a whole namespace constrains nothing. Name the
+        # repositories this runner actually serves; the trailing ":*" still
+        # permits any tag, so pair it with the pipeline-side pinning rule.
+        allowed_images = [
+          "registry.example.com:5000/ci/toolchain:*",
+          "alpine:3.24",
+          "moby/buildkit:v*",
+        ]
+        allowed_services = ["registry.example.com:5000/mirror/postgres:*"]
+        # Writable paths for clusters that enforce a restricted or read-only
+        # container filesystem.
         logs_base_dir = "/tmp"
         scripts_base_dir = "/tmp"
         [runners.kubernetes.node_selector]

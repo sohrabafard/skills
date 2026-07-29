@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fixture
+data:
+  haproxy.cfg: |
+    frontend fe_metrics
+      bind 127.0.0.1:8405
+      http-request use-service prometheus-exporter if { path /metrics }

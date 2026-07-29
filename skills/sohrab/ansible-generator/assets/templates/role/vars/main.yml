@@ -1,10 +1,13 @@
 ---
-# Role: [ROLE_NAME]
-# Variables (higher priority - harder to override)
+# Role: ROLE_NAME
+# Role variables. High precedence: a caller cannot practically override these.
+# Anything a caller may legitimately change belongs in defaults/main.yml instead.
+# The precedence table is ansible-validator (/ansible-validator,
+# $ansible-validator) at its references/best_practices.md rule 6.2.
 
-# Internal variables that should not be overridden
-  [ role_name ]_internal_var: value
+# Values derived from the defaults above
+ROLE_NAME_full_config_path: "{{ ROLE_NAME_config_dir }}/config.yml"
+ROLE_NAME_pid_file: "/run/{{ ROLE_NAME_service_name }}.pid"
 
-# Derived variables
-  [ role_name ]_full_config_path: "{{ [role_name]_config_dir }}/config.yml"
-  [ role_name ]_pid_file: "/var/run/{{ [role_name]_service_name }}.pid"
+# Internal constants that are not configuration
+ROLE_NAME_config_owner: root

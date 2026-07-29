@@ -1,181 +1,170 @@
 ---
 name: alaa-gitlab-ci-cd
-description: Generate, validate, review, and debug GitLab CI/CD pipelines, reusable CI components, runner configs, and container-build workflows for GitLab Runner shell and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Kubernetes executor behavior, Docker or daemonless image builds, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems.
+description: Generate, validate, review, and debug GitLab CI/CD pipelines, reusable CI components, runner configs, and container-build workflows for GitLab Runner shell and Kubernetes executors. Use when the task involves one or more `.gitlab-ci.yml` files, included CI files, CI components, GitLab Runner `config.toml`, Helm `values.yaml`, GitLab Kubernetes executor behavior, Docker or daemonless image builds, cache keys, artifact retention, variables or inputs, job routing via tags, pipeline security, or CI failure triage. Prefer it for both authoring and debugging. Do not use it for unrelated Kubernetes manifests, unrelated Dockerfiles, or non-GitLab CI systems, and do not use it to decide whether a check should block a pipeline; that belongs to the skill that owns the stack.
 ---
 
-Use this skill to act like a production GitLab CI/CD specialist, not a generic YAML writer.
+Act like a production GitLab CI/CD specialist, not a generic YAML writer.
+
+## What this skill owns, and when not to use it
+
+`alaa-gitlab-ci-cd` owns **how a gate is expressed on a runner** — the job graph,
+`rules:` and `needs:`, every expression of a cache key, artifact retention and
+`expire_in`, and the runner image reference — and **decides no gate**. Which
+checks must exist, what each asserts, and whether a non-zero exit blocks or
+informs belong to the skill that owns that stack: `/alaa-frontend-devops`
+(`$alaa-frontend-devops`) for a frontend repository, `/alaa-cicd-laravel-postgres`
+(`$alaa-cicd-laravel-postgres`) for a PHP or Laravel service. When a request asks
+this skill to decide whether a check should block, name that owner and write the
+mechanism, not the verdict.
+
+Three consequences needed on every task: this skill writes how a timeout or a
+retry is expressed and never the value, which is `/alaa-reliability-sla`
+(`$alaa-reliability-sla`)'s; it writes the build job and never the image contents,
+which are `/alaa-docker-production` (`$alaa-docker-production`)'s; it ships the
+hardened form of a risky path and never the exception, which is
+`/alaa-security-review` (`$alaa-security-review`)'s.
+`references/90-companion-boundary.md` holds the full table.
 
 ## Start fast
 
-Collect only the facts that materially change the design:
+Collect only the facts that change the design: GitLab.com, Dedicated or
+self-managed and the instance version; runner type, shared or dedicated, and the
+trust model; whether the job needs Docker daemon behaviour or only an image
+build; the registry, cloud or secret manager involved; and the failure symptom if
+this is a debugging task.
 
-- GitLab version and Runner version.
-- GitLab.com, GitLab Dedicated, or self-managed.
-- Runner type: shell, Kubernetes, or mixed.
-- Shared vs dedicated runner and the trust model.
-- Whether the job really needs a Docker daemon.
-- Registry, cloud, or secret manager involved.
-- The failure symptom if this is a debugging task.
+Where a fact is missing, design against the current stable GitLab and Runner line
+rather than a version number you did not check, use dedicated runners for
+privileged work and protected refs for release and deploy jobs, and say which you
+assumed. `references/feature-version-notes.md` gives the cadence that computes the
+current line and the URL that confirms it.
 
-If those facts are missing, make safe modern assumptions, state them briefly, and continue. Default to GitLab 18.x behavior, Runner 18.x behavior, dedicated runners for privileged work, and protected branches for release or deploy jobs.
-
-## When NOT to use
-
-- Do not use for non-GitLab CI systems.
-- Do not use for Kubernetes, Helm, or Docker work unless GitLab pipeline behavior is the main concern.
-- Do not use for application code changes that do not affect CI/CD.
-
-## Open only the reference you need
-
-- `references/pipeline-authoring.md` for new or refactored pipelines, rules, DAGs, includes, components, and child pipelines.
-- `references/variables-and-inputs.md` for variable precedence, masking, file variables, inputs, dotenv, and downstream forwarding.
-- `references/runner-shell-and-kubernetes.md` for runner architecture, `config.toml`, Helm `values.yaml`, shell runner limits, and Kubernetes executor tuning.
-- `references/container-build-strategies.md` for BuildKit rootless, Docker-in-Docker, Podman, Buildah, registry auth, and cache strategy.
-- `references/security-and-hardening.md` for runner isolation, secrets, merge request risk, pull policy, token risk, and privileged-mode decisions.
-- `references/validation-and-debugging.md` for local validation, CI Lint, `glab`, failure triage, and symptom-to-cause mapping.
-- `references/feature-version-notes.md` when a feature might be gated, beta, experimental, or version-dependent.
-- `references/SOURCES.md` when latest/current GitLab, Runner, security, or feature behavior matters.
-
-Do not read every reference by default. Load the narrowest file that matches the task.
+Do not use this skill for non-GitLab CI systems, for Kubernetes, Helm or Docker
+work where GitLab pipeline behaviour is not the main concern, for application
+changes that do not affect CI/CD, or to decide whether a check should block.
 
 ## Core workflow
 
+`references/00-topic-map.md` is the router: one trigger condition per file. Open
+the narrowest file that matches and do not read the rest.
+
 1. Classify the task: generate, review, validate, debug, or migrate.
-2. Choose the lane:
-   - Pipeline semantics and YAML structure.
-   - Variable and input design.
-   - Runner configuration and job placement.
-   - Container build strategy.
-   - Security review.
-3. Verify version-sensitive claims against current official GitLab documentation when the feature, flag, or minimum version matters.
-4. Produce the smallest correct solution first, then harden it.
-5. Validate before finishing:
-   - Static local checks with `scripts/validate_gitlab_ci.py` or `scripts/validate_runner_config.py`.
-   - Context-aware validation with CI Lint or `glab ci lint` when project access exists.
-6. Close with assumptions, version floor, required variables, runner prerequisites, and remaining risks.
+2. Verify every version-sensitive claim against the official page named in
+   `references/00-source-map.md` before writing it down.
+3. Produce the smallest correct solution, then harden it.
+4. Validate with the bundled checkers, then CI Lint or `glab ci lint` when
+   project access exists and `include:` must be resolved.
+5. Close with the output contract below.
 
 ## Authoring rules
 
-- Prefer `workflow:rules` plus job `rules` for new work. Avoid introducing `only` or `except` unless you are preserving an older pipeline on purpose.
-- Prefer `needs` for DAG execution when stages alone would block parallelism.
-- Use `interruptible: true` for cancel-safe jobs that should stop on superseding commits.
-- Use `resource_group` for deploys or any job that mutates a shared target.
-- Pin images and tools to explicit versions. Do not introduce `latest` in production CI.
-- Reuse hidden jobs, components, or includes when repetition is real. Do not abstract a one-off job.
-- Keep job scripts deterministic and non-interactive.
-- When generating more than one YAML file, make include and child-pipeline boundaries explicit.
+Write `workflow:rules` with a terminal arm so pipeline creation is explicit, put
+the condition that decides whether a job should run into `rules:` rather than
+into a script that exits zero, and reuse through a hidden job, `extends`, an
+include or a component only when the same text appears in three or more jobs or
+when two jobs must change together.
 
-Open `references/pipeline-authoring.md` if the task touches rules, workflow, includes, components, child pipelines, matrix, or DAG layout.
+Open `references/pipeline-authoring.md` for workflow and job rules, environments
+and rollback, includes and components; `references/job-graph-and-scheduling.md`
+for `needs:`, `resource_group`, `interruptible`, job `timeout:`, `retry:` and
+`parallel:`; `references/cache-artifacts-and-pinning.md` for any cache key,
+`policy:`, `fallback_keys`, `expire_in` or image pin.
 
 ## Variable and input rules
 
-- Use `spec:inputs` and CI components for compile-time reusable configuration.
-- Use CI/CD variables for runtime values, secrets, and environment-specific overrides.
-- Prefer file variables or runtime file creation for kubeconfigs, certificates, JSON credentials, and Docker config blobs.
-- Never hardcode secrets in YAML.
-- Treat masked variables as non-composable: do not rely on masked values to expand other variables safely.
-- Document every non-predefined variable you introduce: name, purpose, source, sensitivity, default, and where it is consumed.
-- Watch precedence carefully when mixing pipeline variables, project or group variables, job variables, dotenv artifacts, and downstream pipelines.
-- Avoid variable expansion in `rules:changes`, `rules:exists`, and related path filters.
-
-Open `references/variables-and-inputs.md` whenever the task involves variables, secret handling, inputs, components, downstream pipelines, or file-based credentials.
+Use `spec:inputs` for a value that should be validated before the pipeline is
+created, a CI/CD variable for a runtime value, and a file variable for content a
+tool reads from a path. Never write a secret literal into YAML. GitLab expands
+`$VAR` and `${VAR}` only, so `${VAR:-default}` in a `variables:` value yields an
+empty string and overwrites any predefined variable of that name. Open
+`references/variables-and-inputs.md` for precedence, masking, `id_tokens:`, the
+`secrets:` block, secure files, dotenv and downstream forwarding.
 
 ## Runner rules
 
-- Shell runner is for trusted code on a trusted host. Do not treat it as the default safe runner.
-- Kubernetes executor is the default choice when you need stronger isolation, ephemeral execution, or cluster-native scaling.
-- Use explicit runner tags and make job placement deliberate.
-- For Kubernetes runners, keep Helm `values.yaml` separate from embedded TOML in `runners.config`; the embedded `config` block is TOML, not YAML.
-- Restrict Kubernetes runners with `allowed_images`, `allowed_services`, and `allowed_pull_policies` when the trust model is not fully closed.
-- Use dedicated nodes, labels, or separate runner fleets for privileged or daemon-based builds.
-
-Open `references/runner-shell-and-kubernetes.md` for any runner architecture, `config.toml`, Helm, RBAC, namespace, or executor question.
+The Kubernetes executor is the default. A shell runner is correct only where the
+host serves no other tenant, the runner is tagged so only the intended projects
+reach it, and the jobs that use it run on protected refs. `values.yaml` is YAML
+and the `runners.config` inside it is TOML. Open
+`references/runner-shell-and-kubernetes.md` for executor choice, `config.toml`,
+`concurrent`, `image_pull_secrets`, `helper_image`, distributed cache, RBAC,
+namespaces and restricted clusters.
 
 ## Container build strategy rules
 
-Choose the build path before writing YAML:
-
-- Default to BuildKit rootless for Kubernetes or other unprivileged environments.
-- Use Docker-in-Docker only when the job truly needs Docker daemon behavior.
-- Use Podman or Buildah when the platform or policy favors daemonless OCI builds.
-- Do not recommend Kaniko for new designs.
-- If Docker-in-Docker is required, prefer a dedicated privileged runner, isolated nodes, and TLS-enabled setup unless a documented platform constraint forces otherwise.
-
-Open `references/container-build-strategies.md` before designing any image-build job.
+Choose the build path before writing YAML: rootless BuildKit first, then Podman
+or Buildah, then a shell runner against a host daemon when its four stated
+preconditions all hold, then Docker-in-Docker on a dedicated privileged runner.
+Do not use kaniko; GitLab states it is unmaintained. Open
+`references/container-build-strategies.md` before designing any image-build job.
 
 ## Security rules
 
-- Prefer short-lived credentials with `id_tokens` and supported `secrets` integrations over long-lived cloud keys.
-- Treat privileged runners, shell runners, `docker.sock`, and shared persistent workspaces as high-risk.
-- Be explicit about merge request and fork risk before allowing protected variables, protected runners, or deploy credentials.
-- Prefer `pull_policy: always` on shared or untrusted runners for private images.
-- Separate safe defaults from risky alternatives. If the user requests the risky path, provide it with clear isolation requirements.
-
-Open `references/security-and-hardening.md` for any security-sensitive review or design.
+Use the shortest-lived credential the platform offers, and let no credential
+outlive the job on a runner whose workspace persists — a token written by
+`git remote set-url` stays in `.git/config` for the next job on that host. Open
+`references/security-and-hardening.md` for the threat model per runner type, the
+credential order, fork and merge-request exposure, and pull policy.
 
 ## Debugging rules
 
-Always separate these layers before proposing fixes:
-
-1. YAML parse or schema problem.
-2. Pipeline creation or rule evaluation problem.
-3. Include, component, or input expansion problem.
-4. Runner matching or tag problem.
-5. Executor startup problem.
-6. Container build or registry auth problem.
-7. Script or application problem.
-8. Secret, token, or environment scoping problem.
-
-Do not jump straight to editing scripts when the pipeline might not even be created or picked up.
-
-Open `references/validation-and-debugging.md` for triage steps and command patterns.
+Classify the failure before editing anything: YAML or schema, pipeline creation,
+runner matching, executor startup, or runtime. Editing a script when the pipeline
+was never created wastes a full cycle. Open
+`references/validation-and-debugging.md` for the five classes with their symptoms,
+diagnosis, smallest retry and escalation point, and for the symptom map.
 
 ## Output contract
 
-When you finish, provide:
-
-- The final YAML, TOML, or `values.yaml` needed for the task.
-- A compact variable table for custom inputs or variables.
-- Required runner prerequisites and tags.
-- Validation results and what was validated statically versus against a live GitLab context.
-- Key assumptions, minimum versions, and any feature gates.
-- A short hardening note when the design uses privileged mode, shell runners, or sensitive credentials.
+- The final YAML, TOML or `values.yaml`.
+- A variable table: name, type, source, sensitivity, default, consumer.
+- Runner prerequisites and tags.
+- What was validated statically and what still needs a live GitLab context.
+- Assumptions, the version line targeted, and any feature gate.
+- Which checks block and which inform, attributed to the skill that decided that.
+- A hardening note when the design uses privileged mode, a shell runner, a host
+  daemon, or a sensitive credential.
 
 ## Built-in assets
 
-Use the templates in `assets/templates/` when they match the task closely:
-
-- `app-basic.gitlab-ci.yml`
-- `component-with-inputs.gitlab-ci.yml`
-- `k8s-buildkit-rootless.gitlab-ci.yml`
-- `k8s-dind-tls.gitlab-ci.yml`
-- `shell-runner-trusted-host.gitlab-ci.yml`
-- `values-k8s-runner.yaml`
-- `config-shell-runner.toml`
-
-Treat them as hardened starting points, not blind copy-paste answers.
+Templates in `assets/templates/`, each to adapt rather than copy:
+`app-basic.gitlab-ci.yml`, `component-with-inputs.gitlab-ci.yml`,
+`k8s-buildkit-rootless.gitlab-ci.yml`, `k8s-dind-tls.gitlab-ci.yml`,
+`shell-runner-host-daemon.gitlab-ci.yml`,
+`shell-runner-trusted-host.gitlab-ci.yml`, `values-k8s-runner.yaml`,
+`config-shell-runner.toml`. Every image pin in them carries the URL that
+re-derives it.
 
 ## Validation scripts
 
-- `python3 scripts/validate_gitlab_ci.py <file> [more files]`
-- `python3 scripts/validate_runner_config.py <file> [more files]`
+```bash
+python3 scripts/validate_gitlab_ci.py <file> [more files]
+python3 scripts/validate_runner_config.py <file> [more files]
+```
 
-Use local scripts first for cheap feedback. Use CI Lint or `glab ci lint` when you need include resolution, project context, or pipeline simulation.
+Both accept `--help`, `--json`, `--fail-on-warnings` and `--self-test`, and both
+exit **0 clean, 1 findings, 2 could not run**. Exit 2 is never a clean result.
+Invoke them by absolute path when the working directory is not the skill root.
+What each asserts, what neither can see, and which findings are gate-eligible are
+in `references/validation-and-debugging.md`.
 
 ## Failure-mode handling
 
-- If a feature is beta, experimental, or version-gated, say so and include the minimum version.
-- If live GitLab access is unavailable, say what you validated locally and what still needs live CI Lint or project-context validation.
-- If the request combines incompatible goals, prefer the safer architecture and explain the tradeoff in one or two lines.
+- Without live GitLab access, say what was validated locally and what still needs
+  CI Lint or project context.
+- Where the request combines incompatible goals, present the safer architecture
+  and state the trade-off and who would have to accept it.
 
 ## Subagent strategy
 
-If multi-agent mode is available and the task is large, split work by concern:
+Where multi-agent mode is available and the task is large, split by concern —
+pipeline semantics, runner or executor configuration, security and version
+verification — and merge only after the version-sensitive and security-sensitive
+findings agree. Describe a lane by the judgment it needs, not by a tier: deciding
+trade-offs across a pipeline needs the escalated lane; read-only inventory or
+mechanical validation does not.
 
-- Take every model and reasoning-effort choice from `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no model here, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative.
-- Describe a lane by the judgment it needs rather than by a tier: CI/CD orchestration decides trade-offs across pipelines and needs the escalated lane, and read-only inventory, template comparison, or mechanical validation applies a fixed procedure and does not.
-- Pipeline semantics and YAML generation.
-- Runner or Kubernetes executor configuration.
-- Security and version verification.
-
-Merge results only after the version-sensitive and security-sensitive findings agree.
+Take every model and reasoning-effort choice from `/alaa-prompting-guide`
+(`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`, and name no
+model here, because a model name written into a skill goes stale silently and is
+copied forward because it looks authoritative.

@@ -1,465 +1,394 @@
-# Ansible Security Checklist
+# Security predicates, and the command that evaluates each one
 
-## Overview
+This file is the pair's single statement of the Ansible security predicates and
+of Ansible Vault mechanics. `ansible-generator` (`/ansible-generator`,
+`$ansible-generator`) keeps only the authoring-time shape rules — where `no_log`
+goes, what `mode` to write — and cites this file by line for everything else.
 
-This checklist provides comprehensive security validation guidelines for Ansible playbooks, roles, and collections. Use
-this as a reference when reviewing Ansible code for security vulnerabilities.
+A checklist item with no command that evaluates it is a preference. Every
+predicate below names its command.
 
-## Secrets Management
+**Whose decision a finding is.** This skill reports. It does not decide whether
+a finding blocks a change. `/alaa-security-review` (`$alaa-security-review`)
+owns fail-closed doctrine for security decisions and `/alaa-reliability-sla`
+(`$alaa-reliability-sla`) owns fail-open and degradation for availability. The
+discriminating question, which you may quote: *when this dependency cannot
+answer, does proceeding without it let something through that must not get
+through?* A secret-scan finding answers yes, so it is fail-closed by default.
 
-### ❌ Bad Practices
+**A scan that could not run is a blocked audit, not a clean one.** Every script
+here exits 2 when it could not run, and 2 is never a pass.
 
-```yaml
-# Hardcoded passwords
-- name: Create user
-  user:
-    name: admin
-    password: "P@ssw0rd123"  # NEVER DO THIS
+---
 
-# Hardcoded API keys
-- name: Configure API
-  template:
-    src: config.j2
-    dest: /etc/app/config.yml
-  vars:
-    api_key: "sk-1234567890abcdef"  # NEVER DO THIS
+## The three commands that make up an audit
 
-# Credentials in variables
-vars:
-  db_password: "secret123"  # NEVER DO THIS
-  aws_secret_key: "AKIAIOSFODNN7EXAMPLE"  # NEVER DO THIS
+All three run on every security audit, in any order.
+
+```bash
+bash scripts/validate_playbook_security.sh <target>   # Checkov, ansible + secrets
+bash scripts/scan_secrets.sh <target>                 # Ansible-specific credential shapes
+python3 scripts/check_task_safety.py <target>         # world-writable modes, shell injection
 ```
 
-### ✅ Good Practices
+**Why three and not one.** Each covers what the others cannot, measured
+2026-07-29 against `test/fixtures/secrets/planted-secrets.yml`:
+
+| Tool | Catches | Misses |
+|---|---|---|
+| Checkov `--framework ansible` | TLS, HTTPS and GPG policy: 12 `CKV_ANSIBLE_*` and `CKV2_ANSIBLE_*` checks | every credential. It reported **zero** of the six planted secrets. |
+| Checkov `--framework secrets` | generic credential shapes: AWS keys, private-key blocks, basic-auth URLs, high-entropy literals. Reported five failed checks covering all six planted secrets. | Ansible conventions: it did not report the plaintext `db_password: "hunter2-plaintext"`, which is neither high-entropy nor a generic shape. |
+| `scan_secrets.sh` | credential-shaped variable names assigned a literal, connection strings with an inline password, and the absence of vault indirection | anything that is not shaped like an assignment. |
+| `check_task_safety.py` | a `mode` that grants write to `other`; a Jinja expression in a `command`, `shell` or `raw` value without `\| quote` | everything else. |
+
+So the mandated Checkov invocation is `--framework ansible,secrets`, never
+`--framework ansible` alone. `references/source-map.md` carries the measured
+table and the command that re-derives it; `scripts/lib/checkov_scan.sh`
+implements it.
+
+---
+
+## S1. No credential is a literal in a tracked file
+
+**Predicate.** No file under version control assigns a literal value to a key
+whose name reads as a credential, and no file contains a private-key block, an
+AWS access key ID, or a connection string with an inline password.
+
+**Evaluate.**
+
+```bash
+bash scripts/scan_secrets.sh <target>
+bash scripts/validate_playbook_security.sh <target>
+```
+
+**Correct forms, in the order to try them.**
 
 ```yaml
-# Use Ansible Vault for sensitive data
-- name: Create user
-  user:
-    name: admin
-    password: "{{ admin_password | password_hash('sha512') }}"
+# 1. A vaulted variable. The value lives in an encrypted file.
+- name: Create the database user
+  community.postgresql.postgresql_user:
+    name: app
+    password: "{{ vault_app_db_password }}"
   no_log: true
 
-# Load vaulted variables
-- name: Include vaulted vars
-  include_vars:
-    file: secrets.yml  # This file is encrypted with ansible-vault
-
-# Use environment variables
-- name: Configure API
-  template:
-    src: config.j2
-    dest: /etc/app/config.yml
-  environment:
-    API_KEY: "{{ lookup('env', 'API_KEY') }}"
+# 2. An environment variable the CI job injects.
+- name: Authenticate against the registry
+  community.docker.docker_login:
+    registry_url: registry.example.com
+    username: ci
+    password: "{{ lookup('env', 'REGISTRY_TOKEN') }}"
   no_log: true
 
-# Use external secret management
-- name: Fetch secret from HashiCorp Vault
-  set_fact:
-    db_password: "{{ lookup('hashi_vault', 'secret=secret/data/db:password') }}"
+# 3. An external secret store.
+- name: Read the signing key
+  ansible.builtin.set_fact:
+    signing_key: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/app:signing_key') }}"
   no_log: true
 ```
 
-### Best Practices
+**What the scanner deliberately does not report.** A value that is a Jinja
+expression, a `vault_`-prefixed variable, an inline `!vault` block, or a
+`lookup()` call. Those are the correct patterns. A scanner that red-lights the
+correct pattern gets switched off, which is what happened before 2026-07-29:
+`scan_secrets.sh` reported a fully vaulted playbook as two secrets and exited 1.
+Pass `--no-allow-vaulted` when you are auditing whether the indirection actually
+resolves.
 
-1. **Always use Ansible Vault** for sensitive data
-   ```bash
-   ansible-vault create secrets.yml
-   ansible-vault encrypt existing_file.yml
-   ```
+## S2. `no_log` covers every task that can print a secret
 
-2. **Never commit unencrypted secrets** to version control
+**Predicate.** `no_log: true` is set on any task whose module arguments or
+registered result can contain a value sourced from a vault file, from
+`lookup('env', ...)`, or from a variable whose name matches
+`(pass|secret|token|key|credential)`.
 
-3. **Use `no_log: true`** for tasks handling sensitive data
-   ```yaml
-   - name: Set database password
-     set_fact:
-       db_password: "{{ vault_db_password }}"
-     no_log: true
-   ```
+**Evaluate.**
 
-4. **Rotate secrets regularly** and use version control for vault IDs
-
-5. **Use different vault passwords** for different environments
-
-## Privilege Escalation
-
-### ❌ Bad Practices
-
-```yaml
-# Running entire playbook as root unnecessarily
-- hosts: all
-  become: yes
-  become_user: root
-  tasks:
-    - name: Check application status
-      command: systemctl status myapp
-
-    - name: Read configuration
-      slurp:
-        src: /etc/myapp/config.yml
-
-# No privilege escalation when needed
-- name: Install package
-  apt:
-    name: nginx
-    state: present
-  # This will fail without become
+```bash
+ansible-lint -c assets/.ansible-lint <target>   # rule no-log-password
+bash scripts/scan_secrets.sh <target>
 ```
 
-### ✅ Good Practices
+**What `no_log` does not cover.** `--diff` prints the content of a templated
+file. A template that renders a secret into a configuration file leaks it into
+the diff of a check-mode run even when the task carries `no_log: true`, because
+the diff is produced by the file module and not by the argument logger. When a
+template renders a secret, either set `diff: false` on that task or accept that
+`--check --diff` output is itself sensitive and handle it accordingly.
 
-```yaml
-# Only use become when necessary
-- hosts: all
-  tasks:
-    - name: Check application status
-      command: systemctl status myapp
-      # No become needed for read-only systemctl
+## S3. Vault mechanics
 
-    - name: Install package
-      apt:
-        name: nginx
-        state: present
-      become: yes
-      # Only escalate for this task
+This is the authoritative statement of Ansible Vault for both skills.
 
-    - name: Configure application
-      template:
-        src: config.j2
-        dest: /etc/myapp/config.yml
-        owner: myapp
-        group: myapp
-        mode: '0640'
-      become: yes
+**Encrypt one value into a variable.**
+
+```bash
+ansible-vault encrypt_string 'the-secret-value' --name 'vault_app_db_password'
 ```
 
-### Best Practices
+Paste the block into `group_vars/<group>/vault.yml`. Reference it from
+`group_vars/<group>/vars.yml` as
+`app_db_password: "{{ vault_app_db_password }}"`, so that a grep for
+`app_db_password` finds a definition and not a wall of ciphertext.
 
-1. **Principle of least privilege** - only escalate when necessary
-2. **Use specific become_user** instead of always root
-3. **Limit sudo access** to specific commands in sudoers
-4. **Audit all become usage** in playbooks
-5. **Use become_flags** carefully and document why
+**Encrypt a whole file.**
 
-## File Permissions
-
-### ❌ Bad Practices
-
-```yaml
-# World-readable sensitive files
-- name: Create SSH key
-  copy:
-    src: id_rsa
-    dest: /home/user/.ssh/id_rsa
-    mode: '0644'  # WRONG: Private key readable by all
-
-# No mode specified
-- name: Create config file
-  template:
-    src: database.conf.j2
-    dest: /etc/app/database.conf
-  # Missing mode - depends on umask
-
-# Overly permissive
-- name: Create script
-  copy:
-    src: deploy.sh
-    dest: /usr/local/bin/deploy.sh
-    mode: '0777'  # WRONG: World writable
+```bash
+ansible-vault create  group_vars/production/vault.yml
+ansible-vault encrypt group_vars/production/vault.yml
+ansible-vault edit    group_vars/production/vault.yml
+ansible-vault view    group_vars/production/vault.yml
 ```
 
-### ✅ Good Practices
+**Vault IDs: one per environment, never one per project.**
 
-```yaml
-# Appropriate permissions for private keys
-- name: Create SSH key
-  copy:
-    src: id_rsa
-    dest: /home/user/.ssh/id_rsa
-    owner: user
-    group: user
-    mode: '0600'
-
-# Explicit permissions for config files
-- name: Create config file
-  template:
-    src: database.conf.j2
-    dest: /etc/app/database.conf
-    owner: appuser
-    group: appgroup
-    mode: '0640'
-
-# Minimal necessary permissions
-- name: Create script
-  copy:
-    src: deploy.sh
-    dest: /usr/local/bin/deploy.sh
-    owner: root
-    group: root
-    mode: '0755'
-
-# Set directory permissions properly
-- name: Create secure directory
-  file:
-    path: /etc/app/secrets
-    state: directory
-    owner: appuser
-    group: appgroup
-    mode: '0750'
+```bash
+ansible-vault encrypt_string --vault-id prod@prompt 'value' --name 'vault_x'
+ansible-playbook site.yml --vault-id prod@~/.vault/prod.pass
 ```
 
-### Permission Guidelines
+A single password shared across environments means rotating it after a
+production incident also rotates staging, so nobody rotates it.
 
-| File Type                | Recommended Mode | Owner | Group |
-|--------------------------|------------------|-------|-------|
-| Private keys             | 0600             | user  | user  |
-| Public keys              | 0644             | user  | user  |
-| Config files (sensitive) | 0640             | app   | app   |
-| Config files (public)    | 0644             | app   | app   |
-| Executables              | 0755             | root  | root  |
-| Directories (sensitive)  | 0750             | app   | app   |
-| Directories (public)     | 0755             | app   | app   |
-| Log files                | 0640             | app   | app   |
+**Rotate.**
 
-## Command Injection Prevention
-
-### ❌ Bad Practices
-
-```yaml
-# Unvalidated user input in commands
-- name: Process user file
-  shell: "cat {{ user_provided_filename }}"
-  # VULNERABLE: User could provide "; rm -rf /"
-
-# Direct variable interpolation
-- name: Search logs
-  command: "grep {{ search_term }} /var/log/app.log"
-  # VULNERABLE: User could inject commands
-
-# Using shell when not needed
-- name: Create directory
-  shell: "mkdir -p {{ directory_name }}"
-  # RISKY: Use file module instead
+```bash
+ansible-vault rekey --vault-id prod@~/.vault/prod-old.pass \
+                    --new-vault-id prod@~/.vault/prod-new.pass \
+                    group_vars/production/vault.yml
 ```
 
-### ✅ Good Practices
+Rekeying changes the file's encryption, not the secret inside it. When the
+secret itself leaked, change the secret at its source first and then re-encrypt.
 
-```yaml
-# Use quote filter for variables in shell
-- name: Process user file
-  shell: "cat {{ user_provided_filename | quote }}"
-  when: user_provided_filename is match('^[a-zA-Z0-9._-]+$')
+**Verify that a file that should be encrypted actually is.**
 
-# Better: Use modules instead of shell/command
-- name: Create directory
-  file:
-    path: "{{ directory_name }}"
-    state: directory
-    mode: '0755'
-
-# Validate input before use
-- name: Search logs
-  command: "grep {{ search_term }} /var/log/app.log"
-  when:
-    - search_term is defined
-    - search_term | length > 0
-    - search_term is match('^[a-zA-Z0-9 ]+$')
-  args:
-    warn: false
-
-# Use args for command parameters
-- name: Run script with arguments
-  command: /usr/local/bin/script.sh
-  args:
-    stdin: "{{ user_input }}"
+```bash
+head -1 group_vars/production/vault.yml   # $ANSIBLE_VAULT;1.1;AES256
 ```
 
-### Best Practices
+**Predicate.** Every file matching `*vault*.yml` under `group_vars/` and
+`host_vars/` begins with `$ANSIBLE_VAULT`.
 
-1. **Prefer modules over command/shell** whenever possible
-2. **Always use quote filter** for variables in shell commands
-3. **Validate input** with regex patterns
-4. **Use whitelist validation** not blacklist
-5. **Never trust user input** without validation
-
-## Network Security
-
-### ❌ Bad Practices
-
-```yaml
-# Unencrypted protocols
-- name: Download file
-  get_url:
-    url: http://example.com/file.tar.gz  # WRONG: HTTP not HTTPS
-    dest: /tmp/file.tar.gz
-
-# Disabled SSL verification
-- name: Call API
-  uri:
-    url: https://api.example.com/data
-    validate_certs: no  # WRONG: Disables security
-
-# Exposing on all interfaces unnecessarily
-- name: Configure service
-  template:
-    src: config.j2
-    dest: /etc/app/config.yml
-  vars:
-    bind_address: "0.0.0.0"  # RISKY: Expose to all
+```bash
+find group_vars host_vars -name '*vault*.yml' -print0 \
+  | xargs -0 -I{} sh -c 'head -1 "{}" | grep -q "^\$ANSIBLE_VAULT" || echo "NOT ENCRYPTED: {}"'
 ```
 
-### ✅ Good Practices
+**Where the vault password comes from in CI.** The password reaches the runner
+as a masked variable; that half is `/alaa-gitlab-ci-cd`'s
+(`$alaa-gitlab-ci-cd`). This pair owns `--vault-id` on the command line and the
+rule that a decrypt failure is fatal: a play that cannot decrypt its vault
+stops, and does not continue with the variable undefined.
 
-```yaml
-# Use HTTPS
-- name: Download file
-  get_url:
-    url: https://example.com/file.tar.gz
-    dest: /tmp/file.tar.gz
-    checksum: sha256:abc123...
+## S4. Privilege escalation is scoped
 
-# Validate SSL certificates
-- name: Call API
-  uri:
-    url: https://api.example.com/data
-    validate_certs: yes
-    client_cert: /path/to/cert.pem
-    client_key: /path/to/key.pem
+**Predicate.** `become` appears on the tasks that need it, not on the play, and
+`become_user` names the account that needs it rather than defaulting to root.
 
-# Bind to specific interface
-- name: Configure service
-  template:
-    src: config.j2
-    dest: /etc/app/config.yml
-  vars:
-    bind_address: "127.0.0.1"  # Localhost only
+**Evaluate.**
 
-# Use firewall rules
-- name: Configure firewall
-  ufw:
-    rule: allow
-    port: '443'
-    proto: tcp
-    src: '10.0.0.0/8'  # Only from internal network
+```bash
+grep -rn 'become' <target> | grep -v 'become_user\|become_method'
+ansible-lint -c assets/.ansible-lint <target>   # rule partial-become
 ```
 
-### Best Practices
+Read the result: a `become: true` at play level with read-only tasks under it is
+the finding. A blanket `[privilege_escalation] become = True` in `ansible.cfg`
+is the same finding at project scope, and it makes every ad-hoc `ansible -m`
+command run as root too.
 
-1. **Always use HTTPS** for external communications
-2. **Validate SSL certificates** - only disable for testing
-3. **Bind services to specific interfaces** when possible
-4. **Use firewall rules** to restrict access
-5. **Encrypt sensitive data in transit** (TLS/SSL)
+**On the target,** scope the sudoers grant to the commands the automation
+actually runs rather than granting `NOPASSWD: ALL`:
 
-## SELinux and AppArmor
+```
+# /etc/sudoers.d/ansible
+ansible ALL=(root) NOPASSWD: /usr/bin/systemctl, /usr/bin/apt-get, /usr/bin/dnf
+```
 
-### Best Practices
+## S5. Every written path has an explicit mode, and none is world-writable
+
+**Predicate.** Every `file`, `copy` and `template` task states `mode`, and no
+mode grants write to `other`.
+
+**Evaluate.**
+
+```bash
+ansible-lint -c assets/.ansible-lint <target>     # rule risky-file-permissions
+python3 scripts/check_task_safety.py <target>     # rule mode[world-writable]
+```
+
+ansible-lint reports the *absent* mode. It does not report a permissive one:
+`yaml[octal-values]` fires on the unquoted form only, so `mode: '0777'` on a
+directory and `mode: '0666'` on a secret both pass a production-profile run.
+`check_task_safety.py` exists for that gap.
+
+**The table.**
+
+| What | Mode | Directory |
+|---|---|---|
+| Private key, vault file, credential | `'0600'` | `'0700'` |
+| Configuration holding a secret | `'0640'` | `'0750'` |
+| Configuration with no secret | `'0644'` | `'0755'` |
+| Executable | `'0755'` | `'0755'` |
+| Log file | `'0640'` | `'0750'` |
+
+Quote every mode. An unquoted `0644` is the integer 420 in YAML, and the module
+then applies a mode nobody wrote.
+
+## S6. No unvalidated value reaches a shell
+
+**Predicate.** No `command`, `shell` or `raw` value interpolates a Jinja
+expression that does not end in `| quote`.
+
+**Evaluate.**
+
+```bash
+python3 scripts/check_task_safety.py <target>     # rule command[unquoted-jinja]
+```
+
+Nothing else in this toolchain reports it: measured 2026-07-29, a task reading
+`shell: "grep {{ search_term }} /var/log/app.log"` passes ansible-lint's
+production profile and Checkov's ansible framework alike.
 
 ```yaml
-# Don't disable SELinux
-- name: Configure SELinux
-  selinux:
-    policy: targeted
-    state: enforcing  # Not permissive or disabled
+# Reported
+- name: Search the log
+  ansible.builtin.shell: "grep {{ search_term }} /var/log/app.log"
 
-# Set proper SELinux contexts
-- name: Set SELinux context for web content
-  sefcontext:
-    target: '/web/content(/.*)?'
+# Correct: the value cannot break out of the argument
+- name: Search the log
+  ansible.builtin.shell: "grep {{ search_term | quote }} /var/log/app.log"
+  changed_when: false
+
+# Better: no shell at all
+- name: Search the log
+  ansible.builtin.lineinfile:
+    path: /var/log/app.log
+    regexp: "{{ search_term | regex_escape }}"
+    state: absent
+  check_mode: true
+```
+
+A value that reaches a command from inventory, from an extra var or from a
+registered result is attacker-controlled until proved otherwise. The `args:
+warn: false` idiom that used to appear near this advice no longer exists:
+ansible-core fails with `Unsupported parameters for (ansible.legacy.command)
+module: warn`.
+
+## S7. Transport is encrypted and verified
+
+**Predicate.** No `get_url` or `uri` task uses an `http://` URL, and none sets
+`validate_certs: false`.
+
+**Evaluate.**
+
+```bash
+bash scripts/validate_playbook_security.sh <target>
+# CKV_ANSIBLE_1  uri disabling certificate validation
+# CKV_ANSIBLE_2  get_url disabling certificate validation
+# CKV2_ANSIBLE_1 uri over HTTP
+# CKV2_ANSIBLE_2 get_url over HTTP
+```
+
+A task that sets `validate_certs: false` carries a comment naming the internal
+certificate authority it is working around and a linked issue for installing
+that authority on the target. "Only disable for testing" is not a rule, because
+nothing distinguishes testing from production in the file.
+
+A `get_url` that fetches an artifact states a `checksum`. Transport encryption
+proves who served the bytes, not which bytes they served.
+
+## S8. Host keys are checked
+
+**Predicate.** `host_key_checking` is `True` in `ansible.cfg`.
+
+**Evaluate.**
+
+```bash
+ansible-config dump | grep -i host_key_checking
+```
+
+`False` means the first connection to any host succeeds regardless of identity,
+which removes the only protection against a machine-in-the-middle on the
+management path. Where hosts are genuinely ephemeral, collect their keys into a
+known-hosts file the play references rather than turning the check off:
+
+```yaml
+- name: Record the host key
+  ansible.builtin.known_hosts:
+    path: "{{ project_known_hosts }}"
+    name: "{{ inventory_hostname }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' ~ inventory_hostname) }}"
+  delegate_to: localhost
+```
+
+## S9. A service binds to an address, not to everything
+
+**Predicate.** No default in a shipped role sets a bind address of `0.0.0.0`.
+
+**Evaluate.**
+
+```bash
+grep -rn "0\.0\.0\.0" <target>
+```
+
+Read the result: a bind address of `0.0.0.0` in `defaults/main.yml` is a role
+whose out-of-the-box behaviour is to listen on every interface, including the
+one facing the internet. Default to `127.0.0.1` and make the wider bind an
+explicit override.
+
+## S10. SELinux and AppArmor stay enforcing
+
+**Predicate.** No task sets SELinux `state: permissive` or `state: disabled`, and
+no task unloads an AppArmor profile.
+
+**Evaluate.**
+
+```bash
+grep -rn "state: *\(permissive\|disabled\)" <target>
+grep -rn "apparmor_parser -R" <target>
+```
+
+When a role needs a context rather than a disabled policy, set the context:
+
+```yaml
+- name: Label the web content directory
+  community.general.sefcontext:
+    target: '/srv/web(/.*)?'
     setype: httpd_sys_content_t
     state: present
-
-- name: Apply SELinux context
-  command: restorecon -Rv /web/content
-
-# Manage AppArmor profiles
-- name: Load AppArmor profile
-  command: apparmor_parser -r /etc/apparmor.d/usr.bin.myapp
+  notify: Restore SELinux contexts
 ```
 
-## Audit and Logging
+## S11. A security-relevant change is visible after the fact
 
-### Best Practices
+**Predicate.** A play that creates an account, grants a privilege or writes a
+credential emits a record an operator can find later.
 
-```yaml
-# Log security-relevant actions
-- name: Create admin user
-  user:
-    name: admin
-    groups: sudo
-    state: present
-  register: admin_user_result
+Whether a signal is required, what gates on it and why is
+`/alaa-observability-soc`'s (`$alaa-observability-soc`). The shared field names
+and the metric catalogue are `/alaa-services-contract`'s
+(`$alaa-services-contract`). This skill owns only the assertion that the play
+emits something, and the SARIF and JSON emission of its own findings:
 
-- name: Log user creation
-  lineinfile:
-    path: /var/log/ansible-changes.log
-    line: "{{ ansible_date_time.iso8601 }} - Admin user created by {{ ansible_user_id }}"
-    create: yes
-  when: admin_user_result.changed
-
-# Use tags for security-related tasks
-- name: Configure SSH
-  template:
-    src: sshd_config.j2
-    dest: /etc/ssh/sshd_config
-  tags:
-    - security
-    - ssh
+```bash
+bash scripts/validate_playbook.sh playbook.yml --format json
+ansible-lint -c assets/.ansible-lint --sarif-file ansible-lint.sarif <target>
 ```
 
-## Security Validation Checklist
+## S12. The tools that are not this skill's
 
-Before running playbooks in production, verify:
+`ansible-lint --profile safety` is the security-leaning profile. There is **no**
+`security` profile; `--profile security` is rejected by argparse, and both
+skills documented it until 2026-07-29. The profiles are min, basic, moderate,
+safety, shared, production.
 
-- [ ] No hardcoded secrets (passwords, API keys, tokens)
-- [ ] All sensitive data encrypted with Ansible Vault
-- [ ] `no_log: true` used for tasks handling secrets
-- [ ] Privilege escalation only where necessary
-- [ ] File permissions explicitly set (not relying on umask)
-- [ ] Private keys have mode 0600
-- [ ] No world-writable files or directories
-- [ ] Input validation for user-provided variables
-- [ ] Using modules instead of shell/command where possible
-- [ ] Quote filter used for variables in shell commands
-- [ ] HTTPS used instead of HTTP
-- [ ] SSL certificate validation enabled
-- [ ] Services bound to specific interfaces, not 0.0.0.0
-- [ ] Firewall rules configured appropriately
-- [ ] SELinux/AppArmor not disabled
-- [ ] Security contexts set correctly
-- [ ] Security-relevant actions logged
-- [ ] Regular security updates applied
-- [ ] Unused packages removed
-- [ ] Default credentials changed
-- [ ] Unnecessary services disabled
+`ansible-galaxy collection scan` does not exist and never has. The subcommands
+are download, init, build, publish, install, list and verify. Use
+`ansible-galaxy collection verify` to check an installed collection against its
+signed manifest.
 
-## Tools for Security Scanning
-
-1. **ansible-lint** - Includes security-focused rules
-   ```bash
-   ansible-lint --profile security playbook.yml
-   ```
-
-2. **Ansible Galaxy Security Scan**
-   ```bash
-   ansible-galaxy collection scan namespace.collection
-   ```
-
-3. **Git-secrets** - Prevent committing secrets
-   ```bash
-   git secrets --scan
-   ```
-
-4. **Trivy** - Scan for vulnerabilities
-   ```bash
-   trivy config .
-   ```
-
-## Additional Resources
-
-- [Ansible Security Automation](https://www.ansible.com/use-cases/security-automation)
-- [Ansible Best Practices - Security](https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#best-practices-for-variables-and-vaults)
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
+For repository-wide secret prevention rather than one-off scanning,
+`git secrets --scan` and a pre-commit hook belong to the repository, not to this
+skill. `/alaa-security-review` (`$alaa-security-review`) owns which controls a
+repository must carry.

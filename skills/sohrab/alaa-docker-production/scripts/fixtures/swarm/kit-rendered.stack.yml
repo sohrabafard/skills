@@ -1,0 +1,113 @@
+# FIXTURE — verbatim structure of the Swarm stack file rendered by service-runtime-kit v2.3.0
+# from its own contracts/service.runtime.env.example on 2026-07-29. Environment blocks are
+# elided to the few keys that matter to the interpolation checker; every key check-stack-rollout
+# inspects (deploy, healthcheck, secrets, configs, ports, networks) is unmodified. This file is
+# the evidence for RFC-3 and RFC-4 in the skill report: four long-lived services, zero
+# update_config, zero rollback_config, zero replicas, and one healthcheck whose value is ["NONE"].
+# GENERATED FILE - DO NOT EDIT DIRECTLY
+# source: service-runtime-kit@v2.3.0
+# regenerate with: bash scripts/runtime/render-runtime.sh
+services:
+  platform-app-php:
+    image: ${COMMENT_DOCKER_IMAGE:-comment-service:latest}
+    env_file:
+      - .env
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is missing from the service .env; pass it with --env-file}
+      DB_USERNAME: ${DB_USERNAME:-}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-app}
+    ports:
+      - target: 8000
+        published: ${APP_PORT_EXTERNAL:-9092}
+        protocol: tcp
+        mode: ingress
+    deploy:
+      endpoint_mode: vip
+      resources:
+        limits:
+          cpus: "${APP_CPU_LIMIT:-2.0}"
+          memory: "${APP_MEMORY_LIMIT:-2G}"
+      restart_policy:
+        condition: any
+    networks:
+      shared:
+        aliases:
+          - ${DOCKER_PROJECT_NAME:-comment}-platform-app-php
+          - comment
+  worker:
+    image: ${COMMENT_DOCKER_IMAGE:-comment-service:latest}
+    env_file:
+      - .env
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is missing from the service .env; pass it with --env-file}
+      DB_USERNAME: ${DB_USERNAME:-}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-app}
+      QUEUE_WORKER_QUEUES: ${QUEUE_WORKER_QUEUES:-default}
+    command: ["php","artisan","queue:work","rabbitmq","--queue=${QUEUE_WORKER_QUEUES:-default}","--sleep=1","--tries=${QUEUE_WORKER_TRIES:-3}","--timeout=${QUEUE_WORKER_TIMEOUT:-90}"]
+    deploy:
+      resources:
+        limits:
+          cpus: "${WORKER_CPU_LIMIT:-1.0}"
+          memory: "${WORKER_MEMORY_LIMIT:-1G}"
+      restart_policy:
+        condition: any
+    healthcheck:
+      test: ["NONE"]
+    networks:
+      - shared
+  scheduler:
+    image: ${COMMENT_DOCKER_IMAGE:-comment-service:latest}
+    env_file:
+      - .env
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_KEY: ${APP_KEY:?APP_KEY is missing from the service .env; pass it with --env-file}
+      DB_USERNAME: ${DB_USERNAME:-}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-app}
+    deploy:
+      resources:
+        limits:
+          cpus: "${SCHEDULER_CPU_LIMIT:-0.5}"
+          memory: "${SCHEDULER_MEMORY_LIMIT:-512M}"
+      restart_policy:
+        condition: any
+    networks:
+      - shared
+  pgbouncer:
+    image: edoburu/pgbouncer:v1.24.1-p1
+    entrypoint: ["/bin/sh", "/etc/pgbouncer/generated-entrypoint.sh"]
+    environment:
+      DB_USERNAME: ${DB_USERNAME:-}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      DB_PROVISION_ADMIN_PASSWORD: ${DB_PROVISION_ADMIN_PASSWORD:-postgres}
+    ports:
+      - target: 6432
+        published: ${PGBOUNCER_FORWARD_PORT:-6432}
+        protocol: tcp
+        mode: ingress
+    configs:
+      - source: pgbouncer_ini
+        target: /etc/pgbouncer/pgbouncer.ini
+      - source: pgbouncer_entrypoint
+        target: /etc/pgbouncer/generated-entrypoint.sh
+    deploy:
+      restart_policy:
+        condition: any
+    networks:
+      shared:
+        aliases:
+          - comment-pgbouncer
+configs:
+  pgbouncer_ini:
+    file: ./docker/pgbouncer/pgbouncer.ini
+  pgbouncer_entrypoint:
+    file: ./docker/pgbouncer/entrypoint.sh
+networks:
+  shared:
+    external: true
+    name: ${DOCKER_SHARED_NETWORK_NAME:-alaa-shared-network}

@@ -1,3 +1,20 @@
+# haproxy-configmap.yaml
+# Charter: the HAProxy config the Deployment in this bundle mounts.
+# Minimum branch: 3.2. Verified against 3.4.2 on 2026-07-29 with `haproxy -c -f`.
+# Preconditions: this ConfigMap is one artifact of a bundle. It is only correct alongside
+#   haproxy-deployment.yaml, haproxy-service.yaml, haproxy-networkpolicy.yaml and
+#   haproxy-servicemonitor.yaml from the same directory, because the three port numbers below
+#   appear in all five files and must agree.
+#   Workload and chart authorship - replicas, probes as Kubernetes objects, security context,
+#   NetworkPolicy design - is decided by /alaa-k8s-helm ($alaa-k8s-helm) and, on Arvan CaaS, by
+#   /caas-arvan-kuber ($caas-arvan-kuber). What this file owns is the HAProxy directives.
+# Failure mode: the metrics frontend binds ALL interfaces on 8405, not loopback. A loopback bind
+#   is unreachable through the pod IP, so a Service or a ServiceMonitor pointing at it reports
+#   the target down from the first rollout and no HAProxy metric is ever collected - with no
+#   error in HAProxy's own logs, because from HAProxy's side nothing is wrong. The exposure is
+#   then bounded by haproxy-networkpolicy.yaml, which is where a network-reachability decision
+#   belongs. Loopback is correct only when the scraper shares the network namespace; the
+#   loopback form is in examples/haproxy/10-prometheus-runtime-api.cfg.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,7 +27,7 @@ data:
       stats timeout 30s
       maxconn 20000
 
-    defaults
+    defaults k8s_http
       log stdout format raw local0 info
       mode http
       option httplog
@@ -20,23 +37,38 @@ data:
       timeout server 30s
       timeout http-request 10s
       timeout http-keep-alive 15s
+      timeout queue 5s
+      retries 3
+      option redispatch
 
-    frontend fe_public
+    # Traffic.
+    frontend fe_public from k8s_http
       bind :8080
+      http-request del-header X-Request-Id
       http-request set-header X-Request-Id %[unique-id]
       default_backend be_app
 
-    frontend fe_metrics
-      bind 127.0.0.1:8405
-      mode http
+    # Readiness. This is the directive pair that lets a readiness probe FAIL, which a
+    # tcpSocket probe on the traffic port cannot do: HAProxy holds that listener open until
+    # shutdown, so a TCP probe passes even when every backend is gone.
+    frontend fe_health from k8s_http
+      bind :8406
+      no log
+      monitor-uri /haproxy-ready
+      monitor fail if { nbsrv(be_app) eq 0 }
+
+    # Metrics. Bound on all interfaces so the pod IP is reachable; restricted by NetworkPolicy.
+    frontend fe_metrics from k8s_http
+      bind :8405
+      no log
       http-request use-service prometheus-exporter if { path /metrics }
       http-request return status 404
 
-    backend be_app
+    backend be_app from k8s_http
       balance roundrobin
       option httpchk GET /healthz
       http-check expect status 200
-      server app1 app.default.svc.cluster.local:8080 check resolvers dns init-addr none
+      server app1 app.default.svc.cluster.local:8080 check resolvers dns init-addr none maxconn 200 maxqueue 100
 
     resolvers dns
       nameserver kube-dns 10.96.0.10:53

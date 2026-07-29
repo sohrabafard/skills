@@ -1,102 +1,101 @@
 ---
-# Role Argument Specifications (Ansible 2.11+)
-# This file enables automatic validation of role variables
-# For more info: https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-argument-validation
+# Role: ROLE_NAME
+# Role argument specification.
+#
+# This is validation at the boundary: Ansible checks every entry below before
+# the role's first task runs, so a missing or mistyped variable is a refusal at
+# the start rather than a Jinja error in the middle of a partly applied run.
+# ansible-lint's role-argument-spec rule reports a role that has none.
+#
+# Placeholder convention: replace ROLE_NAME and every CHANGE_ME_* token.
+# references/scaffold.md states it once.
 
 argument_specs:
-  # Main entry point (required)
   main:
-    short_description: [ SHORT_DESCRIPTION_OF_ROLE ]
+    short_description: CHANGE_ME_one_line_description
     description:
-      - [ DETAILED_DESCRIPTION_LINE_1 ]
-      - [ DETAILED_DESCRIPTION_LINE_2 ]
+      - CHANGE_ME_what_this_role_installs_or_configures
+      - CHANGE_ME_what_it_deliberately_does_not_do
     author:
-      - [ AUTHOR_NAME ]
+      - CHANGE_ME_author
 
     options:
-      # Example: String variable
-      [ role_name ]_package_name:
-                     type: str
-                     required: false
-                     default: [ DEFAULT_PACKAGE ]
-                     description: Name of the package to install
+      ROLE_NAME_package_name:
+        type: str
+        required: false
+        default: CHANGE_ME_package
+        description: Name of the package to install.
 
-      # Example: Integer variable
-      [ role_name ]_port:
-                     type: int
-                     required: false
-                     default: [ DEFAULT_PORT ]
-                     description: Port number for the service
+      ROLE_NAME_version:
+        type: str
+        required: true
+        description: >-
+          Version to install. Required, and not defaulted to "latest", because
+          an unpinned version makes the run non-reproducible.
 
-      # Example: Boolean variable
-      [ role_name ]_enabled:
-                     type: bool
-                     required: false
-                     default: true
-                     description: Whether to enable the service
+      ROLE_NAME_port:
+        type: int
+        required: false
+        default: 8080
+        description: TCP port the service listens on.
 
-      # Example: List variable
-      [ role_name ]_packages:
-                     type: list
-                     elements: str
-                     required: false
-                     default:
-                       - [ PACKAGE_1 ]
-                       - [ PACKAGE_2 ]
-                     description: List of packages to install
+      ROLE_NAME_bind_address:
+        type: str
+        required: false
+        default: 127.0.0.1
+        description: >-
+          Interface address to bind. Defaults to the loopback address; a wider
+          bind is an explicit decision the caller makes.
 
-      # Example: Dictionary variable
-      [ role_name ]_config:
-                     type: dict
-                     required: false
-                     default: { }
-                     description: Configuration dictionary
-                     options:
-                       host:
-                         type: str
-                         required: false
-                         default: localhost
-                         description: Hostname for the service
-                       port:
-                         type: int
-                         required: false
-                         default: 5432
-                         description: Port for the service
+      ROLE_NAME_enable_ssl:
+        type: bool
+        required: false
+        default: false
+        description: Whether to configure TLS for the service.
 
-      # Example: Path variable
-      [ role_name ]_config_dir:
-                     type: path
-                     required: false
-                     default: /etc/[SERVICE_NAME]
-                     description: Configuration directory path
+      ROLE_NAME_packages:
+        type: list
+        elements: str
+        required: false
+        default:
+          - CHANGE_ME_package_one
+          - CHANGE_ME_package_two
+        description: Additional packages this role installs.
 
-      # Example: Required variable
-      [ role_name ]_version:
-                     type: str
-                     required: true
-                     description: Version to install (required)
+      ROLE_NAME_config:
+        type: dict
+        required: false
+        default: {}
+        description: Service configuration rendered into the template.
+        options:
+          host:
+            type: str
+            required: false
+            default: localhost
+            description: Hostname the service advertises.
+          port:
+            type: int
+            required: false
+            default: 5432
+            description: Port of the backing service.
 
-      # Example: Variable with choices
-      [ role_name ]_state:
-                     type: str
-                     required: false
-                     default: present
-                     choices:
-                       - present
-                       - absent
-                       - latest
-                     description: Desired state of the installation
+      ROLE_NAME_config_dir:
+        type: path
+        required: false
+        default: /etc/CHANGE_ME_service
+        description: Directory holding the service configuration.
 
-# Available data types:
-# - str: String
-# - int: Integer
-# - float: Float
-# - bool: Boolean
-# - list: List/Array
-# - dict: Dictionary/Object
-# - path: File system path
-# - raw: Any type (no validation)
-# - jsonarg: JSON string
-# - json: JSON object
-# - bytes: Bytes
-# - bits: Bits
+      ROLE_NAME_state:
+        type: str
+        required: false
+        default: present
+        choices:
+          - present
+          - absent
+        description: >-
+          Whether the role installs or removes the service. "latest" is
+          deliberately absent: it makes every run non-idempotent.
+
+# Available types: str, int, float, bool, list, dict, path, raw, jsonarg, json,
+# bytes, bits. Use path rather than str for a filesystem path so that Ansible
+# expands "~" and reports a non-absolute value.

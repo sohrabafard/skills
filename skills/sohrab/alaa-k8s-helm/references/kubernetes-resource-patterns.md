@@ -1,294 +1,137 @@
 # Kubernetes Resource Patterns
 
+Object-by-object decision rules: which controller, which Service type, which probe, which access mode, which security context. Each rule is stated once here; the values behind a rollout, probe, or PDB number come from `references/failure-and-load.md`.
+
 ## Contents
 
 - Controller selection
 - Services and exposure
-- Reliability and disruption controls
+- Probes and disruption controls
 - Storage patterns
 - Security defaults
 - Scheduling and scaling
-- Practical recommendations by object
 
 ## Controller selection
 
-### Pod
+| Controller | Use it for | Do not use it for |
+|---|---|---|
+| `Deployment` | stateless applications, APIs, web frontends, workers with no stable identity | anything that needs per-replica storage or ordinal identity |
+| `StatefulSet` | stable network identity, ordered startup or shutdown, one PVC per replica, durable ordinal identity | a stateless service, where it only slows rollouts |
+| `DaemonSet` | one Pod per node: log shippers, node agents, host networking helpers, storage or security agents | anything on a namespace-scoped managed platform, where the tenant does not own nodes |
+| `Job` and `CronJob` | finite or scheduled work: migrations, backups, batch imports, scheduled maintenance | long-running services |
+| bare `Pod` | debug, ephemeral investigation, a one-off batch task with no retry or history requirement | production services: there is no rollout management, no owning controller, and no recovery behaviour |
 
-Use a naked Pod only for:
-
-- debug or ephemeral investigation
-- a one-off batch task that does not need retries or scheduling history
-- tutorials or very small internal examples
-
-Do not use a naked Pod for normal production apps. It has no rollout management, no stable owner controller, and poor recovery behavior.
-
-### Deployment
-
-Use for stateless apps, APIs, web frontends, and most workers.
-
-Good defaults:
-
-- RollingUpdate strategy
-- readiness probe
-- liveness probe when the app can actually self-heal
-- startup probe for slow boots
-- resource requests and limits
-- ServiceAccount only when needed
-
-### StatefulSet
-
-Use for stateful apps with stable identity or per-replica storage.
-
-Use it when you need:
-
-- ordered startup or shutdown
-- stable network identity
-- one PVC per replica
-- durable ordinal identity
-
-Do not switch casually between Deployment and StatefulSet once data or identity is involved.
-
-### DaemonSet
-
-Use for one Pod per node patterns such as:
-
-- log shippers
-- node agents
-- host networking helpers
-- storage or security agents
-
-### Job and CronJob
-
-Use for finite or scheduled execution.
-
-Prefer them over long-running Deployments for migrations, backups, batch imports, and scheduled maintenance.
+Switching a workload between `Deployment` and `StatefulSet` once data or identity exists is a migration, not an edit: the selector and the volume identity both change. Emit the new object under a new name and state the cutover order.
 
 ## Services and exposure
 
 ### Service types
 
-#### ClusterIP
+- **ClusterIP** — the default for internal traffic: app-to-app calls, backends behind Ingress, Gateway API, or Route, databases, and internal APIs.
+- **Headless** (`clusterIP: None`) — when the client must address individual Pod identities, normally with a StatefulSet.
+- **NodePort** — only when node-level port exposure is genuinely required and no load balancer or ingress path exists. It exposes the port on every node.
+- **LoadBalancer** — when the platform provisions an external load balancer and the workload needs L4 exposure, for TCP or UDP services and cases where HTTP routing is insufficient.
+- **ExternalName** — DNS aliasing to an external service only. It creates no proxying and no health checking.
 
-Default choice for internal traffic. Use this for almost every app first.
+Never set `spec.externalIPs`: the field trusts every user in the cluster (CVE-2020-8554) and is being removed from Kubernetes 1.36. Use a `LoadBalancer` Service, an Ingress, or Gateway API instead.
 
-Best for:
+### Service rules
 
-- app-to-app traffic inside the cluster
-- backends behind Ingress, Gateway API, or Route
-- databases and internal APIs
-
-#### Headless Service
-
-Use `clusterIP: None` when the client must discover individual Pod identities, commonly with StatefulSets.
-
-#### NodePort
-
-Use only when you specifically need node-level port exposure and cannot rely on a proper load-balancer or ingress path. It is rarely the best production default.
-
-#### LoadBalancer
-
-Use when the platform can provision an external load balancer for the Service and you need direct L4 exposure. Good for TCP or UDP services and some edge cases where HTTP routing is not enough.
-
-#### ExternalName
-
-Use for DNS aliasing to an external service. Do not use it as a general networking shortcut inside the cluster.
-
-### Service recommendations
-
-- Prefer named ports.
-- Keep `selector` labels stable.
-- Ensure `targetPort` maps to the actual container port.
-- Use readiness probes so Services only send traffic to ready Pods.
-- Use ClusterIP unless there is a clear reason to expose more broadly.
+- Use named ports, and make `targetPort` reference the container port's name rather than its number, so a port change in the workload cannot silently break the Service.
+- Keep `selector` labels stable; they are matched against the Pod template's labels, not the workload's own.
+- Every backend Pod carries a readiness probe, so the Service routes only to ready Pods.
+- Default to ClusterIP and widen only with a stated reason.
 
 ### Ingress
 
-Use for standard Kubernetes HTTP or HTTPS exposure when an Ingress controller exists and the requirements are simple to moderate.
-
-Use Ingress when:
-
-- the platform is vanilla Kubernetes
-- you need host- and path-based routing
-- a standard controller already exists
+Standard HTTP and HTTPS exposure when an Ingress controller is installed and routing needs are host- and path-based. Confirm the controller exists with `kubectl get ingressclass` before emitting one; an Ingress with no controller is an object that does nothing and reports nothing.
 
 ### Gateway API
 
-Use when the cluster supports it and the routing needs are more advanced than basic Ingress, especially when traffic ownership and policy boundaries need clearer separation.
-
-Use Gateway API when:
-
-- the controller supports it
-- you need richer routing roles or policy attachment
-- you need a more future-facing L4 or L7 API than classic Ingress
-
-Do not assume Gateway API is installed. Check first.
+Use it when `kubectl api-resources --api-group=gateway.networking.k8s.io` returns rows and the routing need exceeds Ingress: richer routing roles, policy attachment, or a separation between the platform team that owns the Gateway and the application team that owns the routes. Do not assume it is installed.
 
 ### OpenShift Route
 
-Use Route for platform-native OpenShift HTTP or HTTPS exposure.
+`Route` is the platform-native OpenShift exposure object and its TLS termination modes are `edge`, `reencrypt`, and `passthrough`. The full rule, including when to use Ingress instead, is stated once in `references/openshift-and-managed-platforms.md`.
 
-Use Route when:
+## Probes and disruption controls
 
-- the target is OpenShift
-- you need `edge`, `passthrough`, or `reencrypt` TLS handling
-- the platform’s router is the supported exposure path
+- **`readinessProbe`** controls traffic eligibility. Every container that serves traffic has one.
+- **`livenessProbe`** restarts a stuck process and nothing else. It must not call a downstream dependency.
+- **`startupProbe`** protects a slow boot, and is the correct alternative to an inflated liveness threshold.
 
-Do not render Routes on vanilla Kubernetes.
+The thresholds themselves, the `terminationGracePeriodSeconds` and `preStop` relationship, and the `replicas`/`maxSurge`/`maxUnavailable`/PDB arithmetic are derived in `references/failure-and-load.md`. Do not copy a threshold from an example.
 
-## Reliability and disruption controls
-
-### Probes
-
-Use the right probe for the right job.
-
-- **readinessProbe**: controls traffic eligibility
-- **livenessProbe**: restarts a stuck process
-- **startupProbe**: protects slow-starting apps from premature liveness failures
-
-Recommendations:
-
-- use readiness on almost all long-running services
-- use startup probes for apps with long initialization
-- avoid aggressive liveness probes that turn dependency outages into restart storms
-
-### PodDisruptionBudget
-
-Use PDBs for workloads that must survive voluntary disruptions such as node drains or upgrades.
-
-Good candidates:
-
-- highly available Deployments with at least 2 replicas
-- StatefulSets where availability matters during maintenance
-
-Poor candidates:
-
-- single-replica apps that cannot meet the budget anyway
-- workloads that are routinely deleted or recreated by operators or batch logic
-
-Important nuance:
-
-- PDBs constrain many voluntary disruptions, but deleting Pods or Deployments directly can bypass their protection.
-
-### Rolling update behavior
-
-For Deployments, align these with capacity and PDBs:
-
-- `maxUnavailable`
-- `maxSurge`
-- readiness timing
-- startup timing
-
-A “valid” rollout can still deadlock if these values conflict.
+**PodDisruptionBudget**: use one for a workload that must survive a voluntary disruption such as a node drain or a cluster upgrade, and only when replicas are at least 2. A single-replica workload with `minAvailable: 1` blocks every drain permanently. A PDB constrains eviction; it does not constrain `kubectl delete`.
 
 ## Storage patterns
 
 ### PersistentVolumeClaim
 
-Use PVCs for durable state. Decide these fields deliberately:
+Decide four fields deliberately: requested size, storage class, access mode, and volume mode when a block device matters.
 
-- requested size
-- storage class
-- access mode
-- volume mode when block devices matter
+### Access modes
 
-### Access mode guidance
+- `ReadWriteOnce` — the normal default for single-node writable storage.
+- `ReadWriteMany` — only when the CSI driver supports shared writable access; confirm against the driver's documentation, not the StorageClass name.
+- `ReadOnlyMany` — shared read-only access.
+- `ReadWriteOncePod` — the strongest single-Pod write guarantee, when the driver supports it.
 
-- `ReadWriteOnce`: normal default for single-node writable storage
-- `ReadWriteMany`: only when the driver supports shared writable access
-- `ReadOnlyMany`: shared read-only access
-- `ReadWriteOncePod`: strongest single-pod write guarantee when supported
+### Storage rules
 
-### Storage recommendations
-
-- use PVCs for data that must survive Pod recreation
-- do not mount persistent storage for caches unless the cache actually needs persistence
-- confirm storage class and expansion support before promising resize workflows
-- remember that driver semantics matter more than YAML alone
-- if advanced volume tuning is needed on modern Kubernetes, check whether `VolumeAttributesClass` is supported by the CSI driver
+- Use a PVC for data that must survive Pod recreation, and only for that. A cache that can be rebuilt goes in an `emptyDir`.
+- Confirm that the StorageClass sets `allowVolumeExpansion: true` before promising a resize workflow: `kubectl get storageclass NAME -o jsonpath='{.allowVolumeExpansion}'`.
+- Driver semantics decide behaviour; the YAML only requests it.
+- `VolumeAttributesClass` is available for live volume tuning when the cluster and the CSI driver both support it. Its version status is in `references/version-awareness.md`.
 
 ## Security defaults
 
 ### Pod and container security context
 
-Prefer restrictive defaults.
+The baseline, applied to every container unless an exception is justified as `references/openshift-and-managed-platforms.md` describes:
 
-Typical baseline:
+```yaml
+securityContext:
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: RuntimeDefault
+```
 
-- `runAsNonRoot: true`
-- `allowPrivilegeEscalation: false`
-- drop all capabilities unless one is required
-- `readOnlyRootFilesystem: true` when the app can support it
-- `seccompProfile.type: RuntimeDefault`
+`readOnlyRootFilesystem: true` is the default, not an aspiration: mount an `emptyDir` at every path the process writes. When the write paths are unknown, find them with the procedure in `references/openshift-and-managed-platforms.md` before shipping.
 
-Do not hardcode `runAsUser` unless there is a strong reason. It hurts portability, especially on OpenShift.
+Do not set `runAsUser`. A fixed UID breaks on any platform that assigns an arbitrary one, and `runAsNonRoot: true` already prevents root without pinning a number.
+
+`scripts/check_manifests.py` asserts this whole block against rendered output.
+
+### Secrets
+
+- A Secret's `data` is base64, which is an encoding and not a protection. Anything that can read the Secret can read the value.
+- Set `automountServiceAccountToken: false` on the Pod spec unless the workload calls the Kubernetes API. The default mounts a usable API token into every container.
+- Never write a rendered manifest containing Secret objects to a shared or world-readable path, and never commit one. `/alaa-security-review` (`$alaa-security-review`) owns the fail-closed doctrine for handling one.
+- Mount a Secret or ConfigMap into a dedicated directory such as `/etc/APP/config`. Mounting onto a directory the image already populates replaces its entire contents and produces a startup failure with no obvious cause.
 
 ### ServiceAccount and RBAC
 
-Create a ServiceAccount only when the workload needs identity beyond the default one.
-
-Grant the minimum namespace-scoped RBAC needed. ClusterRole and ClusterRoleBinding are cluster-admin territory unless the environment explicitly delegates them.
+Create a ServiceAccount only when the workload needs an identity beyond `default`. Grant the minimum namespace-scoped `Role` and `RoleBinding` the workload needs. `ClusterRole` and `ClusterRoleBinding` are cluster-admin territory unless the environment explicitly delegates them.
 
 ## Scheduling and scaling
 
-### Resource requests and limits
+### Requests and limits
 
-Use requests and limits unless the user explicitly wants a different policy.
-
-Why:
-
-- scheduling accuracy
-- better cluster fairness
-- predictable HPA behavior
-- fewer surprise evictions and CPU-throttling blind spots
+Every container declares both. Requests decide scheduling and QoS class; limits decide throttling and OOM behaviour. The consequences at each boundary, and how to size a pool against replica count, are in `references/failure-and-load.md`. The complexity budget behind the number is `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
 
 ### Affinity, anti-affinity, and topology spread
 
-Use them deliberately.
-
-- use anti-affinity or topology spread for availability-sensitive replicas
-- use node affinity only when the node-class requirement is real
-- do not add hard scheduling constraints without confirming capacity exists
+- Use `topologySpreadConstraints` or pod anti-affinity for availability-sensitive replicas, so a single node or zone loss cannot take the whole workload.
+- Use node affinity only when the node-class requirement is real, and name the label key.
+- Do not add a hard scheduling constraint (`requiredDuringSchedulingIgnoredDuringExecution`) without first confirming that enough matching capacity exists; the failure mode is `Pod Pending` with an unschedulable event and no application error.
 
 ### HorizontalPodAutoscaler
 
-Use HPA when there is a real scaling signal and enough observability to tune it.
+Use `autoscaling/v2`. Good inputs: CPU for a CPU-bound stateless service, memory only when memory correlates with real saturation, custom metrics when they are trustworthy and maintained.
 
-Good HPA inputs:
-
-- CPU for CPU-bound stateless services
-- memory only when memory correlates with useful saturation behavior
-- custom metrics when they are trustworthy and maintained
-
-Do not bolt on an HPA without requests. HPA decisions depend on requests and measured metrics.
-
-## Practical recommendations by object
-
-### Pod
-
-- avoid for production services
-- use only for debug, one-offs, or tightly constrained examples
-
-### Service
-
-- default to ClusterIP
-- use named ports
-- keep selectors explicit and stable
-
-### Ingress
-
-- use for standard HTTP routing on vanilla Kubernetes
-- prefer Gateway API when advanced routing is required and the cluster supports it
-
-### Route
-
-- use on OpenShift for platform-native external HTTP or HTTPS exposure
-
-### PDB
-
-- use for multi-replica, disruption-sensitive apps
-- skip when the workload cannot satisfy the budget
-
-### PVC
-
-- use for durable state
-- validate storage class, access mode, and permission model before rollout
+An HPA requires `resources.requests.cpu` on the scaled containers; without it the CPU target is a percentage of nothing and the autoscaler never acts. `maxReplicas` is a budget against the smallest downstream limit the workload can exhaust, as `references/failure-and-load.md` explains. Never combine `spec.replicas` in the workload with an enabled HPA on the same object: each fights the other on every reconcile.

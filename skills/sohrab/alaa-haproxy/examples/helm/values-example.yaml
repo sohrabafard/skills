@@ -1,9 +1,21 @@
-# Example values patterns.
-# Translate these keys to your chosen chart if the chart uses different names.
+# values-example.yaml
+# Charter: the HAProxy-side values a chart must expose, expressed as one worked set.
+# Preconditions: KEY NAMES ARE CHART-SPECIFIC. Read the chart's own values.yaml and map each
+#   entry below onto the key that chart actually uses; a key this chart does not define is
+#   silently ignored by `helm template`, which is why a values file can render cleanly and
+#   change nothing. Chart authorship and key naming are decided by /alaa-k8s-helm
+#   ($alaa-k8s-helm); on Arvan CaaS by /caas-arvan-kuber ($caas-arvan-kuber).
+#   Image tag verified 2026-07-29; re-derive with `docker run --rm haproxy:lts haproxy -v`.
+# Failure mode: the preStop command below SLEEPS BEFORE SIGNALLING. Reversing the two produces
+#   connection refusals on every rollout; the reasoning is stated once, in
+#   examples/kubernetes/haproxy-deployment.yaml.
+#   The readiness probe is an HTTP GET against the `monitor-uri` frontend, not a TCP check on
+#   the traffic port: HAProxy holds the traffic listener open until shutdown, so a TCP probe
+#   there can never fail and therefore can never drain the pod.
 
 image:
   repository: haproxy
-  tag: "3.2.15"
+  tag: "3.4.1"
   pullPolicy: IfNotPresent
 
 replicaCount: 2
@@ -44,11 +56,16 @@ resources:
 
 probes:
   readiness:
-    tcpSocket:
-      port: 8080
+    httpGet:
+      path: /haproxy-ready
+      port: 8406
+    failureThreshold: 2
   liveness:
     tcpSocket:
       port: 8080
+    failureThreshold: 6
+
+terminationGracePeriodSeconds: 45
 
 lifecycle:
   preStop:
@@ -56,7 +73,7 @@ lifecycle:
       command:
         - /bin/sh
         - -ec
-        - kill -USR1 1 || true; sleep 15
+        - sleep 15; kill -USR1 1 || true
 
 metrics:
   serviceMonitor:
@@ -70,12 +87,18 @@ extraVolumes:
     emptyDir: {}
   - name: lib
     emptyDir: {}
+  - name: shm
+    emptyDir:
+      medium: Memory
+      sizeLimit: 64Mi
 
 extraVolumeMounts:
   - name: run
     mountPath: /run/haproxy
   - name: lib
     mountPath: /var/lib/haproxy
+  - name: shm
+    mountPath: /dev/shm
 
 podSecurityContext:
   runAsNonRoot: true
@@ -86,3 +109,5 @@ podSecurityContext:
 containerSecurityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]

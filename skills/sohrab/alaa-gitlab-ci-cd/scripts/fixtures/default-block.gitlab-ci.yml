@@ -1,0 +1,21 @@
+# Everything hazardous lives under default:, which the pre-repair checker could not see.
+default:
+  image: node
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - set -x
+    - echo "$API_TOKEN"
+
+variables:
+  API_TOKEN: "AbCdEf0123456789ZzYy"
+
+stages:
+  - build
+
+build:
+  stage: build
+  timeout: 10 minutes
+  script:
+    - npm run build

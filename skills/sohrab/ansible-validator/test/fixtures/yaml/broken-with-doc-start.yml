@@ -1,0 +1,10 @@
+---
+# Fixture: this file starts with '---' and is syntactically broken.
+# It is the exact shape that made validate_role.sh:208 unable to report a
+# failure: the pipeline read grep's exit status, and grep exits 0 whenever it
+# printed anything, which it always did because the filename header line was
+# printed. Do not fix this file.
+- name: A task whose mapping is broken
+  ansible.builtin.debug:
+    msg: "one"
+   extra_key: two

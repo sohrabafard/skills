@@ -1,0 +1,99 @@
+---
+# Role: demo_nginx
+# Role argument specification.
+#
+# This is validation at the boundary: Ansible checks every entry below before
+# the role's first task runs, so a missing or mistyped variable is a refusal at
+# the start rather than a Jinja error in the middle of a partly applied run.
+# ansible-lint's role-argument-spec rule reports a role that has none.
+#
+
+argument_specs:
+  main:
+    short_description: Install and configure nginx, as a scaffold fixture
+    description:
+      - Installs nginx and renders one configuration file
+      - Does not manage virtual hosts or TLS material
+    author:
+      - ansible-generator fixtures
+
+    options:
+      demo_nginx_package_name:
+        type: str
+        required: false
+        default: nginx
+        description: Name of the package to install.
+
+      demo_nginx_version:
+        type: str
+        required: true
+        description: >-
+          Version to install. Required, and not defaulted to "latest", because
+          an unpinned version makes the run non-reproducible.
+
+      demo_nginx_port:
+        type: int
+        required: false
+        default: 8080
+        description: TCP port the service listens on.
+
+      demo_nginx_bind_address:
+        type: str
+        required: false
+        default: 127.0.0.1
+        description: >-
+          Interface address to bind. Defaults to the loopback address; a wider
+          bind is an explicit decision the caller makes.
+
+      demo_nginx_enable_ssl:
+        type: bool
+        required: false
+        default: false
+        description: Whether to configure TLS for the service.
+
+      demo_nginx_packages:
+        type: list
+        elements: str
+        required: false
+        default:
+          - nginx
+          - nginx-common
+        description: Additional packages this role installs.
+
+      demo_nginx_config:
+        type: dict
+        required: false
+        default: {}
+        description: Service configuration rendered into the template.
+        options:
+          host:
+            type: str
+            required: false
+            default: localhost
+            description: Hostname the service advertises.
+          port:
+            type: int
+            required: false
+            default: 5432
+            description: Port of the backing service.
+
+      demo_nginx_config_dir:
+        type: path
+        required: false
+        default: /etc/nginx
+        description: Directory holding the service configuration.
+
+      demo_nginx_state:
+        type: str
+        required: false
+        default: present
+        choices:
+          - present
+          - absent
+        description: >-
+          Whether the role installs or removes the service. "latest" is
+          deliberately absent: it makes every run non-idempotent.
+
+# Available types: str, int, float, bool, list, dict, path, raw, jsonarg, json,
+# bytes, bits. Use path rather than str for a filesystem path so that Ansible
+# expands "~" and reports a non-absolute value.

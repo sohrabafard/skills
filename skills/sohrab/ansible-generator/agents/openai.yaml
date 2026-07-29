@@ -1,7 +1,7 @@
 interface:
   display_name: "Ansible Generator"
-  short_description: "Generate idempotent, FQCN-correct Ansible playbooks/roles, then validate"
-  default_prompt: "Use $ansible-generator to scaffold production Ansible playbooks/roles/inventories (FQCN modules, idempotency, vault, structure), then run $ansible-validator and fix until clean. Read its references for patterns."
+  short_description: "Generate idempotent Ansible that parses and lints clean"
+  default_prompt: "Use $ansible-generator when a file that does not yet exist has to exist when you are done: playbooks, roles, task files, inventories, project scaffolding. Start from its assets/templates/, follow its references for the task shape and the module choice, then run the delivery gate: check_templates.py on what you generated, then $ansible-validator's validate_playbook.sh or validate_role.sh, scan_secrets.sh and check_task_safety.py. Exit 0 from every one is the only pass; exit 2 means a check could not run and is reported as blocked. When every file already exists and the job is a verdict, use $ansible-validator instead."
 
 policy:
   allow_implicit_invocation: true

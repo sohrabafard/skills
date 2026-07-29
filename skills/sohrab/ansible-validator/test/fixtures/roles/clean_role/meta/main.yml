@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: clean_role
+  namespace: fixture
+  author: ansible-validator fixtures
+  description: A minimal role that must pass validate_role.sh cleanly.
+  license: MIT
+  min_ansible_version: "2.19"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+    - name: EL
+      versions:
+        - "9"
+        - "10"
+  galaxy_tags:
+    - fixture
+    - testing
+
+dependencies: []

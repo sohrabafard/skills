@@ -1,0 +1,27 @@
+# Deprecated top-level keys, an over-long cache key, six fallback keys, no policy,
+# and a floating image tag.
+image: moby/buildkit:rootless
+
+stages:
+  - build
+
+build:
+  stage: build
+  timeout: 10 minutes
+  cache:
+    key:
+      files:
+        - composer.lock
+        - package-lock.json
+        - yarn.lock
+    fallback_keys:
+      - a
+      - b
+      - c
+      - d
+      - e
+      - f
+    paths:
+      - vendor/
+  script:
+    - make build

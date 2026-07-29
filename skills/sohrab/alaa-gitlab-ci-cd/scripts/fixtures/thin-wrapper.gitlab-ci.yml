@@ -1,0 +1,16 @@
+# The fleet's standard shape: a wrapper that includes the platform pipeline and
+# adds one job. Cross-file names must be notes, never errors.
+include:
+  - project: platform/service-ci-kit
+    ref: v1.0.0
+    file: gitlab/platform-app-php-service.yml
+
+test_sqlite:
+  extends: .base_job
+  stage: smoke
+  timeout: 10 minutes
+  needs:
+    - job: make_tag_version
+      artifacts: true
+  script:
+    - php artisan test --parallel

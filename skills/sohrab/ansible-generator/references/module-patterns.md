@@ -1,4 +1,14 @@
-# Common Ansible Module Usage Patterns
+# Module usage patterns
+
+Copy-ready module usage, organised by operation. Read this when choosing a
+module. What a module name maps to *today* is `ansible-validator`
+(`/ansible-validator`, `$ansible-validator`) at its
+`references/module_alternatives.md`; this file shows how to call the module once
+you know its name.
+
+Every `ansible.builtin.*` name below is verified against ansible-core's routing
+table by `python3 <ansible-validator>/scripts/check_module_currency.py`, which
+reads it offline. Re-run that after editing this file.
 
 ## Core Modules (ansible.builtin)
 
@@ -41,7 +51,7 @@
 
 ```yaml
 # NOTE: Use ansible.builtin.dnf for RHEL 8+ and CentOS 8+
-# ansible.builtin.yum is deprecated in favor of dnf for modern RHEL systems
+# ansible.builtin.yum no longer exists as a module; the name is an action redirect to dnf. <!-- check-module-currency:ignore -->
 
 - name: Install package with dnf
   ansible.builtin.dnf:
@@ -64,24 +74,22 @@
     state: present
 ```
 
-#### ansible.builtin.yum (RHEL 7/CentOS 7 - Legacy)
+#### There is no `ansible.builtin.yum` any more <!-- check-module-currency:ignore -->
 
-```yaml
-# NOTE: Only use for RHEL 7/CentOS 7 systems
-# For RHEL 8+ use ansible.builtin.dnf instead
+`yum.py` is gone from ansible-core. The name `ansible.builtin.yum:` still <!-- check-module-currency:ignore -->
+executes, because core's routing table carries `yum: redirect:
+ansible.builtin.dnf` under `action:` — so a task written for RHEL 7 now runs
+**dnf**, and RHEL 7 has no dnf. Advice of the form "use `ansible.builtin.yum` <!-- check-module-currency:ignore -->
+for RHEL 7" names a module that cannot do what the sentence says.
 
-- name: Install package with yum (legacy systems)
-  ansible.builtin.yum:
-    name: nginx
-    state: present
-    update_cache: true
+Write `ansible.builtin.dnf` and state the RHEL 8-or-newer scope, as the dnf
+section above does. For a play that must span both families, use
+`ansible.builtin.package`, which selects the manager from the target's facts.
 
-- name: Install from specific repository (legacy)
-  ansible.builtin.yum:
-    name: nginx
-    state: present
-    enablerepo: epel
-```
+Verify any name offline with
+`python3 <ansible-validator>/scripts/check_module_currency.py <path>`; the
+mapping of what each removed name became is `ansible-validator
+references/module_alternatives.md`.
 
 ### File Operations
 
@@ -150,7 +158,7 @@
   ansible.builtin.copy:
     src: /tmp/source.txt
     dest: /opt/destination.txt
-    remote_src: yes
+    remote_src: true
 ```
 
 #### ansible.builtin.template
@@ -174,7 +182,7 @@
   ansible.builtin.fetch:
     src: /var/log/app/error.log
     dest: /tmp/logs/{{ inventory_hostname }}/
-    flat: yes
+    flat: true
 ```
 
 #### ansible.builtin.lineinfile
@@ -239,6 +247,11 @@
     enabled: false
 ```
 
+#### ansible.builtin.systemd_service
+
+`systemd_service` is the canonical name; `ansible.builtin.systemd` is its alias
+and both resolve to the same module. Write the canonical name in new code.
+
 #### ansible.builtin.systemd
 
 ```yaml
@@ -256,7 +269,7 @@
 - name: Mask service
   ansible.builtin.systemd:
     name: apache2
-    masked: yes
+    masked: true
 ```
 
 ### User and Group Management
@@ -272,7 +285,7 @@
     groups: docker,sudo
     shell: /bin/bash
     home: /home/appuser
-    createhome: yes
+    createhome: true
     state: present
 
 - name: Set user password
@@ -298,24 +311,31 @@
     state: present
 ```
 
-#### ansible.builtin.authorized_key
+#### ansible.posix.authorized_key
+
+`authorized_key` left ansible-core. `ansible.builtin.authorized_key` resolves <!-- check-module-currency:ignore -->
+only through a compatibility redirect. Write `ansible.posix.authorized_key` and
+declare `ansible.posix` in `requirements.yml`.
 
 ```yaml
-- name: Add SSH authorized key
-  ansible.builtin.authorized_key:
+- name: Add the deploy key to the application account
+  ansible.posix.authorized_key:
     user: appuser
     state: present
-    key: "{{ lookup('file', '/home/user/.ssh/id_rsa.pub') }}"
+    key: "{{ lookup('file', 'files/deploy_key.pub') }}"
+    exclusive: false
 
-- name: Add multiple keys
-  ansible.builtin.authorized_key:
+- name: Add every operator key
+  ansible.posix.authorized_key:
     user: appuser
     state: present
     key: "{{ item }}"
-  loop:
-    - ssh-rsa AAAAB3... user1@host
-    - ssh-rsa AAAAB3... user2@host
+  loop: "{{ operator_public_keys }}"
 ```
+
+Read the public key from a file in the role, not from a developer's home
+directory: `lookup('file', '/home/user/.ssh/id_rsa.pub')` resolves differently
+for every person who runs the play.
 
 ### Command Execution
 
@@ -371,7 +391,7 @@
     repo: https://github.com/user/repo.git
     dest: /opt/app
     version: main
-    force: yes
+    force: true
 
 - name: Clone specific branch/tag
   ansible.builtin.git:
@@ -384,7 +404,7 @@
     repo: git@github.com:user/repo.git
     dest: /opt/app
     key_file: /home/deploy/.ssh/id_rsa
-    accept_hostkey: yes
+    accept_hostkey: true
 ```
 
 ### Archive Operations
@@ -403,25 +423,36 @@
   ansible.builtin.unarchive:
     src: /tmp/app.tar.gz
     dest: /opt/
-    remote_src: yes
+    remote_src: true
 
 - name: Download and extract
   ansible.builtin.unarchive:
     src: https://example.com/app.tar.gz
     dest: /opt/
-    remote_src: yes
+    remote_src: true
 ```
 
-#### ansible.builtin.archive
+#### community.general.archive
+
+`archive` left ansible-core. `ansible.builtin.archive` resolves only through a <!-- check-module-currency:ignore -->
+compatibility redirect, so a task using that name runs on a machine where
+`community.general` happens to be installed and fails on one where it is not.
+Write the collection name and declare the collection.
 
 ```yaml
-- name: Create archive
-  ansible.builtin.archive:
+# requirements.yml
+#   collections:
+#     - name: community.general
+#       version: ">=11.0.0"
+
+- name: Create a backup archive
+  community.general.archive:
     path:
       - /opt/app/config
       - /opt/app/data
     dest: /tmp/backup.tar.gz
     format: gz
+    mode: "0600"
 ```
 
 ### Download Operations
@@ -535,7 +566,7 @@
       - db_password is defined
     fail_msg: "Configuration validation failed"
     success_msg: "Configuration is valid"
-    quiet: no
+    quiet: false
 ```
 
 ### Set Facts
@@ -669,7 +700,7 @@
   rescue:
     - name: Rollback on failure
       ansible.builtin.copy:
-        remote_src: yes
+        remote_src: true
         src: "{{ deploy_result.backup_file }}"
         dest: /opt/app/app.jar
       when: deploy_result.backup_file is defined
@@ -705,7 +736,7 @@
   rescue:
     - name: Restore backup on failure
       ansible.builtin.copy:
-        remote_src: yes
+        remote_src: true
         src: "{{ config_update.backup_file }}"
         dest: /etc/nginx/nginx.conf
       when: config_update.backup_file is defined
@@ -813,7 +844,7 @@
       - /opt/backups
       - /var/backups
     patterns: "backup-.*\\.tar\\.gz$"
-    use_regex: yes
+    use_regex: true
     file_type: file
   register: backup_files
 
@@ -822,7 +853,7 @@
   ansible.builtin.find:
     paths: /tmp
     file_type: directory
-    recurse: no
+    recurse: false
   register: directories
 
 - name: Remove empty directories
@@ -946,7 +977,7 @@
     -out "/tmp/{{ inventory_hostname }}.crt"
     -subj "/CN={{ inventory_hostname }}"
   delegate_to: localhost
-  become: no
+  become: false
 ```
 
 #### run_once
@@ -979,41 +1010,49 @@
   delegate_to: "{{ groups['database'] | first }}"
 ```
 
-#### local_action
+#### Running a task on the control node
+
+Use `delegate_to: localhost`. `local_action` is reported by ansible-lint's
+`deprecated-local-action` rule, which is tagged `autofix`, so
+`ansible-lint --fix` rewrites it for you.
 
 ```yaml
-# Execute on control node
-- name: Generate configuration locally
-  local_action:
-    module: ansible.builtin.template
+- name: Render the configuration on the control node
+  ansible.builtin.template:
     src: config.j2
-    dest: "/tmp/{{ inventory_hostname }}_config.yml"
+    dest: "{{ build_dir }}/{{ inventory_hostname }}_config.yml"
+    mode: "0644"
+  delegate_to: localhost
 
-# Fetch file from remote to local
-- name: Backup configuration locally
-  local_action:
-    module: ansible.builtin.copy
+- name: Keep a copy of the live configuration on the control node
+  ansible.builtin.copy:
     content: "{{ lookup('file', '/etc/app/config.yml') }}"
-    dest: "/backup/{{ inventory_hostname }}_config.yml"
+    dest: "{{ backup_dir }}/{{ inventory_hostname }}_config.yml"
+    mode: "0600"
+  delegate_to: localhost
 
-# Send notification from control node
-- name: Send deployment notification
-  local_action:
-    module: ansible.builtin.uri
+- name: Announce the deployment once
+  ansible.builtin.uri:
     url: https://chat.example.com/webhook
     method: POST
     body_format: json
     body:
-      message: "Deploying to {{ inventory_hostname }}"
+      message: "Deploying to {{ ansible_play_hosts | length }} host(s)"
+  delegate_to: localhost
   run_once: true
 
-# Local script execution
-- name: Run local analysis script
-  local_action:
-    module: ansible.builtin.command
-    cmd: python3 analyze.py --host {{ inventory_hostname }}
+- name: Run the local analysis script
+  ansible.builtin.command:
+    cmd: "python3 analyze.py --host {{ inventory_hostname | quote }}"
+  delegate_to: localhost
   register: analysis_result
+  changed_when: false
 ```
+
+A value interpolated into a `command` on the control node runs on **your**
+machine. `| quote` is not optional there. `ansible-validator
+references/security_checklist.md` section S6 states the rule and
+`check_task_safety.py` reports a violation.
 
 ## Common Collection Modules
 
@@ -1093,7 +1132,7 @@
     name: net.ipv4.ip_forward
     value: '1'
     state: present
-    reload: yes
+    reload: true
 ```
 
 ## Cloud Provider Modules
@@ -1203,7 +1242,7 @@
     object: "backups/{{ ansible_date_time.date }}/app.tar.gz"
     src: /tmp/app.tar.gz
     mode: put
-    encrypt: yes
+    encrypt: true
 
 # Download file from S3
 - name: Download configuration from S3

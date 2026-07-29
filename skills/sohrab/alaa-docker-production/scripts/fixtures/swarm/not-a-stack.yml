@@ -1,0 +1,5 @@
+# Fixture: a YAML file that parses cleanly and is not a stack file. The checker must exit 2, not
+# 0: "I found no services to check" is not the same verdict as "every service is compliant".
+name: fixture-not-a-stack
+volumes:
+  storage-data:

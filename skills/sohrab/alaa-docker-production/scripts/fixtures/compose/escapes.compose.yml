@@ -1,0 +1,16 @@
+# Fixture: the two grep traps. Every `$` below either survives to the container as a literal or
+# lives inside a comment, so Compose never interpolates any of it and the checker must report
+# zero findings. A naive grep for `${` reports six false positives here.
+# $UNBRACED and ${UNMODIFIED} written in a comment line are never interpolated by Compose.
+name: fixture-escapes
+
+services:
+  platform-app-php:
+    image: ${SERVICE_IMAGE:-service:1.4.2}
+    command: ["sh", "-c", "echo $${HOME} && date +%s && printf '%s' $$0"]
+    environment:
+      APP_KEY: ${APP_KEY:?APP_KEY must come from the service .env}
+      LITERAL_DOLLAR: "the price is $$5"
+      NGINX_UPSTREAM_TEMPLATE: "proxy_pass http://$${upstream}$${request_uri};"
+      DOUBLE_ESCAPED_THEN_REAL: "$$$${LITERAL}"
+      SHELL_SUBSTITUTION_AT_RUNTIME: "$$(hostname -f)"

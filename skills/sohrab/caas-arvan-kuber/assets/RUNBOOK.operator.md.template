@@ -1,165 +1,147 @@
-# RUNBOOK — <CHART/APP NAME> on Arvan CaaS
+# RUNBOOK — APPLICATION NAME on Arvan CaaS
+
+Replace every capitalised placeholder. This file is for the person on call, so keep every command copy-and-paste ready and keep every answer above the fold.
+
+Two skills own the material behind this runbook: `/caas-arvan-kuber` (`$caas-arvan-kuber`) for Arvan platform facts, and `/alaa-k8s-helm` (`$alaa-k8s-helm`) for chart authoring, the validation gate register, and the manifest checker invoked below.
 
 ## Scope
 
-- Namespace: `<namespace>`
-- Release: `<release>`
-- Chart version: `<version>`
-- OpenAPI baseline: `../references/arvan-caas-openAPI-1.25.json`
+- Namespace: `NAMESPACE`
+- Release: `RELEASE`
+- Chart version: `VERSION`
+- Kubernetes line this release targets: `LINE` — re-derive with `bash scripts/verify-cluster.sh NAMESPACE`
+- Persistent storage attached: `YES or NO` — if YES, this workload **cannot be scaled** while the storage is attached
 
-## Day-0: Initial install checklist
+## Day 0: first install
 
-1) Discovery
-- run `verify-cluster.sh` and confirm required APIs/RBAC
-- verify namespace quota/limitrange visibility
+1. **Discovery.** `bash scripts/verify-cluster.sh NAMESPACE RUNNER_SERVICEACCOUNT`. It exits non-zero when a required API or permission is missing; do not proceed on a non-zero exit.
+2. **Resource policy.** Every container has explicit resources with `requests` equal to `limits`, and `ephemeral-storage` when the namespace LimitRange expects it.
+3. **Secret strategy.** Choose one mode and record it here: the chart creates the Secret, or the chart references an existing one. Confirm every secret-bearing filename is in `.gitignore`.
+4. **Render and gate.**
 
-2) Resource policy
-- every workload container has explicit resources
-- requests/limits parity enforced for Arvan
-- `ephemeral-storage` set when required
+   ```bash
+   bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
+     --values values.yaml --secret-values values.secret.yaml \
+     --out build/rendered.yaml --keep
+   python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml --profile arvan
+   kubectl apply --dry-run=server -f build/rendered.yaml
+   rm -f build/rendered.yaml
+   ```
 
-3) Secret strategy
-- choose one mode:
-  - Helm-managed secret creation, or
-  - existing secret reference
-- confirm `values.secret.yaml` is excluded from git
+5. **Deploy.** Use the install command in the operator README, including the Helm-major-dependent rollback flag. No `--create-namespace`.
+6. **Verify.** `kubectl -n NAMESPACE rollout status deploy/NAME` and check the application's own readiness endpoint, not just the pod phase.
 
-4) Render and dry run
+## Day 1: routine operations
 
-```bash
-bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh ./helm/<chart> <namespace> values.yaml values.secret.yaml rendered.yaml [values.<env>.yaml]
-kubectl apply --dry-run=client -f rendered.yaml
-```
-
-5) Deploy and verify readiness
+### Scale a stateless workload
 
 ```bash
-helm upgrade --install <release> ./helm/<chart> -n <namespace> \
-  -f values.yaml -f values.<env>.yaml -f values.secret.yaml \
-  --wait --timeout 10m --rollback-on-failure
-kubectl -n <namespace> get pods
+kubectl -n NAMESPACE scale deploy/NAME --replicas=N
 ```
 
-## Day-1: Operations
+Check the ResourceQuota first: on a tenant platform an exhausted quota looks exactly like insufficient cluster capacity, and the pods sit `Pending` with a quota event.
 
-### Scale stateless workloads
+### Scale a stateful workload
+
+**You cannot, while persistent storage is attached.** Arvan disables both manual and automatic scaling for such workloads. The two available paths:
+
+1. run additional independent instances, each with its own disk, or
+2. detach the storage, which restarts the application.
+
+Record which one this service uses, who approves it, and what the expected downtime is. `/alaa-reliability-sla` (`$alaa-reliability-sla`) decides whether the downtime is acceptable.
+
+### Rotate an application secret
+
+1. Update `values.secret.yaml`, or the existing Secret when the chart references one.
+2. Run the upgrade. **A change to a mounted Secret does not restart pods on its own** — the chart carries a checksum annotation on the Pod template, or you restart explicitly with `kubectl -n NAMESPACE rollout restart deploy/NAME`.
+3. Confirm a new pod started **and** that the application accepted the new credential, not just that the pod is Running.
+
+### Rotate a registry credential
+
+1. Update the `kubernetes.io/dockerconfigjson` Secret.
+2. Confirm the workload's `imagePullSecrets` still names it.
+3. Force a fresh pull and watch it succeed. A wrong pull credential is invisible until the next pull, which may be days away.
+
+## Day 2: maintenance
+
+### Upgrade the chart or the application
 
 ```bash
-kubectl -n <namespace> scale deploy/<name> --replicas=3
+bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
+  --values values.yaml --secret-values values.secret.yaml --out build/rendered.yaml --keep
+python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml \
+  --baseline build/current.yaml --profile arvan
+rm -f build/rendered.yaml build/current.yaml
+helm upgrade RELEASE ./helm/CHART -n NAMESPACE \
+  -f values.yaml -f values.secret.yaml --wait --timeout TIMEOUT
 ```
 
-### Scale stateful workloads
+`--baseline` compares against the currently deployed render (`helm get manifest RELEASE -n NAMESPACE > build/current.yaml`, written to a mode-0600 file) and fails when an immutable selector or a StatefulSet volume-claim name changed. Both are rejected by the API server, and finding out at `helm upgrade` time costs a failed release.
 
-- Do not use HPA by default.
-- Follow application replication rules first.
-- Scale only with explicit operator approval/runbook steps.
+### Re-check the platform line
 
-```bash
-kubectl -n <namespace> scale sts/<name> --replicas=<n>
-```
-
-### Rotate app secrets
-
-1) Update `values.secret.yaml` or existing secret.
-2) Run Helm upgrade.
-3) Verify rollout and app health checks.
-
-### Rotate registry credentials
-
-1) Update dockerconfigjson secret content.
-2) Confirm `imagePullSecrets` still references expected secret.
-3) Validate new pod pulls succeed.
-
-## Day-2: Maintenance
-
-### Upgrade chart/application
-
-```bash
-bash .codex/skills/caas-arvan-kuber/scripts/render-helm.sh ./helm/<chart> <namespace> values.yaml values.secret.yaml rendered.yaml [values.<env>.yaml]
-helm upgrade <release> ./helm/<chart> -n <namespace> \
-  -f values.yaml -f values.<env>.yaml -f values.secret.yaml \
-  --wait --timeout 10m
-```
+Run `bash scripts/verify-cluster.sh NAMESPACE` at least once per quarter and after any Arvan maintenance announcement. If the reported line changed, re-read `caas-arvan-kuber references/arvan-capability-matrix.md` and re-gate the release: a manifest built for the old line may now be rejected.
 
 ### Rollback
 
 ```bash
-helm history <release> -n <namespace>
-helm rollback <release> <revision> -n <namespace>
+helm history RELEASE -n NAMESPACE
+helm rollback RELEASE REVISION -n NAMESPACE
 ```
 
-## Incident playbook
+## Incident playbooks
 
-### 1) Helm render/parse failure
-
-Checks:
+### 1. Helm render or parse failure
 
 ```bash
-helm lint ./helm/<chart> -f values.yaml -f values.secret.yaml
-helm template <release> ./helm/<chart> -n <namespace> -f values.yaml -f values.secret.yaml > rendered.yaml
+bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE --values values.yaml
 ```
 
-Likely causes:
+Usually a wrong chart path, an unbuilt dependency, or YAML indentation inside a template. Nothing reached the cluster, so there is nothing to roll back.
 
-- wrong chart path or missing dependency artifacts
-- YAML indentation/quoting issues in templates
-
-### 2) `ImagePullBackOff` / auth pull errors
-
-Checks:
+### 2. ImagePullBackOff or a pull authentication error
 
 ```bash
-kubectl -n <namespace> describe pod <pod>
-kubectl -n <namespace> get secret <pull-secret> -o yaml
+kubectl -n NAMESPACE describe pod POD
+kubectl -n NAMESPACE get secret PULL_SECRET -o jsonpath='{.type}'
 ```
 
-Fixes:
+Confirm the Secret type is `kubernetes.io/dockerconfigjson` and that the Pod or its ServiceAccount references it. For a GitLab Runner job pod, the executor's own pull configuration is separate from the manager's, and `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns both.
 
-- verify secret type is `kubernetes.io/dockerconfigjson`
-- verify pod/serviceaccount `imagePullSecrets` includes the expected secret
-- for GitLab Runner, verify executor job pod has `image_pull_secrets`
+### 3. Forbidden, while the Helm release looks healthy
 
-### 3) RBAC denial (`cannot create secrets/configmaps/pods`)
-
-Checks:
+**Do not broaden a RoleBinding yet.** Collect:
 
 ```bash
-kubectl -n <namespace> auth can-i create secrets
-kubectl -n <namespace> auth can-i create configmaps
-kubectl -n <namespace> auth can-i create pods
-kubectl -n <namespace> get rolebinding <name> -o yaml
+kubectl -n NAMESPACE get rolebinding -o custom-columns=NAME:.metadata.name,SUBJECT_KINDS:.subjects[*].kind,SUBJECT_NAMESPACES:.subjects[*].namespace,SUBJECT_NAMES:.subjects[*].name
+TOKEN="$(kubectl -n NAMESPACE create token SERVICEACCOUNT)"
+kubectl --token="$TOKEN" -n NAMESPACE auth can-i create pods
+unset TOKEN
 ```
 
-Fixes:
+The token check evaluates the ServiceAccount's real identity; `--as` does not, because it also needs impersonation rights for the caller. If the RoleBinding subject namespace differs from the one you typed, this is the alias-versus-canonical case: read `caas-arvan-kuber references/arvan-rbac-namespace-facts.md`.
 
-- align `RoleBinding` subject namespace with effective service account identity
-- verify alias vs canonical namespace identity before broadening permissions
-- avoid cluster-scoped RBAC unless explicitly required
-
-### 4) No rollout after successful Helm upgrade
-
-Checks:
+### 4. No rollout after a successful upgrade
 
 ```bash
-kubectl -n <namespace> rollout status deploy/<name>
-kubectl -n <namespace> get events --sort-by=.metadata.creationTimestamp
+kubectl -n NAMESPACE rollout status deploy/NAME
+kubectl -n NAMESPACE get events --sort-by=.lastTimestamp
+kubectl -n NAMESPACE get resourcequota
 ```
 
-Action:
+Quota exhaustion, a failing probe, and an image pull error all present as "the upgrade succeeded and nothing changed". The events tell you which. A restart is not a fix until you know which of the three it was.
+
+### 5. Admission denied on create
+
+Almost always a container without resources, or `requests` not equal to `limits`. Migration, init, and hook Jobs are containers too and are the usual omission.
 
 ```bash
-kubectl -n <namespace> rollout restart deploy/<name>
+python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml --profile arvan
+kubectl -n NAMESPACE get limitrange -o yaml
 ```
 
-### 5) Admission deny due to resources
+The checker names the container; the LimitRange tells you whether a bound was exceeded rather than a field omitted.
 
-Symptoms:
+### 6. A kind is rejected as unknown
 
-- rejected ratio/policy checks
-- missing resources fields
-
-Fix:
-
-- enforce explicit resources on all containers
-- enforce Arvan parity (`requests == limits`)
-- add `ephemeral-storage` when policy expects it
+The cluster is not on the line this release was built for. Re-run `bash scripts/verify-cluster.sh NAMESPACE`, read the matching column of the capability matrix, and re-gate. Do not remove the object silently; record what was dropped and what replaces it.

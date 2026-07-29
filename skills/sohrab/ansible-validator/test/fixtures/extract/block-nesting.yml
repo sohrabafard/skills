@@ -1,0 +1,23 @@
+---
+# Fixture: extract_ansible_info.py --self-test asserts that modules inside
+# block, rescue and always are all seen. Before the repair the skip list fired
+# its 'continue' before the recursion below it, so no module inside a block was
+# ever recorded.
+- name: Fixture play with a block, a rescue and an always
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Attempt an operation with recovery
+      block:
+        - name: Report progress
+          ansible.builtin.debug:
+            msg: "inside block"
+      rescue:
+        - name: Fail with a clear reason
+          ansible.builtin.fail:
+            msg: "inside rescue"
+      always:
+        - name: Remove the lock file
+          ansible.builtin.file:
+            path: /tmp/fixture.lock
+            state: absent

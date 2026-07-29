@@ -1,3 +1,16 @@
+# haproxy-hpa.yaml
+# Charter: scale HAProxy on CPU.
+# Preconditions: metrics-server must be installed or the HPA reports unknown metrics and never
+#   scales, in either direction, silently.
+# Failure mode: HAProxy's CPU cost is dominated by TLS handshakes, not by request volume, so
+#   CPU tracks NEW connections rather than throughput. On a keep-alive-heavy workload CPU stays
+#   flat while connection queues grow, and this HPA will not react. If the saturation signal is
+#   queue depth rather than CPU, the metric is a custom metric and the choice of which signal
+#   gates scaling is decided by /alaa-observability-soc ($alaa-observability-soc) with the
+#   headroom target from /alaa-reliability-sla ($alaa-reliability-sla).
+#   Scaling in during a traffic trough terminates pods, and every termination runs the drain
+#   path in haproxy-deployment.yaml. A stabilization window shorter than that drain turns
+#   scale-in into a 502 source.
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -9,6 +22,10 @@ spec:
     name: haproxy
   minReplicas: 2
   maxReplicas: 10
+  behavior:
+    scaleDown:
+      # Longer than terminationGracePeriodSeconds in haproxy-deployment.yaml.
+      stabilizationWindowSeconds: 300
   metrics:
   - type: Resource
     resource:

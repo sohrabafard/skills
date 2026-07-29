@@ -1,0 +1,73 @@
+# Fixture: the Arvan-only predicates that caas-arvan-kuber contributes.
+# Under --profile default this file reports only the generic rules; under
+# --profile arvan it additionally reports ARVAN-PARITY, ARVAN-HPA-TARGET and
+# ARVAN-ABSENT-KIND.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: reports
+spec:
+  serviceName: reports
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reports
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: reports
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: reports
+          image: registry.example.com/reports@sha256:2222222222222222222222222222222222222222222222222222222222222222
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 256Mi
+            limits:
+              cpu: "0.5"
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: reports
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: reports
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: reports
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reports

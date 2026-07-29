@@ -1,0 +1,26 @@
+# Fixture: every environment line below is a deliberate violation of exactly one rule, and the
+# trailing comment names it. The self-test asserts the count per rule, so adding or removing a
+# line here without updating check-compose-interpolation.mjs breaks the self-test on purpose.
+name: fixture-violations
+
+services:
+  platform-app-php:
+    image: ${SERVICE_IMAGE:-service:1.4.2}
+    environment:
+      DB_HOST: $DB_HOST                                                      # bare-interpolation
+      DB_PORT: $DB_PORT                                                      # bare-interpolation
+      AWS_REGION: ${AWS_REGION}                                              # no-modifier
+      TENANT_ID: ${TENANT_ID-fallback}                                       # colonless-modifier
+      SHARD_ID: ${SHARD_ID?shard is required}                                # colonless-modifier
+      FEATURE_FLAG: ${FEATURE_FLAG:+on}                                      # unsupported-modifier
+      DB_PASSWORD: ${DB_PASSWORD:-}                                          # safety-control-default
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-app}                           # safety-control-default
+      DB_PROVISION_ADMIN_PASSWORD: ${DB_PROVISION_ADMIN_PASSWORD:-postgres}  # safety-control-default
+      APP_KEY: ${APP_KEY:-base64:ZmFrZS1maXh0dXJlLWtleQ==}                   # safety-control-default
+      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-0}                         # safety-control-disabled
+      TLS_VERIFY_PEER: ${TLS_VERIFY_PEER:-false}                             # safety-control-disabled
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-*}                                 # safety-control-disabled
+      # safety-control-waiver: LOCAL_ONLY_TOKEN reason=fixture value, this file is never deployed
+      LOCAL_ONLY_TOKEN: ${LOCAL_ONLY_TOKEN:-fixture}                         # waived, no finding
+      # safety-control-waiver: LOG_LEVEL
+      LOG_LEVEL: ${LOG_LEVEL:-info}                                          # waiver-without-reason

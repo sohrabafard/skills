@@ -1,39 +1,33 @@
-#!/bin/bash
-# Wrapper script for extract_ansible_info.py that handles PyYAML dependency
-# Creates a temporary venv if PyYAML is not available
+#!/usr/bin/env bash
+#
+# extract_ansible_info_wrapper.sh - resolve an interpreter with PyYAML and run
+# extract_ansible_info.py. Every argument passes through unchanged.
+#
+# Requires bash 4.0 or newer. Exit codes are the Python script's: 0 clean,
+# 2 could not run, 64 usage error.
 
-set -e
+set -uo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON_SCRIPT="$SCRIPT_DIR/extract_ansible_info.py"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-# Check if we have arguments
-if [ $# -lt 1 ]; then
-    echo "Usage: extract_ansible_info_wrapper.sh <playbook-or-role-path>" >&2
-    exit 1
+PY="$AV_SCRIPT_DIR/extract_ansible_info.py"
+
+if ! PYTHON_BIN="$(command -v python3)"; then
+    if ! PYTHON_BIN="$(command -v python)"; then
+        av_cannot_run "python3 is not on PATH; extract_ansible_info.py cannot run"
+    fi
 fi
 
-TARGET_PATH="$1"
-
-# Try to run with system Python first
-if python3 -c "import yaml" 2>/dev/null; then
-    # PyYAML is available, run directly
-    python3 "$PYTHON_SCRIPT" "$TARGET_PATH"
-    exit $?
+if [ ! -f "$PY" ]; then
+    av_cannot_run "extract_ansible_info.py not found beside this script at $PY"
 fi
 
-# PyYAML not available, create temporary venv
-TEMP_VENV=$(mktemp -d -t ansible-validator.XXXXXX)
-trap "rm -rf $TEMP_VENV" EXIT
+if ! "$PYTHON_BIN" -c "import yaml" >/dev/null 2>&1; then
+    if av_bootstrap; then
+        PYTHON_BIN="$(av_venv_bin "$AV_VENV")/python"
+    else
+        av_cannot_run "PyYAML is not importable and no tool environment could be created. Install it with: python3 -m pip install -r scripts/requirements.txt"
+    fi
+fi
 
-echo "PyYAML not found in system Python. Creating temporary environment..." >&2
-
-# Create venv and install PyYAML
-python3 -m venv "$TEMP_VENV" >&2
-source "$TEMP_VENV/bin/activate" >&2
-pip install --quiet pyyaml >&2
-
-# Run the script
-python3 "$PYTHON_SCRIPT" "$TARGET_PATH"
-
-# Cleanup happens automatically via trap
+exec "$PYTHON_BIN" "$PY" "$@"

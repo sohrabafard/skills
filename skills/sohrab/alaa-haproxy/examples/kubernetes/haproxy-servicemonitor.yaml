@@ -1,3 +1,15 @@
+# haproxy-servicemonitor.yaml
+# Charter: point Prometheus Operator at the metrics Service.
+# Preconditions: requires the Prometheus Operator CRDs; on a cluster without them this manifest
+#   fails to apply with "no matches for kind ServiceMonitor". Requires the metrics frontend to
+#   bind a pod-reachable address - see haproxy-configmap.yaml - and requires the NetworkPolicy
+#   to permit the monitoring namespace on 8405.
+# Failure mode: `extra-counters` (added in HAProxy 3.0) is off by default and the counters it
+#   gates are simply ABSENT from the exposition, with no error, so a dashboard panel built on
+#   one of them stays empty and reads as "no traffic". Add it as a scrape param when a panel
+#   needs it. Which metrics are required, and what alerts on them, is decided by
+#   /alaa-observability-soc ($alaa-observability-soc); their names by /alaa-services-contract
+#   ($alaa-services-contract).
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -9,5 +21,9 @@ spec:
       expose-metrics: "true"
   endpoints:
   - port: metrics
+    path: /metrics
     interval: 30s
     scrapeTimeout: 10s
+    # Uncomment when a panel needs a counter that is gated behind it.
+    # params:
+    #   extra-counters: ["on"]

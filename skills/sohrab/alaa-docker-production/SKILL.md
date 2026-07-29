@@ -1,81 +1,53 @@
 ---
 name: alaa-docker-production
-description: "Use this skill when the task involves production Dockerfile hardening, Docker Compose or Docker Swarm delivery patterns, registry mirror or private-registry strategy, shared-network or shared-infra container runtime design, secret and healthcheck handling, image size, or deterministic production container guidance. Do not use it when pure app logic changes."
+description: "Use when writing or reviewing a Dockerfile, .dockerignore, Compose file, Swarm stack file, build secret, attestation flag, registry or mirror reference, healthcheck, rollout or resource-limit key, or the interpolation form of a variable in a production-shaped file. It owns how the image and runtime file are expressed and decides no gate. Not for gate policy (alaa-frontend-devops), runner expression (alaa-gitlab-ci-cd), Kubernetes or Helm (caas-arvan-kuber, alaa-k8s-helm), which generator variable exists (service-runtime-kit-governance), or proxy directives (alaa-haproxy)."
 ---
-
-
-
 
 # Alaa Docker Production
 
-## Purpose
+This skill owns the container layer of a fleet running at 99.99%: every Dockerfile, Compose file
+and Swarm stack file, and the interpolation form of every variable in them. It is sole owner of
+the Dockerfile: `service-runtime-kit` generates none (`README.md:182`).
 
-Use this skill when the task needs the architectural or policy guidance owned by Alaa Docker Production.
+## Ownership, and when not to use this skill
 
-Keep this top-level file small. Load the references for the full rules, examples, and checklists.
+`alaa-docker-production` owns how the build and runtime images and any Compose or Swarm stack file
+are expressed — the Dockerfile and its stages, the order and contents of its layers, what survives
+into the final image, and every key in a Compose or stack file including the interpolation form of
+every variable written into it — and it decides no gate: `/alaa-frontend-devops`
+(`$alaa-frontend-devops`) owns the frontend delivery gate register and states the obligations an
+image must satisfy, `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how a gate is expressed on a
+runner, and `/alaa-haproxy` (`$alaa-haproxy`) owns how a cache or routing decision is expressed as
+a directive. When a gate names a property of an image or a Compose file, this skill writes the
+instruction or key that satisfies it and does not change the gate.
 
-## When to use
+`/service-runtime-kit-governance` (`$service-runtime-kit-governance`) owns which generator variable
+expresses a runtime value — its name, its tracked default, which contract file holds it, and
+whether changing it forces a re-render. This skill owns the Docker or Compose construct that
+variable is interpolated into and the interpolation form it is written in. A new knob goes there;
+a change to what the generated file looks like comes here. Where a variable's
+default would silently disable a safety control, the interpolation form is this skill's call, and
+it is `${VAR:?message}` with no default, whatever tracked default the generator carries.
 
-- Dockerfile or Compose hardening
-- Docker Compose or Docker Swarm delivery mechanics
-- image size or attack-surface reduction
-- runtime user, healthcheck, or secret handling changes
-- registry mirror, private-registry, or OCI-pull behavior
-- shared network or shared infra container runtime design
-- release evidence or deterministic image work
+## Three rules that never cost a hop
 
-## When NOT to use
+1. **A production-shaped file fails closed on every safety control.** Mandatory is `${VAR:?why}`;
+   optional is `${VAR:-default}`, and writing that asserts the default is correct in production. A
+   credential, key, token, cap, auth toggle or TLS flag takes `:?` with no default permitted,
+   including `:-0` and bare `:-`, because an empty password and a cap of zero both mean "no
+   control". Compose interpolation reads the shell and `--env-file` only, never a service's
+   `env_file:` key. `references/25-fail-closed-interpolation.md`.
+2. **The final stage is the whole security posture.** Non-root `USER`, `cap_drop: [ALL]`,
+   `security_opt: [no-new-privileges:true]`, read-only root filesystem with named writable mounts,
+   and no package manager, compiler or dev dependency in the image; anything unmet is named in the
+   merge request. `references/10-dockerfile-authorship.md`.
+3. **Verify the rendered model, not the file you wrote.** Run `docker compose config` and the
+   `scripts/` checkers on the generated files before `up` or `stack deploy`. Exit 0 is clean, 1 is
+   a violation, 2 means the tree could not be read and is not a pass.
 
-- pure app logic changes
-- non-containerized local-only tasks
+## Navigation
 
-## Quick start
-
-1. Read the repo-local `AGENTS.md`.
-2. Decide whether the task is generic Docker delivery work, Ala-specific service-contract work, or Arvan Kubernetes delivery work.
-3. Read `references/00-topic-map.md`.
-4. Read `references/SOURCES.md` when the task depends on latest Docker, Compose, Swarm, OCI, registry, or security behavior.
-5. Load only the sections you need from `references/full-guide.md`.
-6. Pair with the listed companion skills before making changes outside this skill's ownership.
-
-## Troubleshooting map
-
-| If the failure looks like...                | Start with                                     |
-|---------------------------------------------|------------------------------------------------|
-| build-stage errors or dependency drift      | image-build and deterministic-runtime sections |
-| runtime crash or missing extension          | runtime contract and container-user sections   |
-| permissions or writable-path issues         | non-root user and filesystem guidance          |
-| healthcheck, startup, or readiness mismatch | healthcheck and release-evidence sections      |
-| service discovery or proxy misrouting       | DNS alias and shared-network sections          |
-| Swarm rollout or image pull problems        | runtime-mode split and registry sections       |
-
-## Companion routing
-
-- $alaa-services-contract
-  - Pair when the task also changes Ala-specific deploy expectations, canonical service aliases, key ownership, or service bootstrap rules.
-- $caas-arvan-kuber
-  - Pair when the task touches the primary Arvan Kubernetes production path, Helm values, OCI charts, or GitLab rollout mechanics.
-- $alaa-cicd-laravel-postgres
-  - Pair when the task also touches pipeline alignment for image builds.
-- $alaa-security-review
-  - Pair when the task also touches runtime hardening and secret handling.
-- $alaa-minio-object-storage (`/alaa-minio-object-storage` in Claude Code)
-  - Pair when the task decides what a MinIO container's bucket, policy, lifecycle rules, or credentials must be, as opposed to how the container is expressed.
-
-## Reference navigation
-
-- Section map and fast routing:
-  - `references/00-topic-map.md`
-- Full preserved guidance, rules, examples, and checklists:
-  - `references/full-guide.md`
-- Official-first Docker, OCI, registry, and security source map:
-  - `references/SOURCES.md`
-
-## Maintenance rules
-
-- Keep this file routing-first and plain.
-- Put detailed rules into `references/full-guide.md` instead of growing this file.
-- Keep the topic map aligned with the actual headings in the full guide.
-- Keep generic Docker and Swarm mechanics here; move Ala-specific service-family hard constraints into `alaa-services-contract`.
-- Re-check official Docker and OCI sources when latest, current, version, or security behavior matters.
-- Re-check companion-skill routing when ownership boundaries change.
+`references/00-topic-map.md` routes every task and symptom here to one file; open it when you do
+not know which file you need. Model and effort decisions belong to `/alaa-prompting-guide`
+(`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`; never write a model name or an
+effort key into anything this skill emits.

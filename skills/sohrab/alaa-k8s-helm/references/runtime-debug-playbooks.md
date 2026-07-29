@@ -4,29 +4,26 @@
 
 - Triage model
 - Evidence collection order
-- Common incident playbooks
+- Symptom playbooks
 - OpenShift-specific failure patterns
 - Escalation boundaries
 
 ## Triage model
 
-Classify the incident before proposing a fix.
+Classify the incident before proposing a fix. Identify the failing layer first; everything after it is faster.
 
-### Failure layers
-
-- **spec or render**: broken YAML, bad template, wrong fields
-- **admission or policy**: SCC, PSA, RBAC, quota, webhook denial
-- **scheduling**: insufficient resources, taints, affinity, missing PVC binding
-- **image and startup**: pull errors, bad command, missing config, probe failures
-- **service path**: no endpoints, DNS, port mismatch, route or ingress miswire
-- **storage**: PVC pending, mount errors, permission denied, fsGroup mismatch
-- **node or cluster**: NotReady nodes, pressure, CNI or DNS failures, API instability
-
-Start by identifying the failing layer. Debugging gets much faster once the layer is correct.
+- **spec or render** — broken YAML, bad template, wrong field
+- **admission or policy** — SCC, Pod Security Admission, RBAC, quota, webhook denial
+- **scheduling** — insufficient resources, taints, affinity, unbound PVC
+- **image and startup** — pull error, bad command, missing config, probe failure
+- **service path** — no endpoints, DNS, port mismatch, ingress or route miswire
+- **storage** — PVC pending, mount error, permission denied, fsGroup mismatch
+- **node or cluster** — NotReady nodes, pressure, CNI or DNS failure, API instability
+- **degraded dependency** — the workload is Running and Ready, the error rate is up, and nothing restarted. This one has its own playbook in `references/failure-and-load.md`, because the fix is a reliability decision owned by `/alaa-reliability-sla` (`$alaa-reliability-sla`) rather than a Kubernetes object change.
 
 ## Evidence collection order
 
-Use the cheapest high-signal evidence first.
+Cheapest high-signal evidence first.
 
 1. current object status
 2. describe output and events
@@ -34,244 +31,142 @@ Use the cheapest high-signal evidence first.
 4. resource usage and restart history
 5. service, endpoint, and DNS path
 6. policy and permission checks
-7. node or cluster health only if namespace-level evidence is insufficient
-
-Useful commands:
+7. node or cluster health, only when namespace-level evidence is insufficient
 
 ```bash
-kubectl get pods -A
-kubectl describe pod <pod> -n <namespace>
-kubectl logs <pod> -n <namespace> --all-containers --tail=200
-kubectl logs <pod> -n <namespace> --all-containers --previous --tail=200
-kubectl get events -n <namespace> --sort-by='.lastTimestamp'
+kubectl get pods -n NS
+kubectl describe pod POD -n NS
+kubectl logs POD -n NS --all-containers --tail=200
+kubectl logs POD -n NS --all-containers --previous --tail=200
+kubectl get events -n NS --sort-by='.lastTimestamp'
 ```
 
-OpenShift equivalents can use `oc` directly.
+On OpenShift, `oc` accepts each of these unchanged.
 
 ## Playbook: Pod Pending
 
-Typical causes:
-
-- unsatisfied resources
-- taints or affinity mismatch
-- PVC not bound
-- image pull secret or admission issue that appears during scheduling
-
-Check in this order:
+Causes: unsatisfied resource requests, taints or affinity mismatch, an unbound PVC, or an admission failure that surfaces at scheduling time.
 
 ```bash
-kubectl get pod <pod> -n <namespace> -o wide
-kubectl describe pod <pod> -n <namespace>
-kubectl get pvc -n <namespace>
+kubectl get pod POD -n NS -o wide
+kubectl describe pod POD -n NS
+kubectl get pvc -n NS
 kubectl get nodes
 ```
 
-Likely fixes:
-
-- reduce requests or add capacity
-- adjust affinity, tolerations, or node selectors
-- fix PVC or storage class issues
-- remove impossible topology constraints
+Fixes, in increasing risk order: reduce requests or add capacity; correct affinity, tolerations, or node selectors; fix the StorageClass or PVC; remove an impossible topology constraint. A hard scheduling constraint with no matching capacity is the most common cause and the event message names the constraint.
 
 ## Playbook: CrashLoopBackOff or repeated restarts
 
-Check:
-
 ```bash
-kubectl logs <pod> -n <namespace> --all-containers --tail=200
-kubectl logs <pod> -n <namespace> --all-containers --previous --tail=200
-kubectl describe pod <pod> -n <namespace>
-kubectl top pod <pod> -n <namespace> --containers
+kubectl logs POD -n NS --all-containers --tail=200
+kubectl logs POD -n NS --all-containers --previous --tail=200
+kubectl describe pod POD -n NS
+kubectl top pod POD -n NS --containers
 ```
 
-Common causes:
+Causes: wrong command or args; missing config or Secret; permission denied on a startup path; `OOMKilled`; a liveness probe restarting a slow start; the application binding the wrong port or interface.
 
-- wrong command or args
-- missing config or secret
-- permission denied on startup path
-- OOM kill
-- probe restarts masking a slow startup
-- app binds the wrong port or interface
-
-Prefer `startupProbe` for slow-starting apps instead of inflating liveness thresholds indefinitely.
+`lastState.terminated.reason` discriminates: `OOMKilled` means the memory limit, `Error` with a non-zero exit code means the application, and a restart with no terminated reason and a probe event means the liveness probe. Use a `startupProbe` for a slow start rather than inflating the liveness threshold; `references/failure-and-load.md` gives the derivation.
 
 ## Playbook: ImagePullBackOff or ErrImagePull
 
-Check:
-
 ```bash
-kubectl describe pod <pod> -n <namespace>
-kubectl get secret -n <namespace>
+kubectl describe pod POD -n NS
+kubectl get serviceaccount SA -n NS -o yaml
+kubectl get secret -n NS
 ```
 
-Common causes:
+Causes: wrong image name or tag; missing or wrong `imagePullSecrets`; registry authentication failure; no egress or DNS path to the registry; a mutable tag that moved.
 
-- wrong image name or tag
-- missing pull secret
-- registry auth failure
-- network egress or DNS failure to registry
-- immutable tags unexpectedly updated
+Fix order: verify repository and tag; verify the pull secret's name, type (`kubernetes.io/dockerconfigjson`), and that it is referenced by the Pod or its ServiceAccount; verify registry reachability from the cluster's egress path; pin by digest when a mutable tag is the cause. `/alaa-docker-production` (`$alaa-docker-production`) owns tag and digest policy.
 
-Low-risk fix order:
-
-1. verify repository and tag
-2. verify image pull secret reference and contents
-3. verify registry reachability from cluster egress path
-4. pin by digest if the failure is caused by mutable tags
-
-## Playbook: readiness or liveness failures
-
-Check:
+## Playbook: readiness or liveness failure
 
 ```bash
-kubectl describe pod <pod> -n <namespace>
-kubectl get pod <pod> -n <namespace> -o yaml
+kubectl describe pod POD -n NS
+kubectl get pod POD -n NS -o yaml
 ```
 
-Focus on:
+Focus on probe path, port, and scheme; the application's bind address; startup time against probe timing; a TLS mismatch between probe and listener; and dependency readiness the probe should not be testing.
 
-- probe path, port, and scheme
-- application bind address
-- startup time vs probe timing
-- TLS mismatch
-- dependency readiness such as DB or cache availability
-
-Do not “fix” a probe failure by removing the probe unless the probe itself is objectively wrong.
+Do not resolve a probe failure by deleting the probe. Resolve it by correcting the probe when the probe is wrong, and by correcting the application or the threshold when it is not. `references/failure-and-load.md` states which thresholds are derivable and how.
 
 ## Playbook: service connectivity failure
 
-Check the full path.
-
 ```bash
-kubectl get svc -n <namespace>
-kubectl get endpoints,endpointslices -n <namespace>
-kubectl get pod -n <namespace> --show-labels
-kubectl exec -n <namespace> <source-pod> -- sh -c 'getent hosts <service> || nslookup <service>'
+kubectl get svc -n NS
+kubectl get endpointslices -n NS
+kubectl get pod -n NS --show-labels
+kubectl exec -n NS SOURCE_POD -- sh -c 'getent hosts SERVICE || nslookup SERVICE'
+bash scripts/network_debug.sh NS POD
 ```
 
-Common causes:
+Causes: selector mismatch, wrong `targetPort`, no ready endpoints, NetworkPolicy denial, DNS failure, or an application listening only on localhost.
 
-- selector mismatch
-- wrong target port
-- no ready endpoints
-- NetworkPolicy denial
-- DNS issues
-- app only listening on localhost
-
-If a Service exists but has no endpoints, fix labels or readiness first. Do not debug the ingress layer yet.
+When the Service exists with no endpoints, fix labels or readiness first and do not touch the ingress layer yet.
 
 ## Playbook: ingress, route, or gateway failure
 
-Check in this order:
-
-1. backend Service
-2. endpoints
-3. port mapping
-4. TLS mode and hostname
-5. controller-specific events or logs
-
-For Kubernetes Ingress:
+Check in this order: backend Service, endpoints, port mapping, TLS mode and hostname, then controller-specific events or logs.
 
 ```bash
-kubectl describe ingress <name> -n <namespace>
+kubectl describe ingress NAME -n NS
+oc describe route NAME -n NS
 ```
 
-For OpenShift Route:
-
-```bash
-oc describe route <name> -n <namespace>
-```
-
-Common Route-specific causes:
-
-- wrong service target port name
-- TLS termination mode mismatch (`edge`, `reencrypt`, `passthrough`)
-- service is healthy internally but host/path policy is wrong
+Route-specific causes: a wrong service target-port name; a TLS termination mode mismatch across `edge`, `reencrypt`, and `passthrough`; a healthy internal Service behind a wrong host or path policy. The termination modes themselves are defined once in `references/openshift-and-managed-platforms.md`.
 
 ## Playbook: PVC pending, mount failure, or permission denied
 
-Check:
-
 ```bash
-kubectl get pvc -n <namespace>
-kubectl describe pvc <pvc> -n <namespace>
-kubectl describe pod <pod> -n <namespace>
+kubectl get pvc -n NS
+kubectl describe pvc PVC -n NS
+kubectl describe pod POD -n NS
 ```
 
-Common causes:
+Causes: missing or wrong StorageClass; access-mode mismatch against the driver; requested size beyond quota or driver limits; fsGroup or UID mismatch on the mounted volume; on OpenShift, an arbitrary-UID assignment against image paths that are not group-writable.
 
-- missing or wrong storage class
-- access mode mismatch
-- requested size beyond quota or driver limits
-- fsGroup or UID mismatch on mounted volume
-- OpenShift arbitrary-UID constraints with image paths not writable
-
-If the problem is permissions inside the mounted filesystem on OpenShift, check the image and volume ownership model before requesting `anyuid`.
+When the failure is permissions inside a mounted filesystem on OpenShift, fix the image's ownership model before requesting a broader SCC.
 
 ## Playbook: rollout stuck
 
-Check:
-
 ```bash
-kubectl rollout status deployment/<name> -n <namespace>
-kubectl describe deployment <name> -n <namespace>
-kubectl get rs -n <namespace>
-kubectl get pdb -n <namespace>
+kubectl rollout status deployment/NAME -n NS
+kubectl describe deployment NAME -n NS
+kubectl get rs -n NS
+kubectl get pdb -n NS
 ```
 
-Common causes:
+Causes: new Pods failing; `maxUnavailable` and `maxSurge` values that conflict with capacity or with the PDB; PDB blocks; image pull or probe failure; a selector mistake.
 
-- failing new Pods
-- maxUnavailable or maxSurge values that conflict with capacity
-- PDB blocks
-- image pull or probe failures
-- selector mistakes
+The deadlock condition and the arithmetic that resolves it are in `references/failure-and-load.md`. Do not delete the PDB to unblock a rollout; that removes the protection the drain will need next.
 
-## Playbook: SCC, PSA, or permission denials on OpenShift
+## Playbook: SCC, PSA, or permission denial on OpenShift
 
-Look for these indicators:
-
-- admission messages mentioning SCC or pod security
-- pods accepted on vanilla Kubernetes but rejected on OpenShift
-- writes to paths that assume a fixed UID
-- containers trying to bind low ports or run privileged
-
-Checks:
+Indicators: an admission message naming an SCC or pod security; Pods that are accepted on vanilla Kubernetes and rejected on OpenShift; writes to paths that assume a fixed UID; containers binding low ports or requesting privilege.
 
 ```bash
-oc auth can-i use scc/anyuid -n <namespace>
-oc describe pod <pod> -n <namespace>
-oc get events -n <namespace> --sort-by='.lastTimestamp'
+oc auth can-i use scc/anyuid -n NS
+oc describe pod POD -n NS
+oc get events -n NS --sort-by='.lastTimestamp'
+kubectl get ns NS -o jsonpath='{.metadata.labels}'
 ```
 
-The safest fix is usually to make the image and manifest compatible with the default restricted posture, not to request broader SCCs.
+The last command shows the Pod Security Admission labels, which are a second, independent gate; a workload can pass SCC and fail PSA. The safest fix is to make the image and manifest satisfy the restrictive path in `references/openshift-and-managed-platforms.md`, not to request a broader SCC.
 
 ## Cluster-level tools
 
-Use cluster-level snapshots only when namespace evidence is not enough.
+Use a cluster-level snapshot only when namespace evidence is insufficient.
 
 ```bash
 bash scripts/cluster_health.sh
-python3 scripts/pod_diagnostics.py <pod> -n <namespace>
-bash scripts/network_debug.sh <namespace> <pod>
+python3 scripts/pod_diagnostics.py POD -n NS
+bash scripts/network_debug.sh NS POD
 ```
 
-On OpenShift, node-level investigation often uses:
-
-```bash
-oc debug node/<node>
-chroot /host
-```
-
-Only recommend node debugging when the user has the correct access surface.
+On OpenShift, node-level investigation uses `oc debug node/NODE` followed by `chroot /host`. Recommend it only after confirming the user's access surface.
 
 ## Escalation boundaries
 
-Escalate to cluster operators or admins when the likely cause is:
-
-- missing CRD installation
-- CNI, DNS, or Ingress controller outage
-- storage class or CSI driver failure
-- SCC grants, custom SCC creation, or namespace policy changes
-- node pressure, kernel, CRI-O, or kubelet issues
-- MachineConfig or runtime tuning requirements on OpenShift
+Escalate to the cluster operator or platform owner when the likely cause is a missing CRD installation, a CNI or DNS or ingress-controller outage, a StorageClass or CSI driver failure, an SCC grant or namespace policy change, node pressure or kernel or kubelet issues, or `MachineConfig` and runtime tuning on OpenShift. State the evidence that points there, so the escalation carries its own proof.

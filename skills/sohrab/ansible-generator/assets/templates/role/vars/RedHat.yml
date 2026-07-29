@@ -1,6 +1,7 @@
 ---
-# OS-specific variables for RHEL/CentOS/Rocky
+# OS-specific variables for the RedHat family, loaded by tasks/main.yml through
+# include_vars on ansible_os_family.
 
-  [ role_name ]_package_name: [ redhat_package_name ]
-  [ role_name ]_service_name: [ redhat_service_name ]
-  [ role_name ]_config_dir: /etc/[service_name]
+ROLE_NAME_package_name: "CHANGE_ME_redhat_package"
+ROLE_NAME_service_name: "CHANGE_ME_redhat_service"
+ROLE_NAME_config_dir: "/etc/CHANGE_ME_redhat_service"

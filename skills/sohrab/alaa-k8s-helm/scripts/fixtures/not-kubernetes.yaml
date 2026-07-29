@@ -1,0 +1,6 @@
+# Fixture: valid YAML that is not a Kubernetes manifest at all.
+name: my-project
+version: 1.2.3
+dependencies:
+  - left-pad
+  - right-pad

@@ -5,173 +5,110 @@ description: Generate, validate, refactor, modernize, and debug GNU Make and .mk
 
 # Alaa Makefile
 
-Use this as the single entrypoint for the full Makefile lifecycle: authoring, review, validation, hardening, refactoring, and debugging.
+## What a Make target is
 
-This skill replaces the old split `makefile-generator` and `makefile-validator` workflow with one routing-first skill that keeps context small while still preserving the deeper references and scripts.
+A Make target is a **local invocation of a command whose definition is owned elsewhere**. The skill
+decides how the invocation is named, what it depends on and how it fails; it does not decide what the
+command is. Its job is to make the local verdict identical to the runner's verdict. Three rules follow,
+each with a checker in `scripts/validate_makefile.sh`:
+
+1. A target fronting a CI gate runs the command the runner runs, with the same arguments, adds no flag
+   the runner does not pass, and re-implements no part of the gate inline.
+2. It passes when the gate passes and fails when the gate fails: no `-` prefix, no `|| true`. Make
+   signals a failed recipe with its own exit status 2 rather than the recipe's status, so this is
+   pass-or-fail parity, not numeric parity; a caller needing the gate's own number invokes the script
+   directly instead of through Make.
+3. This skill writes no provider YAML, no Dockerfile and no Compose file, and emits no model name and
+   no effort key.
+
+Owners across that boundary:
+- `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how a gate is expressed on a runner. When a target
+  and the runner job disagree about a command, the runner job is correct and the target changes.
+- `/alaa-docker-production` (`$alaa-docker-production`) owns the Dockerfile, the image expression and
+  the Compose file a target fronts, including the fail-closed interpolation invariant.
+- `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns the frontend gate register: which gates exist
+  and what each asserts. A frontend target invokes a gate from that register and adds none.
+- `/service-runtime-kit-governance` (`$service-runtime-kit-governance`) decides which generator
+  variable expresses a runtime value when a target renders runtime files.
 
 ## Start fast
 
-Make these decisions before editing:
+1. **Dialect.** GNU Make by default. Write POSIX-only Make when the file must run under BSD make or an
+   `alpine` default shell, and record that in a first-line comment.
+2. **Role.** CI entrypoint, build entrypoint, packaging workflow or developer convenience layer. The
+   role fixes which reference the topic map sends you to.
+3. **Recipe shell.** Set `SHELL := bash` whenever a recipe uses `source`, `[[`, an array, `declare`,
+   `pipefail` or process substitution; otherwise recipes run under `/bin/sh`, which is `dash` on Debian
+   and `ash` on Alpine, where those constructs fail.
 
-1. **Make dialect**
-   - Default to GNU Make when the repo already relies on GNU features, `bash`, pattern rules, or developer tooling that assumes GNU behavior.
-   - Prefer stricter POSIX compatibility only when the target environment really needs it.
-2. **File role**
-   - project build entrypoint
-   - CI wrapper or task runner
-   - install/package workflow
-   - local developer convenience layer
-3. **Recipe shell model**
-   - Decide whether recipes must stay portable under `/bin/sh`
-   - Or whether the repo should explicitly use `bash` with `.ONESHELL` and safe shell flags
-4. **Validation surface**
-   - static syntax only
-   - style/formatting
-   - security and hardening
-   - portability
-   - runtime smoke check on real targets
-
-## When NOT to use
-
-- Do not use for shell scripts, CI YAML, or package-manager scripts unless Make behavior is the decision surface.
-- Do not use to replace a working repo-native task runner without a clear Makefile requirement.
-- Do not use for build-system migrations outside GNU Make scope.
-
-## Default operating model
-
-- **Routing-first**: Open the smallest reference that matches the task instead of loading every Makefile guide.
-- **GNU-safe by default**: Use modern GNU Make patterns when the repo already depends on them.
-- **Reviewable first**: Prefer small, explicit targets and clear variables over clever macro-heavy Makefiles.
-- **Shell-aware**: Treat recipe safety as part of the Makefile design, not as an afterthought.
-- **Freshness-aware**: Read `references/SOURCES.md` when GNU Make, POSIX make, validation tooling, latest/current behavior, or security-sensitive recipe behavior matters.
-- **Validation before closeout**: Run the bundled validator script and any cheap repo-specific smoke checks before finishing.
-
-## Task lanes
-
-### Generate or redesign a Makefile
-
-Read:
-
-- `references/makefile-structure.md`
-- `references/variables-guide.md`
-- `references/targets-guide.md`
-- `references/patterns-guide.md`
-
-Use this lane for:
-
-- creating a new `Makefile` or `.mk` file
-- replacing ad-hoc command docs with real targets
-- adding install, clean, dist, test, or help targets
-- introducing language-specific build patterns
-
-If you need the preserved long-form workflow, open `references/authoring-full-guide.md`.
-
-### Validate, review, or harden an existing Makefile
-
-Read:
-
-- `references/best-practices.md`
-- `references/common-mistakes.md`
-- `references/security-guide.md`
-- `references/optimization-guide.md`
-
-Use this lane for:
-
-- code review
-- cleanup or modernization
-- security and safety checks
-- performance and maintainability improvements
-- converting fragile legacy Makefiles into safer patterns
-
-### Validate with tooling
-
-Read:
-
-- `references/bake-tool.md`
-- `references/validation-full-guide.md`
-
-Use this lane for:
-
-- `mbake` formatting and validation
-- `checkmake` linting
-- `unmake` portability checks
-- CI or pre-commit validation wiring
-
-Use the bundled script:
-
-- `scripts/validate_makefile.sh`
-
-### Add or scaffold standard targets quickly
-
-Use:
-
-- `scripts/generate_makefile_template.sh`
-- `scripts/add_standard_targets.sh`
-
-These are good for deterministic scaffolding, but do not stop there. Review the output against the repo's actual build, install, and test behavior.
+Do not use this skill for shell scripts, CI YAML or package-manager scripts unless Make behaviour is
+the decision surface, nor to replace a working repo-native task runner.
 
 ## Core authoring rules
 
-- Prefer a clear header and special-target preamble when the repo benefits from GNU Make hardening:
-  - `SHELL := bash`
-  - `.ONESHELL:`
-  - `.SHELLFLAGS := -eu -o pipefail -c`
-  - `.DELETE_ON_ERROR:`
-  - `MAKEFLAGS += --warn-undefined-variables`
-  - `MAKEFLAGS += --no-builtin-rules`
-- Use `?=` for user-overridable values and `:=` for immediate project-owned values.
-- Keep `.PHONY` accurate and explicit.
-- Use order-only prerequisites for directories when that avoids timestamp-driven rebuild noise.
-- Prefer `$(MAKE)` for recursive calls, never bare `make`.
-- Keep help output and target names stable enough for humans and CI to rely on.
+- Every Makefile here opens with the six-line hardening preamble; a file omitting a line states in the
+  comment above it which environment forbids it. `references/makefile-structure.md` holds the list.
+- `?=` for user-overridable values, `:=` for immediate project-owned values.
+- Every target that creates no file is declared in `.PHONY`.
+- A directory prerequisite takes the order-only form `| $(DIR)`.
+- A sub-make is `$(MAKE)`, never bare `make`, which loses `-j`, `-n` and the jobserver.
+- Every target carries a `## ` documentation line. Target names are a contract: renaming one needs the
+  same review as renaming a runner job.
+- A recipe exceeding ten commands, or containing a loop, a conditional or a function definition, moves
+  into a script under `scripts/` that the target invokes.
 
-## Validation rules
+## Blocking defects
 
-- Run `scripts/validate_makefile.sh <file>` for any non-trivial change.
-- Use `make -n`, `make help`, or a narrow real target when a smoke check is cheap and safe.
-- Treat recipe indentation, shell failure behavior, credential leakage, and unsafe variable expansion as high-priority issues.
-- If portability matters, check whether GNU-only features are intentional before "fixing" them away.
+A review leaving any of these open does not pass. Each has a checker in `validate_makefile.sh`.
 
-## Companion routing
+- `.ONESHELL:` without `-e` in `.SHELLFLAGS`, which makes a recipe exit 0 after an earlier command
+  failed.
+- `-` prefix or `|| true` on a recipe line invoking a gate, an image build, a Compose command or
+  `$(MAKE)`.
+- Bash-only constructs in a recipe when `SHELL` is not set to bash.
+- Spaces where a recipe needs a tab; CRLF anywhere in the file.
+- A credential-shaped assignment. Read it from the environment and fail closed:
+  `API_TOKEN ?= $(error API_TOKEN is not set)`.
+- A recipe re-implementing a command owned by `service-ci-kit` or `service-runtime-kit`.
 
-- Pair with `$alaa-bash-shell` when recipe complexity becomes shell-script complexity.
-- Pair with `$alaa-gitlab-ci-cd` when the Makefile is the operator surface for GitLab jobs or release automation.
-- Pair with `$alaa-docker-production` when targets mainly wrap image builds, Compose, or production container workflows.
-- Pair with `$alaa-k8s-helm` when Make targets are wrappers around Helm or Kubernetes operations.
-- Pair with `$caas-arvan-kuber` when Make targets enforce Arvan-safe delivery behavior.
+## Validation
 
-## Reference navigation
+- `bash scripts/validate_makefile.sh <file>` on every change. `0` clean, `1` findings, `2` could not
+  run; a caller treating `2` as a pass has no gate. `--no-venv` skips the mbake install on a prepared
+  image; `--self-test` checks the checker.
+- `make -n <target>`, diffed against the command the runner runs: that diff is the proof of parity.
+- `make --shuffle=random -j$(nproc)` on GNU Make 4.4 or newer before claiming parallel safety.
+- A portability finding on a GNU-only feature is resolved by confirming the feature is intentional, not
+  by removing it; the first-line comment records that decision.
 
-- Fast router:
-  - `references/00-topic-map.md`
-- Authoring and generation:
-  - `references/makefile-structure.md`
-  - `references/variables-guide.md`
-  - `references/targets-guide.md`
-  - `references/patterns-guide.md`
-  - `references/authoring-full-guide.md`
-- Review, safety, and optimization:
-  - `references/best-practices.md`
-  - `references/common-mistakes.md`
-  - `references/security-guide.md`
-  - `references/optimization-guide.md`
-- Validation tooling:
-  - `references/bake-tool.md`
-  - `references/validation-full-guide.md`
-- Official-first source map:
-  - `references/SOURCES.md`
+## Routing, and when not to use this skill
 
-## Deliverable rules
+Each owner decides its matter; this skill states only how the invocation is shaped.
 
-- For generation tasks, return a ready-to-use Makefile that matches the repo's real workflow.
-- For review tasks, separate blocking defects, safety risks, and improvement suggestions.
-- For refactors, preserve target names and user-facing behavior unless the task explicitly authorizes a contract change.
-- State what you validated: syntax, formatting, safety checks, portability checks, and any smoke-run targets.
+- `/alaa-bash-shell` (`$alaa-bash-shell`) — shell logic once a recipe becomes a script.
+- `/alaa-k8s-helm` (`$alaa-k8s-helm`) — chart and release when a target runs `helm` or `kubectl`.
+- `/caas-arvan-kuber` (`$caas-arvan-kuber`) — manifest and API versions when a target deploys to Arvan
+  CaaS, whose Kubernetes version is pinned.
+- `/alaa-reliability-sla` (`$alaa-reliability-sla`) — whether a target may retry, how long it may wait
+  and what degradation is acceptable. This skill adds no retry and no timeout of its own.
+- `/alaa-observability-soc` (`$alaa-observability-soc`) — what a failing target emits and what gates on
+  it.
+- `/alaa-services-contract` (`$alaa-services-contract`) — every shared name a target prints or passes:
+  log fields, metric names, `OTEL_*` values, host ports.
+- `/alaa-testing-strategy` (`$alaa-testing-strategy`) — what `test:` and `check:` assert.
+- `/alaa-security-review` (`$alaa-security-review`) — review triggers and fail-closed doctrine when a
+  target handles a secret, signature or credential.
+- `/alaa-controlled-ops` (`$alaa-controlled-ops`) — change control when a target deploys or migrates.
+- `/alaa-project-constitution` (`$alaa-project-constitution`) — the quality bar, at
+  `alaa-project-constitution references/quality-bar.md`.
+- `/alaa-prompting-guide` (`$alaa-prompting-guide`) — every model and effort question, at
+  `alaa-prompting-guide references/50-effort-and-thinking.md`.
 
-## Maintenance rules
+## Deliverables
 
-- Keep this file routing-first and compact.
-- Keep detailed reference material in `references/`.
-- Keep the scripts usable as standalone helpers, but do not let them become the only documented workflow.
-- Re-check official GNU Make, POSIX, and validation-tool sources when latest, current, version, or security behavior matters.
-- When ownership changes, update companion routing and pack-level docs in the same patch.
+Generation returns a Makefile matching the repository's real workflow and names the command each target
+fronts. Review separates blocking defects from improvements and quotes the validator's exit code. A
+refactor preserves target names and user-facing behaviour unless the task authorises a contract change.
+
+`references/00-topic-map.md` is the router. `references/SOURCES.md` is the provenance ledger and carries
+the command that re-derives every pinned version.

@@ -1,0 +1,12 @@
+---
+# Fixture: check_assets.sh asserts that yamllint and ansible-lint agree about
+# 'become: yes'. Before the repair assets/.yamllint permitted it while
+# assets/.ansible-lint failed the same line.
+- name: Fixture play using a non-canonical boolean
+  hosts: localhost
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "fixture"

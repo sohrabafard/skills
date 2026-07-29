@@ -1,0 +1,12 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Mini CaaS", "version": "1.25" },
+  "servers": [ { "url": "https://example.invalid/caas/v2/zones/test-1" } ],
+  "paths": {
+    "/api/v1/namespaces/{namespace}/configmaps": { "get": {}, "post": {}, "delete": {} },
+    "/api/v1/namespaces/{namespace}/configmaps/{name}": { "get": {}, "put": {}, "patch": {}, "delete": {} },
+    "/apis/apps/v1/namespaces/{namespace}/deployments": { "get": {}, "post": {}, "delete": {} },
+    "/apis/apps/v1/namespaces/{namespace}/deployments/{name}": { "get": {}, "put": {}, "patch": {}, "delete": {} },
+    "/apis/apps/v1/namespaces/{namespace}/deployments/{name}/scale": { "get": {}, "put": {}, "patch": {} }
+  }
+}

@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  role_name: broken_yaml_role
+  namespace: fixture
+  author: ansible-validator fixtures
+  description: A role whose YAML does not parse, used as a regression fixture.
+  license: MIT
+  min_ansible_version: "2.19"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - noble
+  galaxy_tags:
+    - fixture
+
+dependencies: []

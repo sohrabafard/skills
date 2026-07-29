@@ -1,0 +1,28 @@
+# Fixture: API versions the cluster no longer serves, plus an OpenShift object.
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: legacy-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: legacy
+  minReplicas: 1
+  maxReplicas: 3
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: legacy-psp
+spec:
+  privileged: false
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: legacy-route
+spec:
+  to:
+    kind: Service
+    name: legacy

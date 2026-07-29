@@ -1,18 +1,41 @@
+# Rootless BuildKit on a Kubernetes runner: an OCI image build with no privileged
+# container and no Docker daemon.
+#
+# Image content — base image choice, layer order, multi-stage boundaries — is not
+# decided here. That belongs to /alaa-docker-production ($alaa-docker-production).
+# This file decides only how the build is expressed as a job on a runner.
+#
+# Image pin verified 2026-07-29 against https://github.com/moby/buildkit/releases
+# (v0.31.2, 2026-07-16). Re-derive with:
+#   https://hub.docker.com/r/moby/buildkit/tags
 workflow:
   rules:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH
+    - when: never
 
 default:
   tags:
     - k8s
     - buildkit
   image:
-    name: moby/buildkit:rootless
+    # A version tag, not "rootless" on its own: a tag with no version component
+    # moves under you between two runs of the same pipeline.
+    name: moby/buildkit:v0.31.2-rootless
+    # The image has an entrypoint that would swallow the job script.
     entrypoint: [""]
+  interruptible: true
+  timeout: 30 minutes
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
     BUILDKIT_PROGRESS: plain
+    # The cache image is named separately from the release image so a cache push
+    # can never be mistaken for a release.
     CACHE_IMAGE: $CI_REGISTRY_IMAGE:buildcache-$CI_COMMIT_REF_SLUG
 
 stages:
@@ -20,7 +43,12 @@ stages:
 
 build-image:
   stage: build
+  timeout: 30 minutes
+  needs: []
   before_script:
+    # 0077 first: the credentials file must not be readable by any other process
+    # that shares this pod.
+    - umask 077
     - mkdir -p ~/.docker
     - |
       cat > ~/.docker/config.json <<EOF
@@ -35,4 +63,15 @@ build-image:
       EOF
   script:
     - |
-      buildctl-daemonless.sh build         --frontend dockerfile.v0         --local context=.         --local dockerfile=.         --opt filename=Dockerfile         --output type=image,name=${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA},push=true         --import-cache type=registry,ref=${CACHE_IMAGE}         --export-cache type=registry,ref=${CACHE_IMAGE},mode=max
+      buildctl-daemonless.sh build \
+        --frontend dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --opt filename=Dockerfile \
+        --output type=image,name=${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA},push=true \
+        --import-cache type=registry,ref=${CACHE_IMAGE} \
+        --export-cache type=registry,ref=${CACHE_IMAGE},mode=max
+  after_script:
+    # The pod is discarded either way; the removal is here so the same block can
+    # be copied onto a shell runner, where it is not.
+    - rm -f ~/.docker/config.json

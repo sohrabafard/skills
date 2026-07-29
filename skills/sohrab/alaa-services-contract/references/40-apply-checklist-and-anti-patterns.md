@@ -151,6 +151,11 @@ When applying this skill to a service, finish by checking:
 - malformed `X-Location-*` values
 - parity between `$request->user()` and `Auth::user()`
 - parity with any legacy guard still in use
+- for a service that reads `X-TOTP-PROOF-REJECTED`: two requests identical except for that header, and any
+  value of it, produce the same status, the same allow-or-deny outcome, and the same side effects. A test
+  that only asserts the message changed does not catch the failure this one exists to catch
+- for a service that emits `meta.proof_rejected`: every `TOTP_STEP_UP_REQUIRED` response carries the key,
+  `null` when the gateway set no header, so one code keeps one `meta` key set
 
 ### Public project selector
 - public `project_id` accepts a mapped canonical UUIDv7

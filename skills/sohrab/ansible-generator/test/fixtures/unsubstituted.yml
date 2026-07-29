@@ -1,0 +1,14 @@
+---
+# Fixture: a generated file that still carries scaffold substitution tokens.
+# check_templates.py --self-test asserts that these are reported when the file
+# is checked as output rather than as a template. Do not fix it.
+- name: Ensure the package is installed
+  ansible.builtin.package:
+    name: "{{ ROLE_NAME_package_name }}"
+    state: present
+
+- name: Write the configuration
+  ansible.builtin.copy:
+    content: "server=CHANGE_ME_hostname"
+    dest: /etc/app/config
+    mode: "0644"

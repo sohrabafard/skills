@@ -1,177 +1,101 @@
-# Networking, Observability, and Tuning
+# Networking and Tuning
 
 ## Contents
 
-- Minimal networking model every senior operator needs
+- The layer model
 - Fast service-path tracing
 - Core debugging checkpoints
-- Monitoring signals that matter
-- Tuning boundaries and access requirements
+- Kubernetes-specific signals
+- Tuning boundaries by access surface
 
-## Minimal networking model every senior operator needs
+## The layer model
 
-Think in layers. Most Kubernetes network incidents become much easier when you can name the failing layer.
+Name the failing layer before changing anything. Most Kubernetes network incidents become tractable at that moment.
 
-### Layer model
+- **name resolution** — DNS turns a name into a cluster IP or an external IP
+- **service virtual IP** — Service plus kube-proxy or its replacement routes to endpoints
+- **endpoint selection** — EndpointSlice reflects ready backend Pods
+- **pod network** — the CNI provides pod-to-pod routing
+- **application listener** — the process actually listens on the expected address and port
+- **edge routing** — Ingress, Gateway API, Route, or a load balancer handles external entry
 
-- **name resolution**: DNS turns names into cluster IPs or external IPs
-- **service virtual IP**: Service and kube-proxy or the implementation route traffic to endpoints
-- **endpoint selection**: EndpointSlice reflects ready backend Pods
-- **pod network**: the CNI provides pod-to-pod routing
-- **application listener**: the process must actually listen on the expected address and port
-- **edge routing**: Ingress, Gateway API, Route, or a load balancer handles external entry
+Key concepts that decide which layer you are in:
 
-### Key concepts
-
-- **L3/L4 vs L7**: Service, NetworkPolicy, and load balancers mostly live at L3 or L4; Ingress, Gateway API, and Route add L7 behavior such as hosts, paths, headers, and TLS termination.
-- **SNAT and egress**: outbound traffic may be NATed by the node or platform egress path.
-- **MTU**: mismatched MTU can create flaky connectivity, retransmits, or mysterious timeouts.
-- **conntrack**: exhausted or unhealthy connection tracking can cause drops and intermittent failures.
-- **readiness vs connectivity**: a pod can be reachable by IP but not ready for Service traffic.
+- **L3/L4 versus L7** — Service, NetworkPolicy, and load balancers act at L3 or L4; Ingress, Gateway API, and Route add L7 behaviour such as hosts, paths, headers, and TLS termination.
+- **SNAT and egress** — outbound traffic may be NATed by the node or by a platform egress path, so the source address the remote service sees is not the Pod IP.
+- **MTU** — a mismatch produces flaky connectivity, retransmits, and timeouts that look like an application bug.
+- **conntrack** — an exhausted connection-tracking table drops connections intermittently and silently.
+- **readiness versus connectivity** — a Pod can be reachable by IP and still receive no Service traffic.
 
 ## Fast service-path tracing
 
-Trace requests in this order.
+### Internal service path, in order
 
-### Internal service path
-
-1. source pod can resolve the name
-2. Service exists
-3. Service selector matches Pods
-4. EndpointSlice contains ready backends
-5. target Pod listens on the expected port
-6. NetworkPolicy allows traffic
-
-Useful checks:
+1. the source Pod resolves the name
+2. the Service exists
+3. the Service selector matches Pods
+4. the EndpointSlice contains ready backends
+5. the target Pod listens on the expected port
+6. NetworkPolicy allows the traffic
 
 ```bash
-kubectl get svc,endpoints,endpointslices -n <namespace>
-kubectl get pod -n <namespace> --show-labels
-kubectl exec -n <namespace> <pod> -- sh -c 'getent hosts <service> || nslookup <service>'
+kubectl get svc,endpointslices -n NS
+kubectl get pod -n NS --show-labels
+kubectl exec -n NS POD -- sh -c 'getent hosts SERVICE || nslookup SERVICE'
 ```
 
-### External HTTP path
+### External HTTP path, in order
 
-1. backend Service works internally
-2. Ingress, Gateway, or Route points to the correct Service and port
+1. the backend Service works internally
+2. the Ingress, Gateway, or Route points at the correct Service and port
 3. host and path rules match the request
-4. TLS mode matches the backend expectation
-5. the external DNS record points to the correct edge
+4. the TLS mode matches what the backend expects
+5. the external DNS record points at the correct edge
 
-Do not start at the public URL if the Service is already broken internally.
+Do not start at the public URL when the Service is already broken internally.
 
 ## Core debugging checkpoints
 
-### DNS
+**DNS** — service FQDN and short-name resolution, CoreDNS or platform DNS health, `resolv.conf` search domains inside the Pod, and namespace mismatch in the lookup.
 
-Check:
+**Service and endpoints** — selector labels, `targetPort`, named-versus-numeric port mismatch, and endpoint readiness state.
 
-- service FQDN and short name resolution
-- CoreDNS or platform DNS health
-- `resolv.conf` search domains inside the Pod
-- namespace mismatch in lookups
+**NetworkPolicy** — policies are allow-lists, not deny-lists with exceptions; the absence of a matching allow rule is a denial. Both ingress and egress policies can block traffic. Enforcement requires a CNI that implements NetworkPolicy: without one, the object exists and enforces nothing, which is indistinguishable from a permissive policy until an audit. Confirm with the CNI's own documentation, not with the object's presence.
 
-### Service and endpoints
+**Application listener** — a large share of "Kubernetes networking" bugs are listener bugs. Check that the process listens on `0.0.0.0` rather than `127.0.0.1`, that the port declared in YAML matches the process, and that TLS expectations are consistent end to end.
 
-Check:
+## Kubernetes-specific signals
 
-- selector labels
-- `targetPort`
-- named vs numeric port mismatch
-- endpoint readiness state
+`/alaa-observability-soc` (`$alaa-observability-soc`) decides whether a signal is required and what gates on it. `/alaa-services-contract` (`$alaa-services-contract`) decides every metric name, label, log field, and `OTEL_*` default. Do not invent a name here.
 
-### NetworkPolicy
+What this skill contributes is the short list of Kubernetes-layer signals those owners do not derive from the application, and what each one means:
 
-Remember:
+| Signal | Why it is Kubernetes-specific | What it distinguishes |
+|---|---|---|
+| container restart count and `lastState.terminated.reason` | comes from the kubelet, not the process | `OOMKilled` versus `Error` versus a liveness-probe restart, which have different fixes |
+| probe failure counts by probe type | only the kubelet sees them | a readiness flap that removes traffic from a healthy Pod, versus a real fault |
+| Pod pending duration | scheduling, not runtime | insufficient capacity or an unsatisfiable constraint, versus an application that will not start |
+| CPU throttled seconds, alongside CPU usage | the CFS quota is a limit-enforcement artefact | latency caused by the limit rather than by the workload; usage alone never shows it |
+| unavailable replicas during a rollout | the controller's view | a rollout that is progressing slowly versus one that is deadlocked, which `references/failure-and-load.md` resolves |
 
-- policies are allow lists, not deny lists with exceptions
-- both ingress and egress policies can block traffic
-- enforcement depends on the CNI supporting NetworkPolicy
+Everything else — request rate, error rate by status class, latency percentiles, traces, log fields — is the application's telemetry, and its names and requirement level belong to the two owners above.
 
-### Application listener
+## Tuning boundaries by access surface
 
-A large share of “Kubernetes networking” bugs are actually app-level listener bugs.
+### Feasible with namespace access
 
-Check:
+Resource requests and limits, probe timings, HPA settings, connection pool sizes in application config, worker concurrency, ingress or route timeouts where the platform delegates them, and the Service type.
 
-- the app is listening on `0.0.0.0`, not just `127.0.0.1`
-- the port exposed in YAML matches the process
-- TLS expectations are consistent end to end
+Each of these needs a derivation, and `references/failure-and-load.md` gives it. Do not change one without recording the before and after measurement.
 
-## Monitoring signals that matter
+### Requires cluster-admin or the platform owner
 
-Keep the telemetry focused on signals that help explain failures.
+CNI settings, MTU, kube-proxy mode, conntrack sizing, DNS architecture changes such as NodeLocal DNSCache, kubelet or container-runtime or kernel tuning, and OpenShift `MachineConfig`. On a managed platform, treat all of these as unavailable until `kubectl auth can-i list nodes` returns `yes`.
 
-### Workload health
+## Habits that keep tuning honest
 
-- restart count
-- `OOMKilled`
-- probe failure counts
-- pending duration
-- rollout status and unavailable replicas
-
-### Resource pressure
-
-- CPU throttling, not just CPU usage
-- memory working set and OOM events
-- container filesystem saturation
-- node pressure conditions
-
-### Traffic and latency
-
-- request rate
-- error rate by status class
-- latency percentiles, not just averages
-- open connections and timeouts
-- retransmits and dropped packets when node metrics are available
-
-### Platform services
-
-- CoreDNS latency or failure rate
-- ingress or router 4xx and 5xx patterns
-- API server errors or throttling
-- CSI driver errors for storage-related incidents
-
-### Logs, metrics, and traces together
-
-Use all three when possible.
-
-- **metrics** tell you when and how broadly something is failing
-- **logs** tell you what failed
-- **traces** tell you where latency and dependency failures accumulated
-
-## Tuning boundaries and access requirements
-
-### Namespace-level tuning
-
-Usually feasible with namespace access:
-
-- resource requests and limits
-- probes and timeouts
-- HPA tuning
-- connection pool sizes in app config
-- worker concurrency
-- ingress or route timeouts where delegated
-- Service type and exposure choices
-
-### Cluster-level tuning
-
-Usually requires cluster-admin or platform-owner access:
-
-- CNI settings
-- MTU changes
-- kube-proxy mode or implementation details
-- conntrack sizing
-- DNS architecture changes such as NodeLocal DNSCache
-- kubelet, CRI-O, or kernel tuning
-- OpenShift MachineConfig or runtime configuration
-
-On managed platforms, assume cluster-level tuning is off-limits until proven otherwise.
-
-## Senior-operator habits
-
-- isolate the layer before changing YAML
-- prefer one hypothesis at a time
-- compare failing and healthy workloads in the same namespace
-- measure before and after every tuning change
-- do not “tune” around a broken dependency, bad selector, or wrong probe
+- Isolate the layer before changing YAML.
+- Test one hypothesis at a time.
+- Compare a failing workload against a healthy one in the same namespace.
+- Measure before and after every change, and put both numbers in the report.
+- Do not tune around a broken dependency, a mismatched selector, or a wrong probe. You are in that situation when the Service has zero ready endpoints, when the selector matches no Pod, or when the probe fails on a request the application answers correctly from inside the container — all three are observable with the commands above, and none of them is fixed by a resource or timeout change.

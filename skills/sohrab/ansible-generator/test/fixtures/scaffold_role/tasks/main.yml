@@ -1,0 +1,56 @@
+---
+# Role: demo_nginx
+# Main task list.
+
+- name: Load the OS-family variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - always
+
+- name: Ensure the package is installed
+  ansible.builtin.package:
+    name: "{{ demo_nginx_package_name }}"
+    state: present
+  tags:
+    - install
+    - packages
+
+- name: Ensure the service directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ demo_nginx_user }}"
+    group: "{{ demo_nginx_group }}"
+    mode: "{{ demo_nginx_dir_mode }}"
+  loop:
+    - "{{ demo_nginx_config_dir }}"
+    - "{{ demo_nginx_data_dir }}"
+    - "{{ demo_nginx_log_dir }}"
+  tags:
+    - configure
+    - directories
+
+- name: Deploy the service configuration
+  ansible.builtin.template:
+    src: config.j2
+    dest: "{{ demo_nginx_full_config_path }}"
+    owner: "{{ demo_nginx_user }}"
+    group: "{{ demo_nginx_group }}"
+    mode: "{{ demo_nginx_config_mode }}"
+    backup: true
+    # validate runs the service's own config checker against the candidate file
+    # before it replaces the live one, so a bad render cannot take the service
+    # down. %s is the path of the candidate. Delete this line only if the
+    # service ships no checker.
+    validate: "/usr/sbin/nginx -t -c %s"
+  notify: Restart the service
+  tags:
+    - configure
+
+- name: Ensure the service is started and enabled
+  ansible.builtin.service:
+    name: "{{ demo_nginx_service_name }}"
+    state: started
+    enabled: true
+  tags:
+    - service

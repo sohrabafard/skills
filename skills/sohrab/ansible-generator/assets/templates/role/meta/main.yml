@@ -1,37 +1,39 @@
 ---
-# Role: [ROLE_NAME]
-# Metadata
+# Role: ROLE_NAME
+# Role metadata.
 
 galaxy_info:
-  role_name: [ role_name ]
-  author: [ Author Name ]
-  description: [ Role description ]
-  company: [ Company Name ]
+  role_name: ROLE_NAME
+  namespace: CHANGE_ME_namespace
+  author: CHANGE_ME_author
+  description: CHANGE_ME_one_line_description
+  company: CHANGE_ME_company
   license: MIT
-  min_ansible_version: "2.10"
+  # The oldest ansible-core this role is tested against. 2.19 is the oldest
+  # branch still receiving security fixes; it reaches end of life in November
+  # 2026. Re-derive the supported branches from the releases-and-maintenance
+  # page listed in ansible-validator (/ansible-validator, $ansible-validator)
+  # at its references/source-map.md.
+  min_ansible_version: "2.19"
 
+  # Only list a platform this role was actually tested on. A platform in this
+  # list that nobody tested is a claim the role cannot support.
   platforms:
     - name: Ubuntu
       versions:
-        - focal    # 20.04
-        - jammy    # 22.04
-        - noble    # 24.04
+        - jammy
+        - noble
     - name: Debian
       versions:
-        - bullseye # 11
-        - bookworm # 12
+        - bookworm
+        - trixie
     - name: EL
       versions:
-        - 8
-        - 9
+        - "9"
+        - "10"
 
   galaxy_tags:
-    - [ tag1 ]
-    - [ tag2 ]
-    - [ tag3 ]
+    - CHANGE_ME_tag_one
+    - CHANGE_ME_tag_two
 
-dependencies: [ ]
-# dependencies:
-#   - role: common
-#     vars:
-#       some_var: value
+dependencies: []

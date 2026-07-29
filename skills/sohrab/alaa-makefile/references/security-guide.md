@@ -1,362 +1,253 @@
-# Makefile Security Guide
+# Makefile security
 
-## Overview
+**Owner of:** credentials in and around a Makefile, validation of untrusted values, shell injection,
+path traversal, temporary files, download verification, and what must not reach a build log or an image
+layer. Read this first in any review lane.
 
-This guide covers security best practices for Makefiles, including secrets management, input validation, shell injection
-prevention, and CI/CD security considerations.
+`/alaa-security-review` (`$alaa-security-review`) decides review triggers, threat classes and what must
+fail closed. This file states how those decisions are expressed in Make.
 
-## Secrets Management
+## Credentials
 
-### Never Commit Secrets
-
-**DO NOT** hardcode credentials, API keys, or passwords in Makefiles:
+### Never a literal
 
 ```makefile
-# WRONG: Hardcoded credentials
-DB_PASSWORD := mysecretpassword
+# wrong
+DB_PASSWORD := hunter2
 AWS_SECRET := AKIAIOSFODNN7EXAMPLE
 ```
 
-### Use Environment Variables
+`scripts/validate_makefile.sh` reports any credential-shaped assignment as an error. The pattern covers
+`password`, `secret`, `api_key`, `token`, `private_key`, `aws_*`, `github_token`, `database_url`,
+`ssh_key`, `ssl_key` and `encryption_key`.
 
-Pass secrets via environment variables:
+### Fail closed, do not default
 
 ```makefile
-# CORRECT: Environment variable with validation
+API_TOKEN ?= $(error API_TOKEN is not set; export it or load it from the secret store)
 DB_PASSWORD ?= $(error DB_PASSWORD is not set)
-AWS_SECRET_KEY ?= $(error AWS_SECRET_KEY is not set)
-
-deploy:
-	@echo "Deploying with credentials from environment..."
-	./deploy.sh
 ```
 
-### Use .env Files (Not in Git)
+`$(error …)` inside `?=` is deferred, so it fires when the variable is referenced. A target that does not
+need the credential still runs, and a target that needs it stops before doing half its work. A default is
+never correct for a credential: a default that works is a credential in the file, and a default that does
+not work turns an authentication failure into an obscure one.
+
+### Fetch at use, do not cache in a Make variable
 
 ```makefile
-# Include .env file if it exists (never commit .env!)
+## Deploy using a credential fetched at run time
+deploy:
+	DB_PASSWORD="$$(vault kv get -field=password secret/database)" ./deploy.sh
+```
+
+The value lives in the recipe's shell and never becomes a Make variable, so it cannot leak through
+`make -p`, through `.EXPORT_ALL_VARIABLES:` or into a sub-make's environment.
+
+### `.env` files
+
+```makefile
 -include .env
-export
-
-# Ensure .gitignore contains .env
-.PHONY: check-env
-check-env:
-	@grep -q '^\.env$$' .gitignore || echo "WARNING: Add .env to .gitignore!"
+export DATABASE_URL APP_KEY
 ```
 
-### Secrets from External Sources
+`-include` rather than `include`, so a developer without the file still gets a usable Makefile. Export
+the specific names; a bare `export` or `.EXPORT_ALL_VARIABLES:` sends every variable to every subprocess
+and the validator reports it. Confirm `.env` is in `.gitignore` before writing the `-include`.
 
-**AWS Secrets Manager:**
+Note that a Compose file does **not** read this. Compose interpolates from the shell environment and
+`--env-file` only, never from a service-level `env_file:` key; `/alaa-docker-production`
+(`$alaa-docker-production`) owns that invariant, and `compose-and-container-targets.md` states how a
+target passes `--env-file`.
+
+## Keeping secrets out of logs and layers
 
 ```makefile
-# Fetch secret at runtime, don't cache in Makefile variables
+# wrong: the token is in the build log
 deploy:
-	@DB_PASSWORD=$$(aws secretsmanager get-secret-value \
-		--secret-id prod/db/password \
-		--query SecretString --output text) && \
-	./deploy.sh
-```
+	curl -H "Authorization: Bearer $(API_TOKEN)" https://api.example.com/
 
-**HashiCorp Vault:**
-
-```makefile
+# right: suppress the echo, and read the value in the shell
 deploy:
-	@DB_PASSWORD=$$(vault kv get -field=password secret/database) && \
-	./deploy.sh
+	@curl -H "Authorization: Bearer $$API_TOKEN" https://api.example.com/
 ```
 
-## Shell Injection Prevention
-
-### Input Validation
-
-Always validate user-provided variables:
+`@` is correct here and only here. `ci-entrypoint.md` forbids `@` on a gate command, because silencing a
+gate hides the command a reader needs; the resolution is that a command carrying a secret is not written
+inline in a Makefile at all — it goes into a script, and the target invokes the script.
 
 ```makefile
-# Validate PROJECT_NAME contains only safe characters
-PROJECT_NAME := $(strip $(PROJECT_NAME))
-ifneq ($(PROJECT_NAME),$(shell echo '$(PROJECT_NAME)' | tr -cd 'a-zA-Z0-9_-'))
-$(error PROJECT_NAME contains invalid characters. Use only [a-zA-Z0-9_-])
-endif
+# wrong: --build-arg values are recorded in the image's layer history
+image/build:
+	docker build --build-arg API_KEY=$(API_KEY) -t $(IMAGE) .
+
+# right: BuildKit secrets are mounted for one RUN and are not committed to a layer
+image/build:
+	DOCKER_BUILDKIT=1 docker build --secret id=api_key,src=$(API_KEY_FILE) -t $(IMAGE) .
 ```
 
-### Quote Variables in Shell Commands
+The Dockerfile side of that — the `RUN --mount=type=secret` line — belongs to
+`/alaa-docker-production` (`$alaa-docker-production`).
+
+## Untrusted values
+
+A value that comes from the command line, the environment or a CI variable is untrusted. Quoting alone
+is not enough when the value is interpolated into a command the shell will parse.
+
+### Allow-list, do not sanitise
 
 ```makefile
-# WRONG: Unquoted variables - vulnerable to injection
+ALLOWED_ENVS := dev staging prod
+ENVIRONMENT ?= dev
+
+## Deploy to ENVIRONMENT, which must be one of ALLOWED_ENVS
+deploy:
+	@echo "$(ALLOWED_ENVS)" | tr ' ' '\n' | grep -qxF "$(ENVIRONMENT)" \
+	  || { echo "ERROR: ENVIRONMENT must be one of: $(ALLOWED_ENVS)" >&2; exit 1; }
+	./deploy.sh "$(ENVIRONMENT)"
+```
+
+An allow-list states what is permitted. A deny-list or a character-stripping filter states what someone
+already thought of, and is defeated by the next encoding.
+
+### Quote every expansion that reaches a shell
+
+```makefile
+# wrong: a space or a semicolon in USER_INPUT becomes new arguments or a new command
 process:
 	./script.sh $(USER_INPUT)
 
-# CORRECT: Quoted variables
+# right
 process:
 	./script.sh '$(USER_INPUT)'
 ```
 
-### Avoid Shell Expansion of User Input
+Single quotes stop the shell expanding the value. They do not stop a value that itself contains a single
+quote, which is why the allow-list above comes first.
+
+### Three constructs that are never acceptable
 
 ```makefile
-# WRONG: Shell will interpret special characters
-echo-input:
-	@echo $(MESSAGE)
-
-# SAFER: Use printf with proper quoting
-echo-input:
-	@printf '%s\n' '$(MESSAGE)'
+run-command:  ; $(USER_COMMAND)      # the value IS the command
+execute:      ; echo $(INPUT) | sh   # the value becomes a script
+eval-input:   ; @eval $(USER_INPUT)  # the value becomes shell source
 ```
 
-### Dangerous Patterns to Avoid
+There is no safe form of these. Replace them with a fixed command that takes the value as an argument
+after the allow-list check.
+
+## Path traversal
 
 ```makefile
-# NEVER do this - allows arbitrary command execution
-run-command:
-	$(USER_COMMAND)
+DATA_DIR := ./data
 
-# NEVER pipe untrusted input to shell
-execute:
-	echo $(INPUT) | sh
-
-# NEVER use eval with user input
-eval-input:
-	@eval $(USER_INPUT)
-```
-
-## Variable Expansion Security
-
-### Simple vs Recursive Expansion
-
-```makefile
-# Use := for values that shouldn't be re-evaluated
-SAFE_VALUE := $(shell whoami)
-
-# = causes re-evaluation each time - potential for injection
-# if EXTERNAL_VAR changes after assignment
-UNSAFE_VALUE = $(EXTERNAL_VAR)
-```
-
-### Dollar Sign Escaping
-
-When working with passwords containing `$`:
-
-```makefile
-# Password with $ sign - double the $ to escape
-# If password is "pa$$word", set it as:
-PASSWORD := pa$$$$word
-
-# Or read from file where $ is already escaped
-PASSWORD := $(shell cat .password | sed 's/\$$/\$\$\$\$/g')
-```
-
-## File System Security
-
-### Path Traversal Prevention
-
-```makefile
-# WRONG: User can specify "../../../etc/passwd"
-read-file:
-	cat $(FILE_PATH)
-
-# SAFER: Validate path is within expected directory
-SAFE_DIR := ./data
-read-file:
-	@case "$(FILE_PATH)" in \
-		$(SAFE_DIR)/*) cat "$(FILE_PATH)" ;; \
-		*) echo "ERROR: Invalid path" >&2; exit 1 ;; \
+## Print a file from DATA_DIR
+show:
+	@case "$(FILE)" in \
+	  $(DATA_DIR)/*) [ -f "$(FILE)" ] && cat "$(FILE)" ;; \
+	  *) echo "ERROR: FILE must be inside $(DATA_DIR)" >&2; exit 1 ;; \
 	esac
 ```
 
-### Secure Temporary Files
+The prefix test is necessary and not sufficient: `./data/../../etc/passwd` has the right prefix. Resolve
+the path before comparing when the value is genuinely hostile, or hold the allowed names in a variable
+and match against that list instead.
+
+## Destructive commands
 
 ```makefile
-# Use mktemp for secure temporary files
-process:
-	@TMPFILE=$$(mktemp) && \
-	trap 'rm -f "$$TMPFILE"' EXIT && \
-	./generate-config > "$$TMPFILE" && \
-	./process-config "$$TMPFILE"
+# wrong: an unset or wrong BUILD_DIR makes this catastrophic
+clean:
+	rm -rf $(BUILD_DIR)/*
+
+# right
+BUILD_DIR ?= build
+
+clean:
+	@case "$(BUILD_DIR)" in \
+	  ''|/|/*) echo "ERROR: refusing to clean '$(BUILD_DIR)'" >&2; exit 1 ;; \
+	esac
+	rm -rf -- "$(BUILD_DIR)"
 ```
 
-### File Permission Handling
+Three separate protections: a default so the variable is never empty,
+`MAKEFLAGS += --warn-undefined-variables` from the preamble so a typo is reported, and a guard that
+refuses an absolute path. The validator reports `rm -rf`, `sudo`, `curl` and `wget` driven by a variable
+the file never defines.
+
+## Temporary files
 
 ```makefile
-# Set restrictive permissions on sensitive files
+render:
+	TMPFILE="$$(mktemp)"
+	trap 'rm -f "$$TMPFILE"' EXIT
+	./generate-config > "$$TMPFILE"
+	./install-config "$$TMPFILE"
+```
+
+`mktemp` with no argument uses `TMPDIR` and creates the file with mode 600, so a predictable name in a
+world-writable directory cannot be pre-created by someone else. The `trap` needs `.ONESHELL:` to be in
+scope for the whole recipe, which the mandated preamble provides.
+
+Never create a scratch directory inside the repository. On this fleet the checkout is read-only in
+places, and a leftover directory changes what `$(wildcard …)` returns on the next run.
+
+## Downloads
+
+```makefile
+CURL := curl --proto '=https' --tlsv1.2 -fsSL
+
+fetch:
+	$(CURL) -o package.tar.gz https://example.com/package.tar.gz
+	$(CURL) -o package.tar.gz.sha256 https://example.com/package.tar.gz.sha256
+	sha256sum -c package.tar.gz.sha256
+```
+
+`--proto '=https'` refuses to follow a redirect to plain HTTP, `--tlsv1.2` sets a floor, `-f` makes an
+HTTP error status a non-zero exit rather than a downloaded error page, and `-S` keeps the error message
+while `-s` suppresses the progress meter. Verify the checksum or a GPG signature from a *different*
+source than the artifact; a checksum served beside the file by the same compromised host proves nothing.
+
+Never pipe a download to a shell.
+
+## File permissions
+
+```makefile
 install-config:
-	install -m 600 config.secret $(DESTDIR)/etc/myapp/
-
-# Create directories with appropriate permissions
-install-dirs:
-	install -d -m 700 $(DESTDIR)/var/lib/myapp/secrets
+	install -d -m 700 $(DESTDIR)/var/lib/$(PROJECT)/secrets
+	install -m 600 config.secret $(DESTDIR)/etc/$(PROJECT)/
 ```
 
-## CI/CD Security
+Set the mode in the same command that creates the file. A `chmod` afterwards leaves a window in which the
+file exists with the default mode.
 
-### Avoid Logging Secrets
+## Audit trail
 
-```makefile
-# WRONG: Password visible in logs
-deploy:
-	curl -u user:$(PASSWORD) https://api.example.com
+A Makefile is a developer's local tool and is not the system of record for who deployed what. Do not
+write an audit log to a fixed host path from a recipe: the path may not exist, may not be writable, and
+is not collected. What must be emitted when a privileged target runs, and where it goes, is decided by
+`/alaa-observability-soc` (`$alaa-observability-soc`); the names it uses are decided by
+`/alaa-services-contract` (`$alaa-services-contract`); and whether the target may run at all outside a
+change window is decided by `/alaa-controlled-ops` (`$alaa-controlled-ops`).
 
-# CORRECT: Suppress command echo
-deploy:
-	@curl -u user:$(PASSWORD) https://api.example.com
+## Checklist
 
-# BEST: Use credential helper
-deploy:
-	@curl --netrc-file ~/.netrc https://api.example.com
-```
+- [ ] No credential-shaped assignment; every required credential fails closed with `$(error …)`
+- [ ] `.env` is in `.gitignore` and included with `-include`
+- [ ] No bare `export` and no `.EXPORT_ALL_VARIABLES:`
+- [ ] Every untrusted value passes an allow-list before it reaches a command
+- [ ] No `$(USER_COMMAND)`, no `| sh`, no `eval`
+- [ ] Destructive commands guarded, and their variables defaulted
+- [ ] Temporary files from `mktemp`, removed by a `trap`, never inside the repository
+- [ ] Downloads over pinned TLS with `-f`, and verified against an independently sourced checksum
+- [ ] No secret in a build log and none in `--build-arg`
+- [ ] Permissions set at creation, not afterwards
 
-### Fail Securely
+## What this file does not decide
 
-```makefile
-# Use strict mode
-SHELL := bash
-.SHELLFLAGS := -eu -o pipefail -c
-
-# Ensure sensitive operations fail closed
-deploy:
-	@test -n "$(API_KEY)" || { echo "ERROR: API_KEY not set" >&2; exit 1; }
-	@./deploy.sh
-```
-
-### Environment Isolation
-
-```makefile
-# Don't inherit all environment variables
-# Only export what's needed
-unexport HISTFILE
-unexport AWS_SESSION_TOKEN
-
-# Explicitly export required variables
-export PATH
-export HOME
-```
-
-### Audit Logging
-
-```makefile
-AUDIT_LOG := /var/log/makefile-audit.log
-
-audit-log = @echo "$$(date -Iseconds) [$(1)] $(2)" >> $(AUDIT_LOG)
-
-deploy: check-permissions
-	$(call audit-log,DEPLOY,Starting deployment by $$USER)
-	./deploy.sh
-	$(call audit-log,DEPLOY,Deployment completed)
-```
-
-## Network Security
-
-### Secure Downloads
-
-```makefile
-# Always verify downloads
-CHECKSUM_FILE := checksums.sha256
-
-download:
-	curl -fsSL -o package.tar.gz https://example.com/package.tar.gz
-	sha256sum -c $(CHECKSUM_FILE)
-
-# Or use GPG verification
-download-verified:
-	curl -fsSL -o package.tar.gz https://example.com/package.tar.gz
-	curl -fsSL -o package.tar.gz.asc https://example.com/package.tar.gz.asc
-	gpg --verify package.tar.gz.asc package.tar.gz
-```
-
-### TLS/HTTPS Only
-
-```makefile
-# Force HTTPS for all downloads
-CURL_OPTS := --proto '=https' --tlsv1.2
-
-download:
-	curl $(CURL_OPTS) -fsSL -o file.txt https://example.com/file.txt
-```
-
-## Container Security
-
-### Don't Build as Root
-
-```makefile
-docker-build:
-	docker build --build-arg USER_ID=$$(id -u) --build-arg GROUP_ID=$$(id -g) -t myapp .
-
-# In Dockerfile, create non-root user
-```
-
-### Scan Images for Vulnerabilities
-
-```makefile
-IMAGE := myapp:latest
-
-.PHONY: docker-scan
-docker-scan: docker-build
-	@if command -v trivy >/dev/null 2>&1; then \
-		trivy image --exit-code 1 --severity HIGH,CRITICAL $(IMAGE); \
-	else \
-		echo "WARNING: trivy not found, skipping security scan"; \
-	fi
-```
-
-### Don't Pass Secrets as Build Args
-
-```makefile
-# WRONG: Secret visible in image layers
-docker-build:
-	docker build --build-arg API_KEY=$(API_KEY) -t myapp .
-
-# CORRECT: Use build secrets (BuildKit)
-docker-build:
-	DOCKER_BUILDKIT=1 docker build \
-		--secret id=api_key,src=.api_key \
-		-t myapp .
-```
-
-## Secure Defaults
-
-### Modern Makefile Preamble
-
-```makefile
-# Secure and strict Makefile configuration
-SHELL := bash
-.SHELLFLAGS := -eu -o pipefail -c
-.DELETE_ON_ERROR:
-MAKEFLAGS += --warn-undefined-variables
-MAKEFLAGS += --no-builtin-rules
-
-# Prevent accidental exposure
-unexport HISTFILE
-```
-
-### Require Explicit Targets
-
-```makefile
-# Prevent running all targets by accident
-.PHONY: all
-all:
-	@echo "Please specify a target. Run 'make help' for options."
-	@exit 1
-```
-
-## Security Checklist
-
-Before committing a Makefile:
-
-- [ ] No hardcoded credentials, API keys, or passwords
-- [ ] Secrets loaded from environment or secret manager
-- [ ] `.env` file listed in `.gitignore`
-- [ ] User input is validated before use
-- [ ] Shell commands use proper quoting
-- [ ] No use of `eval` with external input
-- [ ] Downloads verified with checksums or signatures
-- [ ] Sensitive commands prefixed with `@` to hide from logs
-- [ ] Temporary files created securely and cleaned up
-- [ ] File permissions are appropriately restrictive
-- [ ] Container builds don't expose secrets in layers
-
-## References
-
-- [OWASP Command Injection](https://owasp.org/www-community/attacks/Command_Injection)
-- [CWE-78: Improper Neutralization of Special Elements](https://cwe.mitre.org/data/definitions/78.html)
-- [GNU Make Security Considerations](https://www.gnu.org/software/make/manual/html_node/Environment.html)
-- [Passing Credentials in GNU Make - Security Stack Exchange](https://security.stackexchange.com/questions/278120/passing-credentials-in-gnu-make)
-- [GitGuardian - Secure Your Secrets with .env](https://blog.gitguardian.com/secure-your-secrets-with-env/)
+- The Dockerfile and Compose sides of image and container security: `/alaa-docker-production`
+  (`$alaa-docker-production`).
+- Which threats require review and what must fail closed: `/alaa-security-review`
+  (`$alaa-security-review`).
+- Shell-script security once a recipe becomes a script: `/alaa-bash-shell` (`$alaa-bash-shell`).
+- The preamble that several of these patterns depend on: `makefile-structure.md`.

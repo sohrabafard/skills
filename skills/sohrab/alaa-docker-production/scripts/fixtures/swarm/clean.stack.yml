@@ -1,0 +1,108 @@
+# Fixture: a compliant Swarm stack file. check-stack-rollout must report zero findings.
+# The reasoning for every value here is in
+# alaa-docker-production references/30-swarm-delivery.md.
+name: fixture-clean-stack
+
+services:
+  platform-app-php:
+    image: registry.example.invalid/alaa/comment-service:1.4.2
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/octane/healthcheck.sh"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 45s
+      start_interval: 2s
+    secrets:
+      - source: comment_app_key_v3
+        target: app_key
+        uid: "1000"
+        gid: "1000"
+        mode: 0400
+    deploy:
+      replicas: 3
+      endpoint_mode: vip
+      update_config:
+        parallelism: 1
+        order: start-first
+        delay: 10s
+        monitor: 60s
+        failure_action: rollback
+        max_failure_ratio: 0
+      rollback_config:
+        parallelism: 1
+        order: start-first
+        delay: 5s
+        monitor: 30s
+        failure_action: pause
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+        reservations:
+          cpus: "1.0"
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 0
+        window: 120s
+    networks:
+      - shared
+
+  worker:
+    image: registry.example.invalid/alaa/comment-service:1.4.2
+    command: ["php", "artisan", "queue:work", "rabbitmq", "--queue=default"]
+    stop_grace_period: 120s
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/octane/worker-healthcheck.sh"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        order: start-first
+        delay: 15s
+        monitor: 60s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        order: start-first
+        monitor: 30s
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+      restart_policy:
+        condition: any
+        delay: 15s
+        window: 300s
+    networks:
+      - shared
+
+  db-provision:
+    image: registry.example.invalid/alaa/comment-service:1.4.2
+    command: ["php", "artisan", "db:provision"]
+    deploy:
+      mode: replicated-job
+      replicas: 1
+      restart_policy:
+        condition: none
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
+    name: alaa-shared-network
+
+secrets:
+  comment_app_key_v3:
+    external: true

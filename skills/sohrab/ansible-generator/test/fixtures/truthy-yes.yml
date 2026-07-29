@@ -1,0 +1,17 @@
+---
+# Fixture: non-canonical booleans. The skill's own checklist has required
+# true/false since before check_templates.py existed, and the templates used
+# yes in five places, which is what a rule with no checker looks like.
+# check_templates.py --self-test asserts that these are reported. Do not fix it.
+- name: Deploy a configuration file
+  ansible.builtin.template:
+    src: config.j2
+    dest: /etc/app/config.yml
+    mode: "0644"
+    backup: yes
+
+- name: Ensure the service is enabled
+  ansible.builtin.service:
+    name: app
+    state: started
+    enabled: yes

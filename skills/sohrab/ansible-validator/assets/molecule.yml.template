@@ -1,21 +1,65 @@
 ---
-# Molecule configuration template for Ansible role testing
-# Copy this file to your role's molecule/default/molecule.yml
+# Molecule scenario configuration template.
+# Copy to <role>/molecule/<scenario>/molecule.yml and edit the platform list.
+#
+# Verified 2026-07-29 against molecule 26.6.0. Re-derive the action list with
+#   molecule --help
+# and the available drivers with
+#   molecule drivers
+#
+# WHICH CONFIGURATION MODEL THIS IS
+#
+# The driver / platforms / provisioner / verifier keys below are what the
+# official documentation calls the pre-ansible-native model
+# (https://docs.ansible.com/projects/molecule/pre-ansible-native/). It is
+# maintained for compatibility, drivers are described there as displaced by
+# collections, and no removal date is published. It is the model most existing
+# roles use, so it is the model this template ships. references/molecule.md
+# states the migration condition.
+#
+# WHICH PACKAGE PROVIDES THE DRIVER
+#
+# `molecule drivers` on a stock install lists `default` only. The docker driver
+# comes from molecule-plugins:
+#     python3 -m pip install "molecule>=25.0" "molecule-plugins[docker]"
+# Do NOT install molecule-docker. Its last release was 2022-09-29 and the
+# official installation guide tells upgraders to uninstall it to avoid
+# conflicts with molecule-plugins.
+#
+# WHEN THIS SCENARIO MAY BE RUN
+#
+# `molecule converge` applies the role for real inside a container it creates,
+# and the platform entries below ask for privileged containers with
+# /sys/fs/cgroup mounted read-write. Run a scenario when a human asked for a
+# test and the machine is a disposable test host. scripts/test_role.sh requires
+# --i-confirm-disposable-host for exactly that reason.
 
-# Dependency manager
 dependency:
   name: galaxy
   options:
     requirements-file: requirements.yml
-    role-file: requirements.yml
 
-# Test driver (docker, podman, vagrant, ec2, etc.)
 driver:
   name: docker
 
-# Test platforms - define your test instances
+# Base images. Test against versions that still receive security updates: an
+# out-of-support base gives a false signal, because a fix you rely on may be
+# absent and a failure you see may already be fixed upstream.
+# Re-derive support windows from https://endoflife.date/ubuntu,
+# https://endoflife.date/debian and https://endoflife.date/rocky-linux.
 platforms:
-  # Ubuntu 22.04 LTS
+  - name: ubuntu-24-04
+    image: ubuntu:24.04
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    tmpfs:
+      - /run
+      - /tmp
+
   - name: ubuntu-22-04
     image: ubuntu:22.04
     pre_build_image: true
@@ -28,9 +72,8 @@ platforms:
       - /run
       - /tmp
 
-  # Ubuntu 20.04 LTS
-  - name: ubuntu-20-04
-    image: ubuntu:20.04
+  - name: debian-12
+    image: debian:12
     pre_build_image: true
     privileged: true
     command: /lib/systemd/systemd
@@ -41,22 +84,8 @@ platforms:
       - /run
       - /tmp
 
-  # Debian 11
-  - name: debian-11
-    image: debian:11
-    pre_build_image: true
-    privileged: true
-    command: /lib/systemd/systemd
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-    cgroupns_mode: host
-    tmpfs:
-      - /run
-      - /tmp
-
-  # Rocky Linux 9 (RHEL-compatible)
   - name: rocky-9
-    image: rockylinux:9
+    image: rockylinux/rockylinux:9
     pre_build_image: true
     privileged: true
     command: /usr/sbin/init
@@ -67,52 +96,35 @@ platforms:
       - /run
       - /tmp
 
-# Provisioner settings
 provisioner:
   name: ansible
   config_options:
     defaults:
       interpreter_python: auto_silent
-      callback_whitelist: profile_tasks, timer, yaml
+      # callbacks_enabled, not callback_whitelist. The old key was renamed in
+      # ansible-core 2.11 and `ansible-config validate -t all` now reports it as
+      # an unknown key in section 'defaults'.
+      callbacks_enabled: profile_tasks, timer
       stdout_callback: yaml
     ssh_connection:
       pipelining: true
-  inventory:
-    host_vars:
-      # Example host-specific vars
-      ubuntu-22-04:
-        ansible_python_interpreter: /usr/bin/python3
-      ubuntu-20-04:
-        ansible_python_interpreter: /usr/bin/python3
-      debian-11:
-        ansible_python_interpreter: /usr/bin/python3
-      rocky-9:
-        ansible_python_interpreter: /usr/bin/python3
   playbooks:
-    # Optional prepare playbook (runs before converge)
     prepare: prepare.yml
-    # Main converge playbook (runs your role)
     converge: converge.yml
-    # Verification playbook (tests if role worked)
     verify: verify.yml
-  # Additional Ansible configuration
   env:
     ANSIBLE_FORCE_COLOR: "true"
 
-# Verifier settings
 verifier:
   name: ansible
 
-# Linter settings
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
+# There is no `lint:` key in the Molecule configuration schema and no `lint`
+# action in `molecule --help`. Linting is a separate step:
+#     bash scripts/validate_role.sh <role>
+# The key was still shipped here until 2026-07-29, doing nothing.
 
-# Scenario settings
 scenario:
   name: default
-  # Test sequence
   test_sequence:
     - dependency
     - cleanup
@@ -126,18 +138,15 @@ scenario:
     - verify
     - cleanup
     - destroy
-  # Create sequence (for 'molecule create')
   create_sequence:
     - dependency
     - create
     - prepare
-  # Converge sequence (for 'molecule converge')
   converge_sequence:
     - dependency
     - create
     - prepare
     - converge
-  # Check sequence (for 'molecule check')
   check_sequence:
     - dependency
     - cleanup
@@ -147,7 +156,6 @@ scenario:
     - converge
     - check
     - destroy
-  # Destroy sequence (for 'molecule destroy')
   destroy_sequence:
     - dependency
     - cleanup

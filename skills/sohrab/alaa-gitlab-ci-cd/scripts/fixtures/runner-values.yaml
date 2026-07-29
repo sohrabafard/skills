@@ -1,0 +1,26 @@
+# Helm values with the legacy registration token and an unnamed service account.
+gitlabUrl: https://gitlab.example.com/
+
+runnerRegistrationToken: "REPLACE_WITH_LEGACY_TOKEN"
+
+rbac:
+  create: false
+
+runners:
+  tags: "k8s"
+  privileged: false
+  config: |
+    [[runners]]
+      executor = "kubernetes"
+      [runners.cache]
+        Type = "s3"
+      [runners.kubernetes]
+        namespace = "gitlab-runner"
+        service_account = "gitlab-runner"
+        image = "registry.example.com:5000/ci/toolchain:1.8.3"
+        helper_image = "registry.example.com:5000/mirror/gitlab-runner-helper:x86_64-v19.1.2"
+        image_pull_secrets = ["registry-pull"]
+        privileged = false
+        allowed_pull_policies = ["always"]
+        allowed_images = ["registry.example.com:5000/ci/toolchain:*"]
+        allowed_services = ["registry.example.com:5000/mirror/postgres:*"]

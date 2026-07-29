@@ -1,797 +1,203 @@
-# Makefile Optimization Guide
+# Parallel safety and incremental builds
 
-## Overview
+**Owner of:** `-j`, `--shuffle`, `--output-sync`, `.NOTPARALLEL`, `.WAIT`, `.INTERMEDIATE`,
+`.SECONDARY`, `.PRECIOUS`, `.NOTINTERMEDIATE`, and the debugging flags. No other file in this skill
+states these rules.
 
-This guide covers techniques for optimizing Makefile performance, including parallel builds, dependency tracking,
-incremental builds, caching strategies, and performance profiling.
+Version floors below are against GNU Make 4.4.1, the current stable release, verified 2026-07-29;
+`SOURCES.md` carries the command that re-derives it.
 
-## Parallel Builds
-
-### Enabling Parallel Execution
+## Parallel execution
 
 ```bash
-# Run with 4 parallel jobs
-make -j4
-
-# Use all CPU cores
-make -j$(nproc)
-
-# Unlimited parallel jobs (careful!)
-make -j
+make -j$(nproc)          # one job per core
+make -j4                 # four jobs
+make -j                  # unbounded; do not use in CI, it will exhaust memory
+make -j4 --output-sync=target   # keep each target's output together
 ```
 
-### Making Makefiles Parallel-Safe
+`--output-sync=target` is not optional in CI. Without it, several jobs interleave their output line by
+line and the log becomes unreadable exactly when a build fails.
 
-**Problem: Shared resources**
+`$(MAKE)` passes `-j` to a sub-make through the jobserver, so the total job count stays bounded. Bare
+`make` does not, so it serialises — one more reason `makefile-structure.md` forbids it.
+
+## Making a Makefile parallel-safe
+
+The defect is always the same shape: two recipes that can run at once touch the same thing.
 
 ```makefile
-# WRONG: Multiple rules write to same file
-target1:
-	echo "data1" >> shared.log
-
-target2:
-	echo "data2" >> shared.log
-
-# With -j2, file corruption likely!
+# unsafe: both recipes append to one file
+report/a: ; echo a >> shared.log
+report/b: ; echo b >> shared.log
 ```
 
-**Solution: Proper dependencies**
+Three correct fixes, in order of preference:
+
+1. **Give each recipe its own output**, then combine in a third target that depends on both. This keeps
+   the parallelism.
+2. **Express the real ordering as a prerequisite.** If `b` genuinely needs `a` to have finished, `b: a`
+   is the honest statement, and make will never run them together.
+3. **Serialise explicitly** with `.NOTPARALLEL` or `.WAIT` when the ordering is a resource constraint
+   rather than a data dependency.
+
+### `.NOTPARALLEL`
 
 ```makefile
-# RIGHT: Serialize access with dependencies
-target2: target1
-
-# Or use separate files
-target1:
-	echo "data1" > target1.log
-
-target2:
-	echo "data2" > target2.log
+.NOTPARALLEL:                              # all versions: nothing in this file runs in parallel
+.NOTPARALLEL: image/build image/push       # GNU Make 4.4+: serialise these targets' prerequisites
 ```
 
-### Controlling Parallelism
+The bare form is a blunt instrument and costs the whole file its parallelism; reach for it only in a file
+whose every target touches one shared resource. The form with prerequisites arrived in 4.4 and inserts a
+`.WAIT` between each prerequisite of the named targets.
+
+### `.WAIT`
 
 ```makefile
-# Disable parallel builds for this Makefile
-.NOTPARALLEL:
-
-# Disable parallelism for specific targets
-.NOTPARALLEL: install clean
-
-# Serialize specific targets
-install: build
-	# Install runs after build completes
+## Run the pipeline stages locally in the order the runner runs them
+ci/all: ci/build .WAIT ci/release .WAIT ci/deploy
 ```
 
-### GNU Make 4.4+ Parallel Control Features
+`.WAIT` in a prerequisite list means "everything to my left completes before anything to my right
+starts". It expresses ordering without inventing a dependency, so `ci/release` does not acquire
+`ci/build` as a prerequisite it would rebuild. It has no effect in a serial build, and it needs GNU Make
+4.4 or newer.
 
-GNU Make 4.4 (released October 2022) introduced new features for fine-grained parallel control. These are becoming part
-of the upcoming POSIX standard.
-
-#### .WAIT Special Target
-
-The `.WAIT` target provides explicit ordering without creating artificial dependencies:
+Guard a 4.4 construct when the file must also run on an older release:
 
 ```makefile
-# .WAIT ensures prerequisites to its left complete
-# before starting prerequisites to its right
-all: compile .WAIT link .WAIT package
-
-# Equivalent behavior without .WAIT would require:
-# link: compile
-# package: link
-# But .WAIT is cleaner when targets are independent conceptually
-```
-
-**Use Cases for .WAIT:**
-
-```makefile
-# Build phases with explicit ordering
-build: setup .WAIT compile .WAIT test .WAIT package
-	@echo "Build complete"
-
-# Parallel within phases, serial between phases
-ci: lint fmt .WAIT test.unit test.integration .WAIT build
-# lint and fmt run in parallel
-# then unit and integration tests run in parallel
-# finally build runs
-
-# Database migrations before tests
-test: migrate .WAIT run-tests
-	@echo "Tests complete"
-```
-
-**Important Notes:**
-
-- `.WAIT` only affects parallel builds (`make -j`)
-- With sequential execution, `.WAIT` has no effect
-- `.WAIT` doesn't create actual dependencies, just ordering
-- Available in GNU Make 4.4+ (check with `make --version`)
-
-#### .NOTPARALLEL with Prerequisites (Enhanced)
-
-In Make 4.4+, `.NOTPARALLEL` can take specific targets as prerequisites:
-
-```makefile
-# Traditional: Disable ALL parallel execution
-.NOTPARALLEL:
-
-# NEW in 4.4: Serialize only specific targets
-.NOTPARALLEL: install deploy cleanup
-
-# This implicitly adds .WAIT between each prerequisite
-# of the listed targets
-```
-
-**When to Use .NOTPARALLEL with Prerequisites:**
-
-```makefile
-# Deployment must be serial (avoid race conditions)
-.NOTPARALLEL: deploy
-
-deploy: deploy-database deploy-backend deploy-frontend
-	@echo "Deployment complete"
-# deploy-database -> deploy-backend -> deploy-frontend (serial)
-
-# But compilation can still be parallel
-build: $(OBJECTS)
-	$(CC) $^ -o $(TARGET)
-# Object files compile in parallel (unaffected by .NOTPARALLEL: deploy)
-```
-
-#### Version Checking for Make 4.4+ Features
-
-Check Make version before using 4.4+ features:
-
-```makefile
-# Check Make version (4.4 = 4.4, need >= 4.4)
-MAKE_VERSION_MAJOR := $(word 1,$(subst ., ,$(MAKE_VERSION)))
-MAKE_VERSION_MINOR := $(word 2,$(subst ., ,$(MAKE_VERSION)))
-
-# Simple version check
-ifeq ($(shell expr $(MAKE_VERSION_MAJOR) \>= 4),1)
-ifeq ($(shell expr $(MAKE_VERSION_MINOR) \>= 4),1)
-    HAVE_WAIT := 1
-endif
-endif
-
-# Alternative: Graceful degradation
-ifdef HAVE_WAIT
-    # Use .WAIT for modern Make
-    all: compile .WAIT link
+MIN_MAKE := 4.4
+ifeq ($(firstword $(sort $(MAKE_VERSION) $(MIN_MAKE))),$(MIN_MAKE))
+ci/all: ci/build .WAIT ci/release
 else
-    # Fall back to dependencies for older Make
-    link: compile
-    all: link
+ci/release: ci/build
+ci/all: ci/release
 endif
 ```
 
-**Practical Version Check Pattern:**
+`scripts/validate_makefile.sh` detects `.WAIT`, `.NOTPARALLEL` with prerequisites, `.NOTINTERMEDIATE`,
+`$(let …)` and `$(intcmp …)`, and reports an error when the locally installed make is older than 4.4.
 
-```makefile
-# At the top of your Makefile
-MIN_MAKE_VERSION := 4.4
-CURRENT_MAKE_VERSION := $(MAKE_VERSION)
-
-# Check and warn if using older Make
-ifeq ($(shell printf '%s\n' "$(MIN_MAKE_VERSION)" "$(CURRENT_MAKE_VERSION)" | sort -V | head -n1),$(MIN_MAKE_VERSION))
-    # Make version is sufficient
-else
-    $(warning GNU Make $(MIN_MAKE_VERSION)+ recommended. You have $(CURRENT_MAKE_VERSION))
-    $(warning Some parallel control features may not work)
-endif
-```
-
-#### Comparison: .WAIT vs Dependencies vs .NOTPARALLEL
-
-| Feature                  | Use Case                            | Make Version |
-|--------------------------|-------------------------------------|--------------|
-| Dependencies (`b: a`)    | Actual dependency relationship      | All          |
-| `.WAIT`                  | Ordering without dependency         | 4.4+         |
-| `.NOTPARALLEL:` (global) | Disable all parallel                | All          |
-| `.NOTPARALLEL: target`   | Serialize specific target's prereqs | 4.4+         |
-
-**Example Comparison:**
-
-```makefile
-# Using dependencies (works in all Make versions)
-# Problem: Creates false dependency relationship
-link: compile
-package: link
-all: package
-
-# Using .WAIT (Make 4.4+)
-# Cleaner: Explicit ordering, no false dependencies
-all: compile .WAIT link .WAIT package
-
-# Using .NOTPARALLEL with targets (Make 4.4+)
-# Best for: Targets that must never run in parallel
-.NOTPARALLEL: deploy
-deploy: step1 step2 step3
-```
-
-### Optimal Parallel Structure
-
-```makefile
-# Good parallel structure
-SOURCES := src1.c src2.c src3.c src4.c
-OBJECTS := $(SOURCES:.c=.o)
-
-# All .o files can build in parallel
-program: $(OBJECTS)
-	$(CC) $^ -o $@
-
-%.o: %.c
-	$(CC) -c $< -o $@
-```
-
-**Parallel execution:**
-
-```
-make -j4
-# Compiles 4 .c files simultaneously
-# Then links when all are done
-```
-
-## Dependency Tracking
-
-### Accurate Dependencies
-
-**Problem: Incorrect dependencies**
-
-```makefile
-# WRONG: Missing header dependencies
-main.o: main.c
-	$(CC) -c $< -o $@
-
-# If common.h changes, main.o won't rebuild!
-```
-
-**Solution: Automatic dependency generation**
-
-```makefile
-# Generate dependencies during compilation
-%.o: %.c
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
-
-# Include generated .d files
--include $(OBJECTS:.o=.d)
-```
-
-**Generated dependency file (main.d):**
-
-```makefile
-main.o: main.c common.h utils.h
-common.h:
-utils.h:
-```
-
-### Dependency Flags
-
-```makefile
-# -MMD: Generate dependency file (.d)
-# -MP: Add phony targets for headers
-# -MF file: Specify dependency file name
-
-DEPFLAGS = -MMD -MP -MF $(@:.o=.d)
-
-%.o: %.c
-	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
-```
-
-### Why -MP is Important
-
-**Without -MP:**
-
-```makefile
-# Generated main.d:
-main.o: main.c utils.h
-
-# If utils.h is deleted:
-make: *** No rule to make target 'utils.h'. Stop.
-```
-
-**With -MP:**
-
-```makefile
-# Generated main.d:
-main.o: main.c utils.h
-utils.h:
-
-# If utils.h is deleted, make continues
-# (assumes you also removed #include "utils.h")
-```
-
-## Incremental Builds
-
-### Timestamp-Based Builds
-
-Make rebuilds targets when prerequisites are newer:
-
-```makefile
-# program rebuilt if any .o is newer
-program: $(OBJECTS)
-	$(CC) $^ -o $@
-
-# main.o rebuilt if main.c or headers are newer
-main.o: main.c common.h
-	$(CC) -c main.c -o main.o
-```
-
-### Optimizing Dependency Chains
-
-**Inefficient:**
-
-```makefile
-# Every source depends on config.h
-# Changing config.h rebuilds EVERYTHING
-main.o: main.c config.h
-utils.o: utils.c config.h
-helper.o: helper.c config.h
-```
-
-**Better: Only include where needed**
-
-```makefile
-# Only main.c actually uses config.h
-main.o: main.c config.h
-utils.o: utils.c
-helper.o: helper.c
-```
-
-**Best: Use automatic dependencies**
-
-```makefile
-%.o: %.c
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
-
--include $(DEPENDS)
-# Automatically tracks which headers each file uses
-```
-
-### Intermediate File Management
-
-```makefile
-# Mark intermediate files
-.INTERMEDIATE: $(OBJECTS)
-# Deleted after use
-
-# Keep important intermediate files
-.SECONDARY: important.o
-# Not deleted
-
-# Never delete these files
-.PRECIOUS: %.o %.d
-# Protected from deletion
-```
-
-### Avoiding Unnecessary Rebuilds
-
-**Problem: Timestamp updates without changes**
-
-```makefile
-# WRONG: Always updates config.h
-config.h: config.h.in
-	sed 's/@VERSION@/$(VERSION)/g' $< > $@
-	# Updates timestamp even if content unchanged!
-```
-
-**Solution: Conditional update**
-
-```makefile
-# RIGHT: Only update if different
-config.h: config.h.in
-	sed 's/@VERSION@/$(VERSION)/g' $< > $@.tmp
-	cmp -s $@.tmp $@ || mv $@.tmp $@
-	rm -f $@.tmp
-```
-
-## Build Caching
-
-### Compiler Cache (ccache)
-
-```makefile
-# Use ccache for faster recompilation
-CC := ccache gcc
-CXX := ccache g++
-
-# Or conditionally:
-ifeq ($(shell command -v ccache 2>/dev/null),)
-CC ?= gcc
-else
-CC ?= ccache gcc
-endif
-```
-
-**Benefits:**
-
-- Caches compilation results
-- Speeds up clean rebuilds
-- Useful for CI/CD and switching branches
-
-### Distcc for Distributed Compilation
-
-```makefile
-# Distributed compilation across network
-CC := distcc gcc
-CXX := distcc g++
-
-# Set number of jobs based on available hosts
-DISTCC_HOSTS := localhost/2 build1/4 build2/4
-JOBS := 10
-```
-
-### Build Directory Caching
-
-```makefile
-# Keep build artifacts between clean builds
-.PHONY: clean distclean
-
-clean:
-	$(RM) $(TARGET)
-	# Keep .o and .d files for faster rebuild
-
-distclean: clean
-	$(RM) -r $(BUILDDIR)
-	# Complete clean
-```
-
-## Performance Optimization Techniques
-
-### 1. Use := Instead of =
-
-```makefile
-# SLOW: Recursive expansion (evaluated every use)
-SOURCES = $(wildcard src/*.c)
-OBJECTS = $(SOURCES:.c=.o)
-# $(OBJECTS) re-runs wildcard every time!
-
-# FAST: Simple expansion (evaluated once)
-SOURCES := $(wildcard src/*.c)
-OBJECTS := $(SOURCES:.c=.o)
-# Evaluated once when defined
-```
-
-### 2. Minimize Shell Invocations
-
-```makefile
-# SLOW: Multiple shell calls
-FILES = $(shell ls *.c)
-COUNT = $(shell ls *.c | wc -l)
-
-# FAST: Single shell call
-FILES := $(wildcard *.c)
-COUNT := $(words $(FILES))
-```
-
-### 3. Use Static Pattern Rules
-
-```makefile
-OBJECTS := main.o utils.o helper.o
-
-# FASTER: Static pattern rule (make knows exact files)
-$(OBJECTS): %.o: %.c
-	$(CC) -c $< -o $@
-
-# SLOWER: Pattern rule (make searches for matches)
-%.o: %.c
-	$(CC) -c $< -o $@
-```
-
-### 4. Reduce Makefile Parsing Time
-
-```makefile
-# SLOW: Complex shell commands in variable assignment
-VERSION = $(shell git describe --tags --always --dirty)
-
-# FAST: Use := to evaluate once
-VERSION := $(shell git describe --tags --always --dirty)
-
-# FASTER: Cache in file
-VERSION := $(file < VERSION.txt)
-```
-
-### 5. Avoid Recursive Make
-
-**Inefficient: Recursive Make**
-
-```makefile
-# Top-level Makefile
-SUBDIRS := lib1 lib2 app
-
-all:
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
-```
-
-**Problems:**
-
-- Multiple make invocations (slow)
-- Incorrect dependency tracking
-- Parallel builds broken
-
-**Efficient: Non-Recursive Make**
-
-```makefile
-# Single Makefile
-LIB1_SRC := $(wildcard lib1/*.c)
-LIB2_SRC := $(wildcard lib2/*.c)
-APP_SRC := $(wildcard app/*.c)
-
-ALL_SRC := $(LIB1_SRC) $(LIB2_SRC) $(APP_SRC)
-OBJECTS := $(ALL_SRC:.c=.o)
-
-# Single dependency tree
-# Accurate parallel builds
-```
-
-**Reference:** "Recursive Make Considered Harmful" by Peter Miller
-
-## Performance Profiling
-
-### Timing Individual Targets
-
-```makefile
-# Time recipe execution
-%.o: %.c
-	@echo "Compiling $<..."
-	@time $(CC) $(CFLAGS) -c $< -o $@
-```
-
-### Build Time Measurement
+### `--shuffle` is how you test the claim
 
 ```bash
-# Time entire build
-time make -j4
-
-# Output:
-# real    0m12.345s
-# user    0m45.678s
-# sys     0m3.456s
+make --shuffle=random -j$(nproc)     # GNU Make 4.4+
+make --shuffle=reverse -j$(nproc)
+make --shuffle=12345 -j$(nproc)      # reproduce a specific ordering by seed
 ```
 
-### Debug Output for Performance Analysis
+`--shuffle` randomises the order in which make considers prerequisites, which surfaces a missing
+prerequisite that the file's declaration order was accidentally hiding. A serial build and a `-j` build
+in declaration order can both pass while the graph is wrong; a shuffled build fails. Run it before
+claiming a Makefile is parallel-safe, and record the seed of any failure so it can be replayed.
+
+`--jobserver-style=fifo` selects the named-pipe jobserver, also new in 4.4, which is more robust than the
+pipe-based one across a `sudo` or a container boundary. Leave it at the default unless a sub-process is
+losing the jobserver.
+
+## Shared caches serialise
+
+A package installer and an image build both write to a cache outside the build directory, so two of them
+at once corrupt it:
+
+```makefile
+# unsafe under -j2: both run the installer against one node_modules
+web/build: ; npm ci && npm run build
+api/build: ; npm ci && go build ./...
+```
+
+Give the shared work its own target and depend on it:
+
+```makefile
+node_modules: package-lock.json
+	npm ci
+	touch $@
+
+web/build: node_modules ; npm run build
+api/build: node_modules ; go build ./...
+```
+
+`touch $@` is required because `npm ci` does not reliably update the directory's own timestamp, so
+without it the target reruns on every invocation. The validator reports an installer or image-build
+command in a file with no `.NOTPARALLEL`.
+
+## Incremental builds
+
+Make rebuilds a target when a prerequisite is newer. Two things break that:
+
+**A recipe that rewrites its output unconditionally** makes every downstream target rebuild even when
+nothing changed:
+
+```makefile
+# rewrites config.json every run
+config.json: config.json.in
+	envsubst < $< > $@
+
+# writes only on a real change
+config.json: config.json.in
+	envsubst < $< > $@.tmp
+	if cmp -s $@.tmp $@; then rm -f $@.tmp; else mv $@.tmp $@; fi
+```
+
+**An incomplete prerequisite list** makes make skip a rebuild that was needed. That is the harder
+failure, because it is silent. For compiled languages the compiler can emit its own dependency list;
+`native-toolchain.md` owns that mechanism.
+
+## Intermediate files
+
+| Directive | Effect | Floor |
+|---|---|---|
+| `.INTERMEDIATE: f` | make may delete `f` after the build that produced it | all |
+| `.SECONDARY: f` | `f` is intermediate but is not deleted | all |
+| `.SECONDARY:` (bare) | nothing is deleted as intermediate | all |
+| `.PRECIOUS: f` | `f` survives an interrupt or a failed recipe | all |
+| `.NOTINTERMEDIATE: f` | `f` is never treated as intermediate, even when a chained rule produced it | 4.4 |
+
+Make treats a file produced only as a step in a rule chain as intermediate and deletes it, then rebuilds
+it next time — which looks like a caching failure and is not. `.NOTINTERMEDIATE`, added in 4.4, turns
+that off for a named file, for a pattern, or globally when written bare. It is the direct answer to "why
+does make keep regenerating this file?".
+
+`.PRECIOUS` and `.DELETE_ON_ERROR` point in opposite directions and `.PRECIOUS` wins for the files it
+names. Use it only where a partial file is genuinely more useful than none — a long download that
+supports resumption. Everywhere else, `.DELETE_ON_ERROR` from the preamble is correct.
+
+## Cheap wins
+
+- `:=` rather than `=` for anything computed, so `wildcard` and `$(shell …)` run once. Owned by
+  `variables-guide.md`; it belongs here too as the largest single parse-time cost in most files.
+- `--no-builtin-rules` and `.SUFFIXES:`, both in the preamble, so make does not search its built-in rule
+  database per target. Owned by `makefile-structure.md`.
+- `$(words …)`, `$(filter …)` and `$(sort …)` instead of shelling out to `wc`, `grep` and `sort`. Each
+  `$(shell …)` is a fork at parse time.
+- Static pattern rules rather than open pattern rules for a known list, so make does no search. Owned by
+  `patterns-guide.md`.
+
+## Debugging a slow or wrong build
 
 ```bash
-# Show what make is doing
-make -d
-
-# Show only remake decisions
-make -d --debug=basic
-
-# Show implicit rule search
-make -d --debug=implicit
-
-# Profile make itself
-make --profile=profile.log
+make -n                       # print the commands without running them
+make -d                       # every decision make makes; very verbose
+make --debug=basic            # only the remake decisions
+make --debug=implicit         # only the implicit-rule search
+make -p                       # dump the full database, including built-in rules
+make --trace                  # print each recipe line with the target it belongs to
+make -W file.c target         # pretend file.c changed, and show what would rebuild
 ```
 
-### Finding Bottlenecks
+**GNU Make has no `--profile` flag.** A previous revision of this file taught
+`make --profile=profile.log` in two places; the flag does not exist in any release, and
+`make --profile=/tmp/p.log` answers `make: unrecognized option '--profile='`. To time a build, use
+`time make -j$(nproc)`; to attribute time to targets, use `make --trace` with timestamps or `--debug=basic`
+and read the remake decisions.
 
-```makefile
-# Add timing to critical paths
-$(TARGET): $(OBJECTS)
-	@echo "==> Linking $(TARGET)"
-	@time $(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+## What this file does not decide
 
-%.o: %.c
-	@echo "==> Compiling $<"
-	@time $(CC) $(CFLAGS) -c $< -o $@
-```
-
-## Optimization Best Practices
-
-### 1. Structure for Parallelism
-
-```makefile
-# Good: Independent compilation
-OBJECTS := a.o b.o c.o d.o
-
-program: $(OBJECTS)
-	$(CC) $^ -o $@
-
-%.o: %.c
-	$(CC) -c $< -o $@
-
-# make -j4 compiles 4 files at once
-```
-
-### 2. Accurate Dependencies
-
-```makefile
-# Use automatic dependency generation
-CFLAGS += -MMD -MP
--include $(OBJECTS:.o=.d)
-
-# Not manual maintenance
-```
-
-### 3. Minimal Clean
-
-```makefile
-# Keep intermediate files by default
-clean:
-	$(RM) $(TARGET)
-
-# Full clean only when needed
-distclean: clean
-	$(RM) $(OBJECTS) $(DEPENDS)
-```
-
-### 4. Efficient Variable Usage
-
-```makefile
-# Use := for computed values
-SOURCES := $(wildcard src/*.c)
-OBJECTS := $(SOURCES:.c=.o)
-
-# Use ?= for user overrides
-CC ?= gcc
-CFLAGS ?= -O2
-```
-
-### 5. Avoid Unnecessary Work
-
-```makefile
-# Don't rebuild if nothing changed
-config.h: config.h.in Makefile
-	@sed 's/@VERSION@/$(VERSION)/g' $< > $@.tmp
-	@if ! cmp -s $@ $@.tmp; then \
-		echo "  GEN     $@"; \
-		mv $@.tmp $@; \
-	else \
-		rm -f $@.tmp; \
-	fi
-```
-
-## Complete Optimized Example
-
-```makefile
-# Optimized Makefile for C project
-.DELETE_ON_ERROR:
-.SUFFIXES:
-
-PROJECT := optimized
-VERSION := 1.0.0
-
-# User-overridable (use ?=)
-CC ?= gcc
-CFLAGS ?= -Wall -Wextra -O2
-PREFIX ?= /usr/local
-
-# Computed once (use :=)
-SRCDIR := src
-BUILDDIR := build
-OBJDIR := $(BUILDDIR)/obj
-
-SOURCES := $(wildcard $(SRCDIR)/*.c)
-OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-DEPENDS := $(OBJECTS:.o=.d)
-TARGET := $(BUILDDIR)/$(PROJECT)
-
-# Check for ccache
-ifneq ($(shell command -v ccache 2>/dev/null),)
-    CC := ccache $(CC)
-endif
-
-# Optimization flags for dependencies
-DEPFLAGS = -MMD -MP
-
-.PHONY: all clean distclean profile
-
-all: $(TARGET)
-
-# Link (serial)
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(@D)
-	@echo "  LD      $@"
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
-
-# Compile (parallel-safe)
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(@D)
-	@echo "  CC      $<"
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
-
-# Include auto-generated dependencies
--include $(DEPENDS)
-
-# Minimal clean (keeps .o for faster rebuild)
-clean:
-	$(RM) $(TARGET)
-
-# Full clean
-distclean:
-	$(RM) -r $(BUILDDIR)
-
-# Profile build
-profile:
-	time $(MAKE) clean
-	time $(MAKE) -j$(shell nproc) all
-```
-
-## Benchmarking Results
-
-**Example project: 100 C files**
-
-| Configuration            | Build Time | Rebuild Time |
-|--------------------------|------------|--------------|
-| Sequential (make)        | 45s        | 12s          |
-| Parallel -j2             | 25s        | 7s           |
-| Parallel -j4             | 15s        | 4s           |
-| Parallel -j8             | 12s        | 3s           |
-| Parallel + ccache (cold) | 14s        | 3s           |
-| Parallel + ccache (warm) | 3s         | 1s           |
-
-**Key takeaways:**
-
-- Parallel builds: 3-4x speedup
-- ccache (warm): 10x speedup on clean builds
-- Accurate dependencies: Only rebuild what changed
-
-## Advanced Optimization
-
-### Precompiled Headers
-
-```makefile
-# Generate precompiled header
-$(OBJDIR)/common.h.gch: $(SRCDIR)/common.h
-	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -x c-header $< -o $@
-
-# Use precompiled header
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(OBJDIR)/common.h.gch
-	$(CC) $(CPPFLAGS) $(CFLAGS) -include $(OBJDIR)/common.h -c $< -o $@
-```
-
-### Link-Time Optimization (LTO)
-
-```makefile
-# Enable LTO for release builds
-release: CFLAGS += -flto -O3
-release: LDFLAGS += -flto -O3
-release: $(TARGET)
-```
-
-### Unity Builds
-
-```makefile
-# Combine all sources into one compilation unit
-unity.c: $(SOURCES)
-	@echo "Generating unity build..."
-	@for src in $(SOURCES); do \
-		echo "#include \"$$src\"" >> $@; \
-	done
-
-unity.o: unity.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Fast single-file compilation
-# Trade-off: No parallel compilation
-```
-
-## Profiling Tools
-
-```bash
-# Make's built-in profiling
-make --profile=profile.log
-# Analyze profile.log
-
-# Time individual targets
-make -d 2>&1 | grep -E "Considering|Must remake"
-
-# strace for system call analysis
-strace -c make 2>&1 | tail -20
-
-# Remake (make debugger)
-remake --debug
-```
-
-## References
-
-- [GNU Make Manual - Parallel Execution](https://www.gnu.org/software/make/manual/html_node/Parallel.html)
-- [GNU Make Manual - Parallel Disable (.WAIT, .NOTPARALLEL)](https://www.gnu.org/software/make/manual/html_node/Parallel-Disable.html)
-- [GNU Make 4.4 Release Notes](https://lists.gnu.org/archive/html/info-gnu/2022-10/msg00008.html)
-- [GNU Make 4.4.1 Release Notes](https://lists.gnu.org/archive/html/info-gnu/2023-02/msg00011.html)
-- [Recursive Make Considered Harmful](http://aegis.sourceforge.net/auug97.pdf)
-- [ccache Documentation](https://ccache.dev/manual/latest.html)
-- [Auto-Dependency Generation](https://make.mad-scientist.net/papers/advanced-auto-dependency-generation/)
+- The preamble, `.SUFFIXES:` and includes: `makefile-structure.md`.
+- Assignment operators: `variables-guide.md`.
+- `.PHONY`, order-only prerequisites and standard targets: `targets-guide.md`.
+- Automatic variables and pattern-rule selection: `patterns-guide.md`.
+- Whether a target may retry or wait on a slow dependency: `/alaa-reliability-sla`
+  (`$alaa-reliability-sla`).
+- Compiler caching, distributed compilation and link-time optimisation: `native-toolchain.md`.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa GitLab CI/CD"
-  short_description: "GitLab CI/CD, runners, and secure build workflows"
-  default_prompt: "Use $alaa-gitlab-ci-cd to generate, validate, review, or debug GitLab CI/CD YAML, runner configuration, and container-build workflows."
+  short_description: "GitLab CI/CD pipelines, runners, caching and secure builds"
+  default_prompt: "Use $alaa-gitlab-ci-cd to generate, validate, review, or debug GitLab CI/CD YAML, the job graph, cache keys and image pinning, runner configuration, and container-build workflows. It decides no gate: route that to $alaa-frontend-devops or $alaa-cicd-laravel-postgres."

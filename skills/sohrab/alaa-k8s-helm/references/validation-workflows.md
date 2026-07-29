@@ -1,254 +1,88 @@
-# Validation Workflows
+# The Kubernetes and Helm Delivery Gate Register
 
-## Contents
+This file is the register. For each gate it states the **predicate** it asserts, the **command** that evaluates it, and the **artifact** the command inspects. It decides which checks must pass before a Kubernetes or Helm change is applied; it writes no `.gitlab-ci.yml`, no other provider YAML, and no Dockerfile.
 
-- Principles
-- Tool checks
-- Raw manifest validation
-- Helm chart validation
-- CRDs and OpenShift resources
-- Permission and rollout checks
-- Report format
+- `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how each gate below is placed on a runner and decides no gate.
+- `/alaa-docker-production` (`$alaa-docker-production`) owns how the image a chart references is built and hardened, and decides no gate.
+- `/alaa-makefile` (`$alaa-makefile`) owns making a local Make target return the same verdict as the runner for the same gate.
+- `/caas-arvan-kuber` (`$caas-arvan-kuber`) contributes Arvan-only predicates to this register and owns no gate placement.
+- `/alaa-testing-strategy` (`$alaa-testing-strategy`) decides what a chart test must assert. This register decides only that the test exists, is packaged, and runs.
 
-## Principles
+## How to use the register
 
-Validation should move from cheapest and broadest checks to the most environment-specific checks.
+Run gates in the listed order: each one is cheaper than the one after it and its failures explain theirs. A gate marked **mandatory** blocks the change. A gate marked **conditional** blocks the change when its stated condition holds and is skipped, with the skip named in the report, otherwise.
 
-Recommended order:
+Report-only mode applies when the user said validate, lint, audit, or review; fix mode applies when the user said repair, refactor, generate, or patch. Both run the same gates.
 
-1. file and structure sanity
-2. YAML syntax and formatting
-3. schema validation
-4. rendered-output validation
-5. server-side dry-run
-6. permission and rollout-risk review
-7. upgrade-diff review when there is an existing release
+## The register
 
-Use report-only mode when the user asked to validate, lint, audit, or review. Use fix mode when the user asked to repair or refactor.
+| # | Gate | Predicate | Command | Artifact | Level |
+|---|---|---|---|---|---|
+| 0 | Tooling present | Every tool the lane needs is on `PATH` | `bash scripts/check_tools.sh helm` (or `yaml`, `debug`, `all`) | the machine | mandatory |
+| 1 | Chart structure | `Chart.yaml`, `values.yaml`, and `templates/` exist; `Chart.yaml` declares `apiVersion: v2`, a name, and a version; `values.schema.json` parses | `bash scripts/validate_chart_structure.sh CHART` | chart directory | mandatory for charts |
+| 2 | YAML syntax and style | The file parses and obeys the shared style rules | `yamllint -c assets/.yamllint FILE` | raw YAML, and rendered output; never Helm templates, which are not YAML until rendered | mandatory |
+| 3 | Resource classification | Every document's `apiVersion` is classified as Kubernetes, OpenShift, or custom, and no document failed to parse | `bash scripts/detect_crd_wrapper.sh FILE` | raw or rendered YAML | mandatory |
+| 4 | Dependency sanity | Every dependency in `Chart.yaml` resolves and is locked | `helm dependency list CHART` then `helm dependency build CHART` | chart directory | conditional: the chart declares dependencies |
+| 5 | Chart lint | Helm's own template and metadata checks pass with no error | `helm lint CHART -f values.yaml` | chart directory | mandatory for charts |
+| 6 | Render | The chart renders with default values and with each realistic override set | `helm template REL CHART -f values.yaml > rendered.yaml` | chart directory to rendered YAML | mandatory for charts |
+| 7 | Schema validation | Every document validates against the API schema for the target minor | `kubeconform -strict -summary -kubernetes-version 1.36.0 rendered.yaml` | rendered or raw YAML | mandatory |
+| 8 | Skill rules | No container omits `resources`; no workload container omits a `readinessProbe`; the security baseline holds; no host-level field is set; every Service `targetPort` resolves | `python3 scripts/check_manifests.py rendered.yaml` | rendered or raw YAML | mandatory |
+| 9 | Upgrade identity | No `spec.selector` and no `volumeClaimTemplates[].metadata.name` changed against the currently deployed release | `python3 scripts/check_manifests.py new.yaml --baseline current.yaml` | two rendered YAML sets | mandatory when a release already exists |
+| 10 | Server dry-run | Admission, webhooks, quota, and unknown fields accept the manifest on the real cluster | `kubectl apply --dry-run=server -f rendered.yaml` | rendered YAML against the live API | mandatory when API access exists |
+| 11 | Diff | The change set against the live cluster is the change set intended | `kubectl diff -f rendered.yaml`, or `helm diff upgrade REL CHART -f values-prod.yaml` when the plugin is installed | rendered YAML against live objects | conditional: read access to the target namespace |
+| 12 | Permission | The identity that will apply the change can create or patch every kind in it | `kubectl auth can-i create deployment -n NS`, and the exact verb for each sensitive kind, for example `oc auth can-i use scc/anyuid -n NS` | RBAC on the target | mandatory |
+| 13 | Chart tests packaged | `templates/tests/` survives `helm package` and the test runs | `helm package CHART` then `tar tzf CHART-VERSION.tgz \| grep templates/tests/`, then `helm test REL` after install | packaged chart | conditional: the chart ships tests |
+| 14 | Version drift | The version claims in this skill still match the vendors' pages | `python3 scripts/check_versions.py` | `references/version-awareness.md` | conditional: the answer depends on a version |
 
-## Tool checks
+### Gate 7, when a schema is missing
 
-Run the lane-specific tool inventory first.
+`kubeconform -ignore-missing-schemas` turns an unvalidated document into a pass, so it is not a substitute for validation. When a schema is missing:
 
-```bash
-bash scripts/check_tools.sh yaml
-bash scripts/check_tools.sh helm
-bash scripts/check_tools.sh debug
-```
+1. Fetch the CRD from the cluster: `kubectl get crd NAME -o json`.
+2. Extract `spec.versions[].schema.openAPIV3Schema` into a schema directory and pass it with `-schema-location`.
+3. Only when no cluster is reachable may the resource be reported as unvalidated, and the report must name the kind and say the gate was skipped.
 
-The script reports required and optional tools for the chosen lane and prefers `oc` when OpenShift tooling is present.
+A successful kubeconform pass never proves semantic correctness for a CRD. Identify the owning operator and check the `spec` shape against its documentation.
 
-## Raw manifest validation
+### Gate 10, why server-side and not client-side
 
-### Stage 1: syntax and formatting
+Server-side dry-run evaluates admission plugins, validating and mutating webhooks, quota, and unknown-field rejection against the cluster that will receive the object. Client-side dry-run evaluates none of these. When only client-side is available, say so in the report; do not describe the manifest as validated.
 
-Use the bundled yamllint config.
+### Gate 12, verbs that need an exact check
 
-```bash
-yamllint -c assets/.yamllint path/to/file.yaml
-```
+`create route`, `use scc/NAME`, `create pvc`, `create rolebinding`, `create clusterrole`, and `create customresourcedefinition` fail for identities that can create Deployments. Check each one that the change needs.
 
-Capture all syntax errors first. They often explain downstream schema failures.
+## Release-risk review
 
-### Stage 2: detect CRDs and OpenShift resources
+Gates catch what a machine can assert. Read the diff for these as well, because no shipped checker asserts them:
 
-```bash
-bash scripts/detect_crd_wrapper.sh path/to/file.yaml
-```
-
-Use the output to classify resources into:
-
-- standard Kubernetes
-- OpenShift platform resources
-- custom resources from operators or CRDs
-
-### Stage 3: schema validation
-
-For mostly standard Kubernetes manifests:
-
-```bash
-kubeconform -strict -summary -ignore-missing-schemas path/to/file.yaml
-```
-
-Use `-ignore-missing-schemas` only when custom or platform resources are expected. Missing schemas are not proof that a manifest is valid.
-
-### Stage 4: server-side dry-run
-
-Prefer server-side dry-run whenever API access exists.
-
-```bash
-kubectl apply --dry-run=server -f path/to/file.yaml
-oc apply --dry-run=server -f path/to/file.yaml
-```
-
-Why server-side first:
-
-- it catches admission issues
-- it catches API deprecations and unknown fields against the actual cluster
-- it checks policy and webhook behavior more accurately than client-side parsing
-
-### Stage 5: diff and permission checks
-
-If the user has safe read access to the target namespace, use:
-
-```bash
-kubectl diff -f path/to/file.yaml
-kubectl auth can-i apply -f path/to/file.yaml
-oc auth can-i create deployment -n <namespace>
-```
-
-Use exact resource verbs for sensitive changes such as `create route`, `use scc/<name>`, or `create pvc`.
-
-## Helm chart validation
-
-### Stage 1: chart structure
-
-```bash
-bash scripts/validate_chart_structure.sh path/to/chart
-```
-
-This catches missing files, broken `Chart.yaml`, absent values, and missing helper or schema files.
-
-### Stage 2: dependency sanity
-
-```bash
-helm dependency list path/to/chart
-helm dependency build path/to/chart
-```
-
-If the chart has no dependencies, do not force them.
-
-### Stage 3: lint the chart
-
-```bash
-helm lint path/to/chart
-```
-
-Treat lint output as follows:
-
-- **errors**: blocking
-- **warnings**: investigate; many are deployment risks rather than style nits
-
-### Stage 4: render with representative values
-
-Always render at least the default values and one realistic override set.
-
-```bash
-helm template release-name path/to/chart > rendered.yaml
-helm template release-name path/to/chart -f values-prod.yaml > rendered-prod.yaml
-```
-
-If the chart targets OpenShift, render both the Kubernetes path and the Route-enabled or OpenShift-enabled path when those toggles exist.
-
-### Stage 5: validate rendered output
-
-Run the raw manifest flow on the rendered YAML.
-
-```bash
-yamllint -c assets/.yamllint rendered.yaml
-kubeconform -strict -summary -ignore-missing-schemas rendered.yaml
-kubectl apply --dry-run=server -f rendered.yaml
-```
-
-### Stage 6: dry-run install or upgrade
-
-```bash
-helm install release-name path/to/chart --dry-run --debug
-helm upgrade --install release-name path/to/chart --dry-run --debug
-```
-
-If the `helm-diff` plugin is present and a live release already exists, use it.
-
-```bash
-helm diff upgrade release-name path/to/chart -f values-prod.yaml
-```
-
-### Stage 7: release-risk review
-
-Explicitly check for:
-
-- selector changes
-- Service port changes
-- PVC or StatefulSet identity changes
-- renamed resources
-- deleted hooks or tests that previously guarded rollout behavior
-- default value changes that alter exposure or security
-
-## CRDs and OpenShift resources
-
-Schema validation is weaker for platform-specific and custom resources. When schemas are missing, switch to doc-informed validation.
-
-### For OpenShift resources
-
-If the group ends with `.openshift.io`, validate against platform expectations instead of assuming generic Kubernetes rules.
-
-Common examples:
-
-- `route.openshift.io/v1`
-- `security.openshift.io/v1`
-- `image.openshift.io/v1`
-- `build.openshift.io/v1`
-- `project.openshift.io/v1`
-- `operator.openshift.io/v1`
-- `config.openshift.io/v1`
-
-Read `references/openshift-and-managed-platforms.md` when these appear.
-
-### For operator CRDs
-
-Identify the owning project or operator and validate the `spec` shape against its documentation or examples. A successful kubeconform pass does not prove semantic correctness for a CRD.
-
-## Permission and rollout checks
-
-Validation is incomplete unless you consider access and rollout semantics.
-
-### Permission checks
-
-Before recommending or applying a change, verify whether the user can do it.
-
-Examples:
-
-```bash
-kubectl auth can-i create deployment -n <namespace>
-kubectl auth can-i create clusterrole
-oc auth can-i use scc/anyuid -n <namespace>
-```
-
-### Rollout checks
-
-Look for these risks even when syntax is valid:
-
-- PDB blocks and surge settings that prevent rollout progress
+- Service port changes that break an Ingress or Route backend reference
+- renamed resources that leave orphans behind
+- deleted hooks or tests that previously guarded rollout behaviour
+- default value changes that alter exposure or security posture
+- PDB, `maxUnavailable`, and `maxSurge` combinations that cannot make progress — `references/failure-and-load.md` gives the arithmetic
 - PVCs that cannot bind in the target storage class
-- probes that will flap under startup behavior
-- Services with selectors that match no Pods
-- Routes or Ingresses pointing at the wrong Service port
-- changes that require cluster-scoped dependencies the user cannot create
+- probes that will flap under the application's real startup time
+- Services whose selector matches no Pod
+- changes that require cluster-scoped dependencies the applying identity cannot create
+
+## OpenShift and custom resources
+
+When the group ends with `.openshift.io`, validate against platform expectations rather than generic Kubernetes rules, and read `references/openshift-and-managed-platforms.md`. Common groups: `route.openshift.io/v1`, `security.openshift.io/v1`, `image.openshift.io/v1`, `build.openshift.io/v1`, `project.openshift.io/v1`, `operator.openshift.io/v1`, `config.openshift.io/v1`.
 
 ## Report format
 
-Use this format for report-only validation work.
-
 ### 1. Validation summary
-
-- target type and path
-- version surface
-- access surface
-- checks performed
-- checks skipped and why
+Target type and path, version surface, access surface, gates run, gates skipped and the condition that caused each skip.
 
 ### 2. Blocking errors
-
-Anything that prevents render, admission, or likely startup.
+Anything that prevents render, admission, or likely startup. Cite the gate number.
 
 ### 3. Deployment risks
-
-Anything that may pass validation but break rollout, traffic, persistence, or upgrades.
+Anything that passes the gates but can break rollout, traffic, persistence, or upgrade. Cite the gate number or "release-risk review".
 
 ### 4. Best-practice gaps
-
 Security, portability, and maintainability gaps that are not immediate blockers.
 
 ### 5. Exact next actions
-
-List the next command or patch that confirms the diagnosis or resolves the issue with minimal risk.
+The next command or patch that confirms the diagnosis or resolves the issue with the least risk.

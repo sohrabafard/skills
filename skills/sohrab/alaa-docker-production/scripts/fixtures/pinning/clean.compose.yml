@@ -1,0 +1,14 @@
+# Fixture: every image reference here is deterministic. check-image-pinning reports zero findings
+# in default mode; --release reports two (the two references with no digest) and
+# --mirror-var PUBLIC_DOCKER_REGISTRY --private-host registry.example.invalid reports one.
+name: fixture-clean-pinning
+
+services:
+  platform-app-php:
+    image: registry.example.invalid/alaa/comment-service:1.4.2
+  postgres:
+    image: ${PUBLIC_DOCKER_REGISTRY:-mirror.cdn.ir/}postgres:18.3@sha256:1111111111111111111111111111111111111111111111111111111111111111
+  redis:
+    image: ${PUBLIC_DOCKER_REGISTRY:-mirror.cdn.ir/}redis:8.6.1-alpine
+  adminer:
+    image: adminer:5.4.2@sha256:2222222222222222222222222222222222222222222222222222222222222222

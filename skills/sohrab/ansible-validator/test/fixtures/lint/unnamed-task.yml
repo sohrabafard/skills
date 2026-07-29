@@ -1,0 +1,11 @@
+---
+# Fixture: check_assets.sh asserts that name[missing] and fqcn[action-core] both
+# fire on this file. They did not before the 2026-07-29 repair of
+# assets/.ansible-lint, because task_name_prefix: "{path}:" raised a KeyError
+# that ansible-lint swallowed, leaving NameRule dead.
+- name: Fixture play with an unnamed task
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - debug:
+        msg: "this task has no name and no fully qualified action"
