@@ -1,7 +1,7 @@
 interface:
-  display_name: "Vector Rust Observability Pipelines"
-  short_description: "Vector observability pipeline patterns"
-  default_prompt: "Use $vector-rust-observability-pipelines to follow its workflow for vector observability pipeline patterns."
-
+  display_name: "Vector Observability Pipelines"
+  short_description: "Vector pipelines, buffers, VRL, ClickHouse sink"
+  default_prompt: "Use $vector-rust-observability-pipelines for Vector topology, VRL transforms, buffering and acknowledgement choices, ClickHouse sink tuning, and what the pipeline does when its destination is unreachable."
+  brand_color: "#5B4B9F"
 policy:
   allow_implicit_invocation: true

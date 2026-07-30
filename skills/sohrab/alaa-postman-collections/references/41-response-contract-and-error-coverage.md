@@ -80,7 +80,9 @@ normal shape for a validation status, not a defect.
   other bodyless status carries an empty body and its real headers, not a fabricated
   JSON body.
 - Response headers include the ones the caller must read. `X-Request-Id` appears on
-  every example because the platform returns it on every response.
+  every example because `alaa-services-contract` requires it on every response, in that
+  skill's `references/20-operational-and-observability-contract.md`. Read the shape there;
+  never restate an envelope, code, or header value in this skill's files.
 - Values are safe placeholders. A token, a signed URL, a national identifier, or a
   real person's data never appears in a committed example, including inside an error
   body.

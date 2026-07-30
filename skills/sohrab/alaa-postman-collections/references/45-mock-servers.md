@@ -35,9 +35,13 @@ Do not define one when:
 - the value being sought is documentation. Postman's generated documentation already
   renders saved examples without a mock server existing.
 
-A mock is never required for the collection to be complete. Correctness must not depend
-on one existing, on its URL, or on its call volume, because mock-server call volume is
-metered per Postman plan and a committed artifact cannot assume any plan.
+A mock is never required for the collection to be complete. Correctness must not depend on
+one existing, on its URL, or on its call volume. Insomnia's free tier meters mock requests
+at `1,000 mock server requests per month`; Postman's published Free plan lists mock servers
+as included and states no per-call number, which means the absence of a cap is not
+documented rather than documented as absent. Either way a committed artifact cannot assume a
+plan. `50-insomnia-compatibility-and-free-plan-rules.md` carries both readings and their
+date.
 
 ## How an example drives the mock
 

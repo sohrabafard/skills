@@ -1,0 +1,8 @@
+interface:
+  display_name: "Alaa Repo Docs"
+  short_description: "Repository docs, contracts, and Persian mirrors"
+  default_prompt: "Use $alaa-repo-docs to produce repository documentation aligned with code, contracts, runtime behaviour, storage shape, errors, events, observability, and API surface. Create or refresh README.md, docs/BIG_PICTURE.md, docs/api-summary.md, docs/data-architecture.md, and docs/errors-events-observability.md when the repository warrants them, repair README navigation and repo-local links, and run scripts/check_markdown_links.py before finishing. English is the source document; produce the Persian mirror when the repository already carries a .fa document or docs/fa directory, or when asked."
+  brand_color: "#2E6F63"
+
+policy:
+  allow_implicit_invocation: true

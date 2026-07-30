@@ -1,19 +1,40 @@
-
+# Vector -> ClickHouse landing pipeline, with every delivery-relevant option set
+# explicitly. Defaults are stated in comments so a reviewer can see what was
+# chosen and what was merely inherited.
+# Validate with:  vector validate --skip-healthchecks assets/templates/vector-clickhouse.yaml
+# Do not add --no-environment: it suppresses the component checks that catch
+# routing-template confinement and buffer bound errors.
 data_dir: /var/lib/vector
 
+# Credentials come from a secret backend, never from ${VAR} interpolation.
+# Vector 0.57.0 disabled environment-variable interpolation by default, so a
+# config using ${CLICKHOUSE_PASSWORD} passes validation and then authenticates
+# with that 22-character literal string. See references/85-security-and-secrets.md.
+secret:
+  clickhouse:
+    type: exec
+    # Replace with the command your platform uses to emit the secret as JSON.
+    command: ["/usr/local/bin/fetch-clickhouse-secret"]
+
 sources:
-  in_demo:
-    type: demo_logs
-    format: json
+  # `file` participates in end-to-end acknowledgements. `demo_logs` does not:
+  # pairing it with `acknowledgements.enabled: true` makes Vector warn
+  # "Silent data loss could occur" at validate time. Check the source before
+  # enabling acks - see references/30-buffers-acks-and-backpressure.md.
+  in_files:
+    type: file
+    include: ["/var/log/app/*.log"]
 
 transforms:
   enrich:
     type: remap
-    inputs: [in_demo]
+    inputs: [in_files]
     source: |
-      .service = string!(.service) ?? "unknown"
-      .level = downcase(string!(.level) ?? "info")
-      .ts = .timestamp ?? now()
+      .service = string(.service) ?? "unknown"
+      .level = downcase(string(.level) ?? "info")
+      # `??` coalesces errors, not null. A path lookup never errors, so
+      # `.timestamp ?? now()` is error[E651] and would not default anything.
+      .ts = if exists(.timestamp) { .timestamp } else { now() }
 
 sinks:
   out_clickhouse:
@@ -21,16 +42,35 @@ sinks:
     inputs: [enrich]
     endpoint: https://clickhouse.example.com:8443
     database: analytics
+    # A templated table needs a literal prefix. Vector 0.57.0 rejects
+    # `table: "{{ tenant }}"` at startup; `logs_{{ tenant }}` is accepted.
     table: logs_raw
+    # Default is reported as `none` by `vector generate` on 0.57.0 while the
+    # component docs say `gzip`. Set it explicitly rather than relying on either.
     compression: gzip
+    # Default false. Enable only when timestamps arrive as RFC3339/ISO8601 text.
     date_time_best_effort: true
+    # Default json_each_row. Safest for evolving payloads.
+    format: json_each_row
 
     batch:
+      # Defaults: max_bytes 1e7, timeout_secs 1. Restated to make them reviewable.
       max_bytes: 10000000
       timeout_secs: 1
 
+    request:
+      # Default retry_attempts is i64::MAX, i.e. retry effectively forever.
+      # Bound it so a dead sink surfaces as an error instead of an invisible stall.
+      retry_attempts: 10
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 30
+      timeout_secs: 60
+
+    # Audit-grade path: durable and blocking. For product telemetry the fleet
+    # requires fail-open instead - see references/30-buffers-acks-and-backpressure.md.
     buffer:
       type: disk
+      # Minimum accepted by 0.57.0 is 268435488 bytes. Exactly 256 MiB is rejected.
       max_size: 1073741824
       when_full: block
 
@@ -39,12 +79,11 @@ sinks:
 
     auth:
       strategy: basic
-      user: ${CLICKHOUSE_USER}
-      password: ${CLICKHOUSE_PASSWORD}
+      user: "SECRET[clickhouse.user]"
+      password: "SECRET[clickhouse.password]"
 
     tls:
       verify_certificate: true
 
-# Optional higher-throughput batch encoding path:
-# batch_encoding:
-#   codec: arrow_stream
+    healthcheck:
+      enabled: true

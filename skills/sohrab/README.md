@@ -11,11 +11,22 @@ The current pack mixes two patterns on purpose:
 
 ## Pack design rules
 
-- `agents/openai.yaml` ships with every skill a Codex agent can load; a Claude-Code-only skill with a Codex twin is the only exception
+- a Codex agent can load only a skill that ships `agents/openai.yaml`, and 65 of the 67 folders here do. Two do not, checked 2026-07-30: `alaa-cc-orchestrator`, which is Claude-Code-only and whose Codex twin `alaa-codex-orchestrator` ships one, and `alaa-go-chi-development`, which has no twin and is an open defect rather than a precedent. `python scripts\check_skill_index.py` reports the current list
 - no skill states a model name; model, effort, and runtime-capability questions route to `/alaa-prompting-guide` (`$alaa-prompting-guide`)
 - mature surfaces prefer one routing-first owner instead of many tiny near-duplicates
 - companion skills stay explicit where ownership boundaries still matter
 - `AGENTS.md` here owns how a skill is written and structured; this file does not repeat it
+
+### Path notation in a citation
+
+A path written in a skill points either at a file that ships with that skill or at a file in the repository an agent is working on, and an unmarked path does not say which. Two markers do, and `python scripts\check_fleet_references.py` reads them:
+
+- `$SKILL_DIR/<path>` — a file bundled inside the citing skill. The checker resolves it, and a missing file is a finding.
+- `<repo>/<path>` — a path in the target repository. The checker never resolves it, because this repository cannot know what is there.
+
+Mark the path whenever you write or edit a citation. An unmarked path that resolves nowhere is reported as informational and never fails a run, so the fleet can be converted one skill at a time and no intermediate state breaks the gate. `alaa-postman-collections` already uses both markers.
+
+The durable home for this convention is `skills/sohrab/AGENTS.md`, beside the rule that a cross-skill reference names its owning skill; it is stated here because that file was outside the scope of the change that added the markers.
 
 ## Core precedence rules
 
@@ -41,7 +52,7 @@ For the standard Vue 3 + Quasar + Vite app family, start with `alaa-frontend-dev
 
 ### 4. PHP / Laravel coding baseline
 
-For PHP / Laravel work, the default coding baseline is `alaa-php-clean-code`. Use it together with the smallest relevant companion skills: `alaa-laravel-architecture`, `alaa-data-layer`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-octane-performance`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-docs-farsi`, `alaa-mongodb-patterns`, `alaa-trust-gateway-auth`, `alaa-workflow`.
+For PHP / Laravel work, the default coding baseline is `alaa-php-clean-code`. Use it together with the smallest relevant companion skills: `alaa-laravel-architecture`, `alaa-data-layer`, `alaa-async-messaging`, `alaa-laravel-job-rabbitmq`, `alaa-octane-performance`, `alaa-security-review`, `alaa-observability-soc`, `alaa-cicd-laravel-postgres`, `alaa-repo-docs`, `alaa-mongodb-patterns`, `alaa-trust-gateway-auth`, `alaa-workflow`.
 
 ## Before assuming a service already conforms
 
@@ -90,7 +101,9 @@ These sequences route to owners; they do not restate what an owner decides. Thre
 
 ## Current skill map
 
-Every folder in this directory appears exactly once below. Groups match `README.fa.md`, which carries a one-line purpose for each skill.
+Every folder in this directory appears exactly once between the markers below, and every name between them is a folder. `python scripts\check_skill_index.py` asserts both directions and fails when either is false, which is what makes this sentence checkable rather than aspirational. `README.fa.md` carries the same names with a one-line purpose for each; its membership matches this map exactly, and its group boundaries do not — it splits doctrine and multi-agent routing into nine sections where this file uses eight.
+
+<!-- skill-map:start -->
 
 ### Core Ala architecture and policy
 
@@ -105,6 +118,7 @@ Every folder in this directory appears exactly once below. Groups match `README.
 - `alaa-testing-strategy`
 - `alaa-algorithms-data-structures`
 - `alaa-keyset-pagination` — cursor/keyset pagination design: deterministic ordering, matching index, cursor integrity and context binding, limits, and the offset exception.
+- `alaa-input-normalization` — folding Persian, Arabic and every other non-ASCII decimal digit to ASCII at both input boundaries, under one contract with four implementations and a conformance harness.
 - `alaa-prompting-guide`
 - `alaa-low-noise`
 - `alaa-workflow`
@@ -114,7 +128,7 @@ Every folder in this directory appears exactly once below. Groups match `README.
 - `alaa-cc-orchestrator`
 - `alaa-codex-orchestrator`
 - `alaa-codex-runtime-ops`
-- `alaa-basic-memory-os`
+- `alaa-memory-os` — a store-agnostic memory operating model: what is worth recording, in what note shape, and with what recall budget. Basic Memory and Hindsight each get one adapter reference and neither is the subject.
 
 ### PHP / Laravel and service engineering
 
@@ -164,6 +178,7 @@ The 46 `golang-*` skills these four route into are upstream subtrees under the r
 - `alaa-k8s-helm`
 - `alaa-gitlab-ci-cd`
 - `alaa-haproxy`
+- `alaa-haproxy-lua` — Lua running inside an HAProxy process: execution model, failure visibility at the edge, and testing outside HAProxy. `alaa-haproxy` owns the configuration directives.
 - `caas-arvan-kuber`
 - `alaa-bash-shell`
 - `alaa-makefile`
@@ -184,15 +199,18 @@ The 46 `golang-*` skills these four route into are upstream subtrees under the r
 - `alaa-signoz-clickhouse-docs`
 - `vector-rust-observability-pipelines`
 - `alaa-postman-collections`
-- `alaa-docs-farsi`
+- `alaa-repo-docs` — repository-level documentation: the README big picture, the API summary, data architecture, and errors and events. The English document is always the source of truth. A Persian mirror is mandatory when the target repository already contains a `.fa` document or a `docs/fa/` directory, and is produced on explicit request otherwise; the skill writes neither Persian only nor English only.
+
+<!-- skill-map:end -->
 
 ## Consolidated or removed from this pack
 
-These names appeared in earlier versions of the map and have no folder here, checked 2026-07-25. Do not re-add one before its folder exists on disk.
+These names appeared in earlier versions of the map and have no folder here, re-checked 2026-07-30. Do not re-add one before its folder exists on disk. A rename is listed here too, old name first, so a stale pointer resolves to its replacement.
 
 - `dockerfile-*` — replaced by `alaa-docker-production`; `makefile-generator`, `makefile-validator` — replaced by `alaa-makefile`
 - `azure-pipelines-*`, `github-actions-*`, `jenkinsfile-*` — `alaa-gitlab-ci-cd` is the only CI surface this pack ships
 - `terraform-*`, `terragrunt-*` — infrastructure targets route through `caas-arvan-kuber` and `alaa-k8s-helm`
+- `alaa-docs-farsi` — renamed to `alaa-repo-docs`, because the old name promised a language while the skill delivers a documentation standard; `alaa-basic-memory-os` — renamed to `alaa-memory-os`, because the model is store-agnostic and Basic Memory is one adapter
 - `promql-*`, `logql-generator`, `loki-config-generator`, `fluentbit-*` — `alaa-observability-soc` owns signal and gate decisions; `alaa-signoz-clickhouse-docs` and `vector-rust-observability-pipelines` own the query and pipeline surfaces
 
 ## Definition of done
@@ -203,7 +221,7 @@ Work in this pack is considered ready when:
 - detailed guidance is preserved in one-hop `references/` or `docs/` files
 - `agents/openai.yaml` exists and matches the current skill intent
 - stale donor skill names are removed from active routing docs
-- the skill map above matches this directory in both directions
+- `python scripts\check_skill_index.py` reports no index finding, and any `agents/openai.yaml` gap it reports is one of the two named in Pack design rules above
 - examples, checklists, and anti-patterns are preserved in simple English
 - system-level helpers are clearly separated from pack-local skills
 

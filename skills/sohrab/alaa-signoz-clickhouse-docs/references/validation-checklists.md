@@ -1,69 +1,42 @@
-# SigNoz Query Validation Checklists
+# Final Checks Before a Query Ships
 
-Use this before finalizing ClickHouse SQL or docs-grounded guidance for a sensitive production system.
+Read this before pasting SQL into a production dashboard panel or an alert rule.
 
-## 1. Surface check
+Most of what used to be on this list is now executed rather than recited: `SKILL.md` names the three
+checkers, their invocations and their exit codes, and `check-signoz-sql.py --help` lists the eleven
+rules it enforces. Run them first. **A `2` from any checker is not a pass** — say which one could not
+run and treat every assertion it would have made as unverified.
 
-- Query Builder/search syntax if the user is working in an Explorer.
-- ClickHouse SQL only for dashboards or ClickHouse-backed alert surfaces.
-- If the user asks for “the right docs page”, return docs first and do not invent SQL.
+Then spend the reading time on the four judgements no tool can make.
 
-## 2. Signal/table check
+**1. Is this the signal that answers the question?** A checker confirms the SQL is valid against the
+logs schema; it cannot tell you the question was about spans. Name the signal, and why, before the
+SQL.
 
-- Logs: logs v2 table family.
-- Traces: signoz index v3 table family.
-- Metrics: `signoz_metrics` samples/time-series table family.
-- Do not join across signal families unless the join key, time window, and purpose are explicit.
+**2. Is the window the window the user meant?** Every panel returns something. A query bounded to one
+hour when the incident was yesterday returns a clean, empty, convincing panel. State the window in
+the answer so the reader can reject it.
 
-## 3. Time-bounds check
+**3. Would this output disclose something the requester did not ask to see?** Log bodies, full URLs
+and forensic tables are the cases. A query can be correct, cheap and index-supported and still put
+customer text on a shared dashboard. When it might, say so and offer the aggregate form.
 
-- Every query has a bounded time filter.
-- Logs/traces include the bucket filter when the reference requires it.
-- Metrics use millisecond macros and sample table `unix_milli` filters.
-- Time windows are not accidentally widened by resource CTEs or fingerprint prefilters.
+**4. Is any part of this unverified?** Name it. An answer that says which table it could not confirm
+is usable; one that quietly assumed a table is not, and the assumption surfaces as a production panel
+error instead of as a question.
 
-## 4. Output-shape check
-
-- Timeseries returns `ts`, `value`.
-- Value widget returns one numeric column named `value`.
-- Table panels have labeled columns, deterministic ordering, and `LIMIT` where appropriate.
-
-## 5. Safety and privacy check
-
-- No secrets, credentials, raw payloads, emails, phones, national IDs, tokens, cookies, session IDs, or raw JWTs in example filters/output.
-- No high-cardinality grouping unless the user explicitly needs a forensic table and the data is safe.
-- Query examples use placeholders, not real customer identifiers.
-- No destructive SQL, mutations, table drops, or database configuration changes.
-
-## 6. Performance check
-
-- Uses distributed tables expected by SigNoz.
-- Filters by time before expensive map/JSON access when possible.
-- Uses indexed/pre-extracted columns when available.
-- Uses resource/fingerprint CTEs only when they reduce the scan.
-- Includes `LIMIT` for exploratory/table queries.
-- Avoids unbounded `LIKE '%...%'` over large log bodies without a narrow time range.
-
-## 7. Schema uncertainty check
-
-Before finalizing, state uncertainty or request schema inspection when:
-
-- table names or macros are version-sensitive
-- the user’s existing query references unknown columns
-- metrics histogram or exponential histogram internals are involved
-- SigNoz docs and live schema disagree
-- a query will be pasted into a production alert/dashboard
-
-## 8. Final answer template
+## The answer shape
 
 ```text
-Surface: Dashboard ClickHouse | Alert ClickHouse | Query Builder | Docs lookup
+Surface: Dashboard panel ClickHouse | Query Builder | Docs lookup
 Signal: logs | traces | metrics
-Assumptions: ...
-SQL/filter/formula: ...
-Validation notes:
-- time bounds: ...
-- schema/table family: ...
-- privacy/cardinality: ...
-- unresolved uncertainty: ...
+Window: ...
+Assumptions and placeholders: ...
+SQL:
+...
+Checked: check-signoz-sql.py exit <code>, findings: ...
+Unverified: ...
 ```
+
+`Alert ClickHouse` is deliberately absent from that list. Read the alert-surface gate in `../SKILL.md`
+before offering it.

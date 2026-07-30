@@ -1,0 +1,8 @@
+env	String
+temporality	String
+metric_name	String
+fingerprint	String
+unix_milli	String
+value	String
+flags	String
+inserted_at_unix_milli	String

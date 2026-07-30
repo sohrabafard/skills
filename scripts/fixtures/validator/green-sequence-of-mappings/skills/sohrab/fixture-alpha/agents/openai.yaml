@@ -1,0 +1,21 @@
+interface:
+  display_name: Fixture Alpha
+  short_description: "Validator fixture skill, alpha"
+  default_prompt: "Use $fixture-alpha only inside the validator self-test."
+  brand_color: "#3A5BA0"
+policy:
+  allow_implicit_invocation: false
+  primary_domains:
+    - validator-fixtures
+    - yaml-subset-parsing
+  # A block sequence of mappings. Each item opens a mapping whose sibling keys sit at the column
+  # of the text after the dash, which is the construct that used to return exit 2 on valid YAML.
+  not_this_skill:
+    - domain: a neighbouring territory, with a comma and a semicolon; like this
+      route_to: $fixture-beta
+    - domain: another neighbouring territory
+      route_to: $fixture-gamma
+notes:
+  scope: >
+    A folded block scalar under default clip chomping, whose parsed value ends in exactly
+    one newline.

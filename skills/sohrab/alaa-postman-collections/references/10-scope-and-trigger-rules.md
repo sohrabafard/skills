@@ -37,6 +37,32 @@ Use this skill when the request includes work such as:
 - "validate the Postman artifact"
 - "make the API contract complete enough to generate an SDK"
 
+## The ordered workflow
+
+Follow these steps in order. Each one exists because skipping it produces a specific
+defect, named beside it.
+
+1. Discover the public API boundary and behaviour truth from gateway contracts, routes,
+   code, verified contracts, tests, and runtime examples. Skipping this invents endpoints.
+2. Inspect the canonical contract plus existing collections and environments for ownership,
+   generators, stable IDs, structure, variables, and auth layout. Skipping this overwrites
+   a generator's output by hand.
+3. Build a route-and-variant coverage matrix for every public operation, including each
+   error each route can return. Skipping this ships one example per route and calls it
+   coverage.
+4. Confirm the canonical public contract covers every meaningful request, response, error,
+   lifecycle, and workflow branch. `25-public-api-contract-and-sdk-readiness.md` says who
+   owns that contract and what this skill does when the owner is another skill.
+5. Choose the smallest fitting collection structure, variable model, and auth plan.
+6. When artifacts are generated, patch the generator or its inputs first, then regenerate
+   and review the produced diff. The generated-artifact rule below governs this step.
+7. Create or update the collection and environment artifacts as projections of the same
+   contract, with minimal reviewable diffs.
+8. Audit variable dependencies: prove every `{{variable}}` is either captured by a script
+   or a declared operator input. `42-scripts-and-state-capture.md` holds that audit.
+9. Validate, then report against the output contract in
+   `60-validation-and-output-contract.md`.
+
 ## Source-of-truth order
 
 Separate artifact ownership from API behavior truth.
@@ -56,7 +82,7 @@ If implementation and contracts disagree, identify the drift and use only the sa
 
 When the repository owns a public HTTP API, Postman-only completion is not sufficient. Read `25-public-api-contract-and-sdk-readiness.md`, synchronize the canonical public contract, and prove route-and-variant parity before closing.
 
-If an existing Postman request or prose doc describes behavior that current code does not implement, do not silently keep it as shipped behavior. Report the gap and route any `remaining-task.md` backlog wording to `alaa-docs-farsi`.
+If an existing Postman request or prose doc describes behavior that current code does not implement, do not silently keep it as shipped behavior. Report the gap and route any `remaining-task.md` backlog wording to `alaa-repo-docs` (`/alaa-repo-docs`, `$alaa-repo-docs`).
 
 ## Generated artifact rule
 

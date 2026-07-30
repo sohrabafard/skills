@@ -1,6 +1,36 @@
 # Public API Contract And SDK Readiness
 
-Read this file whenever the repository owns a public HTTP API. Public-contract synchronization is mandatory for this skill, even when the user's immediate wording mentions only Postman.
+Read this file whenever the repository owns a public HTTP API.
+
+## Who owns the contract, and what this skill owns instead
+
+The canonical contract and the Postman artifacts are two projections of one verified
+behaviour. Which skill owns which projection depends on whether another skill can obtain
+evidence this one cannot.
+
+**On a Laravel service, `alaa-laravel-public-api-contract-pack`
+(`/alaa-laravel-public-api-contract-pack`, `$alaa-laravel-public-api-contract-pack`) owns
+what the contract is:** the canonical document, its location, its versioning and
+breaking-change classification, its deprecation and sunset policy, and the gate that
+refuses to emit a pack while any of those is unresolved. Its parity check is driven by a
+route inventory from `php artisan route:list --json`, which is evidence this skill cannot
+obtain. Do not define a competing contract location, a competing completeness gate, or a
+competing SDK-readiness verdict on such a repository.
+
+**This skill owns how the collection proves it:** the Postman and environment projection,
+saved examples, scripts, tests, request documentation, mock servers, secret typing, and
+Insomnia portability. On a Laravel service the SDK-readiness questions below become
+Postman-side parity questions asked *against* that pack's contract rather than derived
+independently — does every operation the contract declares have a request item, and does
+every response branch it declares have a saved example. Run that skill's
+`scripts/contract_pack_audit.py` and read its `openapi_postman_divergence` finding as the
+parity result; do not reimplement it here.
+
+**On a repository with no contract owner** — any non-Laravel service, or a Laravel service
+where that pack is not in use — the rest of this file is this skill's own, unchanged,
+because no other skill covers that case. Say in the task output which of the two situations
+applied, so a later reader knows whether the contract verdict came from here or from the
+owning pack.
 
 ## Outcome
 
@@ -17,9 +47,9 @@ Done means another agent can build an SDK without opening service implementation
 - asynchronous workflows and state transitions
 - safe, source-backed examples
 
-OpenAPI 3.1 is preferred when the repository has no stronger canonical format. Preserve an existing canonical format or generator when the repo already owns one.
+OpenAPI 3.1 is the format to choose when the repository has no stronger canonical format and no owning skill prescribes one. Preserve an existing canonical format or generator when the repo already owns one.
 
-Prefer the repository's existing contract location. If the repo clearly owns public routes but has no contract convention, create the smallest explicit pack at `docs/contracts/<service>/openapi.yaml` with colocated `examples/` only when external example files add value. In a monorepo, keep the pack under the owning service's documented contract area. Link it from an existing API/docs index when one exists; do not introduce a competing documentation root.
+Prefer the repository's existing contract location, and prefer the location the contract's owning skill prescribes over the default below. If the repo clearly owns public routes, has no contract convention, and no owning skill applies, create the smallest explicit pack at `docs/contracts/<service>/openapi.yaml` with colocated `examples/` only when external example files add value. In a monorepo, keep the pack under the owning service's documented contract area. Link it from an existing API/docs index when one exists; do not introduce a competing documentation root.
 
 ## Boundary and ownership discovery
 

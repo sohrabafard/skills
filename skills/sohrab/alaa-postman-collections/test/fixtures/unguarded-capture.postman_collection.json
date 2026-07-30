@@ -1,0 +1,145 @@
+{
+  "info": {
+    "name": "Fixture Unguarded Capture",
+    "description": "Fixture for this skill's self-test. Not a real service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Issue token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"code\": \"000000\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/tokens",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tokens"
+              ]
+            },
+            "description": "## Purpose\nIssue a bearer access token so later requests in this fixture folder can authenticate.\n\n## Flow position\nFirst request in the folder. Populates `access_token`, which later requests reference.\n\n## Request\nPOST a JSON body carrying the operator identifier and the one-time code.\n\n## Response\n200 with the success envelope; `data.token.access_token` carries the credential.\n\n## Access\nPublic route. It is the route that mints a credential, so it needs none.\n\n## Errors\n422 when the one-time code is wrong. The caller re-prompts instead of retrying.\n\n## Frontend notes\nHold the token in memory for the session; never write it to local storage.\n\n## Security notes\nThe body carries a one-time code: never log it, never commit a real value here."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('access_token', String(pm.response.json().data.token.access_token));",
+                  "",
+                  "pm.test('Status is 200', function () {",
+                  "  pm.expect(pm.response.code).to.eql(200);",
+                  "});",
+                  "pm.test('Correlation header is returned', function () {",
+                  "  pm.expect(pm.response.headers.has('X-Request-Id')).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 Token issued",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"code\": \"000000\"}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v1/tokens",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "tokens"
+                  ]
+                }
+              },
+              "code": 200,
+              "status": "OK",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "X-Request-Id",
+                  "value": "00000000-0000-4000-8000-000000000000"
+                }
+              ],
+              "body": "{\"data\": {\"token\": {\"access_token\": \"<replace-me>\"}}}"
+            },
+            {
+              "name": "422 Invalid one-time code",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"code\": \"000000\"}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/v1/tokens",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "tokens"
+                  ]
+                }
+              },
+              "code": 422,
+              "status": "Unprocessable Entity",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "X-Request-Id",
+                  "value": "00000000-0000-4000-8000-000000000000"
+                }
+              ],
+              "body": "{\"error\": {\"code\": \"VALIDATION_FAILED\"}}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.example.test"
+    }
+  ]
+}

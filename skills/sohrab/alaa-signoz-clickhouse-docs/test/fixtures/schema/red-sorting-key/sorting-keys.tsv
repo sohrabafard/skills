@@ -1,0 +1,2 @@
+# <db>.<table>\t<sorting key>, as system.tables.sorting_key reports it
+signoz_traces.signoz_index_v3	(timestamp, resource_fingerprint, has_error, name)

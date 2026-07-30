@@ -1,0 +1,16 @@
+{
+  "info": {
+    "name": "Fixture Clean",
+    "description": "Fixture for this skill's self-test. Not a real service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Issue token",
+          "request": {
+            "method": "POST",
+            "header": [
+             

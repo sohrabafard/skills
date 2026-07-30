@@ -1,0 +1,7 @@
+interface:
+  display_name: Alaa Memory OS
+  short_description: "Durable cross-session memory and drift"
+  default_prompt: "Use $alaa-memory-os to decide what durable knowledge to remember, in what shape, what to derive instead, and how to record drift when two sources of truth disagree."
+  brand_color: "#4B6B8A"
+policy:
+  allow_implicit_invocation: true

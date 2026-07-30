@@ -6,7 +6,8 @@ references/60-validation-and-output-contract.md:
 
   0  no errors; warnings may be present and are printed
   1  at least one rule violation in the collection or an environment
-  2  input failure: a file could not be read, is not a JSON object, or a flag is invalid
+  2  input failure: a file could not be read, is not a JSON object, a flag is invalid, or
+     --require-schema was passed and official schema validation could not run
   3  official Postman v2.1 schema validation ran and failed
   4  a committed artifact carries a value that looks like a real credential
 
@@ -72,7 +73,16 @@ DEPRECATED_SCRIPT_PATTERNS = (
 # Script APIs with no Insomnia counterpart. See
 # references/50-insomnia-compatibility-and-free-plan-rules.md for each source.
 UNPORTABLE_SCRIPT_APIS = ("pm.vault", "pm.require(", "pm.state", "pm.datasets", "pm.visualizer")
-CHAI_RESPONSE_CHAINS = ("pm.response.to.have.", "pm.response.to.be.")
+# Members Insomnia registers on `insomnia.response.to`. Read from Insomnia's own source at
+# packages/insomnia-scripting-environment/src/objects/response.ts, tag `core@12.6.0`. Any
+# other member is unresolved after the `pm.`-to-`insomnia.` rewrite.
+# references/50-insomnia-compatibility-and-free-plan-rules.md carries the citation.
+INSOMNIA_RESPONSE_TO_MEMBERS = frozenset(
+    {"withBody", "error", "ok", "json", "status", "header", "body", "jsonBody", "jsonSchema"}
+)
+RESPONSE_TO_MEMBER_RE = re.compile(
+    r"pm\.response\.to\.(?:not\.)?(?:have\.|be\.)?([A-Za-z_$][\w$]*)"
+)
 # Auth types Insomnia's Postman importer maps. Any other type imports as no auth.
 INSOMNIA_MAPPED_AUTH_TYPES = frozenset(
     {"basic", "bearer", "apikey", "digest", "oauth1", "oauth2", "awsv4", "noauth"}
@@ -85,12 +95,39 @@ VARIABLE_ARRAY_SET_RE = re.compile(
     r"\b(?:setLocal|setVariables|saveVariables)\(\s*\[(?P<body>[^\]]*)\]"
 )
 QUOTED_NAME_RE = re.compile(r"['\"]([^'\"]+)['\"]")
-SUCCESS_GUARD_MARKERS = (
-    "pm.response.code",
-    "pm.response.to.be.success",
-    "pm.response.to.have.status",
-    "pm.expect(pm.response.code",
+
+# --- Structural capture-guard analysis -------------------------------------------------
+# references/42-scripts-and-state-capture.md requires that a capture not run on an error
+# response. A substring search for `pm.response.code` cannot prove that: 43-response-tests
+# mandates `pm.expect(pm.response.code).to.eql(200)` on every request, so the substring is
+# present in every conforming collection and the check can never fail. The test below is
+# structural instead — the guard must dominate the write.
+
+# A condition that can actually stop the write: the response code compared with an
+# operator, or tested for membership in an explicit set of accepted codes.
+RESPONSE_CODE_TEST_RE = re.compile(
+    r"pm\.response\.code\s*(?:===|!==|==|!=|>=|<=|>|<)"
+    r"|(?:===|!==|==|!=|>=|<=|>|<)\s*pm\.response\.code"
+    r"|\.(?:includes|indexOf|has)\(\s*pm\.response\.code\s*\)"
 )
+# A bare chai assertion on the response code. At top level an uncaught throw aborts the
+# rest of the script, so it does stop a later write. Inside a `pm.test` callback the
+# runner catches the throw and the script continues, which is why paren depth is checked.
+BARE_CODE_ASSERTION_RE = re.compile(
+    r"pm\.expect\(\s*pm\.response\.code|pm\.response\.to\.(?:have\.status|be\.success)"
+)
+CONDITION_HEADER_RE = re.compile(r"\b(?:if|while|for)\s*\(")
+FUNCTION_HEADER_RE = re.compile(r"=>\s*$|\bfunction\b\s*[\w$]*\s*\(")
+REGEX_LITERAL_PRECEDERS = frozenset("(,=:[!&|?{};+-*%~^<>")
+
+# --- Pinned vendor identifiers ---------------------------------------------------------
+# A committed environment value that pins a vendor model or engine identifier is an
+# implementation constant the generator should own, not operator input. The rule is keyed
+# on the variable name and the value's shape, never on a list of vendor or model names:
+# which model to use is owned by alaa-prompting-guide, not by this skill.
+VENDOR_PINNED_KEY_HINTS = ("model", "llm", "engine", "deployment", "embedding", "completion")
+VENDOR_PINNED_VALUE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9._-]*$")
+
 CORRELATION_VARIABLE_SUFFIXES = ("_last_request_id", "_last_traceparent")
 CORRELATION_VARIABLE_NAMES = frozenset({"last_request_id", "last_traceparent"})
 TOKEN_BODY_KEYS = ('"access_token"', '"refresh_token"', '"id_token"', '"accessToken"', '"refreshToken"')
@@ -118,6 +155,7 @@ class Report:
         self.warnings: list[str] = []
         self.secrets: list[str] = []
         self.schema_errors: list[str] = []
+        self.schema_skipped: str | None = None
         self.counts: dict[str, int] = {
             "requests": 0,
             "saved_responses": 0,
@@ -221,6 +259,39 @@ def is_placeholder(value: Any) -> bool:
     return any(hint in normalized for hint in PLACEHOLDER_HINTS if hint)
 
 
+def pinned_vendor_identifier(key: str, value: Any) -> str | None:
+    """Return the pinned identifier when a committed value names a vendor model or engine.
+
+    Keyed on the variable name and the value's shape, never on a list of vendor or model
+    names: this skill carries no such list. A `{{reference}}` or a placeholder is correct and
+    produces nothing.
+    """
+    lowered = key.lower()
+    if not any(hint in lowered for hint in VENDOR_PINNED_KEY_HINTS):
+        return None
+    if not isinstance(value, str):
+        return None
+    candidate = value.strip()
+    if not candidate or is_placeholder(candidate):
+        return None
+    if not VENDOR_PINNED_VALUE_RE.match(candidate):
+        return None
+    if not any(char.isdigit() for char in candidate) and "-" not in candidate:
+        return None
+    return candidate
+
+
+def report_pinned_vendor_identifier(scope: str, key: str, value: Any, report: Report) -> None:
+    pinned = pinned_vendor_identifier(key, value)
+    if pinned:
+        report.error(
+            f"{scope}: committed value `{pinned}` pins a vendor model or engine identifier. It is an "
+            "implementation constant the generator should own: declare it as a generator input, "
+            "reference it as a variable here, and route which identifier to use to "
+            "`/alaa-prompting-guide` (`$alaa-prompting-guide`)."
+        )
+
+
 def looks_sensitive_key(name: str) -> bool:
     lowered = name.lower()
     normalized = re.sub(r"[^a-z0-9]", "", lowered)
@@ -301,6 +372,159 @@ def is_correlation_variable(name: str) -> bool:
     return name in CORRELATION_VARIABLE_NAMES or name.endswith(CORRELATION_VARIABLE_SUFFIXES)
 
 
+def mask_script(text: str) -> str:
+    """Blank comment, string and regex-literal contents, preserving length and newlines.
+
+    Scanning runs on the mask so a brace inside a string cannot move the block depth and a
+    `pm.response.code` inside a comment cannot count as a guard. Offsets stay aligned with
+    the original text.
+    """
+    out = list(text)
+    length = len(text)
+    index = 0
+    previous = ""
+
+    def blank(start: int, end: int) -> None:
+        for position in range(start, min(end, length)):
+            if out[position] != "\n":
+                out[position] = " "
+
+    while index < length:
+        char = text[index]
+        nxt = text[index + 1] if index + 1 < length else ""
+        if char == "/" and nxt == "/":
+            end = text.find("\n", index)
+            end = length if end == -1 else end
+            blank(index, end)
+            index = end
+            continue
+        if char == "/" and nxt == "*":
+            end = text.find("*/", index + 2)
+            end = length if end == -1 else end + 2
+            blank(index, end)
+            index = end
+            continue
+        if char in "'\"`" or (char == "/" and previous in REGEX_LITERAL_PRECEDERS):
+            closer = char if char != "/" else "/"
+            end = index + 1
+            in_class = False
+            while end < length:
+                if text[end] == "\\":
+                    end += 2
+                    continue
+                if char == "/" and text[end] in "[]":
+                    in_class = text[end] == "["
+                elif text[end] == closer and not in_class:
+                    end += 1
+                    break
+                elif char == "/" and text[end] == "\n":
+                    break
+                end += 1
+            blank(index, end)
+            previous = "x"
+            index = end
+            continue
+        if not char.isspace():
+            previous = char
+        index += 1
+    return "".join(out)
+
+
+class ScanFailure(Exception):
+    """A script could not be scanned into balanced brace blocks."""
+
+
+def scan_blocks(masked: str) -> list[tuple[int, int, str, int]]:
+    """Return `(open_offset, close_offset, header_text, depth)` for every brace block.
+
+    The header is the masked text between the previous statement boundary and the opening
+    brace, which is what carries `if (pm.response.code === 200)`.
+    """
+    blocks: list[tuple[int, int, str, int]] = []
+    stack: list[tuple[int, str, int]] = []
+    for index, char in enumerate(masked):
+        if char == "{":
+            boundary = max(masked.rfind(separator, 0, index) for separator in (";", "{", "}"))
+            stack.append((index, masked[boundary + 1 : index], len(stack)))
+        elif char == "}":
+            if not stack:
+                raise ScanFailure("a closing brace has no matching opening brace")
+            open_offset, header, depth = stack.pop()
+            blocks.append((open_offset, index, header, depth))
+    if stack:
+        raise ScanFailure("an opening brace has no matching closing brace")
+    return blocks
+
+
+def unguarded_capture_names(script_text: str) -> tuple[list[str], str | None]:
+    """Classify every literal-named capture write in one script.
+
+    Returns the names written on a path an error response also reaches, and a reason when the
+    analysis could not decide. A capture is guarded when one of these dominates the write: an
+    enclosing `if`, `while` or `for` whose own condition tests `pm.response.code`; a top-level
+    early exit on `pm.response.code` that returns or throws first; or a top-level bare chai
+    assertion on `pm.response.code` whose uncaught throw aborts the script. Correlation-only
+    variables are exempt: they are captured on error responses on purpose.
+    """
+    writes = [
+        (match.start(), match.group(1))
+        for match in VARIABLE_SET_RE.finditer(script_text)
+        if not is_correlation_variable(match.group(1))
+    ]
+    if not writes:
+        return [], None
+
+    masked = mask_script(script_text)
+    try:
+        blocks = scan_blocks(masked)
+    except ScanFailure as exc:
+        return [], str(exc)
+
+    conditional_blocks = [
+        (open_offset, close_offset, header, depth)
+        for open_offset, close_offset, header, depth in blocks
+        if CONDITION_HEADER_RE.search(header) and RESPONSE_CODE_TEST_RE.search(header)
+    ]
+    guard_spans = [(open_offset, close_offset) for open_offset, close_offset, _, _ in conditional_blocks]
+    early_exit_ends = [
+        close_offset
+        for open_offset, close_offset, _, depth in conditional_blocks
+        if depth == 0 and re.search(r"\b(?:return|throw)\b", masked[open_offset:close_offset])
+    ]
+    earliest_exit = min(early_exit_ends) if early_exit_ends else None
+
+    assertion_offsets = [
+        match.start()
+        for match in BARE_CODE_ASSERTION_RE.finditer(masked)
+        if masked.count("(", 0, match.start()) == masked.count(")", 0, match.start())
+        and not any(open_o < match.start() < close_o for open_o, close_o, _, _ in blocks)
+    ]
+    earliest_assertion = min(assertion_offsets) if assertion_offsets else None
+
+    function_spans = [
+        (open_offset, close_offset)
+        for open_offset, close_offset, header, _ in blocks
+        if FUNCTION_HEADER_RE.search(header.rstrip())
+    ]
+
+    unguarded: list[str] = []
+    inside_function = False
+    for offset, name in writes:
+        if any(open_o < offset < close_o for open_o, close_o in guard_spans):
+            continue
+        if earliest_exit is not None and offset > earliest_exit:
+            continue
+        if earliest_assertion is not None and offset > earliest_assertion:
+            continue
+        if any(open_o < offset < close_o for open_o, close_o in function_spans):
+            inside_function = True
+            continue
+        unguarded.append(name)
+    if inside_function and not unguarded:
+        return [], "the capture runs inside a nested function whose call sites this check does not follow"
+    return sorted(set(unguarded)), None
+
+
 def check_script_text(script_text: str, scope: str, report: Report) -> None:
     for pattern in DEPRECATED_SCRIPT_PATTERNS:
         if pattern in script_text:
@@ -316,13 +540,20 @@ def check_script_text(script_text: str, scope: str, report: Report) -> None:
     for api in UNPORTABLE_SCRIPT_APIS:
         if api in script_text:
             report.warn(f"{scope}: `{api}` has no Insomnia counterpart; keep it out of required behavior")
-    for chain in CHAI_RESPONSE_CHAINS:
-        if chain in script_text:
-            report.warn(
-                f"{scope}: `{chain}` is Postman-current but unverified after Insomnia's `pm.`-to-"
-                "`insomnia.` rewrite; prefer `pm.expect(pm.response.code)`"
-            )
-            break
+    unsupported_members = sorted(
+        {
+            member
+            for member in RESPONSE_TO_MEMBER_RE.findall(script_text)
+            if member not in INSOMNIA_RESPONSE_TO_MEMBERS
+        }
+    )
+    for member in unsupported_members:
+        report.warn(
+            f"{scope}: `pm.response.to...{member}` has no counterpart on Insomnia's response object "
+            "after the `pm.`-to-`insomnia.` rewrite; Insomnia registers only "
+            f"{', '.join(sorted(INSOMNIA_RESPONSE_TO_MEMBERS))}. Use `pm.expect(pm.response.code)` "
+            "or one of those members instead."
+        )
     for label, pattern in REAL_SECRET_PATTERNS:
         if pattern.search(script_text):
             report.secret(f"{scope}: script contains a literal that looks like a {label}")
@@ -379,10 +610,19 @@ def validate_events(
         written = written_variable_names(script_text)
         guarded = {name for name in written if not is_correlation_variable(name)}
         if listen == "test" and require_success_guarded_captures and guarded:
-            if not any(marker in script_text for marker in SUCCESS_GUARD_MARKERS):
+            unguarded, undecided = unguarded_capture_names(script_text)
+            if unguarded:
+                names = ", ".join(f"`{name}`" for name in unguarded)
                 report.error(
-                    f"{event_scope}: response-variable capture has no explicit HTTP success guard, so an "
-                    "error response overwrites a working value"
+                    f"{event_scope}: capture writes {names} on a path an error response also reaches, so "
+                    "an intentional error overwrites a working value. Move the write inside an explicit "
+                    "`if (pm.response.code === 200)` block, or return early on any other code."
+                )
+            elif undecided:
+                report.error(
+                    f"{event_scope}: the capture's success guard could not be established structurally "
+                    f"because {undecided}. Move the write into an explicit "
+                    "`if (pm.response.code === 200)` block in this script so the guard is provable."
                 )
         for variable_name in sorted(written - declared_variables):
             report.error(
@@ -661,6 +901,16 @@ def validate_collection(
         report.error("collection: missing non-empty `item` array")
     else:
         walk_items(items, "collection", report, options, declared_variables)
+        # A collection whose top-level `item` array holds only folders satisfies the check
+        # above and contains nothing for any per-request rule to fire on, so every
+        # `--require-*` flag passes vacuously. references/70-aggregate-collections-and-
+        # consumer-repos.md names two merge-program invariants that produce exactly this
+        # artifact, so it is a real failure and not a hypothetical one.
+        if report.counts["requests"] == 0:
+            report.error(
+                "collection: contains folders but no request items, so every `--require-*` flag "
+                "passed with nothing to check; fix the collection or the merge program that emitted it"
+            )
 
     top_level_events = collection.get("event", [])
     if isinstance(top_level_events, list):
@@ -695,6 +945,8 @@ def validate_collection(
                 report.warn(
                     f"collection.variable `{key}`: looks secret-like and its value is not a placeholder"
                 )
+            if options.forbid_pinned_vendor_identifier:
+                report_pinned_vendor_identifier(f"collection.variable `{key}`", key, value, report)
             if "-" in key:
                 report.warn(
                     f"collection.variable `{key}`: Insomnia rewrites a hyphenated name into bracket "
@@ -759,18 +1011,27 @@ def validate_environment(path: Path, env: Any, report: Report, options: argparse
                     report.error(message)
                 else:
                     report.warn(message)
+        if options.forbid_pinned_vendor_identifier:
+            report_pinned_vendor_identifier(item_scope, key, value, report)
 
 
 def try_schema_validation(collection: dict[str, Any], schema_url: str, report: Report) -> None:
+    """Validate against the official schema, recording why the check was skipped if it was.
+
+    A skip is not a pass. `--require-schema` turns any skip into exit 2, so an air-gapped
+    CI runner cannot report success while the strongest structural check never ran.
+    """
     try:
         import jsonschema
     except ImportError:
+        report.schema_skipped = "`jsonschema` is not installed"
         report.warn("schema: skipped official schema validation because `jsonschema` is not installed")
         return
     try:
         with urllib.request.urlopen(schema_url, timeout=20) as response:
             schema = json.load(response)
     except Exception as exc:  # noqa: BLE001
+        report.schema_skipped = f"the schema fetch failed: {exc}"
         report.warn(f"schema: skipped official schema validation because schema fetch failed: {exc}")
         return
     try:
@@ -802,7 +1063,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="Variable name intentionally supplied outside the provided collection and environment files",
     )
     parser.add_argument("--skip-schema", action="store_true", help="Skip official schema validation")
+    parser.add_argument(
+        "--require-schema",
+        action="store_true",
+        help="Exit 2 when official schema validation could not run; recommended in CI",
+    )
     parser.add_argument("--schema-url", default=DEFAULT_SCHEMA_URL, help="Official Postman schema URL")
+    parser.add_argument(
+        "--forbid-pinned-vendor-identifier",
+        action="store_true",
+        help="Fail when a committed collection or environment value pins a vendor model or engine identifier",
+    )
     parser.add_argument(
         "--min-description-chars",
         type=int,
@@ -897,7 +1168,9 @@ def main() -> int:
 
     validate_collection(collection, environment_keys, report, options)
 
-    if not options.skip_schema:
+    if options.skip_schema:
+        report.schema_skipped = "`--skip-schema` was passed"
+    else:
         try_schema_validation(collection, options.schema_url, report)
 
     if options.json:
@@ -908,6 +1181,7 @@ def main() -> int:
                     "environments": [str(path) for path, _ in environments],
                     "counts": report.counts,
                     "secrets": report.secrets,
+                    "schema_skipped": report.schema_skipped,
                     "schema_errors": report.schema_errors,
                     "errors": report.errors,
                     "warnings": report.warnings,
@@ -932,6 +1206,13 @@ def main() -> int:
         elif not (report.secrets or report.schema_errors or report.errors):
             print("Validation passed with warnings.")
 
+    if options.require_schema and report.schema_skipped:
+        print(
+            f"ERROR: --require-schema was passed but official schema validation could not run because "
+            f"{report.schema_skipped}; the collection was not checked against the official schema",
+            file=sys.stderr,
+        )
+        return EXIT_INPUT
     if report.secrets:
         return EXIT_SECRET
     if report.schema_errors:

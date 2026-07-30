@@ -1,23 +1,35 @@
+# Reusable VRL fragments. Check one with:
+#   vector vrl -i event.json -o '<program>'
+# `-p/--program` takes a FILE path; an inline program is the positional argument.
 
-# Common VRL snippets
+# --- Normalise a level -------------------------------------------------------
+# `string(...)` returns an error for a missing or non-string field, so `??`
+# has an error to coalesce. `string!(...)` aborts instead of returning an
+# error, which makes the right-hand side unreachable: error[E651].
+.level = downcase(string(.level) ?? "info")
 
-# Normalize level
-.level = downcase(string!(.level) ?? "info")
-
-# Parse embedded JSON safely
+# --- Parse an embedded JSON payload without aborting -------------------------
 parsed, err = parse_json(.message)
 if err == null && is_object(parsed) {
   .structured = parsed
 }
 
-# Derive routing key
+# --- Derive a routing key ----------------------------------------------------
 .route = if .service == "payments" {
   "critical"
 } else {
   "default"
 }
 
-# Redact simple secret patterns
-if exists(.token) {
-  .token = "[REDACTED]"
+# --- Redact credential-bearing fields ----------------------------------------
+# Redact by name. Extend this list to every field your sources can carry;
+# `.token` alone is an example, not a policy. The fleet's rule on what must
+# never be logged lives in /alaa-observability-soc ($alaa-observability-soc).
+# `exists()` takes a path literal, so a name-driven loop must use `get`,
+# which is fallible and returns null for an absent field.
+for_each(["token", "password", "authorization", "api_key", "secret", "set_cookie"]) -> |_i, field| {
+  current = get(., [field]) ?? null
+  if current != null {
+    . = set!(., [field], "[REDACTED]")
+  }
 }

@@ -1,0 +1,23 @@
+{
+  "info": {
+    "name": "Fixture Folders Only",
+    "description": "Fixture for this skill's self-test. Not a real service.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": []
+    },
+    {
+      "name": "Catalog",
+      "item": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.example.test"
+    }
+  ]
+}

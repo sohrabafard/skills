@@ -1,0 +1,142 @@
+---
+name: fixture-alpha
+description: "A fixture skill used only to prove this validator's assertions fail on inputs that violate them. Use when running the validator self-test. Do not use for any real task, and do not copy its shape into a real skill."
+---
+
+# Fixture Alpha
+
+Detail lives in `references/10-detail.md`.
+
+## When NOT to use
+
+For anything other than a validator fixture.
+
+Line 1 of deliberate body bulk.
+Line 2 of deliberate body bulk.
+Line 3 of deliberate body bulk.
+Line 4 of deliberate body bulk.
+Line 5 of deliberate body bulk.
+Line 6 of deliberate body bulk.
+Line 7 of deliberate body bulk.
+Line 8 of deliberate body bulk.
+Line 9 of deliberate body bulk.
+Line 10 of deliberate body bulk.
+Line 11 of deliberate body bulk.
+Line 12 of deliberate body bulk.
+Line 13 of deliberate body bulk.
+Line 14 of deliberate body bulk.
+Line 15 of deliberate body bulk.
+Line 16 of deliberate body bulk.
+Line 17 of deliberate body bulk.
+Line 18 of deliberate body bulk.
+Line 19 of deliberate body bulk.
+Line 20 of deliberate body bulk.
+Line 21 of deliberate body bulk.
+Line 22 of deliberate body bulk.
+Line 23 of deliberate body bulk.
+Line 24 of deliberate body bulk.
+Line 25 of deliberate body bulk.
+Line 26 of deliberate body bulk.
+Line 27 of deliberate body bulk.
+Line 28 of deliberate body bulk.
+Line 29 of deliberate body bulk.
+Line 30 of deliberate body bulk.
+Line 31 of deliberate body bulk.
+Line 32 of deliberate body bulk.
+Line 33 of deliberate body bulk.
+Line 34 of deliberate body bulk.
+Line 35 of deliberate body bulk.
+Line 36 of deliberate body bulk.
+Line 37 of deliberate body bulk.
+Line 38 of deliberate body bulk.
+Line 39 of deliberate body bulk.
+Line 40 of deliberate body bulk.
+Line 41 of deliberate body bulk.
+Line 42 of deliberate body bulk.
+Line 43 of deliberate body bulk.
+Line 44 of deliberate body bulk.
+Line 45 of deliberate body bulk.
+Line 46 of deliberate body bulk.
+Line 47 of deliberate body bulk.
+Line 48 of deliberate body bulk.
+Line 49 of deliberate body bulk.
+Line 50 of deliberate body bulk.
+Line 51 of deliberate body bulk.
+Line 52 of deliberate body bulk.
+Line 53 of deliberate body bulk.
+Line 54 of deliberate body bulk.
+Line 55 of deliberate body bulk.
+Line 56 of deliberate body bulk.
+Line 57 of deliberate body bulk.
+Line 58 of deliberate body bulk.
+Line 59 of deliberate body bulk.
+Line 60 of deliberate body bulk.
+Line 61 of deliberate body bulk.
+Line 62 of deliberate body bulk.
+Line 63 of deliberate body bulk.
+Line 64 of deliberate body bulk.
+Line 65 of deliberate body bulk.
+Line 66 of deliberate body bulk.
+Line 67 of deliberate body bulk.
+Line 68 of deliberate body bulk.
+Line 69 of deliberate body bulk.
+Line 70 of deliberate body bulk.
+Line 71 of deliberate body bulk.
+Line 72 of deliberate body bulk.
+Line 73 of deliberate body bulk.
+Line 74 of deliberate body bulk.
+Line 75 of deliberate body bulk.
+Line 76 of deliberate body bulk.
+Line 77 of deliberate body bulk.
+Line 78 of deliberate body bulk.
+Line 79 of deliberate body bulk.
+Line 80 of deliberate body bulk.
+Line 81 of deliberate body bulk.
+Line 82 of deliberate body bulk.
+Line 83 of deliberate body bulk.
+Line 84 of deliberate body bulk.
+Line 85 of deliberate body bulk.
+Line 86 of deliberate body bulk.
+Line 87 of deliberate body bulk.
+Line 88 of deliberate body bulk.
+Line 89 of deliberate body bulk.
+Line 90 of deliberate body bulk.
+Line 91 of deliberate body bulk.
+Line 92 of deliberate body bulk.
+Line 93 of deliberate body bulk.
+Line 94 of deliberate body bulk.
+Line 95 of deliberate body bulk.
+Line 96 of deliberate body bulk.
+Line 97 of deliberate body bulk.
+Line 98 of deliberate body bulk.
+Line 99 of deliberate body bulk.
+Line 100 of deliberate body bulk.
+Line 101 of deliberate body bulk.
+Line 102 of deliberate body bulk.
+Line 103 of deliberate body bulk.
+Line 104 of deliberate body bulk.
+Line 105 of deliberate body bulk.
+Line 106 of deliberate body bulk.
+Line 107 of deliberate body bulk.
+Line 108 of deliberate body bulk.
+Line 109 of deliberate body bulk.
+Line 110 of deliberate body bulk.
+Line 111 of deliberate body bulk.
+Line 112 of deliberate body bulk.
+Line 113 of deliberate body bulk.
+Line 114 of deliberate body bulk.
+Line 115 of deliberate body bulk.
+Line 116 of deliberate body bulk.
+Line 117 of deliberate body bulk.
+Line 118 of deliberate body bulk.
+Line 119 of deliberate body bulk.
+Line 120 of deliberate body bulk.
+Line 121 of deliberate body bulk.
+Line 122 of deliberate body bulk.
+Line 123 of deliberate body bulk.
+Line 124 of deliberate body bulk.
+Line 125 of deliberate body bulk.
+Line 126 of deliberate body bulk.
+Line 127 of deliberate body bulk.
+Line 128 of deliberate body bulk.
+Line 129 of deliberate body bulk.

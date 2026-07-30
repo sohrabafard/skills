@@ -1,0 +1,7 @@
+interface:
+  display_name: beta-skill
+  short_description: Fixture skill for index checks
+  default_prompt: Use $beta-skill only inside a fixture.
+  brand_color: "#3A5BA0"
+policy:
+  allow_implicit_invocation: false

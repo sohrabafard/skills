@@ -1,0 +1,13 @@
+{
+  "_schema": "Recorded result of the alert-surface discovery test in references/query-language-routing.md.",
+  "_status_values": ["unconfirmed", "dashboards-only", "dashboards-and-alerts"],
+  "_expiry_rule": "When the install's SigNoz version differs from signoz_version below, this record has expired: treat status as unconfirmed and rerun the test.",
+  "status": "unconfirmed",
+  "signoz_version": null,
+  "observed_at": null,
+  "observed_by": null,
+  "method": null,
+  "alert_types_offering_clickhouse_tab": [],
+  "save_succeeded": null,
+  "evidence": null
+}

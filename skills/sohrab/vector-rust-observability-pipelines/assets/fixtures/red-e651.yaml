@@ -1,0 +1,20 @@
+# RED fixture - must be reported as a finding.
+# `string!(...)` is infallible, so `?? "unknown"` is unreachable: error[E651].
+# This is the exact defect that shipped in all three templates before Batch 8.
+data_dir: /var/lib/vector
+sources:
+  in_files:
+    type: file
+    include: ["/var/log/app/*.log"]
+transforms:
+  normalize:
+    type: remap
+    inputs: [in_files]
+    source: |
+      .service = string!(.service) ?? "unknown"
+sinks:
+  out_console:
+    type: console
+    inputs: [normalize]
+    encoding:
+      codec: json

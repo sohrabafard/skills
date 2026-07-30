@@ -1,0 +1,10 @@
+interface:
+  display_name: Fixture Alpha
+  short_description: "Validator fixture skill, alpha"
+  default_prompt: "Use $fixture-alpha only inside the validator self-test."
+  brand_color: "#3A5BA0"
+policy:
+  allow_implicit_invocation: false
+  not_this_skill:
+    - domain: a neighbouring territory
+       route_to: $fixture-beta

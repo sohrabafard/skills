@@ -1,0 +1,2 @@
+X8-MISSING-OPENAI-YAML|beta-skill|skills/sohrab/beta-skill/agents/openai.yaml|missing  # twin: alpha-skill
+X8-MISSING-OPENAI-YAML|zeta-skill|skills/sohrab/zeta-skill/agents/openai.yaml|missing  # skill deleted long ago

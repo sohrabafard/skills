@@ -1,0 +1,4 @@
+# The R4 entry is real, and the second entry matches nothing. A baseline that can hold an
+# entry matching nothing is a permanent amnesty, so the stale entry must exit 1.
+R4-AMBIGUOUS-BARE|citing-skill|SKILL.md|references/72-offline-media-store.md  # owner: citing-skill
+R2-DANGLING-LOCAL|citing-skill|SKILL.md|references/00-this-was-fixed-long-ago.md  # owner: citing-skill

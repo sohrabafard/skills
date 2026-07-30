@@ -1,8 +1,18 @@
-
+# Unit tests for the `normalize` transform in vector-basic.yaml.
+#
+# This file does NOT define `normalize`. `vector test` resolves transforms across
+# the whole config set it is given, so both files must be passed together:
+#   vector test assets/templates/vector-basic.yaml assets/templates/vector-tests.yaml
+# Passing this file alone fails with an unknown-component error, which reads as a
+# broken test rather than a missing argument.
+#
+# These cases assert the failure classes, not only the happy path. A test suite
+# that only proves the good input works cannot tell a correct transform from one
+# that silently drops the defaulting logic.
 tests:
-  - name: normalize level and service
+  - name: happy path - level is downcased, service is preserved
     inputs:
-      - insert_at: in_demo
+      - insert_at: normalize
         type: log
         log_fields:
           level: WARN
@@ -16,3 +26,60 @@ tests:
               assert_eq!(.level, "warn")
               assert_eq!(.service, "API")
               assert_eq!(.message, "hello")
+
+  - name: missing service falls back to unknown
+    inputs:
+      - insert_at: normalize
+        type: log
+        log_fields:
+          level: INFO
+          message: no service field
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.service, "unknown")
+
+  - name: missing level falls back to info
+    inputs:
+      - insert_at: normalize
+        type: log
+        log_fields:
+          service: api
+          message: no level field
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.level, "info")
+
+  - name: non-string level is defaulted rather than aborting the transform
+    inputs:
+      - insert_at: normalize
+        type: log
+        log_fields:
+          level: 42
+          service: api
+          message: level arrived as an integer
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.level, "info")
+
+  - name: ingest timestamp is always added
+    inputs:
+      - insert_at: normalize
+        type: log
+        log_fields:
+          service: api
+          message: timestamp check
+    outputs:
+      - extract_from: normalize
+        conditions:
+          - type: vrl
+            source: |
+              assert!(is_timestamp(.ingest_ts))

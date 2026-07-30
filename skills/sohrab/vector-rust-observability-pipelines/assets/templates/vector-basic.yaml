@@ -1,4 +1,6 @@
-
+# Minimal Vector pipeline: demo source -> normalising remap -> console sink.
+# Validate with:  vector validate --skip-healthchecks assets/templates/vector-basic.yaml
+# `data_dir` must exist on the validating host, or validation reports an environment error.
 data_dir: /var/lib/vector
 
 sources:
@@ -7,12 +9,17 @@ sources:
     format: json
 
 transforms:
+  # Named for what it produces, not what it consumes.
   normalize:
     type: remap
     inputs: [in_demo]
     source: |
-      .service = string!(.service) ?? "unknown"
-      .level = downcase(string!(.level) ?? "info")
+      # `string(...)` is fallible and returns an error for a missing or non-string
+      # field, so `??` has something to coalesce. `string!(...)` aborts instead of
+      # returning an error, which makes `?? "default"` unreachable and is rejected
+      # at compile time as error[E651]. See references/20-vrl-transforms.md.
+      .service = string(.service) ?? "unknown"
+      .level = downcase(string(.level) ?? "info")
       .ingest_ts = now()
 
 sinks:

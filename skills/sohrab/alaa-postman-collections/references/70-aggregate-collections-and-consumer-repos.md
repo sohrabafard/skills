@@ -47,6 +47,12 @@ diff -u "$SKILL_DIR/scripts/audit_collection_contract.py" scripts/postman/audit_
 
 Empty output means the copies are in sync. Any output means the consumer repository is running different logic from the skill, which makes its CI result unreproducible from the skill; re-sync it from the skill and rerun the repository's own gate before closing.
 
+### Outstanding re-sync, created 30 July 2026
+
+`audit_collection_contract.py` was corrected on 30 July 2026 to exit `2` rather than `1` when it cannot read an input, because a "could not run" reported as a finding makes a CI gate treat a missing file as a fixable defect. `60-validation-and-output-contract.md` holds the corrected table.
+
+Any consumer copy made before that date still exits `1`. Re-sync it with the `diff -u` command above the next time that repository is touched, and check the repository's CI for a step that branches on exit `1` versus other codes: a step written as "exit 1 means findings" now needs to treat `2` as a blocked run instead of a clean one. Until a copy is re-synced, its own gate is correct about collections and wrong about unreadable inputs.
+
 ## Invariants a merge program must hold
 
 Verify each of these against the merge program before trusting its output. Each one has a failure that is silent without the check.
@@ -75,5 +81,7 @@ Editing the generated file instead is worth naming precisely, because the edit a
 ## Worked example
 
 The `gateway` repository is the reference implementation. `scripts/postman/generate_gateway_collection.sh` merges eight service-local collections into one gateway-facing aggregate under `docs/postman/`, and `docs/postman/gateway-postman-maintenance.md` documents its registry, its per-constant change procedure, and its change matrix. Read those two files before changing an aggregate in any repository; they hold the operational detail this page deliberately does not restate.
+
+A generator that writes a value into an environment file owns that value, which makes it the place a pinned implementation constant hides. `30-variables-auth-and-environments.md` states the rule as the sixth environment-completeness condition, and `validate_postman_artifacts.py --forbid-pinned-vendor-identifier` is the gate; run it against every environment file a generator emits, not only against hand-written ones. When it fires, the fix is in the generator's inputs, per the generated-artifact rule in `10-scope-and-trigger-rules.md`, and never in the emitted JSON.
 
 That generator stays in `gateway` and is not moved into this skill: its transformations are defined by gateway's route prefixes, public-route allowlist, trusted-header set, and per-service exceptions, so the logic and the data are not separable without inventing a configuration format richer than the one platform that would use it.

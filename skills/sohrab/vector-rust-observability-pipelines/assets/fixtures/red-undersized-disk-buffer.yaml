@@ -1,0 +1,20 @@
+# RED fixture - must be reported as a finding.
+# Vector 0.57.0 requires a disk buffer max_size >= 268435488 bytes.
+# 268435456 is exactly 256 MiB and is REJECTED, so "about 256 MiB" is not a
+# safe reading of the documented minimum.
+# `--no-environment` also hides this one.
+data_dir: /var/lib/vector
+sources:
+  in_files:
+    type: file
+    include: ["/var/log/app/*.log"]
+sinks:
+  out_console:
+    type: console
+    inputs: [in_files]
+    encoding:
+      codec: json
+    buffer:
+      type: disk
+      max_size: 268435456
+      when_full: block

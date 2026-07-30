@@ -1,83 +1,74 @@
 ---
 name: alaa-signoz-clickhouse-docs
-description: "SigNoz docs lookup and ClickHouse query execution for dashboards/alerts over OpenTelemetry logs, traces, and metrics. Use for Query Builder v5 routing, search syntax, dashboard variables, field ambiguity, missing spans, trace-quality troubleshooting, and writing/repairing SigNoz ClickHouse SQL. Pair with alaa-observability-soc for signal design, cardinality, exemplars, Sentry, Collector, Vector, or SOC policy decisions."
+description: "SigNoz ClickHouse SQL for dashboard panels over OpenTelemetry logs, traces and metrics, plus docs routing: the vendor-owned signoz_logs, signoz_traces and signoz_metrics tables, their sorting keys, the bucket-filter and resource-CTE idioms, rollup selection, missing-span diagnosis, and the service-topology read path. Use it to write or repair raw SigNoz panel SQL, to confirm a SigNoz table or column, to diagnose a trace with missing spans, or to choose the SigNoz docs page for a setup question. Do not use it to decide what a ClickHouse table must be, which /clickhouse-performance-schema-ops ($clickhouse-performance-schema-ops) owns; nor for telemetry requirement levels, cardinality ceilings or alert severity, which /alaa-observability-soc ($alaa-observability-soc) owns; nor for Vector pipeline config, which /vector-rust-observability-pipelines ($vector-rust-observability-pipelines) owns."
 ---
 
-# Alaa SigNoz ClickHouse Docs
+# SigNoz ClickHouse Docs and Query Reference
 
-Use this skill to choose the right official SigNoz documentation path and to write or repair SigNoz ClickHouse queries for dashboards and alerts over logs, traces, and metrics.
+Write and repair raw ClickHouse SQL against SigNoz's vendor-owned tables, and route a SigNoz documentation question to the page that answers it.
 
-## Quick start
+## Three facts that decide every task here
 
-1. Read `references/source-map.md` when the task mentions latest/current docs, schema changes, Query Builder behavior, live query failures, instrumentation versions, Collector versions, or migration.
-2. If the task is broad, read `references/00-topic-map.md` first.
-3. Classify the task:
-   - docs lookup or docs-grounded answer
-   - Query Builder/search syntax/variables/field ambiguity
-   - ClickHouse SQL writing or repair for logs, traces, or metrics
-   - missing-spans or trace-quality troubleshooting
-   - mixed task: docs first, then query
-4. Load only the matching reference file and answer directly.
+**1. The SigNoz schema is vendor-owned and read-only to this fleet.** SigNoz's schema migrator creates and alters every table in `signoz_logs`, `signoz_traces`, `signoz_metrics`, `signoz_metadata` and `signoz_meter`, and the schema changes only when SigNoz is upgraded. Propose no `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `OPTIMIZE` or `SYSTEM` statement against a `signoz_*` table; report a schema defect to the vendor instead, because an unratified local change is overwritten by the next upgrade.
 
-## Do not use for
+**2. A tenant predicate is not required on a SigNoz query.** All tenants report into one shared SigNoz, and everyone with access to that SigNoz is authorised to see every tenant's telemetry, because seeing it is how they fix it. A project whose telemetry must not be shared gets a separate SigNoz address selected by an environment variable, so the isolation is the address, not a `WHERE` clause. `clickhouse-performance-schema-ops` requires the tenant column first in `ORDER BY` and a tenant filter on every query; that rule governs tables the fleet's own ingest pipeline owns and does not transfer to `signoz_*` tables, because the fleet owns neither their sorting key nor their write path and cannot add a tenant column to either. Do not add a tenant predicate to a SigNoz query to satisfy that rule, and do not report its absence as a defect.
 
-- generic ClickHouse work outside SigNoz schemas
-- PromQL-only tasks unless the user needs SigNoz docs routing
-- observability design that does not depend on SigNoz docs, UI behavior, or table conventions
-- security/SOC policy, Sentry role decisions, cardinality policy, exemplar architecture, Collector/Vector topology, or alert severity policy; use `$alaa-observability-soc`
+**3. The ClickHouse alert surface is unconfirmed, and this skill fails closed on it.** See the next section.
 
-## Mode routing
+## The alert-surface gate
 
-| Mode | Use when | Load |
-| --- | --- | --- |
-| Docs lookup | user asks for the right SigNoz page or a docs-grounded setup answer | `docs-routing.md` plus a specific routing file |
-| Instrumentation | OTel SDK, Collector, migration, language/framework setup | `instrumentation-routing.md` |
-| Log collection | logs, files, containers, OTLP/HTTP logs, collectors | `log-collection-routing.md` |
-| Query Builder | visual query builder, search syntax, filters, formulas, variables, field ambiguity | `query-language-routing.md` |
-| Logs SQL | raw ClickHouse panel/alert query over logs | `clickhouse-logs-reference.md` |
-| Traces SQL | raw ClickHouse panel/alert query over spans/traces | `clickhouse-traces-reference.md` |
-| Metrics SQL | raw ClickHouse panel/alert query over metric samples/time series | `clickhouse-metrics-reference.md` |
-| Missing spans | missing parent span, broken trace tree, parent span ID confusion | `observability-guardrails.md` + `clickhouse-traces-reference.md` |
-| Sensitive validation | production query safety, panel correctness, schema assumptions | `validation-checklists.md` |
+The vendor contradicts itself about whether a SigNoz alert rule accepts ClickHouse SQL, and both statements were live on 2026-07-30. Neither the vendor nor the owner has resolved it, so assume nothing and discover it. `references/query-language-routing.md` carries both quotes, both URLs, and the discovery test.
 
-## ClickHouse query operating rules
+Read `assets/alert-surface.json` before answering any request for alert SQL. While its `status` is `unconfirmed`:
 
-- First confirm the UI surface. ClickHouse SQL is for SigNoz Dashboards and ClickHouse-backed alerts; Explorers usually use Query Builder/search syntax.
-- Identify the signal before writing SQL: logs, traces, or metrics. Do not mix table families without a clear join key and time window.
-- Use distributed tables and official SigNoz schema names from the relevant reference. If schema age is uncertain, inspect current docs or live `SHOW TABLES`/`DESCRIBE TABLE` before finalizing.
-- Always include a bounded time filter. For logs/traces, include the expected SigNoz bucket filter when required. For metrics, use `{{.start_timestamp_ms}}` and `{{.end_timestamp_ms}}` unless the current docs or dashboard surface proves different variables.
-- Prefer indexed/pre-extracted columns over map/JSON access when they exist.
-- Use a resource CTE only when filtering on resource attributes; use `GLOBAL IN` where the reference requires it.
-- Return the expected panel shape:
-  - timeseries: `ts`, `value`
-  - value widget: one row named `value`
-  - table: labeled columns and bounded `LIMIT`
-- Keep placeholders explicit (`{{service_name}}`, `{{attribute_key}}`, `{{metric_name}}`) when exact values are unknown.
-- Never include credentials, tokens, raw customer payloads, or destructive SQL in examples.
+1. Run the discovery test in `references/query-language-routing.md` against this fleet's own SigNoz and record the result in `assets/alert-surface.json`. It needs one account that can open the alert-rule editor, and about one minute.
+2. When the test cannot be run in this session, deliver the dashboard-panel form of the query and the Query Builder alert path, and state that the ClickHouse alert surface is unconfirmed on this install. Do not label SQL as alert SQL, because a rule the surface rejects is work that cannot ship.
 
-## Missing-spans workflow
+`check-signoz-sql.py --surface alert` reports finding `S11` for exactly this case, so the gate is enforced rather than remembered.
 
-Use SigNoz/live evidence first when available:
+## Rules that hold on every query
 
-1. inspect recent traces for `trace_id`, `span_id`, `parent_span_id`, `name`, `serviceName`, and `spanKind`
-2. group by operation and parent span pattern
-3. use the anti-join query in `clickhouse-traces-reference.md` if ClickHouse access exists
-4. fix instrumentation at source: preserve inbound `traceparent`; do not generate a fake parent span; root the request server span when inbound context is missing/invalid
-5. verify with a direct request that has no inbound `traceparent`; it should produce a root/server span with an empty parent span ID
+1. Name the signal before writing SQL — logs, traces, or metrics — and read only that signal's reference. Joining two `signoz_*` databases needs an explicit `JOIN ... ON`, a shared key and one time window, because the three families share no fingerprint space.
+2. Bound every query in time with the variables that signal's reference names, and pair a logs or traces query with the `ts_bucket_start` predicate, because `ts_bucket_start` is the first column of the sorting key and a query without it reads every part in the partition.
+3. Group only by a column whose distinct-value count is inside the ceiling that `/alaa-observability-soc` (`$alaa-observability-soc`) `references/30-quantitative-budgets.md` sets. That file states the number; this skill states none and enforces the denylist as `check-signoz-sql.py` rule `S7`.
+4. Return the panel shape the widget expects: `ts` and `value` for a timeseries, one column named `value` for a value widget, labelled columns and a `LIMIT` for a table.
+5. Keep an unknown value as an explicit placeholder — `{{service_name}}`, `{{metric_name}}`, `{{attribute_key}}` — rather than inventing one, and never put a credential, token or real customer payload in an example.
+6. When the live schema cannot be reached, emit the query with a literal `-- UNVERIFIED SCHEMA: db.table` comment above it and name the command that verifies it. Never silently downgrade to this reference's assumption.
+
+## References
+
+Route the task through `references/00-topic-map.md`, which maps the situation you are in to the one file that answers it. It is the only router in this skill.
+
+## Checkers
+
+Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not run; a `2` is never a pass. Each ships a red fixture reachable with `--self-test`.
+
+- `python3 scripts/check-signoz-links.py --skill-dir .` — every URL in the skill resolves 200 and does not silently redirect to a docs index. Exits `2` when the network is unreachable, so a dead link can never read as clean.
+- `python3 scripts/check-signoz-schema.py --describe-dir DIR` (or `--dsn URL`) — every table and column this skill claims is present on the target, and `signoz_index_v3` still sorts by `ts_bucket_start, resource_fingerprint` first. A finding here means this skill is stale against the installed SigNoz, not that your query is wrong: fix the reference first, then the query.
+- `python3 scripts/check-signoz-sql.py --skill-dir .` — this skill's own examples obey the rules above. Add `--sql FILE` to check a query you are about to hand over.
+
+## Not owned here
+
+`clickhouse-performance-schema-ops` owns what a ClickHouse table must be — engine, sorting key, partitioning, TTL, compression — for tables the fleet controls.
+`alaa-signoz-clickhouse-docs` owns how a SigNoz-owned table is queried, and states that those tables are vendor-owned and read-only to the fleet.
+`vector-rust-observability-pipelines` owns what the pipeline writes into a ClickHouse table and how it behaves when that table is unreachable, and decides no schema.
+
+Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`) `references/40-query-tuning-and-read-lane.md`. Telemetry requirement levels, gates and reasons: `/alaa-observability-soc` (`$alaa-observability-soc`). Who may hold a SigNoz credential, and what a saved panel executes with: `/alaa-security-review` (`$alaa-security-review`). Model and effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`. Every other owner is named at the rule it governs inside `references/`.
+
+## When NOT to use
+
+- generic ClickHouse work outside the `signoz_*` databases
+- deciding a table's engine, sorting key, partitioning or TTL, including for a `signoz_*` table
+- PromQL-only questions that need no SigNoz docs routing
+- observability design that does not depend on SigNoz schema, docs or UI behaviour
+- SOC policy, Sentry role decisions, cardinality ceilings, exemplar architecture, Collector or Vector topology, and alert severity policy
 
 ## Output contract
 
-For docs tasks, return the best page first, why it is the best fit, and only the alternates that change the setup path.
+For a docs task, return the one best page, why it fits, and only the alternates that change the setup path.
 
-For query tasks, return:
-
-- panel type and signal
-- assumptions/placeholders
-- final SQL in one block
-- validation notes: time bounds, schema/table family, variables, resource filters, limits, and any unresolved uncertainty
-
-For query repair, briefly name the issue, provide the corrected query, and avoid a long research diary.
+For a query task, return the panel type and signal, the assumptions and placeholders, the SQL in one block, and validation notes covering time bounds, table family, variables, resource filters, limits and any unresolved uncertainty. For a repair, name the defect, give the corrected query, and skip the research diary.
 
 ## Stop rules
 
-Make the smallest safe assumption when details are missing. Ask only when the missing detail changes the signal, table family, time variables, schema version, production side effects, or data exposure. Do not invent SigNoz table names, fields, macros, or UI capabilities when current docs or live schema are required.
+Make the smallest safe assumption when a detail is missing. Ask only when the missing detail changes the signal, the table family, the time variables, the schema version, a production side effect, or what data is exposed. Never invent a SigNoz table, column, macro or UI capability; when the current docs or the live schema are required to answer, say so and name the command that would answer it.

@@ -23,6 +23,7 @@ Use this file to choose the smallest relevant reference file.
 | a variable, an environment file, or an auth block | `references/30-variables-auth-and-environments.md` |
 | anything that must survive Insomnia import | `references/50-insomnia-compatibility-and-free-plan-rules.md` |
 | a merge of several services' collections, or a repo copy of a script from here | `references/70-aggregate-collections-and-consumer-repos.md` |
+| a capture that two requests or two folders could race on | `references/42-scripts-and-state-capture.md` |
 
 ## Read before closing the task
 
@@ -46,7 +47,10 @@ Use this file to choose the smallest relevant reference file.
 - `scripts/audit_collection_contract.py` — the strict pass/fail gate. Run it last on a
   frontend, penetration-test, SDK, or aggregate handoff, and whenever a repository's CI
   already runs it, using that CI's flags.
-- `references/60-validation-and-output-contract.md` holds every flag, both exit-code
+- `scripts/selftest.py` — proves both scripts above against the committed fixtures in
+  `test/fixtures/`, each of which violates one assertion those scripts make. Run it whenever
+  either script or a fixture changed, before trusting what either script reports.
+- `references/60-validation-and-output-contract.md` holds every flag, all three exit-code
   tables, and what each failure obliges you to do.
 
 ## Working rule

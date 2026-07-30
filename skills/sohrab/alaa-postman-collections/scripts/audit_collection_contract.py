@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""Audit Postman v2.1 request documentation, examples, and executable scripts."""
+"""Audit Postman v2.1 request documentation, examples, and executable scripts.
+
+Exit codes, documented in references/60-validation-and-output-contract.md:
+
+  0  no findings
+  1  at least one finding; every finding this script reports is blocking
+  2  could not run: an input file could not be read or is not a JSON object
+
+A "could not run" must never be reported as a failing artifact, because a harness that
+cannot tell them apart treats a missing file as a fixable finding and a broken gate as a
+broken collection.
+"""
 
 from __future__ import annotations
 
@@ -406,7 +417,7 @@ def main() -> int:
             )
     except ValueError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
-        return 1
+        return 2
 
     if args.json:
         print(

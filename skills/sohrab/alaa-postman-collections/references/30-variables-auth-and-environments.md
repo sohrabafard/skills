@@ -9,7 +9,7 @@ shape, and auth inheritance.
 
 ## Environment completeness
 
-An environment is complete when all five hold. Each one is checkable.
+An environment is complete when all six hold. Each one is checkable.
 
 1. **Every referenced variable is declared.** Every `{{name}}` that appears anywhere in the
    collection — a URL, a header, a query value, a body, an auth block, a saved example, a
@@ -30,6 +30,18 @@ An environment is complete when all five hold. Each one is checkable.
 5. **Every entry is enabled.** Insomnia's environment importer drops any entry whose
    `enabled` is falsy, so a variable parked as disabled is present in Postman and absent in
    Insomnia. Delete it or give it a placeholder instead.
+6. **No committed value is an implementation constant the generator should own.** An
+   environment value is operator input: a host, a route prefix, a page size, a credential
+   placeholder, or an identifier the operator supplies. A pinned vendor model, engine,
+   deployment, or embedding identifier is not operator input — it is a constant the
+   generating script or service configuration owns, and freezing it in a committed
+   environment means the artifact silently keeps pinning it after the service moves on.
+   The positive replacement: declare the value as an input of the generator that emits the
+   environment, reference it here as a `{{variable}}` or leave it out of the committed file
+   entirely, and route which identifier to use to `/alaa-prompting-guide`
+   (`$alaa-prompting-guide`). This skill states no model, engine, or vendor name of its own.
+   `validate_postman_artifacts.py --forbid-pinned-vendor-identifier` is the gate;
+   `60-validation-and-output-contract.md` holds the flag table.
 
 ## Per-developer versus shared
 

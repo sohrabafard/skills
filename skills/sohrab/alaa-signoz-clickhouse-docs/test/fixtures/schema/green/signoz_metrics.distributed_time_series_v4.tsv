@@ -1,0 +1,12 @@
+env	String
+temporality	String
+metric_name	String
+description	String
+unit	String
+type	String
+is_monotonic	String
+fingerprint	String
+unix_milli	String
+labels	String
+__normalized	String
+inserted_at_unix_milli	String

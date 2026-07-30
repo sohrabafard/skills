@@ -1,0 +1,20 @@
+{
+  "_comment": [
+    "RED fixture for check-upstream-version.mjs --self-test.",
+    "This is a trimmed, real-shaped response from the GitHub releases API for",
+    "vectordotdev/vector. The first entry is the trap: the repository also tags",
+    "the `vdev` developer tool, and GitHub's /releases/latest endpoint returns",
+    "vdev-v0.3.3 rather than a Vector release. A resolver that takes the first",
+    "entry, or that trusts /releases/latest, reports Vector 0.3.3 and every",
+    "downstream version comparison is then wrong in the safe-looking direction.",
+    "The self-test asserts the resolver rejects this entry and returns 0.57.0."
+  ],
+  "releases": [
+    { "tag_name": "vdev-v0.3.3", "published_at": "2026-07-20T00:00:00Z" },
+    { "tag_name": "v0.57.0", "published_at": "2026-07-14T20:58:30Z" },
+    { "tag_name": "v0.56.0", "published_at": "2026-06-03T00:00:00Z" },
+    { "tag_name": "v0.55.0", "published_at": "2026-04-22T00:00:00Z" },
+    { "tag_name": "v0.9.0", "published_at": "2020-01-01T00:00:00Z" }
+  ],
+  "expected_latest": "0.57.0"
+}

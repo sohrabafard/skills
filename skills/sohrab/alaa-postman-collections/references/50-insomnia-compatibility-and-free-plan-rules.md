@@ -15,10 +15,14 @@ reader of it.
 
 ## What Insomnia preserves and what it drops
 
-Verified 25 July 2026 by reading Insomnia's own importer at
+Verified 30 July 2026 against **Insomnia 12.6.0, released 22 May 2026**, the current stable
+release. The importer claims were read from
 `packages/insomnia/src/main/importers/importers/postman.ts` and
-`packages/insomnia/src/main/importers/importers/postman-env.ts` on the `master` branch of
-`https://github.com/Kong/insomnia`, and Insomnia's documentation at
+`packages/insomnia/src/main/importers/importers/postman-env.ts`, and the scripting-object
+claims from `packages/insomnia-scripting-environment/src/objects/response.ts`, all at tag
+`core@12.6.0` of `https://github.com/Kong/insomnia`. Read a tag rather than `master`: a
+`master` reading cannot be tied to a release a reader can install. Also verified against
+Insomnia's documentation at
 `https://developer.konghq.com/insomnia/scripts/`,
 `https://developer.konghq.com/insomnia/import-export/`, and
 `https://developer.konghq.com/how-to/migrate-collections-and-environments-from-postman-to-insomnia/`.
@@ -80,6 +84,29 @@ Do not put `https://schema.getpostman.com/collection/json/v2.1.0/draft-04/collec
 in `info.schema`. It is the URL for validating a collection against the JSON Schema, and
 it is not in Insomnia's accepted list.
 
+## Why this skill pins v2.1 when v3.0.0 exists
+
+Postman's current collection schema is **3.0.0**, not 2.1. Its stated design goal is a
+collection spread over multiple YAML files so people, agents, and tooling can read, diff, and
+review it — which is this skill's own premise. The pin on 2.1 is nonetheless deliberate, and
+rests on two constraints 3.0 does not satisfy:
+
+- Insomnia's `convert()` accepts only the four v2.0 and v2.1 schema strings listed above. A
+  3.0 collection is rejected with `No importers found for file`, so the Insomnia leg of this
+  skill's portability requirement cannot be met by 3.0 at all.
+- Newman runs a collection exported to 2.1 and cannot run 3.0; running a 3.0 collection
+  requires the Postman CLI. Pinning 2.1 keeps the artifact runnable by both.
+
+Re-derive both facts before changing the pin:
+
+```shell
+curl -s https://raw.githubusercontent.com/Kong/insomnia/core@12.6.0/packages/insomnia/src/main/importers/importers/postman.ts | grep -A4 POSTMAN_SCHEMA_URLS_V2_1
+```
+
+and read the schema-version and Newman-compatibility statements at
+`https://learning.postman.com/docs/use/use-collections/collections-schemas`. Change the pin
+only when both constraints have changed, and record the date and the source with the change.
+
 ## Scripting rules that follow from the rewrite
 
 Insomnia rewrites `pm.` to `insomnia.` as text, then runs the result against its own
@@ -98,10 +125,21 @@ object. A `pm.*` call therefore works in Insomnia exactly when the matching
 - Never use `pm.vault`, `pm.require`, `pm.state`, `pm.datasets`, or `pm.visualizer`. They
   have no Insomnia counterpart, and a package-library import is not carried in the
   exported file at all.
-- Prefer `pm.expect(pm.response.code).to.eql(200)` over `pm.response.to.have.status(200)`.
-  Insomnia's own documented example is
-  `insomnia.expect(insomnia.response.code).to.eql(201)`; whether the chai-style
-  `insomnia.response.to.have.*` chain resolves is **not documented and was not verified**.
+- `insomnia.response.code` is the numeric HTTP status and `insomnia.response.status` is the
+  reason phrase. Both members exist; they are not two spellings of one value. Insomnia's
+  `Response` class declares `code: number` and `status: string`, and sets
+  `this.status = options.reason || RESPONSE_CODE_REASONS[options.code] || ''`. So
+  `pm.response.code` rewrites to the number to compare against `200`, and Insomnia's current
+  documentation example `const status = insomnia.response.status;` reads the phrase, not the
+  code. Comparing `status` to a number always fails on both sides.
+- The chai-style `pm.response.to.*` chain does resolve, for exactly the members Insomnia
+  registers on the response object: the properties `withBody`, `error`, `ok` and `json`, and
+  the methods `status(code)`, `header(name)`, `body(text)`, `jsonBody(key)` and
+  `jsonSchema(schema)`. `status(code)` compares against `code` internally, so
+  `pm.response.to.have.status(200)` is correct in both tools. Any other member on that chain
+  is unresolved after the rewrite; `validate_postman_artifacts.py` warns on the members
+  outside this list and stays silent on the ones in it. `43-response-tests.md` states which
+  form to write and why.
 - Postman dynamic variables such as `{{$guid}}` are rewritten into Insomnia's
   `{% faker 'guid' %}` tag, so they survive. A variable name containing a hyphen is
   rewritten into bracket notation, so name every variable in `snake_case` with no hyphen.
@@ -125,24 +163,35 @@ Insomnia's Postman-environment importer reads three fields and ignores the rest.
 
 ## Postman free-plan rules that matter here
 
-Postman's Free plan includes the API client, collections and environments, collection
-generation and sync, Native Git, the Postman CLI, and unlimited Collection Runner and
-Performance Testing runs. Paid plans add custom-branded documentation, custom domains,
-broader collaboration, and enterprise governance. Therefore:
+Postman's Free plan, read 30 July 2026, includes the API client and core tools, specs and
+mock servers, Native Git, the Postman CLI, the local vault, the secret scanner, manual
+Flows, and unlimited Collection Runner and Performance Testing runs. Its limits that bear on
+a committed artifact are `1 user`, `10,000` monthly Postman API calls, `1,000 requests` of
+monthly API monitoring, `Up to 5` integrations, `50 AI credits`, and a `1 day` collection
+recovery window. Paid plans add custom-branded documentation, custom domains, broader
+collaboration, and enterprise governance. Therefore:
 
 - never require paid documentation branding, a custom domain, or team-only governance
-- keep the workflow local and file-based by default
-- treat mock-server call volume as metered and never make correctness depend on it
+- keep the workflow local and file-based by default, because a `1 day` recovery window means
+  the committed file, not Postman's cloud, is what the artifact's durability rests on
+- never build a workflow around the Postman API or around monitors: both are metered per
+  month at the numbers above, and a workflow that needs them stops working mid-month
 
 ## Insomnia free-plan rules that matter here
 
-Insomnia's free tier includes unlimited Cloud and Local projects, unlimited collection
-runs, unlimited environments, Inso CLI access, and plugin access. Therefore:
+Insomnia's free tier, branded **Essentials** and read 30 July 2026, includes unlimited
+Cloud and Local projects for all users, unlimited collection runs, unlimited environments,
+Inso CLI access for CI, end-to-end encryption, and unlimited plugins. Two limits bear on a
+committed artifact: `Unlimited Git Sync projects for up to 3 users`, and `1,000 mock server
+requests per month`. Therefore:
 
 - never assume a paid Insomnia plan is needed to import or run the artifact
 - keep validation steps runnable locally
-- treat enterprise-only storage controls, RBAC, SSO, and vault integrations as out of
-  scope
+- never make a collection's correctness depend on a mock server on either side: Insomnia
+  meters mock requests at `1,000` a month, and `45-mock-servers.md` treats a mock as a
+  convenience rather than a contract
+- treat enterprise-only storage controls, RBAC, SSO, and vault integrations as out of scope,
+  and treat Git Sync as unavailable above three users
 
 ## Features that stay optional
 
@@ -152,12 +201,26 @@ SSO. A committed artifact works without every one of them.
 
 ## Proving portability
 
-Run the importer family before closing when local Node and network access are available:
+**There is no maintained command-line Postman-to-Insomnia converter.** Both npm packages
+this file used to prescribe are deprecated: `insomnia-importers` and `insomnia-inso` were
+each last published 27 September 2022 and both now carry
+`Package no longer supported. Use at your own risk.` Do not put either in a validation
+ladder or a CI job. Re-check before trusting this paragraph:
 
 ```shell
-npx --yes insomnia-importers@3.6.0 path/to/collection.postman_collection.json
+curl -s https://registry.npmjs.org/insomnia-importers | python3 -c "import json,sys; d=json.load(sys.stdin); l=d['dist-tags']['latest']; print(l, d['time'][l], d['versions'][l].get('deprecated'))"
 ```
 
-A successful conversion is stronger evidence than JSON or schema validation for the
-`No importers found for file` failure mode. When the host cannot run it, state that exact
-gap in the task output rather than describing portability as verified.
+What replaces it is two checks, in this order:
+
+1. **The static check, automated and always available.** `validate_postman_artifacts.py`
+   compares `info.schema` against the exact export marker with no flag needed. That string
+   comparison is the whole of Insomnia's detection logic, so it fully proves the
+   `No importers found for file` failure mode — the one the deprecated converter was run to
+   catch.
+2. **A real import into Insomnia, by a person, when portability is contractual.** It is the
+   only way to observe what the importer silently drops. Record the Insomnia version, because
+   this file's table is version-pinned.
+
+When neither has been done, say in the task output that Insomnia portability is
+static-checked but not import-verified. Never describe it as verified.

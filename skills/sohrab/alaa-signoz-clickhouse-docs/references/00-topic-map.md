@@ -1,49 +1,33 @@
 # Topic Map
 
-Use this file first when the task is broad or when you are not sure which reference to load.
+The only router in this skill. Find the row whose situation matches yours and read that one file.
+Read a second file only when its own row also matches.
 
-## Read this file, then jump to one reference
+| You are about to | Read |
+|---|---|
+| write or repair ClickHouse SQL over log records | `clickhouse-logs-reference.md` |
+| write or repair ClickHouse SQL over spans | `clickhouse-traces-reference.md` |
+| write or repair ClickHouse SQL over metric samples, a counter rate, an error ratio, or a histogram quantile | `clickhouse-metrics-reference.md` |
+| decide whether a request belongs in Query Builder, a dashboard panel, or an alert rule, or promise a ClickHouse alert path | `query-language-routing.md` |
+| explain or diagnose a trace SigNoz reports as having missing spans, or a span whose parent was never collected | `40-missing-spans.md` |
+| answer what calls what, read the service dependency graph, or explain a missing edge in it | `50-service-topology.md` |
+| state a SigNoz, collector or ClickHouse version, or judge whether a ClickHouse feature exists on the target | `90-versions.md` |
+| find the current SigNoz docs page, or weigh a docs page against source, a blog post or a memory | `10-docs-navigation.md` |
+| finalise a query that will be pasted into a production dashboard or alert | `validation-checklists.md` |
 
-- Official docs page selection and current entry pages:
-  - `docs-routing.md`
-- OpenTelemetry instrumentation, migration, Collector setup, and language/framework paths:
-  - `instrumentation-routing.md`
-- Log-ingestion path selection:
-  - `log-collection-routing.md`
-- Query Builder v5, search syntax, field ambiguity, formulas, aggregation, and dashboard variables:
-  - `query-language-routing.md`
-- Logs dashboard/alert SQL in ClickHouse:
-  - `clickhouse-logs-reference.md`
-- Traces dashboard/alert SQL in ClickHouse:
-  - `clickhouse-traces-reference.md`
-- Metrics dashboard/alert SQL in ClickHouse:
-  - `clickhouse-metrics-reference.md`
-- Generic SigNoz/OTel data-quality guardrails and missing-span reasoning:
-  - `observability-guardrails.md`
-- Production query safety and validation checklist:
-  - `validation-checklists.md`
-- Official-first source priority and freshness triggers:
-  - `source-map.md`
+## Rows that are one situation, not two
 
-## Fast routing
+**Missing spans start at `40-missing-spans.md` and stay there.** That file states the causes, the
+instrumentation fix, and the anti-join, and it names the one query in
+`clickhouse-traces-reference.md` you need if you have ClickHouse access. Do not start from the
+traces reference for a missing-spans question: the anti-join tells you which spans are missing and
+not why, and the why is what closes the ticket.
 
-- “Which SigNoz page should I read for OpenTelemetry instrumentation?”
-  - Start with `instrumentation-routing.md`.
-- “I already use OpenTelemetry. How do I switch to SigNoz?”
-  - Start with `instrumentation-routing.md`.
-- “How should I send logs to SigNoz?”
-  - Start with `log-collection-routing.md`.
-- “Why is `service.name` ambiguous in SigNoz?”
-  - Start with `query-language-routing.md`, then `observability-guardrails.md`.
-- “Write a ClickHouse panel query for logs.”
-  - Start with `clickhouse-logs-reference.md`.
-- “Write a ClickHouse panel query for traces.”
-  - Start with `clickhouse-traces-reference.md`.
-- “Write a ClickHouse panel query for metrics, request rate, error rate, or p99 latency from metric samples.”
-  - Start with `clickhouse-metrics-reference.md`.
-- “I need both the docs page and the SQL.”
-  - Read the relevant routing file first, then the matching ClickHouse reference.
-- “SigNoz says this trace has missing spans.”
-  - Start with `observability-guardrails.md`, then use `clickhouse-traces-reference.md` for anti-join verification.
-- “Is this query safe/efficient for a sensitive production system?”
-  - Load `validation-checklists.md` before finalizing.
+**A missing dependency-graph edge is a missing-spans question wearing a different hat.** Read
+`50-service-topology.md` first for what the graph is a lower bound on, then `40-missing-spans.md`
+for why a span never arrived.
+
+**A docs question plus a SQL question is two tasks.** Answer the docs one from
+`10-docs-navigation.md`, then the SQL one from the signal reference. Do not open a routing file to
+answer a schema question — every schema fact this skill asserts lives in the three ClickHouse
+references and is checked by `scripts/check-signoz-schema.py`.

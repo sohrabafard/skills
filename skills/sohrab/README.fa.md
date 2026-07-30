@@ -6,6 +6,65 @@
 
 ---
 
+## قواعد طراحی این pack
+
+- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و ۶۵ پوشه از ۶۷ پوشه اینجا دارند. دو پوشه ندارند، بررسی‌شده در ۲۰۲۶-۰۷-۳۰: یکی `alaa-cc-orchestrator` که فقط برای Claude Code است و دوقلوی Codex اش یعنی `alaa-codex-orchestrator` این فایل را دارد، و دیگری `alaa-go-chi-development` که دوقلو ندارد و یک نقص باز است، نه یک رویه مجاز.
+- هیچ skill ای نام مدل نمی‌گوید؛ هر سوال مدل و effort و توان runtime به `alaa-prompting-guide` می‌رود.
+- سطح‌های بالغ یک مالک routing-first دارند، نه چند skill ریز و تقریبا تکراری.
+- skill های همراه جایی صریح می‌مانند که مرز مالکیت هنوز اهمیت دارد.
+- فایل `AGENTS.md` همین پوشه مالک نحوه نوشتن و ساختاردهی یک skill است و این سند آن را تکرار نمی‌کند.
+
+### نشانه‌گذاری مسیر در یک ارجاع
+
+مسیری که داخل یک skill نوشته می‌شود یا به فایلی اشاره دارد که با همان skill می‌آید، یا به فایلی در مخزنی که agent روی آن کار می‌کند، و مسیر بی‌نشانه نمی‌گوید کدام. دو نشانه می‌گویند، و `python scripts\check_fleet_references.py` آن‌ها را می‌خواند:
+
+- شکل `$SKILL_DIR/<path>` برای فایلی است که داخل همان skill بسته‌بندی شده. آن checker مسیر را resolve می‌کند و فایل غایب یک finding است.
+- شکل `<repo>/<path>` برای مسیری در مخزن هدف است. آن checker هرگز این مسیر را resolve نمی‌کند، چون این مخزن نمی‌داند آنجا چه هست.
+
+هنگام نوشتن یا ویرایش هر ارجاع، مسیر را نشانه بگذارید. مسیر بی‌نشانه‌ای که به جایی resolve نمی‌شود فقط اطلاعی گزارش می‌شود و هرگز اجرا را نمی‌شکند، پس تبدیل ناوگان می‌تواند skill به skill جلو برود و هیچ حالت میانی gate را خراب نمی‌کند. همین حالا `alaa-postman-collections` هر دو نشانه را به کار می‌برد.
+
+## قواعد تقدم اصلی
+
+وقتی دو skill یک قاعده را می‌گویند، فایل `AGENTS.md` مالک و سمت اشاره‌کننده را نام می‌برد. آن مرزها مال همان فایل است و قواعد زیر تکرارشان نمی‌کنند.
+
+### ۱. سیاست Arvan-first برای پلتفرم
+
+اگر کار زیرساخت یا Kubernetes یا Helm یا استقرار روی ArvanCloud CaaS است، منبع حقیقت سطح-pack همان `caas-arvan-kuber` است. اگر توصیه عمومی زیرساخت با محدودیت‌های آروان تناقض داشت، Arvan-first برنده است، مگر کاربر صریحا override را تایید کند.
+
+### ۲. سیاست اعتماد gateway
+
+اگر سرویسی پشت gateway علاء زندگی می‌کند، منبع حقیقت مرز اعتماد همان `alaa-trust-gateway-auth` است: هویت مشتق از JWT، قواعد هدر معتمد، انتشار مرز tenant و project، تصمیم اعتماد به سرویس پایین‌دست، و راهنمای route و قرارداد خطای سرویس auth.
+
+### ۳. سیاست خانواده frontend
+
+برای خانواده استاندارد Vue 3 و Quasar و Vite، از `alaa-frontend-developer` شروع کنید. سپس `alaa-vue-typescript-clean-code` را به‌عنوان خط پایه کیفیت اعمال کنید، هر جا کدنویسی یا بازبینی یا refactor به SFC و composable و store مربوط به Pinia و TypeScript سمت frontend دست بزند. بعد به کوچک‌ترین skill همراهی بروید که مالک تصمیم بعدی است:
+
+- برای build و استقرار و Docker و CI و artifact و public-path و CDN و proxy: `alaa-frontend-devops`
+- برای کار فقط-مستندسازی روی JSDoc یا کامنت درون‌کد: `alaa-frontend-doc-annotations`
+- برای package کاری و `packages/*` و peer dependency و انتشار asset: `alaa-mono-package`
+- برای Quasar CLI و `quasar.config` و جزئیات mode و ارتقای Quasar: `alaa-quasar-app-vite-v3`
+- برای کتابخانه کامپوننت و توکن طراحی و حاکمیت بصری: `alaa-ui-ux-design-system`
+
+### ۴. خط پایه کدنویسی PHP و Laravel
+
+برای کار PHP و Laravel، خط پایه پیش‌فرض `alaa-php-clean-code` است. آن را همراه کوچک‌ترین skill های مرتبط به کار ببرید: `alaa-laravel-architecture`، `alaa-data-layer`، `alaa-async-messaging`، `alaa-laravel-job-rabbitmq`، `alaa-octane-performance`، `alaa-security-review`، `alaa-observability-soc`، `alaa-cicd-laravel-postgres`، `alaa-repo-docs`، `alaa-mongodb-patterns`، `alaa-trust-gateway-auth`، `alaa-workflow`.
+
+## پیش از فرض اینکه سرویسی از قبل منطبق است
+
+فایل `alaa-services-contract references/95-fleet-conformance.md` برای تاریخ نوشته‌شده در ابتدایش ثبت می‌کند که کدام یک از هفت مولفه علاء کدام قواعد قرارداد را برآورده می‌کنند و هر کدام که نمی‌کند چه باید تغییر دهد. پیش از برنامه‌ریزی یک migration، ترتیب‌دهی یک تغییر در سطح ناوگان، یا نوشتن هر جمله‌ای که فرض می‌گیرد سرویسی نام‌برده از قبل منطبق است، آن فایل را بخوانید. خودش هیچ قاعده‌ای نمی‌گوید: فایل reference شماره‌دار کنار هر سطر برنده است، و هر جا آن snapshot با مخزن پیش چشم شما اختلاف داشت، مخزن درست است.
+
+## وابستگی pack-local در برابر سطح-سیستم
+
+هر چیزی که در نقشه skill ها پایین‌تر آمده با pack به نام `sohrab` می‌آید و سطح نصب عمومی و قابل حمل است. سه مورد زیر کمک‌کننده سطح-سیستم‌اند: قابل ارجاع، ولی pack-local نیستند و هیچ چیزی در این pack جایشان را نمی‌گیرد.
+
+- شکل `/openai-docs` و `$openai-docs` برای راهنمای رسمی OpenAI و Codex، ارجاع‌دهی، به‌روزرسانی prompt، و رفتار CLI یا اپ
+- شکل `/playwright` و `$playwright` برای خودکارسازی صریح مرورگر، navigation، یا QA مبتنی بر مرورگر
+- شکل `/playwright-interactive` و `$playwright-interactive` برای حلقه‌های دیباگ مرورگر که کار تعاملی لازم دارند
+
+## نقشه فعلی skill ها
+
+هر پوشه این دایرکتوری دقیقا یک بار در جدول‌های زیر می‌آید، و هر نامی که در آن جدول‌ها هست یک پوشه است. دستور `python scripts\check_skill_index.py` هر دو جهت را برای این فایل و برای `README.md` بررسی می‌کند و وقتی یکی از دو جهت نقض شود شکست می‌خورد. عضویت این فایل با `README.md` دقیقا یکی است؛ مرز دسته‌ها یکی نیست، چون اینجا نه دسته داریم و آنجا هشت دسته.
+
 ## ۱. دکترین و استانداردهای مشترک
 
 این‌ها پایه‌اند و بقیه به آن‌ها ارجاع می‌دهند. اگر قاعده‌ای در دو جا تعریف شده باشد، مالک اصلی همین دسته است.
@@ -26,6 +85,7 @@
 | `alaa-testing-strategy` | طراحی تست: لایه‌ها، test double ها، شش سطح قدرت اثبات، کنترل flake، و پوشش | تصمیم‌گیری درباره اینکه چه چیزی و در کدام لایه تست شود |
 | `alaa-algorithms-data-structures` | بودجه پیچیدگی، پیدا کردن کران واقعی ورودی، انتخاب ساختار داده از روی الگوی دسترسی، و خانواده N+1 | مسیری که ورودی‌اش با تعداد کاربر، تاریخچه یا fan-out رشد می‌کند |
 | `alaa-keyset-pagination` | طراحی pagination مبتنی بر cursor: ترتیب قطعی با tie-breaker، ایندکس متناظر، امضا و اعتبارسنجی cursor، و استثنای offset برای جدول‌های ادمین | هر route لیستی که کلاینت صفحه‌به‌صفحه می‌خواند |
+| `alaa-input-normalization` | تبدیل ارقام فارسی و عربی و هر رقم غیر-ASCII به ASCII در هر دو مرز ورودی، یعنی مرورگر در لحظه submit و middleware هر سرویس backend، با یک قرارداد و چهار پیاده‌سازی و یک harness انطباق | نوشتن یا بازبینی مسیر submit فرم، validator، middleware تازه، یا فیلد OTP و موبایل و کد ملی؛ و وقتی مقداری که با ارقام فارسی تایپ شده در validation یا unique index یا idempotency شکست می‌خورد |
 
 ## ۲. هدایت چند-agent
 
@@ -34,7 +94,7 @@
 | `alaa-cc-orchestrator` | هدایت چند-agent در Claude Code با ۲۱ نقش، دروازه‌های تایید و بازبینی مستقل |
 | `alaa-codex-orchestrator` | همان چیز برای Codex |
 | `alaa-codex-runtime-ops` | بازیابی از خطاهای runtime در Codex و ویندوز |
-| `alaa-basic-memory-os` | حافظه بین‌نشستی روی Basic Memory و Obsidian |
+| `alaa-memory-os` | مدل عملیاتی حافظه، مستقل از انبار: اینکه چه چیزی ارزش ثبت دارد، در چه شکل یادداشتی، و با چه بودجه بازخوانی و مسیر fail-open. ثبت drift وقتی دو منبع حقیقت اختلاف دارند. Basic Memory و Hindsight هر کدام یک reference آداپتور دارند و هیچ‌کدام موضوع این skill نیستند |
 
 ## ۳. PHP و Laravel
 
@@ -53,10 +113,10 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-golang` | نقطه ورود Go و مسیریابی به ۴۶ skill بالادستی `golang-*` |
+| `alaa-golang` | نقطه ورود Go و مسیریابی به ۴۶ skill بالادستی `golang-*`. مالک تصمیم framework هم همین است: kit یعنی `alaa-go-chi` روی chi و پیش‌فرض هر سرویس Go تازه. همچنین انتشار deadline، کران‌های server، محدودیت decode درخواست، و مرز repository و cache |
 | `alaa-golang-clean-code-principles` | کد تمیز Go در عصر kit، و مرز اعتماد |
 | `alaa-golang-fiber` | سرویس Go روی Fiber |
-| `alaa-go-chi-development` | سرویس Go روی chi و قالب‌های kit |
+| `alaa-go-chi-development` | قرارداد حاکمیت kit مشترک `alaa-go-chi` و سرویس‌های ساخته‌شده روی آن، در دو نقش: کار داخل مخزن kit و کار داخل سرویس مصرف‌کننده. فاز اجرا را از تصمیم ratified شده خود مخزن kit می‌خواند و اگر فاز ناشناخته بود متوقف می‌شود |
 
 > ۴۶ skill با پیشوند `golang-*` از upstream می‌آیند و زیر `vendor/` هستند. **هرگز ویرایش نشوند** — چهار skill بالا به آن‌ها ارجاع می‌دهند.
 
@@ -64,19 +124,19 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-data-layer` | الگوی repository، Redis، و مرزهای لایه داده |
-| `alaa-mongodb-patterns` | طراحی سند و الگوهای MongoDB |
-| `alaa-partitioned-table-fk-audit` | جدول partition شده و بازبینی کلید خارجی |
-| `alaa-crockford-base32-codecs` | کدگذاری شناسه با Crockford Base32 |
-| `clickhouse-performance-schema-ops` | کارایی و schema در ClickHouse |
-| `alaa-minio-object-storage` | ذخیره‌سازی شیء روی MinIO و S3: طراحی bucket و کلید شیء، lifecycle، اعتبارنامه و URL امضاشده |
-| `alaa-arvan-object-storage` | تفاوت‌های ذخیره‌سازی شیء ابر آروان با MinIO و S3 |
+| `alaa-data-layer` | سیاست لایه داده با Postgres به‌عنوان حقیقت: کدام انبار مالک یک واقعیت است، طراحی schema و ایندکس tenant-scoped، migration بدون قفل کردن جدول زنده، تنظیم query و pool، و Redis به‌عنوان cache ای که درخواست بدون آن هم زنده می‌ماند |
+| `alaa-mongodb-patterns` | مکانیزم MongoDB: شکل سند و collection، ایندکس ترکیبی tenant-scoped، TTL و نگهداشت، upsert و bulkWrite خودتوان، read و write concern، و اینکه یک خواننده در زمان انتخاب primary چه می‌گیرد |
+| `alaa-partitioned-table-fk-audit` | بازبینی کلید خارجی که با کلید ناقص به جدول partition شده اشاره می‌کند، یعنی SQLSTATE 42830. یک detector تست‌شده می‌فرستد که والدهای partition شده را از کد کشف می‌کند، شکل کلید واقعی هر والد را می‌خواند، و هر ارجاع ناقص را علامت می‌زند |
+| `alaa-crockford-base32-codecs` | کدگذاری شناسه با Crockford Base32 و UUIDv7، با چهار پیاده‌سازی بایت-یکسان برای PHP و JavaScript و bash و Lua مربوط به HAProxy، به‌همراه harness ای که اثبات می‌کند هنوز هم‌خوان‌اند. برای تولید راز یا کلید رمزنگاری مناسب نیست |
+| `clickhouse-performance-schema-ops` | schema و ingest و query و عملیات ClickHouse: مخزن ingest-pipeline مالک DDL است و هر مصرف‌کننده kit از یک lane با `readonly=2` می‌خواند که DDL اجرا نمی‌کند. انتخاب بین materialized view و projection و TTL و mutation و drop partition، و رفتار سرویس وقتی ClickHouse در دسترس نیست |
+| `alaa-minio-object-storage` | سیاست ذخیره‌سازی شیء روی MinIO و S3: طراحی bucket و کلید شیء، دامنه tenant داخل کلید، lifecycle شامل قاعده abort برای multipart نیمه‌کاره، نسخه‌بندی و رمزنگاری و replication، تامین و چرخش اعتبارنامه، URL امضاشده، و کلاس‌های خطای انباری که در دسترس نیست یا نیمه‌نوشته است |
+| `alaa-arvan-object-storage` | لایه تفاوت‌های Object Storage ابر آروان روی همان سیاست S3 و MinIO: endpoint های منطقه‌ای و جداسازی آن‌ها، آدرس‌دهی virtual-hosted، مدل کلید سطح-حساب، ماتریس سازگاری S3، سقف ۴۰۰ مگابایتی هر part، دسترسی عمومی از پشت CDN، و انتقال یک bucket یا کلاینت بین دو انبار |
 
 ## ۶. Frontend
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-frontend-developer` | نقطه ورود frontend: SSR، PWA، کارایی و دیباگ مرورگر |
+| `alaa-frontend-developer` | نقطه ورود و سیاست frontend خانواده Vue 3 و Quasar و Vite: قطعیت hydration و امنیت cleanup، وضعیت auth و session در SSR، سیاست PWA و service worker، کتابچه Lighthouse و Core Web Vitals، و نیمه سمت-کلاینت پایداری و امنیت و رصدپذیری و قرارداد ورودی |
 | `alaa-vue-typescript-clean-code` | کد تمیز Vue و TypeScript |
 | `alaa-quasar-app-vite-v3` | پروژه Quasar روی Vite |
 | `alaa-ui-ux-design-system` | سیستم طراحی و حاکمیت کتابخانه کامپوننت |
@@ -90,10 +150,11 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-docker-production` | Dockerfile و Compose آماده production |
-| `alaa-k8s-helm` | manifest و chart برای Kubernetes |
+| `alaa-docker-production` | Dockerfile و Compose و stack آماده production، شامل build secret و attestation و healthcheck و سقف منابع. مالک نحوه بیان image و فایل runtime است و هیچ gate ای تصمیم نمی‌گیرد؛ سیاست gate مال `alaa-frontend-devops` است |
+| `alaa-k8s-helm` | تولید و بازبینی و اعتبارسنجی و دیباگ chart های Helm و manifest های Kubernetes و بار کاری OpenShift، شامل Route و SCC و CRD و امنیت rollout و در معرض گذاشتن سرویس، حتی روی پلتفرم namespace-محور |
 | `alaa-gitlab-ci-cd` | خط لوله GitLab |
-| `alaa-haproxy` | پیکربندی HAProxy |
+| `alaa-haproxy` | پیکربندی و تنظیم و عیب‌یابی و ارتقای HAProxy: تبدیل تصمیم routing و TLS و cache و rate limiting و درین به directive، انتخاب بین branch های پشتیبانی‌شده، و خواندن Runtime API. هر تغییر با `haproxy -c -f` اثبات می‌شود |
+| `alaa-haproxy-lua` | قرارداد مهندسی Lua ای که داخل پروسه HAProxy اجرا می‌شود: مدل اجرا، سطح API، دیده‌شدن خطا در لبه، و تست بیرون از HAProxy. یک checker پیش-از-انتشار می‌فرستد. directive های پیکربندی مال `alaa-haproxy` است |
 | `alaa-makefile` | Makefile و هدف‌های تکرارشدنی |
 | `caas-arvan-kuber` | Kubernetes روی ابر آروان |
 | `ansible-generator` / `ansible-validator` | تولید و اعتبارسنجی playbook |
@@ -103,7 +164,7 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-async-messaging` | معماری async روی RabbitMQ: تنها broker ناوگان؛ prefetch و ack و confirm، outbox، DLQ و replay |
+| `alaa-async-messaging` | معماری صفحه پیام روی RabbitMQ، تنها broker ناوگان: درز بین commit پایگاه داده و پیام منتشرشده، outbox تراکنشی و سطح عملیاتی‌اش، publisher confirm، نقطه ack، prefetch و همروندی مصرف‌کننده، توپولوژی dead-letter، و رویه replay از DLQ |
 | `alaa-trust-gateway-auth` | صدور و اعتبارسنجی token و هدرهای معتمد در gateway |
 | `alaa-bale-provider` | یکپارچه‌سازی با پیام‌رسان بله |
 | `alaa-sms-provider-mediana` | ارسال پیامک با مدیانا |
@@ -114,10 +175,32 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-signoz-clickhouse-docs` | جستجوی مستندات SigNoz و کوئری ClickHouse |
-| `vector-rust-observability-pipelines` | خط لوله Vector |
-| `alaa-postman-collections` | ساخت و اعتبارسنجی collection و environment در Postman، و دکترین collection تجمیعی چند-سرویسی |
-| `alaa-docs-farsi` | نگارش مستندات فارسی |
+| `alaa-signoz-clickhouse-docs` | نوشتن و تعمیر SQL خام پنل‌های SigNoz روی جدول‌های `signoz_logs` و `signoz_traces` و `signoz_metrics` که مالکشان vendor است و برای ناوگان فقط-خواندنی‌اند: کلیدهای ترتیب، اصطلاح bucket-filter و resource-CTE، انتخاب rollup، تشخیص span گم‌شده، و مسیریابی مستندات SigNoz |
+| `vector-rust-observability-pipelines` | خط لوله production ای Vector: توپولوژی و قرارداد تحویل هر مسیر، تبدیل VRL، buffer و ack سرتاسری، backpressure، و retry و batch مقصد. مهم‌ترین بخشش این است که خط لوله وقتی مقصدش در دسترس نیست چه می‌کند. هیچ schema ای تصمیم نمی‌گیرد |
+| `alaa-postman-collections` | ساخت و همگام‌سازی و اعتبارسنجی collection و environment نسخه v2.1 در Postman، به‌شکلی که هر request نمونه ذخیره‌شده برای حالت موفق و برای هر خطایی که واقعا می‌تواند برگرداند داشته باشد، یک script پس-از-پاسخ که token و id را برای request های بعدی بگیرد، و تست‌هایی که روی پیاده‌سازی خراب شکست بخورند. خروجی قابل import در Insomnia می‌ماند |
+| `alaa-repo-docs` | مستندسازی سطح-مخزن: `README.md`، `docs/BIG_PICTURE.md`، `docs/api-summary.md`، معماری داده، و سند خطا و رویداد و رصدپذیری. سند انگلیسی همیشه منبع حقیقت است؛ آینه فارسی مثل `README.fa.md` وقتی الزامی است که مخزن هدف از قبل یک سند `.fa` یا پوشه `docs/fa/` داشته باشد، و در بقیه موارد فقط با درخواست صریح ساخته می‌شود |
+
+## تجمیع‌شده یا حذف‌شده از این pack
+
+نام‌های زیر در نسخه‌های قدیمی‌تر نقشه بودند و اینجا هیچ پوشه‌ای ندارند، بازبینی‌شده در ۲۰۲۶-۰۷-۳۰. هیچ‌کدام را پیش از آنکه پوشه‌اش روی دیسک باشد به نقشه برنگردانید.
+
+- خانواده `dockerfile-*` جایش را به `alaa-docker-production` داد، و `makefile-generator` و `makefile-validator` جایشان را به `alaa-makefile` دادند
+- خانواده‌های `azure-pipelines-*` و `github-actions-*` و `jenkinsfile-*` حذف شدند، چون `alaa-gitlab-ci-cd` تنها سطح CI ای است که این pack می‌فرستد
+- خانواده‌های `terraform-*` و `terragrunt-*` حذف شدند، چون هدف‌های زیرساخت از `caas-arvan-kuber` و `alaa-k8s-helm` عبور می‌کنند
+- نام `alaa-docs-farsi` به `alaa-repo-docs` تغییر کرد، چون نام قدیم یک زبان را وعده می‌داد در حالی که این skill یک استاندارد مستندسازی تحویل می‌دهد؛ و نام `alaa-basic-memory-os` به `alaa-memory-os` تغییر کرد، چون آن مدل مستقل از انبار است و Basic Memory فقط یکی از آداپتورهاست
+- خانواده `promql-*` و `logql-generator` و `loki-config-generator` و `fluentbit-*` حذف شدند، چون `alaa-observability-soc` مالک تصمیم سیگنال و gate است و `alaa-signoz-clickhouse-docs` و `vector-rust-observability-pipelines` مالک سطح کوئری و خط لوله‌اند
+
+## تعریف انجام‌شده
+
+کار در این pack وقتی آماده حساب می‌شود که:
+
+- کوچک‌ترین skill درست از `SKILL.md` به‌راحتی پیدا شود
+- راهنمای تفصیلی در فایل‌های یک-پرش `references/` یا `docs/` نگه داشته شده باشد
+- فایل `agents/openai.yaml` وجود داشته باشد و با نیت فعلی skill بخواند
+- نام skill های اهداکننده قدیمی از سندهای routing فعال حذف شده باشد
+- دستور `python scripts\check_skill_index.py` هیچ finding مربوط به نقشه گزارش نکند، و هر کمبود `agents/openai.yaml` که گزارش می‌کند یکی از آن دو مورد نام‌برده در قواعد طراحی باشد
+- مثال و checklist و ضدالگو به انگلیسی ساده حفظ شده باشند
+- کمک‌کننده‌های سطح-سیستم از skill های pack-local به‌روشنی جدا باشند
 
 ---
 
@@ -134,3 +217,8 @@
 **مدل و effort.** هیچ skill دیگری نام مدل نمی‌گوید. همه به `alaa-prompting-guide` ارجاع می‌دهند.
 
 **پوشه vendor.** هر چیزی زیر `vendor/` از upstream می‌آید و ویرایش نمی‌شود. skill خودی آن را می‌پوشاند و به آن ارجاع می‌دهد.
+
+## یادداشت عملی
+
+وقتی یک best practice عمومی با مدل اعتماد gateway علاء، قواعد پلتفرم آروان، یا قرارداد artifact مربوط به frontend تناقض دارد، دلیل انحراف را مستند کنید، نه اینکه پنهانش کنید.
+

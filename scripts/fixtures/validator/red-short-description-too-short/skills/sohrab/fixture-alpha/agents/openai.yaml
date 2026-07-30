@@ -1,0 +1,7 @@
+interface:
+  display_name: Fixture Alpha
+  short_description: too short
+  default_prompt: "Use $fixture-alpha only inside the validator self-test."
+  brand_color: "#3A5BA0"
+policy:
+  allow_implicit_invocation: false

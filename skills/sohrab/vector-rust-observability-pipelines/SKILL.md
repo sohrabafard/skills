@@ -1,230 +1,123 @@
 ---
 name: vector-rust-observability-pipelines
-description: "Use this skill when a task involves Vector topology design, VRL transforms, sink tuning, buffering, acknowledgement strategy, or production troubleshooting. Do not use it for generic logging advice that ignores Vector pipeline mechanics."
+description: "Production Vector pipelines: topology and per-path delivery contracts, VRL transforms, buffering, end-to-end acknowledgements, backpressure, sink retry and batching, and what the pipeline does when its destination is unreachable. Use when writing or reviewing a Vector config, a VRL program, or a buffer or acknowledgement setting; when a pipeline stalls, drops, duplicates, or exits on its own; when a ClickHouse sink needs batching, retry, or credential handling; when upgrading Vector across a breaking change; and when validating a config before rollout. Do not use it for generic logging advice independent of Vector mechanics, for what a ClickHouse table must be, which belongs to /clickhouse-performance-schema-ops, for how a SigNoz-owned table is queried, which belongs to /alaa-signoz-clickhouse-docs, or for whether telemetry is required at all, which belongs to /alaa-observability-soc."
 ---
 
+# Vector observability pipelines
 
+**A log pipeline that drops silently under load is an observability outage that hides
+itself.** That is the failure this skill exists to prevent, and why every rule below
+is about making loss visible, chosen, and bounded rather than about tidy config.
 
+Pinned to Vector `0.57.0` (`references/80-version-and-upgrade-deltas.md`). Vector
+changed interpolation defaults, template confinement and internal metric names within
+five releases, so state the version you verified against and re-derive every
+version-sensitive claim rather than recalling it: `references/90-source-map.md`.
 
-# Skill: Vector (Rust-based) observability pipelines
+## Rules
 
-Date: 2026-03-01
+1. **Every path has a written delivery contract before it has a config.** Source,
+   transforms, sink, schema in and out, gate or contributor, tolerable outage
+   duration, retry ceiling, the metric that proves it healthy, and how it is tested.
+   A blank field is a decision nobody has made, and the default will make it.
+   `references/10-topology-and-delivery-contract.md`.
 
-This skill is for **production Vector work**:
-- designing agent / aggregator / unified topologies
-- writing and testing VRL safely
-- choosing buffering, acknowledgements, and backpressure behavior deliberately
-- tuning sinks, especially ClickHouse
-- validating configurations before rollout
-- monitoring Vector itself and debugging stalls, loss, duplication, or OOM scenarios
+2. **Buffering, acknowledgements and `when_full` are never left to the default.**
+   Writing no `buffer` block still chooses one: an in-memory buffer of 500 events that
+   blocks forever, behind a sink that retries forever. State each value and its reason.
+   `references/30-buffers-acks-and-backpressure.md`.
 
-## Source freshness
+3. **Product telemetry fails open; audit evidence fails closed.** This skill does
+   not choose the policy — `/alaa-observability-soc` (`$alaa-observability-soc`)
+   already binds the fleet to fail-open for product traffic. This skill states which
+   Vector option expresses it: `when_full: drop_newest`, sized for the burst, and
+   never `block` on a product path, because `block` turns a destination outage into
+   a latency incident on the producing service.
 
-- Read `references/OFFICIAL_LINKS.md` before handling latest/current/version/security-sensitive Vector, VRL, sink, buffering, acknowledgement, Helm, or runtime behavior.
-- Treat community posts, Stack Overflow, and issue threads as troubleshooting-only unless Vector docs or runtime validation evidence confirms the guidance.
+4. **Every fallible VRL call is handled deliberately.** `f(x)` returns an error and
+   can be coalesced with `??`; `f!(x)` aborts and cannot; a path lookup never fails,
+   so `??` after one is dead code. `??` coalesces errors, not null.
+   `references/20-vrl-transforms.md`.
 
-## Core operating principles
+5. **Credentials come from a secret backend, never from `${VAR}` interpolation.**
+   Vector 0.57.0 disabled interpolation by default, so a config using
+   `${CLICKHOUSE_PASSWORD}` passes validation and then authenticates with that
+   literal string. It fails open, silently, exactly where the value is a secret.
+   `references/85-security-and-secrets.md`.
 
-1. **Treat Vector as a topology, not a single config blob**
-   Start by identifying:
-   - deployment role: edge agent, central aggregator, or unified
-   - sources
-   - transforms
-   - sinks
-   - delivery guarantees
-   - acceptable loss/latency tradeoffs
-   - healthcheck, retry, and observability requirements
+6. **Every templated `table`, `database`, object key, file path or header carries a
+   literal prefix.** Vector 0.57.0 confines routing templates and rejects unprefixed
+   ones at startup. It is the mitigation for injection through a routing field, so
+   take the prefix rather than the opt-out.
 
-2. **Buffering and acknowledgements are product decisions**
-   Never hand-wave:
-   - memory vs disk buffer
-   - `when_full = block` vs `drop_newest`
-   - whether end-to-end acknowledgements are enabled
-   - how multi-sink fanout affects durability and throughput
-   - whether a failed experimental sink can slow production flow
+7. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
+   `--no-environment`.** That flag suppresses component checks, so an unconfined
+   template and an undersized disk buffer both validate clean under it — proven by
+   two committed fixtures. Warnings matter too: "acknowledgements are not supported
+   by this source" means the durability you configured does not exist.
+   `references/50-validation-and-testing.md`.
 
-3. **VRL is fail-safe**
-   - handle fallible operations intentionally
-   - use `vector vrl` to iterate on snippets
-   - use `vector validate` and `vector test` before rollout
-   - keep transformations small, testable, and named
+8. **Unit-test the failure classes, not the happy path.** Absent field, wrong type,
+   malformed payload, and the event that must be dropped: a suite that only proves
+   the good input works cannot tell a correct transform from a broken one. Pass the
+   test file together with the config defining the transform, or it fails as an
+   unknown component.
 
-4. **Make Vector observable**
-   - wire `internal_logs` and `internal_metrics`
-   - define `data_dir` for stateful features like disk buffers and checkpoints
-   - decide what "healthy" means for startup and rollout
-   - if healthchecks matter at startup, use `--require-healthy`
+9. **A critical path does not share an acknowledging source with an unreliable one.**
+   Fanout acknowledgement uses the worst status, so one failing sink causes
+   re-delivery to the sinks that already succeeded. Isolation is a topology decision
+   and no sink setting undoes it.
 
-5. **Treat Helm as part of pipeline correctness**
-   - map deployment role to workload shape explicitly:
-     - Agent -> DaemonSet
-     - Aggregator -> StatefulSet
-     - Stateless-Aggregator -> Deployment
-   - keep `values.yaml` overrides minimal to reduce upgrade drift
-   - if `customConfig` is used, remember it replaces defaults and must be complete
-   - when Vector template syntax is embedded in Helm values, escape it intentionally
-   - for private registries, define image path and pull secrets explicitly
+10. **Disk buffers are a capacity dependency of the process.** A full volume makes
+    Vector forcefully stop itself, by design, because it can no longer guarantee what
+    reached disk. Alert on free bytes on the `data_dir` volume and keep it larger than
+    the sum of every configured `max_size`, whose minimum is 268435488 bytes —
+    exactly 256 MiB is rejected.
 
 ## When NOT to use
 
-- do not use this skill for generic logging or metrics advice that does not depend on Vector topology, VRL, buffering, or sink behavior
-- do not change acknowledgement, buffering, or delivery settings casually; treat them as product and reliability decisions
-- do not ship Vector config changes without validation for syntax, health, and the intended failure mode
+- Generic logging or metrics advice that does not depend on Vector topology, VRL,
+  buffering, or sink behaviour.
+- Deciding what a ClickHouse table must be, whether a signal is required, or what an
+  Ala timeout or threshold value is. Those have owners, named below.
 
-## Fast entry
+## References
 
-| If the task is mainly about... | Start with |
-|---|---|
-| topology shape and deployment role | topology and role guidance |
-| VRL transforms or parsing | the VRL reference and validation flow |
-| buffering, acks, or backpressure | buffer and acknowledgement references |
-| ClickHouse sink or pipeline reliability | sink-specific references plus validation guidance |
+Route through `references/00-topic-map.md`: situation to the one file that answers it.
 
-## Companion routing
+## Checks
 
-- `$clickhouse-performance-schema-ops`
-  - Pair when Vector output shape or ClickHouse ingestion behavior is part of the root cause.
-- `$alaa-observability-soc`
-  - Pair when alerting, incident visibility, or SOC-grade logging expectations change.
-- `$caas-arvan-kuber`
-  - Pair when the rollout target is Arvan CaaS or Kubernetes platform constraints matter.
+```bash
+node scripts/check-vector-configs.mjs [--self-test]   # templates, unit tests, red fixtures
+node scripts/check-upstream-version.mjs [--self-test] # version drift against upstream
+```
 
-## Version guardrails (Vector 0.53.0+)
+Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`. Exit `2`
+is not a pass: a gate that cannot tell "Vector is missing" from "nothing is wrong" treats
+every broken runner as clean. Detail: `references/50-validation-and-testing.md`.
 
-When the task includes an upgrade to 0.53.0 or later, explicitly check for:
+## Not owned here
 
-- **Internal metrics rename and cardinality changes**
-  - `buffer_max_size` -> `buffer_max_size_bytes`
-  - `buffer_size` -> `buffer_size_bytes`
-  - histogram buckets for `buffer_byte_size` changed from 10 to 26 buckets
-  - dashboards/alerts using old metric names must be migrated
-- **Component labels in internal metrics**
-  - rely on current component labels and avoid assuming old field names in dashboards
-- **VRL metric access**
-  - prefer the newer helper functions for reading/aggregating internal metrics in VRL when needed
-- **ClickHouse sink path**
-  - re-evaluate `json_each_row` vs `batch_encoding.codec = "arrow_stream"` based on schema stability and destination behavior
-- **Upgrade validation**
-  - include a version check in runbooks/pipelines (for example `vector --version`) before `vector validate` / `vector test`
-
-## Default workflow
-
-### Step 1: classify the topology
-Pick the closest shape:
-- single-node edge agent
-- central aggregator
-- edge agent -> central vector sink -> downstream sinks
-- Kubernetes daemonset + aggregator
-- metrics-only
-- logs-only
-- mixed logs/metrics/traces
-- ClickHouse landing pipeline
-
-### Step 2: gather constraints
-Collect or infer:
-- Vector version and deployment mode
-- source protocols and throughput
-- downstream sink latency/error profile
-- allowed event loss
-- required at-least-once behavior
-- transformation complexity
-- whether per-event routing or dynamic tables/indexes are used
-- authentication and TLS requirements
-- expected backpressure strategy
-
-### Step 3: choose a topology contract
-For each path, write:
-- source -> transform(s) -> sink(s)
-- event schema in and out
-- failure behavior
-- buffer type and size
-- acknowledgement expectations
-- retry and timeout behavior
-- how the path is tested
-
-Do not mix experimental and production sinks casually. Fanout and acknowledgement semantics can surprise you.
-
-### Step 4: implement VRL safely
-Rules:
-- keep programs readable and composable
-- explicitly handle fallible parsing and coercion
-- normalize timestamps, levels, service labels, and routing keys
-- add unit tests for every non-trivial transform
-- use the REPL / `vector vrl` for quick experiments
-
-### Step 5: validate and test
-Before suggesting rollout:
-- run `vector validate`
-- run `vector test`
-- if config is split across files, validate/test the combined set
-- check that `data_dir` exists and is writable when disk buffers/checkpoints are involved
-
-### Step 6: observe the observer
-Default observability plan:
-- route `internal_logs`
-- scrape or ship `internal_metrics`
-- watch buffer, retry, dropped-event, and backpressure signals
-- expose enough metadata to trace sink-specific failures
-
-## Delivery guarantee rules
-
-### Acknowledgements
-- Use end-to-end acknowledgements only when the source and sink path actually support the durability contract you need.
-- Explain that acknowledgements can reduce throughput and change failure semantics.
-- In fanout, remember sinks can influence source acknowledgement behavior.
-
-### Buffers
-- `memory`: faster, less durable
-- `disk`: more durable, slower, needs `data_dir`, enough disk, and monitoring
-- `when_full = block`: preserve data, propagate backpressure
-- `when_full = drop_newest`: prioritize liveness, knowingly lose data
-
-### Health checks
-- start with sink healthchecks enabled
-- when startup must fail fast on unhealthy downstreams, use `vector --require-healthy`
-
-## ClickHouse sink rules
-When the user is sending Vector data to ClickHouse:
-- decide whether standard JSON formats are good enough or whether `batch_encoding.codec = "arrow_stream"` is worth it
-- set batching deliberately: `batch.max_bytes`, `batch.max_events`, `batch.timeout_secs`
-- pick compression intentionally (`gzip`, `zstd`, etc.)
-- consider `date_time_best_effort` when RFC3339 / ISO8601 timestamps are involved
-- use `skip_unknown_fields` only if you are intentionally tolerating schema drift
-- document auth, TLS, retries, and timeout behavior
-- mention current edge cases if using Arrow stream with complex ClickHouse schemas
-
-## Multi-agent plan
-If multi-agent is enabled, use or suggest:
-- `topology_architect`: break the pipeline into contracts and failure domains
-- `vrl_engineer`: implement / test transformations
-- `delivery_guarantees`: analyse acks, buffers, retries, and loss semantics
-- `sink_specialist`: tune the destination sink (ClickHouse, Kafka, S3, etc.)
-- `ops_observability`: internal metrics/logs, rollout, capacity, and incident playbooks
-- `troubleshooting_risk_reviewer`: scan official docs first, then issues/community threads only for troubleshooting sharp edges
+The three-way ClickHouse boundary: `clickhouse-performance-schema-ops` owns what a
+ClickHouse table must be — engine, sorting key, partitioning, TTL, compression — for
+tables the fleet controls. `alaa-signoz-clickhouse-docs` owns how a SigNoz-owned
+table is queried, and states that those tables are vendor-owned and read-only to the
+fleet. `vector-rust-observability-pipelines` owns what the pipeline writes into a
+ClickHouse table and how it behaves when that table is unreachable, and decides no
+schema. Route to `/clickhouse-performance-schema-ops`
+(`$clickhouse-performance-schema-ops`) and `/alaa-signoz-clickhouse-docs`
+(`$alaa-signoz-clickhouse-docs`). Requirement levels and gates are
+`/alaa-observability-soc` (`$alaa-observability-soc`); every name and every Ala value
+is `/alaa-services-contract` (`$alaa-services-contract`). Every other owner is listed
+once in `references/00-topic-map.md`, at the rule it governs.
 
 ## Output contract
-Every final answer using this skill should include:
-1. topology summary
-2. config fragments
-3. buffer/ack rationale
-4. validation/test commands
-5. monitoring plan
-6. risk notes and rollback/fallback strategy
 
-## Included resources
-Open only what you need:
-- `references/TOPOLOGY_WORKFLOW.md`
-- `references/VRL_GUIDE.md`
-- `references/BUFFERS_AND_ACKS.md`
-- `references/CLICKHOUSE_SINK.md`
-- `references/VALIDATION_AND_TESTING.md`
-- `references/INTERNAL_MONITORING.md`
-- `references/HELM_CHART_OPERATIONS.md`
-- `references/TROUBLESHOOTING.md`
-- `references/COMMUNITY_NOTES.md`
-- `assets/templates/vector-basic.yaml`
-- `assets/templates/vector-clickhouse.yaml`
-- `assets/templates/vector-tests.yaml`
-- `assets/templates/common.vrl`
-- `prompts/AGENT_PROMPT.md`
-- `prompts/MULTI_AGENT_PROMPT.md`
+Every answer using this skill states:
+
+1. the topology, as one line per path
+2. the config fragments, with each non-default value's reason
+3. the buffer, acknowledgement and `when_full` decision, and which path type it follows
+4. the validation and test commands, with their observed exit codes
+5. the monitoring plan: the metric, the condition, and where it is shipped
+6. the risks, and the rollback

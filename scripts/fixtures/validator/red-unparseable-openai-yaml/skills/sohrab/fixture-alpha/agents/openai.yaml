@@ -1,0 +1,5 @@
+interface:
+  display_name: Fixture Alpha
+  short_description: &shared Validator fixture skill, alpha
+  default_prompt: *shared
+  brand_color: "#3A5BA0"

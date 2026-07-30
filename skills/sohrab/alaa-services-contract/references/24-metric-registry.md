@@ -93,6 +93,7 @@ nothing rather than inventing a near-miss name.
 | `alaa_pagination_client_failures_total` | counter | `http_route`, `purpose`, `code` | any service with keyset pagination | client-recoverable pagination failures by bounded route, code-owned purpose, and stable error code |
 | `alaa_pagination_server_failures_total` | counter | `http_route`, `purpose`, `category` | any service with keyset pagination | pagination server failures by bounded route, code-owned purpose, and bounded failure category |
 | `alaa_pagination_reply_hydration_nodes` | gauge | `purpose`, `truncated` | any service with bounded reply hydration | reply nodes materialized for a keyset page, split only by code-owned purpose and bounded truncation state |
+| `alaa_pagination_requests_total` | counter | `http_route`, `purpose`, `mode` | any service running dual-mode pagination during a keyset migration | successfully served list responses split by the pagination mode actually used, so a legacy-selector removal gate has a server-side observable instead of a point-in-time client survey. `mode` is bounded to `legacy` and `keyset` |
 
 ### Database
 | Metric | Type | Owner | Measures |

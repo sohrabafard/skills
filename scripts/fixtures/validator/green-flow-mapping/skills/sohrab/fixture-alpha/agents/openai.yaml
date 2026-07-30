@@ -1,0 +1,3 @@
+interface: {display_name: "Fixture Alpha",short_description: "Version-aware fixture workflows",default_prompt: "Use $fixture-alpha inside the self-test.",brand_color: "#3A5BA0"}
+policy:
+  allow_implicit_invocation: false

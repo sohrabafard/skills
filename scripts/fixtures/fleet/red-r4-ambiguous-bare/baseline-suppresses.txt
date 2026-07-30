@@ -1,0 +1,2 @@
+# Suppresses the single R4 finding this fixture produces.
+R4-AMBIGUOUS-BARE|citing-skill|SKILL.md|references/72-offline-media-store.md  # owner: citing-skill

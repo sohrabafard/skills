@@ -1,0 +1,3 @@
+# beta-skill is Claude-Code-only and its Codex twin alpha-skill ships agents/openai.yaml.
+# The exception is written down here, with its reason, instead of hardcoded in the checker.
+X8-MISSING-OPENAI-YAML|beta-skill|skills/sohrab/beta-skill/agents/openai.yaml|missing  # twin: alpha-skill

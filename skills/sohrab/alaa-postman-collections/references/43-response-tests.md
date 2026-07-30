@@ -6,7 +6,10 @@ Read this file when writing or reviewing the assertions on a request.
 
 ## The test that is not a test
 
-A test that still passes against a plausible broken implementation is not a test.
+`alaa-testing-strategy` (`/alaa-testing-strategy`, `$alaa-testing-strategy`) owns test
+design, including the rule that a test must name the broken implementation it defends
+against. Read that skill for the rule; this file applies it to a Postman request and owns
+the Postman-specific minimum below, which that skill explicitly cedes.
 
 `pm.test('works', () => pm.response.to.have.status(200))` passes against a handler that
 returns an empty body, returns another tenant's record, returns the previous version of
@@ -32,7 +35,7 @@ Five assertions, on every request item that has a real response:
    status assertion catches.
 4. **The correlation header.** `X-Request-Id` is present on the response.
    `alaa-services-contract` makes it mandatory on every response, in that skill's
-   `references/20-operational-and-observability-contract.md`,, which makes its absence a contract failure
+   `references/20-operational-and-observability-contract.md`, which makes its absence a contract failure
    and not a nicety.
 5. **The field this request exists to produce.** The one value the caller came for,
    asserted so a wrong value fails and not only an absent one. For a create, that the
@@ -58,16 +61,21 @@ location or retry header, an idempotency replay marker, an ETag, a rate-limit he
 ## Portable assertion form
 
 Write assertions as `pm.expect(pm.response.code).to.eql(200)` and
-`pm.expect(pm.response.headers.has('X-Request-Id')).to.be.true` rather than as
-`pm.response.to.have.status(200)` and `pm.response.to.have.header(...)`.
+`pm.expect(pm.response.headers.has('X-Request-Id')).to.be.true`.
 
-Both forms are current in Postman. The reason to prefer the `pm.expect` form is
-portability: Insomnia's importer rewrites `pm.` to `insomnia.` textually, and
-Insomnia's own documented examples use `insomnia.expect(insomnia.response.code).to.eql(...)`.
-Whether `insomnia.response.to.have.*` resolves is not documented, so the `pm.expect`
-form is the one proven on both sides. Existing collections that use
-`pm.response.to.have.status` are not broken in Postman; the validator reports them as a
-portability warning, and converting them is a cleanup, not an emergency.
+`pm.response.code` is the numeric status on both sides and is the property to compare
+against a number. **`pm.response.status` is not a second spelling of it:** it is the reason
+phrase, a string such as `OK`, on both sides. Comparing it to `200` always fails.
+`50-insomnia-compatibility-and-free-plan-rules.md` carries the source citation and the
+version the claim was read at.
+
+The chai-style chain also survives import, but only for the members Insomnia registers.
+`pm.response.to.have.status(200)` and `pm.response.to.have.header('X-Request-Id')` both
+work; `50-insomnia-compatibility-and-free-plan-rules.md` lists the complete registered set
+and the validator warns on any member outside it. Prefer the `pm.expect` form anyway, for a
+reason that is about failure messages rather than portability: `pm.expect` takes a message
+argument, so a failure names what was being checked instead of only reporting a mismatched
+value. Existing collections using a registered chain member are correct and need no change.
 
 ## Where tests go
 

@@ -1,0 +1,3 @@
+fingerprint	String
+labels	String
+seen_at_ts_bucket_start	String

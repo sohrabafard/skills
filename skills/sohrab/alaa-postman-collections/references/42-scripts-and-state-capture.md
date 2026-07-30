@@ -70,9 +70,26 @@ Choose the narrowest scope that keeps the behaviour findable:
 The template encodes all six. Each one corresponds to a failure that is silent
 without it.
 
-1. **Guard on an explicit success status.** `if (pm.response.code === 200)` or an
-   equivalent explicit check. Without it, an intentional error response overwrites a
-   working token with `undefined` and every later request fails for the wrong reason.
+1. **Guard on an explicit success status, in a form that stops the write.** Without a
+   guard, an intentional error response overwrites a working token with `undefined` and
+   every later request fails for the wrong reason.
+
+   An assertion is not a guard. `pm.expect(pm.response.code).to.eql(200)` inside a
+   `pm.test` callback is caught by the test runner, so the script continues and the write
+   still happens. `43-response-tests.md` mandates that assertion on every request, which is
+   why its presence proves nothing about the capture. Write one of these three instead:
+
+   - the write inside a conditional block whose own condition tests the code:
+     `if (pm.response.code === 200) { ... }`, or a membership test such as
+     `if ([200, 201].includes(pm.response.code)) { ... }`
+   - a top-level early exit before the write: `if (pm.response.code !== 200) { return; }`
+   - a top-level bare assertion before the write, outside any `pm.test` callback, whose
+     uncaught throw aborts the rest of the script
+
+   `validate_postman_artifacts.py --require-success-guarded-captures` checks structure, not
+   text: it reports the write an error response can also reach. When the write sits inside a
+   helper it cannot follow, it says so and asks you to move it into an explicit conditional in
+   the same script — a guard the checker cannot see is one a reviewer cannot see either.
 2. **Parse the body defensively.** Wrap `pm.response.json()` in a `try`; a non-JSON
    error body must not throw inside the script and abort the remaining assertions.
 3. **Skip empty values.** Do not write `undefined`, `null`, or an empty string over an
@@ -91,6 +108,31 @@ without it.
 Correlation-only values such as a request id or a traceparent are the one exception to
 the success guard: they are captured on error responses too, because that is exactly
 when someone needs them to find the request in the logs.
+
+## Captures under concurrent and parallel runs
+
+A capture is a write to shared mutable state. These rules bound what that state may be.
+
+- **One writer per variable name per collection.** Two requests that both write
+  `access_token` race: whichever ran last decides what the next request sends, and the
+  failure surfaces as a misleading `401` on a third request. When two routes genuinely mint
+  different credentials, they write two differently named variables.
+- **Within a folder, the collection assumes serial execution.** A capture in request A and
+  a read in request B are ordered only because B runs after A.
+  `20-collection-structure-and-docs.md` requires the request order to make a top-to-bottom
+  run succeed, and that ordering is the mechanism this assumption rests on. State the
+  assumption in the folder description rather than leaving a reader to infer it.
+- **Namespace the variable when a folder may run in parallel.** A Collection Runner
+  configured to run folders concurrently, or an aggregate collection merged from several
+  services, gives every folder the same environment. Prefix the variable with the folder or
+  service that produces it — `billing_access_token`, not `access_token` — so two folders
+  cannot overwrite each other. `70-aggregate-collections-and-consumer-repos.md` owns the
+  namespacing rule for aggregates.
+- **Two developers sharing one environment file is not a supported configuration.** The
+  environment is the per-developer artifact and is committed with placeholders only, per
+  `30-variables-auth-and-environments.md`. A shared live environment makes every capture a
+  cross-developer race; if a repository has one, say so in the task output rather than
+  designing captures around it.
 
 ## Never hardcode a credential
 

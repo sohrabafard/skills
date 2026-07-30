@@ -1,0 +1,18 @@
+# RED fixture - must be reported as a finding.
+# A routing template with no literal prefix is rejected by Vector 0.57.0.
+#
+# This fixture is the one that discriminates a correct checker from a plausible
+# broken one: `vector validate --no-environment` reports this file CLEAN.
+# If this fixture ever passes, the checker has silently stopped running
+# component checks and no longer catches confinement or buffer-bound defects.
+data_dir: /var/lib/vector
+sources:
+  in_files:
+    type: file
+    include: ["/var/log/app/*.log"]
+sinks:
+  out_clickhouse:
+    type: clickhouse
+    inputs: [in_files]
+    endpoint: https://clickhouse.example.com:8443
+    table: "{{ tenant }}"
