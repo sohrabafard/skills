@@ -54,9 +54,9 @@ that date is more than a release cycle old; record the new date here when you do
 
 ## Repository sources this skill reads
 
-`alaa-go-chi` for the consumer read lane (`chkit/`, `configkit/keys.go`, `docs/CONSUMERS.md`), and
-the ingest-pipeline repository for the data model (`clickhouse/ddl/`, `vector/`, `docs/DECISIONS.md`,
-`samples/`). Read the source file, never a summary of it: a decision log records what a team chose,
+`alaa-go-chi` for the consumer read lane (its `chkit/`, `configkit/keys.go`, and `docs/CONSUMERS.md`),
+and the ingest-pipeline repository `wa` for the data model (`<repo>/clickhouse/ddl/`,
+`<repo>/vector/`, `<repo>/docs/DECISIONS.md`, `<repo>/samples/`). Read the source file, never a summary of it: a decision log records what a team chose,
 and the code records what runs. Where they differ, the code is the fact and the difference is the
 finding.
 

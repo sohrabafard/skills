@@ -83,7 +83,7 @@
     {
       "id": 14,
       "prompt": "OUTBOX_PUBLISH_TIMEOUT is ratified in the decision register. Add it to the kit and ship it.",
-      "expected_output": "Confirms from source that the key is ratified and currently absent from configkit and .env.example, and does not describe it as existing before it does. Lands one atomic change: implementation, tests, the configkit key and default with its clamp, .env.example, the CONTRACTS.md entry, a contracttest assertion, the decision record update, the generated consumer templates and scaffold goldens so the rule reaches consumer repositories, and docs/INDEX.md if a main document changed. Uses alaa-docs-farsi for the writing craft and gives every new document an opening summary rather than a bare reference dump. Reports each gate with an outcome word and leaves shipped_in pending until a tag exists.",
+      "expected_output": "Confirms from source that the key is ratified and currently absent from configkit and .env.example, and does not describe it as existing before it does. Lands one atomic change: implementation, tests, the configkit key and default with its clamp, .env.example, the CONTRACTS.md entry, a contracttest assertion, the decision record update, the generated consumer templates and scaffold goldens so the rule reaches consumer repositories, and docs/INDEX.md if a main document changed. Uses alaa-repo-docs for the writing craft and gives every new document an opening summary rather than a bare reference dump. Reports each gate with an outcome word and leaves shipped_in pending until a tag exists.",
       "files": []
     },
     {

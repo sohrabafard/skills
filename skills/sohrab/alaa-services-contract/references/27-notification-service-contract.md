@@ -177,7 +177,7 @@ stored message, which surfaces as a silent delivery failure rather than an error
 - `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq` for producer queue/worker design.
 - `$alaa-golang` for the Go producer message structs and tags.
 - `$alaa-observability-soc` for `correlation_id` / `causation_id` tracing.
-- `$alaa-docs-farsi` when documenting producer integration or notification runbooks.
+- `$alaa-repo-docs` when documenting producer integration or notification runbooks.
 
 ## Sources of truth
 

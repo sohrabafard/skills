@@ -48,7 +48,7 @@ The new skill must not be a generic docs skill.
 It must own Postman collection work as a dedicated concern.
 
 Important design requirement:
-Do not refer to `alaa-docs-farsi/SKILL.md` as a design reference in the new skill content.
+Do not refer to `alaa-repo-docs/SKILL.md` as a design reference in the new skill content.
 Instead, directly implement the stronger design qualities that such a mature skill should have:
 - a small routing-first top-level `SKILL.md`
 - progressive disclosure through reference files
@@ -63,10 +63,10 @@ Instead, directly implement the stronger design qualities that such a mature ski
 
 After creating the new skill, decouple Postman ownership from the general docs skill.
 Update:
-- `skills/sohrab/alaa-docs-farsi/SKILL.md`
+- `skills/sohrab/alaa-repo-docs/SKILL.md`
 
 Make that file route Postman-specific work to `$alaa-postman-collections` instead of owning detailed Postman workflow itself.
-If needed for consistency, update the smallest related reference files under `skills/sohrab/alaa-docs-farsi/` too, but keep the change minimal and focused.
+If needed for consistency, update the smallest related reference files under `skills/sohrab/alaa-repo-docs/` too, but keep the change minimal and focused.
 
 The final skill must be written so that when any future agent uses `$alaa-postman-collections`, it can reliably do all of the following in any project:
 

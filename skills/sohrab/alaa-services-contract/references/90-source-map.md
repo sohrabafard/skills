@@ -5,7 +5,7 @@ Use this file when the service contract depends on standards, framework behavior
 ## Source priority
 
 1. Target repo truth: routes, controllers, middleware, resources, tests, config, Helm/Compose files, CI files, and current docs.
-2. Ala platform skills that own the concern: this skill, `$alaa-trust-gateway-auth`, `$alaa-observability-soc`, `$alaa-docker-production`, `$caas-arvan-kuber`, `$alaa-gitlab-ci-cd`, and `$alaa-docs-farsi`.
+2. Ala platform skills that own the concern: this skill, `$alaa-trust-gateway-auth`, `$alaa-observability-soc`, `$alaa-docker-production`, `$caas-arvan-kuber`, `$alaa-gitlab-ci-cd`, and `$alaa-repo-docs`.
 3. Official or primary standards and product docs:
    - W3C Trace Context: https://www.w3.org/TR/trace-context/
    - OpenTelemetry docs and specs: https://opentelemetry.io/docs/

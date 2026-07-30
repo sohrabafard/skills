@@ -69,7 +69,7 @@ Where a rule here and a rule in the owning skill disagree, **the owning skill wi
 | Threat classes, review triggers, the fail-closed discriminator, every security verdict | `/alaa-security-review` — `$alaa-security-review` |
 | What a long-lived worker may retain between requests, reset mechanics, worker sizing | `/alaa-octane-performance` — `$alaa-octane-performance` |
 | Pre-implementation design: bounding a subsystem, extend-versus-new-service, contract-before-code, data ownership, candidate comparison | `/alaa-system-design` — `$alaa-system-design`. Read it **before** the change, not during it, whenever the change meets any of the six trigger conditions that skill lists — it owns the list. It settles the answer; this skill places it in a Laravel tree. |
-| Docs workflow, README, Postman, and diagram alignment | `/alaa-docs-farsi` — `$alaa-docs-farsi`; docblocks and artifact rules `alaa-php-clean-code references/documentation-and-artifacts.md` |
+| Docs workflow, README, Postman, and diagram alignment | `/alaa-repo-docs` — `$alaa-repo-docs`; docblocks and artifact rules `alaa-php-clean-code references/documentation-and-artifacts.md` |
 | Running the gate as a pipeline stage, static analysis, and release gating | `/alaa-cicd-laravel-postgres` — `$alaa-cicd-laravel-postgres` |
 | Project policy, archetypes, and the ten-criterion quality bar itself | `/alaa-project-constitution` — `$alaa-project-constitution` |
 | Model and effort selection, prompting, skill authoring | `/alaa-prompting-guide` — `$alaa-prompting-guide` |

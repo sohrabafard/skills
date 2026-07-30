@@ -1,6 +1,6 @@
 ## Goal
 
-Create a new reusable skill at `skills/sohrab/alaa-postman-collections/` that owns Postman collection and environment generation, update, synchronization, validation, and documentation, while preserving import compatibility with the free version of Insomnia. Then narrow `skills/sohrab/alaa-docs-farsi/` so it routes detailed Postman work to the new skill.
+Create a new reusable skill at `skills/sohrab/alaa-postman-collections/` that owns Postman collection and environment generation, update, synchronization, validation, and documentation, while preserving import compatibility with the free version of Insomnia. Then narrow `skills/sohrab/alaa-repo-docs/` so it routes detailed Postman work to the new skill.
 
 ## Assumptions
 
@@ -46,7 +46,7 @@ Create a new reusable skill at `skills/sohrab/alaa-postman-collections/` that ow
 
 ### Phase 3 — Decouple docs skill ownership
 - Inputs:
-  - current `alaa-docs-farsi` files
+  - current `alaa-repo-docs` files
   - new skill ownership boundary
 - Outputs:
   - minimal routing updates in docs skill files

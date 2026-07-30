@@ -156,7 +156,7 @@ The pack is already mostly routing-first, but the current validator fails becaus
 - Exact files / modules to touch:
   - `alaa-workflow`
   - `alaa-php-clean-code`
-  - `alaa-docs-farsi`
+  - `alaa-repo-docs`
   - dense generator/validator skills when they mention model policy
 - Validation commands:
   - `rg -n "gpt-5\.4|GPT-5\.4|gpt-5\.5|GPT-5\.5|reasoning_effort|model_reasoning" skills\sohrab`
@@ -262,7 +262,7 @@ The pack is already mostly routing-first, but the current validator fails becaus
 
 - Scope: workflow, trust, service contracts, docs, Postman, observability, security.
 - Read scope: matching skill folders and official/primary sources.
-- Write scope: `alaa-workflow`, `alaa-low-noise`, `alaa-services-contract`, `alaa-trust-gateway-auth`, `alaa-security-review`, `alaa-observability-soc`, `alaa-docs-farsi`, `alaa-postman-collections`, `alaa-crockford-base32-codecs`.
+- Write scope: `alaa-workflow`, `alaa-low-noise`, `alaa-services-contract`, `alaa-trust-gateway-auth`, `alaa-security-review`, `alaa-observability-soc`, `alaa-repo-docs`, `alaa-postman-collections`, `alaa-crockford-base32-codecs`.
 - Depends on: Phase 1.
 - Validation target: targeted quick validation plus contract-boundary review.
 - Merge notes: preserve existing service-boundary semantics.

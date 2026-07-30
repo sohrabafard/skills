@@ -74,7 +74,7 @@ The outcome is determined, not discretionary:
 **Rule:** when a Go task needs a decision that all three checks show is covered by nothing, make the decision, and
 name it in your final report — which decision you had to make, why no source covered it, and where you recorded it.
 The report is the minimum; a durable record belongs in the reference file that now states the rule, or in a note
-through `/alaa-basic-memory-os` (`$alaa-basic-memory-os`) when the decision outlives the task.
+through `/alaa-memory-os` (`$alaa-memory-os`) when the decision outlives the task.
 
 **Forbidden:** deciding a gap silently. An undeclared gap decision is invisible to the maintainer, so the next agent
 meets the same gap and decides it differently — which is how one platform grows two answers to one question.

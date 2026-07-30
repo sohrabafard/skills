@@ -42,6 +42,29 @@ Because `CREATE TABLE IF NOT EXISTS` is a no-op against an existing table
 any schema change, query `system.columns` for the table and compare the name, type, and default of
 every column against the DDL file. Paste the difference, or paste the empty difference.
 
+### What that check must assert once it runs in CI, and what a weaker one lets through
+
+A gate that reports "converged" when it has not is worse than no gate, because a pipeline built on
+it treats an unverified apply as a pass. `wa`'s schema job is the strongest shape in the fleet
+today; copy it into any repository that owns ClickHouse DDL. Each assertion below exists because the
+weaker version beside it passed something wrong.
+
+| Assert this | The weaker version, and what it misses |
+| --- | --- |
+| after applying the DDL, diff `system.columns` **name and type** against a schema artifact derived from the commit under test (`<repo>/.gitlab-ci.yml:440-451`) | comparing column *counts*: a `MODIFY COLUMN` mutation killed mid-flight leaves the same count with the wrong type, and the count-only gate reports success |
+| assert `count() FROM system.mutations WHERE is_done = 0` is zero for the database (`<repo>/.gitlab-ci.yml:453-455`) | trusting the DDL client's exit code: the client can abort on its own receive timeout while the mutation keeps running server-side, and the re-run then returns instantly as a metadata no-op |
+| require the DDL file and every bundled copy of it to be byte-identical (`ddl_bundle_sync`, `<repo>/.gitlab-ci.yml:217-222`) | assuming two copies were edited together: an operator who applies the packaged copy then creates a different table from the one the repository declares |
+| make the writer's rollout job depend on the schema job (`<repo>/.gitlab-ci.yml:472-477`) | ordering by convention: a writer rolled out ahead of its schema has its new fields discarded in silence, because the sink sets `skip_unknown_fields: true` (`<repo>/vector/wa-vector.yaml:635` and `:677`) |
+
+Two properties make the first two assertions mean anything, and both are worth reproducing by name.
+The expected schema is derived from the commit under test rather than carried over from a previous
+run, so a drifted expectation cannot approve itself. And every credential and input the job needs is
+asserted present rather than defaulted to an empty value, so a missing one exits non-zero instead of
+applying as somebody else or asserting against nothing.
+
+A repository whose only schema check is "the DDL applied without an error" has no gate; it has a log
+line.
+
 ## State the rollback before applying, not after
 
 Every ClickHouse change has a reverse, and some reverses are not the mirror of the forward

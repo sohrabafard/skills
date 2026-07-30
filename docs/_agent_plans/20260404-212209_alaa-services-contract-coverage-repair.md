@@ -21,7 +21,7 @@ Restore `skills/sohrab/alaa-services-contract` so `references/full-guide.md` is 
 
 - `skills/sohrab/alaa-trust-gateway-auth` keeps `SKILL.md` lean, `references/00-topic-map.md` as the router, and `references/full-guide.md` as the preserved whole-guide reference.
 - `skills/sohrab/alaa-workflow` requires repo-local task memory for non-trivial multi-file work.
-- `skills/sohrab/alaa-docs-farsi` requires rich documentation to stay strong rather than being compressed into lower-signal summaries.
+- `skills/sohrab/alaa-repo-docs` requires rich documentation to stay strong rather than being compressed into lower-signal summaries.
 
 ## Phases (with dependencies)
 

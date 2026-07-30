@@ -24,6 +24,6 @@ Triggers are runtime-specific: `/name` in Claude Code, `$name` in Codex. Both fo
 - Security: `alaa-security-review`.
 - Observability: `alaa-observability-soc`.
 - Containers, Kubernetes, and CI/CD: the matching Docker, Kubernetes, or pipeline skill.
-- Documentation: `alaa-docs-farsi` when the document language or task requires it.
+- Documentation: `alaa-repo-docs` when the document language or task requires it.
 
 Repository truth and closer instructions override generic skill guidance. Do not duplicate a domain skill's rules in the workflow plan or state.

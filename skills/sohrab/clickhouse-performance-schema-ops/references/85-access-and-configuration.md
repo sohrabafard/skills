@@ -30,7 +30,7 @@ the values produces a connection error that reads like a network fault:
 
 | Side | Variable | Protocol and default |
 | --- | --- | --- |
-| ingest (Vector sink) | `CLICKHOUSE_ENDPOINT` | HTTP, `http://shared-clickhouse:8123` (`docs/DECISIONS.md:92-99`) |
+| ingest (Vector sink) | `CLICKHOUSE_ENDPOINT` | HTTP, `http://shared-clickhouse:8123` (`<repo>/docs/DECISIONS.md` section 10) |
 | consumer read lane (`chkit`) | `CLICKHOUSE_ADDR` | native protocol, `host:port` with no scheme |
 
 The ingest side also reads `CLICKHOUSE_USER` and `CLICKHOUSE_PASSWORD`, so those two names appear
@@ -87,7 +87,7 @@ the one it queries.
 
 Credentials reach the runtime from a secret, never from a file in the repository. On this platform
 the ingest side takes them from a shared secret named by the chart
-(`docs/DECISIONS.md:92-99`, default `shared-clickhouse-secrets`), and the consumer side takes them
+(`<repo>/docs/DECISIONS.md` section 10, default `shared-clickhouse-secrets`), and the consumer takes
 from the `CLICKHOUSE_PASSWORD` lane key. A password committed to git outlives the commit that
 removed it, so the only remedy after an exposure is rotation, and rotation of a shared instance's
 credential affects every service on it — say so in the change request.

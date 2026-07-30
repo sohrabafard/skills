@@ -15,7 +15,7 @@ This skill owns four things: recovery of a dependency change, the baseline that 
 | Algorithms and data structures, N+1 included | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
 | Configurability | `/alaa-laravel-architecture` (`$alaa-laravel-architecture`) `references/70-config-contract.md`; contract values `/alaa-services-contract` (`$alaa-services-contract`) |
 | Speed of development and debuggability | plan, phasing, state, resume `/alaa-workflow` (`$alaa-workflow`); output shape `/alaa-low-noise` (`$alaa-low-noise`); lane planning and delegation `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator`) |
-| Documentation | service and API artifacts `/alaa-docs-farsi` (`$alaa-docs-farsi`), `/alaa-postman-collections` (`$alaa-postman-collections`) |
+| Documentation | service and API artifacts `/alaa-repo-docs` (`$alaa-repo-docs`), `/alaa-postman-collections` (`$alaa-postman-collections`) |
 
 ## Other surfaces
 

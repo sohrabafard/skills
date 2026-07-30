@@ -4,7 +4,7 @@
 executes from.**
 
 Membership, from `UPGRADE-CARRYOVER.md:197`: `alaa-signoz-clickhouse-docs`,
-`vector-rust-observability-pipelines`, `alaa-docs-farsi`, `alaa-postman-collections`,
+`vector-rust-observability-pipelines`, `alaa-repo-docs`, `alaa-postman-collections`,
 `alaa-basic-memory-os` — plus the repository-level cleanup in section 6 and a link check that every
 cross-skill path in `skills/sohrab/` resolves.
 
@@ -26,7 +26,7 @@ merely omits a subject someone else owns scores FAIL, not DELEGATED. **PARTIAL**
 part of the criterion and leaves the rest neither answered nor routed. **n/a** means the criterion
 has no referent in the domain.
 
-| # | Criterion | `alaa-signoz-clickhouse-docs` | `vector-rust-observability-pipelines` | `alaa-docs-farsi` | `alaa-postman-collections` | `alaa-basic-memory-os` |
+| # | Criterion | `alaa-signoz-clickhouse-docs` | `vector-rust-observability-pipelines` | `alaa-repo-docs` | `alaa-postman-collections` | `alaa-basic-memory-os` |
 |---|---|---|---|---|---|---|
 | 1 | Correctness and testability | FAIL | FAIL | FAIL | FAIL | FAIL |
 | 2 | Failure behaviour | FAIL | FAIL | FAIL | **SATISFIED** | FAIL |
@@ -89,7 +89,7 @@ Six cells are legitimate delegations and Phase 2 must preserve them rather than 
 - **Observability requirement levels and gates** belong to `alaa-observability-soc`; **observability
   names and values** belong to `alaa-services-contract`. Three members trespass on one or the other
   and the trespasses are itemised in §3 below.
-- **Clean code, SOLID and patterns (6)** for `alaa-docs-farsi` correctly belongs elsewhere — the
+- **Clean code, SOLID and patterns (6)** for `alaa-repo-docs` correctly belongs elsewhere — the
   skill produces documents, not code.
 - **Algorithms and data structures (7)** genuinely belongs to `alaa-algorithms-data-structures` for
   four of the five, but **no member names it at any call site**, so no member currently gets credit
@@ -127,7 +127,7 @@ excluding shell variables:
 
 | Skill | Codex `$name` | Claude Code `/name` | Verdict |
 |---|---|---|---|
-| `alaa-docs-farsi` | 14 (9 in the always-loaded body) | **0** | invisible from Claude Code |
+| `alaa-repo-docs` | 14 (9 in the always-loaded body) | **0** | invisible from Claude Code |
 | `vector-rust-observability-pipelines` | 4 | **0** | invisible from Claude Code |
 | `alaa-signoz-clickhouse-docs` | 3 | **0** | invisible from Claude Code |
 | `alaa-basic-memory-os` | **0** | **0** | routes to nothing at all |
@@ -144,7 +144,7 @@ description **with no sigil at all**, so the description over-triggers and under
 
 ### Class 3 — Duplication between body and references: **found, and one instance is extreme**
 
-- **`alaa-docs-farsi/references/full-guide.md` is 96.43% verbatim duplicate.** Measured both
+- **`alaa-repo-docs/references/full-guide.md` is 96.43% verbatim duplicate.** Measured both
   directions: 648 of 672 content lines from the seven split references appear verbatim in the guide
   (97.92% heading-normalised); 95.50% of the guide's 689 lines are reproduced by the references.
   Exactly **five lines** of unique rule text exist, all at
@@ -168,7 +168,7 @@ description **with no sigil at all**, so the description over-triggers and under
 
 Four of five members exceed the repository validator's 120-line body warning:
 `vector-rust-observability-pipelines` **227** (the fleet record), `alaa-postman-collections` **154**,
-`alaa-basic-memory-os` **140**, `alaa-docs-farsi` **127**. `alaa-signoz-clickhouse-docs` is the only
+`alaa-basic-memory-os` **140**, `alaa-repo-docs` **127**. `alaa-signoz-clickhouse-docs` is the only
 member under the line. Fleet-wide 22 skills carry this warning, so Phase 2 treats it as a batch
 obligation and reports it as a fleet convention question rather than fixing it outside the batch.
 
@@ -187,7 +187,7 @@ characters under the ceiling, so any Phase 2 edit to its description must re-mea
 
 ### Class 7 — Fragile tooling: **found in three of the four script-bearing members**
 
-- `alaa-docs-farsi/scripts/check_markdown_links.py` — `WINDOWS_ABS_RE` at `:17` is **dead code**:
+- `alaa-repo-docs/scripts/check_markdown_links.py` — `WINDOWS_ABS_RE` at `:17` is **dead code**:
   `is_external` matches `D:` as a URI scheme first, so both `D:/repo/x.md` and `C:\repo\x.md` pass
   clean. Those are verbatim the two counter-examples the skill's own
   `references/10-language-and-links.md:68-69` gives.
@@ -266,7 +266,7 @@ contract wins on what it is called. Three members break this:
   `alaa-observability-soc/SKILL.md:36` already binds the fleet: *"Telemetry is fail-open for product
   traffic: a failed … Vector sidecar … degrades."* SOC wins on requirement level, so the skill does
   not merely omit a rule — it contradicts one.
-- **`alaa-docs-farsi/references/60-errors-events-observability-contract.md:104`** states
+- **`alaa-repo-docs/references/60-errors-events-observability-contract.md:104`** states
   `request-id`, where `alaa-services-contract references/20-operational-and-observability-contract.md:12`
   owns the name `X-Request-Id`. That is a **wrong value**, not just a missing citation. Note the
   lane's own correction to its brief: this file states no requirement level and no gate, and every
@@ -300,19 +300,19 @@ other two thirds are proposed, not settled, and `clickhouse-performance-schema-o
 
 ### 3.3 The Persian-documentation contradiction — the batch's sharpest ownership defect
 
-`grep -rnP '(*UTF)[\x{0600}-\x{06FF}]'` over `alaa-docs-farsi`, on the staged copy **and** on the
+`grep -rnP '(*UTF)[\x{0600}-\x{06FF}]'` over `alaa-repo-docs`, on the staged copy **and** on the
 device original, returns **zero matches**. A byte-level scan finds zero non-ASCII characters in all
 fourteen files. `SKILL.md:12` and `:63` mandate **English** output.
 
 Meanwhile six fleet call sites route Persian deliverables to this skill, two of them inside
 `alaa-frontend-doc-annotations`, which Batch 6 shipped at standard:
 `alaa-frontend-doc-annotations/SKILL.md:13-15` reads *"Persian belongs in … Persian-language
-deliverables, which are `/alaa-docs-farsi`"*, and `references/10-annotation-boundaries.md:86` repeats
+deliverables, which are `/alaa-repo-docs`"*, and `references/10-annotation-boundaries.md:86` repeats
 it. `UPGRADE-BATCH-6-ANALYSIS.md:2118` records that Batch 6 saw this seam and settled it on the wrong
 assumption, because the skill was out of its tree at the time. `README.fa.md:120` describes the skill
 as writing Persian documentation while its own frontmatter says it produces simple-English docs.
 
-**Persian deliverables are currently unowned, and a skill named `alaa-docs-farsi` is the reason
+**Persian deliverables are currently unowned, and a skill named `alaa-repo-docs` is the reason
 nobody noticed.** This needs the owner's decision — see §6, Q3.
 
 ### 3.4 Other boundaries, each with the evidence
@@ -328,7 +328,7 @@ nobody noticed.** This needs the owner's decision — see §6, Q3.
 - **`alaa-basic-memory-os` ↔ `alaa-workflow`.** `references/compact-and-handoff.md` (625 bytes)
   restates material that `alaa-workflow/references/artifact-lifecycle.md:61` explicitly closes:
   *"Do not restate them here."* Retire it.
-- **`alaa-docs-farsi` ↔ `alaa-postman-collections`.** API documentation is the overlap: the docs
+- **`alaa-repo-docs` ↔ `alaa-postman-collections`.** API documentation is the overlap: the docs
   skill produces `docs/api-summary.md` and the Postman skill produces request documentation blocks,
   and **neither mentions the other's artifact anywhere.** Proposed and flagged as needing reciprocal
   agreement; both are in this batch, so Phase 2 can write both halves.
@@ -413,7 +413,7 @@ and the `MaxDynamicPaths: 100` cap on the `resource` JSON column. Versions: SigN
 `signoz-otel-collector` **v0.144.6**, SigNoz ships ClickHouse **25.12.5** against an upstream
 ClickHouse of **26.7 (2026-07-22)** — seven minors of drift the skill pins nowhere.
 
-**`alaa-docs-farsi`: nothing stale, because nothing is pinned.** All six URLs in
+**`alaa-repo-docs`: nothing stale, because nothing is pinned.** All six URLs in
 `references/90-source-map.md` resolve today. Zero version pins anywhere in the skill, so D10 is unmet
 by absence rather than by staleness.
 
@@ -655,7 +655,7 @@ without violating its own boundary. Four gaps came close enough to test the rule
 resolve inside existing boundaries:
 
 1. **Persian deliverables are genuinely unowned** (§3.3). But the owner exists — the skill is named
-   `alaa-docs-farsi`, six fleet call sites already route Persian to it, and the defect is that its
+   `alaa-repo-docs`, six fleet call sites already route Persian to it, and the defect is that its
    own body mandates English. That is a contradiction to resolve inside one skill, not a second
    skill to create. Creating an `alaa-docs-persian` alongside it would leave two skills whose names
    both promise Persian and neither of which owns it unambiguously.
@@ -732,7 +732,7 @@ rewrite. The cost is a rename touching 4 call sites and 3 carry-over mentions; t
 it is a skill whose body needs re-verification every week against a 0.x product.
 
 **Q3 — Who owns Persian deliverables?** §3.3. **Recommendation: the skill is right and the fleet is
-wrong** — `alaa-docs-farsi` produces simple-English documentation by design, and the six call sites
+wrong** — `alaa-repo-docs` produces simple-English documentation by design, and the six call sites
 that route Persian to it should be corrected. Two of those six are inside `alaa-frontend-doc-annotations`,
 which is outside this batch, so they become a reported carry-over item rather than an edit. The
 alternative — making the skill produce Persian — would contradict `SKILL.md:12` and `:63` and
@@ -786,7 +786,7 @@ brief:
 |---|---|---|
 | `alaa-signoz-clickhouse-docs` | **−8%** (retire 20.6 KB of link list, add 13.6 KB of references) | three checkers: link, schema, and SQL-rule |
 | `vector-rust-observability-pipelines` | **≈3.4× (25.7 KB → ~88 KB)**, still under the fleet median | it currently states almost none of its own subject: buffers, acknowledgements, backpressure, sink failure |
-| `alaa-docs-farsi` | **−39.6% net** | retire `full-guide.md`; the cross-reference checker moves to fleet scope |
+| `alaa-repo-docs` | **−39.6% net** | retire `full-guide.md`; the cross-reference checker moves to fleet scope |
 | `alaa-postman-collections` | **+3.6%** | a self-test harness with red fixtures it does not have today |
 | `alaa-basic-memory-os` → `alaa-memory-os` | restructured, not grown | store-agnostic operating model with two adapter references |
 
@@ -806,7 +806,7 @@ executes from; the front section above is a reading of them, not a replacement f
 
 - **Appendix A** — `alaa-signoz-clickhouse-docs`
 - **Appendix B** — `vector-rust-observability-pipelines`
-- **Appendix C** — `alaa-docs-farsi`
+- **Appendix C** — `alaa-repo-docs`
 - **Appendix D** — `alaa-postman-collections`
 - **Appendix E** — `alaa-basic-memory-os`
 - **Appendix F** — Repository hygiene and cross-reference survey
@@ -2650,16 +2650,16 @@ script's 127 is the bug being fixed.
 
 ---
 
-# Appendix C — `alaa-docs-farsi`
+# Appendix C — `alaa-repo-docs`
 
-# Batch 8 — Lane L3 analysis: `alaa-docs-farsi`
+# Batch 8 — Lane L3 analysis: `alaa-repo-docs`
 
 Analysis date **2026-07-29**. Phase 1, read-only. Nothing on the device was modified.
-Staged copy read in full: `/home/claude/b8/src/alaa-docs-farsi/` (14 files, 133,756 bytes).
+Staged copy read in full: `/home/claude/b8/src/alaa-repo-docs/` (14 files, 133,756 bytes).
 Device original verified byte-identical by size, file for file, at
-`D:\Sohrab\Project\skills\skills\sohrab\alaa-docs-farsi\` (reached read-only through
+`D:\Sohrab\Project\skills\skills\sohrab\alaa-repo-docs\` (reached read-only through
 `mcp__remote-devices__device_bash` at
-`/sessions/rcw-01nfpk8ndxrrswndyp6txjwc/mnt/skills/skills/sohrab/alaa-docs-farsi`).
+`/sessions/rcw-01nfpk8ndxrrswndyp6txjwc/mnt/skills/skills/sohrab/alaa-repo-docs`).
 
 **Headline.** The lane premise that this is the fleet's Persian-documentation skill is empirically
 false, and that falsehood is the single most consequential finding in this lane. The skill contains
@@ -2675,7 +2675,7 @@ this skill. The fleet and the skill contradict each other on the skill's central
 | File | Bytes | What it actually contains |
 |---|---:|---|
 | `SKILL.md` | 10,703 | 130-line body. Purpose, when/when-not, 9-step quick start, doc-set trigger rules, non-negotiables, doc-impact checklist, 8-entry companion routing (all `$name`, no `/name`), subagent strategy, **a full 13-line reference-navigation list that duplicates `references/00-topic-map.md`**, maintenance rules. |
-| `agents/openai.yaml` | 669 | Codex interface block. `short_description` 51 chars (valid, 25–64). `default_prompt` names `$alaa-docs-farsi`. `allow_implicit_invocation: true`. |
+| `agents/openai.yaml` | 669 | Codex interface block. `short_description` 51 chars (valid, 25–64). `default_prompt` names `$alaa-repo-docs`. `allow_implicit_invocation: true`. |
 | `references/00-topic-map.md` | 3,902 | Not a topic map with trigger conditions — a **table of contents listing the headings of the other reference files**. 93 content lines, none of which is a rule. Contains no routing predicate ("read X when Y"); it lists filenames and their headings. |
 | `references/10-language-and-links.md` | 6,355 | Purpose, when/when-not (a third copy), language rules, hard constraints, repo-safe link rules with correct/incorrect examples, doc-graph linking rules, link-validation workflow. The link rules here are the ones `scripts/check_markdown_links.py` actually enforces. |
 | `references/20-readme-big-picture-contract.md` | 11,750 | Largest numbered reference. README/BIG_PICTURE role split, four-audience requirement, richness-protection rule, required section lists for both files, quality-bar question lists, Mermaid diagram coverage rules, architectural-patterns section, frontend-integration coverage, new-service baseline extraction, shared section extensions. |
@@ -2832,7 +2832,7 @@ copy of the other. `full-guide.md:769-777` drops four rules that `80` states: th
 for ordinary docs polish" negative trigger (`80:14`), the "what not to include" list (`80:36-41`),
 the raw-transcript exclusion, and the Postman handoff (`80:43-45`).
 
-**Recommendation: RETIRE `full-guide.md`** to `_to_delete/20260729-batch8/alaa-docs-farsi/`.
+**Recommendation: RETIRE `full-guide.md`** to `_to_delete/20260729-batch8/alaa-repo-docs/`.
 The number behind it: 96.43% verbatim overlap forward, 95.50% backward, five lines of unique rule
 text, and one already-live divergence. This is far closer to Batch 6's 99.75% retire case than to
 Batch 7's 18.3% keep case. Before retiring, move the five-line `### Core rule` block — it already
@@ -2896,7 +2896,7 @@ rules" and `:37` "Exact `traceparent` rules", and `:18` requiring migration off 
 blocks a ship" and routes "exact Alaa metric, event, code, and log-field names to
 /alaa-services-contract".
 
-So `alaa-docs-farsi` states an observability **NAME** on its own authority — the thing
+So `alaa-repo-docs` states an observability **NAME** on its own authority — the thing
 `alaa-services-contract` owns — and states it in a casing (`request-id`) that does not match the
 contract (`X-Request-Id`). An agent writing a `docs/errors-events-observability.md` from this rule
 documents a header the fleet does not emit. This is the sharpest single defect in the skill: not a
@@ -2967,13 +2967,13 @@ this skill, no errors and exactly one warning:
 
 ```
 Warnings:
-- alaa-docs-farsi: top-level body is 127 lines
+- alaa-repo-docs: top-level body is 127 lines
 ```
 
 `SKILL.md` is 130 physical lines; the validator counts 127 after the frontmatter. The description is
 737 characters (under the 900 practical ceiling), contains no angle brackets, and `## When NOT to
 use` satisfies the `(when not to use|do not use)` heading rule. `agents/openai.yaml`
-`short_description` is 51 characters and the `default_prompt` names `$alaa-docs-farsi`. The pack
+`short_description` is 51 characters and the `default_prompt` names `$alaa-repo-docs`. The pack
 otherwise passes.
 
 **Classes checked and NOT found:** class 1 (no model name anywhere — `grep -rniE
@@ -2993,7 +2993,7 @@ Persian-documentation skill. There is no exception, because there is no Persian.
 
 **Measurement.** `grep -rnP '(*UTF)[\x{0600}-\x{06FF}]'` across the staged skill: **zero matches,
 exit 1**. The same grep run against the device original at
-`.../skills/sohrab/alaa-docs-farsi`: **zero matches, exit 1**. Widening to the Arabic Supplement,
+`.../skills/sohrab/alaa-repo-docs`: **zero matches, exit 1**. Widening to the Arabic Supplement,
 Arabic Extended-A, Presentation Forms blocks and ZWNJ: zero. A byte-level scan
 (`LC_ALL=C grep -rnP '[\x80-\xFF]'`) and an independent Python codepoint audit over all 14 files:
 **zero non-ASCII characters of any kind**. There is no Persian hit to classify as legitimate or
@@ -3014,25 +3014,25 @@ folder, returns 30 call sites. Six of them assert Persian ownership:
 alaa-frontend-doc-annotations/SKILL.md:13-15
   "Every comment in a file is English and ASCII-range — no Persian text or digits …
    Persian belongs in terminal replies and in Persian-language deliverables,
-   which are `/alaa-docs-farsi` (`$alaa-docs-farsi`)."
+   which are `/alaa-repo-docs` (`$alaa-repo-docs`)."
 
 alaa-frontend-doc-annotations/references/10-annotation-boundaries.md:86
   "| Persian-language deliverables. Never Persian inside a source file
-     | `/alaa-docs-farsi` (`$alaa-docs-farsi`) |"
+     | `/alaa-repo-docs` (`$alaa-repo-docs`) |"
 
 alaa-golang/references/20-sohrab-companions.md:51
-  "| `/alaa-docs-farsi` (`$alaa-docs-farsi`)
+  "| `/alaa-repo-docs` (`$alaa-repo-docs`)
      | write repository documentation or a human-facing note in Persian |"
 
 alaa-laravel-public-api-contract-pack/SKILL.md:168
   "| The ten-criterion quality bar; Farsi docs and backlog wording
-     | `alaa-project-constitution references/quality-bar.md`, `/alaa-docs-farsi` |"
+     | `alaa-project-constitution references/quality-bar.md`, `/alaa-repo-docs` |"
 
 alaa-workflow/references/companion-routing.md:27
-  "- Documentation: `alaa-docs-farsi` when the document language or task requires it."
+  "- Documentation: `alaa-repo-docs` when the document language or task requires it."
 
 README.fa.md:120
-  "| `alaa-docs-farsi` | نگارش مستندات فارسی |"     (= "writing Persian documentation")
+  "| `alaa-repo-docs` | نگارش مستندات فارسی |"     (= "writing Persian documentation")
 ```
 
 Two get it right:
@@ -3040,10 +3040,10 @@ Two get it right:
 ```
 alaa-php-clean-code/references/00-topic-map.md:74
   "| README, docs, Postman collection, env docs, or a diagram
-     | `/alaa-docs-farsi` — output in English unless the user asks otherwise |"
+     | `/alaa-repo-docs` — output in English unless the user asks otherwise |"
 
 alaa-php-clean-code/SKILL.md:189
-  "… the repo-wide docs workflow belongs to `/alaa-docs-farsi`, with output in simple,
+  "… the repo-wide docs workflow belongs to `/alaa-repo-docs`, with output in simple,
    fluent English unless the user asks for another language."
 ```
 
@@ -3051,21 +3051,21 @@ The rest route documentation work generically without asserting a language.
 
 **This was seen and entrenched rather than resolved.** `UPGRADE-BATCH-6-ANALYSIS.md:2118` records
 the collision check verbatim:
-> "**Collision check against `alaa-docs-farsi` (Batch 8):** one live risk … That row invites an agent
-> to treat `alaa-docs-farsi` as the README owner and, by association, to write Persian into files. …
-> Fix: … narrow the `alaa-docs-farsi` row to Persian-language *deliverables only*."
+> "**Collision check against `alaa-repo-docs` (Batch 8):** one live risk … That row invites an agent
+> to treat `alaa-repo-docs` as the README owner and, by association, to write Persian into files. …
+> Fix: … narrow the `alaa-repo-docs` row to Persian-language *deliverables only*."
 
 and `:2045`:
 > "On a Persian/RTL repository this is the assertion that mechanically settles the seam with
-> `alaa-docs-farsi`: files are English, only terminal replies are Persian."
+> `alaa-repo-docs`: files are English, only terminal replies are Persian."
 
 Batch 6 resolved the seam on the correct axis — *inside a source file* vs *a deliverable* — but on
-the wrong assumption about what the deliverable's language is. Because `alaa-docs-farsi` was out of
+the wrong assumption about what the deliverable's language is. Because `alaa-repo-docs` was out of
 tree for Batch 6, nobody opened it. The result is a skill that Batch 6 shipped *at standard*
 asserting a fact about a skill that contradicts it.
 
 **The consequence is concrete.** An agent in `alaa-frontend-doc-annotations` that hits a Persian
-requirement is routed to `/alaa-docs-farsi`, loads it, and reads at line 12 that output is "always
+requirement is routed to `/alaa-repo-docs`, loads it, and reads at line 12 that output is "always
 simple, fluent English". It now has two binding instructions in conflict and no tiebreak. Under the
 programme's own fail-closed discrimination — *does proceeding without resolution let something
 through that must not?* — a document in the wrong language delivered to a Persian-reading operator
@@ -3097,7 +3097,7 @@ matters:
 > against the code it claims to describe — in a diff whose build output must be byte-identical before
 > and after — belongs here."
 
-From `alaa-docs-farsi`, `SKILL.md:84-85`:
+From `alaa-repo-docs`, `SKILL.md:84-85`:
 > "- `$alaa-frontend-doc-annotations`
 >    - Pair when the task also touches docblocks and inline code annotations."
 
@@ -3105,12 +3105,12 @@ and the negative half, `SKILL.md:30`: "pure inline code annotation passes" under
 restated at `10-language-and-links.md:31`.
 
 **Verdict: the file-boundary is written and reciprocal and correct.** In-code annotations →
-`alaa-frontend-doc-annotations`; repository `.md` files → `alaa-docs-farsi`. The predicate is
+`alaa-frontend-doc-annotations`; repository `.md` files → `alaa-repo-docs`. The predicate is
 observable: which file the diff touches. No overlap found on this axis after reading both.
 
 **One asymmetry.** `alaa-frontend-doc-annotations` gives both trigger forms
-(`/alaa-docs-farsi` (`$alaa-docs-farsi`)) at every call site; `alaa-docs-farsi` gives only `$name`.
-And `alaa-docs-farsi`'s "Pair when" is an invitation, not a boundary — it never states what it does
+(`/alaa-repo-docs` (`$alaa-repo-docs`)) at every call site; `alaa-repo-docs` gives only `$name`.
+And `alaa-repo-docs`'s "Pair when" is an invitation, not a boundary — it never states what it does
 *not* own to the other skill. The one axis where the pair is genuinely broken is language (4.1), and
 the break is on `alaa-frontend-doc-annotations`'s side of the sentence.
 
@@ -3118,7 +3118,7 @@ the break is on `alaa-frontend-doc-annotations`'s side of the sentence.
 
 Read from the staged copy at `/home/claude/b8/src/alaa-postman-collections/`.
 
-`alaa-docs-farsi` states its side clearly. `30-api-summary-contract.md:16`:
+`alaa-repo-docs` states its side clearly. `30-api-summary-contract.md:16`:
 > "`docs/api-summary.md` is the fast contract sheet for humans and agents who need the endpoint map
 > and a few verified request examples **without reading a full Postman collection, OpenAPI document,
 > `README.md`, or `docs/BIG_PICTURE.md`**."
@@ -3140,7 +3140,7 @@ And `references/44-request-documentation-blocks.md:29-33` claims a third layer:
 
 **Measurement of the gap.** `grep -rn 'api-summary'` across the whole of
 `alaa-postman-collections`: **zero matches**. `grep -rn 'openapi\|docs/contracts'` across the whole
-of `alaa-docs-farsi`: `OpenAPI` appears four times, always as a thing a reader might otherwise have
+of `alaa-repo-docs`: `OpenAPI` appears four times, always as a thing a reader might otherwise have
 to read (`30:16`, `70:56`, `full-guide.md:297,645`), never as an artifact this skill coordinates
 with; `docs/contracts` appears **zero** times.
 
@@ -3157,12 +3157,12 @@ the other level exists.
 
 | Artifact | Owner | Rule |
 |---|---|---|
-| `docs/contracts/<service>/openapi.yaml` — the machine-readable contract | `alaa-postman-collections` | Authoritative for request/response schemas, status codes, error shapes. `alaa-docs-farsi` never edits it. |
+| `docs/contracts/<service>/openapi.yaml` — the machine-readable contract | `alaa-postman-collections` | Authoritative for request/response schemas, status codes, error shapes. `alaa-repo-docs` never edits it. |
 | The Postman collection, environments, examples, tests, request descriptions | `alaa-postman-collections` | Sole owner. |
-| `docs/api-summary.md` — the human endpoint sheet | `alaa-docs-farsi` | **Derived, never authoritative.** When it disagrees with the OpenAPI contract, the contract wins and `api-summary.md` is the defect. |
+| `docs/api-summary.md` — the human endpoint sheet | `alaa-repo-docs` | **Derived, never authoritative.** When it disagrees with the OpenAPI contract, the contract wins and `api-summary.md` is the defect. |
 | Whether `docs/api-summary.md` should exist at all when an OpenAPI contract exists | **unresolved — owner decision** | See open question 3. |
-| `remaining-task.md` backlog wording | `alaa-docs-farsi` | Already reciprocal and correct: `postman SKILL.md:82,142` and `postman references/10-scope-and-trigger-rules.md:59` route it here; `docs-farsi 80:43-45` accepts it. This is the pair's one clean seam. |
-| README navigation linking to any of the above | `alaa-docs-farsi` | `10:73` "README.md is the navigation hub." |
+| `remaining-task.md` backlog wording | `alaa-repo-docs` | Already reciprocal and correct: `postman SKILL.md:82,142` and `postman references/10-scope-and-trigger-rules.md:59` route it here; `docs-farsi 80:43-45` accepts it. This is the pair's one clean seam. |
+| README navigation linking to any of the above | `alaa-repo-docs` | `10:73` "README.md is the navigation hub." |
 
 The precedence rule the pair needs and neither has: **when `docs/api-summary.md` and the canonical
 contract disagree, the contract is right.** That is already the fleet's general shape —
@@ -3170,7 +3170,7 @@ contract disagree, the contract is right.** That is already the fleet's general 
 case:
 > "Generated public artifacts — Postman collections, route inventories, API summaries. When one
 > disagrees with rank 1 or 2 the code is correct and the artifact is the defect: fix it through
-> `/alaa-postman-collections` ($alaa-postman-collections) or `/alaa-docs-farsi` ($alaa-docs-farsi),
+> `/alaa-postman-collections` ($alaa-postman-collections) or `/alaa-repo-docs` ($alaa-repo-docs),
 > never your claim."
 
 `alaa-controlled-ops` already legislates the precedence both skills lack. Neither cites it.
@@ -3283,7 +3283,7 @@ states "OpenAPI 3.1 is preferred". `spec.openapis.org/oas/latest.html` served **
 today. That is that lane's finding, recorded here because I verified it while checking this skill's
 URL list.
 
-**No claim in `alaa-docs-farsi` was found STALE. No claim was UNVERIFIABLE.** All six URLs resolve.
+**No claim in `alaa-repo-docs` was found STALE. No claim was UNVERIFIABLE.** All six URLs resolve.
 
 ---
 
@@ -3304,7 +3304,7 @@ link contract, which puts it ahead of most of the fleet.
 ### 6.1 Observed run against the whole staged tree — verbatim
 
 ```
-$ cd /tmp && python3 /home/claude/b8/src/alaa-docs-farsi/scripts/check_markdown_links.py /home/claude/b8/src/
+$ cd /tmp && python3 /home/claude/b8/src/alaa-repo-docs/scripts/check_markdown_links.py /home/claude/b8/src/
 EXIT=0
 STDOUT:
 Validated Markdown links successfully for: AGENTS.md, UPGRADE-CARRYOVER.md,
@@ -3319,7 +3319,7 @@ STDERR: (empty)
 ### 6.2 Observed run against the real device tree — verbatim
 
 ```
-$ cd /tmp && python3 .../skills/sohrab/alaa-docs-farsi/scripts/check_markdown_links.py \
+$ cd /tmp && python3 .../skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py \
       .../skills/sohrab
 EXIT=1
 STDOUT:
@@ -3559,7 +3559,7 @@ redaction rule.
 
 | File | Bytes | To | Why |
 |---|---:|---|---|
-| `references/full-guide.md` | 52,953 | `_to_delete/20260729-batch8/alaa-docs-farsi/` | 96.43% verbatim duplicate forward, 95.50% backward, 5 unique rule lines (already present at `20:21-26`), and one live divergence from `80`. Before moving: confirm `20:21-26` is intact, and confirm nothing outside the skill points at it (`grep -rn 'full-guide' skills/sohrab/`). |
+| `references/full-guide.md` | 52,953 | `_to_delete/20260729-batch8/alaa-repo-docs/` | 96.43% verbatim duplicate forward, 95.50% backward, 5 unique rule lines (already present at `20:21-26`), and one live divergence from `80`. Before moving: confirm `20:21-26` is intact, and confirm nothing outside the skill points at it (`grep -rn 'full-guide' skills/sohrab/`). |
 
 Nothing else is retired. `00-topic-map.md` is rewritten, not retired.
 
@@ -3685,7 +3685,7 @@ never had.** Prose alone falls from 126,643 to ~85,400 bytes — a 33% reduction
 
 **1. Who owns Persian-language deliverables?** *(The decision this lane exists to surface.)*
 Six call sites across the fleet, two of them in a Batch-6 at-standard skill, route Persian
-deliverables to `alaa-docs-farsi`. `alaa-docs-farsi` mandates English three times. One of the two
+deliverables to `alaa-repo-docs`. `alaa-repo-docs` mandates English three times. One of the two
 statements is wrong and only the owner can say which.
 - **Option A (recommended): the skill is right, the fleet is wrong.** Keep the English default,
   rename the skill's *concept* to "Alaa Docs Standard" (already its Codex display name), and correct
@@ -3725,7 +3725,7 @@ that `30:16` is explicitly built for. **This needs reciprocal agreement with the
 
 **4. Where should `check_skill_xrefs.py` live?** It validates the whole tree, not this skill.
 Recommend `skills/scripts/`, beside `validate_sohrab_skill_pack.py`, so the repository validator can
-call it and it is not shipped to every consumer of `alaa-docs-farsi`. *Trade-off:* this skill then
+call it and it is not shipped to every consumer of `alaa-repo-docs`. *Trade-off:* this skill then
 ships one checker instead of two, and the "every skill ships an executable check" survey counts it
 against the repository rather than the skill.
 
@@ -4107,24 +4107,24 @@ skill in its own frontmatter description. This skill does not name it once.
 assertions, examples, and scripts"). The only content that must move is the doctrine sentence, which
 becomes a routed pointer.
 
-### 4.4 `alaa-docs-farsi` — clean from their side, needs one reciprocal sentence
+### 4.4 `alaa-repo-docs` — clean from their side, needs one reciprocal sentence
 
-`alaa-docs-farsi/references/10-language-and-links.md:32` already excludes this skill's territory:
+`alaa-repo-docs/references/10-language-and-links.md:32` already excludes this skill's territory:
 > `- Postman-only collection or environment maintenance with no Markdown doc work.`
 
 and `references/30-api-summary-contract.md:16` positions `docs/api-summary.md` as the sheet for
 readers "who need the endpoint map and a few verified request examples **without reading a full
-Postman collection**". A grep of the whole `alaa-docs-farsi` tree for "request description",
+Postman collection**". A grep of the whole `alaa-repo-docs` tree for "request description",
 "request-level" or "per-request" returns **nothing**, so there is no competing claim on request-level
 documentation.
 
 **Boundary I propose from this side, flagged as needing reciprocal agreement with the concurrent
-`alaa-docs-farsi` lane:**
+`alaa-repo-docs` lane:**
 
 - `alaa-postman-collections` owns documentation **inside** a Postman artifact: the eight-heading
   `request.description`, folder descriptions, and the collection description. Its unit is one HTTP
   operation.
-- `alaa-docs-farsi` owns documentation **about** the repository: `README.md`,
+- `alaa-repo-docs` owns documentation **about** the repository: `README.md`,
   `docs/BIG_PICTURE.md`, `docs/api-summary.md`, runbooks, and `remaining-task.md`. Its unit is the
   repository.
 - The seam is `docs/api-summary.md`: it summarises the endpoint map, it does not restate the eight
@@ -4132,7 +4132,7 @@ documentation.
   source and the summary is derived.
 - `remaining-task.md` is already correctly delegated in this direction —
   `SKILL.md:141-142` and `10-…:59` both route documented-but-not-implemented gaps to
-  `alaa-docs-farsi`, and `alaa-docs-farsi/references/40-sync-workflow-and-evidence.md:73` accepts it.
+  `alaa-repo-docs`, and `alaa-repo-docs/references/40-sync-workflow-and-evidence.md:73` accepts it.
   **That is the one reciprocal pair already working; the rest needs agreement.**
 
 ### 4.5 What the skill should own and does not
@@ -5554,7 +5554,7 @@ defects**: `caas-arvan-kuber/SKILL.md:39` and
 | --- | --- | --- | --- |
 | `$R/alaa-cicd-laravel-postgres/references/90-source-map.md:10` | `references/SOURCES.md` | 9 skills | **False positive.** The line reads `` …belongs to `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) `references/SOURCES.md` ``. `alaa-gitlab-ci-cd` has no `references/SOURCES.md` — this is a genuine **broken cross-skill citation**, but of the DANGLING-NAMED kind, and the multi-owner ambiguity masks it. Real defect. |
 | `$R/alaa-docker-production/references/00-source-map.md:4` | `references/SOURCES.md` | 9 skills | Self-referential prose: "It replaces the former `references/SOURCES.md`". Historical, not a live citation. |
-| `$R/alaa-indexeddb-browser-storage/references/99-sources-and-maintenance.md:74` | `references/full-guide.md` | `alaa-docs-farsi`, `alaa-octane-performance` | Historical prose about this skill's own retired `full-guide.md`. Not a live citation. |
+| `$R/alaa-indexeddb-browser-storage/references/99-sources-and-maintenance.md:74` | `references/full-guide.md` | `alaa-repo-docs`, `alaa-octane-performance` | Historical prose about this skill's own retired `full-guide.md`. Not a live citation. |
 | `$R/alaa-input-normalization/references/60-provider-seam-and-open-items.md:16` | `scripts/phone-conformance-corpus.json` | `alaa-bale-provider`, `alaa-sms-provider-mediana` | **Deliberate.** The line documents that the corpus ships as "two byte-identical copies". The ambiguity is the design. |
 | `$R/alaa-prompting-guide/references/60-skill-authoring.md:69` | `references/failure-taxonomy.md` | `alaa-cc-orchestrator`, `alaa-codex-orchestrator` | **Illustrative example inside a code span**, not a citation: `` `Read references/failure-taxonomy.md when a check fails` ``. A checker must exclude example text; see §1.9. |
 
@@ -5924,7 +5924,7 @@ Two observations that matter more than the count:
 | alaa-crockford-base32-codecs | 2 | 1 | `codec-conformance.sh` — cross-runtime conformance harness driving all four shipped codec implementations over one shared corpus; `crockford-base32-cli.sh` — reference CLI, header names the owning reference file |
 | alaa-data-layer | 0 | 0 | — |
 | alaa-docker-production | 7 | 5 | `check-compose-interpolation.mjs` (fail-closed interpolation, enforces `references/25-…`); `check-dockerfile-contract.mjs` (Dockerfile authorship, `references/10-…`); `check-image-pinning.mjs` (image-reference determinism + freshness, `references/45-…`); `check-stack-rollout.mjs` (Swarm rollout control, `references/30-…`); `lib/common.mjs` (shared helpers; states the five contracts every checker obeys); `lib/mini-yaml.mjs`, `lib/safety-controls.mjs` (libraries, no exit path — correct) |
-| alaa-docs-farsi | 1 | 1 | `check_markdown_links.py` — validates inline and reference-style Markdown links for local docs. 0/1/2 verified at `:177,:184,:198,:202`. Batch 8 member. |
+| alaa-repo-docs | 1 | 1 | `check_markdown_links.py` — validates inline and reference-style Markdown links for local docs. 0/1/2 verified at `:177,:184,:198,:202`. Batch 8 member. |
 | alaa-frontend-developer | 0 | 0 | — (correctly retired; routes to `alaa-quasar-app-vite-v3`, §8) |
 | alaa-frontend-devops | 1 | 1 | `verify-artifact-contract.mjs` — asserts a frontend build output tree against the declared artifact contract |
 | alaa-frontend-doc-annotations | 1 | 1 | `check-annotations.mjs` — checks comments against the code they claim to describe; never edits. Header states "0 clean, 1 findings, 2 could not run" |
@@ -5986,7 +5986,7 @@ Two observations that matter more than the count:
 | `vector-rust-observability-pipelines` | 1 (240 bytes, exit 1 only, no header, no `--help`, no `--self-test`) | effectively ships preferences |
 | `alaa-basic-memory-os` | 6 PowerShell, none with a header, none with a demonstrable exit-2 path | no contract |
 | `alaa-postman-collections` | 2 (17 KB + 38 KB, substantive), neither with `--help` or `--self-test` | real checkers, missing the fleet's ergonomics |
-| `alaa-docs-farsi` | 1, full 0/1/2, but no `--help` and no `--self-test` | closest to standard |
+| `alaa-repo-docs` | 1, full 0/1/2, but no `--help` and no `--self-test` | closest to standard |
 
 ---
 
@@ -6079,7 +6079,7 @@ because only `.md` files are scanned.
 | --- | ---: | ---: | ---: | ---: | --- |
 | `alaa-cc-orchestrator` | **97** | **0** | 3 | 0 | Claude-only. Arguably legitimate — it is the Claude Code orchestrator — but 97 to 0 means it can never route a reader to a Codex counterpart. |
 | `alaa-codex-orchestrator` | **0** | **33** | 0 | 2 | Codex-only, mirror image. |
-| **`alaa-docs-farsi`** | **0** | **14** | 0 | 9 | **Batch 8 member. Nine `$name` triggers in the always-loaded body and not one `/name`.** A Claude Code agent reading this skill is told to invoke skills by a syntax Claude Code does not accept. |
+| **`alaa-repo-docs`** | **0** | **14** | 0 | 9 | **Batch 8 member. Nine `$name` triggers in the always-loaded body and not one `/name`.** A Claude Code agent reading this skill is told to invoke skills by a syntax Claude Code does not accept. |
 | **`vector-rust-observability-pipelines`** | **0** | **4** | 0 | 3 | **Batch 8 member.** Same defect, smaller. |
 | **`alaa-signoz-clickhouse-docs`** | **0** | **3** | 0 | 1 | **Batch 8 member.** Same defect. |
 | `alaa-codex-runtime-ops` | **0** | 2 | 0 | 1 | Codex-only. |
@@ -6319,7 +6319,7 @@ The carry-over records "22 skills over the body-line warning". **Confirmed: 22.*
 | `alaa-bale-provider` | 135 | +15 |
 | `alaa-minio-object-storage` | 135 | +15 |
 | `alaa-reliability-sla` | 131 | +11 |
-| `alaa-docs-farsi` | **127** | +7 |
+| `alaa-repo-docs` | **127** | +7 |
 
 **Four of Batch 8's five members are in this table**, and one of them holds the fleet record. Only
 `alaa-signoz-clickhouse-docs` is under 120.
@@ -6739,7 +6739,7 @@ Eighteen skills checked. **Nine are accurate, six are materially incomplete, thr
 | `alaa-async-messaging` | `:106` "async architecture on RabbitMQ: the fleet's only broker; prefetch, ack, confirm, outbox, DLQ and replay" | "RabbitMQ message-plane architecture… the seam between a database commit and a published message, the transactional outbox…, publisher confirms, the acknowledgement point, prefetch and consumer concurrency, dead-letter topology, and the DLQ replay procedure" | **ACCURATE** |
 | `alaa-keyset-pagination` | `:28` "cursor pagination design: deterministic order with tie-breaker, matching index, cursor signature and validation, and the offset exception for admin tables" | "…deriving an ordering tuple whose final component is unique, building the index that serves it, and defining a signed cursor that carries its filter and sort context" | **ACCURATE** (and `README.md:107` matches too) |
 | `alaa-minio-object-storage` | `:72` "object storage on MinIO and S3: bucket and object-key design, lifecycle, credentials and signed URLs" | adds "tenant scoping inside the key", "the incomplete-multipart abort rule", versioning, encryption, **replication**, bucket-policy shape, TLS and addressing style, "failure classes of an unreachable or half-written store" | **INCOMPLETE** — the fa line omits the failure-behaviour half, which is the part an SLA reader needs |
-| `alaa-docs-farsi` | `:120` "writing Persian documentation" | "…repository documentation such as `README.md`, `docs/BIG_PICTURE.md`, `docs/api-summary.md`, storage or data-architecture docs, error or event or observability docs… **It produces rich, simple-English docs**…" | **WRONG.** The skill's own frontmatter says it produces **English** docs. The Persian index says it writes **Persian** documentation. These contradict. This is the single worst description mismatch in the tree and it sits on a Batch 8 skill. |
+| `alaa-repo-docs` | `:120` "writing Persian documentation" | "…repository documentation such as `README.md`, `docs/BIG_PICTURE.md`, `docs/api-summary.md`, storage or data-architecture docs, error or event or observability docs… **It produces rich, simple-English docs**…" | **WRONG.** The skill's own frontmatter says it produces **English** docs. The Persian index says it writes **Persian** documentation. These contradict. This is the single worst description mismatch in the tree and it sits on a Batch 8 skill. |
 | `alaa-postman-collections` | `:119` "building and validating Postman collections and environments, and the doctrine of a multi-service aggregate collection" | adds "saved examples for its success case and **for every error it can actually return**", a post-response script capturing tokens/ids, "tests that would fail against a broken implementation", docs for a frontend developer **and a security te…** | **INCOMPLETE** — omits the error-example and failing-test obligations, which are the skill's actual quality claim |
 | `alaa-signoz-clickhouse-docs` | `:117` "searching SigNoz docs and ClickHouse queries" | "…Query Builder v5 routing, search syntax, dashboard variables, field ambiguity, missing spans, trace-quality troubleshooting, and writing/repairing SigNoz ClickHouse SQL. **Pair with alaa-observability-soc**…" | **INCOMPLETE** — omits the pairing rule, which is the routing fact an index exists to convey |
 | `alaa-basic-memory-os` | `:37` "cross-session memory on Basic Memory and Obsidian" | enumerates note classes (architecture, service-ownership, contract, operations, drift, lesson, work-pattern, project-index, project-state, handoff, research, inbox-capture), drift recording/resolution, publishing Prompt 1/2 self-improvement outputs, resuming work | **INCOMPLETE** — the fa line describes a storage location; the skill describes a governance contract |
@@ -6755,8 +6755,8 @@ Eighteen skills checked. **Nine are accurate, six are materially incomplete, thr
 | `alaa-trust-gateway-auth` | `:107` "issuing and validating tokens and trusted headers at the gateway" | names the exact claims `pid, sub, prm, rol, loc` and headers `X-Project-Id, X-User-Id, X-Access, X-User-Roles, X-Location-*`, TOTP step-up headers | **ACCURATE** at index granularity |
 | `alaa-reliability-sla` | `:17` "…**Alaa's numbers are in `alaa-services-contract`**" | "…Use when adding or reviewing an outbound call, a retry, a timeout, a po…" | **ACCURATE**, and it correctly carries the boundary |
 
-**Finding R4 (CONFIRMED).** `README.fa.md:120` describes `alaa-docs-farsi` as producing Persian
-documentation while `alaa-docs-farsi/SKILL.md:3` states it "produces rich, **simple-English** docs".
+**Finding R4 (CONFIRMED).** `README.fa.md:120` describes `alaa-repo-docs` as producing Persian
+documentation while `alaa-repo-docs/SKILL.md:3` states it "produces rich, **simple-English** docs".
 A reader routing from the index will pick this skill expecting Persian output. This is an
 index-versus-owner contradiction of the kind the programme exists to eliminate, and it lands on a
 Batch 8 skill, so lane L3 should be told.
@@ -7084,7 +7084,7 @@ and is flagged as such.
 | 12 | alaa-crockford-base32-codecs | 128,721 | 9 | 2 | 2 | 3,365 | 2026-07-26 | B4 | yes |
 | 13 | alaa-data-layer | 93,878 | 10 | 8 | 0 | 4,928 | 2026-07-28 | B4 | yes |
 | 14 | alaa-docker-production | 340,188 | 37 | 14 | 21 | 3,996 | 2026-07-29 | B7 | yes |
-| 15 | alaa-docs-farsi | 150,140 | 14 | 11 | 1 | 10,703 | **2026-05-10** | B8 | **no (pending)** |
+| 15 | alaa-repo-docs | 150,140 | 14 | 11 | 1 | 10,703 | **2026-05-10** | B8 | **no (pending)** |
 | 16 | alaa-frontend-developer | 115,638 | 21 | 19 | 0 | 10,930 | 2026-07-29 | B6 | yes |
 | 17 | alaa-frontend-devops | 91,754 | 14 | 11 | 1 | 3,779 | 2026-07-29 | B6 | yes |
 | 18 | alaa-frontend-doc-annotations | 90,928 | 11 | 8 | 1 | 4,005 | 2026-07-29 | B6 | yes |
@@ -7537,7 +7537,7 @@ owner's decision in §7** except items 8.6 and 8.7.
 ### 8.2 `skills/sohrab/README.fa.md` — edit (2 rows added, 1 row corrected)
 
 - Add `alaa-haproxy-lua` to §7 (زیرساخت و تحویل) and `alaa-input-normalization` to §1.
-- **Correct `README.fa.md:120`**: `alaa-docs-farsi` produces English documentation per its own
+- **Correct `README.fa.md:120`**: `alaa-repo-docs` produces English documentation per its own
   frontmatter. Rewrite the purpose cell to say it writes repository documentation in simple English
   for maintainers, frontend integrators, operators and agents. Coordinate with lane L3 — if L3
   changes what that skill owns, this row must be written from L3's final frontmatter, not from

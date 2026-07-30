@@ -42,7 +42,7 @@ The kit owns the mechanism. The rules that mechanism must satisfy belong elsewhe
 | GitLab pipelines | `cikit` | `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) |
 | OpenAPI and Postman artifacts | `apicontractkit`(+`postman`) | `/alaa-postman-collections` (`$alaa-postman-collections`), `/golang-swagger` (`$golang-swagger`) |
 | Shared local-runtime identity shared with the Laravel fleet | `scaffold/templates.go` output | `/service-runtime-kit-governance` (`$service-runtime-kit-governance`) |
-| Documentation craft for anything you write here | — | `/alaa-docs-farsi` (`$alaa-docs-farsi`) |
+| Documentation craft for anything you write here | — | `/alaa-repo-docs` (`$alaa-repo-docs`) |
 
 ## Packages — twenty-seven, and what each owns
 

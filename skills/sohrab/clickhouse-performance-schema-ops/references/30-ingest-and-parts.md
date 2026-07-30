@@ -3,7 +3,7 @@
 ## The ingest path on this fleet
 
 Rows reach ClickHouse through a Vector topology, not through application code. The shape, read from
-`vector/wa-vector.yaml`, is:
+`<repo>/vector/wa-vector.yaml` in `wa`, is:
 
 1. An `http_server` source, `POST` only on a single strict path, returning `202`, which lifts three
    trusted headers set by the gateway: `X-Project-Id`, `X-User-Id`, `X-Request-Id`.
@@ -14,7 +14,7 @@ Rows reach ClickHouse through a Vector topology, not through application code. T
 4. A `remap` that flattens each row into exactly the column set of the target table and re-encodes
    the whole envelope plus the single event into `raw_payload`.
 5. A `route` on `event_type`: `watch_segment` to `watch_segments_raw`, everything else to
-   `events_raw` (`docs/DECISIONS.md:28-35`).
+   `events_raw` (`<repo>/docs/DECISIONS.md` section 4).
 6. Two `clickhouse` sinks, `json_each_row`, `skip_unknown_fields: true`, gzip, disk buffer,
    acknowledgements on.
 
@@ -81,7 +81,11 @@ This is the sharpest edge in the current pipeline and it is a design fact, not a
   **"for `*ReplicatedMergeTree` engines, insert deduplication is enabled by default"** and it is not
   enabled by default for non-replicated engines; `non_replicated_deduplication_window` is the
   setting that turns it on.
-- Both tables here are plain `MergeTree` (`clickhouse/ddl/001_init.sql:83` and `:143`).
+- Both tables here are plain `MergeTree` (`<repo>/clickhouse/ddl/001_init.sql:150` and `:249`), and
+  neither sets `non_replicated_deduplication_window`.
+- The requirement this collides with is ratified, not hypothetical: `<repo>/docs/DECISIONS.md`
+  section 29 states that counts and sums derived from `wa_raw` "must be exact" because watch time is
+  sold and teacher contracts are priced on it. An upper bound over-bills.
 
 So a retried insert against these tables inserts the rows again. Two properties follow that any
 consumer of this data must satisfy, and a rollup that violates them is wrong rather than merely
@@ -93,11 +97,26 @@ imprecise:
 - A rollup materialized view over these tables inherits the duplication, because a materialized view
   fires per inserted block and re-inserting the block fires it again.
 
-The three ways to close it, in ascending cost: enable `non_replicated_deduplication_window` on the
-table; supply an `insert_deduplication_token` per batch so deduplication does not depend on the
-block hash; or move to `ReplicatedMergeTree`, which enables block deduplication by default. Each is
-a change to the ingest-pipeline repository, so it is filed as a request, not applied from here
-(`10-authority-and-change-path.md`).
+Three ways close it, and which are available depends on the topology rather than on preference:
+
+1. **`non_replicated_deduplication_window` on the table.** The only one of the three available on a
+   single node with no ClickHouse Keeper, which is this deployment today. It makes the server hash
+   each inserted block and reject a repeat of the last N blocks, which is exactly the
+   retry-after-success shape. Its bound is a count of recent blocks, not a span of time, so size it
+   above the number of blocks that can be in flight across every sink at once, and note that it
+   catches only a byte-identical replay — not two genuinely separate submissions of the same event.
+2. **An `insert_deduplication_token` per batch,** so deduplication does not depend on the block hash.
+   This needs the writer to mint and preserve a token across its own retries, which makes it a joint
+   change with the pipeline owner rather than a table-only one.
+3. **`ReplicatedMergeTree`,** the only variant where block deduplication is on by default. Blocked
+   until ClickHouse Keeper exists and the shared-ClickHouse owner decides, and it is an engine change
+   on populated tables rather than a settings flip (`10-authority-and-change-path.md`).
+
+None of the three retroactively corrects rollup rows a materialized view already wrote from a
+duplicated insert; that needs a bounded rebuild of the affected ranges, and it is not optional. Each
+is a change to the ingest-pipeline repository, so it is filed as a request, not applied from here
+(`10-authority-and-change-path.md`). Which skill owns which half of this decision:
+`15-fleet-clickhouse-boundary.md`.
 
 ## Part-pressure symptoms and what each one means
 

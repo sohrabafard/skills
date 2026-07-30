@@ -27,12 +27,13 @@ Two seams, as rules:
    VRL in this pipeline produces exactly the columns SigNoz declares. A missing
    column is a schema-change request filed against SigNoz, never a workaround with
    `skip_unknown_fields`.
-2. **Writing into a fleet-owned table.** The ingest-pipeline repository owns the
-   DDL per `/clickhouse-performance-schema-ops`. The part-count and latency budget
-   is that repository's rule; the `batch` and `buffer` settings that satisfy it are
-   this skill's. When a sink produces too many parts, the fix is here — larger
-   `batch.max_bytes` or a longer `batch.timeout_secs`, fewer and bigger inserts —
-   not a schema change there.
+2. **Writing into a fleet-owned table.** The ingest-pipeline repository owns the DDL
+   per `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`);
+   `75-ala-ingest-pipeline.md` names which repository that is in this fleet. The
+   part-count and latency budget is that repository's rule; the `batch` and `buffer`
+   settings that satisfy it are this skill's. When a sink produces too many parts, the
+   fix is here — larger `batch.max_bytes` or a longer `batch.timeout_secs`, fewer and
+   bigger inserts — not a schema change there.
 
 **Tenancy.** All tenants report into one shared SigNoz, and everyone with access to
 it is authorised to see every tenant's telemetry, because seeing it is how they fix

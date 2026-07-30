@@ -16,7 +16,7 @@ otherwise.
 | `/alaa-cc-orchestrator` (`$alaa-cc-orchestrator`) | split Go work into specialist lanes with independent verification and review gates in Claude Code |
 | `/alaa-codex-orchestrator` (`$alaa-codex-orchestrator`) | do the same in Codex |
 | `/alaa-controlled-ops` (`$alaa-controlled-ops`) | run a command that touches a shared system, a live environment, or anything not reversible from the repository |
-| `/alaa-basic-memory-os` (`$alaa-basic-memory-os`) | record a drift note, a decision, or context that a later session must find |
+| `/alaa-memory-os` (`$alaa-memory-os`) | record a drift note, a decision, or context that a later session must find |
 
 ## Delivery and runtime
 
@@ -48,7 +48,7 @@ otherwise.
 | Load | When you are about to… |
 |---|---|
 | `/alaa-postman-collections` (`$alaa-postman-collections`) | produce or update a Postman collection or an OpenAPI artifact for a Go service |
-| `/alaa-docs-farsi` (`$alaa-docs-farsi`) | write repository documentation or a human-facing note in Persian |
+| `/alaa-repo-docs` (`$alaa-repo-docs`) | write repository documentation or a human-facing note in Persian |
 | `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) | query SigNoz or write a ClickHouse query against telemetry data |
 
 ## Rule for every row above

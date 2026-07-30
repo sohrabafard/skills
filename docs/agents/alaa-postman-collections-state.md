@@ -2,10 +2,10 @@
 
 - Task name: alaa postman collections skill authoring
 - Current status: implemented and validated, pending review feedback
-- Objective: create a new reusable `alaa-postman-collections` skill for Postman collection and environment generation, sync, validation, and documentation with clean free-plan Insomnia import compatibility, then narrow `alaa-docs-farsi` so it routes Postman ownership to the new skill.
+- Objective: create a new reusable `alaa-postman-collections` skill for Postman collection and environment generation, sync, validation, and documentation with clean free-plan Insomnia import compatibility, then narrow `alaa-repo-docs` so it routes Postman ownership to the new skill.
 - Current repository understanding:
   - Sohrab skills use small routing-first top-level `SKILL.md` files with details in `references/`.
-  - `alaa-docs-farsi` still owns Postman collection sync in both `SKILL.md` and `references/full-guide.md`.
+  - `alaa-repo-docs` still owns Postman collection sync in both `SKILL.md` and `references/full-guide.md`.
   - `scripts/validate_sohrab_skill_pack.py` is the local pack validator that checks skill frontmatter, key sections, referenced paths, and `agents/openai.yaml`.
 - Assumptions and constraints:
   - All new skill content, examples, descriptions, and comments must remain English-only.
@@ -16,7 +16,7 @@
   - inspected the current docs skill and nearby skill structure
   - verified current official guidance for OpenAI prompting, Postman collection/schema behavior, Postman environments/variables, and Insomnia free-plan/import constraints
   - created the new `skills/sohrab/alaa-postman-collections/` skill package with routing-first top-level guidance, focused references, and a helper validator script
-  - updated `skills/sohrab/alaa-docs-farsi/` so detailed Postman ownership now routes to `$alaa-postman-collections`
+  - updated `skills/sohrab/alaa-repo-docs/` so detailed Postman ownership now routes to `$alaa-postman-collections`
   - validated the new skill with `quick_validate.py`
   - smoke-tested `scripts/validate_postman_artifacts.py` on temporary Postman collection and environment JSON files
 - Remaining work:
@@ -34,4 +34,4 @@
   - if desired later, forward-test the new skill on a real repository that already contains a stale Postman collection and environment pair
 - Timeline:
   - 2026-03-30 14:14 +03:30 — inspected local skill patterns, loaded `skill-creator`, and gathered official version-sensitive constraints for the new skill.
-  - 2026-03-30 14:34 +03:30 — authored the new Postman skill, routed Postman ownership out of `alaa-docs-farsi`, and completed local validation plus a validator smoke test.
+  - 2026-03-30 14:34 +03:30 — authored the new Postman skill, routed Postman ownership out of `alaa-repo-docs`, and completed local validation plus a validator smoke test.

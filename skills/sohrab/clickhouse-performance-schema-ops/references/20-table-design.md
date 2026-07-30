@@ -8,9 +8,9 @@ check.
 
 Put the tenant column first in `ORDER BY` on every table that holds rows for more than one tenant.
 The pipeline on this fleet does exactly that and ratified it: `project_id` leads the sort key of
-both raw tables (`clickhouse/ddl/001_init.sql:90` and `:150`), and `docs/DECISIONS.md:20-26` gives
-the reason — "A project-first sort key aligns with the main selective filter without carrying a
-duplicate mirror column in the MergeTree order."
+both raw tables (`<repo>/clickhouse/ddl/001_init.sql:157` and `:256`), and
+`<repo>/docs/DECISIONS.md` section 3 gives the reason — "A project-first sort key aligns with the
+main selective filter without carrying a duplicate mirror column in the MergeTree order."
 
 Three obligations follow, and none of them is optional:
 
@@ -18,8 +18,8 @@ Three obligations follow, and none of them is optional:
    Without it the query reads every tenant's granules to answer one tenant's question, and the
    result is both slow and a cross-tenant read waiting for a bug in the application filter.
 2. The tenant value comes from a trusted source, never from the request body. On this pipeline the
-   value is the HAProxy-supplied `X-Project-Id` header, and `docs/DECISIONS.md:37-47` forbids
-   deriving stored `project_id` from payload fields when the trusted header is missing.
+   value is the HAProxy-supplied `X-Project-Id` header, and `<repo>/docs/DECISIONS.md` section 5
+   forbids deriving stored `project_id` from payload fields when the trusted header is missing.
 3. Any table, view, or rollup that a request path reads is reviewed for tenant isolation before it
    ships: `/alaa-security-review` (`$alaa-security-review`)
    `references/40-authorization-and-tenancy.md`. ClickHouse has no row-level security in play here,
@@ -43,18 +43,19 @@ Choose types before tuning anything else; a type mistake is paid on every read f
   "this additional column has to be processed every time a user works with a Nullable column", and
   it "leads to additional storage space used and almost always negatively affects performance".
 - Compress a large opaque column explicitly. The raw event JSON on this pipeline is
-  `raw_payload String CODEC(ZSTD(3))` (`clickhouse/ddl/001_init.sql:81`), which is the right shape:
+  `raw_payload String CODEC(ZSTD(3))` (`<repo>/clickhouse/ddl/001_init.sql:148`), the right shape:
   one wide, rarely-filtered column carrying the provenance copy, compressed harder than the
   defaults because it is read far less often than it is written.
 - Derive, do not duplicate. `event_time` and `event_date` on this pipeline are `MATERIALIZED`
-  expressions over `event_ts_ms` (`:62-63`), so the partition key and the sort key cannot disagree
+  expressions over `event_ts_ms` (`:124-125`), so the partition key and the sort key cannot disagree
   with the stored timestamp.
 
 ### Finding in the pipeline's DDL, reported and not fixed
 
-`wa_raw.events_raw` declares sixteen `Nullable(...)` columns, and
-`wa_raw.watch_segments_raw` three more; `scripts/review_clickhouse_ddl.py` lists every one with its
-line. Four of them — `device_os`,
+`wa_raw.events_raw` declares fifteen `Nullable(...)` columns and `wa_raw.watch_segments_raw` three
+more, eighteen in total, one fewer than before because `<repo>/docs/DECISIONS.md` section 27 removed
+the nullability of `network_save_data` alone; `scripts/review_clickhouse_ddl.py` lists every
+remaining one with its line. Four of them — `device_os`,
 `device_browser`, `network_effective_type`, `session_locale` — are repeated low-cardinality string
 dimensions sitting within a few lines of `device_type LowCardinality(String) DEFAULT ''` and
 `network_type LowCardinality(String) DEFAULT ''`, which solve the identical problem without the
@@ -86,10 +87,36 @@ A high-cardinality column near the end of the key is the common failure. If a co
 count approaches the row count, it can only tie-break; it cannot prune unless every preceding
 column is also constrained.
 
+**Every dimension a rollup groups by belongs in that rollup's `ORDER BY`.** For
+`AggregatingMergeTree`, `SummingMergeTree`, `ReplacingMergeTree` and every other merging engine the
+sort key *is* the merge key, so two rows differing only in a `GROUP BY` column the key omits merge
+into one row and their measures are combined. A filter on that column then answers wrongly in both
+directions: rows that should match are gone, and the survivor carries measures belonging to values
+it does not name. The one exception is a column functionally determined by a column already in the
+key, and it is an exception only when the determination is **enforced in code on the write path** by
+an allowlist or a rejection that a test covers. A comment asserting the invariant is not
+enforcement, a naming convention is not enforcement, and a producer that copies the value from
+client input enforces nothing.
+
+### Finding in the pipeline's rollups, reported and not fixed
+
+`object_type` is a `GROUP BY` dimension in all three content-grained materialized views
+(`<repo>/clickhouse/ddl/002_agg.sql:110`, `:168`, `:289`) and appears in none of their target
+`ORDER BY` clauses (`:78-80`, `:138-140`, `:261-263`). The DDL states the justification at `:55-58`
+— "Functionally determined by content_id (one UUIDv7 belongs to exactly one object type)" — but no
+step on the write path enforces it: `<repo>/vector/wa-vector.yaml:283-287` copies `object_type` out
+of the client body with no allowlist and no rejection, so any non-empty string reaches the column.
+A `WHERE object_type = 'news'` read over these rollups can therefore return an arbitrary survivor of
+a merge across the discriminator, which is a wrong answer rather than an error. Either replacement
+closes it: an allowlist on the ingest path that folds an unknown value to the default and counts it,
+or `object_type` added to the three sort keys. Reported to the owning repository under
+`10-authority-and-change-path.md`; not fixed from here.
+
 ### Finding in the pipeline's DDL, reported and not fixed
 
 Both raw tables carry nine-column sort keys. `events_raw` is `(project_id, event_date, event_type,
-content_id, set_id, course_id, play_id, event_time, event_id)` (`clickhouse/ddl/001_init.sql:90`):
+content_id, set_id, course_id, play_id, event_time, event_id)`
+(`<repo>/clickhouse/ddl/001_init.sql:157`):
 the first three prune well, and the five members after `event_type` are high-cardinality
 identifiers that prune only for a query already constrained on everything to their left. The
 repository's own verification queries (`samples/verification_queries.sql`) group by `content_id`,
@@ -117,7 +144,7 @@ detaching a range for export — and let `ORDER BY` do the pruning.
   across partitions, so a high-cardinality key accumulates unmergeable small parts until an insert
   trips `parts_to_throw_insert` or `max_parts_in_total` and the ingest path starts failing.
 - Monthly partitioning by event date is the pipeline's ratified choice
-  (`docs/DECISIONS.md:20-26`, `PARTITION BY toYYYYMM(event_date)`): twelve partitions a year stays
+  (`<repo>/docs/DECISIONS.md` section 3, `PARTITION BY toYYYYMM(event_date)`): twelve a year stays
   far inside the recommended range and still allows a whole month to be dropped in one operation.
 - Before changing a partition key, note that it cannot be altered in place. The change is: create a
   new table, move data, swap names. Budget it as a migration, not a tweak.
@@ -135,6 +162,17 @@ detaching a range for export — and let `ORDER BY` do the pruning.
 Deduplication that a table engine performs is eventual: it happens during background merges, on a
 schedule nobody controls. If a reader needs exactly-once semantics at read time, that is `FINAL` and
 its cost, or a rollup that is idempotent under duplicates — not an assumption that merges have run.
+
+**When a writer retries, exactness is won or lost at the table, and the engine is what decides it.**
+ClickHouse's insert deduplication ignores a repeated identical block, and it is enabled by default
+only for the `Replicated*MergeTree` family. On a plain `MergeTree` a sink retry that follows an
+insert which actually landed writes those rows a second time, and no retry, backoff or timeout
+setting on the writer changes that. So a requirement that counts and sums be exact is a requirement
+on the engine and the table settings, and "make the pipeline retry more carefully" is not an answer
+to it. Which setting is available when `ReplicatedMergeTree` is blocked, and what a rollup inherits
+from a duplicated raw insert: `30-ingest-and-parts.md`. Which skill decides which half of this, and
+the fleet instance where the requirement and the engine currently disagree:
+`15-fleet-clickhouse-boundary.md`.
 
 `Replicated*` variants and what the single-node-to-cluster transition requires:
 `10-authority-and-change-path.md`.

@@ -1,5 +1,5 @@
 {
-  "skill": "alaa-docs-farsi",
+  "skill": "alaa-repo-docs",
   "display_name": "Alaa Docs Farsi",
   "allow_implicit_invocation": true,
   "counterpart": null,
@@ -8,26 +8,26 @@
     {
       "id": "positive-primary",
       "kind": "positive_trigger",
-      "prompt": "Use $alaa-docs-farsi to help with alaa docs farsi in this repo.",
-      "expected_skill": "alaa-docs-farsi"
+      "prompt": "Use $alaa-repo-docs to help with alaa docs farsi in this repo.",
+      "expected_skill": "alaa-repo-docs"
     },
     {
       "id": "positive-natural-language",
       "kind": "positive_trigger",
       "prompt": "I need help with alaa docs farsi and want the skill that owns this workflow.",
-      "expected_skill": "alaa-docs-farsi"
+      "expected_skill": "alaa-repo-docs"
     },
     {
       "id": "sibling-confusion",
       "kind": "sibling_confusion",
-      "prompt": "I am deciding whether to use alaa-docs-farsi or a nearby skill for alaa docs farsi work.",
-      "expected_skill": "alaa-docs-farsi",
+      "prompt": "I am deciding whether to use alaa-repo-docs or a nearby skill for alaa docs farsi work.",
+      "expected_skill": "alaa-repo-docs",
       "expected_related": null
     },
     {
       "id": "hard-negative",
       "kind": "hard_negative",
-      "prompt": "Write a product launch email. This should not trigger alaa-docs-farsi even though it mentions tooling.",
+      "prompt": "Write a product launch email. This should not trigger alaa-repo-docs even though it mentions tooling.",
       "expected_skill": null
     }
   ]

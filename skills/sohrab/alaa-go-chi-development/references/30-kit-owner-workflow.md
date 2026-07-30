@@ -76,7 +76,7 @@ the change and decision record, generated artifacts, the affected docs and `docs
 
 ### Documentation moves with the change
 
-Use `/alaa-docs-farsi` (`$alaa-docs-farsi`) for the writing craft. Non-domain documentation — deployment,
+Use `/alaa-repo-docs` (`$alaa-repo-docs`) for the writing craft. Non-domain documentation — deployment,
 runtime, environment, contracts, operating procedure, anything a second service would also need — is a kit
 scaffold template generated per service, never hand-written into a consumer. Draft for fact coverage, then
 polish: a two-to-four-sentence opening summary, deliberate structure, no repetition, one source of truth with

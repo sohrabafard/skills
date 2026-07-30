@@ -27,12 +27,12 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
    blocks forever, behind a sink that retries forever. State each value and its reason.
    `references/30-buffers-acks-and-backpressure.md`.
 
-3. **Product telemetry fails open; audit evidence fails closed.** This skill does
-   not choose the policy — `/alaa-observability-soc` (`$alaa-observability-soc`)
-   already binds the fleet to fail-open for product traffic. This skill states which
-   Vector option expresses it: `when_full: drop_newest`, sized for the burst, and
-   never `block` on a product path, because `block` turns a destination outage into
-   a latency incident on the producing service.
+3. **Fail open or fail closed follows what the data is for, not which tool moves it.**
+   `/alaa-reliability-sla` (`$alaa-reliability-sla`) supplies the test: when this
+   dependency cannot answer, does proceeding without it let something through that
+   must not get through? Telemetry, no — a contributor: `when_full: drop_newest`, sized
+   for the burst, never `block`, as `/alaa-observability-soc` (`$alaa-observability-soc`) binds.
+   Product data under an exactness ruling, yes — a gate: `references/75-ala-ingest-pipeline.md`.
 
 4. **Every fallible VRL call is handled deliberately.** `f(x)` returns an error and
    can be coalesced with `??`; `f!(x)` aborts and cannot; a path lookup never fails,
@@ -104,11 +104,10 @@ tables the fleet controls. `alaa-signoz-clickhouse-docs` owns how a SigNoz-owned
 table is queried, and states that those tables are vendor-owned and read-only to the
 fleet. `vector-rust-observability-pipelines` owns what the pipeline writes into a
 ClickHouse table and how it behaves when that table is unreachable, and decides no
-schema. Route to `/clickhouse-performance-schema-ops`
-(`$clickhouse-performance-schema-ops`) and `/alaa-signoz-clickhouse-docs`
-(`$alaa-signoz-clickhouse-docs`). Requirement levels and gates are
-`/alaa-observability-soc` (`$alaa-observability-soc`); every name and every Ala value
-is `/alaa-services-contract` (`$alaa-services-contract`). Every other owner is listed
+schema. Route to `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`)
+and `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`). Requirement levels and
+gates are `/alaa-observability-soc` (`$alaa-observability-soc`); every name and every Ala
+value is `/alaa-services-contract` (`$alaa-services-contract`). Every other owner is listed
 once in `references/00-topic-map.md`, at the rule it governs.
 
 ## Output contract

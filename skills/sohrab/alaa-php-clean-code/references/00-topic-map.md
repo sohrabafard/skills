@@ -71,7 +71,7 @@ Routing is mandatory, not advice. If a row fires, do not continue the affected p
 | A log, trace, metric, alert, correlation ID, or Sentry behaviour | `/alaa-observability-soc` (`$alaa-observability-soc`) for the requirement, `/alaa-services-contract` (`$alaa-services-contract`) for the name |
 | A test, or any claim that a check passed | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
 | CI, Pint or PHPStan configuration, a test command, or a quality gate | `/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`) |
-| README, docs, Postman collection, env docs, or a diagram | `/alaa-docs-farsi` (`$alaa-docs-farsi`) — output in English unless the user asks otherwise |
+| README, docs, Postman collection, env docs, or a diagram | `/alaa-repo-docs` (`$alaa-repo-docs`) — output in English unless the user asks otherwise |
 | A composer dependency bump, or a Laravel 12 → 13 upgrade | `/alaa-laravel-upgrade-all-packages` (`$alaa-laravel-upgrade-all-packages`) |
 | A Crockford Base32, integer, string, or UUIDv7 codec that must match JS, shell, or HAProxy Lua | `/alaa-crockford-base32-codecs` (`$alaa-crockford-base32-codecs`) |
 | A destructive, irreversible, or production-affecting operation | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
@@ -82,7 +82,7 @@ Routing is mandatory, not advice. If a row fires, do not continue the affected p
 
 ### Combined scenarios that recur
 
-- **Gateway-backed HTTP endpoint with database work**: `/alaa-workflow`, `/alaa-laravel-architecture`, `/alaa-trust-gateway-auth`, `/alaa-data-layer`, `/alaa-security-review`, `/alaa-testing-strategy`, and `/alaa-docs-farsi` when the contract or its examples changed.
+- **Gateway-backed HTTP endpoint with database work**: `/alaa-workflow`, `/alaa-laravel-architecture`, `/alaa-trust-gateway-auth`, `/alaa-data-layer`, `/alaa-security-review`, `/alaa-testing-strategy`, and `/alaa-repo-docs` when the contract or its examples changed.
 - **RabbitMQ consumer or outbox listener**: `/alaa-workflow`, `/alaa-laravel-architecture`, `/alaa-async-messaging`, `/alaa-laravel-job-rabbitmq`, `/alaa-observability-soc`, `/alaa-testing-strategy`, plus `/alaa-security-review` when auth or tenant boundaries are involved.
 - **Whole-project cleanup**: `/alaa-workflow` and `/alaa-laravel-architecture` first, this skill throughout, then any skill whose row fires during the audit.
 

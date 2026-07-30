@@ -194,7 +194,7 @@ What routes to whom is already decided, so no Batch 7 session needs to re-derive
 Two live findings are waiting for this batch. First, `entekhabat-front/docker-compose.yml` uses the service-level `env_file:` key, which Compose interpolation never reads, and declares no `${VAR:?}` at all — a live instance of the fail-closed interpolation invariant ratified 2026-07-28, and the fix belongs to `alaa-docker-production`. Second, `alaa-frontend-devops` now ships `scripts/verify-artifact-contract.mjs`, and its findings on the live `client` — no client-prefix convention, and no build provenance in any emitted tree — are the concrete gap this batch's container and pipeline work has to close.
 
 ### Batch 8 — Observability, documentation, and knowledge
-`alaa-signoz-clickhouse-docs`, `vector-rust-observability-pipelines`, `alaa-docs-farsi`, `alaa-postman-collections`, `alaa-basic-memory-os`
+`alaa-signoz-clickhouse-docs`, `vector-rust-observability-pipelines`, `alaa-repo-docs`, `alaa-postman-collections`, `alaa-basic-memory-os`
 Plus the repository-level cleanup in section 6, and a link check that every cross-skill path in `skills/sohrab/` resolves.
 
 **Added at the close of Batch 6, 2026-07-28 — decision D8.** Five obligations beyond the membership above.

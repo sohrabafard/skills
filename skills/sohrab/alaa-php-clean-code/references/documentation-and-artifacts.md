@@ -11,7 +11,7 @@
 - When to use companion doc skills
 
 ## Documentation language and boundary
-Use `/alaa-docs-farsi` (`$alaa-docs-farsi`) for the deterministic workflow that keeps docs, code, and Postman aligned.
+Use `/alaa-repo-docs` (`$alaa-repo-docs`) for the deterministic workflow that keeps docs, code, and Postman aligned.
 
 When this skill is the active coding baseline:
 - keep resulting docs in simple, fluent English unless the user explicitly asks for another language
@@ -139,6 +139,6 @@ A document is stale if it:
 - duplicates another document with conflicting detail
 
 ## When to use companion doc skills
-- Use `/alaa-docs-farsi` (`$alaa-docs-farsi`) for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
+- Use `/alaa-repo-docs` (`$alaa-repo-docs`) for repo-wide documentation passes, docs consistency checks, and docs/Postman sync workflow.
 - While using this skill, override the docs output language to simple English unless the user explicitly requests Persian or another language.
 - Use `/openai-docs` (`$openai-docs`) when any document needs official OpenAI references, current model guidance, current prompt guidance, or up-to-date product behavior.

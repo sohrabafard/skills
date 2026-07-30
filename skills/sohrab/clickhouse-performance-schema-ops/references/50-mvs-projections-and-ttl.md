@@ -13,7 +13,8 @@ below the first costs more to build, more to operate, or both.
 | an incremental materialized view | rows must be reshaped, filtered, joined, or aggregated at insert time into a table you name | react to `UPDATE` or `DELETE` on the source table |
 | a new base table fed by its own route | the two workloads want different sort keys, different retention, and different columns | share storage; you now maintain two ingest paths |
 
-The pipeline on this fleet already took the last row deliberately: `docs/DECISIONS.md:5-11` splits
+The pipeline on this fleet already took the last row deliberately: `<repo>/docs/DECISIONS.md`
+section 1 splits
 `watch_segment` events into their own table because "Segment workloads (heatmap/completion/rewatch)
 are hot-path analytics and benefit from typed columns and dedicated sort order." Two tables with two
 sort keys was the right answer there; it is not free, and it is not the default.
@@ -52,18 +53,18 @@ row.
   the base table first.
 - Every rollup that a request path will read must carry the tenant column in its own sort key, for
   the same reason the base table does.
+- The target table's sort key must also contain every dimension the view groups by, because that key
+  is the merge key: the rule, its one enforced-invariant exception, and the fleet instance that
+  violates it are in `20-table-design.md` section 3.
 
 ## TTL
 
-**On this pipeline, retention is an open decision, not a missing feature.**
-`clickhouse/ddl/001_init.sql:9` and `docs/DECISIONS.md:13-18` state "NO TTL by design (retention
-policy is a later decision)", because retention "is a policy decision that should not be hardcoded
-in bootstrap DDL" and omitting it "prevents accidental data deletion during early product
-iteration". Do not add a TTL clause to a table on this pipeline. When a task raises retention,
-produce the options and their consequences and hand them to the repository owner
-(`10-authority-and-change-path.md`).
+**On this pipeline the retention decision is already made and it forbids a TTL**;
+`10-authority-and-change-path.md` states that ruling and what to do with it, and this file does not
+repeat it. Everything below is the mechanics a pipeline uses once its own owner has ratified a
+retention policy that deletes or tiers something.
 
-When a retention policy does exist, these are the mechanics it will use:
+These are the mechanics such a policy will use:
 
 - A `TTL … DELETE` expression removes rows during merges, so deletion is eventual and disk does not
   drop at the moment the expression becomes true.

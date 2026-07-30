@@ -83,7 +83,7 @@ load on a concern no reference file keys on:
 
 - `alaa-php-clean-code` — before implementing or refactoring any PHP.
 - `alaa-crockford-base32-codecs` — shared Crockford Base32 or UUIDv7 helper assets across runtimes.
-- `alaa-docs-farsi` — when docs, Postman artifacts, or runbooks change.
+- `alaa-repo-docs` — when docs, Postman artifacts, or runbooks change.
 - `alaa-frontend-doc-annotations`, `alaa-quasar-app-vite-v3` — the documentation pass on a new public
   frontend surface, and exact Quasar component or SSR shapes.
 - `alaa-keyset-pagination` — before writing or reviewing a paginated list query: the ordering tuple, the

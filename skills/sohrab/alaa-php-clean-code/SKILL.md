@@ -53,7 +53,7 @@ Where a row's condition fires, read that skill before editing the affected code,
 | Queue, broker, retry transport, DLQ, ordering, message-plane design | `/alaa-async-messaging` (`$alaa-async-messaging`), `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`) |
 | Whether a signal is required, and the gate it feeds | `/alaa-observability-soc` (`$alaa-observability-soc`) |
 | CI, quality gates, Pint and PHPStan configuration, pipeline behaviour | `/alaa-cicd-laravel-postgres` (`$alaa-cicd-laravel-postgres`) |
-| Docs-alignment workflow, Postman sync, docs consistency checks | `/alaa-docs-farsi` (`$alaa-docs-farsi`) |
+| Docs-alignment workflow, Postman sync, docs consistency checks | `/alaa-repo-docs` (`$alaa-repo-docs`) |
 | Long-task planning, phasing, resumable state, shared plan paths such as `docs/_agent_plans/*` | `/alaa-workflow` (`$alaa-workflow`) |
 | Subagent lanes, role prompts, delegation, review gates — this skill carries no subagent template | `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) |
 | Controlled and risky operations, the proof-strength vocabulary | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
@@ -186,7 +186,7 @@ Measure before micro-optimizing. Avoid repeated encode/decode churn, broad objec
 
 ## Documentation baseline
 
-Documentation is part of done when behaviour, contracts, setup, env vars, request or response shapes, flows, or examples change. `references/documentation-and-artifacts.md` owns the docblock rules, README and docs expectations, Postman collection v2.1 shape, environment artifacts, and flow diagrams; the repo-wide docs workflow belongs to `/alaa-docs-farsi` (`$alaa-docs-farsi`), with output in simple, fluent English unless the user asks for another language.
+Documentation is part of done when behaviour, contracts, setup, env vars, request or response shapes, flows, or examples change. `references/documentation-and-artifacts.md` owns the docblock rules, README and docs expectations, Postman collection v2.1 shape, environment artifacts, and flow diagrams; the repo-wide docs workflow belongs to `/alaa-repo-docs` (`$alaa-repo-docs`), with output in simple, fluent English unless the user asks for another language.
 
 ## Validation before done
 

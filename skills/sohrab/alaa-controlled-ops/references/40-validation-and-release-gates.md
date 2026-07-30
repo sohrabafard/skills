@@ -49,6 +49,6 @@ The last three need a running local runtime, owned by `/service-runtime-kit-gove
 
 ## Artifact sync
 
-When service public behavior changes, sync docs and API artifacts through `/alaa-docs-farsi` ($alaa-docs-farsi) and `/alaa-postman-collections` ($alaa-postman-collections). If the package changes only internal PHP contracts, update package docs instead of creating service-facing API claims.
+When service public behavior changes, sync docs and API artifacts through `/alaa-repo-docs` ($alaa-repo-docs) and `/alaa-postman-collections` ($alaa-postman-collections). If the package changes only internal PHP contracts, update package docs instead of creating service-facing API claims.
 
 The six proof levels — static, unit, parity, local smoke, in-runtime, live-dependency — and the rule that a weaker proof is never presented as a production-equivalent validation are owned by `/alaa-testing-strategy` (`$alaa-testing-strategy` in Codex), `references/40-proof-strength.md`. Name the level reached from that vocabulary; this file states only which gates run.

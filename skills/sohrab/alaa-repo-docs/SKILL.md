@@ -9,7 +9,7 @@ description: "Use this skill for repository-level documentation in Ala-style pro
 
 Produce repository-level documentation that stays aligned with implementation and operational reality, and keep the documents that describe one system consistent with each other.
 
-This skill owns Markdown files in a repository. Comments and docblocks inside source files belong to `/alaa-frontend-doc-annotations` (`$alaa-frontend-doc-annotations`). The folder was named `alaa-docs-farsi` until this batch; it was renamed because the old name promised a language while the skill delivers a documentation standard.
+This skill owns Markdown files in a repository. Comments and docblocks inside source files belong to `/alaa-frontend-doc-annotations` (`$alaa-frontend-doc-annotations`). The folder was named `alaa-repo-docs` until this batch; it was renamed because the old name promised a language while the skill delivers a documentation standard.
 
 Keep this file routing-first. Load only the reference whose condition holds.
 

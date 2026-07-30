@@ -83,7 +83,7 @@ comment or in the pass report.
 | Digit and text normalization, fleet-wide | `/alaa-input-normalization` (`$alaa-input-normalization`) |
 | Test design, proof levels, what a test-intent comment may claim | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
 | Browser storage quota, eviction and persistence semantics | `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`) |
-| Persian-language deliverables. Never Persian inside a source file | `/alaa-docs-farsi` (`$alaa-docs-farsi`) |
+| Persian-language deliverables. Never Persian inside a source file | `/alaa-repo-docs` (`$alaa-repo-docs`) |
 | The quality bar itself | `/alaa-project-constitution` (`$alaa-project-constitution`) |
 | Output discipline in the pass report | `/alaa-low-noise` (`$alaa-low-noise`) |
 | Model and effort | `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md` |

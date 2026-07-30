@@ -9,6 +9,7 @@ do not match costs context and buys nothing.
 | write or debug a VRL program, handle a fallible call, default a missing field, or you hit `error[E651]` or an aborting `remap` | `20-vrl-transforms.md` |
 | choose a buffer type, size a buffer, set `when_full`, enable acknowledgements, or answer what the pipeline does when the destination is unreachable | `30-buffers-acks-and-backpressure.md` |
 | configure the ClickHouse sink, set batching or retry options, template a `table` or `database`, or decide who owns the schema you are writing into | `40-clickhouse-sink.md` |
+| work on the `wa` watch-time ingest pipeline, or decide whether a Vector path carrying product data fails open or fails closed | `75-ala-ingest-pipeline.md` |
 | validate a config, write unit tests, choose the right `vector validate` flags, or interpret an exit code from Vector or from a checker | `50-validation-and-testing.md` |
 | decide what to alert on, name an internal metric, or set the startup health policy | `60-internal-monitoring.md` |
 | diagnose a live symptom: no data arriving, a stall, Vector exiting on its own, loss, duplication, high CPU, or a regression after an upgrade | `65-troubleshooting.md` |

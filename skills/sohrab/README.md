@@ -210,7 +210,7 @@ These names appeared in earlier versions of the map and have no folder here, re-
 - `dockerfile-*` — replaced by `alaa-docker-production`; `makefile-generator`, `makefile-validator` — replaced by `alaa-makefile`
 - `azure-pipelines-*`, `github-actions-*`, `jenkinsfile-*` — `alaa-gitlab-ci-cd` is the only CI surface this pack ships
 - `terraform-*`, `terragrunt-*` — infrastructure targets route through `caas-arvan-kuber` and `alaa-k8s-helm`
-- `alaa-docs-farsi` — renamed to `alaa-repo-docs`, because the old name promised a language while the skill delivers a documentation standard; `alaa-basic-memory-os` — renamed to `alaa-memory-os`, because the model is store-agnostic and Basic Memory is one adapter
+- `alaa-repo-docs` — renamed to `alaa-repo-docs`, because the old name promised a language while the skill delivers a documentation standard; `alaa-basic-memory-os` — renamed to `alaa-memory-os`, because the model is store-agnostic and Basic Memory is one adapter
 - `promql-*`, `logql-generator`, `loki-config-generator`, `fluentbit-*` — `alaa-observability-soc` owns signal and gate decisions; `alaa-signoz-clickhouse-docs` and `vector-rust-observability-pipelines` own the query and pipeline surfaces
 
 ## Definition of done

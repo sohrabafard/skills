@@ -8,7 +8,7 @@ Refresh from source before answering when the task mentions latest package versi
 
 ## Companion skills
 
-Load one when its condition holds. Claude Code form first, Codex form second. Companions cited inside a rule elsewhere in this skill — `/alaa-reliability-sla` ($alaa-reliability-sla), `/alaa-postman-collections` ($alaa-postman-collections), `/alaa-docs-farsi` ($alaa-docs-farsi) — carry their condition at that rule and are not repeated here.
+Load one when its condition holds. Claude Code form first, Codex form second. Companions cited inside a rule elsewhere in this skill — `/alaa-reliability-sla` ($alaa-reliability-sla), `/alaa-postman-collections` ($alaa-postman-collections), `/alaa-repo-docs` ($alaa-repo-docs) — carry their condition at that rule and are not repeated here.
 
 - `/alaa-project-constitution` ($alaa-project-constitution) — owns the fleet quality bar. Read when judging whether a package change is fit to release, or when the repository carries a `CONSTITUTION.md`.
 - `/alaa-services-contract` ($alaa-services-contract) — platform service contracts and public API shape. Its `references/22-failure-load-and-deprecation-contract.md` owns failure, load, and deprecation: read before changing how a ControlledOps operation behaves under load, or before deprecating a package contract an adopter uses.

@@ -165,7 +165,7 @@ the owner states it and this skill points; on conflict the owner wins.
 | Pre-implementation design once a scope expansion changes an interface, a writer, or what a caller sees when a dependency fails | `/alaa-system-design` (`$alaa-system-design`) |
 | Multi-file runs and durable handoff; risky operations and proof strength | `/alaa-workflow` (`$alaa-workflow`), `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
 | Lane planning and subagent roles; model and reasoning-effort choice | `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator`), `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
-| The ten-criterion quality bar; Farsi docs and backlog wording | `alaa-project-constitution references/quality-bar.md`, `/alaa-docs-farsi` (`$alaa-docs-farsi`) |
+| The ten-criterion quality bar; Farsi docs and backlog wording | `alaa-project-constitution references/quality-bar.md`, `/alaa-repo-docs` (`$alaa-repo-docs`) |
 
 Owned here and stated nowhere else: the pack's file set and `contract.meta.json` shape; the
 emission gate; the source-priority ladder and its conflict rule; the boundary extraction method;

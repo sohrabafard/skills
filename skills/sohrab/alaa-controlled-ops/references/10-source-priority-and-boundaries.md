@@ -8,7 +8,7 @@ Ranks 1 and 2 are the same two repositories in either order, by task class: pack
 
 3. Committed docs in the repository that owns the surface under discussion.
 4. `composer.lock`, plus Satis and Composer dist metadata for the resolved version.
-5. Generated public artifacts — Postman collections, route inventories, API summaries. When one disagrees with rank 1 or 2 the code is correct and the artifact is the defect: fix it through `/alaa-postman-collections` ($alaa-postman-collections) or `/alaa-docs-farsi` ($alaa-docs-farsi), never your claim.
+5. Generated public artifacts — Postman collections, route inventories, API summaries. When one disagrees with rank 1 or 2 the code is correct and the artifact is the defect: fix it through `/alaa-postman-collections` ($alaa-postman-collections) or `/alaa-repo-docs` ($alaa-repo-docs), never your claim.
 6. Plan and state files, as continuation context only, never as contract truth.
 7. Historical Codex or Claude Code sessions, as search hints only. A fact from a session is unverified until read out of rank 1 or 2.
 

@@ -26,7 +26,7 @@
   - `$alaa-frontend-developer` and `$alaa-frontend-doc-annotations` govern the JavaScript class shape and inline documentation style.
   - `$bash-script-generator` informs the bash helper structure.
   - `$alaa-haproxy` governs HAProxy Lua loading and extension-point usage.
-  - `$alaa-docs-farsi` governs Markdown documentation updates and link portability.
+  - `$alaa-repo-docs` governs Markdown documentation updates and link portability.
   - `$skill-creator` governs how the skill should package reusable artifacts and keep the top-level instructions lean.
 - Validation approach:
   - run the skill quick validator after the edits.

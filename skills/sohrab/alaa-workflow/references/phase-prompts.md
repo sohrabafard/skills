@@ -17,7 +17,7 @@ Before resolving any runtime, model, agent feature, or skill-trigger syntax:
 
 - `implementer`: makes the in-scope change, validates it, and reports blockers.
 - `independent reviewer`: inspects the resulting artifact or diff without inheriting the implementer's conclusions.
-- `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `$alaa-docs-farsi` / `/alaa-docs-farsi`.
+- `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `$alaa-repo-docs` / `/alaa-repo-docs`.
 
 Choose the current runtime and model for each role only after the freshness gate, and use the trigger syntax that runtime accepts — `$name` in Codex, `/name` in Claude Code.
 

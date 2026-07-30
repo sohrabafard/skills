@@ -22,7 +22,7 @@
   - validate the updated skills and the moved runtime assets.
 - Dependency notes:
   - `skill-creator` governs skill scaffolding and metadata structure.
-  - `alaa-docs-farsi` governs the style and portability of skill-pack documentation.
+  - `alaa-repo-docs` governs the style and portability of skill-pack documentation.
   - `alaa-haproxy`, `alaa-frontend-developer`, `alaa-php-clean-code`, and `alaa-services-contract` remain the companion routing surfaces that need aligned references.
 - Validation approach:
   - run `quick_validate.py` on the new skill and each updated forwarding or companion skill.

@@ -12,21 +12,22 @@ what a service does while the analytical store is slow or gone.
 
 Name the audience before proposing any DDL, because the deliverable differs. The **ingest-pipeline
 repository** — the one that owns the ClickHouse DDL directory and the Vector topology writing into
-it — creates and alters every table and owns column type, ordering, partitioning, retention, and
-engine. A **kit consumer on the `chkit` read lane** owns none of that: every session is pinned to
-`readonly=2` as a kit invariant, the client exports no `Exec`, and a kit integration test fails if
-a `CREATE TABLE` issued over that lane succeeds. When the requester is a consumer, deliver a query,
-a rollup request filed against the ingest pipeline, or a `chkit` configuration change, and never
-DDL the requester cannot apply. Source evidence and the change path each audience follows:
-`references/10-authority-and-change-path.md`.
+it, and on this fleet that repository is `wa` — creates and alters every table and owns column
+type, ordering, partitioning, retention, and engine. A **kit consumer on the `chkit` read lane**
+owns none of that: every session is pinned to `readonly=2` as a kit invariant, the client exports
+no `Exec`, and a kit integration test fails if a `CREATE TABLE` issued over that lane succeeds.
+When the requester is a consumer, deliver a query, a rollup request filed against the ingest
+pipeline, or a `chkit` configuration change, and never DDL the requester cannot apply. Source
+evidence and the change path each audience follows: `references/10-authority-and-change-path.md`.
 
 ## Rules that hold on every task
 
 1. Name the repository that owns every table you touch before writing SQL, because a consumer
    cannot apply DDL and a raw-table read is not a rollup read.
-2. Put the tenant column first in `ORDER BY` on every tenant-scoped table and filter every query by
-   it, because a table or query without it scans every tenant's rows to answer one tenant's
-   question.
+2. Put the tenant column first in `ORDER BY` on every fleet-owned tenant-scoped table, and filter
+   every query against one of those tables by it, because such a table or query without it scans
+   every tenant's rows to answer one tenant's question. The rule stops at tables the fleet cannot
+   alter; `references/15-fleet-clickhouse-boundary.md` names those and gives the reason.
 3. Report, and do not edit, a defect in a table owned by another repository, because that
    repository ratifies its own schema and an outside edit is an unratified change.
 4. Run `scripts/review_clickhouse_ddl.py` over every `CREATE TABLE` you write or review and paste
@@ -45,10 +46,18 @@ file that answers it.
 
 ## Not owned here
 
-Postgres schema, indexes, migrations, Redis, and store selection: `/alaa-data-layer`
-(`$alaa-data-layer`). Vector source, transform, sink, and buffer internals:
-`/vector-rust-observability-pipelines` (`$vector-rust-observability-pipelines`) — that skill owns
-what the pipeline writes, this one owns what the table must be. Multi-agent plans:
+`clickhouse-performance-schema-ops` owns what a ClickHouse table must be — engine, sorting key,
+partitioning, TTL, compression — for tables the fleet controls.
+`alaa-signoz-clickhouse-docs` owns how a SigNoz-owned table is queried, and states that those tables
+are vendor-owned and read-only to the fleet.
+`vector-rust-observability-pipelines` owns what the pipeline writes into a ClickHouse table and how
+it behaves when that table is unreachable, and decides no schema.
+
+Which tables fall on which side of that line, and why a SigNoz query needs no tenant predicate:
+`references/15-fleet-clickhouse-boundary.md`. SigNoz panel SQL itself: `/alaa-signoz-clickhouse-docs`
+(`$alaa-signoz-clickhouse-docs`). Postgres schema, indexes, migrations, Redis, and store selection:
+`/alaa-data-layer` (`$alaa-data-layer`). Vector source, transform, sink, and buffer internals:
+`/vector-rust-observability-pipelines` (`$vector-rust-observability-pipelines`). Multi-agent plans:
 `/alaa-cc-orchestrator` (`$alaa-cc-orchestrator`), or `/alaa-codex-orchestrator`
 (`$alaa-codex-orchestrator`) in Codex. Model and effort: `/alaa-prompting-guide`
 (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`. The ten-point quality bar:

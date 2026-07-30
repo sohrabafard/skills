@@ -12,7 +12,7 @@ byte-identical before and after — belongs here. This pass changes comments; no
 
 **Every comment in a file is English and ASCII-range** — no Persian text or digits, no
 typographic dash or quote. Persian belongs in terminal replies and in Persian-language deliverables,
-which are `/alaa-docs-farsi` (`$alaa-docs-farsi`).
+which are `/alaa-repo-docs` (`$alaa-repo-docs`).
 
 **The prefix set is closed.** Five prefixes exist and no sixth may be invented: `SSR NOTE:`,
 `HYDRATION NOTE:`, `STORE NOTE:`, `AUTH NOTE:`, `SECURITY NOTE:`. Closed means `grep -rn "AUTH NOTE:" src/`

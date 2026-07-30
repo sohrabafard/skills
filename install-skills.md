@@ -29,7 +29,7 @@ $srcRoots = @(
     # root. Without this line the installer links 5 of 14 basic-memory skills. A future
     # generator fix may emit the same root inside the block; a duplicate is harmless, because
     # the loop below reports EXIST and skips a link that already points at the same target.
-    (Join-Path $repoRoot "vendor\basic-memory")
+    # (Join-Path $repoRoot "vendor\basic-memory")
 )
 
 $destinations = @(

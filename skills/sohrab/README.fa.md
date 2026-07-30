@@ -187,7 +187,7 @@
 - خانواده `dockerfile-*` جایش را به `alaa-docker-production` داد، و `makefile-generator` و `makefile-validator` جایشان را به `alaa-makefile` دادند
 - خانواده‌های `azure-pipelines-*` و `github-actions-*` و `jenkinsfile-*` حذف شدند، چون `alaa-gitlab-ci-cd` تنها سطح CI ای است که این pack می‌فرستد
 - خانواده‌های `terraform-*` و `terragrunt-*` حذف شدند، چون هدف‌های زیرساخت از `caas-arvan-kuber` و `alaa-k8s-helm` عبور می‌کنند
-- نام `alaa-docs-farsi` به `alaa-repo-docs` تغییر کرد، چون نام قدیم یک زبان را وعده می‌داد در حالی که این skill یک استاندارد مستندسازی تحویل می‌دهد؛ و نام `alaa-basic-memory-os` به `alaa-memory-os` تغییر کرد، چون آن مدل مستقل از انبار است و Basic Memory فقط یکی از آداپتورهاست
+- نام `alaa-repo-docs` به `alaa-repo-docs` تغییر کرد، چون نام قدیم یک زبان را وعده می‌داد در حالی که این skill یک استاندارد مستندسازی تحویل می‌دهد؛ و نام `alaa-basic-memory-os` به `alaa-memory-os` تغییر کرد، چون آن مدل مستقل از انبار است و Basic Memory فقط یکی از آداپتورهاست
 - خانواده `promql-*` و `logql-generator` و `loki-config-generator` و `fluentbit-*` حذف شدند، چون `alaa-observability-soc` مالک تصمیم سیگنال و gate است و `alaa-signoz-clickhouse-docs` و `vector-rust-observability-pipelines` مالک سطح کوئری و خط لوله‌اند
 
 ## تعریف انجام‌شده
