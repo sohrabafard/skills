@@ -117,7 +117,9 @@ controllers and repositories is how `0` ends up saved as a real school id.
   absent header decide differently in most parsers and only one of them is the
   contract.
 - The gateway does not derive tenant from hostname, path prefix, request body or
-  query string.
+  query string. A service behind it may read a body field or a query parameter on a
+  route that admits tokenless requests; `references/10-verification-and-ingress.md`
+  states when, and states that the gateway still reads neither.
 - The gateway does not decode `prm` and does not consume any service's generated
   permission map. It projects the claim and stops.
 - `Authorization` is stripped after successful verification in the current

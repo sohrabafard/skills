@@ -83,8 +83,20 @@ The app must not re-implement anything the SDK or gateway already owns. Default 
     because a bitmap failed to decode.
   - Every other claim, including `rol` and `pid`, stays unparsed.
   - Reading `prm` from your own token is not the same as sending `X-Access`. The header deny-list above is unchanged.
-- `project_id` is a public UUIDv7. Send it only in the request **body** where the contract requires it (for example the
-  OTP request), sourced from app config/env (such as `PROJECT_ID`). Never send it as a trusted header from the client.
+- `project_id` is a public UUIDv7 sourced from app config/env (such as `PROJECT_ID`). On a call the app makes with no
+  access token it travels in the request **body**, or as a **query parameter** when that request has no body to put it
+  in — a GET or a HEAD. This is the general rule, not an OTP exception: where the endpoint's contract needs a project
+  and there is no token, those two channels are the only ones there are. The pre-auth OTP request and verify calls are
+  the body instance the app already ships; the query form serializes through the SDK's existing query input and adds no
+  transport. Send it on exactly one channel per request, chosen by whether the request has a body, and never on both.
+- The query parameter rides the SDK's own HTTP call, not the page address. No route, link, or browser URL in the app
+  gains a `project_id`, and none is added to make a call match one.
+- Never send `project_id` as a trusted header, with a token or without one. `x-project-id` is in the SDK's forbidden
+  trusted-header set, and building request headers that contain it raises instead of sending. When the app does hold a
+  token, the gateway supplies the project id downstream from the verified claim and the app adds nothing; a
+  client-asserted `project_id` on such a request is not read downstream, so do not add one to make a call succeed. What
+  the receiving service does with either channel is owned by `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) in
+  `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
 
 ## UI capability hints in app code
 
@@ -177,7 +189,8 @@ stored token, and the decoder does not verify it.
 - No app import of `@alaa/sdk-core` or a domain SDK; no app re-implementation of trust/refresh/error ownership.
 - Outbound client headers are limited to `Authorization: Bearer`, `X-Request-Id`, `traceparent`.
 - No token in cookie/SSR HTML/SSR state; token treated as opaque except for the SDK's unverified UI-hint decode, whose
-  result never gates a security decision; `project_id` only in body, from config.
+  result never gates a security decision; `project_id` only in the body or a query parameter, never a header, always
+  from config, and on one channel per request.
 - One SDK/core per SSR request; browser SDK reset on logout/actor change.
 - Capability hints recomputed in exactly one place (the token setter); components use the typed helpers with
   `PERMISSIONS.*` values; every hinted call still handles 403.

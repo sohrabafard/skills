@@ -62,11 +62,17 @@ how the response is built — belong to `/alaa-laravel-architecture`
   first query — every query.
 - Reject an HTTP request that lacks `X-Project-Id` on a tenant-scoped route with
   `400` and `TENANT_CONTEXT_MISSING`. Falling back to a default project id is
-  confined to console and queue execution, where there is no caller.
+  confined to console and queue execution, where there is no caller. A route that
+  admits tokenless requests takes a guest request's project id from the request body,
+  or from a `project_id` query parameter when the request has no body;
+  `references/10-verification-and-ingress.md` states that rule and what it rejects.
 - When a client-supplied tenant selector in a body, query string, route parameter or
   untrusted header conflicts with the trusted tenant context, deny explicitly with
   `TENANT_CONTEXT_INVALID`. Silently preferring one source is how a cross-tenant read
-  ships without anyone choosing it.
+  ships without anyone choosing it. A selector is a field the route reads while
+  trusted context is present; a guest route's `project_id`, in the body or the query
+  string, is read only on the branch where no trusted `X-Project-Id` arrived, so on
+  the branch where the header is present there is nothing to compare.
 - An extra tenant-shaped identifier accepted for lookup, reporting or local routing
   is an untrusted selector until it has been matched against the trusted context.
 - Never let a request-body identity field override or replace trusted tenant context,
@@ -79,6 +85,10 @@ how the response is built — belong to `/alaa-laravel-architecture`
 - A service that intentionally serves anonymous traffic states that policy
   explicitly. In that mode tenant context stays mandatory while actor context is
   optional.
+- A route serving anonymous reads scopes by a client-asserted project id only under
+  the read rule in `references/10-verification-and-ingress.md`, which states the test
+  a route passes to be listed, what ingress does for a route that is not listed, and
+  what takes a listed route off again.
 - When `X-User-Id` is absent, never synthesize a trusted actor from a client payload
   field such as `identity.user_id`, `visitor_id` or `device_id`. Store those as
   untrusted analytics metadata if the domain needs them, and classify them that way

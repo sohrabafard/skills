@@ -91,6 +91,12 @@ service missing `X-Project-Id` on an HTTP route returns `400` with
 console and queue execution, where there is no caller to authenticate, and is
 never reached from an HTTP request.
 
+**Scope.** This case is a route whose project id must arrive as a trusted header. A
+route that admits tokenless requests takes a guest request's project id from the
+request body, or from a `project_id` query parameter when the request has no body,
+so an absent header there is the normal shape and not a deny;
+`references/10-verification-and-ingress.md` states that rule and what it rejects.
+
 **Test.** For each required claim, issue a token without it and assert the
 gateway denies before any backend is contacted.
 

@@ -1,6 +1,6 @@
 ---
 name: alaa-trust-gateway-auth
-description: "Trust-boundary authority for the Ala gateway: who may assert a trusted request header, and what a service behind it may believe. Use when gateway header sanitizing or injection, JWT verification order, compact claim projection (pid, sub, prm, rol, loc) into X-Project-Id, X-User-Id, X-Access, X-User-Roles and X-Location-*, X-Access permission-bitmap consumption, TOTP step-up headers (X-TOTP-PURPOSE, X-TOTP-VERIFIED-UNTIL, X-TOTP-PROOF-ID), tenant scoping behind the gateway, auth-service v3 route shape, or a fail-closed case at that boundary is in scope: gateway unreachable, bypassed edge, absent claim, stale or invalid bitmap. Do not use it for a service that is not behind the Ala gateway; route header names and response envelopes to alaa-services-contract, the permission bit contract and its decoders to alaa-permission-generator, fail-closed doctrine to alaa-security-review, and cursor mechanics to alaa-keyset-pagination."
+description: "Trust-boundary authority for the Ala gateway: who may assert a trusted request header, and what a service behind it may believe. Use when gateway header sanitizing or injection, JWT verification order, compact claim projection (pid, sub, prm, rol, loc) into X-Project-Id, X-User-Id, X-Access, X-User-Roles and X-Location-*, X-Access permission-bitmap consumption, TOTP step-up headers, tenant scoping behind the gateway including a guest project_id in a body or query parameter, auth-service v3 route shape, or a fail-closed case at that boundary is in scope: bypassed edge, absent claim, invalid bitmap. Do not use it for a service not behind the Ala gateway; route header names and response envelopes to alaa-services-contract, the permission bit contract and decoders to alaa-permission-generator, fail-closed doctrine to alaa-security-review, and cursor mechanics to alaa-keyset-pagination."
 ---
 
 # Alaa Trust Gateway Auth
@@ -13,7 +13,7 @@ boundary between those, and every way it fails.
 
 Read this file, then the reference the router names, then the owning skill named
 below when your change lands on its ground, then the repository, and only then
-propose a change. When two rows match, read both and follow the stricter rule.
+propose a change.
 
 ## Absolutes
 
@@ -29,7 +29,11 @@ injects appears in it.
 **Tenant and actor context are derived from the verified token** — never from a
 request body, query string, route parameter or client-supplied header. When a
 client-supplied selector disagrees with the trusted context, deny rather than
-choose: a silent choice is a cross-tenant read nobody decided to ship.
+choose: a silent choice is a cross-tenant read nobody decided to ship. A tokenless
+route has no token to derive from, so a guest carries `project_id` in the body, or
+in the query string when the request has no body. That value attributes a write,
+scopes a read only on an explicitly listed route, authorizes nothing, and is not
+read at all once a verified claim is present.
 
 **A public client never generates, sends or relies on a trusted internal header.**
 Every such header is on the gateway's delete list precisely so a client's copy
@@ -37,16 +41,14 @@ cannot survive; a client sending one is confused or hostile, and neither earns a
 exception.
 
 **An authorization decision behind the gateway is taken from the decoded `X-Access`
-permission bitmap, and from no other source** — not a role string, not a
-per-request database lookup, not a claim read directly from a token. **The decoder
-is the one emitted and governed by `/alaa-permission-generator`
-(`$alaa-permission-generator`), never a locally written one.** One model means a
-bug is fixed in one place and no agent re-derives the bit contract each time; a
-local decoder is only ever discovered to be wrong by the incident it causes. Take
-the decoder, the conformance vectors and the harness from
-`alaa-permission-generator` `references/shared-consumer-contract.md` and the
-per-language consumer references beside it. This skill states the obligation, not
-the bit contract.
+permission bitmap, and from no other source** — not a role string, not a per-request
+database lookup, not a claim read directly from a token. **The decoder is the one
+emitted and governed by `/alaa-permission-generator` (`$alaa-permission-generator`),
+never a locally written one**, because a local decoder is only ever discovered to be
+wrong by the incident it causes. Take the decoder, the conformance vectors and the
+harness from `alaa-permission-generator` `references/shared-consumer-contract.md`
+and the per-language consumer references beside it. This skill states the
+obligation, not the bit contract.
 
 **A client-supplied opaque value carries no trust.** After decoding it, compare
 every scope-bearing field it yields against the trusted request context and deny on
@@ -71,7 +73,7 @@ Each case carries its symptom, decision, response, log and test in
 
 | You are about to | Read |
 |---|---|
-| change gateway verification order, the public-route list, prefix stripping, or sanitizing | `references/10-verification-and-ingress.md` |
+| change gateway verification order, the public-route list, prefix stripping or sanitizing, or decide where a request's `X-Project-Id` came from | `references/10-verification-and-ingress.md` |
 | decide which claim a value travels in, which header it arrives as, what absence looks like, or which step-up headers a service may read | `references/20-claims-headers-and-sentinels.md` |
 | decide what happens when the gateway, a claim, a header, a checker or a proof is missing or wrong | `references/30-fail-closed-cases.md` |
 | write or review a service's ingress layer — middleware, guards, context builders, tenant scoping, bitmap consumption | `references/40-downstream-normalization.md` |
@@ -94,9 +96,8 @@ Exit `0` every requested check passed; `1` a defect was found, fixed before the
 change ships and in the gateway or environment configuration first; `2` the
 invocation was wrong; `3` a check could not run for want of input — supply it, and
 never report a pass for a check that did not run. `--help` carries the full
-contract. The bitmap check proves one reader agrees with the contract; the canonical
-vectors and the cross-runtime harness belong to `/alaa-permission-generator`
-(`$alaa-permission-generator`).
+contract. The canonical bitmap vectors and the cross-runtime harness belong to
+`/alaa-permission-generator` (`$alaa-permission-generator`).
 
 ## What this does not own
 

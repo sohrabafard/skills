@@ -126,7 +126,14 @@ PATH_RE = re.compile(
     r"((?:\.\.?/|[A-Za-z0-9_.-]+/)*?"
     r"(?:" + "|".join(RESOURCE_DIRS) + r")"
     r"/[A-Za-z0-9_./-]+\.(?:" + "|".join(EXTENSIONS) + r"))"
+    # Not followed by more of the same token, and not followed by a further
+    # dotted segment. Without the second lookahead, `assets/values.secret.yaml.example`
+    # matched as `assets/values.secret.yaml` and was reported as a phantom dangling
+    # citation, because that truncated path exists nowhere. A double-extension path now
+    # matches nothing at all, which is the correct failure direction: a citation this
+    # resolver cannot parse must not become a finding against the author.
     r"(?![A-Za-z0-9])"
+    r"(?!\.[A-Za-z0-9])"
 )
 
 MARKED_REPO_RE = re.compile(r"(?<![A-Za-z0-9_-])<repo>/([A-Za-z0-9_./-]+)")
@@ -908,6 +915,27 @@ def self_test(fixtures_dir: Path) -> int:
         failed += 1
     else:
         print("PASS     extension-ordering probe (.json is not truncated to .js)")
+        passed += 1
+
+    # A double extension must not be truncated to its first known extension and reported
+    # as dangling. Regression from the 2026-07-31 sweep.
+    probe = "see `$SKILL_DIR/assets/values.secret.yaml.example` for the shape"
+    got = PATH_RE.findall(probe)
+    if got != []:
+        print(f"FAIL     double-extension probe: matched {got!r}")
+        failed += 1
+    else:
+        print("PASS     double-extension probe (.yaml.example is not truncated to .yaml)")
+        passed += 1
+
+    # ...while a single extension followed by sentence punctuation still matches.
+    probe = "defined in `references/00-topic-map.md`."
+    got = PATH_RE.findall(probe)
+    if got != ["references/00-topic-map.md"]:
+        print(f"FAIL     trailing-period probe: matched {got!r}")
+        failed += 1
+    else:
+        print("PASS     trailing-period probe (a sentence period still ends a path)")
         passed += 1
 
     print(f"\nself-test: {passed} passed, {failed} failed, {blocked} blocked")
