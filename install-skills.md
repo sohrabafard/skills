@@ -19,7 +19,7 @@ $srcRoots = @(
     (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
     (Join-Path $repoRoot "vendor\knowledge-work-plugins\design\skills")
     (Join-Path $repoRoot "vendor\knowledge-work-plugins\product-management\skills")
-    (Join-Path $repoRoot "vendor\basic-memory")
+    (Join-Path $repoRoot "vendor\basic-memory\basic-memory")
     (Join-Path $repoRoot "vendor")
 # vendor-subtrees:codex-src-roots:end
 )
