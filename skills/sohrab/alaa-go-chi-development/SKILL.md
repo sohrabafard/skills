@@ -62,6 +62,15 @@ stops there: filing the request is the whole hop, never a continuation into `30-
 7. **Evidence honesty.** One outcome vocabulary and one proof ladder, defined once in `05-`. Never report a proof
    above the level that actually ran.
 
+## When NOT to use
+
+- `go.mod` does not require `git.alaatv.com/vk/alaa-go-chi` and no task proposes adopting it. There is no
+  kit relationship to govern.
+- The question is Go craft — naming, error shape, package layout, the P1-P13 bar — rather than who owns a
+  change and how it reaches consumers.
+- The question is which model or effort level to run at.
+- The routing table below names the owner for each of these.
+
 ## What this skill does not own
 
 Route these; adopt the owner skill vocabulary.

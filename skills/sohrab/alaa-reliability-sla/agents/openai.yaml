@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa Reliability SLA"
-  short_description: "Reliability doctrine: deadlines, retries, breakers, bulkheads, shedding, degradation, idempotency, error budgets"
+  short_description: "Reliability doctrine for a strict-SLA service"
   default_prompt: "Use $alaa-reliability-sla to decide or review failure behaviour under load: classify each dependency as a gate or a contributor, bound every outbound call by the request deadline and a per-dependency cap, decide retry legality before writing a retry, decide the shed order and what is never shed, and settle the idempotency contract including two requests carrying the same key at once. Take every Ala timeout, retry, pool, and shed value from $alaa-services-contract references/22 rather than choosing one, and report any mechanism with no test that fails when the mechanism is removed as an unproven gap."
+  brand_color: "#1F5C8B"
 
 policy:
   allow_implicit_invocation: true

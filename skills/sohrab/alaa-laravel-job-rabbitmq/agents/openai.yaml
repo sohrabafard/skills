@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa Laravel Job Rabbitmq"
-  short_description: "Laravel jobs on RabbitMQ: worker modes, ack/nack, delivery limits, failure classes"
+  short_description: "Laravel queued jobs on RabbitMQ: workers and acks"
   default_prompt: "Use $alaa-laravel-job-rabbitmq for Laravel queued jobs on RabbitMQ. Follow its hard constraints and route through its topic map."
+  brand_color: "#B5451B"
 
 policy:
   allow_implicit_invocation: true

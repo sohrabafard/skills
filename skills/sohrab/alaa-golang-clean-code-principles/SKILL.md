@@ -63,7 +63,7 @@ Then match the task to the smallest set of files. When two rows match, read both
 | Add a log line, metric, span, or Sentry capture | `references/30-runtime-and-observability.md` (P11); pair with `/alaa-observability-soc` (`$alaa-observability-soc`) |
 | Write or review a test | `references/40-testing-and-contracts.md` (P12); pair with `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
 | Call another service, consume its events, or hit an unknown external fact | `references/40-testing-and-contracts.md` (P13); pair with `/alaa-services-contract` (`$alaa-services-contract`) |
-| Build a whole feature end to end, or review a whole package | `references/10-`, `20-`, `30-`, `40-` in that order |
+| Build a whole feature end to end, or review a whole package | `references/10-kit-and-trust-boundary.md`, `references/20-domain-data-and-consistency.md`, `references/30-runtime-and-observability.md`, then `references/40-testing-and-contracts.md` |
 | Choose, name, or review a design pattern | `references/60-design-patterns-kit-era.md` |
 | Ask which skill owns a Go topic, or a cost/complexity question | `references/50-skill-boundaries.md` |
 | Rely on a kit fact stated here — identity types, pooling lanes, metric names, provider idempotency, the scope phase | `references/90-source-map.md` |

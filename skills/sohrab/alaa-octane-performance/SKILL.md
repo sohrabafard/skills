@@ -121,6 +121,15 @@ Upstream `octane-development/SKILL.md` stays useful for mechanics this skill doe
 `Octane::table()` and `Octane::concurrently()` syntax, driver configuration keys, and FrankenPHP
 specifics. It is not owned by this repository; on any retention rule, this skill wins.
 
+## When NOT to use
+
+- `config('octane.server')` is null and no worker server is planned. Every invariant here exists because a
+  process outlives a request; under PHP-FPM none of them binds.
+- The change retains no value past the response and touches no hot path: a view, a migration, a one-off
+  command, a docs edit.
+- The task is query, cache, or Redis design rather than the lifetime of a connection inside a worker. The
+  router below names each owner.
+
 ## Router — read the reference whose condition you are in
 
 | You are about to, or you observe | Read |

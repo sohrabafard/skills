@@ -92,7 +92,7 @@ Any normaliser in the service — PHP, Go, TypeScript, SQL — must produce the 
 
 The file records `corpus_sha256`: the SHA-256 of `json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":"))` encoded as UTF-8. As of this writing it is `80dcb3723e83d848236ab0cbfbfc62447eec524c62a434737d85682aa653d7dc`, set on 2026-07-28 when the Devanagari case was re-ratified from rejected to rendered and the split moved from 48/32 to 49/31. The digest covers the parsed cases rather than the on-disk `\uXXXX` escaping, so any language can reproduce it, and case order is part of the hashed bytes: accepted cases first, then rejected ones, ascending by Unicode code point of `input` within each group. The file's own `canonicalization` field states the rule and carries a one-line command that recomputes the digest from the file alone.
 
-**The identical file ships at `skills/sohrab/alaa-bale-provider/scripts/phone-conformance-corpus.json`.** The two copies are byte-identical by design, and a difference between them is a finding rather than a local customisation. `AGENTS.md` binds this: more than one implementation of one wire format ships a conformance harness, because a document asserting that two implementations agree is not evidence that they do.
+**The identical file ships at `alaa-bale-provider/scripts/phone-conformance-corpus.json`.** The two copies are byte-identical by design, and a difference between them is a finding rather than a local customisation. `AGENTS.md` binds this: more than one implementation of one wire format ships a conformance harness, because a document asserting that two implementations agree is not evidence that they do.
 
 ## Running the harness
 

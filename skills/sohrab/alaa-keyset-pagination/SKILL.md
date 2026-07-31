@@ -76,6 +76,15 @@ Stop and raise the question rather than deciding alone when: the only unique tie
 - The covered-behaviour list a paginated route must satisfy — read when writing or reviewing the route's tests: `references/70-test-list.md`
 - Primary sources, versions, retrieval dates, and what remains unverified — read before repeating any version-sensitive claim in this skill: `references/90-source-map.md`
 
+## When NOT to use
+
+- The collection is bounded by schema rather than by data — a fixed enum, a per-record set a constraint
+  caps, a list whose maximum length is enforced at write time. It cannot grow, so it needs no cursor.
+- The route returns a single record, or one aggregate computed over a window the server chooses.
+- The traversal is an internal export or backfill that may hold a snapshot and read to the end.
+- The question is the collection or error envelope, the index mechanics behind the ordering, or cursor
+  tampering, rather than how the route traverses. The routing table below names each owner.
+
 ## What this skill does not own
 
 - **The collection envelope, the error envelope, identifier exposure, and the reject-don't-clamp rule** — `alaa-services-contract` (`/alaa-services-contract`, `$alaa-services-contract`). This skill decides what goes in `meta` for a keyset list and defers to that skill on the envelope those keys sit in.

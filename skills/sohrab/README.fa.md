@@ -178,7 +178,7 @@
 | `alaa-signoz-clickhouse-docs` | نوشتن و تعمیر SQL خام پنل‌های SigNoz روی جدول‌های `signoz_logs` و `signoz_traces` و `signoz_metrics` که مالکشان vendor است و برای ناوگان فقط-خواندنی‌اند: کلیدهای ترتیب، اصطلاح bucket-filter و resource-CTE، انتخاب rollup، تشخیص span گم‌شده، و مسیریابی مستندات SigNoz |
 | `vector-rust-observability-pipelines` | خط لوله production ای Vector: توپولوژی و قرارداد تحویل هر مسیر، تبدیل VRL، buffer و ack سرتاسری، backpressure، و retry و batch مقصد. مهم‌ترین بخشش این است که خط لوله وقتی مقصدش در دسترس نیست چه می‌کند. هیچ schema ای تصمیم نمی‌گیرد |
 | `alaa-postman-collections` | ساخت و همگام‌سازی و اعتبارسنجی collection و environment نسخه v2.1 در Postman، به‌شکلی که هر request نمونه ذخیره‌شده برای حالت موفق و برای هر خطایی که واقعا می‌تواند برگرداند داشته باشد، یک script پس-از-پاسخ که token و id را برای request های بعدی بگیرد، و تست‌هایی که روی پیاده‌سازی خراب شکست بخورند. خروجی قابل import در Insomnia می‌ماند |
-| `alaa-repo-docs` | مستندسازی سطح-مخزن: `README.md`، `docs/BIG_PICTURE.md`، `docs/api-summary.md`، معماری داده، و سند خطا و رویداد و رصدپذیری. سند انگلیسی همیشه منبع حقیقت است؛ آینه فارسی مثل `README.fa.md` وقتی الزامی است که مخزن هدف از قبل یک سند `.fa` یا پوشه `docs/fa/` داشته باشد، و در بقیه موارد فقط با درخواست صریح ساخته می‌شود |
+| `alaa-repo-docs` | مستندسازی سطح-مخزن برای راه‌اندازی، معماری، خلاصه API، داده، خطا، رویداد، رصدپذیری، و navigation داخلی. زبان هر سند موجود را حفظ می‌کند، نسخه زبانی دیگر را فقط با درخواست صریح می‌سازد، و برای هر موضوع یک محل canonical نگه می‌دارد تا سندهای دیگر با لینک نسبی به آن ارجاع دهند |
 
 ## تجمیع‌شده یا حذف‌شده از این pack
 
@@ -187,7 +187,7 @@
 - خانواده `dockerfile-*` جایش را به `alaa-docker-production` داد، و `makefile-generator` و `makefile-validator` جایشان را به `alaa-makefile` دادند
 - خانواده‌های `azure-pipelines-*` و `github-actions-*` و `jenkinsfile-*` حذف شدند، چون `alaa-gitlab-ci-cd` تنها سطح CI ای است که این pack می‌فرستد
 - خانواده‌های `terraform-*` و `terragrunt-*` حذف شدند، چون هدف‌های زیرساخت از `caas-arvan-kuber` و `alaa-k8s-helm` عبور می‌کنند
-- نام `alaa-repo-docs` به `alaa-repo-docs` تغییر کرد، چون نام قدیم یک زبان را وعده می‌داد در حالی که این skill یک استاندارد مستندسازی تحویل می‌دهد؛ و نام `alaa-basic-memory-os` به `alaa-memory-os` تغییر کرد، چون آن مدل مستقل از انبار است و Basic Memory فقط یکی از آداپتورهاست
+- نام `alaa-basic-memory-os` به `alaa-memory-os` تغییر کرد، چون آن مدل مستقل از انبار است و Basic Memory فقط یکی از آداپتورهاست
 - خانواده `promql-*` و `logql-generator` و `loki-config-generator` و `fluentbit-*` حذف شدند، چون `alaa-observability-soc` مالک تصمیم سیگنال و gate است و `alaa-signoz-clickhouse-docs` و `vector-rust-observability-pipelines` مالک سطح کوئری و خط لوله‌اند
 
 ## تعریف انجام‌شده
@@ -221,4 +221,3 @@
 ## یادداشت عملی
 
 وقتی یک best practice عمومی با مدل اعتماد gateway علاء، قواعد پلتفرم آروان، یا قرارداد artifact مربوط به frontend تناقض دارد، دلیل انحراف را مستند کنید، نه اینکه پنهانش کنید.
-

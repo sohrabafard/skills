@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa Algorithms And Data Structures"
-  short_description: "Complexity budgets, bounds on N, structure choice from the access pattern, the N+1 family, memory, tuning points, and when none of it applies"
+  short_description: "Complexity budgets and structure choice for code paths"
   default_prompt: "Use $alaa-algorithms-data-structures to decide or review what a code path is allowed to cost as its input grows. Apply the trigger test first and stop with no budget when no dimension is unbounded, no per-element work leaves the process, and no dimension grows with tenants, history, catalogue, fan-out, or time. When it fires, find the real bound on every input dimension from a boundary that enforces it or from the largest value observed in production times the stated growth horizon, use the largest value the system permits rather than the typical one, and report an unbounded dimension as a design defect together with the boundary that would bound it. State each budget with all four parts - operation, growing dimension, bound, and the input size at which it was measured or reasoned - before the implementation is written. Choose every structure from the access pattern rather than the data's shape, record the rejected alternative, and normalise every value used as a key. Resolve every process-leaving call inside a loop over a non-constant dimension, and give every batch its own maximum and partial-failure behaviour. Make a value configurable only when a deployment actually varies it, with a default safe at the worst case and a range validated at startup. Report a bound as measured only when it was measured at two input sizes, and take every timeout, pool, page, and cardinality value from the skill that owns it rather than restating one."
+  brand_color: "#4C6EF5"
 
 policy:
   allow_implicit_invocation: true

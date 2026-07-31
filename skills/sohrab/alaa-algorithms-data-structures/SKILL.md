@@ -115,6 +115,15 @@ Stop successfully when every dimension has a bound with a source, every budget c
 
 Stop and report blocked when: a dimension has no enforced maximum and adding the boundary is outside this change's scope, in which case name the boundary that would fix it; a worst case is a product that cannot be computed; the second input size cannot be produced here and the claim depends on shape rather than constant; or the right structure needs a schema, index, or query change owned by `/alaa-data-layer` (`$alaa-data-layer`).
 
+## When NOT to use
+
+- Every input dimension the path touches already has a small maximum enforced in code — a fixed enum, a
+  schema-bounded column set, a list whose length a validator caps. There is no growth to bound.
+- The work is a one-off script over a known fixed input that will not be run again against a larger one.
+- The change alters no loop, no query, no fan-out, no batch, no export, and no retained collection.
+- The question is which index serves a query, what a timeout or pool value should be, or how a subsystem
+  is shaped. The routing table below names each owner.
+
 ## What this skill does not own
 
 This skill decides inside whatever the skills below define, and states none of their values. The four `golang-*` packs are vendored upstream: route to them for mechanics, never restate or edit them.

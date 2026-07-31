@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa MongoDB Patterns"
-  short_description: "MongoDB document shape, indexes, TTL, writes, and failure behaviour"
+  short_description: "MongoDB document shape, indexes, TTL, writes"
   default_prompt: "Use $alaa-mongodb-patterns for MongoDB collection and document shape, index and TTL design, idempotent writes and concerns, and MongoDB timeout, pool, and degraded-mode behaviour."
+  brand_color: "#2E7D57"
 
 policy:
   allow_implicit_invocation: true

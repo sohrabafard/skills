@@ -27,7 +27,7 @@ datastore nobody operates.
    copies every secret the database holds.
 4. Never state a platform number or coin a telemetry name: `/alaa-services-contract`
    (`$alaa-services-contract`) owns both, numbers in `references/22-failure-load-and-deprecation-contract.md`
-   and names in `references/24-metric-registry.md`, and a missing name is requested there.
+   and names in `alaa-services-contract` `references/24-metric-registry.md`, and a missing name is requested there.
 
 ## References
 

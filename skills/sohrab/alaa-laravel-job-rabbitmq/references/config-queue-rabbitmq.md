@@ -4,7 +4,7 @@ Read this when adding, editing or reviewing the `rabbitmq` entry in `config/queu
 variable in `.env`, a Helm `envConfig`, or a Compose file. Which keys the driver reads and which are
 silently ignored is in `references/driver-facts.md`; check there before adding a key not listed below. The
 package's own minimal example is at
-`references/upstream/vyuldashev/9b8df5d.../config/rabbitmq.php`.
+`references/upstream/vyuldashev/9b8df5d4239128ed70b857249513edb30749e63b/config/rabbitmq.php`.
 
 ## Two corrections to make on sight
 

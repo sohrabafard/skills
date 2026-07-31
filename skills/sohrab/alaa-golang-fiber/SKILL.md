@@ -36,6 +36,13 @@ preferences, and an agent that omits them lets the user assume a precedent that 
   place that decides chi versus Fiber. This skill states no competing criteria. If you are being
   asked *which* framework to use, you are in the wrong skill: stop and read that file.
 
+## When NOT to use
+
+- You are choosing a framework for a new service. A new Ala service is a chi kit consumer unless the owner
+  has recorded a Fiber exception, and that decision is owned elsewhere.
+- The repository imports no Fiber and carries no recorded Fiber exception.
+- The question is Go craft that would read the same on any HTTP framework. The router below names the owner.
+
 ## Router
 
 Read the one file that matches what you are about to do. Do not preload the set.

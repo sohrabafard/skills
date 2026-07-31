@@ -160,6 +160,16 @@ runs — on conflict about what the test must prove, `/alaa-testing-strategy` wi
 regardless of syntax. Real-infrastructure verification of the same property is step 3 of
 `references/running-workers.md`.
 
+# When NOT to use
+
+- The decision is which broker to run at all — Kafka against RabbitMQ — or what the event topology and
+  fan-out should be. Both are settled before any job exists.
+- The queue runs on Redis with Horizon, or on any driver other than this RabbitMQ package.
+- The work is broker cluster administration — nodes, quorum members, disk alarms, upgrades — rather than
+  how a Laravel job behaves on a broker that is already running.
+- The task is naming a queue, vhost, or exchange, or setting a retry, backoff, DLQ, or idempotency policy.
+  The ownership boundary below names each owner.
+
 # Ownership boundary
 
 This skill owns one thing: the behaviour of Laravel jobs on **this** RabbitMQ driver. Below is owned

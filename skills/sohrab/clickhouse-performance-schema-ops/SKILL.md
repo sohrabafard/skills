@@ -1,6 +1,6 @@
 ---
 name: clickhouse-performance-schema-ops
-description: "ClickHouse schema, ingest, query, and operations policy for the Ala fleet: the ingest-pipeline repository owns the DDL, and every kit consumer reads through a readonly=2 chkit lane that cannot execute DDL. Use when writing or reviewing a CREATE TABLE, ORDER BY, PARTITION BY, engine, or column type; when an insert path produces too many parts or a merge backlog; when a query scans far more than it returns, needs FINAL, or must move off a raw table onto a rollup; when choosing between a materialized view, a projection, a TTL, a mutation, and a partition drop; when deciding what a read-lane service does while ClickHouse is unreachable or a query trips max_execution_time or max_result_rows; and when proving a ClickHouse change before it ships. Do not use it for Postgres schema, indexes, migrations, Redis, or store selection, which belong to /alaa-data-layer, nor for Vector transform internals, which belong to /vector-rust-observability-pipelines."
+description: "ClickHouse schema, ingest, query, and operations policy for the Ala fleet. Use when writing or reviewing a CREATE TABLE, ORDER BY, PARTITION BY, engine, or column type; when an insert path produces too many parts or a merge backlog; when a query scans far more than it returns, needs FINAL, or must move off a raw table onto a rollup; when choosing between a materialized view, a projection, a TTL, a mutation, and a partition drop; when deciding what a read-lane service does while ClickHouse is unreachable or a query trips max_execution_time or max_result_rows; and when proving a ClickHouse change before it ships. Do not use it for Postgres schema, indexes, migrations, Redis, or store selection, which belong to /alaa-data-layer ($alaa-data-layer), nor for Vector transform internals, which belong to /vector-rust-observability-pipelines ($vector-rust-observability-pipelines)."
 ---
 
 # ClickHouse Performance, Schema, Ingest, and Operations
@@ -63,3 +63,12 @@ Which tables fall on which side of that line, and why a SigNoz query needs no te
 (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`. The ten-point quality bar:
 `/alaa-project-constitution` (`$alaa-project-constitution`) `references/quality-bar.md`. Every other
 owner is named at the rule it governs inside `references/`.
+
+## When NOT to use
+
+- a `signoz_*` or other vendor-owned table whose engine, sorting key, partitioning or TTL the
+  fleet cannot alter
+- panel SQL written against a SigNoz-owned table
+- Postgres or Redis schema, indexes, migrations, or the choice of which store holds a dataset
+- Vector source, transform, sink, or buffer internals
+- a task that touches no ClickHouse table, query, ingest path, or read-lane setting

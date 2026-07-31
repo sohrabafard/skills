@@ -7,6 +7,17 @@ description: "Production-grade multi-agent coding orchestration for Claude Code.
 
 Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system inside Claude Code. The session model leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
 
+## When NOT to use
+
+- The change is a single edit whose correctness one reader can confirm without a second lane. Delegation
+  then costs more than the work.
+- The request is a destructive or externally visible action — a push, a deploy, a data change, a published
+  artifact — and no explicit authorization for it exists yet.
+- The runtime is Codex rather than Claude Code. The bootstrap here writes Claude Code agent files and
+  does nothing useful there.
+- The engagement needs durable plan and state that survives compaction and handoff rather than one
+  session's subagent fan-out; `/alaa-workflow` (`$alaa-workflow`) owns that.
+
 ## 0. Bootstrap: ensure managed subagents exist (cheap sentinel check first)
 
 1. Resolve SKILL_ROOT as the directory containing this SKILL.md. Run exactly one cheap check: compare the content of `~/.claude/agents/.alaa-cc-orchestrator.version` with `SKILL_ROOT/VERSION`. When they match, the agents are current — skip the rest of this section silently, with no file comparisons and no setup narration.

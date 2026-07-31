@@ -1,9 +1,8 @@
 # Failure classes: symptom, diagnosis, smallest retry, escalation
 
-Read this when a check fails or a run errors. It replaces the former
-`references/common_errors.md`, which was a flat list of symptoms with prose
-"solutions" and no diagnosis step; three of its claims were factually wrong and
-are corrected here in transit.
+Read this when a check fails or a run errors. It replaces the former `references/common_errors.md`,
+which was a flat list of symptoms with prose "solutions" and no diagnosis step; three of its claims
+were factually wrong and are corrected here in transit.
 
 Every entry has the same four parts:
 

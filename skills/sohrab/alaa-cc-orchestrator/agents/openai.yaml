@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alaa CC Orchestrator"
+  short_description: "Multi-agent coding orchestration for Claude Code"
+  default_prompt: "Use $alaa-cc-orchestrator in orchestrator mode for this repository goal:"
+  brand_color: "#7A4E8C"
+policy:
+  allow_implicit_invocation: false

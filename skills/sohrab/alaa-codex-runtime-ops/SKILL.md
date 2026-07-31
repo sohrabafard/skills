@@ -92,6 +92,15 @@ Audit rules, all applying to every transcript audit:
 - **Retry.** If the port sits in an excluded range, move only the host-side binding outside it.
 - **Fallback.** Keep the container port unchanged unless the application must listen elsewhere.
 
+## When NOT to use
+
+- The command failed on its own merits: a genuinely failing test, a broken migration, a real application
+  bug. The environment is working and the code is not.
+- The task is general Windows administration with no Codex sandbox, harness, or session state involved.
+- The proposed remedy is a destructive cleanup — deleting a session log, wiping a cache directory,
+  removing a lock without first reading what holds it.
+- A domain skill or a validation policy already answers the question. Nothing here overrides one.
+
 ## Hard rules
 
 - Do not broaden search scope to compensate for a runtime failure.

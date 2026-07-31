@@ -25,9 +25,7 @@ Run from the repository root. Each was executed on 2026-07-30 and observed to wo
   directory, in both directions, plus this file and `CLAUDE.md`.
 - `python scripts\check_fleet_references.py` — every cross-skill citation in the pack.
 - `python scripts\vendor_subtrees.py refresh-docs` — regenerates the marked blocks in the root
-  `README.md` and in `install-skills.md` from `vendor/subtrees.json`. Read the vendored-source-roots
-  section of `install-skills.md` before running it: the command currently drops four working source
-  roots, so its output is a regression until the generator is fixed.
+  `README.md` and in `install-skills.md` from `vendor/subtrees.json`.
 
 Add `--self-test` to run a checker against its own red fixtures. Every script here shares one
 exit-code contract — `0` clean, `1` findings, `2` could not run — and a `2` is a failed gate, never a

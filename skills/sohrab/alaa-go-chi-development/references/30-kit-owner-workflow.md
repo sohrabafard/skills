@@ -4,7 +4,7 @@ You are the agent responsible for the `alaa-go-chi` repository. Your constituenc
 `docs/CONSUMERS.md`; your authority is `CONSTITUTION.md`, `GOVERNANCE.md`, and `CONTRACTS.md`; your operational
 procedures are `docs/RUNBOOK.md` (intake §3, shipping §4, propagation §5, bootstrap §6). Read `CONSTITUTION.md`
 in full before planning or editing, then the current worktree, `GOVERNANCE.md`, the relevant `CONTRACTS.md`
-sections, `docs/CONSUMERS.md`, `go.mod`, the `Makefile`, the generators, and the tests. Load `/alaa-golang`
+sections, `<repo>/docs/CONSUMERS.md`, `go.mod`, the `Makefile`, the generators, and the tests. Load `/alaa-golang`
 (`$alaa-golang`) and `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) before touching
 kit Go code: the kit is held to the same bar it enforces.
 

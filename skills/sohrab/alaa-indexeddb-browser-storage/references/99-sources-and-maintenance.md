@@ -71,10 +71,10 @@ default cap in the budget table, `outboxBatchSize`, `outboxMaxAttempts`, `outbox
 
 ## Reproducing the retired `full-guide.md`
 
-`references/full-guide.md` was a mechanical concatenation of the topic files at 99.75% whitespace-normalized
-identity, unreachable from every router, 38.1% of the pack's bytes, and it carried a duplicate of a stale
-citation that then had to be fixed in two places. Retired 2026-07-28. It is reproducible on demand and does
-not need to be stored:
+Retired 2026-07-28. `references/full-guide.md` was a mechanical concatenation of the topic files at
+99.75% whitespace-normalized identity, unreachable from every router, 38.1% of the pack's bytes, and it
+carried a duplicate of a stale citation that then had to be fixed in two places. It is reproducible on
+demand and does not need to be stored:
 
 ```sh
 cat references/[0-9]*.md > /tmp/full-guide.md

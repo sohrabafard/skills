@@ -48,7 +48,7 @@ otherwise.
 | Load | When you are about to… |
 |---|---|
 | `/alaa-postman-collections` (`$alaa-postman-collections`) | produce or update a Postman collection or an OpenAPI artifact for a Go service |
-| `/alaa-repo-docs` (`$alaa-repo-docs`) | write repository documentation or a human-facing note in Persian |
+| `/alaa-repo-docs` (`$alaa-repo-docs`) | create, refresh, reorganize, or cross-link any repository Markdown document for a Go service — `README.md`, the `docs/` deep dives, `remaining-task.md`, documentation navigation, or repo-local links — writing each one in the language it already uses. A Persian companion such as `README.fa.md` is one case of this row, and only when the user explicitly asks for that companion |
 | `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) | query SigNoz or write a ClickHouse query against telemetry data |
 
 ## Rule for every row above

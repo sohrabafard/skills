@@ -8,7 +8,7 @@ This file replaces the fork tree. The fork's `README.md` was byte-identical to t
 block below. Those two files plus the fork's `composer.json`, `.github/workflows/tests.yml` and
 `CHANGELOG-14x.md` were retired to `_to_delete/2026-07-26-batch2/alaa-laravel-job-rabbitmq/`. The pin at
 `references/forks/FORK_COMMIT.txt` stays; the pin is the durable artifact.
-`references/forks/sohrabafard/9c8125f.../src/Consumer.php` was **kept** — it is this skill's only offline
+`references/forks/sohrabafard/9c8125f133cc13d49e7c08496fde5615919439e7/src/Consumer.php` was **kept** — it is this skill's only offline
 snapshot of the consume loop.
 
 **1. The four added methods — the entire code divergence.** Inserted into `src/Queue/RabbitMQQueue.php`

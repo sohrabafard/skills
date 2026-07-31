@@ -5,20 +5,8 @@
 # only shrink: each entry expires by itself the moment the missing file appears, and none of
 # them can become a permanent amnesty.
 #
-# Why this file exists. Without it the checker exits 1 on the tree it ships with, and a gate
-# that is red on day one is a gate nobody runs. Both entries below are outside Batch 8 and
-# neither file could be created by the lane that wrote this baseline.
-#
-# Both exceptions are stated in skills/sohrab/README.md:14, read 2026-07-30. Nothing else is
-# baselined here.
-
-# alaa-cc-orchestrator is Claude-Code-only and its Codex twin alaa-codex-orchestrator ships
-# agents/openai.yaml. This is the single exception shape README.md:14 permits, so this entry is
-# expected to stay until the twin arrangement itself changes.
-X8-MISSING-OPENAI-YAML|alaa-cc-orchestrator|skills/sohrab/alaa-cc-orchestrator/agents/openai.yaml|missing  # Claude-Code-only; Codex twin alaa-codex-orchestrator ships the file
-
-# alaa-go-chi-development has no agents/ directory and no Codex twin. README.md:14 calls it an
-# open defect rather than a precedent, and this entry does not change that: it suppresses the
-# finding only so the other index rules stay enforceable. The owner adds agents/openai.yaml and
-# this line then exits 1 as stale until it is removed.
-X8-MISSING-OPENAI-YAML|alaa-go-chi-development|skills/sohrab/alaa-go-chi-development/agents/openai.yaml|missing  # open defect, no twin; owner must add agents/openai.yaml
+# This file is currently empty of entries, and that is the intended end state. It shipped on
+# 2026-07-30 with two X8-MISSING-OPENAI-YAML entries, for alaa-cc-orchestrator and
+# alaa-go-chi-development. Both files were written on 2026-07-31, so both entries expired as
+# designed and were removed. Keep the file rather than deleting it: --baseline is named in the
+# documented invocation, and a missing path is a "could not run" the checker reports as exit 2.

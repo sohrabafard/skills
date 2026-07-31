@@ -144,6 +144,16 @@ the example is wrong here: never document a client-set header as tenant or user 
 | document a route returning a collection, or a request field accepting more than one value | `references/30-pagination-and-limits-for-consumers.md` |
 | create a pack, bump its version, write any pack file to disk, or validate one — this file holds the deliverables floor and the validation floor | `references/40-consumer-discovery-pinning-and-secret-hygiene.md` |
 
+## When NOT to use
+
+- The task is to decide a fleet contract value rather than to document one: an envelope shape, a header
+  name, an identifier format, a deprecation window, or any platform number.
+- The API has no external client and no contract to emit, pin, or reconcile.
+- The change is Laravel code with no effect on any route's public shape, version, deprecation status, or
+  sunset date.
+- The task is generating a Postman collection, or choosing the pagination mechanism itself. The ownership
+  boundary below names each owner.
+
 ## Ownership boundary
 
 `/name` for Claude Code, `$name` for Codex. Where this skill and an owner could state one rule,

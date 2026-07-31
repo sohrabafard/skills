@@ -27,6 +27,14 @@ PHP 8.5 and Laravel 13 are the current baseline for new Alaa Laravel services; `
 
 **Octane is the default runtime assumption.** Treat every Alaa Laravel service as running under Octane unless `composer.json` requires no `laravel/octane` **and** the repository has no `config/octane.php`. Both must hold before you may reason as if a worker serves one request.
 
+## When NOT to use
+
+- The edit is one line with no design choice in it: a typo, a version bump, a copy change.
+- The question can only be answered by reading more than one class — which layer may call which, what an
+  envelope carries, who derives a tenant, what a worker retains between requests.
+- The question is a value rather than a shape: a timeout, a retry count, a page size, a cardinality cap.
+- The ownership boundary below names the owner for each of these.
+
 ## Ownership boundary — what this skill does not own
 
 This table answers *who decides*. `references/00-topic-map.md` answers *when to read* — it is the only router in this skill, and its third table carries the read triggers.

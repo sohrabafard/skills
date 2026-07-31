@@ -233,14 +233,60 @@ def vendor_list_markdown(entries: list[dict[str, object]]) -> str:
     return "\n".join(lines)
 
 
+def entry_codex_src_roots(entry: dict[str, object]) -> list[str]:
+    """Return the installer source roots for one manifest entry, repo-relative with forward slashes.
+
+    An explicit `codex_src_roots` list in the entry wins and is used verbatim. Where a vendored
+    pack keeps its skills is a fact about that upstream, and which of those skills this repository
+    exposes is a decision; neither is derivable from the directory tree. `knowledge-work-plugins`
+    ships seventeen `<plugin>/skills` directories and this repository installs two of them, so no
+    probe can reproduce the intended set.
+
+    When the key is absent the original probe applies: `<prefix>/skills` when that directory
+    exists, nothing otherwise. Raises ValueError when the key is present but is not a list of
+    non-empty strings.
+    """
+    declared = entry.get("codex_src_roots")
+    if declared is None:
+        probed = str(entry["prefix"]) + "/skills"
+        return [normalize_prefix(probed)] if subtree_exists(probed) else []
+    if not isinstance(declared, list) or not all(
+        isinstance(root, str) and root.strip() for root in declared
+    ):
+        raise ValueError(
+            f"subtree entry {entry.get('name', '<unnamed>')}: codex_src_roots must be a list of "
+            f"non-empty strings, got {declared!r}"
+        )
+    return [normalize_prefix(root) for root in declared]
+
+
 def codex_src_roots_block(entries: list[dict[str, object]]) -> str:
-    skill_roots = [str(entry["prefix"]) for entry in entries if subtree_exists(f"{entry['prefix']}/skills")]
-    if not skill_roots:
+    """Render the PowerShell source-root lines for install-skills.md, in manifest order.
+
+    A root that an earlier entry already emitted is skipped, so two entries naming the same
+    directory produce one line. A declared root that is missing on disk is still emitted and is
+    reported on stderr: the installer's own loop prints `Source root missing, skipped` for it, so
+    dropping the line here would hide a manifest typo instead of surfacing it.
+    """
+    lines: list[str] = []
+    seen: set[str] = set()
+    for entry in entries:
+        for root in entry_codex_src_roots(entry):
+            if root in seen:
+                continue
+            seen.add(root)
+            if not subtree_exists(root):
+                print(
+                    f"[vendor-subtrees] warning: {entry.get('name', '<unnamed>')} declares source "
+                    f"root {root}, which does not exist under {ROOT}",
+                    file=sys.stderr,
+                )
+            windows_root = root.replace("/", "\\")
+            lines.append('    (Join-Path $repoRoot "' + windows_root + '")')
+    if not lines:
         return "    # No vendored skill roots detected."
-    lines = []
-    for prefix in skill_roots:
-        lines.append(f"    (Join-Path $repoRoot \"{prefix.replace('/', '\\')}\\skills\")")
     return "\n".join(lines)
+
 
 
 def replace_marker_span(path: Path, start: str, end: str, body: str) -> None:
@@ -254,25 +300,30 @@ def replace_marker_span(path: Path, start: str, end: str, body: str) -> None:
 
 
 def refresh_docs(entries: list[dict[str, object]]) -> None:
+    # Render every block before writing any of them. A manifest error must leave both documents
+    # untouched, because a half-refreshed pair of documents looks refreshed and is not.
+    vendor_list = vendor_list_markdown(entries)
+    roots_block = codex_src_roots_block(entries)
     replace_marker_span(
         README_PATH,
         "<!-- vendor-subtrees:readme-list:start -->",
         "<!-- vendor-subtrees:readme-list:end -->",
-        vendor_list_markdown(entries),
+        vendor_list,
     )
     replace_marker_span(
         INSTALL_SKILLS_PATH,
         "<!-- vendor-subtrees:install-list:start -->",
         "<!-- vendor-subtrees:install-list:end -->",
-        vendor_list_markdown(entries),
+        vendor_list,
     )
     replace_marker_span(
         INSTALL_SKILLS_PATH,
         "# vendor-subtrees:codex-src-roots:start",
         "# vendor-subtrees:codex-src-roots:end",
-        codex_src_roots_block(entries),
+        roots_block,
     )
     print("[vendor-subtrees] refreshed README.md and install-skills.md from vendor/subtrees.json")
+
 
 
 def entry_conflicts(entries: list[dict[str, object]], new_entry: dict[str, object]) -> str:

@@ -39,6 +39,14 @@ Settle these three before writing or editing a line; they select every reference
 
 `scripts/new-script.sh` scaffolds from `assets/templates/`. `scripts/validate-shell.sh` runs syntax, ShellCheck, `shfmt`, `checkbashisms`, the `--matrix` portability pass, and optional `--smoke-help` checks. Prefer both over hand-rolling the equivalent.
 
+## When NOT to use
+
+- The target shell is zsh, fish, or PowerShell. Their arrays, quoting and word-splitting differ from Bash
+  and POSIX sh, so a rule taken from here can be silently wrong there.
+- The program needs structured data, real concurrency, long-lived state, or a test suite beyond
+  command-level checks. Write it in a fuller language and keep shell for process glue.
+- The task is one interactive command with no script to keep, review, or run again.
+
 ## Delegation
 
 Delegate only a lane that is genuinely independent and would otherwise flood the parent context. Portability inventory — shebangs, Bashisms, and GNU-only flags across a tree — and lint or format collection are bounded lanes: their criteria are fixed before the lane starts, so they search and report rather than decide. Cross-platform redesign is a judgment lane, because the decision is still open when it starts: how a Bash-only construct becomes portable, or whether the script should stop being shell.

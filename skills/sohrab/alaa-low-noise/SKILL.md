@@ -35,6 +35,16 @@ Shared by both parts: complete the real task and keep repository files as the so
 
 Verbosity defaults, narration cadence, and instruction literalness differ per model, so a concision rule tuned for one family can be inert on another. One fact is universal: reasoning effort controls thinking volume, not answer length — lowering effort does not shorten output, and length needs its own instruction. Read `references/model-output-profiles.md` for per-model profiles and documented calibration language.
 
+## When NOT to use
+
+- The task is small enough that the whole of it fits in one read and one edit. The discipline then costs
+  more context than it saves.
+- The deliverable is the raw output itself — a full log, a complete file, a verbatim dump the user asked
+  for. Trimming it destroys the deliverable.
+- The question is a domain question. Nothing here substitutes for the skill that owns the subject.
+- The need is durable planning and state that survives compaction and handoff.
+  `/alaa-workflow` (`$alaa-workflow`) owns that, and nothing here replaces it.
+
 ## References
 
 Read only when needed:

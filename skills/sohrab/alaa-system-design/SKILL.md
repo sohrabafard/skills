@@ -114,6 +114,15 @@ A design is reviewed before any implementation lane is dispatched, and a record 
 
 Read `references/70-review-and-readiness.md` when reviewing a record, when deciding whether a finding blocks, and when handing a reviewed record to an implementation lane.
 
+## When NOT to use
+
+- The design is already decided and recorded. Implement it; re-deriving it is not review.
+- The task is reviewing code that already exists.
+- The change touches no interface another component calls, moves no data owner, alters no consistency,
+  ordering, or caching property, adds and removes no dependency, and creates no deployable unit.
+- The question is project policy, a platform invariant, or a failure-doctrine rule. The routing table
+  below names each owner.
+
 ## Stop conditions
 
 Stop successfully when every section of the record carries either a decision or a stated non-applicability with its evidence; the reviewer's blocking findings are resolved in the record rather than deferred into implementation; and the record's status reads `reviewed`.

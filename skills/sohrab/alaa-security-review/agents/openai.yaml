@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa Security Review"
-  short_description: "Security review gate: trust boundaries, authz, tenant isolation, injection, SSRF, files, crypto"
+  short_description: "Security review gate for multi-tenant services"
   default_prompt: "Use $alaa-security-review to run its Fast Gate: build the five-column surface inventory, read the reference rows it hits, and emit a per-item PASS/FAIL/N-A verdict with a stop-the-line list. Report any item you could not verify against actual code as FAIL with the reason 'not determined'."
+  brand_color: "#8B2E2E"
 
 policy:
   allow_implicit_invocation: true

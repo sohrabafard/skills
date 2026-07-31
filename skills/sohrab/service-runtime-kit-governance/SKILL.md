@@ -1,6 +1,6 @@
 ---
 name: service-runtime-kit-governance
-description: "Ownership and debug governance for `service-runtime-kit`-generated local Docker Compose and Swarm runtime in Laravel or PHP service repositories. Use when working in a repo that consumes `service-runtime-kit`, or when changing `runtime/*.env`, `runtime/hooks/**`, `scripts/runtime/**`, generated `docker-compose*.yml`, generated `docker/octane/**` or `docker/pgbouncer/**`, copied helpers such as `scripts/validate_runtime.php`, runtime-kit version pinning, bootstrap or auto-fetch behavior, or Windows Git Bash path conversion of slash-valued Compose env vars, and when deciding which layer owns a runtime fix or debug path. Do not use for application logic unrelated to runtime generation. Route Kubernetes, OpenShift, and Helm deployment to /caas-arvan-kuber; GitLab CI/CD pipelines owned by `service-ci-kit` to /alaa-gitlab-ci-cd; the shared-infra and deployment contract to /alaa-services-contract."
+description: "Ownership and debug governance for `service-runtime-kit`-generated local Docker Compose and Swarm runtime in Laravel or PHP service repositories. Use when working in a repo that consumes `service-runtime-kit`, or when changing `runtime/*.env`, `runtime/hooks/**`, `scripts/runtime/**`, generated `docker-compose*.yml`, generated `docker/octane/**` or `docker/pgbouncer/**`, copied helpers such as `validate_runtime.php`, runtime-kit version pinning, bootstrap or auto-fetch behavior, or Windows Git Bash path conversion of slash-valued Compose env vars, and when deciding which layer owns a runtime fix or debug path. Do not use for application logic unrelated to runtime generation. Route Kubernetes, OpenShift, and Helm deployment to /caas-arvan-kuber; GitLab CI/CD pipelines owned by `service-ci-kit` to /alaa-gitlab-ci-cd; the shared-infra and deployment contract to /alaa-services-contract."
 ---
 
 # Service Runtime Kit Governance
@@ -78,6 +78,14 @@ Complete only when all hold: the correct layer was chosen; no generated file was
 - editing `scripts/docker/*.sh` directly instead of hooks or the shared kit
 - putting normal app env into `runtime/service.runtime.env` when it belongs in `.env`
 - mixing `service-runtime-kit` and `service-ci-kit` responsibilities
+
+## When NOT to use
+
+- The change is application logic — a controller, a job, a migration, a test — with no effect on generated
+  runtime files, `runtime/*.env` values, hooks, or the kit pin.
+- The repository does not consume `service-runtime-kit` and no task proposes adopting it.
+- The target is a Kubernetes, OpenShift, or Helm deployment, or a CI pipeline, rather than local Compose or
+  Swarm runtime. The ownership section below names each owner.
 
 ## What This Skill Does Not Own
 

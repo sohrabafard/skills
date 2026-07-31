@@ -17,6 +17,15 @@ Decide which checks may block a Laravel-on-Postgres release and at what threshol
 
 Run `scripts/check-ci-determinism.sh` before finishing any CI-file change; `--help` states each exit code.
 
+## When NOT to use
+
+- The change touches application code only and alters no pipeline stage, no gate threshold, no test
+  database, no migration job, no image tag, no cache key, and no CI credential.
+- The question is provider YAML syntax, runner configuration, or how a protected variable is declared,
+  rather than what the pipeline must gate on and at what threshold.
+- The question is what makes a test a test, or whether a migration is lock-safe on a large table. The
+  routing section below names each owner.
+
 ## Read next
 
 | You are about to | Read |

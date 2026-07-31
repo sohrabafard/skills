@@ -95,6 +95,14 @@ Stop successfully when every dependency in scope is classified, bounded, and has
 
 Stop and report blocked when: a dependency cannot be classified as gate or contributor from the code and the repository's documentation; a required value is absent from the platform contract and the workload data needed to derive it does not exist; a route's idempotency guarantee cannot be placed in the same transactional store as its effect and no reconciliation path exists; or a mechanism cannot be tested without a production experiment the user has not authorized.
 
+## When NOT to use
+
+- You need the exact Ala number — a timeout, a retry count, a pool bound, a shed threshold. This skill
+  states no Ala value; it states why a mechanism exists and how to choose its shape.
+- The path makes no outbound call, holds no pool, and has no defined behaviour when a dependency fails.
+- The question is whether an actor is permitted to act at all, or a control that must fail closed for
+  security rather than availability reasons. The routing table below names each owner.
+
 ## Reference routing
 
 Read only the files whose condition the task meets. Loading the whole tree means the task was not scoped.

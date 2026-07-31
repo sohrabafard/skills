@@ -115,6 +115,14 @@ Always in this order:
 5. `Validation:` exact commands or tests with the expected result of each, including the applicable negative tests from `50-credentials-and-cryptography.md`.
 6. `PASS` only when all three hold: no FAIL of either kind, no stop-the-line item, and section 2 enumerates every item in every trigger row the inventory hit.
 
+## When NOT to use
+
+- The change is style cleanup, formatting, or documentation only, and moves no trust boundary.
+- The change is performance tuning that alters no authentication, authorization, tenant scope, input
+  handling, outbound target, uploaded or served file, or stored secret.
+- The question is availability behaviour under load — retries, timeouts, degradation, shedding — rather
+  than whether an actor is permitted to act. The routing table below names each owner.
+
 ## Reference routing
 
 Read the smallest set the surface inventory hits.

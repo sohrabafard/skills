@@ -192,7 +192,7 @@ that greps human output breaks on an image bump with no error naming the cause. 
 defect: `mc mb -p ... || true` hid every bucket-creation failure and left the API reporting itself ready against a
 bucket that did not exist. Both Compose files now fail closed on alias setup, bucket creation and the `mc stat`
 read-back, and a static guard rejects the `|| true` pattern if it returns
-`[source: tusd-upload-platform repository, docs/agents/tusd-api-contract-state.md and
+`[source: tusd-upload-platform repository, <repo>/docs/agents/tusd-api-contract-state.md and
 scripts/docker/validate-compose-runtime.sh, read: 2026-07-27]`.
 
 **Discard `mc`'s output on the success path and print a fixed message instead.** `mc` prints the alias, endpoint,

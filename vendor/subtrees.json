@@ -26,7 +26,8 @@
       "remote": "claude-plugins-official-upstream",
       "url": "https://github.com/anthropics/claude-plugins-official.git",
       "branch": "main",
-      "pinned_commit": "f42c6edab38a90e56b7120a45525c541dee86ecc"
+      "pinned_commit": "f42c6edab38a90e56b7120a45525c541dee86ecc",
+      "codex_src_roots": []
     },
     {
       "name": "knowledge-work-plugins",
@@ -34,7 +35,11 @@
       "remote": "knowledge-work-plugins-upstream",
       "url": "https://github.com/anthropics/knowledge-work-plugins.git",
       "branch": "main",
-      "pinned_commit": "73b2b2dc0cf8467da112d0ef6b555ab022ee219d"
+      "pinned_commit": "73b2b2dc0cf8467da112d0ef6b555ab022ee219d",
+      "codex_src_roots": [
+        "vendor/knowledge-work-plugins/design/skills",
+        "vendor/knowledge-work-plugins/product-management/skills"
+      ]
     },
     {
       "name": "basic-memory",
@@ -43,14 +48,20 @@
       "url": "https://github.com/basicmachines-co/basic-memory.git",
       "branch": "main",
       "source_path": "skills",
-      "pinned_commit": "a1e0987eaf5ac9853c32fed5d907b1451e7a90df"
+      "pinned_commit": "a1e0987eaf5ac9853c32fed5d907b1451e7a90df",
+      "codex_src_roots": [
+        "vendor/basic-memory"
+      ]
     },
     {
       "name": "skill-temporal-developer",
       "prefix": "vendor/skill-temporal-developer",
       "remote": "skill-temporal-developer-upstream",
       "url": "https://github.com/temporalio/skill-temporal-developer.git",
-      "branch": "main"
+      "branch": "main",
+      "codex_src_roots": [
+        "vendor"
+      ]
     }
   ]
 }

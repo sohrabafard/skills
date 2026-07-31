@@ -112,7 +112,7 @@ Any output line is a duplicate. Run the same loop against the module under `lua-
 
 Classify each claim with `/alaa-testing-strategy` (`$alaa-testing-strategy`) `references/40-proof-strength.md` and report it at the level actually reached, never higher. For this kind of change, four levels are reachable and each one is required before a module ships:
 
-1. **Static** — `python3 scripts/check_haproxy_lua.py <module.lua>` exits 0. Reached without running anything.
+1. **Static** — `python3 scripts/check_haproxy_lua.py <module.lua>` exits 0. Reached without running anything. Before trusting that exit code on a branch or a module shape the checker has not seen, run `python3 scripts/check_haproxy_lua.py --self-test`, which re-runs every rule against the committed fixtures in `test/fixtures/`: one red fixture per rule that must report it, plus a converter-shaped and an action-shaped module that must report nothing. A rule with no fixture that makes it fire is decoration, and a clean exit from a checker whose rules were never shown to fire is not evidence.
 2. **Unit** — the mock-`core` test exits 0 under the interpreter `haproxy -vv` named, and every failure path has a case.
 3. **Local smoke** — `haproxy -c -f` exits 0 on the real configuration.
 4. **In-runtime** — a running HAProxy on a loopback bind answers the accepted case and the rejected cases as designed. Reach this level for any handler whose failure decides whether a request is served, because levels 1 to 3 cannot observe the rendered sample.

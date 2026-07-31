@@ -18,10 +18,10 @@ Its reciprocal statement, carried here verbatim:
 > offline download sits in best-effort storage; the caller must request persistence itself and must
 > ship the eviction-recovery path.
 
-Read `references/72-offline-media-store.md` there before shipping a download feature,
-`references/32-eviction-and-recovery.md` for the recovery path, and
-`references/41-multitab-versionchange-and-locks.md` if a service worker and a tab can both be active
-during a download. Neither skill restates the other.
+Read `alaa-indexeddb-browser-storage` `references/72-offline-media-store.md` before shipping a download
+feature, `alaa-indexeddb-browser-storage` `references/32-eviction-and-recovery.md` for the recovery path,
+and `alaa-indexeddb-browser-storage` `references/41-multitab-versionchange-and-locks.md` if a service
+worker and a tab can both be active during a download. Neither skill restates the other.
 
 **The fact that joins them, and the consequence the consumer must handle:** Shaka's only use of
 `navigator.storage` anywhere in `lib/` is **two `estimate()` calls** in

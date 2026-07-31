@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa CI/CD Laravel Postgres"
-  short_description: "Release gates for Laravel on Postgres: what gates, at what threshold"
+  short_description: "Laravel-on-Postgres release gates and thresholds"
   default_prompt: "Use $alaa-cicd-laravel-postgres to classify every pipeline check as gate or advisory, set its threshold, and wire the test-database isolation, migration reversibility and recovery paths."
+  brand_color: "#2F6F4F"
 
 policy:
   allow_implicit_invocation: true

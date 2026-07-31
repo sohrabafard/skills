@@ -1,46 +1,28 @@
-> [!IMPORTANT]
-> **This repository is deprecated.** For current Codex skill and plugin examples, use the [OpenAI Plugins repository](https://github.com/openai/plugins). If you want to add your own skills to Codex, follow the [Build plugins](https://developers.openai.com/codex/plugins/build) guide, which includes instructions for creating a skill-only plugin.
+# Skills
 
-# Agent Skills
+Agent Skills for coding work: folders of instructions, references, and scripts that Claude Code and
+Codex both load. Invoke a skill with `/name` in Claude Code and `$name` in Codex; both forms name the
+same skill.
 
-Agent Skills are folders of instructions, scripts, and resources that AI agents can discover and use to perform at specific tasks. Write once, use everywhere.
+Three files answer almost every question about this repository:
 
-Codex uses skills to help package capabilities that teams and individuals can use to complete specific tasks in a repeatable way. This repository catalogs skills for use and distribution with Codex.
+- [`skills/sohrab/README.md`](skills/sohrab/README.md) — the map of the first-party pack: every skill
+  it ships, what each one owns, and when to load it.
+- [`install-skills.md`](install-skills.md) — authoritative for install paths. It carries the script
+  that links the packs in this repository into `~/.codex/skills` and `~/.claude/skills`, and the
+  source-root list that script walks.
+- [`AGENTS.md`](AGENTS.md) — the rules for changing anything here, and the checkers to run before you
+  call a change done. Read it before your first edit.
 
-Learn more:
-- [Using skills in Codex](https://developers.openai.com/codex/skills)
-- [Create custom skills in Codex](https://developers.openai.com/codex/skills/create-skill)
-- [Agent Skills open standard](https://agentskills.io)
+Third-party skills sit under `skills/.curated/` and `skills/.system/`. Upstream packs are committed
+under `vendor/` and listed below.
 
-## Installing a skill
+## Vendored upstream skills
 
-Skills in [`.system`](skills/.system/) are automatically installed in the latest version of Codex.
-
-To install [curated](skills/.curated/) or [experimental](skills/.experimental/) skills, you can use the `$skill-installer` inside Codex.
-
-Curated skills can be installed by name (defaults to `skills/.curated`):
-
-```
-$skill-installer gh-address-comments
-```
-
-For experimental skills, specify the skill folder. For example:
-
-```
-$skill-installer install the create-plan skill from the .experimental folder
-```
-
-Or provide the GitHub directory URL:
-
-```
-$skill-installer install https://github.com/openai/skills/tree/main/skills/.experimental/create-plan
-```
-
-After installing a skill, restart Codex to pick up new skills.
-
-## Vendored Upstream Skills
-
-This repository also commits third-party skill packs under [`vendor/`](vendor/). Metadata-backed entries use `git subtree`; pinned or source-path snapshots are committed vendor directories and are refreshed manually.
+Upstream skill packs are committed under [`vendor/`](vendor/) as ordinary tracked files, so a clone
+of `origin` already has them and needs no subtree pull of its own. Metadata-backed entries use
+`git subtree`; pinned and source-path snapshots are committed directories refreshed by hand. The
+manifest that defines all of them is [`vendor/subtrees.json`](vendor/subtrees.json).
 
 <!-- vendor-subtrees:readme-list:start -->
 Current vendored upstreams:
@@ -52,43 +34,14 @@ Current vendored upstreams:
 - [`vendor/skill-temporal-developer`](vendor/skill-temporal-developer/) from `https://github.com/temporalio/skill-temporal-developer.git`
 <!-- vendor-subtrees:readme-list:end -->
 
-These directories are regular tracked files in this repository. If you sync vendor updates locally and push them to `origin`, any later clone of `origin` already receives the vendored content without running extra subtree pulls.
-
-The only clone-local setup is Git configuration. To make plain `git pull` also refresh all configured vendors in a clone, run once:
-
-```powershell
-python scripts\vendor_subtrees.py install-hooks
-```
-
-Manual sync remains available. It updates subtree-backed vendors and reports pinned or source-path snapshots as manual refreshes:
-
-```powershell
-python scripts\vendor_subtrees.py sync
-```
-
-To headlessly add a new vendor from only its Git URL:
-
-```powershell
-python scripts\vendor_subtrees.py add https://github.com/org/repo.git
-```
-
-The command derives the subtree name, detects the default branch, adds the subtree under `vendor/`, updates `vendor/subtrees.json`, and refreshes the vendored-skill docs blocks.
-
-It does not auto-enable hooks and it does not auto-install the vendored skills into Codex. Those remain explicit manual steps.
-
-As your vendored inventory grows, prefer selective exposure instead of linking every vendored skill into `~/.codex/skills`.
-
-Useful commands:
-
-```powershell
-python scripts\vendor_skill_links.py vendors
-python scripts\vendor_skill_links.py list --vendor cc-skills-golang
-python scripts\vendor_skill_links.py link --vendor cc-skills-golang --skill golang-testing --skill golang-troubleshooting
-python scripts\vendor_skill_links.py unlink --vendor cc-skills-golang --all --dry-run
-```
-
-The manifest for all managed subtree remotes lives in [`vendor/subtrees.json`](vendor/subtrees.json).
+That list is generated from the manifest by `python scripts\vendor_subtrees.py refresh-docs`; an edit
+between the markers is discarded by the next run. The commands that add a vendor, sync it, enable
+hook-driven sync, and expose selected vendored skills all live in
+[`install-skills.md`](install-skills.md), which also documents how the installer's source-root list
+is generated and how to change what it contains.
 
 ## License
 
-The license of an individual skill can be found directly inside the skill's directory inside the `LICENSE.txt` file.
+A vendored pack under `vendor/` carries whatever license file its upstream ships, at the top of its
+directory. A skill under `skills/.curated/` or `skills/.system/` carries a `LICENSE.txt` inside the
+skill's own directory. The first-party pack under `skills/sohrab/` ships no per-skill license file.

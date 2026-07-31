@@ -51,7 +51,7 @@ A number written in this skill never outranks a number the cluster reports.
 | Runner registration tokens are the legacy workflow; authentication tokens carry a `glrt-` prefix; from GitLab 17.0 an administrator or group owner can disable the legacy workflow, after which registration returns `410 Gone - runner registration disallowed` | https://docs.gitlab.com/ci/runners/new_creation_workflow/ |
 | GitLab Runner chart 0.53 and later configure pull secrets as `image_pull_secrets` in `config.toml`; 0.52 and earlier used `runners.imagePullSecrets` in `values.yaml` | https://docs.gitlab.com/runner/install/kubernetes_helm_chart_configuration/ |
 
-Runner configuration itself is owned by `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`). These two rows are recorded here only because this skill's `assets/values.secret.yaml.example` and its RBAC guidance touch them.
+Runner configuration itself is owned by `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`). These two rows are recorded here only because this skill's `$SKILL_DIR/assets/values.secret.yaml.example` and its RBAC guidance touch them.
 
 ## Arvan documentation map
 

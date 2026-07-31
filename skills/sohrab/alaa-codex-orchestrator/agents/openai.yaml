@@ -1,6 +1,7 @@
 interface:
   display_name: "Alaa Codex Orchestrator"
-  short_description: "Production multi-agent coding with verification and specialist gates"
+  short_description: "Multi-agent coding orchestration for Codex"
   default_prompt: "Use $alaa-codex-orchestrator in orchestrator mode for this repository goal:"
+  brand_color: "#4A5568"
 policy:
   allow_implicit_invocation: true

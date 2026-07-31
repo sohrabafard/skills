@@ -43,6 +43,14 @@ These bind on every Alaa service: a repo satisfies each one or carries a blockin
 - Every security or audit event is structured, timestamped, queryable, and carries the trace and request identity of the
   work that produced it.
 
+## When NOT to use
+
+- The change adds, removes, or alters no log, metric, trace, profile, dashboard, alert, runbook, or audit
+  record, and no retention or egress path.
+- The question is what a log field, event, code, or metric is called rather than whether it is required.
+- The question is how a request behaves against a failing dependency — pools, retries, breakers, shedding
+  — rather than which signal proves it happened. The ownership section below names each owner.
+
 ## Ownership
 
 - `/alaa-services-contract` (`$alaa-services-contract`) owns every **name and value**: headers, event and code names,

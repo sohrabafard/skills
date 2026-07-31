@@ -134,7 +134,7 @@ A chart that must work on Arvan and on stock Kubernetes carries exactly these sw
 
 ## 10. Secrets
 
-The handling rule is generic and is owned by `/alaa-k8s-helm` (`$alaa-k8s-helm`); the fail-closed doctrine is owned by `/alaa-security-review` (`$alaa-security-review`). What is specific here is the artifact this skill's own workflow produces: `scripts/render-helm.sh` writes a file containing every rendered `Secret`, creates it with mode 0600, and deletes it on exit unless `--keep` is passed. Every filename that can hold one — `rendered.yaml`, `*.rendered.yaml`, `values.secret.yaml`, `*.secret.yaml`, `*.secrets.yaml` — belongs in the consuming repository's ignore rules before the first render. `assets/values.secret.yaml.example` carries the list.
+The handling rule is generic and is owned by `/alaa-k8s-helm` (`$alaa-k8s-helm`); the fail-closed doctrine is owned by `/alaa-security-review` (`$alaa-security-review`). What is specific here is the artifact this skill's own workflow produces: `scripts/render-helm.sh` writes a file containing every rendered `Secret`, creates it with mode 0600, and deletes it on exit unless `--keep` is passed. Every filename that can hold one — `rendered.yaml`, `*.rendered.yaml`, `values.secret.yaml`, `*.secret.yaml`, `*.secrets.yaml` — belongs in the consuming repository's ignore rules before the first render. `$SKILL_DIR/assets/values.secret.yaml.example` carries the list.
 
 ## 11. Failure map for delivery on Arvan
 

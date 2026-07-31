@@ -1,0 +1,7 @@
+interface:
+  display_name: "alaa-go-chi Development"
+  short_description: "Governance for the alaa-go-chi kit and consumers"
+  default_prompt: "Use $alaa-go-chi-development when go.mod requires git.alaatv.com/vk/alaa-go-chi: read the kit repository's ratified execution-scope decision first, then work the row of its router that matches the condition you can observe."
+  brand_color: "#00758D"
+policy:
+  allow_implicit_invocation: true

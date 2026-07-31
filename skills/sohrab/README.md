@@ -199,7 +199,7 @@ The 46 `golang-*` skills these four route into are upstream subtrees under the r
 - `alaa-signoz-clickhouse-docs`
 - `vector-rust-observability-pipelines`
 - `alaa-postman-collections`
-- `alaa-repo-docs` — repository-level documentation: the README big picture, the API summary, data architecture, and errors and events. The English document is always the source of truth. A Persian mirror is mandatory when the target repository already contains a `.fa` document or a `docs/fa/` directory, and is produced on explicit request otherwise; the skill writes neither Persian only nor English only.
+- `alaa-repo-docs` — repository-level documentation: onboarding, architecture, API summaries, data, errors, events, observability, and internal navigation. It preserves each existing document's language, creates localized companions only when explicitly requested, and keeps one canonical home per topic with relative links from other documents.
 
 <!-- skill-map:end -->
 
@@ -210,7 +210,7 @@ These names appeared in earlier versions of the map and have no folder here, re-
 - `dockerfile-*` — replaced by `alaa-docker-production`; `makefile-generator`, `makefile-validator` — replaced by `alaa-makefile`
 - `azure-pipelines-*`, `github-actions-*`, `jenkinsfile-*` — `alaa-gitlab-ci-cd` is the only CI surface this pack ships
 - `terraform-*`, `terragrunt-*` — infrastructure targets route through `caas-arvan-kuber` and `alaa-k8s-helm`
-- `alaa-repo-docs` — renamed to `alaa-repo-docs`, because the old name promised a language while the skill delivers a documentation standard; `alaa-basic-memory-os` — renamed to `alaa-memory-os`, because the model is store-agnostic and Basic Memory is one adapter
+- `alaa-basic-memory-os` — renamed to `alaa-memory-os`, because the model is store-agnostic and Basic Memory is one adapter
 - `promql-*`, `logql-generator`, `loki-config-generator`, `fluentbit-*` — `alaa-observability-soc` owns signal and gate decisions; `alaa-signoz-clickhouse-docs` and `vector-rust-observability-pipelines` own the query and pipeline surfaces
 
 ## Definition of done

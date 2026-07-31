@@ -24,6 +24,16 @@ that keeps them identical.
 - Treat every non-zero exit from `scripts/crockford-base32-cli.sh` as a rejection and pass the failure on, because an empty or fallback substitute turns a rejected input into a wrong identifier downstream.
 - Use these UUIDv7 generators for correlation identifiers only, never for secrets or key material, because not every path uses a cryptographic PRNG.
 
+## When NOT to use
+
+- The value must be unguessable: a secret, a token, a session identifier, a password reset code. None of
+  these generators is cryptographically secure. Use a CSPRNG.
+- The task is HAProxy configuration or Lua-at-the-edge engineering rather than the codec those layers
+  share.
+- The task is deciding which identifier a public surface exposes, or which headers a trust boundary
+  accepts, rather than encoding bytes that decision already settled. The companion routing below names
+  each owner.
+
 ## Companion routing
 
 - `/alaa-haproxy-lua` (`$alaa-haproxy-lua`): Lua execution model, `lua-load` choice, edge error visibility.

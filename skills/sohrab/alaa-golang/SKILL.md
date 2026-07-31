@@ -14,6 +14,22 @@ belongs here is in `references/05-what-this-skill-does-not-own.md`. A project th
 this skill and a skill it routes to disagree, follow the routed skill and report the disagreement as drift; do not
 pick a side silently.
 
+## When NOT to use
+
+Do not enter through this skill when the whole task belongs to another owner:
+
+- **The task is kit-conformance review of an existing `alaa-go-chi` consumer and nothing else** —
+  load `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) directly.
+- **The task is kit governance rather than service work** — load `/alaa-go-chi-development`
+  (`$alaa-go-chi-development`) directly. Its row in `references/05-what-this-skill-does-not-own.md`
+  lists which requests those are.
+- **The task contains no Go source.** A Dockerfile, a pipeline, a chart, an edge configuration, or a
+  document that merely mentions a Go service belongs to its own owner, named in
+  `references/20-sohrab-companions.md`.
+
+Handing one topic inside a Go task to another owner is a different question, answered topic by topic
+in `references/05-what-this-skill-does-not-own.md`.
+
 ## Router
 
 Read `references/00-topic-map.md` and open only the rows whose situation matches what you are about to do.
@@ -55,9 +71,9 @@ thinking budget, a subagent or plan-mode capability, or trigger-syntax guidance,
 **Validation gate.** After any Go edit, run in this order: `go build ./...`; gopls `go_diagnostics` on every changed
 file; `go vet ./...`; the tests of the changed packages; `go test ./...`. Add `go test -race ./...` when the change
 touches a goroutine, a channel, a mutex, a cache, a worker pool, or a package-level variable. Run `govulncheck ./...`
-when `go.mod` or `go.sum` changed. Report every command with the evidence vocabulary in `alaa-go-chi-development`
-`references/05-phase-and-source-truth.md` — `passed`, `failed`, `blocked`, `skipped`, `not run` — and never report an
-outcome for a command you did not execute.
+when `go.mod` or `go.sum` changed. Report every command with the evidence vocabulary in
+`alaa-go-chi-development` `references/05-phase-and-source-truth.md` — `passed`, `failed`, `blocked`, `skipped`,
+`not run` — and never report an outcome for a command you did not execute.
 
 **Completion check.** Before calling Go work done, produce four answers in the final report:
 

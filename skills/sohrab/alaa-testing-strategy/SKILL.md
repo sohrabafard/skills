@@ -98,6 +98,14 @@ Stop successfully when every enumerated failure mode has a test that fails when 
 
 Stop and report blocked when: a behaviour cannot be placed at any layer because its failure is not producible in any arrangement available here; a required proof level is unreachable and the claim depends on what that level alone decides; an intermittent failure cannot be classified as product or test defect after the procedure in `references/50-flake.md` has been run to completion; a control cannot be proven by removal because removing it breaks compilation of unrelated code, and no equivalent inversion exists; or a test the change requires cannot be run and the repository has no skip mechanism to record it.
 
+## When NOT to use
+
+- The question is framework idiom or assertion syntax: which matcher to call, how to name the file, which
+  helper the runner already provides. The per-language skill owns that.
+- No test is being written, reviewed, repaired, or claimed as passing.
+- The question is fault injection, a security control, an envelope or code, or a Postman request test. The
+  routing table below names each owner.
+
 ## Reference routing
 
 Read only the files whose stated condition the task meets. Loading the whole tree means the task was not scoped.

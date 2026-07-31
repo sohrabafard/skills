@@ -1,7 +1,8 @@
 interface:
   display_name: "Alaa Octane Performance"
-  short_description: "Octane worker-state safety, cross-request leak prevention, worker lifecycle, and hot-path performance for Laravel"
+  short_description: "Octane worker-state safety and hot-path speed"
   default_prompt: "Use $alaa-octane-performance when config('octane.server') is non-null, or when the task mentions Octane, Swoole, RoadRunner, FrankenPHP, a singleton or static leaking between requests, stale auth/tenant/locale state, worker RSS creep, max_requests, or octane:reload. Apply its invariants before changing any binding."
+  brand_color: "#8A2E4D"
 
 policy:
   allow_implicit_invocation: true

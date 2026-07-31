@@ -82,6 +82,16 @@ The timeouts, with their documented defaults:
 | `tune.lua.forced-yield` | instructions between forced yields | 10000 per-thread, `MAX(500, 10000 / nbthread)` shared |
 | `tune.lua.maxmem` | Lua memory per process, in megabytes | 0, meaning unlimited |
 
+Every default in that table is a pinned value read from one branch of the manual, so re-derive it for the branch you deploy before quoting a number:
+
+```
+haproxy -v | head -1
+curl -fsS https://raw.githubusercontent.com/haproxy/haproxy/refs/tags/v3.4.0/doc/configuration.txt \
+  | grep -n -A6 'tune.lua.burst-timeout'
+```
+
+Replace `v3.4.0` with the tag matching the branch the first command reported. `references/SOURCES.md` records which tag each value above was read from and gives the same re-derivation for every other pin in this skill.
+
 Sleeping time is not counted against `burst-timeout`, `session-timeout`, or `service-timeout`; only pure Lua runtime is. Garbage-collection cycles *are* counted against `burst-timeout`, which the manual flags as a source of false positives on saturated systems.
 
 **Synchronous I/O from Lua stalls every connection on that thread**, and under `lua-load` it stalls every thread that needs Lua. HAProxy forbids the filesystem and process functions at runtime for exactly this reason: `os.remove`, `os.rename`, `os.tmpname`, `package.*`, `io.*`, `file.*`, `os.execute`, and `os.exit`. `print` is also prohibited, because it writes to stdout and can block; use `core.log` or `TXN.log`.

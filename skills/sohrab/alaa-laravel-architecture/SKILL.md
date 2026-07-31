@@ -48,6 +48,15 @@ None of these is a style preference. Each is the edge that produces a defect no 
 
 Run `sh scripts/architecture-gate.sh --app-dir app`; exit 0 is required. It is a floor, not a proof: `references/80-acceptance-gate.md` holds the findings, the blind spots, the waiver rule, and the three tests and one documentation obligation that complete a boundary change.
 
+## When NOT to use
+
+- The rule can be checked by reading one class on its own: naming, types, method length, or a pattern
+  applied inside a single file. Nothing crosses a boundary, so there is no call graph to test.
+- The change stays inside one layer and adds, moves, or removes no route, controller, service, repository,
+  DTO, resource, policy, provider binding, or emitted event.
+- The task is choosing a design before any code exists, or picking a timeout, retry, page-size, or
+  envelope value. The routing table below names each owner.
+
 ## What this skill does not own
 
 Where a rule here and a rule in the owning skill disagree, **the owning skill wins and the statement here is deleted** rather than kept as a second opinion.

@@ -11,7 +11,7 @@ You move a live service's dependency set and prove the service still behaves.
 
 Each item is a stop, not a preference.
 
-- **Continuity.** `/alaa-workflow` (`$alaa-workflow`) `references/context-continuity.md` owns plan, phasing, state and resume; follow it unchanged. Two facts it cannot know: this sweep's state file is `docs/agents/upgrade-all-packages-execution-state.md`, and a dirty `composer.lock` plus a dirty `vendor/` is an interrupted **resolution**, not an interrupted plan -- diagnose that via `references/40-failure-classes.md` before reading any plan.
+- **Continuity.** `/alaa-workflow` (`$alaa-workflow`) `references/context-continuity.md` owns plan, phasing, state and resume; follow it unchanged. Two facts it cannot know: this sweep's state file is `<repo>/docs/agents/upgrade-all-packages-execution-state.md`, and a dirty `composer.lock` plus a dirty `vendor/` is an interrupted **resolution**, not an interrupted plan -- diagnose that via `references/40-failure-classes.md` before reading any plan.
 - **Freeze marker.** A frozen dependency baseline is detected by a `docs/agents/dependency-freeze.md` file or an `extra.alaa.dependency-freeze` key in `composer.json` naming the freeze owner and reason. If either exists, change no dependency and report its contents. If a human says the repo is frozen and no marker exists, write the marker from the owner and reason they give and change nothing else, so the next run detects it without asking.
 - **Scope of the run.** `git ls-files '*composer.json' | grep -v '^vendor/'` enumerates manifests: run once per root, name that root in the state file, and derive every path from its absolute path, never from the working directory, which in a monorepo is not the manifest root. Then `grep -rn 'composer \(update\|install\)' Makefile* .gitlab-ci.yml .github .circleci docker 2>/dev/null`: any hit means Composer is wrapped, and the wrapper is what runs, since it may set flags, environment or ordering the raw commands omit.
 - **ControlledOps.** `"name": "alaa/controlled-ops"` in this manifest, or a run that would cut a tag or publish to Satis, belongs to `/alaa-controlled-ops` (`$alaa-controlled-ops`), whose release gates outrank every step here.
@@ -38,6 +38,14 @@ Show actual command output. A summary is not evidence, and a gate not run is rep
 - **Supply chain.** `composer validate --strict` and `composer audit` clean, or every finding carries the full acceptance record from `references/30-advisory-triage.md`. No agent accepts a finding on its own authority; critical and high have no acceptance path.
 - **Proof strength.** Name the level reached from `/alaa-controlled-ops` (`$alaa-controlled-ops`) `references/40-validation-and-release-gates.md`, "Proof vocabulary". Static inspection never clears a lockfile change under the fleet SLA; `references/20-breaking-change-detection.md` sets the level per class.
 - **Diff.** `git status --short`, `git diff --stat` and `git diff --check` show only intended dependency, generated-artifact, doc and state files, and no scratch or cache directory survives.
+
+## When NOT to use
+
+- The repository has no `composer.json`: a Go module, an npm-only service, or any other ecosystem.
+- The repository carries a dependency-freeze marker whose named owner has not answered.
+- The manifest is `alaa/controlled-ops`, or the run would cut a tag or publish to Satis.
+- The task is a major framework migration rather than bringing current dependencies forward.
+- The routing section below names the owner for each of these.
 
 ## Routing
 

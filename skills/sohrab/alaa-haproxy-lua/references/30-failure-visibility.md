@@ -2,6 +2,8 @@
 
 A Lua handler that fails badly does not raise an exception anyone sees. It produces a plausible value, the configuration accepts it, and the request continues to the backend. This file states what each failure shape actually renders and which one you must use.
 
+**Scope: converters and sample fetches.** They are the only handler types whose return value HAProxy reads back and turns into a sample, so they are the only ones every rule below applies to. An action or a service returns nothing HAProxy consumes; its failure contract is a named variable plus a rejecting configuration rule, and it is stated in `references/25-actions-services-and-subrequests.md`. Applying the rules below to an action produces a rule that cannot be satisfied, and applying the action contract to a converter leaves the converter failing open.
+
 ## What a Lua return value becomes
 
 HAProxy converts the Lua value your handler returns into a sample. `doc/lua.txt` gives the mapping:
@@ -36,7 +38,7 @@ Two conclusions follow, and both invert the intuitive reading.
 
 ## The rule
 
-**Signal every failure with `error(message, 0)`.** The sample then fails, the target variable stays unset, and a configuration rule can act on that.
+**Signal every failure of a converter or a sample fetch with `error(message, 0)`.** The sample then fails, the target variable stays unset, and a configuration rule can act on that. Inside an action or a service there is no sample to fail, so `error` there aborts the handler and logs, and the rejection has to come from the variable the handler set before it raised.
 
 **Pair every fallible converter or fetch with an explicit rejection at its call site**, because setting a variable is not a decision:
 
