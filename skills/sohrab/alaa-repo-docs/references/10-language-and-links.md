@@ -1,68 +1,59 @@
-# Language, redaction, and repository-safe links
+# Language, topic ownership, redaction, and repository-safe links
 
 Read this before writing any sentence, example, or link into a document. It binds every document
 this skill produces, in every language.
 
-## Language requirements
+## Language preservation
 
-- Write documentation in simple, fluent, correct English. English is the source document.
-- The user's chat language does not change the documentation language by itself. A Persian
-  conversation with no Persian document in the repository still produces an English document.
+- Preserve the language of each existing document. Do not translate it, rewrite it into a preferred
+  language, or create another language variant unless the user explicitly requests that output.
+- The user's chat language does not change a document's language by itself.
+- For a new document, use an explicitly requested language first. When the request names no
+  language, match the established language of the nearest equivalent document, documentation hub,
+  or repository instruction; never impose English or Persian as a fleet-wide default.
+- If the local documentation uses several languages and no nearest convention resolves a new
+  document's language, ask only when the choice materially changes the requested deliverable.
 - Never translate an identifier: enum, table, collection, index, cache-key prefix, header, route,
-  class, queue, event, metric, or payload key. Keep technical tokens exactly as implemented in
-  code, config, migrations, and Postman artifacts.
+  class, queue, event, metric, or payload key. Keep technical tokens exactly as implemented.
 
-## The Persian mirror
+## Explicit localized companions
 
-The English document is the source and the Persian document is its mirror. This repository already
-uses that pattern: `README.md` and `README.fa.md` sit side by side at the pack root.
-
-### When a mirror is mandatory
-
-Produce the mirror when either condition holds. Both are checkable before you start writing:
-
-1. The target repository already contains at least one mirror document — a file whose name ends in
-   `.fa.md` or `-fa.md` — or a `docs/fa/` directory. Then every document this skill creates or
-   updates in this task ships with its mirror in the same change.
-2. The user explicitly asks for a Persian document.
-
-If neither condition holds, do not produce a mirror. An unrequested mirror in a repository that has
-no Persian documents doubles the surface that can drift, and nobody asked for it.
+Create or update a translated or localized companion only when the user explicitly includes that
+companion in scope. The existence of `.fa.md`, `-fa.md`, or `docs/fa/` content is evidence of an
+existing document, not authorization to create or update another one.
 
 ### Naming
 
-- Same directory, same stem: `README.md` pairs with `README.fa.md`; `docs/BIG_PICTURE.md` pairs
-  with `docs/BIG_PICTURE.fa.md`.
-- If the repository already uses `-fa.md` or a `docs/fa/` tree, follow the convention that
-  repository already has. Never introduce a second convention beside an existing one.
+- For an explicitly requested Persian companion, use the same directory and the `.fa.md` suffix by
+  default: `README.md` pairs with `README.fa.md`, and `docs/BIG_PICTURE.md` pairs with
+  `docs/BIG_PICTURE.fa.md`.
+- Follow a different naming layout only when a repository instruction or the user's request
+  explicitly makes it binding. Do not infer authorization to create companions from that layout.
 
-### What the mirror must match
+### Companion structure
 
-The mirror translates prose. It does not restructure, reorder, shorten, or extend the source.
+When a localized companion is explicitly in scope, translate prose without restructuring,
+reordering, shortening, or extending the base document.
 
-- Same headings, in the same order, at the same levels. A section present in one and absent from
-  the other is drift, not a translation choice.
-- Byte-identical fenced code blocks. Identifiers, payloads, commands, and diagram source are never
-  translated, so nothing inside a fence changes between the pair. When the mirror needs a
-  translated caption for an example, put it in the prose beside the fence, never inside it.
-- Same link targets, which resolve identically because both files sit in the same directory.
+- Keep the same headings in the same order and at the same levels.
+- Keep fenced code blocks byte-identical.
+- Keep link targets identical when the pair shares a directory; recalculate relative targets when
+  an explicitly required repository convention places the companion elsewhere.
+- Run
+  `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <base> <companion>
+  --localized-pair <base> <companion>`. Repeat `--localized-pair` for each additional companion
+  explicitly in scope. Pair paths are explicit, so any language suffix or repository-owned layout
+  is supported and unrelated companions are not checked.
 
-### The incompleteness condition
-
-A change to an English document leaves the documentation set **incomplete** until its mirror
-carries the same change. An incomplete set is a finding, not a preference: report it under the
-output checklist in `references/40-sync-workflow-and-evidence.md` and close it in the same task.
-
-`scripts/check_markdown_links.py` asserts the structural half mechanically:
+The checker reports:
 
 | Finding | Condition | Fix |
 |---|---|---|
-| `PAIR-ORPHAN` | A mirror exists with no English source at the matching path. | Write the English source, or rename the file if it was never a mirror. |
-| `PAIR-DRIFT` | A pair exists whose heading sequence or fenced-code blocks differ. | Bring the mirror back to the source's structure. The source wins. |
-| `PAIR-MISSING` | The repository already has at least one mirror, and one of the documents listed in `SKILL.md` under `## Default document set` has none. | Write the missing mirror, or remove the mirror that made the rule apply. |
+| `PAIR-ORPHAN` | A localized companion has no explicitly named base document. | Create the base only when it belongs in scope, or correct the pair paths. |
+| `PAIR-DRIFT` | An explicitly named pair has different heading levels or fenced-code blocks. | Align the explicitly scoped pair; the named base document defines the structure. |
 
-The checker cannot tell whether a translated sentence is accurate. It reports that the two
-documents no longer describe the same structure, which is the drift class that actually occurs.
+The checker cannot judge translation accuracy. A clean result proves only link resolution and the
+structural parity of localized pairs that the command was explicitly asked to check.
 
 ### Persian prose rules
 
@@ -110,6 +101,28 @@ Documents produced here are committed and often published. Every example is a pu
 - If you add or refresh any deep-dive document, repair README navigation and related links in the
   same task.
 
+## Canonical topic ownership and de-duplication
+
+Apply this procedure in every documentation task:
+
+1. Inventory the current documentation hubs, deep dives, contracts, runbooks, and decision records
+   before writing.
+2. Search the documentation tree for the topic and its canonical identifiers before adding text.
+3. Assign the full explanation to exactly one canonical document based on role: README or the
+   repository index owns navigation; BIG_PICTURE owns the system map; a topic deep dive owns dense
+   detail; a runbook owns procedures; an ADR owns a decision and its rationale; a machine-readable
+   contract owns exact schemas.
+4. Preserve unique verified facts from every overlapping section. Consolidate the full detail into
+   the canonical owner, then replace repeated detail elsewhere with the smallest useful summary and
+   a relative link to the canonical section.
+5. Do not copy tables, payloads, step lists, diagrams, or normative rules into several documents.
+   If two audiences need the same detail, link both audiences to one owner.
+6. When no canonical document exists, place the topic in the strongest existing equivalent rather
+   than creating a near-duplicate. Create a new deep dive only when its role is distinct and the
+   task authorizes that document.
+7. Re-run the search after editing. Any remaining repeated detail must either have a distinct
+   audience-specific purpose stated in the text or be reduced to a link.
+
 ## Repository-safe links in generated documents
 
 - Every link must be repo-portable: valid after clone, valid in a GitHub or GitLab web viewer, and
@@ -132,8 +145,10 @@ Documents produced here are committed and often published. Every example is a pu
 
 ## Documentation graph and internal linking rules
 
-- `README.md` is the navigation hub. It links to every major document a new maintainer must read
-  next.
+- Use the repository's declared documentation index as the navigation hub. Use `README.md` when no
+  separate index is declared.
+- Make every major maintained document reachable from the hub through repo-relative Markdown
+  links. A new or changed deep dive is incomplete while it is orphaned.
 - `docs/BIG_PICTURE.md` is the architecture and runtime map. It summarises and points to deeper
   documents rather than copying every table, cache key, event, or error matrix.
 - `docs/api-summary.md` links back to `README.md` and `docs/BIG_PICTURE.md`, and to the deep-dive
@@ -147,19 +162,24 @@ Documents produced here are committed and often published. Every example is a pu
   when event payloads or failures depend on stored state.
 - Prefer a small `Related docs` or `See also` block near the top or end of each document over
   repeated navigation paragraphs.
-- When two documents overlap, keep the summary in the broader document and the full detail in the
-  narrower one.
+- Give each changed deep dive a link back to the hub and links to the canonical neighboring
+  documents needed to understand its inputs, outputs, or side effects.
+- Link directly to the owning section when the target renderer supports stable heading anchors;
+  otherwise link to the owning document and name the section in prose.
 
 ## Link validation workflow
 
 - Resolve every repo-local Markdown link before finishing, including same-file and cross-file
   heading anchors.
-- Run `python scripts/check_markdown_links.py <repo-root>`, or
-  `python scripts/check_markdown_links.py <repo-root> --files <paths>` for a narrow pass. Exit `0`
-  is clean, `1` is findings, `2` means the check could not run and nothing was proven.
-- That checker validates Markdown-link syntax and English-Persian pairs only. It does not see the
-  inline-code path citations that carry most cross-skill references in this pack; those are the
-  fleet checker `skills/scripts/check_fleet_references.py`'s subject.
+- Run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`, or
+  `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths>` for a narrow
+  pass. Exit `0` is clean, `1` is findings, `2` means the check could not run and nothing was
+  proven.
+- By default the checker validates Markdown-link syntax only. Add
+  `--localized-pair <base> <companion>` only when that localized companion is explicitly in scope;
+  repeat the option for more explicitly scoped pairs. It does not see the inline-code path citations
+  that carry most cross-skill references in this pack; those are the fleet checker
+  `skills/scripts/check_fleet_references.py`'s subject.
 - If Python is unavailable, the check did not run. Verify each touched link by opening its target,
   and record in the output report that the automated check was not available — never report the
   document as validated.

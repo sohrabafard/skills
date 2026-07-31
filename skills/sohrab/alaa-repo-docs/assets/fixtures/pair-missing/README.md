@@ -1,4 +1,4 @@
-# Owned Document Without A Mirror
+# Valid Unpaired Document
 
-This repository has a Persian mirror (other.fa.md), so every owned document needs one. This file
-has none, and the checker must report PAIR-MISSING against it.
+This repository has an unrelated localized pair (`other.md` and `other.fa.md`). That pair does not
+authorize or require a localized companion for this document.

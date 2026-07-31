@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Validate repo-local Markdown links, heading anchors, and English-Persian document pairs.
+"""Validate repo-local Markdown links, heading anchors, and explicit localized document pairs.
 
 Scope, stated so nobody builds a gate on more than this proves. It checks Markdown-syntax links
-only -- [text](target) and resolved reference-style links -- with their heading anchors, plus
-English-Persian mirror pairs structurally: orphan, drift, missing. It does NOT see inline-code path
-citations such as `references/10-x.md` or `alaa-foo references/10-x.md`, which carry most
-cross-skill references in this pack; those resolve against a skill root rather than the citing
-file's directory and belong to skills/scripts/check_fleet_references.py. Do not widen this script
-to cover them.
+only -- [text](target) and resolved reference-style links -- with their heading anchors. Each
+--localized-pair BASE COMPANION checks that one explicitly scoped pair for orphan and structural
+drift, regardless of its language suffix or directory layout. It never infers another companion.
+It does NOT see inline-code path citations such as `references/10-x.md` or
+`alaa-foo references/10-x.md`, which carry most cross-skill references in this pack; those resolve
+against a skill root rather than the citing file's directory and belong to
+skills/scripts/check_fleet_references.py. Do not widen this script to cover them.
 
 Exit codes: 0 clean, 1 findings, 2 could not run (nothing was proven).
 """
@@ -32,14 +33,6 @@ SCHEME_RE = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]+:")
 CODE_SPAN_RE = re.compile(r"``[^`]*``|`[^`]*`")
 FENCE_RE = re.compile(r"^(```+|~~~+)")
 
-MIRROR_SUFFIXES = (".fa.md", "-fa.md")
-OWNED_DOCS = (
-    "README.md",
-    "docs/BIG_PICTURE.md",
-    "docs/api-summary.md",
-    "docs/data-architecture.md",
-    "docs/errors-events-observability.md",
-)
 DEFAULT_EXCLUDES = ("vendor", "_to_delete", "node_modules", "fixtures")
 
 
@@ -184,17 +177,14 @@ def validate_target(root: Path, file_path: Path, line_no: int, target: str,
     return []
 
 
-def mirror_source(root: Path, path: Path) -> Optional[Path]:
-    """Return the English source a mirror claims, or None when the file is not a mirror."""
-    name = path.name
-    for suffix in MIRROR_SUFFIXES:
-        if name.endswith(suffix) and len(name) > len(suffix):
-            return path.with_name(name[: -len(suffix)] + ".md")
-    parts = list(path.relative_to(root).parts)
-    for i in range(len(parts) - 1):
-        if parts[i] == "docs" and parts[i + 1] == "fa":
-            return root.joinpath(*(parts[:i + 1] + parts[i + 2:]))
-    return None
+def resolve_repo_path(root: Path, path_arg: str) -> Path:
+    """Resolve a CLI path and reject reads outside the declared repository root."""
+    path = (root / path_arg).resolve()
+    try:
+        path.relative_to(root)
+    except ValueError as exc:
+        raise Blocked(f"path resolves outside repository root: {path_arg}") from exc
+    return path
 
 
 def structure_signature(path: Path) -> Tuple[List[int], List[str]]:
@@ -221,37 +211,33 @@ def structure_signature(path: Path) -> Tuple[List[int], List[str]]:
     return levels, fences
 
 
-def check_pairs(root: Path, files: Sequence[Path]) -> List[Issue]:
+def check_pairs(root: Path, pairs: Sequence[Tuple[str, str]]) -> List[Issue]:
     issues: List[Issue] = []
-    mirrors = {p: mirror_source(root, p) for p in files}
-    mirrors = {p: s for p, s in mirrors.items() if s is not None}
-    for mirror, source in sorted(mirrors.items()):
-        if not source.exists():
-            issues.append(Issue(mirror, 1, "PAIR-ORPHAN",
-                                f"mirror has no English source at {source.relative_to(root).as_posix()}"))
+    for base_arg, companion_arg in pairs:
+        base = resolve_repo_path(root, base_arg)
+        companion = resolve_repo_path(root, companion_arg)
+        if not companion.exists():
+            raise Blocked(f"localized companion does not exist: {companion_arg}")
+        if base == companion:
+            raise Blocked(f"localized pair paths must differ: {base_arg}")
+        if not base.exists():
+            issues.append(Issue(companion, 1, "PAIR-ORPHAN",
+                                "localized companion has no explicitly named base document at "
+                                f"{base.relative_to(root).as_posix()}"))
             continue
-        if structure_signature(source) != structure_signature(mirror):
-            issues.append(Issue(mirror, 1, "PAIR-DRIFT",
+        if structure_signature(base) != structure_signature(companion):
+            issues.append(Issue(companion, 1, "PAIR-DRIFT",
                                 "heading sequence or fenced blocks differ from "
-                                f"{source.relative_to(root).as_posix()}; the English source wins"))
-    if mirrors:
-        known = {m.resolve() for m in mirrors}
-        for rel in OWNED_DOCS:
-            source = root / rel
-            if not source.exists():
-                continue
-            candidates = [source.with_name(source.stem + s) for s in MIRROR_SUFFIXES]
-            candidates.append(root / "docs" / "fa" / Path(rel).name)
-            if not any(c.resolve() in known or c.exists() for c in candidates):
-                issues.append(Issue(source, 1, "PAIR-MISSING",
-                                    "repository has Persian mirrors but this owned document has none"))
+                                f"{base.relative_to(root).as_posix()}; the base structure wins"))
     return issues
 
 
 def run_checks(root: Path, files: Optional[Sequence[str]],
-               excludes: Sequence[str]) -> Tuple[List[Issue], List[Path]]:
+               excludes: Sequence[str],
+               localized_pairs: Sequence[Tuple[str, str]] = ()
+               ) -> Tuple[List[Issue], List[Path]]:
     if files:
-        selected = [(root / rel).resolve() for rel in files]
+        selected = [resolve_repo_path(root, rel) for rel in files]
         missing = [p for p in selected if not p.exists()]
         if missing:
             raise Blocked("missing file(s): " + ", ".join(str(p) for p in missing))
@@ -263,18 +249,23 @@ def run_checks(root: Path, files: Optional[Sequence[str]],
     for path in selected:
         for line_no, target in extract_targets(path):
             issues.extend(validate_target(root, path, line_no, target, cache))
-    issues.extend(check_pairs(root, selected))
+    issues.extend(check_pairs(root, localized_pairs))
     return issues, selected
 
 
 SELF_TEST_CASES = (
-    ("clean", 0, "code spans, ~~~ fence, Persian anchor, valid pair"),
-    ("windows-abs", 1, "D:/ and C:\\ links, this skill's own counter-examples"),
-    ("broken-link", 1, "relative link to a missing file"),
-    ("pair-orphan", 1, "mirror with no English source"),
-    ("pair-drift", 1, "pair with differing heading sequence"),
-    ("pair-missing", 1, "owned document with no mirror where the repo has one"),
-    ("undecodable", 2, "a .md file that is not valid UTF-8"),
+    ("clean", 0, "code spans, ~~~ fence, Persian anchor, valid explicit pair",
+     (("note.md", "note.fa.md"),)),
+    ("windows-abs", 1, "D:/ and C:\\ links, this skill's own counter-examples", ()),
+    ("broken-link", 1, "relative link to a missing file", ()),
+    ("pair-orphan", 1, "explicit companion with no named base document",
+     (("x.md", "x.fa.md"),)),
+    ("pair-drift", 1, "explicit pair with differing heading sequence",
+     (("guide.md", "guide.fa.md"),)),
+    ("pair-generic", 1, "non-Persian explicit pair with differing heading sequence",
+     (("guide.md", "guide.fr.md"),)),
+    ("pair-missing", 0, "an unrelated localized pair does not require another companion", ()),
+    ("undecodable", 2, "a .md file that is not valid UTF-8", ()),
 )
 
 
@@ -283,14 +274,14 @@ def self_test(fixtures: Path) -> int:
         print(f"self-test fixtures not found: {fixtures}", file=sys.stderr)
         return 2
     blocked = failed = 0
-    for name, expected, what in SELF_TEST_CASES:
+    for name, expected, what, localized_pairs in SELF_TEST_CASES:
         root = (fixtures / name).resolve()
         if not root.is_dir():
             print(f"BLOCKED {name}: fixture directory missing")
             blocked += 1
             continue
         try:
-            issues, _ = run_checks(root, None, ())
+            issues, _ = run_checks(root, None, (), localized_pairs=localized_pairs)
             observed = 1 if issues else 0
         except Blocked:
             observed = 2
@@ -301,20 +292,46 @@ def self_test(fixtures: Path) -> int:
         else:
             verdict, failed = "FAIL", failed + 1
         print(f"{verdict} {name}: expected {expected}, observed {observed} -- {what}")
+    outside_root = (fixtures / "pair-missing").resolve()
+    try:
+        run_checks(outside_root, ("../clean/note.md",), ())
+        observed = 0
+    except Blocked:
+        observed = 2
+    if observed == 2:
+        verdict = "PASS"
+    else:
+        verdict, failed = "FAIL", failed + 1
+    print(f"{verdict} files-outside-root: expected 2, observed {observed} -- "
+          "explicit files cannot escape the repository root")
+    unscoped_pair_root = (fixtures / "pair-drift").resolve()
+    try:
+        issues, _ = run_checks(unscoped_pair_root, None, ())
+        observed = 1 if issues else 0
+    except Blocked:
+        observed = 2
+    if observed == 0:
+        verdict = "PASS"
+    elif observed == 2:
+        verdict, blocked = "BLOCKED", blocked + 1
+    else:
+        verdict, failed = "FAIL", failed + 1
+    print(f"{verdict} unscoped-pair: expected 0, observed {observed} -- "
+          "an unrelated drifting pair is not checked")
     if blocked:
         print(f"\n{blocked} case(s) could not run.", file=sys.stderr)
         return 2
     if failed:
         print(f"\n{failed} case(s) failed.", file=sys.stderr)
         return 1
-    print(f"\nAll {len(SELF_TEST_CASES)} self-test cases passed.")
+    print(f"\nAll {len(SELF_TEST_CASES) + 2} self-test cases passed.")
     return 0
 
 
 def main(argv: Sequence[str]) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate repo-local Markdown links, anchors, and English-Persian pairs. "
-                    "Inline-code path citations are out of scope: see "
+        description="Validate repo-local Markdown links and anchors, with explicitly scoped "
+                    "localized-pair checks. Inline-code path citations are out of scope: see "
                     "skills/scripts/check_fleet_references.py.")
     parser.add_argument("repo_root", nargs="?", help="Repository root that links resolve within")
     parser.add_argument("--files", nargs="*", default=None,
@@ -323,6 +340,9 @@ def main(argv: Sequence[str]) -> int:
                         help=f"Directory names to skip (default: {' '.join(DEFAULT_EXCLUDES)})")
     parser.add_argument("--self-test", action="store_true",
                         help="Run the committed fixtures and report PASS/FAIL/BLOCKED")
+    parser.add_argument("--localized-pair", nargs=2, action="append", default=[],
+                        metavar=("BASE", "COMPANION"),
+                        help="Check one explicitly scoped localized pair; repeat for more pairs")
     parser.add_argument("--fixtures", default=None,
                         help="Fixture root for --self-test (default: ../assets/fixtures beside this script)")
     args = parser.parse_args(argv)
@@ -341,7 +361,13 @@ def main(argv: Sequence[str]) -> int:
         return 2
 
     try:
-        issues, checked = run_checks(root, args.files, tuple(args.exclude))
+        issues, checked = run_checks(
+            root,
+            args.files,
+            tuple(args.exclude),
+            localized_pairs=tuple((base, companion)
+                                  for base, companion in args.localized_pair),
+        )
     except Blocked as exc:
         print(f"Could not run: {exc}", file=sys.stderr)
         return 2
@@ -351,7 +377,8 @@ def main(argv: Sequence[str]) -> int:
             print(issue.render(root))
         print(f"\nFound {len(issues)} issue(s) in {len(checked)} file(s).", file=sys.stderr)
         return 1
-    print(f"Validated links and document pairs in {len(checked)} Markdown file(s) under {root}.")
+    scope = "links and localized pairs" if args.localized_pair else "links"
+    print(f"Validated {scope} in {len(checked)} Markdown file(s) under {root}.")
     return 0
 
 

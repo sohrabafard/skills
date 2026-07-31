@@ -1,6 +1,6 @@
 # Example Note
 
-English source of a valid pair. Every link below must resolve.
+Base document of a valid localized pair. Every link below must resolve.
 
 ## Setup
 

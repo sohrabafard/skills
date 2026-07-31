@@ -1,6 +1,6 @@
 ---
 name: alaa-repo-docs
-description: "Use this skill for repository-level documentation in Ala-style projects: README.md, remaining-task.md, the four docs/ deep-dive documents (BIG_PICTURE.md, api-summary.md, data-architecture.md, errors-events-observability.md), README navigation and repo-local Markdown links, and keeping all of them aligned with code and contracts. Every document named here is a file in the repository being worked on, not a file this skill ships. The English document is always the source of truth; a Persian mirror such as README.fa.md is produced when the repository already carries one or the user asks for one. Do not use it for logic-only changes, for comments and docblocks inside source files, which belong to alaa-frontend-doc-annotations, or for Postman collections and OpenAPI contracts, which belong to alaa-postman-collections."
+description: "Repository-level documentation control for Ala-style projects: README.md, remaining-task.md, the four docs/ deep dives, navigation, repo-local links, implementation alignment, and one canonical home per topic. Use when creating, refreshing, organizing, de-duplicating, or cross-linking project documents. Preserve each existing document's language. Create a translated or localized companion such as README.fa.md only when the user explicitly requests it; an existing Persian file never authorizes more translation. Do not use for logic-only changes, source comments or docblocks owned by alaa-frontend-doc-annotations, or Postman collections and OpenAPI contracts owned by alaa-postman-collections."
 ---
 
 # Alaa Repo Docs
@@ -21,7 +21,7 @@ Keep this file routing-first. Load only the reference whose condition holds.
 - `docs/errors-events-observability.md` for a repository with meaningful error, event, queue, log, trace, or metric surface
 - documentation alignment after an API, auth, storage, cache, runtime, deployment, event, error, or observability change
 - `remaining-task.md` when a document or Postman request promises behaviour the code does not implement
-- a Persian mirror of any document above, under `## Documentation language`
+- an explicitly requested localized companion of any document above, under `## Documentation language`
 
 ## When NOT to use
 
@@ -36,8 +36,9 @@ Keep this file routing-first. Load only the reference whose condition holds.
 2. Read `references/00-topic-map.md` and load only the rows whose condition holds.
 3. Verify behaviour from source before writing any claim: routes, validation, handlers, exception mapping, events, listeners, queue config, migrations, models, cache code, observability config, and tests.
 4. For a broad or multi-document refresh, split discovery using `references/70-subagent-doc-workflows.md` before editing anything.
-5. Update every paired document the change triggers, following the production workflow in `references/40-sync-workflow-and-evidence.md`, and report against its output checklist.
-6. Repair README navigation and repo-local links, then run `python scripts/check_markdown_links.py <repo-root>` and resolve every finding.
+5. Assign each touched topic one canonical document, replace repeated detail elsewhere with a summary and relative link, then follow the production workflow in `references/40-sync-workflow-and-evidence.md`.
+6. Repair documentation-hub navigation and repo-local links, then run
+   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and resolve every finding.
 
 ## Default document set
 
@@ -54,23 +55,22 @@ If the repository already has a stronger equivalent document under another name,
 
 ## Documentation language
 
-- The English document is the source of truth. Every other rule in this skill binds the English document first.
-- Produce a Persian mirror when either condition holds: the repository already contains a `.fa` document such as `README.fa.md` or `README-fa.md`, or a `docs/fa/` directory; or the user asks for one. Both are checkable facts about the repository or the request, not judgements about the audience.
-- A change to an English document leaves the documentation set **incomplete** until its mirror carries the same change in the same task. `scripts/check_markdown_links.py` asserts this and reports drift as a finding.
-- Never translate an identifier, in any output language: enum, table, collection, index, header, route, class, queue, event, metric, or payload key. A Persian sentence that mixes the two starts with a Persian word.
-- Several skills across the fleet route Persian deliverables to this skill. That routing is correct as of this batch, because the mirror is now this skill's output. It does not make Persian the default.
-- Full rules, including the mirror's structural obligations: `references/10-language-and-links.md`.
+- Preserve the language of every existing document. Editing a document never authorizes translating it or creating another language variant.
+- For a new document, use the language the user explicitly requested; otherwise match the established language of the nearest equivalent document or documentation hub.
+- Create a translated or localized companion only when the user explicitly requests that companion. The presence of `.fa.md`, `-fa.md`, or `docs/fa/` files is not permission to create or update another Persian document.
+- When the user asks for a Persian companion and no stronger repository convention applies, name it with `.fa.md`, such as `README.fa.md`.
+- Never translate an identifier in any output language.
+- Read `references/10-language-and-links.md` before writing; it owns language selection, explicit localized companions, canonical topic ownership, de-duplication, and links.
 
 ## Non-negotiables
 
 - Every statement is traceable to source code, config, migrations, schema, tests, current documents, or runtime artifacts. When a claim is uncertain, state the verification path instead of guessing.
 - Never weaken an existing strong document into a shorter, more generic one. Preserve caveats, diagrams, enum tables, payload examples, operational notes, storage inventories, event lists, and flow variants unless they are provably obsolete.
-- The documents above hold different roles. Do not collapse them into duplicates, and do not copy deep-dive content upward into `README.md` or `docs/BIG_PICTURE.md`.
 - Do not patch business logic in a documentation-only request.
 - Every link is repo-portable. Never emit a machine-local absolute path, a Windows backslash, or a `file://` link.
 - A committed example never carries a real secret, token, API key, `.env` value, production hostname, internal IP address, or real tenant or user identifier. Use placeholder values that are obviously placeholders, and route any doubt about whether a value is safe to publish to `/alaa-security-review` (`$alaa-security-review`).
 - Validate repo-local links and heading anchors before finishing.
-- The repository `AGENTS.md` may rename or relocate any document above and may add required sections. It may not waive link validation, the traceability rule, the redaction rule, or the mirror rule.
+- The repository `AGENTS.md` may rename or relocate any document above and may add required sections. It may not waive link validation, traceability, redaction, language preservation, or explicit authorization for localized companions.
 
 ## Ground this skill does not own
 

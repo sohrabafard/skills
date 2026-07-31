@@ -93,5 +93,6 @@ When the project or user has custom agent definitions, prefer the one whose desc
 1. Reconcile overlaps and contradictions in the parent thread.
 2. Write or update the documents serially, with one merge owner per file.
 3. Re-open the changed documents and verify the links between them.
-4. Run `python scripts/check_markdown_links.py <repo-root>`, and treat exit `2` as "not checked".
+4. Run `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>`, and treat exit `2` as "not
+   checked".
 5. Re-check the output checklist in `references/40-sync-workflow-and-evidence.md`, including the tracks that returned nothing.

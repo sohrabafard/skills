@@ -27,7 +27,7 @@ task.
 | Deployment or local-runtime assumptions | `<repo>/README.md`, `<repo>/docs/BIG_PICTURE.md`, `<repo>/docs/api-summary.md` when the example base host changes, and runbook, Helm, or Docker sources |
 | Module boundaries or architecture patterns | `<repo>/docs/BIG_PICTURE.md`, module maps, and linked design documents |
 | Documentation filenames or internal links | `<repo>/README.md`, every touched deep-dive document, and the full repo-local link graph |
-| Any English document, in a repository with a Persian mirror | that document's mirror, per `references/10-language-and-links.md` |
+| A localized companion explicitly requested by the user | its explicitly named base document and the companion, per `references/10-language-and-links.md` |
 
 ## AGENTS alignment
 
@@ -36,7 +36,8 @@ task.
 - Always document runtime-mode differences explicitly.
 - When backend and gateway assumptions differ by deployment, keep both claims explicit and each
   linked to its source file.
-- When deep-dive documents exist, `README.md` still remains the navigation hub.
+- When deep-dive documents exist, keep the repository's declared documentation index as the hub;
+  use `README.md` when no separate index is declared.
 
 ## Workflow for producing richer documents
 
@@ -50,9 +51,14 @@ task.
 8. For a stateful repository, create or refresh `docs/data-architecture.md` per `references/50-data-architecture-contract.md`.
 9. For a repository with meaningful error, event, or observability surface, create or refresh `docs/errors-events-observability.md` per `references/60-errors-events-observability-contract.md`.
 10. Add or refresh diagrams, module maps, flowcharts, and state snapshots where the current documents are too thin.
-11. Re-check cross-links to Postman, runbooks, decision records, and service-specific references, and validate every repo-local Markdown link.
+11. Apply the canonical-topic procedure in `references/10-language-and-links.md`: consolidate
+    repeated detail into one owner, replace duplicates with summaries and links, and make every
+    changed major document reachable from the repository's documentation hub; then validate every
+    repo-local Markdown link.
 12. If a document or Postman artifact promises behavior not implemented in current code, create or refresh `remaining-task.md` using `references/80-implementation-gap-backlog.md`.
-13. Update every Persian mirror the change touched, per `references/10-language-and-links.md`.
+13. Preserve every existing document's language. Create or update a localized companion only when
+    the user explicitly requested it, then validate that pair with
+    `--localized-pair <base> <companion>`.
 14. Before finishing, walk the `## Coverage requirements` list in every contract reference that applied to this task and confirm each question is answered by the document that owns it. **An unanswered coverage question is a gap to close, and that is this skill's only done criterion.** "Richer or clearer than before" is not one, because no agent can fail it.
 
 ## Output checklist for documentation updates
@@ -67,7 +73,8 @@ Report every line. An item that did not apply is reported as intentionally not n
 6. `docs/errors-events-observability.md` created, refreshed, reused under another filename, or intentionally not needed.
 7. Postman and contract artifacts updated through their owner, or intentionally unchanged.
 8. `remaining-task.md` created, refreshed, or intentionally not needed.
-9. Persian mirrors updated, or the repository has none.
+9. Languages preserved; explicitly requested localized companions created or updated, or none
+   requested.
 10. Subagents used or intentionally skipped, with the track each owned.
 11. Repo-local Markdown links validated, with the checker's exit code, or the reason the checker could not run.
 12. Remaining uncertain areas, if any.
@@ -77,9 +84,15 @@ Report every line. An item that did not apply is reported as intentionally not n
 - Use `rg` or an equivalent identifier search for every contract term: headers, routes, enums, queues, event names, table names, cache-key prefixes, logger names, and runtime modes.
 - Check source code, migrations, schema, or config for each changed assertion.
 - Verify that each document listed in the sync matrix for this change still matches current code for the topic it owns, and that `README.md` and `docs/BIG_PICTURE.md` have matching coverage on shared topics.
-- Resolve each repo-local Markdown link against the repository tree. Run `python scripts/check_markdown_links.py <repo-root>` and treat exit `2` as "not checked", never as "clean".
+- Resolve each repo-local Markdown link against the repository tree. Run
+  `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and treat exit `2` as "not
+  checked", never as "clean".
 - Reconcile conflicting subagent findings against source-of-truth files before editing final documents.
 - Verify that existing useful sections were preserved or intentionally replaced with stronger coverage.
+- Search the documentation tree for each touched topic after editing; confirm full detail has one
+  canonical owner and other occurrences are audience-specific summaries with links.
+- Confirm every changed major document is reachable from the documentation hub and links back to
+  that hub.
 
 ## Failure classes for this skill's own run
 
