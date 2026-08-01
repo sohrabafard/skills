@@ -37,7 +37,7 @@ Move each named question through discovery, exact semantics or editing, and proo
 
 ## Tool usage
 
-Use CodeGraph for unknown location and broad supported-source flow, relationships, architecture, or impact. Use Serena for a known symbol or file, exact semantics, references, hierarchy, diagnostics, and semantic edits. Use Laravel Boost for installed Laravel documentation and authorized Laravel application context. Use native or domain owners for Markdown and policy, JSON/YAML/TOML, CI, Docker/Compose/Helm semantics, generated artifacts, binaries, runtime facts, Git diff, and proof.
+Use CodeGraph for unknown location and broad supported-source flow, relationships, architecture, or impact. Use Serena for a known supported-source symbol or file, exact semantics, references, hierarchy, diagnostics, and semantic edits. Use Laravel Boost for installed Laravel documentation and authorized Laravel application context. Use native or domain owners for Markdown and policy, JSON/YAML/TOML, CI, Docker/Compose/Helm semantics, generated artifacts, binaries, runtime facts, Git diff, and proof.
 
 ## Retrieval rules
 

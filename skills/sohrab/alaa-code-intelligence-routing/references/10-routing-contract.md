@@ -21,8 +21,8 @@ Parallel execution is allowed only when separately named questions are independe
 | Exact definition, reference, implementation, hierarchy, type-aware diagnostic, or known-symbol navigation | Serena | CodeGraph only when a new wider-flow or impact question appears |
 | Known small textual change in one named hand-maintained non-semantic file | Native targeted read and patch | Serena only when a separately named semantic question appears |
 | Semantic rename, symbol-body replacement, or reference-safe code edit | Serena | Native patch only after the exact range is established and Serena cannot perform the operation |
-| Markdown phrase or identifier across repository documents | Native search restricted to Markdown | Serena Markdown for headings after one document is named |
-| Heading outline or section navigation in one known Markdown file | Serena Markdown when healthy | Targeted native read |
+| Markdown phrase or identifier across repository documents | Native search restricted to Markdown | None |
+| Heading outline or section navigation in one known Markdown file | Native targeted read or heading-scoped search | None |
 | Repository Markdown creation, alignment, de-duplication, navigation, or link repair | `/alaa-repo-docs` in Claude Code or `$alaa-repo-docs` in Codex | Claim-specific code, config, contract, framework, or runtime evidence |
 | Source comments, docblocks, or annotations | `/alaa-frontend-doc-annotations` or `$alaa-frontend-doc-annotations` | Serena for the exact containing symbol |
 | JSON, YAML, TOML, CI, environment templates, manifests, or policy text | Native scoped search/read plus parser or repository checker | Serena only for one named diagnostic question when that language is enabled |

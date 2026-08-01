@@ -8,7 +8,7 @@ Score correctness and required proof coverage first. Reject any run with a misse
 
 Treat duplicate detection as a heuristic. Review the named gap, staleness state, and artifact transition before calling a sequence waste. Use only stable client-provided usage data; never build a permanent parser over private or unstable transcripts.
 
-Run controlled comparisons over representative cases: unknown-location flow, known-symbol semantics, Laravel package context, stale CodeGraph files, an unsupported artifact, a document-heavy task, Git-diff review, and native proof. Include a degraded case for each evidence owner and verify that partial or blocked labels preserve the lost guarantee.
+Run controlled comparisons over representative cases: unknown-location flow, known-symbol semantics, Laravel package context, stale CodeGraph files, an unsupported artifact, repository Markdown routing, Git-diff review, and native proof. Include a degraded case for each evidence owner and verify that partial or blocked labels preserve the lost guarantee.
 
 Conclude only that one tested policy performed better on the held-constant corpus and measures. Prose, one successful run, or fewer calls alone cannot establish an absolute best policy.
 
