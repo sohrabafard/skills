@@ -11,7 +11,7 @@ The current pack mixes two patterns on purpose:
 
 ## Pack design rules
 
-- a Codex agent can load only a skill that ships `agents/openai.yaml`, and 65 of the 67 folders here do. Two do not, checked 2026-07-30: `alaa-cc-orchestrator`, which is Claude-Code-only and whose Codex twin `alaa-codex-orchestrator` ships one, and `alaa-go-chi-development`, which has no twin and is an open defect rather than a precedent. `python scripts\check_skill_index.py` reports the current list
+- a Codex agent can load only a skill that ships `agents/openai.yaml`, and all 68 of the 68 skill folders here do, verified with `python scripts\check_skill_index.py`
 - no skill states a model name; model, effort, and runtime-capability questions route to `/alaa-prompting-guide` (`$alaa-prompting-guide`)
 - mature surfaces prefer one routing-first owner instead of many tiny near-duplicates
 - companion skills stay explicit where ownership boundaries still matter
@@ -117,6 +117,7 @@ Every folder in this directory appears exactly once between the markers below, a
 - `alaa-system-design`
 - `alaa-testing-strategy`
 - `alaa-algorithms-data-structures`
+- `alaa-code-intelligence-routing` — deterministic evidence routing across CodeGraph, Serena, Laravel Boost, native/domain owners, and repository proof; prevents duplicate retrieval and requires same-worktree validation.
 - `alaa-keyset-pagination` — cursor/keyset pagination design: deterministic ordering, matching index, cursor integrity and context binding, limits, and the offset exception.
 - `alaa-input-normalization` — folding Persian, Arabic and every other non-ASCII decimal digit to ASCII at both input boundaries, under one contract with four implementations and a conformance harness.
 - `alaa-prompting-guide`
@@ -221,7 +222,7 @@ Work in this pack is considered ready when:
 - detailed guidance is preserved in one-hop `references/` or `docs/` files
 - `agents/openai.yaml` exists and matches the current skill intent
 - stale donor skill names are removed from active routing docs
-- `python scripts\check_skill_index.py` reports no index finding, and any `agents/openai.yaml` gap it reports is one of the two named in Pack design rules above
+- `python scripts\check_skill_index.py` reports no index finding and no `agents/openai.yaml` gap
 - examples, checklists, and anti-patterns are preserved in simple English
 - system-level helpers are clearly separated from pack-local skills
 

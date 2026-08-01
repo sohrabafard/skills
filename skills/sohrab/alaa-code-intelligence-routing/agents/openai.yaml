@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Code Intelligence Routing"
-  short_description: "Choose one evidence owner and prevent duplicate discovery"
-  default_prompt: "Use $alaa-code-intelligence-routing to select the evidence owner, name any fallback gap, and route proof without repeating retrieval."
+  short_description: "Route CodeGraph, Serena, Boost, and proof once"
+  default_prompt: "Use $alaa-code-intelligence-routing to classify the current question, select one primary owner, permit only one named secondary gap, and finish with native proof in the same worktree."

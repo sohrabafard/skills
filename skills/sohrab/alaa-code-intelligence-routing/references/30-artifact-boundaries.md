@@ -9,5 +9,7 @@
 | Logs, traces, metrics, browser state | Authorized runtime owner | Static tools may map evidence to source but cannot prove runtime behavior. |
 | Images, diagrams, PDFs, binary assets | Native visual or artifact tool | CodeGraph and Serena do not own binary content. |
 | External framework or package behavior | Official version-aware docs | Laravel Boost owns installed Laravel package documentation. |
-| Cross-repository ownership and contracts | Service catalog, contract registry, GitHub, or existing Hindsight surface | Query local repositories only after the authority names them. |
+| Cross-repository ownership, contracts, and handoffs | Service catalog, contract registry, hosting surface, or approved memory surface | Evidence from another checkout is unavailable; query a named repository and reproduce proof there. |
 | Git review | Diff first | Expand only from changed artifacts and named risks. |
+
+No parser, language server, graph, or runtime tool receives authority from availability. Apply the repository's existing read, write, secret, data, environment, and production boundaries before invoking it.

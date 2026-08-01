@@ -8,7 +8,7 @@
 
 ## قواعد طراحی این pack
 
-- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و ۶۵ پوشه از ۶۷ پوشه اینجا دارند. دو پوشه ندارند، بررسی‌شده در ۲۰۲۶-۰۷-۳۰: یکی `alaa-cc-orchestrator` که فقط برای Claude Code است و دوقلوی Codex اش یعنی `alaa-codex-orchestrator` این فایل را دارد، و دیگری `alaa-go-chi-development` که دوقلو ندارد و یک نقص باز است، نه یک رویه مجاز.
+- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و هر ۶۸ پوشه skill از ۶۸ پوشه اینجا این فایل را دارند؛ این وضعیت با `python scripts\check_skill_index.py` بررسی شده است.
 - هیچ skill ای نام مدل نمی‌گوید؛ هر سوال مدل و effort و توان runtime به `alaa-prompting-guide` می‌رود.
 - سطح‌های بالغ یک مالک routing-first دارند، نه چند skill ریز و تقریبا تکراری.
 - skill های همراه جایی صریح می‌مانند که مرز مالکیت هنوز اهمیت دارد.
@@ -84,6 +84,7 @@
 | `alaa-system-design` | روش طراحی یک سرویس یا زیرسیستم **پیش از** پیاده‌سازی: مرزبندی، قرارداد قبل از کد، مالکیت داده، و انتخاب بین چند طرح | قبل از نوشتن کدی که مرز، قرارداد، یا مالکیت داده را جابه‌جا می‌کند |
 | `alaa-testing-strategy` | طراحی تست: لایه‌ها، test double ها، شش سطح قدرت اثبات، کنترل flake، و پوشش | تصمیم‌گیری درباره اینکه چه چیزی و در کدام لایه تست شود |
 | `alaa-algorithms-data-structures` | بودجه پیچیدگی، پیدا کردن کران واقعی ورودی، انتخاب ساختار داده از روی الگوی دسترسی، و خانواده N+1 | مسیری که ورودی‌اش با تعداد کاربر، تاریخچه یا fan-out رشد می‌کند |
+| `alaa-code-intelligence-routing` | هدایت قطعی شواهد میان CodeGraph، Serena، Laravel Boost، مالک‌های native/domain و proof مخزن؛ جلوگیری از retrieval تکراری و الزام اعتبارسنجی در همان worktree | وقتی باید برای discovery، ویرایش معنایی، مستندسازی، artifact، review یا proof یک مالک انتخاب کنید |
 | `alaa-keyset-pagination` | طراحی pagination مبتنی بر cursor: ترتیب قطعی با tie-breaker، ایندکس متناظر، امضا و اعتبارسنجی cursor، و استثنای offset برای جدول‌های ادمین | هر route لیستی که کلاینت صفحه‌به‌صفحه می‌خواند |
 | `alaa-input-normalization` | تبدیل ارقام فارسی و عربی و هر رقم غیر-ASCII به ASCII در هر دو مرز ورودی، یعنی مرورگر در لحظه submit و middleware هر سرویس backend، با یک قرارداد و چهار پیاده‌سازی و یک harness انطباق | نوشتن یا بازبینی مسیر submit فرم، validator، middleware تازه، یا فیلد OTP و موبایل و کد ملی؛ و وقتی مقداری که با ارقام فارسی تایپ شده در validation یا unique index یا idempotency شکست می‌خورد |
 
@@ -198,7 +199,7 @@
 - راهنمای تفصیلی در فایل‌های یک-پرش `references/` یا `docs/` نگه داشته شده باشد
 - فایل `agents/openai.yaml` وجود داشته باشد و با نیت فعلی skill بخواند
 - نام skill های اهداکننده قدیمی از سندهای routing فعال حذف شده باشد
-- دستور `python scripts\check_skill_index.py` هیچ finding مربوط به نقشه گزارش نکند، و هر کمبود `agents/openai.yaml` که گزارش می‌کند یکی از آن دو مورد نام‌برده در قواعد طراحی باشد
+- دستور `python scripts\check_skill_index.py` هیچ finding مربوط به نقشه و هیچ کمبود `agents/openai.yaml` گزارش نکند
 - مثال و checklist و ضدالگو به انگلیسی ساده حفظ شده باشند
 - کمک‌کننده‌های سطح-سیستم از skill های pack-local به‌روشنی جدا باشند
 
