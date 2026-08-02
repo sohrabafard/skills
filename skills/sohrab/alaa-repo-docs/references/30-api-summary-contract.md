@@ -24,6 +24,27 @@ One API surface can end up described in three artifacts. Each has exactly one ow
 
 The one case where the summary shrinks rather than coexists: when the summary would only restate the contract field by field, cut it to the endpoint inventory plus a link to the contract for schemas. A summary that duplicates a machine-readable contract will drift from it, and the contract wins.
 
+## Drift-free public API contract gate
+
+Do not finalize public API documentation while any known drift remains between current repository
+truth, the machine-readable contract, Postman artifacts when present, and the human-readable
+contract documentation. The aligned set must describe the same registered routes, caller and auth
+surface, path and query parameters, request bodies, response schemas, status codes, and error
+shapes.
+
+Verify alignment against the current worktree's routes, validators, handlers, serializers,
+exception mapping, and tests. When OpenAPI or Postman is stale, route its repair through
+`/alaa-postman-collections` (`$alaa-postman-collections`); never make
+`<repo>/docs/api-summary.md` agree
+with a stale artifact. A known drift that cannot be repaired within current authority is a blocked
+completion state, not an acceptable documentation caveat.
+
+The machine-readable OpenAPI contract and Postman collection remain semantically atomic: preserve
+each as one complete artifact and do not size-grade or split it. `docs/api-summary.md` and other
+human-readable public API contract guides are eligible narrative documents: split, de-duplicate,
+and route them under `references/10-language-and-links.md` and
+`references/15-document-size-and-clustering.md`.
+
 ## When docs/api-summary.md is required
 
 Create or refresh it when all of these are true: the repository owns or exposes HTTP API routes; those routes matter to frontend clients, external callers, internal services, operators, or future agents; and the route surface is large enough that a concise summary improves navigation.
@@ -82,5 +103,7 @@ The `docs/api-summary.md` cluster tree must answer each of these without opening
 - Which action endpoints exist beyond basic CRUD?
 - What is the verified local example host, if the repository documents one?
 - Which deeper document answers storage, event, or error questions?
+- Do the current implementation, machine-readable contract, Postman artifacts when present, and
+  this human-readable contract tree agree with no known drift?
 
 Every claim in it is source-backed, and it never tries to replace the canonical contract or the Postman collection.

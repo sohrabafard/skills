@@ -47,7 +47,8 @@ task.
 4. Verify behavior from code, config, route definitions, validation rules, exception handlers, events, listeners, migrations, models, cache helpers, and source-of-truth documents before editing any claim.
 5. When the repository is large or the task spans several documents, split read-only discovery per `references/70-subagent-doc-workflows.md` and wait for every track before writing.
 6. Fill coverage gaps for all four audiences: maintainer, frontend developer, coding agent, and new service author.
-7. For an API repository, create or refresh `docs/api-summary.md` per `references/30-api-summary-contract.md`.
+7. For an API repository, create or refresh `docs/api-summary.md` and prove the public API contract
+   set has no known drift per `references/30-api-summary-contract.md`.
 8. For a stateful repository, create or refresh `docs/data-architecture.md` per `references/50-data-architecture-contract.md`.
 9. For a repository with meaningful error, event, or observability surface, create or refresh `docs/errors-events-observability.md` per `references/60-errors-events-observability-contract.md`.
 10. Add or refresh diagrams, module maps, flowcharts, and state snapshots where the current documents are too thin.
@@ -75,7 +76,8 @@ Report every line. An item that did not apply is reported as intentionally not n
 4. `docs/api-summary.md` created, refreshed, or intentionally not needed.
 5. `docs/data-architecture.md` created, refreshed, reused under another filename, or intentionally not needed.
 6. `docs/errors-events-observability.md` created, refreshed, reused under another filename, or intentionally not needed.
-7. Postman and contract artifacts updated through their owner, or intentionally unchanged.
+7. Postman and public-contract artifacts verified aligned with current implementation and updated
+   through their owner when drift existed, or intentionally absent.
 8. `remaining-task.md` created, refreshed, or intentionally not needed.
 9. Languages preserved; explicitly requested localized companions created or updated, or none
    requested.

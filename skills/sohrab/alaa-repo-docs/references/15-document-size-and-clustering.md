@@ -11,11 +11,12 @@ Classify each file without asking the user whether it should be split or size-gr
 - **Eligible narrative documentation:** a repository guide whose primary readers are humans or
   agents and whose purpose is orientation, explanation, or navigation. Always grade and improve
   these documents toward green. This includes `README.md`, `docs/BIG_PICTURE.md`,
-  `docs/data-architecture.md`, `docs/errors-events-observability.md`, and equivalent project guides.
+  `docs/api-summary.md`, human-readable public API contract guides, `docs/data-architecture.md`,
+  `docs/errors-events-observability.md`, and equivalent project guides.
 - **Exempt named artifacts:** workflow state and checkpoint files, plans, task backlogs such as
   `remaining-task.md`, RFCs and decision records, Postman collections and environments, OpenAPI or
-  AsyncAPI contracts, machine-readable schemas, and generated contracts. Preserve each as one
-  complete artifact; never split or size-grade it.
+  AsyncAPI contracts, every `.json`, `.yaml`, and `.yml` file, machine-readable schemas, and
+  generated contracts. Preserve each as one complete artifact; never split or size-grade it.
 - **Exempt semantically atomic files:** any file that a human, agent, or tool must consume as a
   whole to interpret or validate one payload, API request or response, schema, decision, execution
   state, or ordered procedure. Preserve the whole file. When an atomic payload or example is
@@ -39,9 +40,11 @@ diagrams, and fenced blocks.
 | Red | 201 or more | Blocked without explicit human approval for the named file and current line count. Prefer restructuring even when approved. |
 
 Every eligible narrative document this skill creates or refreshes, and every child it creates,
-must be measured. The agent's objective is green for every measured file. Yellow or orange requires
-a concise reason in the final report explaining why the next split would damage comprehension.
-Human approval for a red document expires when its line count or content materially changes.
+must be measured. Finalize autonomously in this strict order: green when coherent; otherwise yellow
+when another split would harm comprehension; otherwise orange when no coherent green or yellow
+decomposition exists. Do not ask for human approval for green, yellow, or orange. State the reason
+for every yellow or orange result in the final report. Only red requires explicit human approval,
+and that approval expires when the document's line count or content materially changes.
 
 ## Recursive clustering procedure
 
