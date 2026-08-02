@@ -36,7 +36,7 @@ Keep this file routing-first. Load only the reference whose condition holds.
 2. Read `references/00-topic-map.md` and load only the rows whose condition holds.
 3. Verify behaviour from source before writing any claim: routes, validation, handlers, exception mapping, events, listeners, queue config, migrations, models, cache code, observability config, and tests.
 4. For a broad or multi-document refresh, split discovery using `references/70-subagent-doc-workflows.md` before editing anything.
-5. Assign each touched topic one canonical document, then apply `references/15-document-size-and-clustering.md` to every created or refreshed document before following the production workflow in `references/40-sync-workflow-and-evidence.md`.
+5. Assign each touched topic one canonical document, then use `references/15-document-size-and-clustering.md` to classify every created or refreshed file, grade and cluster eligible narrative documents, and preserve exempt artifacts whole before following the production workflow in `references/40-sync-workflow-and-evidence.md`.
 6. Repair documentation-hub navigation and repo-local links, then run
    `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and resolve every finding.
 

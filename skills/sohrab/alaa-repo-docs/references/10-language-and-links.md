@@ -104,7 +104,9 @@ Documents produced here are committed and often published. Every example is a pu
 
 ## Canonical topic ownership and de-duplication
 
-Apply this procedure in every documentation task:
+Apply this procedure during documentation creation, refresh, update, upgrade, migration, and
+cluster splitting. Existing duplication is cleanup input, never permission to reproduce the same
+topic in the new document tree.
 
 1. Inventory the current documentation hubs, deep dives, contracts, runbooks, and decision records
    before writing.
@@ -113,16 +115,21 @@ Apply this procedure in every documentation task:
    repository index owns navigation; BIG_PICTURE owns the system map; a topic deep dive owns dense
    detail; a runbook owns procedures; an ADR owns a decision and its rationale; a machine-readable
    contract owns exact schemas.
-4. Preserve unique verified facts from every overlapping section. Consolidate the full detail into
-   the canonical owner, then replace repeated detail elsewhere with the smallest useful summary and
-   a relative link to the canonical section.
-5. Do not copy tables, payloads, step lists, diagrams, or normative rules into several documents.
+4. Merge every unique verified fact from overlapping sections into the canonical owner, resolve
+   contradictions against repository truth, and upgrade that owner into the current complete
+   explanation. Do not preserve stale wording or duplicate structure merely because it existed.
+5. Replace every non-canonical occurrence with the smallest audience-specific summary and an
+   informative relative link that names the topics the canonical owner teaches, following
+   `references/15-document-size-and-clustering.md`.
+6. Do not copy tables, payloads, step lists, diagrams, or normative rules into several documents.
    If two audiences need the same detail, link both audiences to one owner.
-6. When no canonical document exists, place the topic in the strongest existing equivalent rather
-   than creating a near-duplicate. Create a new deep dive only when its role is distinct and the
-   task authorizes that document.
-7. Re-run the search after editing. Any remaining repeated detail must either have a distinct
-   audience-specific purpose stated in the text or be reduced to a link.
+7. When no canonical document exists, place the topic in the strongest existing equivalent rather
+   than creating a near-duplicate. When one topic is genuinely shared by several parent documents,
+   create one shared canonical child using the hierarchy in
+   `references/15-document-size-and-clustering.md` and link every parent to it.
+8. Re-run the search after editing. Confirm the canonical owner contains the complete verified
+   topic, remains aligned with source truth, and is the only location with full detail. Every other
+   occurrence must have a distinct audience-specific summary or be reduced to an informative link.
 
 ## Repository-safe links in generated documents
 

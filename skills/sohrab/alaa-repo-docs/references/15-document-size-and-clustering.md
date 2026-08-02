@@ -1,8 +1,30 @@
 # Document size and topic-clustering contract
 
 Read this file whenever this skill creates or refreshes a main document or any child document
-extracted from it. The create-or-refresh triggers remain in `SKILL.md`; once a document is in scope,
-this file owns its size state and decomposition.
+extracted from it. The create-or-refresh triggers remain in `SKILL.md`; this file owns the
+eligibility decision, size state, and decomposition.
+
+## Eligibility decision
+
+Classify each file without asking the user whether it should be split or size-graded:
+
+- **Eligible narrative documentation:** a repository guide whose primary readers are humans or
+  agents and whose purpose is orientation, explanation, or navigation. Always grade and improve
+  these documents toward green. This includes `README.md`, `docs/BIG_PICTURE.md`,
+  `docs/data-architecture.md`, `docs/errors-events-observability.md`, and equivalent project guides.
+- **Exempt named artifacts:** workflow state and checkpoint files, plans, task backlogs such as
+  `remaining-task.md`, RFCs and decision records, Postman collections and environments, OpenAPI or
+  AsyncAPI contracts, machine-readable schemas, and generated contracts. Preserve each as one
+  complete artifact; never split or size-grade it.
+- **Exempt semantically atomic files:** any file that a human, agent, or tool must consume as a
+  whole to interpret or validate one payload, API request or response, schema, decision, execution
+  state, or ordered procedure. Preserve the whole file. When an atomic payload or example is
+  embedded in eligible narrative documentation, keep that block intact while clustering the
+  surrounding narrative.
+
+An existing narrative document's integrated layout is not an exemption; cluster it by topic and
+target green. When a file remains genuinely ambiguous after applying the rules above, preserve it
+whole, report it as `EXEMPT-ATOMIC` with the reason, and do not ask the user to decide.
 
 ## Size states
 
@@ -16,12 +38,16 @@ diagrams, and fenced blocks.
 | Orange | 101-200 | Accept only when no coherent green or yellow decomposition exists. |
 | Red | 201 or more | Blocked without explicit human approval for the named file and current line count. Prefer restructuring even when approved. |
 
-Every main document this skill creates or refreshes, and every child it creates, must be measured.
-The agent's objective is green for every measured file. Yellow or orange requires a concise reason
-in the final report explaining why the next split would damage comprehension. Human approval for a
-red document expires when its line count or content materially changes.
+Every eligible narrative document this skill creates or refreshes, and every child it creates,
+must be measured. The agent's objective is green for every measured file. Yellow or orange requires
+a concise reason in the final report explaining why the next split would damage comprehension.
+Human approval for a red document expires when its line count or content materially changes.
 
 ## Recursive clustering procedure
+
+Before creating cluster files, apply the canonical-topic and de-duplication procedure in
+`references/10-language-and-links.md`. It decides which repeated topic becomes one upgraded owner;
+never derive one child per previous occurrence.
 
 1. Group the document by cohesive reader questions, source owners, and change cadence. A cluster is
    one related subject set that a reader normally needs together; it is never an arbitrary line
@@ -67,14 +93,17 @@ topics instead.
 - When a child must split again, create a sibling directory named after that child's full stem and
   apply the same rule inside it. Example:
   `docs/data-architecture/20-cache/10-invalidation.md`.
+- When `references/10-language-and-links.md` identifies a topic shared by several parent documents,
+  place its single canonical child under `<repo>/docs/shared/NN-<topic>.md` and link every parent to
+  it. Do not create one copy beneath each parent.
 - Follow a stronger repository-owned documentation directory only when it preserves the same
   explicit hierarchy and two-digit child filenames. Repair all affected relative links in the same
   task.
 
 ## Deterministic check
 
-Run the link check required by `references/10-language-and-links.md`, then measure every created or
-refreshed document and child with:
+Run the link check required by `references/10-language-and-links.md`, then measure every eligible
+narrative document and child with:
 
 `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root> --files <paths> --line-budget`
 

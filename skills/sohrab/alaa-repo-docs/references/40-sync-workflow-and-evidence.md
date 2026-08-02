@@ -55,8 +55,10 @@ task.
     repeated detail into one owner, replace duplicates with summaries and links, and make every
     changed major document reachable from the repository's documentation hub; then validate every
     repo-local Markdown link.
-12. Apply `references/15-document-size-and-clustering.md` to every created or refreshed document,
-    recursively split non-green clusters when comprehension permits, and run its line-budget gate.
+12. Classify every created or refreshed file under
+    `references/15-document-size-and-clustering.md`; preserve exempt artifacts whole, recursively
+    split eligible non-green narrative clusters when comprehension permits, and run the line-budget
+    gate only on eligible narrative files.
 13. If a document or Postman artifact promises behavior not implemented in current code, create or refresh `remaining-task.md` using `references/80-implementation-gap-backlog.md`.
 14. Preserve every existing document's language. Create or update a localized companion only when
     the user explicitly requested it, then validate that pair with
@@ -79,9 +81,9 @@ Report every line. An item that did not apply is reported as intentionally not n
    requested.
 10. Subagents used or intentionally skipped, with the track each owned.
 11. Repo-local Markdown links validated, with the checker's exit code, or the reason the checker could not run.
-12. Line count and green, yellow, orange, or red state for every created or refreshed document;
-    the comprehension reason for each yellow or orange exception; and the exact human approval for
-    each red exception.
+12. Line count and green, yellow, orange, or red state for every eligible narrative document; the
+    comprehension reason for each yellow or orange exception; the exact human approval for each red
+    exception; and each exempt artifact with its exemption class and reason.
 13. Remaining uncertain areas, if any.
 
 ## Evidence checks
@@ -93,11 +95,12 @@ Report every line. An item that did not apply is reported as intentionally not n
   `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and treat exit `2` as "not
   checked", never as "clean".
 - Run the line-budget command from `references/15-document-size-and-clustering.md` for every
-  created or refreshed document and child.
+  eligible narrative document and child; never pass exempt artifacts to that gate.
 - Reconcile conflicting subagent findings against source-of-truth files before editing final documents.
 - Verify that existing useful sections were preserved or intentionally replaced with stronger coverage.
-- Search the documentation tree for each touched topic after editing; confirm full detail has one
-  canonical owner and other occurrences are audience-specific summaries with links.
+- Search the documentation tree for each touched topic after editing; confirm all unique verified
+  facts were merged and corrected in one canonical owner, old duplication was not reproduced, and
+  every other occurrence is an audience-specific summary with an informative link.
 - Confirm every changed major document is reachable from the documentation hub and links back to
   that hub.
 
