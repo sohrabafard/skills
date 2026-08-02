@@ -1,23 +1,27 @@
 # Routing-hook topology
 
-This skill owns the interaction topology between evidence tools and the adoption and rollback checks for that topology. The user-level CodeGraph baseline remains the discovery governor. Keep Serena project activation and cleanup, but omit `serena-hooks remind` while CodeGraph routing is enabled because the reminder cannot recognize CodeGraph evidence as completed discovery.
+The vendor or runtime owns executable hook syntax and lifecycle behavior. This skill owns only which routing behavior may coexist without creating duplicate discovery.
 
-Current official runtime documentation and the installed CodeGraph and Serena commands own exact hook events, schema, locations, matchers, trust behavior, lifecycle support, command shapes, and client compatibility. Verify both at adoption time; do not freeze executable JSON or TOML in this skill.
+## Ownership
+
+- The CodeGraph installer owns its MCP registration, marker-fenced instructions, permissions, and any compatible prompt hook. Do not copy a second CodeGraph hook from this pack.
+- Project-local Serena hooks own activation and cleanup for the project.
+- A Serena reminder may be used when CodeGraph is not available. Omit it in a CodeGraph-indexed project because it cannot prove that graph discovery already answered the question and may re-trigger grep or symbol exploration.
+- Serena auto-approval is not a default. It can approve semantic edit tools as well as reads; enable the optional fragment only when project permission policy explicitly authorizes that entire matched tool surface.
+- One hook operation has one configuration owner. Do not rely on cross-layer replacement or deduplication; inspect effective hooks and remove semantically duplicate entries from the layer you control.
 
 ## Adoption
 
-1. Verify the CodeGraph root and Serena active project resolve to the current Git worktree.
-2. Inspect the installed CodeGraph and Serena command help and health output and the target runtime's current official hook schema before editing project-local configuration.
-3. When the installed CodeGraph hook command declares compatible input for the target runtime and client, configure CodeGraph prompt injection; otherwise do not configure it. The currently observed `codegraph prompt-hook --help` identifies Claude `UserPromptSubmit` input; do not copy that hook to Codex unless the installed command declares Codex-compatible input.
-4. Preserve existing Serena activation and cleanup behavior. Remove or omit only the project-local Serena reminder that competes with CodeGraph routing.
-5. Parse or validate the project-local configuration against the current schema, then exercise each hook in a disposable or ordinary session while observing its exit and status behavior.
-6. Exercise one CodeGraph discovery route, one Serena known-symbol route, and the named manual fallback.
-7. Record only the project-local deltas. Keep the exact current JSON or TOML in the user handoff, not in this skill. Do not imply onboarding, memory writes, reindexing, initialization, dependency installation, or mutation authority.
-
-If compatible CodeGraph prompt injection is unavailable or any routing hook fails, degrade to the named manual fallback: apply the global CodeGraph baseline for supported-source discovery, verify Serena activation before known-symbol work, and verify the worktree before native proof. Consume evidence already returned; fallback does not authorize duplicate discovery.
+1. Verify CodeGraph root, Serena active project, and Git root resolve to the same worktree.
+2. Inspect installed CodeGraph and Serena help and the target runtime's official hook schema.
+3. Let the CodeGraph installer create or repair its own entries.
+4. Merge exactly one Serena profile: `codegraph-indexed` or `no-codegraph`.
+5. Parse the effective JSON or TOML and inspect the runtime's effective hook list.
+6. Exercise activation, one known-symbol Serena request, cleanup, and—only in the no-CodeGraph profile—one reminder case.
+7. Record the project-local delta and rollback path. Hook activation does not change evidence ownership. Do not modify hook or MCP configuration unless the task explicitly requests setup, upgrade, repair, or removal.
 
 ## Rollback
 
-Remove only the project-local hook entries and files introduced by the adoption. Preserve user, managed, plugin, and unrelated project hooks. Re-parse or validate the effective configuration, inspect remaining command health, observe remaining hooks in a disposable or ordinary session, and verify that manual routing still works in the same worktree.
+Remove only entries introduced from this pack. Preserve managed, user, plugin, vendor, and unrelated project hooks. Re-parse the effective configuration, inspect remaining hooks, and verify manual routing in the same worktree.
 
-Passive instrumentation may observe routing, but it must not alter permissions, tool output, or the routing decision being measured.
+Passive evaluation hooks may observe events but must not alter permissions, tool output, or routing decisions.

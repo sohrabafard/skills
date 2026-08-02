@@ -1,29 +1,30 @@
 # Stack fast paths
 
-These are evidence fast paths, not project instruction ownership.
+These rows select evidence owners. The named stack skill still owns implementation doctrine.
 
 ## Laravel
 
-Use Laravel Boost for installed-package documentation and authorized Laravel application context. Before each call, verify the installed Boost tool inventory and distinguish documentation or metadata reads from database queries, code-execution or runtime operations exposed by the installed tool, data mutation, secrets, and production context; the latter retain their normal authorization requirements. A source-flow question starts with CodeGraph. A known-symbol PHP question starts with Serena. Boost moves to CodeGraph or Serena only for one recorded source-flow or semantic gap. Repository-native Laravel gates own proof.
+| Question | Owner |
+|---|---|
+| Where is the behavior, what symbols are related, what is the route-to-handler and downstream call path, who calls whom, what is the likely blast radius, and which files should be read? | CodeGraph in a healthy index |
+| What is the outline of this known PHP file, where is this declaration, what references it, what diagnostics apply, or how should this symbol be renamed or edited semantically? | Serena when the PHP backend is configured and healthy |
+| Which routes are registered in this application? | `php artisan route:list`, or an installed Boost inventory surface that proves the same fact |
+| What does the installed Laravel or package documentation say, or what framework convention applies? | Laravel Boost Search Docs |
+| What application metadata, log, schema, or database/runtime fact is observed? | Installed Boost surface or native runtime command, under normal environment and data authorization |
+| Did the change work? | Repository-native Laravel gates |
+
+Laravel Boost does not own source call graphs or symbol refactors. CodeGraph and Serena do not prove runtime registration, framework behavior, database state, or completion. Before any Boost database operation, verify environment and statement effect; do not trust a read-only label as the authority boundary.
+
+Implementation doctrine routes to `/alaa-laravel-architecture` in Claude Code or `$alaa-laravel-architecture` in Codex and the other Laravel owners named by that skill.
 
 ## Go
 
-Use CodeGraph for unknown package location, handler and consumer flow, interface relationships, and likely impact. Use Serena for a known definition, implementation, reference, diagnostic, hierarchy, rename, or semantic edit. Use Go commands and repository gates for proof.
-
-## HAProxy gateway with Lua
-
-Use CodeGraph for unknown supported-source flow when its index is healthy. Use Serena with `lua` for a known Lua symbol, reference, diagnostic, hierarchy, rename, or semantic edit. `/alaa-haproxy-lua` (`$alaa-haproxy-lua`) owns Lua implementation doctrine, and `/alaa-haproxy` (`$alaa-haproxy`) owns HAProxy directives, rendered configuration, runtime behavior, and native proof. Handle HAProxy configuration, Helm, YAML, Compose, shell, and generated render output through their native or domain owners; do not add their languages to Serena for repository coverage.
-
-## WA repository
-
-When the live repository contains a material Go module at `<repo>/wa-api/go.mod`, apply the Go route above to that module. Use Serena with `go` for known Go symbols and semantic edits only. Handle Vector configuration, VRL embedded in YAML, ClickHouse SQL, OpenAPI, Helm, Compose, scripts, and repository documents through their native or domain owners. If Serena activated at the repository root cannot expose the nested Go module, activate `<repo>/wa-api` while verifying that it still resolves to the same Git worktree; do not add unrelated languages as a workaround.
+Use CodeGraph for unknown package location, source flow, relationships, and likely impact. `/alaa-golang` in Claude Code or `$alaa-golang` in Codex owns the semantic interface for definitions, references, hierarchy, diagnostics, and Go-aware edits and routes those questions to its gopls owner. Do not enable Serena merely to duplicate that owner. A project may select Serena only for a measured recurring gap that `/alaa-golang` does not cover and records that exception in its binding. Native Go commands and repository gates own proof.
 
 ## Vue and Quasar
 
-Use CodeGraph for page, route, component, composable, store, API-client, and static integration flow. Use Serena with `vue` for exact Vue and TypeScript semantics; do not add a duplicate TypeScript language when the Vue server supplies its companion server. Use browser/runtime evidence for runtime UI questions and repository-native frontend gates for proof.
+Use CodeGraph for unknown page, route, component, composable, store, API-client, and static integration flow. Use Serena for a known Vue or TypeScript symbol only when the configured Vue backend exposes the required semantics and no project skill names another semantic owner. Do not add a second TypeScript backend merely because TypeScript files exist; use the project-generated Serena configuration and health result as authority. Browser evidence owns runtime UI behavior, and repository-native frontend gates own proof. Implementation doctrine routes to `/alaa-frontend-developer` or `$alaa-frontend-developer` and `/alaa-vue-typescript-clean-code` or `$alaa-vue-typescript-clean-code`.
 
 ## Other source repositories
 
-Use the same question boundary regardless of language: CodeGraph owns unknown location and broad supported-source relationships; Serena owns a known symbol or file and semantic editing; the stack owner owns implementation doctrine; native commands own proof. If either evidence surface does not support the material language, route to the language-native owner and label any lost broad-flow or semantic guarantee.
-
-Copy the applicable source-repository binding and minimal Serena profile from `references/70-project-bindings.md`; profiles are examples, not fleet-wide mandates. Route repository documentation through `references/20-documentation-routing.md`.
+CodeGraph owns unknown structural discovery in supported indexed source. The stack-declared semantic owner, otherwise configured Serena, owns known-symbol semantics and edits. The stack skill owns implementation doctrine. Native commands own proof. Unsupported or unindexed languages route to their language-native owner and retain a partial label when broad-flow or semantic guarantees are lost.

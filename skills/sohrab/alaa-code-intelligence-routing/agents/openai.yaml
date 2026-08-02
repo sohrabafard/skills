@@ -1,4 +1,4 @@
 interface:
   display_name: "Alaa Code Intelligence Routing"
-  short_description: "Route CodeGraph, Serena, Boost, and proof once"
-  default_prompt: "Use $alaa-code-intelligence-routing to classify the current question, select one primary owner, permit only one named secondary gap, and finish with native proof in the same worktree."
+  short_description: "Route structural, semantic, Boost, and native evidence once"
+  default_prompt: "Use $alaa-code-intelligence-routing to name the current question, select one primary evidence owner, permit one recorded secondary gap at most, and finish with native proof in the same worktree."

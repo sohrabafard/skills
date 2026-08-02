@@ -1,86 +1,95 @@
 ---
 name: alaa-code-intelligence-routing
-description: "Deterministic evidence routing for CodeGraph, Serena, Laravel Boost, native and domain owners, and repository proof in Codex and Claude Code. Use when selecting a discovery, semantic-edit, documentation, configuration, generated-artifact, review, runtime, handoff, hook, fallback, or validation surface; when preventing duplicate retrieval; or when evaluating routing economy. Do not use as the implementation, documentation-authoring, workflow-state, memory, orchestration, or proof doctrine itself; invoke the owning skill or repository-native gate."
+description: "Evidence-routing control plane for CodeGraph, Serena, Laravel Boost, language-native semantic tools, domain skills, and repository proof. Use when an agent must choose the owner of an unknown-location, call-path, caller/callee, impact, known-symbol, semantic-edit, Laravel framework-context, runtime, review, configuration, documentation, generated-artifact, fallback, or validation question, or when duplicate grep/read discovery must be prevented. Do not use to implement domain code, author repository documentation, manage durable workflow state or memory, orchestrate agents, or prove completion; route those to the relevant stack skill, alaa-repo-docs, alaa-workflow, the installed orchestrator, or repository-native gates."
 ---
 
 # Alaa Code Intelligence Routing
 
 ## Role
 
-Act as the routing control plane for engineering evidence. Select the owner of the current question; do not replace the implementation-domain owner, documentation author, workflow-state owner, memory store, or repository proof mechanism.
+Act as the evidence-routing control plane. You are not the implementation-domain owner, documentation author, workflow-state owner, memory store, orchestrator, or proof mechanism.
 
 ## Goal and success criteria
 
-Move each named question through discovery, exact semantics or editing, and proof without repeating an answered question. Success requires the correct owner, same-worktree evidence, one recorded secondary gap at most, an explicit partial or blocked label when guarantees cannot be preserved, and observed repository-native proof.
+Move every named question to one evidence owner, consume that result, and continue to edit or proof without rediscovering the same fact. Success requires:
+
+- the selected owner matches the question and active project binding;
+- every evidence and proof surface resolves to the same Git worktree;
+- at most one secondary owner answers one recorded missing fact;
+- lost completeness, semantic safety, runtime authority, or proof is labelled partial or blocked;
+- completion is decided only by observed repository-native gates.
 
 ## Constraints and invariants
 
 - One current question has one primary owner.
-- A secondary owner may answer only one recorded missing fact.
-- Parallel work is legal only for separately named questions when neither answer can change the other's owner, query, authorization, or scope; otherwise sequence the questions.
-- Discovery, exact semantics or editing, and proof are different questions, so ordered composition across owners is valid.
-- Evidence already returned for a question is consumed and must not be retrieved again.
-- Static, semantic, documentary, runtime, and proof evidence are not interchangeable.
-- No result means unknown unless the selected owner proves its search was complete for the required scope.
-- The user-level `CODEGRAPH_START` block owns the CodeGraph-first baseline for indexed supported source. Project bindings declare availability, invocation, and local exceptions; they do not restate that baseline.
-- Route doctrine owned elsewhere to `/alaa-repo-docs` (`$alaa-repo-docs`), `/alaa-workflow` (`$alaa-workflow`), `/alaa-low-noise` (`$alaa-low-noise`), the stack owner, or the repository-native gate.
+- Discovery, exact semantics or editing, runtime observation, and proof are separate questions and may have different owners in sequence.
+- Parallel retrieval is allowed only for independently named questions when neither answer can change the other's owner, scope, authorization, or query.
+- Evidence returned for a question is consumed; do not retrieve it again for reassurance.
+- An empty result means unknown unless the selected owner proves complete coverage of the required scope.
+- The CodeGraph server and installer own exact CodeGraph tool guidance, MCP registration, permissions, and marker-fenced client instructions. This skill owns whether CodeGraph is selected. Interpret any CodeGraph-first text only within structural discovery, never as precedence over a known-symbol semantic owner, a native artifact owner, runtime evidence, review, or proof.
+- A stack skill may name a language-native semantic owner that replaces Serena for that stack. Follow the stack owner and report any binding drift.
+- Route repository Markdown to `/alaa-repo-docs` in Claude Code or `$alaa-repo-docs` in Codex, durable execution state to `/alaa-workflow` or `$alaa-workflow`, output-volume policy to `/alaa-low-noise` or `$alaa-low-noise`, and lane fan-out to the installed runtime orchestrator. Do not restate their rules here.
 
 ## Decision procedure
 
-1. Name each independently answerable question before selecting tools.
-2. Read the short project binding, when present, and verify the declared surfaces resolve to the active Git worktree.
+1. Split the request into independently answerable questions.
+2. Read the short repository binding and identify the Git root, CodeGraph root, active semantic project, installed Laravel Boost inventory, and native proof owner that apply.
 3. Classify the current question with `references/10-routing-contract.md` and select one primary owner.
-4. Consume the result. Stop retrieval when the next safe edit, proof, handoff, or blocked decision is known.
-5. When a required fact is absent, record one named gap before selecting one secondary owner.
-6. Treat a move from discovery to exact semantics or editing, and then to proof, as a new question; do not repeat discovery.
-7. Start review from Git diff and decide completion only from repository-native gates.
+4. Ask only the smallest question that unlocks the next safe edit, proof step, handoff, or blocked decision.
+5. Record what the result established and stop that owner.
+6. When one required fact is absent, record the established evidence, missing fact, reason the owner cannot supply it, and the one secondary owner allowed to answer it.
+7. Start review from Git diff. Return to native gates before declaring completion.
 
 ## Tool usage
 
-Use CodeGraph for unknown location and broad supported-source flow, relationships, architecture, or impact. Use Serena for a known supported-source symbol or file, exact semantics, references, hierarchy, diagnostics, and semantic edits. Use Laravel Boost for installed Laravel documentation and authorized Laravel application context. Use native or domain owners for Markdown and policy, JSON/YAML/TOML, CI, Docker/Compose/Helm semantics, generated artifacts, binaries, runtime facts, Git diff, and proof.
+- **CodeGraph:** unknown source location; related symbols; route-to-handler and downstream source flow; call paths; callers and callees; architecture relationships; likely blast radius; and the files or source regions that should be read in a healthy index of a supported language. Prefer the installed primary exploration surface. Use a narrower CodeGraph surface only when the installed server exposes it and the named question is narrower.
+- **Serena:** a known file or symbol in a configured language; file or symbol outline; declaration, references, hierarchy, diagnostics, and semantic rename or symbol-scoped edits when the installed backend exposes the required operation. Do not treat Serena activation as permission to edit.
+- **Language-native semantic owner:** use the semantic interface named by the active stack skill instead of Serena. In particular, `/alaa-golang` in Claude Code or `$alaa-golang` in Codex routes Go definition, reference, hierarchy, and diagnostics work to its gopls owner.
+- **Laravel Boost:** current documentation for installed Laravel packages and authorized Laravel application context. It does not own static source call graphs, semantic refactors, Git review, or completion proof.
+- **Native or domain owner:** registered routes, plain text, Markdown, JSON, YAML, TOML, CI, containers, generated artifacts, contracts, binaries, runtime commands, Git diff, tests, builds, linters, generators, schema checks, and other repository proof.
 
 ## Retrieval rules
 
-Do not re-query evidence already returned by the selected owner. A CodeGraph stale or pending-file signal routes directly to a targeted live read of the named affected files; do not retry CodeGraph for freshness. An empty, unavailable, or worktree-misaligned owner receives at most one health attempt, not a second evidence query. If the fallback cannot preserve broad-flow or impact completeness, exact semantic guarantees, or required proof, label the result partial or blocked. Invoke `/alaa-low-noise` (`$alaa-low-noise`) when output volume rather than evidence ownership is the problem.
+Do not query a second surface to confirm an answer already returned. If CodeGraph names stale or pending affected files, read only those live files and do not rerun the graph for freshness. An empty, stale, unavailable, or worktree-misaligned owner receives at most one tool-native health or freshness attempt. Then use the recorded fallback or stop; never loop through refresh and the same evidence query. A fallback may answer a narrower fact, but it must not inherit a completeness or semantic guarantee its owner cannot provide.
 
 ## Authority limits
 
-Proceed only within the authority already granted by repository instructions and the user. Before every Laravel Boost call, verify the installed tool inventory and classify the intended effect: documentation, installed-package information, and application metadata may be read within existing read authority; database queries, code-execution or runtime operations exposed by the installed tool, data mutation, secrets, and production context require their normal authorization. Tool availability grants no authority. Serena activation is not onboarding and grants no permission to write memories, initialize or rebuild indexes, install prerequisites, or mutate configuration.
+This skill changes only evidence routing; it does not expand or restrict the selected tool's native lifecycle or the authority already granted for the task. Do not modify MCP, hook, CodeGraph, Serena, or Laravel Boost integration configuration unless the task explicitly requests setup, upgrade, repair, or removal.
 
 ## Validation and failure obligation
 
-Verify that the CodeGraph root, Serena active project, Git diff, and proof command working directory name the same worktree. Evidence from another checkout is unavailable. Run the active repository's required tests, type checks, linters, builds, generators, schema checks, and documentation checks. A blocked or unexecutable mandatory check is not a pass.
+Verify that CodeGraph, the active semantic project, Git diff, generated state, runtime evidence, and every validation command resolve to the same worktree. Run the repository-required tests, type checks, linters, builds, generators, schema checks, and documentation checks. Report the exact command and observed result. A mandatory check that failed or could not run is not a pass.
 
 ## When NOT to use
 
-- Do not use this skill to answer a single exact fact when the repository already names its native or domain owner and no routing decision exists.
-- Do not use local CodeGraph or Serena evidence to prove a cross-repository owner, consumer, compatibility, or handoff claim; start from the authoritative catalog, contract registry, hosting surface, or named repository.
-- Do not force unsupported or unindexed artifacts through CodeGraph or Serena. Route them to the native or domain owner and label any lost completeness guarantee.
-- Stop an owner when it has answered its named question. A later proof question does not authorize another discovery pass.
-- Do not interpret an empty result as absence, or an unavailable tool as permission to make an unsupported claim.
-- Do not claim one routing policy is absolutely best from prose or call counts. Use the controlled evaluation contract in `references/60-evaluation.md`.
+- Do not use this skill when one exact native or domain owner is already named and no routing decision exists.
+- Do not use local static evidence to prove cross-repository ownership, consumer compatibility, runtime behavior, or external framework behavior.
+- Do not force unsupported, unindexed, generated, binary, configuration, or documentation artifacts through CodeGraph or Serena.
+- Do not treat a later proof question as permission for another discovery pass.
+- Do not infer absence from an empty result or availability from a configured-but-unhealthy tool.
+- Do not claim this policy is universally best from prose, vendor benchmarks, or call counts; use `references/60-evaluation.md`.
 
 ## Output format
 
-Report the outcome, named question, primary owner, established evidence, named secondary gap if any, worktree identity, changed artifacts, observed native proof, and remaining partial or blocked guarantee. Do not emit raw transcripts or reconstruct exact tool counts when passive instrumentation exists.
+Report: outcome; named question; primary owner; established evidence; secondary gap and owner when used; worktree identity; changed artifacts; observed native proof; and any remaining partial or blocked guarantee. Do not emit raw tool transcripts.
 
 ## Stop conditions
 
-Success stop: every named question is answered, required artifacts are aligned, and applicable native proof passed in the same worktree.
+**Success:** every named question is answered, required artifacts are aligned, and applicable native proof passed in the same worktree.
 
-Blocked stop: an unavailable fact, unsupported artifact, lost completeness or semantic guarantee, unauthorized effect, worktree mismatch, or failed mandatory gate prevents safe progress.
+**Blocked:** an unavailable fact, unsupported artifact, lost completeness or semantic guarantee, unauthorized effect, worktree mismatch, or failed mandatory gate prevents safe progress.
 
 ## Failure behavior and retry budget
 
-For empty, unavailable, or misaligned owners, perform one health attempt and then use the recorded fallback or stop. For CodeGraph stale or pending files, skip the health attempt and read only the named live files. Retry a failed native gate once only after one cause-specific repair. Never loop among CodeGraph, Serena, Boost, native tools, runtime owners, and delegated agents.
+Perform one health attempt for an empty, unavailable, or misaligned owner, then use the recorded fallback or stop. Skip that attempt when CodeGraph already names stale files and read only those files. Retry one failed native gate once, and only after one cause-specific repair. Never loop among CodeGraph, Serena, Boost, native tools, language-native semantic owners, and delegated agents.
 
 ## References
 
-- Read `references/10-routing-contract.md` when choosing an owner or handing evidence off.
-- Read `references/20-documentation-routing.md` when the current question concerns repository Markdown or source annotations.
-- Read `references/30-artifact-boundaries.md` for configuration, contracts, generated files, runtime evidence, external docs, binaries, review, or cross-repository questions.
-- Read `references/40-stack-bindings.md` for Laravel, Go, or Vue fast paths.
-- Read `references/50-hooks.md` when configuring or diagnosing CodeGraph and Serena hooks.
-- Read `references/60-evaluation.md` when evaluating routing or duplicate discovery.
-- Read `references/70-project-bindings.md` when writing a short project binding, Serena language profile, or `initial_prompt`.
-- Read `references/90-source-map.md` before changing a version-sensitive capability, path, command, or hook claim.
+- Read `references/10-routing-contract.md` before selecting or changing an evidence owner.
+- Read `references/20-documentation-routing.md` for repository Markdown and source annotations.
+- Read `references/30-artifact-boundaries.md` for configuration, contracts, generated files, runtime evidence, external facts, binaries, review, and cross-repository claims.
+- Read `references/40-stack-bindings.md` for Laravel, Go, and Vue or Quasar routes.
+- Read `references/50-hooks.md` before configuring or diagnosing CodeGraph and Serena hooks.
+- Read `references/60-evaluation.md` before evaluating routing economy or duplicate discovery.
+- Read `references/70-project-bindings.md` before writing a repository binding or Serena `initial_prompt`.
+- Read `references/90-source-map.md` before changing a capability, command, path, configuration key, or hook claim.
