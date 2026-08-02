@@ -36,7 +36,7 @@ Keep this file routing-first. Load only the reference whose condition holds.
 2. Read `references/00-topic-map.md` and load only the rows whose condition holds.
 3. Verify behaviour from source before writing any claim: routes, validation, handlers, exception mapping, events, listeners, queue config, migrations, models, cache code, observability config, and tests.
 4. For a broad or multi-document refresh, split discovery using `references/70-subagent-doc-workflows.md` before editing anything.
-5. Assign each touched topic one canonical document, replace repeated detail elsewhere with a summary and relative link, then follow the production workflow in `references/40-sync-workflow-and-evidence.md`.
+5. Assign each touched topic one canonical document, then apply `references/15-document-size-and-clustering.md` to every created or refreshed document before following the production workflow in `references/40-sync-workflow-and-evidence.md`.
 6. Repair documentation-hub navigation and repo-local links, then run
    `python $SKILL_DIR/scripts/check_markdown_links.py <repo-root>` and resolve every finding.
 
@@ -65,7 +65,7 @@ If the repository already has a stronger equivalent document under another name,
 ## Non-negotiables
 
 - Every statement is traceable to source code, config, migrations, schema, tests, current documents, or runtime artifacts. When a claim is uncertain, state the verification path instead of guessing.
-- Never weaken an existing strong document into a shorter, more generic one. Preserve caveats, diagrams, enum tables, payload examples, operational notes, storage inventories, event lists, and flow variants unless they are provably obsolete.
+- Never weaken an existing strong document into a shorter, more generic one. A shorter parent is valid only when every moved fact survives in an informatively linked child under `references/15-document-size-and-clustering.md`.
 - Do not patch business logic in a documentation-only request.
 - Every link is repo-portable. Never emit a machine-local absolute path, a Windows backslash, or a `file://` link.
 - A committed example never carries a real secret, token, API key, `.env` value, production hostname, internal IP address, or real tenant or user identifier. Use placeholder values that are obviously placeholders, and route any doubt about whether a value is safe to publish to `/alaa-security-review` (`$alaa-security-review`).

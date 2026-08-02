@@ -82,7 +82,7 @@ The walkthrough must state, for the flow it describes:
 
 ## Coverage requirements
 
-`docs/data-architecture.md` must answer each of these from itself alone:
+The `docs/data-architecture.md` cluster tree must answer each of these without opening code:
 
 - Where does the important data live, and which component reads and writes each store?
 - Which cache keys or derived records exist, and what invalidates each one?

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Validate repo-local Markdown links, heading anchors, and explicit localized document pairs.
+"""Validate repo-local Markdown links, heading anchors, localized pairs, and opt-in line budgets.
 
 Scope, stated so nobody builds a gate on more than this proves. It checks Markdown-syntax links
 only -- [text](target) and resolved reference-style links -- with their heading anchors. Each
 --localized-pair BASE COMPANION checks that one explicitly scoped pair for orphan and structural
 drift, regardless of its language suffix or directory layout. It never infers another companion.
-It does NOT see inline-code path citations such as `references/10-x.md` or
+With --line-budget it also classifies explicitly selected Markdown files by physical line count
+and fails on red files unless each was explicitly allowed. It does NOT see inline-code path
+citations such as `references/10-x.md` or
 `alaa-foo references/10-x.md`, which carry most cross-skill references in this pack; those resolve
 against a skill root rather than the citing file's directory and belong to
 skills/scripts/check_fleet_references.py. Do not widen this script to cover them.
@@ -34,6 +36,11 @@ CODE_SPAN_RE = re.compile(r"``[^`]*``|`[^`]*`")
 FENCE_RE = re.compile(r"^(```+|~~~+)")
 
 DEFAULT_EXCLUDES = ("vendor", "_to_delete", "node_modules", "fixtures")
+
+LINE_STATE_GREEN = "GREEN"
+LINE_STATE_YELLOW = "YELLOW"
+LINE_STATE_ORANGE = "ORANGE"
+LINE_STATE_RED = "RED"
 
 
 class Blocked(Exception):
@@ -76,6 +83,36 @@ def read_lines(path: Path) -> List[str]:
         return path.read_text(encoding="utf-8").splitlines()
     except (UnicodeDecodeError, PermissionError, OSError) as exc:
         raise Blocked(f"cannot read {path}: {exc.__class__.__name__}: {exc}") from exc
+
+
+def line_budget_state(line_count: int) -> str:
+    if line_count < 50:
+        return LINE_STATE_GREEN
+    if line_count <= 100:
+        return LINE_STATE_YELLOW
+    if line_count <= 200:
+        return LINE_STATE_ORANGE
+    return LINE_STATE_RED
+
+
+def check_line_budgets(root: Path, paths: Sequence[Path], allowed_red: Sequence[str]
+                       ) -> Tuple[List[Issue], List[Tuple[Path, int, str]]]:
+    allowed = {resolve_repo_path(root, path_arg) for path_arg in allowed_red}
+    selected = set(paths)
+    outside_scope = sorted(path for path in allowed if path not in selected)
+    if outside_scope:
+        raise Blocked("--allow-red path is not selected by --files: " +
+                      ", ".join(str(path.relative_to(root)) for path in outside_scope))
+    issues: List[Issue] = []
+    statuses: List[Tuple[Path, int, str]] = []
+    for path in paths:
+        line_count = len(read_lines(path))
+        state = line_budget_state(line_count)
+        statuses.append((path, line_count, state))
+        if state == LINE_STATE_RED and path not in allowed:
+            issues.append(Issue(path, 1, "DOC-LINES-RED",
+                                f"{line_count} physical lines; explicit human approval required"))
+    return issues, statuses
 
 
 def iter_markdown_files(root: Path, excludes: Sequence[str]) -> Iterator[Path]:
@@ -268,6 +305,15 @@ SELF_TEST_CASES = (
     ("undecodable", 2, "a .md file that is not valid UTF-8", ()),
 )
 
+LINE_BUDGET_SELF_TESTS = (
+    (49, LINE_STATE_GREEN),
+    (50, LINE_STATE_YELLOW),
+    (100, LINE_STATE_YELLOW),
+    (101, LINE_STATE_ORANGE),
+    (200, LINE_STATE_ORANGE),
+    (201, LINE_STATE_RED),
+)
+
 
 def self_test(fixtures: Path) -> int:
     if not fixtures.is_dir():
@@ -318,21 +364,30 @@ def self_test(fixtures: Path) -> int:
         verdict, failed = "FAIL", failed + 1
     print(f"{verdict} unscoped-pair: expected 0, observed {observed} -- "
           "an unrelated drifting pair is not checked")
+    for line_count, expected in LINE_BUDGET_SELF_TESTS:
+        observed_state = line_budget_state(line_count)
+        if observed_state == expected:
+            verdict = "PASS"
+        else:
+            verdict, failed = "FAIL", failed + 1
+        print(f"{verdict} line-budget-{line_count}: expected {expected}, "
+              f"observed {observed_state}")
     if blocked:
         print(f"\n{blocked} case(s) could not run.", file=sys.stderr)
         return 2
     if failed:
         print(f"\n{failed} case(s) failed.", file=sys.stderr)
         return 1
-    print(f"\nAll {len(SELF_TEST_CASES) + 2} self-test cases passed.")
+    print(f"\nAll {len(SELF_TEST_CASES) + 2 + len(LINE_BUDGET_SELF_TESTS)} "
+          "self-test cases passed.")
     return 0
 
 
 def main(argv: Sequence[str]) -> int:
     parser = argparse.ArgumentParser(
         description="Validate repo-local Markdown links and anchors, with explicitly scoped "
-                    "localized-pair checks. Inline-code path citations are out of scope: see "
-                    "skills/scripts/check_fleet_references.py.")
+                    "localized-pair and line-budget checks. Inline-code path citations are out "
+                    "of scope: see skills/scripts/check_fleet_references.py.")
     parser.add_argument("repo_root", nargs="?", help="Repository root that links resolve within")
     parser.add_argument("--files", nargs="*", default=None,
                         help="Specific Markdown files, relative to repo_root")
@@ -343,6 +398,10 @@ def main(argv: Sequence[str]) -> int:
     parser.add_argument("--localized-pair", nargs=2, action="append", default=[],
                         metavar=("BASE", "COMPANION"),
                         help="Check one explicitly scoped localized pair; repeat for more pairs")
+    parser.add_argument("--line-budget", action="store_true",
+                        help="Classify selected Markdown files by physical line count and fail red")
+    parser.add_argument("--allow-red", nargs="*", default=[], metavar="PATH",
+                        help="Human-approved red files; valid only with --line-budget and --files")
     parser.add_argument("--fixtures", default=None,
                         help="Fixture root for --self-test (default: ../assets/fixtures beside this script)")
     args = parser.parse_args(argv)
@@ -350,6 +409,11 @@ def main(argv: Sequence[str]) -> int:
     if args.self_test:
         fixtures = Path(args.fixtures) if args.fixtures else Path(sys.argv[0]).resolve().parent.parent / "assets" / "fixtures"
         return self_test(fixtures)
+
+    if args.allow_red and (not args.line_budget or not args.files):
+        parser.print_usage(sys.stderr)
+        print("--allow-red requires --line-budget and explicit --files", file=sys.stderr)
+        return 2
 
     if not args.repo_root:
         parser.print_usage(sys.stderr)
@@ -368,16 +432,27 @@ def main(argv: Sequence[str]) -> int:
             localized_pairs=tuple((base, companion)
                                   for base, companion in args.localized_pair),
         )
+        line_statuses: List[Tuple[Path, int, str]] = []
+        if args.line_budget:
+            line_issues, line_statuses = check_line_budgets(root, checked, args.allow_red)
+            issues.extend(line_issues)
     except Blocked as exc:
         print(f"Could not run: {exc}", file=sys.stderr)
         return 2
 
+    for path, line_count, state in line_statuses:
+        print(f"{path.relative_to(root).as_posix()}: {state} {line_count} physical lines")
     if issues:
         for issue in issues:
             print(issue.render(root))
         print(f"\nFound {len(issues)} issue(s) in {len(checked)} file(s).", file=sys.stderr)
         return 1
-    scope = "links and localized pairs" if args.localized_pair else "links"
+    scopes = ["links"]
+    if args.localized_pair:
+        scopes.append("localized pairs")
+    if args.line_budget:
+        scopes.append("line budgets")
+    scope = ", ".join(scopes)
     print(f"Validated {scope} in {len(checked)} Markdown file(s) under {root}.")
     return 0
 

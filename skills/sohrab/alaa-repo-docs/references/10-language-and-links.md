@@ -91,8 +91,9 @@ Documents produced here are committed and often published. Every example is a pu
 - Do not patch business logic in a documentation-only request.
 - Every statement must be traceable to source code, config, migrations, schema, tests, current
   documents, or runtime artifacts.
-- Never make an existing strong document weaker, shorter, or more generic unless obsolete content
-  is being removed with proof.
+- Never make an existing strong document weaker or more generic. Shorten it only by removing
+  provably obsolete content or by losslessly extracting clusters under
+  `references/15-document-size-and-clustering.md`.
 - Keep edits minimal and style-preserving: prefer corrections, additions, cross-links, and
   de-duplication over broad rewrites; do not reorder useful sections unless clarity improves; and
   preserve high-signal existing sections that are still accurate.

@@ -23,7 +23,7 @@ If a rewrite improves one audience while making the document less useful for the
 
 When updating an existing `README.md` or `docs/BIG_PICTURE.md`:
 
-- Preserve high-signal details already present: payload examples, enum tables, request variants, trust and header details, queue or outbox flow notes, storage and cache notes, logging and SOC flow notes, deployment-mode differences, and known caveats or operator notes.
+- Preserve high-signal details already present: payload examples, enum tables, request variants, trust and header details, queue or outbox flow notes, storage and cache notes, logging and SOC flow notes, deployment-mode differences, and known caveats or operator notes. Detail moved for the line budget must survive in the canonical child cluster.
 - Standardize structure without flattening service-specific knowledge.
 - If a repository already exceeds this baseline in a useful way, keep the richer coverage and map it under the standard instead of deleting it.
 
@@ -75,7 +75,7 @@ Do not copy deep-dive content into `README.md` or `docs/BIG_PICTURE.md`. Summari
 
 ## BIG_PICTURE coverage requirements
 
-`docs/BIG_PICTURE.md` must answer each of these without the reader opening any code:
+The `docs/BIG_PICTURE.md` cluster tree must answer each of these without the reader opening any code:
 
 - Which runtime components exist and how do they connect?
 - Which trust-boundary rules are non-negotiable?

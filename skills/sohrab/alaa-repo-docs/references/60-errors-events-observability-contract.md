@@ -84,7 +84,7 @@ Event-inventory columns: name, producer, trigger, sync or async, transport or st
 
 ## Coverage requirements
 
-`docs/errors-events-observability.md` must answer each of these from itself alone:
+The `docs/errors-events-observability.md` cluster tree must answer each of these without opening code:
 
 - Which errors exist, and how is each surfaced to a caller?
 - Where is each important error produced or mapped?

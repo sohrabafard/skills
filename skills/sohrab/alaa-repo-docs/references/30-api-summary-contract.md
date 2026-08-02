@@ -74,7 +74,7 @@ When an existing `docs/api-summary.md` already has useful examples, preserve the
 
 ## API summary coverage requirements
 
-`docs/api-summary.md` must answer each of these from itself alone:
+The `docs/api-summary.md` cluster tree must answer each of these without opening another artifact family:
 
 - Which consumer-facing endpoints exist?
 - Which route parameters and path shapes are canonical?
