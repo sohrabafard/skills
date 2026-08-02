@@ -1,0 +1,8 @@
+[features]
+hooks = true
+
+[mcp_servers.serena]
+enabled = true
+command = "serena"
+cwd = "D:\\Sohrab\\Project\\auth"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd"]

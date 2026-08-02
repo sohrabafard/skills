@@ -35,7 +35,6 @@ project_name: "skills"
 # Note that when using the JetBrains backend, language servers are not used and this list is correspondingly ignored.
 languages:
 - python
-- markdown
 
 # the encoding used by text files in the project
 # For a list of possible encodings, see https://docs.python.org/3.11/library/codecs.html#standard-encodings
@@ -108,7 +107,10 @@ ls_additional_workspace_folders: []
 #     - "**/bin/**"
 #     - "**/obj/**"
 # Note: global ignored_paths from serena_config.yml are also applied additively.
-ignored_paths: []
+ignored_paths:
+  - ".agents/skills/**"
+  - ".claude/skills/**"
+  - ".codegraph/**"
 
 # whether the project is in read-only mode
 # If set to true, all editing tools will be disabled and attempts to use them will result in an error
@@ -147,7 +149,10 @@ added_modes:
 
 # initial prompt for the project. It will always be given to the LLM upon activating the project
 # (contrary to the memories, which are loaded on demand).
-initial_prompt: ""
+initial_prompt: >-
+  Invoke /alaa-code-intelligence-routing in Claude Code or $alaa-code-intelligence-routing in Codex before non-trivial code-intelligence
+  evidence selection. Follow the repository binding and that skill for owner selection, duplicate-retrieval prevention,
+  fallback, and proof routing; this prompt adds no independent policy.
 
 # time budget (seconds) per tool call for the retrieval of additional symbol information
 # such as docstrings or parameter information.

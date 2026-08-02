@@ -50,3 +50,9 @@ pass.
   force-push, or credential rotation.
 - **No emoji in any artifact.** When a request is ambiguous, contradictory, or unsafe, say so, ask
   the smallest question that resolves it, and stop.
+
+<!-- BEGIN ALAA CODE INTELLIGENCE BINDING -->
+## Alaa code-intelligence binding
+
+Invoke `/alaa-code-intelligence-routing` in Claude Code or `$alaa-code-intelligence-routing` in Codex before non-trivial code-intelligence evidence selection. That skill owns selection among CodeGraph, Serena, the active stack semantic owner, and repository-native tools, and prevents duplicate retrieval of the same fact. CodeGraph's installer owns exact CodeGraph usage instructions after CodeGraph is selected. Use CodeGraph and the configured semantic owner only when their active project or root resolves to this Git worktree. Native repository gates prove completion. Do not modify MCP, hook, CodeGraph, Serena, or language-server integration configuration unless the task explicitly requests setup, upgrade, repair, or removal.
+<!-- END ALAA CODE INTELLIGENCE BINDING -->

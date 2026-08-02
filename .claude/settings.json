@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__serena__*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "serena-hooks auto-approve --client=claude-code"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "serena-hooks remind --client=claude-code"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "serena-hooks activate --client=claude-code"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "serena-hooks cleanup --client=claude-code"
+          }
+        ]
+      }
+    ]
+  }
+}
