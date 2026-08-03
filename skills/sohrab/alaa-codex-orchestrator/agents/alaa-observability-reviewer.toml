@@ -3,8 +3,9 @@ description = "Read-only production observability gate for new failure modes, ba
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
-mcp_servers.serena.enabled = false
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "last-error", "read-log-entries", "browser-logs"]
+# grant-template: materialize-live-parent-mcp
+#mcp_servers.serena.enabled = false
+#mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "last-error", "read-log-entries", "browser-logs"]
 
 developer_instructions = """
 You are the observability and diagnosability reviewer. Determine whether operators can detect, explain, and safely respond to the change in production.

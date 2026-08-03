@@ -3,14 +3,9 @@ name: alaa-implementer
 description: Routine implementation lane worker for orchestrated goals. Spawn one per independent write scope to implement a bounded slice with tests and evidence. Not for architecture review, research-only, verification-only, docs-only, or high-risk design lanes.
 model: sonnet
 effort: high
-disallowedTools: mcp__serena__execute_shell_command, mcp__laravel-boost__tinker, mcp__laravel-boost__record-rule
+disallowedTools: Skill, mcp__serena__execute_shell_command, mcp__laravel-boost__tinker, mcp__laravel-boost__record-rule
 skills:
-  - /alaa-octane-performance
-  - /alaa-php-clean-code
-  - /alaa-frontend-developer
-  - /alaa-vue-typescript-clean-code
-  - /alaa-golang
-  - /alaa-golang-clean-code-principles
+  - /alaa-code-intelligence-routing
   - /alaa-services-contract
   - /alaa-trust-gateway-auth
 color: blue

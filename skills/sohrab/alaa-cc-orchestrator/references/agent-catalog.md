@@ -88,10 +88,12 @@ list does. The same reason removes Serena's shell tool from the implementation l
 
 Every lane granted a server also keeps the ability to invoke `/alaa-code-intelligence-routing` on demand, because a lane holding
 three servers and no contract for choosing among them is the problem the grants were meant to solve.
-`scripts/check_agent_grants.py` resolves each definition and fails on a violated boundary; run it after
-any change to `agents/`, since a file that parses can still hand a reviewer an edit tool. It prints the
-effective grant per role, exits 0 only when every boundary holds, and `--self-test` proves it still
-rejects known-bad definitions — a gate never observed failing is indistinguishable from one that cannot.
+Run `python scripts/check_agent_grants.py` after any change to `agents/`. The checker compares every
+normalized MCP grant and the implementation deny set with this catalog: exit `0` is clean, exit `1`
+reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the
+gate.
+Run `python scripts/check_agent_grants.py --self-test` after changing the checker. The pack
+validator invokes the normal check automatically.
 
 ## How the tiers divide
 

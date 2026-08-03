@@ -32,12 +32,14 @@ On macOS/Linux/WSL:
 
 ## Automatic agent installation
 
-Every skill activation runs the platform installer:
+When the pack version or live MCP-inventory fingerprint changes, skill activation runs the platform installer:
 
 - Windows: `scripts/Install-AlaaCodexAgents.ps1`
 - macOS/Linux/WSL: `scripts/install-agents.sh`
 
-It copies only `agents/*.toml` into:
+The files under `agents/` are portable templates, not directly installable role definitions. The installer
+queries the live parent MCP inventory, adds complete transports for each role's exact catalog grant,
+disables every unassigned server, validates the resolved TOMLs, and writes only those materialized roles into:
 
 ```text
 ~/.codex/agents/
@@ -46,9 +48,11 @@ It copies only `agents/*.toml` into:
 Behavior:
 
 - creates the target directory when absent;
+- fails closed when the live MCP inventory or a transport cannot be resolved;
 - skips byte-identical/hash-identical files;
 - backs up differing same-named files under `.alaa-codex-orchestrator-backups/<timestamp>/`;
 - installs via a temporary file and rename/replace;
+- records the live inventory fingerprint beside the version sentinel;
 - leaves unrelated agents and configuration untouched;
 - may require a narrow sandbox approval because `~/.codex` is outside/protected from the repository workspace.
 

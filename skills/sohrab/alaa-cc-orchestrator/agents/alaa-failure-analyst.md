@@ -4,6 +4,8 @@ description: Read-only diagnostic specialist for failed, flaky, timed-out, conta
 model: opus
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+skills:
+  - /alaa-code-intelligence-routing
 color: orange
 ---
 

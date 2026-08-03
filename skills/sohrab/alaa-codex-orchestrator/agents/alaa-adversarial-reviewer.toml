@@ -4,8 +4,9 @@ description = "Read-only second independent lens, gated to irreversible or high-
 model = "gpt-5.6-sol"
 model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"
-mcp_servers.serena.enabled_tools = ["find_symbol", "get_symbols_overview", "find_referencing_symbols", "find_declaration", "find_implementations", "get_diagnostics_for_file"]
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
+# grant-template: materialize-live-parent-mcp
+#mcp_servers.serena.enabled_tools = ["find_symbol", "get_symbols_overview", "find_referencing_symbols", "find_declaration", "find_implementations", "get_diagnostics_for_file"]
+#mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
 
 developer_instructions = """
 You are the adversarial lens. You are spawned only when a change is irreversible or has high blast radius, or when alaa-reviewer and a specialist gate returned conflicting verdicts. You are not a second opinion on the same question; you are a different question.

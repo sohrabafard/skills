@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.4.0
+
+- Replaced partial per-server MCP tables with marked transport-neutral templates. Partial tables had no transport and were rejected by Codex as malformed, while omission and empty maps inherit the parent configuration.
+- Made both installers resolve the live parent inventory, preserve each server's transport discriminator, materialize the catalog's exact per-role grant, disable unassigned servers, validate the resolved files, and record an inventory fingerprint.
+- Changed the grant checker to distinguish portable templates from resolved roles and added omission, missing-server, enabled-server, and partial-transport red fixtures.
+- Updated status and bootstrap checks for materialized files and live inventory drift, and removed the installer bootstrap's count-only fallback when Python is unavailable.
+- Wired the grant checker into pack validation and documented its exact command and exit-code contract in the skill body.
+
 ## 3.3.0
 
 - Every agent file now fixes the code-intelligence servers its role may reach. A role that cannot ask a server's question no longer holds it, and the tool descriptions it never used stop arriving in that role's window on every dispatch. `references/agent-catalog.md` records the assignment; `$alaa-code-intelligence-routing` owns the grant classes behind it.

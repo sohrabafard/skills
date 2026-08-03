@@ -5,6 +5,7 @@ model: opus
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
+  - /alaa-code-intelligence-routing
   - /alaa-data-layer
   - /alaa-partitioned-table-fk-audit
 color: orange

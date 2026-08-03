@@ -4,16 +4,40 @@ set -euo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="${1:-$(cd -- "$script_dir/.." && pwd)/agents}"
 target_dir="${2:-$HOME/.codex/agents}"
+
+if command -v python3 >/dev/null 2>&1; then
+  python_cmd=(python3)
+elif command -v python >/dev/null 2>&1; then
+  python_cmd=(python)
+else
+  echo "Python 3 is required to validate agent grants before installation" >&2
+  exit 2
+fi
+
 mkdir -p "$target_dir"
+target_dir="$(cd -- "$target_dir" && pwd)"
 
 lock_dir="$target_dir/.alaa-codex-orchestrator.install.lock"
 if ! mkdir "$lock_dir" 2>/dev/null; then
   echo "Another Alaa agent installation is active: $lock_dir" >&2
   exit 2
 fi
-trap 'rmdir "$lock_dir" 2>/dev/null || true' EXIT
+materialized_dir="$target_dir/.alaa-codex-orchestrator.materialized.$$.$RANDOM"
+cleanup() {
+  if [[ "$materialized_dir" == "$target_dir"/.alaa-codex-orchestrator.materialized.* ]]; then
+    rm -rf -- "$materialized_dir"
+  fi
+  rmdir "$lock_dir" 2>/dev/null || true
+}
+trap cleanup EXIT
 
-mapfile -t files < <(find "$source_dir" -maxdepth 1 -type f -name '*.toml' -print | sort)
+"${python_cmd[@]}" "$script_dir/check_agent_grants.py" --materialize "$source_dir" "$materialized_dir" || {
+  code=$?
+  echo "Agent grant materialization failed with exit code $code" >&2
+  exit "$code"
+}
+
+mapfile -t files < <(find "$materialized_dir" -maxdepth 1 -type f -name '*.toml' -print | sort)
 if [[ ${#files[@]} -eq 0 ]]; then
   echo "No agent TOML files found in: $source_dir" >&2
   exit 1
@@ -44,6 +68,9 @@ for src in "${files[@]}"; do
   mv -f "$tmp" "$dst"
   changed=$((changed + 1))
 done
+
+cp "$materialized_dir/.alaa-codex-orchestrator.mcp-inventory" \
+  "$target_dir/.alaa-codex-orchestrator.mcp-inventory"
 
 version_file="$(cd -- "$script_dir/.." && pwd)/VERSION"
 if [[ -f "$version_file" ]]; then

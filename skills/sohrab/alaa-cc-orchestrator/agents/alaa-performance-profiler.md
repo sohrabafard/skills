@@ -5,6 +5,7 @@ model: sonnet
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries
 skills:
+  - /alaa-code-intelligence-routing
   - /alaa-algorithms-data-structures
   - /alaa-octane-performance
   - /golang-performance

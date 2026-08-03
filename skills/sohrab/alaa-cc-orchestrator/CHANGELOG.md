@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.4.0
+
+- Replaced broad `Skill` access with a preloaded `/alaa-code-intelligence-routing` skill for MCP-enabled roles; inherited implementation roles now explicitly deny bare `Skill` as well.
+- Changed the grant checker from generic blacklists to the catalog's exact per-role MCP assignments and exact implementation deny set, with missing, extra, and routing-preload red fixtures.
+- Wired the grant checker into pack validation and documented its exact command and exit-code contract in the skill body and catalog.
+
 ## 3.3.0
 
 - Every agent file now fixes the code-intelligence servers its role may reach. A role that cannot ask a server's question no longer holds it, and the tool descriptions it never used stop arriving in that role's window on every dispatch. `references/agent-catalog.md` records the assignment; `/alaa-code-intelligence-routing` owns the grant classes behind it.

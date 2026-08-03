@@ -4,6 +4,8 @@ description: Read-only specification analyst. Spawn before any implementation di
 model: opus
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+skills:
+  - /alaa-code-intelligence-routing
 color: cyan
 ---
 

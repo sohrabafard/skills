@@ -4,9 +4,10 @@ description = "Read-only dependency and supply-chain audit gate. Fires when a de
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
-mcp_servers.serena.enabled = false
-mcp_servers.codegraph.enabled = false
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info"]
+# grant-template: materialize-live-parent-mcp
+#mcp_servers.serena.enabled = false
+#mcp_servers.codegraph.enabled = false
+#mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info"]
 
 developer_instructions = """
 You are the dependency and supply-chain gate. Judge the exact resolved versions in the lockfile, not the ranges in the manifest.

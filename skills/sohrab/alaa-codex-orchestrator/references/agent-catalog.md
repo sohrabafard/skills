@@ -47,10 +47,8 @@ Twenty-one roles are available. A typical goal fires three to five of them. Brea
 
 ## Code-intelligence scope
 
-Each agent file fixes which code-intelligence servers that role may reach, because a role that cannot
-ask a server's question gains nothing from holding it and pays for its tool descriptions in every
-dispatch. `$alaa-code-intelligence-routing` owns the grant classes and the named tool sets; `references/80-agent-scoping.md`
-inside that skill is the definition. This table is only the assignment.
+Each installed agent receives the narrowest live server grant its question class earns. Servers not
+assigned here, including servers unknown to this pack, are disabled in that role.
 
 | Agent | Structural and semantic | Framework context |
 |---|---|---|
@@ -62,36 +60,35 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-migration-guardian` | CodeGraph | docs, schema |
 | `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
-| `alaa-reviewer` | CodeGraph + Serena read set | docs, schema |
-| `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
-| `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-reviewer`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
 | `alaa-implementer`, `alaa-implementer-sol` | full, minus Serena's shell tool | full, minus `tinker` and `record-rule` |
-| `alaa-researcher` | none | docs |
-| `alaa-dependency-auditor` | none | docs |
-| `alaa-release-guardian` | none | docs |
-| `alaa-accessibility-reviewer` | none | docs, routing |
-| `alaa-documenter` | none | docs, routing |
+| `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
+| `alaa-accessibility-reviewer`, `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
 | `alaa-verifier` | none | none |
 
-The framework classes are composed, not bundled, so no lane carries a surface its question cannot use:
-`docs` is `search-docs` and `application-info`; `schema` is `database-schema` and
-`database-connections`; `routing` is `get-absolute-url`; `app-errors` is `last-error` and
-`read-log-entries`; `browser` is `browser-logs`. Two tools appear in no class and are denied everywhere:
-`tinker`, which executes arbitrary PHP, and `record-rule`, which writes into `.ai/rules/` and would let
-a lane rewrite the instructions other lanes follow.
+The Serena read set and framework classes come from
+`alaa-code-intelligence-routing references/80-agent-scoping.md`: `docs` is `search-docs` and
+`application-info`; `schema` is `database-schema` and `database-connections`; `routing` is
+`get-absolute-url`; `app-errors` is `last-error` and `read-log-entries`; and `browser` is
+`browser-logs`.
 
-Read-only lanes receive Serena tools by exact name rather than the whole server. An MCP server is a
-separate process, so `sandbox_mode = "read-only"` and the approval policy does not stop that server's own rename and delete tools; only the allow
-list does. The same reason removes Serena's shell tool from the implementation lanes, which already run commands under the sandbox and approval policy.
+A custom-agent TOML is a configuration layer. Omitting `mcp_servers` inherits the parent, while naming
+a server with only `enabled_tools`, `disabled_tools`, or `enabled` is malformed because the table has
+no transport. An empty map also does not clear the inherited map. The portable files under `agents/`
+therefore carry a materialization marker and no MCP table. The supported installers query
+`codex mcp list --json`, preserve each live server's `command` or `url` discriminator, apply this
+role's exact allow/deny set, set unassigned servers to `enabled = false`, validate the generated
+TOMLs, and record an inventory fingerprint. A changed inventory makes the bootstrap reinstall before
+dispatch. A catalog server absent from the live inventory remains unavailable rather than being
+invented with a machine-specific transport.
 
-Every lane granted a server also keeps the ability to invoke `$alaa-code-intelligence-routing` on demand, because a lane holding
-three servers and no contract for choosing among them is the problem the grants were meant to solve.
-`scripts/check_agent_grants.py` resolves each definition and fails on a violated boundary; run it after
-any change to `agents/`, since a file that parses can still hand a reviewer an edit tool. It prints the
-effective grant per role, exits 0 only when every boundary holds, and `--self-test` proves it still
-rejects known-bad definitions — a gate never observed failing is indistinguishable from one that cannot.
+Run `python scripts/check_agent_grants.py` after any source-agent change and
+`python scripts/check_agent_grants.py --self-test` after changing the checker. Exit `0` is clean,
+exit `1` reports a grant mismatch, and exit `2` means the checker could not run; both nonzero results
+fail the gate. The pack validator checks the templates, and both installers materialize and validate
+the resolved live grants. Plain copies are unsupported because they would inherit the parent grant.
 
 ## How the tiers divide
 

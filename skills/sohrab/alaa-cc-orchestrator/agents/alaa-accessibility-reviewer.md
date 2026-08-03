@@ -5,6 +5,7 @@ model: sonnet
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
 skills:
+  - /alaa-code-intelligence-routing
   - /alaa-ui-ux-design-system
   - /alaa-frontend-developer
 color: green

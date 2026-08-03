@@ -23,13 +23,29 @@ function Get-FileHashHex {
 }
 
 $source = (Resolve-Path -LiteralPath $SourceDirectory).Path
-New-Item -ItemType Directory -Path $TargetDirectory -Force | Out-Null
-$target = (Resolve-Path -LiteralPath $TargetDirectory).Path
-
 $agentFiles = @(Get-ChildItem -LiteralPath $source -File -Filter "*.toml" | Sort-Object Name)
 if ($agentFiles.Count -eq 0) {
     throw "No agent TOML files found in: $source"
 }
+
+$grantChecker = Join-Path (Split-Path -Parent $source) "scripts\check_agent_grants.py"
+if (-not (Test-Path -LiteralPath $grantChecker)) {
+    throw "Agent grant checker not found: $grantChecker"
+}
+$python = Get-Command python.exe -ErrorAction SilentlyContinue
+if (-not $python) { $python = Get-Command python -ErrorAction SilentlyContinue }
+$pythonPrefix = @()
+if (-not $python) {
+    $python = Get-Command py.exe -ErrorAction SilentlyContinue
+    if (-not $python) { $python = Get-Command py -ErrorAction SilentlyContinue }
+    if (-not $python) {
+        throw "Python 3 is required to validate agent grants before installation"
+    }
+    $pythonPrefix = @("-3")
+}
+
+New-Item -ItemType Directory -Path $TargetDirectory -Force | Out-Null
+$target = (Resolve-Path -LiteralPath $TargetDirectory).Path
 
 $lockPath = Join-Path $target ".alaa-codex-orchestrator.install.lock"
 $lockStream = $null
@@ -37,6 +53,7 @@ $changed = 0
 $unchanged = 0
 $backupDirectory = $null
 $timestamp = Get-Date -Format "yyyyMMdd-HHmmss-fff"
+$materializedDirectory = Join-Path $target ".alaa-codex-orchestrator.materialized.$([Guid]::NewGuid().ToString('N'))"
 
 try {
     $lockStream = [System.IO.File]::Open(
@@ -45,6 +62,12 @@ try {
         [System.IO.FileAccess]::ReadWrite,
         [System.IO.FileShare]::None
     )
+
+    & $python.Source @pythonPrefix $grantChecker --materialize $source $materializedDirectory
+    if ($LASTEXITCODE -ne 0) {
+        throw "Agent grant materialization failed with exit code $LASTEXITCODE"
+    }
+    $agentFiles = @(Get-ChildItem -LiteralPath $materializedDirectory -File -Filter "*.toml" | Sort-Object Name)
 
     foreach ($sourceFile in $agentFiles) {
         $destination = Join-Path $target $sourceFile.Name
@@ -89,10 +112,16 @@ try {
             }
         }
     }
+
+    Copy-Item -LiteralPath (Join-Path $materializedDirectory ".alaa-codex-orchestrator.mcp-inventory") `
+        -Destination (Join-Path $target ".alaa-codex-orchestrator.mcp-inventory") -Force
 }
 finally {
     if ($lockStream) { $lockStream.Dispose() }
     Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue
+    if (Test-Path -LiteralPath $materializedDirectory) {
+        Remove-Item -LiteralPath $materializedDirectory -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
 $versionFile = Join-Path (Split-Path -Parent $source) "VERSION"

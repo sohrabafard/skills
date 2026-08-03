@@ -4,6 +4,8 @@ description: Read-only dependency and supply-chain gate. Spawn when a dependency
 model: sonnet
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+skills:
+  - /alaa-code-intelligence-routing
 color: orange
 ---
 

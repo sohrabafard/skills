@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 try:
@@ -121,6 +122,7 @@ for rel in [
     "scripts/Install-AlaaCodexAgents.ps1",
     "scripts/Install-AlaaCodexOrchestrator.ps1",
     "scripts/Get-AlaaCodexAgentStatus.ps1",
+    "scripts/check_agent_grants.py",
     "scripts/Invoke-AlaaLowPriority.ps1",
     "scripts/install-agents.sh",
     "scripts/install-skill.sh",
@@ -168,6 +170,19 @@ for path in sorted(ROOT.rglob("*")):
         if hit:
             rel = path.relative_to(ROOT)
             errors.append(f"cross-runtime leak in {rel}:{lineno}: {hit.group(0)!r}")
+
+grant_check = subprocess.run(
+    [sys.executable, str(ROOT / "scripts" / "check_agent_grants.py")],
+    capture_output=True,
+    text=True,
+    check=False,
+)
+if grant_check.returncode != 0:
+    detail = (grant_check.stdout + grant_check.stderr).strip().replace("\n", " | ")
+    errors.append(
+        f"agent grant checker exited {grant_check.returncode}"
+        + (f": {detail}" if detail else "")
+    )
 
 if errors:
     print("PACK VALIDATION FAILED", file=sys.stderr)

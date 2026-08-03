@@ -20,10 +20,10 @@ Convert a product or engineering goal into a controlled, evidence-driven multi-a
 
 ## 0. Bootstrap: ensure managed subagents exist (cheap sentinel check first)
 
-1. Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`. Run exactly one cheap check: compare the content of `~/.codex/agents/.alaa-codex-orchestrator.version` with `SKILL_ROOT/VERSION`. When they match, the agents are current — skip the rest of this section silently, with no installer run and no setup narration.
-2. Only when the sentinel is missing or differs, install: copy every `SKILL_ROOT/agents/*.toml` into `~/.codex/agents/` (a plain file copy is sufficient; back up differing same-named files under `~/.codex/agents/.alaa-codex-orchestrator-backups/<timestamp>/` first), then write the content of `SKILL_ROOT/VERSION` to `~/.codex/agents/.alaa-codex-orchestrator.version`. The platform installer scripts (`scripts/Install-AlaaCodexAgents.ps1`, `scripts/install-agents.sh`) do the same with backups and locking and may be used instead, but are optional.
+1. Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`. From `SKILL_ROOT`, compare `~/.codex/agents/.alaa-codex-orchestrator.version` with `VERSION`, then run `python scripts/check_agent_grants.py --inventory-fingerprint` and compare its output with `~/.codex/agents/.alaa-codex-orchestrator.mcp-inventory`. Only when both sentinels match are the agents current; skip the rest of this section silently.
+2. When either sentinel is missing or differs, run the platform installer: `scripts/Install-AlaaCodexAgents.ps1` on Windows or `scripts/install-agents.sh` elsewhere. The installer resolves the live parent MCP inventory, materializes each role's exact catalog grant with complete transports, disables every unassigned server, validates the resolved grants, backs up differing same-named files, and writes both sentinels. Do not bypass this gate with a plain file copy: the portable files under `agents/` are marked templates and intentionally contain no machine transport.
 3. One attempt only. If installation fails for any reason, do not troubleshoot, retry, or read installation docs mid-goal: state the failure in one line, continue with whatever `alaa-*` agents are already installed (or built-in `worker`/`explorer` if none), clearly mark the fallback, and note that one Codex restart may be required for newly installed agents to become discoverable.
-4. Never block or delay dispatch on bootstrap. Installation authority stays limited to this pack's named TOMLs, their backups, and the sentinel file under `~/.codex/agents`. Never delete or modify unrelated files or global configuration.
+4. Never block or delay dispatch on bootstrap. Installation authority stays limited to this pack's named TOMLs, their backups, and the two sentinel files under `~/.codex/agents`. Never delete or modify unrelated files or global configuration.
 
 Read `references/installation.md` only when the user explicitly asks about installation.
 
@@ -130,6 +130,7 @@ Provide grounded repository findings; a lane plan with dependencies and gates; o
 
 ## 7. Verification and resource rules
 
+- After any change to `agents/`, run `python scripts/check_agent_grants.py`; it verifies the transport-neutral templates. To exercise live resolution manually, run `python scripts/check_agent_grants.py --materialize agents <new-empty-output-directory>` and inspect only the generated scratch directory. Exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run; both nonzero results fail completion. Run `python scripts/check_agent_grants.py --self-test` when changing the checker itself. `scripts/validate_pack.py` checks the templates, and both agent installers materialize and validate the live resolved grants before writing.
 - Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
 - Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
 - On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.

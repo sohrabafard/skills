@@ -5,6 +5,7 @@ model: sonnet
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
+  - /alaa-code-intelligence-routing
   - /alaa-docker-production
   - /alaa-gitlab-ci-cd
   - /alaa-cicd-laravel-postgres

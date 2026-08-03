@@ -5,6 +5,7 @@ model: sonnet
 effort: medium
 tools: Read, Glob, Grep, Bash, Write, Edit, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
 skills:
+  - /alaa-code-intelligence-routing
   - /alaa-repo-docs
   - /alaa-postman-collections
 color: green

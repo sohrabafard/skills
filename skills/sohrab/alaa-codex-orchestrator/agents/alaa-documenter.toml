@@ -3,9 +3,10 @@ description = "Documentation-only lane after implementation/review gates. Update
 model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
-mcp_servers.serena.enabled = false
-mcp_servers.codegraph.enabled = false
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "get-absolute-url"]
+# grant-template: materialize-live-parent-mcp
+#mcp_servers.serena.enabled = false
+#mcp_servers.codegraph.enabled = false
+#mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "get-absolute-url"]
 
 developer_instructions = """
 You are the final documentation write lane. You receive the verified goal, reconciled change summary, touched files, review verdicts, and documentation scope.

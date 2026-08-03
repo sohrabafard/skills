@@ -43,8 +43,7 @@ try {
             if ($LASTEXITCODE -ne 0) { throw "Skill validation failed" }
         }
         else {
-            $tomlCount = @(Get-ChildItem -LiteralPath (Join-Path $stagingDirectory "agents") -Filter "*.toml" -File).Count
-            if ($tomlCount -ne 16) { throw "Expected 16 agent TOMLs; found $tomlCount" }
+            throw "Python 3 is required to validate the staged skill and its agent grants"
         }
     }
 

@@ -21,7 +21,7 @@ Convert a product or engineering goal into a controlled, evidence-driven multi-a
 ## 0. Bootstrap: ensure managed subagents exist (cheap sentinel check first)
 
 1. Resolve SKILL_ROOT as the directory containing this SKILL.md. Run exactly one cheap check: compare the content of `~/.claude/agents/.alaa-cc-orchestrator.version` with `SKILL_ROOT/VERSION`. When they match, the agents are current — skip the rest of this section silently, with no file comparisons and no setup narration.
-2. Only when the sentinel is missing or differs, install: copy every `SKILL_ROOT/agents/*.md` into `~/.claude/agents/`, backing up any differing same-named previous version under `~/.claude/agents/.alaa-cc-orchestrator-backups/<timestamp>/` first, then write the content of `SKILL_ROOT/VERSION` to `~/.claude/agents/.alaa-cc-orchestrator.version`. Claude Code watches `~/.claude/agents/` and picks up new files within seconds; no restart is needed. Never delete or modify unrelated agents or settings.
+2. Only when the sentinel is missing or differs, run `python scripts/check_agent_grants.py` from `SKILL_ROOT` and continue only on exit `0`; then copy every `SKILL_ROOT/agents/*.md` into `~/.claude/agents/`, backing up any differing same-named previous version under `~/.claude/agents/.alaa-cc-orchestrator-backups/<timestamp>/` first, and write `SKILL_ROOT/VERSION` to `~/.claude/agents/.alaa-cc-orchestrator.version`. Claude Code watches `~/.claude/agents/` and picks up new files within seconds; no restart is needed. Never delete or modify unrelated agents or settings.
 3. One attempt only. If installation fails for any reason, do not troubleshoot or retry mid-goal: state the failure in one line and continue with general-purpose subagents carrying the matching role prompt from `references/delegation-prompts.md` plus an explicit per-invocation model override.
 4. Never block or delay dispatch on bootstrap.
 
@@ -132,6 +132,7 @@ Provide: grounded repository findings; a lane plan with dependencies and gates; 
 
 ## 7. Verification and resource rules
 
+- After any change to `agents/`, run `python scripts/check_agent_grants.py`; exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run. Both `1` and `2` fail completion. Run `python scripts/check_agent_grants.py --self-test` when changing the checker itself; it must exit `0` after proving every red fixture is rejected. `scripts/validate_pack.py` invokes the normal grant check automatically.
 - Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
 - Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
 - On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.

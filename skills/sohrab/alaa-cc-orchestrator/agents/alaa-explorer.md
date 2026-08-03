@@ -4,6 +4,8 @@ description: Fast read-only repository mapper for orchestrated goals. Spawn when
 model: sonnet
 effort: medium
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
+skills:
+  - /alaa-code-intelligence-routing
 color: cyan
 ---
 
