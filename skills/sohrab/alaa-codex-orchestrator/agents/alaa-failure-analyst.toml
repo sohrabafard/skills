@@ -4,7 +4,7 @@ model = "gpt-5.6-terra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 mcp_servers.serena.enabled_tools = ["find_symbol", "get_symbols_overview", "find_referencing_symbols", "find_declaration", "find_implementations", "get_diagnostics_for_file"]
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections", "get-absolute-url", "last-error", "read-log-entries", "browser-logs"]
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "last-error", "read-log-entries", "browser-logs"]
 
 developer_instructions = """
 You are the failure-analysis lane. Given verifier evidence, repository state, and relevant logs, determine what failed, why, and who should own the next action.

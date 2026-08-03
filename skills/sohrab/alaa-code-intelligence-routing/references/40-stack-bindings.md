@@ -40,7 +40,24 @@ Implementation doctrine routes to `/alaa-laravel-architecture` in Claude Code or
 
 ## Go
 
-Use CodeGraph for unknown package location, source flow, relationships, and likely impact. `/alaa-golang` in Claude Code or `$alaa-golang` in Codex owns the semantic interface for definitions, references, hierarchy, diagnostics, and Go-aware edits and routes those questions to its gopls owner. Do not enable Serena merely to duplicate that owner. A project may select Serena only for a measured recurring gap that `/alaa-golang` does not cover and records that exception in its binding. Native Go commands and repository gates own proof.
+Use CodeGraph for unknown package location, source flow, relationships, and likely impact.
+
+The semantic owner for a known Go symbol is decided by availability, not by a fixed preference. Where
+Serena is configured for Go and healthy, it answers definitions, references, hierarchy, diagnostics, and
+symbol-scoped edits, and no exception needs recording — Go is an ordinary Serena backend, selected on the
+same terms as any other language. Where Serena is absent or unhealthy, those questions go to the Go
+owner's own language-server interface through `/alaa-golang` in Claude Code or `$alaa-golang` in Codex,
+which reaches gopls.
+
+Name which of the two answered when you report the result, because their guarantees differ: gopls
+reasons about the locally resolved build and sees generated and dependency code that a Serena project
+scoped to the repository may not, while Serena answers uniformly across the languages a mixed repository
+actually contains. A question the available owner cannot answer is a recorded gap, not a reason to fall
+back to text search.
+
+Implementation doctrine, framework choice, and package selection remain with `/alaa-golang`, which is
+the front door for Go and routes onward to the installed Go skills. Native Go commands and repository
+gates own proof.
 
 ## Vue and Quasar
 

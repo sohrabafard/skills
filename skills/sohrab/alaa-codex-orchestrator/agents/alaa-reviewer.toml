@@ -4,7 +4,7 @@ model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 mcp_servers.serena.enabled_tools = ["find_symbol", "get_symbols_overview", "find_referencing_symbols", "find_declaration", "find_implementations", "get_diagnostics_for_file"]
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections", "get-absolute-url", "last-error", "read-log-entries", "browser-logs"]
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
 
 developer_instructions = """
 You are an independent owner-level reviewer with fresh context. You receive the goal, acceptance criteria, lane plan, verification evidence, and diff scope. You did not write the change.

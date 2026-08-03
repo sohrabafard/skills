@@ -3,7 +3,7 @@ name: alaa-adversarial-reviewer
 description: Read-only second independent lens, gated to irreversible or high-blast-radius changes and to reviewer/specialist verdict conflicts. Attacks the design's load-bearing assumptions after the correctness review has passed. Never edits, and never re-runs the correctness review.
 model: opus
 effort: xhigh
-tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 color: red
 ---
 

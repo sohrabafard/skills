@@ -151,15 +151,18 @@ for path in sorted(ROOT.rglob("*")):
     # is ever loaded into an agent's context, so neither can leak at runtime.
     if path.name in {"validate_pack.py", "CHANGELOG.md"}:
         continue
-    # A "When NOT to use" section exists to name the cases this pack does not
-    # serve, and the other runtime is the first of them. Naming it there is the
-    # section doing its job, so the sweep skips that section rather than forcing
-    # the boundary to be stated in words that cannot say which runtime it means.
+    # One line may name the other runtime: the negative-routing sentence inside
+    # "When NOT to use", whose entire job is to say which runtime this pack does
+    # not serve. Exempting the whole section would blind the sweep to anything
+    # else later placed there, so the exemption is scoped to that one line shape
+    # and still requires the line to route the reader elsewhere.
+    negative_route = re.compile(
+        r"^\s*[-*]\s+The runtime is .+ rather than .+\.", re.IGNORECASE)
     section = ""
     for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
         if path.suffix == ".md" and line.startswith("## "):
             section = line[3:].strip().lower()
-        if section == "when not to use":
+        if section == "when not to use" and negative_route.match(line):
             continue
         hit = FORBIDDEN.search(line)
         if hit:

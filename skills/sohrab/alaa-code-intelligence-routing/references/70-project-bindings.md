@@ -37,7 +37,7 @@ A language list selects semantic backends, not every repository file type. Each 
 1. Enable a backend only for a recurring known-symbol, reference, hierarchy, diagnostics, or semantic-edit question.
 2. Start with the one material language whose semantics the project needs.
 3. Do not add Markdown, YAML, shell, or configuration languages merely for repository coverage.
-4. Do not add a backend that duplicates a semantic owner named by the stack skill; `/alaa-golang` or `$alaa-golang`, for example, owns Go semantics through gopls.
+4. Select a backend on the project's own need, not to mirror another tool. Where a stack skill names a language-server interface of its own, enabling the semantic backend for that language is still correct when the project wants one uniform semantic surface — the stack interface then becomes the fallback for when the backend is absent or unhealthy. Record which one the project expects to answer, so a reader can tell a real gap from a misconfiguration.
 5. Add one backend only after naming the missing guarantee, verifying health, and accepting observed resource cost.
 6. Remove a backend when its recurring semantic requirement no longer exists.
 

@@ -3,7 +3,7 @@ name: alaa-security-reviewer
 description: Read-only security specialist for changes involving authentication, authorization, tokens, secrets, untrusted input, uploads, queries, webhooks, payments, cryptography, deserialization, or trust boundaries. Never edits or performs offensive actions.
 model: opus
 effort: xhigh
-tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - /alaa-security-review
   - /alaa-trust-gateway-auth

@@ -3,7 +3,7 @@ name: alaa-explorer
 description: Fast read-only repository mapper for orchestrated goals. Spawn when ownership, execution paths, dependencies, tests, conventions, or likely change scope are unclear. Never edits and does not choose the design.
 model: sonnet
 effort: medium
-tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
 color: cyan
 ---
 

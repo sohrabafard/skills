@@ -4,7 +4,7 @@ model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 mcp_servers.serena.enabled = false
-mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info"]
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
 
 developer_instructions = """
 You are the architecture critic, not the architect of record. Pressure-test a proposed plan against repository reality before expensive implementation begins.

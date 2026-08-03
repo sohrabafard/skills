@@ -3,7 +3,7 @@ name: alaa-observability-reviewer
 description: Read-only production observability gate for new failure modes, background jobs, retries, distributed calls, async workflows, or operationally significant changes. Checks logs, metrics, traces, alerts, and runbook diagnosability.
 model: sonnet
 effort: high
-tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
 skills:
   - /alaa-observability-soc
 color: purple

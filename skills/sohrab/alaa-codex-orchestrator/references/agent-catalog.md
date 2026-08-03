@@ -49,46 +49,49 @@ Twenty-one roles are available. A typical goal fires three to five of them. Brea
 
 Each agent file fixes which code-intelligence servers that role may reach, because a role that cannot
 ask a server's question gains nothing from holding it and pays for its tool descriptions in every
-dispatch. `$alaa-code-intelligence-routing` owns the grant classes and the named tool sets;
-`references/80-agent-scoping.md` inside that skill is the definition. This table is only the assignment.
+dispatch. `$alaa-code-intelligence-routing` owns the grant classes and the named tool sets; `references/80-agent-scoping.md`
+inside that skill is the definition. This table is only the assignment.
 
-| Agent | Structural and semantic | Laravel Boost |
+| Agent | Structural and semantic | Framework context |
 |---|---|---|
-| `alaa-explorer` | CodeGraph | docs |
+| `alaa-explorer` | CodeGraph | docs, routing |
 | `alaa-spec-analyst` | CodeGraph | docs |
-| `alaa-architecture-critic` | CodeGraph | docs |
-| `alaa-test-strategist` | CodeGraph | docs |
-| `alaa-api-contract-reviewer` | CodeGraph | inspect |
-| `alaa-migration-guardian` | CodeGraph | inspect |
-| `alaa-observability-reviewer` | CodeGraph | inspect |
-| `alaa-performance-profiler` | CodeGraph | inspect |
-| `alaa-reviewer` | CodeGraph + Serena read set | inspect |
-| `alaa-adversarial-reviewer` | CodeGraph + Serena read set | inspect |
-| `alaa-security-reviewer` | CodeGraph + Serena read set | inspect |
-| `alaa-failure-analyst` | CodeGraph + Serena read set | inspect |
+| `alaa-architecture-critic` | CodeGraph | docs, schema |
+| `alaa-test-strategist` | CodeGraph | docs, schema |
+| `alaa-api-contract-reviewer` | CodeGraph | docs, routing, schema |
+| `alaa-migration-guardian` | CodeGraph | docs, schema |
+| `alaa-observability-reviewer` | CodeGraph | docs, app-errors, browser |
+| `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
+| `alaa-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
+| `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
 | `alaa-implementer`, `alaa-implementer-sol` | full, minus Serena's shell tool | full, minus `tinker` and `record-rule` |
 | `alaa-researcher` | none | docs |
 | `alaa-dependency-auditor` | none | docs |
-| `alaa-accessibility-reviewer` | none | docs |
 | `alaa-release-guardian` | none | docs |
-| `alaa-documenter` | none | docs |
-| `alaa-browser-qa` | none | inspect |
+| `alaa-accessibility-reviewer` | none | docs, routing |
+| `alaa-documenter` | none | docs, routing |
+| `alaa-browser-qa` | none | docs, routing, browser, app-errors |
 | `alaa-verifier` | none | none |
 
-`docs` is `search-docs` and `application-info` — what the installed framework does, at the version this
-project actually has. `inspect` adds the read-only application surfaces: schema, connections, URL
-resolution, last error, application log, browser log. `full` is everything Boost registers except
+The framework classes are composed, not bundled, so no lane carries a surface its question cannot use:
+`docs` is `search-docs` and `application-info`; `schema` is `database-schema` and
+`database-connections`; `routing` is `get-absolute-url`; `app-errors` is `last-error` and
+`read-log-entries`; `browser` is `browser-logs`. Two tools appear in no class and are denied everywhere:
 `tinker`, which executes arbitrary PHP, and `record-rule`, which writes into `.ai/rules/` and would let
 a lane rewrite the instructions other lanes follow.
 
 Read-only lanes receive Serena tools by exact name rather than the whole server. An MCP server is a
-separate process, so `sandbox_mode = "read-only"` and the approval policy do not stop that server's
-own rename and delete tools; only the allow list does. The same reason removes Serena's shell tool from
-the implementation lanes, which already run commands under the sandbox and approval policy.
+separate process, so `sandbox_mode = "read-only"` and the approval policy does not stop that server's own rename and delete tools; only the allow
+list does. The same reason removes Serena's shell tool from the implementation lanes, which already run commands under the sandbox and approval policy.
 
-A grant that names a server the project has not installed is inert, not broken. The role answers its
-question through native tools and labels the answer partial when a lost server carried a completeness
-guarantee.
+Every lane granted a server also keeps the ability to invoke `$alaa-code-intelligence-routing` on demand, because a lane holding
+three servers and no contract for choosing among them is the problem the grants were meant to solve.
+`scripts/check_agent_grants.py` resolves each definition and fails on a violated boundary; run it after
+any change to `agents/`, since a file that parses can still hand a reviewer an edit tool. It prints the
+effective grant per role, exits 0 only when every boundary holds, and `--self-test` proves it still
+rejects known-bad definitions — a gate never observed failing is indistinguishable from one that cannot.
 
 ## How the tiers divide
 

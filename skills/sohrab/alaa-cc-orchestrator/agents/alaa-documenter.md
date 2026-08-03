@@ -3,7 +3,7 @@ name: alaa-documenter
 description: Documentation-only lane after implementation/review gates. Updates README, docs, changelog, API/configuration/operations/troubleshooting material to match verified shipped behavior. Never edits executable code or configuration.
 model: sonnet
 effort: medium
-tools: Read, Glob, Grep, Bash, Write, Edit, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+tools: Read, Glob, Grep, Bash, Write, Edit, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
 skills:
   - /alaa-repo-docs
   - /alaa-postman-collections
