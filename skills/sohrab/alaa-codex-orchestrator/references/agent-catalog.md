@@ -62,7 +62,7 @@ assigned here, including servers unknown to this pack, are disabled in that role
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
 | `alaa-reviewer`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-sol` | full, minus Serena's shell tool | full, minus `tinker` and `record-rule` |
+| `alaa-implementer`, `alaa-implementer-sol` | full, minus Serena's shell tool | full |
 | `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
 | `alaa-accessibility-reviewer`, `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
@@ -72,7 +72,7 @@ The Serena read set and framework classes come from
 `alaa-code-intelligence-routing references/80-agent-scoping.md`: `docs` is `search-docs` and
 `application-info`; `schema` is `database-schema` and `database-connections`; `routing` is
 `get-absolute-url`; `app-errors` is `last-error` and `read-log-entries`; and `browser` is
-`browser-logs`.
+`browser-logs`. Read-only roles receive only the classes their question requires. Implementation roles inherit Laravel Boost's native surface; this orchestrator does not create a second server-wide Boost policy.
 
 A custom-agent TOML is a configuration layer. Omitting `mcp_servers` inherits the parent, while naming
 a server with only `enabled_tools`, `disabled_tools`, or `enabled` is malformed because the table has

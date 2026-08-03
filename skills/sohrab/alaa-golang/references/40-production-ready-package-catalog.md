@@ -160,7 +160,7 @@ using it to prove a query returns correct results — that needs a real database
 
 ## Repository tools
 
-`gopls` — **default** language server; reached through `/golang-gopls` (`$golang-gopls`).
+`gopls` — **required backend** for Serena's Go semantic surface and the direct fallback reached through `/golang-gopls` (`$golang-gopls`); it is not the default agent-facing route.
 `golangci-lint` — **default** lint runner. **Rule:** pin its version in CI.
 `govulncheck` — **default** vulnerability gate.
 `buf` — **default** in any protobuf repository.

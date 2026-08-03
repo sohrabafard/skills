@@ -136,12 +136,12 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-implementer-sol": {
         "codegraph": {},
         "serena": {"disabled_tools": ["execute_shell_command"]},
-        "laravel-boost": {"disabled_tools": ["tinker", "record-rule"]},
+        "laravel-boost": {},
     },
     "alaa-implementer": {
         "codegraph": {},
         "serena": {"disabled_tools": ["execute_shell_command"]},
-        "laravel-boost": {"disabled_tools": ["tinker", "record-rule"]},
+        "laravel-boost": {},
     },
     "alaa-migration-guardian": {
         "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),

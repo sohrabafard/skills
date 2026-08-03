@@ -5,7 +5,6 @@ model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 # grant-template: materialize-live-parent-mcp
 #mcp_servers.serena.disabled_tools = ["execute_shell_command"]
-#mcp_servers.laravel-boost.disabled_tools = ["tinker", "record-rule"]
 
 developer_instructions = """
 You are the escalation implementation lane under an orchestrating main thread. You receive one hard, bounded write scope with acceptance criteria and verification commands.

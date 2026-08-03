@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.4.1
+
+- Removed the routing-owned Laravel Boost hardening rule. Read-only lanes retain exact question-scoped Boost allowlists, while implementation lanes inherit Boost's native surface; this orchestrator no longer denies `tinker` or `record-rule` or claims they must be switched off at the server.
+- Repaired the existing 3.4.0 grant drift by removing bare `Skill` from MCP-enabled allowlists and re-enabling the checker rule that rejects unscoped skill access; the named routing skill remains preloaded.
+
 ## 3.4.0
 
 - Replaced broad `Skill` access with a preloaded `/alaa-code-intelligence-routing` skill for MCP-enabled roles; inherited implementation roles now explicitly deny bare `Skill` as well.

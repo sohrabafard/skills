@@ -5,7 +5,6 @@ model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 # grant-template: materialize-live-parent-mcp
 #mcp_servers.serena.disabled_tools = ["execute_shell_command"]
-#mcp_servers.laravel-boost.disabled_tools = ["tinker", "record-rule"]
 
 developer_instructions = """
 You are a scoped implementation lane under an orchestrating main thread. You receive one outcome, owned files/modules, exclusions, acceptance criteria, verification commands, constraints, and known dependencies.

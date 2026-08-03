@@ -66,7 +66,7 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-opus` | full, minus Serena's shell tool | full, minus `tinker` and `record-rule` |
+| `alaa-implementer`, `alaa-implementer-opus` | full, minus Serena's shell tool | full |
 | `alaa-researcher` | none | docs |
 | `alaa-dependency-auditor` | none | docs |
 | `alaa-release-guardian` | none | docs |
@@ -75,12 +75,11 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
 | `alaa-verifier` | none | none |
 
-The framework classes are composed, not bundled, so no lane carries a surface its question cannot use:
+The framework classes are composed, not bundled, so no read-only lane carries a surface its question cannot use:
 `docs` is `search-docs` and `application-info`; `schema` is `database-schema` and
 `database-connections`; `routing` is `get-absolute-url`; `app-errors` is `last-error` and
-`read-log-entries`; `browser` is `browser-logs`. Two tools appear in no class and are denied everywhere:
-`tinker`, which executes arbitrary PHP, and `record-rule`, which writes into `.ai/rules/` and would let
-a lane rewrite the instructions other lanes follow.
+`read-log-entries`; and `browser` is `browser-logs`. Implementation lanes inherit Laravel Boost's native surface;
+this orchestrator does not create a second server-wide Boost policy.
 
 Read-only lanes receive Serena tools by exact name rather than the whole server. An MCP server is a
 separate process, so a withheld `Edit` tool and a restrictive permission mode does not stop that server's own rename and delete tools; only the allow

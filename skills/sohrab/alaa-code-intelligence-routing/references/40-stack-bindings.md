@@ -34,30 +34,17 @@ on a framework name as unknown rather than absent, and re-ask Boost.
 
 Laravel Boost does not own source call graphs or symbol refactors. CodeGraph and Serena do not prove runtime registration, framework behavior, database state, or completion.
 
-Boost's own surface is not uniform in authority, and a read-only label on it is a claim rather than a boundary. Its documentation and application-metadata tools are safe to reach for early and are usually the cheapest correct answer for a framework question. Its query tool returns whatever the application can read, including data a lane has no reason to see, and its guard is a statement-keyword check rather than a database-level restriction. Two further tools are not evidence surfaces at all: one executes arbitrary application code, and one writes durable rule files that other agents then follow. Verify environment and statement effect before any Boost database operation, and keep code execution and rule writing out of every lane whose contract is to observe or to judge.
-
 Implementation doctrine routes to `/alaa-laravel-architecture` in Claude Code or `$alaa-laravel-architecture` in Codex and the other Laravel owners named by that skill.
 
 ## Go
 
-Use CodeGraph for unknown package location, source flow, relationships, and likely impact.
+Use CodeGraph for unknown package location, source flow, relationships, likely impact, and the files or regions to inspect.
 
-The semantic owner for a known Go symbol is decided by availability, not by a fixed preference. Where
-Serena is configured for Go and healthy, it answers definitions, references, hierarchy, diagnostics, and
-symbol-scoped edits, and no exception needs recording — Go is an ordinary Serena backend, selected on the
-same terms as any other language. Where Serena is absent or unhealthy, those questions go to the Go
-owner's own language-server interface through `/alaa-golang` in Claude Code or `$alaa-golang` in Codex,
-which reaches gopls.
+Enable Go in Serena for repositories covered by this pack. Serena is the agent-facing owner for a known Go file or symbol: outline, declaration, references, implementation hierarchy, diagnostics, semantic rename, and symbol-scoped edits. Serena's Go backend uses `gopls`, so the backend is not a parallel evidence owner.
 
-Name which of the two answered when you report the result, because their guarantees differ: gopls
-reasons about the locally resolved build and sees generated and dependency code that a Serena project
-scoped to the repository may not, while Serena answers uniformly across the languages a mixed repository
-actually contains. A question the available owner cannot answer is a recorded gap, not a reason to fall
-back to text search.
+Invoke `/golang-gopls` in Claude Code or `$golang-gopls` in Codex directly only when Serena is unavailable or unhealthy, or after recording one required build-aware, generated-code, dependency-resolution, package-API, or code-action operation that Serena does not expose. Ask direct gopls only that missing question and do not repeat Serena evidence.
 
-Implementation doctrine, framework choice, and package selection remain with `/alaa-golang`, which is
-the front door for Go and routes onward to the installed Go skills. Native Go commands and repository
-gates own proof.
+Implementation doctrine, framework choice, and package selection remain with `/alaa-golang`, which is the front door for Go and routes onward to the installed Go skills. Native Go commands and repository gates own proof.
 
 ## Vue and Quasar
 

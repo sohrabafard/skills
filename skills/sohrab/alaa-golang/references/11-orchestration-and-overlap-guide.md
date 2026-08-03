@@ -23,9 +23,9 @@ risks at the start of the task, not after something breaks.
 | reviewing security-sensitive code | `/golang-security` (`$golang-security`) | `/golang-safety` (`$golang-safety`), `/golang-lint` (`$golang-lint`), `/golang-error-handling` (`$golang-error-handling`) |
 | changing dependencies | `/golang-dependency-management` (`$golang-dependency-management`) | `/golang-pkg-go-dev` (`$golang-pkg-go-dev`), `/golang-security` (`$golang-security`) |
 | configuring CI | `/golang-continuous-integration` (`$golang-continuous-integration`) | `/golang-lint` (`$golang-lint`), `/golang-security` (`$golang-security`), `/golang-testing` (`$golang-testing`) |
-| navigating unfamiliar code | `/golang-gopls` (`$golang-gopls`) | `/golang-project-layout` (`$golang-project-layout`) |
-| restructuring existing code | `/golang-refactoring` (`$golang-refactoring`) | `/golang-gopls` (`$golang-gopls`) and the skill that defines the target shape |
-| adopting a newer Go feature | `/golang-modernize` (`$golang-modernize`) | `/golang-lint` (`$golang-lint`), `/golang-gopls` (`$golang-gopls`) |
+| navigating unfamiliar code | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) | `/golang-project-layout` (`$golang-project-layout`); CodeGraph maps unknown structure and Serena answers the exact known symbol |
+| restructuring existing code | `/golang-refactoring` (`$golang-refactoring`) | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) and the skill that defines the target shape |
+| adopting a newer Go feature | `/golang-modernize` (`$golang-modernize`) | `/golang-lint` (`$golang-lint`) and the semantic diagnostics selected by `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) |
 
 **Forbidden:** loading a Go skill because the task is written in Go. **Rule:** load a skill when the task hits the
 condition that skill's row names, and no others.
@@ -129,17 +129,18 @@ failure is recorded as a metric.
 **Forbidden:** adopting a language feature the repository's `go` directive does not allow — see
 `70-modern-go-baseline.md`.
 
-## gopls against godig against govulncheck
+## Local semantics against godig against govulncheck
 
-The dividing question is whether you are asking about *your build* or *the ecosystem*.
+The dividing question is whether you are asking about *this repository's build* or *the published ecosystem*.
 
-- `/golang-gopls` (`$golang-gopls`) — your locally resolved build: definitions, call sites, interface satisfaction, post-edit
-  diagnostics, safe rename, extract and inline. It sees `replace`d forks; `grep` and `godig` do not.
+- `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) — this repository: CodeGraph for unknown
+  structure, Serena for known Go symbols and semantic edits, and direct `/golang-gopls` (`$golang-gopls`) only for one
+  recorded unavailable, unhealthy, or missing build-aware operation. Serena's Go backend itself uses `gopls`.
 - `/golang-pkg-go-dev` (`$golang-pkg-go-dev`) — the published ecosystem: versions, symbols, examples, importers, licences, and CVEs of a
   package, including one not yet in `go.mod`. It queries pkg.go.dev, never your checkout.
 - `/golang-security` (`$golang-security`) — the whole-tree reachable-CVE audit with `govulncheck ./...`, which is the gate of record.
 
-**Rule:** read and reshape with gopls, learn ecosystem facts with godig, gate releases with `govulncheck`.
+**Rule:** read and reshape through the selected semantic owner, learn ecosystem facts with godig, and gate releases with `govulncheck`.
 **Forbidden:** stating a package's version, licence, CVE status, or importer set from memory. **Rule:** query
 `godig` and cite what it returned.
 
@@ -151,7 +152,9 @@ The dividing question is whether you are asking about *your build* or *the ecosy
   the destination: the new name, the new package, the target shape, the modern idiom.
 - `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) — the destination for any service on the kit.
 
-**Rule:** load the process skill and the destination skill together, with `/golang-gopls` (`$golang-gopls`) as the actuator.
+**Rule:** load the process skill and the destination skill together, with the semantic actuator selected by
+`/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`); Serena is the default Go surface and direct
+`/golang-gopls` (`$golang-gopls`) is one recorded fallback.
 **Forbidden:** a commit that both moves code and changes behaviour. **Rule:** land the move, verify the tests are
 unchanged and green, then land the behaviour change separately.
 **Forbidden:** refactoring code that has no test covering the behaviour being preserved. **Rule:** add that test

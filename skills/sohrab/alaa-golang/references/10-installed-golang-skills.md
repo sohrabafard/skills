@@ -144,16 +144,18 @@ Swagger and OpenAPI with `swaggo/swag`: annotations, generated docs, UI routes, 
 
 ### golang-gopls (`/golang-gopls` · `$golang-gopls`)
 
-Semantic code intelligence through `gopls`: definitions, references, call and implementation hierarchies, workspace
-symbol search, package API discovery, post-edit diagnostics, safe rename, and extract/inline/fill/rewrite actions.
-Reach it through the gopls MCP server (`go_*` tools), the native LSP tool, or the CLI. It reasons about the locally
-resolved build, including `replace`d forks.
+Direct access to Go's `gopls` language server for one operation Serena does not expose, or when Serena is unavailable
+or unhealthy. Serena's Go backend also uses `gopls`, so the backend is not a second evidence owner. Do not invoke the
+direct surface for a question already answered through Serena. The direct fallback can supply build-aware definitions,
+references, package API discovery, diagnostics, rename, and code actions against the locally resolved build, including
+`replace`d forks. `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) owns the fallback decision.
 
 ### golang-refactoring (`/golang-refactoring` · `$golang-refactoring`)
 
-The safe, staged process of restructuring existing Go: coverage safety net, behaviour-preserving transforms (gopls
-Rename, Inline, Extract; `gofmt -r`; `eg`; `gopatch`; `go/analysis` fixers), breaking import cycles, moving types with
-aliases, and small stacked PRs. It owns *how*; the target shape is owned elsewhere.
+The safe, staged process of restructuring existing Go: coverage safety net, behaviour-preserving transforms through
+the semantic actuator selected by `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`), plus
+`gofmt -r`, `eg`, `gopatch`, and `go/analysis` fixers; breaking import cycles; moving types with aliases; and small
+stacked PRs. It owns *how*; the target shape is owned elsewhere.
 
 ## Quality, operations, and delivery
 

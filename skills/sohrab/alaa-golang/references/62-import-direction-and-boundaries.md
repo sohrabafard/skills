@@ -58,8 +58,9 @@ the import graph lie about what depends on what. **Rule:** construct in the comp
 
 - `go list -deps ./internal/domain/... ./internal/application/...` lists everything those layers actually pull in,
   transitively. Nothing in the forbidden list above may appear.
-- `/golang-gopls` (`$golang-gopls`) `go_package_api` shows what a package exports; `go_symbol_references` shows who
-  depends on a type before you move it.
+- `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) selects the semantic surface: Serena shows
+  the package's known symbols and references before a move; invoke `/golang-gopls` (`$golang-gopls`) directly only
+  for one recorded package-API or build-aware guarantee that Serena does not expose.
 
 **Rule:** when the check fails, fix the direction rather than the check — move the type toward the layer that owns it,
 or introduce the interface at the consumer. An import cycle in Go is always a boundary that was drawn in the wrong

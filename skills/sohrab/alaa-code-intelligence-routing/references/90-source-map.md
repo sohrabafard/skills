@@ -14,7 +14,6 @@ Sources were reviewed on 2026-08-02. Recheck the official documentation and inst
 - Codex custom agents and the agent TOML layer: https://developers.openai.com/codex/subagents
 - Codex configuration reference for `mcp_servers` keys: https://developers.openai.com/codex/config-reference
 - Laravel Boost documentation, custom guidelines, update command, MCP tools, documentation search, and application context: https://laravel.com/docs/boost
-- Laravel Boost upstream issue tracker for current tool-safety reports: https://github.com/laravel/boost/issues
 - Claude Code hooks: https://code.claude.com/docs/en/hooks
 - Codex hooks: https://learn.chatgpt.com/docs/hooks
 

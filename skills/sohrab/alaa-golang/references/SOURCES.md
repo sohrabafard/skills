@@ -35,6 +35,8 @@ that a capability exists in the kit. **Rule:** ratification is not implementatio
 | `https://go.dev/doc/modules/layout` | official module and package layout |
 | `https://pkg.go.dev` | versions, symbols, examples, importers, licences, CVEs for a published path — queried by `godig` |
 | `https://pkg.go.dev/golang.org/x/tools/gopls` | gopls capabilities, MCP tools, code actions, settings |
+| `https://oraios.github.io/serena/01-about/020_programming-languages.html` | Serena Go support and its `gopls` prerequisite |
+| `https://oraios.github.io/serena/02-usage/050_configuration.html` | Serena Go backend settings forwarded to `gopls` |
 | `https://pkg.go.dev/testing` | tests, benchmarks, examples, fuzzing, helpers, cleanup, subtests |
 | `https://go.dev/doc/security/fuzz/` | fuzzing rules, seed corpus, deterministic targets |
 

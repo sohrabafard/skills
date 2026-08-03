@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.1
+
+- Removed the routing-owned Laravel Boost hardening rule. Read-only lanes retain exact question-scoped Boost allowlists, while implementation lanes inherit Boost's native surface; this orchestrator no longer denies `tinker` or `record-rule` or claims they must be switched off at the server.
+
 ## 3.4.0
 
 - Replaced partial per-server MCP tables with marked transport-neutral templates. Partial tables had no transport and were rejected by Codex as malformed, while omission and empty maps inherit the parent configuration.

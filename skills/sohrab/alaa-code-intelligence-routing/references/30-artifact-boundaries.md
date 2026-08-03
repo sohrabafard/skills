@@ -5,7 +5,7 @@
 | JSON, YAML, TOML, CI, manifests, environment templates | Native scoped read plus parser or repository checker | Parsed syntax is not the effective runtime value. |
 | OpenAPI, AsyncAPI, Postman, protobuf, schemas | Owning contract skill or generator | Markdown may summarize but never replaces the exact contract. |
 | Migrations and source schema | Framework or schema owner | Name whether the question concerns migration intent or live schema. |
-| Live Laravel schema or database context | Authorized Boost or native database surface | Treat every query as effectful until environment and statement class are verified. |
+| Live Laravel schema or database context | Installed Boost or native database surface | Runtime evidence does not replace source or completion proof. |
 | Generated source or docs | Generator and source template | Do not patch generated output as the source of truth. |
 | Logs, traces, metrics, browser state | Authorized runtime owner | Static tools may map evidence to source but cannot prove runtime behavior. |
 | Images, diagrams, PDFs, archives, binary assets | Native visual or artifact tool | CodeGraph and Serena do not own binary content. |
@@ -14,4 +14,3 @@
 | Git review | Diff first | Expand only from changed artifacts and named risks. |
 | Completion | Repository-native gates | No graph, language server, docs answer, or runtime snapshot substitutes for proof. |
 
-No parser, graph, language server, or runtime tool receives authority from availability. Apply existing read, write, secret, data, environment, and production boundaries before invoking it.

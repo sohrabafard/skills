@@ -57,8 +57,8 @@ owns it — gives the test that decides whether this skill fills the gap itself.
 
 | You are about to… | Read / load |
 |---|---|
-| find a definition, a caller, a package's exported surface, or an interface implementation | the repository's configured semantic backend when it is healthy, otherwise `/golang-gopls` (`$golang-gopls`); `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) owns that selection |
-| rename, move, extract, or inline across more than one file | `/golang-refactoring` (`$golang-refactoring`) with `/golang-gopls` (`$golang-gopls`), plus the skill that defines the target shape |
+| find a definition, caller, package surface, implementation, or diagnostic | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`): Serena for the known Go symbol; direct `/golang-gopls` (`$golang-gopls`) only for one recorded unavailable, unhealthy, or missing-operation fallback |
+| rename, move, extract, or inline across more than one file | `/golang-refactoring` (`$golang-refactoring`) for the process, `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) for the semantic actuator, plus the skill that defines the target shape |
 | change behaviour of any kind | `63-tdd-and-testing-discipline.md` |
 | debug a panic, a deadlock, a leak, or output nobody can explain | `/golang-troubleshooting` (`$golang-troubleshooting`) |
 | investigate slowness | `/golang-observability` (`$golang-observability`) first, then `/golang-benchmark` (`$golang-benchmark`), then `/golang-performance` (`$golang-performance`) |

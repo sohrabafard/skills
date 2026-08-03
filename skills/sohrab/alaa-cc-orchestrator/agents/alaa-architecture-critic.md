@@ -8,8 +8,11 @@ skills:
   - /alaa-code-intelligence-routing
   - /alaa-system-design
   - /alaa-services-contract
-  - /alaa-project-constitution
   - /alaa-laravel-architecture
+  - /alaa-data-layer
+  - /alaa-algorithms-data-structures
+  - /alaa-trust-gateway-auth
+  - /alaa-partitioned-table-fk-audit
 color: red
 ---
 

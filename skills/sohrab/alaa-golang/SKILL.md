@@ -52,10 +52,13 @@ the consumer does.
 (`$alaa-golang-clean-code-principles`) before the first edit or the first review comment. Its P1–P13 are the
 conformance bar; this skill adds no principle of its own and overrides none of them.
 
-**Read code with gopls, not with grep.** To find where a symbol is defined, who calls it, what a package exports, or
-whether a type satisfies an interface, load `/golang-gopls` (`$golang-gopls`) and use `go_search`, `go_file_context`,
-`go_package_api`, and `go_symbol_references`; run `go_diagnostics` on every file you edited. Use `grep` only for text
-that is not a Go symbol: struct tags, SQL strings, template names, config keys, generated-file markers.
+**Route Go code intelligence through `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`).**
+CodeGraph owns unknown package location, source flow, callers, callees, relationships, likely impact, and the files or
+regions to inspect. Serena owns a known Go file or symbol: outline, declaration, references, implementation hierarchy,
+diagnostics, semantic rename, and symbol-scoped edits. Serena's Go backend uses `gopls`; that backend is not a second
+evidence owner. Invoke `/golang-gopls` (`$golang-gopls`) directly only when Serena is unavailable or unhealthy, or
+after recording one required build-aware operation that Serena does not expose. Use `grep` only for text that is not
+a Go symbol: struct tags, SQL strings, template names, config keys, and generated-file markers.
 
 **Route, do not restate — and record what nothing covers.** When another skill owns a topic, load it and follow it;
 do not paraphrase its content into your answer or into this repository.
@@ -68,8 +71,10 @@ silently is re-decided differently by the next agent.
 thinking budget, a subagent or plan-mode capability, or trigger-syntax guidance, load `/alaa-prompting-guide`
 (`$alaa-prompting-guide`) and its `references/50-effort-and-thinking.md`, and take the answer from there.
 
-**Validation gate.** After any Go edit, run in this order: `go build ./...`; gopls `go_diagnostics` on every changed
-file; `go vet ./...`; the tests of the changed packages; `go test ./...`. Add `go test -race ./...` when the change
+**Validation gate.** After any Go edit, run in this order: `go build ./...`; Serena diagnostics on every changed Go
+file; `go vet ./...`; the tests of the changed packages; `go test ./...`. If Serena is unavailable or unhealthy, or
+does not expose the required diagnostic, record that one gap and invoke `/golang-gopls` (`$golang-gopls`)
+`go_diagnostics` once as the fallback. Add `go test -race ./...` when the change
 touches a goroutine, a channel, a mutex, a cache, a worker pool, or a package-level variable. Run `govulncheck ./...`
 when `go.mod` or `go.sum` changed. Report every command with the evidence vocabulary in
 `alaa-go-chi-development` `references/05-phase-and-source-truth.md` — `passed`, `failed`, `blocked`, `skipped`,

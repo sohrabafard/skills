@@ -40,10 +40,6 @@ duplicate of a native tool the runtime already sandboxes. Verify the names again
 inventory before writing them into an agent file; a name that no longer exists silently grants nothing,
 and a new edit tool added upstream is not covered by a stale deny list.
 
-Two framework tools stay out of every lane that observes or judges: one executes arbitrary application
-code, and one writes durable rule files that other agents then follow. Deny them in the lane and switch
-them off at the server, because the two filters are independent.
-
 ## Why an allow list rather than a deny list
 
 A semantic MCP server is a separate process. Its file writes and shell calls do not pass through the
@@ -61,12 +57,11 @@ The always-loaded repository binding must reach the role. Where a runtime loads 
 subagent, the binding arrives with it; where that is undocumented, treat it as unproven and confirm by
 observation before relying on it.
 
-The role must also be able to act on what the binding says. A binding that tells a role to invoke the
-routing skill is inert if that role's tool grant cannot reach the skill surface at all. Any role granted
-a code-intelligence server therefore keeps the ability to invoke this skill on demand. Prefer that to
-preloading the whole skill into every lane: the binding is short and always present, while the skill is
-only needed when a routing decision is genuinely contested, and preloading it everywhere spends context
-on every dispatch to answer a question most dispatches never ask.
+The role must also be able to act on what the binding says. Every role granted a code-intelligence
+server receives this routing contract through the orchestrator-owned agent definition. Do not grant a
+general skill-discovery surface solely to make this contract reachable; preload or otherwise bind this
+named skill without widening access to unrelated skills. The orchestrator pack owns the exact agent
+wiring, and `/alaa-prompting-guide` or `$alaa-prompting-guide` owns the runtime-specific syntax.
 
 ## Validating a grant
 

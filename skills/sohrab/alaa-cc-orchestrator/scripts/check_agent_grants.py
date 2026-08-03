@@ -21,8 +21,6 @@ AGENTS = os.path.join(ROOT, "agents")
 ROUTING_SKILL = "/alaa-code-intelligence-routing"
 MUST_DENY = frozenset((
     "Skill",
-    "mcp__laravel-boost__tinker",
-    "mcp__laravel-boost__record-rule",
     "mcp__serena__execute_shell_command",
 ))
 
@@ -139,8 +137,8 @@ def grant_failures(name: str, fm: dict[str, str | list[str]]) -> tuple[list[str]
     native = [tool for tool in allow if not tool.startswith("mcp__")]
     if not native:
         failures.append(f"{name}: allowlist contains only MCP entries and may not launch without them")
-#     if "Skill" in allow:
-#         failures.append(f"{name}: grants unscoped Skill access; preload only the routing skill")
+    if "Skill" in allow:
+        failures.append(f"{name}: grants unscoped Skill access; preload only the routing skill")
     if deny:
         failures.append(f"{name}: allowlisted role has an unexpected disallowedTools overlay")
     if actual_mcp != expected:
@@ -222,7 +220,7 @@ def self_test() -> int:
         if tools:
             lines.append(tools)
         if name == "alaa-implementer":
-            lines.append("disallowedTools: mcp__serena__execute_shell_command, mcp__laravel-boost__tinker, mcp__laravel-boost__record-rule")
+            lines.append("disallowedTools: mcp__serena__execute_shell_command")
             lines.extend(("skills:", f"  - {ROUTING_SKILL}"))
         elif label != "MCP grant without routing preload":
             lines.extend(("skills:", f"  - {ROUTING_SKILL}"))

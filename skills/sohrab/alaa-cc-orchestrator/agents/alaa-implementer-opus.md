@@ -3,7 +3,7 @@ name: alaa-implementer-opus
 description: Escalated implementation lane worker for slices that must themselves make non-obvious design decisions — public contracts, service boundaries, concurrency, trust boundaries, coupled migrations, complex compatibility. Not for routine lanes that apply an already-ratified decision.
 model: opus
 effort: xhigh
-disallowedTools: Skill, mcp__serena__execute_shell_command, mcp__laravel-boost__tinker, mcp__laravel-boost__record-rule
+disallowedTools: mcp__serena__execute_shell_command
 skills:
   - /alaa-code-intelligence-routing
   - /alaa-services-contract

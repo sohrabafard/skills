@@ -7,7 +7,6 @@ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search
 skills:
   - /alaa-code-intelligence-routing
   - /alaa-testing-strategy
-  - /golang-testing
 color: yellow
 ---
 
