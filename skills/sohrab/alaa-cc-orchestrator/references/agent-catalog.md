@@ -45,6 +45,51 @@ Twenty-one roles are available. A typical goal fires three to five of them. Brea
 | `alaa-observability-reviewer` | Sonnet / high | New runtime failure paths, jobs, distributed calls, retries, degraded operation | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
 | `alaa-release-guardian` | Sonnet / high | CI/CD, container, config and env, dependencies, packaging, deploy and release | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
 
+## Code-intelligence scope
+
+Each agent file fixes which code-intelligence servers that role may reach, because a role that cannot
+ask a server's question gains nothing from holding it and pays for its tool descriptions in every
+dispatch. `/alaa-code-intelligence-routing` owns the grant classes and the named tool sets;
+`references/80-agent-scoping.md` inside that skill is the definition. This table is only the assignment.
+
+| Agent | Structural and semantic | Laravel Boost |
+|---|---|---|
+| `alaa-explorer` | CodeGraph | docs |
+| `alaa-spec-analyst` | CodeGraph | docs |
+| `alaa-architecture-critic` | CodeGraph | docs |
+| `alaa-test-strategist` | CodeGraph | docs |
+| `alaa-api-contract-reviewer` | CodeGraph | inspect |
+| `alaa-migration-guardian` | CodeGraph | inspect |
+| `alaa-observability-reviewer` | CodeGraph | inspect |
+| `alaa-performance-profiler` | CodeGraph | inspect |
+| `alaa-reviewer` | CodeGraph + Serena read set | inspect |
+| `alaa-adversarial-reviewer` | CodeGraph + Serena read set | inspect |
+| `alaa-security-reviewer` | CodeGraph + Serena read set | inspect |
+| `alaa-failure-analyst` | CodeGraph + Serena read set | inspect |
+| `alaa-implementer`, `alaa-implementer-opus` | full, minus Serena's shell tool | full, minus `tinker` and `record-rule` |
+| `alaa-researcher` | none | docs |
+| `alaa-dependency-auditor` | none | docs |
+| `alaa-accessibility-reviewer` | none | docs |
+| `alaa-release-guardian` | none | docs |
+| `alaa-documenter` | none | docs |
+| `alaa-browser-qa` | none | inspect |
+| `alaa-verifier` | none | none |
+
+`docs` is `search-docs` and `application-info` — what the installed framework does, at the version this
+project actually has. `inspect` adds the read-only application surfaces: schema, connections, URL
+resolution, last error, application log, browser log. `full` is everything Boost registers except
+`tinker`, which executes arbitrary PHP, and `record-rule`, which writes into `.ai/rules/` and would let
+a lane rewrite the instructions other lanes follow.
+
+Read-only lanes receive Serena tools by exact name rather than the whole server. An MCP server is a
+separate process, so a withheld `Edit` tool and a restrictive permission mode do not stop that server's
+own rename and delete tools; only the allow list does. The same reason removes Serena's shell tool from
+the implementation lanes, which already hold `Bash` under the runtime's own approval rules.
+
+A grant that names a server the project has not installed is inert, not broken. The role answers its
+question through native tools and labels the answer partial when a lost server carried a completeness
+guarantee.
+
 ## How the tiers divide
 
 Opus lanes are the ones that must exercise independent owner-level judgment: leading, reviewing, challenging, and the implementation lanes whose design is not yet decided. Sonnet lanes are the ones with a defined target — apply a ratified decision, run a known check, judge a change against a published standard, capture evidence. The dividing question is never how sensitive the surface is; it is how much of the decision is still open when the lane starts.

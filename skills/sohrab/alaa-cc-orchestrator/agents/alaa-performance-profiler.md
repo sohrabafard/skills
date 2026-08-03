@@ -3,7 +3,7 @@ name: alaa-performance-profiler
 description: Performance measurement specialist for a specific latency, throughput, CPU, allocation, query, or memory question with a declared baseline and budget. Collects artifacts and analysis; never performs speculative code optimization.
 model: sonnet
 effort: high
-tools: Read, Glob, Grep, Bash
+tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
 skills:
   - /alaa-algorithms-data-structures
   - /alaa-octane-performance

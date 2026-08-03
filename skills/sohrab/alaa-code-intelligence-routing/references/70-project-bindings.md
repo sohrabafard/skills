@@ -4,11 +4,29 @@ Project bindings are always-loaded declarations. Keep them short: invoke the glo
 
 ## Laravel binding source
 
-Use `project-setup/stacks/laravel/.ai/guidelines/30-alaa-code-intelligence.md`. Laravel Boost copies that source into generated agent instructions. Do not maintain parallel hand-edited copies in `AGENTS.md` and `CLAUDE.md`.
+Use `project-setup/stacks/laravel/.ai/guidelines/30-alaa-code-intelligence.md`. Laravel Boost composes every file under `.ai/guidelines/` into one marker-fenced block in the generated agent instructions, replacing that block in place on each install or update while leaving text outside it untouched. So the binding is authored once in the guidelines directory and never hand-edited inside the generated block, where the next update would overwrite it. Do not maintain parallel hand-edited copies in `AGENTS.md` and `CLAUDE.md`.
 
 ## Non-Laravel binding source
 
-Merge `project-setup/stacks/non-laravel/AGENTS.binding.md` once into root `AGENTS.md`. Import that file from `CLAUDE.md` with the supplied bridge when the repository uses that pattern.
+Merge `project-setup/stacks/none-laravel/AGENTS.binding.md` once into root `AGENTS.md`. Import that file from `CLAUDE.md` with the supplied bridge when the repository uses that pattern.
+
+## Serena client context
+
+Serena's client context, not only its project file, decides which tools it exposes. A context written
+for a coding client withholds the file-read, file-create, directory-listing, and shell tools the client
+already owns and sandboxes; a context written for a chat client leaves them enabled. Passing the wrong
+one is not cosmetic — it re-exposes duplicate surfaces outside the client's permission model and gives
+every lane a second way to reach the filesystem.
+
+Select the context by the client that speaks MCP to the server, not by the window that client runs
+inside. A coding client hosted inside a chat application is still the coding client, and the config file
+the registration lives in is the reliable signal: a project MCP file belongs to the coding client, and
+the chat application's own config file belongs to the chat client. The same machine may hold both
+registrations with different contexts, and they do not conflict.
+
+Take the context name from the installed version's list rather than an older guide, and confirm the
+effective tool set after activation. Aliases are retired between releases; a context that once resolved
+may now resolve elsewhere or fail.
 
 ## Serena language-selection policy
 

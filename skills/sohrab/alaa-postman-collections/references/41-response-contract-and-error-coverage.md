@@ -73,9 +73,11 @@ normal shape for a validation status, not a defect.
 ## Coherence rules for a saved example
 
 - `code` is the numeric status. `status` is its reason phrase.
-- `originalRequest` reproduces the request that produced it: same method, same URL,
-  same headers, same body. A saved example whose `originalRequest` points at a
-  different URL documents a request the collection cannot send.
+- `originalRequest` reproduces the request that produced it. Its method and endpoint URL
+  (scheme, host, and path) match the parent request. A named example may use different query,
+  header, or body values when those values are the actual variant that produces the response;
+  keep that variant explicit in `originalRequest`. A saved example that points at a different
+  endpoint documents a request the collection cannot send.
 - The body is the real serialized shape, with placeholder values. A `204` and any
   other bodyless status carries an empty body and its real headers, not a fabricated
   JSON body.

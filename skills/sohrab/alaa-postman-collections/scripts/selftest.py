@@ -77,6 +77,13 @@ CASES: tuple[tuple[str, str, list[str], int, str], ...] = (
         "Validation passed with no issues.",
     ),
     (
+        "validator rejects a saved response attached to a different endpoint",
+        VALIDATOR,
+        ["@wrong-endpoint.postman_collection.json", "--skip-schema"],
+        1,
+        "originalRequest endpoint does not match the request endpoint",
+    ),
+    (
         "validator rejects a capture that writes on an error response",
         VALIDATOR,
         [
@@ -144,6 +151,13 @@ CASES: tuple[tuple[str, str, list[str], int, str], ...] = (
         ],
         0,
         "errors=0",
+    ),
+    (
+        "auditor rejects a saved response attached to a different endpoint",
+        AUDITOR,
+        ["--min-description-chars", "0", "wrong=@wrong-endpoint.postman_collection.json"],
+        1,
+        "originalRequest endpoint does not match the request endpoint",
     ),
     (
         "auditor rejects a collection of folders with no requests",

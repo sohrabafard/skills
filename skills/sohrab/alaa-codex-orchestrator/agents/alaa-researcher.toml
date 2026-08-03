@@ -3,6 +3,9 @@ description = "Read-only external and repository research specialist. Spawn for 
 model = "gpt-5.6-terra"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
+mcp_servers.serena.enabled = false
+mcp_servers.codegraph.enabled = false
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info"]
 
 developer_instructions = """
 You are the research lane under an orchestrating main thread. Establish facts needed for one engineering decision.

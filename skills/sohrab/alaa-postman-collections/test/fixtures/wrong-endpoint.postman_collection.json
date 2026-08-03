@@ -1,0 +1,43 @@
+{
+  "info": {
+    "name": "Fixture Wrong Endpoint",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "List records",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/v1/records?mode=current",
+          "host": ["{{base_url}}"],
+          "path": ["v1", "records"]
+        },
+        "description": "A red fixture whose saved response points at another endpoint."
+      },
+      "response": [
+        {
+          "name": "200 Wrong endpoint",
+          "originalRequest": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/other?mode=variant",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "other"]
+            }
+          },
+          "code": 200,
+          "status": "OK",
+          "header": [],
+          "body": "{}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.example.test"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ name: alaa-dependency-auditor
 description: Read-only dependency and supply-chain gate. Spawn when a dependency is added, upgraded, removed, or replaced, or when a lockfile drifts outside a scoped upgrade lane. Judges whether the dependency is safe to depend on; never upgrades, pins, or edits anything.
 model: sonnet
 effort: high
-tools: Read, Glob, Grep, Bash
+tools: Read, Glob, Grep, Bash, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 color: orange
 ---
 

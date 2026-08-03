@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.3.0
+
+- Every agent file now fixes the code-intelligence servers its role may reach. A role that cannot ask a server's question no longer holds it, and the tool descriptions it never used stop arriving in that role's window on every dispatch. `references/agent-catalog.md` records the assignment; `$alaa-code-intelligence-routing` owns the grant classes behind it.
+- Read-only review lanes receive Serena tools by exact name rather than the whole server. An MCP server is a separate process, so `sandbox_mode = "read-only"` never constrained it — a lane declared read-only could still rename or delete a symbol repository-wide. The allow list is the only form of that boundary that holds.
+- Removed Serena's shell tool from the implementation lanes. They already run commands under the sandbox and approval policy, and a second path to the shell that bypasses those rules is a hole rather than a capability.
+- A lane's grant is now an anti-pattern to widen inside a dispatch. It belongs in the agent file, which is also what a reinstall restores.
+- Laravel Boost is now scoped per role too, in three tiers. `docs` (`search-docs`, `application-info`) goes to every read-only lane, because using an API correctly at the installed version the first time is cheaper than a review cycle spent on a signature that changed. `inspect` adds the read-only application surfaces for lanes that need observed state. `full` goes to the implementation lanes, minus `tinker`, which executes arbitrary PHP, and `record-rule`, which writes the rule files other lanes then follow.
+- Gave `alaa-documenter` a real tool allow list instead of a deny list. It previously inherited every tool in the session; it now holds exactly what a documentation lane needs.
+- Fixed the cross-runtime sweep in `scripts/validate_pack.py`. It flagged the "When NOT to use" section for naming the other runtime, which is that section doing its job, so the sweep now skips it. Both packs validate clean.
+
 ## 3.2.0
 
 - Wired three doctrine skills into the roles that were already gated on their subjects but had no standard behind them. `alaa-architecture-critic` now reviews against `$alaa-system-design`, `alaa-test-strategist` applies `$alaa-testing-strategy`, and `alaa-performance-profiler` measures against the complexity budget `$alaa-algorithms-data-structures` owns. Each is loaded through the agent's developer instructions and named in its dispatch template, so the standard arrives with the lane rather than depending on the lead remembering it.

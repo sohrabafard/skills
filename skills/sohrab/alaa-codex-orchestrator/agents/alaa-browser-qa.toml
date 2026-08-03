@@ -3,6 +3,9 @@ description = "Browser evidence and user-flow QA specialist for frontend changes
 model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
+mcp_servers.serena.enabled = false
+mcp_servers.codegraph.enabled = false
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections", "get-absolute-url", "last-error", "read-log-entries", "browser-logs"]
 
 developer_instructions = """
 You are the browser QA lane. Execute bounded user-visible scenarios against the declared environment and collect reproducible evidence.

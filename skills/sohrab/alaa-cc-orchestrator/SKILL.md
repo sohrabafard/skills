@@ -145,6 +145,7 @@ Read `references/resource-policy.md` for runner usage and ecosystem examples. Re
 - Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Auto-install authority is limited to this pack's named agent files under `~/.claude/agents` and their backups. It does not authorize editing settings, hooks, other skills, or unrelated agents.
+- A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.claude/agents`.
 - Never commit unless requested. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 
@@ -161,6 +162,7 @@ Stop and report a partial or blocked state when: the same lane is blocked twice 
 - spawning a subagent to double-check another subagent, or adding "verify your work" instructions the lead already honors;
 - treating the verifier and reviewer gates as redundancy and skipping them because the work already looks checked — they are authority boundaries;
 - using a reviewer as a fixer, a verifier as a debugger, or a researcher as a decision-maker;
+- telling a lane to use a code-intelligence server its agent file does not grant, or widening the grant inside a dispatch instead of in the agent file;
 - the lead running heavy test suites or implementing while lanes are viable;
 - allowing documentation to describe intended rather than observed behavior;
 - treating a rerun that passes after a failure as a clean pass;

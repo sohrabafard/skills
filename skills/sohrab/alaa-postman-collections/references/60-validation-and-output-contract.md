@@ -65,7 +65,9 @@ holding this skill's `SKILL.md`; it interpolates in PowerShell and POSIX shells,
 - one `prerequest` and one `test` event per scope
 - no deprecated `postman.*` interface and no `pm.globals.*`
 - each saved response has a numeric `code`, a `body`, and an `originalRequest` whose
-  method and URL match the request
+  method and endpoint URL (scheme, host, and path) match the request. A named response may
+  use a different query variant when its `originalRequest` records the query that actually
+  produces that example
 - no two saved examples on one request share a status and a name
 - every committed environment declares `"_postman_variable_scope": "environment"` and no
   duplicate keys
@@ -188,7 +190,8 @@ to be re-synced with a new analyser, so **the validator is the gate that proves 
 treat an auditor pass on that rule as no evidence either way.
 
 It enforces the exact v2.1 export marker, a minimum request-description length, one saved
-response per request with a numeric code, a body, and a matching `originalRequest`, event
+response per request with a numeric code, a body, and an `originalRequest` with the same method
+and endpoint URL while allowing accurately recorded query variants, event
 structure with no duplicate listener in a scope and `script.exec` as an array of strings,
 no scripts under `request.event`, no deprecated Postman interfaces, no script writing an
 undeclared variable, an explicit success guard on any non-correlation capture, and the

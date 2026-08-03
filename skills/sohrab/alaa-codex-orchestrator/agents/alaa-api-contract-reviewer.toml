@@ -4,6 +4,8 @@ description = "Read-only compatibility gate for public HTTP/RPC endpoints, event
 model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
+mcp_servers.serena.enabled = false
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections", "get-absolute-url", "last-error", "read-log-entries", "browser-logs"]
 
 developer_instructions = """
 You are the consumer-compatibility gate. Spawned when a change touches a public HTTP or RPC endpoint, an event or message schema, a shared DTO, an SDK surface, or a persisted serialization format.

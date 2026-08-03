@@ -3,6 +3,8 @@ description = "Fast read-only repository mapper for orchestrated goals. Spawn wh
 model = "gpt-5.6-luna"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
+mcp_servers.serena.enabled = false
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info"]
 
 developer_instructions = """
 You are the repository exploration lane under an orchestrating main thread. Answer one bounded repository question with direct evidence.

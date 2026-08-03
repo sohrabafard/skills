@@ -3,7 +3,7 @@ name: alaa-spec-analyst
 description: Read-only specification analyst. Spawn before any implementation dispatch when the goal's acceptance criteria are not yet checkable — vague quality language, an implied but unstated contract, or a "done" state two competent readers would define differently. Never implements, designs, or decides product questions.
 model: opus
 effort: high
-tools: Read, Glob, Grep, Bash
+tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 color: cyan
 ---
 

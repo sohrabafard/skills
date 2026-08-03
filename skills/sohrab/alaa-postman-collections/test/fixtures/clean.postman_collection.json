@@ -23,7 +23,7 @@
               "raw": "{\"code\": \"000000\"}"
             },
             "url": {
-              "raw": "{{base_url}}/v1/tokens",
+              "raw": "{{base_url}}/v1/tokens?mode=current",
               "host": [
                 "{{base_url}}"
               ],
@@ -78,7 +78,7 @@
                   "raw": "{\"code\": \"000000\"}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/v1/tokens",
+                  "raw": "{{base_url}}/v1/tokens?mode=issued",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -117,7 +117,7 @@
                   "raw": "{\"code\": \"000000\"}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/v1/tokens",
+                  "raw": "{{base_url}}/v1/tokens?mode=invalid",
                   "host": [
                     "{{base_url}}"
                   ],

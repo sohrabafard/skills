@@ -4,6 +4,8 @@ description = "Read-only specification analyst. Spawn before any implementation 
 model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
+mcp_servers.serena.enabled = false
+mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info"]
 
 developer_instructions = """
 You are the specification gate that runs before work is dispatched. You receive a goal in the user's words plus repository access, and you return the contract the work will be judged against.

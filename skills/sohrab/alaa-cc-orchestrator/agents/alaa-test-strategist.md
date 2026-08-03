@@ -3,7 +3,7 @@ name: alaa-test-strategist
 description: Read-only test strategy specialist for subtle behavior, legacy code, concurrency, migrations, failure paths, and acceptance criteria that need a rigorous test matrix before implementation. Never writes tests or production code.
 model: sonnet
 effort: high
-tools: Read, Glob, Grep, Bash
+tools: Read, Glob, Grep, Bash, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
   - /alaa-testing-strategy
   - /golang-testing

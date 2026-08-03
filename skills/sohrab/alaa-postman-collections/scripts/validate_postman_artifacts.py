@@ -341,6 +341,11 @@ def raw_url(value: Any) -> str:
     return ""
 
 
+def endpoint_url(value: Any) -> str:
+    """Return the scheme/host/path identity while allowing saved query variants."""
+    return raw_url(value).split("#", 1)[0].split("?", 1)[0]
+
+
 def script_text_of(events: Any, listener: str | None = None) -> str:
     lines: list[str] = []
     if not isinstance(events, list):
@@ -791,7 +796,7 @@ def walk_items(
         seen_pairs: set[tuple[Any, str]] = set()
         token_in_success_example = False
         request_method = str(request.get("method", "GET")).upper()
-        request_url = raw_url(request.get("url"))
+        request_endpoint = endpoint_url(request.get("url"))
 
         for response_index, response in enumerate(responses):
             response_scope = f"{item_scope}.response[{response_index}]"
@@ -841,9 +846,9 @@ def walk_items(
                         f"{response_scope}: originalRequest method `{original_method}` does not match "
                         f"`{request_method}`"
                     )
-                original_url = raw_url(original_request.get("url"))
-                if request_url and original_url != request_url:
-                    report.error(f"{response_scope}: originalRequest URL does not match the request URL")
+                original_endpoint = endpoint_url(original_request.get("url"))
+                if request_endpoint and original_endpoint != request_endpoint:
+                    report.error(f"{response_scope}: originalRequest endpoint does not match the request endpoint")
 
         if success_codes:
             report.bump("requests_with_success_example")

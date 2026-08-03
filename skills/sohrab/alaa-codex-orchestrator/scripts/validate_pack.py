@@ -151,7 +151,16 @@ for path in sorted(ROOT.rglob("*")):
     # is ever loaded into an agent's context, so neither can leak at runtime.
     if path.name in {"validate_pack.py", "CHANGELOG.md"}:
         continue
+    # A "When NOT to use" section exists to name the cases this pack does not
+    # serve, and the other runtime is the first of them. Naming it there is the
+    # section doing its job, so the sweep skips that section rather than forcing
+    # the boundary to be stated in words that cannot say which runtime it means.
+    section = ""
     for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+        if path.suffix == ".md" and line.startswith("## "):
+            section = line[3:].strip().lower()
+        if section == "when not to use":
+            continue
         hit = FORBIDDEN.search(line)
         if hit:
             rel = path.relative_to(ROOT)

@@ -1,6 +1,6 @@
 ---
 name: alaa-code-intelligence-routing
-description: "Evidence-routing control plane for CodeGraph, Serena, Laravel Boost, language-native semantic tools, domain skills, and repository proof. Use when an agent must choose the owner of an unknown-location, call-path, caller/callee, impact, known-symbol, semantic-edit, Laravel framework-context, runtime, review, configuration, documentation, generated-artifact, fallback, or validation question, or when duplicate grep/read discovery must be prevented. Do not use to implement domain code, author repository documentation, manage durable workflow state or memory, orchestrate agents, or prove completion; route those to the relevant stack skill, alaa-repo-docs, alaa-workflow, the installed orchestrator, or repository-native gates."
+description: "Evidence-routing control plane for CodeGraph, Serena, Laravel Boost, language-native semantic tools, domain skills, and repository proof. Use when an agent must choose the owner of an unknown-location, call-path, caller/callee, impact, known-symbol, semantic-edit, Laravel framework-context, runtime, review, configuration, documentation, generated-artifact, fallback, or validation question, when duplicate grep/read discovery must be prevented, or when deciding which code-intelligence servers and tools a role or subagent may be granted. Do not use to implement domain code, author repository documentation, manage durable workflow state or memory, orchestrate agents, define agent rosters, or prove completion; route those to the relevant stack skill, alaa-repo-docs, alaa-workflow, the installed orchestrator, or repository-native gates."
 ---
 
 # Alaa Code Intelligence Routing
@@ -27,14 +27,26 @@ Move every named question to one evidence owner, consume that result, and contin
 - Evidence returned for a question is consumed; do not retrieve it again for reassurance.
 - An empty result means unknown unless the selected owner proves complete coverage of the required scope.
 - The CodeGraph server and installer own exact CodeGraph tool guidance, MCP registration, permissions, and marker-fenced client instructions. This skill owns whether CodeGraph is selected. Interpret any CodeGraph-first text only within structural discovery, never as precedence over a known-symbol semantic owner, a native artifact owner, runtime evidence, review, or proof.
+- CodeGraph resolves more than static calls: callback registration, function-as-value, and interface-to-implementation are real traversable edges, so an empty grep result never justifies concluding a symbol is unused. What it does not resolve is the invocation half of a runtime-computed dispatch — a computed member call, reflection, a string-keyed bus, a container or mediator lookup. There it announces the boundary instead of guessing an edge, and reports the site, the dispatch form, and any statically visible key.
+- An announced boundary is an answer, not a failure, and it is the one place a second lookup is legitimate. Use the reported key to shortlist candidates and confirm with one semantic lookup or one live read; do not restart discovery, and do not report the call path as complete across a boundary that was never traversed. Where a framework resolves targets through a container, an event dispatcher, or a facade, expect boundaries there and budget one confirmation per boundary.
 - A stack skill may name a language-native semantic owner that replaces Serena for that stack. Follow the stack owner and report any binding drift.
+- A code-intelligence MCP server runs outside the client's sandbox and permission model. A read-only lane stays read-only only when its semantic grant is restricted to read tools; a read-only sandbox mode, a restrictive permission mode, and a withheld native edit tool do not stop a semantic server's own edit, rename, delete, file-creation, or shell tools. Grant the read set in `references/80-agent-scoping.md` instead of the whole server.
+- Serena project memories are a tool-local store, not the durable execution record. Read one when it is already the cheapest source of a project fact; route durable plan, checkpoint, and handoff state to `/alaa-workflow` or `$alaa-workflow` and cross-session project knowledge to `/alaa-memory-os` or `$alaa-memory-os`. Do not write execution state into semantic-server memories.
 - Route repository Markdown to `/alaa-repo-docs` in Claude Code or `$alaa-repo-docs` in Codex, durable execution state to `/alaa-workflow` or `$alaa-workflow`, output-volume policy to `/alaa-low-noise` or `$alaa-low-noise`, and lane fan-out to the installed runtime orchestrator. Do not restate their rules here.
 
 ## Decision procedure
 
 1. Split the request into independently answerable questions.
 2. Read the short repository binding and identify the Git root, CodeGraph root, active semantic project, installed Laravel Boost inventory, and native proof owner that apply.
-3. Classify the current question with `references/10-routing-contract.md` and select one primary owner.
+3. Select one primary owner. Four cases cover most questions and need no reference read: an unknown
+   location or a relationship between symbols goes to CodeGraph; a known file or symbol whose exact
+   references, hierarchy, diagnostics, or symbol-scoped edit is needed goes to the semantic owner; the
+   behaviour, current signature, or convention of an installed framework or package goes to that
+   framework's documentation surface before any source read, because only it answers at the version
+   installed here;
+   and configuration, markup, contracts, generated output, and prose go to their native owner. Read
+   `references/10-routing-contract.md` when the question does not land cleanly in one of the four, when
+   two owners look equally right, or when an owner has already come back empty.
 4. Ask only the smallest question that unlocks the next safe edit, proof step, handoff, or blocked decision.
 5. Record what the result established and stop that owner.
 6. When one required fact is absent, record the established evidence, missing fact, reason the owner cannot supply it, and the one secondary owner allowed to answer it.
@@ -42,8 +54,8 @@ Move every named question to one evidence owner, consume that result, and contin
 
 ## Tool usage
 
-- **CodeGraph:** unknown source location; related symbols; route-to-handler and downstream source flow; call paths; callers and callees; architecture relationships; likely blast radius; and the files or source regions that should be read in a healthy index of a supported language. Prefer the installed primary exploration surface. Use a narrower CodeGraph surface only when the installed server exposes it and the named question is narrower.
-- **Serena:** a known file or symbol in a configured language; file or symbol outline; declaration, references, hierarchy, diagnostics, and semantic rename or symbol-scoped edits when the installed backend exposes the required operation. Do not treat Serena activation as permission to edit.
+- **CodeGraph:** unknown source location; related symbols; route-to-handler and downstream source flow; call paths; callers and callees; architecture relationships; likely blast radius; and the files or source regions that should be read in a healthy index of a supported language. It is a pre-built index, so ask it first for a structural question rather than arriving at the same answer through a grep-and-read loop it has already done, and consume its verbatim source instead of re-reading the same files. Prefer the installed primary exploration surface; use a narrower CodeGraph surface only when the installed server exposes it and the named question is narrower.
+- **Serena:** a known file or symbol in a configured language; file or symbol outline; declaration, references, hierarchy, diagnostics, and semantic rename or symbol-scoped edits when the installed backend exposes the required operation. Select from the inventory the installed version exposes rather than a remembered tool list; names are added and retired between releases. Do not treat Serena activation as permission to edit.
 - **Language-native semantic owner:** use the semantic interface named by the active stack skill instead of Serena. In particular, `/alaa-golang` in Claude Code or `$alaa-golang` in Codex routes Go definition, reference, hierarchy, and diagnostics work to its gopls owner.
 - **Laravel Boost:** current documentation for installed Laravel packages and authorized Laravel application context. It does not own static source call graphs, semantic refactors, Git review, or completion proof.
 - **Native or domain owner:** registered routes, plain text, Markdown, JSON, YAML, TOML, CI, containers, generated artifacts, contracts, binaries, runtime commands, Git diff, tests, builds, linters, generators, schema checks, and other repository proof.
@@ -92,4 +104,5 @@ Perform one health attempt for an empty, unavailable, or misaligned owner, then 
 - Read `references/50-hooks.md` before configuring or diagnosing CodeGraph and Serena hooks.
 - Read `references/60-evaluation.md` before evaluating routing economy or duplicate discovery.
 - Read `references/70-project-bindings.md` before writing a repository binding or Serena `initial_prompt`.
+- Read `references/80-agent-scoping.md` before granting or withholding a code-intelligence server for a role, subagent, or lane.
 - Read `references/90-source-map.md` before changing a capability, command, path, configuration key, or hook claim.

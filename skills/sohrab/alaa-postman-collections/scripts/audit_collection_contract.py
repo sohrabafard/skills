@@ -180,6 +180,11 @@ def raw_url(value: Any) -> str:
     return ""
 
 
+def endpoint_url(value: Any) -> str:
+    """Return the scheme/host/path identity while allowing saved query variants."""
+    return raw_url(value).split("#", 1)[0].split("?", 1)[0]
+
+
 def walk_request_items(items: Any) -> Iterable[dict[str, Any]]:
     if not isinstance(items, list):
         return
@@ -328,7 +333,7 @@ def audit_collection(
         responses = item.get("response")
         saved_responses = responses if isinstance(responses, list) else []
         request_method = str(request.get("method", "GET")).upper()
-        request_url = raw_url(request.get("url"))
+        request_endpoint = endpoint_url(request.get("url"))
         result.saved_responses += len(saved_responses)
         if require_saved_responses and not saved_responses:
             result.add("error", label_text, "request has no attached saved response example")
@@ -349,12 +354,12 @@ def audit_collection(
                         label_text,
                         f"saved response {index} method `{original_method}` does not match `{request_method}`",
                     )
-                original_url = raw_url(original_request.get("url"))
-                if request_url and original_url != request_url:
+                original_endpoint = endpoint_url(original_request.get("url"))
+                if request_endpoint and original_endpoint != request_endpoint:
                     result.add(
                         "error",
                         label_text,
-                        f"saved response {index} originalRequest URL does not match the request URL",
+                        f"saved response {index} originalRequest endpoint does not match the request endpoint",
                     )
             if "body" not in response:
                 result.add("error", label_text, f"saved response {index} has no body field")
