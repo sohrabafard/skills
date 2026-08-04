@@ -8,7 +8,7 @@
 
 ## قواعد طراحی این pack
 
-- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و هر ۶۸ پوشه skill از ۶۸ پوشه اینجا این فایل را دارند؛ این وضعیت با `python scripts\check_skill_index.py` بررسی شده است.
+- یک agent در Codex فقط skill ای را می‌تواند بار کند که `agents/openai.yaml` داشته باشد، و هر ۶۹ پوشه skill از ۶۹ پوشه اینجا این فایل را دارند؛ این وضعیت با `python scripts\check_skill_index.py` بررسی شده است.
 - هیچ skill ای نام مدل نمی‌گوید؛ هر سوال مدل و effort و توان runtime به `alaa-prompting-guide` می‌رود.
 - سطح‌های بالغ یک مالک routing-first دارند، نه چند skill ریز و تقریبا تکراری.
 - skill های همراه جایی صریح می‌مانند که مرز مالکیت هنوز اهمیت دارد.
@@ -96,6 +96,7 @@
 | `alaa-codex-orchestrator` | همان چیز برای Codex |
 | `alaa-codex-runtime-ops` | بازیابی از خطاهای runtime در Codex و ویندوز |
 | `alaa-memory-os` | مدل عملیاتی حافظه، مستقل از انبار: اینکه چه چیزی ارزش ثبت دارد، در چه شکل یادداشتی، و با چه بودجه بازخوانی و مسیر fail-open. ثبت drift وقتی دو منبع حقیقت اختلاف دارند. Basic Memory و Hindsight هر کدام یک reference آداپتور دارند و هیچ‌کدام موضوع این skill نیستند |
+| `alaa-extract-agent-lessons` | دروازه میانی و پایانی برای استخراج رابط‌های تصمیم‌گیری، معیارهای قضاوت، و کارت‌های دانش ماندگارِ مبتنی بر شواهد؛ نگهداری نامزدهای فعال در `alaa-workflow` و انتشار فقط دانش ماندگارِ مجاز از مسیر `alaa-memory-os` |
 
 ## ۳. PHP و Laravel
 

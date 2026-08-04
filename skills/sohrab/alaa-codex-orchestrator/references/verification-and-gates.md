@@ -12,9 +12,17 @@ Accept evidence only when it includes the exact command, working directory, rele
 4. Full independent `alaa-reviewer`.
 5. Conditional specialist gates.
 6. Documentation write lane.
-7. Documentation checks and final diff/status reconciliation.
+7. Documentation checks.
+8. Final reusable-context curation through `$alaa-extract-agent-lessons` after the evidence is stable.
+9. Final diff/status reconciliation.
 
 A specialist may run earlier when its purpose is plan pressure-testing, especially architecture critic and test strategist.
+
+## Gate reopen rule
+
+A repository promotion discovered after evidence was declared stable reopens the owning write lane and every
+affected verification, review, documentation, and documentation-check gate. After those gates pass, rerun final
+reusable-context curation. Durable memory publication alone does not reopen repository gates.
 
 ## Finding ownership
 
@@ -46,4 +54,6 @@ The orchestrator may report completion only when:
 - reviewer and triggered specialist blockers/majors are resolved or explicitly accepted by the user;
 - final touched files match authorized scopes;
 - documentation ran or was explicitly skipped for a grounded reason;
+- the final reusable-context pass reported persisted, deferred, rejected, or no admitted candidates;
+- no `pipeline reopen required` result remains unresolved;
 - no destructive/external action was performed without authorization.

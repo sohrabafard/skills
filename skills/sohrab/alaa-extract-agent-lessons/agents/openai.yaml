@@ -1,0 +1,4 @@
+interface:
+  display_name: "Curate Reusable Agent Context"
+  short_description: "Extract reusable judgment, knowledge, and decision interfaces"
+  default_prompt: "Use $alaa-extract-agent-lessons at this task boundary to retain only evidence-backed context whose absence would worsen a future decision, judgment, reasoning, or discovery cost; shape it as a decision interface, judgment rubric, or durable knowledge card, keep active candidates in the workflow handoff, and publish only authorized durable knowledge."

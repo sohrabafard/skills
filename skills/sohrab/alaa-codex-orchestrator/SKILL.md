@@ -84,6 +84,14 @@ The catalog is a menu, not a fleet. A typical goal fires one to three roles beyo
 
 ## 5. Orchestrator execution pipeline
 
+### Cross-phase reusable-context curation
+
+At the end of Phases A through D, invoke `$alaa-extract-agent-lessons` for an intermediate scan only when the
+phase produced an explicit user or team judgment, an accepted tradeoff, a verified surprise, a costly detour,
+a validation-driven method change, a coordination bottleneck, or non-obvious reusable knowledge. This is a
+main-thread curation step, not a subagent lane. When a workflow parent exists, put admitted candidates in its
+handoff package; otherwise keep the compact candidates in the main thread. Never publish active phase state.
+
 ### Phase A — Evidence and plan
 
 1. Dispatch specification, exploration, and research lanes in parallel only when their questions are independent.
@@ -121,8 +129,9 @@ The catalog is a menu, not a fleet. A typical goal fires one to three roles beyo
 
 1. Spawn `alaa-documenter` only when shipped behavior, API, configuration, operations, troubleshooting, or upgrade instructions changed.
 2. After documentation edits, run applicable docs formatting, link, example, and scope checks. Documentation is the final write lane and therefore must not bypass validation.
-3. Re-check final git status and diff against declared scopes.
-4. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results; review and specialist verdicts with the resolution of each finding; documentation outcome; residual risks, skipped checks, and follow-ups; and the agent roster — every subagent dispatched this goal, one line each with agent name, pinned model and effort, its self-reported AGENT/MODEL/EFFORT identity line flagging any mismatch, and for every escalated lane the named criterion that earned it. Audit every claim against an actual tool result from this session before reporting it.
+3. Invoke `$alaa-extract-agent-lessons` for the final full-engagement gate after the evidence is stable. Reconcile intermediate candidates, publish only authorized durable knowledge through `$alaa-memory-os`, and accept an empty retained set as a valid result. If it returns `pipeline reopen required`, follow the gate-reopen rule in `references/verification-and-gates.md` before rerunning this final gate.
+4. Re-check final git status and diff against declared scopes.
+5. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results; review and specialist verdicts with the resolution of each finding; documentation outcome; reusable-context curation outcome, including persisted, deferred, or empty; residual risks, skipped checks, and follow-ups; and the agent roster — every subagent dispatched this goal, one line each with agent name, pinned model and effort, its self-reported AGENT/MODEL/EFFORT identity line flagging any mismatch, and for every escalated lane the named criterion that earned it. Audit every claim against an actual tool result from this session before reporting it.
 
 ## 6. Advisor-mode output
 
@@ -151,7 +160,7 @@ Read `references/resource-policy.md` for runner usage and ecosystem examples. Re
 
 ## 9. Stop conditions
 
-Stop successfully only when every acceptance criterion has evidence, mandatory gates passed, the final diff scope is clean, and documentation was completed or explicitly skipped.
+Stop successfully only when every acceptance criterion has evidence, mandatory gates passed, the final diff scope is clean, documentation was completed or explicitly skipped, and the final reusable-context gate reported what was persisted, deferred, rejected, or absent.
 
 Stop and report a partial or blocked state when: the same lane is blocked twice by the same cause; blocker or major findings remain after two fix cycles; verification remains flaky, timed out, contaminated, or environment-blocked; scope expands beyond the goal; an irreversible or product decision belongs to the user; or a safe execution path no longer exists.
 

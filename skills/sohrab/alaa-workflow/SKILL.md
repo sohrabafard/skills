@@ -47,7 +47,25 @@ Two things are worth knowing without opening it. Write when something happens â€
 - Validate each behavior-changing phase before advancing.
 - Fix failed gates, or record the exact blocker and the next safe action.
 - On resume, follow the read order in `references/context-continuity.md`: plan, then handoff package, then checkpoint, then the named read-first files, and JSON only when an automated consumer requires it.
-- Complete only when implementation, validation evidence, documentation, and artifact status agree.
+- Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.
+
+## Curate reusable context
+
+At each completed or failed phase and each material decision boundary, invoke
+`$alaa-extract-agent-lessons` / `/alaa-extract-agent-lessons` for an intermediate scan only when the phase
+produced an explicit user or team judgment, an accepted tradeoff, a verified surprise, a costly detour, a
+validation-driven method change, a coordination bottleneck, or non-obvious reusable knowledge. Put each
+admitted candidate in the matching handoff-package field. Record judgment as a confirmed fact about who chose
+what and why, not as a universal fact. Do not publish active plan, checkpoint, or validation state to memory.
+
+Before completion, after implementation, validation, review, and documentation evidence are stable, run the
+skill's final full-engagement gate even when the expected result is empty. Reconcile intermediate candidates,
+route authorized durable publication through `$alaa-memory-os` / `/alaa-memory-os`, and record persisted,
+deferred, rejected, or no admitted candidates in the final phase evidence and checkpoint. This workflow owns
+when and where curation occurs; `alaa-extract-agent-lessons` owns admission and reusable shapes. If the final
+gate returns `pipeline reopen required`, reopen the owning phase, perform the authorized repository promotion,
+rerun every affected validation, review, documentation, and documentation-check gate, then rerun final curation.
+Never close the plan against evidence the curation gate changed.
 
 ## Delegate selectively
 

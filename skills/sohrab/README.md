@@ -11,7 +11,7 @@ The current pack mixes two patterns on purpose:
 
 ## Pack design rules
 
-- a Codex agent can load only a skill that ships `agents/openai.yaml`, and all 68 of the 68 skill folders here do, verified with `python scripts\check_skill_index.py`
+- a Codex agent can load only a skill that ships `agents/openai.yaml`, and all 69 of the 69 skill folders here do, verified with `python scripts\check_skill_index.py`
 - no skill states a model name; model, effort, and runtime-capability questions route to `/alaa-prompting-guide` (`$alaa-prompting-guide`)
 - mature surfaces prefer one routing-first owner instead of many tiny near-duplicates
 - companion skills stay explicit where ownership boundaries still matter
@@ -130,6 +130,7 @@ Every folder in this directory appears exactly once between the markers below, a
 - `alaa-codex-orchestrator`
 - `alaa-codex-runtime-ops`
 - `alaa-memory-os` — a store-agnostic memory operating model: what is worth recording, in what note shape, and with what recall budget. Basic Memory and Hindsight each get one adapter reference and neither is the subject.
+- `alaa-extract-agent-lessons` — an intermediate and final curation gate that extracts evidence-backed decision interfaces, judgment rubrics, and durable knowledge cards, keeps active candidates in `alaa-workflow`, and publishes only authorized durable knowledge through `alaa-memory-os`.
 
 ### PHP / Laravel and service engineering
 
