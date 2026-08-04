@@ -11,6 +11,8 @@ Use this file to choose the smallest recovery reference. Each entry names the fa
 - `references/20-command-and-path-discipline.md`
 - command-length failure, including `CreateProcessAsUserW failed: 206`
 - Windows `EPERM` during validation or build cleanup
+- PowerShell 7 discovery and Windows-native command execution
+- Git Bash/MSYS signal-pipe, shared-memory, or child-startup failure
 - shell syntax, quoting, and path confusion across PowerShell and Git Bash
 - Docker named-pipe permission failure
 - port binding exclusion or reservation

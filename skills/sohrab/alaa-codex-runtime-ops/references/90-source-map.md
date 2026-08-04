@@ -17,5 +17,6 @@ Verify current behavior before giving durable guidance about:
 - OpenAI/Codex tool behavior and session file layout under `~/.codex`
 - Git safe-directory policy
 - Docker Compose on Windows through Git Bash
+- Git Bash/MSYS IPC and child-process behavior inside and outside the active sandbox
 - PowerShell path, stream, or quoting behavior
 - the pinned commands in `references/40-project-fallbacks.md`, which track one workspace's scripts and toolchain versions and go stale when those change
