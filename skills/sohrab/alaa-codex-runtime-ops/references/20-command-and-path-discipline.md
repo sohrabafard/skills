@@ -11,7 +11,7 @@ For `CreateProcessAsUserW failed: 206` or similar command-length errors:
 
 ## Windows execution order
 
-Resolve `pwsh` from the active environment and use PowerShell 7 first for every Windows-native command. Do not silently downlevel to Windows PowerShell when `pwsh` is unavailable or when the command cannot complete there; report the condition. If the required command cannot complete in PowerShell 7 and the gate truly requires Bash semantics, resolve the installed Git Bash from the active environment and run the exact gate outside the sandbox with task-specific escalation approval. Do not hardcode a machine-specific executable path.
+Resolve `pwsh` from the active environment and run tests and Windows-native commands with PowerShell 7 inside the sandbox first. Do not silently downlevel to Windows PowerShell when `pwsh` is unavailable or when the command cannot complete there; report the condition. If a required Bash-backed gate then fails before its validator runs with one of the Git Bash/MSYS IPC startup signatures below, the next shell attempt is the exact gate run directly with the installed Git Bash outside the sandbox under task-specific escalation approval. Do not insert an outside-sandbox PowerShell retry or another wrapper between that classified sandbox failure and the direct Git Bash retry. Resolve both shells from the active environment; do not hardcode a machine-specific executable path.
 
 Prefer:
 
