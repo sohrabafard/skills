@@ -383,16 +383,41 @@ def paragraph_names(
     return out
 
 
-def in_command_span(line: str, start: int, end: int) -> bool:
+def is_owned_citation_span(content: str, skills: Sequence[str]) -> bool:
+    """True when a code span is exactly the pack's cross-skill citation form.
+
+    `skills/sohrab/AGENTS.md` mandates naming the owner: `alaa-services-contract
+    references/22-...`. That form contains a space, so the whitespace test below read every
+    one of them as an example and skipped it -- the convention the checker exists to enforce
+    was the one class it never checked. Verified on 2026-08-06 by pointing a citation at a
+    file that does not exist and observing exit 0.
+
+    Kept deliberately narrow: exactly two tokens, the first a skill this pack actually ships,
+    the second a bundled path. `Read references/failure-taxonomy.md when a check fails` has
+    more than two tokens and stays an example; so does any span whose first token is prose.
+    """
+    parts = content.strip().split()
+    return (
+        len(parts) == 2
+        and parts[0] in skills
+        and parts[1].split("/", 1)[0] in RESOURCE_DIRS
+    )
+
+
+def in_command_span(line: str, start: int, end: int, skills: Sequence[str] = ()) -> bool:
     """True when the citation sits inside an inline code span whose content has whitespace.
 
     Evidence: alaa-prompting-guide/references/60-skill-authoring.md:69 writes
     `Read references/failure-taxonomy.md when a check fails` -- an illustrative sentence in a
     code span, not a citation. validate_sohrab_skill_pack.py implements the same test as
     is_command_example.
+
+    The one exception is the owner-prefixed citation form; see is_owned_citation_span.
     """
     for m in INLINE_SPAN_RE.finditer(line):
         if m.start(1) <= start and end <= m.end(1):
+            if is_owned_citation_span(m.group(1), skills):
+                return False
             return any(ch.isspace() for ch in m.group(1))
     return False
 
@@ -461,7 +486,7 @@ def classify_line(
             continue
         raw = m.group(1)
         cited = normalise(raw)
-        if in_command_span(line, m.start(1), m.end(1)):
+        if in_command_span(line, m.start(1), m.end(1), skills):
             add(cited, "SKIPPED-COMMAND-EXAMPLE")
             continue
         if in_retirement_prose(line, m.start(1)):
@@ -938,6 +963,29 @@ def self_test(fixtures_dir: Path) -> int:
         print("PASS     trailing-period probe (a sentence period still ends a path)")
         passed += 1
 
+    # The owner-prefixed citation form contains a space, so the command-example exclusion
+    # skipped every one of them and the convention AGENTS.md mandates was the one class this
+    # checker never verified. Both directions are asserted: the citation form is checked, and
+    # an illustrative sentence in a code span is still skipped.
+    fleet = ("alaa-services-contract", "alaa-repo-docs")
+    for label, span, expect_skipped in (
+        ("owner-prefixed citation is checked", "alaa-repo-docs references/15-x.md", False),
+        ("bundled script citation is checked", "alaa-repo-docs scripts/check_markdown_links.py", False),
+        ("illustrative sentence is still an example", "Read references/failure-taxonomy.md when a check fails", True),
+        ("unknown first token is still an example", "Read references/failure-taxonomy.md", True),
+        ("three tokens is still an example", "alaa-repo-docs references/15-x.md now", True),
+    ):
+        line = f"see `{span}` for the rule"
+        m = INLINE_SPAN_RE.search(line)
+        inner_start = m.start(1) + span.index("references/" if "references/" in span else "scripts/")
+        got_skipped = in_command_span(line, inner_start, inner_start + 5, fleet)
+        if got_skipped != expect_skipped:
+            print(f"FAIL     citation-span probe ({label}): skipped={got_skipped}")
+            failed += 1
+        else:
+            print(f"PASS     citation-span probe ({label})")
+            passed += 1
+
     print(f"\nself-test: {passed} passed, {failed} failed, {blocked} blocked")
     if blocked:
         return EXIT_CANNOT_RUN
@@ -981,7 +1029,12 @@ resolution order
   7 a skill is named but owns nothing -> R1 8 one other owner -> R4, several -> R3, none -> R2/I1
 
 exclusions
-  * an inline code span whose content contains whitespace is an example, not a citation
+  * an inline code span whose content contains whitespace is an example, not a citation --
+    except the pack's own citation form, exactly `<owning-skill> <bundled-path>`, which is
+    two tokens whose first is a skill this pack ships. That form contains a space, so until
+    2026-08-06 the exclusion skipped every one of them and the convention AGENTS.md mandates
+    was the one class this checker never verified. Enabling it moved 197 citations from
+    SKIPPED-COMMAND-EXAMPLE to RESOLVES-CROSS-SKILL and produced no new finding.
   * a line whose 80 characters before the path say was/were/formerly/retired is retirement prose
   * globs and placeholders are not paths
   * directories named fixtures are skipped unless --include-fixtures

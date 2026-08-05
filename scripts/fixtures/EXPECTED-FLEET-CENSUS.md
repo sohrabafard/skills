@@ -266,3 +266,38 @@ because plugin validation rejects angle brackets there. `alaa-repo-docs/SKILL.md
 repaired in prose: the four `docs/...` paths were rewritten so the scanner matches nothing, and one
 added sentence states in words what the marker would have stated in symbols. Every description
 that must name a target-repository path has the same problem and, for now, the same only fix.
+
+## 2026-08-06 — the owner-prefixed citation form entered the checked set
+
+The command-example exclusion skipped any inline code span containing whitespace. The pack's own
+cross-skill citation form, `<owning-skill> <bundled-path>`, contains a space, so every one of them
+was skipped: the convention `skills/sohrab/AGENTS.md` mandates was the one class this checker never
+verified. Observed directly — a citation pointed at a script that does not exist passed at exit 0.
+
+`is_owned_citation_span` now exempts exactly that form from the exclusion: two tokens, the first a
+skill this pack ships, the second a bundled path. An illustrative sentence in a code span, a span
+whose first token is prose, and a span of three or more tokens all remain examples. Five probes in
+`--self-test` assert both directions.
+
+Enabling it moved 197 citations out of `SKIPPED-COMMAND-EXAMPLE` and produced **no new finding**,
+so the pack's citations were already correct — they were merely unverified. `TOTAL` is unchanged,
+which is the check that the move was a reclassification rather than new matching.
+
+| Class | all prefixes, before | all prefixes, after | references/ only, after |
+| --- | ---: | ---: | ---: |
+| RESOLVES-LOCALLY | 2083 | 2083 | 1558 |
+| RESOLVES-CROSS-SKILL | 511 | 708 | 690 |
+| RESOLVES-CROSS-SKILL-CONTEXTUAL | 158 | 158 | 154 |
+| RESOLVES-RELATIVE | 4 | 4 | 0 |
+| MARKED-BUNDLED | 17 | 17 | 0 |
+| MARKED-TARGET-REPO | 120 | 120 | 0 |
+| AMBIGUOUS-BARE | 2 | 2 | 0 |
+| AMBIGUOUS-MULTI | 1 | 1 | 0 |
+| DANGLING | 322 | 322 | 0 |
+| DANGLING-NAMED | 0 | 0 | 0 |
+| SKIPPED-COMMAND-EXAMPLE | 359 | 162 | 1 |
+| SKIPPED-RETIREMENT-PROSE | 17 | 17 | 15 |
+| TOTAL | 3594 | 3594 | 2418 |
+
+The `references/`-scoped totals differ from the 2026-07-29 rows above because the tree itself grew
+between the two measurements; only the before/after columns here were measured on one tree.
