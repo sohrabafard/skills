@@ -20,6 +20,20 @@ Two claims are never accepted, however confidently they are written: a check tha
 
 Reporting the second run alone is the single most common way a real intermittent defect is lost, because the first run is the only evidence it ever produced.
 
+## Reusing an earlier result instead of re-running it
+
+`SKILL.md` carries the binding rule and the four validity conditions. This section owns how a reused result is reported, because a cited result and a fresh one are not interchangeable in a report even when they are interchangeable as evidence.
+
+A cited claim carries the five facts above **plus two more**: the timestamp of the run it is citing, and the tree identity it ran against — the commit or, on an uncommitted tree, the exact paths and their state. Without the second, no reader can check the first validity condition, and the citation degrades into an assertion that nothing changed.
+
+Write it as one row, marked: `cited` rather than `run`. A report that presents a cited result as a fresh one has misstated when the evidence was obtained, which is the same class of error as misstating the proof level.
+
+Three rules settle the common disputes:
+
+- **A reviewer may demand one re-run**, and gets it without argument. The reuse rule exists to stop unprompted repetition, not to refuse a check that a reviewer has a reason to want.
+- **A citation across a subagent boundary names the agent that observed it.** A result the reporting agent did not observe is reported as not run — that rule is not relaxed by citation; the observing lane's evidence is carried forward with its owner attached.
+- **A merge, rebase, or conflict resolution invalidates every result taken before it.** The merged tree is a tree nothing has run against, whatever both parents returned.
+
 ## A result obtained after changing the command
 
 Changing a command, a flag, a timeout, an environment variable, a fixture, or a seed produces a result for a *different* check. Report both: the original command with its failure, and the altered command with its result, stated as two separate rows. The reviewer decides whether the alteration was legitimate; the report does not decide it by omitting the first row.

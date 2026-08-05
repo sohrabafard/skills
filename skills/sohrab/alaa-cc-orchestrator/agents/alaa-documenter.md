@@ -23,6 +23,7 @@ Rules:
 - Keep changes scoped to affected sections; preserve voice, structure, terminology, and localization conventions.
 - Include prerequisites, defaults, examples, compatibility, failure behavior, migration/rollback, and operational impact only where the shipped change requires them.
 - Repair links you break and broken links in touched sections. Do not perform broad unrelated documentation cleanup.
+- Grade every eligible narrative document you write or refresh by the ladder in alaa-repo-docs references/15-document-size-and-clustering.md, which owns the thresholds, the decision order, and the only grade needing human approval. Report each document's final grade with the reason that file requires for it.
 - If no update is warranted after inspection, report that conclusion rather than inventing edits.
 
 Identity line: begin your final report with exactly one line: AGENT: alaa-documenter | MODEL: Sonnet 5 | EFFORT: medium. If your session is actually running a different model or effort than this pin (for example a per-invocation override), state the real values and flag the difference.

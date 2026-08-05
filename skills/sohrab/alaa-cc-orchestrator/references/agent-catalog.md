@@ -85,8 +85,37 @@ Read-only lanes receive Serena tools by exact name rather than the whole server.
 separate process, so a withheld `Edit` tool and a restrictive permission mode does not stop that server's own rename and delete tools; only the allow
 list does. The same reason removes Serena's shell tool from the implementation lanes, which already hold `Bash` under the runtime's own approval rules.
 
-Every lane granted a server also keeps the ability to invoke `/alaa-code-intelligence-routing` on demand, because a lane holding
+Every lane granted a server also carries `/alaa-code-intelligence-routing`, because a lane holding
 three servers and no contract for choosing among them is the problem the grants were meant to solve.
+
+## How a lane gets its skills
+
+**A role can always reach a skill it is told to apply.** Two mechanisms serve that, and they are
+complementary rather than alternatives.
+
+`skills:` preloads what a role always needs: the routing contract, and the doctrine its verdict is
+measured against. `alaa-architecture-critic` carries the constitution it reviews against,
+`alaa-performance-profiler` both runtime performance skills, `alaa-test-strategist` the Go testing
+skill beside the doctrine, and `alaa-verifier` the testing doctrine whose proof levels and tiers it
+must name.
+
+The `Skill` tool covers everything a preload cannot know in advance. Which clean-code skill a lane
+needs depends on the repository's language and the surface the dispatch hands over, and the pack's
+rule is to name the one skill the lane needs rather than preload every candidate into every lane.
+Every allowlisted role keeps `Skill` for that reason, and every implementation role inherits it.
+
+Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
+already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `clean_code_skill`
+field unsatisfiable; and it removes runtime invocation from every specialist on the theory that its
+preload list is complete, which no evidence supports. The safety deny set is therefore exactly
+Serena's shell tool, a real second path to the shell that bypasses the runtime's approval rules.
+
+The checker enforces reachability in both directions. Every preloaded name must resolve to an
+installed skill, because a stale preload removes a standard silently. And a role that does not hold
+`Skill` must preload every installed skill its body names, because it has no other way to reach one —
+`alaa-verifier` is the only such role today. When no skill root is visible, as in an installed copy
+with no siblings, resolution is reported as skipped rather than passed.
+
 Run `python scripts/check_agent_grants.py` after any change to `agents/`. The checker compares every
 normalized MCP grant and the implementation deny set with this catalog: exit `0` is clean, exit `1`
 reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the

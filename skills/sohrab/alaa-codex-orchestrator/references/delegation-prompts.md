@@ -14,8 +14,11 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <acceptance_criteria><numbered checkable criteria></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
+<return>the shape of the return and its line bound; findings, verdicts, counts, and artifact paths only, never transcripts, full diffs, or raw logs</return>
 <output>use the agent's native output contract</output>
 ```
+
+Every dispatch carries the `<return>` field. An unbounded child return is the most common way a parent's context is flooded, and the parent pays that cost on every remaining turn of the goal, not only on the turn the return arrives.
 
 ## Spec analyst
 
@@ -64,10 +67,11 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
 <clean_code_skill><matching installed skill or repository baseline></clean_code_skill>
-<verification>
-  <commands><exact targeted commands></commands>
+<verification tier="focused">
+  <commands><exact targeted commands: this lane's failure-mode tests plus lint, type, and build checks scoped to its files></commands>
   <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>
   <resource_limits><priority, CPU count, workers, timeout></resource_limits>
+  <excluded>the full suite, the race detector, the end-to-end suite, and any other lane's checks</excluded>
 </verification>
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
@@ -89,6 +93,8 @@ Use `alaa-implementer-sol` instead of `alaa-implementer` when the routing matrix
   Unix runner: <absolute SKILL_ROOT>/scripts/run-low-priority.sh
   Priority: BelowNormal; CPU count: <n>; only one heavy command at a time.
 </resource_policy>
+<tier>affected | exhaustive — affected once per phase, exhaustive once on the final candidate</tier>
+<already_observed><commands whose recorded results are still valid, with the run that produced each; do not re-run these></already_observed>
 <rerun_policy>none | one identical rerun for flake detection</rerun_policy>
 <action_safety>Evidence only. Never fix or alter command semantics.</action_safety>
 ```
@@ -241,7 +247,7 @@ Use `alaa-implementer-sol` instead of `alaa-implementer` when the routing matrix
 <task>Resolve reviewer/specialist findings in original lane <n>.</task>
 <findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
 <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
-<verification><targeted checks plus affected integrated checks></verification>
+<verification><the focused checks for each fixed finding, plus the affected-tier checks the fix reaches></verification>
 <output>For each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>
 ```
 
@@ -252,6 +258,7 @@ Use `alaa-implementer-sol` instead of `alaa-implementer` when the routing matrix
 <change_summary><actual behavior, files, configuration/API/operational changes></change_summary>
 <verdicts><review and specialist verdicts></verdicts>
 <scope><expected documentation files/sections></scope>
-<checks><docs formatter, links, examples, scope check></checks>
+<checks><docs formatter, links, examples, scope check, and the size grade></checks>
+<size_grade>Grade every eligible narrative document by the ladder in alaa-repo-docs references/15-document-size-and-clustering.md and report each final grade with the reason that file requires.</size_grade>
 <action_safety>Documentation files only; no intended or unverified behavior.</action_safety>
 ```

@@ -48,6 +48,7 @@ That second property and the rule against testing one behaviour at three layers 
 9. A check that was not observed to run is reported as not run. An unexecuted check has no result, and reporting one invents evidence.
 10. Every test is hermetic: it creates the state it needs, asserts only on state it created, and leaves none behind. A test depending on another test's leftovers passes in one order and fails in another, and the order is not part of anyone's contract.
 11. No test synchronises on wall-clock sleeping. Time is injected as a controllable clock, and waiting is done on the condition the test is waiting for, with a bounded timeout. A sleeping test flakes on a loaded machine and charges its sleep on every run forever.
+12. Breadth is earned by a change in the tree, never by a change of phase, agent, or reviewer. A result whose four validity conditions still hold is cited, not re-run, and the exhaustive tier runs once, fresh, on the final candidate. Re-running a heavy suite against an unchanged tree buys no confidence and produces the worst evidence available, because a warm cache and a warm environment are hardest to tell apart from a real pass.
 
 ## Designing the tests for a change
 
@@ -75,6 +76,34 @@ Six levels, named so a claim's strength can be stated in one word across every s
 
 `references/40-proof-strength.md` owns the mapping from a claim to the minimum level that supports it, and the rule for a level that cannot be reached in this environment.
 
+## Scope tiers: how much of the suite runs, and when
+
+A proof level says how strong one claim is. A **tier** says how much of the suite has earned the right to run at this moment. The two are independent, and conflating them is what produces a pipeline that runs the whole suite four times against a tree that changed once.
+
+Three tiers. Each has exactly one owner and exactly one moment, and no tier is run by the author of the change it is judging except the first.
+
+| Tier | What runs | Who runs it | When |
+|---|---|---|---|
+| **Focused** | the tests naming this change's failure modes, plus lint, type, and build checks scoped to the touched files | the lane that wrote the change | at the end of every subtask, before that subtask is reported complete |
+| **Affected** | every suite reachable from the changed surfaces — callers, shared fixtures, the contract tests of the touched surface — plus the acceptance criteria this phase claims | an authority other than the lane that wrote the change | once per phase, after the phase's lanes are reconciled |
+| **Exhaustive** | the whole suite under its normal configuration, then the race, end-to-end, and highest-level proofs the claims require | an authority other than any implementing lane | exactly once, on the final candidate tree, after every lane and every fix has landed |
+
+**The exhaustive tier is not an early-warning system.** Run on an intermediate tree it observes a combination that is about to change, so its result expires before it is read while its cost is charged in full — and the tree it was meant to judge still goes unobserved. Its whole value is that it runs on the tree that ships.
+
+**It runs on the tree that will land, and integration is what moves that target.** Merging, rebasing, or cherry-picking anything into the branch after the run produces a tree nothing has run against. A clean integration is no exception, and this is the case that gets missed: no conflict means no edit was needed to combine the two sides, never that the combination was observed. Two orderings satisfy the invariant — integrate first and then run, or run again after integrating — and a run that ends without one of them has shipped an unobserved tree.
+
+### A result stays valid until something named invalidates it
+
+A recorded result remains citable evidence for a later claim while **all four** of these are unchanged since it was observed: the tracked tree at the paths the check reads; the tool, runner, and dependency versions; the environment and service state the check depends on; and the flags, seed, configuration, and working directory it ran under. While all four hold, cite the result with its original command and timestamp. Re-running it produces no new information and its cost is real.
+
+When one of them changes, say which one, and re-run every result downstream of it. Two results are never reused whatever the four conditions say: the exhaustive tier on the final candidate, which is always fresh; and any result classified `FLAKY`, `CONTAMINATED`, `TIMEOUT`, or environment-blocked, which carries no evidence in either direction.
+
+### A failing tier is classified before it is repaired
+
+Classify first, then act, because a repair applied to the wrong class is how a host-environment problem becomes an edit to the product. Four classes stay separate: a defect in the product; a defect in the test harness, fixture, or runner; a host-environment block — the shell, the container runtime, a permission, a missing executable or service; and a contaminated tree, including stale build or test cache. `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) `references/failure-taxonomy.md` owns the status vocabulary and the host sub-classes; this skill owns what each class licenses you to conclude, and no class licenses reporting the change as passed.
+
+A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold. An unreachable tier is reported unreached with its blocker named, under `references/80-evidence-and-reporting.md`.
+
 ## Output contract
 
 Return these fields, in this order, for every test design, test review, or reported test run:
@@ -88,13 +117,14 @@ Layer placement: per behaviour, the layer and the components that had to be real
 Doubles: per double, real|fake|stub|mock|spy, the reason for substituting, can-drift yes|no, and what binds it
 Coverage obligations: each named obligation -> met by which test, or unmet
 Evidence: per claim -> command run, working directory, proof level reached, observed outcome, artifact path
+Tier: focused | affected | exhaustive -> run now, or cited from an earlier run with the four validity conditions named as still holding
 Flake: any intermittent result -> classified product defect | broken test -> action taken and owner
 Gaps: claims with no test, levels not reached and the blocker, quarantined tests and their deadlines
 ```
 
 ## Stop conditions
 
-Stop successfully when every enumerated failure mode has a test that fails when its mode is injected, every control has been proven by removal, every double that can drift is bound, every named coverage obligation is met or recorded as a gap, and every reported claim carries an observed result at a stated level.
+Stop successfully when every enumerated failure mode has a test that fails when its mode is injected, every control has been proven by removal, every double that can drift is bound, every named coverage obligation is met or recorded as a gap, every reported claim carries an observed result at a stated level and tier, and the exhaustive tier has run once on the final candidate tree.
 
 Stop and report blocked when: a behaviour cannot be placed at any layer because its failure is not producible in any arrangement available here; a required proof level is unreachable and the claim depends on what that level alone decides; an intermittent failure cannot be classified as product or test defect after the procedure in `references/50-flake.md` has been run to completion; a control cannot be proven by removal because removing it breaks compilation of unrelated code, and no equivalent inversion exists; or a test the change requires cannot be run and the repository has no skip mechanism to record it.
 
@@ -117,7 +147,7 @@ Read only the files whose stated condition the task meets. Loading the whole tre
 - `references/50-flake.md` — when any test has produced two different outcomes on the same code, and when a retry is being proposed anywhere.
 - `references/60-coverage.md` — when coverage is being measured, gated, or cited as evidence, and when deciding what still needs a test.
 - `references/70-failure-mode-first.md` — at the start of every change, before any test is written.
-- `references/80-evidence-and-reporting.md` — when reporting a test result, when reviewing someone else's reported result, and when a test cannot be run at all.
+- `references/80-evidence-and-reporting.md` — when reporting a test result, when reviewing someone else's reported result, when a test cannot be run at all, and when deciding whether an earlier result may be cited instead of re-run.
 
 ## What this skill does not own
 
@@ -128,7 +158,7 @@ Read only the files whose stated condition the task meets. Loading the whole tre
 - `/alaa-observability-soc` (`$alaa-observability-soc`) owns the failure-mode enumeration table and the signal, query, and alert each mode needs — `references/10-signal-model.md`. This skill consumes the same enumeration to derive tests; neither skill maintains a second list.
 - `/alaa-controlled-ops` (`$alaa-controlled-ops`) owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
 - The per-language skills and the vendored `/golang-testing` (`$golang-testing`) own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision; it names no framework construct.
-- The `alaa-verifier` role in `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns command execution, resource policy, low-priority runners, and artifact directories. This skill owns what its results mean and how they are classified.
+- The `alaa-verifier` role in `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns command execution, resource policy, low-priority runners, artifact directories, and the status vocabulary a run is reported in — `references/failure-taxonomy.md`. This skill owns what each status licenses a reader to conclude, which tier had the right to run, and whether an earlier result is still citable.
 - `/alaa-prompting-guide` (`$alaa-prompting-guide`) owns every model and effort question. This skill names no model.
 
 ## Anti-patterns
@@ -144,4 +174,7 @@ Read only the files whose stated condition the task meets. Loading the whole tre
 - a coverage percentage cited as validation, when the number rises by executing code that asserts nothing;
 - writing the happy path first and stopping there, which produces a suite that proves only that the routes are routed;
 - a test that sleeps to wait for a condition, which is a flake on a loaded machine and a permanent tax on every run;
+- re-running the full suite, the race detector, or the acceptance set against a tree that has not changed since the last run, which charges the whole cost for no new information and produces the pass that is hardest to distinguish from a cached one;
+- an implementing lane running the exhaustive tier on its own work, which is both the wrong authority and the wrong moment;
+- repairing the product in response to a shell, container-runtime, permission, or stale-cache failure that was never classified;
 - deleting or weakening an assertion so a test can run in a constrained environment, instead of recording the level not reached and the blocker.

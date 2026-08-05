@@ -13,6 +13,7 @@ skills:
   - /alaa-algorithms-data-structures
   - /alaa-trust-gateway-auth
   - /alaa-partitioned-table-fk-audit
+  - /alaa-project-constitution
 color: red
 ---
 

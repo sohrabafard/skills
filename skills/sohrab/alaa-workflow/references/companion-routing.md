@@ -22,7 +22,7 @@ Triggers are runtime-specific: `/name` in Claude Code, `$name` in Codex. Both fo
 - Queues and jobs: `alaa-async-messaging` or `alaa-laravel-job-rabbitmq`.
 - Data: `alaa-data-layer`.
 - Subsystem design before a phase implements it: `alaa-system-design`. Route a phase there first when the phase changes an interface another component calls, moves which component writes a piece of data, alters a consistency, ordering or caching property, adds or removes a dependency between components, or creates a new deployable unit. It produces the design record the later phases implement.
-- What a phase's tests must prove and at which strength: `alaa-testing-strategy`. Route there when deciding which layer a behaviour is tested at, whether a double is honest, or which of six proof levels a phase's validation evidence actually reached — the plan records the level, never a stronger one.
+- What a phase's tests must prove and at which strength: `alaa-testing-strategy`. Route there when deciding which layer a behaviour is tested at, whether a double is honest, which of six proof levels a phase's validation evidence actually reached, or which scope tier a phase has earned — the plan records the level and the tier reached, never a stronger one, and cites an unchanged earlier result rather than re-running it.
 - Security: `alaa-security-review`.
 - Observability: `alaa-observability-soc`.
 - Containers, Kubernetes, and CI/CD: the matching Docker, Kubernetes, or pipeline skill.

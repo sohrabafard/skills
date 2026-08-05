@@ -41,13 +41,20 @@ This is why the artifacts exist, and `references/context-continuity.md` owns the
 
 Two things are worth knowing without opening it. Write when something happens — a phase ends, a decision lands, a validation runs, a handoff approaches, or something expensive is learned — never on a schedule. And do not wait for a compaction warning to record knowledge, because afterwards the same information survives only as a summary of a summary.
 
+Compaction rarely announces itself, so detect it from your own state rather than from a signal. Treat any turn in which you cannot name the current phase, the last command you ran, and what it returned as a turn after compaction: re-read the plan and the checkpoint before taking any action, and where recollection and a file disagree, the file is right.
+
 ## Execute and resume
 
 - Work from the plan in order; re-read it after interruption, compaction, or a branch or worktree change.
+- Decompose each phase into subtasks that each carry one checkable outcome. A tick claims that outcome was observed, so tick a box once its evidence exists and never ahead of it. Several boxes at once is normal and correct: one change often satisfies several subtasks, and work that turns out to be already done is ticked as soon as you have verified it rather than assumed it. The two failures are a tick running ahead of its evidence, and a plan left stale while the work moves on — bring it current before the next phase, before a handoff, and before any report.
 - Validate each behavior-changing phase before advancing.
 - Fix failed gates, or record the exact blocker and the next safe action.
 - On resume, follow the read order in `references/context-continuity.md`: plan, then handoff package, then checkpoint, then the named read-first files, and JSON only when an automated consumer requires it.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.
+
+## Work on a branch and commit each subtask
+
+Every multi-phase or delegated run works on its own branch off a recorded base, commits at each completed subtask, and merges into the base only after the user confirms. A commit is the cheapest checkpoint that survives what the artifacts cannot: a crashed session, a wrong edit, and a lost conversation at the same time. `references/workspace-and-integration.md` owns the base capture, the dirty-tree refusal, the branch and worktree rules, the commit contract, and the final integration handshake. Read it before the first write and again before asking the user to accept the result.
 
 ## Curate reusable context
 
@@ -103,6 +110,7 @@ The frontmatter owns trigger boundaries. After this skill is selected, still avo
 
 - `references/context-continuity.md` — surviving compaction, handoff, and a fresh agent; the handoff package, write triggers, cold-start test, and resume protocol.
 - `references/artifact-lifecycle.md` — artifact admission, paths, lifecycle, and compatibility.
+- `references/workspace-and-integration.md` — before the first write and before final acceptance: base capture, work branch, worktree, per-subtask commits, and the merge handshake.
 - `references/phase-prompts.md` — optional role-based prompt generation and freshness checks.
 - `references/review-mode.md` — review semantics and verdict shape.
 - `references/companion-routing.md` — domain skill ownership.

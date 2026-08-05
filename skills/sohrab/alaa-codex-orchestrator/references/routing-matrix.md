@@ -43,7 +43,7 @@ Do not spawn when the relevant paths and contracts are already established in cu
 - concurrency, retry, idempotency, migration, security, or failure-mode testing matters;
 - test layer selection and flake control need design.
 
-`$alaa-testing-strategy` is the doctrine this role applies. Name it in the dispatch, and read it directly when deciding which layer a behaviour is tested at, whether a double is honest enough to stand in for the real dependency, or which of the six proof levels a claim actually reaches.
+`$alaa-testing-strategy` is the doctrine this role applies. Name it in the dispatch, and read it directly when deciding which layer a behaviour is tested at, whether a double is honest enough to stand in for the real dependency, which of the six proof levels a claim actually reaches, or which scope tier has earned the right to run at this moment.
 
 ## Implementation routing
 

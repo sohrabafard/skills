@@ -25,11 +25,26 @@ Shared by both parts: complete the real task and keep repository files as the so
 
 ### Part 2 — Output noise: what gets printed
 
+**The file is the medium; the message is the pointer.** Working material — logs, diffs, inventories, command output, intermediate results, generated data, and any state a later turn or another agent will need again — is written to a file and named by its path instead of printed. The terminal is not storage: what is printed there is charged once as output tokens, charged again against context on every later turn, and gone when the session ends. This is the rule the rest of this part implements, and it is the one most often skipped while the others are obeyed.
+
+**The answer is not working material.** A review, a plan, an assessment, an explanation, or any deliverable the user asked to receive is delivered in the reply. Writing it to a file instead creates an artifact nobody requested and hides the answer behind a path, which is a worse outcome than the verbosity this skill exists to prevent. A read-only or advisory request produces no file at all unless the user asked for one; `/alaa-workflow` (`$alaa-workflow`) owns when a repository artifact is authorized and `/alaa-repo-docs` (`$alaa-repo-docs`) owns documents, and nothing here triggers either.
+
 - Report only milestones, blockers, scope changes, validation outcomes, and useful artifact paths, and never duplicate status the harness already surfaces.
 - Bound terminal output: no unbounded file, tree, manifest, or log dumps. Prefer purpose-built tools, changed-file lists, diff stats, and path-scoped diffs.
+- **Budget: 12 lines of prose per message, and no single excerpt over 20 lines.** A message past either bound has stopped being a report. Cut it to the outcome and the path, and put what was cut into the file. Apply this to the draft before sending it; a long message is not repaired by a note apologising for its length.
 - Retain an artifact only when it helps the user inspect or resume; summarize the outcome, name the path, and remove throwaway files when that is safe. Implementation stays in normal repository files, never in temp, shell-history, or off-repo state.
 - Finish with changed paths, reasons, validation results, and remaining risks or blockers instead of a large pasted diff.
 - On sandbox, refresh, locking, quoting, or command-length failures, retry only the essential failed work serially and with bounded output. Under Codex, invoke `$alaa-codex-runtime-ops` first; it is Codex-only, with no Claude Code equivalent.
+
+#### The three leaks
+
+These survive every general instruction to be concise, because each one feels like diligence rather than noise. Each has one replacement, and the replacement is what to do instead — not merely what to stop doing.
+
+1. **Narrating the plan before executing it.** What is about to happen is visible in what happens next. State a plan only when the user has to decide something before it runs; otherwise run it and report the outcome.
+2. **Pasting command output to show the command ran.** The outcome is the evidence; the transcript is not. Report the result, the one line that mattered, and the path to the rest.
+3. **Restating a file just written or edited.** The file is the deliverable and it can be opened. Name the path and what changed in it.
+
+A fourth belongs to delegation: **a child returning its work instead of its findings.** That one is prevented in the dispatch rather than in the child — every dispatch carries a return shape and a line bound. `references/workflow-integration.md` owns the return contract.
 
 ## Model calibration
 
@@ -56,4 +71,4 @@ Read only when needed:
 
 ## Check
 
-Confirm that task quality and evidence survived, that what entered context was bounded and justified, that what was printed stayed proportionate, that edits remain reviewable, and that workflow or domain ownership was not duplicated.
+Confirm that task quality and evidence survived, that what entered context was bounded and justified, that what was printed stayed inside the budget, that nothing durable was left only in the conversation, that edits remain reviewable, and that workflow or domain ownership was not duplicated.

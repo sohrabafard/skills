@@ -165,7 +165,53 @@ def validate_handoff(content: str, profile: str, status: str) -> list[str]:
     return messages
 
 
-def validate_phases(content: str, profile: str, adaptive_plan: bool) -> list[str]:
+def validate_workspace(content: str, profile: str, status: str, adaptive_plan: bool) -> list[str]:
+    """Check that the plan records the branch its commits are landing on.
+
+    Two facts are load-bearing once execution begins. Without the work branch, this run's
+    commits cannot be told apart from commits on the user's base branch. Without the base
+    branch and commit, the integration handshake has no merge target to name and no
+    baseline to compare against, so it cannot decide whether the exhaustive-tier evidence
+    still describes the tree being merged. Both are therefore errors, not records.
+
+    Checked only once the plan is past planning, because a plan being drafted has written
+    nothing yet, and only on adaptive non-legacy plans, because completed legacy records
+    are history rather than runs in flight.
+    """
+    if not adaptive_plan or profile == "legacy" or is_planning_status(status):
+        return []
+    messages: list[str] = []
+    work_branch = field_value(content, "Work branch")
+    if work_branch is None:
+        messages.append(
+            error(
+                "plan.workspace",
+                f"Plan status '{status}' is past planning but no work branch is recorded, so nothing distinguishes this run's commits from commits on the base branch.",
+                "Add 'Work branch' and 'Base branch and commit' to the plan header per assets/plan-template.md.",
+            )
+        )
+    elif UNRESOLVED_RE.search(work_branch):
+        messages.append(
+            error(
+                "plan.workspace",
+                f"Plan status '{status}' is past planning but the work branch is still unfilled.",
+                "Record the branch this run's commits land on, and the base branch and commit it started from.",
+            )
+        )
+    else:
+        base = field_value(content, "Base branch and commit")
+        if base is None or UNRESOLVED_RE.search(base):
+            messages.append(
+                error(
+                    "plan.workspace",
+                    f"Plan status '{status}' is past planning but the base branch and commit are not recorded, so the integration handshake has no merge target to name and no baseline to decide whether its verification evidence still describes the tree being merged.",
+                    "Record 'Base branch and commit' in the plan header per assets/plan-template.md, naming the branch this work merges back into and the commit it started from.",
+                )
+            )
+    return messages
+
+
+def validate_phases(content: str, profile: str, adaptive_plan: bool, status: str = "") -> list[str]:
     """Check that each phase carries dependencies, ownership, exclusions, and observed evidence."""
     level = error if adaptive_plan and profile != "legacy" else warning
     messages: list[str] = []
@@ -192,6 +238,19 @@ def validate_phases(content: str, profile: str, adaptive_plan: bool) -> list[str
                     "plan.phase-fields",
                     f"{title} uses the superseded 'Validation commands/evidence' field.",
                     "Split it into 'Validation commands' (what to run) and 'Evidence observed' (what it returned).",
+                )
+            )
+        if field_value(block, "Commit") is None:
+            # An absent field and a phase that changed nothing are different states, and only
+            # the field makes them distinguishable. Recording 'none', or that the user declined
+            # the branch protocol, satisfies this; omitting it leaves the work unrecoverable
+            # with no record of the decision that made it so.
+            commit_level = warning if is_planning_status(status) else level
+            messages.append(
+                commit_level(
+                    "plan.phase-commit",
+                    f"{title} records no commit, so work it claims has no recoverable point to return to and nothing says whether that was intended.",
+                    "Add 'Commit' per assets/plan-template.md. A phase that changed nothing records 'none'; a run the user excused from committing records that.",
                 )
             )
     return messages
@@ -229,8 +288,10 @@ def validate_plan(path: Path, profile: str) -> list[str]:
             else:
                 messages.append(error(invariant, message, remediation))
 
+    adaptive_plan = HANDOFF_HEADING_RE.search(content) is not None
     messages.extend(validate_handoff(content, profile, status))
-    messages.extend(validate_phases(content, profile, HANDOFF_HEADING_RE.search(content) is not None))
+    messages.extend(validate_workspace(content, profile, status, adaptive_plan))
+    messages.extend(validate_phases(content, profile, adaptive_plan, status))
     messages.extend(unresolved_messages(content, complete, "plan.placeholders"))
     return messages
 

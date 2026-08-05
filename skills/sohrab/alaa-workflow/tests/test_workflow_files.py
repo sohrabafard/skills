@@ -195,6 +195,14 @@ class WorkflowFilesTest(unittest.TestCase):
         self.assertIn(old, content)
         path.write_text(content.replace(old, new, 1), encoding="utf-8")
 
+    def drop_line(self, path: Path, prefix: str) -> None:
+        """Remove the first line starting with prefix, asserting one was there to remove."""
+        lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+        index = next((i for i, line in enumerate(lines) if line.startswith(prefix)), None)
+        self.assertIsNotNone(index, f"no line starting with {prefix!r} in {path.name}")
+        del lines[index]
+        path.write_text("".join(lines), encoding="utf-8")
+
     def test_resumable_is_the_default_and_creates_a_plan_plus_checkpoint(self) -> None:
         with workspace_tempdir() as tmp:
             root = Path(tmp)
@@ -511,6 +519,109 @@ class WorkflowFilesTest(unittest.TestCase):
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
             self.assertIn("ERROR [plan.phase-fields]", result.stdout)
             self.assertIn("Owned scope", result.stdout)
+
+    def test_unfilled_work_branch_blocks_once_the_plan_leaves_planning(self) -> None:
+        """A run past planning that has not recorded its work branch cannot be told apart
+        from one committing onto the user's base branch."""
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+            self.assertIn("ERROR [plan.workspace]", result.stdout)
+
+    def test_recorded_work_branch_and_base_satisfy_the_workspace_gate(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
+            self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
+            self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.assertNotIn("[plan.workspace]", result.stdout)
+
+    def test_missing_base_commit_blocks_once_execution_has_begun(self) -> None:
+        """The integration handshake names its merge target and compares against this
+        commit to decide whether its verification evidence still describes the tree."""
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.drop_line(plan, "- Base branch and commit")
+            self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
+            self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+            self.assertIn("ERROR [plan.workspace]", result.stdout)
+
+    def test_unfilled_base_commit_blocks_like_a_missing_one(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
+            self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+            self.assertIn("ERROR [plan.workspace]", result.stdout)
+
+    def test_previous_version_plan_is_exempt_from_the_workspace_gate(self) -> None:
+        """A plan written before the protocol existed carries no work branch and is history,
+        not a run in flight. It must not start failing."""
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            self.write_files(root, {
+                "docs/_agent_plans/20260101-000000_previous-version.md": PREVIOUS_VERSION_PLAN,
+                "docs/agents/20260101-000000_previous-version-state.md": PREVIOUS_VERSION_CHECKPOINT,
+            })
+            result = self.run_script(
+                VALIDATE, ["--plan", "docs/_agent_plans/20260101-000000_previous-version.md"], root
+            )
+            self.assertNotIn("[plan.workspace]", result.stdout)
+
+    def test_phase_without_a_commit_field_only_warns_while_planning(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.drop_line(plan, "- Commit:")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.assertIn("WARN [plan.phase-commit]", result.stdout)
+
+    def test_phase_without_a_commit_field_blocks_once_execution_has_begun(self) -> None:
+        """An absent field and a phase that changed nothing are different states, and only
+        the field tells them apart."""
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
+            self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
+            self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
+            self.drop_line(plan, "- Commit:")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+            self.assertIn("ERROR [plan.phase-commit]", result.stdout)
+
+    def test_a_phase_that_changed_nothing_records_none_and_passes(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
+            self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
+            self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
+            content = plan.read_text(encoding="utf-8").replace("- Commit: none yet", "- Commit: none; this phase changed no files")
+            plan.write_text(content, encoding="utf-8")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.assertNotIn("[plan.phase-commit]", result.stdout)
+            self.assertNotIn("[plan.workspace]", result.stdout)
 
     def test_resumable_plan_requires_its_correlated_checkpoint(self) -> None:
         with workspace_tempdir() as tmp:

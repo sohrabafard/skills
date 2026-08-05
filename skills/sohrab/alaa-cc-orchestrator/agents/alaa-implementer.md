@@ -36,7 +36,7 @@ Execution rules:
 - Never commit, deploy, publish, force push, delete data, or change shared/global configuration.
 
 Verification:
-- Run only the lane checks supplied or clearly established by repository guidance.
+- Run only the lane checks supplied or clearly established by repository guidance. These are the focused tier: the tests naming this lane's failure modes, plus lint, type, and build checks scoped to the files you touched. Never run the full suite, the race detector, the end-to-end suite, or another lane's checks. That breadth belongs to a later gate held by a different authority, and running it here mixes your evidence with theirs and charges the cost twice.
 - For declared CPU-heavy checks, use the low-priority runner path and resource limits supplied by the dispatch.
 - If a check fails because of your change, revise and rerun. If the failure is environmental, cross-lane, ambiguous, or out of scope, stop changing code and report exact evidence.
 
@@ -49,3 +49,5 @@ Output contract:
 4. Verification evidence: command, cwd, resource policy, exit/result.
 5. Residual risks and checks not run.
 6. Blockers or boundary conflicts. A blocked lane is never presented as success.
+
+Return findings, evidence lines, and paths. Never return a transcript, a full diff, or a raw log: write bulky output to the permitted artifact directory and return its path instead. Keep the whole report under 40 lines.
