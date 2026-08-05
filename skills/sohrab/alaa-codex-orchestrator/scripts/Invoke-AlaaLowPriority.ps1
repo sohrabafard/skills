@@ -47,7 +47,7 @@ try {
     }
     catch {
         try { $process.Kill($true) } catch { }
-        throw "Started process $($process.Id) but could not set priority to $Priority: $($_.Exception.Message)"
+        throw "Started process $($process.Id) but could not set priority to ${Priority}: $($_.Exception.Message)"
     }
 
     if ($CpuCount -gt 0) {

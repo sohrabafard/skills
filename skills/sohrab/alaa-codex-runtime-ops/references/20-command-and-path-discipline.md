@@ -9,9 +9,9 @@ For `CreateProcessAsUserW failed: 206` or similar command-length errors:
 - prefer `rg --files` plus focused follow-up reads instead of one giant command
 - avoid changing repo files merely to shorten a command
 
-## PowerShell first on Windows
+## Windows execution order
 
-Use PowerShell-native paths and commands for Windows-local inspection unless the task specifically requires Bash. Prefer PowerShell 7 when it is available: resolve `pwsh` from the active environment with `Get-Command pwsh` instead of assuming or committing a machine-specific installation path. If PowerShell 7 is unavailable, report that fact and use Windows PowerShell only when its semantics are sufficient for the command.
+Resolve `pwsh` from the active environment and use PowerShell 7 first for every Windows-native command. Do not silently downlevel to Windows PowerShell when `pwsh` is unavailable or when the command cannot complete there; report the condition. If the required command cannot complete in PowerShell 7 and the gate truly requires Bash semantics, resolve the installed Git Bash from the active environment and run the exact gate outside the sandbox with task-specific escalation approval. Do not hardcode a machine-specific executable path.
 
 Prefer:
 
@@ -37,7 +37,7 @@ If the target port falls inside an excluded range, choose a host port outside th
 
 Git Bash may rewrite slash-looking argument or environment values when invoking native Windows binaries. For Docker Compose and runtime scripts, route service-runtime env conversion issues to `$service-runtime-kit-governance`.
 
-For one-off shell recovery, prefer native PowerShell. If Bash is required, consider `MSYS_NO_PATHCONV=1` or `MSYS2_ARG_CONV_EXCL=*` only for the affected command.
+After Git Bash has been selected by the Windows execution order, consider `MSYS_NO_PATHCONV=1` or `MSYS2_ARG_CONV_EXCL=*` only for the affected command.
 
 Those variables address argument conversion only. They do not fix MSYS process-creation, signal-pipe, file-mapping, shared-memory, or DLL-startup failures.
 
@@ -53,7 +53,7 @@ Recovery sequence:
 
 1. Preserve the exact Bash-backed command, working directory, environment, arguments, and flags. Confirm from the output that the shell failed before the requested test or validator ran.
 2. Do not apply `MSYS_NO_PATHCONV`, rewrite tests, or change repository configuration as a remedy for these IPC signatures.
-3. If the gate is required, rerun that exact command once outside the sandbox with `sandbox_permissions: "require_escalated"` and a task-specific approval request.
+3. If the gate is required, apply the Windows execution order above to that exact Bash-backed command.
 4. Record the sandboxed failure and the outside-sandbox result separately. A passing outside-sandbox retry proves the gate but also documents sandbox friction; it does not make the first result disappear.
 5. Do not substitute a PowerShell approximation when the gate requires Bash semantics. An equivalent native validator may be useful supplemental evidence only when its proof boundary is stated.
 6. If the exact outside-sandbox retry fails with the same startup signature, inspect Git Bash/MSYS installation integrity and Defender or EDR detections, blocks, or process restrictions. Do not disable protection or add exclusions without separate evidence and authorization.

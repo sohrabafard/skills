@@ -16,7 +16,7 @@ Recover from Codex environment failures while preserving the user's task scope: 
 
 Read `references/40-project-fallbacks.md` when the failing stack is Node, Vite, Vitest, Quasar, or a Yarn gate, and `references/90-source-map.md` before giving durable guidance about Codex, shell, or OS behavior.
 
-On Windows, prefer an available PowerShell 7 executable for Windows-native commands. Discover `pwsh` from the active environment instead of assuming or committing a machine-specific installation path. Preserve Bash when the required gate depends on Bash semantics.
+When selecting a Windows command shell or recovering a Bash-backed gate, read `references/20-command-and-path-discipline.md`.
 
 ## Failure classes
 
@@ -45,7 +45,7 @@ On Windows, prefer an available PowerShell 7 executable for Windows-native comma
 
 - **Symptom.** Git Bash or an MSYS child exits before the requested command runs with `couldn't create signal pipe, Win32 error 5`, `CreateFileMapping ... Win32 error 5`, or child status `0xc0000142` attributable to `bash` or `sh` startup.
 - **Diagnosis.** MSYS could not create its process IPC or shared-memory objects. This is not a test failure, and MSYS path-conversion flags do not repair it.
-- **Retry.** If the Bash-backed gate is required, rerun that exact command once outside the sandbox with `sandbox_permissions: "require_escalated"` and task-specific approval. Preserve its working directory, environment, arguments, and flags; record the sandboxed and escalated outcomes separately.
+- **Retry.** If the Bash-backed gate is required, apply the Git Bash/MSYS recovery sequence in `references/20-command-and-path-discipline.md`; preserve its working directory, environment, arguments, and flags, and record the sandboxed and escalated outcomes separately.
 - **Fallback.** If the exact outside-sandbox retry fails too, inspect shell installation integrity and Defender or EDR evidence. Do not edit source or tests, disable protection, or add exclusions without separate evidence and authorization.
 
 ### Docker named-pipe permission failure

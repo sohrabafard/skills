@@ -348,6 +348,23 @@ route that has not recorded the five-condition exception above, no such route va
 keyset pagination while its list code calls an offset paginator, or calls no paginator at all, is
 non-conforming even though its documentation is correct.
 
+## Edge TLS termination and internal HTTP
+
+Decision:
+- Public TLS terminates only at a dedicated platform SSL handler that is
+  upstream of the `gateway` service (for example, Cloudflare, ArvanCloud, or
+  an equivalent edge node). The `gateway` service never terminates TLS.
+- The SSL handler forwards HTTP to `gateway`; `gateway` and all services
+  communicate over HTTP inside the trusted private zone. Neither `gateway` nor
+  services add TLS listeners, certificates, or TLS-termination sidecars.
+- Direct public access to `gateway` and service origins must remain blocked;
+  the separate SSL handler is the public ingress boundary. Any future TLS
+  change belongs there and must not require `gateway` or internal services to
+  change their HTTP endpoints.
+- A private network is a network boundary, not cryptographic service
+  authentication. Preserve the contract's spoofing defenses and trusted-header
+  sanitization on every ingress path.
+
 ## Internal service-to-service mTLS rollout status
 
 Decision:
