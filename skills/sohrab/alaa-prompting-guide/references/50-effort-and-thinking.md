@@ -12,7 +12,7 @@ Choose the model from the kind of judgment the task requires. Choose the effort 
 
 ## What effort does not control
 
-Effort controls thinking volume. It does not control response length, and on the current Claude flagship the documentation says so explicitly. This matters because the natural reflex when a model's answers run long is to lower effort, and that reflex fails: it produces a shallower answer of roughly the same length. Response length, written-deliverable length, and progress-update cadence are all prompt-controlled and need their own explicit instructions. See `20-opus-5.md` for the verbatim calibration snippets.
+Effort controls thinking volume. It does not control response length, and on the current Claude flagship the documentation says so explicitly. This matters because the natural reflex when a model's answers run long is to lower effort, and that reflex fails: it produces a shallower answer of roughly the same length. Response length, written-deliverable length, and progress-update cadence are all prompt-controlled and need their own explicit instructions. See `references/20-opus-5.md` for the verbatim calibration snippets.
 
 Effort also does not control scope. A model that widens the task beyond what was asked is not thinking too hard; it is missing a scope constraint. Fix that in the prompt.
 
@@ -26,13 +26,9 @@ Manual thinking budgets are no longer the mechanism on this Claude generation; a
 
 ## Choosing a starting level
 
-Each family has a documented starting point, and they are not the same number, which is why "use high effort" is meaningless advice across vendors.
+Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/20-opus-5.md`, `references/30-sonnet-5.md`, `references/40-fable-5.md`, `references/10-gpt-5-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
 
-For the current Claude generation the levels are `low`, `medium`, `high`, `xhigh`, and `max`, with `high` as the unset default. The flagship's documented recommendation is to start at `xhigh` for coding and agentic work, and to re-validate any effort setting inherited from a previous model rather than assuming it transfers.
-
-For the current GPT generation the levels run from `none` through `max`, with `medium` as the recommended balanced starting point. The documented migration advice is to hold your previous level and then test one level lower, because this generation frequently holds quality with fewer tokens.
-
-Both vendors give the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Re-run the sweep.
+Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Re-run the sweep.
 
 ## The decision procedure
 
@@ -80,7 +76,7 @@ The same applies to context. A model reasoning over a poorly assembled context d
 
 ## Caveats
 
-Effort level names, per-model defaults, thinking-disable constraints, the availability of manual thinking budgets, and every documented starting-point recommendation are vendor-stated and time-sensitive. The measured lean-prompt figures are from a specific vendor's internal testing on a specific generation and should not be generalized. Re-read the sources below before hard-coding any of these anywhere, and treat the tier ceilings here as this pack's policy rather than as vendor rules.
+Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive; effort level names, per-model defaults, and starting-point recommendations are not restated here — read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures are from a specific vendor's internal testing on a specific generation and should not be generalized. Re-read the sources below before hard-coding any of these anywhere, and treat the tier ceilings here as this pack's policy rather than as vendor rules.
 
 ## Sources
 
@@ -92,4 +88,4 @@ Effort level names, per-model defaults, thinking-disable constraints, the availa
 
 ## Companion references
 
-Read `20-opus-5.md`, `30-sonnet-5.md`, `40-fable-5.md`, or `10-gpt-5-6.md` for the levels a specific model supports and its documented starting point. Read `90-model-selection.md` for choosing the model itself. Read `80-subagent-authoring.md` for pinning effort inside an agent definition.
+Read `references/20-opus-5.md`, `references/30-sonnet-5.md`, `references/40-fable-5.md`, or `references/10-gpt-5-6.md` for the levels a specific model supports and its documented starting point. Read `references/90-model-selection.md` for choosing the model itself. Read `references/80-subagent-authoring.md` for pinning effort inside an agent definition.

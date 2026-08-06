@@ -1,12 +1,12 @@
 # Claude Opus 5
 
-API model id `claude-opus-5`. Anthropic's model for complex agentic coding and enterprise work, with its documented strength in long-horizon agentic tasks. 1M-token context window as both default and maximum, 128k max output, $5/$25 per MTok — the same price as Opus 4.8. Anthropic positions it as "a thoughtful and proactive model that comes close to the frontier intelligence of Claude Fable 5 at half the price." In this pack it is the default Claude tier for architecture-sensitive review, subtle bug finding, complex agentic coding, and long-horizon work (see `references/90-model-selection.md`).
+API model id `claude-opus-5`. Anthropic's model for complex agentic coding and enterprise work, with its documented strength in long-horizon agentic tasks. 1M-token context window as both default and maximum, 128k max output, $5/$25 per MTok. Anthropic positions it as "a thoughtful and proactive model that comes close to the frontier intelligence of Claude Fable 5 at half the price." In this pack it is the default Claude tier for architecture-sensitive review, subtle bug finding, complex agentic coding, and long-horizon work (see `references/90-model-selection.md`).
 
-The docs say existing Opus 4.8 prompts "perform well" on Opus 5. That is true of the prompt body and false of the scaffolding. Several behaviors invert relative to Opus 4.8, so the parts of a 4.8-tuned prompt that compensated for 4.8's weaknesses are now actively counterproductive.
+Scaffolding tuned for compensating for a weaker model actively hurts Opus 5, because the model already does the thing that scaffolding used to force.
 
-## Behaviors that inverted relative to Opus 4.8
+## Delegation, self-verification, and self-correction
 
-**Delegation.** Opus 4.8 under-spawned subagents, so 4.8 prompts encouraged delegation. Opus 5 "delegates more readily than prior models," and delegation multiplies cost and time on small tasks. Delegation guidance must now cap rather than encourage — see `## Subagents`.
+**Delegation.** Opus 5 delegates to subagents readily, and delegation multiplies cost and time on small tasks. Cap it rather than encourage it — see `## Subagents` below, and read `references/06-invocation-and-composition.md` for the cross-model delegation polarity rule.
 
 **Self-verification.** Opus 5 verifies its own work without being told. The doc is explicit: **remove explicit verification instructions** — "include a final verification step," "use a subagent to verify" — because they cause over-verification and waste tokens for no quality gain. Draw the distinction carefully before deleting anything:
 
@@ -15,40 +15,30 @@ The docs say existing Opus 4.8 prompts "perform well" on Opus 5. That is true of
 
 The test: if the verifier disappeared and the only loss would be a second look, remove it. If the loss would be that an implementer now signs off on its own work, keep it.
 
-**Self-correction.** Opus 5 "catches and fixes mistakes well without prompting." Avoid re-check instructions such as "double-check your answer" or "re-verify before responding"; they compound with the model's own behavior and add cost without adding quality. It also narrates corrections more than prior models, which needs its own control:
+**Self-correction.** Opus 5 "catches and fixes mistakes well without prompting." Avoid re-check instructions such as "double-check your answer" or "re-verify before responding"; they compound with the model's own behavior and add cost without adding quality. It also narrates corrections readily, which needs its own control:
 
 ```
 Only correct an earlier statement when the error would change the user's code, conclusions, or decisions. State corrections plainly and briefly, then continue the task. For slips that change nothing for the user, make the fix and move on without noting it.
 ```
 
-**Run length and narration.** Opus 5 runs longer, narrates readily during agentic work, and writes longer files than prior models. Response length, deliverable length, and progress-update cadence each need explicit calibration — see `## Response length, tone, and progress updates`. Note that `effort` controls thinking volume, not response length; lowering effort will not shorten the answer.
-
-## Migration and API notes
-
-Migration checklist from Opus 4.8, per the live migration guide:
-
-- Update the model name from `claude-opus-4-8` to `claude-opus-5`.
-- Review workloads that ran without a `thinking` field: on Opus 4.8 they ran without thinking, on Opus 5 they run with adaptive thinking.
-- Revisit `max_tokens`, which remains a hard limit on total output (thinking plus response text), or pass `thinking: {type: "disabled"}` at effort `high` or below to preserve the old behavior.
-- Audit requests that disable thinking: `thinking: {type: "disabled"}` with effort `xhigh` or `max` returns a 400 error, enforced per request. Opus 4.8 accepted that combination.
-- Re-baseline cost on your own workloads, and re-run an effort sweep rather than carrying over 4.8 effort defaults.
-
-Neither the Opus 5 prompting page nor the migration guide states a restriction on `temperature`/`top_p`/`top_k` (unlike Sonnet 5, where they error). Verify against the API reference before relying on that either way.
+**Run length and narration.** Opus 5 runs long, narrates readily during agentic work, and writes long files by default. Response length, deliverable length, and progress-update cadence each need explicit calibration — see `## Response length, tone, and progress updates`. Note that `effort` controls thinking volume, not response length; lowering effort will not shorten the answer.
 
 ## Effort and thinking
 
-`effort` (`low` / `medium` / `high` / `xhigh` / `max`) is the primary control for token cost and response time. The effort reference marks `high` as the default level, and recommends for Opus 5: start at `xhigh` for coding and agentic work, use `high` for most intelligence-sensitive workloads, and treat `low` and `medium` as genuinely usable — they are stronger on Opus 5 than on earlier Opus models and produce strong quality at a fraction of the tokens and latency. Use effort liberally as the cost lever wherever your own evals show quality holds. Set a large `max_tokens` at higher effort, starting around 64k.
+`effort` (`low` / `medium` / `high` / `xhigh` / `max`) is the primary control for token cost and response time. The effort reference marks `high` as the default level, and recommends for Opus 5: start at `xhigh` for coding and agentic work, use `high` for most intelligence-sensitive workloads, and treat `low` and `medium` as genuinely usable — they produce strong quality at a fraction of the tokens and latency. Use effort liberally as the cost lever wherever your own evals show quality holds. Set a large `max_tokens` at higher effort, starting around 64k — `max_tokens` is a hard limit on total output, thinking plus response text, so leave headroom rather than sizing it for response text alone.
 
-Thinking is on by default and **disabling it is capped at `high` effort or below**. That cap, plus two documented failure artifacts, is why lowering effort while leaving thinking on is the better cost lever than disabling thinking:
+Thinking is on by default and **disabling it is capped at `high` effort or below**: passing `thinking: {type: "disabled"}` at effort `xhigh` or `max` returns a 400 error, enforced per request. That cap, plus two documented failure artifacts, is why lowering effort while leaving thinking on is the better cost lever than disabling thinking:
 
 - **Tool calls as text.** With thinking disabled, the model occasionally writes a tool call into visible text instead of emitting a structured `tool_use` block. Mitigation: `You may say a brief sentence before using a tool.`
 - **Internal XML tags in output.** The model can emit `<thinking>` tags into the visible response. Remove any rules instructing the model not to think, and use the general form rather than naming specific tags: `Do not include internal or system XML tags in your response.`
 
 Changing effort between requests invalidates cached prefixes; hold effort constant within a cached conversation and vary it across workloads. For the cross-model decision procedure, read `references/50-effort-and-thinking.md`.
 
+Neither the Opus 5 prompting page nor the migration guide states a restriction on `temperature`/`top_p`/`top_k` (unlike Sonnet 5, where they error). Verify against the API reference before relying on that either way.
+
 ## Response length, tone, and progress updates
 
-Default responses run longer than on prior Opus models. For conciseness:
+Default responses run long. For conciseness:
 
 ```
 Keep responses focused, brief, and concise. Keep disclaimers and caveats short, and spend most of the response on the main answer. When asked to explain something, give a high-level summary unless an in-depth explanation is specifically requested.
@@ -62,7 +52,7 @@ Keep outputs reasonably concise.
 </tone_preference>
 ```
 
-Files Opus 5 writes — reports, Markdown, summaries — are often longer than on prior models. Calibrate deliverable length separately from response length:
+Files Opus 5 writes — reports, Markdown, summaries — are often long. Calibrate deliverable length separately from response length:
 
 ```
 Match the length of written documents to what the task needs: cover the substance, but do not pad with filler sections, redundant summaries, or boilerplate.
@@ -86,7 +76,7 @@ Deliver what was asked, at the scope intended. Make routine judgment calls yours
 - Use XML tags to separate role, instructions, context, examples, and input documents; use 3–5 `<example>` blocks for format-sensitive work.
 - For long-context work, put long documents near the top and the query/instructions at the end — the family guidance cites up to ~30% quality improvement from that ordering alone.
 - Use direct action verbs (`change`, `implement`, `verify`, `report only`); state when an instruction applies to every section, file, or item.
-- Drop "avoid overthinking," "double-check," and "verify before responding" boilerplate — 4.6/4.8-era patches. Keep confirm-before-destructive-action guidance for shared systems and irreversible operations: that is an authority rule, not a quality patch.
+- Drop "avoid overthinking," "double-check," and "verify before responding" boilerplate; Opus 5 self-verifies and self-corrects without it (see `## Delegation, self-verification, and self-correction` above). Keep confirm-before-destructive-action guidance for shared systems and irreversible operations: that is an authority rule, not a quality patch.
 
 ## Subagents
 

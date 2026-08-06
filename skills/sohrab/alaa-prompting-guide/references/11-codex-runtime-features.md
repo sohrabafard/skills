@@ -21,7 +21,7 @@ Stop after <turn or time cap> even if incomplete, reporting progress, evidence s
 
 Build worked examples from `references/10-gpt-5-6.md` plus the template above: one objective, one stopping condition, one validation loop. A goal should be larger than one prompt but smaller than an open-ended backlog. Documented fits are migrations, large refactors, experiments, and any long-running coding work with a clear success condition and a validation loop.
 
-**This is not Claude Code's `/goal`.** Same command name, different mechanism: Codex runs a durable thread-scoped objective loop with its own budget accounting, while Claude Code wraps a session-scoped Stop hook whose completion check is a separate small evaluator model reading the transcript. The two differ in what proves completion, in how they are enabled, and in what they cost. Never carry a `/goal` block between the runtimes unedited — see `references/41-claude-code-runtime-features.md`.
+**This is not Claude Code's `/goal`.** Same command name, different mechanism — never carry a `/goal` block between the runtimes unedited. Read `references/41-claude-code-runtime-features.md` for how Claude Code's version differs and what that changes about what proves completion, how it's enabled, and what it costs.
 
 ## Subagents — explicit delegation and parallel spawning
 
@@ -125,7 +125,7 @@ Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked
 - [Follow a goal | Codex use cases](https://developers.openai.com/codex/use-cases/follow-goals)
 - [Using Goals in Codex (Cookbook)](https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex)
 - [Subagents – Codex](https://developers.openai.com/codex/subagents)
-- [Agent Skills – Codex](https://developers.openai.com/codex/skills)
+- [Agent Skills – Codex](https://learn.chatgpt.com/docs/build-skills)
 - [Custom instructions with AGENTS.md – Codex](https://developers.openai.com/codex/guides/agents-md)
 - [Configuration Reference – Codex](https://developers.openai.com/codex/config-reference)
 - [Slash commands – Codex CLI](https://developers.openai.com/codex/cli/slash-commands)

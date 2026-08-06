@@ -2,7 +2,7 @@
 
 API model id `claude-fable-5`. Correct the obvious assumption first: Fable 5 is not a creative-writing or persona model. It is Anthropic's most capable widely released tier, built for complex, long-running, end-to-end work that previously took hours, days, or weeks. 1M-token context, 128k max output, $10/$50 per MTok, adaptive thinking always on, training and knowledge cutoff January 2026. Mythos 5 shares Fable's specs and pricing but is invitation-only and lacks Fable's safety classifiers; this file is about Fable 5 unless a task names Mythos 5 explicitly.
 
-**As of this revision the orchestrator packs no longer pin Fable 5 at all.** Opus 5 reaches comparable quality on coding and agentic benchmarks at substantially lower cost — Anthropic's own figures put Opus 5 within 0.5% of Fable 5's peak CursorBench 3.2 score at half the cost, and above Fable 5 on OSWorld 2.0 at just over a third of the cost — and Opus 5 carries a May 2026 knowledge cutoff against Fable's January 2026. Fable 5 is now an **opt-in specialist**: name it deliberately for a specific lane, do not inherit it as a default.
+**Fable 5 is an opt-in specialist in this pack's orchestrator packs, not a default.** Opus 5 reaches comparable quality on coding and agentic benchmarks at substantially lower cost — Anthropic's own figures put Opus 5 within 0.5% of Fable 5's peak CursorBench 3.2 score at half the cost, and above Fable 5 on OSWorld 2.0 at just over a third of the cost — and Opus 5 carries a May 2026 knowledge cutoff against Fable's January 2026. Name Fable 5 deliberately for a specific lane; do not inherit it as a default.
 
 ## When Fable 5 is still the right call
 
@@ -24,7 +24,7 @@ Secondary documented strengths: dense technical images and detailed screenshots,
 
 Audit prompts for chain-of-thought extraction requests and replace them with structured thinking or progress surfaces — raw chain-of-thought is never returned, and asking for it trips the `reasoning_extraction` refusal category.
 
-## Migration and API notes, effort and thinking
+## API notes, effort and thinking
 
 Fable 5 and Mythos 5 use adaptive thinking only; manual extended-thinking token budgets do not apply. Verify sampling-parameter and error behavior against the live API reference rather than assuming the Sonnet 5 rules carry over.
 
@@ -134,7 +134,7 @@ Between tool calls, when you have content the user must read verbatim (a partial
 
 ## Caveats
 
-Pricing ($10/$50 per MTok), the 1M/128k limits, the January 2026 cutoff, the Opus 5 comparison figures, availability, safety-classifier behavior, and the documented fallback target are time-sensitive Anthropic-stated details — re-check the live docs before hard-coding them. The benchmark comparisons come from Anthropic's own Opus 5 announcement, not independent evaluation. The "no longer pinned by default" decision is this pack's policy driven by that cost comparison, not an Anthropic recommendation. This model postdates a typical training cutoff; every claim here came from a live fetch.
+Pricing ($10/$50 per MTok), the 1M/128k limits, the January 2026 cutoff, the Opus 5 comparison figures, availability, safety-classifier behavior, and the documented fallback target are time-sensitive Anthropic-stated details — re-check the live docs before hard-coding them. The benchmark comparisons come from Anthropic's own Opus 5 announcement, not independent evaluation. The opt-in, not-default policy is this pack's decision, driven by that cost comparison, not an Anthropic recommendation. This model postdates a typical training cutoff; every claim here came from a live fetch.
 
 ## Sources
 

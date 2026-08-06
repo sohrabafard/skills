@@ -85,7 +85,9 @@ Plan mode is the closest thing to a launch gate for a large or risky autonomous 
 
 ## `/goal` — condition-based multi-turn autonomy (Claude Code's own mechanism)
 
-**Not the same mechanism as Codex's `/goal`** (see `references/11-codex-runtime-features.md`) — same name, different implementation. Claude Code's `/goal` is a wrapper around a session-scoped prompt-based Stop hook: after every turn, the condition plus the conversation so far go to your configured small fast model (defaults to Haiku), which returns a yes/no decision plus a short reason. On "no," Claude starts another turn using that reason as guidance; on "yes," the goal clears and records an achieved entry. Setting a goal immediately starts a turn with the condition as the directive. One goal is active per session; a new one replaces it. Requires Claude Code v2.1.139 or later.
+**Not the same mechanism as Codex's `/goal`** — same name, different implementation. Claude Code's `/goal` is a wrapper around a session-scoped prompt-based Stop hook: after every turn, the condition plus the conversation so far go to your configured small fast model (defaults to Haiku), which returns a yes/no decision plus a short reason. On "no," Claude starts another turn using that reason as guidance; on "yes," the goal clears and records an achieved entry. Setting a goal immediately starts a turn with the condition as the directive. One goal is active per session; a new one replaces it. Requires Claude Code v2.1.139 or later.
+
+Codex's `/goal` instead runs a durable thread-scoped objective loop with its own budget accounting, not a Stop-hook evaluator — the two differ in what proves completion, how they're enabled, and what they cost. Never carry a `/goal` block between the runtimes unedited; read `references/11-codex-runtime-features.md` for Codex's mechanism.
 
 ```text
 /goal migrate every call site off the deprecated `useLegacyAuth` composable to `useAuth`, all TypeScript
