@@ -1,7 +1,5 @@
 # Reusable-Context Curation
 
-Read this at the first phase boundary of a long run, and again before closing a plan.
-
 Three skills meet here and the boundary is settled. `alaa-extract-agent-lessons` owns admission and the reusable shapes — what qualifies as a decision interface, a judgment rubric, or a knowledge card. `alaa-memory-os` owns durable publication. This workflow owns when curation runs, where a candidate is parked while the engagement is still open, and what happens to the plan when the final gate changes something.
 
 ## The intermediate scan

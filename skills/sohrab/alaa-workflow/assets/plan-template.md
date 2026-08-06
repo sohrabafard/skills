@@ -27,7 +27,7 @@
 
 ## Handoff Package
 
-Knowledge that lives only in the current agent's head and disappears on compaction. Fill a field when something is learned, not on a schedule; leave a field empty rather than padding it. See `references/context-continuity.md`.
+Knowledge that lives only in the current agent's head and disappears on compaction. Fill a field when something is learned, not on a schedule; leave a field empty rather than padding it. Field semantics are in `alaa-workflow references/context-continuity.md`, which is in the skill, not in this repository.
 
 - Confirmed facts (verified, each with how it was verified): none yet.
 - Open assumptions (believed but unverified, each with what would verify it): none yet.

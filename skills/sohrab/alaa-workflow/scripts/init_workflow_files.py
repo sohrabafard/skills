@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+import traceback
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,14 @@ ASSETS = ROOT / "assets"
 PROFILES = ("direct", "resumable", "orchestrated", "legacy")
 DEFAULT_PROFILE = "resumable"
 UNRESOLVED = "NEEDS_LIVE_VERIFICATION"
+
+
+class Misuse(Exception):
+    """The invocation cannot produce artifacts, so nothing was created.
+
+    Separated from a write conflict because the two oblige different repairs: a misuse is
+    fixed in the command, a conflict is a decision about files already in the repository.
+    """
 
 
 def slugify(value: str) -> str:
@@ -51,9 +60,7 @@ def display_path(path: Path | None) -> str:
     return f"`{portable(path)}`" if path else "not created"
 
 
-def write_text(path: Path, content: str, force: bool) -> None:
-    if path.exists() and not force:
-        raise FileExistsError(f"Refusing to overwrite existing file: {path}")
+def write_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 
@@ -79,7 +86,19 @@ def warn(message: str) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog="init_workflow_files.py",
+        description=__doc__,
+        epilog=(
+            "exit 0  the artifacts were created, or --dry-run printed the paths it would create.\n"
+            "exit 1  an output already exists and --force was not given. Nothing was written; "
+            "decide whether to continue the existing artifact family or to overwrite it.\n"
+            "exit 2  the invocation could not run -- paired flags supplied alone, a parent plan "
+            "that does not exist, a malformed timestamp or date, or an unreadable template. "
+            "Exit 2 is not evidence that the artifacts exist."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--task", required=True, help="Human task title used for naming and template fill.")
     parser.add_argument(
         "--profile",
@@ -119,7 +138,7 @@ def parse_args() -> argparse.Namespace:
 
 def validate_timestamp(stamp: str) -> str:
     if not re.fullmatch(r"\d{8}-\d{6}", stamp):
-        raise ValueError("timestamp must match YYYYMMDD-HHMMSS")
+        raise Misuse("--timestamp must match YYYYMMDD-HHMMSS")
     return stamp
 
 
@@ -155,13 +174,13 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
     ]
     documenter_fields = [args.documenter_runtime, args.documenter_model]
     if any(fields) and not all(fields):
-        raise SystemExit("Provide all implementer/reviewer runtime and model values together.")
+        raise Misuse("Provide all implementer/reviewer runtime and model values together.")
     if any(documenter_fields) and not all(documenter_fields):
-        raise SystemExit("Provide documenter runtime and model values together.")
+        raise Misuse("Provide documenter runtime and model values together.")
     if any(documenter_fields) and not all(fields):
-        raise SystemExit("Documenter metadata requires the implementer/reviewer metadata.")
+        raise Misuse("Documenter metadata requires the implementer/reviewer metadata.")
     if not active and (any(fields) or any(documenter_fields) or args.verified_on or args.verification_source):
-        raise SystemExit("Prompt verification metadata requires --with-prompts.")
+        raise Misuse("Prompt verification metadata requires --with-prompts.")
     if not active:
         return {}
     if not all(fields):
@@ -181,12 +200,12 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
             "documenter_model": UNRESOLVED,
         }
     if not args.verified_on or not args.verification_source:
-        raise SystemExit("Resolved prompt metadata requires --verified-on and at least one --verification-source.")
+        raise Misuse("Resolved prompt metadata requires --verified-on and at least one --verification-source.")
     verified_on = args.verified_on
     try:
         date.fromisoformat(verified_on)
     except ValueError as exc:
-        raise SystemExit("--verified-on must match YYYY-MM-DD") from exc
+        raise Misuse("--verified-on must match YYYY-MM-DD") from exc
     sources = ", ".join(args.verification_source)
     return {
         "verification_status": "verified",
@@ -201,17 +220,16 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
     }
 
 
-def main() -> int:
-    args = parse_args()
+def run(args: argparse.Namespace) -> int:
     profile = resolve_profile(args)
     include_prompts = args.with_prompts or profile == "legacy"
     prompt_metadata = resolve_prompt_metadata(args, include_prompts)
 
     parent_plan = Path(args.parent_plan) if args.parent_plan else None
     if args.lane and parent_plan is None:
-        raise SystemExit("--lane requires --parent-plan.")
+        raise Misuse("--lane requires --parent-plan.")
     if parent_plan and not parent_plan.exists():
-        raise SystemExit(f"Parent plan not found: {parent_plan}")
+        raise Misuse(f"Parent plan not found: {parent_plan}")
 
     stamp = validate_timestamp(args.timestamp) if args.timestamp else now_stamp()
     created_at = now_iso()
@@ -244,31 +262,64 @@ def main() -> int:
         **prompt_metadata,
     }
 
-    outputs: list[Path] = []
-
-    def emit(path: Path, content: str) -> None:
-        outputs.append(path)
-        if not args.dry_run:
-            write_text(path, content, force=args.force)
+    planned: list[tuple[Path, str]] = []
 
     if not args.state_only:
-        emit(plan_path, render("plan-template.md", values))
+        planned.append((plan_path, render("plan-template.md", values)))
         if include_prompts:
-            emit(prompt_path, render("phase-prompts-template.md", values))
+            planned.append((prompt_path, render("phase-prompts-template.md", values)))
         if include_checkpoint:
-            emit(checkpoint_path, render("continuation-state-template.md", values))
+            planned.append((checkpoint_path, render("continuation-state-template.md", values)))
     if include_state:
-        emit(state_path, render_json(values))
+        planned.append((state_path, render_json(values)))
+
+    # Every target is checked before any of them is written. Writing until the first
+    # collision leaves half an artifact family behind, and the next run then cannot start
+    # without --force even though the conflict was never the caller's doing.
+    if not args.force:
+        colliding = [path for path, _ in planned if path.exists()]
+        if colliding:
+            print(
+                "Refusing to overwrite existing files; nothing was written: "
+                + ", ".join(portable(path) for path in colliding)
+                + ". Continue that artifact family instead, or pass --force to replace it.",
+                file=sys.stderr,
+            )
+            return 1
+
+    if not args.dry_run:
+        for path, content in planned:
+            write_text(path, content)
 
     payload: dict[str, Any] = {
         "task": args.task,
         "mode": mode,
         "profile": profile,
-        "outputs": [portable(path) for path in outputs],
+        "outputs": [portable(path) for path, _ in planned],
     }
     print(json.dumps(payload, indent=2, ensure_ascii=True))
     return 0
 
 
+def main() -> int:
+    args = parse_args()
+    try:
+        return run(args)
+    except Misuse as exc:
+        print(f"MISUSE: {exc}", file=sys.stderr)
+        return 2
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    # A generator that could not run must not leave through Python's default exit 1, which
+    # this script already uses for the one recoverable outcome: existing files it refused to
+    # replace. Anything else that raises is exit 2, so no caller reads it as a write conflict.
+    try:
+        sys.exit(main())
+    except (OSError, UnicodeDecodeError) as exc:
+        print(f"MISUSE: could not read or write a required file: {exc}", file=sys.stderr)
+        sys.exit(2)
+    except Exception:  # noqa: BLE001 - a generator bug is not a write conflict
+        traceback.print_exc()
+        print("MISUSE: the initializer raised; no artifact set can be assumed.", file=sys.stderr)
+        sys.exit(2)

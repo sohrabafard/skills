@@ -320,11 +320,14 @@ class WorkflowFilesTest(unittest.TestCase):
             self.assertIn("not included / not included", content)
         with workspace_tempdir() as tmp:
             root = Path(tmp)
+            # Exit 2, not 1: a half-supplied flag pair is a misuse of the invocation, and the
+            # initializer reserves 1 for the one outcome the caller must decide about, which
+            # is an artifact family already on disk.
             failure = self.run_script(
                 INIT,
                 ["--task", "Adaptive workflow", "--timestamp", STAMP, *resolved, "--documenter-runtime", "runtime-c"],
                 root,
-                expected=1,
+                expected=2,
             )
             self.assertIn("documenter runtime and model", (failure.stdout + failure.stderr).lower())
 
@@ -642,6 +645,119 @@ class WorkflowFilesTest(unittest.TestCase):
             self.edit(checkpoint, declared, "- Plan: `docs/_agent_plans/some-other-plan.md`")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
             self.assertIn("ERROR [checkpoint.plan]", result.stdout)
+
+    def test_initializer_misuse_reports_could_not_run(self) -> None:
+        for arguments, expected_text in (
+            (["--timestamp", "not-a-stamp"], "yyyymmdd-hhmmss"),
+            (["--lane", "frontend"], "--parent-plan"),
+            (["--parent-plan", "docs/_agent_plans/absent.md"], "parent plan not found"),
+        ):
+            with self.subTest(arguments=arguments), workspace_tempdir() as tmp:
+                failure = self.run_script(
+                    INIT, ["--task", "Adaptive workflow", *arguments], Path(tmp), expected=2
+                )
+                self.assertIn(expected_text, (failure.stdout + failure.stderr).lower())
+
+    def test_existing_outputs_are_refused_whole_and_nothing_is_written(self) -> None:
+        """The refusal is exit 1 and it is all-or-nothing.
+
+        Writing until the first collision leaves half an artifact family behind, and the
+        next run then cannot start without --force over a conflict it did not create.
+        """
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root, "--profile", "orchestrated")
+            plan = root / str(payload["outputs"][0])
+            checkpoint = root / str(payload["outputs"][1])
+            state = root / str(payload["outputs"][2])
+            checkpoint.unlink()
+            state.unlink()
+
+            failure = self.run_script(
+                INIT, ["--task", "Adaptive workflow", "--timestamp", STAMP, "--profile", "orchestrated"], root, expected=1
+            )
+            self.assertIn("nothing was written", (failure.stdout + failure.stderr).lower())
+            self.assertIn(plan.name, failure.stdout + failure.stderr)
+            self.assertFalse(checkpoint.exists(), "a refused run must not have written the companions")
+            self.assertFalse(state.exists(), "a refused run must not have written the companions")
+
+            forced, _ = self.init(root, "--profile", "orchestrated", "--force")
+            self.assertEqual(3, len(forced["outputs"]))
+            self.assertTrue(checkpoint.exists())
+            self.assertTrue(state.exists())
+
+    def test_initializer_help_states_every_exit_code(self) -> None:
+        with workspace_tempdir() as tmp:
+            result = self.run_script(INIT, ["--help"], Path(tmp))
+            help_text = " ".join(result.stdout.split())
+            self.assertIn("exit 0", help_text)
+            self.assertIn("exit 1", help_text)
+            self.assertIn("exit 2", help_text)
+            self.assertIn("not evidence that the artifacts exist", help_text)
+
+    def test_nothing_selected_reports_could_not_run(self) -> None:
+        with workspace_tempdir() as tmp:
+            result = self.run_script(VALIDATE, [], Path(tmp), expected=2)
+            self.assertIn("Nothing to validate", result.stdout)
+
+    def test_absent_plan_reports_could_not_run_rather_than_findings(self) -> None:
+        with workspace_tempdir() as tmp:
+            result = self.run_script(VALIDATE, ["--plan", "docs/_agent_plans/absent.md"], Path(tmp), expected=2)
+            self.assertIn("[plan.path]", result.stdout)
+
+    def test_uncorrelatable_companion_reports_could_not_run(self) -> None:
+        with workspace_tempdir() as tmp:
+            result = self.run_script(VALIDATE, ["--state", "auto"], Path(tmp), expected=2)
+            self.assertIn("[correlation]", result.stdout)
+
+    def test_named_companion_that_does_not_exist_reports_could_not_run(self) -> None:
+        """A path the caller typed and a path this run correlated are different claims.
+
+        The first not existing is a broken invocation; the second not existing stays a
+        finding about the artifact family, which the two correlation tests pin.
+        """
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            result = self.run_script(
+                VALIDATE,
+                ["--plan", str(plan.relative_to(root)), "--state", ".codex/state/absent.json"],
+                root,
+                expected=2,
+            )
+            self.assertIn("Explicitly selected state path does not exist", result.stdout)
+
+    def test_unreadable_plan_reports_could_not_run_rather_than_findings(self) -> None:
+        """An artifact that cannot be read is a validation that did not happen.
+
+        Exiting 1 here would be indistinguishable from findings, and a caller would read
+        "the artifacts are wrong" where the truth is that nobody checked them.
+        """
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            unreadable = root / "docs/_agent_plans/a-directory.md"
+            unreadable.mkdir(parents=True)
+            result = self.run_script(VALIDATE, ["--plan", "docs/_agent_plans/a-directory.md"], root, expected=2)
+            self.assertIn("could not run", (result.stdout + result.stderr).lower())
+
+    def test_real_findings_still_exit_one_and_not_two(self) -> None:
+        """The could-not-run class must not swallow the findings class."""
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+
+    def test_help_states_every_exit_code_and_that_two_is_never_a_pass(self) -> None:
+        with workspace_tempdir() as tmp:
+            result = self.run_script(VALIDATE, ["--help"], Path(tmp))
+            help_text = " ".join(result.stdout.split())
+            self.assertIn("exit 0", help_text)
+            self.assertIn("exit 1", help_text)
+            self.assertIn("exit 2", help_text)
+            self.assertIn("never evidence that the artifacts are clean", help_text)
 
     def test_task_text_is_json_escaped(self) -> None:
         with workspace_tempdir() as tmp:

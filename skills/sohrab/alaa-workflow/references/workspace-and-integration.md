@@ -1,6 +1,6 @@
 # Workspace, Commits, and Integration
 
-Read this before the first write of any multi-phase or delegated run, and again before asking the user to accept the result. `references/context-continuity.md` owns what gets written into files; this file owns what gets written into Git, because a commit is the only checkpoint that survives a crashed session, a lost conversation, and a wrong edit at the same time.
+`references/context-continuity.md` owns what gets written into files; this file owns what gets written into Git, because a commit is the only checkpoint that survives a crashed session, a lost conversation, and a wrong edit at the same time.
 
 The whole protocol exists to keep three things true at once: the user's base branch is never the surface being experimented on, every intermediate state is recoverable, and nothing leaves the local repository without the user saying so.
 

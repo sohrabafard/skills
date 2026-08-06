@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+import traceback
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -476,7 +477,19 @@ def validate_state(path: Path, plan_path: Path | None = None, profile: str = "au
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog="validate_workflow_files.py",
+        description=__doc__,
+        epilog=(
+            "exit 0  no blocking error. Warnings alone do not reach 1.\n"
+            "exit 1  a blocking error in the artifacts. Repair it before the plan advances; "
+            "an error is a defect in the artifacts, never a reason to relax the check.\n"
+            "exit 2  the validation could not run -- nothing was selected, the plan does not "
+            "exist, a companion cannot be correlated, or a selected file cannot be read. "
+            "Exit 2 is a failed gate, never evidence that the artifacts are clean."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--plan", help="Plan path, or auto to select the newest plan only.")
     parser.add_argument("--profile", choices=PROFILES, default="auto", help="Override profile detection.")
     parser.add_argument("--state", help="Explicit state path, or auto with a selected plan.")
@@ -505,8 +518,10 @@ def explicit_path(value: str | None, correlated: Path | None, kind: str, plan_pa
 def main() -> int:
     args = parse_args()
     if not any((args.plan, args.state, args.phase_prompts, args.continuation)):
+        # Could not run, not clean and not findings. Exiting 1 here would be read as
+        # "the artifacts are wrong" when in fact nothing was ever checked.
         print("Nothing to validate. Pass --plan or an explicit companion path.")
-        return 1
+        return 2
 
     had_error = False
     plan_path: Path | None = None
@@ -517,7 +532,7 @@ def main() -> int:
         plan_path = resolve_auto_plan() if args.plan == "auto" else Path(args.plan)
         if plan_path is None or not plan_path.exists():
             print(error("plan.path", "Selected plan does not exist.", "Pass an existing plan path."))
-            return 1
+            return 2
         content = read_text(plan_path)
         profile = detect_profile(content) if profile == "auto" else profile
         companions = resolve_companions(plan_path, content)
@@ -529,7 +544,7 @@ def main() -> int:
         companions["state"] = explicit_path(args.state, companions["state"], "state", plan_path)
     except ValueError as exc:
         print(error("correlation", str(exc), "Pass an explicit path or select a plan."))
-        return 1
+        return 2
 
     required = {
         "direct": set(),
@@ -544,14 +559,30 @@ def main() -> int:
         "state": lambda path: validate_state(path, plan_path, profile),
     }
 
+    raw_flags = {
+        "prompts": args.phase_prompts,
+        "checkpoint": args.continuation,
+        "state": args.state,
+    }
+
     for kind in ("prompts", "checkpoint", "state"):
         path = companions[kind]
-        was_explicit = {
-            "prompts": args.phase_prompts,
-            "checkpoint": args.continuation,
-            "state": args.state,
-        }[kind] is not None
+        raw = raw_flags[kind]
+        # A path the caller typed and a path this run correlated are different claims. The
+        # first not existing is a broken invocation; the second not existing is a real gap in
+        # the artifact family. "auto" is a request to correlate, so it belongs to the second.
+        was_named = raw is not None and raw != "auto"
+        was_explicit = raw is not None
         if path is None or not path.exists():
+            if was_named:
+                print(
+                    error(
+                        f"artifact.{kind}",
+                        f"Explicitly selected {kind} path does not exist: {raw}.",
+                        "Pass a path that exists, or drop the flag and let the plan stem correlate the companion.",
+                    )
+                )
+                return 2
             if kind in required or was_explicit:
                 remediation = f"Create the correlated {kind} artifact or select a profile that does not require it."
                 print(error(f"artifact.{kind}", f"Profile {profile} requires a correlated {kind} file.", remediation))
@@ -565,4 +596,21 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # An artifact that cannot be read, or a validator that raised, is a validation that did
+    # not happen. Both would otherwise leave through Python's default exit 1 and be
+    # indistinguishable from findings, which is the one misreading this gate cannot afford.
+    try:
+        sys.exit(main())
+    except (OSError, UnicodeDecodeError) as exc:
+        print(
+            error("runner", f"Validation could not run: {exc}.", "Make every selected artifact readable, then re-run."),
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    except Exception:  # noqa: BLE001 - a validator bug is a failed gate, not a finding
+        traceback.print_exc()
+        print(
+            error("runner", "Validation could not run: the validator raised.", "Report the traceback above; it is not a result."),
+            file=sys.stderr,
+        )
+        sys.exit(2)
