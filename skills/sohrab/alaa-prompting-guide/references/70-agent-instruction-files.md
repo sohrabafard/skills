@@ -81,7 +81,7 @@ Three approaches, with honest tradeoffs.
 
 **Two maintained files.** Only justified when the two runtimes genuinely need different content — different agent rosters, different tool availability, different sandbox semantics. The cost is real and recurring: every convention change must be made twice, and the files drift silently because nothing fails when they disagree. If you choose this, keep the shared 90% in a third file that both import or include, and let each runtime file hold only its own delta.
 
-Whichever you choose, do not put runtime-specific paths or trigger syntax in the shared body. A shared file that says `/alaa-security-review` is wrong under Codex and one that says `$alaa-security-review` is wrong under Claude Code; either name the skill without a prefix, or put the prefixed form in the runtime-specific section.
+Whichever you choose, do not hard-code a runtime-specific call prefix into the shared body. A shared file names the skill in prose, with no prefix — "the alaa-security-review skill," not a call form — and a prefixed call form belongs only in a runtime-specific section. When deciding which call form belongs at a live invocation site, read `references/06-invocation-and-composition.md`, which owns the per-runtime call syntax.
 
 ## Defects and fixes
 
@@ -112,12 +112,16 @@ Whichever you choose, do not put runtime-specific paths or trigger syntax in the
 
 ## Caveats
 
-Verified against live documentation on 24 July 2026. Time-sensitive: Claude Code's under-200-line target is guidance, not an enforced limit, and `CLAUDE.md` files are loaded in full regardless of length; the `MEMORY.md` 200-line / 25 KB cap discussed in the same documentation applies to auto memory, not to `CLAUDE.md`. Codex's `project_doc_max_bytes` default of 32 KiB and the `project_doc_fallback_filenames` behavior are configuration values that can change; the fallback list is not documented to include `CLAUDE.md`, which should be re-confirmed before relying on it. Claude Code settings names (`claudeMd`, `claudeMdExcludes`) and the `.claude/rules/` mechanism carry per-version notes and should be checked against the running version.
+Verified 24 July 2026. Values that move between releases:
+
+- Claude Code's under-200-line target — guidance, not an enforced limit; `CLAUDE.md` files load in full regardless of length. The `MEMORY.md` 200-line / 25 KB cap governs auto memory only, not `CLAUDE.md`.
+- Codex `project_doc_max_bytes` — 32 KiB default; `project_doc_fallback_filenames` is not documented to include `CLAUDE.md` — confirm against the running version before relying on it.
+- Claude Code settings names (`claudeMd`, `claudeMdExcludes`) and the `.claude/rules/` mechanism — carry per-version notes; check against the running version.
 
 ## Sources
 
 - [How Claude remembers your project (Claude Code)](https://code.claude.com/docs/en/memory)
 - [Extend Claude with skills (Claude Code)](https://code.claude.com/docs/en/skills)
 - [AGENTS.md (Codex)](https://developers.openai.com/codex/guides/agents-md)
-- [Skills (Codex)](https://developers.openai.com/codex/skills)
+- [Skills (Codex)](https://learn.chatgpt.com/docs/build-skills)
 - [Latest model guide (OpenAI)](https://developers.openai.com/api/docs/guides/latest-model)

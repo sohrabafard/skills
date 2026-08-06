@@ -45,7 +45,7 @@ The two runtimes express the same four decisions with different key names. A cro
 
 A reviewer told not to write is a reviewer that will not write most of the time. A reviewer whose `tools` list contains no write tool is a reviewer that *cannot* write, and the difference is the difference between a strong default and a guarantee. The same holds for `sandbox_mode = "read-only"` under Codex. Prefer configuration to prose wherever the runtime offers a key, and use prose only for the part configuration cannot express.
 
-This is also the principle that keeps verification gates alive on a model generation that has otherwise made self-checking instructions obsolete. Anthropic's Opus 5 guidance is unambiguous that explicit re-check instructions — "double-check your answer," "re-verify before responding," "include a final verification step," "use a subagent to verify" — now cause over-verification and should be removed, because the model already catches and fixes its own mistakes. Those instructions are redundant and must go.
+The same principle keeps an independent verification gate alive even though most self-checking instructions are redundant. Anthropic's Opus 5 guidance is unambiguous that explicit re-check instructions — "double-check your answer," "re-verify before responding," "include a final verification step," "use a subagent to verify" — cause over-verification and should be removed, because the model already catches and fixes its own mistakes. Those instructions are redundant and must go.
 
 An independent verifier is a categorically different thing, and must not go. It exists because **no lane may approve its own change** — a structural property of the pipeline, not a request for more diligence. The orchestrator packs state this directly: `alaa-verifier`, `alaa-reviewer`, and the specialists are authority boundaries, and a gate is never skipped on the grounds that the work already looks verified. The test that separates the two cases: if the same agent that produced the artifact is being asked to look at it again, delete the instruction; if a *different* agent with fresh context and no stake in the outcome is being asked to judge it, keep the gate. Removing the first is a tightening. Removing the second is a loss of control.
 
@@ -90,13 +90,9 @@ Two dispatch rules follow from the same place. Name the *one* skill the lane nee
 
 ## Delegation polarity
 
-The bias to correct differs by target model, and applying one polarity everywhere produces the opposite of the intended effect on half the fleet.
+When calibrating how readily a lane should delegate to subagents on a given target model, read `references/06-invocation-and-composition.md`, which owns the polarity rule and the per-model bias table.
 
-**Claude Opus 5 delegates readily and needs a cap.** Anthropic's guidance is explicit that it delegates to subagents more readily than prior models, and that delegation multiplies cost and time when applied to small tasks; the recommended framing is to delegate only for large, genuinely independent, parallelizable tracks, to avoid delegating work finishable in a handful of tool calls, to avoid using subagents to verify your own work, and to keep spawn counts low. The Claude pack's lead calibration section is this guidance applied: "Delegate narrowly," with parallelism preserved and redundancy removed.
-
-**Codex spawns only on request and needs authorization.** Its documentation states that Codex only spawns a new agent when you explicitly ask it to do so. Restriction-shaped language therefore does nothing useful here — the restriction is already the default. Delegation language must authorize in the imperative: "spawn one lane per independent slice in the same turn, without asking" outperforms "parallel work is authorized only for independent lanes," and constraints belong in the lane rules as disjoint scopes and single-writer-per-file, not in the delegation verb.
-
-The general rule is to read the target's documented default bias first and write the correction that opposes it. A cap applied to a model that already under-delegates produces a single-threaded session; an authorization applied to a model that already over-delegates produces a swarm. Note also that Claude Code disables subagent nesting by default — a subagent cannot spawn subagents unless nesting is enabled — so fan-out depth is a runtime property, not only a prompting one.
+Claude Code disables subagent nesting by default — a subagent cannot spawn subagents unless nesting is enabled — so fan-out depth is a runtime property, not only a prompting one.
 
 ## Defects and fixes
 
@@ -130,7 +126,11 @@ The general rule is to read the target's documented default bias first and write
 
 ## Caveats
 
-Verified against live documentation on 24 July 2026. Time-sensitive: the Claude Code subagent frontmatter surface carries per-version notes (several fields and behaviors are gated on specific minor versions, including background-by-default and extended-thinking inheritance) and should be checked against the running version. Codex's documented agent TOML keys are the complete published set as of this date; `sandbox_mode` values beyond `"read-only"` and `"workspace-write"` and any restart requirement after adding an agent file are not documented and are treated here as unverified. Effort-level availability depends on the model in both runtimes. The delegation-polarity guidance is model-generation-specific: re-read the target model's own prompting page before carrying either polarity to a new model.
+Verified 24 July 2026. Values that move between releases:
+
+- Claude Code subagent frontmatter fields — several are gated on specific minor versions, including background-by-default and extended-thinking inheritance; check against the running version.
+- Codex agent TOML `sandbox_mode` — values beyond `"read-only"` and `"workspace-write"`, and whether adding an agent file requires a restart, are unverified.
+- Effort-level availability — depends on the model, in both runtimes.
 
 ## Sources
 
