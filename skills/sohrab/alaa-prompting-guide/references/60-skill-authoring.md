@@ -47,7 +47,7 @@ This routes: *"When you are about to choose a frontmatter key or a description l
 
 The cost model decides it. Inlining a failure taxonomy into the body charges every run for it, including the four runs in five that never fail a check; moving it behind a pointer charges one line and buys the whole file conditionally.
 
-Where the router itself lives — as a table in the body, or in its own file — is set by reference count, not by feel. The pack contract at `skills/sohrab/AGENTS.md` owns that threshold and the filename the router moves into; read its routing-convention rule before choosing a placement.
+Where the router itself lives — as a table in the body, or in its own file — is set by reference count, not by feel. **A skill with eight or fewer references carries the router in the body as a table and ships no separate router file; a skill with nine or more moves it into `references/00-topic-map.md` and leaves exactly one pointer line in the body.** The threshold is about always-loaded cost, not about whether routing matters: a router in the body reaches the agent with no second read and is the better placement whenever the body can afford it. Crossing the threshold in either direction *moves* the router and never duplicates it, because two routers in one skill drift and the agent follows whichever it reads first. A repository may pin a different threshold or filename in its own contract; where it does, that contract wins.
 
 ## The draft-then-compress loop
 
@@ -74,7 +74,7 @@ OpenAI's current-model guidance reports that configurations with leaner system p
 
 The same guidance names what to cut — repeated instructions, redundant examples, bloated tool descriptions — and the rule that replaces them: state each instruction once, keep a policy in one place, expose only the tools the task needs, and keep an example only where it encodes a real requirement or corrects a measured gap. Applied to a skill: a rule stated in the body and again in a reference is stated twice and belongs in whichever file owns it; a section restating a numbered pipeline in prose is a duplicate; a paragraph explaining why the skill is good is pure cost.
 
-When you are about to write a self-check, a "double-check your answer" line, or a final verification step into a skill, read `references/80-subagent-authoring.md` first. It owns the boundary between a redundant self-verification instruction, which current models make worse rather than better, and an independent gate that exists so no lane approves its own change, which must survive.
+When you are about to write a self-check, a "double-check your answer" line, or a final verification step into a skill, read `references/80-subagent-authoring.md` first. It owns the boundary between a redundant self-verification instruction, which Opus 5 and Sonnet 5 make worse rather than better, and an independent gate that exists so no lane approves its own change, which must survive. The scope matters: Fable 5 is the documented exception and wants explicit verification, so `references/40-fable-5.md` decides that case.
 
 ## Anatomy of a strong body
 
@@ -150,5 +150,6 @@ Verified against live documentation on 6 August 2026. The 10–15% / 41–66% / 
 ## Sources
 
 - [Extend Claude with skills (Claude Code)](https://code.claude.com/docs/en/skills)
+- [How Claude remembers your project (Claude Code)](https://code.claude.com/docs/en/memory)
 - [Build skills (OpenAI)](https://learn.chatgpt.com/docs/build-skills)
 - [Latest model guide (OpenAI)](https://developers.openai.com/api/docs/guides/latest-model)

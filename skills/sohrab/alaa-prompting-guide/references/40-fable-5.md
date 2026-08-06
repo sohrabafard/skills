@@ -91,7 +91,7 @@ You have ample context remaining. Do not stop, summarize, or suggest a new sessi
 
 ## Subagents
 
-Fable 5 dispatches parallel subagents readily. Give explicit guidance and prefer asynchronous communication: `Delegate independent subtasks to subagents and keep working while they run. Intervene if a subagent goes off track or is missing relevant context.`
+Read `references/06-invocation-and-composition.md` for the delegation-polarity rule and its reasoning for this model. The prompt wording: `Delegate independent subtasks to subagents and keep working while they run. Intervene if a subagent goes off track or is missing relevant context.`
 
 Unlike Opus 5, self-verification here should be **explicit**, and separate fresh-context verifier subagents outperform self-critique: `Establish a method for checking your own work at an interval of [X] as you build. Run this every [X interval], verifying your work with subagents against the specification.` For Claude Code's Agent tool and related runtime features, read `references/41-claude-code-runtime-features.md`.
 

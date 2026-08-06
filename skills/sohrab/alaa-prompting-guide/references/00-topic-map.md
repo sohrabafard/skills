@@ -15,6 +15,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Tune a prompt for Claude Fable 5, or judge whether its cost is justified | `references/40-fable-5.md` | It is an opt-in specialist, so the first question is whether to use it at all |
 | Use Claude Code's `/loop`, subagents, workflows, plan mode, or `/goal` | `references/41-claude-code-runtime-features.md` | Concurrency caps, nesting defaults, and evaluator scope decide whether a prompt can work |
 | Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
+| Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
 | Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure, including the draft-then-compress rewrite and how to split a subject into references |
 | Look up a skill discovery path, a frontmatter key surface, or a description character budget | `references/61-skill-platform-mechanics.md` | These are per-runtime lookups that go stale and must not be recalled from memory |
 | Write, trim, or split an `AGENTS.md` or `CLAUDE.md` | `references/70-agent-instruction-files.md` | An instruction file is loaded unconditionally, so its economics differ from every other artifact here |

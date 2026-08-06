@@ -33,6 +33,4 @@ Carry caveats forward as caveats. Never convert uncertainty into a firm instruct
 
 Where official sources and `/alaa-workflow` disagree with this skill, report the drift, prefer current official and runtime truth for the task in hand, and reconcile the owning file afterwards. Silently choosing a side leaves two sources of truth and no record of which one was followed.
 
-## Freshness
-
 Verified against live documentation on 6 August 2026.

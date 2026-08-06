@@ -12,7 +12,7 @@ Treat model and runtime behavior as version-sensitive. Read the owning reference
 ## When NOT to use
 
 - Not as a general coding, review, or refactor skill, unless the task is writing, choosing, reviewing, or repairing a prompt or an agentic workflow.
-- Not for Haiku, retired Claude generations, non-Codex GPT surfaces, or any model outside the scope above.
+- Not for Haiku, retired Claude generations, or any model outside the scope above. Model tuning for a non-Codex GPT surface is out of scope; the one thing this skill states about ChatGPT is the sigil its prompts must carry, because a prompt generated here can be pasted there.
 - Not instead of `/alaa-workflow` for a multi-phase implementation and review engagement that needs plan, state, and phase-prompt artifacts.
 - Not instead of `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` for per-goal multi-agent orchestration. Those packs own lane planning, role prompts, and the review gate; a prompt this skill generates activates that mode by naming the trigger and the goal, and must not restate what they own.
 
@@ -21,7 +21,7 @@ Treat model and runtime behavior as version-sensitive. Read the owning reference
 1. **Identify the target runtime and model.** Ask only when neither can be inferred safely. The runtime determines harness features and how a trigger resolves; the model determines tuning. These are separate questions and answering one does not answer the other.
 2. **Route each question to its owning reference before answering it.** `references/00-topic-map.md` is this skill's router: it lists the situation that makes each reference necessary. Read it first, then read only what its condition selects — every unread reference is context you have not spent.
 3. **Resolve every version-sensitive fact from a source, never from recall.** Prices, caps, effort names, discovery paths, feature gates, and defaults move between releases.
-4. **Write the artifact as a draft, then ship its compressed rewrite.** The first text you produce is never the deliverable. `references/60-skill-authoring.md` owns the loop and the test for when the rewrite is finished.
+4. **Write the artifact as a draft, then ship its compressed rewrite.** For a skill, an instruction file, or a subagent definition, the first text you produce is never the deliverable. `references/60-skill-authoring.md` owns the loop and the test for when the rewrite is finished; a one-off prompt that will never be reused does not earn a second pass.
 5. **Choose the artifact type deliberately.** A prompt, an instruction file, a skill, and a subagent are four different answers, and picking the wrong one is the most common authoring defect. The router points at the file that decides it.
 
 ## Principles that govern every artifact this skill produces

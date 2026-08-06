@@ -50,7 +50,7 @@ in the background, without asking again. Research the authentication, database, 
 using separate subagents, then summarize the risk each one found before you touch any code.
 ```
 
-Use that wording for Codex, and check it before reusing it on Opus 5 or Fable 5, which already delegate readily and generally need a cap and selection criteria instead. See `references/06-invocation-and-composition.md` and `references/80-subagent-authoring.md`.
+This wording is authored for Codex's reticent bias — before reusing it on Opus 5 or Fable 5, read `references/06-invocation-and-composition.md` for the delegation-polarity rule those models need instead.
 
 ## Workflow tool — deterministic multi-agent orchestration scripts
 

@@ -85,7 +85,3 @@ Thinking-disable constraints and the availability of manual thinking budgets are
 - [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
 - [Prompting Claude Fable 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5)
 - [Using the latest model (GPT-5.6)](https://developers.openai.com/api/docs/guides/latest-model)
-
-## Companion references
-
-Read `references/20-opus-5.md`, `references/30-sonnet-5.md`, `references/40-fable-5.md`, or `references/10-gpt-5-6.md` for the levels a specific model supports and its documented starting point. Read `references/90-model-selection.md` for choosing the model itself. Read `references/80-subagent-authoring.md` for pinning effort inside an agent definition.

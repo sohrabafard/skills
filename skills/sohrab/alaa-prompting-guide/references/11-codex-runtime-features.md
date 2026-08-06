@@ -8,6 +8,8 @@ A Goal is durable, thread-scoped state that keeps a Codex thread working toward 
 
 A strong Goal defines seven things: **outcome** (what should be true when work concludes), **verification surface** (the test, benchmark, artifact, or log that proves it), **constraints** (what must not regress), **boundaries** (which files, tools, or resources are in play), **iteration policy** (how Codex picks the next action after each attempt), **blocked stop condition** (when to halt and what would unblock it), and **bounded budget** (an explicit turn or time cap so a stalled or non-converging goal cannot run unbounded).
 
+Codex documents no fixed cap on goal length, but a bloated objective dulls both the directive and the completion check.
+
 **Must be enabled first.** Goals are an experimental feature, off by default. Turn them on from the CLI with `/experimental`, or set `goals = true` under `[features]` in `~/.codex/config.toml`. The feature requires `codex-cli` 0.128.0 or later. Manage the lifecycle with `/goal <objective>` (set), bare `/goal` (view current objective and status), `/goal pause`, `/goal resume`, and `/goal clear`.
 
 ### Ready-to-use `/goal` template

@@ -80,13 +80,13 @@ Deliver what was asked, at the scope intended. Make routine judgment calls yours
 
 ## Subagents
 
-Opus 5 coordinates subagent teams well — writer-verifier patterns work, and agents rarely overwrite each other's work. The problem is volume, not coordination. Cap it:
+Opus 5 coordinates subagent teams well — writer-verifier patterns work, and agents rarely overwrite each other's work. The problem is volume, not coordination; read `references/06-invocation-and-composition.md` for the cap and its reasoning. The Opus-specific addition to that cap:
 
 ```
-Delegate to a subagent only for large tasks that are genuinely independent and parallelizable, such as a wide multi-file investigation. Do not delegate work you can finish yourself in a handful of tool calls, and do not use subagents to verify or double-check your own work. If one subagent can complete the task, use one rather than several, and keep spawn counts low.
+Do not use subagents to verify or double-check your own work.
 ```
 
-Read that last clause against the authority-boundary distinction above: it forbids spawning a subagent to re-check *your own* output, not a review lane that exists because implementers do not approve their own changes. Multi-agent writer-verifier remains a supported pattern where the verifier is a distinct role with its own context and criteria.
+Read that clause against the authority-boundary distinction above: it forbids spawning a subagent to re-check *your own* output, not a review lane that exists because implementers do not approve their own changes. Multi-agent writer-verifier remains a supported pattern where the verifier is a distinct role with its own context and criteria.
 
 For Claude Code's actual Agent tool, `/loop`, Workflow tool, plan mode, and `/goal`, read `references/41-claude-code-runtime-features.md`.
 
@@ -98,7 +98,11 @@ Opus 5 reviews with high precision and recall: it finds real bugs at a high rate
 Report every issue you find, including ones you are uncertain about or consider low-severity. Do not filter for importance or confidence at this stage - a separate verification step will do that. Your goal here is coverage: it is better to surface a finding that later gets filtered out than to silently drop a real bug. For each finding, include your confidence level and an estimated severity so a downstream filter can rank them.
 ```
 
-If a single pass must self-filter, define the bar concretely: report any bug that could cause incorrect behavior, a test failure, or a misleading result; omit only nits such as pure style or naming preferences.
+If a single pass must self-filter, define the bar concretely:
+
+```
+Report any bug that could cause incorrect behavior, a test failure, or a misleading result. Omit only nits such as pure style or naming preferences.
+```
 
 ## Vision, office, and document tasks
 

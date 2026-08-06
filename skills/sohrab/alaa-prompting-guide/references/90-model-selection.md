@@ -4,12 +4,12 @@
 
 | Model | Runtime / trigger | Default use | Effort | Notable |
 |---|---|---|---|---|
-| GPT-5.6 `sol` | Codex / `/name` | Frontier Codex work: review, security, architecture, hard implementation | `reasoning.effort` `none`–`max`; `medium` recommended start | Programmatic Tool Calling, persisted reasoning, Pro mode |
-| GPT-5.6 `terra` | Codex / `/name` | Balanced default for routine implementation and diagnosis | same range | Best cost/quality for ordinary lanes |
-| GPT-5.6 `luna` | Codex / `/name` | High-volume bounded work: exploration, command execution, docs | same range | Cheapest evidence tier |
-| Opus 5 | Claude Code / `/name` | Default top tier: leading, review, architecture, subtle bugs, escalated implementation | `low`–`max`; `xhigh` recommended for coding and agentic work | Delegates readily, self-verifies, self-corrects |
-| Sonnet 5 | Claude Code / `/name` | Balanced default for routine implementation and evidence lanes | `low`–`max`; `high` default | Literal instruction following; more aggressive tool use |
-| Fable 5 | Claude Code / `/name` | Opt-in specialist: genuinely multi-day autonomy, heaviest sustained fan-out | `low`–`max`; `high` default | Refusal domains make it unsuitable for security lanes |
+| GPT-5.6 `sol` | Codex / `$name` | Frontier Codex work: review, security, architecture, hard implementation | `reasoning.effort` `none`–`max` | Programmatic Tool Calling, persisted reasoning, Pro mode |
+| GPT-5.6 `terra` | Codex / `$name` | Balanced default for routine implementation and diagnosis | same range | Best cost/quality for ordinary lanes |
+| GPT-5.6 `luna` | Codex / `$name` | High-volume bounded work: exploration, command execution, docs | same range | Cheapest evidence tier |
+| Opus 5 | Claude Code / `/name` | Default top tier: leading, review, architecture, subtle bugs, escalated implementation | `low`–`max` | Delegates readily, self-verifies, self-corrects |
+| Sonnet 5 | Claude Code / `/name` | Balanced default for routine implementation and evidence lanes | `low`–`max` | Literal instruction following; more aggressive tool use |
+| Fable 5 | Claude Code / `/name` | Opt-in specialist: genuinely multi-day autonomy, heaviest sustained fan-out | `low`–`max` | Refusal domains make it unsuitable for security lanes |
 
 Re-check `references/00-source-map.md` before quoting costs, limits, defaults, or feature gates. Cross-vendor prices are not comparable.
 
@@ -45,7 +45,3 @@ Other companions:
 ## Caveats
 
 Benchmark claims, relative pricing, effort defaults, and the capability ordering among current models are vendor-stated and time-sensitive — a single release can invalidate any ranking here. Re-check `references/00-source-map.md` and the live model pages before treating any ranking here as current.
-
-## Companion references
-
-Read `references/50-effort-and-thinking.md` for the effort decision procedure, the target model's own file for its tuning, `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for harness features, and `references/80-subagent-authoring.md` for turning a model choice into an agent pin.

@@ -2,21 +2,25 @@
 
 A generated prompt that names a skill has not necessarily activated it. Activation fails silently when the trigger is buried mid-paragraph, when the session role contradicts the skill's role, when a compact goal is inflated back into an operating manual, or when the wrong form is written for the surface that will execute it. Apply every rule here before finalizing any prompt that must activate a skill.
 
-## Writing a call site
-
-**Write `/name`.** One form, every call site, both runtimes. The pack's plugin build rewrites `$name` and `/name` alike to `/<plugin-namespace>:name` in the packaged Markdown, so a second form is redundant in the artifact that actually ships and costs characters against the description budget — `skills/sohrab/AGENTS.md` owns that budget and the rewrite cost. The one place a bare `$` is still correct is `agents/openai.yaml`, which is Codex-only interface metadata that no build rewrites.
-
 ## How a skill is actually reached
 
 Three mechanisms, and a prompt author must know which one they are relying on.
 
-**Selection from the host's picker.** Typing `/` opens a command palette that lists installed skills in Claude Code and in the Codex app and CLI, where `/skills` also opens a dedicated browser. Selection is deterministic: the chosen skill loads. This is a user action, so it is not available to a prompt.
+**Selection from the host's picker.** Typing `/` opens a command palette listing installed skills in Claude Code and in the Codex app and CLI, where `/skills` also opens a dedicated browser. Selection is deterministic: the chosen skill loads. It is a user action, so it is never available to a prompt. Treat the Codex palette as observed behaviour rather than documented behaviour — it is evidenced by a bug report against the shipping app, while the documentation describes only `/skills`.
 
-**An explicit textual mention.** This is what a generated prompt has. The sigil is a property of the surface that reads the text: `/name` in Claude Code, `$name` in Codex CLI and the IDE extension, `@name` in ChatGPT. Inside this pack the build makes the question moot, but a prompt written to be pasted raw into Codex or ChatGPT outside the plugin must carry that surface's sigil or the mention will not resolve.
+**An explicit textual mention.** This is the only mechanism a generated prompt controls, and the sigil belongs to the surface that reads the text rather than to the skill: `/name` in Claude Code, `$name` in Codex CLI and the IDE extension, `@name` in ChatGPT. A prompt aimed at Codex that carries `/name` mentions nothing, and nothing errors.
 
 **An implicit description match.** Both hosts load every skill's name and description first and load the body only after deciding the skill applies. A prompt that describes the work in the description's own trigger words can activate a skill with no sigil at all — reliably enough to depend on when the description is well written, never reliably enough to be the only mechanism when activation is required.
 
-Resolve the registered name rather than guessing it. In Claude Code the command name comes from the skill's directory or file name for personal and project skills, while a plugin skill resolves under `/plugin-name:skill-name`, where the frontmatter `name` sets only the last segment. In Codex, read the `name:` frontmatter field. Prefer the namespaced form for a plugin skill even where a bare alias also resolves, because the alias works only while no other command claims that name and is therefore the wrong thing to hard-code into a generated prompt. Claude Code merged custom commands into skills, so `.claude/commands/deploy.md` and `.claude/skills/deploy/SKILL.md` both answer to `/deploy`, and either is a valid target.
+## Writing a call site
+
+Two questions hide under one word here, and answering the wrong one is how a generated prompt silently activates nothing.
+
+**In a prompt you generate for another surface to run, write that surface's sigil**, from the list above. Where a prompt pack carries per-runtime sections, apply one sigil consistently inside each section and switch it at the section boundary; a paragraph that mixes forms is wrong under both runtimes.
+
+**In this repository's own Markdown, write `/name`** — one form, every call site. The plugin build rewrites `$name` and `/name` alike to `/<plugin-namespace>:name` in the packaged artifact, so a second form buys nothing and costs characters against the description budget. This rule governs files that pass through that build, and says nothing about the prompts those files instruct an agent to write, which follow the paragraph above. The one bare `$` that stays correct is in `agents/openai.yaml`, Codex interface metadata that no build rewrites.
+
+Resolve the registered name rather than guessing it. In Claude Code the command name comes from the skill's directory or file name for personal and project skills, while a plugin skill resolves under `/plugin-name:skill-name`, where the frontmatter `name` sets only the last segment. In Codex, read the `name:` frontmatter field. Treat `/plugin-name:skill-name` as the only stable form to hard-code into a generated prompt: the bare alias is version-gated behaviour that has changed inside the current release line, and it resolves only while no other command claims that name. Claude Code merged custom commands into skills, so `.claude/commands/deploy.md` and `.claude/skills/deploy/SKILL.md` both answer to `/deploy`, and either is a valid target.
 
 ## Mention versus invocation
 
@@ -38,7 +42,7 @@ Two single-message shapes both work. Choose by whether you want the runtime's ha
 
 **Trigger-led — deterministic activation, no harness loop.** The message leads with the exact skill trigger, assigns the role and lane rules, and closes with the completion condition and a turn or time bound inline. The skill activates reliably because its trigger leads, and the invoked skill's own drive carries the work to completion. Best when the skill is itself the completion engine.
 
-**Goal-led — harness auto-continue, implicit activation.** The message is a single `/goal` whose text is both the directive for the first turn and the completion condition the harness re-checks each turn. Because the goal command must lead the message, the skill it needs activates only implicitly, so open the condition by naming and describing that skill's role — "Acting as the `<name>` orchestrator, lead the lanes…" — to make the description match fire, then give the operating context, lane rules, a measurable end state, and a turn or time bound. Keep it inside the runtime's limit; `references/41-claude-code-runtime-features.md` and `references/11-codex-runtime-features.md` carry the current caps. Accept that implicit activation is model judgment rather than a guaranteed trigger — that is the reliability cost of one message.
+**Goal-led — harness auto-continue, implicit activation.** The message is a single `/goal` whose text is both the directive for the first turn and the completion condition the harness re-checks each turn. Because the goal command must lead the message, the skill it needs activates only implicitly, so open the condition by naming and describing that skill's role — "Acting as the `<name>` orchestrator, lead the lanes…" — to make the description match fire, then give the operating context, lane rules, a measurable end state, and a turn or time bound. Keep it inside the runtime's limit: Claude Code caps the goal text, and `references/41-claude-code-runtime-features.md` carries the current figure. Codex documents no fixed cap, which is not permission to write a long one — a bloated objective dulls both the directive and the completion check the harness re-runs every turn. Accept that implicit activation is model judgment rather than a guaranteed trigger; that is the reliability cost of one message.
 
 One Claude Code constraint belongs in this decision: the goal evaluator judges only what is already in the transcript, runs no tools, and reads no files. Write the condition as something the session's own output can demonstrate — "`npm test` exits 0", "`git status` is clean" — not as a state the evaluator would have to go and check.
 
@@ -65,7 +69,7 @@ Two rules hold whichever direction you write.
 
 **An invoked orchestrator skill's own fan-out policy wins.** When `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` is invoked, do not override its delegation stance from the calling prompt; add or tighten lane rules instead.
 
-Delete carried-over verification scaffolding of the form "use a subagent to verify" or "add a final verification step" — current models verify their own work without being told, and the instruction causes over-verification. When you are about to remove such an instruction, read `references/80-subagent-authoring.md` first, because it owns the test that separates a redundant self-check from an independent gate that must survive.
+Delete carried-over verification scaffolding of the form "use a subagent to verify" or "add a final verification step" **when the target is Opus 5 or Sonnet 5**, which verify their own work without being told, so the instruction only causes over-verification. The scope is load-bearing: Fable 5 is the documented exception and wants explicit verification and a separate fresh-context verifier, so read `references/40-fable-5.md` before stripping anything from a Fable 5 prompt. When you are about to remove such an instruction on any model, read `references/80-subagent-authoring.md` first, because it owns the test that separates a redundant self-check from an independent gate that must survive.
 
 ## Pre-send checklist
 
@@ -87,7 +91,7 @@ For durable multi-phase work that outgrows a single goal, route to `/alaa-workfl
 
 ## Freshness
 
-Verified against live documentation on 6 August 2026. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, the Codex goal limits, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. The Sonnet 5 position is marked unverified because its guide is silent on delegation, not because it was measured and found neutral.
+Verified against live documentation on 6 August 2026. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, whether Codex has since documented a goal cap, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. The Sonnet 5 position is marked unverified because its guide is silent on delegation, not because it was measured and found neutral. The Codex `/` palette listing skills is observed in a bug report against the shipping app rather than documented; `/skills` is the documented path.
 
 ## Sources
 
@@ -100,3 +104,6 @@ Verified against live documentation on 6 August 2026. Re-check before quoting: t
 - [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
 - [Create custom subagents (Claude Code)](https://code.claude.com/docs/en/sub-agents)
 - [Orchestrate subagents at scale with dynamic workflows](https://code.claude.com/docs/en/workflows)
+- [Subagents (Codex)](https://developers.openai.com/codex/subagents)
+- [Follow a goal (Codex)](https://developers.openai.com/codex/use-cases/follow-goals)
+- [Duplicate skills in the Codex slash picker (openai/codex issue 22626)](https://github.com/openai/codex/issues/22626)
