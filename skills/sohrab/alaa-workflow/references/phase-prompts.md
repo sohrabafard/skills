@@ -42,7 +42,7 @@ Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below
 
 ## Delegation in prompts
 
-Authorize delegation only for independent work or high-volume context isolation. Keep phases that share substantial context in the main conversation. Name owned surfaces and integration responsibility when delegation is allowed.
+`SKILL.md` owns which work may be delegated. What belongs in the prompt is the consequence: when a prompt authorizes delegation, it names the owned surfaces and who owns integration, because the executing agent cannot ask.
 
 ## Bootstrap metadata
 

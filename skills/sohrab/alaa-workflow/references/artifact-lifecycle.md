@@ -11,9 +11,9 @@ Use the smallest artifact set with a real consumer.
 | `orchestrated` | required | required | required | opt-in | An automated consumer parses the state |
 | `legacy` | required | required | required | required | An old four-file consumer requires it |
 
-`resumable` is the documented default: work with more than one phase gets a plan and a checkpoint. `direct` is not the fallback for anything that does not obviously need state — it is a deliberate downgrade, chosen when the work is genuinely one phase and bounded, and it accepts that an interruption is paid for with a rediscovery from `git status` and diffs.
+`resumable` is the documented default: work with more than one phase gets a plan and a checkpoint. The asymmetry is what settles it — the checkpoint is about ten lines written at four moments in the whole task, while losing position in the middle of long work costs a rediscovery from `git status` and diffs that is expensive and sometimes wrong. `direct` is therefore not the fallback for anything that does not obviously need state; it is a deliberate downgrade, chosen when the work is genuinely one phase and bounded, and it accepts that rediscovery as the price of an interruption.
 
-Native Plan Mode and review-only work create no repository artifacts unless the user asks for files.
+Before selecting any profile, check the stop condition in `SKILL.md` under *When NOT to use*, which owns it: some requests create no repository artifacts at all, and the cheapest profile is still the wrong answer for one of those.
 
 ## Paths and correlation
 
@@ -24,31 +24,17 @@ Native Plan Mode and review-only work create no repository artifacts unless the 
 
 Continue an active task's existing family and stem. Resolve companions only from explicit references or this selected stem; never attach an unrelated newest file.
 
-## Ownership
+## Permitted contents
 
-Three owners, three questions, no overlap: the plan owns the destination and route, the checkpoint owns position, and the plan's handoff package owns knowledge. Nothing belongs to two of them.
+`references/context-continuity.md` owns why the artifacts divide the way they do, what each handoff field means, and when a field earns a line. This file owns only where each artifact lives and what it is permitted to contain.
 
-The plan owns:
+The plan contains outcome and scope, ordered work and dependencies, acceptance criteria, validation commands and required evidence, and the handoff package.
 
-- outcome and scope;
-- ordered work and dependencies;
-- acceptance criteria;
-- validation commands and required evidence.
-
-The handoff package is a section inside the plan, not a separate file — knowledge is only useful next to the route it belongs to, and a fourth file is a fourth thing to keep honest. It owns:
-
-- confirmed facts, each with how it was verified;
-- open assumptions, each with what would verify it;
-- ruled-out approaches, each with the reason and the evidence;
-- the ordered, minimal list of exact paths to read first on resume;
-- environment notes — command shapes that work here, and ones that look right but fail;
-- traps — anything that looks correct and is not.
+The handoff package is a section inside the plan, not a separate file — knowledge is only useful next to the route it belongs to, and a fourth file is a fourth thing to keep honest. Its six fields are fixed; keep an unused one empty rather than deleting it, because a deleted field reads as a field nobody had anything to put in.
 
 The checkpoint contains only status, current phase, last verified result, blockers, next action, touched surfaces, and update time.
 
 JSON contains only schema version, task identity, status, plan path, current phase, next actions, blockers, last validation, and update time.
-
-`references/context-continuity.md` owns the semantics of these fields and when they earn a line. This file owns only where each artifact lives and what it is permitted to contain.
 
 ## Update events
 
@@ -62,9 +48,7 @@ Do not maintain duplicate phase checklists, review history, lane definitions, do
 
 ## Delegation
 
-Delegate independent lanes with disjoint write scopes or high-volume isolated context. Keep shared-context phases in the parent conversation. The parent owns integration and reruns the combined validation surface.
-
-Record lane ownership in the parent plan or delegated prompt. Do not create a lane-plan file.
+`SKILL.md` owns which work may be delegated and what the parent stays responsible for. One artifact rule belongs here: record lane ownership in the parent plan or the delegated prompt, and never create a lane-plan file. A second plan splits the destination in two, and the parent stops being the authoritative one the moment they disagree.
 
 ## Compatibility
 

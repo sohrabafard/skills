@@ -15,7 +15,7 @@ The whole protocol exists to keep three things true at once: the user's base bra
 
 **One commit per completed subtask or phase, never a single commit at the end.** A run that commits once has no recoverable intermediate state, so a defect found late costs a bisect through work that was never separated. A run that commits every file save has no readable history, which costs the same review twice.
 
-A subtask is committable once its focused-tier check has passed. Commit the change that satisfied it, and tick every box that change satisfied — one commit can close several subtasks, and a subtask found already done is ticked with no commit at all because there is nothing to record. What never happens is a tick with no evidence behind it, or a finished change left uncommitted while the next one starts on top of it.
+A subtask is committable once its focused-tier check has passed. Commit the change that satisfied it — one commit can close several subtasks, and a subtask found already done produces no commit at all because there is nothing to record. What never happens is a finished change left uncommitted while the next one starts on top of it. `SKILL.md` owns when a plan box may be ticked.
 
 - **The parent commits; lanes do not.** Concurrent lanes committing into one branch interleave into a history that describes no single state. Lanes report changed paths; the parent stages the subtask's owned paths and writes the commit. In worktree-per-lane mode each lane owns its own worktree and its own branch, and the parent still owns every merge.
 - **Stage the subtask's owned paths only.** Never `git add -A` on a tree where another lane is writing.
