@@ -3,8 +3,9 @@
 
 WHAT THIS ASSERTS, per skill directory
     V1  SKILL.md has frontmatter carrying name and description
-    V2  the description is at or under the plugin-validation hard limit of 1024 characters,
-        and warns above the author target (default 900)
+    V2  the PACKAGED description -- source length plus what the plugin build's call rewrite adds
+        for every `$name` and `/name` cross-skill call -- is at or under the plugin-validation
+        hard limit of 1024 characters, and warns above the author target (default 975)
     V3  the body carries a heading matching ^#+\\s+.*\\b(when not to use|do not use)\\b
     V4  warns when the body above the first reference exceeds 120 lines
     V5  every bundled-resource path cited in SKILL.md exists
@@ -80,18 +81,36 @@ QUEUE_REGISTRY = "references/23-queue-and-exchange-registry.md"
 LOCAL_RESOURCE_PREFIXES = ("references/", "examples/", "scripts/", "assets/")
 TARGET_REPO_PREFIXES = ("docs/", "output/", "test/", "tests/")
 
-SKILL_NAME_RE = re.compile(
-    r"[/$]?\b((?:alaa|golang|caas|ansible|clickhouse|jitsi|service|tusd|vector|playwright|openfga|openai)[a-z0-9-]*)\b"
+# One vocabulary of skill-name prefixes, used both to recognise a fleet citation and to decide
+# whether a `/token` or `$token` is a cross-skill call the plugin build will rewrite.
+SKILL_NAME_PREFIXES = (
+    "alaa", "golang", "caas", "ansible", "clickhouse", "jitsi",
+    "service", "tusd", "vector", "playwright", "openfga", "openai",
 )
+_PREFIX_ALT = "|".join(SKILL_NAME_PREFIXES)
+SKILL_NAME_RE = re.compile(rf"[/$]?\b((?:{_PREFIX_ALT})[a-z0-9-]*)\b")
+VENDOR_SKILL_RE = re.compile(rf"^(?:{_PREFIX_ALT})[a-z0-9-]*$")
 
 # Plugin validation rejects a description over this length. It is stricter than the
 # 1536-character listing cap documented for Claude Code, so this is the binding number.
 DESCRIPTION_HARD_MAX = 1024
-# Author target. The plugin validator's own character count exceeds a YAML-parsed count by at
-# least thirty, so 900 leaves the margin that keeps a passing description passing. This is the
-# one place the number lives; --description-target overrides it without a code edit, which is
-# what the open 900-versus-950 question needs.
-DESCRIPTION_TARGET_MAX_DEFAULT = 900
+# The number the limit is applied to is the PACKAGED description, not the one on disk. The
+# Cowork plugin build rewrites every cross-skill call in a packaged Markdown file -- frontmatter
+# included -- from `$name` or `/name` to `/<namespace>:name`. Each call therefore grows by the
+# namespace plus its colon. Measuring the source length instead is what let five descriptions that
+# read as 921-1001 characters here fail plugin validation at install time: under the former
+# `sohrab-skills` namespace a call cost fourteen characters, so nine of them added 126.
+# This must equal $PluginName in the plugin build script, which is the namespace it writes.
+PLUGIN_NAMESPACE = "so"
+CALL_REWRITE_COST = len(PLUGIN_NAMESPACE) + 1
+CALL_REF_RE = re.compile(r"[/$]([a-z][a-z0-9-]*)(?![A-Za-z0-9_-])")
+# A `/segment` that continues a path or a module name is not a call. `git.alaatv.com/vk/alaa-go-chi`
+# names a Go module, not the alaa-go-chi skill, and `@alaa/sdk` names a package.
+EMBEDDED_BEFORE = frozenset("./-_")
+# Author target, measured on the same packaged length. One added routing reference costs about
+# forty characters, so this leaves room for exactly one before the hard limit bites. This is the
+# one place the number lives; --description-target overrides it without a code edit.
+DESCRIPTION_TARGET_MAX_DEFAULT = 975
 BODY_LINE_WARN = 120
 SHORT_DESCRIPTION_MIN = 25
 SHORT_DESCRIPTION_MAX = 64
@@ -757,8 +776,42 @@ def as_text(value: Any) -> str:
     return str(value)
 
 
+def packaged_description_length(description: str, pack_skill_names: Sequence[str]) -> Tuple[int, int]:
+    """Return (source length, packaged length) for a description.
+
+    Source length is the collapsed single-line form, because a folded YAML scalar is counted that
+    way. Packaged length adds what the plugin build's call rewrite will add: every `$name` or
+    `/name` that names a real skill becomes `/<namespace>:name`.
+
+    Two classes of token, because the build resolves against roots this file cannot see:
+
+    * a skill in this pack is counted wherever it appears, including mid-path, because the build's
+      rewrite is registry-gated and nothing else -- a module path that ends in a real skill name
+      would be rewritten too;
+    * a token that only carries a known fleet prefix (`golang-*` and the rest live in vendored
+      roots) is counted only where it reads as a call. `git.alaatv.com/vk/alaa-go-chi` names a Go
+      module and `@alaa/sdk` names a package; neither resolves to a skill and neither is rewritten.
+    """
+    collapsed = " ".join(description.split())
+    known = set(pack_skill_names)
+    refs = 0
+    for match in CALL_REF_RE.finditer(collapsed):
+        token = match.group(1)
+        if token in known:
+            refs += 1
+            continue
+        if not VENDOR_SKILL_RE.match(token):
+            continue
+        start = match.start()
+        preceding = collapsed[start - 1] if start else " "
+        if preceding.isalnum() or preceding in EMBEDDED_BEFORE:
+            continue
+        refs += 1
+    return len(collapsed), len(collapsed) + CALL_REWRITE_COST * refs
+
+
 def validate_skill(
-    skill_dir: Path, description_target: int
+    skill_dir: Path, description_target: int, pack_skill_names: Sequence[str] = ()
 ) -> Tuple[List[str], List[str]]:
     errors: List[str] = []
     warnings: List[str] = []
@@ -775,17 +828,19 @@ def validate_skill(
         errors.append(f"{name}: frontmatter must include name and description")
     else:
         # Plugin validation rejects a description over 1024 characters outright, which is a
-        # harder limit than the 1536-character listing cap in the Claude Code docs. Measure the
-        # collapsed single-line form, because a folded YAML scalar is counted that way.
-        desc_len = len(" ".join(description.split()))
+        # harder limit than the 1536-character listing cap in the Claude Code docs. It sees the
+        # packaged description, after the build has namespaced every cross-skill call, so that is
+        # the length measured here.
+        source_len, desc_len = packaged_description_length(description, pack_skill_names)
+        grew = f" ({source_len} on disk, +{desc_len - source_len} from call rewriting)"
         if desc_len > DESCRIPTION_HARD_MAX:
             errors.append(
-                f"{name}: description is {desc_len} chars, over the "
+                f"{name}: packaged description is {desc_len} chars{grew}, over the "
                 f"{DESCRIPTION_HARD_MAX}-char plugin-validation limit"
             )
         elif desc_len > description_target:
             warnings.append(
-                f"{name}: description is {desc_len} chars, within "
+                f"{name}: packaged description is {desc_len} chars{grew}, within "
                 f"{DESCRIPTION_HARD_MAX - desc_len} of the {DESCRIPTION_HARD_MAX}-char limit; "
                 f"keep it at or under {description_target} so one added clause cannot break "
                 f"the build"
@@ -887,9 +942,10 @@ def run(pack_dir: Path, description_target: int) -> Tuple[List[str], List[str], 
     warnings: List[str] = []
     blockers: List[str] = []
     skills = discover_skills(pack_dir)
+    pack_skill_names = [p.name for p in skills]
     for skill_dir in skills:
         try:
-            e, w = validate_skill(skill_dir, description_target)
+            e, w = validate_skill(skill_dir, description_target, pack_skill_names)
         except CannotRun as exc:
             # Keep going so one broken file does not hide the state of the other sixty-six,
             # then still exit 2 because at least one rule could not be evaluated.
@@ -919,13 +975,34 @@ SELF_TEST_CASES: Tuple[Tuple[str, int, Tuple[str, ...], Tuple[str, ...]], ...] =
     ("red-broken-reference-path", EXIT_ERRORS, ("referenced path does not exist",), ()),
     ("red-topic-map-path-missing", EXIT_ERRORS, ("topic map path missing",), ()),
     ("red-description-over-hard-max", EXIT_ERRORS, ("over the 1024-char",), ()),
+    # Under the limit on disk, over it once the build namespaces its routing calls. This is the
+    # case the source-length measurement passed and plugin validation rejected.
+    ("red-description-over-hard-max-packaged", EXIT_ERRORS, ("from call rewriting",), ()),
     ("red-registry-unregistered-metric", EXIT_ERRORS, ("with no row in",), ()),
-    ("warn-description-over-target", EXIT_CLEAN, (), ("keep it at or under 900",)),
+    ("warn-description-over-target", EXIT_CLEAN, (), ("keep it at or under 975",)),
     ("warn-body-over-120-lines", EXIT_CLEAN, (), ("top-level body is",)),
     ("red-unparseable-openai-yaml", EXIT_CANNOT_RUN, (), ()),
     ("red-unparseable-sequence-indent", EXIT_CANNOT_RUN, (), ()),
     ("red-unparseable-frontmatter", EXIT_CANNOT_RUN, (), ()),
     ("red-empty-pack", EXIT_CANNOT_RUN, (), ()),
+)
+
+# (label, description, pack skill names, expected packaged length). Every expected value is the
+# source length plus CALL_REWRITE_COST per call the plugin build actually rewrites -- written as
+# `+ CALL_REWRITE_COST` so a namespace rename moves the expectations with the constant, and the
+# cases keep testing which tokens count rather than what the namespace happens to be.
+PACKAGED_LENGTH_CASES: Tuple[Tuple[str, str, Tuple[str, ...], int], ...] = (
+    ("no call at all", "Route nothing anywhere.", (), 23),
+    ("a slash call to a pack skill", "Route to /alaa-data-layer.", ("alaa-data-layer",), 26 + CALL_REWRITE_COST),
+    ("a dollar call to a pack skill", "Route to $alaa-data-layer.", ("alaa-data-layer",), 26 + CALL_REWRITE_COST),
+    # golang-* lives in a vendored root, so the pack name set cannot confirm it.
+    ("a slash call to a vendored skill", "Route to /golang-benchmark.", (), 27 + CALL_REWRITE_COST),
+    # The build resolves a name, not a position: a path ending in a real skill name is rewritten.
+    ("a pack skill inside a module path", "See git.example.com/vk/alaa-data-layer.", ("alaa-data-layer",), 39 + CALL_REWRITE_COST),
+    # ... but an unresolvable prefixed token mid-path is a module name, not a call.
+    ("an unresolvable name inside a module path", "See git.alaatv.com/vk/alaa-go-chi.", (), 34),
+    ("a scoped package is not a call", "The `@alaa/sdk` package.", (), 24),
+    ("a folded scalar is measured collapsed", "one\n  two", (), 7),
 )
 
 MINI_YAML_CASES: Tuple[Tuple[str, str, Any], ...] = (
@@ -1092,6 +1169,20 @@ def self_test(fixtures_dir: Path) -> int:
         print(f"BLOCKED: fixture directory not found: {base}")
         return EXIT_CANNOT_RUN
     passed = failed = blocked = 0
+
+    for label, description, pack_names, expected_len in PACKAGED_LENGTH_CASES:
+        try:
+            _, got_len = packaged_description_length(description, pack_names)
+        except Exception as exc:  # noqa: BLE001 - a crash here is a blocked case
+            print(f"BLOCKED  packaged length: {label}: {type(exc).__name__}: {exc}")
+            blocked += 1
+            continue
+        if got_len != expected_len:
+            print(f"FAIL     packaged length: {label}: got {got_len}, expected {expected_len}")
+            failed += 1
+        else:
+            print(f"PASS     packaged length: {label}")
+            passed += 1
 
     for label, text, expected in MINI_YAML_CASES:
         try:

@@ -105,7 +105,8 @@ Two parsing decisions are load-bearing and each has a fixture behind it:
 | `red-broken-reference-path` | V5 fires |
 | `red-topic-map-path-missing` | V9 fires |
 | `red-description-over-hard-max` | a 1100-character description is an error |
-| `warn-description-over-target` | a 940-character description is a **warning** and the run still exits 0, at the 900 target rather than the old 950 |
+| `red-description-over-hard-max-packaged` | **the regression fixture for this batch.** A 1015-character description carrying nine routing calls is 1042 characters once the plugin build namespaces them, so it is an error even though the file on disk is under 1024. Measuring the source length passed five real skills that plugin validation then rejected at install time. The margin here is deliberately narrow: the namespace is now `so`, so a call costs three characters rather than the fourteen `sohrab-skills` cost |
+| `warn-description-over-target` | a 1000-character description is a **warning** and the run still exits 0, at the 975 packaged target |
 | `warn-body-over-120-lines` | V4 warns and does not fail |
 | `red-registry-unregistered-metric` | V10 fires when `alaa-services-contract` names an `alaa_*` metric with no registry row |
 | `red-unparseable-openai-yaml` | a YAML anchor — outside the supported subset — produces exit **2** naming the file, never a silent pass |
