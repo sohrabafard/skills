@@ -2,7 +2,7 @@
 
 You are about to edit this skill's own files or scripts. This file holds only what is **specific to this pack**.
 
-General agent-authoring doctrine — how to write a skill, how to write an instruction file, runtime differences, effort and thinking budgets, trigger syntax, and model selection — is `/alaa-prompting-guide` (`$alaa-prompting-guide`): `references/05-trigger-syntax.md`, `references/50-effort-and-thinking.md`, `references/60-skill-authoring.md`, `references/70-agent-instruction-files.md`. Read it there. **State no model name anywhere in this pack**; refer to runtime families when a distinction is genuinely needed, and route the question to the prompting guide.
+General agent-authoring doctrine — how to write a skill, how to write an instruction file, runtime differences, effort and thinking budgets, trigger syntax, and model selection — is `/alaa-prompting-guide` (`$alaa-prompting-guide`): `references/06-invocation-and-composition.md`, `references/50-effort-and-thinking.md`, `references/60-skill-authoring.md`, `references/70-agent-instruction-files.md`. Read it there. **State no model name anywhere in this pack**; refer to runtime families when a distinction is genuinely needed, and route the question to the prompting guide.
 
 ## 1. The example convention, with Quasar examples
 
