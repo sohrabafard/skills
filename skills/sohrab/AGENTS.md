@@ -32,7 +32,7 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **Never edit anything under `vendor/`.** Those are upstream git subtrees, re-pulled periodically. A local edit either collides on the next pull or is silently overwritten. Wrap a vendored skill from the owning `alaa-*` skill and point into it; never fork it.
 
-**Never state a model name.** Not in a skill, not in a script, not in an agent definition, not in a generated artifact. Route every model, effort, and runtime-capability question to `/alaa-prompting-guide` (`$alaa-prompting-guide` in Codex). A pinned model name goes stale silently and gets copied forward because it looks authoritative.
+**Never state a model name.** Not in a skill, not in a script, not in an agent definition, not in a generated artifact. Route every model, effort, and runtime-capability question to `/alaa-prompting-guide`. A pinned model name goes stale silently and gets copied forward because it looks authoritative.
 
 **Never delete a file.** The device mount forbids `unlink`, and history matters. Move a retired file into `_to_delete/<YYYYMMDD>-<reason>/` at the repository root and say what you moved.
 
@@ -52,7 +52,11 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **Do not add a `00-topic-map.md` to a skill below the threshold, and do not delete one from a skill above it.** Crossing the threshold in either direction *moves* the router; it never duplicates it, and it never drops the routing content. Removing a topic map from a skill that fell below 9 references is correct only when every row survived into the body table.
 
-**Both runtimes matter.** Claude Code and Codex both load these skills. Give both trigger forms at every cross-skill call site — `/name` and `$name`. `agents/openai.yaml` is Codex-only metadata and correctly uses the bare `$`.
+**Both runtimes matter, and one call form serves both.** Claude Code and Codex both load these skills. Write a single `/name` at every cross-skill call site: the plugin build rewrites `$name` and `/name` alike to `/<plugin-namespace>:name`, so a second form reaches the agent as a duplicate of the first while spending characters against the description budget measured below. The one bare `$` that stays correct is `default_prompt` in `agents/openai.yaml` — Codex interface metadata that no build rewrites, and which `scripts/validate_sohrab_skill_pack.py` rule V8 requires to carry it. Remove it there and the gate fails.
+
+**A dual-form call site is legacy, not an error.** Most of the pack still carries `/name` (`$name`) pairs written under the previous rule. Convert them in a file you are already editing for another reason, never write a new one, and do not open a file only to sweep it — a pack-wide rewrite is its own change and needs its own review. No checker reports the old form, so this converges only by being applied.
+
+**What a generated prompt must carry is a different question.** The rule above governs Markdown in this repository. Which sigil an agent writes into a prompt aimed at a particular runtime is a runtime capability claim, owned by `alaa-prompting-guide references/06-invocation-and-composition.md`.
 
 **Cross-skill references name the owning skill**, always: `alaa-services-contract references/22-…`, never a bare `references/22-…`, because a bare path resolves inside the wrong skill.
 

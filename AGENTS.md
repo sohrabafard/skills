@@ -38,8 +38,12 @@ pass.
   named here because `_to_delete/` is a root-level directory and `rm` fails on the Windows mount
   this repository is developed on.
 - **Never name a model, an effort level, or a runtime capability.** That question has exactly one
-  owner: `alaa-prompting-guide` — `/alaa-prompting-guide` in Claude Code, `$alaa-prompting-guide` in
-  Codex — at `skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md`.
+  owner: `/alaa-prompting-guide`, at
+  `skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md`.
+- **Write one call form, `/name`.** Both runtimes load these skills and the plugin build rewrites
+  `$name` and `/name` alike, so a second form is a duplicate. `skills/sohrab/AGENTS.md` owns the
+  rule, the one `agents/openai.yaml` exception, and what to do with the legacy pairs still in the
+  pack.
 - **Write English into every file.** A Persian document is a mirror of an English source, and
   `alaa-repo-docs` owns when one is produced. A reply to the user may be Persian; a file is not.
 - **Require an authoritative source for a concrete claim,** and never read a missing result as a
@@ -54,5 +58,5 @@ pass.
 <!-- BEGIN ALAA CODE INTELLIGENCE BINDING -->
 ## Alaa code-intelligence binding
 
-Invoke `/alaa-code-intelligence-routing` in Claude Code or `$alaa-code-intelligence-routing` in Codex before non-trivial code-intelligence evidence selection. That skill owns selection among CodeGraph, Serena, the active stack semantic owner, and repository-native tools, and prevents duplicate retrieval of the same fact. CodeGraph's installer owns exact CodeGraph usage instructions after CodeGraph is selected. Use CodeGraph and the configured semantic owner only when their active project or root resolves to this Git worktree. Native repository gates prove completion. Do not modify MCP, hook, CodeGraph, Serena, or language-server integration configuration unless the task explicitly requests setup, upgrade, repair, or removal.
+Invoke `/alaa-code-intelligence-routing` before non-trivial code-intelligence evidence selection. That skill owns selection among CodeGraph, Serena, the active stack semantic owner, and repository-native tools, and prevents duplicate retrieval of the same fact. CodeGraph's installer owns exact CodeGraph usage instructions after CodeGraph is selected. Use CodeGraph and the configured semantic owner only when their active project or root resolves to this Git worktree. Native repository gates prove completion. Do not modify MCP, hook, CodeGraph, Serena, or language-server integration configuration unless the task explicitly requests setup, upgrade, repair, or removal.
 <!-- END ALAA CODE INTELLIGENCE BINDING -->
