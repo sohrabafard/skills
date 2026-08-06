@@ -62,16 +62,7 @@ Four behaviors of the lead model need active counter-tuning. These are deliberat
 
 ## 3. Intake and planning
 
-Before dispatch:
-
-1. Inspect relevant repository guidance (`CLAUDE.md`/`AGENTS.md`, local instructions, architecture docs, package manifests, CI, tests, and affected code paths).
-2. Restate internally: desired outcome; checkable acceptance criteria; constraints and preserved behavior; out-of-scope work; irreversible or externally visible actions.
-3. Use `alaa-spec-analyst` when the goal's acceptance criteria are not yet checkable — vague quality language, an implied but unstated contract, or a request whose "done" state two readers would define differently. A complete specification up front raises first-pass correctness materially at every tier, and this is the cheapest place in the pipeline to buy it. Skip it when the request is already concrete.
-4. Use `alaa-explorer` when ownership, execution paths, or test locations are not already clear.
-5. Use `alaa-researcher` when correctness depends on external or version-specific facts. Prefer primary and official sources.
-6. Use `alaa-test-strategist` before implementation only when acceptance criteria are subtle, legacy behavior is poorly protected, concurrency or failure modes matter, or a migration needs a test matrix.
-7. Split work into the smallest practical lanes with disjoint write scopes. Each lane gets: one concrete outcome; owned files and modules; explicit exclusions; acceptance criteria; focused-tier verification commands; dependencies on other lanes; the name of its matching clean-code skill; and its return contract — the shape of the return and its line bound.
-8. Serialize lanes that overlap in files, data contracts, generated output, migrations, or runtime state — or run them under worktree isolation and merge deliberately.
+Before any dispatch: inspect the repository's own guidance and the affected code paths; restate the outcome, the checkable acceptance criteria, the preserved behavior, and every irreversible action; then split the work into the smallest lanes with disjoint write scopes and serialize the ones that overlap. `references/verification-and-gates.md` owns the full intake list and what each lane definition must carry.
 
 Every dispatch carries `/alaa-low-noise` (`$alaa-low-noise`): a child returns findings, verdicts, counts, and artifact paths, never transcripts, full diffs, or raw logs, and anything bulky is written to the permitted artifact directory and returned as a path. An unbounded child return is the most common way a lead's context is flooded, and the lead pays that cost on every remaining turn of the goal.
 
@@ -89,83 +80,36 @@ The catalog is a menu, not a fleet. A typical goal fires one to three roles beyo
 
 ## 5. Orchestrator execution pipeline
 
+Six phases, in order, and orchestrator mode only. Advisor mode runs none of them: Phases A, B, and F create a branch, write files, and commit, which is exactly what section 1 forbids there. They are also the gate order; there is no second list. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
+
+| Phase | Owns | Ends when |
+|---|---|---|
+| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
+| B — Implementation | one lane per disjoint write scope, focused-tier checks, a commit per completed subtask | every required lane is reconciled against its actual diff |
+| C — Verification | one integrated affected-tier plan, executed by an authority that owns no lane | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+| D — Review and specialist gates | the independent review, plus every specialist whose trigger holds | findings are resolved or explicitly accepted by the user |
+| E — Documentation and final validation | the documentation lane and its grade, base integration, the single exhaustive run, the report | the tree that will land has been observed |
+| F — Integration handshake | the user's decision, then the local merge | the work is on the base branch, or the user declined |
+
 ### Execution profile: size the pipeline to the plan
 
-The phases below are the full shape, not the mandatory shape. Running all of them on a change that does not need them costs more than the change itself, and the cost lands on latency and the user's attention as well as on tokens. Choose the profile once, from the finished Phase A plan, and record it there. Escalate mid-run the moment a heavier profile's condition becomes true; never de-escalate, because the evidence that earned the heavier profile does not stop existing.
+**Every profile runs all six phases.** The profile decides how many agents are dispatched inside them, not which of them happen — a phase skipped is a gate skipped, and no profile has that authority. What `lean` removes is dispatch overhead on a change that cannot justify it, where the cost lands on latency and the user's attention as much as on tokens. Choose the profile once, from the finished Phase A plan, and record it there. Escalate mid-run the moment a heavier profile's condition becomes true; never de-escalate, because the evidence that earned the heavier profile does not stop existing.
 
-| Profile | Conditions — every one must hold | Phases |
+| Profile | Conditions — every one must hold | Shape |
 |---|---|---|
-| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions | A, B, C, E, F. The lead reviews the diff itself instead of dispatching `alaa-reviewer`. |
-| `standard` | anything that is neither `lean` nor `hardened` | A through F, with specialists gated as usual |
-| `hardened` | the change is irreversible or high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
+| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions | all six phases; the lead performs Phase D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
+| `standard` | anything that is neither `lean` nor `hardened` | all six phases, every gate dispatched as written |
+| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
 
 `lean` drops the reviewer dispatch, never the review. The lead did not write the diff, so it remains an independent authority over it, which is what the gate exists to guarantee. The moment the diff leaves the lane plan, the profile becomes `standard` and `alaa-reviewer` is dispatched against the complete change.
 
-**No profile suppresses a specialist.** The profile governs the reviewer dispatch and how much ceremony the phases carry; `references/routing-matrix.md` governs which specialists fire, and it governs that identically at every profile. A one-lane retry change is still `lean` and still gets the observability reviewer. Any attempt to state which specialists a profile excludes would be a second copy of the trigger list, and the copy is what goes stale — a `lean` run that quietly skipped the gate its change actually needed is the failure this rule prevents.
+**No profile suppresses a specialist.** The profile governs the reviewer dispatch and how much ceremony the phases carry; `references/routing-matrix.md` governs which specialists fire, identically at every profile. A one-lane retry change is still `lean` and still gets the observability reviewer. Any attempt to state which specialists a profile excludes would be a second copy of the trigger list, and the copy is what goes stale.
 
-### Cross-phase reusable-context curation
+### Final report
 
-At the end of Phases A through D, invoke `/alaa-extract-agent-lessons` for an intermediate scan only when the
-phase produced an explicit user or team judgment, an accepted tradeoff, a verified surprise, a costly detour,
-a validation-driven method change, a coordination bottleneck, or non-obvious reusable knowledge. This is a
-lead-session curation step, not a subagent lane. When a workflow parent exists, put admitted candidates in its
-handoff package; otherwise keep the compact candidates in the lead session. Never publish active phase state.
+Report in this order: outcome and final verdict; changes by lane and touched files; verification commands with observed results, each marked run or cited and carrying its tier; review and specialist verdicts with the resolution of each finding; documentation outcome with each touched document's grade; reusable-context curation outcome, including persisted, deferred, or empty; residual risks, skipped checks, and follow-ups; and the agent roster — every subagent dispatched this goal, one line each with agent name, pinned model and effort, its self-reported AGENT/MODEL/EFFORT identity line flagging any mismatch, and for every escalated lane the named criterion that earned it.
 
-### Phase A — Plan
-
-This phase always runs first and is never skipped, at any profile. Everything after it inherits its decisions, so a decomposition written before the solution is chosen decomposes the wrong solution and every lane then carries that mistake into its own diff.
-
-1. Set up the workspace before the first write: record the base branch and its commit, refuse to start on a tree carrying changes this run did not make, and create the run's work branch. `alaa-workflow references/workspace-and-integration.md` owns the base capture, the dirty-tree refusal, worktree mode, and the commit protocol.
-2. Dispatch specification, exploration, and research lanes in parallel only when their questions are independent.
-3. Reconcile observed facts and label unresolved assumptions.
-4. Decide the solution before decomposing it. Name the chosen approach and each rejected alternative with the reason it was rejected. Where the goal stores, indexes, caches, or moves data, decide the representation and the access path with `/alaa-data-layer` (`$alaa-data-layer`). Where a path grows with tenants, rows, history, or events, state its complexity bound with `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`). Run the design pass under `/alaa-system-design` (`$alaa-system-design`) when that skill's conditions hold; `references/routing-matrix.md` names the three conditions it adds beyond the architecture critic's own triggers.
-5. Trigger `alaa-architecture-critic` before implementation when the plan changes public contracts, service boundaries, consistency models, concurrency, caching semantics, or distributed workflows, or whenever step 4 required a design pass. The critic reviews a design record with its decisions already made; a critic handed an undecided plan can only accept or reject the whole proposal.
-6. Trigger `alaa-api-contract-reviewer` before implementation when a public API, event schema, or shared DTO changes shape, so consumer impact and the deprecation path are decided before code is written rather than after.
-7. Write the plan down through `/alaa-workflow` (`$alaa-workflow`) at the `resumable` profile, or adopt the parent plan when a workflow parent already exists. That plan is the run's single checklist — ordered phases, one checkbox per subtask, acceptance criteria, per-phase validation commands, and the handoff package — and it is where the lead reads its own position back after compaction. Tick a box once its outcome has been observed and never ahead of the evidence — several at once when one change satisfied several, and at the start for a subtask that turns out to be already done and was verified rather than assumed. `/alaa-workflow` owns the plan and state machinery; this skill consumes it and does not recreate it.
-8. Choose the execution profile from the finished plan, then present the plan and the profile in one compact message and continue without waiting, unless an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
-
-### Phase B — Implementation
-
-1. Dispatch one `alaa-implementer` per routine lane.
-2. Dispatch `alaa-implementer-opus` instead only when the lane meets a named escalation criterion from `references/routing-matrix.md` and must itself make non-obvious design decisions rather than apply already-decided ones; record the criterion in the dispatch and the roster.
-3. Concurrency policy: at most two workspace-writing implementation agents at once; never parallelize overlapping write scopes; reserve remaining capacity for read-only agents; only one CPU-heavy verification or profiling command at a time.
-4. Each lane runs the focused tier only — the tests naming its own failure modes, plus lint, type, and build checks scoped to the files it touched — and returns that evidence. A lane never runs the affected or exhaustive tier: it is the wrong authority and the wrong moment for both. `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns the tiers.
-5. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
-6. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage. Commit each completed subtask on the work branch as it lands, and tick its box in the plan.
-
-### Phase C — Independent verification
-
-1. Build one integrated verification plan for the affected tier: every suite reachable from the changed surfaces, plus the acceptance criteria this phase claims. The exhaustive tier is not dispatched here — it runs once in Phase E, on the final candidate.
-2. Do not re-dispatch a check whose recorded result is still valid: the tracked tree at the paths it reads, the tool and dependency versions, the environment and service state, and the flags, seed, and working directory all unchanged since it ran. Cite that result with its command, its timestamp, and the lane that observed it. When you do re-run, name which of the four conditions changed.
-3. Dispatch `alaa-verifier` with exact commands, working directory, timeout, allowed artifact directory, and resource policy.
-4. On Windows, CPU-heavy commands must use `scripts/Invoke-AlaaLowPriority.ps1` with `BelowNormal` by default; `Idle` only for explicitly background-grade benchmark, fuzz, or very heavy diagnostics. On Unix-like systems use `scripts/run-low-priority.sh`.
-5. Do not proceed as if verification passed when status is `PRODUCT-FAILURE`, `TEST-INFRA-FAILURE`, `ENVIRONMENT-BLOCKED`, `TIMEOUT`, `FLAKY`, or `CONTAMINATED`. Classify the failure before any repair: `references/failure-taxonomy.md` separates a product defect from a test-infrastructure defect, a host-environment block — shell parsing, container runtime, permission, missing executable — and a contaminated tree, including stale build or test cache. A product edit made against any of the last three is a change with no defect behind it.
-6. Use `alaa-failure-analyst` for ambiguous, cross-lane, flaky, environmental, race, timeout, or infrastructure failures. Route a grounded fix request to the owning implementer afterward.
-7. Re-run the affected checks after fixes, followed by the integrated gate when shared behavior changed.
-
-### Phase D — Independent review and specialist gates
-
-1. Spawn `alaa-reviewer` against the complete diff and lane plan after integrated verification is clean enough to review.
-2. Trigger specialists only when their conditions match (`references/routing-matrix.md`): `alaa-security-reviewer` for trust-boundary changes; `alaa-migration-guardian` for schema and data migrations; `alaa-api-contract-reviewer` for public contract changes not already gated in Phase A; `alaa-dependency-auditor` when a dependency was added, upgraded, or removed; `alaa-accessibility-reviewer` for new or changed user-visible interface; `alaa-browser-qa` for user-visible web flows; `alaa-performance-profiler` only with a measurable question and a baseline or budget; `alaa-observability-reviewer` for new failure modes and distributed behavior; `alaa-release-guardian` for CI/CD, container, configuration, dependency, or release changes.
-3. Spawn `alaa-adversarial-reviewer` only when the change is irreversible or high blast radius — production data movement, auth or tenancy boundaries, public contract breaks, deployment topology — or when the reviewer and a specialist reach conflicting verdicts. It is a second independent lens, not a second opinion on a routine change, and its findings are reported to the user rather than fed into another fix cycle.
-4. Reviewer verdict handling: `APPROVED` proceeds; `APPROVED-WITH-NITS` proceeds while reporting nits, fixing only in-scope low-risk ones; `CHANGES-REQUESTED` routes blocker and major findings verbatim to the owning lane, with a maximum of two review-fix cycles unless the user explicitly authorizes more.
-5. Specialist blocker and major findings are gates equal to reviewer findings. Conflicting specialist opinions are reconciled by the lead using repository evidence; unresolved high-risk conflicts are surfaced to the user.
-
-### Phase E — Documentation and final validation
-
-1. Spawn `alaa-documenter` only when shipped behavior, API, configuration, operations, troubleshooting, or upgrade instructions changed.
-2. Documentation is graded, not merely written. `alaa-repo-docs references/15-document-size-and-clustering.md` owns the size ladder, its thresholds, the measuring command, and the one condition under which the largest grade may stand; `/alaa-repo-docs` (`$alaa-repo-docs`) applies it. This skill decides only that the grade is measured and reported, never what the ladder says — a local copy of it goes stale the moment that skill retunes a threshold.
-3. After documentation edits, run applicable docs formatting, link, example, and scope checks. Documentation is the final write lane and must not bypass validation.
-4. Bring the base branch into the work branch before verifying, so the tree about to be judged is the tree that will land. Then dispatch the exhaustive tier once, on that tree: the whole suite under its normal configuration, then the race, end-to-end, and highest-level proofs the claims require. This result is always fresh and is never cited from an earlier run. Run it after documentation lands, so nothing writes to the tree afterwards, and record the base commit it observed — Phase F compares against that commit to decide whether the evidence still describes the tree being merged.
-5. Invoke `/alaa-extract-agent-lessons` for the final full-engagement gate after the evidence is stable. Reconcile intermediate candidates, publish only authorized durable knowledge through `/alaa-memory-os`, and accept an empty retained set as a valid result. If it returns `pipeline reopen required`, follow the gate-reopen rule in `references/verification-and-gates.md` before rerunning this final gate.
-6. Re-check final git status and diff against declared scopes, confirm every plan checkbox matches what actually landed, and read the last commit's timestamp out of that same inspection.
-7. Final report order: outcome and final verdict; changes by lane and touched files; verification commands with observed results, each marked run or cited and carrying its tier; review and specialist verdicts with the resolution of each finding; documentation outcome with each touched document's grade; reusable-context curation outcome, including persisted, deferred, or empty; residual risks, skipped checks, and follow-ups; and the agent roster — every subagent dispatched this goal, one line each with agent name, pinned model and effort, its self-reported AGENT/MODEL/EFFORT identity line flagging any mismatch, and for every escalated lane the named criterion that earned it. Audit every claim against an actual tool result from this session before reporting it.
-8. Close with one run-accounting line: agents dispatched and how many distinct roles that was; checks run versus checks cited; and the branch span, from the plan's `Created` timestamp to the last commit. Every figure is already in hand — the roster holds the first, the evidence table the second, and the plan header plus step 6's inspection the third — so the accounting costs no extra command and no bookkeeping. Never start a timer, never carry a clock across turns, and never record a number a later turn would have to reconstruct: an instrumented run that measures its own slowness by being slower has answered nothing.
-9. Call it the branch span, not the duration, because it excludes planning before the first commit and every gate that ran after the last. The three figures are diagnostic only together: dispatches well above distinct roles is fix-cycle churn, checks run well above checks cited is the repetition the tiers exist to prevent, and the span alone means nothing. State no budget for any of them — a threshold invented here would be enforced everywhere and grounded nowhere.
-
-### Phase F — Integration handshake
-
-The goal is not finished when the gates pass; it is finished when the work is on the base branch or the user has decided it should not be. Present the work branch, its commits, the diffstat against the base, every gate verdict, and the residual risks, then ask for confirmation and wait without merging. On confirmation, integrate exactly as `alaa-workflow references/workspace-and-integration.md` specifies: if the base has advanced past the commit Phase E recorded, bring it into the work branch, resolve any conflict there against the plan's decisions, and re-run the exhaustive tier — a clean merge invalidates that evidence exactly as a conflicted one does, because no conflict means no edit was needed to combine the two sides, not that the combination was observed. When the base has not moved, the Phase E evidence still describes the tree and no rerun is owed. Then merge into the base locally. Push, tag, branch deletion, and any remote action each need a further explicit request. In worktree mode, remove the worktree and detach only after the merge is confirmed clean, then report the branch that still holds the work. A declined or unanswered confirmation ends the goal with the work branch intact and the base untouched, which is a complete outcome and is reported as one.
+Close with one run-accounting line: agents dispatched and how many distinct roles that was; checks run versus checks cited; and the branch span, from the plan's `Created` timestamp to the last commit. Every figure is already in hand — the roster, the evidence table, and the plan header plus Phase E's final git inspection — so the accounting costs no extra command and no bookkeeping. Never start a timer and never carry a clock across turns: a run that measures its own slowness by being slower has answered nothing. Call it the branch span rather than the duration, because it excludes planning before the first commit and every gate after the last. The three are diagnostic only together — dispatches well above distinct roles is fix-cycle churn, checks run well above checks cited is the repetition the tiers exist to prevent — and no budget is stated for any of them, because a threshold invented here would be enforced everywhere and grounded nowhere.
 
 ## 6. Advisor-mode output
 
@@ -173,8 +117,8 @@ Provide: grounded repository findings; a lane plan with dependencies and gates; 
 
 ## 7. Verification and resource rules
 
-- After any change to `agents/`, run `python scripts/check_agent_grants.py`; exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run. Both `1` and `2` fail completion. Run `python scripts/check_agent_grants.py --self-test` when changing the checker itself; it must exit `0` after proving every red fixture is rejected. `scripts/validate_pack.py` invokes the normal grant check automatically.
 - Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
+- After any change to `agents/`, the grant checker must pass before completion; `references/agent-catalog.md` states its exact invocation and exit-code contract.
 - Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
 - On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.
 - Do not kill unrelated services, dev servers, containers, or processes; do not start duplicate services when a reusable declared service exists.
@@ -199,28 +143,24 @@ Stop and report a partial or blocked state when: the same lane is blocked twice 
 
 ## 10. Anti-patterns
 
-- spawning every specialist for every task, or several agents for one lane;
-- delegating work the lead could finish in a handful of tool calls;
-- spawning a subagent to double-check another subagent, or adding "verify your work" instructions the lead already honors;
+Each of these inverts a default the lead would otherwise follow. Rules already stated above are not repeated here.
+
+- spawning every specialist for every task, several agents for one lane, or a subagent whose job is to check another subagent;
+- delegating work the lead could finish in a handful of tool calls, or the lead implementing and running heavy suites while lanes are viable;
 - treating the verifier and reviewer gates as redundancy and skipping them because the work already looks checked — they are authority boundaries;
 - using a reviewer as a fixer, a verifier as a debugger, or a researcher as a decision-maker;
-- telling a lane to use a code-intelligence server its agent file does not grant, or widening the grant inside a dispatch instead of in the agent file;
-- the lead running heavy test suites or implementing while lanes are viable;
-- allowing documentation to describe intended rather than observed behavior;
-- treating a rerun that passes after a failure as a clean pass;
 - running the full suite, the race detector, or the acceptance set again on a tree that has not changed since the last run — breadth is bought by a change in the tree, never by reaching a new phase or handing the work to a new agent;
 - letting an implementation lane run the exhaustive tier on its own work, or running it before the final candidate exists;
 - editing the product in response to a shell-parsing, container-runtime, permission, or stale-cache failure that was never classified;
-- running the full pipeline on a change whose plan meets the `lean` conditions, or staying in `lean` after a gated surface turned out to be touched;
+- treating a rerun that passes after a failure as a clean pass;
 - dispatching implementation before Phase A produced a written plan with the approach chosen and the alternatives rejected;
+- dispatching the full reviewer and specialist set on a change whose plan meets the `lean` conditions, or staying in `lean` after the diff left the lane plan — `lean` removes dispatches, never phases;
 - committing the whole goal as one commit at the end, committing onto the user's base branch, or merging into the base before the user confirms;
 - printing a diff, a log, or a file into the conversation instead of writing it to the artifact directory and reporting the path;
-- deciding a document's size grade locally, or restating the ladder, instead of applying and reporting the one `alaa-repo-docs` owns;
-- parallelizing migrations, generated contracts, or shared-state edits;
-- using model tier as a substitute for repository evidence;
-- escalating a lane's model because the goal is important or the surface is sensitive, instead of because the lane meets a named escalation criterion — importance and sensitivity are handled by gates, not tier;
-- dispatching the escalated implementer for CRUD, plumbing, configuration, test-writing, or mechanical application of ratified values;
+- deciding a document's size grade locally, or restating a rule this pack routes to its owner, instead of applying the owner's;
+- escalating a lane's model because the goal is important or the surface is sensitive, rather than because the lane meets a named escalation criterion — importance and sensitivity are handled by gates, not tier;
 - raising a Sonnet lane to `xhigh` instead of changing the model, or pinning any agent at `max`;
 - routing the adversarial reviewer's findings into another fix cycle instead of reporting them;
+- parallelizing migrations, generated contracts, or shared-state edits;
 - instrumenting a run to explain its own cost, when the measurement costs more than the waste it would find;
 - pre-loading every clean-code skill into every lane — name only the lane's matching skill.

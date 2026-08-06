@@ -68,57 +68,57 @@ Name the lane's matching clean-code skill in the dispatch when one is installed:
 
 ## Specialist gates
 
-### Architecture critic
+### Architecture critic — `alaa-architecture-critic`
 
 Trigger before implementation for cross-cutting design: public contracts, service boundaries, consistency models, concurrency, caching semantics, distributed workflows. Skip for a local bug fix whose contract and ownership are established.
 
 `$alaa-system-design` owns the standard this gate reviews against, and its trigger list is wider than the one above by three conditions: the change moves which component writes a piece of data, it adds or removes a dependency between two components, or it creates a new deployable unit. Any of those requires a design pass in Phase A even when no contract shape changes, and the critic reviews the resulting design record rather than the plan that preceded it.
 
-### API contract reviewer
+### API contract reviewer — `alaa-api-contract-reviewer`
 
 Trigger when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Prefer to trigger it in Phase A, before code exists, so the deprecation path and consumer impact are decided rather than discovered. Trigger it in Phase D instead when the contract change emerged during implementation. Skip when the change is internal to one module and no consumer outside it can observe the difference.
 
 Distinct from the architecture critic, which judges whether the design is sound; this gate judges whether the transition is safe for existing consumers.
 
-### Security reviewer
+### Security reviewer — `alaa-security-reviewer`
 
 Trigger for authentication or authorization, tokens and sessions, secrets, untrusted inputs, upload and download, query or command construction, serialization, webhooks, payments, cryptography, tenant isolation, or privileged operations.
 
-### Migration guardian
+### Migration guardian — `alaa-migration-guardian`
 
 Trigger for DDL, constraints, defaults, nullability, index creation, data backfills, format transforms, cleanup or deletion, compatibility windows, or production data movement.
 
-### Dependency auditor
+### Dependency auditor — `alaa-dependency-auditor`
 
 Trigger when a dependency is added, upgraded, removed, or replaced, when a lockfile changes outside a scoped upgrade lane, or when a transitive tree shifts materially. Covers known vulnerabilities, license compatibility, maintenance signals, transitive blast radius, and lockfile integrity.
 
 Distinct from the release guardian, which asks whether the change deploys and operates cleanly; this gate asks whether the dependency itself is safe to depend on.
 
-### Accessibility reviewer
+### Accessibility reviewer — `alaa-accessibility-reviewer`
 
 Trigger for new or changed user-visible interface: components, forms, dialogs, navigation, tables, and any flow a user completes with a keyboard or a screen reader. Covers semantics and landmarks, keyboard reachability and focus order, focus management across route and dialog transitions, visible focus indication, labelling and error association, contrast, motion preferences, and right-to-left layout correctness where the product ships an RTL locale.
 
 Distinct from browser QA, which gathers functional evidence that a flow works; this gate judges whether the interface is usable by people who do not drive it with a mouse or read it visually.
 
-### Browser QA
+### Browser QA — `alaa-browser-qa`
 
 Trigger for user-visible browser behavior. Require an exact URL, environment, and scenario. Preserve `--browser chromium` and existing profile settings.
 
-### Performance profiler
+### Performance profiler — `alaa-performance-profiler`
 
 Trigger only when there is a measurable question, a comparable baseline, and a budget. Do not use as generic optimization advice.
 
 `$alaa-algorithms-data-structures` owns the budget that question is measured against, and it is read before this gate rather than at it: when the change adds a loop, query, fan-out, batch, export, or in-memory collection whose size grows with tenants, rows, history, or events, the budget is stated during implementation planning. A growing path that reaches this gate with no stated bound is reported as a missing budget, not measured into one.
 
-### Observability reviewer
+### Observability reviewer — `alaa-observability-reviewer`
 
 Trigger for async jobs, queues, retries, external service calls, failure and degraded paths, production critical flows, or new operational states.
 
-### Release guardian
+### Release guardian — `alaa-release-guardian`
 
 Trigger for CI/CD, Docker or container, package, lock, or version, configuration and environment, feature flags, deployment order, health checks, startup and shutdown, release notes, or rollback changes.
 
-### Adversarial reviewer
+### Adversarial reviewer — `alaa-adversarial-reviewer`
 
 Trigger only when the change is irreversible or has high blast radius — production data movement, auth or tenancy boundaries, a public contract break, deployment topology — or when `alaa-reviewer` and a specialist return conflicting verdicts that repository evidence does not settle.
 

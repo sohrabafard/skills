@@ -32,7 +32,7 @@ Twenty-one roles are available. A typical goal fires three to five of them. Brea
 
 ## Conditional specialist gates
 
-| Agent | Model / effort | Trigger | Gate output |
+| Agent | Model / effort | Subject | Gate output |
 |---|---|---|---|
 | `alaa-architecture-critic` | Opus / xhigh | Public contracts, boundaries, distributed workflow, consistency, caching, concurrency | `SOUND`, `SOUND-WITH-CONDITIONS`, `REVISE` |
 | `alaa-security-reviewer` | Opus / xhigh | Auth, authorization, secrets, untrusted input, uploads, queries, payments, webhooks, crypto, tenancy | `PASS`, `PASS-WITH-HARDENING`, `BLOCK` |
@@ -44,6 +44,10 @@ Twenty-one roles are available. A typical goal fires three to five of them. Brea
 | `alaa-performance-profiler` | Sonnet / high | Measurable latency, throughput, CPU, memory, or query regression | Verdict against declared baseline and budget |
 | `alaa-observability-reviewer` | Sonnet / high | New runtime failure paths, jobs, distributed calls, retries, degraded operation | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
 | `alaa-release-guardian` | Sonnet / high | CI/CD, container, config and env, dependencies, packaging, deploy and release | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
+
+The `Subject` column orients and decides nothing: it names what a gate is about so the roster can be
+scanned, and it is deliberately shorter than the condition that fires the gate. `references/routing-matrix.md` owns every trigger, and a gate is fired from that file alone — a
+roster line read as a trigger under-fires, because the conditions it leaves out are still conditions.
 
 ## Code-intelligence scope
 
