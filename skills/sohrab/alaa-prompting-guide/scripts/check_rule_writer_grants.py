@@ -18,9 +18,16 @@ Rules:
     G3  neither wrapper grants an MCP server
     G4  the Codex wrapper sets sandbox_mode = "read-only"
     G5  each wrapper's embedded contract equals contract.md
-    G6  neither wrapper pins a model or an effort, or carries an identity line
+    G6  no wrapper emits an identity line, a model name, or an effort level
     G7  every doctrine path a wrapper names resolves
     G8  the wrappers agree on name and description
+    G9  no wrapper pins an effort of max
+
+A model and effort pin belongs in runtime metadata and never in text the agent emits. The pin
+routes the dispatch; an identity line or a model name inside the contract reaches the caller's
+report, goes stale the first time a pin moves, and is copied forward because it looks
+authoritative. G9 encodes the rule that a max pin removes the escalation path, so there is
+nothing left to raise to when a lane falls short.
 
 G5 compares the value the runtime loads, not the bytes on disk, and for the Codex wrapper
 those differ. A TOML basic multi-line string processes escapes, so one backslash inside
@@ -210,14 +217,15 @@ def check(root: Path) -> List[str]:
         if normalise(body) != contract:
             findings.append(f"G5: the contract embedded in {rel} differs from {CONTRACT}")
 
-        for key in ("model", "effort", "model_reasoning_effort"):
-            if key in fields:
-                findings.append(f"G6: the {name} wrapper pins {key}; model and effort are chosen at dispatch")
         if IDENTITY_LINE_RE.search(body) or EFFORT_TOKEN_RE.search(body):
             findings.append(f"G6: the {name} wrapper's output contract carries an identity line")
         named_model = MODEL_NAME_RE.search(body) or MODEL_NAME_RE.search(fields.get("description", ""))
         if named_model:
-            findings.append(f"G6: the {name} wrapper names the model {named_model.group(0)!r}")
+            findings.append(f"G6: the {name} wrapper emits the model name {named_model.group(0)!r}")
+
+        for key in ("effort", "model_reasoning_effort"):
+            if str(fields.get(key, "")).strip().lower() == "max":
+                findings.append(f"G9: the {name} wrapper pins {key} at max, which removes the escalation path")
 
         for cited in DOCTRINE_RE.findall(body):
             if not (root / cited).is_file():
@@ -255,9 +263,10 @@ def self_test(fixtures: Path) -> int:
         ("red-g4-codex-not-read-only", "G4"),
         ("red-g5-contract-drift", "G5"),
         ("red-g5-toml-escape-drift", "G5"),
-        ("red-g6-model-pinned", "G6"),
+        ("red-g6-identity-line", "G6"),
         ("red-g7-dangling-doctrine-path", "G7"),
         ("red-g8-description-mismatch", "G8"),
+        ("red-g9-effort-max", "G9"),
         ("red-unparseable-toml", "CANNOT_RUN"),
     ]
     failures = 0
@@ -320,7 +329,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         for f in findings:
             print(f"  {f}")
         return EXIT_FINDINGS
-    print("OK: both wrappers embed the contract unchanged, hold read-only grants, and pin no model")
+    print("OK: both wrappers embed the contract unchanged, hold read-only grants, and keep their pins out of the output")
     return EXIT_CLEAN
 
 

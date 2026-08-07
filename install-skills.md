@@ -218,23 +218,25 @@ Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-codex-orchestrator\agents\*.t
 
 ### The `alaa-rule-writer` specialist
 
-`alaa-prompting-guide` installs its own single agent when the skill activates, so this section
-records what that does rather than giving a command to run by hand. That skill's `SKILL.md` bootstrap
-section owns the procedure, and its `scripts/check_rule_writer_grants.py` gates it.
+The two runtimes reach this agent by different routes, and only one of them is a command.
 
-- **Managed files, one per runtime and never both in one activation.**
-  `skills\sohrab\alaa-prompting-guide\assets\rule-writer\claude\alaa-rule-writer.md` installs into
-  `$env:USERPROFILE\.claude\agents`;
-  `skills\sohrab\alaa-prompting-guide\assets\rule-writer\codex\alaa-rule-writer.toml` installs into
-  `$env:USERPROFILE\.codex\agents`. When the runtime is ambiguous, nothing is installed.
-- **Versioned and idempotent.** The sentinel `.alaa-prompting-guide.version` in the agents home is
-  compared against the skill's `VERSION` file; a match skips the whole section with no file
-  comparison. On a mismatch the wrapper is compared by bytes or hash and replaced atomically only
-  when it is missing or differs, and the sentinel is written last so an interrupted install retries.
-- **No backup is written, and no copy of a prior version is kept.** A differing file at the target
-  path is replaced. The source is under version control, so a copy in the agents home would be a
-  second unmanaged copy rather than a safety net. Both orchestrator packs install the same way.
-- **Unrelated agents and settings are never moved or modified.**
+**Claude Code: nothing to run.** The definition ships inside the plugin and Claude loads it from the
+plugin-root `agents/` directory once the plugin is installed or enabled, so rebuilding and
+reinstalling the plugin is the whole update path. Do not copy a wrapper into
+`$env:USERPROFILE\.claude\agents` and do not write an installation sentinel; a hand-placed copy
+would shadow the packaged one and then go stale silently.
+
+**Codex: one copy, since Codex has no plugin.** Run from the repository root:
+
+```powershell
+$repoRoot = (Resolve-Path ".").Path
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\agents" | Out-Null
+Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-prompting-guide\assets\rule-writer\codex\alaa-rule-writer.toml") "$env:USERPROFILE\.codex\agents\" -Force
+```
+
+`-Force` replaces a differing prior version and keeps no backup, matching both orchestrator packs.
+Run `python skills\sohrab\alaa-prompting-guide\scripts\check_rule_writer_grants.py` first; exit `0`
+is the gate, and `1` or `2` both fail it.
 
 
 ## install browser:
