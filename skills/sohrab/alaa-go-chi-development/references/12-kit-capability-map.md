@@ -186,8 +186,8 @@ Verify each before quoting it; the point of the list is that ratification alone 
   422, and both render code `INPUT_VALIDATION_FAILED`. `CONTRACTS.md` shows 422 in its canonical example and 400
   in its strict-JSON sections, and the envelope permits both. There is an open request on this. Cite the
   contradiction, pick nothing, and do not encode either side into a new surface.
-- **No maintainer or reviewer is assigned.** Every row of the ownership table in `GOVERNANCE.md` is
-  `NEEDS_CONFIRMATION`. Do not write a workflow step that assumes a named approver exists; write "project owner"
+- **No maintainer or reviewer is assigned.** `.rules/500-merge-release-and-ownership.md` owns the roster and
+  forbids inventing one. Do not write a workflow step that assumes a named approver exists; write "project owner"
   and say the roster is unassigned.
 - **`BYPASS_GATEWAY_PROOF` defaults to `true`.** In bypass mode the loader neither resolves nor retains the proof
   header or secret, and the gateway-proof middleware skips validation entirely; setting it `false` restores

@@ -1,15 +1,18 @@
 # Kit Owner Workflow — Intake, Change, Release, Propagation
 
 You are the agent responsible for the `alaa-go-chi` repository. Your constituency is every row of
-`docs/CONSUMERS.md`; your authority is `CONSTITUTION.md`, `GOVERNANCE.md`, and `CONTRACTS.md`; your operational
-procedures are `docs/RUNBOOK.md` (intake §3, shipping §4, propagation §5, bootstrap §6). Read `CONSTITUTION.md`
-in full before planning or editing, then the current worktree, `GOVERNANCE.md`, the relevant `CONTRACTS.md`
-sections, `<repo>/docs/CONSUMERS.md`, `go.mod`, the `Makefile`, the generators, and the tests. Load `/alaa-golang`
+`docs/CONSUMERS.md`; your authority is the kit's root agent file, the `.rules/` files it triggers, and
+`CONTRACTS.md`; your operational procedures are `docs/RUNBOOK.md` (intake §3, shipping §4, propagation §5,
+bootstrap §6). Root `CONSTITUTION.md` and `GOVERNANCE.md` are retired and absent by design — never recreate
+them, and read `.rules/090-legacy-policy-migration.md` for what now owns their content. Read the root agent file
+in full before planning or editing, then the current worktree, `.rules/300-contract-change-governance.md`, the
+relevant `CONTRACTS.md` sections, `<repo>/docs/CONSUMERS.md`, `go.mod`, the `Makefile`, the generators, and the
+tests. Load `/alaa-golang`
 (`$alaa-golang`) and `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) before touching
 kit Go code: the kit is held to the same bar it enforces.
 
-No maintainer or reviewer identity is assigned in `GOVERNANCE.md` — every row is `NEEDS_CONFIRMATION`. Write
-"project owner" where a workflow needs an approver, and never invent a reviewer.
+No maintainer or reviewer identity is assigned; `.rules/500-merge-release-and-ownership.md` owns ownership and
+merge. Write "project owner" where a workflow needs an approver, and never invent a reviewer.
 
 ## Intake — processing a change request or baseline proposal
 
@@ -26,16 +29,19 @@ No maintainer or reviewer identity is assigned in `GOVERNANCE.md` — every row 
    survey **every** live registry row prospectively — grep the accessible repositories for the affected symbols,
    env keys, metric names and DDL, mark inaccessible ones `NEEDS_CONFIRMATION`, and count designed-but-unbuilt
    consumers from their architecture documents. Never assume "unexposed".
-4. **Classify** per `GOVERNANCE.md`: patch, additive minor, major, or deprecation-required. When a request would
-   be major, search hard for an additive shape first — a new option with the old default, a new function beside
-   the old one, a default-preserving env flag. The standing bias is additive or deprecated, rarely removed. Never
-   silently weaken a contract.
+4. **Classify** per `.rules/300-contract-change-governance.md`: patch, minor, major-class, or
+   deprecation-required. Major-class is mandatory disclosure shipping with an `x` bump, not a version digit — the
+   release line is permanently `v1.x.y`. Search hard for an additive shape first — a new option with the old
+   default, a new function beside the old one — but never a default-preserving environment flag, which D-01(c)
+   forbids for a break. The standing bias is additive or deprecated, rarely removed. A break may serve a ratified
+   goal; the defect is leaving one undeclared, so declare each in the set that rule names. When uncertain, use the
+   stronger class, and never silently weaken a contract.
 5. **Decide and record.** Append to the archived document:
 
    ```markdown
    ## Kit decision — YYYY-MM-DD
    verdict: accepted | accepted-amended | rejected | deferred
-   classification: patch | minor | major | deprecation
+   classification: patch | minor | major-class | deprecation-required
    consumer_impact: <one line per registered consumer: the marker string the active scope record
      prescribes, or — when the survey was permitted — none | additive | action-required | NEEDS_CONFIRMATION>
    reasoning: <what you verified; what you changed about the proposal and why>
@@ -88,9 +94,11 @@ Select the affected repository-native gates from the list in `12-`, report each 
 and name the proof level reached. Treat network, host, and runner blockers separately from deterministic
 failures.
 
-Versioning is semver: minors never break; a breaking change is a major, or a default-preserving deprecation with
-the `GOVERNANCE.md` deprecation record. A release is not "shipped" until the tag and the artifact both exist. Do
-not commit, push, tag, deploy, or publish without explicit authority.
+The release line is permanently `v1.x.y` under D-33: never create `/v2`, a parallel major line, a copied major
+tree, or a downlevel, including after public publication. Minors stay additive with existing behavior preserved
+by defaults; a break ships as major-class with an `x` bump and the full declaration set
+`.rules/300-contract-change-governance.md` names. A release is not "shipped" until the tag and the artifact both
+exist. Do not commit, push, tag, deploy, or publish without explicit authority.
 
 ## Propagation — getting consumers onto a shipped change
 
@@ -98,8 +106,8 @@ not commit, push, tag, deploy, or publish without explicit authority.
 route below.** Check the matrix in `05-` first. Propagation also requires an actual release: there is nothing to
 propagate before a tag exists.
 
-Walk `docs/CONSUMERS.md` for every consumer whose impact was `action-required` — and, for majors, `additive` too,
-since those must at least re-pin. Then:
+Walk `docs/CONSUMERS.md` for every consumer whose impact was `action-required` — and, for major-class changes,
+`additive` too, since those must at least re-pin. Then:
 
 - **When the `consumer-repo-write` cell allows in-session edits:** perform the update yourself — pin bump,
   call-site adaptation, the full consumer gate including `contracttest`, registry row update. One consumer per

@@ -17,7 +17,7 @@
     {
       "id": 3,
       "prompt": "Here is docs/kit-change-requests/2026-07-10-jobkit-cron-lane.md from a consumer agent. You own alaa-go-chi — handle it.",
-      "expected_output": "Archives the document verbatim into the kit's docs/change-requests/ under its own filename, reproduces the claim against current kit code before trusting it, and resolves the consumer-repo-read and consumer-impact-claim cells before surveying anything. Classifies per GOVERNANCE.md preferring an additive shape, appends the Kit decision block, and, if accepted, lands code, CONTRACTS.md, contracttest, docs/INDEX.md and generated artifacts as one change. Writes 'project owner' rather than inventing a reviewer, because the GOVERNANCE.md ownership rows are all NEEDS_CONFIRMATION. Propagates only when the propagation cell allows it and a real tag exists.",
+      "expected_output": "Archives the document verbatim into the kit's docs/change-requests/ under its own filename, reproduces the claim against current kit code before trusting it, and resolves the consumer-repo-read and consumer-impact-claim cells before surveying anything. Classifies per .rules/300-contract-change-governance.md preferring an additive shape but never a default-preserving environment flag, appends the Kit decision block, and, if accepted, lands code, CONTRACTS.md, contracttest, docs/INDEX.md and generated artifacts as one change. Writes 'project owner' rather than inventing a reviewer, because no roster is assigned. Propagates only when the propagation cell allows it and a real tag exists.",
       "files": []
     },
     {
@@ -35,7 +35,7 @@
     {
       "id": 6,
       "prompt": "Audit all uncommitted alaa-go-chi changes, fix every issue, and make it production ready for 99.99% SLA.",
-      "expected_output": "Reads CONSTITUTION.md and live contracts, loads the mandatory Go skills, and reviews correctness, security, data, races, idempotency, contracts, observability, deploy and CI with file:line evidence. Follows fix then validate then re-review only because fixes were authorized. Respects the consumer capability cells for any consumer surface. Reports each gate with an outcome word and names the proof level it reached, and states plainly that load, capacity, HA/failover, chaos, remote-CI and live SLO evidence are absent, so no 99.99% claim is made.",
+      "expected_output": "Reads the kit's root agent file and live contracts, loads the mandatory Go skills, and reviews correctness, security, data, races, idempotency, contracts, observability, deploy and CI with file:line evidence. Follows fix then validate then re-review only because fixes were authorized. Respects the consumer capability cells for any consumer surface. Reports each gate with an outcome word and names the proof level it reached, and states plainly that load, capacity, HA/failover, chaos, remote-CI and live SLO evidence are absent, so no 99.99% claim is made.",
       "files": []
     },
     {
@@ -89,7 +89,7 @@
     {
       "id": 15,
       "prompt": "Quick question, one line: does alaa-go-chi give me request rate limiting out of the box?",
-      "expected_output": "Answers directly and briefly that it does not, and that the kit also has no circuit breaking, backpressure, load shedding, in-flight admission cap, or ingress request deadline, noting that http_requests_in_flight is an observability gauge rather than admission control and that the kit's own AGENTS.md names rate limits and breakers as design goals, not capabilities. Routes the design to alaa-reliability-sla. Reaches the answer through the capability map alone: it does not read the full reference set, run gates, open consumer repositories, or read CONSTITUTION.md in full for a read-only capability question, and it does not pad the answer with governance boilerplate the question did not need.",
+      "expected_output": "Answers directly and briefly that it does not, and that the kit also has no circuit breaking, backpressure, load shedding, in-flight admission cap, or ingress request deadline, noting that http_requests_in_flight is an observability gauge rather than admission control and that the kit's own AGENTS.md names rate limits and breakers as design goals, not capabilities. Routes the design to alaa-reliability-sla. Reaches the answer through the capability map alone: it does not read the full reference set, run gates, open consumer repositories, or read the root agent file in full for a read-only capability question, and it does not pad the answer with governance boilerplate the question did not need.",
       "files": []
     },
     {

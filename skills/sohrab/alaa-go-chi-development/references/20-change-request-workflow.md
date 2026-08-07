@@ -57,7 +57,7 @@ and the decision record together.
 
 ## What happens next
 
-The kit owner verifies your evidence against kit code, applies the phase gate, classifies per `GOVERNANCE.md`,
+The kit owner verifies your evidence against kit code, applies the phase gate, classifies per `.rules/300-contract-change-governance.md`,
 and appends an accept, amend, reject, or defer decision block. If the change ships and the `propagation` cell
 allows it, you receive an update prompt; your job afterwards is to upgrade per
 [15-debug-upgrade-migrate](15-debug-upgrade-migrate.md) and delete the corresponding `KIT-WRAP`.

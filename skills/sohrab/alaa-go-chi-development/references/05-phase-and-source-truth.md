@@ -9,11 +9,12 @@ one evidence vocabulary the rest of this skill uses.
 For any factual or permission question, trust in this order, and verify before acting:
 
 1. System, developer, and current-user authority, and safety rules.
-2. The nearest repository `AGENTS.md`, then `CONSTITUTION.md`, within its binding scope. Read the kit
-   `CONSTITUTION.md` in full before planning or editing anything in the kit.
+2. The nearest repository `AGENTS.md`, and the `.rules/` files it triggers, within its binding scope. Read the
+   kit's root agent file in full before planning or editing anything in the kit. Root `CONSTITUTION.md` and
+   `GOVERNANCE.md` are retired and absent by design; never recreate them, and read
+   `.rules/090-legacy-policy-migration.md` for what now owns their content.
 3. Current executable repository truth: code, tests, generators, generated artifacts, manifests, runtime evidence.
-4. Maintained documents: `GOVERNANCE.md`, `CONTRACTS.md`, `docs/RUNBOOK.md`, `docs/CONSUMERS.md`, `README.md`,
-   `docs/INDEX.md`.
+4. Maintained documents: `CONTRACTS.md`, `docs/RUNBOOK.md`, `docs/CONSUMERS.md`, `README.md`, `docs/INDEX.md`.
 5. This skill and its references.
 6. Memory, handoffs, old plans, historical architecture documents, and consumer-origin claims.
 
@@ -28,7 +29,8 @@ The kit's execution scope is set by owner-ratified decision records in the kit r
 it is never inferred.
 
 Run `scripts/phase-check.sh <kit-repo-root>`. It reads three authority locations — the scope banner in
-`docs/CONSUMERS.md`; the phase statements in `AGENTS.md`, `CONSTITUTION.md`, and `GOVERNANCE.md`; and the newest
+`docs/CONSUMERS.md`; the phase statements in the root agent file, and in `CONSTITUTION.md` and `GOVERNANCE.md`
+where a checkout still has them; and the newest
 `docs/change-requests/YYYY-MM-DD-<slug>-scope.md` — and reports the phase and record, or the disagreement. Its
 `--help` states each exit code and what that code obliges you to do; act on the code, and do not proceed past a
 non-zero exit on an assumed phase. When the script cannot run, perform the same three reads by hand and apply the

@@ -21,7 +21,7 @@ session-start phase read, which governs what you may touch — then `<trigger>al
 ## Released kit change
 
 <2–6 sentences: the change, the motivating request or bug, the immutable version/tag that ships it, and the
-classification (patch/minor/major/deprecation). Cite the decision record docs/change-requests/<file> and the
+classification (patch/minor/major-class/deprecation-required). Cite the decision record docs/change-requests/<file> and the
 relevant CONTRACTS.md delta.>
 
 ## Your task

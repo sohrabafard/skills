@@ -12,8 +12,8 @@ only, and record in the report's coverage table that the consumer was not inspec
 
 ## Scope
 
-**Kit surfaces, always:** code, generators, generated goldens, the consistency of `CONTRACTS.md`,
-`GOVERNANCE.md`, `docs/INDEX.md` and the package documentation, this skill package, and kit-local infrastructure
+**Kit surfaces, always:** code, generators, generated goldens, the consistency of `CONTRACTS.md`, the `.rules/`
+files, `docs/INDEX.md` and the package documentation, this skill package, and kit-local infrastructure
 and CI evidence. Follow-up actions are kit-local change requests, baseline proposals, drift notes, or authorized
 fixes.
 
