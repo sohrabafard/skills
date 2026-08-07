@@ -44,6 +44,11 @@ pass.
   `$name` and `/name` alike, so a second form is a duplicate. `skills/sohrab/AGENTS.md` owns the
   rule, the one `agents/openai.yaml` exception, and what to do with the legacy pairs still in the
   pack.
+- **Before shortening or editing any text that will control another agent** — a prompt, a rule, a
+  skill, this file, a `CLAUDE.md`, a constitution, or a subagent dispatch — apply the compression
+  contract in `skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md`. It owns what
+  may never be cut and the test the rewrite must pass. It is named here because the rule binds work
+  anywhere in this repository, including work that never touches `skills/sohrab/`.
 - **Write English into every file.** A Persian document is a mirror of an English source, and
   `alaa-repo-docs` owns when one is produced. A reply to the user may be Persian; a file is not.
 - **Require an authoritative source for a concrete claim,** and never read a missing result as a

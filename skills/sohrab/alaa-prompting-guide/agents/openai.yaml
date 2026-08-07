@@ -2,3 +2,5 @@ interface:
   display_name: "Alaa Prompting Guide"
   short_description: "Prompting guide for GPT-5.6 and Claude models"
   default_prompt: "Use $alaa-prompting-guide to write, review, or compress a model-aware prompt, skill, or subagent definition for GPT-5.6 in Codex or Claude Opus 5, Sonnet 5, or Fable 5 in Claude Code."
+policy:
+  allow_implicit_invocation: false

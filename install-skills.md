@@ -8,7 +8,7 @@ vendor, local pack, or agent home to these arrays.
 > source roots" near the end of this file.
 
 ```powershell
-cd D:\Sohrab\Project\skills
+# Run this from the repository root; every path below is resolved from it.
 $repoRoot = (Resolve-Path ".").Path
 
 $srcRoots = @(
@@ -199,25 +199,55 @@ pull writes only inside a sibling directory and cannot reach `vendor/subtrees.js
 `scripts/vendor_subtrees.py` writes the file itself when `add` records a new vendor.
 
 ## install subagents
+
+Run from the repository root. `$repoRoot` is resolved from the working directory for the same reason
+the snippet at the top of this file does it: an absolute path from one machine is wrong on every
+other one.
+
 ```powershell
+$repoRoot = (Resolve-Path ".").Path
+
 # Claude world — once, applies to every project
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\agents" | Out-Null
-Copy-Item "D:\Sohrab\Project\skills\skills\sohrab\alaa-cc-orchestrator\agents\*.md" "$env:USERPROFILE\.claude\agents\"
+Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-cc-orchestrator\agents\*.md") "$env:USERPROFILE\.claude\agents\"
 
 # Codex world — once, applies to every project
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\agents" | Out-Null
-Copy-Item "D:\Sohrab\Project\skills\skills\sohrab\alaa-codex-orchestrator\agents\*.toml" "$env:USERPROFILE\.codex\agents\"
+Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-codex-orchestrator\agents\*.toml") "$env:USERPROFILE\.codex\agents\"
 ```
+
+### The `alaa-rule-writer` specialist
+
+`alaa-prompting-guide` installs its own single agent when the skill activates, so this section
+records what that does rather than giving a command to run by hand. That skill's `SKILL.md` bootstrap
+section owns the procedure, and its `scripts/check_rule_writer_grants.py` gates it.
+
+- **Managed files, one per runtime and never both in one activation.**
+  `skills\sohrab\alaa-prompting-guide\assets\rule-writer\claude\alaa-rule-writer.md` installs into
+  `$env:USERPROFILE\.claude\agents`;
+  `skills\sohrab\alaa-prompting-guide\assets\rule-writer\codex\alaa-rule-writer.toml` installs into
+  `$env:USERPROFILE\.codex\agents`. When the runtime is ambiguous, nothing is installed.
+- **Versioned and idempotent.** The sentinel `.alaa-prompting-guide.version` in the agents home is
+  compared against the skill's `VERSION` file; a match skips the whole section with no file
+  comparison. On a mismatch the wrapper is compared by bytes or hash and replaced atomically only
+  when it is missing or differs, and the sentinel is written last so an interrupted install retries.
+- **No backup is written, and no copy of a prior version is kept.** A differing file at the target
+  path is replaced. The source is under version control, so a copy in the agents home would be a
+  second unmanaged copy rather than a safety net. Both orchestrator packs install the same way.
+- **Unrelated agents and settings are never moved or modified.**
 
 
 ## install browser:
-New-Item -ItemType Directory -Force -Path "C:\Users\CIT\.playwright-mcp-profile" | Out-Null
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.playwright-mcp-profile" | Out-Null
 npm install playwright
 npx playwright install chromium
 npm install -g -D @axe-core/playwright
-npx @playwright/mcp@latest --port 8931 --browser chromium --user-data-dir "C:\Users\CIT\.playwright-mcp-profile"
+npx @playwright/mcp@latest --port 8931 --browser chromium --user-data-dir "$env:USERPROFILE\.playwright-mcp-profile"
 
-codex config:
+codex config: substitute your own home directory for `USER_HOME` below. Codex reads this file as
+TOML and does not expand an environment variable inside it, so the path has to be absolute and
+cannot be written portably the way the PowerShell lines above are.
+
 ```
 [mcp_servers.playwright_visual]
 command = "npx"
@@ -227,7 +257,7 @@ args = [
   "--browser",
   "chromium",
   "--user-data-dir",
-  "C:\\Users\\CIT\\.playwright-mcp-profile"
+  "USER_HOME\\.playwright-mcp-profile"
 ]
 startup_timeout_sec = 60
 tool_timeout_sec = 300
@@ -247,7 +277,7 @@ git subtree pull --prefix vendor/openfga-agent-skills openfga-upstream main --sq
 ```
 Then hook it into your existing install pattern by linking the vendored skill folder into Codex:
 ```bash
-$srcRoot = "D:\Sohrab\Project\skills\vendor\openfga-agent-skills\skills"
+$srcRoot = Join-Path (Resolve-Path ".").Path "vendor\openfga-agent-skills\skills"
 $dstRoot = "$HOME\.codex\skills"
 
 New-Item -ItemType Directory -Force -Path $dstRoot | Out-Null

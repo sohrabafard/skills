@@ -51,7 +51,7 @@ Where the router itself lives — as a table in the body, or in its own file —
 
 ## The draft-then-compress loop
 
-**The first text you write for a skill is a draft, never the deliverable.** The shipped text is a deliberate rewrite of that draft: shorter, denser, fewer words, equal or greater power. A first draft shipped unrewritten is the defect this procedure exists to catch, and it survives review because a first draft reads fine — it is complete, it is accurate, and it is two to three times longer than the contract inside it. This applies to a repair as much as to a new skill: an edited paragraph is a draft until it has been through pass two.
+**The first text you write for any artifact that controls another agent's behavior is a draft, never the deliverable.** The shipped text is a deliberate rewrite of that draft: shorter, denser, fewer words, equal or greater power. Power is execution fidelity to the same intent — clearer, more precise, less ambiguous wording that makes the same behavior more reliable. It never authorizes stronger normative force, a new rule, a broader scope, a narrower exception, or a change to a threshold, an authority, a precedence, or a behavior; any change in a rule's force fails, weaker or stronger alike. A first draft shipped unrewritten is the defect this procedure exists to catch, and it survives review because a first draft reads fine — it is complete, it is accurate, and it is two to three times longer than the contract inside it. This applies to a repair as much as to a new artifact: an edited paragraph is a draft until it has been through pass two.
 
 **Pass one — draft.** Get every decision onto the page. Write the rule, the scope it applies to, its reason, its stop condition, and the case that made you write it. Do not compress, do not remove a repetition, do not stop to phrase anything well. A decision omitted because it seemed obvious is the one the agent will get wrong, and no later pass can recover a decision that was never written down.
 
@@ -62,11 +62,15 @@ Where the router itself lives — as a table in the body, or in its own file —
 3. Delete an example that repeats a rule already given in prose without adding a case the rule does not cover.
 4. Collapse list items that differ only in wording into one item.
 5. Replace a paragraph of narration with the rule it was narrating, stated before its rationale.
-6. Cut a qualifier that changes no decision — "generally", "it is worth noting", "in most cases" — unless the qualifier is the rule's scope.
+6. Cut a qualifier that changes no behavior — "generally", "it is worth noting", "in most cases" — unless the qualifier is the rule's scope.
 
-**Never remove any of these, at any compression ratio:** a decision; the scope a constraint applies to; the reason attached to a rule; a stop condition; an authority limit; a source or verification date. Each is load-bearing exactly when the agent is under pressure from a conflicting instruction, and each looks like padding while you are cutting. A shorter file that lost one of them is a worse file, not a leaner one.
+**Never remove or weaken any of these, at any compression ratio:** a rule or obligation; a condition or trigger; an exception; a decision boundary or threshold; the scope a constraint applies to; the alternative a prohibition names; the reason attached to a rule; a stop condition; an authority limit; a source or verification date; or any other text whose change can alter agent behavior. The catch-all governs and the examples are non-exhaustive, because no list of kinds can cover every way a sentence carries behavior. Weakening is removal by another route — a constraint verb replaced by a preference verb, a scope or a trigger replaced by silence, two rules merged into one general rule that decides neither case. Each is load-bearing exactly when the agent is under pressure from a conflicting instruction, and each looks like padding while you are cutting. A shorter file that lost one of them is a worse file, not a leaner one.
 
-**The done-test for the rewrite:** every sentence removed was one whose removal changes no decision the executing agent would make. Apply it by walking the shipped text as the agent and naming, for each cut, the decision that cut would have driven; if you can name one, restore the sentence. The rewrite is finished when the next cut you can find fails this test. A word-count target is not this test — a file can lose 40% of its words and one stop condition, and the word count reports a success.
+**A compress pass relocates nothing.** Moving a rule can change its scope, its precedence, its loading condition, or its ownership, and each of those alters behavior with no word lost. A move is a separate change with its own reason and its own review. Cutting a rule because another file should own it, without the edit that puts it there, deletes it.
+
+**The done-test for the rewrite: the executing agent's behavior is unchanged.** Every sentence removed and every word replaced must leave it unchanged. Apply the test by walking the shipped text as the agent and naming, for each cut and each substitution, what it would now do differently; restore the original whenever you can name something. The rewrite is finished when the next change you can find fails this test. A word count is not this test — a file can lose 40% of its words and one stop condition, and the word count reports a success.
+
+**A soft target yields; a hard limit does not.** An author target, a recommended line count, or a default word budget yields when required behavior-affecting content does not fit: exceed it, say so, and compress the rest as normal — yielding is never permission to stop compressing. A limit that rejects or truncates the artifact, such as a packaging validator or a runtime byte budget, cannot yield: meet it by restructuring without semantic loss, and report blocked when no restructuring satisfies both. Restructuring moves content, so it is a separate change with its own reason and not a compress pass.
 
 ## Lean is a measured quality property, not an aesthetic one
 
@@ -119,7 +123,8 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 |---|---|---|
 | Description never triggers | The skill runs only when typed manually | Front-load a noun phrase and add the user's own trigger verbs; confirm the entry is not being shortened out of the listing |
 | Description over-triggers | The skill loads on unrelated requests | Add explicit negatives and name the alternative skill; narrow the scope noun; make the skill manual-only when it should never load automatically |
-| First draft shipped | The body reads well and is two to three times the length of the contract inside it | Run the compress pass and hold it to the removal done-test before shipping |
+| First draft shipped | The body reads well and is two to three times the length of the contract inside it | Run the compress pass and hold it to the done-test before shipping |
+| Rule weakened during compression | Same rules, softer verbs; the file passes review | Diff the verbs, the scopes, and the conditions, not the word count |
 | Reference nobody reads | A reference file exists and never loads | Rewrite the pointer to name the triggering situation and what the file decides |
 | Lookup table in the body | Every run pays for a matrix used in one run out of five | Move the table to its own reference and leave a pointer |
 | Body duplicates a reference | The same rule in two files, drifting apart | Assign one owner per rule; leave a one-line pointer where the rule used to be |
@@ -138,7 +143,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 4. The description fits the caps with room to spare, and the key use case survives shortening.
 5. The body carries role, goal, success criteria, constraints, authority limits, tool usage, retrieval rules, validation, output format, stop conditions, and failure behavior — each stated once.
 6. Every topic has exactly one owning file, and every pointer names the situation that triggers reading it and what the file decides.
-7. The shipped text is a compressed rewrite of a draft, and every cut passes the removal done-test.
+7. The shipped text is a compressed rewrite of a draft, and every cut and every substitution passes the done-test.
 8. No duplicated instruction, no decorative example, no explanation of why the skill is worth having.
 9. Deterministic work ships as a script with its exact invocation, pre-approved rather than described in prose.
 10. Every example that names a skill follows `references/06-invocation-and-composition.md`, and every version-sensitive claim carries a source or is marked unverified.

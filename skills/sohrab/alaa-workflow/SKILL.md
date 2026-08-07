@@ -64,7 +64,7 @@ A phase that is itself one bounded goal with parallel role lanes may be executed
 
 ## Generate prompts only on request
 
-Use `implementer` and `independent reviewer`; add `documenter` only when the phase alters behavior, APIs, configuration, or operations. Start from `assets/phase-prompts-template.md`; keep each role to the six required fields and at most 250 words unless the user requests an exhaustive prompt.
+Use `implementer` and `independent reviewer`; add `documenter` only when the phase alters behavior, APIs, configuration, or operations. Start from `assets/phase-prompts-template.md`; keep each role to the six required fields and at most 250 words; the target yields when the user requests an exhaustive prompt, and whenever required behavior-affecting content does not fit.
 
 Before resolving any runtime name, model name, effort level, feature syntax, or skill-trigger syntax, load `$alaa-prompting-guide` / `/alaa-prompting-guide` and verify current official documentation. `references/phase-prompts.md` owns the freshness gate, the role definitions, and where a resolved value is allowed to live.
 

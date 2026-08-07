@@ -38,7 +38,7 @@ Each role prompt contains:
 
 The read-first section must carry the handoff-package facts that bear on this lane: the confirmed facts with how they were verified, the approaches already ruled out and why, and the environment notes and traps that apply to the surfaces this role owns. The executing agent has no shared context — it sees this prompt and the files it names, and nothing else. Copy the facts in rather than pointing at a conversation it never had. A prompt that omits them buys a rediscovery, or a repeat of an experiment that already failed. Field semantics are in `references/context-continuity.md`.
 
-Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below 250 words by default. Add only task-specific constraints that affect correctness. Put detailed checklists in the plan or read-first sources; do not repeat the plan, repository instructions, generic engineering advice, or the other role's prompt. Exceed the limit only when the user explicitly requests an exhaustive standalone prompt.
+Start from `assets/phase-prompts-template.md`. Keep each role prompt at or below 250 words by default. Add only task-specific constraints that affect correctness. Put detailed checklists in the plan or read-first sources; do not repeat the plan, repository instructions, generic engineering advice, or the other role's prompt. The 250-word target yields whenever exhaustive or required behavior-affecting content does not fit: exceed it rather than drop any, say so, and compress the rest as normal.
 
 ## Delegation in prompts
 

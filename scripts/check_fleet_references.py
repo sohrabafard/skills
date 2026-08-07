@@ -407,10 +407,12 @@ def is_owned_citation_span(content: str, skills: Sequence[str]) -> bool:
 def in_command_span(line: str, start: int, end: int, skills: Sequence[str] = ()) -> bool:
     """True when the citation sits inside an inline code span whose content has whitespace.
 
-    Evidence: alaa-prompting-guide/references/60-skill-authoring.md:69 writes
-    `Read references/failure-taxonomy.md when a check fails` -- an illustrative sentence in a
-    code span, not a citation. validate_sohrab_skill_pack.py implements the same test as
-    is_command_example.
+    Evidence: fixtures/fleet/green-trap-forms/skills/sohrab/citing-skill/SKILL.md, Form 5, writes
+    `Read references/failure-taxonomy.md when a check fails` -- an illustrative sentence inside a
+    code span, not a citation -- and the self_test table below asserts it stays skipped. Cite a
+    fixture this checker owns rather than a line in a document it does not: this evidence pointed
+    at a skill file until a compression pass there moved the text out from under it.
+    validate_sohrab_skill_pack.py implements the same test as is_command_example.
 
     The one exception is the owner-prefixed citation form; see is_owned_citation_span.
     """

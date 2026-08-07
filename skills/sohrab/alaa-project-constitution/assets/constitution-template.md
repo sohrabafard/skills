@@ -352,6 +352,26 @@ After the evidence-backed rewrite:
 Compression removes words, never obligations. A prescribed obligation compresses to one sentence
 naming its observable condition and its canonical owner; it is never deleted for brevity.
 
+The test every compression must pass is that the behaviour of an agent executing this constitution
+is unchanged. Apply it to each removal and each substitution alike: name what the agent would now
+do differently, and restore the original wherever you can name something.
+
+Never remove or weaken a rule, an obligation, a condition or trigger, an exception, a threshold or
+other decision boundary, the scope a constraint applies to, the alternative a prohibition names, an
+authority limit, a stop condition, a canonical source, or any other text whose change can alter
+agent behaviour. That last item governs and the ones before it are examples, because no list of
+kinds covers every way a sentence carries behaviour. An obligation compressed into a preference is
+deleted whatever the word count says, and a MUST rewritten as a SHOULD is such a deletion.
+
+Compression removes words in place; it never moves a rule. Moving one can change its scope, its
+precedence, when it is loaded, or which document owns it, and each of those alters behaviour with
+no word lost. Delegating detail to a canonical source is a deliberate structural decision recorded
+as such, never a step of the compression pass.
+
+The 12 KiB and 160-line thin-charter figures are targets, not limits. When required
+behaviour-affecting content does not fit, exceed the target, say so, and compress the rest as
+normal.
+
 AUTHORITY AND STATUS
 - Higher-precedence instructions remain controlling.
 - Canonical ownership, current authority, approval, and ratification are distinct facts.

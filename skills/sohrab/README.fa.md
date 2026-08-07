@@ -78,7 +78,7 @@
 | `alaa-observability-soc` | سطح الزام و gate های telemetry: انتخاب سیگنال، بودجه cardinality، مرز histogram، sampling، burn-rate، شواهد SOC | افزودن یا تغییر سیگنال، هشدار، یا مسیر telemetry |
 | `alaa-controlled-ops` | مرز مالکیت بین package `alaa/controlled-ops` و سرویس مصرف‌کننده، و انتشار آن روی Satis | کار روی همان package یا سرویسی که آن را adopt کرده |
 | `service-runtime-kit-governance` | اینکه یک تغییر runtime در کدام لایه می‌نشیند و چرا، و دیباگ اختلاف بین خروجی تولیدشده و ورودی‌هایش | تغییر `runtime/*`، فایل‌های تولیدشده Compose، یا pin کردن نسخه kit |
-| `alaa-prompting-guide` | **تنها مرجع مدل و effort.** نوشتن prompt، skill، تعریف agent، و فایل‌های `AGENTS.md`/`CLAUDE.md` | هر سوالی درباره انتخاب مدل، سطح تلاش، یا نوشتن skill |
+| `alaa-prompting-guide` | **تنها مرجع مدل و effort.** نوشتن prompt، skill، تعریف agent، و فایل‌های `AGENTS.md`/`CLAUDE.md`؛ صاحب قرارداد فشرده‌سازیِ رفتار-حفظ و نصب‌کننده تخصصیِ `alaa-rule-writer` | هر سوالی درباره انتخاب مدل، سطح تلاش، نوشتن skill، یا کوتاه‌کردن متنی که رفتار agent دیگری را کنترل می‌کند |
 | `alaa-low-noise` | صرفه‌جویی در context و نظم خروجی، در هر دو runtime | کارهای طولانی که خروجی پرگو تولید می‌کنند |
 | `alaa-workflow` | برنامه‌ریزی کارهای چندفازی با فایل plan و state که از compaction و تحویل جان سالم ببرد | کاری که در یک نشست تمام نمی‌شود |
 | `alaa-system-design` | روش طراحی یک سرویس یا زیرسیستم **پیش از** پیاده‌سازی: مرزبندی، قرارداد قبل از کد، مالکیت داده، و انتخاب بین چند طرح | قبل از نوشتن کدی که مرز، قرارداد، یا مالکیت داده را جابه‌جا می‌کند |

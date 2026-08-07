@@ -37,7 +37,7 @@ A skill costs nothing until it is loaded. An instruction file costs its full len
 
 Claude Code's own guidance draws the same line: keep the instruction file to facts Claude should hold in every session, and move anything that is a multi-step procedure or only matters for one part of the codebase into a skill or a path-scoped rule. The failure mode this prevents is the instruction file that grows into a procedure manual — a deployment runbook, a migration checklist, a framework tutorial — all of which are paid for on every unrelated bug fix.
 
-Two corollaries follow. First, an instruction file that has crossed roughly 200 lines is usually carrying conditional content that should have been a skill; Claude Code's guidance targets under 200 lines per file and states that longer files consume more context and reduce adherence. Second, splitting a long file into imports is organization, not relief: the imported content still loads at launch.
+Two corollaries follow. First, an instruction file that has crossed roughly 200 lines is usually carrying conditional content that should have been a skill; Claude Code's guidance targets under 200 lines per file and states that longer files consume more context and reduce adherence. Second, splitting a long file into imports is organization, not relief: the imported content still loads at launch. The 200-line target is soft and yields to behavior preservation; the 32 KiB budget above is hard and drops the tail silently, so a file that cannot fit it is restructured — conditional content into a skill — never trimmed by deleting a rule. `references/60-skill-authoring.md` owns what may never be cut.
 
 ## What belongs in one
 
@@ -100,7 +100,7 @@ Whichever you choose, do not hard-code a runtime-specific call prefix into the s
 ## Checklist
 
 1. Every line is true for every task in this repository; anything conditional has moved to a skill or a path-scoped rule.
-2. The file is under roughly 200 lines, and imports were not used as a substitute for deleting content.
+2. The file is under roughly 200 lines with no rule deleted to reach it, and imports were not used as a substitute for deleting content.
 3. Every command in the file has been executed and observed to work.
 4. Nothing in the file is re-derivable from the filesystem in a few tool calls.
 5. Each rule is one statement, concrete enough to verify, positive where a positive form exists, and carries a reason where it would otherwise look arbitrary.
