@@ -45,8 +45,6 @@ fi
 
 changed=0
 unchanged=0
-timestamp="$(date +%Y%m%d-%H%M%S)"
-backup_dir=""
 
 for src in "${files[@]}"; do
   name="$(basename "$src")"
@@ -54,13 +52,6 @@ for src in "${files[@]}"; do
   if [[ -f "$dst" ]] && cmp -s "$src" "$dst"; then
     unchanged=$((unchanged + 1))
     continue
-  fi
-  if [[ -f "$dst" ]]; then
-    if [[ -z "$backup_dir" ]]; then
-      backup_dir="$target_dir/.alaa-codex-orchestrator-backups/$timestamp"
-      mkdir -p "$backup_dir"
-    fi
-    cp -p "$dst" "$backup_dir/$name"
   fi
   tmp="$dst.tmp.$$.$RANDOM"
   cp "$src" "$tmp"
@@ -77,5 +68,5 @@ if [[ -f "$version_file" ]]; then
   cp "$version_file" "$target_dir/.alaa-codex-orchestrator.version"
 fi
 
-printf '{"Status":"OK","InstalledOrUpdated":%d,"AlreadyCurrent":%d,"TargetDirectory":"%s","BackupDirectory":"%s"}\n' \
-  "$changed" "$unchanged" "$target_dir" "$backup_dir"
+printf '{"Status":"OK","InstalledOrUpdated":%d,"AlreadyCurrent":%d,"TargetDirectory":"%s"}\n' \
+  "$changed" "$unchanged" "$target_dir"

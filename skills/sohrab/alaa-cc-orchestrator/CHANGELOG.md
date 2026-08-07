@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.1
+
+- The bootstrap replaces a differing agent file outright and keeps no backup. It previously copied any differing same-named version into `~/.claude/agents/.alaa-cc-orchestrator-backups/<timestamp>/` first, which left an unmanaged second copy of a definition that is already under version control — and left it inside the directory the runtime scans for agents. Auto-install authority now covers this pack's agent files and its sentinel, and nothing else.
+
 ## 3.5.0
 
 - Phase A is now a planning phase rather than an evidence phase, and it never skips. It sets up the workspace, chooses the solution and names the alternatives it rejected, decides the data representation and the complexity bound where either exists, then writes the plan through `/alaa-workflow` as one checklist with a box per subtask. A decomposition written before the solution is chosen decomposes the wrong solution, and every lane afterwards inherits that mistake.

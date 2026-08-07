@@ -12,22 +12,22 @@ if [[ "$source_dir" == "$(cd -- "$target_dir" 2>/dev/null && pwd || true)" ]]; t
 fi
 
 staging="$target_dir.tmp.$$.$RANDOM"
-backup=""
-timestamp="$(date +%Y%m%d-%H%M%S)"
+# The previous directory is moved aside only so a failed swap can be undone; it is removed on
+# success, so no copy of a prior version is retained.
+replaced=""
 trap 'rm -rf "$staging" 2>/dev/null || true' EXIT
 cp -R "$source_dir" "$staging"
 python3 "$staging/scripts/validate_pack.py"
 
 if [[ -e "$target_dir" ]]; then
-  backup_root="$(dirname "$target_dir")/.alaa-codex-orchestrator-backups"
-  mkdir -p "$backup_root"
-  backup="$backup_root/$timestamp"
-  mv "$target_dir" "$backup"
+  replaced="$target_dir.replaced.$$.$RANDOM"
+  mv "$target_dir" "$replaced"
 fi
 
 if ! mv "$staging" "$target_dir"; then
-  if [[ -n "$backup" && ! -e "$target_dir" ]]; then mv "$backup" "$target_dir"; fi
+  if [[ -n "$replaced" && ! -e "$target_dir" ]]; then mv "$replaced" "$target_dir"; fi
   exit 1
 fi
+if [[ -n "$replaced" ]]; then rm -rf -- "$replaced"; fi
 "$target_dir/scripts/install-agents.sh"
-printf '{"Status":"OK","SkillDirectory":"%s","PreviousSkillBackup":"%s"}\n' "$target_dir" "$backup"
+printf '{"Status":"OK","SkillDirectory":"%s"}\n' "$target_dir"

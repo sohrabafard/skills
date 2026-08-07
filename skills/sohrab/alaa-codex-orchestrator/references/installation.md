@@ -50,7 +50,7 @@ Behavior:
 - creates the target directory when absent;
 - fails closed when the live MCP inventory or a transport cannot be resolved;
 - skips byte-identical/hash-identical files;
-- backs up differing same-named files under `.alaa-codex-orchestrator-backups/<timestamp>/`;
+- replaces differing same-named files outright, keeping no backup and no copy of a prior version;
 - installs via a temporary file and rename/replace;
 - records the live inventory fingerprint beside the version sentinel;
 - leaves unrelated agents and configuration untouched;
@@ -81,4 +81,4 @@ The installer intentionally does not edit `config.toml`.
 
 ## Updates and rollback
 
-Replacing the skill directory updates the source agent definitions. The next activation updates installed TOMLs and creates backups for changed prior versions. Restore a backup manually only when you intentionally want the previous definitions; the pack never silently rolls back.
+Replacing the skill directory updates the source agent definitions. The next activation replaces any installed TOML whose content differs, and keeps no copy of what it replaced — the skill directory under version control is the only source a previous definition is recovered from. The skill installer moves the previous directory aside solely so a failed swap can be undone, and removes it once the swap succeeds.

@@ -51,8 +51,6 @@ $lockPath = Join-Path $target ".alaa-codex-orchestrator.install.lock"
 $lockStream = $null
 $changed = 0
 $unchanged = 0
-$backupDirectory = $null
-$timestamp = Get-Date -Format "yyyyMMdd-HHmmss-fff"
 $materializedDirectory = Join-Path $target ".alaa-codex-orchestrator.materialized.$([Guid]::NewGuid().ToString('N'))"
 
 try {
@@ -79,12 +77,6 @@ try {
                 $unchanged++
                 continue
             }
-
-            if (-not $backupDirectory) {
-                $backupDirectory = Join-Path $target ".alaa-codex-orchestrator-backups\$timestamp"
-                New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
-            }
-            Copy-Item -LiteralPath $destination -Destination (Join-Path $backupDirectory $sourceFile.Name) -Force
         }
 
         $tempPath = "$destination.tmp.$([Guid]::NewGuid().ToString('N'))"
@@ -94,12 +86,10 @@ try {
                 throw "Hash mismatch while staging $($sourceFile.Name)"
             }
 
-            if (Test-Path -LiteralPath $destination) {
-                [System.IO.File]::Replace($tempPath, $destination, $null, $true)
-            }
-            else {
-                [System.IO.File]::Move($tempPath, $destination)
-            }
+            # Move-Item -Force replaces an existing destination in one operation and takes no
+            # backup path. [System.IO.File]::Replace requires one, and PowerShell binds a $null
+            # argument to an empty string, so that call threw on every update it was reached by.
+            Move-Item -LiteralPath $tempPath -Destination $destination -Force
 
             if ((Get-FileHashHex -Path $destination) -ne $sourceHash) {
                 throw "Hash mismatch after installing $($sourceFile.Name)"
@@ -134,6 +124,5 @@ $result = [ordered]@{
     InstalledOrUpdated = $changed
     AlreadyCurrent = $unchanged
     TargetDirectory = $target
-    BackupDirectory = $backupDirectory
 }
 $result | ConvertTo-Json -Compress

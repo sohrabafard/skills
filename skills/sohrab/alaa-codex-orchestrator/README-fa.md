@@ -7,7 +7,7 @@
 ## ویژگی‌های اصلی
 
 - نصب و به‌روزرسانی خودکار ۲۱ subagent داخل `~/.codex/agents`
-- backup گرفتن از نسخه قبلی agentهای هم‌نام
+- جایگزینی کامل نسخه قبلی agentهای هم‌نام، بدون نگه‌داشتن backup یا هیچ کپی از نسخه قدیمی
 - عدم تغییر agentها و تنظیمات دیگر کاربر
 - تفکیک implementation، verification، diagnosis، review و documentation
 - specialist gate برای architecture، security، migration، browser QA، performance، observability و release

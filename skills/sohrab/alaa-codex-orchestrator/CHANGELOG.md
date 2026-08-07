@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.1
+
+- The installers replace a differing agent TOML outright and keep no backup. Both platform installers previously copied any differing same-named file into `.alaa-codex-orchestrator-backups/<timestamp>/`, which left an unmanaged second copy of a definition that is already under version control. The atomic temp-file-and-replace path, the hash verification, and the install lock are unchanged; only the retained copy is gone, and `BackupDirectory` has left the installer's JSON result.
+- Fixed the Windows agent installer, which threw on every file it had to update. `[System.IO.File]::Replace` requires a backup filename and PowerShell binds a `$null` argument to an empty string, so the call failed with "The path is empty" the moment a differing same-named file existed — leaving the backup directory it had just created as the only trace. Reproduced against the committed 3.5.0 tree before the fix. The staging copy, its hash check, and the post-install hash check are unchanged; the replace itself is now `Move-Item -Force`.
+- The skill installers no longer retain the directory they replaced. They still move it aside so a failed swap can be undone, and now remove it once the swap succeeds; `PreviousSkillBackup` has left their JSON result.
+
 ## 3.5.0
 
 - Phase A is now a planning phase rather than an evidence phase, and it never skips. It sets up the workspace, chooses the solution and names the alternatives it rejected, decides the data representation and the complexity bound where either exists, then writes the plan through `$alaa-workflow` as one checklist with a box per subtask. A decomposition written before the solution is chosen decomposes the wrong solution, and every lane afterwards inherits that mistake.

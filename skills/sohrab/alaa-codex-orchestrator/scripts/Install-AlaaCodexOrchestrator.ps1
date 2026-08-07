@@ -19,8 +19,9 @@ if ($normalizedSource -ieq $normalizedTarget) {
     return
 }
 
-$timestamp = Get-Date -Format "yyyyMMdd-HHmmss-fff"
-$backupDirectory = $null
+# The previous directory is moved aside only so a failed swap can be undone; it is removed on
+# success, so no copy of a prior version is retained.
+$replacedDirectory = $null
 $stagingDirectory = "$targetFull.tmp.$([Guid]::NewGuid().ToString('N'))"
 
 try {
@@ -48,10 +49,8 @@ try {
     }
 
     if (Test-Path -LiteralPath $targetFull) {
-        $backupRoot = Join-Path $targetParent ".alaa-codex-orchestrator-backups"
-        New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
-        $backupDirectory = Join-Path $backupRoot $timestamp
-        Move-Item -LiteralPath $targetFull -Destination $backupDirectory
+        $replacedDirectory = "$targetFull.replaced.$([Guid]::NewGuid().ToString('N'))"
+        Move-Item -LiteralPath $targetFull -Destination $replacedDirectory
     }
     Move-Item -LiteralPath $stagingDirectory -Destination $targetFull
     & (Join-Path $targetFull "scripts\Install-AlaaCodexAgents.ps1")
@@ -59,17 +58,19 @@ try {
     [ordered]@{
         Status = "OK"
         SkillDirectory = $targetFull
-        PreviousSkillBackup = $backupDirectory
     } | ConvertTo-Json -Compress
 }
 catch {
-    if ((-not (Test-Path -LiteralPath $targetFull)) -and $backupDirectory -and (Test-Path -LiteralPath $backupDirectory)) {
-        Move-Item -LiteralPath $backupDirectory -Destination $targetFull -ErrorAction SilentlyContinue
+    if ((-not (Test-Path -LiteralPath $targetFull)) -and $replacedDirectory -and (Test-Path -LiteralPath $replacedDirectory)) {
+        Move-Item -LiteralPath $replacedDirectory -Destination $targetFull -ErrorAction SilentlyContinue
     }
     throw
 }
 finally {
     if (Test-Path -LiteralPath $stagingDirectory) {
         Remove-Item -LiteralPath $stagingDirectory -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    if ($replacedDirectory -and (Test-Path -LiteralPath $replacedDirectory)) {
+        Remove-Item -LiteralPath $replacedDirectory -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
