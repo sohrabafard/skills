@@ -102,14 +102,14 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-php-clean-code` | کد تمیز، SOLID، الگوهای طراحی و بوی کد در PHP |
-| `alaa-laravel-architecture` | معماری لایه‌ای، سرویس‌ها و ساختار پروژه Laravel |
-| `alaa-octane-performance` | کارایی و ایزولاسیون state زیر Octane |
-| `alaa-laravel-job-rabbitmq` | job و queue روی RabbitMQ در Laravel |
-| `alaa-laravel-public-api-contract-pack` | قرارداد API عمومی و آمادگی SDK |
-| `alaa-laravel-upgrade-all-packages` | ارتقای امن همه package ها |
-| `alaa-cicd-laravel-postgres` | خط CI/CD قطعی برای سرویس Laravel با Postgres |
-| `alaa-permission-generator` | تولید کاتالوگ دسترسی‌ها |
+| `alaa-php-clean-code` | کد تمیز PHP 8.5 و Laravel 13 برای سرویس‌های امن زیر Octane: نام‌گذاری، SOLID، تشخیص الگو و بوی کد، persistence اول-repository، caching با الگوی decorator، بودجه اندازه، و شعاع انفجار refactor |
+| `alaa-laravel-architecture` | نقشه لایه‌ای Laravel برای سرویس‌های علاء (Controller تا Service تا Repository تا DB): کجا cache seam و error envelope و رویداد دامنه تولید می‌شود، و یک gate برای نقض لایه و نشت public-id |
+| `alaa-octane-performance` | ایمنی runtime و کارایی مسیر داغ زیر Octane با worker های طولانی‌عمر: چه چیزی هرگز نباید بین دو request باقی بماند، مکانیزم reset، چرخه عمر worker، و تست رگرسیون نشتی |
+| `alaa-laravel-job-rabbitmq` | job های صف‌شده Laravel روی RabbitMQ از طریق `vladimir-yuldashev/laravel-queue-rabbitmq`: تصمیم `queue:work` در برابر `rabbitmq:consume`، سیاست ack و nack، سقف تحویل و خطر crash-loop، و هشت کلاس خطای نام‌گذاری‌شده |
+| `alaa-laravel-public-api-contract-pack` | ساخت و ممیزی بسته قرارداد API عمومی یک سرویس Laravel از روی حقیقت اجرایی مخزن: فهرست route، نسخه‌بندی، معنای retry هر route، مستندات OpenAPI و Postman و SDK، و gate ای که تا تاریخ deprecation حل‌نشده باشد بسته نمی‌شود |
+| `alaa-laravel-upgrade-all-packages` | جاروب ارتقای وابستگی Composer و npm برای سرویس Laravel: اول restore point و baseline تست، سپس وضعیت outdated و audit، اولویت‌بندی advisory بر اساس severity، و یک تغییر قابل بازگشت |
+| `alaa-cicd-laravel-postgres` | دروازه‌های انتشار برای سرویس‌های Laravel روی Postgres: کدام چک gate است و کدام advisory، gate برگشت‌پذیری up-down-up مایگریشن، ایزولاسیون پایگاه‌داده تست per-worker، و تطابق نسخه production با Postgres |
+| `alaa-permission-generator` | ثبت و تولید و اعمال و اعتبارسنجی دسترسی‌های coarse علاء از طریق `alaa-permission-catalog`: کلید و bitmap id دسترسی، مصرف‌کننده Laravel و Go و TypeScript، seed احراز هویت، و رمزگشایی bitmap معتمد `X-Access` |
 
 ## ۴. Go
 
@@ -138,15 +138,15 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-frontend-developer` | نقطه ورود و سیاست frontend خانواده Vue 3 و Quasar و Vite: قطعیت hydration و امنیت cleanup، وضعیت auth و session در SSR، سیاست PWA و service worker، کتابچه Lighthouse و Core Web Vitals، و نیمه سمت-کلاینت پایداری و امنیت و رصدپذیری و قرارداد ورودی |
-| `alaa-vue-typescript-clean-code` | کد تمیز Vue و TypeScript |
-| `alaa-quasar-app-vite-v3` | پروژه Quasar روی Vite |
-| `alaa-ui-ux-design-system` | سیستم طراحی و حاکمیت کتابخانه کامپوننت |
-| `alaa-frontend-devops` | CI و Docker مخصوص frontend |
-| `alaa-frontend-doc-annotations` | مستندسازی درون‌کد frontend |
-| `alaa-mono-package` | ساخت و انتشار package در mono-repo |
-| `alaa-indexeddb-browser-storage` | ذخیره‌سازی سمت مرورگر |
-| `alaa-shaka-player` | پخش ویدیو با Shaka |
+| `alaa-frontend-developer` | نقطه ورود و سیاست frontend خانواده Vue 3 و Quasar و Vite: قطعیت hydration و امنیت cleanup، وضعیت auth و session در SSR، سیاست PWA و service worker، کتابچه Lighthouse و Core Web Vitals، و نیمه سمت-کلاینت پایداری و امنیت و رصدپذیری و قرارداد ورودی — همین‌جا شروع کنید، بعد به کوچک‌ترین skill همراه بروید |
+| `alaa-vue-typescript-clean-code` | قرارداد الزامی کد تمیز Vue 3 و Quasar و Vite و TypeScript: تایپ script-setup، شکل composable و Pinia، تعمیر SOLID و بوی کد، عمق TypeScript، و بودجه سخت اندازه — پیش از تغییر هر فایل `.vue` یا `.ts` اعمال کنید |
+| `alaa-quasar-app-vite-v3` | صفحه کنترل نسخه-آگاه برای Quasar CLI روی `@quasar/app-vite` نسخه ۳ (به‌همراه نگهداری v2 و مهاجرت v2-به-v3): `quasar.config`، boot و routing، هر mode پلتفرم، service worker، و بودجه دسترس‌پذیری و کارایی |
+| `alaa-ui-ux-design-system` | تصمیم‌های UI/UX برای اپ‌های Vue/Quasar: توکن طراحی، theming، حالت تاریک، تایپوگرافی، RTL و تایپوگرافی فارسی، motion، وضعیت کامپوننت، و الگوهای دسترس‌پذیری |
+| `alaa-frontend-devops` | دروازه‌های CI و pipeline برای مخزن frontend: قرارداد artifact ساخت، public path و پایه asset، سیاست cache، provenance ساخت، و اینکه چه چیزی مجاز است داخل bundle کلاینت کامپایل شود |
+| `alaa-frontend-doc-annotations` | یک گذر فقط-مستندسازی روی کد frontend — JSDoc و کامنت درون‌خط روی فایل‌های Vue و Quasar و Vite — در diff ای که خروجی build آن پیش و پس بایت‌به‌بایت یکسان است؛ هرگز برای تغییری که رفتار را عوض می‌کند به کار نمی‌رود |
+| `alaa-mono-package` | مهندسی package workspace زیر `packages/*`: نقشه `exports` و نقطه‌ورود عمومی، peer dependency، انتشار CSS و asset پکیج، ترتیب build، و اینکه اپ ریشه چگونه یک پکیج داخلی را مصرف می‌کند |
+| `alaa-indexeddb-browser-storage` | بستر ذخیره‌سازی خود مرورگر برای ناوگان علاء: معناشناسی IndexedDB، سهمیه origin، eviction، شاخه‌بندی ارتقای schema، همروندی چند-تب و service-worker، و اینکه کدام کلاس داده مجاز است روی دستگاه بنشیند |
+| `alaa-shaka-player` | اطلس کامل قابلیت Shaka Player: چرخه عمر، DASH و HLS، بیت‌ریت تطبیقی، DRM، دانلود آفلاین، طبقه‌بندی خطا، و binding مربوط به Vue و Quasar |
 
 ## ۷. زیرساخت و تحویل
 
@@ -154,13 +154,14 @@
 |---|---|
 | `alaa-docker-production` | Dockerfile و Compose و stack آماده production، شامل build secret و attestation و healthcheck و سقف منابع. مالک نحوه بیان image و فایل runtime است و هیچ gate ای تصمیم نمی‌گیرد؛ سیاست gate مال `alaa-frontend-devops` است |
 | `alaa-k8s-helm` | تولید و بازبینی و اعتبارسنجی و دیباگ chart های Helm و manifest های Kubernetes و بار کاری OpenShift، شامل Route و SCC و CRD و امنیت rollout و در معرض گذاشتن سرویس، حتی روی پلتفرم namespace-محور |
-| `alaa-gitlab-ci-cd` | خط لوله GitLab |
+| `alaa-gitlab-ci-cd` | تولید و اعتبارسنجی و بازبینی و دیباگ pipeline های GitLab CI/CD، کامپوننت‌های قابل استفاده‌مجدد CI، پیکربندی runner، و جریان‌کار container-build؛ مالک نحوه بیان یک gate روی runner است و هرگز تصمیم نمی‌گیرد که یک چک باید pipeline را ببندد یا نه |
 | `alaa-haproxy` | پیکربندی و تنظیم و عیب‌یابی و ارتقای HAProxy: تبدیل تصمیم routing و TLS و cache و rate limiting و درین به directive، انتخاب بین branch های پشتیبانی‌شده، و خواندن Runtime API. هر تغییر با `haproxy -c -f` اثبات می‌شود |
 | `alaa-haproxy-lua` | قرارداد مهندسی Lua ای که داخل پروسه HAProxy اجرا می‌شود: مدل اجرا، سطح API، دیده‌شدن خطا در لبه، و تست بیرون از HAProxy. یک checker پیش-از-انتشار می‌فرستد. directive های پیکربندی مال `alaa-haproxy` است |
-| `alaa-makefile` | Makefile و هدف‌های تکرارشدنی |
-| `caas-arvan-kuber` | Kubernetes روی ابر آروان |
-| `ansible-generator` / `ansible-validator` | تولید و اعتبارسنجی playbook |
-| `alaa-bash-shell` | نوشتن و اعتبارسنجی اسکریپت Bash و POSIX |
+| `caas-arvan-kuber` | حقایق پلتفرم Arvan CaaS برای بار کاری Kubernetes و Helm که با Kubernetes خام فرق دارد: سطح API محدود-به-namespace، هویت RBAC alias-در-برابر-canonical، برابری admission requests-equal-limits، و annotation های exposure مستندنشده |
+| `alaa-bash-shell` | چرخه کامل عمر Bash و POSIX shell: تولید و بازآرایی و اعتبارسنجی و دیباگ اسکریپت `.sh` و `.bash`، با قرارداد الزامی `-h`/`--help` و جریان‌کارهای ShellCheck و shfmt و checkbashisms و Bats |
+| `alaa-makefile` | تولید و اعتبارسنجی و بازآرایی و به‌روزسازی و دیباگ فایل‌های GNU Make و `.mk`: هدف‌های phony، طراحی متغیر، make بازگشتی، ایمنی shell در recipe، و اعتبارسنجی mbake و checkmake و unmake |
+| `ansible-generator` | تولید playbook و role و task file و inventory آماده production برای Ansible با ماژول‌های صحیح FQCN و task های idempotent، سپس سپردن نتیجه به `ansible-validator` |
+| `ansible-validator` | اعتبارسنجی و lint و ممیزی امنیتی و dry-run playbook و role و inventory موجود Ansible با ansible-lint و yamllint و check mode و Checkov و Molecule، با گزارش یک حکم همراه ارجاع رفع هر finding |
 
 ## ۸. پیام‌رسانی، یکپارچه‌سازی و اعتماد
 
