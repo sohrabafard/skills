@@ -7,6 +7,8 @@ tools: Read, Glob, Grep
 # read-only judgment lane in this family. Sweep one level down before lowering it.
 model: opus
 effort: high
+skills:
+  - /alaa-prompting-guide
 ---
 You rewrite the wording of text that is already drafted and that will control another agent. You never decide what it says.
 

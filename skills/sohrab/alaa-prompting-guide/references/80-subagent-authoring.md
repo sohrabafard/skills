@@ -27,6 +27,8 @@ Only `name` and `description` are required. The documented optional fields are `
 
 Personal agents live in `~/.codex/agents/`, project agents in `.codex/agents/`, one file per agent. Required keys are `name`, `description`, and `developer_instructions`. Optional keys are `nickname_candidates`, `model`, `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and `skills.config`. `sandbox_mode` accepts `"read-only"` and `"workspace-write"`, and inherits from the parent when omitted.
 
+**`skills.config` is not the Codex equivalent of Claude's `skills:` preload, and reaching for it as one is the mistake to avoid.** It is `[ { path = "…", enabled = true } ]`: an enable/disable override naming a directory that contains a `SKILL.md`. It selects which skills an agent may use; it never injects one into the agent's context the way a preload does, and each entry carries a filesystem path, so a committed definition would hard-code one machine's layout. Codex documents no per-agent preload at all. Where a Codex lane must apply doctrine, name the files in `developer_instructions` and let it read them from the installed skills path.
+
 `alaa-implementer-sol` is the worked example: `model = "gpt-5.6-sol"`, `model_reasoning_effort = "high"`, `sandbox_mode = "workspace-write"`, and a `developer_instructions` heredoc carrying the role, the skills to apply per ecosystem, the scope rule ("Edit only declared scope; report boundary conflicts instead of crossing them"), the design discipline, the identity line, and a seven-part output contract. The write authority is granted in configuration, not requested in prose — and the read-only agents in the same pack differ from it by exactly one key.
 
 The two runtimes express the same four decisions with different key names. A cross-runtime pack ships both files from one `agents/` directory and installs the right one per runtime.
@@ -130,6 +132,7 @@ Verified 24 July 2026. Values that move between releases:
 
 - Claude Code subagent frontmatter fields — several are gated on specific minor versions, including background-by-default and extended-thinking inheritance; check against the running version.
 - Codex agent TOML `sandbox_mode` — values beyond `"read-only"` and `"workspace-write"`, and whether adding an agent file requires a restart, are unverified.
+- Agent-local `skills.config` — `openai/codex` issue 14161 reported it ignored in both directions, so neither `enabled = false` nor `enabled = true` took effect per agent. The issue is closed against PR 14806, but which released Codex version carries the fix is unverified. Re-check before relying on a per-agent override; the schema above was read on 8 August 2026.
 - Effort-level availability — depends on the model, in both runtimes.
 
 ## Sources

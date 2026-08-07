@@ -4,6 +4,8 @@ description: Fixture wrapper used only by this checker's self-test. Never a real
 tools: Read, Glob, Grep
 model: opus
 effort: max
+skills:
+  - /alaa-prompting-guide
 ---
 You rewrite drafted text that controls another agent. You never decide what it says.
 

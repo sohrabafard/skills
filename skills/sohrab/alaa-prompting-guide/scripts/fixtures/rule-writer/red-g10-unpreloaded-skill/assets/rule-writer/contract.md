@@ -1,10 +1,3 @@
----
-name: alaa-rule-writer
-description: Fixture wrapper used only by this checker's self-test. Never a real agent.
-tools: Read, Glob, Grep
-skills:
-  - /alaa-prompting-guide
----
 You rewrite drafted text that controls another agent. You never decide what it says.
 
 Apply `alaa-prompting-guide references/10-detail.md` for compression and never restate it.

@@ -22,6 +22,13 @@ Rules:
     G7  every doctrine path a wrapper names resolves
     G8  the wrappers agree on name and description
     G9  no wrapper pins an effort of max
+    G10 the Claude wrapper preloads every skill its contract names
+
+G10 exists because the lane holds no Skill tool: without a preload it would have to find the
+doctrine by guessing a path, and under Claude Code the packaged skill lives at an opaque
+plugin-managed location. Codex has no equivalent key that this repository has ever used, so its
+wrapper reaches the same files through the documented `~/.codex/skills/` install path instead;
+do not invent a `skills.config` block to make the two look symmetric.
 
 A model and effort pin belongs in runtime metadata and never in text the agent emits. The pin
 routes the dispatch; an identity line or a model name inside the contract reaches the caller's
@@ -86,6 +93,9 @@ MODEL_NAME_RE = re.compile(r"\b(opus|sonnet|haiku|fable|luna|terra|sol)\b|gpt-?5
 IDENTITY_LINE_RE = re.compile(r"\bAGENT:\s*\S+\s*\|", re.I)
 EFFORT_TOKEN_RE = re.compile(r"\bEFFORT:\s*\S", re.I)
 DOCTRINE_RE = re.compile(r"`alaa-prompting-guide\s+(references/[A-Za-z0-9._/-]+\.md)`")
+# The owner half of the same citation form, so G10 asks about whatever the contract actually
+# names rather than about one hard-coded skill.
+DOCTRINE_OWNER_RE = re.compile(r"`([a-z][a-z0-9-]*)\s+(?:references|assets|scripts)/")
 
 
 class CannotRun(Exception):
@@ -124,12 +134,22 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
         return None
     head, body = text[4:end], text[end + 5 :]
     fields: dict = {}
+    key: Optional[str] = None
     for line in head.split("\n"):
-        if not line.strip() or line.startswith("#"):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        item = re.match(r"^\s+-\s*(.+?)\s*$", line)
+        if item and key is not None:
+            current = fields.get(key)
+            if current == "":
+                fields[key] = [item.group(1)]
+            elif isinstance(current, list):
+                current.append(item.group(1))
             continue
         m = re.match(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$", line)
         if m:
-            fields[m.group(1)] = m.group(2).strip()
+            key = m.group(1)
+            fields[key] = m.group(2).strip()
     return fields, body
 
 
@@ -194,12 +214,13 @@ def check(root: Path) -> List[str]:
     wrappers = [(n, p, w) for n, p, w in (("claude", CLAUDE_WRAPPER, claude), ("codex", CODEX_WRAPPER, codex)) if w]
 
     if claude:
-        fields, _ = claude
+        fields, claude_body = claude
         declared = fields.get("tools")
         if declared is None:
             findings.append("G2: the Claude wrapper omits tools, so it inherits every tool")
+            granted = set()
         else:
-            granted = {t.strip() for t in declared.split(",") if t.strip()}
+            granted = {t.strip() for t in str(declared).split(",") if t.strip()}
             extra = sorted(granted - ALLOWED_CLAUDE_TOOLS)
             if extra:
                 findings.append(
@@ -207,6 +228,17 @@ def check(root: Path) -> List[str]:
                     + ", ".join(extra)
                     + "; a read-only wording lane holds only "
                     + ", ".join(sorted(ALLOWED_CLAUDE_TOOLS))
+                )
+
+        if "Skill" not in granted:
+            preloaded = {s.lstrip("/").split(":")[-1] for s in fields.get("skills") or []}
+            missing = sorted(set(DOCTRINE_OWNER_RE.findall(claude_body)) - preloaded)
+            if missing:
+                findings.append(
+                    "G10: the Claude wrapper's contract names "
+                    + ", ".join(missing)
+                    + " but it holds no Skill tool and does not preload it, so it would have to"
+                    " guess where the doctrine lives"
                 )
 
     for name, rel, (fields, body) in wrappers:
@@ -267,6 +299,7 @@ def self_test(fixtures: Path) -> int:
         ("red-g7-dangling-doctrine-path", "G7"),
         ("red-g8-description-mismatch", "G8"),
         ("red-g9-effort-max", "G9"),
+        ("red-g10-unpreloaded-skill", "G10"),
         ("red-unparseable-toml", "CANNOT_RUN"),
     ]
     failures = 0
