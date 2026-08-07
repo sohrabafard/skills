@@ -1,6 +1,6 @@
 ---
 name: alaa-memory-os
-description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what is worth remembering and in what shape, writing architecture, service-ownership, contract, operations, lesson, work-pattern, project-index, project-state, handoff or research notes, recording drift when two sources of truth disagree, setting a recall budget with a fail-open path, and separating facts worth remembering from relationships that must be derived. Basic Memory and Hindsight each get one adapter reference. Do not use for tiny deterministic code edits, as a second task system, for active execution plans or handoff contents owned by alaa-workflow, or to remember service dependency edges, which are always derived."
+description: "Use when Alaa work must record or recall durable cross-session knowledge, whichever memory store backs it: deciding what is worth remembering and in what shape, writing architecture, service-ownership, contract, operations, lesson, work-pattern, project-index, project-state, handoff or research notes, recording drift when two sources of truth disagree, setting a recall budget with a fail-open path, and separating facts worth remembering from relationships that must be derived. One adapter is active at a time and the skill body declares which; local file vault, Basic Memory, and Hindsight each get one adapter reference. Do not use for tiny deterministic code edits, as a second task system, for active execution plans or handoff contents owned by alaa-workflow, or to remember service dependency edges, which are always derived."
 ---
 
 # Alaa Memory OS
@@ -9,6 +9,44 @@ This skill owns what Alaa work remembers, when, in what shape, and what it deriv
 The backing store sits behind one adapter reference per store, and this body names no store command: the
 fleet routes here for the capability, not the product, so replacing the store changes one adapter file and
 leaves every rule below intact.
+
+## Active adapter
+
+```text
+ACTIVE_ADAPTER: local
+```
+
+**This line is the selection.** Read it before the first recall or write of a task, load only
+`references/store-<value>.md`, and use that adapter's mechanics for every store operation in the task.
+
+| Value | Adapter | Store |
+|---|---|---|
+| `local` | `references/store-local.md` | the `agent-memory` markdown vault under git, read and written with ordinary file tools |
+| `basic-memory` | `references/store-basic-memory.md` | the Basic Memory CLI indexing that same vault |
+| `hindsight` | `references/store-hindsight.md` | Hindsight |
+
+Exactly one adapter is active. Two adapters used in one task write the same knowledge through two
+mechanisms with different assumptions about indexing, commit, and concurrency, and the disagreement surfaces
+later as a note that exists twice or not at all.
+
+**To switch stores, change the value on that line and nothing else.** No rule in this skill, and no rule in
+`references/knowledge-shape.md` or `references/drift-management.md`, is store-specific — that separation is
+the reason a switch is one line. A switch that seems to require editing a policy file means the policy has
+leaked a store assumption; fix the leak rather than forking the policy.
+
+Two failure modes, both of which have to stop the task rather than be worked around:
+
+- **The named adapter file is missing.** Stop and report the missing file. Do not fall back to another
+  adapter — a silent fallback writes notes into a store the selection says is not in use, and nothing will
+  report that until someone looks for them in the other one.
+- **The selected store is unreachable.** Recall fails open, so continue from repository truth and say which
+  step ran without memory. A *write* does not fail open: report the unwritten note and its content in the
+  handoff so the knowledge survives the outage.
+
+Current selection, recorded 2026-08-07: `local`. Basic Memory's CLI is being retired while the vault it
+indexed stays exactly where it is, so the switch cost nothing and migrated nothing. The declared intent is to
+move to `hindsight` once it is activated; until that line says `hindsight`, it is not active no matter what
+is installed on the machine.
 
 ## Use this skill when
 
@@ -98,8 +136,9 @@ accept, and the store's adapter reference names the exact variables. `/alaa-secu
 |---|---|
 | `references/knowledge-shape.md` | Before creating or updating any note. Owns search-before-create, required fields, status and confidence values, the observation vocabulary, Extraction and Design mode, and the single do-not-store list. |
 | `references/drift-management.md` | Two sources of truth disagree. |
-| `references/store-basic-memory.md` | The backing store is Basic Memory. |
-| `references/store-hindsight.md` | The backing store is Hindsight. |
+| `references/store-local.md` | `ACTIVE_ADAPTER: local` — the current selection. The `agent-memory` markdown vault, read and written with ordinary file tools. |
+| `references/store-basic-memory.md` | `ACTIVE_ADAPTER: basic-memory`. Retained while `bm` is still installed; the CLI is being retired and the vault it indexed is unchanged. |
+| `references/store-hindsight.md` | `ACTIVE_ADAPTER: hindsight`. |
 | `references/checkers-and-hooks.md` | Running a checker, reading its exit code, or installing a hook. |
 | `references/skill-boundaries.md` | Unsure whether this skill or another owns a decision. |
 | `references/prompt-3-publishing.md` | Publishing curated lessons from the evidence warehouse. |
@@ -108,6 +147,8 @@ accept, and the store's adapter reference names the exact variables. `/alaa-secu
 
 Update memory only when durable knowledge changed, then confirm each of these before reporting:
 
+- The adapter named by `ACTIVE_ADAPTER` was the only one used, and a missing adapter file stopped the task
+  rather than falling back to another store.
 - Memory was searched before a note was created, or the report says why it was not.
 - Repository truth was inspected before any implementation claim.
 - No raw transcript, log, source file, whole document, or secret reached the store.
