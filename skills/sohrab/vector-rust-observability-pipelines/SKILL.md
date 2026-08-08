@@ -34,41 +34,54 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
    for the burst, never `block`, as `/alaa-observability-soc` (`$alaa-observability-soc`) binds.
    Product data under an exactness ruling, yes — a gate: `references/75-ala-ingest-pipeline.md`.
 
-4. **Every fallible VRL call is handled deliberately.** `f(x)` returns an error and
+4. **A path that must never slow its client is configured that way, or it is not
+   that path.** Acknowledgements decide whether the *response* waits for durability;
+   `when_full` decides what a full sink buffer does. Settle both, state the headroom
+   as a duration knowing the `buffer` block understates the real queue depth, alert
+   on the source-to-sink event differential and not on buffer utilisation alone, and
+   write in the contract that an immediate `202` is a receipt for accepted, not
+   stored. `references/35-pass-through-and-relay-paths.md`.
+
+5. **Every fallible VRL call is handled deliberately.** `f(x)` returns an error and
    can be coalesced with `??`; `f!(x)` aborts and cannot; a path lookup never fails,
    so `??` after one is dead code. `??` coalesces errors, not null.
    `references/20-vrl-transforms.md`.
 
-5. **Credentials come from a secret backend, never from `${VAR}` interpolation.**
-   Vector 0.57.0 disabled interpolation by default, so a config using
-   `${CLICKHOUSE_PASSWORD}` passes validation and then authenticates with that
-   literal string. It fails open, silently, exactly where the value is a secret.
+6. **A config that interpolates a credential must fail loudly when interpolation is
+   off.** Vector 0.57.0 disabled `${VAR}` by default, and any string is a valid
+   password, so a credential-only config validates clean either way and then
+   authenticates with the literal `${VAR}` text. Prefer a `secret:` backend. An
+   environment variable is legitimate only with the opt-in on every command that
+   reads the config, a format-constrained interpolated value — endpoint, port,
+   duration — in the same config to force a load failure, and a standing gate
+   requiring exit 78 without the opt-in and exit 0 with it.
    `references/85-security-and-secrets.md`.
 
-6. **Every templated `table`, `database`, object key, file path or header carries a
+7. **Every templated `table`, `database`, object key, file path or header carries a
    literal prefix.** Vector 0.57.0 confines routing templates and rejects unprefixed
    ones at startup. It is the mitigation for injection through a routing field, so
    take the prefix rather than the opt-out.
 
-7. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
+8. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
    `--no-environment`.** That flag suppresses component checks, so an unconfined
    template and an undersized disk buffer both validate clean under it — proven by
    two committed fixtures. Warnings matter too: "acknowledgements are not supported
-   by this source" means the durability you configured does not exist.
+   by this source" means the durability you configured does not exist, and an
+   unconsumed `route` leg fails the gate rather than scrolling past.
    `references/50-validation-and-testing.md`.
 
-8. **Unit-test the failure classes, not the happy path.** Absent field, wrong type,
-   malformed payload, and the event that must be dropped: a suite that only proves
-   the good input works cannot tell a correct transform from a broken one. Pass the
-   test file together with the config defining the transform, or it fails as an
-   unknown component.
+9. **Unit-test the failure classes, not the happy path.** Absent field, wrong type,
+   malformed payload, the event that must be dropped, and the count a transform must
+   emit: a suite that only proves the good input works cannot tell a correct
+   transform from a broken one. Pass the test file together with the config defining
+   the transform, or it fails as an unknown component.
 
-9. **A critical path does not share an acknowledging source with an unreliable one.**
-   Fanout acknowledgement uses the worst status, so one failing sink causes
-   re-delivery to the sinks that already succeeded. Isolation is a topology decision
-   and no sink setting undoes it.
+10. **A critical path does not share an acknowledging source with an unreliable one.**
+    Fanout acknowledgement uses the worst status, so one failing sink causes
+    re-delivery to the sinks that already succeeded. Isolation is a topology decision
+    and no sink setting undoes it.
 
-10. **Disk buffers are a capacity dependency of the process.** A full volume makes
+11. **Disk buffers are a capacity dependency of the process.** A full volume makes
     Vector forcefully stop itself, by design, because it can no longer guarantee what
     reached disk. Alert on free bytes on the `data_dir` volume and keep it larger than
     the sum of every configured `max_size`, whose minimum is 268435488 bytes —
@@ -92,23 +105,19 @@ node scripts/check-vector-configs.mjs [--self-test]   # templates, unit tests, r
 node scripts/check-upstream-version.mjs [--self-test] # version drift against upstream
 ```
 
-Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`. Exit `2`
-is not a pass: a gate that cannot tell "Vector is missing" from "nothing is wrong" treats
-every broken runner as clean. Detail: `references/50-validation-and-testing.md`.
+Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`. **Exit
+`2` is not a pass.** Detail: `references/50-validation-and-testing.md`.
 
 ## Not owned here
 
-The three-way ClickHouse boundary: `clickhouse-performance-schema-ops` owns what a
-ClickHouse table must be — engine, sorting key, partitioning, TTL, compression — for
-tables the fleet controls. `alaa-signoz-clickhouse-docs` owns how a SigNoz-owned
-table is queried, and states that those tables are vendor-owned and read-only to the
-fleet. `vector-rust-observability-pipelines` owns what the pipeline writes into a
-ClickHouse table and how it behaves when that table is unreachable, and decides no
-schema. Route to `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`)
-and `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`). Requirement levels and
-gates are `/alaa-observability-soc` (`$alaa-observability-soc`); every name and every Ala
-value is `/alaa-services-contract` (`$alaa-services-contract`). Every other owner is listed
-once in `references/00-topic-map.md`, at the rule it governs.
+This skill owns what the pipeline writes into a ClickHouse table and how it behaves
+when that table is unreachable, and decides no schema. The three-way ClickHouse
+boundary against `/clickhouse-performance-schema-ops`
+(`$clickhouse-performance-schema-ops`) and `/alaa-signoz-clickhouse-docs`
+(`$alaa-signoz-clickhouse-docs`) is stated once, in `references/40-clickhouse-sink.md`.
+Every other owner — requirement levels, Ala names and values, reliability shape,
+design, testing, security, platform — is listed once in `references/00-topic-map.md`,
+at the question it governs.
 
 ## Output contract
 

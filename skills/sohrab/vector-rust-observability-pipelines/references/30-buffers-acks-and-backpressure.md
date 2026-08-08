@@ -41,6 +41,15 @@ client that is sending the data**. That is the part that matters: `block` on a
 telemetry path converts a ClickHouse outage into added latency on the producing
 service's request path.
 
+**How far that propagation reaches, and after how much traffic, is not something
+this skill has measured.** An attempt on 0.57.0 to drive a `block`ing one-event
+buffer to its stall point with 200 events did not reach it — the events queued
+between source and sink instead, undropped. Treat the upstream statement above as
+the mechanism and do not convert it into a prediction about a specific client at a
+specific rate. A path required never to slow its upstream has to settle both this
+setting and acknowledgements: `35-pass-through-and-relay-paths.md` owns the
+conditions and the evidence.
+
 ### `drop_newest`
 
 Vector discards the incoming event when the buffer is full. Liveness is preserved

@@ -58,6 +58,28 @@ than as console noise is the whole point, so the shipped checker runs with
 `--deny-warnings` by default and offers `--allow-warnings` for the cases where a
 warning genuinely is informational.
 
+**The trap `--deny-warnings` sets, and it is a real one.** An unconsumed `route`
+output is a warning, so it becomes exit 78 under the flag. Observed on 0.57.0, same
+config, flags the only difference:
+
+```
+vector validate --skip-healthchecks
+  ~ Transform "route_events._unmatched" has no consumers      EXIT=0
+
+vector validate --skip-healthchecks --deny-warnings
+  x Transform "route_events._unmatched" has no consumers      EXIT=78
+```
+
+Every `route` transform has an implicit `_unmatched` output, so **a `route` whose
+default leg goes nowhere fails a `--deny-warnings` gate** — including a config that
+deliberately discards unmatched events. Do not resolve this by dropping the flag,
+which also un-gates the acknowledgement warning above. Resolve it by wiring
+`_unmatched` to something that makes the discard visible: a `log_to_metric` counter,
+or a dead-letter sink where policy allows one. If the leg genuinely must be
+discarded and cannot be counted, that is the narrow case for `--allow-warnings` on
+that config, recorded with its reason — and `75-ala-ingest-pipeline.md` rule 5 states
+why a counter is the floor rather than the answer.
+
 ## Unit tests must be passed together with the config that defines the transform
 
 `vector test` resolves transforms across the whole config set it is given. A test
@@ -95,8 +117,26 @@ belongs to `/alaa-testing-strategy` (`$alaa-testing-strategy`).
 
 Current unit-test schema keys, verified: `tests[].name`, `inputs[].insert_at`,
 `inputs[].type`, `inputs[].log_fields`, `outputs[].extract_from`,
-`outputs[].conditions[].type: vrl`, `conditions[].source`, `no_outputs_from[]`, and
-the `assert!` / `assert_eq!` functions.
+`outputs[].conditions[].type: vrl`, `conditions[].source`,
+`outputs[].expected_event_count`, `no_outputs_from[]`, and the `assert!` /
+`assert_eq!` functions.
+
+`expected_event_count` was added in 0.56.0 and asserts how many events an output
+emitted. It is the assertion for a transform whose *count* is the behaviour — an
+`unnest` that explodes one request into N events, or a filter expected to keep
+exactly two of five. `no_outputs_from[]` proves a leg emitted nothing;
+`expected_event_count` proves a leg emitted the right number, which is the case
+between "nothing" and "something" that neither of the other assertions covers.
+
+Verified by running it on 0.57.0 in both directions. The second case is the one that
+proves it, because a key Vector did not recognise but silently ignored would pass the
+first on its own:
+
+```
+outputs[].expected_event_count: 1, one event emitted  ->  test ... passed   EXIT=0
+outputs[].expected_event_count: 7, one event emitted  ->  EXIT=78
+    expected 7 events from transforms ["t"], but received 1
+```
 
 ## Iterating on a snippet
 

@@ -6,7 +6,12 @@ between causes, then the smallest retry, then when to escalate. A list of nouns 
 
 The live inspector is `vector top`. Note that Vector's observability API moved from
 GraphQL to gRPC in 0.55.0: `vector top` and `vector tap` were updated with it, but
-anything else that queried `/graphql` was not. `GET /health` is unchanged.
+anything else that queried `/graphql` was not. `GET /health` still answers `200`.
+
+**If Vector will not start at all after crossing 0.55.0, look at the `api` block
+first.** `api.graphql` and `api.playground` are rejected at config load — exit 78,
+before any component runs, so no symptom below applies. Message and fix:
+`80-version-and-upgrade-deltas.md`.
 
 ```bash
 vector top --url http://127.0.0.1:8686/   # live component throughput and errors
@@ -116,9 +121,13 @@ arithmetic is in `30-buffers-acks-and-backpressure.md`.
 
 ## Class 5 — high CPU or memory
 
-**Discriminate with the per-component CPU metric**, which is opt-in: set
-`measure_cpu_usage: true` on the transform or sink and read
+**Discriminate with the per-component CPU metric**, which is opt-in and
+**transform-only**: set `measure_cpu_usage: true` on the *transform* and read
 `component_cpu_usage_ns_total`. Without it you are guessing which component is hot.
+Observed on 0.57.0, the key is rejected on a sink (`x unknown field
+'measure_cpu_usage'`, exit 78), so a hot sink has to be discriminated another way —
+by its `component_latency_seconds` and its request metrics, per
+`60-internal-monitoring.md`.
 
 - One transform dominating CPU → VRL cost per event. `parse_json` and regex work
   are the usual candidates; a dynamic `parse_regex` pattern is worse than a fixed

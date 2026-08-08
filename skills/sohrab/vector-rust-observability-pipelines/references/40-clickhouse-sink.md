@@ -65,6 +65,7 @@ the value you get by saying nothing.
 | `request.retry_attempts` | `9223372036854775807` | **Always.** The default retries effectively forever, so a dead sink never becomes a terminal error. |
 | `request.retry_initial_backoff_secs` | `1` | |
 | `request.retry_max_duration_secs` | `30` | Ceiling on the backoff interval, not total retry time. |
+| `request.retry_strategy` | not stated | The destination returns a status whose default retry behaviour is wrong for you. Added 0.56.0 for HTTP-based sinks; it selects **which response codes trigger a retry**. Retrying a permanent rejection burns the retry budget and delays the terminal error; not retrying a transient one loses the batch. **The nesting under `request:` is load-bearing** — observed on 0.57.0, at the sink's top level it is rejected with `x unknown field 'retry_strategy'` and exit 78; under `request:` the config loads clean. |
 | `request.concurrency` | `adaptive` | Pin it only when the destination has a hard concurrency limit that adaptive discovery keeps overshooting. |
 | `acknowledgements.enabled` | `false` | The path is audit-grade and the source can acknowledge. |
 | `dangerously_allow_unconfined_template_resolution` | `false` | Never, without a written security decision. |
@@ -122,6 +123,12 @@ to bound it. Details in `80-version-and-upgrade-deltas.md`.
 `format: arrow_stream` is the other route to the same encoding. Neither is a
 default choice.
 
+Its type coverage widened inside the pinned range, which matters because a type
+`arrow_stream` cannot carry is a reason not to adopt it: **`Array`, `Map` and
+`Tuple` became supported in 0.54.0**, and **`UUID` maps to Arrow `Utf8` as of
+0.55.0**. Below those versions a row containing one of those types is an argument
+against the encoding rather than a bug to work around.
+
 Adopt it only when all of these hold: the schema is stable and tightly controlled,
 you have measured a throughput or CPU problem that batching did not solve, and you
 have validated the destination's behaviour in staging with production-shaped data.
@@ -130,11 +137,11 @@ problem under load is not the moment to design a fallback.
 
 ## Authentication
 
-`auth.strategy` accepts `basic`, `bearer`, `aws`, and `custom`. Credentials come
-from a `secret:` backend referenced as `SECRET[backend.key]`, never from `${VAR}`
-interpolation — on 0.57.0 that interpolation is off by default and a
-`${CLICKHOUSE_PASSWORD}` literal passes validation and then fails authentication at
-runtime. The full rule is in `85-security-and-secrets.md`.
+`auth.strategy` accepts `basic`, `bearer`, `aws`, and `custom`. Prefer a `secret:`
+backend referenced as `SECRET[backend.key]`. Interpolation is off by default on
+0.57.0, and whether `${VAR}` is an acceptable credential source depends on what else
+the config interpolates — `85-security-and-secrets.md` rule 1 owns that decision and
+states it once.
 
 Set `tls.verify_certificate: true` explicitly. Trust-boundary review for a new
 external destination belongs to `/alaa-security-review` (`$alaa-security-review`).

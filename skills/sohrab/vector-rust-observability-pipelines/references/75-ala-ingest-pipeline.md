@@ -155,20 +155,38 @@ means *accepted for parsing* and nothing more — and if the path is a gate, onl
 of those is available.
 
 The honest cost belongs with the rule, because it is what makes this a decision rather
-than an oversight. With `when_full: block`, a source that waits for the acknowledgement
-holds the HTTP request open while the buffer is full. Silent loss becomes visible
-backpressure, which is the right direction, and the ingest endpoint can hang under
-sustained overload, which is a genuine new failure mode. It needs a bounded request
-deadline in front of it and an alert on buffer utilisation. The mechanism is
-`30-buffers-acks-and-backpressure.md`; the deadline value is
-`/alaa-services-contract` (`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md`.
+than an oversight. A source that waits for the acknowledgement holds the HTTP request
+open until every sink confirms. Silent loss becomes visible backpressure, which is the
+right direction, and the ingest endpoint can hang under sustained overload, which is a
+genuine new failure mode. It needs a bounded request deadline in front of it and an
+alert on buffer utilisation. The mechanism is `30-buffers-acks-and-backpressure.md`;
+the deadline value is `/alaa-services-contract` (`$alaa-services-contract`)
+`references/22-failure-load-and-deprecation-contract.md`.
+
+**Do not read that cost as the only way the client can be slowed.** Acknowledgements
+decide whether the *response* waits for durability; `when_full` decides what a full
+sink buffer does, and `block` propagates backpressure toward the source from there.
+They are separate settings, and this pipeline sets `block` on both sink buffers
+independently of any acknowledgement decision. How far that propagation reaches, and
+after how much traffic, is not established — `35-pass-through-and-relay-paths.md`
+holds the conditions, the evidence, and the limits of what was measured.
 
 **In this pipeline.** Both sinks set `acknowledgements.enabled: true`. The
 `wa_ingest_http` source sets no `acknowledgements` key, and the file has no top-level
-block, so `response_code: 202` is returned as soon as the body is decoded. Under the
-exactness ruling this is the sharpest of the five: the client is told the event was
-accepted, and a rollout, a drain, or the `emptyDir` of rule 1 can then discard it with
-nothing anywhere recording that it was lost.
+block, so `response_code: 202` is returned as soon as the body is decoded. Measured on
+0.57.0 with ClickHouse unreachable, that path answered `202` in 3–15 ms across six
+consecutive requests — the sinks' acknowledgements reach no client, exactly as the rule
+says.
+
+**What was actually run, because the committed config cannot be.** That measurement
+used this config with two deviations: `api.graphql` and `api.playground` deleted, and
+`VECTOR_DANGEROUSLY_ALLOW_ENV_VAR_INTERPOLATION=true` set. Rule 4 below records why
+each is required and the exit code without it. The measurement therefore describes the
+topology, not the committed file, which does not start on 0.57.0 at all.
+
+Under the exactness ruling this is the sharpest of the five: the client is told the
+event was accepted, and a rollout, a drain, or the `emptyDir` of rule 1 can then
+discard it with nothing anywhere recording that it was lost.
 
 ### 3. At-least-once delivery plus a non-deduplicating table equals duplicate rows
 
@@ -217,17 +235,34 @@ config is discovered at validate time. A default that starts assigning a differe
 to the same text is discovered in production, or not at all.
 
 **In this pipeline.** Vector is pinned to `0.53.0` in five places while current stable is
-`0.57.0`. Six sink settings — endpoint, user and password on each of the two sinks — use
-`${VAR}` interpolation, and `${CLICKHOUSE_PASSWORD}` carries no default. 0.57.0 disables
-that interpolation by default, so the bump alone would make both sinks authenticate with
-the literal string `${CLICKHOUSE_PASSWORD}` while the config file is unchanged;
-`80-version-and-upgrade-deltas.md` states the change and `85-security-and-secrets.md`
-states the replacement. CI would not catch it: the `vector_validate` job runs
-`vector validate --skip-healthchecks` with no `--deny-warnings` on either copy, and it
-exports an empty `CLICKHOUSE_PASSWORD` first, which makes a literal placeholder and a
-working credential produce the same result. This is the evidence for the rule
-`50-validation-and-testing.md` already states — a validate gate has to be able to see the
-defect class it is gating, or it reports clean on the one thing it exists to catch.
+`0.57.0`; nothing has been bumped. Two dormant changes are waiting in that gap, and
+running the unchanged config on a 0.57.0 binary shows both, in order:
+
+1. `api.graphql: false` and `api.playground: false` are still in the config. 0.55.0
+   rejects both at load: `x unknown field 'graphql', expected 'enabled' or 'address'`,
+   exit 78. The config does not start.
+2. Remove those two keys and the next load failure is the six `${VAR}` sites — endpoint,
+   user and password on each of the two sinks. 0.57.0 disables interpolation by default,
+   and the config fails with `x invalid uri character in 'sinks.clickhouse_events_raw'`,
+   exit 78, **with and without the environment variables set**.
+
+Both observed on `timberio/vector:0.57.0-alpine`, digest
+`sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`, 2026-08-08.
+
+**So the bump does not silently authenticate with a literal `${CLICKHOUSE_PASSWORD}` —
+it refuses to load.** The interpolated `endpoint` is format-constrained and aborts the
+load before any credential is used, which is the tripwire
+`85-security-and-secrets.md` rule 1 requires and this config happens to have.
+
+The rule stands and the danger is undiminished: **a version pin is a dormant
+configuration change**, and this one is holding two. What the loud failure removes is
+the *silent* variant, not the change. CI would not distinguish them anyway: the
+`vector_validate` job runs `vector validate --skip-healthchecks` with no
+`--deny-warnings` on either copy, and it exports an empty `CLICKHOUSE_PASSWORD` first,
+which makes a literal placeholder and a working credential produce the same result.
+That is the evidence for the rule `50-validation-and-testing.md` already states — a
+validate gate has to be able to see the defect class it is gating, or it reports clean
+on the one thing it exists to catch.
 
 ### 5. A dropped-events counter is not a dead-letter queue
 

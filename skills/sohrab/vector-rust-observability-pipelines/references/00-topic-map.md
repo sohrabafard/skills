@@ -8,6 +8,7 @@ do not match costs context and buys nothing.
 | lay out a pipeline, decide how many Vector tiers there are, write a per-path delivery contract, or work out whether one sink can stall another | `10-topology-and-delivery-contract.md` |
 | write or debug a VRL program, handle a fallible call, default a missing field, or you hit `error[E651]` or an aborting `remap` | `20-vrl-transforms.md` |
 | choose a buffer type, size a buffer, set `when_full`, enable acknowledgements, or answer what the pipeline does when the destination is unreachable | `30-buffers-acks-and-backpressure.md` |
+| keep a source returning immediately and never slowing its upstream client, or check whether a path that answers fast today is actually configured to keep doing so | `35-pass-through-and-relay-paths.md` |
 | configure the ClickHouse sink, set batching or retry options, template a `table` or `database`, or decide who owns the schema you are writing into | `40-clickhouse-sink.md` |
 | work on the `wa` watch-time ingest pipeline, or decide whether a Vector path carrying product data fails open or fails closed | `75-ala-ingest-pipeline.md` |
 | validate a config, write unit tests, choose the right `vector validate` flags, or interpret an exit code from Vector or from a checker | `50-validation-and-testing.md` |
@@ -15,6 +16,7 @@ do not match costs context and buys nothing.
 | diagnose a live symptom: no data arriving, a stall, Vector exiting on its own, loss, duplication, high CPU, or a regression after an upgrade | `65-troubleshooting.md` |
 | deploy or change Vector via the Helm chart, pick a role, or work out why a config change had no effect | `70-helm-chart-operations.md` |
 | upgrade Vector, or repeat any claim about a version, a default, or a breaking change | `80-version-and-upgrade-deltas.md` |
+| find out whether Vector can do a thing at the pinned version, or check that an option you are about to recommend is not deprecated | `82-capability-surface.md` |
 | put a credential in a config, redact a field, or template a routing identifier | `85-security-and-secrets.md` |
 | cite a source, or re-derive a version-sensitive fact rather than trusting this skill | `90-source-map.md` |
 

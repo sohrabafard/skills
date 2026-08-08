@@ -46,6 +46,11 @@ one environment and not the other.
 `0.53.0` 2026-01-27 · `0.54.0` 2026-03-10 · `0.55.0` 2026-04-22 ·
 `0.56.0` 2026-06-03 · `0.57.0` 2026-07-14.
 
+This file records what **breaks** across that line. What the pin can **do** — new
+components, VRL, config keys, CLI flags, metrics, and the deprecations to stop
+recommending — is `82-capability-surface.md`. Read it before concluding Vector
+cannot do something.
+
 ## The three 0.57.0 changes that change what you must write
 
 ### 1. Environment-variable interpolation is disabled by default
@@ -70,13 +75,15 @@ EXIT=0
 ```
 
 Where the interpolated value must satisfy a format, the same change fails loudly
-instead: `endpoint: ${CH_ENDPOINT}` gives `x invalid uri character` and exit 78.
-So the breakage is silent exactly where the value is a secret.
+instead: `endpoint: ${CH_ENDPOINT}` gives `x invalid uri character` and exit 78 —
+and it aborts the **whole config load**, so a password interpolated in the same file
+never gets used. The breakage is silent only where every interpolated value is
+format-unconstrained.
 
-**Rule:** do not use `${VAR}` interpolation for credentials in a Vector config.
-Use a `secret:` backend and `SECRET[backend.key]` references. The full rule, and
-the deprecation of placeholders in structural positions, is in
-`85-security-and-secrets.md`.
+That asymmetry is the whole rule, and `85-security-and-secrets.md` rule 1 states it
+once: which shapes of interpolation are safe, the three conditions that make an
+environment variable a legitimate credential source, and the deprecation of
+placeholders in structural positions.
 
 ### 2. Sink routing templates are confined
 
@@ -119,14 +126,37 @@ there to bound it either.
 
 ## 0.55.0 — the observability API moved from GraphQL to gRPC
 
-Upstream: the API *"has moved from GraphQL to gRPC. This includes `vector top`,
-`vector tap`, and anything that talked to `/graphql` or the `/playground`. The
-HTTP `GET /health` endpoint is unchanged."*
+The API moved from GraphQL to gRPC. This covers `vector top`, `vector tap`, and
+anything that talked to `/graphql` or `/playground`.
 
-**Rule:** if anything other than `vector top` and `vector tap` queries the Vector
-API — a dashboard, a scrape job, a custom operator — it must be re-pointed at the
-gRPC API before upgrading past 0.55.0. Kubernetes HTTP probes on `GET /health`
-are unaffected and need no change.
+**The consequence that breaks a config, and it is a hard startup failure.** The
+0.55.0 material reports that configs containing `api.graphql` or `api.playground`
+are rejected — a paraphrase, because it reached this skill through a summarising
+fetch. It needs no quotation: the behaviour is directly observed on 0.57.0.
+
+```
+api:
+  graphql: false        ->  x unknown field `graphql`, expected `enabled` or `address`
+  playground: false         in `api`
+                            EXIT=78
+```
+
+Setting either to `false` does not help — the field itself is unknown. Delete both.
+This is not a tooling note to schedule; a config carrying either key does not start
+on 0.55.0 or later.
+
+**`GET /health` on the API port still answers `200 {"ok":true}` on 0.57.0** —
+observed on a live 0.57.0 process with the API bound to `0.0.0.0:8687`, on
+`timberio/vector:0.57.0-alpine`, digest
+`sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`, build
+`0.57.0 (x86_64-unknown-linux-musl 8832452 2026-07-14 20:58:30)`, 2026-08-08. An
+earlier reading of this had "the `GET /health` endpoint is unchanged" as an upstream
+quote; it is not one, it was a summariser's paraphrase. The binary settles it, and
+Kubernetes HTTP probes on `GET /health` need no change.
+
+**Rule:** before upgrading past 0.55.0, delete `api.graphql` and `api.playground`,
+and re-point anything other than `vector top` and `vector tap` that queries the
+Vector API — a dashboard, a scrape job, a custom operator — at the gRPC API.
 
 Also in 0.55.0: the top-level `headers` option was removed from the `http` and
 `opentelemetry` sinks, and `azure_logs_ingestion` with Client Secret credentials
@@ -138,6 +168,17 @@ now requires `azure_credential_kind` to be set explicitly.
 `compression` explicitly to keep the previous behaviour. `0.56.0`: the
 `greptimedb_metrics` and `greptimedb_logs` sinks require GreptimeDB v1.x.
 Neither affects a ClickHouse pipeline.
+
+**`0.54.0` also renamed a buffer-observability config key**, which does affect any
+pipeline that tuned it: `buffer_utilization_ewma_alpha` was **replaced** by
+`buffer_utilization_ewma_half_life_seconds`. Upstream states the
+`*buffer_utilization_mean` metrics now use time-weighted averaging, *"more
+representative of the actual buffer utilization over time"*, and that the key
+replacement is what makes the change breaking. A config still setting the old key
+must be migrated; a config that never set it needs no edit, but the metric it reads
+is computed differently from 0.54.0 onward, so a threshold derived before that
+release needs re-deriving. Those two metrics are the smoothed saturation signal in
+`60-internal-monitoring.md`.
 
 ## 0.53.0 — the internal buffer metric renames
 

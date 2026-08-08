@@ -74,10 +74,34 @@ sizing or limits; internal metric names; Helm chart values; a deprecation; or
 anything security-sensitive. Those are exactly the claims that go stale without
 announcing it.
 
-## What was verified, and when
+## What was verified, when, and how
 
-Every factual claim in this skill's references was checked against Vector `0.57.0`
-on **2026-07-30**, with a locally installed binary for the runtime observations
-(exit codes, error messages, the disk-buffer minimum, the interpolation and
-confinement behaviour). Claims taken from documentation rather than observation say
-so at the point they are made.
+Two passes with different provenance. Claims taken from documentation rather than
+observation say so where they are made, and a claim carrying no stated observation
+is a documentation claim.
+
+**2026-07-30 — the original pass.** Every factual claim then in this skill's
+references was checked against Vector `0.57.0`, with a locally installed binary for
+the runtime observations: exit codes, error messages, the disk-buffer minimum, and
+the interpolation and confinement behaviour.
+
+**2026-08-08 — the capability and pass-through pass.** Added
+`35-pass-through-and-relay-paths.md` and `82-capability-surface.md`, and revised
+`30-`, `40-`, `50-`, `60-`, `65-`, `75-`, `80-` and `85-`. **Mixed provenance, and
+the two kinds must not be conflated:**
+
+- *Observed on the binary* — image `timberio/vector:0.57.0-alpine`, digest
+  `sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`, build
+  `0.57.0 (x86_64-unknown-linux-musl 8832452 2026-07-14 20:58:30)`: the `api.graphql`
+  rejection, `GET /health`, interpolation load behaviour with and without a
+  format-constrained value, the `route._unmatched` warning under `--deny-warnings`,
+  `expected_event_count`, `request.retry_strategy` nesting, `measure_cpu_usage`
+  scope, `vector vrl --quiet`, live internal metric names and histogram buckets, and
+  both relay runs.
+- *Read from release pages through a summarising fetch* — the whole of
+  `82-capability-surface.md` except where it says otherwise, and the version-tagged
+  additions in `40-`, `50-`, `60-` and `80-`. **Re-read the page before quoting any
+  of it verbatim:** that pass has already been caught altering wording inside what
+  looked like a quotation.
+
+Where the two disagree, the binary wins, per the precedence at the top of this file.

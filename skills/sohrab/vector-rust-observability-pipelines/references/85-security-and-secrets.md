@@ -4,29 +4,101 @@ Verified against Vector `0.57.0` on 2026-07-30. Trust-boundary review for a new
 destination or a new credential path belongs to `/alaa-security-review`
 (`$alaa-security-review`); this file states how Vector expresses the decision.
 
-## Rule 1 — credentials never come from `${VAR}` interpolation
+## Rule 1 — a credential's only interpolation site is never format-unconstrained
 
-**Vector 0.57.0 disabled environment-variable interpolation by default, and the
-resulting failure is fail-open.** A config containing:
+**The defect is not interpolation. It is a credential whose only interpolation site
+is format-unconstrained**, because that is the one shape in which a disabled opt-in
+fails silently.
+
+**Vector 0.57.0 disabled environment-variable interpolation by default**, and the
+resulting failure mode depends entirely on what else the config interpolates. A
+config whose *only* `${VAR}` is a password:
 
 ```yaml
 auth:
   strategy: basic
-  user: ${CLICKHOUSE_USER}
   password: ${CLICKHOUSE_PASSWORD}
 ```
 
-passes `vector validate` with exit 0 on 0.57.0 — observed directly — and then
-authenticates with the literal 22-character string `${CLICKHOUSE_PASSWORD}`. Any
-string is a valid password, so nothing in the type system or the validation step
-objects. The pipeline appears configured, appears validated, and cannot connect.
+validates clean on 0.57.0 **and validates identically whether or not the opt-in is
+set**. Observed, `vector validate --skip-healthchecks` on a `clickhouse` sink with a
+literal endpoint and only the password interpolated:
 
-The same change fails **loudly** wherever the value has to satisfy a format:
-`endpoint: ${CH_ENDPOINT}` produces `x invalid uri character` and exit 78. So the
-breakage is silent precisely where the value is a secret, and noisy where it is not.
-That asymmetry is why this gets its own rule rather than a line in an upgrade note.
+```
+no opt-in set                                   -> Validated, EXIT=0
+VECTOR_DANGEROUSLY_ALLOW_ENV_VAR_INTERPOLATION=true,
+  CLICKHOUSE_PASSWORD=hunter2                   -> Validated, EXIT=0
+```
 
-**Use a secret backend.** Declare it once and reference it:
+Any string is a valid password, so neither the type system nor the validation step
+objects, and the first case then authenticates with the literal 22-character string
+`${CLICKHOUSE_PASSWORD}`. The pipeline appears configured, appears validated, and
+cannot connect. **The two runs are indistinguishable, so no validate step built on
+this config can tell a working credential from a placeholder.**
+
+Add one **format-constrained** interpolated value to the same config and the whole
+config stops loading instead:
+
+```
+endpoint: "${CLICKHOUSE_ENDPOINT}"  and  password: "${CLICKHOUSE_PASSWORD}"
+  -> x invalid uri character   in `sinks.clickhouse_events_raw`
+  EXIT=78, with and without the environment variables set
+```
+
+Observed on `timberio/vector:0.57.0-alpine`, digest
+`sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`, build
+`0.57.0 (x86_64-unknown-linux-musl 8832452 2026-07-14 20:58:30)`, 2026-08-08. The
+endpoint must parse as a URI, `${...}` does not, and the load aborts before any
+credential is used. **The failure is loud, and it is loud because a format-
+constrained value shares the config.** A password alone stays silent.
+
+### The rule
+
+**Prefer a `secret:` backend.** Where an environment variable is genuinely the only
+available source — infrastructure that may be handed over as nothing but a
+connection string, where a backend would have to be provisioned identically on every
+deployment path — interpolation is a legitimate choice, provided all three hold:
+
+1. **The opt-in is set on every command that reads the config** — the running
+   `vector`, `vector validate`, and `vector test` each take it independently. One
+   command left without it is a gate that cannot see the defect it gates.
+2. **At least one format-constrained interpolated value shares the config, and a
+   standing gate keeps it there.** An endpoint, URI, port, or duration interpolated
+   alongside the credential is the tripwire that converts the silent failure into a
+   loud one. A config that interpolates *only* credentials has no tripwire and does
+   not meet this rule.
+
+   The tripwire is a property of an unrelated field, so **a future edit deletes it
+   without touching the credential and without any symptom** — hard-code the endpoint,
+   and condition 3's check silently stops discriminating. This is therefore not a
+   one-time check: the CI gate in condition 3 is what enforces it, and **removing the
+   tripwire must fail that gate**. Whoever removes it either restores one or moves the
+   config to a `secret:` backend.
+
+3. **A standing CI gate proves the opt-in is load-bearing, using the discriminating
+   pair.** One run is never sufficient. Require **both**, on every pipeline run:
+
+   | Run | Required result |
+   | --- | --- |
+   | `vector validate --skip-healthchecks` with **no** opt-in | exit **78**, and the diagnostic must be the interpolation failure — for a URI-valued tripwire, `invalid uri character` |
+   | the same command **with** the opt-in and real values | exit **0** |
+
+   **Both halves, and the diagnostic check, are load-bearing.** Exit 78 is reachable
+   for reasons that have nothing to do with interpolation: a stale `api.graphql` key
+   produces `unknown field 'graphql'` and exit 78 on every run, with and without the
+   opt-in, which is exactly what an unguarded gate reads as success. If the two runs
+   produce the same result, every conclusion drawn from the pair is void. A validate
+   step that exports an empty value first, or that never runs without the opt-in,
+   reports the same result for a working credential and a literal placeholder.
+
+Deployment-layer sourcing is where the security benefit is obtained under this
+option: the variable comes from a secret object rather than a mounted configuration
+object. That is a platform decision, not a Vector one — `/alaa-k8s-helm`
+(`$alaa-k8s-helm`), and `/alaa-security-review` (`$alaa-security-review`) for whether
+the resulting trust boundary is acceptable.
+
+**Use a secret backend where nothing forces the other choice.** Declare it once and
+reference it:
 
 ```yaml
 secret:
@@ -46,15 +118,16 @@ Verified: this validates on 0.57.0, and the backend command is **not executed
 during `vector validate`** — so validation stays safe to run in CI, and a missing
 backend does not turn into an accidental credential fetch.
 
-If an environment variable genuinely is the only available source, then
-interpolation must be re-enabled explicitly with
+The opt-in that condition 1 requires is
 `--dangerously-allow-env-var-interpolation` or
-`VECTOR_DANGEROUSLY_ALLOW_ENV_VAR_INTERPOLATION=true`, **on every command that
-reads the config** — `vector`, `vector validate`, and `vector test` each take the
-flag. The flag is named "dangerously" by upstream because interpolation splices the
-value in verbatim, including characters that change the config's structure. The old
-`--disable-env-var-interpolation` flag and `VECTOR_DISABLE_ENV_VAR_INTERPOLATION`
-were removed in 0.57.0, so a runbook carrying either will fail.
+`VECTOR_DANGEROUSLY_ALLOW_ENV_VAR_INTERPOLATION=true`. **Upstream's "dangerously"
+is not decoration:** interpolation splices the value in verbatim, including
+characters that change the config's structure, so an attacker-influenced variable
+can alter the shape of the config and not only one field's value. That risk is
+unchanged by conditions 1 to 3 — they make a *disabled* opt-in loud, and do nothing
+about a *hostile* value. The old `--disable-env-var-interpolation` flag and
+`VECTOR_DISABLE_ENV_VAR_INTERPOLATION` were removed in 0.57.0, so a runbook carrying
+either will fail.
 
 **Also deprecated in 0.57.0:** `${VAR}` and `SECRET[backend.key]` placeholders in
 *structural* positions of a config — as a key, or where a block is expected — will
