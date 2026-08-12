@@ -27,6 +27,7 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 | Reliability **doctrine** — why a mechanism exists, how to shape it | `alaa-reliability-sla` | every other skill points here |
 | The **ten-point quality bar** | `alaa-project-constitution` `references/quality-bar.md` | every other skill points here instead of restating |
 | **Model and effort**, every runtime capability claim | `alaa-prompting-guide` | no other skill states a model name |
+| The **completion lifecycle** — what `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, and `PUBLISHED` each require | `alaa-workflow` `references/workspace-and-integration.md` | both orchestrators report the four states and point here; no skill restates a definition |
 
 `fail-closed` and `fail-open` conflict by design. A control deciding whether a caller may act denies when it cannot decide — that is `alaa-security-review`. A component that merely contributes degrades when it fails — that is `alaa-reliability-sla`. The deciding question is what the failure lets through, never how important the component is.
 

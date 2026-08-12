@@ -17,13 +17,15 @@ every shared rule is edited here and nowhere else.
 
 ## Commands
 
-Run from the repository root. Each was executed on 2026-07-30 and observed to work.
+Run from the repository root. Each was executed on 2026-08-13 and observed to work.
 
 - `python scripts\validate_sohrab_skill_pack.py` — per-skill structure: frontmatter, description
   budget, the "When NOT to use" heading, `agents/openai.yaml` shape, and reference-path resolution.
 - `python scripts\check_skill_index.py` — both skill indexes in `skills/sohrab/` against the
   directory, in both directions, plus this file and `CLAUDE.md`.
 - `python scripts\check_fleet_references.py` — every cross-skill citation in the pack.
+- `python scripts\check_lifecycle_contract.py` — the four completion-lifecycle states: defined in
+  one owning file, named by both orchestrators' final reports, and restated nowhere else.
 - `python scripts\vendor_subtrees.py refresh-docs` — regenerates the marked blocks in the root
   `README.md` and in `install-skills.md` from `vendor/subtrees.json`.
 
