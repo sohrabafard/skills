@@ -108,6 +108,10 @@ Apply this procedure during documentation creation, refresh, update, upgrade, mi
 cluster splitting. Existing duplication is cleanup input, never permission to reproduce the same
 topic in the new document tree.
 
+**The unit is the claim, not the subject.** One factual claim has one authoring owner. Two documents
+are duplicates when they assert the same claim, not when they name the same release, endpoint,
+table, or version. Classify each occurrence before collapsing it.
+
 1. Inventory the current documentation hubs, deep dives, contracts, runbooks, and decision records
    before writing.
 2. Search the documentation tree for the topic and its canonical identifiers before adding text.
@@ -121,8 +125,8 @@ topic in the new document tree.
 5. Replace every non-canonical occurrence with the smallest audience-specific summary and an
    informative relative link that names the topics the canonical owner teaches, following
    `references/15-document-size-and-clustering.md`.
-6. Do not copy tables, payloads, step lists, diagrams, or normative rules into several documents.
-   If two audiences need the same detail, link both audiences to one owner.
+6. Do not copy tables, payloads, step lists, diagrams, or normative rules into several narrative
+   documents. If two audiences need the same detail, link both audiences to one owner.
 7. When no canonical document exists, place the topic in the strongest existing equivalent rather
    than creating a near-duplicate. When one topic is genuinely shared by several parent documents,
    create one shared canonical child using the hierarchy in
@@ -130,6 +134,24 @@ topic in the new document tree.
 8. Re-run the search after editing. Confirm the canonical owner contains the complete verified
    topic, remains aligned with source truth, and is the only location with full detail. Every other
    occurrence must have a distinct audience-specific summary or be reduced to an informative link.
+
+### Three kinds of text, and only one of them is de-duplicated
+
+Steps 1-8 govern the first row alone. Collapsing a row below it destroys a record, and the loss is
+invisible afterwards because what survives reads complete.
+
+| Kind | How to recognise it | What this procedure does to it |
+|---|---|---|
+| Canonical narrative | it explains, orients, or navigates; a reader consults it to understand | one owner holds the full explanation, and every other occurrence becomes an audience-specific summary and a link |
+| Normative record | its audience is obliged to read it for a change to be consumed correctly — a changelog for an upgrading consumer, a decision register for a future maintainer. The obligation on the reader is what makes it normative, never the filename | left intact. Merge two only when their required semantics are identical, which naming the same subject never establishes |
+| Machine projection | a mutable value that exists in a second place only so drift can be detected against the first | never authored or corrected by hand here. Its domain owner generates or validates it; where no such tooling exists, link to the owner instead of copying the value |
+
+A hand-edited projection stops testing the drift it was put there to catch, and it fails silently,
+because the two values now agree for the wrong reason.
+
+Reading two documents in one task is not evidence that they hold one claim between them.
+`references/40-sync-workflow-and-evidence.md` owns the paired-review matrix and already states what
+reviewing a paired document does and does not oblige.
 
 ## Repository-safe links in generated documents
 
