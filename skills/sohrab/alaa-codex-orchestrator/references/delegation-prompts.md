@@ -14,11 +14,14 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <acceptance_criteria><numbered checkable criteria></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
+<progress>emit one line between steps; prefer one invocation per package or target over a single chained command</progress>
 <return>the shape of the return and its line bound; findings, verdicts, counts, and artifact paths only, never transcripts, full diffs, or raw logs</return>
 <output>use the agent's native output contract</output>
 ```
 
 Every dispatch carries the `<return>` field. An unbounded child return is the most common way a parent's context is flooded, and the parent pays that cost on every remaining turn of the goal, not only on the turn the return arrives.
+
+Every dispatch that can run long carries `<progress>`. A silent lane is indistinguishable from a finished one, and a stream watchdog can kill it mid-run with its work already done and unreported.
 
 ## Spec analyst
 
@@ -84,6 +87,7 @@ Use `alaa-implementer-sol` instead of `alaa-implementer` when the routing matrix
 <task>Independently verify the combined change for: <goal>.</task>
 <repository><absolute worktree path></repository>
 <initial_expectation><expected clean/known git status></initial_expectation>
+<tree_pin><commit SHA under test>. Re-read HEAD at start, between commands, and at the end; if it moved, stop and report which commands ran before the move.</tree_pin>
 <commands>
   <command id="1" cpu_heavy="true|false" timeout_seconds="...">exact command and cwd</command>
 </commands>

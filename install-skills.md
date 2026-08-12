@@ -26,7 +26,7 @@ $srcRoots = @(
 
 $destinations = @(
     [pscustomobject]@{ Name = "codex"; Path = (Join-Path $HOME ".codex\skills") }
-#    [pscustomobject]@{ Name = "claude"; Path = (Join-Path $HOME ".claude\skills") }
+    [pscustomobject]@{ Name = "claude"; Path = (Join-Path $HOME ".claude\skills") }
 )
 
 function Resolve-LinkTargetPath {

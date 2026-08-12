@@ -109,7 +109,7 @@ reason in its own repository docs.
 | `authz-sidecar` -> OpenFGA `check` | `200 ms` | `500 ms` | none |
 | Service -> RabbitMQ publish, waiting for the broker acknowledgement | `1000 ms` | `5000 ms` | per the retry budget below |
 | Service -> one `/api/ready` dependency probe | `500 ms` | `2000 ms` | none |
-| Service -> Redis, single command | `500 ms` | `1000 ms` | none |
+| Service -> Redis, single command | `1000 ms` | `1000 ms` | none |
 
 Two hops carry no retry deliberately. The gateway authorization hop is on the critical path of every
 protected request and already fails closed with `503 AUTHZ_SERVICE_UNAVAILABLE`, so a retry there

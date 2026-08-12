@@ -14,6 +14,8 @@ Then read `README.fa.md` for the routing map, and the owning skill for anything 
 
 A rule has exactly one owning file. When two skills state the same rule, one of them is wrong.
 
+**One pair is the deliberate exception.** `alaa-cc-orchestrator` and `alaa-codex-orchestrator` are one skill for two runtimes, and their behaviour is identical by design: a behavioural rule added to one is added to the other in the same change, and an unexplained divergence between them is drift, not ownership. Only two things may differ — the mechanics, expressed in each runtime's own idiom, and delegation polarity, which stays matched to each target family because flattening it yields either a swarm or a single-threaded session and neither errors. Do not "fix" that duplication. `alaa-workflow` is the layer above both — plans, resumable state, phase prompts — and takes no copy of an orchestrator rule; it points at the pair.
+
 | Contested ground | Owner | The other side |
 |---|---|---|
 | Telemetry **names and values** — log fields, event and code names, metric families, `OTEL_*` defaults | `alaa-services-contract` | `alaa-observability-soc` points here |
@@ -38,7 +40,7 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **Never hardcode a machine path or a version-sensitive number.** `D:\…` breaks on every other machine; a threshold copied from memory is stale the day it is written. Take paths as arguments, and fetch a current value from its primary source with the source and date recorded beside it.
 
-**State every instruction exactly once.** The one deliberate exception is `alaa-project-constitution/assets/constitution-template.md`, which is self-contained because it travels to other repositories and must stand alone there. Duplication between a skill and an artifact it emits is not duplication.
+**State every instruction exactly once.** Two deliberate exceptions: `alaa-project-constitution/assets/constitution-template.md`, which is self-contained because it travels to other repositories and must stand alone there; and the mirrored orchestrator pair recorded under Ownership above. Duplication between a skill and an artifact it emits is not duplication.
 
 ## Structure
 

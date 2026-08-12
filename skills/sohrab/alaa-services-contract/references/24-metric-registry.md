@@ -105,9 +105,40 @@ nothing rather than inventing a near-miss name.
 | `alaa_db_pool_in_use` | gauge | any service with a database | the observable behind the pool bound in `22-failure-load-and-deprecation-contract.md` |
 | `alaa_db_pool_idle` | gauge | any service with a database | idle pooled connections |
 | `alaa_db_pool_wait_seconds` | histogram | any service with a database | time spent waiting to acquire a pooled connection |
+| `alaa_db_session_guard_seconds` | gauge | any service on the `alaa-go-chi` kit with a database | the effective server-side session guard in seconds, as the server reports it on the connection sampled; `0` is PostgreSQL's own encoding for disabled |
+| `alaa_db_session_guard_observed` | gauge | same | `1` when the guard was read successfully, `0` when the read failed, so a disabled guard is distinguishable from an unread one |
 
 Where the driver and database support them safely: `alaa_db_transactions_total`,
 `alaa_db_transaction_duration_seconds`, `alaa_db_lock_wait_seconds`, `alaa_db_deadlocks_total`.
+
+### The two `alaa_db_session_guard_*` families: their labels, and why there are two
+
+Registered 2026-08-11 on the registry owner's approval, ahead of emission, for
+`alaa-go-chi`'s `docs/change-requests/2026-08-11-pgkit-session-guard-runtime-verification.md`. They
+exist because that kit's ratified pooled/direct boundary hands `statement_timeout`, `lock_timeout` and
+`idle_in_transaction_session_timeout` to the pooler and the database on a pooled lane, leaving no way
+to answer "is this service actually guarded" without a manual session.
+
+- **Labels: `guard`, `lane`.** `guard` is closed to `statement_timeout`, `lock_timeout`,
+  `idle_in_transaction_session_timeout`; `lane` is closed to `runtime`, `admin`. Both are
+  compile-time constants in the kit, so nothing in a request, tenant, host, or connection can extend
+  either set. Add no per-connection, per-host, per-database or per-tenant label: the question these
+  answer is per-service, and the connection-level detail belongs in a log reached through `trace_id`.
+- **Worst-case series: 3 `guard` x 2 `lane` = 6 per family, 12 across both, per service per
+  environment**, with `service` and `env` arriving as const labels. Invariant under attack traffic
+  because no request path reaches either label.
+- **Two families, not one, and this is not a second spelling of one measurement.** The value alone
+  cannot distinguish *disabled on purpose* from *never configured* from *the read failed*, because `0`
+  is PostgreSQL's own encoding for disabled. With the companion, the first two are `observed=1,
+  value=0` and the third is `observed=0`, and series absence means only that the service is not
+  reporting.
+- **A gauge carrying `_seconds` is deliberate**, matching `alaa_queue_consumer_lag_seconds` and
+  `alaa_outbox_oldest_age_seconds`: the base-unit rule governs, and the type-suffix table's "gauge:
+  none" applies to gauges that measure no unit.
+- **`{guard="statement_timeout", lane="admin"}` is `0` on a correctly configured service**, because
+  that kit's `PG_MIGRATE_STATEMENT_TIMEOUT` defaults to `0` by ratified design. Measured against a real
+  stack on 2026-08-11. An alert that does not exclude it fires on correct configuration from its first
+  day. Alert authorship and severity remain `$alaa-observability-soc`'s.
 
 ### Downstream dependency
 | Metric | Type | Owner | Measures |

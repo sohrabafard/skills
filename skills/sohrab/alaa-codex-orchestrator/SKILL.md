@@ -7,6 +7,8 @@ description: "Production-grade multi-agent coding orchestration for Codex. Use w
 
 Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system. The main thread leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
 
+**One skill, two runtimes.** This pack and its counterpart for the other runtime are the same orchestrator with identical behaviour by design — same decisions, gates, triggers, and stopping conditions — so a behavioural rule added to one is added to the other in the same change. Only expression differs: each states its mechanics in its own runtime's idiom and carries the delegation polarity its own target model family needs, which `/alaa-prompting-guide` owns. Any other difference is drift.
+
 ## When NOT to use
 
 - The change is a single edit whose correctness one reader can confirm without a second lane. Delegation
