@@ -86,6 +86,14 @@ of #19 landed the same day; the rest of both rows is still ahead of the fleet.
 | 19 | The gateway sets `X-TOTP-PROOF-REJECTED` on a presented-and-rejected proof, and a service acts on it only to change a message | `32-auth-totp-and-step-up-contract.md` | `gateway` (emits it, sanitizes it from client input, and proves presence, value, and absence at runtime) | no backend reads it, and no service that emits `TOTP_STEP_UP_REQUIRED` carries `meta.proof_rejected` yet — that key lands fleet-wide in one change or not at all |
 | 20 | The gateway exports `alaa_gateway_totp_proof_verifications_total` | `24-metric-registry.md` | none | `gateway`; its Vector configuration has no `log_to_metric` transform, so step-up rejection alerting is log-search-only while the `auth` half of the same flow is a counter |
 
+One obligation was added on 2026-08-12 after the owner selected network-only admission for service metrics.
+No repository was re-surveyed for this amendment, so conformance remains unproven until each target's
+application guard and rendered deployment exposure are checked together.
+
+| # | Rule | Owning file | Conforms | Does not conform |
+|---|---|---|---|---|
+| 21 | The central scraper calls each private `GET /metrics` directly, with no application-layer credential or source-IP allowlist and no public gateway route | `21-alaa-platform-observability-directive.md` | none proven | `auth`, `comment`, `content`, and the `alaa-go-chi` kit require a fresh application-plus-deployment conformance pass |
+
 Corrections to note, because the evidence did not support the first reading:
 - #3: `entitlement-api` is keyset (`cursor` and `limit` reach the query services), but its survey shows
   responses wrapped only as `{"data":...}` by `writeData`; a `meta.next_cursor` field is not evidenced. It is
