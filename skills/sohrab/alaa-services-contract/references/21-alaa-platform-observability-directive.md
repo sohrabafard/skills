@@ -135,6 +135,28 @@ flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s ca
 - Which labels a metric may carry, and the cardinality budget, belong to `$alaa-observability-soc`. The
   request-middleware label boundary is in `20-operational-and-observability-contract.md`.
 
+### Metrics scraper admission
+
+- The central Collector or Prometheus scraper calls each service's `GET /metrics` endpoint directly. The
+  public API gateway never proxies, aggregates, authenticates, or discovers service metrics.
+- Admission is the deployment's private network boundary only. When the endpoint is enabled, the
+  application accepts the scrape without a gateway proof, bearer token, API key, session, cookie, client
+  certificate, custom authentication header, or application-owned source-IP allowlist.
+- Do not add a metrics credential, secret-file path, authentication bypass, or trusted-gateway environment
+  variable. A service that currently guards `/metrics` with one removes that guard when adopting this
+  contract.
+- The deployment keeps `/metrics` absent from public gateway routes and public Ingress rules, and does not
+  publish its listener or metrics port outside the approved private network. If that boundary cannot be
+  demonstrated in rendered deployment artifacts and a negative reachability check, the deployment does
+  not expose the endpoint.
+- A private network is the accepted admission boundary for this non-sensitive operational surface; it is
+  not cryptographic service authentication. Internal mTLS remains governed by
+  `25-end-to-end-flow-and-boundaries.md` and is not introduced service by service for metrics.
+- The endpoint exposes only registered metric families and bounded labels. A secret, credential, token,
+  session value, raw PII, request or trace identifier, raw URL, query string, or customer payload in its
+  output is a contract violation, because every workload admitted to the private metrics network may read
+  it.
+
 ## Metric names
 
 `24-metric-registry.md` owns every one: the `alaa_` prefix rule, the naming grammar and unit suffixes, the
