@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.6.0
+
+- The final report now states four completion-lifecycle states independently — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, in place of the single final-verdict line. One verdict left a run that was committed and reviewed indistinguishable from one that was merely written, and it let a blocker at the release end erase proof already earned at the implementation end. `alaa-workflow references/workspace-and-integration.md` owns what earns each state, that a later state's blocker never unproves an earlier one, and that a release is requested rather than inferred from an implementation request; this skill names the four states and defines none of them.
+- Added a repository checker that fails when a lifecycle state is defined outside its owner or is missing from either orchestrator's final report, so the two reports cannot drift apart or grow a second copy of the definitions.
+
 ## 3.5.1
 
 - The installers replace a differing agent TOML outright and keep no backup. Both platform installers previously copied any differing same-named file into `.alaa-codex-orchestrator-backups/<timestamp>/`, which left an unmanaged second copy of a definition that is already under version control. The atomic temp-file-and-replace path, the hash verification, and the install lock are unchanged; only the retained copy is gone, and `BackupDirectory` has left the installer's JSON result.

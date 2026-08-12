@@ -27,6 +27,23 @@ A subtask is committable once its focused-tier check has passed. Commit the chan
 
 Committing locally on a work branch is the only Git action this protocol authorizes on its own. Every one of these is asked first, each time: push, tag, force-push, history rewrite, branch deletion, merge into the base branch, or any action against a remote. Repository instructions may narrow this further and never widen it.
 
+## The completion lifecycle
+
+Four states describe what a run has proven, and every run reports all four. Each carries its own verdict — proven, not proven with the blocker named, or not requested — because one word for "done" reads the same over a change that is committed and reviewed as over one that is merely written.
+
+| State | Proven when |
+|---|---|
+| `IMPLEMENTED` | the change's focused-tier proof passed, and the completed change sits in a durable local commit wherever this run holds commit authority. A run that holds none proves the state on the check alone and names the uncommitted tree as a residual risk |
+| `MERGE_CANDIDATE` | every integration gate the change affects passed, as the run's own pipeline defines them, and the independent review the change required returned its verdict |
+| `RELEASE_CANDIDATE` | the user asked for a release, and the release prerequisites the target repository itself defines passed |
+| `PUBLISHED` | an authorized immutable publication landed — a push, a tag, a released artifact — and its evidence was observed on the remote rather than inferred from a command that exited zero |
+
+**A blocker in a later state never unproves an earlier one.** A failed release prerequisite leaves `IMPLEMENTED` and `MERGE_CANDIDATE` exactly as they were proven. Collapsing the ladder to its lowest failure hides finished work and buys it a second time, and that is the whole reason a run reports four verdicts instead of one. Only evidence against a state's own condition moves that state — a commit that is gone, a gate that now fails.
+
+**A release is requested, never inferred.** An instruction to implement, fix, or merge authorizes no release step. With no explicit release request from the user, `RELEASE_CANDIDATE` and `PUBLISHED` report not requested, which is a complete outcome and not a gap to close.
+
+**A state is a report, never an authority.** *What still needs the user* above governs every action these states describe, unchanged: `IMPLEMENTED` records the local commit this protocol already authorizes, while the merge, push, and tag behind `MERGE_CANDIDATE` and `PUBLISHED` each still need the user at the moment they happen. Reaching one state never licenses the action that would reach the next.
+
 ## The integration handshake
 
 Run this once, after every phase is complete, every gate has passed, and documentation has landed.
