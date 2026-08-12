@@ -94,6 +94,7 @@ Route by name rather than restating. Claude Code form first, Codex form second.
 | Frontend integration behaviour the documents describe | `/alaa-frontend-developer` (`$alaa-frontend-developer`) |
 | Ala service conventions and `/api/*` response behaviour | `/alaa-services-contract` (`$alaa-services-contract`) |
 | Whether every cross-skill path citation in `skills/sohrab/` resolves | the fleet checker `skills/scripts/check_fleet_references.py` |
+| Release governance, version selection, changelog policy, contract classification, and repository-specific release tooling | the documented repository's own release owner. Describe what it decided; never decide it here, and never rewrite its records to remove duplication |
 
 ## Subagent strategy
 
