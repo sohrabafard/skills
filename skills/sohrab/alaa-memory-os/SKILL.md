@@ -43,10 +43,8 @@ Two failure modes, both of which have to stop the task rather than be worked aro
   step ran without memory. A *write* does not fail open: report the unwritten note and its content in the
   handoff so the knowledge survives the outage.
 
-Current selection, recorded 2026-08-07: `local`. Basic Memory's CLI is being retired while the vault it
-indexed stays exactly where it is, so the switch cost nothing and migrated nothing. The declared intent is to
-move to `hindsight` once it is activated; until that line says `hindsight`, it is not active no matter what
-is installed on the machine.
+The code block above is the sole selection. Activation evidence and temporary ingestion restrictions belong
+in the selected adapter or the owning repository checkpoint, never in a second selection sentence here.
 
 ## Use this skill when
 
@@ -136,9 +134,9 @@ accept, and the store's adapter reference names the exact variables. `/alaa-secu
 |---|---|
 | `references/knowledge-shape.md` | Before creating or updating any note. Owns search-before-create, required fields, status and confidence values, the observation vocabulary, Extraction and Design mode, and the single do-not-store list. |
 | `references/drift-management.md` | Two sources of truth disagree. |
-| `references/store-local.md` | `ACTIVE_ADAPTER: local` — the current selection. The `agent-memory` markdown vault, read and written with ordinary file tools. |
+| `references/store-local.md` | `ACTIVE_ADAPTER: local`. The `agent-memory` markdown vault, read and written with ordinary file tools. |
 | `references/store-basic-memory.md` | `ACTIVE_ADAPTER: basic-memory`. Retained while `bm` is still installed; the CLI is being retired and the vault it indexed is unchanged. |
-| `references/store-hindsight.md` | `ACTIVE_ADAPTER: hindsight`. |
+| `references/store-hindsight.md` | `ACTIVE_ADAPTER: hindsight` — the current selection. |
 | `references/checkers-and-hooks.md` | Running a checker, reading its exit code, or installing a hook. |
 | `references/skill-boundaries.md` | Unsure whether this skill or another owns a decision. |
 | `references/prompt-3-publishing.md` | Publishing curated lessons from the evidence warehouse. |
