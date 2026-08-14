@@ -60,13 +60,15 @@ It must not: implement while implementation agents are viable; run CPU-heavy ver
 
 **Bound every return.** Each dispatch carries `$alaa-low-noise` (`/alaa-low-noise`): a child returns findings, verdicts, counts, and artifact paths, never transcripts, full diffs, or raw logs, and anything bulky is written to the permitted artifact directory and returned as a path. An unbounded child return is the most common way a main thread's context is flooded, and that cost is charged on every remaining turn of the goal. Anything a later turn or another agent might need again is written to a file first and referenced by path; the conversation is not the storage medium.
 
+**One bounded command per invocation.** Every dispatched agent runs one bounded command per invocation and prints a line naming the step it is starting between them. A watchdog ends a lane on silence rather than on duration, so several commands chained into one long quiet invocation is the shape that loses the whole lane. A killed lane is resumed from its transcript, never restarted: its working tree survived the kill, so the transcript is the only record of which steps had already landed, and a restart repeats those while quietly losing the one that had not.
+
 **Verification is an authority boundary, not redundancy.** `alaa-verifier`, `alaa-reviewer`, and the specialist gates exist because no lane may approve its own change. That is structural. Never skip a gate on the grounds that a lane already checked its own work, and never add a generic "double-check yourself" instruction to a dispatch in place of a real gate.
 
 ## 3. Intake and planning
 
 Before any dispatch: inspect the repository's own guidance and the affected code paths; restate the outcome, the checkable acceptance criteria, the preserved behavior, and every irreversible action; then split the work into the smallest lanes with disjoint write scopes and serialize the ones that overlap. `references/verification-and-gates.md` owns the full intake list and what each lane definition must carry.
 
-Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts.
+Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
 
 ## 4. Model and role routing
 

@@ -17,6 +17,8 @@ It does not apply to a change that alters no behaviour and no test: a comment, a
 
 **No shipped surface is exempt.** Every route, queue consumer, job, scheduled task, and published request carries at least one test meeting the core rule below. The surface that issues credentials is the least exempt of all: a validator run over this platform's own API collection found 73 requests with no test at all, including the entire Auth folder — the requests that issue tokens asserted nothing. That is the failure this skill exists to prevent, because a credential surface is the one place where silent breakage grants access rather than removing it.
 
+**A repository's own validation-policy file outranks this skill inside that repository.** Where a repository states which checks gate a change, at which moment, and what may be cited instead of re-run, that file decides and this skill supplies only what it leaves open. What follows is the fleet default for a repository that has not written its own.
+
 ## The core rule: what makes a test a test
 
 **A test names the broken implementation it defends against. A test that still passes against a plausible broken implementation is not a test — it is an execution of the code under a different name, and its green result is worse than no test, because a reviewer counts it as coverage and stops looking.**

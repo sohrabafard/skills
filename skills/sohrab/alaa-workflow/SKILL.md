@@ -38,6 +38,7 @@ Compaction rarely announces itself, so detect it from your own state rather than
 - Decompose each phase into subtasks that each carry one checkable outcome. A tick claims that outcome was observed, so tick a box once its evidence exists and never ahead of it. Several boxes at once is normal and correct: one change often satisfies several subtasks, and work that turns out to be already done is ticked as soon as you have verified it rather than assumed it.
 - Bring the plan current before the next phase, before a handoff, and before any report. A plan left stale while the work moves on misreports position exactly as a premature tick does.
 - Validate each behavior-changing phase before advancing.
+- Order a phase's gates by cost: every cheap read-only gate whose finding can move the tree returns its verdict before an expensive container-, service-, or build-backed gate is dispatched, and never beside it. The expensive gate then runs once, on the tree those verdicts settled on. Where a repository ships its own validation-policy file, that file outranks this ordering there — `/alaa-testing-strategy` owns that precedence.
 - Fix failed gates, or record the exact blocker and the next safe action.
 - On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.

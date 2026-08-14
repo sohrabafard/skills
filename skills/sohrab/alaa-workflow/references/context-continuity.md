@@ -58,7 +58,7 @@ Writing continuously is a tax; writing only at the end is a bet that nothing goe
 
 1. **A phase completes or fails.** Update the checkpoint. This is the routine case and it is cheap.
 2. **A decision is made or scope changes.** Update the checkpoint and, if the decision closed off an alternative, add it to *ruled out*.
-3. **A validation runs.** Record the actual result in the checkpoint — the command, and what it returned. Not a paraphrase.
+3. **A validation runs.** Record the actual result in the checkpoint — the command, and what it returned. Not a paraphrase. Freeze the tree before the validation is dispatched: commit the work first, so the reference the validation resolves cannot move under it, and record that commit beside the result. A result recorded without the tree identity it observed cannot be cited on resume, because nobody can then check what has changed since — so the resuming agent re-runs a pass this run already paid for.
 4. **Something is learned that would be expensive to rediscover.** Add it to the matching handoff field immediately, while the detail is still exact.
 5. **Before handing off, and before any long autonomous stretch.** Bring both files fully current, then verify with the cold-start test.
 

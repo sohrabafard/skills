@@ -17,6 +17,27 @@ the same pipeline drift and the agent follows whichever it read first.
 `references/routing-matrix.md` owns every specialist trigger; `references/delegation-prompts.md` owns
 the dispatch contracts.
 
+## Gate economics
+
+Gates differ in cost by orders of magnitude, so their order is a rule here rather than a per-phase
+judgement. A gate is **expensive** when it needs a container, a service, a full build, or minutes of CPU,
+and **cheap** when it reads the tree and needs none of those. Where a repository ships its own
+validation-policy file, that file outranks this section inside that repository; `/alaa-testing-strategy`
+owns that precedence.
+
+1. **Cheap read-only gates run before the expensive one, never beside it.** Every cheap gate whose finding
+   can move the tree — the independent review, and each specialist lens whose trigger holds — returns its
+   verdict and has its findings resolved before the expensive verification gate is dispatched. Two gates
+   dispatched together spend the expensive pass on a tree the cheap one is still changing: each fix
+   invalidates the pass already running, and that pass cannot be repaired, only paid for again. Where the
+   verification gate is expensive this orders Phase D's read-only gates ahead of Phase C's dispatch; the
+   phases keep their names, their contents, and their owners.
+2. **The expensive gate runs once, on the tree the review verdict settled on.** A second dispatch of the
+   same gate inside one phase is the evidence that step 1 was skipped, not thoroughness the run earned.
+3. **Freeze before verifying.** Commit the tree on the work branch before dispatching the expensive gate, so
+   the reference it resolves cannot move under it. `alaa-workflow references/workspace-and-integration.md`
+   owns the commit protocol and what may not land while a pass is in flight.
+
 ## Cross-phase reusable-context curation
 
 At the end of Phases A through D, invoke `/alaa-extract-agent-lessons` for an intermediate scan only when the
@@ -44,7 +65,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 1. Dispatch one `alaa-implementer` per routine lane.
 2. Dispatch `alaa-implementer-opus` instead only when the lane meets a named escalation criterion from `references/routing-matrix.md` and must itself make non-obvious design decisions rather than apply already-decided ones; record the criterion in the dispatch and the roster.
 3. Concurrency policy: at most two workspace-writing implementation agents at once; never parallelize overlapping write scopes; reserve remaining capacity for read-only agents; only one CPU-heavy verification or profiling command at a time.
-4. Each lane runs the focused tier only — the tests naming its own failure modes, plus lint, type, and build checks scoped to the files it touched — and returns that evidence. A lane never runs the affected or exhaustive tier: it is the wrong authority and the wrong moment for both. `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns the tiers.
+4. Each lane runs the focused tier only — the tests naming its own failure modes, plus lint, type, and build checks scoped to the files it touched — and returns that evidence. A lane never runs the affected or exhaustive tier: it is the wrong authority and the wrong moment for both. `/alaa-testing-strategy` (`$alaa-testing-strategy`) owns the tiers. That focused tier includes every cheap check that could falsify a property the lane's own report claims — the exported-surface, contract, type, or lint check its change could break — and the lane returns each check's observed output. A property asserted without the check that would have contradicted it is returned as not checked, whatever the lane believes.
 5. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
 6. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage. Commit each completed subtask on the work branch as it lands, and tick its box in the plan.
 
@@ -60,7 +81,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 
 ## Phase D — Independent review and specialist gates
 
-1. Spawn `alaa-reviewer` against the complete diff and lane plan after integrated verification is clean enough to review. Under the `lean` profile the lead performs this review itself against a diff it did not write; the authority boundary holds because the reviewer is not the author, and the moment the diff leaves the lane plan the profile becomes `standard` and `alaa-reviewer` is dispatched.
+1. Spawn `alaa-reviewer` against the complete diff and lane plan after integrated verification is clean enough to review. Under the `lean` profile the lead performs this review itself against a diff it did not write; the authority boundary holds because the reviewer is not the author, and the moment the diff leaves the lane plan the profile becomes `standard` and `alaa-reviewer` is dispatched. When the verification gate is expensive, *Gate economics* above orders this review before that gate's dispatch rather than after it.
 2. Trigger a specialist only when its own condition in `references/routing-matrix.md` holds. That file owns every trigger; this one names no condition and narrows none, because a shorter local copy of a trigger list does not read as a summary at dispatch time — it reads as the list, and the conditions it dropped become gates nobody ran. The triggers are identical at every profile.
 3. Spawn `alaa-adversarial-reviewer` only when its condition in `references/routing-matrix.md` holds. That condition has two arms and they are not interchangeable: the blast-radius arm is known in Phase A and is what selects the `hardened` profile, while the conflicting-verdict arm is discovered here and fires the reviewer inside whatever profile is already running. A discovery made in Phase D never reselects the profile, because a profile chosen retroactively would demand a Phase A gate the run has already passed. It is a second independent lens, not a second opinion on a routine change, and its findings are reported to the user rather than fed into another fix cycle.
 4. Reviewer verdict handling: `APPROVED` proceeds; `APPROVED-WITH-NITS` proceeds while reporting nits, fixing only in-scope low-risk ones; `CHANGES-REQUESTED` routes blocker and major findings verbatim to the owning lane.

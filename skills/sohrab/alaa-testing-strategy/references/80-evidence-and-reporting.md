@@ -20,6 +20,12 @@ Two claims are never accepted, however confidently they are written: a check tha
 
 Reporting the second run alone is the single most common way a real intermittent defect is lost, because the first run is the only evidence it ever produced.
 
+## Scoping a pass
+
+**A pass runs the gates the change's paths reach, and cites the rest.** Reachability is computed from the changed paths — the suites, contract tests, and checks that read them, directly or through a caller — and is never re-decided as a per-phase judgement. A gate no changed path can reach observes nothing new, so running it charges its full cost for a result already recorded.
+
+**The pass names the gates it cited, not only the ones it ran.** List each cited gate beside the run ones in the `Tier` field, with its command and timestamp. A report showing only what ran leaves a reader unable to tell a gate that was unreachable from one that was forgotten, and both read as coverage.
+
 ## Reusing an earlier result instead of re-running it
 
 `SKILL.md` carries the binding rule and the four validity conditions. This section owns how a reused result is reported, because a cited result and a fresh one are not interchangeable in a report even when they are interchangeable as evidence.
@@ -39,6 +45,12 @@ Three rules settle the common disputes:
 Changing a command, a flag, a timeout, an environment variable, a fixture, or a seed produces a result for a *different* check. Report both: the original command with its failure, and the altered command with its result, stated as two separate rows. The reviewer decides whether the alteration was legitimate; the report does not decide it by omitting the first row.
 
 `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns the execution-side rule about which commands may be run and under what resource policy through its `alaa-verifier` role. This file owns only how the result is reported and what it means.
+
+## A removal or mutation experiment
+
+`SKILL.md` requires every control to be proven by removal, and that experiment is evidence only when its observed failure output is reported — the test that failed and the assertion that produced it. An experiment reported as having failed as expected, with no output, is indistinguishable from one that was never run, and is recorded as not run.
+
+**A surviving mutation is reported as surviving, before anything is repaired.** When the test still passes with the mechanism removed or inverted, that outcome is written down and reported first. What is then repaired is the cause — the test that failed to defend the control — and never the experiment: adjusting the mutation until the test fails converts a missing test into a report of a passing one.
 
 ## When a test cannot be run at all
 

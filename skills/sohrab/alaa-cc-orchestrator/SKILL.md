@@ -68,7 +68,9 @@ Before any dispatch: inspect the repository's own guidance and the affected code
 
 Every dispatch carries `/alaa-low-noise` (`$alaa-low-noise`): a child returns findings, verdicts, counts, and artifact paths, never transcripts, full diffs, or raw logs, and anything bulky is written to the permitted artifact directory and returned as a path. An unbounded child return is the most common way a lead's context is flooded, and the lead pays that cost on every remaining turn of the goal.
 
-Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts.
+Every dispatched agent runs one bounded command per invocation and prints a line naming the step it is starting between them. A watchdog ends a lane on silence rather than on duration, so several commands chained into one long quiet invocation is the shape that loses the whole lane. A killed lane is resumed from its transcript, never restarted: its working tree survived the kill, so the transcript is the only record of which steps had already landed, and a restart repeats those while quietly losing the one that had not.
+
+Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
 
 ## 4. Model and role routing
 

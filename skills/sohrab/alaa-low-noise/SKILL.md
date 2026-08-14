@@ -13,6 +13,8 @@ A companion skill: domain skills own implementation, `$alaa-workflow` / `/alaa-w
 
 Shared by both parts: complete the real task and keep repository files as the source of truth; preserve required facts, decisions, caveats, validation, blockers, and next steps while trimming introductions, repetition, proof-of-work narration, raw dumps, and optional background first; obey an explicit request for full logs, diffs, or file contents; and follow repository conventions, using the `$alaa-workflow` / `/alaa-workflow` artifact family when that skill is active rather than a competing one.
 
+**Silence is a failure mode, not economy.** Run one bounded command per invocation, and print a line naming the step between invocations. A watchdog ends a run that produces no output, so a long chain of commands joined into one silent invocation is killed on its silence rather than on its duration, and whatever it had not yet written is lost with it. Boundedness is an execution rule before it is an output rule. The line names the step and nothing else — this is not licence to narrate, and the budgets in Part 2 are unchanged. Where a repository's own validation-policy file states how its checks are invoked, that file outranks this rule there.
+
 ### Part 1 — Context economy: what enters the window
 
 - Treat every tool result as a recurring cost rather than a one-turn cost, and decide on that basis.
