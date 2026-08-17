@@ -19,8 +19,9 @@ $srcRoots = @(
     (Join-Path $repoRoot "vendor\cc-skills-golang\skills")
     (Join-Path $repoRoot "vendor\knowledge-work-plugins\design\skills")
     (Join-Path $repoRoot "vendor\knowledge-work-plugins\product-management\skills")
-    (Join-Path $repoRoot "vendor\basic-memory\basic-memory")
+    #(Join-Path $repoRoot "vendor\basic-memory\basic-memory")
     (Join-Path $repoRoot "vendor")
+    (Join-Path $repoRoot "vendor\hindsight-skills\skills")
 # vendor-subtrees:codex-src-roots:end
 )
 
@@ -316,6 +317,7 @@ Current vendored upstreams:
 - [`vendor/knowledge-work-plugins`](vendor/knowledge-work-plugins/) from `https://github.com/anthropics/knowledge-work-plugins.git`
 - [`vendor/basic-memory`](vendor/basic-memory/) from `https://github.com/basicmachines-co/basic-memory.git`
 - [`vendor/skill-temporal-developer`](vendor/skill-temporal-developer/) from `https://github.com/temporalio/skill-temporal-developer.git`
+- [`vendor/hindsight-skills`](vendor/hindsight-skills/) from `https://github.com/vectorize-io/hindsight-skills.git`
 <!-- vendor-subtrees:install-list:end -->
 
 The source of truth for subtree definitions is:

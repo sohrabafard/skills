@@ -62,6 +62,13 @@
       "codex_src_roots": [
         "vendor"
       ]
+    },
+    {
+      "name": "hindsight-skills",
+      "prefix": "vendor/hindsight-skills",
+      "remote": "hindsight-skills-upstream",
+      "url": "https://github.com/vectorize-io/hindsight-skills.git",
+      "branch": "main"
     }
   ]
 }
