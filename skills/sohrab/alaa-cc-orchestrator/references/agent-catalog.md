@@ -10,7 +10,7 @@ Twenty-one roles are available. A typical goal fires three to five of them. Brea
 |---|---|---|---|---|
 | `alaa-spec-analyst` | Opus / high | read-only | Turn a vague goal into a checkable acceptance contract and a lane decomposition | Implementation, or inventing product decisions the user owns |
 | `alaa-explorer` | Sonnet / medium | read-only | Repository ownership and execution-path mapping | External research or design decisions |
-| `alaa-researcher` | Sonnet / medium | read-only | Official docs, versions, standards, third-party contracts | Implementation or final decision-making |
+| `alaa-researcher` | Sonnet / medium | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
 | `alaa-test-strategist` | Sonnet / high | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
 
 ## Implementation and verification

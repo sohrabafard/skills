@@ -31,6 +31,7 @@ Do not spawn when the relevant paths and contracts are already established in cu
 
 ### Spawn `alaa-researcher` when
 
+- a prior session, decision, file, or shared contract must be recalled and verified;
 - an external API, library, or tool version controls correctness;
 - official docs or standards are needed;
 - sources disagree or current behavior may have changed;

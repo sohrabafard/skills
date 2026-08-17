@@ -8,6 +8,26 @@ Verified 2026-08-15: stable Hindsight is `0.9.1`, and the official `@vectorize-i
 
 Coding Agents owns Claude Code and Codex hooks, MCP wiring, its staged runtime and companion skill, config merging/backups, install/update/uninstall, bank resolution, retain/recall/reflect tools, session write-back, optional git seeding, and optional conversation import. Do not add a second hook, spool, transcript parser, MCP registration, or installer around it.
 
+## Upstream skill routing
+
+This adapter keeps policy authority: it decides whether memory work is admitted, which bank and scope are
+legal, what must be verified against repository truth, and whether an external effect is authorized. After
+that decision, invoke at most one vendored upstream skill for the product mechanics it owns:
+
+- `/hindsight-docs` for current Hindsight architecture, API, SDK, deployment, configuration, debugging, or
+  best-practice questions. Read only the references needed for the question; it does not decide what Alaa
+  work may retain.
+- `/hindsight-architect` when the user asks to design or review an application's Hindsight integration. It
+  produces an implementation plan, not code; route accepted execution through `/alaa-workflow`, and verify
+  its repository and security assumptions before implementation.
+- `/hindsight-upgrade` only for an explicit installed-copy update request. Its network, setup, configuration,
+  and replacement steps require the corresponding user authorization. It must never edit
+  `vendor/hindsight-skills`; this repository updates that subtree through its vendor workflow.
+
+Routine Alaa recall, retention admission, durable publication, and drift handling stay in `/alaa-memory-os`;
+none of these upstream skills replaces them. If the named upstream skill is not installed, report that
+mechanics are unavailable and continue only where this adapter's fail-open rule permits it.
+
 ## Installation and configuration
 
 Install explicit targets and an explicit server mode:

@@ -46,9 +46,10 @@ Every dispatch that can run long carries `<progress>`. A silent lane is indistin
 ## Researcher
 
 ```xml
-<task>Establish the external/version-specific facts needed for: <decision question>.</task>
+<task>Establish the prior-context or external/version-specific facts needed for: <decision question>.</task>
+<memory_query><exact prior session, decision, file, or shared-contract query; otherwise none. When set, apply /alaa-memory-os once and report recalled claims separately from repository verification.</memory_query>
 <versions><versions derived from repository manifests/locks></versions>
-<source_priority>Repository evidence, then primary/official sources.</source_priority>
+<source_priority>Repository evidence and primary/official sources are proof; memory is a lead to verify.</source_priority>
 <decision_boundary>Inform the orchestrator; do not decide or edit.</decision_boundary>
 ```
 

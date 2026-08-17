@@ -4,9 +4,9 @@ Mechanics for reading and writing the vault with ordinary file tools and no inde
 with the store; nothing here is policy. The policy is in `SKILL.md`, `references/knowledge-shape.md`, and
 `references/drift-management.md`.
 
-**This is the active adapter.** The Basic Memory CLI is being retired; `references/store-basic-memory.md` stays
-for the period while `bm` is still installed and for anyone who reinstates it. Nothing was migrated when the tool
-was dropped, because the tool was never where the notes lived.
+**Use this adapter only when `ACTIVE_ADAPTER: local` is selected.** The Basic Memory CLI is being retired;
+`references/store-basic-memory.md` stays for the period while `bm` is still installed and for anyone who
+reinstates it. Nothing was migrated when the tool was dropped, because the tool was never where the notes lived.
 
 ## What the store actually is
 

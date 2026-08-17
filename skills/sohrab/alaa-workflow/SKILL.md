@@ -11,8 +11,10 @@ Coordinate long work so it survives losing the conversation, without making ever
 
 1. Read repository instructions and every user-named read-first artifact.
 2. If a plan already exists, read it before execution, resume, delegation, review, or handoff, and follow the resume protocol in `references/context-continuity.md`.
-3. Pair with `$alaa-low-noise` / `/alaa-low-noise` and the narrowest domain skill needed for technical decisions.
-4. Select the artifact profile before writing workflow files.
+3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads; it never owns this workflow's plan, checkpoint, evidence, or handoff.
+4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once and reuse its routed result instead of retrieving the same fact through a second surface.
+5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions.
+6. Select the artifact profile before writing workflow files.
 
 ## Select the profile
 

@@ -2,16 +2,15 @@
 
 `alaa-workflow` owns workflow admission, plan and checkpoint continuity, delegation boundaries, handoff, and review cadence. Pair it with the narrowest owner for every technical decision. This file says which skill owns which decision and nothing more.
 
-Triggers are runtime-specific: `/name` in Claude Code, `$name` in Codex. Both forms exist for every skill below except where a line marks one runtime-specific.
-
 ## Core companions
 
-- Prompt design, model and effort selection, runtime feature syntax, and freshness: `$alaa-prompting-guide` / `/alaa-prompting-guide`. It owns every model name, effort level, and trigger-syntax question this skill defers on; add `$openai-docs` / `/openai-docs` for current OpenAI guidance.
-- Per-goal multi-model role orchestration: `$alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code — a bounded goal or a single phase executed across parallel role lanes. The workflow plan stays authoritative and records the orchestrator's final report as phase evidence.
-- Context economy and output discipline: `$alaa-low-noise` / `/alaa-low-noise`. It owns both what enters the context window and what gets printed. This skill owns what gets written down durably; the two are complementary and neither substitutes for the other.
-- Reusable-context curation at signal-bearing phase boundaries and before completion: `$alaa-extract-agent-lessons` / `/alaa-extract-agent-lessons`. It owns admission and the decision-interface, judgment-rubric, and knowledge-card shapes. This workflow owns the intermediate handoff location and the final lifecycle gate; `$alaa-memory-os` / `/alaa-memory-os` owns durable publication.
-- Which surface answers a phase's code question — a code graph, a semantic language server, a framework MCP, or plain read and search — and which of those a delegated lane may be granted: `$alaa-code-intelligence-routing` / `/alaa-code-intelligence-routing`. It also owns preventing the same fact from being retrieved twice. Record what a lane established as a confirmed fact in the handoff package, with the owner that established it, so the next phase consumes it instead of re-running the query.
-- Codex runtime and harness failures on Windows: `$alaa-codex-runtime-ops`. Codex-only, with no Claude Code equivalent.
+- Prompt design, model and effort selection, runtime feature syntax, and freshness: `/alaa-prompting-guide`. It owns every model name, effort level, and trigger-syntax question this skill defers on; add `/openai-docs` for current OpenAI guidance.
+- Per-goal multi-model role orchestration: `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code — a bounded goal or a single phase executed across parallel role lanes. The workflow plan stays authoritative and records the orchestrator's final report as phase evidence.
+- Context economy and output discipline: `/alaa-low-noise`. It owns both what enters the context window and what gets printed. This skill owns what gets written down durably; the two are complementary and neither substitutes for the other.
+- Prior-context recall when `/alaa-memory-os`'s trigger holds, and durable publication after curation: `/alaa-memory-os`. Recall supplies leads that must be verified against repository truth; this workflow still owns active plans, checkpoints, evidence, and handoffs.
+- Reusable-context curation at signal-bearing phase boundaries and before completion: `/alaa-extract-agent-lessons`. It owns admission and the decision-interface, judgment-rubric, and knowledge-card shapes. This workflow owns the intermediate handoff location and the final lifecycle gate; `/alaa-memory-os` owns durable publication.
+- Which surface answers a phase's code question — a code graph, a semantic language server, a framework MCP, or plain read and search — and which of those a delegated lane may be granted: `/alaa-code-intelligence-routing`. Invoke it before the first non-trivial code-evidence choice and consume that result instead of retrieving the same fact twice. Record what a lane established as a confirmed fact in the handoff package, with the owner that established it, so the next phase consumes it instead of re-running the query.
+- Codex runtime and harness failures on Windows: `/alaa-codex-runtime-ops`. Codex-only, with no Claude Code equivalent.
 
 ## Domain owners
 

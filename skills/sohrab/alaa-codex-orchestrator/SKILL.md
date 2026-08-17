@@ -68,6 +68,8 @@ It must not: implement while implementation agents are viable; run CPU-heavy ver
 
 Before any dispatch: inspect the repository's own guidance and the affected code paths; restate the outcome, the checkable acceptance criteria, the preserved behavior, and every irreversible action; then split the work into the smallest lanes with disjoint write scopes and serialize the ones that overlap. `references/verification-and-gates.md` owns the full intake list and what each lane definition must carry.
 
+Before the first Phase A evidence dispatch, invoke `/alaa-memory-os` when its trigger list holds. The lead performs one bounded recall, verifies useful claims against repository truth, and passes only confirmed facts into lane context; active plan and handoff state stay in `/alaa-workflow`. When the unresolved question is itself about a prior session, decision, file, or shared contract, give the exact query to `alaa-researcher`, which owns that read-only memory lane. Independently invoke `/alaa-code-intelligence-routing` before choosing a code-evidence surface, then reuse the routed result rather than asking another surface for the same fact.
+
 Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
 
 ## 4. Model and role routing
@@ -134,7 +136,7 @@ Read `references/resource-policy.md` for runner usage and ecosystem examples. Re
 - Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Auto-install authority is limited to this pack's named TOML files and its two sentinels under `~/.codex/agents`. It does not authorize editing `~/.codex/config.toml`, MCP configuration, other skills, or unrelated agents.
-- A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `$alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.codex/agents`.
+- A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.codex/agents`.
 - Commit on the run's own work branch at each completed subtask — never on the user's base branch, and never as one commit at the end. `alaa-workflow references/workspace-and-integration.md` owns the protocol, including which agent may commit. Push, tag, force-push, history rewrite, branch deletion, and merging into the base each need explicit permission at the time it is needed. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 
