@@ -13,7 +13,7 @@ leaves every rule below intact.
 ## Active adapter
 
 ```text
-ACTIVE_ADAPTER: local
+ACTIVE_ADAPTER: hindsight
 ```
 
 **This line is the selection.** Read it before the first recall or write of a task, load only
