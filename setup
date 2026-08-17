@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+# hindsight-skills setup — register skills with Claude Code, Codex, Gemini CLI, Cursor, Kiro, or Factory Droid
+set -euo pipefail
+
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+SKILLS_DIR="$REPO_DIR/skills"
+
+# ─── Parse flags ──────────────────────────────────────────────
+HOST="claude"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --host)   [ -z "${2:-}" ] && echo "Missing value for --host" >&2 && exit 1; HOST="$2"; shift 2 ;;
+    --host=*) HOST="${1#--host=}"; shift ;;
+    *)        shift ;;
+  esac
+done
+
+case "$HOST" in
+  claude|codex|kiro|factory|auto) ;;
+  *) echo "Unknown --host value: $HOST (expected claude, codex, kiro, factory, or auto)" >&2; exit 1 ;;
+esac
+
+# ─── Auto-detect installed agents ─────────────────────────────
+INSTALL_CLAUDE=0
+INSTALL_CODEX=0
+INSTALL_KIRO=0
+INSTALL_FACTORY=0
+
+if [ "$HOST" = "auto" ]; then
+  command -v claude >/dev/null 2>&1 && INSTALL_CLAUDE=1
+  command -v codex >/dev/null 2>&1 && INSTALL_CODEX=1
+  command -v kiro-cli >/dev/null 2>&1 && INSTALL_KIRO=1
+  command -v droid >/dev/null 2>&1 && INSTALL_FACTORY=1
+  # Default to Claude if nothing detected
+  if [ $INSTALL_CLAUDE -eq 0 ] && [ $INSTALL_CODEX -eq 0 ] && [ $INSTALL_KIRO -eq 0 ] && [ $INSTALL_FACTORY -eq 0 ]; then
+    INSTALL_CLAUDE=1
+  fi
+else
+  case "$HOST" in
+    claude)  INSTALL_CLAUDE=1 ;;
+    codex)   INSTALL_CODEX=1 ;;
+    kiro)    INSTALL_KIRO=1 ;;
+    factory) INSTALL_FACTORY=1 ;;
+  esac
+fi
+
+echo "hindsight-skills setup"
+echo "======================"
+echo ""
+
+# ─── Generate SKILL.md from templates ─────────────────────────
+echo "Generating skills from templates..."
+bash "$REPO_DIR/scripts/generate-hindsight-skills.sh"
+echo ""
+
+# ─── Install function ────────────────────────────────────────
+install_skills() {
+  local target_dir="$1"
+  local agent_name="$2"
+
+  mkdir -p "$target_dir"
+  echo "Installing skills to $target_dir..."
+
+  for skill_dir in "$SKILLS_DIR"/hindsight-*/; do
+    [ -d "$skill_dir" ] || continue
+    skill_name=$(basename "$skill_dir")
+    target="$target_dir/$skill_name"
+
+    # Remove existing skill (symlink or directory)
+    if [ -L "$target" ]; then
+      rm "$target"
+    elif [ -d "$target" ]; then
+      rm -rf "$target"
+    fi
+
+    cp -R "$skill_dir" "$target"
+    echo "  Installed: $skill_name"
+  done
+
+  echo "  ($agent_name)"
+  echo ""
+}
+
+# ─── Register skills with each agent ─────────────────────────
+installed=0
+
+if [ $INSTALL_CLAUDE -eq 1 ]; then
+  install_skills "$HOME/.claude/skills" "Claude Code"
+  installed=1
+fi
+
+if [ $INSTALL_CODEX -eq 1 ]; then
+  install_skills "$HOME/.codex/skills" "Codex / Gemini CLI / Cursor"
+  installed=1
+fi
+
+if [ $INSTALL_KIRO -eq 1 ]; then
+  install_skills "$HOME/.kiro/skills" "Kiro"
+  installed=1
+fi
+
+if [ $INSTALL_FACTORY -eq 1 ]; then
+  install_skills "$HOME/.factory/skills" "Factory Droid"
+  installed=1
+fi
+
+if [ $installed -eq 0 ]; then
+  echo "No agents detected. Install manually with --host claude|codex|kiro|factory"
+  exit 1
+fi
+
+# ─── Write install-source breadcrumb ─────────────────────────
+mkdir -p "$HOME/.hindsight-skills"
+echo "$REPO_DIR" > "$HOME/.hindsight-skills/install-source"
+
+# ─── Make bin/ scripts executable ────────────────────────────
+find "$SKILLS_DIR" -path '*/bin/*' -type f -exec chmod +x {} \;
+
+echo "Done! Available skills:"
+echo "  /hindsight-architect  — Design memory architectures for AI agents"
+echo "  /hindsight-docs       — Hindsight technical documentation reference"
+echo "  /hindsight-upgrade    — Check for and install updates"
+echo ""
+echo "Type /hindsight-architect to get started."
