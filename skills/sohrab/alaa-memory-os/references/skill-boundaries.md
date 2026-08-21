@@ -16,6 +16,7 @@ is this skill's.
 
 | Question | Owner |
 |---|---|
+| Which evidence becomes a durable candidate, and in what reusable shape | `/alaa-extract-agent-lessons` (`$alaa-extract-agent-lessons`) |
 | Active plans, phase state, continuity across compaction, and what a handoff package contains | `/alaa-workflow` (`$alaa-workflow`) |
 | What enters the context window at all, and what gets printed | `/alaa-low-noise` (`$alaa-low-noise`) |
 | Whether an observability record is required, and at what level | `/alaa-observability-soc` (`$alaa-observability-soc`) |
@@ -30,7 +31,7 @@ is this skill's.
 | Model and effort choice | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
 | Deriving the service call graph from telemetry | `alaa-signoz-clickhouse-docs` `references/50-service-topology.md` |
 
-## Two corrections to the previous version
+## Three corrections to the previous version
 
 **`alaa-low-noise` has two levers, not one.** The retired text described it as owning "bounded terminal and
 output discipline, avoiding raw dumps and noisy logs" — the output lever only. It also owns **context
@@ -50,6 +51,12 @@ six-field lists did not even agree, and `alaa-workflow`'s decomposition is the b
 What survives is one sentence: **the memory store holds a pointer to the plan and its handoff package, and
 `/alaa-workflow` (`$alaa-workflow`) owns what the handoff contains.** That file is retired; this sentence
 replaces all of it.
+
+**The curation owner was missing from the table entirely.** `/alaa-extract-agent-lessons`
+(`$alaa-extract-agent-lessons`) routes into this skill for publication and says so in its own step 4, but
+nothing here pointed back, so a task could reach publication having never run admission. That is the
+shape of omission this file warns about: the rule was already enforced negatively by the do-not-store
+list, and the missing half was who produces the storable form.
 
 ## The vendored Basic Memory pack
 

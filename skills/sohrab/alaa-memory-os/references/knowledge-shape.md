@@ -84,6 +84,11 @@ about their own membership, so an agent reading the shortest never learned that 
   `references/50-service-topology.md` owns the derivation. A remembered edge is wrong silently, because
   nothing fails when the call graph changes underneath it.
 
+Nothing on this list becomes storable by being summarised inline on the way in. A transcript, log, or
+document reaches the store only as a candidate that `/alaa-extract-agent-lessons`
+(`$alaa-extract-agent-lessons`) already admitted and shaped. Bulk processing of past conversations is
+that same path at volume, not an exception to it.
+
 ## Mechanics belong to the vendored pack
 
 The syntax of frontmatter, observations, and wiki-link relations is documented upstream and is not restated
