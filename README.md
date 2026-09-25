@@ -2,7 +2,7 @@
 
 AI agent skills are reusable instruction sets that extend your coding assistant with domain-specific expertise, loaded on demand so they don't bloat your context. This repository covers **Go-specific** skills only (language, testing, security, observability, etc.); for dev workflow skills (git conventions, CI/CD, PR reviews) you'll want to add a separate skills plugin.
 
-For generic skills, please visit [cc-skills](https://github.com/samber/cc-skills).
+For non-Golang skills, please visit [cc-skills](https://github.com/samber/cc-skills).
 
 <!-- prettier-ignore-start -->
 
@@ -10,6 +10,8 @@ For generic skills, please visit [cc-skills](https://github.com/samber/cc-skills
 > Bootstrapped with Claude Code by distilling my Go project commits. **Edited, tested, reviewed and reworked by a human**.
 >
 > **No AI slop here.** AI-made skills are useless.
+>
+> Built for Claude Code, Codex, Gemini, Copilot, Antigravity, Cursor...
 
 <!-- prettier-ignore-end -->
 
@@ -105,13 +107,19 @@ OpenCode auto-discovers skills from `.agents/skills/`, `.opencode/skills/`, and 
 <details>
 <summary>Codex (OpenAI)</summary>
 
-Clone into the cross-client discovery path:
+Install the plugin via the Codex CLI:
 
 ```bash
-git clone https://github.com/samber/cc-skills-golang.git ~/.agents/skills/cc-skills-golang
+codex plugin add github:samber/cc-skills
 ```
 
-Codex auto-discovers skills from `~/.agents/skills/` and `.agents/skills/`. Update with `cd ~/.agents/skills/cc-skills-golang && git pull`.
+Update with `codex plugin update cc-skills`. Falls back to a manual clone if the marketplace path is unavailable:
+
+```bash
+git clone https://github.com/samber/cc-skills.git ~/.agents/skills/cc-skills
+```
+
+Codex auto-discovers skills from `~/.agents/skills/` and `.agents/skills/`.
 
 </details>
 
@@ -188,64 +196,64 @@ These skills are designed as **atomic, cross-referencing units**. A skill may re
 
 |  | Skill | Flags | Error rate gap | Description (tok) | SKILL.md (tok) | Directory (tok) |
 | --- | --- | --- | --- | --- | --- | --- |
-| ⭐️ | ✅ `golang-code-style` | ⚡ 🤖 ⚙️ | -40% | 115 | 2,341 | 2,957 |
-| ⭐️ | ✅ `golang-data-structures` | ⚡ | -39% | 93 | 2,599 | 6,318 |
-| ⭐️ | ✅ `golang-database` | ⚡ ⚙️ | -38% | 97 | 2,712 | 7,234 |
-| ⭐️ | ✅ `golang-design-patterns` | ⚡ ⚙️ | -37% | 80 | 2,685 | 9,391 |
-| ⭐️ | ✅ `golang-documentation` | ⚡ 🤖 ⚙️ | -53% | 75 | 3,078 | 11,177 |
-| ⭐️ | ✅ `golang-error-handling` | ⚡ 🤖 ⚙️ | -26% | 141 | 1,718 | 4,677 |
-| ⭐️ | ✅ `golang-how-to` | ⚡ | — | 165 | 4,017 | 13,853 |
-| ⭐️ | ✅ `golang-modernize` | ⚡ 🤖 | -61% | 68 | 2,920 | 9,233 |
-| ⭐️ | ✅ `golang-naming` | ⚡ ⚙️ | -23% | 159 | 3,022 | 7,390 |
-| ⭐️ | ✅ `golang-refactoring` | ⚡ 🧠 🤖 ⚙️ | — | 246 | 3,708 | 20,216 |
-| ⭐️ | ✅ `golang-safety` | ⚡ | -58% | 78 | 2,605 | 5,375 |
-| ⭐️ | ✅ `golang-testing` | ⚡ 🧠 🤖 ⚙️ | -32% | 115 | 4,234 | 7,341 |
-| ⭐️ | ✅ `golang-troubleshooting` | ⚡ 🧠 🤖 | -32% | 128 | 2,894 | 16,577 |
-| ⭐️ | ✅ `golang-security` | ⚡ 🧠 🤖 | -32% | 85 | 3,160 | 21,596 |
-|  | ✅ `golang-benchmark` | ⚡ 🧠 | -50% | 102 | 3,042 | 30,224 |
-|  | ✅ `golang-cli` | ⚡ | -43% | 125 | 2,329 | 6,144 |
-|  | ✅ `golang-concurrency` | ⚡ 🤖 ⚙️ | -39% | 72 | 2,180 | 6,810 |
-|  | ✅ `golang-context` | ⚡ ⚙️ | -34% | 82 | 1,202 | 4,012 |
-|  | ✅ `golang-continuous-integration` | ⚡ | -59% | 82 | 3,291 | 12,553 |
-|  | ✅ `golang-dependency-injection` | ⚡ 🤖 ⚙️ | -47% | 178 | 2,994 | 5,265 |
-|  | ✅ `golang-dependency-management` | ⚡ | -54% | 77 | 2,361 | 5,499 |
-|  | ✅ `golang-structs-interfaces` | ⚡ ⚙️ | -35% | 111 | 3,067 | 3,067 |
-|  | ✅ `golang-lint` | ⚡ 🤖 | -41% | 98 | 1,853 | 6,181 |
-|  | ✅ `golang-observability` | ⚡ 🤖 ⚙️ | -37% | 164 | 3,096 | 18,583 |
-|  | ✅ `golang-performance` | ⚡ 🧠 🤖 | -39% | 130 | 2,190 | 18,190 |
-|  | ✅ `golang-gopls` | ⚡ | — | 219 | 2,308 | 12,188 |
-|  | ✅ `golang-pkg-go-dev` | ⚡ | — | 230 | 3,428 | 5,242 |
-|  | ✅ `golang-popular-libraries` | ⚡ | -30% | 51 | 1,044 | 4,438 |
-|  | ✅ `golang-project-layout` | ⚡ | -38% | 69 | 1,563 | 5,778 |
-|  | ✅ `golang-stay-updated` | ⚡ | -56% | 44 | 1,801 | 1,801 |
+| ⭐️ | ✅ `golang-code-style` | ⚡ 🤖 ⚙️ | -40% | 114 | 2,358 | 2,974 |
+| ⭐️ | ✅ `golang-data-structures` | ⚡ | -39% | 93 | 2,608 | 6,327 |
+| ⭐️ | ✅ `golang-database` | ⚡ ⚙️ | -38% | 97 | 2,721 | 7,243 |
+| ⭐️ | ✅ `golang-design-patterns` | ⚡ ⚙️ | -37% | 80 | 2,694 | 9,400 |
+| ⭐️ | ✅ `golang-documentation` | ⚡ 🤖 ⚙️ | -53% | 75 | 3,163 | 11,876 |
+| ⭐️ | ✅ `golang-error-handling` | ⚡ 🤖 ⚙️ | -26% | 141 | 1,734 | 4,693 |
+| ⭐️ | ✅ `golang-how-to` | ⚡ | — | 184 | 4,210 | 17,583 |
+| ⭐️ | ✅ `golang-modernize` | ⚡ 🤖 | -43% | 104 | 3,486 | 15,145 |
+| ⭐️ | ✅ `golang-naming` | ⚡ ⚙️ | -23% | 159 | 3,031 | 7,399 |
+| ⭐️ | ✅ `golang-refactoring` | ⚡ 🧠 🤖 ⚙️ | — | 245 | 3,835 | 20,392 |
+| ⭐️ | ✅ `golang-safety` | ⚡ | -58% | 78 | 2,614 | 5,384 |
+| ⭐️ | ✅ `golang-testing` | ⚡ 🧠 🤖 ⚙️ | -32% | 115 | 4,270 | 8,822 |
+| ⭐️ | ✅ `golang-troubleshooting` | ⚡ 🧠 🤖 | -32% | 173 | 2,993 | 18,035 |
+| ⭐️ | ✅ `golang-security` | ⚡ 🧠 🤖 | -32% | 85 | 3,187 | 21,623 |
+|  | ✅ `golang-benchmark` | ⚡ 🧠 | -50% | 102 | 3,153 | 33,396 |
+|  | ✅ `golang-cli` | ⚡ | -43% | 125 | 2,338 | 6,153 |
+|  | ✅ `golang-concurrency` | ⚡ 🤖 ⚙️ | -39% | 72 | 2,196 | 6,826 |
+|  | ✅ `golang-context` | ⚡ ⚙️ | -34% | 82 | 1,211 | 4,021 |
+|  | ✅ `golang-continuous-integration` | ⚡ | -59% | 177 | 3,542 | 12,804 |
+|  | ✅ `golang-dependency-injection` | ⚡ 🤖 ⚙️ | -47% | 178 | 3,016 | 5,287 |
+|  | ✅ `golang-dependency-management` | ⚡ | -54% | 77 | 2,407 | 5,545 |
+|  | ✅ `golang-structs-interfaces` | ⚡ ⚙️ | -35% | 111 | 3,076 | 3,076 |
+|  | ✅ `golang-lint` | ⚡ 🤖 | -41% | 98 | 1,877 | 6,295 |
+|  | ✅ `golang-observability` | ⚡ 🤖 ⚙️ | -37% | 164 | 3,128 | 19,583 |
+|  | ✅ `golang-performance` | ⚡ 🧠 🤖 | -39% | 130 | 2,226 | 19,820 |
+|  | ✅ `golang-gopls` | ⚡ | — | 219 | 2,317 | 12,312 |
+|  | ✅ `golang-pkg-go-dev` | ⚡ | — | 170 | 3,442 | 5,386 |
+|  | ✅ `golang-popular-libraries` | ⚡ | -30% | 156 | 1,181 | 5,093 |
+|  | ✅ `golang-project-layout` | ⚡ | -38% | 105 | 1,761 | 6,257 |
+|  | ✅ `golang-stay-updated` | ⚡ | -56% | 44 | 1,802 | 1,802 |
 
 **Tools:**
 
 | Skill | Flags | Error rate gap | Description (tok) | SKILL.md (tok) | Directory (tok) |
 | --- | --- | --- | --- | --- | --- |
-| ✅ `golang-google-wire` | ⚡ | -16% | 122 | 2,661 | 7,391 |
-| ✅ `golang-graphql` |  | -16% | 76 | 3,061 | 7,932 |
-| ✅ `golang-grpc` | ⚡ | -41% | 70 | 2,332 | 5,148 |
-| ✅ `golang-spf13-cobra` | ⚡ | — | 176 | 2,571 | 7,342 |
-| ✅ `golang-spf13-viper` | ⚡ | — | 170 | 2,542 | 7,089 |
-| ✅ `golang-swagger` | ⚡ | — | 144 | 2,333 | 3,338 |
-| ✅ `golang-uber-dig` | ⚡ | -10% | 107 | 2,576 | 6,248 |
-| ✅ `golang-uber-fx` | ⚡ | -5% | 118 | 2,816 | 7,051 |
-| ✅ `golang-samber-do` | ⚡ | -81% | 71 | 1,877 | 3,392 |
-| ✅ `golang-samber-hot` | ⚡ | -54% | 119 | 1,977 | 7,407 |
-| ✅ `golang-samber-lo` | ⚡ | -40% | 167 | 2,601 | 10,279 |
-| ✅ `golang-samber-mo` | ⚡ 🧠 | -48% | 82 | 2,943 | 11,358 |
-| ✅ `golang-samber-oops` | ⚡ | -59% | 70 | 2,535 | 2,847 |
-| ✅ `golang-samber-ro` | ⚡ 🧠 | -50% | 154 | 2,952 | 11,168 |
-| ✅ `golang-samber-slog` | ⚡ | -19% | 119 | 3,111 | 9,833 |
+| ✅ `golang-google-wire` | ⚡ | -16% | 122 | 2,670 | 7,400 |
+| ✅ `golang-graphql` |  | -16% | 76 | 3,070 | 7,941 |
+| ✅ `golang-grpc` | ⚡ | -41% | 70 | 2,341 | 5,157 |
+| ✅ `golang-spf13-cobra` | ⚡ | — | 176 | 2,580 | 7,351 |
+| ✅ `golang-spf13-viper` | ⚡ | — | 170 | 2,551 | 7,098 |
+| ✅ `golang-swagger` | ⚡ | — | 144 | 2,342 | 3,347 |
+| ✅ `golang-uber-dig` | ⚡ | -10% | 107 | 2,585 | 6,257 |
+| ✅ `golang-uber-fx` | ⚡ | -5% | 118 | 2,825 | 7,060 |
+| ✅ `golang-samber-do` | ⚡ | -81% | 71 | 2,145 | 3,660 |
+| ✅ `golang-samber-hot` | ⚡ | -54% | 119 | 1,986 | 7,416 |
+| ✅ `golang-samber-lo` | ⚡ | -40% | 166 | 2,610 | 10,288 |
+| ✅ `golang-samber-mo` | ⚡ 🧠 | -48% | 82 | 2,967 | 11,382 |
+| ✅ `golang-samber-oops` | ⚡ | -59% | 70 | 2,544 | 2,856 |
+| ✅ `golang-samber-ro` | ⚡ 🧠 | -50% | 153 | 2,976 | 11,192 |
+| ✅ `golang-samber-slog` | ⚡ | -19% | 119 | 3,120 | 9,842 |
 | ❌ `golang-temporal` |  | — | 0 | 0 | 0 |
-| ✅ `golang-stretchr-testify` | ⚡ | -47% | 92 | 1,849 | 2,668 |
+| ✅ `golang-stretchr-testify` | ⚡ | -47% | 92 | 1,858 | 2,677 |
 
 ## 🧪 Skill evaluations
 
 |             | With Skill          | Without Skill       | Delta     |
 | ----------- | ------------------- | ------------------- | --------- |
-| **Overall** | **3315/3395 (98%)** | **1915/3395 (56%)** | **+41pp** |
+| **Overall** | **3348/3439 (97%)** | **1957/3439 (57%)** | **+40pp** |
 
 See [EVALUATIONS.md](./EVALUATIONS.md) for the full per-skill breakdown.
 
