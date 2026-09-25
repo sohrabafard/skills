@@ -1,0 +1,7 @@
+attempt=1
+classification=ENVIRONMENT-BLOCKED (runner setup; underlying gate count=0)
+cause=Start-Process in this PowerShell does not accept -PriorityClass
+observed-error=Start-Process: A parameter cannot be found that matches parameter name PriorityClass.
+scope=19 wrapper invocations attempted; no Python check process launched; no gate execution counted
+resolution=single cause-specific retry used current PowerShell BelowNormal priority and subprocess creationflags BELOW_NORMAL_PRIORITY_CLASS
+result=retry executed all 19 gates successfully

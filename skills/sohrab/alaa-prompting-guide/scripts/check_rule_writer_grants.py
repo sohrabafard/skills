@@ -21,9 +21,10 @@ Rules:
     G6  no wrapper emits an identity line, a model name, or an effort level
     G7  every doctrine path a wrapper names resolves
     G8  the wrappers agree on name and description
-    G9  no wrapper pins an effort of max
+    G9  the Codex wrapper retains its default-effort restriction
     G10 the Claude wrapper preloads every skill its contract names
     G11 real Codex wrapper matches the canonical model policy
+    G12 real Claude wrapper matches the canonical Claude model policy CLI
 
 G10 exists because the lane holds no Skill tool: without a preload it would have to find the
 doctrine by guessing a path, and under Claude Code the packaged skill lives at an opaque
@@ -34,8 +35,8 @@ do not invent a `skills.config` block to make the two look symmetric.
 A model and effort pin belongs in runtime metadata and never in text the agent emits. The pin
 routes the dispatch; an identity line or a model name inside the contract reaches the caller's
 report, goes stale the first time a pin moves, and is copied forward because it looks
-authoritative. G9 encodes the rule that a max pin removes the escalation path, so there is
-nothing left to raise to when a lane falls short.
+authoritative. Claude model and effort legality belongs only to its canonical policy;
+G9 preserves the existing restriction for the other runtime.
 
 G5 compares the value the runtime loads, not the bytes on disk, and for the Codex wrapper
 those differ. A TOML basic multi-line string processes escapes, so one backslash inside
@@ -66,6 +67,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 import sys
 sys.dont_write_bytecode = True
 from pathlib import Path
@@ -130,10 +132,10 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
     path on every machine, and a key shape this checker fully owns.
     """
     if not text.startswith("---\n"):
-        return None
+        raise CannotRun("Claude wrapper lacks an opening frontmatter delimiter")
     end = text.find("\n---\n", 3)
     if end == -1:
-        return None
+        raise CannotRun("Claude wrapper lacks a closing frontmatter delimiter")
     head, body = text[4:end], text[end + 5 :]
     fields: dict = {}
     key: Optional[str] = None
@@ -143,6 +145,8 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
         item = re.match(r"^\s+-\s*(.+?)\s*$", line)
         if item and key is not None:
             current = fields.get(key)
+            if key != "skills" or not isinstance(current, list) and current != "":
+                raise CannotRun(f"unsupported Claude list under {key}")
             if current == "":
                 fields[key] = [item.group(1)]
             elif isinstance(current, list):
@@ -151,7 +155,11 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
         m = re.match(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$", line)
         if m:
             key = m.group(1)
+            if key in fields:
+                raise CannotRun(f"duplicate Claude frontmatter key: {key}")
             fields[key] = m.group(2).strip()
+            continue
+        raise CannotRun(f"unsupported Claude frontmatter line: {line!r}")
     return fields, body
 
 
@@ -217,6 +225,8 @@ def check(root: Path) -> List[str]:
 
     if claude:
         fields, claude_body = claude
+        for key in sorted(set(fields) - {"name", "description", "tools", "model", "effort", "skills"}):
+            findings.append(f"G2: unapproved Claude metadata field {key}")
         declared = fields.get("tools")
         if declared is None:
             findings.append("G2: the Claude wrapper omits tools, so it inherits every tool")
@@ -257,7 +267,7 @@ def check(root: Path) -> List[str]:
         if named_model:
             findings.append(f"G6: the {name} wrapper emits the model name {named_model.group(0)!r}")
 
-        for key in ("effort", "model_reasoning_effort"):
+        for key in (("effort", "model_reasoning_effort") if name == "codex" else ()):
             if str(fields.get(key, "")).strip().lower() in ("max", "ultra"):
                 findings.append(f"G9: the {name} wrapper pins {key} at a prohibited default effort")
 
@@ -289,6 +299,23 @@ def check(root: Path) -> List[str]:
     return findings
 
 
+def claude_policy_findings(root: Path) -> List[str]:
+    """Consume the public owner CLI; never duplicate its model or effort rules."""
+    checker = Path(__file__).resolve().parent / "check_claude_model_policy.py"
+    policy = root / "assets/claude-model-policy.json"
+    if not checker.is_file() or not policy.is_file():
+        raise CannotRun("production rule-writer validation requires the Claude policy and checker")
+    result = subprocess.run(
+        [sys.executable, "-B", str(checker), "--policy", str(policy),
+         "--agent-root", str(root / "assets/rule-writer/claude")],
+        capture_output=True, text=True, check=False,
+    )
+    detail = (result.stdout + result.stderr).strip()
+    if result.returncode not in (0, 1):
+        raise CannotRun(f"Claude policy exited {result.returncode}: {detail}")
+    return [f"G12: {detail}"] if result.returncode else []
+
+
 def self_test(fixtures: Path) -> int:
     """Every rule gets one red fixture that only it rejects, plus one green tree.
 
@@ -317,6 +344,40 @@ def self_test(fixtures: Path) -> int:
             raise CannotRun(f"model-output detection missed {token}")
     from check_codex_model_policy import self_test as policy_self_test
     policy_self_test()
+    # Exercise policy CLI failure propagation without turning structural historical
+    # fixtures into another copy of policy. The owner tests actual pin drift.
+    from unittest.mock import patch
+    for malformed in (
+        "---\ntools: Read\ntools: Write\n---\nbody",
+        "---\ntools: Read\n  - Write\n---\nbody",
+        "---\ntools: Read\nbody",
+    ):
+        try:
+            parse_claude(malformed)
+        except CannotRun:
+            pass
+        else:
+            raise CannotRun("malformed or ambiguous Claude metadata was accepted")
+    for code in (0, 1, 2, 9):
+        with patch.object(Path, "is_file", return_value=True), patch(
+            "subprocess.run", return_value=subprocess.CompletedProcess([], code, "fixture", "")
+        ):
+            try:
+                issues = claude_policy_findings(Path("fixture"))
+            except CannotRun:
+                if code not in (2, 9):
+                    raise
+            else:
+                if code in (2, 9) or bool(issues) != (code == 1):
+                    raise CannotRun(f"Claude policy exit {code} propagated incorrectly")
+    for key in ("hooks", "permissionMode", "mcpServers"):
+        text = read_text(fixtures / "green" / CLAUDE_WRAPPER).replace("tools: Read, Glob, Grep", f"tools: Read, Glob, Grep\n{key}: unauthorized")
+        original = read_text
+        def mutated(path: Path) -> str:
+            return text if path == fixtures / "green" / CLAUDE_WRAPPER else original(path)
+        with patch(__name__ + ".read_text", side_effect=mutated):
+            if not any(issue.startswith("G2:") for issue in check(fixtures / "green")):
+                raise CannotRun(f"unauthorized {key} was accepted")
     failures = 0
     for name, expected in cases:
         root = fixtures / name
@@ -366,7 +427,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         root = Path(args.root.strip().strip("\r\n")).expanduser() if args.root else here.parent
         if not (root / "assets/codex-model-policy.json").is_file():
             raise CannotRun("production rule-writer validation requires assets/codex-model-policy.json")
-        findings = check(root)
+        findings = check(root) + claude_policy_findings(root)
     except CannotRun as exc:
         print(f"could not run: {exc}", file=sys.stderr)
         return EXIT_CANNOT_RUN

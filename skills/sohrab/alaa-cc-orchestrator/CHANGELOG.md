@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.0 - 2026-09-25
+
+- Project exact Claude model and effort pins from the prompting guide policy; retain existing role identifiers, bodies and grants.
+- Validate pins through the canonical policy CLI; remove local model selection and effort ceilings. Missing policy or unreadable input cannot pass.
+- Reject native grant and authority metadata drift as well as MCP drift. These are source checks, not proof of runtime activation or enforcement.
+
 ## 4.0.0 - 2026-09-25
 
 - Require explicit installation and commit authority; activation only inspects availability. Integration applies only when requested and authorized; local-only work has no merge prompt.

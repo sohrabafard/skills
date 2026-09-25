@@ -1,0 +1,5 @@
+baseline-common-files=466
+codex-orchestrator-files=58; changed=0
+codex-path-differences=1: CHANGED skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml
+UNCHANGED skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py
+UNCHANGED skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py

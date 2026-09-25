@@ -1,0 +1,113 @@
+# Claude Sonnet 5
+
+API model id `claude-sonnet-5`. The balanced tier: 1M-token context (default and maximum), 128k max output, $2/$10 per MTok in the 25 September 2026 model overview. Adaptive thinking, vision, and the `computer_20251124` computer-use tool. Anthropic calls it the most agentic Sonnet yet, with particular strength in sustained multi-step tool use, unprompted self-verification, and finishing tasks end to end rather than stalling halfway.
+
+The structured Claude policy owns role assignments. Sonnet remains a supported candidate
+for bounded engineering and evidence work; published price and latency classes are not local
+measurements. There is no blanket high-effort ceiling: xhigh and max are valid capabilities,
+whose value must be measured on the target workload.
+
+## API notes
+
+- **Adaptive thinking is on by default.** Requests run with adaptive thinking unless you turn it off with `thinking: {type: "disabled"}`. Manual extended thinking — `thinking: {type: "enabled", budget_tokens: N}` — is **not supported and returns a 400 error**.
+- **Sampling parameters error.** Do not set `temperature`, `top_p`, or `top_k` to a non-default value; any of the three returns a 400. Steer tone through the system prompt instead. This also removes temperature as a lever for stylistic variation.
+- **Tokenizer.** The same input text produces roughly 30% more tokens under Sonnet 5's tokenizer than under the prior one. Measure token counts on your own workloads and set `max_tokens` from that measurement rather than a carried-over estimate.
+
+Add handling for `stop_reason: "refusal"` if the workload touches cybersecurity topics.
+
+## Effort and thinking
+
+`effort` is the primary lever. **Sonnet 5 defaults to `high`.**
+
+`max` is absolute maximum capability with no token constraint; `xhigh` is for the hardest coding and agentic tasks; `high` is the default and balances token usage against intelligence for most use cases; `medium` suits cost-sensitive workloads; `low` is for short, scoped tasks and latency-sensitive workloads.
+
+If reasoning looks shallow on a complex problem, raise effort rather than prompting around it. For latency-critical low-effort tasks that still need multi-step reasoning:
+
+```
+This task involves multistep reasoning. Think carefully through the problem before responding.
+```
+
+If adaptive thinking triggers too often behind a large system prompt:
+
+```
+Thinking adds latency and should only be used when it will meaningfully improve answer quality, typically for problems that require multistep reasoning. When in doubt, respond directly.
+```
+
+Because thinking counts against the same `max_tokens` output cap, leave headroom at `high`, `xhigh`, or `max` — a tight cap yields a response that is mostly thinking and then truncates. Read `references/50-effort-and-thinking.md` for the cross-model decision procedure.
+
+## Response length, tone, and progress updates
+
+Sonnet 5 calibrates response length to task complexity rather than a fixed verbosity: shorter on simple queries, longer on open-ended analysis. To reduce verbosity:
+
+```
+Provide concise, focused responses. Skip non-essential context, and keep examples minimal.
+```
+
+Prefer positive examples of the style you want over negative instructions about what to avoid. If the product needs a specific voice, state it explicitly — for example, `Use a warm, collaborative tone. Acknowledge the user's framing before answering.`
+
+Progress updates during long agentic traces are regular and high quality by default. Remove scaffolding that forces interim status messages on a counter. If the updates do not fit the product, describe what they should contain, with examples.
+
+## Prompting techniques that matter most
+
+- **Literal, explicit instruction following, especially at lower effort.** Sonnet 5 does not silently generalize an instruction or infer an unstated request. This is a benefit for structured extraction and API use, and a trap for loosely scoped prompts. State scope in full: `Apply this formatting to every section, not just the first one.` Anywhere a prompt says "fix the bug" and means "fix every instance of this class of bug," say the second thing.
+- **Be explicit about action versus suggestion.** "Suggest some changes" will produce suggestions, not edits.
+- **Tool use is aggressive by default,** and higher effort produces substantially more tool calls. With thinking disabled it is *less* likely to reach for tools — add explicit triggering rules if tool calls are critical in that configuration. It also runs independent tool calls in parallel readily; steer up or down explicitly.
+- Use XML tags to separate instructions, context, and input; 3–5 `<example>` blocks for format-sensitive work.
+- For long-context work (20k+ tokens), put documents at the top and the query at the end — cited as up to ~30% quality improvement from ordering alone.
+- Ask it to confirm before hard-to-reverse or shared-system actions (force-push, `rm -rf`, dropping tables, posting externally) unless autonomous action on those is intended.
+
+## Subagents and agentic notes
+
+Sonnet 5 tracks its remaining context budget through a conversation. For long-running or multi-context-window work, tell it explicitly that context will be auto-compacted so it should not wrap up early; use structured state files as checkpoints and commit only with explicit authority; and give it verification tools (Playwright, computer use) so it can self-check without human round-trips. Family guidance for delegation:
+
+```
+Use subagents when tasks can run in parallel, require isolated context, or involve 
+independent workstreams. For simple tasks, sequential operations, or single-file edits, 
+work directly rather than delegating.
+```
+
+Use the registered profile as an uncalibrated starting point; higher-level model recommendations do not replace role evidence. For Claude Code's Agent tool, `/loop`, Workflow tool, and plan mode, read `references/41-claude-code-runtime-features.md`.
+
+## Frontend and design defaults
+
+Sonnet 5 defaults to a consistent visual style on open-ended design briefs, and negative instructions ("don't use that color") tend to shift it to a different fixed default rather than produce variety. Temperature is no longer available as a variation lever. Two remedies are documented as reliable. First, **specify a concrete visual system** — palette hexes, typeface direction, layout structure, corner radius, spacing rhythm, motion timing, section-by-section content; the doc's worked example runs to a full paragraph-level brief, and that level of specificity is the point. Second, **have the model propose options first**:
+
+```
+Before building, propose 4 distinct visual directions tailored to this brief (each as: bg hex / accent hex / typeface, plus a one-line rationale). Ask the user to pick one, then implement only that direction.
+```
+
+Where generic AI aesthetics are a risk, add to the system prompt:
+
+```
+<frontend_aesthetics>
+NEVER use generic AI-generated aesthetics like overused font families (Inter, Roboto, Arial, system fonts), cliched color schemes (particularly purple gradients on white or dark backgrounds), predictable layouts and component patterns, and cookie-cutter design that lacks context-specific character. Use unique fonts, cohesive colors and themes, and animations for effects and micro-interactions.
+</frontend_aesthetics>
+```
+
+## Interactive coding products
+
+Choose effort through the structured policy and an authorized comparison; enable autonomous runtime modes only within granted authority. Front-load a well-specified task description with intent and constraints in the first human turn. Minimize required user interactions: ambiguous prompts revealed progressively across many turns reduce token efficiency and sometimes performance.
+
+## Code review harnesses
+
+Sonnet 5 follows a stated importance bar faithfully — a harness that says "only report high-severity issues" will investigate just as thoroughly and then under-report, not investigate less. Separate coverage from filtering. Read `references/20-opus-5.md` for the coverage-stage prompt language and the single-pass fallback; both are stated there and apply here unchanged.
+
+## Computer use
+
+Sonnet 5 supports tool version `computer_20251124` with support up to 2576px / 3.75MP. Internal testing shows 1080p gives a good performance/cost balance; 720p or 1366×768 are viable for cost-sensitive workloads. Tune effort alongside resolution.
+
+## Caveats
+
+Pricing ($2/$10 per MTok, verified 25 September 2026), the ~30% tokenizer increase, the 1M/128k limits, the computer-use resolution caps, and the 400-error conditions are time-sensitive Anthropic-stated figures — re-check before quoting them elsewhere. "Defaults to `high` effort" is stated for the Claude API; do not assume every third-party surface matches. Both xhigh and max are supported; a supported level is not a measured role recommendation. API controls and computer-use specifications do not imply equivalent Claude Code controls. Unchanged detailed mechanics retain their earlier verification and require refresh before use.
+
+## Sources
+
+- [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
+- [Effort (parameter reference)](https://platform.claude.com/docs/en/build-with-claude/effort)
+- [Migration guide](https://platform.claude.com/docs/en/about-claude/models/migration-guide)
+- [Prompting best practices (Claude family)](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
+- [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview)
+
+## Companion reference
+
+For Claude Code's shared agentic features, read `references/41-claude-code-runtime-features.md`. For the cross-model effort decision procedure, read `references/50-effort-and-thinking.md`. For model choice, read `references/90-model-selection.md`.

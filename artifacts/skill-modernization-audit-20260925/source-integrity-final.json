@@ -1,0 +1,11 @@
+{
+  "tracked_inventory_files": 1501,
+  "changed_since_audit_intake": [
+    "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+    "skills/sohrab/alaa-prompting-guide/references/93-claude-evaluation.md",
+    "skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py",
+    "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py",
+    "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py",
+    "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/policy-cases.json"
+  ]
+}

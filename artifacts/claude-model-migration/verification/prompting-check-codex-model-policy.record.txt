@@ -1,0 +1,13 @@
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_codex_model_policy.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:13.661852+03:30
+ended=2026-09-25T15:44:13.778728+03:30
+duration-ms=116
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-codex-model-policy.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-codex-model-policy.stderr.log

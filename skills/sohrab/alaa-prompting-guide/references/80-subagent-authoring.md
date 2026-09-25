@@ -21,7 +21,7 @@ Project agents live in `.claude/agents/`, user agents in `~/.claude/agents/`; bo
 
 Only `name` and `description` are required. The documented optional fields are `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, and `initialPrompt`. The markdown body below the frontmatter becomes the subagent's system prompt — and only that: a subagent receives its own system prompt plus basic environment details, not the full Claude Code system prompt and not the parent's conversation history.
 
-`alaa-reviewer` is the worked example. Its frontmatter pins `model: opus`, `effort: xhigh`, `tools: Read, Glob, Grep, Bash`, and a `skills:` list preloading the clean-code and security references the reviewer must apply. Note what is absent: `Write` and `Edit`. The description states the role and closes with the boundary in three words — "Never edits or fixes." Native tools, Bash command permissions, and MCP grants must all preserve that boundary; omitting Write and Edit alone is insufficient.
+`alaa-reviewer` is the worked example. Its model and effort metadata are checked against `assets/claude-model-policy.json`; it declares `tools: Read, Glob, Grep, Bash` and a `skills:` list preloading the clean-code and security references the reviewer must apply. Note what is absent: `Write` and `Edit`. The description states the role and closes with the boundary in three words — "Never edits or fixes." Native tools, Bash command permissions, and MCP grants must all preserve that boundary; omitting Write and Edit alone is insufficient.
 
 ### Codex: standalone TOML
 
@@ -41,7 +41,10 @@ The two runtimes express the same four decisions with different key names. A cro
 
 **One role with a hard authority boundary.** An agent that reviews *and* fixes will fix, because fixing feels like progress and the model resolves ambiguity toward action. Pick the verb and enforce it in configuration.
 
-**A model and effort appropriate to the role.** Pinned in the definition so every dispatch inherits the same tier and a caller cannot accidentally run a security review on a cheap tier.
+**A model and supported effort appropriate to the role.** Read the runtime's structured policy
+and check executable metadata against it. Pins express intent; check version-dependent
+overrides and observed identity before claiming they took effect. Omit effort for models
+without that parameter.
 
 **The tools it may use.** Claude Code inherits every tool available to subagents when `tools` is omitted, so omission is a decision to grant everything — usually the wrong one. `disallowedTools` subtracts from the inherited pool when a narrow allowlist would be brittle. Codex expresses the coarser cut through `sandbox_mode`.
 
@@ -54,7 +57,10 @@ sandbox does not restrict server-side MCP mutation; Bash may also expose writes 
 native edit tools. Inspect parent overrides and effective grants, and withhold mutation-capable
 tools before claiming read-only. Prose describes the intended authority but cannot prove it.
 
-The same principle keeps an independent verification gate alive even though most self-checking instructions are redundant. Anthropic's Opus 5 guidance is unambiguous that explicit re-check instructions — "double-check your answer," "re-verify before responding," "include a final verification step," "use a subagent to verify" — cause over-verification and should be removed, because the model already catches and fixes its own mistakes. Those instructions are redundant and must go.
+Current Claude prompting guidance supports removing generic, repeated self-check reminders.
+It does not authorize removing a required test, unresolved-failure check or another role's
+acceptance responsibility. Judge each instruction by the responsibility it enforces; a model
+upgrade alone cannot establish that a verification step is redundant.
 
 An independent verifier is a categorically different thing, and must not go. It exists because **no lane may approve its own change** — a structural property of the pipeline, not a request for more diligence. The orchestrator packs state this directly: `alaa-verifier`, `alaa-reviewer`, and the specialists are authority boundaries, and a gate is never skipped on the grounds that the work already looks verified. Keep focused implementer validation and independent acceptance gates. Remove repeated checks only when no change, failure, or unresolved concern justifies them. A distinct checker has an authority-boundary purpose when it owns independent acceptance criteria.
 
@@ -86,7 +92,7 @@ Neither runtime's precedence proves the model that actually served a response.
 ## Choosing model and effort per role
 
 Read `references/50-effort-and-thinking.md` for the decision procedure and
-`assets/codex-model-policy.json` for Codex pins. Choose by unresolved judgment and task evidence;
+`assets/codex-model-policy.json` for Codex pins or `assets/claude-model-policy.json` for Claude pins. Choose by unresolved judgment and task evidence;
 model and effort are different variables. A registered profile is a starting hypothesis until
 comparative evidence supports it. Do not transfer an API effort, a previous generation's ceiling,
 or a dispatch override assumption into a custom-agent definition.
@@ -137,7 +143,7 @@ Claude Code disables subagent nesting by default — a subagent cannot spawn sub
 
 ## Caveats
 
-Codex pin precedence, authority caveats, and identity reporting refreshed 25 September 2026. Remaining runtime facts retain their 24 July 2026 verification and must be refreshed before use:
+Codex pin precedence and shared authority/identity guidance refreshed 25 September 2026. Current Claude selection precedence is owned by `references/41-claude-code-runtime-features.md`. Remaining runtime facts retain their 24 July 2026 verification and must be refreshed before use:
 
 - Claude Code subagent frontmatter fields — several are gated on specific minor versions, including background-by-default and extended-thinking inheritance; check against the running version.
 - Codex agent TOML `sandbox_mode` — values beyond `"read-only"` and `"workspace-write"`, and whether adding an agent file requires a restart, are unverified.
@@ -150,4 +156,4 @@ Codex pin precedence, authority caveats, and identity reporting refreshed 25 Sep
 - [Extend Claude with skills (Claude Code)](https://code.claude.com/docs/en/skills)
 - [Subagents (Codex)](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 - [Latest model guide (OpenAI)](https://developers.openai.com/api/docs/guides/latest-model)
-- [Prompting Claude Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5)
+- [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)

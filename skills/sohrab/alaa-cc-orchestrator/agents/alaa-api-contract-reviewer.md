@@ -1,7 +1,7 @@
 ---
 name: alaa-api-contract-reviewer
 description: Read-only contract compatibility gate. Spawn when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Judges whether the transition is safe for existing consumers; never edits or designs the contract.
-model: opus
+model: claude-opus-5-5
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:

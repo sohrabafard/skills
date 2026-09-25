@@ -1,0 +1,72 @@
+[
+  {
+    "check": "structure",
+    "command": "python -B scripts/validate_sohrab_skill_pack.py",
+    "cwd": ".",
+    "exit": 0,
+    "log": "structure.log"
+  },
+  {
+    "check": "indexes",
+    "command": "python -B scripts/check_skill_index.py",
+    "cwd": ".",
+    "exit": 0,
+    "log": "indexes.log"
+  },
+  {
+    "check": "references",
+    "command": "python -B scripts/check_fleet_references.py",
+    "cwd": ".",
+    "exit": 0,
+    "log": "references.log"
+  },
+  {
+    "check": "lifecycle",
+    "command": "python -B scripts/check_lifecycle_contract.py",
+    "cwd": ".",
+    "exit": 0,
+    "log": "lifecycle.log"
+  },
+  {
+    "check": "codex-policy",
+    "command": "python -B scripts/check_codex_model_policy.py",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "exit": 0,
+    "log": "codex-policy.log"
+  },
+  {
+    "check": "claude-policy",
+    "command": "python -B scripts/check_claude_model_policy.py",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "exit": 0,
+    "log": "claude-policy.log"
+  },
+  {
+    "check": "codex-all-pins",
+    "command": "python -B scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex --agent-root ../alaa-codex-orchestrator/agents",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "exit": 0,
+    "log": "codex-all-pins.log"
+  },
+  {
+    "check": "codex-render",
+    "command": "python -B scripts/render_agents.py --check",
+    "cwd": "skills/sohrab/alaa-codex-orchestrator",
+    "exit": 0,
+    "log": "codex-render.log"
+  },
+  {
+    "check": "codex-pack",
+    "command": "python -B scripts/validate_pack.py",
+    "cwd": "skills/sohrab/alaa-codex-orchestrator",
+    "exit": 0,
+    "log": "codex-pack.log"
+  },
+  {
+    "check": "claude-pack",
+    "command": "python -B scripts/validate_pack.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "exit": 0,
+    "log": "claude-pack.log"
+  }
+]

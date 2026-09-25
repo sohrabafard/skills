@@ -1,0 +1,13 @@
+--- before/skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
++++ after/skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
+@@ -17,7 +17,9 @@
+ 2. **Within Claude Code**, select the registered role profile. Compare Fable or Haiku only in an explicitly authorized, representative evaluation; neither is an automatic local fallback. Restricted models and announced future generations receive no inferred default profile.
+ 3. **Within Codex**, use the registered profile for the role; bounded evidence, routine engineering, and difficult judgment are distinct workloads, with exact pins owned by the policy JSON.
+ 4. **Choose effort separately**, using `references/50-effort-and-thinking.md`. Model and effort are different questions and answering them together produces bad answers to both.
+-5. **Diagnose before escalation.** Use unresolved judgment and observed quality gaps, after excluding missing context, broken tools and ambiguous specifications. Record the reason in the policy. A later gate does not establish that a weaker starting profile is sufficient.
++5. **Codex only:** **Default down when pinning.** Escalation is earned by decision density, not by surface sensitivity or goal importance. A lane that mechanically applies a ratified value or a precise spec is balanced-tier work on any surface; only lanes that must make non-obvious design decisions earn the top tier, and the criterion is recorded wherever the pin is raised. When uncertain, stay lower — gates catch the rare shortfall, and one justified re-dispatch costs less than habitual top-tier defaults.
++
++   **Claude Code only:** **Diagnose before escalation.** Use unresolved judgment and observed quality gaps, after excluding missing context, broken tools and ambiguous specifications. Record the reason in the policy. A later gate does not establish that a weaker starting profile is sufficient.
+ 6. **Match delegation polarity to the target's bias** before writing delegation language for any model — read `references/06-invocation-and-composition.md` for the rule.
+ 7. **Use the runtime's own `/goal`** for a durable objective; the implementations share a name and nothing else — read `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for which is which.
+ 8. **Route durable multi-phase engagements** with plan, state, and phase artifacts to `/alaa-workflow` rather than duplicating that machinery.

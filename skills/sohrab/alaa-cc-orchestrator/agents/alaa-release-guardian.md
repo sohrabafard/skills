@@ -1,7 +1,7 @@
 ---
 name: alaa-release-guardian
 description: Read-only release and operability gate for CI/CD, Docker, deployment, environment/configuration, dependency/version, feature flag, packaging, or production-readiness changes. Never deploys, publishes, tags, or edits.
-model: sonnet
+model: claude-sonnet-5
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:

@@ -1,0 +1,6 @@
+command=python skills\sohrab\alaa-repo-docs\scripts\check_markdown_links.py . --files README.md docs/claude-model-migration.md --line-budget
+exit=0
+output:
+README.md: YELLOW 53 physical lines
+docs/claude-model-migration.md: YELLOW 61 physical lines
+Validated links, line budgets in 2 Markdown file(s) under D:\Sohrab\Project\skills.

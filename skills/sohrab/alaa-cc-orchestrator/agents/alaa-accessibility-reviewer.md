@@ -1,7 +1,7 @@
 ---
 name: alaa-accessibility-reviewer
 description: Read-only accessibility gate for new or changed user-visible interface — components, forms, dialogs, navigation, tables, and any flow completed with a keyboard or a screen reader. Covers RTL layout correctness where the product ships an RTL locale. Never fixes.
-model: sonnet
+model: claude-sonnet-5
 effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
 skills:

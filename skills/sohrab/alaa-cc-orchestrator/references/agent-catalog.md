@@ -122,7 +122,7 @@ installed skill, because a stale preload removes a standard silently. And a role
 with no siblings, resolution is reported as skipped rather than passed.
 
 Run `python scripts/check_agent_grants.py` after any change to `agents/`. The checker compares every
-normalized MCP grant and the implementation deny set with this catalog: exit `0` is clean, exit `1`
+native and MCP grant and the implementation deny set with the authored roles. Unapproved metadata fields fail because hooks, server configuration, or permission overrides can add authority outside those roles: exit `0` is clean, exit `1`
 reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the
 gate.
 Run `python scripts/check_agent_grants.py --self-test` after changing the checker. The pack

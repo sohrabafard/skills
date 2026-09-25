@@ -1,0 +1,690 @@
+{
+  "schema_version": 1,
+  "policy_version": "1.0.0",
+  "surface": "claude-code",
+  "verified_on": "2026-09-25",
+  "sources": [
+    {
+      "id": "models",
+      "url": "https://platform.claude.com/docs/en/models/overview",
+      "verified_on": "2026-09-25",
+      "scope": "Exact API IDs, default effort and thinking mode"
+    },
+    {
+      "id": "effort",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/effort",
+      "verified_on": "2026-09-25",
+      "scope": "Supported effort values; Haiku unsupported"
+    },
+    {
+      "id": "model-config",
+      "url": "https://code.claude.com/docs/en/model-config",
+      "verified_on": "2026-09-25",
+      "scope": "Provider mapping, version gates, overrides and fallback"
+    },
+    {
+      "id": "subagents",
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "verified_on": "2026-09-25",
+      "scope": "Full-ID metadata and version-dependent precedence"
+    },
+    {
+      "id": "opus-prompt",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5",
+      "verified_on": "2026-09-25",
+      "scope": "Starting effort and measured escalation"
+    },
+    {
+      "id": "sonnet-prompt",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5",
+      "verified_on": "2026-09-25",
+      "scope": "Literal scoping and tool use"
+    },
+    {
+      "id": "fable-prompt",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1",
+      "verified_on": "2026-09-25",
+      "scope": "Long-horizon candidate and evaluation caveats"
+    }
+  ],
+  "models": {
+    "claude-opus-5-5": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": "medium",
+      "thinking_mode": "adaptive-always-on",
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config"
+      ],
+      "minimum_claude_code": "2.1.280"
+    },
+    "claude-fable-5-1": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": "high",
+      "thinking_mode": "adaptive-always-on",
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config"
+      ],
+      "minimum_claude_code": "2.1.257"
+    },
+    "claude-sonnet-5": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "default_effort": "high",
+      "thinking_mode": "adaptive",
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config"
+      ],
+      "minimum_claude_code": "2.1.197"
+    },
+    "claude-haiku-4-5-20251001": {
+      "supported_efforts": [],
+      "default_effort": null,
+      "thinking_mode": "extended",
+      "source_ids": [
+        "models",
+        "effort"
+      ]
+    }
+  },
+  "profiles": {
+    "main": {
+      "kind": "policy-only",
+      "model": "claude-opus-5-5",
+      "effort": "medium",
+      "rationale": "Documented starting effort.",
+      "escalation_criterion": "Raise to high for interacting unresolved design decisions.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": []
+    },
+    "alaa-spec-analyst": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "medium",
+      "rationale": "Acceptance judgment at current default.",
+      "escalation_criterion": "Escalate when material ambiguity survives adequate context.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md"
+      ]
+    },
+    "alaa-explorer": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "rationale": "Current supported lower-cost line for bounded inventory.",
+      "escalation_criterion": "Escalate on missed required relationships.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md"
+      ]
+    },
+    "alaa-researcher": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "rationale": "Source extraction.",
+      "escalation_criterion": "Escalate on unresolved source conflicts.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md"
+      ]
+    },
+    "alaa-implementer": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Current engineering starting point for decided scope.",
+      "escalation_criterion": "Difficult design goes to difficult implementation.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md"
+      ]
+    },
+    "alaa-implementer-opus": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Interacting design decisions.",
+      "escalation_criterion": "Evaluate xhigh only after diagnosed quality gap.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md"
+      ]
+    },
+    "alaa-failure-analyst": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Interacting failure evidence.",
+      "escalation_criterion": "Escalate after tool/context/spec causes are excluded.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md"
+      ]
+    },
+    "alaa-verifier": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "low",
+      "rationale": "Exact commands and evidence, no design.",
+      "escalation_criterion": "Ambiguous failure goes to analyst.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md"
+      ]
+    },
+    "alaa-test-strategist": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Discriminating failure matrix.",
+      "escalation_criterion": "Escalate for unresolved cross-system semantics.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md"
+      ]
+    },
+    "alaa-reviewer": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Same independent contract.",
+      "escalation_criterion": "Deep scope changes coverage, no second executable profile without evidence.",
+      "confidence": "low",
+      "calibration_status": "evaluated",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md"
+      ],
+      "evaluation_evidence": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/malformed.json"
+    },
+    "alaa-adversarial-reviewer": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Load-bearing assumption challenge.",
+      "escalation_criterion": "Use only existing blast-radius/conflict trigger.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md"
+      ]
+    },
+    "alaa-architecture-critic": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Ownership and consistency judgment.",
+      "escalation_criterion": "Evaluate xhigh after demonstrated reasoning shortfall.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md"
+      ]
+    },
+    "alaa-security-reviewer": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Trust-boundary judgment.",
+      "escalation_criterion": "Safeguards/fallback must be disclosed, never bypassed.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md"
+      ]
+    },
+    "alaa-migration-guardian": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Multi-state rollout/recovery judgment.",
+      "escalation_criterion": "Escalate for unresolved interactions.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md"
+      ]
+    },
+    "alaa-api-contract-reviewer": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Consumer compatibility judgment.",
+      "escalation_criterion": "Escalate for unresolved transition states.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md"
+      ]
+    },
+    "alaa-dependency-auditor": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Bounded manifest and advisory evidence.",
+      "escalation_criterion": "Escalate unresolved compatibility reasoning.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md"
+      ]
+    },
+    "alaa-accessibility-reviewer": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Declared source/rendered criteria.",
+      "escalation_criterion": "Missing rendered proof is an evidence gap.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md"
+      ]
+    },
+    "alaa-browser-qa": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "rationale": "Declared browser scenarios.",
+      "escalation_criterion": "Tooling failure is not model failure.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md"
+      ]
+    },
+    "alaa-performance-profiler": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Controlled measurements and interpretation.",
+      "escalation_criterion": "No unsolicited benchmarks.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md"
+      ]
+    },
+    "alaa-observability-reviewer": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Failure-to-signal mapping.",
+      "escalation_criterion": "Escalate interacting operational ambiguity.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md"
+      ]
+    },
+    "alaa-release-guardian": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "rationale": "Packaging and rollout evidence.",
+      "escalation_criterion": "Unavailable runtime remains a blocker to activation claims.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md"
+      ]
+    },
+    "alaa-documenter": {
+      "kind": "agent",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "rationale": "Verified behavior synthesis.",
+      "escalation_criterion": "Unresolved behavior returns to owner.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.197",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "sonnet-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md"
+      ]
+    },
+    "alaa-instruction-reviewer": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Behavioral equivalence and authority judgment.",
+      "escalation_criterion": "Evaluate xhigh for demonstrated misses.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md"
+      ]
+    },
+    "alaa-rule-writer": {
+      "kind": "agent",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "rationale": "Per-sentence equivalence.",
+      "escalation_criterion": "Keep replacement-only output and no authorship/edits.",
+      "confidence": "low",
+      "calibration_status": "unrun",
+      "availability": {
+        "minimum_claude_code": "2.1.280",
+        "provider_requirement": "Provider must serve the exact model ID or a verified deployment mapping; account access, allowlists, effective overrides and effort caps must be checked at activation.",
+        "account_status": "unknown"
+      },
+      "source_ids": [
+        "models",
+        "effort",
+        "model-config",
+        "subagents",
+        "opus-prompt"
+      ],
+      "artifacts": [
+        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md"
+      ]
+    }
+  },
+  "notes": "Local starting hypotheses, not comparative rankings. No live calibration, account check, installation or runtime activation is implied. Fable and Haiku are comparison candidates, not automatic fallbacks."
+}

@@ -1,7 +1,7 @@
 ---
 name: alaa-researcher
 description: Read-only external and repository research specialist. Spawn for version-specific APIs, official documentation, standards, third-party behavior, prior decisions, or evidence-based comparisons. Never edits or makes the final decision.
-model: sonnet
+model: claude-sonnet-5
 effort: medium
 tools: Read, Glob, Grep, Bash, WebFetch, WebSearch, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:

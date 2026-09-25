@@ -15,7 +15,9 @@ Three files answer almost every question about this repository:
   call a change done. Read it before your first edit.
 
 For the dated GPT-6 agent migration, read [the migration guide](docs/gpt6-agent-migration.md)
-for pin changes, installation boundaries, and the validation status.
+for pin changes, installation boundaries, and the validation status. For the dated Claude model
+migration snapshot, read [the Claude migration report](docs/claude-model-migration.md) for profile
+changes, compatibility evidence, review results, and unrun comparisons.
 
 Third-party skills sit under `skills/.curated/` and `skills/.system/`. Upstream packs are committed
 under `vendor/` and listed below.

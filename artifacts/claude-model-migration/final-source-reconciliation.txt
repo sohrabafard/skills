@@ -1,0 +1,1 @@
+Final reconciliation: 482 manifest entries checked; mismatches=0. HEAD remains 4fdd8b709a745314a0575c25c06d0a390847bde6. Unrelated artifacts/skill-modernization-audit-20260925 entries are excluded and preserved.

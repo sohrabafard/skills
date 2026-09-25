@@ -1,0 +1,207 @@
+[
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+    "draft_words": 1347,
+    "final_words": 1345,
+    "substitutions": [
+      {
+        "draft": "Defaults cover both managed agent roots.",
+        "final": "Defaults cover both managed roots.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      },
+      {
+        "draft": "for an explicit policy input.",
+        "final": "for an explicit policy.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+    "draft_words": 773,
+    "final_words": 772,
+    "substitutions": [
+      {
+        "draft": "Current calibration and API boundaries differ from historical Opus 5",
+        "final": "Calibration and API boundaries differ from historical Opus 5",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+    "draft_words": 577,
+    "final_words": 578,
+    "substitutions": [
+      {
+        "draft": "Neither vendor scores nor source validation proves",
+        "final": "Vendor scores and source validation do not prove",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/20-opus-5.md",
+    "draft_words": 1792,
+    "final_words": 1791,
+    "substitutions": [
+      {
+        "draft": "Read only for an explicitly historical comparison.",
+        "final": "Read only for explicit historical comparison.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/40-fable-5.md",
+    "draft_words": 2017,
+    "final_words": 2016,
+    "substitutions": [
+      {
+        "draft": "Read only for an explicitly historical comparison.",
+        "final": "Read only for explicit historical comparison.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/21-opus-5-5.md",
+    "draft_words": 276,
+    "final_words": 272,
+    "substitutions": [
+      {
+        "draft": "Use this reference for current Opus prompting.",
+        "final": "Use for current Opus prompting.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      },
+      {
+        "draft": "Begin a fresh effort comparison at the documented default rather than inheriting an older\ngeneration's pin.",
+        "final": "Start effort comparisons at the documented default; do not inherit an older generation's pin.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      },
+      {
+        "draft": "are excluded and a quality gap remains.",
+        "final": "are excluded and quality still falls short.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/42-fable-5-1.md",
+    "draft_words": 304,
+    "final_words": 301,
+    "substitutions": [
+      {
+        "draft": "Use this reference for current Fable prompting.",
+        "final": "Use for current Fable prompting.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      },
+      {
+        "draft": "An explicit comparison may test Fable for unresolved demanding\nreasoning or long-horizon work after diagnosing the current profile's context and tools.",
+        "final": "Explicit comparisons may test Fable for unresolved demanding reasoning or long-horizon work\nafter diagnosing the current profile's context and tools.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/35-haiku-4-5.md",
+    "draft_words": 169,
+    "final_words": 168,
+    "substitutions": [
+      {
+        "draft": "Haiku is a current comparison candidate for bounded extraction, exploration and exact",
+        "final": "Haiku is a comparison candidate for bounded extraction, exploration and exact",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/30-sonnet-5.md",
+    "draft_words": 1365,
+    "final_words": 1364,
+    "substitutions": [
+      {
+        "draft": "There is no blanket high-effort ceiling:",
+        "final": "No blanket high-effort ceiling applies:",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+    "draft_words": 1442,
+    "final_words": 1442,
+    "substitutions": [
+      {
+        "draft": "These are model/API differences,\nnot interchangeable Claude Code settings.",
+        "final": "These model/API differences are not interchangeable Claude Code settings.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+    "draft_words": 590,
+    "final_words": 589,
+    "substitutions": [
+      {
+        "draft": "Historical references\nnever select a current profile.",
+        "final": "Historical references never select current profiles.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+    "draft_words": 2294,
+    "final_words": 2293,
+    "substitutions": [
+      {
+        "draft": "The older Fable 5 exception in",
+        "final": "The Fable 5 exception in",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md",
+    "draft_words": 2570,
+    "final_words": 2570,
+    "substitutions": [
+      {
+        "draft": "Pins express intent; inspect version-dependent",
+        "final": "Pins express intent; check version-dependent",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+    "draft_words": 3294,
+    "final_words": 3292,
+    "substitutions": [
+      {
+        "draft": "No fresh date is applied to unverified limits.",
+        "final": "Unverified limits receive no new date.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  },
+  {
+    "file": "skills/sohrab/alaa-prompting-guide/references/93-claude-evaluation.md",
+    "draft_words": 546,
+    "final_words": 545,
+    "substitutions": [
+      {
+        "draft": "The separate `assets/evals/claude-agent-comparisons.json` corpus carries eight concrete tasks,",
+        "final": "The `assets/evals/claude-agent-comparisons.json` corpus carries eight concrete tasks,",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      },
+      {
+        "draft": "Each compares two configurations twice\nin fresh contexts.",
+        "final": "Each compares two configurations twice in fresh contexts.",
+        "equivalence": "Same trigger, scope, authority, evidence requirement and exception; no relocation."
+      }
+    ]
+  }
+]

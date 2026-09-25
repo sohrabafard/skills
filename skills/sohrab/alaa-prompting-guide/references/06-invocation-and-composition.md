@@ -58,8 +58,8 @@ This section owns the rule; other references point here rather than restating it
 
 **Match the polarity of your delegation language to the target model's default bias.** There is no single correct direction. A prompt that authorizes fan-out on a model that already over-delegates multiplies cost for nothing; a prompt that only restricts fan-out on a model that never delegates unprompted produces a single-threaded session that quietly does everything itself. Polarity defects are silent — nothing errors, and the verb-ownership audit will not catch them — so check polarity separately against the target model.
 
-- **Claude Opus 5 — eager; cap it.** Anthropic's guide states that Opus 5 delegates to subagents more readily than prior models, that delegation multiplies cost and time when applied to small tasks, and that authors should give explicit guidance on which scenarios warrant delegation or set deterministic caps on how many agents may launch. Delegation language for Opus 5 is a ceiling rather than a permission: delegate only for large, genuinely independent, parallelizable tracks; do not delegate work finishable in a handful of tool calls; prefer one subagent over several; keep spawn counts low.
-- **Claude Fable 5 — eager, and the correction is shape rather than volume.** Fable 5 dispatches parallel subagents readily, and the guidance is to use subagents frequently while giving explicit criteria for when delegation is appropriate, preferring asynchronous orchestrator-to-subagent communication over blocking on each return. Add selection criteria and non-blocking dispatch, not encouragement.
+- **Claude Opus 5.5 — bound delegation.** Current guidance, including inherited Opus coordination advice, states that the model delegates to subagents more readily than prior models, that delegation multiplies cost and time when applied to small tasks, and that authors should give explicit guidance on which scenarios warrant delegation or set deterministic caps on how many agents may launch. Delegation language for current Opus is a ceiling rather than a permission: delegate only for large, genuinely independent, parallelizable tracks; do not delegate work finishable in a handful of tool calls; prefer one subagent over several; keep spawn counts low.
+- **Claude Fable 5.1 — constrain the work shape.** Current Fable dispatches parallel subagents readily, and the guidance is to use subagents frequently while giving explicit criteria for when delegation is appropriate, preferring asynchronous orchestrator-to-subagent communication over blocking on each return. Add selection criteria and non-blocking dispatch, not encouragement.
 - **Claude Sonnet 5 — treat as neutral-to-eager, and verify.** The Sonnet 5 guide does not address delegation. It does state that Sonnet 5 is more agentic than its predecessor and will reach for tools and run self-verification loops more readily. Absence of a delegation note is not evidence of under-fan-out; measure on your own harness before writing polarity either way.
 - **Codex — explicit authorization and bounded lanes.** Use the current host's delegation
   rules and available tools. When authorized, name concrete independent scopes and their result
@@ -72,14 +72,18 @@ Two rules hold whichever direction you write.
 
 **An invoked orchestrator skill's own fan-out policy wins.** When `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` is invoked, do not override its delegation stance from the calling prompt; add or tighten lane rules instead.
 
-Delete carried-over verification scaffolding of the form "use a subagent to verify" or "add a final verification step" **when the target is Opus 5 or Sonnet 5**, which verify their own work without being told, so the instruction only causes over-verification. The scope is load-bearing: Fable 5 is the documented exception and wants explicit verification and a separate fresh-context verifier, so read `references/40-fable-5.md` before stripping anything from a Fable 5 prompt. When you are about to remove such an instruction on any model, read `references/80-subagent-authoring.md` first, because it owns the test that separates a redundant self-check from an independent gate that must survive.
+Before removing verification language for current Opus, Sonnet or Fable, read
+`references/80-subagent-authoring.md`. It owns the distinction between redundant self-check
+reminders and focused tests or independent acceptance gates. The Fable 5 exception in
+`references/40-fable-5.md` is historical and does not transfer to Fable 5.1. Evaluate prompt
+changes on the target workload instead of assuming that less checking proves equal quality.
 
 ## Pre-send checklist
 
 1. The message opens with either the exact skill trigger or a goal command that names the needed skill's role, using the exact installed name for the executing surface, never a buried mid-paragraph trigger.
 2. The session has one role, consistent with the invoked skill, and implementation verbs live in lane rules.
 3. The single-message form is chosen deliberately: trigger-led for deterministic activation, goal-led for harness auto-continue. Two messages only to get both.
-4. Delegation wording matches the target model's default bias — a cap and selection criteria for Opus 5 and Fable 5, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.
+4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.
 5. Skills needed by lanes are named inside dispatch text, not as top-level triggers.
 6. In goal form, the completion condition is demonstrable from the transcript and carries an explicit turn or time clause.
 7. If the prompt will be pasted raw into a surface outside this plugin, the mention sigil matches that surface.
@@ -94,7 +98,7 @@ For durable multi-phase work that outgrows a single goal, route to `/alaa-workfl
 
 ## Freshness
 
-Verified against live documentation on 6 August 2026. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, whether Codex has since documented a goal cap, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. The Sonnet 5 position is marked unverified because its guide is silent on delegation, not because it was measured and found neutral. The Codex `/` palette listing skills is observed in a bug report against the shipping app rather than documented; `/skills` is the documented path.
+Claude delegation guidance refreshed 25 September 2026; unchanged invocation and harness mechanics retain their 6 August 2026 verification. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, whether Codex has since documented a goal cap, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. The Sonnet 5 position is marked unverified because its guide is silent on delegation, not because it was measured and found neutral. The Codex `/` palette listing skills is observed in a bug report against the shipping app rather than documented; `/skills` is the documented path.
 
 ## Sources
 
@@ -102,8 +106,8 @@ Verified against live documentation on 6 August 2026. Re-check before quoting: t
 - [Developer commands (OpenAI)](https://learn.chatgpt.com/docs/developer-commands)
 - [Extend Claude with skills (Claude Code)](https://code.claude.com/docs/en/skills)
 - [Keep Claude working toward a goal (Claude Code)](https://code.claude.com/docs/en/goal)
-- [Prompting Claude Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5)
-- [Prompting Claude Fable 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5)
+- [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
+- [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
 - [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
 - [Create custom subagents (Claude Code)](https://code.claude.com/docs/en/sub-agents)
 - [Orchestrate subagents at scale with dynamic workflows](https://code.claude.com/docs/en/workflows)

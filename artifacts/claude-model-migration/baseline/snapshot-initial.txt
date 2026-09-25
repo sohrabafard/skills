@@ -1,0 +1,17 @@
+baseline_phase=PRE-EDIT
+cwd=
+D:\Sohrab\Project\skills
+HEAD=
+4fdd8b709a745314a0575c25c06d0a390847bde6
+branch=
+codex/gpt6-agent-migration
+git_status_scoped_begin
+git_status_scoped_end
+manifest=sha256-manifest-initial.txt
+manifest_file_count=
+466
+configured_role=gpt-6-luna/low
+requested_role=gpt-6-luna/low
+observed_identity=unknown
+effective_isolation=not proven
+proof_level_for_static_pack_checkers=1 static

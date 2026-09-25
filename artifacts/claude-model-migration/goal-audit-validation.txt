@@ -1,0 +1,12 @@
+source-files=482
+mismatches=0
+manifest-sha256=9ac7145a6048d35118ba78f2d80d32ab2280a27b1b2181533815ef8d32a767e5
+branch=codex/gpt6-agent-migration
+head=4fdd8b709a745314a0575c25c06d0a390847bde6
+local-link-failures=0
+plan: docs/_agent_plans/20260925-110010_claude-model-migration.md
+checkpoint: docs/agents/20260925-110010_claude-model-migration-state.md
+Validation completed without blocking errors (profile: resumable).
+workflow-exit=0
+Independent researcher: evidence-fidelity PASS for alias supplement and goal audit; no material overclaim.
+git diff --check: exit 0; Git emitted line-ending normalization warnings.

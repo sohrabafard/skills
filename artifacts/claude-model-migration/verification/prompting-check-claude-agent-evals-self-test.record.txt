@@ -1,0 +1,13 @@
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_agent_evals.py --self-test
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:12.492317+03:30
+ended=2026-09-25T15:44:12.915850+03:30
+duration-ms=423
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-claude-agent-evals-self-test.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-claude-agent-evals-self-test.stderr.log

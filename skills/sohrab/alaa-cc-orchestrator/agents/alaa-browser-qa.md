@@ -1,7 +1,7 @@
 ---
 name: alaa-browser-qa
 description: Browser evidence and user-flow QA specialist for frontend changes and regressions. Reproduces declared scenarios, captures screenshots/console/network evidence, and reports behavior. Never edits application code or changes the configured Chromium browser without permission.
-model: sonnet
+model: claude-sonnet-5
 effort: medium
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__browser-logs, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries
 skills:

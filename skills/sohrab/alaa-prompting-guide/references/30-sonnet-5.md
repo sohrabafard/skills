@@ -1,8 +1,11 @@
 # Claude Sonnet 5
 
-API model id `claude-sonnet-5`. The balanced tier: 1M-token context (default and maximum), 128k max output, $3/$15 per MTok, with introductory pricing of $2/$10 through 31 August 2026. Adaptive thinking, vision, and the `computer_20251124` computer-use tool. Anthropic calls it the most agentic Sonnet yet, with particular strength in sustained multi-step tool use, unprompted self-verification, and finishing tasks end to end rather than stalling halfway.
+API model id `claude-sonnet-5`. The balanced tier: 1M-token context (default and maximum), 128k max output, $2/$10 per MTok in the 25 September 2026 model overview. Adaptive thinking, vision, and the `computer_20251124` computer-use tool. Anthropic calls it the most agentic Sonnet yet, with particular strength in sustained multi-step tool use, unprompted self-verification, and finishing tasks end to end rather than stalling halfway.
 
-Frame its place honestly. Sonnet 5 is the right default for ordinary implementation, extraction, high-volume, and latency-sensitive work. It is not a cheaper Opus 5. This pack caps Sonnet 5 at `high` effort: a lane that needs more than `high` should change model, not raise effort, because `xhigh`/`max` on Sonnet buys less per token than moving to Opus 5 for the same work (see `references/90-model-selection.md`).
+The structured Claude policy owns role assignments. Sonnet remains a supported candidate
+for bounded engineering and evidence work; published price and latency classes are not local
+measurements. No blanket high-effort ceiling applies: xhigh and max are valid capabilities,
+whose value must be measured on the target workload.
 
 ## API notes
 
@@ -55,7 +58,7 @@ Progress updates during long agentic traces are regular and high quality by defa
 
 ## Subagents and agentic notes
 
-Sonnet 5 tracks its remaining context budget through a conversation. For long-running or multi-context-window work, tell it explicitly that context will be auto-compacted so it should not wrap up early; use structured state files and commits as checkpoints; and give it verification tools (Playwright, computer use) so it can self-check without human round-trips. Family guidance for delegation:
+Sonnet 5 tracks its remaining context budget through a conversation. For long-running or multi-context-window work, tell it explicitly that context will be auto-compacted so it should not wrap up early; use structured state files as checkpoints and commit only with explicit authority; and give it verification tools (Playwright, computer use) so it can self-check without human round-trips. Family guidance for delegation:
 
 ```
 Use subagents when tasks can run in parallel, require isolated context, or involve 
@@ -63,7 +66,7 @@ independent workstreams. For simple tasks, sequential operations, or single-file
 work directly rather than delegating.
 ```
 
-Sonnet 5 is a good subagent model at `low` or `medium` effort under an Opus 5 orchestrator. For Claude Code's Agent tool, `/loop`, Workflow tool, and plan mode, read `references/41-claude-code-runtime-features.md`.
+Use the registered profile as an uncalibrated starting point; higher-level model recommendations do not replace role evidence. For Claude Code's Agent tool, `/loop`, Workflow tool, and plan mode, read `references/41-claude-code-runtime-features.md`.
 
 ## Frontend and design defaults
 
@@ -83,7 +86,7 @@ NEVER use generic AI-generated aesthetics like overused font families (Inter, Ro
 
 ## Interactive coding products
 
-Use `xhigh` or `high` effort, add autonomous features such as an auto mode, and front-load a well-specified task description with intent and constraints in the first human turn. Minimize required user interactions: ambiguous prompts revealed progressively across many turns reduce token efficiency and sometimes performance.
+Choose effort through the structured policy and an authorized comparison; enable autonomous runtime modes only within granted authority. Front-load a well-specified task description with intent and constraints in the first human turn. Minimize required user interactions: ambiguous prompts revealed progressively across many turns reduce token efficiency and sometimes performance.
 
 ## Code review harnesses
 
@@ -95,7 +98,7 @@ Sonnet 5 supports tool version `computer_20251124` with support up to 2576px / 3
 
 ## Caveats
 
-Pricing ($3/$15 per MTok, introductory $2/$10 through 31 August 2026), the ~30% tokenizer increase, the 1M/128k limits, the computer-use resolution caps, and the 400-error conditions are time-sensitive Anthropic-stated figures — re-check before quoting them elsewhere. "Defaults to `high` effort" is stated for the Claude API; do not assume every third-party surface matches. The `high` effort cap is this pack's policy, not an Anthropic recommendation — the docs recommend `xhigh` for Sonnet 5's hardest coding and agentic tasks.
+Pricing ($2/$10 per MTok, verified 25 September 2026), the ~30% tokenizer increase, the 1M/128k limits, the computer-use resolution caps, and the 400-error conditions are time-sensitive Anthropic-stated figures — re-check before quoting them elsewhere. "Defaults to `high` effort" is stated for the Claude API; do not assume every third-party surface matches. Both xhigh and max are supported; a supported level is not a measured role recommendation. API controls and computer-use specifications do not imply equivalent Claude Code controls. Unchanged detailed mechanics retain their earlier verification and require refresh before use.
 
 ## Sources
 

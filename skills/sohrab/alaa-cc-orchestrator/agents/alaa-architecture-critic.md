@@ -1,8 +1,8 @@
 ---
 name: alaa-architecture-critic
 description: Read-only architecture pressure-test specialist. Spawn before implementation for public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes. Challenges the plan; never owns it or edits code.
-model: opus
-effort: xhigh
+model: claude-opus-5-5
+effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
 skills:
   - /alaa-code-intelligence-routing

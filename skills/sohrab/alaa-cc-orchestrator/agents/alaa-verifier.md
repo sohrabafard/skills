@@ -1,7 +1,7 @@
 ---
 name: alaa-verifier
 description: Independent verification operator. Spawn after implementation or fix cycles to execute exact test, lint, typecheck, build, race, and smoke commands under declared CPU/resource limits. Produces reproducible evidence; never edits or fixes code.
-model: sonnet
+model: claude-sonnet-5
 effort: low
 tools: Read, Glob, Grep, Bash
 skills:

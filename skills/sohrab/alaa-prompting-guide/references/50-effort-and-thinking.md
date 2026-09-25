@@ -12,21 +12,27 @@ Choose the model from the kind of judgment the task requires. Choose the effort 
 
 ## What effort does not control
 
-Effort controls thinking volume. It does not control response length, and on the current Claude flagship the documentation says so explicitly. This matters because the natural reflex when a model's answers run long is to lower effort, and that reflex fails: it produces a shallower answer of roughly the same length. Response length, written-deliverable length, and progress-update cadence are all prompt-controlled and need their own explicit instructions. See `references/20-opus-5.md` for the verbatim calibration snippets.
+Effort controls thinking volume. It does not control response length, and on the current Claude flagship the documentation says so explicitly. This matters because the natural reflex when a model's answers run long is to lower effort, and that reflex fails: it produces a shallower answer of roughly the same length. Response length, written-deliverable length, and progress-update cadence are all prompt-controlled and need their own explicit instructions. Read `references/21-opus-5-5.md` for current calibration guidance.
 
 Effort also does not control scope. A model that widens the task beyond what was asked is not thinking too hard; it is missing a scope constraint. Fix that in the prompt.
 
 ## Thinking: keep it on, lower the effort instead
 
-Across the current Claude generation, thinking is on by default in adaptive mode, and on the flagship it cannot be disabled at the top two effort levels at all. Where disabling it is technically possible, it is still the wrong cost lever: it degrades tool-use reliability, it produces artifacts such as tool calls emitted as prose, and it saves less than simply stepping the effort down one level.
+Use the registered model capability snapshot and refresh its API documentation before changing
+thinking controls. Opus 5.5 and Fable 5.1 require adaptive thinking; Sonnet permits disabling it;
+Haiku uses extended thinking and has no effort parameter. These model/API differences are not interchangeable Claude Code settings.
 
-**The rule: never disable thinking to save money. Lower the effort.** If you have disabled thinking and are now writing prompt instructions to repair the resulting behavior — nudging the model to actually call its tools, or telling it to suppress internal tags — you are paying twice for a choice that should be reversed.
+For effort-enabled models, lower supported effort before using disabled thinking as a cost
+lever. Measure retrieval, tool-use reliability and task quality; report unsupported controls
+instead of substituting them. For Haiku, use its own supported thinking controls.
 
-Manual thinking budgets are no longer the mechanism on this Claude generation; adaptive thinking plus effort replaced them, and passing an explicit budget is an error rather than a tuning knob. Do not carry forward a prompt that sets one. Note also that `adaptive` is a thinking mode, not an effort value, and passing it as one is a mistake.
+Do not carry manual thinking budgets into adaptive-only models. Haiku is the extended-thinking
+exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor
+`ultracode` is a Claude API effort value; harness orchestration modes require separate proof.
 
 ## Choosing a starting level
 
-Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/20-opus-5.md`, `references/30-sonnet-5.md`, `references/40-fable-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
+Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/30-sonnet-5.md`, `references/42-fable-5-1.md`, `references/35-haiku-4-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
 
 Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Re-run the sweep.
 
@@ -70,8 +76,11 @@ for a configuration change. Read `references/11-codex-runtime-features.md` for p
 
 Unrun profiles remain `calibration_status: unrun`; evaluated profiles require an evidence
 pointer. `references/92-agent-evaluation.md` defines the comparison corpus and evidence fields.
-Existing Claude-specific routing remains in `references/90-model-selection.md`; this Codex
-migration changes no Claude model pin.
+For Claude, `assets/claude-model-policy.json` is the separate canonical owner. Its supported
+levels are capabilities, not a blanket ceiling or a recommendation to maximize effort.
+Unrun is the initial calibration state; evaluated requires validated, matching runtime
+comparison evidence. Read `references/41-claude-code-runtime-features.md` before relying on
+model/effort override precedence or claiming activation.
 
 ## Effort is not the only cost lever
 
@@ -85,7 +94,7 @@ The same applies to context. A model reasoning over a poorly assembled context d
 - Disabling thinking to control cost instead of lowering effort, then writing repair instructions for the resulting behavior.
 - Lowering effort to shorten responses. Effort is not a verbosity control.
 - Raising effort because the goal is important or the surface is sensitive rather than because the lane must decide something.
-- Pinning the maximum level anywhere, which removes the escalation path.
+- Pinning maximum effort by habit without measured quality benefit and a stated workload need.
 - Treating a supported effort as proof it is appropriate, or changing model and effort together in a comparison.
 - Setting an explicit thinking budget on a generation that no longer accepts one.
 - Passing `adaptive` as an effort value.
@@ -99,7 +108,7 @@ Thinking-disable constraints and the availability of manual thinking budgets are
 ## Sources
 
 - [Effort parameter reference](https://platform.claude.com/docs/en/build-with-claude/effort)
-- [Prompting Claude Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5)
+- [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
 - [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
-- [Prompting Claude Fable 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5)
+- [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
 - [Using the latest model](https://developers.openai.com/api/docs/guides/latest-model)

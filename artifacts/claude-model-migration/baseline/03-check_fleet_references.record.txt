@@ -1,0 +1,1 @@
+command=python -B scripts/check_fleet_references.py cwd=D:\Sohrab\Project\skills priority=BelowNormal; applied=True timeout_seconds=180 duration_seconds=2.864 exit=0 classification=PASS tier=baseline; dispatch tier unspecified proof_level=1 static stdout=logs/03-check_fleet_references.stdout.log stderr=logs/03-check_fleet_references.stderr.log

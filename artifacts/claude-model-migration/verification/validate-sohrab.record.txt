@@ -1,0 +1,13 @@
+argv=python -B scripts\validate_sohrab_skill_pack.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:43:53.587659+03:30
+ended=2026-09-25T15:43:53.828555+03:30
+duration-ms=240
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\validate-sohrab.stdout.log
+stderr=artifacts/claude-model-migration/verification\validate-sohrab.stderr.log

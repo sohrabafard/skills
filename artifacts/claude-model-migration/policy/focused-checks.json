@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "python",
+      "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py",
+      "--self-test"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/check-1.log"
+  },
+  {
+    "command": [
+      "python",
+      "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/check-2.log"
+  },
+  {
+    "command": [
+      "python",
+      "skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py",
+      "--self-test"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/check-3.log"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "HEAD",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-prompting-guide"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/check-4.log"
+  }
+]

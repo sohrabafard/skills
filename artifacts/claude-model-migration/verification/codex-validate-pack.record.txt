@@ -1,0 +1,13 @@
+argv=python -B skills\sohrab\alaa-codex-orchestrator\scripts\validate_pack.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:05.509931+03:30
+ended=2026-09-25T15:44:05.804564+03:30
+duration-ms=294
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\codex-validate-pack.stdout.log
+stderr=artifacts/claude-model-migration/verification\codex-validate-pack.stderr.log
