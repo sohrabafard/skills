@@ -1,0 +1,165 @@
+{
+  "head": "34aeb11db38e1408b1760d9fe3f4c1fec16d0498",
+  "branch": "main",
+  "observed_at": "2026-09-25T15:32:46.124991+00:00",
+  "method": "SHA256 sorted relative path NUL file SHA256 LF",
+  "digest": "0177491480002b3bcf9e5bb1083926ed73d7a169aa7b5fa707eb78a459ed6695",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-input-normalization/agents/openai.yaml",
+      "sha256": "ce60429b8d3ed45ddce150b7427fac5df961315251320eeb79dd5d1a305e4811"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/input-normalization.ts",
+      "sha256": "f85943045cd9c51a3384c9507d50b7a273bf4188200d4a03204a2deb7c0410b1"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/input_normalization.go",
+      "sha256": "aa192a793d8b442fe1c46d6d2c7077398f5b184078a6185061f716beb1c5d0d0"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/InputNormalization.php",
+      "sha256": "27ee3287ab247171a4a81d0b4e0f5f23b304e363c26c722a85ce8c160e05536a"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/normalize_reference.py",
+      "sha256": "f0aa307502f15cf1fe73148b8612feae720d9e96756fdfba0a57d8a557a6a84c"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/10-normalization-contract.md",
+      "sha256": "286a38caa3f148a8fa7184081fe498a4e693b031ccab0990c9d21990cffe3ceb"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/20-browser-binding.md",
+      "sha256": "0f4276f486d886d479b251bb4c87d193c33c5ef5222d2d82bf549c7ba07937ad"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/30-backend-middleware-binding.md",
+      "sha256": "5842471f270917bd337cce4a8d1c7055ae3674b33d82a9ad3ffed18f8c090e26"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/40-failure-classes.md",
+      "sha256": "43d141abd539a105d78f78a1799054bdff0878050e7e2e103db5e110522f072c"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/50-corpus-and-harness.md",
+      "sha256": "f6045c7added2617f3172135c53d7556b377cb190752ea29da4135dac6c19b9b"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/60-provider-seam-and-open-items.md",
+      "sha256": "6ce83a17e058cc85d14b94f33737feed816697f4ef0070fc083f47e01372b978"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/_phone_inputs.b64",
+      "sha256": "6b6c143609815fea0a1875cdd7fdcdb3ae7520103dac71c2d00f0913900c681f"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/normalization-conformance.sh",
+      "sha256": "b207593886393105c38ec0b47e4ec1c6986cb74fcada32cec76a4f3cc31b30f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/normalization-corpus.json",
+      "sha256": "126694e18000ce44c65c02f482d7f4f8c553dd1be0519a079b8b4107f26eead0"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/SKILL.md",
+      "sha256": "d3dfee191c0a7db3255d8dc8127e7059cb0cadf837cff3c32c9e4e1dbadf9fb2"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/agents/openai.yaml",
+      "sha256": "59383840855e5171e8f44172629142aa2c26718174fe1c2f24113601696658d9"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "sha256": "8cad92e66fb8237f57f752f870d3870343ff35573a0dd730a21abb45631daf1f"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "sha256": "b8f6400160f98e72d8f674bcb6b2d3fed7100016cbc3ed0ee42792784d46d4d3"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/values.secret.yaml.example",
+      "sha256": "5034b5dee7b60c6c56e165c7b0dd926a15b44dc41c62f8af3c8086e883f08670"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-caas-openAPI-1.25.json",
+      "sha256": "8e7a00ea44cdf611f95f56f7ee71d59fc64d50ac86a0a2c327caef62aa15f572"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-capability-matrix.md",
+      "sha256": "4d2af9c631e3cc485eddd0e14b368c10c4ebb8edd119b8ed4f2826f4f5493b7a"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "sha256": "f630284e0eaf6cee2956886a0c8056665b8de7e20500b94a59d61be9913fa2b5"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-execution-loop.md",
+      "sha256": "bee76227502f3db751db63ff80f35d974d34c02d8b2b536ebb1b7383e8dae87a"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-rbac-namespace-facts.md",
+      "sha256": "714563558da72c9175e4deea831af6312ca31875b0ecda461af34bcee9c04b06"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "sha256": "5105a89b2b3b2db19816e8dcf294fdf0961033f1ccc3198215e68ef3f06ee08d"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/SOURCES.md",
+      "sha256": "37f038c37d8186c76cc71b5e9b3dca5b82f840e2370ddc3e14d2683d9879f00e"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-body-transcribing.md",
+      "sha256": "81b3b1013e40af43403de5a702924c04f2e6fd1bd6ebb8096cb390c5136e3248"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-body.md",
+      "sha256": "9e5f572d869078f85ae6df30997f8749bd596e8488047dacfe2f394857c0b7ad"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-crlf.md",
+      "sha256": "765638dd6edf3c9ed5b633b405b6bf69367eedf043ab60a9393464625f534de7"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-drifted.md",
+      "sha256": "6d1cbbe9d065564fa6c5cb8e5eacec693783fdbbd64a3fcc29ef03d7450c3435"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-no-markers.md",
+      "sha256": "3bd1cc6bccb9f2ec627da7a6054d348288ece27e8a827954a59bec96a6e781be"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-no-stamp.md",
+      "sha256": "95fad1dbc10dbe65fa43f0753cf137d843d38f18428d98a1e0c6fac85771f186"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix.md",
+      "sha256": "765638dd6edf3c9ed5b633b405b6bf69367eedf043ab60a9393464625f534de7"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-openapi.json",
+      "sha256": "15eb031d531202058600d4e0869593a5d81311a8afc6697d8935a8ce36423ed5"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/unparsable-openapi.json",
+      "sha256": "e31e24e19b2afcaf67e344887210a109e8170fa1f4783d695fedcb7916488945"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+      "sha256": "a0303c89b92e3424cf36423c63b69b231667488f9f70fffb4d84b4cfceda64d0"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/summarize-openapi.sh",
+      "sha256": "7bf5de58b44265ebdf5a6a5790a4a25d57f53fb6a4cd03b8398be0d8b1e6b212"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/verify-cluster.sh",
+      "sha256": "d4a1695149c39db24f47fa28458b8894fe41984b26da60300ecefe4e528fb4f1"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "sha256": "c202cd25481e72e39e75a363d1fe6f35ed10855612681522d0b54f29be694eaf"
+    }
+  ]
+}

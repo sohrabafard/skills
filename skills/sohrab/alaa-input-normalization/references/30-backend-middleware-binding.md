@@ -32,11 +32,33 @@ recursive, global, value-only request transformer — `TrimStrings` is a subclas
 already walks nested arrays and JSON bodies and rewrites `$request->all()` in place, and
 reusing it removes the traversal from the list of things that can differ between services.
 
+`TransformsRequest` passes the full dot path to `transform`: `contact.phone` stays distinct
+from `other.phone`, and an array element is `contacts.0.phone`. Declare each typed path
+exactly, including numeric indices. Unlisted paths remain `text` even when their final
+field name matches; this example does not opt in a variable-length collection. It assumes
+the copied canonical PHP class is autoloadable under `Alaa\Support\Input` and the middleware
+lives under `App\Http\Middleware`. It also requires input keys without literal dots:
+Laravel passes both a flat JSON key `contact.phone` and a nested `contact` → `phone` value
+to `transform` as `contact.phone`. This example cannot distinguish their typed modes. A
+service accepting literal-dot keys needs a separate selection design before adopting it;
+normalization itself still never rejects a value.
+
 ```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware;
+
+use Alaa\Support\Input\InputNormalization;
+use Illuminate\Foundation\Http\Middleware\TransformsRequest;
+
 final class NormalizeRequestInput extends TransformsRequest
 {
-    /** @var list<string> the only fields that get typed mode, named here and nowhere else */
-    protected array $typedFields = ['mobile', 'code', 'national_code'];
+    /** @var list<string> The only full dot paths that get typed mode. */
+    protected array $typedFields = [
+        'mobile', 'code', 'national_code', 'contact.phone', 'contacts.0.phone',
+    ];
 
     protected function transform($key, $value)
     {
@@ -44,12 +66,17 @@ final class NormalizeRequestInput extends TransformsRequest
             return $value;
         }
 
-        return in_array($this->fieldName($key), $this->typedFields, true)
+        return in_array($key, $this->typedFields, true)
             ? InputNormalization::typed($value)
             : InputNormalization::text($value);
     }
 }
 ```
+
+Run `php scripts/test_laravel_middleware_example.php /path/to/vendor/autoload.php` from
+this skill's directory against an existing Laravel installation. Exit `0` proves the
+example on that version; `1` means a failed scenario and `2` means unavailable runtime
+input. Syntax checking alone does not prove traversal.
 
 Register it globally, before validation, and before `TrimStrings` where that exists:
 

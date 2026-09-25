@@ -49,13 +49,15 @@ different statement. Name the category in the source — `\p{Nd}`, `unicode.Is(u
 ## 3. The two modes
 
 **`text` is the default and applies to every string in the request, including free text.**
-It folds digits and applies NFC. It deletes nothing, inserts nothing, trims nothing, and
-rewrites no letter.
+It folds digits and applies NFC. The digit fold deletes nothing, inserts nothing, trims
+nothing, and rewrites no letter; NFC may compose code points afterward.
 
-That restraint is what makes free-text folding safe without a parser. Because the fold is a
-1:1 map over code points it cannot change the code-point length of a string, and it cannot
-damage an HTML tag, an attribute quote, a markdown fence, a JSON structure, a URL, or an
-ASCII identifier — all of those are ASCII, and ASCII digits map to themselves. The corpus
+That restraint is what makes free-text folding safe without a parser. The digit fold is a
+1:1 map over code points, so it preserves code-point length; the subsequent NFC step can
+change that length relative to the input. `text` has the same code-point length as
+NFC(input), the baseline checked by the canonical reference. The fold cannot damage an
+HTML tag, an attribute quote, a markdown fence, a JSON structure, a URL, or an ASCII
+identifier — all of those are ASCII, and ASCII digits map to themselves. The corpus
 pins this with a real `arvanvod.ir` master.m3u8 URL, a Crockford Base32 id, a UUIDv7, an
 `<img>` tag and an ASCII code fence, all of which come back byte-identical.
 
@@ -104,7 +106,8 @@ digit bug when the implementations differ only in composition.
    with `charCodeAt` over `.length`, or with `strlen`/`str_replace` instead of `preg_*` with
    `/u`, splits the surrogate pair of an astral digit such as `U+1D7CE` and emits mojibake.
    The corpus pins five astral families for exactly this.
-4. **Length in code points is unchanged by `text` mode**, and `typed` output never grows.
+4. **Length.** The digit fold preserves code-point count. `text` has the same count as
+   NFC(input), which can differ from the input count; `typed` never exceeds `text`.
 5. **Values only, never keys.** Folding an object key renames a field.
 6. **Invalid UTF-8 is returned unchanged.** It is not text and this contract does not repair
    it; validation rejects it. Repairing would insert `U+FFFD`, and this contract never

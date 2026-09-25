@@ -73,7 +73,18 @@ Scripts: `verify-cluster.sh` (read-only discovery that fails on a missing capabi
 ## Definition of done
 
 1. The discovered line is named in the deliverable, with the command output that established it.
-2. `python3 alaa-k8s-helm scripts/check_manifests.py rendered.yaml --profile arvan` exits 0.
+2. Resolve the loaded `/alaa-k8s-helm` skill's absolute directory and the rendered manifest's absolute path before running this check. Replace both example paths; do not infer either from the current directory. A missing checker or Python 3 stops with exit 2. The checker returns 0 for clean, 1 for findings, and 2 when it could not run; completion requires exit 0.
+
+   ```sh
+   (
+     k8s_helm_root="/absolute/path/to/alaa-k8s-helm"
+     rendered_yaml="/absolute/path/to/rendered.yaml"
+     checker="$k8s_helm_root/scripts/check_manifests.py"
+     [ -f "$checker" ] || { printf 'Missing /alaa-k8s-helm checker: %s\n' "$checker" >&2; exit 2; }
+     command -v python3 >/dev/null 2>&1 || { printf 'Python 3 is required\n' >&2; exit 2; }
+     python3 "$checker" "$rendered_yaml" --profile arvan
+   )
+   ```
 3. Every kind used appears in the discovered line's column of the capability matrix, or the deliverable says why discovery overrode it.
 4. The exposure mode is explicit and matches what the cluster already uses.
 5. No decoded secret exists outside a mode-0600 file removed on exit, and every filename that can hold one is in the repository's ignore rules.

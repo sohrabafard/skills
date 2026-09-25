@@ -1,0 +1,1513 @@
+{
+  "head": "34aeb11db38e1408b1760d9fe3f4c1fec16d0498",
+  "digest": "a2d7a00ab1420afbbfc8fd36bd1504a83a22929a53252c343a384d14c66982ff",
+  "tracked_diff_sha256": "a46e224631f6ad5dd215119173680002143c32ee8d19b54ab7e5c6f616b82595",
+  "files": [
+    {
+      "path": "scripts/check_fleet_references.py",
+      "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781"
+    },
+    {
+      "path": "scripts/check_lifecycle_contract.py",
+      "sha256": "39ce2054adbfa825eea5b13ce064d25d2aa008e7e21eb7a62617a17e616161c9"
+    },
+    {
+      "path": "scripts/check_skill_index.baseline.txt",
+      "sha256": "749cbb0460d026c3bb74dcb68156e2e73e7ec1cd1155625df5740a2085a26ca6"
+    },
+    {
+      "path": "scripts/check_skill_index.py",
+      "sha256": "3d8d8fc5de9de02dc0a2ad7096f4b4f779bc488ea6d2176ac98006c2d7a3bc95"
+    },
+    {
+      "path": "scripts/fixtures/EXPECTED-FLEET-CENSUS.md",
+      "sha256": "0509d3c461db2ad550b12f39b037a71eb8235d5cb246af178b193d363d0e8f37"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green/skills/sohrab/citing-skill/references/20-local.md",
+      "sha256": "654321f1af632ded67259f026c0526361c8dff4083c4f7a70f80c454060a9c52"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green/skills/sohrab/citing-skill/SKILL.md",
+      "sha256": "be1b8d87cde8cbe84fef5e228a3437f2b619541c0cb0884c6b20ebb7fa7adf3c"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green/skills/sohrab/owner-skill/references/00-topic-map.md",
+      "sha256": "1d0c4f6a4d6a2bdd14ceca04fa5b7873044569aa347ef1a14e5f9ba577d54721"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green/skills/sohrab/owner-skill/references/10-owned.md",
+      "sha256": "35968770fd51519b9ff91e1bc75ea5bed496f807ab3c5f7d2212b131d8d096d1"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green/skills/sohrab/owner-skill/SKILL.md",
+      "sha256": "c4ace27e29e275409f712f4f7d94f1b406c2400ff54ab05d3ed631b259e89292"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-marked-notation/skills/sohrab/marker-skill/references/10-local.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-marked-notation/skills/sohrab/marker-skill/scripts/tool.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-marked-notation/skills/sohrab/marker-skill/SKILL.md",
+      "sha256": "5ddd2a99d038706cfefb5a0c468b3a163e7550fddc82c69ad40b0b2b543430b3"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/citing-skill/references/30-relative.md",
+      "sha256": "11dcd291adcd7ac965be970b9df83efbd79dd7af7ebceaf3d2227074fec192fc"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/citing-skill/scripts/tool.sh",
+      "sha256": "be43f00b0c560536d7863023605c71e27e5d661d367c301ffc97f9ad5dc4527b"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/citing-skill/SKILL.md",
+      "sha256": "ba7fad9726e88f7743f22c84c70f93f795292689106dca6b36320ccb18fc4a7f"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/other-owner/scripts/codec-conformance.sh",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/other-owner/SKILL.md",
+      "sha256": "42d7c6cda9000be0a37dd9fec02658b5165485a2d76ed3dbbcb31ad66c55b89b"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/owner-skill/references/40-proof-strength.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/owner-skill/references/arvan-caas-openAPI-1.25.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/green-trap-forms/skills/sohrab/owner-skill/SKILL.md",
+      "sha256": "c9f7ccf314a3db307ca902abb7fdf72c94beb6a71c844ff6deb63f96af0da674"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-no-skills/skills/sohrab/README.md",
+      "sha256": "f53f6836ffdf9e9c73cda34ccf0f39543ad3bf48f74ef4826865f2cbdb9fb650"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r1-dangling-named/skills/sohrab/citing-skill/SKILL.md",
+      "sha256": "ac2a37961fa9a14e1e7efc8d7a03a707c47caec7a433a014b1dbefa19434dec5"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r1-dangling-named/skills/sohrab/owner-skill/references/10-present.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r1-dangling-named/skills/sohrab/owner-skill/SKILL.md",
+      "sha256": "2f3db6c31ac03413cb205e404e0877cc63084573f9d273bc6a3d5890d81d77da"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r2-dangling-local/skills/sohrab/lonely-skill/scripts/present.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r2-dangling-local/skills/sohrab/lonely-skill/SKILL.md",
+      "sha256": "e3adee9cfc7594a6fa06342d1c748f903e8e5f54a4e08c057d4245c23a4bebe9"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r3-ambiguous-multi/skills/sohrab/citing-skill/SKILL.md",
+      "sha256": "841eba946011ecc2120281a5d798dd26f979559abc1e94c6b7fbb9b0eefee051"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r3-ambiguous-multi/skills/sohrab/first-owner/references/SOURCES.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r3-ambiguous-multi/skills/sohrab/first-owner/SKILL.md",
+      "sha256": "3e16a56bc43c38cbb2dd83ca6c51b6e5914d9b9191fcca0bc9caaf29ae074041"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r3-ambiguous-multi/skills/sohrab/second-owner/references/SOURCES.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r3-ambiguous-multi/skills/sohrab/second-owner/SKILL.md",
+      "sha256": "1435344098b8c8e5c77c0e879ab1c4e3b015245ea6bf6a4b5efd4fc9a3f3c524"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r4-ambiguous-bare/baseline-malformed.txt",
+      "sha256": "4eef5e26726c0b973af27175711115d32cee72296c2a8af17e3f602726788b1c"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r4-ambiguous-bare/baseline-stale.txt",
+      "sha256": "da037e9db3fe1a7dbe312978ead347e3122234e41aac2d66ceafc78afcfd4dfd"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r4-ambiguous-bare/baseline-suppresses.txt",
+      "sha256": "c7b2e9a1870a02f1f260d409c183c04fa4930dbaceae75f7462972d00e84067d"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r4-ambiguous-bare/skills/sohrab/citing-skill/SKILL.md",
+      "sha256": "4bb2fa196be56901e2affeff7e6a10594f3f4f49d54e1ce4608a3428a09b434f"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r4-ambiguous-bare/skills/sohrab/store-owner/references/72-offline-media-store.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r4-ambiguous-bare/skills/sohrab/store-owner/SKILL.md",
+      "sha256": "e70dc4f1cb81fb29b5cdc60fdc4ab192e92f49a11126658625b61da1aaddaece"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r5-contextual/skills/sohrab/citing-skill/SKILL.md",
+      "sha256": "a89d03981582b430beb8d911346dc3d494ef4965945979d8a0d824fb347bcc03"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r5-contextual/skills/sohrab/sla-owner/references/20-retries.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r5-contextual/skills/sohrab/sla-owner/SKILL.md",
+      "sha256": "4ad7ade96430331a0915ae945389dd1f59db13d158f3d1c08f77e6eef744f86c"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r6-topic-map/skills/sohrab/router-skill/references/00-topic-map.md",
+      "sha256": "ea0f6a81bfd76c7f4d9df5419d980030a125ba7220ee5a593b8cf595a3b124fd"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r6-topic-map/skills/sohrab/router-skill/references/10-present.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-r6-topic-map/skills/sohrab/router-skill/SKILL.md",
+      "sha256": "02386a6be7b82f6c3cdf35b7c02a4fff8575821a753695ebea66e954b5043849"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-undecodable/skills/sohrab/fixture-owner/assets/fixtures/undecodable/bad.md",
+      "sha256": "1f8b411082423f1e792592bd246d0548635919221282b03e48b84fc1900772eb"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-undecodable/skills/sohrab/fixture-owner/references/10-local.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/fixtures/fleet/red-undecodable/skills/sohrab/fixture-owner/SKILL.md",
+      "sha256": "d213bd607e50a18d23515e7124db62b26108cfbe82a01036e3be6c63566e4567"
+    },
+    {
+      "path": "scripts/fixtures/index/green/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/green/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/CLAUDE.md",
+      "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/CLAUDE.md",
+      "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/green-bridged/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/green-crlf-agents/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/green-marked-map/skills/sohrab/README.md",
+      "sha256": "a072adffd06da67d67bfd4e517bd3b1bf6b6853c0b84e96fba534fe23708d0fd"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-missing-readme-fa/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-map-region/skills/sohrab/README.md",
+      "sha256": "45aff717e684f81b26d2d005015d82a6badf47dec098617a223bf7e2452fdc3b"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-skills/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-no-skills/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x1-dir-not-in-readme/skills/sohrab/README.md",
+      "sha256": "2ed2d567d61f0e4984b7b026c58974ecd09b5ddc8bfc2e5844bef6222741139d"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x2-readme-name-not-a-dir/skills/sohrab/README.md",
+      "sha256": "945a9da4bba5496e182319db4acb29160e97bfb7dcf7d429f30d129a2f7b40b4"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/README.fa.md",
+      "sha256": "f94f6c0f4a415d059d71622b174a10445d25bb3544a1eb6913ba863ee335a001"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x3-dir-not-in-readme-fa/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/README.fa.md",
+      "sha256": "8f34cedf4418d988bf9528595401f106487b3144c06722eeaf29239509521d6d"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x4-readme-fa-name-not-a-dir/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x5-consolidated-still-exists/skills/sohrab/README.md",
+      "sha256": "e0ecc6970d12c9ddab8efe4180046928dc54f155cb23d45b54cb0bd8ea00d6ab"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/CLAUDE.md",
+      "sha256": "6088505cd0c4f93b94ca61a1df1c8440f0fb50e0120504c0f06bb17fcff9d309"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x6-agents-claude-diverged/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/CLAUDE.md",
+      "sha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x7-claude-md-stub/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/baseline-malformed.txt",
+      "sha256": "c6f2415e993df21d17829aa0d21fc76656a3cc789dd0acd740dbb5c1c7604edd"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/baseline-stale.txt",
+      "sha256": "17efefd342af3a07b237fbced2f947f880eacc747c67d7260a85da3b1febeef5"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/baseline-suppresses.txt",
+      "sha256": "16aff58dcc59092514099a771c581a105331ac4032d87d7ef4c574d9ef35e47d"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x8-missing-openai-yaml/skills/sohrab/README.md",
+      "sha256": "57e851889bcd4b2429ebd699780bbd85eb030950550af7dede4639cd422da806"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/AGENTS.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/CLAUDE.md",
+      "sha256": "282f80efbd46739b957cde8fcf20f99011998fe885a97583d4304b62fd2fbdea"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/AGENTS.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/alpha-skill/agents/openai.yaml",
+      "sha256": "90f9165e0c3f41663059c0ea307082ec7aaf9258a5f43c045c95ff0a0bd30ec1"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/alpha-skill/SKILL.md",
+      "sha256": "5c805c4500a9fe821eb0b373fe64e4b5e1efbc9cd0112d87c8f7561231583f6e"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/beta-skill/agents/openai.yaml",
+      "sha256": "641924ff7e1612b739b02cfe5aa2009b4176c1d54142862b3823e2f5f2ee8f18"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/beta-skill/SKILL.md",
+      "sha256": "6beeef1a4a6f0557e6c29df18169f81684631b5b1e96517453eb540b76813dd0"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/CLAUDE.md",
+      "sha256": "fb3639c5925b59a0c2804c7b4dd9d1cfae66297247a57912611eef00bdd5ec17"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/README.fa.md",
+      "sha256": "20713f6cd455c8d710b2b34f3408bf401050dcb991c899e4cf283f179c801b98"
+    },
+    {
+      "path": "scripts/fixtures/index/red-x9-duplicate-in-index/skills/sohrab/README.md",
+      "sha256": "7b346f93fcb88ee1bae583db437bb0f5f85c356406d8ac808eb0ec2e4e5bf9dd"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/green/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/green/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/green/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "92069e9182bfd3f805b1582454eee9791a4d6b6770e078b86d14d02cb3c9f4f4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/green/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l1-owner-state-undefined/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l1-owner-state-undefined/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l1-owner-state-undefined/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "0bba9e3bc761a5456768a9a2bcc3321eee3de74e6d4a7aa4328e42617bbd10d4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l1-owner-state-undefined/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l2-report-state-missing/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "013ec708162b04ff6d29c0a3e4b5884fca95774fe308d89b152462026a8645ed"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l2-report-state-missing/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l2-report-state-missing/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "92069e9182bfd3f805b1582454eee9791a4d6b6770e078b86d14d02cb3c9f4f4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l2-report-state-missing/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l3-report-owner-not-cited/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "a8e22dca40ce152ff4d4e2a39e790a7fae89f1a0ec23bdc62d2bf99de945ed8c"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l3-report-owner-not-cited/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l3-report-owner-not-cited/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "92069e9182bfd3f805b1582454eee9791a4d6b6770e078b86d14d02cb3c9f4f4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l3-report-owner-not-cited/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l4-state-outside-owner/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l4-state-outside-owner/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l4-state-outside-owner/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "92069e9182bfd3f805b1582454eee9791a4d6b6770e078b86d14d02cb3c9f4f4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l4-state-outside-owner/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l4-state-outside-owner/skills/sohrab/other-skill/SKILL.md",
+      "sha256": "cffad7bf07ec45fb6c437d5fdcd498f90587c327430baedd301ad764ce0b0d9e"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l5-definition-outside-owner/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l5-definition-outside-owner/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c2161d2548243fc1dd593e9c04562125384360004127ac3e63f641c83ae6e739"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l5-definition-outside-owner/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "92069e9182bfd3f805b1582454eee9791a4d6b6770e078b86d14d02cb3c9f4f4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-l5-definition-outside-owner/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-owner/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-owner/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-owner/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-report-section/skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "c4839ebcced2dcaa79de58b6586f6c69c19e48ee1dfbf1efb26d4245a9183413"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-report-section/skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "c608c6c50a26f14b5b03a72e1e5e4e994a2bcb5b0e51a343dc9591e0a8725376"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-report-section/skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+      "sha256": "92069e9182bfd3f805b1582454eee9791a4d6b6770e078b86d14d02cb3c9f4f4"
+    },
+    {
+      "path": "scripts/fixtures/lifecycle/red-no-report-section/skills/sohrab/alaa-workflow/SKILL.md",
+      "sha256": "dbe6c9dbdc84937710a611a925026818f43dd7eb60d39bc418fa5a783ea8cd9a"
+    },
+    {
+      "path": "scripts/fixtures/README.md",
+      "sha256": "af90014b85edb3a06e78312b3a02c5b496e767d14363524370c68ad70d290217"
+    },
+    {
+      "path": "scripts/fixtures/validator/green/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/green/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/green/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-block-scalar/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "38b542b971dbe8a917266a407ac74c4f8c01a28c71f997b726e37d8491efddae"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-block-scalar/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-block-scalar/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-flow-mapping/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "35bdb7c713de01fa9e7fe6bcdaf7c11b3f1096700c4d50ab4faf00b6d4fff52f"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-flow-mapping/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-flow-mapping/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-repo-notation/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-repo-notation/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-repo-notation/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "7184f0e584370fef6f0ce546dacc6b311484c29fa02bd41bb91b18bb072d01a4"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-sequence-of-mappings/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "7ea371e920788a79b959b4854696823ae1eed81516c12cac71e80a9ff5a92572"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-sequence-of-mappings/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-sequence-of-mappings/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-unquoted-scalars/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "f5089a5fb4110ee3b31c890224364438342c72fa2801bb29e0410f5c742f6670"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-unquoted-scalars/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/green-unquoted-scalars/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-broken-reference-path/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-broken-reference-path/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-broken-reference-path/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "08fffc219011151dbd65678beb2ff9f3be4a54e06a90dfe22ae48ddb9807b83f"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-default-prompt-no-sigil/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "9f0d1564c4459839ac5d9666666b346e4cbd9ca6f238c42125d3562c9856735b"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-default-prompt-no-sigil/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-default-prompt-no-sigil/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-description-over-hard-max/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-description-over-hard-max/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-description-over-hard-max/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "eb9c05c35d26ccfc10eee9a42ff368754eca758b448446fcdd5661856267b061"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-description-over-hard-max-packaged/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "cca3dc8d2c2fc0cb7134bc5c1fc9f4a6de362be3a52ebb2412166bdd242b92e4"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-description-over-hard-max-packaged/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "cdc11ce6299736fb795d8cb3e68327a9440c5f5e3e41b5a1c54409c1d3018153"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-description-over-hard-max-packaged/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "34c4a2ce65788161e50f78d4caf8a578ffcb558385a33c218b350a7bc6470d8a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-missing-openai-yaml/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-missing-openai-yaml/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-missing-when-not-to-use/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-missing-when-not-to-use/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-missing-when-not-to-use/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "2041fe8108f2313ce2cdb8daec086fab79847fcbb787c5137fe150effa09e2b3"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-registry-unregistered-metric/skills/sohrab/alaa-services-contract/agents/openai.yaml",
+      "sha256": "66700baa740d6558e6ef2abba1d85596e5dd24973e6ee1dd4d7daa7ed0b80c06"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-registry-unregistered-metric/skills/sohrab/alaa-services-contract/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-registry-unregistered-metric/skills/sohrab/alaa-services-contract/references/23-queue-and-exchange-registry.md",
+      "sha256": "be09efc5909ca8d1511a5c87469e30a2478b5ed2d013029e41c37405b7df4ea2"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-registry-unregistered-metric/skills/sohrab/alaa-services-contract/references/24-metric-registry.md",
+      "sha256": "92b88c4b224c1c91de0323582b03116662cd4d9e6b7b7cd661af0f9f63f668a9"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-registry-unregistered-metric/skills/sohrab/alaa-services-contract/references/30-emits.md",
+      "sha256": "588123a7b08957cd2e1a0663b9d0054822e634fd76f37769d1640792b807c342"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-registry-unregistered-metric/skills/sohrab/alaa-services-contract/SKILL.md",
+      "sha256": "4f4f127ce0ea4bf2285d558fc8f0c2cedc0ac580742a3057882231a91dc260a9"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-short-description-too-short/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "92d56940d9870eaeb890fcd96d0a0dddca7803a862f1dcee33348849a0f952b7"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-short-description-too-short/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-short-description-too-short/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-topic-map-path-missing/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-topic-map-path-missing/skills/sohrab/fixture-alpha/references/00-topic-map.md",
+      "sha256": "d96e7c298621c4c18d72b80690472483e7193a8408d1bd20a432a4fc11b596c3"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-topic-map-path-missing/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-topic-map-path-missing/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-frontmatter/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-frontmatter/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-frontmatter/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "0d7fa2788454caeabc517ac48bbadaaa23941af7241d4328117615a7cc73a562"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-openai-yaml/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "3ab63a0959e1f43d70db1cdd00c485eadc00afc360688571c31a1b4fc9f4df35"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-openai-yaml/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-openai-yaml/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-sequence-indent/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "e863e95b00f21578c2cbe5cb89d09c590424d117cadf3ff910db63213389711a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-sequence-indent/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/red-unparseable-sequence-indent/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "69e56d2db6a146dfca49eda83065eb4d6875558be1dbee638b52ea251a059fe6"
+    },
+    {
+      "path": "scripts/fixtures/validator/warn-body-over-120-lines/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/warn-body-over-120-lines/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/warn-body-over-120-lines/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "924281b3eb01025df3fa666364ad814d7e5a5ed14a1399ea11b209e8b3711c10"
+    },
+    {
+      "path": "scripts/fixtures/validator/warn-description-over-target/skills/sohrab/fixture-alpha/agents/openai.yaml",
+      "sha256": "b40f2ef7463414b772e4802e760c72a8b00f895486e3612c75d6c219cb9f9ecd"
+    },
+    {
+      "path": "scripts/fixtures/validator/warn-description-over-target/skills/sohrab/fixture-alpha/references/10-detail.md",
+      "sha256": "b45aebf69a7e1b5e0deb0da53408a12688493d50ea0574932c393b151319d61a"
+    },
+    {
+      "path": "scripts/fixtures/validator/warn-description-over-target/skills/sohrab/fixture-alpha/SKILL.md",
+      "sha256": "6c842214b1d3132f8dec5ef49e3eb9a080a500e5369cfe2513bf101ee60848ba"
+    },
+    {
+      "path": "scripts/validate_sohrab_skill_pack.py",
+      "sha256": "d26e1a9bd3145710cfbda7eda3816754dd330681b00720fa541f7f83253dfc89"
+    },
+    {
+      "path": "scripts/vendor_skill_links.py",
+      "sha256": "0ab8715209914ef58144283b1d64824d17bebe1ddf858620332e1b3650dfc703"
+    },
+    {
+      "path": "scripts/vendor_subtrees.py",
+      "sha256": "8b21ee0b2b2598aa3b8c80c46807d58b8e083a626ac0755fb3679c5c9057ab40"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/agents/openai.yaml",
+      "sha256": "ce60429b8d3ed45ddce150b7427fac5df961315251320eeb79dd5d1a305e4811"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/input-normalization.ts",
+      "sha256": "f85943045cd9c51a3384c9507d50b7a273bf4188200d4a03204a2deb7c0410b1"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/input_normalization.go",
+      "sha256": "aa192a793d8b442fe1c46d6d2c7077398f5b184078a6185061f716beb1c5d0d0"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/InputNormalization.php",
+      "sha256": "27ee3287ab247171a4a81d0b4e0f5f23b304e363c26c722a85ce8c160e05536a"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/assets/input-normalization/normalize_reference.py",
+      "sha256": "f0aa307502f15cf1fe73148b8612feae720d9e96756fdfba0a57d8a557a6a84c"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/10-normalization-contract.md",
+      "sha256": "3d87bce21b82d8beda7cae8a1086955a9fcd21d04a5988260fb58118d76cd3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/20-browser-binding.md",
+      "sha256": "0f4276f486d886d479b251bb4c87d193c33c5ef5222d2d82bf549c7ba07937ad"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/30-backend-middleware-binding.md",
+      "sha256": "ec6fbecd4baae4656c89b3ff9612cbc6039804aad3930d8d265bf6a9e1b12f98"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/40-failure-classes.md",
+      "sha256": "43d141abd539a105d78f78a1799054bdff0878050e7e2e103db5e110522f072c"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/50-corpus-and-harness.md",
+      "sha256": "f6045c7added2617f3172135c53d7556b377cb190752ea29da4135dac6c19b9b"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/references/60-provider-seam-and-open-items.md",
+      "sha256": "6ce83a17e058cc85d14b94f33737feed816697f4ef0070fc083f47e01372b978"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/_phone_inputs.b64",
+      "sha256": "6b6c143609815fea0a1875cdd7fdcdb3ae7520103dac71c2d00f0913900c681f"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/normalization-conformance.sh",
+      "sha256": "b207593886393105c38ec0b47e4ec1c6986cb74fcada32cec76a4f3cc31b30f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/normalization-corpus.json",
+      "sha256": "126694e18000ce44c65c02f482d7f4f8c553dd1be0519a079b8b4107f26eead0"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/scripts/test_laravel_middleware_example.php",
+      "sha256": "f652866c5cacb5e60623b234d8b1cecfeb207cf3878d6ea167613982c24f57be"
+    },
+    {
+      "path": "skills/sohrab/alaa-input-normalization/SKILL.md",
+      "sha256": "d3dfee191c0a7db3255d8dc8127e7059cb0cadf837cff3c32c9e4e1dbadf9fb2"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/check_manifests.py",
+      "sha256": "ba3c52cd2f07c1ca5c0bf9e0dc1034d6b5672b76b4b29d95894b83d5d331ae2f"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/check_tools.sh",
+      "sha256": "f75df8ead89641a5acd9cfd1aef9911b8b49d62e5b6420031f81002c10eb02b5"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/check_versions.py",
+      "sha256": "f4c1f8f101d4f29ca51941807206fcbca29a297714823d8579b2d731cf973ba1"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/cluster_health.sh",
+      "sha256": "caea12e93ed2c0b91984e46fa221ef7d24271830cf138ba9503ebe881c51e3b1"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/detect_crd.py",
+      "sha256": "9d92382390a2999c3e2419e923d0de682d8bfd7647c30182a89bf15b74120717"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/detect_crd_wrapper.sh",
+      "sha256": "1dc69b8abc92f0588b2956507557d36360416b0d4b98e3ea0335428835ea074c"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/arvan-violations.yaml",
+      "sha256": "c8e0771d2ea9670b7cf9a359423bd9d94ba9327f15cbb01c2a41b6304d42819b"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/bad-deployment-crlf.yaml",
+      "sha256": "3b1834d560e6c1f122b337f5f9bf8979d9756558755a38a74232ded012059e84"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/bad-deployment.yaml",
+      "sha256": "3b1834d560e6c1f122b337f5f9bf8979d9756558755a38a74232ded012059e84"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/baseline-drift.yaml",
+      "sha256": "776854e7ee22f2e4506e2580050cd4d4a1aa04efb3f6bf1bc3dfa442206eb556"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-broken/Chart.yaml",
+      "sha256": "7d3582e694bb5e705522d1d9976bcc2d04258301690f42d60853b6ada6c6713a"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-broken/values.yaml",
+      "sha256": "544aff8fa96bf915b49d53a740454bfd0a5b5f97b0c883baacb60cb0ab1dc405"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-crlf/.helmignore",
+      "sha256": "f00ef72a2a76cdcd2e1160256ec848efcc5e6f92173ebccc5fd74cb81f3f8c13"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-crlf/Chart.yaml",
+      "sha256": "7e13011c0798e022a6b93259b26e13949807d595e0c2d38376fc09b68dba2c94"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-crlf/templates/_helpers.tpl",
+      "sha256": "ad12556b74ac2b87d1b56f9bb10d0048e626e2c5998c531019270691fd0411ea"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-crlf/templates/deployment.yaml",
+      "sha256": "65d02f7c3d5b50d6c2cdd2804577f8252d8e556a025487352083d41a9a664587"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-crlf/values.schema.json",
+      "sha256": "c563506968fff158249b07ae4f3387454f8afd1ae35a8a32befb5008e712b016"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-crlf/values.yaml",
+      "sha256": "544aff8fa96bf915b49d53a740454bfd0a5b5f97b0c883baacb60cb0ab1dc405"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-good/.helmignore",
+      "sha256": "f00ef72a2a76cdcd2e1160256ec848efcc5e6f92173ebccc5fd74cb81f3f8c13"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-good/Chart.yaml",
+      "sha256": "7e13011c0798e022a6b93259b26e13949807d595e0c2d38376fc09b68dba2c94"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-good/templates/_helpers.tpl",
+      "sha256": "ad12556b74ac2b87d1b56f9bb10d0048e626e2c5998c531019270691fd0411ea"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-good/templates/deployment.yaml",
+      "sha256": "65d02f7c3d5b50d6c2cdd2804577f8252d8e556a025487352083d41a9a664587"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-good/values.schema.json",
+      "sha256": "c563506968fff158249b07ae4f3387454f8afd1ae35a8a32befb5008e712b016"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/chart-good/values.yaml",
+      "sha256": "544aff8fa96bf915b49d53a740454bfd0a5b5f97b0c883baacb60cb0ab1dc405"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/clean.yaml",
+      "sha256": "c2b02e4f2617a8620d00309922410898eb834fc3de5b17c9719f1123a27dc4d6"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/not-kubernetes.yaml",
+      "sha256": "ea2cdfc2eadd5e569839659b35372636324688ba32facfd98a9f3ac66baa455d"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/removed-apis.yaml",
+      "sha256": "a0f35ddc2af6c5d828b2e3ce22a6375cad244d52f75c0f87f078c3c95b26c9d8"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/unparsable.yaml",
+      "sha256": "a2143a6a298916555fe4183d260d8bc6b395970f9423137efd358a95b25234f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/versions-drifted/helm-latest.html",
+      "sha256": "e518a25cb34a45d476dda2d407020c7ed80b9e0b1eaa40e11317addc5cc90f14"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/versions-drifted/helm3-eol.html",
+      "sha256": "0e6d198a4f4aad93ab420f0bddaf4c0f76e65e0166e78098dfc4602940fffd27"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/versions-drifted/kubernetes-latest.html",
+      "sha256": "2169f78e9bc97d17c44d2684ddcf3acaaed598c1656535a49e7804f290b466e3"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/versions-matching/helm-latest.html",
+      "sha256": "68dfd497af726b201a220c0a493c05e2c2fa71758fb0588b3a36a593aa4dc2ac"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/versions-matching/helm3-eol.html",
+      "sha256": "46cedf7b7e37a6cffda30eba520cc977faaacc9786c27e21c0954834740970c4"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/fixtures/versions-matching/kubernetes-latest.html",
+      "sha256": "79b6c905a9bacc8170181abca48d4a0edbd93dcbbf80747589c3778113b3718d"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/network_debug.sh",
+      "sha256": "c7ae50568372ec65df602698965db160e33f15973a23010c11ce166885bb8d8a"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/pod_diagnostics.py",
+      "sha256": "2f315f192ec18301b198d5dfbbe60de81e01bda3cf0de9b3306cbf0023846f5d"
+    },
+    {
+      "path": "skills/sohrab/alaa-k8s-helm/scripts/validate_chart_structure.sh",
+      "sha256": "c8d18c3c7813f970be027e9917b4c59d17e81e4c01e61eb4a66d9fda3a3275cb"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/agents/openai.yaml",
+      "sha256": "59383840855e5171e8f44172629142aa2c26718174fe1c2f24113601696658d9"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "sha256": "8cad92e66fb8237f57f752f870d3870343ff35573a0dd730a21abb45631daf1f"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "sha256": "b8f6400160f98e72d8f674bcb6b2d3fed7100016cbc3ed0ee42792784d46d4d3"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/values.secret.yaml.example",
+      "sha256": "5034b5dee7b60c6c56e165c7b0dd926a15b44dc41c62f8af3c8086e883f08670"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-caas-openAPI-1.25.json",
+      "sha256": "8e7a00ea44cdf611f95f56f7ee71d59fc64d50ac86a0a2c327caef62aa15f572"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-capability-matrix.md",
+      "sha256": "4d2af9c631e3cc485eddd0e14b368c10c4ebb8edd119b8ed4f2826f4f5493b7a"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "sha256": "f630284e0eaf6cee2956886a0c8056665b8de7e20500b94a59d61be9913fa2b5"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-execution-loop.md",
+      "sha256": "bee76227502f3db751db63ff80f35d974d34c02d8b2b536ebb1b7383e8dae87a"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-rbac-namespace-facts.md",
+      "sha256": "714563558da72c9175e4deea831af6312ca31875b0ecda461af34bcee9c04b06"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "sha256": "5105a89b2b3b2db19816e8dcf294fdf0961033f1ccc3198215e68ef3f06ee08d"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/SOURCES.md",
+      "sha256": "37f038c37d8186c76cc71b5e9b3dca5b82f840e2370ddc3e14d2683d9879f00e"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-body-transcribing.md",
+      "sha256": "81b3b1013e40af43403de5a702924c04f2e6fd1bd6ebb8096cb390c5136e3248"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-body.md",
+      "sha256": "9e5f572d869078f85ae6df30997f8749bd596e8488047dacfe2f394857c0b7ad"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-crlf.md",
+      "sha256": "765638dd6edf3c9ed5b633b405b6bf69367eedf043ab60a9393464625f534de7"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-drifted.md",
+      "sha256": "6d1cbbe9d065564fa6c5cb8e5eacec693783fdbbd64a3fcc29ef03d7450c3435"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-no-markers.md",
+      "sha256": "3bd1cc6bccb9f2ec627da7a6054d348288ece27e8a827954a59bec96a6e781be"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix-no-stamp.md",
+      "sha256": "95fad1dbc10dbe65fa43f0753cf137d843d38f18428d98a1e0c6fac85771f186"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-matrix.md",
+      "sha256": "765638dd6edf3c9ed5b633b405b6bf69367eedf043ab60a9393464625f534de7"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/mini-openapi.json",
+      "sha256": "15eb031d531202058600d4e0869593a5d81311a8afc6697d8935a8ce36423ed5"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/fixtures/unparsable-openapi.json",
+      "sha256": "e31e24e19b2afcaf67e344887210a109e8170fa1f4783d695fedcb7916488945"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+      "sha256": "a0303c89b92e3424cf36423c63b69b231667488f9f70fffb4d84b4cfceda64d0"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/summarize-openapi.sh",
+      "sha256": "7bf5de58b44265ebdf5a6a5790a4a25d57f53fb6a4cd03b8398be0d8b1e6b212"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/verify-cluster.sh",
+      "sha256": "d4a1695149c39db24f47fa28458b8894fe41984b26da60300ecefe4e528fb4f1"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "sha256": "666c62f2b8b5d57d84f3c1e36bee128d2a0df41cab339520aaa2a9750092d3f0"
+    }
+  ],
+  "observed_at": "2026-09-25T16:00:06.198246+00:00",
+  "method": "SHA256 sorted repo-relative path NUL file SHA256 LF; HEAD and complete tracked diff separately bound; workflow/evidence companions excluded"
+}
