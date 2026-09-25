@@ -2,7 +2,7 @@
 
 **Version 1.0.0**
 OpenFGA Community
-April 2026
+September 2026
 
 > **Note:**
 > This document is mainly for agents and LLMs to follow when authoring,
