@@ -6,18 +6,23 @@ this skill defines.
 
 This file owns the **Ala numbers and the wire behaviour**. It does not own the doctrine: why a timeout
 exists, how to shape a backoff curve, what a circuit breaker is for, or how to run an error budget all
-belong to `/alaa-reliability-sla` (`$alaa-reliability-sla` in Codex). Read that skill for the reasoning
-and this file for the values a service must actually ship. Load `$alaa-data-layer` for pool mechanics
-inside a driver, and `$alaa-async-messaging` for broker prefetch, acknowledgement, and DLQ mechanics.
+belong to `/alaa-reliability-sla`. Read that skill for the reasoning
+and this file for the values a service must actually ship. Load `/alaa-data-layer` for pool mechanics
+inside a driver, and `/alaa-async-messaging` for broker prefetch, acknowledgement, and DLQ mechanics.
 
 The event and code names used below are owned by `20-operational-and-observability-contract.md`. The
 metric families are owned by `24-metric-registry.md`. Do not restate either here.
 
 ## Request deadline
 
-One deadline covers a whole request chain, it is created once at the edge, and every hop spends from it.
+One deadline covers the synchronous request chain, is created once at the edge, and every waiting hop spends from it.
 A deadline each service invents for itself is not a deadline: three hops each allowing five seconds allow
 fifteen, and the client that gave up after two is no longer there to receive any of it.
+
+For work crossing a persisted durable-ownership boundary, apply
+`alaa-reliability-sla references/10-deadlines-and-timeouts.md`: it owns acceptance despite a lost receipt,
+separate bounded execution, business validity/cancellation, and disposition. The header below bounds the
+request wait; it defines no job expiry, broker TTL, or record retention and adds no worker deadline header.
 
 ### The gateway originates it
 
@@ -46,7 +51,7 @@ A service receiving `X-Request-Deadline-Ms` does four things, in this order:
    that already carries `request_id` and `trace_id` — inside `RequestObservabilityMiddleware` for Laravel,
    or the equivalent top-level middleware. `remaining_ms` is that deadline minus now, and it is what every
    later step reads.
-2. **Clamp every outbound call.** Each outbound attempt's timeout is the smaller of its own default in the
+2. **Clamp every request-bound outbound call.** Each outbound attempt's timeout is the smaller of its own default in the
    table below and `remaining_ms`. An unbounded outbound call is a contract violation even when the
    dependency is healthy and even when the deadline header is absent.
 3. **Refuse rather than start work that cannot finish.** When `remaining_ms` is at or below zero, or is
@@ -125,8 +130,10 @@ retries reports a dependency as up when it is flapping, which defeats the purpos
   RabbitMQ publish nack or a closed channel.
 - Retry `429` only when the response carries `Retry-After`, and wait exactly that long. Never retry any
   other `4xx`.
-- Stop retrying when `remaining_ms` no longer covers another attempt, even if attempts remain in the
-  budget. The deadline outranks the attempt count.
+- For request-bound calls, stop retrying when `remaining_ms` no longer covers another attempt, even if
+  attempts remain. After durable acceptance, apply the bounded execution context and job lifecycle owned
+  by `alaa-reliability-sla references/10-deadlines-and-timeouts.md`, not the expired HTTP budget. The
+  applicable deadline outranks the attempt count; the retry limits above still apply.
 - Emit `dependency.call.failed` with code `DEPENDENCY_CALL_FAILED` for each failed attempt, and
   `dependency.unavailable` with code `DEPENDENCY_UNAVAILABLE` once when the budget is exhausted.
 - A retry loop nested inside another retry loop for the same logical call is forbidden: when a client
@@ -230,7 +237,7 @@ first message. A consumer that inherits its client library's default accepts an 
 unacknowledged deliveries, so one slow handler pulls the queue's working set into one process's memory and
 the broker stops redelivering those messages to healthy consumers.
 
-- The prefetch value and its tuning belong to `$alaa-async-messaging`. What this file requires is that a
+- The prefetch value and its tuning belong to `/alaa-async-messaging`. What this file requires is that a
   value is set explicitly, in committed configuration or at the consumer construction site, for every
   consumer.
 - A shared consumer abstraction — a kit, a base class, a runner — exposes prefetch as a required
@@ -256,13 +263,14 @@ user-facing request waiting for capacity, and never discards work that has to su
   does not wait.
 - `/api/health` and `/api/ready` are never shed. Shedding readiness makes an overloaded service look
   dead to the orchestrator and turns load into a restart loop.
-- Work that must not be lost under load is converted to a queued job and acknowledged before the
-  response returns, so the response reports acceptance rather than completion. Never make a product
-  request wait on a queue in order to avoid shedding it.
+- Work that must survive gains persisted durable ownership before an application acceptance receipt is
+  returned. The receipt reports acceptance, not completion or a broker acknowledgement. Apply the
+  lifecycle reference above for lost responses and overload before versus after acceptance. Never make a
+  product request wait on a queue in order to avoid shedding it.
 - `alaa_http_requests_in_flight` is the observable that proves the limit is set correctly, and
   `alaa_queue_backlog` is the observable for the queued path. Both are registered in `24-metric-registry.md`.
 - Consumer-side prefetch and concurrency are bounded under `Bounded message consumers` above; their values,
-  tuning, and DLQ mechanics belong to `$alaa-async-messaging`.
+  tuning, and DLQ mechanics belong to `/alaa-async-messaging`.
 
 ## Deprecating a contract surface
 

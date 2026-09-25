@@ -1,13 +1,13 @@
 # Retries
 
-Read when a retry is added, removed, or found nested inside another retry. `SKILL.md` holds the three rules that bind without reading this file: a retry is legal only when repeating the call cannot produce a second effect, exactly one layer in a chain retries a given logical call, and every backoff is exponential with full jitter. This file is the classification, the arithmetic, and the audit. The Ala attempt count, backoff base, and cap are in `/alaa-services-contract` (`$alaa-services-contract` in Codex) `references/22-failure-load-and-deprecation-contract.md`.
+Read when a retry is added, removed, or found nested inside another retry. `SKILL.md` holds the three rules that bind without reading this file: a retry is legal only when repeating the call cannot produce a second effect, exactly one layer in a chain retries a given logical call, and every backoff is exponential with full jitter. This file is the classification, the arithmetic, and the audit. The Ala attempt count, backoff base, and cap are in `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
 ## The four preconditions, checked in this order
 
 A retry is written only when all four hold. Check them in order, because each is cheaper to evaluate than the next and the first failure ends the question.
 
 1. **The outcome is in a retryable class.** See the table below. A retry of a non-retryable outcome is a second identical failure plus its latency.
-2. **The remaining deadline covers another attempt and its wait.** If it does not, the correct behaviour is to stop now rather than to attempt and be cut off. `10-deadlines-and-timeouts.md` owns this bound.
+2. **The applicable execution budget covers another attempt and its wait.** Stop when it does not. For accepted work, check owner-defined validity, cancellation, and retry limits; the original HTTP deadline does not decide its fate. `10-deadlines-and-timeouts.md` owns that lifecycle and the request-versus-attempt context.
 3. **Repeating the effect is safe** — the operation is naturally idempotent, or it carries an idempotency key the receiver honours. `60-idempotency.md` owns what "honours" means, and a route with no idempotency guarantee is retried zero times, not once.
 4. **This is the layer that owns the retry**, and every layer below has its retry count explicitly at zero.
 
@@ -28,7 +28,7 @@ The classification turns on one question: **does this outcome prove the request 
 | Any other `4xx` | No | The request is wrong, and an identical request will be wrong again. Retrying it converts a client defect into load |
 | `501`, `505`, and other permanent server refusals | No | The condition is a property of the request or the deployment, not of this moment |
 | An application-level failure inside a `200` | No, unless the payload names the failure as transient | A retry decision made from a status code alone is wrong on any API that reports failure in the body |
-| A broker publish nack or a closed channel | Yes, with a key or from a durable outbox row | The message was not accepted, and the outbox makes the repeat safe |
+| A broker publish nack or a closed channel | Yes, with a key or from a durable outbox row | A closed channel can leave acceptance unknown; preserve identity so republication cannot produce a second effect |
 
 **A connect refusal and a timeout are not the same event and must not share a code path.** A refusal is a proof of non-execution: retrying it duplicates nothing, so it is retryable on any operation, including one with no idempotency key. A timeout is the absence of information: the server may have committed the write and failed to answer, so retrying it without a key is a coin flip on duplication. Code that catches a generic transport exception and retries has lost the distinction, and the observable consequence is duplicates that appear only when the dependency is slow.
 
@@ -50,7 +50,7 @@ An attempt count bounds one call. It does not bound the fleet, and the fleet is 
 
 The arithmetic: with two retries permitted per call, a dependency failing every request receives three times its normal load — during its own outage. Whatever capacity it needed to recover, the callers just spent. This is why a per-call count is a necessary bound and never a sufficient one.
 
-A retry budget bounds retries as **a fraction of successful requests over a rolling window**, measured per client instance per dependency. Below the fraction, retries proceed. Above it, retries stop entirely and the first failure is returned to the caller, even though attempts remain in the per-call count. The question the fraction answers is "how much extra load may we add to a dependency that is already failing?" — and the answer is small, because the extra load is only useful for the failures that are genuinely transient, and a dependency failing more than a few percent of requests is not having transient failures.
+A retry budget bounds retries as **a fraction of successful requests over a rolling window**, measured per client instance per dependency. Below the fraction, retries proceed. Above it, retries stop entirely and the first failure is returned to the calling request or worker, even though attempts remain in the per-call count. A worker then follows the accepted-work disposition contract; budget exhaustion is not permission to lose the job. The question the fraction answers is "how much extra load may we add to a dependency that is already failing?" — and the answer is small, because the extra load is only useful for the failures that are genuinely transient, and a dependency failing more than a few percent of requests is not having transient failures.
 
 Two properties make the budget work: it is measured against **successes**, so a fully failing dependency drives the allowance to zero rather than to a constant fraction of a growing failure count; and it is **per dependency**, so one broken dependency does not spend the allowance that another one's transient blips need.
 
@@ -78,7 +78,7 @@ The owning layer is the one that holds the idempotency key and the deadline, bec
 - **Breaker first.** A retry inside an open circuit is not a retry; the breaker's whole purpose is that the call is not attempted. Check the breaker, then retry inside the closed state, and count every attempt — not every logical call — toward the breaker's failure rate, so a retrying caller trips the breaker sooner rather than later. `30-breakers-and-bulkheads.md` owns the states.
 - **Bulkhead per attempt.** Each attempt takes a slot. A retry loop that holds one slot across all attempts and their waits occupies the isolation budget while doing nothing.
 - **Deadline over count**, always, per `10-deadlines-and-timeouts.md`.
-- **Signal per attempt and per exhaustion.** A failed attempt and an exhausted budget are different events, and only the second one is a request-level failure. Collapsing them makes retry amplification invisible. `/alaa-observability-soc` (`$alaa-observability-soc`) owns the signal shape; `/alaa-services-contract` (`$alaa-services-contract`) owns the event and code names.
+- **Signal per attempt and per exhaustion.** A failed attempt and an exhausted budget are different events, and only the second one is a request-level failure. Collapsing them makes retry amplification invisible. `/alaa-observability-soc` owns the signal shape; `/alaa-services-contract` owns the event and code names.
 
 ## Hedged requests are not retries, and need their own permission
 

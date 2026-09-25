@@ -1,0 +1,218 @@
+[
+  {
+    "path": "skills/sohrab/alaa-async-messaging/agents/openai.yaml",
+    "sha256": "9a57c327fdd66c6405792482b2a236eecc225b6a69b83c5232146af9bafb9540"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/10-transport-and-topology.md",
+    "sha256": "2b6cc2883c6166c2f5b25ab63d0e4c8b813dcdee742d24f2f01da60044d413df"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/20-publishing-and-the-outbox.md",
+    "sha256": "0e3c27a739da34eac699df0f470d6c69e33d36d2357f49a739ef458ca5512bff"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch.md",
+    "sha256": "9a438576ac8b54d1228f07998edece6f0c453afd875d0e85ed3dc583858af036"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay.md",
+    "sha256": "f607f0737316afdbd6b08ddcc8af4deef433c92322ae55241eea641346e77284"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes.md",
+    "sha256": "5953fe55b928ca4e77c906a6aa9c769f4fa8e09e72dc1cb4193cd2411f7a3fda"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/60-telemetry-and-proof.md",
+    "sha256": "3ffa31a8bfd367d9a85064a0ea16563c0a1fd6c085881bab762b8334399ab418"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/70-laravel-redis-and-horizon.md",
+    "sha256": "51539fd0812a737fd2202adc286350f8de1db7af203558e0313e2a585d87a54d"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/90-source-map.md",
+    "sha256": "ce12e86e578ca4973961905c1289c029378519c18d3f9573381877ea38f7ae47"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/queues-best-practices.md",
+    "sha256": "3dda5e482834613059dae069b482ee6861b08537cf82814afd06b1257300a1b6"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/check-consumer-bounds.sh",
+    "sha256": "38303c193b089e74af4291f4fb06fd1ff82e473f2098b1e9495a19561022cadf"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/conforming/consumer.go",
+    "sha256": "bd5c1a5456cfbb77fd62e20c08955a4beb73c6b22079ea5fc0c875e6797cf680"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/conforming/env.example",
+    "sha256": "b2c40020063275495ba1b1a76007d1b160bec3e2afb4b39fa7e4628817eeb0c2"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/conforming/queue.php",
+    "sha256": "11e1c716e36aaf26f45d95a30293c4aad2cc7f3428b482a9eb532d1fd6d63750"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/no-broker/clickhouse.go",
+    "sha256": "53097bd7f58184c47902be32b50861edc0a063c53070dee30b65980ed3ef362b"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/violating/c1_consumer.go",
+    "sha256": "2507a106dcd3fc4e72f2333fcfc66f0d50f5b779f87777c80f0c42268dd07b26"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/violating/c2_queue.php",
+    "sha256": "13230a95e7c45d3ceefe2dd83d24c2a619e9ef486cee4881aa8a15477a8c1352"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/scripts/fixtures/violating/c3_names.env.example",
+    "sha256": "ec396956d5a854fbe7d9dedeabe159f1d3cc5eae2185260a0976fb3cb5f8ae0a"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/SKILL.md",
+    "sha256": "1abeafe106b1746964d61f955f68ceff666db5eadbcf776faaca1eabd6e18b63"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/agents/openai.yaml",
+    "sha256": "1307bc671a987ccda31dbe73fc631439ddfcf9be753ca5f199fb7591ec2cdd12"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/00-topic-map.md",
+    "sha256": "465f51ea09cf82fb7fd6429dbfddaf9c2eb85d93c188009adb20878b75c20a84"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/10-deadlines-and-timeouts.md",
+    "sha256": "aeafd667cb5ac2c7073540104db28caa48bd96385790832e3b418a289532879d"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/20-retries.md",
+    "sha256": "e1665683c1ac720e3f66a29e45beb6267d8ee63fab703c24d0aa38f096657cc3"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/30-breakers-and-bulkheads.md",
+    "sha256": "2c27dbd55f0d067efef182e6dea3fa51cd13aaea978a5be296b04aefa2403253"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/40-admission-and-shedding.md",
+    "sha256": "112c1a94fe848e33fdec022efdbdcf35ca792c1843ac885ad7ab29b12dcbbeb5"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/50-degradation.md",
+    "sha256": "a749fb0160e5477eedec491c9fb46594240fb11f1d41e4c4d9e863310e794eb9"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/60-idempotency.md",
+    "sha256": "aaf315a96450b671f9563e69d4c47873477afee7a9b8ca573234cfb2c991aa88"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/70-error-budgets-and-slos.md",
+    "sha256": "722b0d32d876fb58fad13497fa80c7682a52ac1b6a8143fbf03b5e35d6223a38"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/references/80-verification.md",
+    "sha256": "459eed8d03a588b6bb98b47595905e363e8a7c43f657032a92db22721f5ddea3"
+  },
+  {
+    "path": "skills/sohrab/alaa-reliability-sla/SKILL.md",
+    "sha256": "b522f6f82d48bed1b33e9ce1f6baf3512f37e88a7c6f2c0264026816080f38cf"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/agents/openai.yaml",
+    "sha256": "d0a07e1f07f51af6c3a467b65e5be3d4d453344be15251b059edc15a1f248fdc"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/00-topic-map.md",
+    "sha256": "f21345da839beecf1cc554f8d74a3678841afd1e20baab88f49538ae1078d429"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md",
+    "sha256": "d3f2fc421ef7474c8dfd6f7cd281d562a8cd90567462972521270032fcd787f5"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/10-core-service-contract.md",
+    "sha256": "2a41425f83feb969b7d114ee8cf3166b44ad8a77f6f2d551b0239681e24ceae1"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/15-deployment-and-runtime-contract.md",
+    "sha256": "6a2b3953053024e297576c20a6467df414a713aaabad1c85170034ac8d8168d1"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/20-operational-and-observability-contract.md",
+    "sha256": "687d50aed4ec130b3e5881afca2f967ddfb60df99ec2018045b696345f709e34"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+    "sha256": "ca1a6ec6e56fca1b5854c80a1c3c35f63120251a86bc371c6f4e6a6583eec075"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md",
+    "sha256": "581e0761f8d9a9380a56844001716edf73a10eb78471c53e70505c235b02e71f"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/23-queue-and-exchange-registry.md",
+    "sha256": "9f17c427d44b435358b0ddc762870ecd079ef3fc6a389b086995b6615c56f862"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/24-metric-registry.md",
+    "sha256": "ecc2b03bdb6773863a43c0795bec832ca591e46d80388622c804d08d18c6e0ae"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md",
+    "sha256": "cffd48d4a6aee83734f4238661a2e8f2cae64d4c55c66c02685c7f186109cd17"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+    "sha256": "c73a8e270618b70e8269c25a9d96860d3661e668288f24aacf0833d7de999e5c"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md",
+    "sha256": "6235b1a453617332c82be2c3ea4ed15ee7b186428c0e23137fce05bf3a5cde86"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/28-backend-permission-authorization-and-role-freeze.md",
+    "sha256": "aa06d771ad43489e1b1d4f2fe67d6433ce001402e613d22e256f4bcce16d7745"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md",
+    "sha256": "efe40340e47c7fd006ae0ed5ff6f8140f17ec99106f53eb5d89ca77bca7b8962"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/32-auth-totp-and-step-up-contract.md",
+    "sha256": "423b05eb8c9934cb6302dc82a58ad909c7c3f17bc2e986079bc1717a1e11782c"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md",
+    "sha256": "c94a332e7689019ba6dc653a57f39f91f908a3256fc1962b3f3ce576640715fd"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/40-apply-checklist-and-anti-patterns.md",
+    "sha256": "9460d3bb1c9d1b7fb8d219c98754fd031b89322409434aadeff3c2eb0a288ac9"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/50-laravel-copy-baselines.md",
+    "sha256": "00d4ef5f36065c063f335f477ff55725dcb3420d00987fbb00e6a81d1174a30d"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/60-frontend-sdk-consumption-contract.md",
+    "sha256": "3038f3bf5d5d96260dbee6d7955535c3f5153b2469b293c971c94fda61c0c405"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/65-frontend-page-kit-and-widgets-contract.md",
+    "sha256": "ed7fb4d76fcdd2b1c282e5fc91cb9fb460f5805deb9ba46ad2cbb7a5ecda6e26"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/90-source-map.md",
+    "sha256": "21fe7b5d1f311385a29e34a175ed24e7d3dfcc0a5c4591e187f5535924b266be"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md",
+    "sha256": "0c44edc7872e8056fe46e52c8f2d70ab298b1d23dc06e328bcb0cbcc22f9b709"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/SKILL.md",
+    "sha256": "62f3a2fca3624a32e045ad09e8a2f5ee77ecbe2450367a8963e39462cdaee349"
+  }
+]

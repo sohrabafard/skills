@@ -8,7 +8,7 @@ Evidence is an **observed** outcome: a test that ran, an injection that ran, or 
 
 - **The code.** A retry block, a breaker construction, or a timeout constant is a claim about behaviour. Configuration frequently does not reach the client it was written for, a library default silently overrides it, and a wrapper swallows the cancellation.
 - **The configuration value.** A timeout in a config file proves the file contains a number.
-- **A passing test that also passes without the mechanism.** A test that passes either way is measuring something else, and its green result is worse than no test because it is used as evidence. Proof by removal — the procedure that settles it — and the six levels a result may be reported at are owned by `/alaa-testing-strategy` (`$alaa-testing-strategy` in Codex); read it before accepting any row of the table below as verified, and report each observation at the level actually reached rather than the level it was meant to reach.
+- **A passing test that also passes without the mechanism.** A test that passes either way is measuring something else, and its green result is worse than no test because it is used as evidence. Proof by removal — the procedure that settles it — and the six levels a result may be reported at are owned by `/alaa-testing-strategy`; read it before accepting any row of the table below as verified, and report each observation at the level actually reached rather than the level it was meant to reach.
 
 State the evidence as "this was injected, this was asserted, this was observed" — the three together. A review accepts nothing that omits the third.
 
@@ -33,8 +33,8 @@ A suite that injects only mode 8 has tested error handling, not reliability.
 
 | Mechanism | Inject | Assert |
 |---|---|---|
-| Deadline propagation | A dependency that sleeps past the route budget | The request returns the dependency-unavailable outcome before its own deadline; the downstream call carried a timeout no larger than the remaining budget; no partial effect remains |
-| Timeout cancels work | The same, with a stub that records cancellation | The stub observed a cancellation; the pool and semaphore gauges return to baseline; no work completed server-side after the caller gave up |
+| Deadline propagation | A dependency that sleeps past the route budget | The request returns the dependency-unavailable outcome before its own deadline; the downstream call carried a timeout no larger than the remaining budget; any partial or uncertain effect has the operation's tested reconciliation path |
+| Timeout cancels request-bound work | A cancellable waiting-call stub that records cancellation | The stub observed cancellation and stopped; pool and semaphore gauges return to baseline; no stale request work runs in the stub. Test uncertain remote effects separately; a cancellation signal is not rollback proof |
 | Three distinct bounds | Modes 3 and 4 above | The connect, read, and total bounds each trip on their own mode, and the reported reason names which one |
 | Retry legality | A stub failing the first attempts, then succeeding | Exactly one logical effect exists; the attempt count is within budget; the observed waits are **distributed rather than equal**, which is how a missing jitter is detected |
 | One retrying layer | One logical caller call | The request count arriving at the stub is at most the owning layer's budget. A higher count is a nested retry, and this test is the only reliable way to find one |
@@ -45,7 +45,7 @@ A suite that injects only mode 8 has tested error handling, not reliability.
 | Half-open bound | Failures, then recovery, with many callers waiting | At most the configured trial count and concurrency reach the stub in the half-open state |
 | Bulkhead isolation | Mode 1 saturating one dependency's stub | **A route that does not use that dependency still succeeds.** This single assertion is what proves isolation, and it is the test almost nobody writes |
 | Shedding | Concurrency driven past the admission limit | Excess requests are rejected with the shed outcome; admitted requests keep their latency inside the SLO, which is what distinguishes shedding from queueing; health and readiness still answer |
-| Queue bounds | Arrival rate above service rate, sustained | Depth stops at the bound; items past the wait bound are dropped **before** being processed; memory is flat |
+| Caller-bound queue bounds | Arrival rate above service rate, sustained | Depth stops at the bound; stale caller-bound items are dropped **before** processing; memory is flat |
 | Degradation, per optional dependency | Timeout, connection refusal, and error response — three separate runs | The documented status, the degradation marker naming the missing contribution, and the rest of the response complete |
 | Degraded aggregate | Every optional dependency failing at once | The declared minimum set is enforced: above it a marked response, below it a clean failure |
 | Cache absorbs a cache outage | The cache unreachable | The origin serves the request inside the deadline, and origin calls per key are one per instance, not one per caller |
@@ -56,7 +56,23 @@ A suite that injects only mode 8 has tested error handling, not reliability.
 | Idempotency, honest retry | The same key with a differing trace identifier and timestamp | A replay, not a conflict — proving the fingerprint excludes what legitimately varies |
 | Idempotency store unavailable | The key store unreachable | The documented outcome, and no unrecorded effect |
 | Lease expiry | A first request killed mid-operation | The key becomes claimable only after the lease, and exactly one claimant wins |
-| Error budget | Synthetic bad events at a known rate | The SLI query returns the expected ratio and the burn-rate rule fires; the alert's no-data behaviour was observed. `/alaa-observability-soc` (`$alaa-observability-soc` in Codex) owns the query and alert authoring |
+| Error budget | Synthetic bad events at a known rate | The SLI query returns the expected ratio and the burn-rate rule fires; the alert's no-data behaviour was observed. `/alaa-observability-soc` owns the query and alert authoring |
+
+## Durable acceptance and deadline cases
+
+When a path can accept durable work, cover each applicable case below in addition to the mechanism table. `10-deadlines-and-timeouts.md` owns the lifecycle; `/alaa-async-messaging` owns broker redelivery, receipt/effect-before-ack, and real-broker proof. A static instruction-contract walkthrough can judge whether guidance requires these outcomes; it is not application, broker, consumer, or live-agent runtime proof.
+
+| Case | Required observation | Broken interpretation rejected |
+|---|---|---|
+| Request expires before admission or during a cancellable wait | No stale call or retry starts; cancellable work stops and resources return to baseline | A remaining retry count extends the request |
+| Ownership persists, receipt arrives, caller disconnects | Accepted responsibility survives under its job contract | Disconnect cancels the job |
+| Acceptance commits but its response is lost | Reconciliation with the same identity finds the accepted work; no second effect | A lost receipt proves nonacceptance |
+| Storage fails during acceptance | Proven failure produces no accepted receipt; uncertain commit is reconciled separately | Acceptance is reported before persistence, or timeout proves rollback |
+| A durable attempt times out while the job remains valid | Attempt resources release; bounded retry/reconciliation follows job policy | The old HTTP deadline discards the job |
+| Business validity expires or explicit cancellation occurs | Observable owner-defined disposition; committed or uncertain effects reconcile | Silent deletion, guaranteed rollback, or indefinite execution |
+| Effect and receipt commit, then crash before broker ack | Redelivery retains identity and yields one effect and one receipt | Ack-before-effect or duplicate execution |
+| Saturation before versus after acceptance | Before: reject without false acceptance. After: bounded processing/backpressure retains responsibility | Post-acceptance shedding clears the backlog |
+| Required expiry/disposition policy is missing | Design reports the missing owner decision while attempt and capacity bounds remain | Invented zero TTL, infinite retry, or universal deletion |
 
 ## Load testing asserts behaviour at saturation
 
@@ -80,4 +96,4 @@ An experiment whose hypothesis was wrong has produced the most valuable result a
 
 A review accepts a mechanism as verified when it can name the test, the injected mode, the assertion, and the observation — and when removing the mechanism makes that test fail. It records every mechanism decided but unproven as a gap, at the severity the mechanism's absence would carry, because an unproven mechanism and an absent one behave identically in the incident that needs it.
 
-`/alaa-services-contract` (`$alaa-services-contract`) owns the values these tests assert against, and `/alaa-observability-soc` (`$alaa-observability-soc`) owns the signals the assertions read. Neither is restated here.
+`/alaa-services-contract` owns the values these tests assert against, and `/alaa-observability-soc` owns the signals the assertions read. Neither is restated here.

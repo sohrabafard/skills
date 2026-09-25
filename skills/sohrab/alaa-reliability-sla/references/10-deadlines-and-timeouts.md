@@ -1,10 +1,30 @@
 # Deadlines And Timeouts
 
-Read when a deadline, a timeout, a cancellation path, or a per-hop budget is added or changed. The rule that every request carries one ingress deadline, that every outbound call is explicitly bounded, and that a timeout cancels the work it abandons is in `SKILL.md`; this file is how to derive, propagate, and shape those bounds. The Ala values are in `/alaa-services-contract` (`$alaa-services-contract` in Codex) `references/22-failure-load-and-deprecation-contract.md`.
+Read when a deadline, timeout, cancellation path, per-hop budget, or durable acceptance is added or changed. `SKILL.md` requires bounded calls; this file owns their execution context and the durable-work lifecycle. The Ala values are in `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
+
+## Decide which lifetime is bounded
+
+**Persisted ownership, not receipt delivery, separates request-bound work from accepted work.** Identify the committed job, outbox row, or equivalent durable record that makes the service responsible. An application acceptance receipt reports that fact; it does not create it. Return acceptance only after persistence is known. If commit or receipt delivery is uncertain, reconcile by the same logical identity and idempotency key under `60-idempotency.md`; a timeout proves neither nonacceptance nor absence of an effect.
+
+| Bound | Governs | Does not establish |
+|---|---|---|
+| Synchronous request deadline | How long the caller waits and request-bound work may continue | The lifetime of work already durably accepted |
+| Processing-attempt timeout | One worker attempt and its resource use | Whole-job invalidity or rollback of an unknown effect |
+| Business validity and cancellation | Whether accepted work may execute, as defined by its business owner | A universal expiry inferred from the HTTP deadline |
+| Broker message TTL and queue expiry | Message residence and unused-queue lifetime respectively | Business disposition or retention obligations |
+| Record retention | How long job, outbox, receipt, and deduplication evidence remains available under its owning contract | Permission to execute after business validity ends |
+
+**After durable acceptance, caller timeout, disconnect, or a lost receipt cannot cancel or discard the job.** Carry correlation and stable identity into a separately bounded worker execution context, not the originating request's cancellation or expired deadline. This is no extension of the synchronous wait: that wait still ends on time.
+
+For accepted work, require the business owner's explicit validity, cancellation, retry-exhaustion, terminal/reconciliation, and retention contract. Check validity and cancellation before execution or retry. An attempt timeout ends that attempt; further processing depends on that contract, with bounded attempts, backoff, retry budget, and concurrency. Expiry or cancellation takes the observable owner-defined disposition, with reconciliation for committed or uncertain effects; it promises no rollback.
+
+**If a required lifecycle decision is missing, report the missing owner decision and block that design choice.** Do not infer deletion, indefinite execution, infinite retry, unlimited retention, or eventual success. Existing bounds remain binding while the gap is unresolved. A documented kit limitation is a gap to escalate through its owner, not proof that the bound exists.
+
+Publisher confirms cover publishing to the broker; consumer acknowledgements cover deliveries to a consumer. Neither is an application acceptance receipt or a guarantee of business success. Broker mechanics, retry-queue TTL, acknowledgement ordering, and DLQ/replay stay with `/alaa-async-messaging`; idempotency retention stays with `60-idempotency.md` and its platform values owner. Broker distinctions verified 2026-09-26 against [RabbitMQ TTL](https://www.rabbitmq.com/docs/ttl) and [acknowledgements and confirms](https://www.rabbitmq.com/docs/confirms).
 
 ## Why a propagated deadline outranks per-call timeouts
 
-A per-call timeout answers "how long will I wait for this hop?" A deadline answers "when does this request stop being worth serving?" Only the second question has an answer the user cares about, and only the second one composes.
+For request-bound work, a per-call timeout answers "how long will I wait for this hop?" A deadline answers "when does this request stop being worth serving?" Only the second question has an answer the user cares about, and only the second one composes.
 
 Three failures a set of per-call timeouts cannot prevent, and a deadline does:
 
@@ -30,18 +50,18 @@ Record the derivation next to the value: the target, what was subtracted, the ch
 
 ## What a timeout must do to the in-flight work
 
-Expiry is a cancellation, not just a return. On expiry:
+On expiry of the applicable request or processing-attempt deadline:
 
-- **Propagate the cancellation to the callee** by the mechanism the transport has — closing the connection, cancelling the RPC, cancelling the driver's query. A callee that keeps working holds the resource the timeout existed to free.
+- **Promptly signal cancellation to the callee** by the mechanism the transport supports — closing the connection, cancelling the RPC, cancelling the driver's query — and verify it stops cancellable work. Unstopped work still holds resources; a signal alone proves neither remote termination nor rollback.
 - **Release the caller's own resources** on the path out: the pool slot, the semaphore slot, the buffer. Releasing them in the success path only is the leak that turns a dependency's slow hour into the caller's exhausted pool.
-- **Leave no partial effect** behind, or leave one that a later attempt can complete or discard by its key. A timeout in the middle of a multi-step write with no completion path is where reconciliation debt is created.
+- **Reconcile partial or uncertain effects by stable identity.** Roll back when that is provable; otherwise use the operation's completion or disposition contract. A timeout in a multi-step write with no reconciliation path creates debt; it is never proof that nothing committed.
 - **Report which bound expired** — connect, read, or total — because the three imply different causes and different retry legality.
 
-A timeout whose only effect is that the caller stops waiting has not bounded anything except the caller's patience.
+A timeout that only stops waiting leaves attempt resource use unbounded. Apply the durable-work lifecycle above before deciding the job's fate; terminating an attempt is not cancelling accepted ownership.
 
 ## Never set a timeout longer than the remaining budget
 
-Every call site takes the smaller of its own configured timeout and `remaining`. When `remaining` will not cover the next attempt, the call is not made at all: the caller fails immediately with its dependency-unavailable outcome. Attempting it is strictly worse than not attempting it — it cannot produce a usable result, and it consumes the dependency's capacity during whatever incident caused the delay.
+Every call site takes the smaller of its configured timeout and `remaining` in the applicable execution context above. When `remaining` will not cover the next attempt, the call is not made: a waiting request fails immediately with its dependency-unavailable outcome; accepted work follows its bounded retry or disposition contract. An attempt outside its budget consumes capacity without a usable result.
 
 This is also the stop condition that outranks the retry count. Attempts remaining in the budget do not authorise an attempt the deadline cannot cover.
 
@@ -65,6 +85,6 @@ Two more bounds are timeouts in everything but name, and an unbounded version of
 
 Both are hops with a network between them and the caller, and both are routinely left unbounded because the client library defaults to no timeout or to one measured in minutes.
 
-- Set a statement or query timeout on the driver, and set it from the request deadline rather than from a global default. A query the caller has abandoned still holds its locks until the server stops it.
+- Set a statement or query timeout on the driver from the applicable request or processing-attempt deadline rather than a global default. An abandoned query still holds its locks until the server stops it.
 - Give a cache client a timeout tighter than the origin it fronts. A cache slower than the thing it caches is a pure loss, and the request proceeds to the origin rather than wait.
 - A lock, an advisory lock, or a lease is acquired with a timeout and held with an expiry. An unbounded acquire is a queue with no depth limit; a lock with no expiry survives the process that took it.

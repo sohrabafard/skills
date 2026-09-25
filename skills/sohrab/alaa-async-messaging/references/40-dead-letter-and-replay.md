@@ -61,9 +61,9 @@ preconditions, and it is the operation most likely to turn one incident into two
    original ordering.
 3. **The handler is idempotent, and its redelivery test passes on the deployed version.** Replay is a
    deliberate redelivery, so every duplicate it creates is caught only by that guarantee.
-4. **The messages are still meaningful.** A message whose deadline has passed, whose entity is gone, or
-   whose effect has already been produced by a compensating action is not replayed. See "unreplayable"
-   below.
+4. **The messages are still meaningful under the business owner's validity and cancellation contract.**
+   Caller HTTP expiry does not decide this. A message invalid under that contract, whose entity is gone,
+   or whose effect already happened by compensation is not replayed. See "unreplayable" below.
 
 ### The replay
 
@@ -98,13 +98,16 @@ handled by naming it rather than by replaying it:
 - **Its effect has already happened by another path** — a human ran the operation manually, or a
   reconciliation job produced it. Replaying duplicates an effect that idempotency cannot catch, because the
   other path wrote no receipt.
-- **Its deadline has passed.** A one-time password, a session notification, or a time-boxed instruction
-  delivered hours late is worse than not delivered, because the recipient cannot tell it is stale.
+- **Its owner-defined business validity ended or it was explicitly cancelled.** An expired one-time
+  password or time-boxed instruction can mislead its recipient. Use the owning contract, never the
+  originating HTTP deadline or an assumed universal lifetime.
 - **The entity it references is permanently gone.** The replay will fail identically, so it is a way of
   making the same message fail twice.
 - **Its body is malformed and the producer's defect is fixed.** The correct output is a new, well-formed
   message from the producer, not a replay of a body no consumer can parse.
 
-**Every unreplayable message is recorded before it is discarded**: its identifier, its tenant, its original
-routing key, and the reason it was not replayed. Discarding without that record makes the loss permanent and
-undiscoverable, which is the outcome the dead-letter queue existed to prevent.
+**Record every unreplayable message**: its identifier, tenant, original routing key, and reason it was not
+replayed. Apply the owner's observable terminal/reconciliation outcome and retention contract before any
+discard; the record alone authorizes no deletion. If that policy is absent, report the missing decision
+under `alaa-reliability-sla references/10-deadlines-and-timeouts.md`. Silent loss and indefinite execution
+are not substitutes for that decision.

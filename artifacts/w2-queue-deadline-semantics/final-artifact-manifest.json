@@ -1,0 +1,34 @@
+[
+  {
+    "path": "artifacts/w2-queue-deadline-semantics/execution-evidence.md",
+    "sha256": "89a607f8d32f4130c36ec0a48549e5122ecf95ed4dd6de05ae866f85bebd22dd"
+  },
+  {
+    "path": "artifacts/w2-queue-deadline-semantics/intake-manifest.json",
+    "sha256": "ae25149398f21dac3b4609f81558bc6ae2b576c1ad9b554bd254e7d388ede305"
+  },
+  {
+    "path": "artifacts/w2-queue-deadline-semantics/reviewed-initial-manifest.json",
+    "sha256": "0bf8fe3411d781d5ae738b0b77a3b80f045202880a2981e9bb815da34216b311"
+  },
+  {
+    "path": "artifacts/w2-queue-deadline-semantics/snapshot.py",
+    "sha256": "4c1ae041dea6f9377ad40e100e9199167fb9bfc9102038c9af78bffbaccefb2b"
+  },
+  {
+    "path": "artifacts/w2-queue-deadline-semantics/tested-manifest.json",
+    "sha256": "9aa5d3c7584a02c67ca0876b68c338a6a71a537bb8ee78de3ed97921cdfb3594"
+  },
+  {
+    "path": "docs/_agent_plans/20260925-211735_w2-queue-deadline-semantics__phase-prompts.md",
+    "sha256": "8194b4a90feabf336dae6af3da16262bac57adc22762d911268a9414f49105be"
+  },
+  {
+    "path": "docs/_agent_plans/20260925-211735_w2-queue-deadline-semantics.md",
+    "sha256": "57b2c56e19b4a3aea605c914d5421e845a837a1cea397f630751f55e5782c97a"
+  },
+  {
+    "path": "docs/agents/20260925-211735_w2-queue-deadline-semantics-state.md",
+    "sha256": "671b2130cb5581f4618787c96b73d4d3576374d704382294af94d133c690a380"
+  }
+]

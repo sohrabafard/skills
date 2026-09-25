@@ -31,8 +31,14 @@ by its severity.
 | Outcome | Route | What the broker does | Crash window |
 |---|---|---|---|
 | The work succeeded, or a duplicate was recognised | **ack** | removes the message | between commit and ack: redelivery, recognised as a duplicate |
-| Transient failure — dependency unreachable, lock contention, timeout | **reject with requeue**, or let the delivery limit redeliver | redelivers, counting against the delivery limit | none: nothing committed |
+| Transient failure — dependency unreachable, lock contention, timeout | **reject with requeue**, or let the delivery limit redeliver | redelivers, counting against the delivery limit | none only if nonexecution or rollback is proven; an uncertain commit requires identity-based reconciliation |
 | Permanent failure — the message can never succeed as written: schema violation, unknown type, referenced entity absent for good | **reject without requeue** | dead-letters it | none: nothing committed |
+
+**A timeout is not proof that no effect committed.** Preserve identity on redelivery and resolve the
+receipt/effect outcome before repeating an uncertain effect. The same-store transaction below owns local
+deduplication; external effects use the reconciliation contract in
+`alaa-reliability-sla references/60-idempotency.md`. Attempt expiry and job disposition are distinct under
+`alaa-reliability-sla references/10-deadlines-and-timeouts.md`.
 
 **A permanent failure is never requeued.** Requeuing it produces an immediate redelivery to the same or
 another consumer, which fails identically and requeues again, and the loop consumes the whole consumer fleet
@@ -56,7 +62,7 @@ duplicate increments a counter and does nothing else — no second effect, no er
   both proceed; the constraint is the only component in the path that serialises.
 
 Request-side idempotency doctrine — who generates a key, retention, and the in-flight case — is
-`alaa-reliability-sla references/60-idempotency.md` — `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+`alaa-reliability-sla references/60-idempotency.md` — `/alaa-reliability-sla`.
 
 ## Prefetch
 
@@ -107,9 +113,7 @@ the drain is bounded by one handler's deadline rather than by the queue's depth.
 
 The Go kit expresses shutdown in ordered phases against a fixed budget, and Laravel workers express it
 through the worker command and its process supervisor. Neither expression is this file's ground: the rule is
-the ordering between the two budgets. Laravel specifics are `/alaa-laravel-job-rabbitmq`
-(`$alaa-laravel-job-rabbitmq`); container and Deployment expression are `/alaa-docker-production`
-(`$alaa-docker-production`) and `/alaa-k8s-helm` (`$alaa-k8s-helm`).
+the ordering between the two budgets. Laravel specifics are `/alaa-laravel-job-rabbitmq`; container and Deployment expression are `/alaa-docker-production` and `/alaa-k8s-helm`.
 
 ## Reconnect
 
@@ -130,6 +134,5 @@ The heartbeat interval is a value: `alaa-services-contract`.
 
 ## Two things this file does not decide
 
-The Laravel worker command, its flags, and driver-level delivery limits: `/alaa-laravel-job-rabbitmq`
-(`$alaa-laravel-job-rabbitmq`). Retry counts, backoff curves and budgets as doctrine:
-`/alaa-reliability-sla` (`$alaa-reliability-sla`).
+The Laravel worker command, its flags, and driver-level delivery limits: `/alaa-laravel-job-rabbitmq`. Retry counts, backoff curves and budgets as doctrine:
+`/alaa-reliability-sla`.

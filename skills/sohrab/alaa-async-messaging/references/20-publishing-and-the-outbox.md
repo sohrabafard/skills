@@ -26,18 +26,17 @@ while everyone downstream believes the first.
 
 ## Publisher confirms
 
-**A publish that has not been confirmed by the broker has not happened, and code must not report success for
-it.** Without confirms, a publish returns as soon as the frame reaches the socket, so a broker that dies
-before persisting the message loses it while the application records a success — and the loss is
-undetectable from either side afterwards.
+**Without a publisher confirm, broker acceptance is unknown; code must not report confirmed publish
+success.** The broker may have persisted the message and lost the confirm, or lost the message before
+persisting it. A socket write proves neither outcome. `50-failure-classes.md`, class 8, owns diagnosis.
 
 Two consequences:
 
 - **A request-path publish does not wait on a confirm.** Waiting couples user-facing latency to broker
   latency, which is the coupling the outbox exists to remove. Durability comes from the outbox row.
-- **A relay publish waits for the confirm and treats an unconfirmed publish as a failure**: the row is not
-  advanced, and the next relay pass republishes it. Advancing a row on an unconfirmed publish converts a
-  broker restart into silent data loss.
+- **A relay waits for the confirm; without it, the row is not advanced.** The next relay pass republishes
+  with the same message identity and idempotency key, so consumer deduplication handles an already-accepted
+  copy. Advancing the row risks loss; regenerating identity risks a duplicate effect.
 
 **Unverified this session:** `mqkit`'s publisher-confirm surface, its publish timeout behaviour, and its
 behaviour on a broker nack were not readable from the mounted repository. Verify each against `mqkit` source
@@ -70,10 +69,9 @@ Rules that hold on the transitions:
 - **A row is never deleted to clear a backlog.** Consumers tolerate at-least-once delivery, so republishing
   is safe and a deleted row is a lost fact that nothing will detect.
 - The claim query itself, its index, and the transaction-pooling constraints on it are
-  `alaa-data-layer references/30-concurrency-projections-and-pooling.md` — `/alaa-data-layer`
-  (`$alaa-data-layer`).
+  `alaa-data-layer references/30-concurrency-projections-and-pooling.md` — `/alaa-data-layer`.
 
-The browser-side outbox is `/alaa-indexeddb-browser-storage` (`$alaa-indexeddb-browser-storage`),
+The browser-side outbox is `/alaa-indexeddb-browser-storage`,
 `references/71-browser-outbox.md`. Its state set is deliberately different from this file's
 `pending | claimed | published`: a browser claim mutates a status field in place and is released
 only by a reaper, because the claiming context can cease to exist. `idempotencyKey` and at-least-once
@@ -106,8 +104,7 @@ inconvenient defaults; the keys that would express them are absent from the code
    from a row that will never publish. `60-telemetry-and-proof.md` holds the full set.
 
 Needing one of the four is a kit change request filed on
-`alaa-go-chi-development assets/templates/kit-change-request.md`, through `/alaa-go-chi-development`
-(`$alaa-go-chi-development`) — never a local reimplementation of the relay.
+`alaa-go-chi-development assets/templates/kit-change-request.md`, through `/alaa-go-chi-development` — never a local reimplementation of the relay.
 
 ## The outbox operational surface
 
@@ -139,8 +136,7 @@ availability, and a provider timeout then leaves nobody able to say whether the 
 **The row's public id is the idempotency key presented to the provider**, unchanged across every retry of
 that send. A key derived from request content — recipient plus template plus body — collides between two
 legitimate sends and suppresses the second one, which on an OTP path means a user who asked twice receives
-one code. Key doctrine is `alaa-reliability-sla references/60-idempotency.md` — `/alaa-reliability-sla`
-(`$alaa-reliability-sla`).
+one code. Key doctrine is `alaa-reliability-sla references/60-idempotency.md` — `/alaa-reliability-sla`.
 
 **Where a provider offers no idempotency mechanism, the row's state is the guarantee**: only a row in the
 state that means "not yet sent" may dispatch, and the transition to "sent" commits before the next attempt
