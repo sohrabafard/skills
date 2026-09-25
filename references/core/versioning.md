@@ -8,7 +8,7 @@ Workflow versioning allows safe deployment of code changes without breaking runn
 
 1. **Patching API** - Code-level version branching
 2. **Workflow Type Versioning** - New workflow types for incompatible changes
-3. **Worker Versioning** - Deployment-level control with Build IDs
+3. **Worker Versioning** - Deployment-level routing with Worker Deployment Versions
 
 ## Why Versioning is Needed
 
@@ -101,13 +101,16 @@ Create a new workflow type (e.g., `OrderWorkflowV2`) instead of patching.
 
 ### Concept
 
-Manage versions at deployment level using Build IDs. Multiple worker versions can run simultaneously.
+Manage versions through Worker Deployments. Multiple Worker Deployment Versions can run simultaneously, and each version is identified by a deployment name and Build ID.
+
+> [!IMPORTANT]
+> This is the current Worker Deployment-based versioning model. Do not confuse it with the legacy Build ID-based Worker Versioning APIs, which manage compatibility sets directly. Those APIs are deprecated.
 
 ```
-Worker v1.0 (Build ID: abc123)
+Worker Deployment Version (deployment: order-service, build: abc123)
   └── Handles workflows started on this version
 
-Worker v2.0 (Build ID: def456)
+Worker Deployment Version (deployment: order-service, build: def456)
   └── Handles new workflows
   └── Can also handle upgraded old workflows
 ```
@@ -116,7 +119,9 @@ Worker v2.0 (Build ID: def456)
 
 **Worker Deployment**: Logical service grouping (e.g., "order-service")
 
-**Build ID**: Specific code version (e.g., git commit hash)
+**Worker Deployment Version**: A specific snapshot identified by a Worker Deployment name and a Build ID
+
+**Build ID**: The code-version component of a Worker Deployment Version (e.g., a git commit hash)
 
 **Versioning Behaviors**:
 
@@ -159,11 +164,11 @@ By default, Pinned Workflows stay on their original Worker Deployment Version ev
 
 ### Detection flag
 
-Active Workflows detect a Target Version change by checking a per-Workflow flag exposed on `WorkflowInfo` (called `target_worker_deployment_version_changed` in the docs).  The flag is refreshed after each Workflow Task completes; check it from code that runs as part of a Workflow Task (for example, before accepting an Update, starting an Activity, or starting a child Workflow). See the per-language `references/{your_language}/versioning.md` for the SDK-specific call.
+Active Workflows detect a Target Version change by checking a per-Workflow flag exposed on `WorkflowInfo` (called `target_worker_deployment_version_changed` in the docs). The flag is refreshed after each Workflow Task completes; check it from code that runs as part of a Workflow Task (for example, before accepting an Update, starting an Activity, or starting a child Workflow). See the per-language `references/{your_language}/versioning.md` for the SDK-specific call.
 
 ### Triggering the new run
 
-When the flag is set, return a Continue-as-New error with the new run's initial Versioning Behavior set to `AutoUpgrade`. This makes the new run start on the Target Version of its Worker Deployment.  The Workflow Type itself retains its Pinned annotation; only the *initial* behavior of the *new* run is overridden so it picks up the Target Version. Once the new run is on the new version, the per-Workflow-type annotation continues to apply on subsequent CaN.
+When the flag is set, return a Continue-as-New error with the new run's initial Versioning Behavior set to `AutoUpgrade`. This makes the new run start on the Target Version of its Worker Deployment. The Workflow Type itself retains its Pinned annotation; only the *initial* behavior of the *new* run is overridden so it picks up the Target Version. Once the new run is on the new version, the per-Workflow-type annotation continues to apply on subsequent CaN.
 
 ### Limitations
 
@@ -182,12 +187,12 @@ For long-running Workflows that cannot use Continue-as-New (e.g., compliance aud
 ## Choosing an Approach
 
 | Scenario | Recommended Approach |
-|----------|---------------------|
+| -- | -- |
 | Small change, few running workflows | Patching API |
 | Major rewrite | Workflow Type Versioning |
 | Many short workflows, frequent deploys | Worker Versioning (PINNED) |
-| Long-running workflows, uses Continue-as-New | Worker Versioning (PINNED) + upgrade on Continue-as-New  |
-| Long-running workflows, no Continue-as-New | Worker Versioning (AUTO_UPGRADE) + Patching  |
+| Long-running workflows, uses Continue-as-New | Worker Versioning (PINNED) + upgrade on Continue-as-New |
+| Long-running workflows, no Continue-as-New | Worker Versioning (AUTO_UPGRADE) + Patching |
 | Quick fix, can wait for completion | Wait for workflows to complete |
 
 ## Best Practices
