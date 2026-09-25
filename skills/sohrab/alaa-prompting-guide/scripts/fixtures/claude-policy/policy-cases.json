@@ -1,0 +1,451 @@
+[
+  {
+    "name": "bool-version",
+    "changes": [
+      {
+        "path": [
+          "schema_version"
+        ],
+        "value": true
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unknown-version",
+    "changes": [
+      {
+        "path": [
+          "schema_version"
+        ],
+        "value": 2
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unknown-root-key",
+    "changes": [
+      {
+        "path": [
+          "unexpected"
+        ],
+        "value": 1
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "bad-date",
+    "changes": [
+      {
+        "path": [
+          "verified_on"
+        ],
+        "value": "2026-02-30"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "bad-policy-version",
+    "changes": [
+      {
+        "path": [
+          "policy_version"
+        ],
+        "value": "next"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "missing-profile-and-artifact",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer"
+        ],
+        "delete": true
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unknown-model-field",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-sonnet-5",
+          "alias"
+        ],
+        "value": "sonnet"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "invalid-model-object",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-sonnet-5"
+        ],
+        "value": null
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unknown-source",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-sonnet-5",
+          "source_ids"
+        ],
+        "value": [
+          "missing"
+        ]
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "ultra-effort",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "effort"
+        ],
+        "value": "ultra"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "adaptive-effort",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "effort"
+        ],
+        "value": "adaptive"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "rolling-alias",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "model"
+        ],
+        "value": "opus"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "empty-rationale",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "rationale"
+        ],
+        "value": " "
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "bool-availability",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "availability"
+        ],
+        "value": true
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "invented-entitlement",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "availability",
+          "account_status"
+        ],
+        "value": "available"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "model-effort-list",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-sonnet-5",
+          "supported_efforts"
+        ],
+        "value": [
+          "low",
+          "low"
+        ]
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "haiku-effort",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-haiku-4-5-20251001",
+          "supported_efforts"
+        ],
+        "value": [
+          "high"
+        ]
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unsafe-path",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "artifacts"
+        ],
+        "value": [
+          "../reviewer.md"
+        ]
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "cross-role-path",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "artifacts"
+        ],
+        "value": [
+          "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md"
+        ]
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "missing-evaluated-evidence",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "calibration_status"
+        ],
+        "value": "evaluated"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unrun-evidence",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "evaluation_evidence"
+        ],
+        "value": "AGENTS.md"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "sonnet-xhigh-valid",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-implementer",
+          "effort"
+        ],
+        "value": "xhigh"
+      }
+    ],
+    "findings": false
+  },
+  {
+    "name": "sonnet-max-valid",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-implementer",
+          "effort"
+        ],
+        "value": "max"
+      }
+    ],
+    "findings": false
+  },
+  {
+    "name": "unrelated-evaluation-evidence",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "calibration_status"
+        ],
+        "value": "evaluated"
+      },
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "evaluation_evidence"
+        ],
+        "value": "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "invalid-semver-prerelease",
+    "changes": [
+      {
+        "path": [
+          "policy_version"
+        ],
+        "value": "1.0.0-01"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "missing-model-effort",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-sonnet-5",
+          "supported_efforts"
+        ],
+        "delete": true
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "unknown-profile-key",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "fallback"
+        ],
+        "value": "automatic"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "invalid-model-minimum",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-opus-5-5",
+          "minimum_claude_code"
+        ],
+        "value": "2.1.280-01"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "missing-assigned-model-minimum",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-opus-5-5",
+          "minimum_claude_code"
+        ],
+        "delete": true
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "profile-minimum-below-model",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "availability",
+          "minimum_claude_code"
+        ],
+        "value": "2.1.279"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "malformed-evaluation-evidence",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "calibration_status"
+        ],
+        "value": "evaluated"
+      },
+      {
+        "path": [
+          "profiles",
+          "alaa-reviewer",
+          "evaluation_evidence"
+        ],
+        "value": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/malformed.json"
+      }
+    ],
+    "cannot_run": true
+  }
+]

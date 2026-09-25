@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.1.0 - 2026-09-25
+
+- Project exact Claude model and effort pins from the prompting guide policy; retain existing role identifiers, bodies and grants.
+- Validate pins through the canonical policy CLI; remove local model selection and effort ceilings. Missing policy or unreadable input cannot pass.
+- Reject native grant and authority metadata drift as well as MCP drift. These are source checks, not proof of runtime activation or enforcement.
+
+## 4.0.0 - 2026-09-25
+
+- Require explicit installation and commit authority; activation only inspects availability. Integration applies only when requested and authorized; local-only work has no merge prompt.
+- Add instruction-contract review and agent-evaluation design duties; preserve independent gates.
+- Verdict/status or outcome now comes before configured/requested and observed metadata. Unobservable identity is unknown; consumers must stop expecting an identity assertion on line one.
+- Inspect effective sandbox and tool grants instead of claiming enforcement from role metadata.
+- Preserve existing executable pins; standard and deep review share the existing reviewer.
+
 ## 3.6.0
 
 - The final report now states four completion-lifecycle states independently — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, in place of the single final-verdict line. One verdict left a run that was committed and reviewed indistinguishable from one that was merely written, and it let a blocker at the release end erase proof already earned at the implementation end. `alaa-workflow references/workspace-and-integration.md` owns what earns each state, that a later state's blocker never unproves an earlier one, and that a release is requested rather than inferred from an implementation request; this skill names the four states and defines none of them.

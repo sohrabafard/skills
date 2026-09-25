@@ -1,0 +1,1 @@
+command=python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py cwd=D:\Sohrab\Project\skills priority=BelowNormal; applied=True timeout_seconds=180 duration_seconds=0.209 exit=0 classification=PASS tier=baseline; dispatch tier unspecified proof_level=1 static stdout=logs/05-cc_validate_pack.stdout.log stderr=logs/05-cc_validate_pack.stderr.log

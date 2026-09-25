@@ -1,0 +1,13 @@
+argv=python -B scripts\check_skill_index.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:43:54.570554+03:30
+ended=2026-09-25T15:43:54.688131+03:30
+duration-ms=117
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\check-skill-index.stdout.log
+stderr=artifacts/claude-model-migration/verification\check-skill-index.stderr.log

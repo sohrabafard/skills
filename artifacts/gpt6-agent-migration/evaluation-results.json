@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "complete": false,
+  "reason": "Comparison matrix not executed: local CLI/account probe rejected gpt-6-luna. This is not a claim about other execution surfaces.",
+  "runs": [
+    {
+      "scenario": "exploration",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "exploration",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "exploration",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "exploration",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "bounded-implementation",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "bounded-implementation",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "bounded-implementation",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "bounded-implementation",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "debugging",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "debugging",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "debugging",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "debugging",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "known-defect-review",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "known-defect-review",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "known-defect-review",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "known-defect-review",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "architecture",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-astra",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "architecture",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-astra",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "architecture",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-astra",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "architecture",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-astra",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "instruction-rewrite",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "instruction-rewrite",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "instruction-rewrite",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "low"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "instruction-rewrite",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-sol",
+        "effort": "low"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "documentation",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "documentation",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "high"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "documentation",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "documentation",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "failed-check",
+      "configuration": "candidate",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "low"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "failed-check",
+      "configuration": "candidate",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "low"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "failed-check",
+      "configuration": "comparator",
+      "repetition": 1,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    },
+    {
+      "scenario": "failed-check",
+      "configuration": "comparator",
+      "repetition": 2,
+      "requested": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "status": "unrun"
+    }
+  ]
+}

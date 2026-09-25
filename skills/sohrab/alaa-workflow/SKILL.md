@@ -40,15 +40,15 @@ Compaction rarely announces itself, so detect it from your own state rather than
 - Decompose each phase into subtasks that each carry one checkable outcome. A tick claims that outcome was observed, so tick a box once its evidence exists and never ahead of it. Several boxes at once is normal and correct: one change often satisfies several subtasks, and work that turns out to be already done is ticked as soon as you have verified it rather than assumed it.
 - Bring the plan current before the next phase, before a handoff, and before any report. A plan left stale while the work moves on misreports position exactly as a premature tick does.
 - Validate each behavior-changing phase before advancing.
-- Order a phase's gates by cost: every cheap read-only gate whose finding can move the tree returns its verdict before an expensive container-, service-, or build-backed gate is dispatched, and never beside it. The expensive gate then runs once, on the tree those verdicts settled on. Where a repository ships its own validation-policy file, that file outranks this ordering there — `/alaa-testing-strategy` owns that precedence.
+- Run the affected gates at the strength the change requires. Resolve cheap findings before an expensive gate, then cite an unchanged result instead of repeating it. A repository validation policy and `/alaa-testing-strategy` own stricter proof.
 - Fix failed gates, or record the exact blocker and the next safe action.
 - On resume, follow the read order in `references/context-continuity.md` before taking any action.
 - Complete only when implementation, validation evidence, documentation, artifact status, and the final reusable-context curation outcome agree.
 - Report completion as four independent states — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each with its own verdict, never collapsed into a single one. This skill owns that lifecycle for every run that consumes it, and `references/workspace-and-integration.md` owns what earns each state.
 
-## Work on a branch and commit each subtask
+## Preserve workspace evidence
 
-Every multi-phase or delegated run works on its own branch off a recorded base, commits at each completed subtask, and merges into the base only after the user confirms. A commit is the cheapest checkpoint that survives what the artifacts cannot: a crashed session, a wrong edit, and a lost conversation at the same time. `references/workspace-and-integration.md` owns the base capture, the dirty-tree refusal, the branch and worktree rules, the commit contract, and the final integration handshake.
+Before writing, identify the base, working branch or checkout, and unrelated changes. Preserve disjoint work; resolve overlapping ownership before editing. Commit and merge only with explicit user authority. A run without commit authority records the observed worktree identity and scoped content hash beside each validation result. `references/workspace-and-integration.md` owns those records, branch and worktree choices, and integration when requested.
 
 ## Curate reusable context
 
@@ -94,7 +94,7 @@ This skill owns coordination and continuity, not architecture, security, data, r
 |---|---|
 | Begin a long run, hand off, resume, or find you cannot name your own current position | `references/context-continuity.md` |
 | Write the first workflow file, weigh one profile against another, or attach to an artifact family that already exists | `references/artifact-lifecycle.md` |
-| Make the first write of a multi-phase or delegated run, commit a subtask, ask the user to accept the result, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
+| Make the first write of a multi-phase or delegated run, record an evidence snapshot, exercise authorized Git integration, or state which completion states a finished run reached | `references/workspace-and-integration.md` |
 | Reach the first phase boundary of a long run, or close a plan | `references/context-curation.md` |
 | Generate a prompt pack, or resolve a runtime, model, or effort value for one | `references/phase-prompts.md` |
 | Review a diff, plan, or artifact instead of executing one | `references/review-mode.md` |

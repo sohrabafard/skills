@@ -5,13 +5,13 @@ Ground every version-sensitive claim here. This file decides which source wins a
 ## Source priority
 
 1. Explicit user instructions for the current task.
-2. The target model's reference plus its runtime reference in this skill.
+2. Current target-host tool schemas and effective configuration for runtime availability.
 3. Live official documentation:
-   - GPT-5.6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
+   - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
    - Codex and ChatGPT skills, commands, and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, and the Codex pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents`, `guides/agents-md`, and `config-reference`
-   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5, Sonnet 5, and Fable 5 pages under that path
-   - Claude facts and runtime: `https://platform.claude.com/docs/en/about-claude/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, and `goal`
-4. `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
+   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Sonnet 5, and Fable 5.1 pages under that path
+   - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, and `goal`
+4. This skill's dated references and local policy; they do not override current official capability facts. Use `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
 
 A redirect is a signal, not a detour: `developers.openai.com/codex/skills` now returns a permanent redirect to the `learn.chatgpt.com` skills page, so a citation to the old path is stale even though it still resolves. When a documented URL redirects across hosts, cite the destination and update the reference that named the origin.
 
@@ -33,4 +33,9 @@ Carry caveats forward as caveats. Never convert uncertainty into a firm instruct
 
 Where official sources and `/alaa-workflow` disagree with this skill, report the drift, prefer current official and runtime truth for the task in hand, and reconcile the owning file afterwards. Silently choosing a side leaves two sources of truth and no record of which one was followed.
 
-Verified against live documentation on 6 August 2026.
+OpenAI active-model/subagent and Claude model, prompting, effort and selection sources were
+refreshed 25 September 2026. Other harness mechanics retain their section-specific historical
+dates until re-fetched. For lifecycle, use the official model-deprecations page; for API ID
+semantics, use model-ids-and-versions. Full system cards were unavailable after bounded retrieval;
+release summaries are weaker evidence. Vendor scores and source validation do not prove
+local runtime activation, account access or a profile's comparative quality.

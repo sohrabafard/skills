@@ -1,0 +1,1029 @@
+diff --git a/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md b/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
+index 9e7de8cdc..a72fb5de5 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
++++ b/skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
+@@ -1,5 +1,11 @@
+ # Changelog
+ 
++## 4.1.0 - 2026-09-25
++
++- Project exact Claude model and effort pins from the prompting guide policy; retain existing role identifiers, bodies and grants.
++- Validate pins through the canonical policy CLI; remove local model selection and effort ceilings. Missing policy or unreadable input cannot pass.
++- Reject native grant and authority metadata drift as well as MCP drift. These are source checks, not proof of runtime activation or enforcement.
++
+ ## 4.0.0 - 2026-09-25
+ 
+ - Require explicit installation and commit authority; activation only inspects availability. Integration applies only when requested and authorized; local-only work has no merge prompt.
+diff --git a/skills/sohrab/alaa-cc-orchestrator/VERSION b/skills/sohrab/alaa-cc-orchestrator/VERSION
+index fcdb2e109..ee74734aa 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/VERSION
++++ b/skills/sohrab/alaa-cc-orchestrator/VERSION
+@@ -1 +1 @@
+-4.0.0
++4.1.0
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md
+index 2dde6c18f..d09f0d278 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-accessibility-reviewer
+ description: Read-only accessibility gate for new or changed user-visible interface — components, forms, dialogs, navigation, tables, and any flow completed with a keyboard or a screen reader. Covers RTL layout correctness where the product ships an RTL locale. Never fixes.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md
+index e1f5eee29..73529d6fe 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-adversarial-reviewer
+ description: Read-only second independent lens, gated to irreversible or high-blast-radius changes and to reviewer/specialist verdict conflicts. Attacks the design's load-bearing assumptions after the correctness review has passed. Never edits, and never re-runs the correctness review.
+-model: opus
+-effort: xhigh
++model: claude-opus-5-5
++effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+   - /alaa-code-intelligence-routing
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md
+index 243c47db8..920c6542e 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-api-contract-reviewer
+ description: Read-only contract compatibility gate. Spawn when a public HTTP or RPC endpoint, event or message schema, shared DTO, SDK surface, or persisted serialization format changes shape. Judges whether the transition is safe for existing consumers; never edits or designs the contract.
+-model: opus
++model: claude-opus-5-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+index 09a6d9497..d62edc9a3 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-architecture-critic
+ description: Read-only architecture pressure-test specialist. Spawn before implementation for public-contract, service-boundary, distributed workflow, consistency, caching, concurrency, or cross-cutting design changes. Challenges the plan; never owns it or edits code.
+-model: opus
+-effort: xhigh
++model: claude-opus-5-5
++effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+   - /alaa-code-intelligence-routing
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
+index 0b632b007..be126223d 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-browser-qa
+ description: Browser evidence and user-flow QA specialist for frontend changes and regressions. Reproduces declared scenarios, captures screenshots/console/network evidence, and reports behavior. Never edits application code or changes the configured Chromium browser without permission.
+-model: sonnet
++model: claude-sonnet-5
+ effort: medium
+ tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__browser-logs, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md
+index 4b6021e84..36e090b40 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-dependency-auditor
+ description: Read-only dependency and supply-chain gate. Spawn when a dependency is added, upgraded, removed, or replaced, or when a lockfile drifts outside a scoped upgrade lane. Judges whether the dependency is safe to depend on; never upgrades, pins, or edits anything.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md
+index a7ed864fe..27728d607 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-documenter
+ description: Documentation-only lane after implementation/review gates. Updates README, docs, changelog, API/configuration/operations/troubleshooting material to match verified shipped behavior. Never edits executable code or configuration.
+-model: sonnet
++model: claude-sonnet-5
+ effort: medium
+ tools: Read, Glob, Grep, Bash, Write, Edit, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md
+index c47e1ebc7..ccbd56904 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-explorer
+ description: Fast read-only repository mapper for orchestrated goals. Spawn when ownership, execution paths, dependencies, tests, conventions, or likely change scope are unclear. Never edits and does not choose the design.
+-model: sonnet
++model: claude-sonnet-5
+ effort: medium
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
+index b285886b0..38f908608 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-failure-analyst
+ description: Read-only diagnostic specialist for failed, flaky, timed-out, contaminated, cross-lane, or environment-dependent verification. Determines the most likely failure class and owning lane; never edits or reruns broad suites without instruction.
+-model: opus
++model: claude-opus-5-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+index c0b511ea7..cda28787b 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-implementer-opus
+ description: Escalated implementation lane worker for slices that must themselves make non-obvious design decisions — public contracts, service boundaries, concurrency, trust boundaries, coupled migrations, complex compatibility. Not for routine lanes that apply an already-ratified decision.
+-model: opus
+-effort: xhigh
++model: claude-opus-5-5
++effort: high
+ disallowedTools: mcp__serena__execute_shell_command
+ skills:
+   - /alaa-code-intelligence-routing
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+index 1b689d1cd..8cb700e2a 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-implementer
+ description: Routine implementation lane worker for orchestrated goals. Spawn one per independent write scope to implement a bounded slice with tests and evidence. Not for architecture review, research-only, verification-only, docs-only, or high-risk design lanes.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ disallowedTools: mcp__serena__execute_shell_command
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md
+index b5ae190b5..119a919dd 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-instruction-reviewer
+ description: Independent read-only reviewer for prompts, skills, agent definitions, and repository instructions. Checks behavioral contracts, authority, ownership, and compression fidelity; never edits.
+-model: opus
+-effort: xhigh
++model: claude-opus-5-5
++effort: high
+ tools: Read, Glob, Grep
+ skills:
+   - /alaa-prompting-guide
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md
+index ae9d72a28..1b240215c 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-migration-guardian
+ description: Read-only data and schema migration safety gate. Spawn for migrations, backfills, index operations, data transformations, compatibility windows, cleanup, or zero-downtime rollout concerns. Never runs or edits migrations.
+-model: opus
++model: claude-opus-5-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md
+index 101d9adff..5a8e45075 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-observability-reviewer
+ description: Read-only production observability gate for new failure modes, background jobs, retries, distributed calls, async workflows, or operationally significant changes. Checks logs, metrics, traces, alerts, and runbook diagnosability.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
+index 578dcca1c..cc18f475f 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-performance-profiler
+ description: Performance measurement specialist for a specific latency, throughput, CPU, allocation, query, or memory question with a declared baseline and budget. Collects artifacts and analysis; never performs speculative code optimization.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md
+index bcadb5a1f..de8321e23 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-release-guardian
+ description: Read-only release and operability gate for CI/CD, Docker, deployment, environment/configuration, dependency/version, feature flag, packaging, or production-readiness changes. Never deploys, publishes, tags, or edits.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md
+index db733c310..46d9d429b 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-researcher
+ description: Read-only external and repository research specialist. Spawn for version-specific APIs, official documentation, standards, third-party behavior, prior decisions, or evidence-based comparisons. Never edits or makes the final decision.
+-model: sonnet
++model: claude-sonnet-5
+ effort: medium
+ tools: Read, Glob, Grep, Bash, WebFetch, WebSearch, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md
+index 1f3903e99..c29b2a136 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-reviewer
+ description: Fresh-context independent read-only reviewer for complete orchestrated changes or user-authored work. Judges correctness, regressions, security, tests, and production risks. Never edits or fixes.
+-model: opus
+-effort: xhigh
++model: claude-opus-5-5
++effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+   - /alaa-code-intelligence-routing
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md
+index 7ce06ecc3..1f17386ef 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-security-reviewer
+ description: Read-only security specialist for changes involving authentication, authorization, tokens, secrets, untrusted input, uploads, queries, webhooks, payments, cryptography, deserialization, or trust boundaries. Never edits or performs offensive actions.
+-model: opus
+-effort: xhigh
++model: claude-opus-5-5
++effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__serena__find_symbol, mcp__serena__get_symbols_overview, mcp__serena__find_referencing_symbols, mcp__serena__find_declaration, mcp__serena__find_implementations, mcp__serena__get_diagnostics_for_file, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+   - /alaa-code-intelligence-routing
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md
+index 05b822980..45e0e76cd 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md
+@@ -1,8 +1,8 @@
+ ---
+ name: alaa-spec-analyst
+ description: Read-only specification analyst. Spawn before any implementation dispatch when the goal's acceptance criteria are not yet checkable — vague quality language, an implied but unstated contract, or a "done" state two competent readers would define differently. Never implements, designs, or decides product questions.
+-model: opus
+-effort: high
++model: claude-opus-5-5
++effort: medium
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
+ skills:
+   - /alaa-code-intelligence-routing
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md
+index b1d628b1f..0f33f953a 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-test-strategist
+ description: Read-only test strategy specialist for subtle behavior, legacy code, concurrency, migrations, failure paths, and acceptance criteria that need a rigorous test matrix before implementation. Never writes tests or production code.
+-model: sonnet
++model: claude-sonnet-5
+ effort: high
+ tools: Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-connections
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+index 9a2993462..691e02190 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
++++ b/skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+@@ -1,7 +1,7 @@
+ ---
+ name: alaa-verifier
+ description: Independent verification operator. Spawn after implementation or fix cycles to execute exact test, lint, typecheck, build, race, and smoke commands under declared CPU/resource limits. Produces reproducible evidence; never edits or fixes code.
+-model: sonnet
++model: claude-sonnet-5
+ effort: low
+ tools: Read, Glob, Grep, Bash
+ skills:
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md b/skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md
+index 959fb3687..342c27b94 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md
+@@ -122,7 +122,7 @@ installed skill, because a stale preload removes a standard silently. And a role
+ with no siblings, resolution is reported as skipped rather than passed.
+ 
+ Run `python scripts/check_agent_grants.py` after any change to `agents/`. The checker compares every
+-normalized MCP grant and the implementation deny set with this catalog: exit `0` is clean, exit `1`
++native and MCP grant and the implementation deny set with the authored roles. Unapproved metadata fields fail because hooks, server configuration, or permission overrides can add authority outside those roles: exit `0` is clean, exit `1`
+ reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the
+ gate.
+ Run `python scripts/check_agent_grants.py --self-test` after changing the checker. The pack
+diff --git a/skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md b/skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
+index 53130a8d8..0a87e550f 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
++++ b/skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
+@@ -2,7 +2,9 @@
+ 
+ /alaa-prompting-guide owns supported capabilities, runtime precedence, local profile selection, and exception evidence. Read its `references/50-effort-and-thinking.md` before selecting a profile or changing a pin. This orchestrator owns only role triggers and authority boundaries.
+ 
+-Existing executable agent pins are preserved. The instruction reviewer uses the same pin as the independent reviewer. Standard and deep correctness-review routes both select `alaa-reviewer`; the depth trigger changes review scope, not the number of reviewers.
++Executable pins project `alaa-prompting-guide assets/claude-model-policy.json`; that owner records rationale, sources, calibration and availability. Role identifiers remain stable for callers, including the historical `alaa-implementer-opus` name. Standard and deep correctness review both select `alaa-reviewer`; depth changes scope, not reviewer count.
++
++Run `python scripts/validate_pack.py` from this pack; it invokes the canonical policy CLI and the grant gate. After validator changes, also run `python scripts/validate_pack.py --self-test`. For a selected source or packaged agent directory, run `python scripts/check_claude_model_policy.py --agent-root <agent-directory>` from alaa-prompting-guide. Exit `0` is clean, `1` findings, and `2` unavailable proof; either nonzero blocks completion. Missing policy has no fallback. Source validation proves neither runtime compatibility nor account access or serving identity; inspect those against the owner's availability and runtime references before dispatch.
+ 
+ Diagnose a shortfall before changing a profile: repair missing context, a tool failure, or an ambiguous specification through its owner. A comparison changes one factor at a time. Unavailable target profiles are reported explicitly; do not silently substitute another model. Observe effective permissions and tools; API features do not prove that this host exposes them.
+ 
+diff --git a/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py b/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py
+index 7527030b7..cf53bec25 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py
++++ b/skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py
+@@ -125,16 +125,35 @@ EXPECTED_MCP = {
+     "alaa-instruction-reviewer": set(),
+ }
+ 
++# Preserve the authored native grants as well as MCP scope. An extra Write,
++# Agent, or unrestricted tool is authority drift even when MCP grants match.
++READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
++EXPECTED_NATIVE = {name: READ_NATIVE for name in EXPECTED_MCP}
++EXPECTED_NATIVE.update({
++    "alaa-researcher": READ_NATIVE | {"WebFetch", "WebSearch"},
++    "alaa-documenter": READ_NATIVE | {"Write", "Edit"},
++    "alaa-verifier": {"Read", "Glob", "Grep", "Bash"},
++    "alaa-instruction-reviewer": {"Read", "Glob", "Grep"},
++})
++ALLOWED_FIELDS = {"name", "description", "model", "effort", "tools",
++                  "disallowedTools", "skills", "color"}
++
+ 
+ def frontmatter(path: str) -> dict[str, str | list[str]]:
+     text = open(path, encoding="utf-8").read().replace("\r\n", "\n")
+-    head = text.split("\n---\n")[0].lstrip("-\n")
++    if not text.startswith("---\n") or "\n---\n" not in text[4:]:
++        raise ValueError(f"{path}: missing frontmatter delimiters")
++    head = text[4:].split("\n---\n", 1)[0]
+     out: dict[str, str | list[str]] = {}
+     list_key: str | None = None
+     for line in head.split("\n"):
+-        m = re.match(r"^(tools|disallowedTools|model|effort|skills):\s*(.*)$", line)
++        if not line.strip() or line.lstrip().startswith("#"):
++            continue
++        m = re.match(r"^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$", line)
+         if m:
+             key, value = m.group(1), m.group(2)
++            if key in out:
++                raise ValueError(f"{path}: duplicate frontmatter key {key}")
+             if key == "skills" and not value:
+                 out[key] = []
+                 list_key = key
+@@ -147,8 +166,8 @@ def frontmatter(path: str) -> dict[str, str | list[str]]:
+             value = out[list_key]
+             assert isinstance(value, list)
+             value.append(item.group(1))
+-        elif line.strip():
+-            list_key = None
++        else:
++            raise ValueError(f"{path}: unsupported frontmatter line {line!r}")
+     return out
+ 
+ 
+@@ -173,6 +192,11 @@ def grant_failures(
+     skills = set(csv(fm.get("skills", [])))
+     roots = skill_roots() if roots is None else roots
+ 
++    for key in sorted(set(fm) - ALLOWED_FIELDS):
++        failures.append(f"{name}: unapproved metadata field {key}")
++    if allow is not None and len(allow) != len(set(allow)):
++        failures.append(f"{name}: duplicate tool grant")
++
+     for unknown in unresolved_skills(skills, roots):
+         failures.append(f"{name}: preloads {unknown}, which resolves to no installed skill")
+ 
+@@ -206,8 +230,9 @@ def grant_failures(
+ 
+     actual_mcp = {tool for tool in allow if tool.startswith("mcp__")}
+     native = [tool for tool in allow if not tool.startswith("mcp__")]
+-    if name == "alaa-instruction-reviewer" and set(native) != {"Read", "Glob", "Grep"}:
+-        failures.append(f"{name}: native grant must be exactly Read, Glob, Grep")
++    if set(native) != EXPECTED_NATIVE[name]:
++        failures.append(f"{name}: native grant differs from the authored role: "
++                        f"expected {sorted(EXPECTED_NATIVE[name])}, got {sorted(native)}")
+     if not native:
+         failures.append(f"{name}: allowlist contains only MCP entries and may not launch without them")
+     if deny:
+@@ -269,7 +294,7 @@ def main() -> int:
+         for line in failures:
+             print(f"  - {line}")
+         return 1
+-    print(f"OK: {len(names)} agents match the catalog's exact MCP and skill grants")
++    print(f"OK: {len(names)} agents match authored native, MCP and skill grants")
+     return 0
+ 
+ 
+@@ -281,6 +306,9 @@ def self_test() -> int:
+     SERENA_SHELL = "mcp__serena__execute_shell_command"
+     # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
+     cases = [
++        ("reviewer extra Write", "alaa-reviewer", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
++        ("verifier delegation", "alaa-verifier", "tools: Read, Glob, Grep, Bash, Agent", None, [], "body", "native grant differs"),
++        ("documenter missing Edit", "alaa-documenter", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
+         ("unknown role", "unknown", "tools: Read", None, [], "body", "uncatalogued"),
+         ("instruction reviewer shell", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, Bash", None, [], "body", "native grant"),
+         ("instruction reviewer MCP", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, mcp__unknown", None, [], "body", "MCP grant differs"),
+@@ -315,6 +343,30 @@ def self_test() -> int:
+     roots = skill_roots()
+     needs_roots = ("resolves to no installed skill", "holds no Skill tool and does not preload it")
+     failures, skipped = [], []
++    from unittest.mock import mock_open, patch
++    for malformed in (
++        "---\ntools: Read\ntools: Write\n---\nbody",
++        "---\ntools: Read\nmissing-colon\n---\nbody",
++        "tools: Read\n---\nbody",
++    ):
++        with patch("builtins.open", mock_open(read_data=malformed)):
++            try:
++                frontmatter("fixture.md")
++            except ValueError:
++                pass
++            else:
++                failures.append("ambiguous/malformed frontmatter was accepted")
++    for field in ("hooks", "permissionMode", "mcpServers"):
++        observed, _ = grant_failures("alaa-verifier", {
++            "tools": "Read, Glob, Grep, Bash", field: "unauthorized"}, roots)
++        if not any("unapproved metadata" in item for item in observed):
++            failures.append(f"unauthorized {field} was accepted")
++    for name in EXPECTED_MCP:
++        path = os.path.join(AGENTS, name + ".md")
++        observed, _ = grant_failures(name, frontmatter(path), roots,
++                                     open(path, encoding="utf-8").read())
++        if observed:
++            failures.append(f"authored {name} rejected: {observed}")
+     for label, name, tools, deny, skills, body, expected_message in cases:
+         if expected_message in needs_roots and not roots:
+             skipped.append(label)
+@@ -345,9 +397,16 @@ def self_test() -> int:
+         for line in failures:
+             print(f"  - {line}")
+         return 1
+-    print(f"SELF-TEST OK: {len(cases) - len(skipped)} red fixtures each rejected")
++    print(f"SELF-TEST OK: {len(cases) - len(skipped) + 6} red fixtures rejected; "
++          f"{len(EXPECTED_MCP)} authored grants accepted")
+     return 0
+ 
+ 
+ if __name__ == "__main__":
+-    sys.exit(self_test() if "--self-test" in sys.argv[1:] else main())
++    try:
++        if sys.argv[1:] not in ([], ["--self-test"]):
++            raise ValueError("usage: check_agent_grants.py [--self-test]")
++        sys.exit(self_test() if sys.argv[1:] else main())
++    except (OSError, UnicodeError, ValueError) as exc:
++        print(f"grant check unavailable: {exc}", file=sys.stderr)
++        sys.exit(2)
+diff --git a/skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py b/skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
+index 244113f2e..b07af7132 100644
+--- a/skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
++++ b/skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
+@@ -9,6 +9,8 @@ from __future__ import annotations
+ 
+ from pathlib import Path
+ from check_agent_contracts import agent_failures, orchestrator_failures
++from check_agent_grants import frontmatter
++import argparse
+ import re
+ import subprocess
+ import sys
+@@ -41,153 +43,169 @@ REQUIRED = {
+     "alaa-release-guardian",
+ }
+ 
+-VALID_MODEL = {"opus", "sonnet", "haiku", "inherit"}
+-VALID_EFFORT = {"low", "medium", "high", "xhigh", "max"}
+-# Sonnet's ceiling is `high`: above it, the correct move is a different model.
+-SONNET_CEILING = {"low", "medium", "high"}
+ # Cross-runtime isolation: this pack must never name the other runtime's world.
+-FORBIDDEN = re.compile(r"\b(codex|gpt-?[56]|openai|sol|terra|luna|astra)\b|opus 4|fable", re.I)
+-
+-errors: list[str] = []
+-
+-skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+-errors.extend(orchestrator_failures(skill))
+-match = re.match(r"^---\n(.*?)\n---\n", skill, re.S)
+-if not match:
+-    errors.append("SKILL.md is missing YAML frontmatter")
+-else:
+-    fm = match.group(1)
+-    for key in ("name:", "description:"):
+-        if key not in fm:
+-            errors.append(f"SKILL.md frontmatter missing {key}")
+-    if "name: alaa-cc-orchestrator" not in fm:
+-        errors.append("SKILL.md name is not alaa-cc-orchestrator")
+-
+-names: set[str] = set()
+-for path in sorted(AGENTS.glob("*.md")):
+-    text = path.read_text(encoding="utf-8")
+-    fm_match = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+-    if not fm_match:
+-        errors.append(f"{path.name}: missing YAML frontmatter")
+-        continue
+-    fm = fm_match.group(1)
+-
+-    def field(key: str) -> str | None:
+-        found = re.search(rf"^{key}:\s*(\S+)\s*$", fm, re.M)
+-        return found.group(1) if found else None
+-
+-    name = field("name")
+-    if not name:
+-        errors.append(f"{path.name}: missing name")
++FORBIDDEN = re.compile(r"\b(codex|gpt-?[56]|openai|sol|terra|luna|astra)\b|opus 4", re.I)
++
++def validate() -> int:
++    errors: list[str] = []
++
++    skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
++    errors.extend(orchestrator_failures(skill))
++    match = re.match(r"^---\n(.*?)\n---\n", skill, re.S)
++    if not match:
++        errors.append("SKILL.md is missing YAML frontmatter")
+     else:
+-        if name in names:
+-            errors.append(f"duplicate agent name: {name}")
+-        names.add(name)
+-        if path.stem != name:
+-            errors.append(f"{path.name}: filename should match name {name}")
+-
+-    if "description:" not in fm:
+-        errors.append(f"{path.name}: missing description")
+-
+-    model = field("model")
+-    effort = field("effort")
+-    if model not in VALID_MODEL:
+-        errors.append(f"{path.name}: invalid model {model!r}")
+-    if effort not in VALID_EFFORT:
+-        errors.append(f"{path.name}: invalid effort {effort!r}")
+-    if effort == "max":
+-        errors.append(f"{path.name}: 'max' is never a pin, only a per-invocation retry")
+-    if model == "sonnet" and effort not in SONNET_CEILING:
+-        errors.append(
+-            f"{path.name}: sonnet is capped at 'high'; a lane needing more changes model, not effort"
+-        )
+-
+-    errors.extend(f"{path.name}: {error}" for error in agent_failures(text))
+-    if name == "alaa-instruction-reviewer" and (model, effort) != ("opus", "xhigh"):
+-        errors.append(f"{path.name}: instruction reviewer must match the independent reviewer pin")
+-
+-missing = REQUIRED - names
+-extra = names - REQUIRED
+-if missing:
+-    errors.append(f"missing required agents: {sorted(missing)}")
+-if extra:
+-    errors.append(f"unexpected agents: {sorted(extra)}")
+-
+-for rel in [
+-    "references/agent-catalog.md",
+-    "references/routing-matrix.md",
+-    "references/model-effort-policy.md",
+-    "references/delegation-prompts.md",
+-    "references/resource-policy.md",
+-    "references/failure-taxonomy.md",
+-    "references/verification-and-gates.md",
+-    "scripts/Invoke-AlaaLowPriority.ps1",
+-    "scripts/run-low-priority.sh",
+-    "scripts/check_agent_grants.py",
+-    "VERSION",
+-]:
+-    if not (ROOT / rel).is_file():
+-        errors.append(f"missing file: {rel}")
+-
+-catalog_path = ROOT / "references/agent-catalog.md"
+-routing_path = ROOT / "references/routing-matrix.md"
+-if catalog_path.is_file() and routing_path.is_file():
+-    catalog = catalog_path.read_text(encoding="utf-8")
+-    routing = routing_path.read_text(encoding="utf-8")
+-    for name in REQUIRED:
+-        if name not in catalog:
+-            errors.append(f"agent absent from catalog: {name}")
+-        if name not in skill and name not in routing:
+-            errors.append(f"agent absent from skill/routing: {name}")
+-
+-resource_path = ROOT / "references/resource-policy.md"
+-if "--browser chromium" not in skill or (
+-    resource_path.is_file() and "--browser chromium" not in resource_path.read_text(encoding="utf-8")
+-):
+-    errors.append("hard browser chromium preservation rule is missing")
+-
+-for path in sorted(ROOT.rglob("*")):
+-    if not path.is_file() or path.suffix not in {".md", ".yaml", ".py", ".sh", ".ps1"}:
+-        continue
+-    # The sweep's own pattern lives in this file, and CHANGELOG.md is a historical
+-    # record that must be able to name what a revision migrated away from. Neither
+-    # is ever loaded into an agent's context, so neither can leak at runtime.
+-    if path.name in {"validate_pack.py", "CHANGELOG.md"}:
+-        continue
+-    # One line may name the other runtime: the negative-routing sentence inside
+-    # "When NOT to use", whose entire job is to say which runtime this pack does
+-    # not serve. Exempting the whole section would blind the sweep to anything
+-    # else later placed there, so the exemption is scoped to that one line shape
+-    # and still requires the line to route the reader elsewhere.
+-    negative_route = re.compile(
+-        r"^\s*[-*]\s+The runtime is .+ rather than .+\.", re.IGNORECASE)
+-    section = ""
+-    for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+-        if path.suffix == ".md" and line.startswith("## "):
+-            section = line[3:].strip().lower()
+-        if section == "when not to use" and negative_route.match(line):
++        fm = match.group(1)
++        for key in ("name:", "description:"):
++            if key not in fm:
++                errors.append(f"SKILL.md frontmatter missing {key}")
++        if "name: alaa-cc-orchestrator" not in fm:
++            errors.append("SKILL.md name is not alaa-cc-orchestrator")
++
++    names: set[str] = set()
++    for path in sorted(AGENTS.glob("*.md")):
++        text = path.read_text(encoding="utf-8")
++        frontmatter(str(path))  # Reject ambiguous or unsupported metadata, never skip it.
++        fm_match = re.match(r"^---\n(.*?)\n---\n", text, re.S)
++        if not fm_match:
++            errors.append(f"{path.name}: missing YAML frontmatter")
++            continue
++        fm = fm_match.group(1)
++
++        def field(key: str) -> str | None:
++            found = re.search(rf"^{key}:\s*(\S+)\s*$", fm, re.M)
++            return found.group(1) if found else None
++
++        name = field("name")
++        if not name:
++            errors.append(f"{path.name}: missing name")
++        else:
++            if name in names:
++                errors.append(f"duplicate agent name: {name}")
++            names.add(name)
++            if path.stem != name:
++                errors.append(f"{path.name}: filename should match name {name}")
++
++        if "description:" not in fm:
++            errors.append(f"{path.name}: missing description")
++
++        errors.extend(f"{path.name}: {error}" for error in agent_failures(text))
++
++    missing = REQUIRED - names
++    extra = names - REQUIRED
++    if missing:
++        errors.append(f"missing required agents: {sorted(missing)}")
++    if extra:
++        errors.append(f"unexpected agents: {sorted(extra)}")
++
++    for rel in [
++        "references/agent-catalog.md",
++        "references/routing-matrix.md",
++        "references/model-effort-policy.md",
++        "references/delegation-prompts.md",
++        "references/resource-policy.md",
++        "references/failure-taxonomy.md",
++        "references/verification-and-gates.md",
++        "scripts/Invoke-AlaaLowPriority.ps1",
++        "scripts/run-low-priority.sh",
++        "scripts/check_agent_grants.py",
++        "VERSION",
++    ]:
++        if not (ROOT / rel).is_file():
++            errors.append(f"missing file: {rel}")
++
++    catalog_path = ROOT / "references/agent-catalog.md"
++    routing_path = ROOT / "references/routing-matrix.md"
++    if catalog_path.is_file() and routing_path.is_file():
++        catalog = catalog_path.read_text(encoding="utf-8")
++        routing = routing_path.read_text(encoding="utf-8")
++        for name in REQUIRED:
++            if name not in catalog:
++                errors.append(f"agent absent from catalog: {name}")
++            if name not in skill and name not in routing:
++                errors.append(f"agent absent from skill/routing: {name}")
++
++    resource_path = ROOT / "references/resource-policy.md"
++    if "--browser chromium" not in skill or (
++        resource_path.is_file() and "--browser chromium" not in resource_path.read_text(encoding="utf-8")
++    ):
++        errors.append("hard browser chromium preservation rule is missing")
++
++    for path in sorted(ROOT.rglob("*")):
++        if not path.is_file() or path.suffix not in {".md", ".yaml", ".py", ".sh", ".ps1"}:
++            continue
++        # The sweep's own pattern lives in this file, and CHANGELOG.md is a historical
++        # record that must be able to name what a revision migrated away from. Neither
++        # is ever loaded into an agent's context, so neither can leak at runtime.
++        if path.name in {"validate_pack.py", "CHANGELOG.md"}:
+             continue
+-        hit = FORBIDDEN.search(line)
+-        if hit:
+-            errors.append(f"cross-runtime leak in {path.relative_to(ROOT)}:{lineno}: {hit.group(0)!r}")
+-
+-grant_check = subprocess.run(
+-    [sys.executable, str(ROOT / "scripts" / "check_agent_grants.py")],
+-    capture_output=True,
+-    text=True,
+-    check=False,
+-)
+-if grant_check.returncode != 0:
+-    detail = (grant_check.stdout + grant_check.stderr).strip().replace("\n", " | ")
+-    errors.append(
+-        f"agent grant checker exited {grant_check.returncode}"
+-        + (f": {detail}" if detail else "")
+-    )
+-
+-if errors:
+-    print("PACK VALIDATION FAILED", file=sys.stderr)
+-    for error in errors:
+-        print(f"- {error}", file=sys.stderr)
+-    raise SystemExit(1)
+-
+-print(f"PACK VALID: {len(names)} agents, skill version {(ROOT / 'VERSION').read_text().strip()}")
++        # One line may name the other runtime: the negative-routing sentence inside
++        # "When NOT to use", whose entire job is to say which runtime this pack does
++        # not serve. Exempting the whole section would blind the sweep to anything
++        # else later placed there, so the exemption is scoped to that one line shape
++        # and still requires the line to route the reader elsewhere.
++        negative_route = re.compile(
++            r"^\s*[-*]\s+The runtime is .+ rather than .+\.", re.IGNORECASE)
++        section = ""
++        for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
++            if path.suffix == ".md" and line.startswith("## "):
++                section = line[3:].strip().lower()
++            if section == "when not to use" and negative_route.match(line):
++                continue
++            hit = FORBIDDEN.search(line)
++            if hit:
++                errors.append(f"cross-runtime leak in {path.relative_to(ROOT)}:{lineno}: {hit.group(0)!r}")
++
++    unavailable = False
++    policy_check = ROOT.parent / "alaa-prompting-guide/scripts/check_claude_model_policy.py"
++    for label, command in (
++        ("canonical Claude policy", [sys.executable, "-B", str(policy_check), "--agent-root", str(AGENTS)]),
++        ("agent grants", [sys.executable, "-B", str(ROOT / "scripts/check_agent_grants.py")]),
++    ):
++        result = subprocess.run(command, capture_output=True, text=True, check=False)
++        if result.returncode:
++            unavailable |= result.returncode != 1
++            detail = (result.stdout + result.stderr).strip().replace("\n", " | ")
++            errors.append(f"{label} exited {result.returncode}: {detail}")
++
++    if errors:
++        print("PACK VALIDATION FAILED", file=sys.stderr)
++        for error in errors:
++            print(f"- {error}", file=sys.stderr)
++        return 2 if unavailable else 1
++
++    print(f"PACK VALID: {len(names)} agents, skill version {(ROOT / 'VERSION').read_text().strip()}")
++    return 0
++
++
++def self_test() -> int:
++    """Exercise consumer exit propagation; policy owns model/projection fixtures."""
++    from unittest.mock import patch
++    failures = []
++    for policy_exit, grant_exit, expected in ((0, 0, 0), (1, 0, 1), (2, 0, 2), (0, 1, 1), (0, 2, 2), (9, 0, 2)):
++        responses = [subprocess.CompletedProcess([], code, "fixture", "")
++                     for code in (policy_exit, grant_exit)]
++        with patch("subprocess.run", side_effect=responses):
++            observed = validate()
++        if observed != expected:
++            failures.append(f"dependency exits {(policy_exit, grant_exit)}: {observed} != {expected}")
++    if failures:
++        print("\n".join(failures), file=sys.stderr)
++        return 1
++    print("PACK SELF-TEST OK: dependency findings and unavailable proof cannot pass")
++    return 0
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--self-test", action="store_true")
++    args = parser.parse_args()
++    try:
++        return self_test() if args.self_test else validate()
++    except (OSError, UnicodeError, ValueError) as exc:
++        print(f"pack validation unavailable: {exc}", file=sys.stderr)
++        return 2
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md b/skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md
+index ba7daaf59..2d3cf5f0a 100644
+--- a/skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md
++++ b/skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md
+@@ -2,10 +2,8 @@
+ name: alaa-rule-writer
+ description: Wording-only rewriter for already-drafted text that controls another agent — a rule or prompt, a SKILL.md section, a subagent definition, or an AGENTS.md or CLAUDE.md section. Returns replacement text that is the fewest words leaving the executing agent's behavior unchanged. Never authors, decides, researches, judges correctness, or edits a file, and stops blocked rather than invent a decision.
+ tools: Read, Glob, Grep
+-# Pin reason: judging whether a cut changes behavior is a per-sentence judgment with no
+-# downstream gate to catch a miss, which is the shape of alaa-spec-analyst, the nearest
+-# read-only judgment lane in this family. Sweep one level down before lowering it.
+-model: opus
++# Pin and calibration rationale: assets/claude-model-policy.json, alaa-rule-writer profile.
++model: claude-opus-5-5
+ effort: high
+ skills:
+   - /alaa-prompting-guide
+diff --git a/skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py b/skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py
+index 4d1b09c9f..f06af90b4 100644
+--- a/skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py
++++ b/skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py
+@@ -21,9 +21,10 @@ Rules:
+     G6  no wrapper emits an identity line, a model name, or an effort level
+     G7  every doctrine path a wrapper names resolves
+     G8  the wrappers agree on name and description
+-    G9  no wrapper pins an effort of max
++    G9  the Codex wrapper retains its default-effort restriction
+     G10 the Claude wrapper preloads every skill its contract names
+     G11 real Codex wrapper matches the canonical model policy
++    G12 real Claude wrapper matches the canonical Claude model policy CLI
+ 
+ G10 exists because the lane holds no Skill tool: without a preload it would have to find the
+ doctrine by guessing a path, and under Claude Code the packaged skill lives at an opaque
+@@ -34,8 +35,8 @@ do not invent a `skills.config` block to make the two look symmetric.
+ A model and effort pin belongs in runtime metadata and never in text the agent emits. The pin
+ routes the dispatch; an identity line or a model name inside the contract reaches the caller's
+ report, goes stale the first time a pin moves, and is copied forward because it looks
+-authoritative. G9 encodes the rule that a max pin removes the escalation path, so there is
+-nothing left to raise to when a lane falls short.
++authoritative. Claude model and effort legality belongs only to its canonical policy;
++G9 preserves the existing restriction for the other runtime.
+ 
+ G5 compares the value the runtime loads, not the bytes on disk, and for the Codex wrapper
+ those differ. A TOML basic multi-line string processes escapes, so one backslash inside
+@@ -66,6 +67,7 @@ from __future__ import annotations
+ 
+ import argparse
+ import re
++import subprocess
+ import sys
+ sys.dont_write_bytecode = True
+ from pathlib import Path
+@@ -130,10 +132,10 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
+     path on every machine, and a key shape this checker fully owns.
+     """
+     if not text.startswith("---\n"):
+-        return None
++        raise CannotRun("Claude wrapper lacks an opening frontmatter delimiter")
+     end = text.find("\n---\n", 3)
+     if end == -1:
+-        return None
++        raise CannotRun("Claude wrapper lacks a closing frontmatter delimiter")
+     head, body = text[4:end], text[end + 5 :]
+     fields: dict = {}
+     key: Optional[str] = None
+@@ -143,6 +145,8 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
+         item = re.match(r"^\s+-\s*(.+?)\s*$", line)
+         if item and key is not None:
+             current = fields.get(key)
++            if key != "skills" or not isinstance(current, list) and current != "":
++                raise CannotRun(f"unsupported Claude list under {key}")
+             if current == "":
+                 fields[key] = [item.group(1)]
+             elif isinstance(current, list):
+@@ -151,7 +155,11 @@ def parse_claude(text: str) -> Optional[Tuple[dict, str]]:
+         m = re.match(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$", line)
+         if m:
+             key = m.group(1)
++            if key in fields:
++                raise CannotRun(f"duplicate Claude frontmatter key: {key}")
+             fields[key] = m.group(2).strip()
++            continue
++        raise CannotRun(f"unsupported Claude frontmatter line: {line!r}")
+     return fields, body
+ 
+ 
+@@ -217,6 +225,8 @@ def check(root: Path) -> List[str]:
+ 
+     if claude:
+         fields, claude_body = claude
++        for key in sorted(set(fields) - {"name", "description", "tools", "model", "effort", "skills"}):
++            findings.append(f"G2: unapproved Claude metadata field {key}")
+         declared = fields.get("tools")
+         if declared is None:
+             findings.append("G2: the Claude wrapper omits tools, so it inherits every tool")
+@@ -257,7 +267,7 @@ def check(root: Path) -> List[str]:
+         if named_model:
+             findings.append(f"G6: the {name} wrapper emits the model name {named_model.group(0)!r}")
+ 
+-        for key in ("effort", "model_reasoning_effort"):
++        for key in (("effort", "model_reasoning_effort") if name == "codex" else ()):
+             if str(fields.get(key, "")).strip().lower() in ("max", "ultra"):
+                 findings.append(f"G9: the {name} wrapper pins {key} at a prohibited default effort")
+ 
+@@ -289,6 +299,23 @@ def check(root: Path) -> List[str]:
+     return findings
+ 
+ 
++def claude_policy_findings(root: Path) -> List[str]:
++    """Consume the public owner CLI; never duplicate its model or effort rules."""
++    checker = Path(__file__).resolve().parent / "check_claude_model_policy.py"
++    policy = root / "assets/claude-model-policy.json"
++    if not checker.is_file() or not policy.is_file():
++        raise CannotRun("production rule-writer validation requires the Claude policy and checker")
++    result = subprocess.run(
++        [sys.executable, "-B", str(checker), "--policy", str(policy),
++         "--agent-root", str(root / "assets/rule-writer/claude")],
++        capture_output=True, text=True, check=False,
++    )
++    detail = (result.stdout + result.stderr).strip()
++    if result.returncode not in (0, 1):
++        raise CannotRun(f"Claude policy exited {result.returncode}: {detail}")
++    return [f"G12: {detail}"] if result.returncode else []
++
++
+ def self_test(fixtures: Path) -> int:
+     """Every rule gets one red fixture that only it rejects, plus one green tree.
+ 
+@@ -317,6 +344,40 @@ def self_test(fixtures: Path) -> int:
+             raise CannotRun(f"model-output detection missed {token}")
+     from check_codex_model_policy import self_test as policy_self_test
+     policy_self_test()
++    # Exercise policy CLI failure propagation without turning structural historical
++    # fixtures into another copy of policy. The owner tests actual pin drift.
++    from unittest.mock import patch
++    for malformed in (
++        "---\ntools: Read\ntools: Write\n---\nbody",
++        "---\ntools: Read\n  - Write\n---\nbody",
++        "---\ntools: Read\nbody",
++    ):
++        try:
++            parse_claude(malformed)
++        except CannotRun:
++            pass
++        else:
++            raise CannotRun("malformed or ambiguous Claude metadata was accepted")
++    for code in (0, 1, 2, 9):
++        with patch.object(Path, "is_file", return_value=True), patch(
++            "subprocess.run", return_value=subprocess.CompletedProcess([], code, "fixture", "")
++        ):
++            try:
++                issues = claude_policy_findings(Path("fixture"))
++            except CannotRun:
++                if code not in (2, 9):
++                    raise
++            else:
++                if code in (2, 9) or bool(issues) != (code == 1):
++                    raise CannotRun(f"Claude policy exit {code} propagated incorrectly")
++    for key in ("hooks", "permissionMode", "mcpServers"):
++        text = read_text(fixtures / "green" / CLAUDE_WRAPPER).replace("tools: Read, Glob, Grep", f"tools: Read, Glob, Grep\n{key}: unauthorized")
++        original = read_text
++        def mutated(path: Path) -> str:
++            return text if path == fixtures / "green" / CLAUDE_WRAPPER else original(path)
++        with patch(__name__ + ".read_text", side_effect=mutated):
++            if not any(issue.startswith("G2:") for issue in check(fixtures / "green")):
++                raise CannotRun(f"unauthorized {key} was accepted")
+     failures = 0
+     for name, expected in cases:
+         root = fixtures / name
+@@ -366,7 +427,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
+         root = Path(args.root.strip().strip("\r\n")).expanduser() if args.root else here.parent
+         if not (root / "assets/codex-model-policy.json").is_file():
+             raise CannotRun("production rule-writer validation requires assets/codex-model-policy.json")
+-        findings = check(root)
++        findings = check(root) + claude_policy_findings(root)
+     except CannotRun as exc:
+         print(f"could not run: {exc}", file=sys.stderr)
+         return EXIT_CANNOT_RUN
+diff --git a/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/claude/alaa-rule-writer.md b/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/claude/alaa-rule-writer.md
+index 9d4bc9359..52dca6152 100644
+--- a/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/claude/alaa-rule-writer.md
++++ b/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/claude/alaa-rule-writer.md
+@@ -3,7 +3,7 @@ name: alaa-rule-writer
+ description: Fixture wrapper used only by this checker's self-test. Never a real agent.
+ tools: Read, Glob, Grep
+ model: opus
+-effort: max
++effort: high
+ skills:
+   - /alaa-prompting-guide
+ ---
+diff --git a/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml b/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml
+index d7f07cfef..ca9f48df6 100644
+--- a/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml
++++ b/skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml
+@@ -1,5 +1,6 @@
+ name = "alaa-rule-writer"
+ description = "Fixture wrapper used only by this checker's self-test. Never a real agent."
++model_reasoning_effort = "max"
+ sandbox_mode = "read-only"
+ 
+ developer_instructions = """

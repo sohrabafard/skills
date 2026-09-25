@@ -1,0 +1,201 @@
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0jpgm2sb/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0_km1ar9/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-35ewheyo/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6m1s_7qt/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6p4y1wba/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-7iti0y11/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-f44vwy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-faznmppg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-fcc1majp/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-g5ldl87f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-irqap9y1/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-jwqodzp8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-nc7wzr4k/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-oe_ej8t8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-pqr858jg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-ri65mz7f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tcd67ob6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tpd6kyku/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-vfgxpvfj/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-w5nihy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-wlzn74i6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x0lnu3kc/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-xko8o0np/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x_siyr9v/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-y1m6slz7/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-yya74gqq/': Permission denied
+ M README.md
+A  artifacts/claude-model-migration/agents/compression-evidence.md
+A  artifacts/claude-model-migration/agents/instruction-draft.md
+A  artifacts/claude-model-migration/agents/lane.diff
+A  artifacts/claude-model-migration/agents/limitations.md
+A  artifacts/claude-model-migration/agents/projection-preservation.json
+A  artifacts/claude-model-migration/agents/verification.json
+A  artifacts/claude-model-migration/baseline/01-validate_sohrab_skill_pack.record.txt
+A  artifacts/claude-model-migration/baseline/02-check_skill_index.record.txt
+A  artifacts/claude-model-migration/baseline/03-check_fleet_references.record.txt
+A  artifacts/claude-model-migration/baseline/04-check_lifecycle_contract.record.txt
+A  artifacts/claude-model-migration/baseline/05-cc_validate_pack.record.txt
+A  artifacts/claude-model-migration/baseline/06-cc_check_agent_grants.record.txt
+A  artifacts/claude-model-migration/baseline/07-cc_check_agent_contracts.record.txt
+A  artifacts/claude-model-migration/baseline/08-codex_validate_pack.record.txt
+A  artifacts/claude-model-migration/baseline/09-prompting_check_rule_writer_grants.record.txt
+A  artifacts/claude-model-migration/baseline/10-prompting_check_codex_model_policy.record.txt
+A  artifacts/claude-model-migration/baseline/11-prompting_check_agent_evals.record.txt
+A  artifacts/claude-model-migration/baseline/command-summary.txt
+A  artifacts/claude-model-migration/baseline/sha256-manifest-final.txt
+A  artifacts/claude-model-migration/baseline/sha256-manifest-initial.txt
+A  artifacts/claude-model-migration/baseline/snapshot-final.txt
+A  artifacts/claude-model-migration/baseline/snapshot-initial.txt
+AM artifacts/claude-model-migration/documentation/doc-links-and-line-budget.txt
+AM artifacts/claude-model-migration/documentation/profile-table-check.txt
+AM artifacts/claude-model-migration/instruction-review.md
+A  artifacts/claude-model-migration/inventory-summary.md
+A  artifacts/claude-model-migration/policy/changed-paths.json
+A  artifacts/claude-model-migration/policy/compression-evidence.json
+A  artifacts/claude-model-migration/policy/compression-review.md
+A  artifacts/claude-model-migration/policy/drafts/00-source-map.md
+A  artifacts/claude-model-migration/policy/drafts/00-topic-map.md
+A  artifacts/claude-model-migration/policy/drafts/06-invocation-and-composition.md
+A  artifacts/claude-model-migration/policy/drafts/20-opus-5.md
+A  artifacts/claude-model-migration/policy/drafts/21-opus-5-5.md
+A  artifacts/claude-model-migration/policy/drafts/30-sonnet-5.md
+A  artifacts/claude-model-migration/policy/drafts/35-haiku-4-5.md
+A  artifacts/claude-model-migration/policy/drafts/40-fable-5.md
+A  artifacts/claude-model-migration/policy/drafts/41-claude-code-runtime-features.md
+A  artifacts/claude-model-migration/policy/drafts/42-fable-5-1.md
+A  artifacts/claude-model-migration/policy/drafts/50-effort-and-thinking.md
+A  artifacts/claude-model-migration/policy/drafts/80-subagent-authoring.md
+A  artifacts/claude-model-migration/policy/drafts/90-model-selection.md
+A  artifacts/claude-model-migration/policy/drafts/93-claude-evaluation.md
+A  artifacts/claude-model-migration/policy/drafts/SKILL.md
+A  artifacts/claude-model-migration/policy/fix-cycle-1/compression-review.md
+A  artifacts/claude-model-migration/policy/fix-cycle-1/evaluation-contract-draft.md
+A  artifacts/claude-model-migration/policy/fix-cycle-1/focused-checks.json
+A  artifacts/claude-model-migration/policy/fix-cycle-1/policy-with-malformed-evidence.json
+A  artifacts/claude-model-migration/policy/fix-cycle-2/baseline-codex-rule.txt
+A  artifacts/claude-model-migration/policy/fix-cycle-2/before.md
+A  artifacts/claude-model-migration/policy/fix-cycle-2/compression-review.md
+A  artifacts/claude-model-migration/policy/fix-cycle-2/draft.md
+A  artifacts/claude-model-migration/policy/fix-cycle-2/fix.diff
+A  artifacts/claude-model-migration/policy/fix-cycle-2/focused-checks.json
+A  artifacts/claude-model-migration/policy/focused-checks.json
+AM artifacts/claude-model-migration/release-review.md
+AM artifacts/claude-model-migration/research-summary.md
+A  artifacts/claude-model-migration/review-cycle-1.md
+A  artifacts/claude-model-migration/runtime-update.md
+A  artifacts/claude-model-migration/security-review.md
+A  artifacts/claude-model-migration/verification/baseline-codex-comparison.txt
+A  artifacts/claude-model-migration/verification/baseline-scope-assertion.txt
+A  artifacts/claude-model-migration/verification/cc-check-agent-contracts.record.txt
+A  artifacts/claude-model-migration/verification/cc-check-agent-grants-self-test.record.txt
+A  artifacts/claude-model-migration/verification/cc-check-agent-grants.record.txt
+A  artifacts/claude-model-migration/verification/cc-validate-pack-self-test.record.txt
+A  artifacts/claude-model-migration/verification/cc-validate-pack.record.txt
+A  artifacts/claude-model-migration/verification/check-fleet-references.record.txt
+A  artifacts/claude-model-migration/verification/check-lifecycle-contract.record.txt
+A  artifacts/claude-model-migration/verification/check-skill-index.record.txt
+A  artifacts/claude-model-migration/verification/codex-render-agents-check.record.txt
+A  artifacts/claude-model-migration/verification/codex-validate-pack.record.txt
+A  artifacts/claude-model-migration/verification/command-summary.txt
+A  artifacts/claude-model-migration/verification/final/check-fleet-references.record.txt
+A  artifacts/claude-model-migration/verification/final/literal-text-proof.txt
+A  artifacts/claude-model-migration/verification/final/source-delta-assertion.txt
+A  artifacts/claude-model-migration/verification/final/source-manifest-final.txt
+A  artifacts/claude-model-migration/verification/final/validate-sohrab.record.txt
+A  artifacts/claude-model-migration/verification/git-status-final.txt
+A  artifacts/claude-model-migration/verification/git-status-initial.txt
+A  artifacts/claude-model-migration/verification/prompting-check-agent-evals.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-claude-agent-evals-self-test.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-claude-agent-evals.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-claude-model-policy-self-test.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-claude-model-policy.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-codex-model-policy.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-rule-writer-grants-self-test.record.txt
+A  artifacts/claude-model-migration/verification/prompting-check-rule-writer-grants.record.txt
+A  artifacts/claude-model-migration/verification/source-manifest-assertion.txt
+A  artifacts/claude-model-migration/verification/source-manifest-final.txt
+A  artifacts/claude-model-migration/verification/source-manifest-initial.txt
+A  artifacts/claude-model-migration/verification/validate-sohrab.record.txt
+A  artifacts/claude-model-migration/verification/wrapper-attempt-1.record.txt
+A  artifacts/skill-modernization-audit-20260925/assessment-rows.tsv
+A  artifacts/skill-modernization-audit-20260925/audit.md
+A  artifacts/skill-modernization-audit-20260925/baseline-head.txt
+A  artifacts/skill-modernization-audit-20260925/baseline-status.txt
+A  artifacts/skill-modernization-audit-20260925/checks.json
+A  artifacts/skill-modernization-audit-20260925/final-tracked-status.txt
+A  artifacts/skill-modernization-audit-20260925/gpt-migration-snapshot-drift.json
+A  artifacts/skill-modernization-audit-20260925/installed-agent-comparison.json
+A  artifacts/skill-modernization-audit-20260925/inventory.json
+A  artifacts/skill-modernization-audit-20260925/per-skill.csv
+A  artifacts/skill-modernization-audit-20260925/per-skill.json
+A  artifacts/skill-modernization-audit-20260925/per-skill.md
+A  artifacts/skill-modernization-audit-20260925/source-integrity-final.json
+A  artifacts/skill-modernization-audit-20260925/source-manifest.json
+A  artifacts/skill-modernization-audit-20260925/specialist-evidence.md
+A  artifacts/skill-modernization-audit-20260925/versions.md
+AM docs/_agent_plans/20260925-110010_claude-model-migration.md
+AM docs/agents/20260925-110010_claude-model-migration-state.md
+AM docs/claude-model-migration.md
+AM docs/design/0001-claude-policy-projections.md
+ M skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md
+ M skills/sohrab/alaa-cc-orchestrator/VERSION
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+ M skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md
+ M skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
+ M skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py
+ M skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-prompting-guide/SKILL.md
+AM skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json
+A  skills/sohrab/alaa-prompting-guide/assets/evals/claude-agent-comparisons.json
+ M skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md
+ M skills/sohrab/alaa-prompting-guide/references/00-source-map.md
+ M skills/sohrab/alaa-prompting-guide/references/00-topic-map.md
+ M skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md
+ M skills/sohrab/alaa-prompting-guide/references/20-opus-5.md
+A  skills/sohrab/alaa-prompting-guide/references/21-opus-5-5.md
+ M skills/sohrab/alaa-prompting-guide/references/30-sonnet-5.md
+A  skills/sohrab/alaa-prompting-guide/references/35-haiku-4-5.md
+ M skills/sohrab/alaa-prompting-guide/references/40-fable-5.md
+ M skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md
+A  skills/sohrab/alaa-prompting-guide/references/42-fable-5-1.md
+ M skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md
+ M skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md
+ M skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
+AM skills/sohrab/alaa-prompting-guide/references/93-claude-evaluation.md
+AM skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py
+AM skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py
+ M skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py
+AM skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py
+A  skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/duplicate.json
+A  skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/malformed.json
+AM skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/policy-cases.json
+A  skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-anchor.md
+A  skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-duplicate.md
+A  skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-flow.md
+A  skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-unterminated.md
+ M skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/claude/alaa-rule-writer.md
+ M skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml
+?? artifacts/claude-model-migration/documentation/check_profile_table.py
+?? artifacts/claude-model-migration/final-git-status.txt

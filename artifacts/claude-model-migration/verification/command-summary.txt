@@ -1,0 +1,265 @@
+argv=python -B skills\sohrab\alaa-cc-orchestrator\scripts\check_agent_contracts.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:04.628685+03:30
+ended=2026-09-25T15:44:04.711029+03:30
+duration-ms=82
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\cc-check-agent-contracts.stdout.log
+stderr=artifacts/claude-model-migration/verification\cc-check-agent-contracts.stderr.log
+
+argv=python -B skills\sohrab\alaa-cc-orchestrator\scripts\check_agent_grants.py --self-test
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:03.549922+03:30
+ended=2026-09-25T15:44:03.889156+03:30
+duration-ms=339
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\cc-check-agent-grants-self-test.stdout.log
+stderr=artifacts/claude-model-migration/verification\cc-check-agent-grants-self-test.stderr.log
+
+argv=python -B skills\sohrab\alaa-cc-orchestrator\scripts\check_agent_grants.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:02.687298+03:30
+ended=2026-09-25T15:44:02.767326+03:30
+duration-ms=79
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\cc-check-agent-grants.stdout.log
+stderr=artifacts/claude-model-migration/verification\cc-check-agent-grants.stderr.log
+
+argv=python -B skills\sohrab\alaa-cc-orchestrator\scripts\validate_pack.py --self-test
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:01.583318+03:30
+ended=2026-09-25T15:44:01.933271+03:30
+duration-ms=349
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\cc-validate-pack-self-test.stdout.log
+stderr=artifacts/claude-model-migration/verification\cc-validate-pack-self-test.stderr.log
+
+argv=python -B skills\sohrab\alaa-cc-orchestrator\scripts\validate_pack.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:00.260492+03:30
+ended=2026-09-25T15:44:00.672804+03:30
+duration-ms=412
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\cc-validate-pack.stdout.log
+stderr=artifacts/claude-model-migration/verification\cc-validate-pack.stderr.log
+
+argv=python -B scripts\check_fleet_references.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:43:55.446080+03:30
+ended=2026-09-25T15:43:58.344242+03:30
+duration-ms=2898
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\check-fleet-references.stdout.log
+stderr=artifacts/claude-model-migration/verification\check-fleet-references.stderr.log
+
+argv=python -B scripts\check_lifecycle_contract.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:43:59.084702+03:30
+ended=2026-09-25T15:43:59.468699+03:30
+duration-ms=383
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\check-lifecycle-contract.stdout.log
+stderr=artifacts/claude-model-migration/verification\check-lifecycle-contract.stderr.log
+
+argv=python -B scripts\check_skill_index.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:43:54.570554+03:30
+ended=2026-09-25T15:43:54.688131+03:30
+duration-ms=117
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\check-skill-index.stdout.log
+stderr=artifacts/claude-model-migration/verification\check-skill-index.stderr.log
+
+argv=python -B skills\sohrab\alaa-codex-orchestrator\scripts\render_agents.py --check
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:06.607821+03:30
+ended=2026-09-25T15:44:06.751121+03:30
+duration-ms=143
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\codex-render-agents-check.stdout.log
+stderr=artifacts/claude-model-migration/verification\codex-render-agents-check.stderr.log
+
+argv=python -B skills\sohrab\alaa-codex-orchestrator\scripts\validate_pack.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:05.509931+03:30
+ended=2026-09-25T15:44:05.804564+03:30
+duration-ms=294
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\codex-validate-pack.stdout.log
+stderr=artifacts/claude-model-migration/verification\codex-validate-pack.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_agent_evals.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:14.541679+03:30
+ended=2026-09-25T15:44:14.664913+03:30
+duration-ms=123
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-agent-evals.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-agent-evals.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_agent_evals.py --self-test
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:12.492317+03:30
+ended=2026-09-25T15:44:12.915850+03:30
+duration-ms=423
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-claude-agent-evals-self-test.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-claude-agent-evals-self-test.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_agent_evals.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:11.607315+03:30
+ended=2026-09-25T15:44:11.749878+03:30
+duration-ms=142
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-claude-agent-evals.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-claude-agent-evals.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_model_policy.py --self-test
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:10.508125+03:30
+ended=2026-09-25T15:44:10.891584+03:30
+duration-ms=383
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-claude-model-policy-self-test.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-claude-model-policy-self-test.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_claude_model_policy.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:09.554887+03:30
+ended=2026-09-25T15:44:09.726829+03:30
+duration-ms=171
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-claude-model-policy.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-claude-model-policy.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_codex_model_policy.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:13.661852+03:30
+ended=2026-09-25T15:44:13.778728+03:30
+duration-ms=116
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-codex-model-policy.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-codex-model-policy.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_rule_writer_grants.py --self-test
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:08.548622+03:30
+ended=2026-09-25T15:44:08.828740+03:30
+duration-ms=280
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-rule-writer-grants-self-test.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-rule-writer-grants-self-test.stderr.log
+
+argv=python -B skills\sohrab\alaa-prompting-guide\scripts\check_rule_writer_grants.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:44:07.512044+03:30
+ended=2026-09-25T15:44:07.793611+03:30
+duration-ms=281
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\prompting-check-rule-writer-grants.stdout.log
+stderr=artifacts/claude-model-migration/verification\prompting-check-rule-writer-grants.stderr.log
+
+argv=python -B scripts\validate_sohrab_skill_pack.py
+cwd=D:\Sohrab\Project\skills
+env-overrides=none
+resource=BelowNormal; serial; timeout=180s
+started=2026-09-25T15:43:53.587659+03:30
+ended=2026-09-25T15:43:53.828555+03:30
+duration-ms=240
+exit=0
+classification=PASS
+tier=affected
+proof=static
+stdout=artifacts/claude-model-migration/verification\validate-sohrab.stdout.log
+stderr=artifacts/claude-model-migration/verification\validate-sohrab.stderr.log

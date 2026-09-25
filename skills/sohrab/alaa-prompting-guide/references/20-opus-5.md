@@ -1,4 +1,9 @@
-# Claude Opus 5
+# Claude Opus 5: historical reference
+
+Read only for explicit historical comparison. Active routing uses `references/21-opus-5-5.md`
+and `assets/claude-model-policy.json`. The original dated guidance below is preserved as history,
+including its old defaults and verification advice; it does not select current profiles or
+supersede current authority gates. Refresh each historical claim before relying on it.
 
 API model id `claude-opus-5`. Anthropic's model for complex agentic coding and enterprise work, with its documented strength in long-horizon agentic tasks. 1M-token context window as both default and maximum, 128k max output, $5/$25 per MTok. Anthropic positions it as "a thoughtful and proactive model that comes close to the frontier intelligence of Claude Fable 5 at half the price." In this pack it is the default Claude tier for architecture-sensitive review, subtle bug finding, complex agentic coding, and long-horizon work (see `references/90-model-selection.md`).
 

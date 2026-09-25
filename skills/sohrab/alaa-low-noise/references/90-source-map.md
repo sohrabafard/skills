@@ -47,7 +47,7 @@ Bad: reading six full files to answer a question about one function. Good: searc
 
 ## Caveats
 
-The documentation URLs above are current entry points and are restructured periodically; if one 404s, navigate from the vendor's docs root rather than guessing a path. Runtime-specific behavior for Claude Code and Codex diverges between releases, so a rule verified on one runtime is not automatically true on the other. Per-model claims live in `references/model-output-profiles.md` and carry their own caveats and sources; this file only routes to them.
+The documentation URLs above are current entry points and are restructured periodically; if one 404s, navigate from the vendor's docs root rather than guessing a path. Runtime-specific behavior for Claude Code and Codex diverges between releases, so a rule verified on one runtime is not automatically true on the other. Model and runtime claims belong to `/alaa-prompting-guide`; `references/model-output-profiles.md` routes there and defines no copied model policy.
 
 ## Sources
 

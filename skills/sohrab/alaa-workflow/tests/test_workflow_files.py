@@ -586,19 +586,18 @@ class WorkflowFilesTest(unittest.TestCase):
             )
             self.assertNotIn("[plan.workspace]", result.stdout)
 
-    def test_phase_without_a_commit_field_only_warns_while_planning(self) -> None:
+    def test_phase_without_commit_or_snapshot_only_warns_while_planning(self) -> None:
         with workspace_tempdir() as tmp:
             root = Path(tmp)
             payload, _ = self.init(root)
             plan = root / str(payload["outputs"][0])
             self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
-            self.drop_line(plan, "- Commit:")
+            self.drop_line(plan, "- Snapshot:")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
-            self.assertIn("WARN [plan.phase-commit]", result.stdout)
+            self.assertIn("WARN [plan.phase-snapshot]", result.stdout)
 
-    def test_phase_without_a_commit_field_blocks_once_execution_has_begun(self) -> None:
-        """An absent field and a phase that changed nothing are different states, and only
-        the field tells them apart."""
+    def test_phase_without_commit_or_snapshot_blocks_once_execution_has_begun(self) -> None:
+        """An absent evidence identity differs from a phase that changed nothing."""
         with workspace_tempdir() as tmp:
             root = Path(tmp)
             payload, _ = self.init(root)
@@ -607,9 +606,9 @@ class WorkflowFilesTest(unittest.TestCase):
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
             self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
-            self.drop_line(plan, "- Commit:")
+            self.drop_line(plan, "- Snapshot:")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
-            self.assertIn("ERROR [plan.phase-commit]", result.stdout)
+            self.assertIn("ERROR [plan.phase-snapshot]", result.stdout)
 
     def test_a_phase_that_changed_nothing_records_none_and_passes(self) -> None:
         with workspace_tempdir() as tmp:
@@ -620,11 +619,61 @@ class WorkflowFilesTest(unittest.TestCase):
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
             self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
-            content = plan.read_text(encoding="utf-8").replace("- Commit: none yet", "- Commit: none; this phase changed no files")
+            self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
+            content = plan.read_text(encoding="utf-8").replace("- Snapshot: not captured yet", "- Snapshot: no files changed")
             plan.write_text(content, encoding="utf-8")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
-            self.assertNotIn("[plan.phase-commit]", result.stdout)
+            self.assertNotIn("[plan.phase-snapshot]", result.stdout)
             self.assertNotIn("[plan.workspace]", result.stdout)
+
+    def test_completed_uncommitted_phase_requires_observed_snapshot(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "- Status: planning", "- Status: executing")
+            self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
+            self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
+            self.edit(plan, "- Read first on resume (ordered exact paths): NEEDS_FILL", "- Read first on resume (ordered exact paths): `README.md`")
+            self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+            self.assertIn("ERROR [plan.phase-snapshot]", result.stdout)
+
+            digest = "a" * 64
+            self.edit(plan, "- Snapshot: not captured yet", f"- Snapshot: HEAD abc1234; SHA-256 {digest}; paths README.md; observed 2026-09-25T00:00:00Z")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.assertNotIn("[plan.phase-snapshot]", result.stdout)
+
+    def test_existing_commit_field_remains_compatible(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
+            self.edit(plan, "- Snapshot: not captured yet", "- Commit: abc1234")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.assertNotIn("[plan.phase-snapshot]", result.stdout)
+
+    def test_completed_phase_rejects_non_commit_prose_without_snapshot(self) -> None:
+        for value in ("not authorized", "pending", "`abc1234` pending"):
+            with self.subTest(value=value), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                payload, _ = self.init(root)
+                plan = root / str(payload["outputs"][0])
+                self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
+                self.edit(plan, "- Snapshot: not captured yet", f"- Commit: {value}")
+                result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root, expected=1)
+                self.assertIn("ERROR [plan.phase-snapshot]", result.stdout)
+
+    def test_completed_phase_accepts_legacy_no_change_sentinel(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            plan = root / str(payload["outputs"][0])
+            self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
+            self.edit(plan, "- Snapshot: not captured yet", "- Commit: none; this phase changed no files")
+            result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
+            self.assertNotIn("[plan.phase-snapshot]", result.stdout)
 
     def test_resumable_plan_requires_its_correlated_checkpoint(self) -> None:
         with workspace_tempdir() as tmp:

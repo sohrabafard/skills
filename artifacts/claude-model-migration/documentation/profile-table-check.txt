@@ -1,0 +1,4 @@
+command=python artifacts\claude-model-migration\documentation\check_profile_table.py
+exit=0
+output:
+PASS: 24 profile rows match canonical model/effort pairs; reviewer row covers standard and deep scopes.

@@ -1,0 +1,5 @@
+cwd=D:\Sohrab\Project\skills
+branch=codex/gpt6-agent-migration
+python=Python 3.13.14
+PYTHONDONTWRITEBYTECODE=1
+command=python -B -m unittest discover -s skills/sohrab/alaa-workflow/tests -p test_workflow_files.py

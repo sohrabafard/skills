@@ -1,0 +1,109 @@
+{
+  "branch": "codex/gpt6-agent-migration",
+  "python": "Python 3.13.14",
+  "py_dont_write_bytecode": "1",
+  "manifest_sha256": "2e9b5ed0eb60d82ebc35792c9971399d824d10f36044db1ce04977ebaa0a049b",
+  "snapshot_sha256": "cf3ef120144aa9d442cdd57e75456df02f8dda9dd7a6f97dc1591c1c2e76176e",
+  "source_integrity_before": [
+    "recomputed using manifest array entries after initial recorder assumed object shape; before and after final gates were checked now against same frozen manifest"
+  ],
+  "source_integrity_after": "verified_count=201",
+  "commands": [
+    {
+      "number": 1,
+      "command": "python -B scripts/validate_sohrab_skill_pack.py",
+      "exit_code": 0,
+      "log": "final-01.log"
+    },
+    {
+      "number": 2,
+      "command": "python -B scripts/check_skill_index.py",
+      "exit_code": 0,
+      "log": "final-02.log"
+    },
+    {
+      "number": 3,
+      "command": "python -B scripts/check_fleet_references.py",
+      "exit_code": 0,
+      "log": "final-03.log"
+    },
+    {
+      "number": 4,
+      "command": "python -B scripts/check_lifecycle_contract.py",
+      "exit_code": 0,
+      "log": "final-04.log"
+    },
+    {
+      "number": 5,
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "exit_code": 0,
+      "log": "final-05.log"
+    },
+    {
+      "number": 6,
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py --self-test",
+      "exit_code": 0,
+      "log": "final-06.log"
+    },
+    {
+      "number": 7,
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "exit_code": 0,
+      "log": "final-07.log"
+    },
+    {
+      "number": 8,
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py --self-test",
+      "exit_code": 0,
+      "log": "final-08.log"
+    },
+    {
+      "number": 9,
+      "command": "python -B skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py",
+      "exit_code": 0,
+      "log": "final-09.log"
+    },
+    {
+      "number": 10,
+      "command": "python -B skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py --self-test",
+      "exit_code": 0,
+      "log": "final-10.log"
+    },
+    {
+      "number": 11,
+      "command": "python -B skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py --self-test",
+      "exit_code": 0,
+      "log": "final-11.log"
+    },
+    {
+      "number": 12,
+      "command": "python -B skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py --self-test",
+      "exit_code": 0,
+      "log": "final-12.log"
+    },
+    {
+      "number": 13,
+      "command": "python -B skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py --results artifacts/gpt6-agent-migration/evaluation-results.json",
+      "exit_code": 0,
+      "log": "final-13.log"
+    },
+    {
+      "number": 14,
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py --self-test",
+      "exit_code": 0,
+      "log": "final-14.log"
+    },
+    {
+      "number": 15,
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py --self-test",
+      "exit_code": 0,
+      "log": "final-15.log"
+    },
+    {
+      "number": 16,
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py --check",
+      "exit_code": 0,
+      "log": "final-16.log"
+    }
+  ]
+}

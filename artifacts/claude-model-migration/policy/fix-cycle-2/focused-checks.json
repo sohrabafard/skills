@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "python",
+      "scripts/validate_sohrab_skill_pack.py"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/fix-cycle-2/check-1.log"
+  },
+  {
+    "command": [
+      "python",
+      "scripts/check_fleet_references.py"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/fix-cycle-2/check-2.log"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "HEAD",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md"
+    ],
+    "exit_code": 0,
+    "log": "artifacts/claude-model-migration/policy/fix-cycle-2/check-3.log"
+  }
+]

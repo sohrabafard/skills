@@ -1,4 +1,9 @@
-# Claude Fable 5
+# Claude Fable 5: historical reference
+
+Read only for explicit historical comparison. Active routing uses `references/42-fable-5-1.md`
+and `assets/claude-model-policy.json`. The original dated guidance below is preserved as history,
+including its old defaults and verification advice; it does not select current profiles or
+supersede current authority gates. Refresh each historical claim before relying on it.
 
 API model id `claude-fable-5`. Correct the obvious assumption first: Fable 5 is not a creative-writing or persona model. It is Anthropic's most capable widely released tier, built for complex, long-running, end-to-end work that previously took hours, days, or weeks. 1M-token context, 128k max output, $10/$50 per MTok, adaptive thinking always on, training and knowledge cutoff January 2026. Mythos 5 shares Fable's specs and pricing but is invitation-only and lacks Fable's safety classifiers; this file is about Fable 5 unless a task names Mythos 5 explicitly.
 

@@ -122,18 +122,38 @@ EXPECTED_MCP = {
     "alaa-spec-analyst": CODEGRAPH | BOOST_DOCS,
     "alaa-test-strategist": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-verifier": set(),
+    "alaa-instruction-reviewer": set(),
 }
+
+# Preserve the authored native grants as well as MCP scope. An extra Write,
+# Agent, or unrestricted tool is authority drift even when MCP grants match.
+READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
+EXPECTED_NATIVE = {name: READ_NATIVE for name in EXPECTED_MCP}
+EXPECTED_NATIVE.update({
+    "alaa-researcher": READ_NATIVE | {"WebFetch", "WebSearch"},
+    "alaa-documenter": READ_NATIVE | {"Write", "Edit"},
+    "alaa-verifier": {"Read", "Glob", "Grep", "Bash"},
+    "alaa-instruction-reviewer": {"Read", "Glob", "Grep"},
+})
+ALLOWED_FIELDS = {"name", "description", "model", "effort", "tools",
+                  "disallowedTools", "skills", "color"}
 
 
 def frontmatter(path: str) -> dict[str, str | list[str]]:
     text = open(path, encoding="utf-8").read().replace("\r\n", "\n")
-    head = text.split("\n---\n")[0].lstrip("-\n")
+    if not text.startswith("---\n") or "\n---\n" not in text[4:]:
+        raise ValueError(f"{path}: missing frontmatter delimiters")
+    head = text[4:].split("\n---\n", 1)[0]
     out: dict[str, str | list[str]] = {}
     list_key: str | None = None
     for line in head.split("\n"):
-        m = re.match(r"^(tools|disallowedTools|model|effort|skills):\s*(.*)$", line)
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        m = re.match(r"^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$", line)
         if m:
             key, value = m.group(1), m.group(2)
+            if key in out:
+                raise ValueError(f"{path}: duplicate frontmatter key {key}")
             if key == "skills" and not value:
                 out[key] = []
                 list_key = key
@@ -146,8 +166,8 @@ def frontmatter(path: str) -> dict[str, str | list[str]]:
             value = out[list_key]
             assert isinstance(value, list)
             value.append(item.group(1))
-        elif line.strip():
-            list_key = None
+        else:
+            raise ValueError(f"{path}: unsupported frontmatter line {line!r}")
     return out
 
 
@@ -164,11 +184,18 @@ def grant_failures(
     body: str = "",
 ) -> tuple[list[str], str]:
     failures: list[str] = []
+    if name not in EXPECTED_MCP:
+        return [f"{name}: uncatalogued role"], "invalid role"
     expected = EXPECTED_MCP[name]
     allow = csv(fm["tools"]) if "tools" in fm else None
     deny = set(csv(fm.get("disallowedTools", "")))
     skills = set(csv(fm.get("skills", [])))
     roots = skill_roots() if roots is None else roots
+
+    for key in sorted(set(fm) - ALLOWED_FIELDS):
+        failures.append(f"{name}: unapproved metadata field {key}")
+    if allow is not None and len(allow) != len(set(allow)):
+        failures.append(f"{name}: duplicate tool grant")
 
     for unknown in unresolved_skills(skills, roots):
         failures.append(f"{name}: preloads {unknown}, which resolves to no installed skill")
@@ -203,6 +230,9 @@ def grant_failures(
 
     actual_mcp = {tool for tool in allow if tool.startswith("mcp__")}
     native = [tool for tool in allow if not tool.startswith("mcp__")]
+    if set(native) != EXPECTED_NATIVE[name]:
+        failures.append(f"{name}: native grant differs from the authored role: "
+                        f"expected {sorted(EXPECTED_NATIVE[name])}, got {sorted(native)}")
     if not native:
         failures.append(f"{name}: allowlist contains only MCP entries and may not launch without them")
     if deny:
@@ -264,7 +294,7 @@ def main() -> int:
         for line in failures:
             print(f"  - {line}")
         return 1
-    print(f"OK: {len(names)} agents match the catalog's exact MCP and skill grants")
+    print(f"OK: {len(names)} agents match authored native, MCP and skill grants")
     return 0
 
 
@@ -276,6 +306,12 @@ def self_test() -> int:
     SERENA_SHELL = "mcp__serena__execute_shell_command"
     # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
     cases = [
+        ("reviewer extra Write", "alaa-reviewer", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
+        ("verifier delegation", "alaa-verifier", "tools: Read, Glob, Grep, Bash, Agent", None, [], "body", "native grant differs"),
+        ("documenter missing Edit", "alaa-documenter", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
+        ("unknown role", "unknown", "tools: Read", None, [], "body", "uncatalogued"),
+        ("instruction reviewer shell", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, Bash", None, [], "body", "native grant"),
+        ("instruction reviewer MCP", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, mcp__unknown", None, [], "body", "MCP grant differs"),
         ("unexpected server on a no-MCP role", "alaa-verifier",
          "tools: Read, Bash, mcp__codegraph", None, [], "body", "MCP grant differs"),
         ("missing CodeGraph from explorer", "alaa-explorer",
@@ -307,6 +343,30 @@ def self_test() -> int:
     roots = skill_roots()
     needs_roots = ("resolves to no installed skill", "holds no Skill tool and does not preload it")
     failures, skipped = [], []
+    from unittest.mock import mock_open, patch
+    for malformed in (
+        "---\ntools: Read\ntools: Write\n---\nbody",
+        "---\ntools: Read\nmissing-colon\n---\nbody",
+        "tools: Read\n---\nbody",
+    ):
+        with patch("builtins.open", mock_open(read_data=malformed)):
+            try:
+                frontmatter("fixture.md")
+            except ValueError:
+                pass
+            else:
+                failures.append("ambiguous/malformed frontmatter was accepted")
+    for field in ("hooks", "permissionMode", "mcpServers"):
+        observed, _ = grant_failures("alaa-verifier", {
+            "tools": "Read, Glob, Grep, Bash", field: "unauthorized"}, roots)
+        if not any("unapproved metadata" in item for item in observed):
+            failures.append(f"unauthorized {field} was accepted")
+    for name in EXPECTED_MCP:
+        path = os.path.join(AGENTS, name + ".md")
+        observed, _ = grant_failures(name, frontmatter(path), roots,
+                                     open(path, encoding="utf-8").read())
+        if observed:
+            failures.append(f"authored {name} rejected: {observed}")
     for label, name, tools, deny, skills, body, expected_message in cases:
         if expected_message in needs_roots and not roots:
             skipped.append(label)
@@ -337,9 +397,16 @@ def self_test() -> int:
         for line in failures:
             print(f"  - {line}")
         return 1
-    print(f"SELF-TEST OK: {len(cases) - len(skipped)} red fixtures each rejected")
+    print(f"SELF-TEST OK: {len(cases) - len(skipped) + 6} red fixtures rejected; "
+          f"{len(EXPECTED_MCP)} authored grants accepted")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(self_test() if "--self-test" in sys.argv[1:] else main())
+    try:
+        if sys.argv[1:] not in ([], ["--self-test"]):
+            raise ValueError("usage: check_agent_grants.py [--self-test]")
+        sys.exit(self_test() if sys.argv[1:] else main())
+    except (OSError, UnicodeError, ValueError) as exc:
+        print(f"grant check unavailable: {exc}", file=sys.stderr)
+        sys.exit(2)

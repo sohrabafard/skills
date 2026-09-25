@@ -3,7 +3,7 @@ name: alaa-rule-writer
 description: Fixture wrapper used only by this checker's self-test. Never a real agent.
 tools: Read, Glob, Grep
 model: opus
-effort: max
+effort: high
 skills:
   - /alaa-prompting-guide
 ---

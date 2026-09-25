@@ -1,0 +1,79 @@
+[
+  {
+    "command": "python -B scripts/validate_pack.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "pack.log"
+  },
+  {
+    "command": "python -B scripts/validate_pack.py --self-test",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "pack-self-test.log"
+  },
+  {
+    "command": "python -B scripts/check_agent_grants.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "grants.log"
+  },
+  {
+    "command": "python -B scripts/check_agent_grants.py --self-test",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "grants-self-test.log"
+  },
+  {
+    "command": "python -B scripts/check_agent_contracts.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "contracts.log"
+  },
+  {
+    "command": "python -B scripts/check_rule_writer_grants.py",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "rule-writer.log"
+  },
+  {
+    "command": "python -B scripts/check_rule_writer_grants.py --self-test",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "exit": 0,
+    "status": "PASS",
+    "tier": "focused",
+    "proof": "static/source and isolated fixtures",
+    "priority": "BelowNormal",
+    "concurrency": "serial",
+    "log": "rule-writer-self-test.log"
+  }
+]

@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "policy_version": "1.0.0",
+  "surface": "codex",
+  "verified_on": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "verified_on": "2026-09-25",
+      "scope": "Codex custom-agent pin precedence and recommended starting efforts"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/models",
+      "verified_on": "2026-09-25",
+      "scope": "Codex model availability and Max/Ultra distinction"
+    }
+  ],
+  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas; revalidate on the target host before use. API parameter ranges are separate.",
+  "models": {
+    "gpt-6-astra": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "recommended_start": "low"
+    },
+    "gpt-6-sol": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "recommended_start": "medium"
+    },
+    "gpt-6-luna": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "recommended_start": "high"
+    }
+  },
+  "profiles": {
+    "main": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Balanced lead for defined goals.",
+      "calibration_status": "unrun"
+    },
+    "main-deep": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Lead for goals with unresolved, interacting design decisions.",
+      "calibration_status": "unrun"
+    },
+    "alaa-spec-analyst": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Extract acceptance criteria and material ambiguity.",
+      "calibration_status": "unrun"
+    },
+    "alaa-explorer": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "rationale": "Bounded read-only discovery with source evidence.",
+      "calibration_status": "unrun"
+    },
+    "alaa-researcher": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Resolve source disagreement and version-specific evidence.",
+      "calibration_status": "unrun"
+    },
+    "alaa-test-strategist": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Design discriminating tests and agent evaluations.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer": {
+      "model": "gpt-6-sol",
+      "effort": "high",
+      "rationale": "Implement multi-step changes within a ratified design.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-sol": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Implement difficult changes requiring design judgment; retain legacy role identifier.",
+      "calibration_status": "unrun"
+    },
+    "alaa-verifier": {
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "rationale": "Execute exact checks and report evidence without debugging.",
+      "calibration_status": "unrun"
+    },
+    "alaa-failure-analyst": {
+      "model": "gpt-6-sol",
+      "effort": "high",
+      "rationale": "Diagnose failure from incomplete and interacting evidence.",
+      "calibration_status": "unrun"
+    },
+    "alaa-reviewer": {
+      "model": "gpt-6-sol",
+      "effort": "high",
+      "rationale": "Independent standard correctness review.",
+      "calibration_status": "unrun"
+    },
+    "alaa-reviewer-deep": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Same review contract for complex cross-subsystem interactions.",
+      "calibration_status": "unrun"
+    },
+    "alaa-adversarial-reviewer": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Challenge load-bearing design assumptions.",
+      "calibration_status": "unrun"
+    },
+    "alaa-documenter": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "rationale": "Document verified behavior without deciding product policy.",
+      "calibration_status": "unrun"
+    },
+    "alaa-architecture-critic": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Pressure-test boundaries, consistency, and design consequences.",
+      "calibration_status": "unrun"
+    },
+    "alaa-security-reviewer": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Judge trust boundaries and security failure paths.",
+      "calibration_status": "unrun"
+    },
+    "alaa-migration-guardian": {
+      "model": "gpt-6-sol",
+      "effort": "high",
+      "rationale": "Analyze rollout ordering, compatibility, and recovery.",
+      "calibration_status": "unrun"
+    },
+    "alaa-api-contract-reviewer": {
+      "model": "gpt-6-sol",
+      "effort": "high",
+      "rationale": "Trace consumer compatibility and transition windows.",
+      "calibration_status": "unrun"
+    },
+    "alaa-dependency-auditor": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Assess dependency evidence against explicit criteria.",
+      "calibration_status": "unrun"
+    },
+    "alaa-accessibility-reviewer": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Compare source and rendered evidence to accessibility criteria.",
+      "calibration_status": "unrun"
+    },
+    "alaa-browser-qa": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Navigate browser state and distinguish product from environment failure.",
+      "calibration_status": "unrun"
+    },
+    "alaa-performance-profiler": {
+      "model": "gpt-6-sol",
+      "effort": "high",
+      "rationale": "Interpret measurements and separate bottlenecks from noise.",
+      "calibration_status": "unrun"
+    },
+    "alaa-observability-reviewer": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Assess diagnosability of declared failure modes.",
+      "calibration_status": "unrun"
+    },
+    "alaa-release-guardian": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Review packaging, configuration, and rollout evidence.",
+      "calibration_status": "unrun"
+    },
+    "alaa-rule-writer": {
+      "model": "gpt-6-sol",
+      "effort": "medium",
+      "rationale": "Compress drafted instructions without changing behavior.",
+      "calibration_status": "unrun"
+    },
+    "alaa-instruction-reviewer": {
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "rationale": "Independently review behavioral contracts governing other agents.",
+      "calibration_status": "unrun"
+    }
+  },
+  "legacy_exceptions": []
+}

@@ -1,0 +1,117 @@
+[
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md",
+    "body_unchanged": true,
+    "non_pin_metadata_unchanged": true
+  }
+]

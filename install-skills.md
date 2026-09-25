@@ -212,10 +212,14 @@ $repoRoot = (Resolve-Path ".").Path
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\agents" | Out-Null
 Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-cc-orchestrator\agents\*.md") "$env:USERPROFILE\.claude\agents\"
 
-# Codex world — once, applies to every project
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\agents" | Out-Null
-Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-codex-orchestrator\agents\*.toml") "$env:USERPROFILE\.codex\agents\"
+# Codex world — materialize the live MCP grants before installing role definitions
+& (Join-Path $repoRoot "skills\sohrab\alaa-codex-orchestrator\scripts\Install-AlaaCodexAgents.ps1")
 ```
+
+The Codex `agents/*.toml` files are transport-neutral templates. The installer resolves the live
+MCP inventory, validates each role's exact grant, and installs the materialized definitions. A
+plain copy leaves grants unresolved. Installation changes the user-level agents directory and
+requires explicit authorization; this guide does not install agents by itself.
 
 ### The `alaa-rule-writer` specialist
 

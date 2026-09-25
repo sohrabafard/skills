@@ -167,13 +167,10 @@ def validate_handoff(content: str, profile: str, status: str) -> list[str]:
 
 
 def validate_workspace(content: str, profile: str, status: str, adaptive_plan: bool) -> list[str]:
-    """Check that the plan records the branch its commits are landing on.
+    """Check that an active plan identifies its checkout and starting base.
 
-    Two facts are load-bearing once execution begins. Without the work branch, this run's
-    commits cannot be told apart from commits on the user's base branch. Without the base
-    branch and commit, the integration handshake has no merge target to name and no
-    baseline to compare against, so it cannot decide whether the exhaustive-tier evidence
-    still describes the tree being merged. Both are therefore errors, not records.
+    These fields attribute work and let a resumed agent detect checkout drift. They do not
+    grant or imply commit or integration authority.
 
     Checked only once the plan is past planning, because a plan being drafted has written
     nothing yet, and only on adaptive non-legacy plans, because completed legacy records
@@ -187,8 +184,8 @@ def validate_workspace(content: str, profile: str, status: str, adaptive_plan: b
         messages.append(
             error(
                 "plan.workspace",
-                f"Plan status '{status}' is past planning but no work branch is recorded, so nothing distinguishes this run's commits from commits on the base branch.",
-                "Add 'Work branch' and 'Base branch and commit' to the plan header per assets/plan-template.md.",
+                f"Plan status '{status}' is past planning but no work branch or checkout is recorded, so this run's changes cannot be attributed to a workspace.",
+                "Add 'Work branch' (or describe a detached checkout there) and 'Base branch and commit' to the plan header per assets/plan-template.md.",
             )
         )
     elif UNRESOLVED_RE.search(work_branch):
@@ -196,7 +193,7 @@ def validate_workspace(content: str, profile: str, status: str, adaptive_plan: b
             error(
                 "plan.workspace",
                 f"Plan status '{status}' is past planning but the work branch is still unfilled.",
-                "Record the branch this run's commits land on, and the base branch and commit it started from.",
+                "Record the current branch or checkout and the starting base branch and commit.",
             )
         )
     else:
@@ -205,8 +202,8 @@ def validate_workspace(content: str, profile: str, status: str, adaptive_plan: b
             messages.append(
                 error(
                     "plan.workspace",
-                    f"Plan status '{status}' is past planning but the base branch and commit are not recorded, so the integration handshake has no merge target to name and no baseline to decide whether its verification evidence still describes the tree being merged.",
-                    "Record 'Base branch and commit' in the plan header per assets/plan-template.md, naming the branch this work merges back into and the commit it started from.",
+                    f"Plan status '{status}' is past planning but the starting base branch and commit are not recorded, so later changes cannot be compared with their baseline.",
+                    "Record 'Base branch and commit' in the plan header per assets/plan-template.md.",
                 )
             )
     return messages
@@ -241,19 +238,36 @@ def validate_phases(content: str, profile: str, adaptive_plan: bool, status: str
                     "Split it into 'Validation commands' (what to run) and 'Evidence observed' (what it returned).",
                 )
             )
-        if field_value(block, "Commit") is None:
-            # An absent field and a phase that changed nothing are different states, and only
-            # the field makes them distinguishable. Recording 'none', or that the user declined
-            # the branch protocol, satisfies this; omitting it leaves the work unrecoverable
-            # with no record of the decision that made it so.
-            commit_level = warning if is_planning_status(status) else level
+        commit = field_value(block, "Commit")
+        snapshot = field_value(block, "Snapshot")
+        if commit is None and snapshot is None:
+            snapshot_level = warning if is_planning_status(status) else level
             messages.append(
-                commit_level(
-                    "plan.phase-commit",
-                    f"{title} records no commit, so work it claims has no recoverable point to return to and nothing says whether that was intended.",
-                    "Add 'Commit' per assets/plan-template.md. A phase that changed nothing records 'none'; a run the user excused from committing records that.",
+                snapshot_level(
+                    "plan.phase-snapshot",
+                    f"{title} records neither a commit nor a scoped worktree snapshot, so its evidence has no identity.",
+                    "Record an authorized 'Commit' or an observed 'Snapshot' per assets/plan-template.md; a phase that changed no files states that explicitly.",
                 )
             )
+        elif adaptive_plan and profile != "legacy" and is_complete_status(field_value(block, "Status") or ""):
+            authorized_commit = bool(commit and re.fullmatch(r"(?:[0-9a-f]{7,40}|`[0-9a-f]{7,40}`)", commit, re.I))
+            no_changes = any(
+                value is not None and re.fullmatch(r"(?:none;\s*)?(?:no files changed|this phase changed no files)\.?", value, re.I)
+                for value in (commit, snapshot)
+            )
+            scoped_snapshot = bool(snapshot and (
+                re.search(r"\bHEAD\s+[0-9a-f]{7,40}\b", snapshot, re.I)
+                and re.search(r"\bSHA-?256\s+[0-9a-f]{64}\b", snapshot, re.I)
+                and re.search(r"\bpaths?\s+\S+", snapshot, re.I)
+            ))
+            if not (authorized_commit or no_changes or scoped_snapshot):
+                messages.append(
+                    level(
+                        "plan.phase-snapshot",
+                        f"{title} is complete but records no commit ID or scoped worktree snapshot.",
+                        "Record an authorized commit ID, the actual HEAD and SHA-256 digest of the scoped path/content manifest, or state exactly that no files changed.",
+                    )
+                )
     return messages
 
 

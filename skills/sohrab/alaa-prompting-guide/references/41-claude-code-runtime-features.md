@@ -1,6 +1,54 @@
-# Claude Code Runtime Features (shared by Opus 5, Sonnet 5, and Fable 5)
+# Claude Code Runtime Features
 
-These are harness-level features of Claude Code itself, not model APIs. They work the same way regardless of which Claude model powers the session, because the orchestration logic — scheduler, subagent spawner, workflow runtime, plan-mode gate, goal evaluator — lives in Claude Code, not in the model weights. The one place the model matters is the effort ladder that some features sit on, and all three in-scope models now support the full ladder (`low`, `medium`, `high`, `xhigh`, `max`), so ultracode's automatic workflow orchestration is available on all three. Default effort is `high` on every model that supports effort. Read the matching model file (`references/20-opus-5.md`, `references/30-sonnet-5.md`, `references/40-fable-5.md`) for model-level tuning before writing a feature prompt from this file.
+Model/API capabilities do not establish harness support. This file owns Claude Code selection
+and activation mechanics; the structured policy owns executable role pins. Refresh official
+runtime documentation against the actual CLI version before depending on a feature.
+
+## Current model, effort and identity resolution
+
+Verified 25 September 2026 against model-config and sub-agents. Full API IDs pin versions;
+family aliases roll and can resolve differently by provider, parent model or gateway.
+Provider deployment mappings are separate runtime evidence, not aliases accepted by the policy.
+The policy records minimum versions for its assigned profiles; Fable 5.1 additionally requires
+2.1.257. A newer installed CLI alone proves neither account entitlement nor activation.
+
+For session selection, inspect explicit /model choice, startup --model, ANTHROPIC_MODEL,
+settings and ANTHROPIC_DEFAULT_MODEL, plus managed allowlists and host overrides. /model can
+persist a selection; inspection does not authorize changing settings or credit consent.
+
+Since 2.1.251, subagent model precedence is invocation, definition frontmatter, subagent
+model environment variable, then parent. Earlier versions prioritize that environment
+variable. Since 2.1.257, CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1 forces the subagent
+model environment target, or the parent when no target is set. Forks and skills with
+model: inherit retain documented exceptions; inspect them before claiming a pin won. Resolve inherit and family aliases on the target provider.
+Allowlists may substitute a different model. Requested selection is not observed identity.
+
+Frontmatter effort overrides session effort but remains subject to environment override,
+model support and effective caps. Unsupported levels may step down. Opus 5.5's default differs
+from older models, and legacy top-level user effortLevel has a documented exception; inspect
+per-model settings and effective effort instead of extrapolating a saved value.
+
+Record requested profile/model/effort and resolved controls separately from observed serving
+model/effort. Use unknown where the host exposes no observation. Session/subagent status and
+response modelUsage, when available, contribute evidence; an agent's self-description does
+not prove identity. Runtime activation checks require authorized execution and must preserve
+provider/account context, control evidence and any observed mismatch.
+
+## Fallback and safeguards
+
+Provider safety fallback and configured overload fallback are different events. Both can
+change the serving model after selection. Preserve safeguards, disclose fallback/unknown
+identity, and exclude affected runs from claims about the requested pair. Never weaken a
+safeguard, silently substitute a model or introduce a local fallback to complete a gate.
+Fable noninteractive use may spend credits without prompting; obtain the applicable execution
+authority before a live comparison. No source checker grants installation, settings mutation
+or paid execution authority.
+
+## Historical harness mechanics
+
+The remaining loop, workflow, scheduling, nesting and goal details retain their original
+24 July 2026 verification. They are lookup leads, not current capability promises; re-fetch
+the named feature's official page before use. Unverified limits receive no new date.
 
 ## `/loop` — recurring or self-paced interval execution
 
@@ -42,7 +90,7 @@ Nesting being off by default is the item most likely to break a carried-forward 
 
 Subagents run in the background by default; Claude runs one in the foreground when it needs the result before continuing. Background subagents surface permission prompts in your main session, naming the asking subagent, and their results reach Claude as a completion notification in a later turn. `/subtask` starts a fork — a subagent that inherits the full conversation instead of starting fresh — which is the right shape for trying several approaches from the same starting point. `/fork` now copies the whole session into a separate background session instead.
 
-Model resolution order for a subagent: `CLAUDE_CODE_SUBAGENT_MODEL` (when set to a model alias or ID), then the per-invocation `model` parameter, then the definition's `model` frontmatter, then the main conversation's model. Setting the environment variable to `inherit` is equivalent to leaving it unset. Subagents also inherit the main conversation's extended-thinking configuration; there is no per-subagent thinking setting.
+For current model and effort precedence, read the current-resolution section above. The historical environment-first order must not be applied to newer CLIs. Refresh thinking inheritance against the actual runtime; model/API thinking controls are not per-agent settings by inference.
 
 ```text
 Explicit authorization: you may use subagents, and you may run independent lanes of this task in parallel or
@@ -50,7 +98,7 @@ in the background, without asking again. Research the authentication, database, 
 using separate subagents, then summarize the risk each one found before you touch any code.
 ```
 
-This wording is authored for Codex's reticent bias — before reusing it on Opus 5 or Fable 5, read `references/06-invocation-and-composition.md` for the delegation-polarity rule those models need instead.
+This wording requires current host delegation authority — before reusing it on current Opus or Fable, read `references/06-invocation-and-composition.md` for the delegation-polarity rule those models need instead.
 
 ## Workflow tool — deterministic multi-agent orchestration scripts
 
@@ -116,7 +164,7 @@ These compose: a workflow's `agent()` calls are themselves subagents; a `/goal` 
 
 Verified against live documentation on 24 July 2026. Every version gate and hard limit above is time-sensitive and several changed within the current release line — re-check `code.claude.com/docs` before depending on an exact number. Specifically volatile: `/goal` at v2.1.139+ and its 4,000-character cap; dynamic workflows at v2.1.154+ with 16 concurrent and 1,000 total agents; `/effort ultracode` at v2.1.203+; the subagent caps (nesting off by default, 20 concurrent from v2.1.217, 200 per session from v2.1.212); the workflow size guideline at v2.1.202+ and the large-run warning thresholds at v2.1.203+; and the `/loop` figures (1-minute minimum, 50 tasks, 7-day expiry, 25,000-byte `loop.md`).
 
-Ultraplan is documented as a research preview with no stated minimum version; do not carry forward a version gate for it. Model aliases resolve differently per provider — `opus` resolves to Opus 5 on the Anthropic API but to older versions on some others, and Opus 5 itself requires Claude Code v2.1.219 or later — so a generated prompt that assumes a model from an alias is unsafe across providers. Auto mode, which unattended `/goal` and workflow runs generally need, has its own plan, owner, model, and provider requirements.
+Ultraplan is documented as a research preview with no stated minimum version; do not carry forward a version gate for it. Current alias and selection rules are in the current-resolution section above; the historical model defaults are not activation evidence. Auto mode, which unattended `/goal` and workflow runs generally need, has its own plan, owner, model, and provider requirements.
 
 ## Sources
 
@@ -129,4 +177,6 @@ Ultraplan is documented as a research preview with no stated minimum version; do
 - [Choose a permission mode](https://code.claude.com/docs/en/permission-modes)
 - [Plan in the cloud with ultraplan](https://code.claude.com/docs/en/ultraplan)
 - [Keep Claude working toward a goal (`/goal`)](https://code.claude.com/docs/en/goal)
+- [Model configuration](https://code.claude.com/docs/en/model-config)
+
 - [Model configuration](https://code.claude.com/docs/en/model-config)

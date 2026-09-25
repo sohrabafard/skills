@@ -1,6 +1,6 @@
 ---
 name: alaa-prompting-guide
-description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-5.6 in Codex and Claude Opus 5, Sonnet 5, or Fable 5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation and trigger placement, splitting a skill into references, skill and subagent authoring, Codex goals and subagents, or Claude Code /loop, agents, and workflows. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5, or Haiku 4.5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation and trigger placement, splitting a skill into references, skill and subagent authoring, Codex goals and subagents, or Claude Code /loop, agents, and workflows. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
 ---
 
 # Alaa Prompting Guide
@@ -12,7 +12,7 @@ Treat model and runtime behavior as version-sensitive. Read the owning reference
 ## When NOT to use
 
 - Not as a general coding, review, or refactor skill, unless the task is writing, choosing, reviewing, or repairing a prompt or an agentic workflow.
-- Not for Haiku, retired Claude generations, or any model outside the scope above. Model tuning for a non-Codex GPT surface is out of scope; the one thing this skill states about ChatGPT is the sigil its prompts must carry, because a prompt generated here can be pasted there.
+- Not for retired Claude generations or models outside the scope above; retained historical references support explicit comparisons only. Model tuning for a non-Codex GPT surface is out of scope; the one thing this skill states about ChatGPT is the sigil its prompts must carry, because a prompt generated here can be pasted there.
 - Not instead of `/alaa-workflow` for a multi-phase implementation and review engagement that needs plan, state, and phase-prompt artifacts.
 - Not instead of `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` for per-goal multi-agent orchestration. Those packs own lane planning, role prompts, and the review gate; a prompt this skill generates activates that mode by naming the trigger and the goal, and must not restate what they own.
 
@@ -23,6 +23,23 @@ Treat model and runtime behavior as version-sensitive. Read the owning reference
 Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
 
 Its model and effort are pinned in each wrapper with the reason recorded beside them, because a pin raised without a recorded criterion is indistinguishable from drift. After any change to `assets/rule-writer/`, `python scripts/check_rule_writer_grants.py` must pass before completion, and `python scripts/check_rule_writer_grants.py --self-test` after any change to the checker; exit `0` is clean, `1` is findings, and `2` means it could not run, which is a failed gate.
+
+## Codex policy validation
+
+`assets/codex-model-policy.json` owns executable Codex profile pins, supported-effort snapshots, and approved legacy exceptions. After changing pins or policy, run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex` from this skill directory; after checker changes also run it with `--self-test`. To check another pack, repeat `--agent-root` with its agent directory. Run `python scripts/check_agent_evals.py` after changing the evaluation corpus and add `--self-test` after checker changes. Exit `0` is clean, `1` findings, and `2` could not run; either nonzero result blocks completion.
+
+## Claude policy validation
+
+`assets/claude-model-policy.json` owns Claude profile pins, capabilities, availability conditions,
+rationales and calibration status. From this skill directory run
+`python scripts/check_claude_model_policy.py` after policy or projection changes; add `--self-test`
+after checker changes. Defaults cover both managed roots. Repeat `--agent-root <path>`
+for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
+Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
+add `--self-test` after changing its checker and `--results <path>` to validate evidence.
+These repository gates reuse the root checker's bundled YAML parser; missing source/parser
+or malformed input returns `2`, findings return `1`, clean returns `0`. Either nonzero blocks
+completion. Source consistency proves neither installed activation nor calibration.
 
 ## Decision procedure
 
@@ -36,11 +53,11 @@ Its model and effort are pinned in each wrapper with the reason recorded beside 
 
 **A prompt is an execution contract, not decorative text.** It defines role, goal, success criteria, constraints, authority and side-effect limits, tool usage, retrieval rules, validation, output format, stopping conditions, and failure behavior. An artifact missing stopping conditions or failure behavior is incomplete however well the rest reads.
 
-**State each instruction exactly once.** Repetition across a skill body, an agent definition, and a dispatch does not reinforce a rule; it dilutes every copy and costs tokens on every run. Leaner prompts measurably raise evaluation scores while cutting tokens, so bloat is a quality regression and not merely an expense — `references/60-skill-authoring.md` carries the measurement.
+**State each instruction exactly once.** Repetition across a skill body, an agent definition, and a dispatch does not reinforce a rule; it dilutes every copy and costs tokens on every run. Evaluate prompt reductions against the same acceptance criteria; shorter is useful only when required behavior survives. `references/60-skill-authoring.md` owns that test.
 
 **Match delegation polarity to the target model's bias.** Some families delegate readily and need a cap; others delegate only when told and need explicit authorization. Applying one polarity everywhere produces either a swarm or a single-threaded session, and nothing errors either way. `references/06-invocation-and-composition.md` owns the direction per family.
 
-**Do not instruct a current model to double-check itself.** Current models self-verify and self-correct without prompting, and the instruction compounds cost for no quality gain. This does not retire independent verification: a gate that exists as an *authority boundary*, because no lane may approve its own change, is a different mechanism and must survive. `references/80-subagent-authoring.md` owns the test that tells them apart.
+**Keep proportional verification.** Preserve focused implementer checks and independent acceptance gates. Remove a repeated check only when no new change, failure, or unresolved concern justifies it. Do not infer that a model upgrade proves correctness. `references/80-subagent-authoring.md` owns the test that tells them apart.
 
 **Never infer "false" from missing evidence.** When a source does not state something, say so and use a named placeholder rather than inventing a specific. Preserve caveats as caveats instead of converting uncertainty into a firm instruction.
 

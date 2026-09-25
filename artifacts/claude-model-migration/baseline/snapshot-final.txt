@@ -1,0 +1,19 @@
+baseline_phase=PRE-EDIT
+cwd=
+D:\Sohrab\Project\skills
+HEAD=
+4fdd8b709a745314a0575c25c06d0a390847bde6
+branch=
+codex/gpt6-agent-migration
+manifest=sha256-manifest-final.txt
+manifest_file_count=
+466
+source_manifests_identical=
+True
+source_hash_manifest_diff_count=
+0
+git_status_scoped_begin
+git_status_scoped_end
+python_bytecode=disabled with -B
+observed_identity=unknown
+effective_isolation=not proven

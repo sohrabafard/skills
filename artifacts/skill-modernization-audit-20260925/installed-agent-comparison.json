@@ -1,0 +1,209 @@
+[
+  {
+    "name": "alaa-accessibility-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-adversarial-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-api-contract-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-architecture-critic",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-browser-qa",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "workspace-write",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-dependency-auditor",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-documenter",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-luna",
+    "effort": "high",
+    "sandbox_declared": "workspace-write",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-explorer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-luna",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-failure-analyst",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-implementer-sol",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "sandbox_declared": "workspace-write",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-implementer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "sandbox_declared": "workspace-write",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-instruction-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-migration-guardian",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-observability-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-performance-profiler",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "sandbox_declared": "workspace-write",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-release-guardian",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-researcher",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-reviewer-deep",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-security-reviewer",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-spec-analyst",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-test-strategist",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-sol",
+    "effort": "medium",
+    "sandbox_declared": "read-only",
+    "mcp_server_names": []
+  },
+  {
+    "name": "alaa-verifier",
+    "installed": true,
+    "same_bytes": true,
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "sandbox_declared": "workspace-write",
+    "mcp_server_names": []
+  }
+]

@@ -72,30 +72,17 @@ Where the router itself lives — as a table in the body, or in its own file —
 
 **A soft target yields; a hard limit does not.** An author target, a recommended line count, or a default word budget yields when required behavior-affecting content does not fit: exceed it, say so, and compress the rest as normal — yielding is never permission to stop compressing. A limit that rejects or truncates the artifact, such as a packaging validator or a runtime byte budget, cannot yield: meet it by restructuring without semantic loss, and report blocked when no restructuring satisfies both. Restructuring moves content, so it is a separate change with its own reason and not a compress pass.
 
-## Lean is a measured quality property, not an aesthetic one
+## Lean prompts require measured behavior preservation
 
-OpenAI's current-model guidance reports that configurations with leaner system prompts improved evaluation scores by roughly 10–15% while reducing total tokens by 41–66% and cost by 33–67%. The scores went *up*. Padding is a quality regression that also costs money, and trimming is not a budget exercise traded against correctness — which is what makes the compress pass a correctness step rather than an edit.
+Current OpenAI guidance favors small routers, precise triggers, conditional reads, and lean
+instructions. This supports removing duplicated instructions and irrelevant examples; it does
+not prove a fixed quality or cost gain for every task. Keep every load-bearing condition,
+authority boundary, required check, and caveat through the compression test above. Evaluate
+changed prompts on representative tasks before calling them better.
 
-The same guidance names what to cut — repeated instructions, redundant examples, bloated tool descriptions — and the rule that replaces them: state each instruction once, keep a policy in one place, expose only the tools the task needs, and keep an example only where it encodes a real requirement or corrects a measured gap. Applied to a skill: a rule stated in the body and again in a reference is stated twice and belongs in whichever file owns it; a section restating a numbered pipeline in prose is a duplicate; a paragraph explaining why the skill is good is pure cost.
-
-When you are about to write a self-check, a "double-check your answer" line, or a final verification step into a skill, read `references/80-subagent-authoring.md` first. It owns the boundary between a redundant self-verification instruction, which Opus 5 and Sonnet 5 make worse rather than better, and an independent gate that exists so no lane approves its own change, which must survive. The scope matters: Fable 5 is the documented exception and wants explicit verification, so `references/40-fable-5.md` decides that case.
-
-## Anatomy of a strong body
-
-A complete contract answers these, each exactly once:
-
-- **Role.** Who the agent is while the skill is active, and — where it matters — who it is not.
-- **Goal and success criteria.** The outcome in checkable terms. If two readers would define "done" differently, the criteria are not yet criteria.
-- **Constraints.** Preserved behavior, out-of-scope work, invariants that must survive.
-- **Authority and side-effect limits.** What the agent may do without asking, and the enumerated list of what requires explicit permission. Bound installation, network, and destructive authority by name.
-- **Tool usage.** Which tools for which job, and which are forbidden. Do not describe tools the task does not need.
-- **Retrieval rules.** When to consult repository state, when to fetch live docs, and which sources outrank which.
-- **Validation.** The commands or checks that produce evidence, and the rule that a claim without an observed result is not reported as done.
-- **Output format.** What the final report contains, and in what order.
-- **Stopping conditions.** Both halves: when to stop successfully, and when to stop and report a partial or blocked state. A skill with only the first half runs until something breaks.
-- **Failure behavior.** What to do when a step fails — retry once, fall back, or report — with the retry budget stated as a number.
-
-An anti-pattern list at the end is optional and cheap: it converts defects you have actually seen into a checklist the model can match its own behavior against.
+When selecting GPT-6 guidance or evaluation criteria, read `references/12-gpt-6.md` and
+`references/92-agent-evaluation.md`. Historical percentages measured on earlier prompts are
+not forecasts for this pack.
 
 ## The wording is the mechanism
 
@@ -128,7 +115,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 | Reference nobody reads | A reference file exists and never loads | Rewrite the pointer to name the triggering situation and what the file decides |
 | Lookup table in the body | Every run pays for a matrix used in one run out of five | Move the table to its own reference and leave a pointer |
 | Body duplicates a reference | The same rule in two files, drifting apart | Assign one owner per rule; leave a one-line pointer where the rule used to be |
-| Instruction stated more than once | Long body, degraded compliance | State each rule once — this measurably raises scores, not just lowers cost |
+| Instruction stated more than once | Long body, degraded compliance | State each rule once; measure fidelity and required coverage |
 | Skill tries to be a whole workflow | The body sprawls into phases, state files, resumable plans | Split it, and route the durable multi-phase part to a workflow skill by name in the description |
 | Missing stopping conditions | Runs past the goal, or loops on an unreachable bar | Define both success-stop and blocked-stop; cap fix cycles by number |
 | No failure behavior | The agent troubleshoots mid-goal instead of reporting | State the retry budget and the fallback in one sentence |
@@ -150,7 +137,7 @@ The test to apply sentence by sentence: **could a competent agent follow this ex
 
 ## Freshness
 
-Verified against live documentation on 6 August 2026. The 10–15% / 41–66% / 33–67% leanness figures are OpenAI's published measurement for the current model generation and not a general law; re-verify them on the next generation. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
+Authoring structure was verified on 6 August 2026; GPT-6 guidance refreshed on 25 September 2026. No earlier generation's evaluation percentages are promised here. Every runtime value this procedure depends on — caps, budgets, frontmatter surfaces, discovery paths — is held and dated in `references/61-skill-platform-mechanics.md`.
 
 ## Sources
 
@@ -158,3 +145,5 @@ Verified against live documentation on 6 August 2026. The 10–15% / 41–66% / 
 - [How Claude remembers your project (Claude Code)](https://code.claude.com/docs/en/memory)
 - [Build skills (OpenAI)](https://learn.chatgpt.com/docs/build-skills)
 - [Latest model guide (OpenAI)](https://developers.openai.com/api/docs/guides/latest-model)
+
+- [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)

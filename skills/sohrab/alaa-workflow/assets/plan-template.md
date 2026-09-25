@@ -50,7 +50,7 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 - Acceptance criteria: NEEDS_FILL
 - Validation commands: NEEDS_FILL
 - Evidence observed: not run
-- Commit: none yet
+- Snapshot: not captured yet
 
 ### Phase 2 - Validate and reconcile
 
@@ -64,14 +64,14 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 - Acceptance criteria: required behavior and evidence agree.
 - Validation commands: NEEDS_FILL
 - Evidence observed: not run
-- Commit: none yet
+- Snapshot: not captured yet
 
 ## Delegation
 
 - Keep shared-context work in the main conversation.
 - Independent lane ownership, if admitted: none.
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
-- Lanes report changed paths; this plan's owner stages and writes every commit.
+- Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
 
 ## Blockers and Next Action
 
