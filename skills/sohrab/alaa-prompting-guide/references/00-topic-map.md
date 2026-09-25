@@ -8,7 +8,9 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 |---|---|---|
 | Decide how a generated prompt will actually activate a skill, write a call site, place a trigger, choose between a trigger-led and a goal-led message, or write a completion condition | `references/06-invocation-and-composition.md` | Syntax alone does not activate a skill; placement, role consistency, and reachability do |
 | Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
-| Tune a prompt for GPT-5.6 in Codex, or choose among its variants | `references/10-gpt-5-6.md` | Variant, effort, and tool-orchestration behavior are model-specific and not inferable |
+| Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
+| Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
+| Design or execute representative model/effort comparisons | `references/92-agent-evaluation.md` | Defines controlled comparisons and honest evidence status |
 | Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
 | Tune a prompt for Claude Opus 5 | `references/20-opus-5.md` | Its response-length, delegation, and self-correction behavior determine what to write and what to omit |
 | Tune a prompt for Claude Sonnet 5 | `references/30-sonnet-5.md` | It follows instructions more literally than the flagship, which changes how a constraint must be scoped |

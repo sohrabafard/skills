@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Gate the alaa-rule-writer specialist: grants, parity, and the absence of a model pin.
+"""Gate the alaa-rule-writer specialist: grants, parity, and canonical pins and output-only identity.
 
 The specialist ships one shared contract and two runtime wrappers. The contract is the
 only place its behaviour is written; each wrapper embeds that contract verbatim and adds
 runtime metadata and nothing else. Nothing in the repository would notice if a wrapper
-drifted from the contract, if a grant widened, or if a model name reappeared, so this
+drifted from the contract, if a grant widened, or if a model name appeared in its output contract, so this
 checker is the only control over all three.
 
     assets/rule-writer/contract.md                  the shared contract
@@ -23,6 +23,7 @@ Rules:
     G8  the wrappers agree on name and description
     G9  no wrapper pins an effort of max
     G10 the Claude wrapper preloads every skill its contract names
+    G11 real Codex wrapper matches the canonical model policy
 
 G10 exists because the lane holds no Skill tool: without a preload it would have to find the
 doctrine by guessing a path, and under Claude Code the packaged skill lives at an opaque
@@ -66,6 +67,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+sys.dont_write_bytecode = True
 from pathlib import Path
 from typing import List, Optional, Sequence, Tuple
 
@@ -89,7 +91,7 @@ ALLOWED_CLAUDE_TOOLS = frozenset(("Read", "Glob", "Grep"))
 
 # Effort names are matched as whole words so that "high" inside prose does not fire; a bare
 # key is matched separately below.
-MODEL_NAME_RE = re.compile(r"\b(opus|sonnet|haiku|fable|luna|terra|sol)\b|gpt-?5", re.I)
+MODEL_NAME_RE = re.compile(r"\b(opus|sonnet|haiku|fable|luna|terra|sol|astra)\b|gpt-?\d", re.I)
 IDENTITY_LINE_RE = re.compile(r"\bAGENT:\s*\S+\s*\|", re.I)
 EFFORT_TOKEN_RE = re.compile(r"\bEFFORT:\s*\S", re.I)
 DOCTRINE_RE = re.compile(r"`alaa-prompting-guide\s+(references/[A-Za-z0-9._/-]+\.md)`")
@@ -256,8 +258,8 @@ def check(root: Path) -> List[str]:
             findings.append(f"G6: the {name} wrapper emits the model name {named_model.group(0)!r}")
 
         for key in ("effort", "model_reasoning_effort"):
-            if str(fields.get(key, "")).strip().lower() == "max":
-                findings.append(f"G9: the {name} wrapper pins {key} at max, which removes the escalation path")
+            if str(fields.get(key, "")).strip().lower() in ("max", "ultra"):
+                findings.append(f"G9: the {name} wrapper pins {key} at a prohibited default effort")
 
         for cited in DOCTRINE_RE.findall(body):
             if not (root / cited).is_file():
@@ -276,6 +278,14 @@ def check(root: Path) -> List[str]:
             if cf.get(key) != xf.get(key):
                 findings.append(f"G8: the wrappers disagree on {key}")
 
+    # Historical structural fixtures intentionally omit pins. Real skill roots must
+    # carry the policy; the command entry point enforces its presence for production.
+    if codex and (root / "assets/codex-model-policy.json").is_file():
+        from codex_model_policy import load_policy, validate_agent_pin
+        try:
+            findings.extend("G11: " + issue for issue in validate_agent_pin(codex[0], load_policy(root / "assets/codex-model-policy.json")))
+        except ValueError as exc:
+            findings.append(f"G11: {exc}")
     return findings
 
 
@@ -302,6 +312,11 @@ def self_test(fixtures: Path) -> int:
         ("red-g10-unpreloaded-skill", "G10"),
         ("red-unparseable-toml", "CANNOT_RUN"),
     ]
+    for token in ("gpt-6-astra", "GPT-6-SOL", "gpt-6-luna", "Astra"):
+        if not MODEL_NAME_RE.search(token):
+            raise CannotRun(f"model-output detection missed {token}")
+    from check_codex_model_policy import self_test as policy_self_test
+    policy_self_test()
     failures = 0
     for name, expected in cases:
         root = fixtures / name
@@ -349,6 +364,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             fixtures = Path(args.fixtures.strip().strip("\r\n")).expanduser() if args.fixtures else here / "fixtures" / "rule-writer"
             return self_test(fixtures)
         root = Path(args.root.strip().strip("\r\n")).expanduser() if args.root else here.parent
+        if not (root / "assets/codex-model-policy.json").is_file():
+            raise CannotRun("production rule-writer validation requires assets/codex-model-policy.json")
         findings = check(root)
     except CannotRun as exc:
         print(f"could not run: {exc}", file=sys.stderr)

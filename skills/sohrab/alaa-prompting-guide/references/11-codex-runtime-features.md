@@ -1,6 +1,6 @@
-# Codex Runtime Features (the environment GPT-5.6 runs inside)
+# Codex Runtime Features
 
-These are Codex app/CLI features, not raw model behavior. Read `references/10-gpt-5-6.md` first, then only the feature section the task needs.
+These are Codex app/CLI features, not raw model behavior. Read only the feature section needed; model/API guidance lives in `references/12-gpt-6.md`.
 
 ## `/goal` — persistent objective mode
 
@@ -10,7 +10,10 @@ A strong Goal defines seven things: **outcome** (what should be true when work c
 
 Codex documents no fixed cap on goal length, but a bloated objective dulls both the directive and the completion check.
 
-**Must be enabled first.** Goals are an experimental feature, off by default. Turn them on from the CLI with `/experimental`, or set `goals = true` under `[features]` in `~/.codex/config.toml`. The feature requires `codex-cli` 0.128.0 or later. Manage the lifecycle with `/goal <objective>` (set), bare `/goal` (view current objective and status), `/goal pause`, `/goal resume`, and `/goal clear`.
+Use the goal tools or command exposed by the current host only when the user explicitly requests
+an objective loop. Do not infer goal activation from ordinary implementation work. Read that
+host's current goal tool schema for lifecycle, budget, and blocked-state rules; report unavailable
+capabilities instead of writing remembered feature flags or a version gate into configuration.
 
 ### Ready-to-use `/goal` template
 
@@ -21,32 +24,40 @@ If blocked or no valid path remains, report exactly what is blocking progress an
 Stop after <turn or time cap> even if incomplete, reporting progress, evidence so far, and the next step.
 ```
 
-Build worked examples from `references/10-gpt-5-6.md` plus the template above: one objective, one stopping condition, one validation loop. A goal should be larger than one prompt but smaller than an open-ended backlog. Documented fits are migrations, large refactors, experiments, and any long-running coding work with a clear success condition and a validation loop.
+Build worked examples from `references/12-gpt-6.md` plus the template above: one objective, one stopping condition, one validation loop. A goal should be larger than one prompt but smaller than an open-ended backlog. Documented fits are migrations, large refactors, experiments, and any long-running coding work with a clear success condition and a validation loop.
 
 **This is not Claude Code's `/goal`.** Same command name, different mechanism — never carry a `/goal` block between the runtimes unedited. Read `references/41-claude-code-runtime-features.md` for how Claude Code's version differs and what that changes about what proves completion, how it's enabled, and what it costs.
 
 ## Subagents — explicit delegation and parallel spawning
 
-**Codex only spawns a new agent when you explicitly ask it to.** It never fans out on its own, and there is no dedicated slash command for spawning — delegation is requested in natural language. This is the single most important prompt-side fact about the runtime: delegation language for Codex must authorize positively, not merely restrict. See `references/06-invocation-and-composition.md` for the polarity rule.
+Delegate only within authorization granted by the user or an applicable instruction. The host's
+current collaboration tools define roles, nesting, concurrency, inheritance, and waiting; do not
+copy defaults or tool names from another Codex surface. Prompts may authorize concrete independent
+lanes, but cannot enable unavailable runtime features.
 
-Built-in roles: `default` (general fallback), `worker` (execution-focused implementation and fixes), `explorer` (read-heavy codebase exploration). Custom agents are standalone TOML files in `~/.codex/agents/` (personal) or `.codex/agents/` (project). Required fields: `name`, `description`, `developer_instructions`. Optional: `nickname_candidates`, `model`, `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, `skills.config`. Each subagent inherits the parent session's sandbox policy and runtime overrides. When several agents run concurrently, the parent orchestrates, waits for all requested results, and consolidates them into one summary.
+Custom agents are standalone TOML files in the active Codex home `agents/` directory or the
+project's `.codex/agents/`. Required fields are `name`, `description`, and
+`developer_instructions`. The official subagent page documents optional model and effort pins,
+sandbox, MCP, and skill configuration; use only keys supported by the target host.
 
-Global configuration under `[agents]` in `~/.codex/config.toml`:
+**Custom TOML model and effort pins win over spawn arguments.** Omitted settings inherit from
+the parent. Changing a dispatch argument does not upgrade a pinned agent; select another registered
+profile such as the deep reviewer. If unavailable, report the limit without claiming an override.
+A definition created in the repository does not prove the current session has loaded it.
 
-| Key | Default | Meaning |
-|---|---|---|
-| `agents.max_threads` | `6` | Maximum agent threads open concurrently |
-| `agents.max_depth` | `1` | Maximum nesting depth for spawned agent threads; root sessions start at depth 0 |
-| `agents.job_max_runtime_seconds` | `1800` when unset | Default per-worker timeout for `spawn_agents_on_csv` jobs |
+A subagent inherits parent sandbox policy and runtime overrides. A `read-only` TOML value is not
+proof that every capability is read-only: inspect effective native permissions, parent overrides,
+and MCP tool grants, whose server-side effects are outside native sandbox enforcement. Restrict
+or withhold mutation-capable tools before claiming a read-only boundary. Do not change installed
+configuration without authority.
 
-The underlying collaboration tools — `spawn_agent`, `send_input`, `resume_agent`, `wait_agent`, `close_agent` — are gated behind `features.multi_agent`, which is stable and on by default.
+Keep requested profile/model/effort separate from observed runtime identity. Use `unknown` for
+values the host does not expose; copied pins are not observations. Verdict-bearing reports put
+the verdict first and metadata afterward. Replacement-only agents keep their output contract;
+the caller records their requested configuration externally.
 
-```text
-Explicit authorization: you may use subagents and run independent work in parallel for this task without asking
-again. Spawn one agent per independent file/module/lane, wait for all of them, and reconcile the results yourself
-before moving on. Give every subagent the same constraints and a clearly scoped slice so nothing is duplicated
-or dropped.
-```
+The sources below were verified on 25 September 2026. The policy JSON records a dated
+supported-effort snapshot; verify availability again on the actual dispatch host.
 
 ## `spawn_agents_on_csv` — background batch jobs
 
@@ -118,7 +129,7 @@ Two operational cautions belong in any prompt that sets one up: on a Git reposit
 
 ## Caveats
 
-Verified against live documentation on 24 July 2026. Time-sensitive: the `agents.max_threads` (6), `agents.max_depth` (1), and `agents.job_max_runtime_seconds` (1800) defaults; the 32 KiB / 65536-byte `project_doc_max_bytes` bounds; the 2%-or-8,000-character skill listing budget; and the `codex-cli` 0.128.0 requirement for goals are current published values and should be re-checked before being depended on.
+Goal and subagent guidance refreshed on 25 September 2026. Remaining historical sections were verified on 24 July 2026 and require live refresh before use. Historical defaults are not current dispatch authority: the `agents.max_threads` (6), `agents.max_depth` (1), and `agents.job_max_runtime_seconds` (1800) defaults; the 32 KiB / 65536-byte `project_doc_max_bytes` bounds; the 2%-or-8,000-character skill listing budget; and the `codex-cli` 0.128.0 requirement for goals are current published values and should be re-checked before being depended on.
 
 Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked experimental and may change. The `features.goals` key did not appear in the visible portion of the configuration reference, which is truncated on fetch; the two enabling paths cited above come from the Goals use-case page. `features.memories` exists and is off by default, but Codex's memory documentation redirects off the developer docs domain, so this pack makes no claim about how memories interact with `AGENTS.md` — treat that as unverified.
 

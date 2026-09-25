@@ -14,6 +14,9 @@ Three files answer almost every question about this repository:
 - [`AGENTS.md`](AGENTS.md) — the rules for changing anything here, and the checkers to run before you
   call a change done. Read it before your first edit.
 
+For the dated GPT-6 agent migration, read [the migration guide](docs/gpt6-agent-migration.md)
+for pin changes, installation boundaries, and the validation status.
+
 Third-party skills sit under `skills/.curated/` and `skills/.system/`. Upstream packs are committed
 under `vendor/` and listed below.
 

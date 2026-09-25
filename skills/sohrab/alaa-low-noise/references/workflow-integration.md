@@ -1,12 +1,12 @@
 # Workflow Integration
 
-Read this file only when `$alaa-workflow` / `/alaa-workflow` or delegated execution is active.
+Read this file only when `/alaa-workflow` or delegated execution is active.
 
 ## Ownership rule
 
-`$alaa-low-noise` / `/alaa-low-noise` owns context economy and output discipline: what enters the context window, and how much is printed.
+`/alaa-low-noise` owns context economy and output discipline: what enters the context window, and how much is printed.
 
-`$alaa-workflow` / `/alaa-workflow` owns:
+`/alaa-workflow` owns:
 
 - plan mode versus execution mode
 - durable artifact families and naming
@@ -32,11 +32,11 @@ Delegation is a context-economy instrument before it is a parallelism instrument
 - Give each child an explicit return shape and a length bound in its dispatch; an unbounded child return is the most common way a parent's context is flooded.
 - Do not spawn a lane whose only product is a summary the parent could have obtained in a couple of bounded reads.
 
-Runtime note: Claude Code fans out readily and needs the cap stated, while Codex does not fan out unprompted and needs delegation authorized positively. The return contract above is identical in both.
+For runtime-specific delegation authorization and capability, route through `/alaa-prompting-guide`. The return contract above is identical in both runtimes.
 
 ## Good pairing pattern
 
-`$alaa-workflow` / `/alaa-workflow` decides whether the task needs durable plan or state artifacts; this skill keeps discovery, validation, and reporting compact; domain skills still own the code, runtime, and architecture decisions.
+`/alaa-workflow` decides whether the task needs durable plan or state artifacts; this skill keeps discovery, validation, and reporting compact; domain skills still own the code, runtime, and architecture decisions.
 
 ## Caveats
 

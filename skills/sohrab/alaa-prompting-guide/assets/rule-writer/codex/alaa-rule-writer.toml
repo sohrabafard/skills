@@ -1,10 +1,8 @@
 name = "alaa-rule-writer"
 description = "Wording-only rewriter for already-drafted text that controls another agent — a rule or prompt, a SKILL.md section, a subagent definition, or an AGENTS.md or CLAUDE.md section. Returns replacement text that is the fewest words leaving the executing agent's behavior unchanged. Never authors, decides, researches, judges correctness, or edits a file, and stops blocked rather than invent a decision."
 sandbox_mode = "read-only"
-# Pin reason: judging whether a cut changes behavior is a per-sentence judgment with no
-# downstream gate to catch a miss, which is the shape of alaa-spec-analyst, the nearest
-# read-only judgment lane in this family. Sweep one level down before lowering it.
-model = "gpt-5.6-sol"
+# Pin owner: alaa-prompting-guide assets/codex-model-policy.json, profile alaa-rule-writer.
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 
 developer_instructions = """

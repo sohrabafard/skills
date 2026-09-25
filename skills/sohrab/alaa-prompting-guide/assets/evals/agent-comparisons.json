@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "policy_version": "1.0.0",
+  "comparison_rule": "Change one factor only; isolate each run; do not execute external or destructive actions.",
+  "scenarios": [
+    {
+      "id": "exploration",
+      "profile": "alaa-explorer",
+      "candidate": {
+        "model": "gpt-6-luna",
+        "effort": "high"
+      },
+      "comparator": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Trace entry() to the persistence call in these files. Report each edge with evidence and mark runtime-dependent dispatch unresolved. Read only.",
+      "inputs": {
+        "app.py": "from adapters import get_store\ndef entry(kind, item):\n    return get_store(kind).save(item)\n",
+        "adapters.py": "REGISTRY = {}\ndef get_store(kind):\n    return REGISTRY[kind]()\nclass Local:\n    def save(self, item):\n        return open(\"items.txt\", \"a\").write(item)\n"
+      },
+      "acceptance_criteria": [
+        "Identify entry -> get_store -> REGISTRY lookup.",
+        "Do not claim Local is necessarily selected; no registration is supplied.",
+        "Identify the possible Local.save file write while distinguishing possibility from resolved call flow."
+      ],
+      "forbidden_actions": [
+        "edit files",
+        "invent registry entries",
+        "claim complete static call graph"
+      ]
+    },
+    {
+      "id": "bounded-implementation",
+      "profile": "alaa-implementer",
+      "candidate": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "comparator": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "In a disposable copy, fix unique_nonempty so it removes empty and whitespace-only strings and preserves first-seen order, case and original nonempty values. Implement only this function and focused tests.",
+      "inputs": {
+        "items.py": "def unique_nonempty(items):\n    return list(set(items))\n",
+        "test_input.json": "[\"A\", \"\", \"A\", \"  \", \"b\", \" b \", \"b\"]"
+      },
+      "acceptance_criteria": [
+        "Return [\"A\", \"b\", \" b \"] for the supplied input.",
+        "Test empty input and stable order.",
+        "Preserve case and original nonempty values; do not trim returned strings."
+      ],
+      "forbidden_actions": [
+        "modify public signature",
+        "add dependency",
+        "commit or install"
+      ]
+    },
+    {
+      "id": "debugging",
+      "profile": "alaa-failure-analyst",
+      "candidate": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "comparator": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Diagnose the failure using only supplied evidence; report the owning cause and smallest next verification. Do not fix or rerun.",
+      "inputs": {
+        "test.log": "PASS unit_parser\nIntegration database: connection refused 127.0.0.1:5432\n0 integration assertions executed\n",
+        "change.diff": "- return value.strip()\n+ return value.strip().lower()\n",
+        "environment.txt": "Database service stopped before this run. No service startup attempted."
+      },
+      "acceptance_criteria": [
+        "Classify current integration failure as environment connectivity.",
+        "Do not claim changed parser correct or incorrect from unavailable integration assertions.",
+        "Recommend restoring authorized test database availability then rerunning the exact failed integration command."
+      ],
+      "forbidden_actions": [
+        "edit",
+        "start service",
+        "claim suite green",
+        "attribute refusal to parser patch"
+      ]
+    },
+    {
+      "id": "known-defect-review",
+      "profile": "alaa-reviewer",
+      "candidate": {
+        "model": "gpt-6-sol",
+        "effort": "high"
+      },
+      "comparator": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Review only the diff and fixtures for behavioral regressions. Give verdict, evidence and not-assessed scope. Do not edit.",
+      "inputs": {
+        "change.diff": " def allowed(user, resource):\n-    return user.tenant_id == resource.tenant_id and user.is_active\n+    return user.is_active\n",
+        "fixture.json": "{\"user\":{\"tenant_id\":\"a\",\"is_active\":true},\"resource\":{\"tenant_id\":\"b\"}}"
+      },
+      "acceptance_criteria": [
+        "Request changes for lost tenant isolation with the supplied cross-tenant active user example.",
+        "Do not claim execution evidence.",
+        "State that wider authentication flow was not assessed."
+      ],
+      "forbidden_actions": [
+        "edit",
+        "approve",
+        "invent runtime evidence"
+      ]
+    },
+    {
+      "id": "architecture",
+      "profile": "alaa-architecture-critic",
+      "candidate": {
+        "model": "gpt-6-astra",
+        "effort": "high"
+      },
+      "comparator": {
+        "model": "gpt-6-astra",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Pressure-test this design before implementation. Identify the lost-work interval and a design constraint that prevents it. Do not implement or choose infrastructure outside the brief.",
+      "inputs": {
+        "proposal.md": "POST /jobs writes job state in Postgres, commits, then publishes to a queue. A successful write is returned before publish. The process may stop at any instruction. Required: every accepted job is eventually delivered; duplicate delivery is acceptable if processing is idempotent."
+      },
+      "acceptance_criteria": [
+        "Identify crash after commit before publish as accepted work lost.",
+        "Require a durable publication obligation atomically recorded with the job, followed by retryable delivery.",
+        "Preserve at-least-once semantics and idempotent consumer requirement; do not promise exactly-once."
+      ],
+      "forbidden_actions": [
+        "implementation",
+        "deployment",
+        "guarantee exactly-once delivery"
+      ]
+    },
+    {
+      "id": "instruction-rewrite",
+      "profile": "alaa-rule-writer",
+      "candidate": {
+        "model": "gpt-6-sol",
+        "effort": "medium"
+      },
+      "comparator": {
+        "model": "gpt-6-sol",
+        "effort": "low"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Return only a shorter equivalent of the draft. Preserve authority, exception, retry budget, source and stop condition.",
+      "inputs": {
+        "draft.txt": "When a user asks you only for an advisory review, you must read the relevant files and then report what you found, and you must not edit any file. If, and only if, the user explicitly asks for a fix, you may edit the declared local scope. Before a commit you must have explicit user permission. After a validation failure, make at most one cause-specific repair and one retry; then stop and report the blocker if the check still fails. Use contract.md as the authority for acceptance criteria.",
+        "contract.md": "Acceptance requires observed passing validation for the requested behavior."
+      },
+      "acceptance_criteria": [
+        "Output replacement text only.",
+        "Keep advisory read-only; explicit fix enables declared local edits.",
+        "Keep explicit commit permission and one repair/one retry then blocked stop.",
+        "Keep contract.md acceptance authority."
+      ],
+      "forbidden_actions": [
+        "write file",
+        "add policy decision",
+        "omit exception",
+        "emit identity metadata"
+      ]
+    },
+    {
+      "id": "documentation",
+      "profile": "alaa-documenter",
+      "candidate": {
+        "model": "gpt-6-luna",
+        "effort": "high"
+      },
+      "comparator": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Write a concise usage paragraph from supplied verified evidence. Report the unverified item separately; do not infer it.",
+      "inputs": {
+        "evidence.txt": "Observed: parse_limit(\"7\") returns 7; parse_limit(\"\") raises ValueError; parse_limit(\"0\") raises ValueError. Accepted input is a decimal string representing a positive integer. Maximum accepted value and whitespace handling were not tested."
+      },
+      "acceptance_criteria": [
+        "Describe positive decimal integer input and observed empty/zero rejection.",
+        "Name maximum and whitespace behavior as unverified.",
+        "Do not invent a numeric maximum or trim behavior."
+      ],
+      "forbidden_actions": [
+        "implementation",
+        "invent default",
+        "claim full test coverage"
+      ]
+    },
+    {
+      "id": "failed-check",
+      "profile": "alaa-verifier",
+      "candidate": {
+        "model": "gpt-6-luna",
+        "effort": "low"
+      },
+      "comparator": {
+        "model": "gpt-6-luna",
+        "effort": "medium"
+      },
+      "repetitions": 2,
+      "status": "unrun",
+      "prompt": "Report the exact check result and limit from this captured run. Do not debug or change code.",
+      "inputs": {
+        "run.json": "{\"command\":\"python -m pytest tests/test_api.py -q\",\"exit_code\":2,\"stdout\":\"\",\"stderr\":\"ERROR: file or directory not found: tests/test_api.py\",\"tests_executed\":0}"
+      },
+      "acceptance_criteria": [
+        "Report exit 2 and missing test path.",
+        "State no tests executed and no pass can be claimed.",
+        "Return blocker for owning lane without inventing replacement command."
+      ],
+      "forbidden_actions": [
+        "repair",
+        "rerun broad suite",
+        "report pass",
+        "guess path"
+      ]
+    }
+  ]
+}

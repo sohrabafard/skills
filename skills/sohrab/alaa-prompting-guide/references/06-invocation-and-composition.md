@@ -32,7 +32,7 @@ Resolve the registered name rather than guessing it. In Claude Code the command 
 
 A session holds exactly one role. The most common orchestration failure is a prompt that names an orchestrator skill and then writes every imperative at the session as an implementer — the model obeys the dominant verbs, not the buried clause.
 
-- When the prompt routes execution through `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator`, the session role is **orchestrator or lead**, stated in the first sentences: plan lanes, dispatch, enforce the review gate, reconcile, run integrated validation, commit when lanes must not. Add the explicit negative: "Do not write implementation code in this session."
+- When the prompt routes execution through `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator`, the session role is **orchestrator or lead**, stated in the first sentences: plan lanes, dispatch, enforce the review gate, reconcile, run integrated validation, perform authorized integration; commit only with explicit user permission. Add the explicit negative: "Do not write implementation code in this session."
 - Every implementation verb — implement, edit, fix, test-first, refactor, document — moves into **lane rules**, a block the orchestrator copies into dispatches, and never into the lead's own instructions.
 - Run a verb-ownership audit before sending: read each imperative and assign it to lead or lane. A lane verb aimed at the lead, or a lead verb aimed at a lane, is a defect.
 
@@ -61,7 +61,10 @@ This section owns the rule; other references point here rather than restating it
 - **Claude Opus 5 — eager; cap it.** Anthropic's guide states that Opus 5 delegates to subagents more readily than prior models, that delegation multiplies cost and time when applied to small tasks, and that authors should give explicit guidance on which scenarios warrant delegation or set deterministic caps on how many agents may launch. Delegation language for Opus 5 is a ceiling rather than a permission: delegate only for large, genuinely independent, parallelizable tracks; do not delegate work finishable in a handful of tool calls; prefer one subagent over several; keep spawn counts low.
 - **Claude Fable 5 — eager, and the correction is shape rather than volume.** Fable 5 dispatches parallel subagents readily, and the guidance is to use subagents frequently while giving explicit criteria for when delegation is appropriate, preferring asynchronous orchestrator-to-subagent communication over blocking on each return. Add selection criteria and non-blocking dispatch, not encouragement.
 - **Claude Sonnet 5 — treat as neutral-to-eager, and verify.** The Sonnet 5 guide does not address delegation. It does state that Sonnet 5 is more agentic than its predecessor and will reach for tools and run self-verification loops more readily. Absence of a delegation note is not evidence of under-fan-out; measure on your own harness before writing polarity either way.
-- **Codex and GPT-5.6 — reticent; authorize it.** The Codex documentation is explicit that Codex spawns a subagent only when asked and does not fan out on its own. This is the family where positive-authorization wording is exactly right: "spawn one lane per independent slice in the same turn, without asking" beats "parallel work is authorized only for independent lanes."
+- **Codex — explicit authorization and bounded lanes.** Use the current host's delegation
+  rules and available tools. When authorized, name concrete independent scopes and their result
+  contracts. Do not infer a universal GPT-6 delegation bias from a previous generation or an API
+  feature; `references/11-codex-runtime-features.md` owns the runtime boundary.
 
 Two rules hold whichever direction you write.
 
@@ -76,7 +79,7 @@ Delete carried-over verification scaffolding of the form "use a subagent to veri
 1. The message opens with either the exact skill trigger or a goal command that names the needed skill's role, using the exact installed name for the executing surface, never a buried mid-paragraph trigger.
 2. The session has one role, consistent with the invoked skill, and implementation verbs live in lane rules.
 3. The single-message form is chosen deliberately: trigger-led for deterministic activation, goal-led for harness auto-continue. Two messages only to get both.
-4. Delegation wording matches the target model's default bias — a cap and selection criteria for Opus 5 and Fable 5, explicit positive authorization for Codex, measured rather than assumed for Sonnet 5.
+4. Delegation wording matches the target model's default bias — a cap and selection criteria for Opus 5 and Fable 5, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.
 5. Skills needed by lanes are named inside dispatch text, not as top-level triggers.
 6. In goal form, the completion condition is demonstrable from the transcript and carries an explicit turn or time clause.
 7. If the prompt will be pasted raw into a surface outside this plugin, the mention sigil matches that surface.

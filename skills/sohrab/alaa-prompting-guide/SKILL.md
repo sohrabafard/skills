@@ -1,6 +1,6 @@
 ---
 name: alaa-prompting-guide
-description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-5.6 in Codex and Claude Opus 5, Sonnet 5, or Fable 5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation and trigger placement, splitting a skill into references, skill and subagent authoring, Codex goals and subagents, or Claude Code /loop, agents, and workflows. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5, Sonnet 5, or Fable 5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation and trigger placement, splitting a skill into references, skill and subagent authoring, Codex goals and subagents, or Claude Code /loop, agents, and workflows. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
 ---
 
 # Alaa Prompting Guide
@@ -24,6 +24,10 @@ Distributing it is not this skill's job. Under Claude Code the definition ships 
 
 Its model and effort are pinned in each wrapper with the reason recorded beside them, because a pin raised without a recorded criterion is indistinguishable from drift. After any change to `assets/rule-writer/`, `python scripts/check_rule_writer_grants.py` must pass before completion, and `python scripts/check_rule_writer_grants.py --self-test` after any change to the checker; exit `0` is clean, `1` is findings, and `2` means it could not run, which is a failed gate.
 
+## Codex policy validation
+
+`assets/codex-model-policy.json` owns executable Codex profile pins, supported-effort snapshots, and approved legacy exceptions. After changing pins or policy, run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex` from this skill directory; after checker changes also run it with `--self-test`. To check another pack, repeat `--agent-root` with its agent directory. Run `python scripts/check_agent_evals.py` after changing the evaluation corpus and add `--self-test` after checker changes. Exit `0` is clean, `1` findings, and `2` could not run; either nonzero result blocks completion.
+
 ## Decision procedure
 
 1. **Identify the target runtime and model.** Ask only when neither can be inferred safely. The runtime determines harness features and how a trigger resolves; the model determines tuning. These are separate questions and answering one does not answer the other.
@@ -36,11 +40,11 @@ Its model and effort are pinned in each wrapper with the reason recorded beside 
 
 **A prompt is an execution contract, not decorative text.** It defines role, goal, success criteria, constraints, authority and side-effect limits, tool usage, retrieval rules, validation, output format, stopping conditions, and failure behavior. An artifact missing stopping conditions or failure behavior is incomplete however well the rest reads.
 
-**State each instruction exactly once.** Repetition across a skill body, an agent definition, and a dispatch does not reinforce a rule; it dilutes every copy and costs tokens on every run. Leaner prompts measurably raise evaluation scores while cutting tokens, so bloat is a quality regression and not merely an expense — `references/60-skill-authoring.md` carries the measurement.
+**State each instruction exactly once.** Repetition across a skill body, an agent definition, and a dispatch does not reinforce a rule; it dilutes every copy and costs tokens on every run. Evaluate prompt reductions against the same acceptance criteria; shorter is useful only when required behavior survives. `references/60-skill-authoring.md` owns that test.
 
 **Match delegation polarity to the target model's bias.** Some families delegate readily and need a cap; others delegate only when told and need explicit authorization. Applying one polarity everywhere produces either a swarm or a single-threaded session, and nothing errors either way. `references/06-invocation-and-composition.md` owns the direction per family.
 
-**Do not instruct a current model to double-check itself.** Current models self-verify and self-correct without prompting, and the instruction compounds cost for no quality gain. This does not retire independent verification: a gate that exists as an *authority boundary*, because no lane may approve its own change, is a different mechanism and must survive. `references/80-subagent-authoring.md` owns the test that tells them apart.
+**Keep proportional verification.** Preserve focused implementer checks and independent acceptance gates. Remove a repeated check only when no new change, failure, or unresolved concern justifies it. Do not infer that a model upgrade proves correctness. `references/80-subagent-authoring.md` owns the test that tells them apart.
 
 **Never infer "false" from missing evidence.** When a source does not state something, say so and use a named placeholder rather than inventing a specific. Preserve caveats as caveats instead of converting uncertainty into a firm instruction.
 

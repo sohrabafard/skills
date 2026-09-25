@@ -122,6 +122,7 @@ EXPECTED_MCP = {
     "alaa-spec-analyst": CODEGRAPH | BOOST_DOCS,
     "alaa-test-strategist": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-verifier": set(),
+    "alaa-instruction-reviewer": set(),
 }
 
 
@@ -164,6 +165,8 @@ def grant_failures(
     body: str = "",
 ) -> tuple[list[str], str]:
     failures: list[str] = []
+    if name not in EXPECTED_MCP:
+        return [f"{name}: uncatalogued role"], "invalid role"
     expected = EXPECTED_MCP[name]
     allow = csv(fm["tools"]) if "tools" in fm else None
     deny = set(csv(fm.get("disallowedTools", "")))
@@ -203,6 +206,8 @@ def grant_failures(
 
     actual_mcp = {tool for tool in allow if tool.startswith("mcp__")}
     native = [tool for tool in allow if not tool.startswith("mcp__")]
+    if name == "alaa-instruction-reviewer" and set(native) != {"Read", "Glob", "Grep"}:
+        failures.append(f"{name}: native grant must be exactly Read, Glob, Grep")
     if not native:
         failures.append(f"{name}: allowlist contains only MCP entries and may not launch without them")
     if deny:
@@ -276,6 +281,9 @@ def self_test() -> int:
     SERENA_SHELL = "mcp__serena__execute_shell_command"
     # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
     cases = [
+        ("unknown role", "unknown", "tools: Read", None, [], "body", "uncatalogued"),
+        ("instruction reviewer shell", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, Bash", None, [], "body", "native grant"),
+        ("instruction reviewer MCP", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, mcp__unknown", None, [], "body", "MCP grant differs"),
         ("unexpected server on a no-MCP role", "alaa-verifier",
          "tools: Read, Bash, mcp__codegraph", None, [], "body", "MCP grant differs"),
         ("missing CodeGraph from explorer", "alaa-explorer",

@@ -1,0 +1,5 @@
+verification=corrected JSON manifest array parsing
+manifest_entries=201
+manifest_sha256=2e9b5ed0eb60d82ebc35792c9971399d824d10f36044db1ce04977ebaa0a049b
+source_hash_results=all 201 match
+note=Initial before/after parser used a nonexistent files property and produced blank MISSING rows; those rows are invalid evidence and preserved in source-integrity-before.txt. Parent recorded the expected manifest SHA256 before final gates. This corrected pass verifies current files only; source cleanliness is concluded by comparison to that frozen baseline.

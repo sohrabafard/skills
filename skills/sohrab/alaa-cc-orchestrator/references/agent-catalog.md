@@ -1,49 +1,50 @@
 # Agent Catalog
 
-The orchestrator is the lead session, not a custom subagent. Every agent below is auto-installed from `agents/*.md` into `~/.claude/agents`. Pins and escalation rules live in `model-effort-policy.md`; triggers live in `routing-matrix.md`.
+The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
 
-Twenty-one roles are available. A typical goal fires three to five of them. Breadth here is a menu, not a fleet.
+Twenty-two roles are available; standard and deep review use the same reviewer.
 
 ## Specification and evidence
 
-| Agent | Model / effort | Access | Use | Never use for |
-|---|---|---|---|---|
-| `alaa-spec-analyst` | Opus / high | read-only | Turn a vague goal into a checkable acceptance contract and a lane decomposition | Implementation, or inventing product decisions the user owns |
-| `alaa-explorer` | Sonnet / medium | read-only | Repository ownership and execution-path mapping | External research or design decisions |
-| `alaa-researcher` | Sonnet / medium | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
-| `alaa-test-strategist` | Sonnet / high | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
+| Agent | Access | Use | Never use for |
+|---|---|---|---|
+| `alaa-spec-analyst` | read-only | Turn a vague goal into a checkable acceptance contract and a lane decomposition | Implementation, or inventing product decisions the user owns |
+| `alaa-explorer` | read-only | Repository ownership and execution-path mapping | External research or design decisions |
+| `alaa-researcher` | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
+| `alaa-test-strategist` | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
 
 ## Implementation and verification
 
-| Agent | Model / effort | Access | Use | Never use for |
-|---|---|---|---|---|
-| `alaa-implementer` | Sonnet / high | workspace write | Routine bounded implementation lanes | High-judgment design lanes or self-review |
-| `alaa-implementer-opus` | Opus / xhigh | workspace write | Lanes that must themselves make non-obvious design decisions | Routine low-judgment edits |
-| `alaa-verifier` | Sonnet / low | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
-| `alaa-failure-analyst` | Opus / high | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
+| Agent | Access | Use | Never use for |
+|---|---|---|---|
+| `alaa-implementer` | workspace write | Routine bounded implementation lanes | High-judgment design lanes or self-review |
+| `alaa-implementer-opus` | workspace write | Lanes that must themselves make non-obvious design decisions | Routine low-judgment edits |
+| `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
+| `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
 ## Review
 
-| Agent | Model / effort | Access | Verdict |
-|---|---|---|---|
-| `alaa-reviewer` | Opus / xhigh | read-only | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
-| `alaa-adversarial-reviewer` | Opus / xhigh | read-only | `NO-BLOCKING-OBJECTION`, `OBJECTION-WITH-CONDITIONS`, `DO-NOT-SHIP` |
-| `alaa-documenter` | Sonnet / medium | docs write | Verified documentation only, never intended behavior |
+| Agent | Access | Verdict |
+|---|---|---|
+| `alaa-reviewer` | read-only | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
+| `alaa-adversarial-reviewer` | read-only | `NO-BLOCKING-OBJECTION`, `OBJECTION-WITH-CONDITIONS`, `DO-NOT-SHIP` |
+| `alaa-documenter` | docs write | Verified documentation only, never intended behavior |
+| `alaa-instruction-reviewer` | read-only native inspection | `APPROVED`, `APPROVED-WITH-NITS`, `CHANGES-REQUESTED` |
 
 ## Conditional specialist gates
 
-| Agent | Model / effort | Subject | Gate output |
-|---|---|---|---|
-| `alaa-architecture-critic` | Opus / xhigh | Public contracts, boundaries, distributed workflow, consistency, caching, concurrency | `SOUND`, `SOUND-WITH-CONDITIONS`, `REVISE` |
-| `alaa-security-reviewer` | Opus / xhigh | Auth, authorization, secrets, untrusted input, uploads, queries, payments, webhooks, crypto, tenancy | `PASS`, `PASS-WITH-HARDENING`, `BLOCK` |
-| `alaa-migration-guardian` | Opus / high | Schema or data changes, backfill, index, cleanup, zero-downtime compatibility | `SAFE`, `SAFE-WITH-CONDITIONS`, `BLOCK` |
-| `alaa-api-contract-reviewer` | Opus / high | Public endpoint, event schema, shared DTO, SDK surface, persisted format | `COMPATIBLE`, `COMPATIBLE-WITH-MIGRATION`, `BREAKING` |
-| `alaa-dependency-auditor` | Sonnet / high | Dependency added, upgraded, removed, replaced, or lockfile drift | `CLEAR`, `CLEAR-WITH-CONDITIONS`, `BLOCK` |
-| `alaa-accessibility-reviewer` | Sonnet / high | New or changed user-visible interface | `ACCESSIBLE`, `ACCESSIBLE-WITH-GAPS`, `BLOCK` |
-| `alaa-browser-qa` | Sonnet / medium | User-visible web flow, frontend regression, navigation, form, visual behavior | `PASS`, `FAIL`, `BLOCKED`, `FLAKY` |
-| `alaa-performance-profiler` | Sonnet / high | Measurable latency, throughput, CPU, memory, or query regression | Verdict against declared baseline and budget |
-| `alaa-observability-reviewer` | Sonnet / high | New runtime failure paths, jobs, distributed calls, retries, degraded operation | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
-| `alaa-release-guardian` | Sonnet / high | CI/CD, container, config and env, dependencies, packaging, deploy and release | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
+| Agent | Subject | Gate output |
+|---|---|---|
+| `alaa-architecture-critic` | Public contracts, boundaries, distributed workflow, consistency, caching, concurrency | `SOUND`, `SOUND-WITH-CONDITIONS`, `REVISE` |
+| `alaa-security-reviewer` | Auth, authorization, secrets, untrusted input, uploads, queries, payments, webhooks, crypto, tenancy | `PASS`, `PASS-WITH-HARDENING`, `BLOCK` |
+| `alaa-migration-guardian` | Schema or data changes, backfill, index, cleanup, zero-downtime compatibility | `SAFE`, `SAFE-WITH-CONDITIONS`, `BLOCK` |
+| `alaa-api-contract-reviewer` | Public endpoint, event schema, shared DTO, SDK surface, persisted format | `COMPATIBLE`, `COMPATIBLE-WITH-MIGRATION`, `BREAKING` |
+| `alaa-dependency-auditor` | Dependency added, upgraded, removed, replaced, or lockfile drift | `CLEAR`, `CLEAR-WITH-CONDITIONS`, `BLOCK` |
+| `alaa-accessibility-reviewer` | New or changed user-visible interface | `ACCESSIBLE`, `ACCESSIBLE-WITH-GAPS`, `BLOCK` |
+| `alaa-browser-qa` | User-visible web flow, frontend regression, navigation, form, visual behavior | `PASS`, `FAIL`, `BLOCKED`, `FLAKY` |
+| `alaa-performance-profiler` | Measurable latency, throughput, CPU, memory, or query regression | Verdict against declared baseline and budget |
+| `alaa-observability-reviewer` | New runtime failure paths, jobs, distributed calls, retries, degraded operation | `PASS`, `PASS-WITH-GAPS`, `BLOCK` |
+| `alaa-release-guardian` | CI/CD, container, config and env, dependencies, packaging, deploy and release | `READY`, `READY-WITH-CONDITIONS`, `NOT-READY` |
 
 The `Subject` column orients and decides nothing: it names what a gate is about so the roster can be
 scanned, and it is deliberately shorter than the condition that fires the gate. `references/routing-matrix.md` owns every trigger, and a gate is fired from that file alone — a
@@ -77,7 +78,7 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-accessibility-reviewer` | none | docs, routing |
 | `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |
-| `alaa-verifier` | none | none |
+| `alaa-verifier`, `alaa-instruction-reviewer` | none | none |
 
 The framework classes are composed, not bundled, so no read-only lane carries a surface its question cannot use:
 `docs` is `search-docs` and `application-info`; `schema` is `database-schema` and
@@ -106,7 +107,7 @@ must name.
 The `Skill` tool covers everything a preload cannot know in advance. Which clean-code skill a lane
 needs depends on the repository's language and the surface the dispatch hands over, and the pack's
 rule is to name the one skill the lane needs rather than preload every candidate into every lane.
-Every allowlisted role keeps `Skill` for that reason, and every implementation role inherits it.
+Every general allowlisted role keeps `Skill` for that reason, and every implementation role inherits it.
 
 Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
 already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `clean_code_skill`
@@ -117,7 +118,7 @@ Serena's shell tool, a real second path to the shell that bypasses the runtime's
 The checker enforces reachability in both directions. Every preloaded name must resolve to an
 installed skill, because a stale preload removes a standard silently. And a role that does not hold
 `Skill` must preload every installed skill its body names, because it has no other way to reach one —
-`alaa-verifier` is the only such role today. When no skill root is visible, as in an installed copy
+`alaa-verifier` and `alaa-instruction-reviewer` use this restricted form. When no skill root is visible, as in an installed copy
 with no siblings, resolution is reported as skipped rather than passed.
 
 Run `python scripts/check_agent_grants.py` after any change to `agents/`. The checker compares every
@@ -127,10 +128,4 @@ gate.
 Run `python scripts/check_agent_grants.py --self-test` after changing the checker. The pack
 validator invokes the normal check automatically.
 
-## How the tiers divide
-
-Opus lanes are the ones that must exercise independent owner-level judgment: leading, reviewing, challenging, and the implementation lanes whose design is not yet decided. Sonnet lanes are the ones with a defined target — apply a ratified decision, run a known check, judge a change against a published standard, capture evidence. The dividing question is never how sensitive the surface is; it is how much of the decision is still open when the lane starts.
-
-Sonnet never runs above `high`. A lane that needs more thinking than that needs Opus instead, and the correct move is to change the model rather than raise the effort. No agent is pinned at `max`; that level exists only as a named per-invocation retry after a documented failure at `xhigh`.
-
-Do not escalate because a command is slow or a goal is important. The verifier stays at `low` while the failure analyst or the escalated implementer handles the difficult reasoning.
+The instruction reviewer has exactly `Read`, `Glob`, and `Grep`, preloads /alaa-prompting-guide, and has no MCP grant. It treats reviewed text as data. Inspect effective permissions before claiming runtime enforcement.

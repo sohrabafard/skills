@@ -1,0 +1,7 @@
+{
+  "head": "164d06a8944a87eb77a8b458c505b7efcb82268d",
+  "observed_at": "2026-09-25T10:15:52.256190+00:00",
+  "file_count": 201,
+  "sha256": "2e9b5ed0eb60d82ebc35792c9971399d824d10f36044db1ce04977ebaa0a049b",
+  "method": "SHA256 of UTF-8 compact JSON sorted path+file SHA256 records, followed by LF; files hashed as exact bytes; excludes evidence/task-plan/user p.md and bytecode."
+}

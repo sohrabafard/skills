@@ -8,6 +8,7 @@ has leaked into this pack. Run from anywhere; paths resolve against the pack roo
 from __future__ import annotations
 
 from pathlib import Path
+from check_agent_contracts import agent_failures, orchestrator_failures
 import re
 import subprocess
 import sys
@@ -25,6 +26,7 @@ REQUIRED = {
     "alaa-verifier",
     "alaa-failure-analyst",
     "alaa-reviewer",
+    "alaa-instruction-reviewer",
     "alaa-adversarial-reviewer",
     "alaa-documenter",
     "alaa-architecture-critic",
@@ -44,11 +46,12 @@ VALID_EFFORT = {"low", "medium", "high", "xhigh", "max"}
 # Sonnet's ceiling is `high`: above it, the correct move is a different model.
 SONNET_CEILING = {"low", "medium", "high"}
 # Cross-runtime isolation: this pack must never name the other runtime's world.
-FORBIDDEN = re.compile(r"\b(codex|gpt-?5|openai|sol|terra|luna)\b|opus 4|fable", re.I)
+FORBIDDEN = re.compile(r"\b(codex|gpt-?[56]|openai|sol|terra|luna|astra)\b|opus 4|fable", re.I)
 
 errors: list[str] = []
 
 skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+errors.extend(orchestrator_failures(skill))
 match = re.match(r"^---\n(.*?)\n---\n", skill, re.S)
 if not match:
     errors.append("SKILL.md is missing YAML frontmatter")
@@ -99,19 +102,9 @@ for path in sorted(AGENTS.glob("*.md")):
             f"{path.name}: sonnet is capped at 'high'; a lane needing more changes model, not effort"
         )
 
-    identity = re.search(r"AGENT:\s*(\S+)\s*\|\s*MODEL:\s*([^|]+?)\s*\|\s*EFFORT:\s*([a-z]+)", text)
-    if not identity:
-        errors.append(f"{path.name}: missing AGENT/MODEL/EFFORT identity line")
-    else:
-        id_name, id_model, id_effort = identity.groups()
-        if name and id_name != name:
-            errors.append(f"{path.name}: identity line names {id_name}, file declares {name}")
-        if effort and id_effort != effort:
-            errors.append(f"{path.name}: identity effort {id_effort} disagrees with pin {effort}")
-        if model == "opus" and not id_model.lower().startswith("opus"):
-            errors.append(f"{path.name}: identity model {id_model!r} disagrees with pin {model}")
-        if model == "sonnet" and not id_model.lower().startswith("sonnet"):
-            errors.append(f"{path.name}: identity model {id_model!r} disagrees with pin {model}")
+    errors.extend(f"{path.name}: {error}" for error in agent_failures(text))
+    if name == "alaa-instruction-reviewer" and (model, effort) != ("opus", "xhigh"):
+        errors.append(f"{path.name}: instruction reviewer must match the independent reviewer pin")
 
 missing = REQUIRED - names
 extra = names - REQUIRED

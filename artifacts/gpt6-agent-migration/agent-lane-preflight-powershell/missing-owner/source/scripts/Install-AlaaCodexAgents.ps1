@@ -1,0 +1,134 @@
+[CmdletBinding()]
+param(
+    [string]$SourceDirectory,
+    [string]$TargetDirectory = (Join-Path $HOME ".codex\agents"),
+    [string]$PolicyRoot
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+if (-not $SourceDirectory) {
+    $scriptRoot = $PSScriptRoot
+    if (-not $scriptRoot -and $PSCommandPath) { $scriptRoot = Split-Path -Parent $PSCommandPath }
+    if (-not $scriptRoot -and $MyInvocation.MyCommand.Path) { $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path }
+    if (-not $scriptRoot) {
+        throw "Cannot resolve the script location in this invocation style; pass -SourceDirectory <skill-root>\agents explicitly."
+    }
+    $SourceDirectory = Join-Path (Split-Path -Parent $scriptRoot) "agents"
+}
+
+function Get-FileHashHex {
+    param([Parameter(Mandatory)][string]$Path)
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
+$source = (Resolve-Path -LiteralPath $SourceDirectory).Path
+$agentFiles = @(Get-ChildItem -LiteralPath $source -File -Filter "*.toml" | Sort-Object Name)
+if ($agentFiles.Count -eq 0) {
+    throw "No agent TOML files found in: $source"
+}
+
+$grantChecker = Join-Path (Split-Path -Parent $source) "scripts\check_agent_grants.py"
+if (-not (Test-Path -LiteralPath $grantChecker)) {
+    throw "Agent grant checker not found: $grantChecker"
+}
+$python = Get-Command python.exe -ErrorAction SilentlyContinue
+if (-not $python) { $python = Get-Command python -ErrorAction SilentlyContinue }
+$pythonPrefix = @()
+if (-not $python) {
+    $python = Get-Command py.exe -ErrorAction SilentlyContinue
+    if (-not $python) { $python = Get-Command py -ErrorAction SilentlyContinue }
+    if (-not $python) {
+        throw "Python 3 is required to validate agent grants before installation"
+    }
+    $pythonPrefix = @("-3")
+}
+
+$sourceRoot = Split-Path -Parent $source
+if (-not $PolicyRoot) { $PolicyRoot = Join-Path (Split-Path -Parent $sourceRoot) "alaa-prompting-guide" }
+& $python.Source @pythonPrefix -B (Join-Path $sourceRoot "scripts\validate_pack.py") --policy-root $PolicyRoot
+if ($LASTEXITCODE -ne 0) { throw "Source validation failed with exit code $LASTEXITCODE; target was not changed" }
+
+New-Item -ItemType Directory -Path $TargetDirectory -Force | Out-Null
+$target = (Resolve-Path -LiteralPath $TargetDirectory).Path
+
+$lockPath = Join-Path $target ".alaa-codex-orchestrator.install.lock"
+$lockStream = $null
+$changed = 0
+$unchanged = 0
+$materializedDirectory = Join-Path $target ".alaa-codex-orchestrator.materialized.$([Guid]::NewGuid().ToString('N'))"
+
+try {
+    $lockStream = [System.IO.File]::Open(
+        $lockPath,
+        [System.IO.FileMode]::OpenOrCreate,
+        [System.IO.FileAccess]::ReadWrite,
+        [System.IO.FileShare]::None
+    )
+
+    & $python.Source @pythonPrefix -B $grantChecker --materialize $source $materializedDirectory
+    if ($LASTEXITCODE -ne 0) {
+        throw "Agent grant materialization failed with exit code $LASTEXITCODE"
+    }
+    $agentFiles = @(Get-ChildItem -LiteralPath $materializedDirectory -File -Filter "*.toml" | Sort-Object Name)
+
+    foreach ($sourceFile in $agentFiles) {
+        $destination = Join-Path $target $sourceFile.Name
+        $sourceHash = Get-FileHashHex -Path $sourceFile.FullName
+
+        if (Test-Path -LiteralPath $destination) {
+            $destinationHash = Get-FileHashHex -Path $destination
+            if ($sourceHash -eq $destinationHash) {
+                $unchanged++
+                continue
+            }
+        }
+
+        $tempPath = "$destination.tmp.$([Guid]::NewGuid().ToString('N'))"
+        try {
+            Copy-Item -LiteralPath $sourceFile.FullName -Destination $tempPath -Force
+            if ((Get-FileHashHex -Path $tempPath) -ne $sourceHash) {
+                throw "Hash mismatch while staging $($sourceFile.Name)"
+            }
+
+            # Move-Item -Force replaces an existing destination in one operation and takes no
+            # backup path. [System.IO.File]::Replace requires one, and PowerShell binds a $null
+            # argument to an empty string, so that call threw on every update it was reached by.
+            Move-Item -LiteralPath $tempPath -Destination $destination -Force
+
+            if ((Get-FileHashHex -Path $destination) -ne $sourceHash) {
+                throw "Hash mismatch after installing $($sourceFile.Name)"
+            }
+            $changed++
+        }
+        finally {
+            if (Test-Path -LiteralPath $tempPath) {
+                Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Copy-Item -LiteralPath (Join-Path $materializedDirectory ".alaa-codex-orchestrator.mcp-inventory") `
+        -Destination (Join-Path $target ".alaa-codex-orchestrator.mcp-inventory") -Force
+}
+finally {
+    if ($lockStream) { $lockStream.Dispose() }
+    Remove-Item -LiteralPath $lockPath -Force -ErrorAction SilentlyContinue
+    if (Test-Path -LiteralPath $materializedDirectory) {
+        Remove-Item -LiteralPath $materializedDirectory -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
+
+$versionFile = Join-Path (Split-Path -Parent $source) "VERSION"
+if (Test-Path -LiteralPath $versionFile) {
+    Copy-Item -LiteralPath $versionFile -Destination (Join-Path $target ".alaa-codex-orchestrator.version") -Force
+}
+
+$result = [ordered]@{
+    Status = "OK"
+    InstalledOrUpdated = $changed
+    AlreadyCurrent = $unchanged
+    TargetDirectory = $target
+}
+$result | ConvertTo-Json -Compress
