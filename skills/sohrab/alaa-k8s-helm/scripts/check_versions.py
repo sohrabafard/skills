@@ -10,7 +10,7 @@ Exit codes, shared by every script in this skill:
     0  the pinned values match the vendors' pages
     1  findings: at least one pinned value has drifted
     2  could not run: no network, a blocked proxy, an unreadable reference file,
-       or a page whose shape changed so much that nothing could be extracted
+       or a page from which no stable version or required date could be extracted
 
 Windows: pure Python 3 with the standard library only, no shell, no curl.
 Proxies: `urllib` reads `HTTPS_PROXY` and `NO_PROXY` from the environment, so a
@@ -46,7 +46,7 @@ CHECKS = [
         "id": "kubernetes-latest",
         "label": "latest Kubernetes minor",
         "url": "https://kubernetes.io/releases/",
-        "page_pattern": r"\b1\.(\d{2})\.\d+\b",
+        "page_pattern": r"\b1\.(\d{2})\.\d+(?![\w.+-])",
         "pinned_row": "Latest Kubernetes minor",
         "pinned_pattern": r"\b(1\.\d{2})\b",
         "reduce": "max",
@@ -55,7 +55,7 @@ CHECKS = [
         "id": "helm-latest",
         "label": "latest Helm release",
         "url": "https://github.com/helm/helm/releases",
-        "page_pattern": r"\bv(\d+\.\d+\.\d+)\b",
+        "page_pattern": r"\bv(\d+\.\d+\.\d+)(?![\w.+-])",
         "pinned_row": "Current Helm major",
         "pinned_pattern": r"latest (\d+\.\d+\.\d+)",
         "reduce": "max-semver",
@@ -141,8 +141,8 @@ def compare(check: dict, pinned: str, observed: str) -> str | None:
             year, month, day = iso.split("-")
         except ValueError:
             return f"pinned date {iso!r} is not ISO-8601"
-        prose = f"February {int(day)}"
-        if iso in observed or (month == "02" and prose in observed):
+        prose = rf"\bFebruary {int(day)}(?:th)?,? {re.escape(year)}\b"
+        if iso in observed.split("|") or (month == "02" and re.search(prose, observed)):
             return None
         return (f"pinned {check['label']} is {pinned}, and that date is not mentioned on "
                 f"{check['url']}")
@@ -184,7 +184,8 @@ def self_test() -> int:
 
     matching = os.path.join(FIXTURE_DIR, "versions-matching")
     drifted = os.path.join(FIXTURE_DIR, "versions-drifted")
-    reference = os.path.join(SKILL_DIR, "references", "version-awareness.md")
+    # Synthetic expectations must not change when the live snapshot is refreshed.
+    reference = os.path.join(FIXTURE_DIR, "version-reference.md")
 
     load_pages = load_fixture_pages
 
@@ -221,11 +222,55 @@ def self_test() -> int:
     else:
         failures.append("a missing reference file returned a verdict instead of exit 2")
 
+    by_id = {check["id"]: check for check in CHECKS}
+    stable_cases = [
+        ("helm-latest", "v4.3.0 v4.4.0-rc.1 v4.4.0-beta.1", "4.3.0"),
+        ("helm-latest", "v4.3.10 v4.3.11-rc.1", "4.3.10"),
+        ("kubernetes-latest", "1.37.1 1.38.0-alpha.1 1.38.0-rc.1", "1.37"),
+        ("kubernetes-latest", "1.37.10 1.38.10-beta.1", "1.37"),
+    ]
+    for check_id, page, expected in stable_cases:
+        try:
+            actual = observed_value(by_id[check_id], page)
+        except CouldNotRun as exc:
+            failures.append(f"{check_id} mixed stable/preview page: {exc}")
+        else:
+            if actual != expected:
+                failures.append(f"{check_id} selected {actual}, expected stable {expected}")
+
+    preview_cases = [
+        ("helm-latest", "v4.4.10-rc.1"),
+        ("kubernetes-latest", "1.38.10-alpha.1"),
+    ]
+    for check_id, page in preview_cases:
+        try:
+            observed_value(by_id[check_id], page)
+        except CouldNotRun:
+            pass
+        else:
+            failures.append(f"{check_id} preview-only page returned a stable verdict")
+
+    date_cases = [
+        ("February 10th, 2027", True),
+        ("February 10, 2027", True),
+        ("February 10 2027", True),
+        ("2027-02-10", True),
+        ("February 10th, 2028", False),
+        ("February 10, 2026", False),
+        ("2028-02-10", False),
+    ]
+    for page, expected_match in date_cases:
+        observed = observed_value(by_id["helm3-eol"], page)
+        matched = compare(by_id["helm3-eol"], "2027-02-10", observed) is None
+        if matched != expected_match:
+            failures.append(f"EOL date {page!r}: match={matched}, expected {expected_match}")
+
     if failures:
         for line in failures:
             print(f"SELF-TEST FAIL: {line}", file=sys.stderr)
         return EXIT_FINDINGS
-    print("check_versions --self-test: 4 cases passed (offline)")
+    cases = 4 + len(stable_cases) + len(preview_cases) + len(date_cases)
+    print(f"check_versions --self-test: {cases} cases passed (offline)")
     return EXIT_CLEAN
 
 

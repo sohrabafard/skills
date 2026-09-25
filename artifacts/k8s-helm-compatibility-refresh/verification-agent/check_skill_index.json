@@ -1,0 +1,16 @@
+{
+  "command": "python -B scripts/check_skill_index.py",
+  "cwd": "D:\\Sohrab\\Project\\skills",
+  "start_utc": "2026-09-26T02:01:21.5915512+03:30",
+  "end_utc": "2026-09-26T02:01:21.7195852+03:30",
+  "duration_seconds": 0.128,
+  "exit": 0,
+  "classification": "PASS",
+  "tier": "affected",
+  "proof_level": "Level 1 — static",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "timeout_seconds": 120,
+  "stdout": "artifacts\\k8s-helm-compatibility-refresh\\verification-agent\\check_skill_index.stdout.log",
+  "stderr": "artifacts\\k8s-helm-compatibility-refresh\\verification-agent\\check_skill_index.stderr.log"
+}

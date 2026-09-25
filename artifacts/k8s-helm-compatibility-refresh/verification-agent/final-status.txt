@@ -1,0 +1,96 @@
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0jpgm2sb/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0_km1ar9/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-35ewheyo/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6m1s_7qt/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6p4y1wba/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-7iti0y11/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-f44vwy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-faznmppg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-fcc1majp/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-g5ldl87f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-irqap9y1/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-jwqodzp8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-nc7wzr4k/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-oe_ej8t8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-pqr858jg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-ri65mz7f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tcd67ob6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tpd6kyku/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-vfgxpvfj/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-w5nihy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-wlzn74i6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x0lnu3kc/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-xko8o0np/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x_siyr9v/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-y1m6slz7/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-yya74gqq/': Permission denied
+ M skills/sohrab/alaa-k8s-helm/SKILL.md
+ M skills/sohrab/alaa-k8s-helm/references/SOURCES.md
+ M skills/sohrab/alaa-k8s-helm/references/kubernetes-resource-patterns.md
+ M skills/sohrab/alaa-k8s-helm/references/validation-workflows.md
+ M skills/sohrab/alaa-k8s-helm/references/version-awareness.md
+ M skills/sohrab/alaa-k8s-helm/scripts/check_manifests.py
+ M skills/sohrab/alaa-k8s-helm/scripts/check_versions.py
+?? artifacts/k8s-helm-compatibility-refresh/candidate-manifest.sha256
+?? artifacts/k8s-helm-compatibility-refresh/candidate.diff
+?? artifacts/k8s-helm-compatibility-refresh/chart-smoke/Chart.yaml
+?? artifacts/k8s-helm-compatibility-refresh/chart-smoke/templates/workloads.yaml
+?? artifacts/k8s-helm-compatibility-refresh/chart-smoke/values.schema.json
+?? artifacts/k8s-helm-compatibility-refresh/chart-smoke/values.yaml
+?? artifacts/k8s-helm-compatibility-refresh/compatibility-ledger.md
+?? artifacts/k8s-helm-compatibility-refresh/instruction-review.md
+?? artifacts/k8s-helm-compatibility-refresh/phase1-manifest.sha256
+?? artifacts/k8s-helm-compatibility-refresh/phase1.diff
+?? artifacts/k8s-helm-compatibility-refresh/preflight.md
+?? artifacts/k8s-helm-compatibility-refresh/run_check.py
+?? artifacts/k8s-helm-compatibility-refresh/runtime-and-network-blockers.md
+?? artifacts/k8s-helm-compatibility-refresh/snapshot.py
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/check_agent_contracts.json
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/check_fleet_references.json
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/check_lifecycle_contract.json
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/check_skill_index.json
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/final-status.txt
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/source-gates.json
+?? artifacts/k8s-helm-compatibility-refresh/verification-agent/validate_sohrab_skill_pack.json
+?? artifacts/k8s-helm-compatibility-refresh/verification-plan.md
+?? artifacts/k8s-helm-compatibility-refresh/verification/freshness-timeout30.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/freshness-timeout30.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/freshness-timeout30.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/freshness.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/freshness.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/freshness.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/helm-lint.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/helm-lint.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/helm-lint.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-134.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-134.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-134.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-135.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-135.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-135.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-136.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-136.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-136.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-137.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-137.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/manifest-137.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-134.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-134.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-134.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-135.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-135.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-135.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-136.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-136.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-136.stdout
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-137.json
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-137.stderr
+?? artifacts/k8s-helm-compatibility-refresh/verification/render-137.stdout
+?? artifacts/k8s-helm-compatibility-refresh/workflow-validation.md
+?? artifacts/k8s-helm-compatibility-refresh/writer/focused_regressions.py
+?? artifacts/k8s-helm-compatibility-refresh/writer/implementation-evidence.md
+?? artifacts/k8s-helm-compatibility-refresh/writer/source.diff
+?? docs/_agent_plans/20260925-220655_k8s-helm-compatibility-refresh.md
+?? docs/_agent_plans/20260925-220655_k8s-helm-compatibility-refresh__phase-prompts.md
+?? docs/agents/20260925-220655_k8s-helm-compatibility-refresh-state.md
+?? skills/sohrab/alaa-k8s-helm/scripts/fixtures/version-reference.md

@@ -1,0 +1,23 @@
+{
+  "label": "render-137",
+  "command": [
+    "helm",
+    "template",
+    "fixture",
+    "artifacts/k8s-helm-compatibility-refresh/chart-smoke",
+    "-f",
+    "artifacts/k8s-helm-compatibility-refresh/chart-smoke/values.yaml",
+    "--kube-version",
+    "1.37.0"
+  ],
+  "cwd": ".",
+  "start": "2026-09-25T22:31:36.675082+00:00",
+  "end": "2026-09-25T22:31:36.785894+00:00",
+  "exit": 0,
+  "operator": "lead (supplemental checks; separate verifier evidence required)",
+  "tier": "affected",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "head": "12680f2fd18f4a5ac3822cc3cc130b05524053fd",
+  "snapshot": "candidate-manifest.sha256"
+}

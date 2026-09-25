@@ -1,0 +1,1 @@
+check_manifests: artifacts/k8s-helm-compatibility-refresh/verification/render-136.stdout: clean (default profile)

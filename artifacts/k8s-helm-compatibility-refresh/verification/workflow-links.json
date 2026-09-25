@@ -1,0 +1,23 @@
+{
+  "label": "workflow-links",
+  "command": [
+    "python",
+    "-B",
+    "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+    ".",
+    "--files",
+    "docs/_agent_plans/20260925-220655_k8s-helm-compatibility-refresh.md",
+    "docs/_agent_plans/20260925-220655_k8s-helm-compatibility-refresh__phase-prompts.md",
+    "docs/agents/20260925-220655_k8s-helm-compatibility-refresh-state.md"
+  ],
+  "cwd": ".",
+  "start": "2026-09-25T22:36:14.454894+00:00",
+  "end": "2026-09-25T22:36:14.604067+00:00",
+  "exit": 0,
+  "operator": "lead (supplemental checks; separate verifier evidence required)",
+  "tier": "affected",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "head": "12680f2fd18f4a5ac3822cc3cc130b05524053fd",
+  "snapshot": "candidate-manifest.sha256"
+}

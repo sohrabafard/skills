@@ -33,7 +33,7 @@ Switching a workload between `Deployment` and `StatefulSet` once data or identit
 - **LoadBalancer** — when the platform provisions an external load balancer and the workload needs L4 exposure, for TCP or UDP services and cases where HTTP routing is insufficient.
 - **ExternalName** — DNS aliasing to an external service only. It creates no proxying and no health checking.
 
-Never set `spec.externalIPs`: the field trusts every user in the cluster (CVE-2020-8554) and is being removed from Kubernetes 1.36. Use a `LoadBalancer` Service, an Ingress, or Gateway API instead.
+Never set `spec.externalIPs`: the field trusts every user in the cluster (CVE-2020-8554). Use a `LoadBalancer` Service, an Ingress, or Gateway API instead. `references/version-awareness.md` owns the deprecation timeline; deprecation is not removal.
 
 ### Service rules
 
@@ -111,7 +111,7 @@ Do not set `runAsUser`. A fixed UID breaks on any platform that assigns an arbit
 
 - A Secret's `data` is base64, which is an encoding and not a protection. Anything that can read the Secret can read the value.
 - Set `automountServiceAccountToken: false` on the Pod spec unless the workload calls the Kubernetes API. The default mounts a usable API token into every container.
-- Never write a rendered manifest containing Secret objects to a shared or world-readable path, and never commit one. `/alaa-security-review` (`$alaa-security-review`) owns the fail-closed doctrine for handling one.
+- Never write a rendered manifest containing Secret objects to a shared or world-readable path, and never commit one. `/alaa-security-review` owns the fail-closed doctrine for handling one.
 - Mount a Secret or ConfigMap into a dedicated directory such as `/etc/APP/config`. Mounting onto a directory the image already populates replaces its entire contents and produces a startup failure with no obvious cause.
 
 ### ServiceAccount and RBAC
@@ -122,7 +122,7 @@ Create a ServiceAccount only when the workload needs an identity beyond `default
 
 ### Requests and limits
 
-Every container declares both. Requests decide scheduling and QoS class; limits decide throttling and OOM behaviour. The consequences at each boundary, and how to size a pool against replica count, are in `references/failure-and-load.md`. The complexity budget behind the number is `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+Every container declares both. Requests decide scheduling and QoS class; limits decide throttling and OOM behaviour. The consequences at each boundary, and how to size a pool against replica count, are in `references/failure-and-load.md`. The complexity budget behind the number is `/alaa-algorithms-data-structures`.
 
 ### Affinity, anti-affinity, and topology spread
 

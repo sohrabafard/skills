@@ -1,0 +1,16 @@
+{
+  "command": "python -B scripts/check_fleet_references.py",
+  "cwd": "D:\\Sohrab\\Project\\skills",
+  "start_utc": "2026-09-26T02:01:21.7215025+03:30",
+  "end_utc": "2026-09-26T02:01:24.6124211+03:30",
+  "duration_seconds": 2.891,
+  "exit": 0,
+  "classification": "PASS",
+  "tier": "affected",
+  "proof_level": "Level 1 — static",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "timeout_seconds": 120,
+  "stdout": "artifacts\\k8s-helm-compatibility-refresh\\verification-agent\\check_fleet_references.stdout.log",
+  "stderr": "artifacts\\k8s-helm-compatibility-refresh\\verification-agent\\check_fleet_references.stderr.log"
+}

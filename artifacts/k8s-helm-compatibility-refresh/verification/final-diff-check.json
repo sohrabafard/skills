@@ -1,0 +1,18 @@
+{
+  "label": "final-diff-check",
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "cwd": ".",
+  "start": "2026-09-25T22:36:15.326752+00:00",
+  "end": "2026-09-25T22:36:15.378457+00:00",
+  "exit": 0,
+  "operator": "lead (supplemental checks; separate verifier evidence required)",
+  "tier": "affected",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "head": "12680f2fd18f4a5ac3822cc3cc130b05524053fd",
+  "snapshot": "candidate-manifest.sha256"
+}

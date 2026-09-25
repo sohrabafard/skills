@@ -1,0 +1,26 @@
+{
+  "label": "source-links",
+  "command": [
+    "python",
+    "-B",
+    "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+    ".",
+    "--files",
+    "skills/sohrab/alaa-k8s-helm/SKILL.md",
+    "skills/sohrab/alaa-k8s-helm/references/SOURCES.md",
+    "skills/sohrab/alaa-k8s-helm/references/version-awareness.md",
+    "skills/sohrab/alaa-k8s-helm/references/validation-workflows.md",
+    "skills/sohrab/alaa-k8s-helm/references/kubernetes-resource-patterns.md",
+    "skills/sohrab/alaa-k8s-helm/scripts/fixtures/version-reference.md"
+  ],
+  "cwd": ".",
+  "start": "2026-09-25T22:32:46.945488+00:00",
+  "end": "2026-09-25T22:32:47.080687+00:00",
+  "exit": 0,
+  "operator": "lead (supplemental checks; separate verifier evidence required)",
+  "tier": "affected",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "head": "12680f2fd18f4a5ac3822cc3cc130b05524053fd",
+  "snapshot": "candidate-manifest.sha256"
+}

@@ -1,0 +1,2 @@
+check_versions: could not run: https://helm.sh/blog/helm-v3-end-of-life/ is unreachable: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond>
+check_versions: this is exit 2, not a clean verdict; the pinned values were not checked.

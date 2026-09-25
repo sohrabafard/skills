@@ -327,8 +327,9 @@ def check_service(path: str, doc: dict, port_names: set[str], port_numbers: set[
     if spec.get("externalIPs"):
         findings.append(Finding(
             path, line_of(spec), subject, "EXTERNAL-IPS",
-            "spec.externalIPs trusts every cluster user (CVE-2020-8554) and is being "
-            "removed from Kubernetes 1.36; use a LoadBalancer Service, Ingress, or Gateway API",
+            "spec.externalIPs trusts every cluster user (CVE-2020-8554); use a "
+            "LoadBalancer Service, Ingress, or Gateway API. See references/version-awareness.md "
+            "for the deprecation timeline",
         ))
     for port in spec.get("ports") or []:
         if not isinstance(port, dict):

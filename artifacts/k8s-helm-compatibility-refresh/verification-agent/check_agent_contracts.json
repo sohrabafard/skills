@@ -1,0 +1,16 @@
+{
+  "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+  "cwd": "D:\\Sohrab\\Project\\skills",
+  "start_utc": "2026-09-26T02:01:24.9670806+03:30",
+  "end_utc": "2026-09-26T02:01:25.0653069+03:30",
+  "duration_seconds": 0.098,
+  "exit": 0,
+  "classification": "PASS",
+  "tier": "affected",
+  "proof_level": "Level 1 — static",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "timeout_seconds": 120,
+  "stdout": "artifacts\\k8s-helm-compatibility-refresh\\verification-agent\\check_agent_contracts.stdout.log",
+  "stderr": "artifacts\\k8s-helm-compatibility-refresh\\verification-agent\\check_agent_contracts.stderr.log"
+}

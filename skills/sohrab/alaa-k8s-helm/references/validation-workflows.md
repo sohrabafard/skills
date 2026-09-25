@@ -2,11 +2,11 @@
 
 This file is the register. For each gate it states the **predicate** it asserts, the **command** that evaluates it, and the **artifact** the command inspects. It decides which checks must pass before a Kubernetes or Helm change is applied; it writes no `.gitlab-ci.yml`, no other provider YAML, and no Dockerfile.
 
-- `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how each gate below is placed on a runner and decides no gate.
-- `/alaa-docker-production` (`$alaa-docker-production`) owns how the image a chart references is built and hardened, and decides no gate.
-- `/alaa-makefile` (`$alaa-makefile`) owns making a local Make target return the same verdict as the runner for the same gate.
-- `/caas-arvan-kuber` (`$caas-arvan-kuber`) contributes Arvan-only predicates to this register and owns no gate placement.
-- `/alaa-testing-strategy` (`$alaa-testing-strategy`) decides what a chart test must assert. This register decides only that the test exists, is packaged, and runs.
+- `/alaa-gitlab-ci-cd` owns how each gate below is placed on a runner and decides no gate.
+- `/alaa-docker-production` owns how the image a chart references is built and hardened, and decides no gate.
+- `/alaa-makefile` owns making a local Make target return the same verdict as the runner for the same gate.
+- `/caas-arvan-kuber` contributes Arvan-only predicates to this register and owns no gate placement.
+- `/alaa-testing-strategy` decides what a chart test must assert. This register decides only that the test exists, is packaged, and runs.
 
 ## How to use the register
 
@@ -25,14 +25,18 @@ Report-only mode applies when the user said validate, lint, audit, or review; fi
 | 4 | Dependency sanity | Every dependency in `Chart.yaml` resolves and is locked | `helm dependency list CHART` then `helm dependency build CHART` | chart directory | conditional: the chart declares dependencies |
 | 5 | Chart lint | Helm's own template and metadata checks pass with no error | `helm lint CHART -f values.yaml` | chart directory | mandatory for charts |
 | 6 | Render | The chart renders with default values and with each realistic override set | `helm template REL CHART -f values.yaml > rendered.yaml` | chart directory to rendered YAML | mandatory for charts |
-| 7 | Schema validation | Every document validates against the API schema for the target minor | `kubeconform -strict -summary -kubernetes-version 1.36.0 rendered.yaml` | rendered or raw YAML | mandatory |
+| 7 | Schema validation | Every document validates against the API schema for the target minor | `kubeconform -strict -summary -kubernetes-version "$KUBERNETES_VERSION" rendered.yaml` | rendered or raw YAML | mandatory |
 | 8 | Skill rules | No container omits `resources`; no workload container omits a `readinessProbe`; the security baseline holds; no host-level field is set; every Service `targetPort` resolves | `python3 scripts/check_manifests.py rendered.yaml` | rendered or raw YAML | mandatory |
 | 9 | Upgrade identity | No `spec.selector` and no `volumeClaimTemplates[].metadata.name` changed against the currently deployed release | `python3 scripts/check_manifests.py new.yaml --baseline current.yaml` | two rendered YAML sets | mandatory when a release already exists |
 | 10 | Server dry-run | Admission, webhooks, quota, and unknown fields accept the manifest on the real cluster | `kubectl apply --dry-run=server -f rendered.yaml` | rendered YAML against the live API | mandatory when API access exists |
 | 11 | Diff | The change set against the live cluster is the change set intended | `kubectl diff -f rendered.yaml`, or `helm diff upgrade REL CHART -f values-prod.yaml` when the plugin is installed | rendered YAML against live objects | conditional: read access to the target namespace |
 | 12 | Permission | The identity that will apply the change can create or patch every kind in it | `kubectl auth can-i create deployment -n NS`, and the exact verb for each sensitive kind, for example `oc auth can-i use scc/anyuid -n NS` | RBAC on the target | mandatory |
 | 13 | Chart tests packaged | `templates/tests/` survives `helm package` and the test runs | `helm package CHART` then `tar tzf CHART-VERSION.tgz \| grep templates/tests/`, then `helm test REL` after install | packaged chart | conditional: the chart ships tests |
-| 14 | Version drift | The version claims in this skill still match the vendors' pages | `python3 scripts/check_versions.py` | `references/version-awareness.md` | conditional: the answer depends on a version |
+| 14 | Version drift | Relevant version claims match official sources; the checker covers only its three stated fields | `python3 scripts/check_versions.py`, plus the manual source checks required by `references/version-awareness.md` | `references/version-awareness.md` | conditional: the answer depends on a version |
+
+### Gate 7, select the version before validation
+
+Set `KUBERNETES_VERSION` to the target's schema version in `MAJOR.MINOR.PATCH` form. When the target is unknown, validate each minor in the authoring band owned by `references/version-awareness.md` and state the assumed range. Pass the same target to `helm lint --kube-version "$KUBERNETES_VERSION"` and `helm template --kube-version "$KUBERNETES_VERSION"` when templates branch on Kubernetes capabilities. This selects rendering assumptions; it does not prove a server serves the API or make an older Helm binary forward-compatible.
 
 ### Gate 7, when a schema is missing
 

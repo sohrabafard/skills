@@ -1,0 +1,20 @@
+{
+  "label": "helm-lint",
+  "command": [
+    "helm",
+    "lint",
+    "artifacts/k8s-helm-compatibility-refresh/chart-smoke",
+    "-f",
+    "artifacts/k8s-helm-compatibility-refresh/chart-smoke/values.yaml"
+  ],
+  "cwd": ".",
+  "start": "2026-09-25T22:31:06.111777+00:00",
+  "end": "2026-09-25T22:31:06.226059+00:00",
+  "exit": 0,
+  "operator": "lead (supplemental checks; separate verifier evidence required)",
+  "tier": "affected",
+  "priority": "BelowNormal",
+  "parallelism": 1,
+  "head": "12680f2fd18f4a5ac3822cc3cc130b05524053fd",
+  "snapshot": "candidate-manifest.sha256"
+}

@@ -1,0 +1,4 @@
+==> Linting artifacts/k8s-helm-compatibility-refresh/chart-smoke
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed

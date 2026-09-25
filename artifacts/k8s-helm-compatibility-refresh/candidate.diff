@@ -1,0 +1,434 @@
+diff --git a/skills/sohrab/alaa-k8s-helm/SKILL.md b/skills/sohrab/alaa-k8s-helm/SKILL.md
+index 358db3102..9dc24f83d 100644
+--- a/skills/sohrab/alaa-k8s-helm/SKILL.md
++++ b/skills/sohrab/alaa-k8s-helm/SKILL.md
+@@ -10,19 +10,19 @@ Single entrypoint for Helm, Kubernetes YAML, OpenShift, and day-2 troubleshootin
+ ## Start here
+ 
+ 1. Read `references/00-topic-map.md`. It is the only router in this skill: it maps a task phrasing to the smallest set of files to open across the five lanes (authoring, validation, runtime debugging, platform fit, networking and tuning), and it lists the scripts.
+-2. Establish the **version surface** (`helm version`, `kubectl version --output=yaml`, `oc version`, `kubectl api-versions`) and the **access surface** (cluster-admin, namespace admin, developer, container-only) before writing anything.
++2. Establish the **version surface** and the **access surface** (cluster-admin, namespace admin, developer, container-only) before writing anything. Follow the local-client versus authorized-target discovery sequence in `references/version-awareness.md`; mark unavailable target evidence unknown.
+ 3. Open only the files the topic map names.
+ 
+ ## When NOT to use
+ 
+ - Docker-only, Terraform-only, CI-only work, cloud architecture that does not materially depend on Kubernetes, OpenShift, or Helm, and application logic whose fix is not tied to workload runtime behaviour.
+-- Arvan CaaS platform facts. Load `/caas-arvan-kuber` (`$caas-arvan-kuber`) only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise load `/alaa-k8s-helm` (`$alaa-k8s-helm`), including when the target cluster happens to be Arvan.
++- Arvan CaaS platform facts. Load `/caas-arvan-kuber` only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise load `/alaa-k8s-helm`, including when the target cluster happens to be Arvan.
+ 
+ ## Default operating model
+ 
+-- **Version-aware first**: every version number this skill uses lives in `references/version-awareness.md` and nowhere else. Read it when compatibility, skew, or "latest" behaviour affects the answer; re-derive it with `scripts/check_versions.py`.
++- **Version-aware first**: `references/version-awareness.md` owns release, support and compatibility facts. Read it when compatibility, skew, or "latest" behaviour affects the answer; its sources and `scripts/check_versions.py` define what must be revalidated.
+ - **Access-aware first**: never assume cluster-admin. `references/openshift-and-managed-platforms.md` states what each of the four access surfaces unlocks and which `auth can-i` call proves it; run that call before recommending a cluster-scoped object or a node-level action.
+-- **Emit only API versions the target serves**: emit an `apiVersion` only when `kubectl api-versions` on the target reports it. When the cluster is unknown, emit only versions served on every supported Kubernetes minor named in `references/version-awareness.md`, and state that floor in the output.
++- **Emit only API versions the target serves**: emit an `apiVersion` only when `kubectl api-versions` on the target reports it. When the cluster is unknown, emit only versions served throughout the authoring compatibility band in `references/version-awareness.md`, and state that floor in the output.
+ - **Namespace-safe by default**: generate namespaced resources. Emit a cluster-scoped resource only after `kubectl auth can-i create RESOURCE` returns `yes` for the identity that will apply it.
+ - **Evidence before edits**: for debugging, collect status, describe output, events, logs, and access errors before proposing a fix.
+ - **OpenShift-safe by default**: when the target might be OpenShift or an OpenShift-like managed platform, assume arbitrary UID, non-root execution, stricter admission, and no node access until a command proves otherwise.
+@@ -41,16 +41,16 @@ Single entrypoint for Helm, Kubernetes YAML, OpenShift, and day-2 troubleshootin
+ 
+ Each line names an owner and the condition under which that owner decides the matter.
+ 
+-- `/alaa-reliability-sla` (`$alaa-reliability-sla`) decides why a timeout, retry, backoff, circuit breaker, backpressure, or degradation mechanism exists and what shape it takes. `references/failure-and-load.md` holds only the Kubernetes expression of that decision.
+-- `/alaa-security-review` (`$alaa-security-review`) decides review triggers, threat classes, and fail-closed doctrine. Route a manifest change there when it widens an access surface, adds a Secret, or relaxes a security context.
+-- `/alaa-observability-soc` (`$alaa-observability-soc`) decides whether a signal is required and what gates on it; `/alaa-services-contract` (`$alaa-services-contract`) decides every shared name and value, including log fields, the `alaa_*` metric catalog, `OTEL_*` names and defaults, and the host-port table.
+-- `/alaa-testing-strategy` (`$alaa-testing-strategy`) decides test layering and what a smoke test must assert; this skill decides only that a chart test exists and is packaged.
+-- `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) decides the complexity budget behind a request, a limit, or a replica count.
+-- `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) decides the bucket, policy, lifecycle, and credential posture behind an object-storage volume or an S3 Secret, and `/alaa-arvan-object-storage` (`$alaa-arvan-object-storage`) decides the same for an `arvanstorage.ir` endpoint; this skill keeps only the Kubernetes expression, because a Secret, a PVC, or a CSI volume carries whatever storage policy it is handed and enforces none of it.
+-- `/caas-arvan-kuber` (`$caas-arvan-kuber`) decides Arvan CaaS platform facts, under the deciding test above.
+-- `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md` decides model and reasoning effort, and no model name appears in this skill, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative.
++- `/alaa-reliability-sla` decides why a timeout, retry, backoff, circuit breaker, backpressure, or degradation mechanism exists and what shape it takes. `references/failure-and-load.md` holds only the Kubernetes expression of that decision.
++- `/alaa-security-review` decides review triggers, threat classes, and fail-closed doctrine. Route a manifest change there when it widens an access surface, adds a Secret, or relaxes a security context.
++- `/alaa-observability-soc` decides whether a signal is required and what gates on it; `/alaa-services-contract` decides every shared name and value, including log fields, the `alaa_*` metric catalog, `OTEL_*` names and defaults, and the host-port table.
++- `/alaa-testing-strategy` decides test layering and what a smoke test must assert; this skill decides only that a chart test exists and is packaged.
++- `/alaa-algorithms-data-structures` decides the complexity budget behind a request, a limit, or a replica count.
++- `/alaa-minio-object-storage` decides the bucket, policy, lifecycle, and credential posture behind an object-storage volume or an S3 Secret, and `/alaa-arvan-object-storage` decides the same for an `arvanstorage.ir` endpoint; this skill keeps only the Kubernetes expression, because a Secret, a PVC, or a CSI volume carries whatever storage policy it is handed and enforces none of it.
++- `/caas-arvan-kuber` decides Arvan CaaS platform facts, under the deciding test above.
++- `/alaa-prompting-guide` `references/50-effort-and-thinking.md` decides model and reasoning effort, and no model name appears in this skill, because a model name written into a skill goes stale silently and is copied forward because it looks authoritative.
+ 
+-**Stack versus platform (D8).** `references/validation-workflows.md` is the **Kubernetes and Helm delivery gate register**: this skill decides which checks must pass before a Kubernetes or Helm change is applied and what artifact each inspects, and writes no provider YAML and no Dockerfile. `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how each gate is placed on a runner, including the `[runners.kubernetes]` block, and decides no gate. `/alaa-docker-production` (`$alaa-docker-production`) owns how the image a chart references is built and hardened, and decides no gate. `/alaa-makefile` (`$alaa-makefile`) owns making a local Make target return the runner's verdict. `/alaa-frontend-devops` (`$alaa-frontend-devops`) owns the frontend gate register; this file is its backend counterpart.
++**Stack versus platform (D8).** `references/validation-workflows.md` is the **Kubernetes and Helm delivery gate register**: this skill decides which checks must pass before a Kubernetes or Helm change is applied and what artifact each inspects, and writes no provider YAML and no Dockerfile. `/alaa-gitlab-ci-cd` owns how each gate is placed on a runner, including the `[runners.kubernetes]` block, and decides no gate. `/alaa-docker-production` owns how the image a chart references is built and hardened, and decides no gate. `/alaa-makefile` owns making a local Make target return the runner's verdict. `/alaa-frontend-devops` owns the frontend gate register; this file is its backend counterpart.
+ 
+ ## Subagent strategy
+ 
+diff --git a/skills/sohrab/alaa-k8s-helm/references/SOURCES.md b/skills/sohrab/alaa-k8s-helm/references/SOURCES.md
+index 44d14d585..4afecaeca 100644
+--- a/skills/sohrab/alaa-k8s-helm/references/SOURCES.md
++++ b/skills/sohrab/alaa-k8s-helm/references/SOURCES.md
+@@ -2,7 +2,19 @@
+ 
+ Provenance ledger. Use it when Kubernetes, Helm, OpenShift, kubectl, oc, or managed-platform behaviour must be current, and to learn which official URL answers which question.
+ 
+-Last re-verified: **2026-07-29**. Every URL below was fetched on that date unless the row says otherwise. The values derived from them live in `references/version-awareness.md`; `scripts/check_versions.py` re-derives them.
++Kubernetes and Helm compatibility sources listed under the refresh below were re-verified **2026-09-26**. Other entries retain their **2026-07-29** evidence date; OpenShift was not revalidated by this refresh. Derived version facts live in `references/version-awareness.md`; that file also states the three fields covered by `scripts/check_versions.py` and the manual checks it cannot replace.
++
++## Compatibility refresh, 2026-09-26
++
++- Kubernetes release branches, patches and EOL dates: https://kubernetes.io/releases/ and https://kubernetes.io/releases/1.37/ .
++- Component and HA skew: https://kubernetes.io/releases/version-skew-policy/ . API removals: https://kubernetes.io/docs/reference/using-api/deprecation-guide/ .
++- Helm stable releases, excluding previews and schedules: https://github.com/helm/helm/releases . Compatibility: https://helm.sh/docs/topics/version_skew/ and https://helm.sh/docs/v3/topics/version_skew/ .
++- Exact compiled client dependencies: tagged `go.mod` files linked in `references/version-awareness.md`. Read the tag matching the binary, not branch-head source.
++- Helm lifecycle and the final client-library update: https://helm.sh/blog/helm-v3-end-of-life/ .
++- Rollback flag aliases: tagged install and upgrade sources linked in `references/version-awareness.md`; deprecated aliases may be hidden from generated help. Helm legacy CLI: https://docs.helm.sh/docs/v3/helm/helm_install/ and https://docs.helm.sh/docs/v3/helm/helm_upgrade/ .
++- Service externalIPs deprecation and earliest removal plans: https://kubernetes.io/blog/2026/05/14/kubernetes-v1-36-deprecation-and-removal-of-service-externalips/ .
++- VolumeAttributesClass maturity and CSI prerequisites: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ and https://kubernetes.io/blog/2025/09/08/kubernetes-v1-34-volume-attributes-class/ . Distinguish initial GA from the later locked feature gate.
++- Configurable HPA tolerance maturity: https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/#tolerance . Version-specific conditions remain in `references/version-awareness.md`.
+ 
+ ## Freshness triggers
+ 
+diff --git a/skills/sohrab/alaa-k8s-helm/references/kubernetes-resource-patterns.md b/skills/sohrab/alaa-k8s-helm/references/kubernetes-resource-patterns.md
+index 69bfd9579..248131276 100644
+--- a/skills/sohrab/alaa-k8s-helm/references/kubernetes-resource-patterns.md
++++ b/skills/sohrab/alaa-k8s-helm/references/kubernetes-resource-patterns.md
+@@ -33,7 +33,7 @@ Switching a workload between `Deployment` and `StatefulSet` once data or identit
+ - **LoadBalancer** — when the platform provisions an external load balancer and the workload needs L4 exposure, for TCP or UDP services and cases where HTTP routing is insufficient.
+ - **ExternalName** — DNS aliasing to an external service only. It creates no proxying and no health checking.
+ 
+-Never set `spec.externalIPs`: the field trusts every user in the cluster (CVE-2020-8554) and is being removed from Kubernetes 1.36. Use a `LoadBalancer` Service, an Ingress, or Gateway API instead.
++Never set `spec.externalIPs`: the field trusts every user in the cluster (CVE-2020-8554). Use a `LoadBalancer` Service, an Ingress, or Gateway API instead. `references/version-awareness.md` owns the deprecation timeline; deprecation is not removal.
+ 
+ ### Service rules
+ 
+@@ -111,7 +111,7 @@ Do not set `runAsUser`. A fixed UID breaks on any platform that assigns an arbit
+ 
+ - A Secret's `data` is base64, which is an encoding and not a protection. Anything that can read the Secret can read the value.
+ - Set `automountServiceAccountToken: false` on the Pod spec unless the workload calls the Kubernetes API. The default mounts a usable API token into every container.
+-- Never write a rendered manifest containing Secret objects to a shared or world-readable path, and never commit one. `/alaa-security-review` (`$alaa-security-review`) owns the fail-closed doctrine for handling one.
++- Never write a rendered manifest containing Secret objects to a shared or world-readable path, and never commit one. `/alaa-security-review` owns the fail-closed doctrine for handling one.
+ - Mount a Secret or ConfigMap into a dedicated directory such as `/etc/APP/config`. Mounting onto a directory the image already populates replaces its entire contents and produces a startup failure with no obvious cause.
+ 
+ ### ServiceAccount and RBAC
+@@ -122,7 +122,7 @@ Create a ServiceAccount only when the workload needs an identity beyond `default
+ 
+ ### Requests and limits
+ 
+-Every container declares both. Requests decide scheduling and QoS class; limits decide throttling and OOM behaviour. The consequences at each boundary, and how to size a pool against replica count, are in `references/failure-and-load.md`. The complexity budget behind the number is `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
++Every container declares both. Requests decide scheduling and QoS class; limits decide throttling and OOM behaviour. The consequences at each boundary, and how to size a pool against replica count, are in `references/failure-and-load.md`. The complexity budget behind the number is `/alaa-algorithms-data-structures`.
+ 
+ ### Affinity, anti-affinity, and topology spread
+ 
+diff --git a/skills/sohrab/alaa-k8s-helm/references/validation-workflows.md b/skills/sohrab/alaa-k8s-helm/references/validation-workflows.md
+index 9a58d00ef..7f8e6104e 100644
+--- a/skills/sohrab/alaa-k8s-helm/references/validation-workflows.md
++++ b/skills/sohrab/alaa-k8s-helm/references/validation-workflows.md
+@@ -2,11 +2,11 @@
+ 
+ This file is the register. For each gate it states the **predicate** it asserts, the **command** that evaluates it, and the **artifact** the command inspects. It decides which checks must pass before a Kubernetes or Helm change is applied; it writes no `.gitlab-ci.yml`, no other provider YAML, and no Dockerfile.
+ 
+-- `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns how each gate below is placed on a runner and decides no gate.
+-- `/alaa-docker-production` (`$alaa-docker-production`) owns how the image a chart references is built and hardened, and decides no gate.
+-- `/alaa-makefile` (`$alaa-makefile`) owns making a local Make target return the same verdict as the runner for the same gate.
+-- `/caas-arvan-kuber` (`$caas-arvan-kuber`) contributes Arvan-only predicates to this register and owns no gate placement.
+-- `/alaa-testing-strategy` (`$alaa-testing-strategy`) decides what a chart test must assert. This register decides only that the test exists, is packaged, and runs.
++- `/alaa-gitlab-ci-cd` owns how each gate below is placed on a runner and decides no gate.
++- `/alaa-docker-production` owns how the image a chart references is built and hardened, and decides no gate.
++- `/alaa-makefile` owns making a local Make target return the same verdict as the runner for the same gate.
++- `/caas-arvan-kuber` contributes Arvan-only predicates to this register and owns no gate placement.
++- `/alaa-testing-strategy` decides what a chart test must assert. This register decides only that the test exists, is packaged, and runs.
+ 
+ ## How to use the register
+ 
+@@ -25,14 +25,18 @@ Report-only mode applies when the user said validate, lint, audit, or review; fi
+ | 4 | Dependency sanity | Every dependency in `Chart.yaml` resolves and is locked | `helm dependency list CHART` then `helm dependency build CHART` | chart directory | conditional: the chart declares dependencies |
+ | 5 | Chart lint | Helm's own template and metadata checks pass with no error | `helm lint CHART -f values.yaml` | chart directory | mandatory for charts |
+ | 6 | Render | The chart renders with default values and with each realistic override set | `helm template REL CHART -f values.yaml > rendered.yaml` | chart directory to rendered YAML | mandatory for charts |
+-| 7 | Schema validation | Every document validates against the API schema for the target minor | `kubeconform -strict -summary -kubernetes-version 1.36.0 rendered.yaml` | rendered or raw YAML | mandatory |
++| 7 | Schema validation | Every document validates against the API schema for the target minor | `kubeconform -strict -summary -kubernetes-version "$KUBERNETES_VERSION" rendered.yaml` | rendered or raw YAML | mandatory |
+ | 8 | Skill rules | No container omits `resources`; no workload container omits a `readinessProbe`; the security baseline holds; no host-level field is set; every Service `targetPort` resolves | `python3 scripts/check_manifests.py rendered.yaml` | rendered or raw YAML | mandatory |
+ | 9 | Upgrade identity | No `spec.selector` and no `volumeClaimTemplates[].metadata.name` changed against the currently deployed release | `python3 scripts/check_manifests.py new.yaml --baseline current.yaml` | two rendered YAML sets | mandatory when a release already exists |
+ | 10 | Server dry-run | Admission, webhooks, quota, and unknown fields accept the manifest on the real cluster | `kubectl apply --dry-run=server -f rendered.yaml` | rendered YAML against the live API | mandatory when API access exists |
+ | 11 | Diff | The change set against the live cluster is the change set intended | `kubectl diff -f rendered.yaml`, or `helm diff upgrade REL CHART -f values-prod.yaml` when the plugin is installed | rendered YAML against live objects | conditional: read access to the target namespace |
+ | 12 | Permission | The identity that will apply the change can create or patch every kind in it | `kubectl auth can-i create deployment -n NS`, and the exact verb for each sensitive kind, for example `oc auth can-i use scc/anyuid -n NS` | RBAC on the target | mandatory |
+ | 13 | Chart tests packaged | `templates/tests/` survives `helm package` and the test runs | `helm package CHART` then `tar tzf CHART-VERSION.tgz \| grep templates/tests/`, then `helm test REL` after install | packaged chart | conditional: the chart ships tests |
+-| 14 | Version drift | The version claims in this skill still match the vendors' pages | `python3 scripts/check_versions.py` | `references/version-awareness.md` | conditional: the answer depends on a version |
++| 14 | Version drift | Relevant version claims match official sources; the checker covers only its three stated fields | `python3 scripts/check_versions.py`, plus the manual source checks required by `references/version-awareness.md` | `references/version-awareness.md` | conditional: the answer depends on a version |
++
++### Gate 7, select the version before validation
++
++Set `KUBERNETES_VERSION` to the target's schema version in `MAJOR.MINOR.PATCH` form. When the target is unknown, validate each minor in the authoring band owned by `references/version-awareness.md` and state the assumed range. Pass the same target to `helm lint --kube-version "$KUBERNETES_VERSION"` and `helm template --kube-version "$KUBERNETES_VERSION"` when templates branch on Kubernetes capabilities. This selects rendering assumptions; it does not prove a server serves the API or make an older Helm binary forward-compatible.
+ 
+ ### Gate 7, when a schema is missing
+ 
+diff --git a/skills/sohrab/alaa-k8s-helm/references/version-awareness.md b/skills/sohrab/alaa-k8s-helm/references/version-awareness.md
+index ae738b52a..213bcfd40 100644
+--- a/skills/sohrab/alaa-k8s-helm/references/version-awareness.md
++++ b/skills/sohrab/alaa-k8s-helm/references/version-awareness.md
+@@ -1,52 +1,64 @@
+ # Version Awareness
+ 
+-This is the only file in the skill that contains a version number. Every other file points here. When a number below disagrees with the target cluster, the cluster wins.
++This file owns release, support, compatibility and feature-version facts. Other files may carry API identifiers and synthetic fixture versions, but route compatibility decisions here. Target discovery outranks this snapshot; an upstream release does not prove a consumer upgrade.
+ 
+ ## Rules that do not rot
+ 
+ These outlive any snapshot. Apply them before reading the pinned values.
+ 
+-1. **Kubernetes supports the three most recent minor releases.** Each minor gets roughly one year of patch support. Anything older than the third-newest minor receives no upstream patches, including security patches.
++1. **Kubernetes maintains the three most recent minor release branches.** Each minor gets roughly one year of patch support. Check the published EOL date as well as the branch list; when they disagree, record the discrepancy instead of inferring that a consumer is already unsupported.
+    Re-derive: https://kubernetes.io/releases/
+ 2. **Version skew, relative to `kube-apiserver`.** `kubectl` is supported within one minor older or newer. `kubelet` and `kube-proxy` may be up to three minors older and must never be newer (two minors for pre-1.25 components). `kube-controller-manager`, `kube-scheduler`, and `cloud-controller-manager` may be one minor older and must never be newer. In an HA control plane, `kube-apiserver` instances must be within one minor of each other, which narrows every other window.
+    Re-derive: https://kubernetes.io/releases/version-skew-policy/
+    **What to conclude from `kubectl version`:** if the client minor is more than one away from the server minor, stop and say so before emitting YAML, because client-side schema validation and `kubectl diff` will disagree with the server.
+-3. **Helm compatibility is `n-3` against the Kubernetes client libraries the binary was compiled against**, not against a frozen table. Read the release note of the Helm version in use to learn which client-library minor it carries, then subtract three.
+-   Re-derive: https://helm.sh/docs/topics/version_skew/ and the release note at https://github.com/helm/helm/releases
++3. **Helm compatibility is `n-3` against the Kubernetes client libraries the binary was compiled against**, not against a frozen table. Read the exact release's compatibility documentation and tagged `go.mod` to identify that minor, then subtract three. The same chart may support more minors than one Helm binary can operate against.
++   Re-derive: https://helm.sh/docs/topics/version_skew/ , https://helm.sh/docs/v3/topics/version_skew/ and the exact tag at https://github.com/helm/helm/releases
+ 4. **Helm does not guarantee forward compatibility.** Running Helm against a Kubernetes minor newer than the client libraries it was compiled against is unsupported; upgrade Helm rather than assuming it works.
+ 5. **An `apiVersion` is available only when the target serves it.** `kubectl api-versions` is the authority; a schema bundle is not.
+ 
+-## Pinned values, verified 2026-07-29
++## Pinned values, verified 2026-09-26
+ 
+-Re-derive all of these with `python3 scripts/check_versions.py`. Each row names the command or URL that regenerates it.
++The checker compares only the latest stable Kubernetes minor, latest stable Helm release and Helm 3 EOL date. Revalidate the other rows manually from their named official sources; a clean checker does not verify this whole table. Preview tags and scheduled releases are not stable releases.
+ 
+-| Value | As of 2026-07-29 | Re-derive with |
++| Value | As of 2026-09-26 | Re-derive with |
+ |---|---|---|
+-| Latest Kubernetes minor | 1.36 (latest patch 1.36.2, released 2026-06-09) | https://kubernetes.io/releases/ |
+-| Supported Kubernetes minors | 1.36 (EOL 2027-06-28), 1.35 (EOL 2027-02-28), 1.34 (EOL 2026-10-27) | https://kubernetes.io/releases/ |
+-| Kubernetes minors that are end of life | 1.33 and older; 1.33 reached EOL 2026-06-28 | https://kubernetes.io/releases/ |
+-| Current Helm major | 4; latest 4.2.0, released 2026-05-14, compiled against Kubernetes client libraries v1.36 | https://github.com/helm/helm/releases |
+-| Helm 4.2.0 Kubernetes band | 1.36 through 1.33, by the `n-3` rule above | rule 3 plus the 4.2.0 release note |
+-| Latest Helm 3 | 3.21.0, released 2026-05-14 | https://github.com/helm/helm/releases |
+-| Helm 3 end of life | **2027-02-10**. Bug fixes stop at the final 3.x feature release on 2026-09-09; only security fixes are issued between 2026-09-09 and 2027-02-10; Kubernetes client-library updates are not backported during that window; after 2027-02-10 there are no further 3.x releases of any kind | https://helm.sh/blog/helm-v3-end-of-life/ |
+-| Current OpenShift line | 4.22 | https://docs.redhat.com/en/documentation/openshift_container_platform/ |
+-| OpenShift 4.22 Kubernetes version | 1.35, per the release-highlight write-ups; Red Hat's own 4.22 release-notes page did not render this pairing on 2026-07-29, so confirm it against the cluster with `oc version` before relying on it | `oc version` on the target |
++| Latest Kubernetes minor | 1.37 (latest stable patch listed: 1.37.0, released 2026-08-26) | https://kubernetes.io/releases/ and https://kubernetes.io/releases/1.37/ |
++| Maintained Kubernetes branches | 1.37, 1.36, 1.35; listed patches 1.37.0, 1.36.4, 1.35.8 | https://kubernetes.io/releases/ |
++| Kubernetes 1.34 compatibility branch | The release page lists EOL 2026-10-27, although its latest-three maintained-branch list omits this minor. Preserve the authoring floor below; do not infer an earlier EOL from that omission | https://kubernetes.io/releases/ |
++| Current Helm major | 4; latest 4.3.0, compiled against Kubernetes client libraries v1.37 (`k8s.io/client-go v0.37.0`) | https://github.com/helm/helm/releases/tag/v4.3.0 and https://raw.githubusercontent.com/helm/helm/v4.3.0/go.mod |
++| Helm 4.3.0 Kubernetes band | 1.34 through 1.37 | https://helm.sh/docs/topics/version_skew/ and rule 3 |
++| Latest Helm 3 | 3.22.0; client libraries v1.37 (`k8s.io/client-go v0.37.0`), Kubernetes band 1.34 through 1.37 | https://github.com/helm/helm/releases/tag/v3.22.0 and https://raw.githubusercontent.com/helm/helm/v3.22.0/go.mod |
++| Earlier Helm compatibility path | Helm 3.21.x and 4.2.x target Kubernetes 1.33 through 1.36; the observed 4.2.3 tag carries `k8s.io/client-go v0.36.1`. Do not claim support for a newer Kubernetes minor from chart rendering alone | https://helm.sh/docs/v3/topics/version_skew/ , https://helm.sh/docs/topics/version_skew/ and https://raw.githubusercontent.com/helm/helm/v4.2.3/go.mod |
++| Helm 3 end of life | **2027-02-10**. The final minor, 3.22 on 2026-09-09, is limited to Kubernetes client-library updates. Subsequent maintenance is security-only until EOL, without further client-library updates; after EOL no further 3.x releases are planned | https://helm.sh/blog/helm-v3-end-of-life/ |
++
++### Historical OpenShift snapshot, not revalidated in this refresh
++
++The 2026-07-29 snapshot named OCP 4.22 and an authoring band of 4.20 through 4.22. Its proposed pairing of OCP 4.22 with Kubernetes 1.35 was not confirmed by Red Hat's release-notes page. Keep that compatibility path where consumers require it, but do not describe it as the current upstream line. Confirm the target with `oc version` and its versioned documentation at https://docs.redhat.com/en/documentation/openshift_container_platform/ before relying on a pairing or selecting a different band.
+ 
+ ### What this means for authoring
+ 
+-- **Default Kubernetes band: 1.34 through 1.36.** Emit only API versions served across all three unless the target cluster is known.
+-- **Default OpenShift band: 4.20 through 4.22**, or state it as "the three most recent OCP minors" and re-derive.
++- **Default Kubernetes authoring band: 1.34 through 1.37.** Keep the existing 1.34 floor; emit only APIs and fields available throughout this band unless the target is known. A feature available only on a newer minor needs an explicit version condition. Upstream maintenance policy does not change a chart's consumer compatibility floor.
++- **Known older consumers retain their explicit version path.** Validate against their actual served APIs and matching Helm binary; report upstream support separately. For Arvan platform facts, `/caas-arvan-kuber` owns the platform-specific decision. Unknown consumer versions remain unknown.
++- **OpenShift compatibility follows the historical caveat above and target evidence.** A newly published OCP minor does not remove existing consumer support.
+ - **Chart API is `v2`.** Chart API `v1` is Helm 2 shaped and is not emitted.
+-- **Charts stay installable on both Helm 3.21+ and Helm 4** until 2027-02-10. After that date, target Helm 4 only and say so in the chart's README, because Helm 3 receives no Kubernetes client-library patches after 2026-09-09 and no releases at all after 2027-02-10.
++- **Preserve charts' Helm 3.21+ and Helm 4 compatibility paths.** Choose a Helm build whose Kubernetes band includes the target. EOL calls for a migration decision, not automatic consumer-support removal; a breaking support change needs explicit approval and a documented migration path.
++- **Separate proof levels.** Record the intended chart range, each installed client version, upstream support and actual consumer/server evidence separately. Lint or template with one Helm build proves neither another build nor cluster admission. Report missing version coverage; do not install or upgrade tools implicitly.
+ 
+ ### Helm flag names that changed between 3 and 4
+ 
+-`--atomic` was renamed to `--rollback-on-failure` in Helm 4. Helm 4 keeps the legacy `--atomic` binding on `helm upgrade` with a deprecation warning and **removed it from `helm install`**, so `helm install --atomic` fails with an unknown-flag error on Helm 4, and `helm upgrade --rollback-on-failure` fails on Helm 3. Any command a skill or template emits selects the flag from the detected major:
++Use `--atomic` with Helm 3 and `--rollback-on-failure` with Helm 4. Tagged Helm 4.2.3 and 4.3.0 sources retain `--atomic` as a deprecated alias on both install and upgrade; generated help may hide it. Helm 3 does not accept `--rollback-on-failure`. Select the preferred flag from a successfully detected major and stop on an unknown version:
+ 
+ ```bash
+-if helm version --template '{{.Version}}' | grep -q '^v4'; then rb=--rollback-on-failure; else rb=--atomic; fi
++helm_version=$(helm version --template '{{.Version}}') || exit 2
++case "$helm_version" in
++  v3.*) rb=--atomic ;;
++  v4.*) rb=--rollback-on-failure ;;
++  *) printf 'Unsupported Helm version: %s\n' "$helm_version" >&2; exit 2 ;;
++esac
+ ```
+ 
++Verified 2026-09-26 against https://raw.githubusercontent.com/helm/helm/v4.2.3/pkg/cmd/install.go , https://raw.githubusercontent.com/helm/helm/v4.3.0/pkg/cmd/install.go , https://raw.githubusercontent.com/helm/helm/v4.3.0/pkg/cmd/upgrade.go and https://docs.helm.sh/docs/v3/helm/helm_upgrade/ .
++
+ ## API deprecations and removals this skill must know
+ 
+ Re-derive the whole table: https://kubernetes.io/docs/reference/using-api/deprecation-guide/
+@@ -56,8 +68,11 @@ Re-derive the whole table: https://kubernetes.io/docs/reference/using-api/deprec
+ | `policy/v1beta1` PodSecurityPolicy | **Removed in 1.25** | Pod Security Admission namespace labels; see `references/openshift-and-managed-platforms.md` |
+ | `autoscaling/v2beta2` HorizontalPodAutoscaler | **Removed in 1.26** | `autoscaling/v2` |
+ | `flowcontrol.apiserver.k8s.io/v1beta3` | **Removed in 1.32** | `flowcontrol.apiserver.k8s.io/v1` |
+-| Service `.spec.externalIPs` | **Deprecated and being removed from 1.36**, because the field trusts every cluster user (CVE-2020-8554) | a `LoadBalancer` Service, or Ingress or Gateway API; enable the `DenyServiceExternalIPs` admission plugin to block new use |
+-| `autoscaling/v2`, `policy/v1`, `networking.k8s.io/v1`, `rbac.authorization.k8s.io/v1`, `gateway.networking.k8s.io/v1` | Current and not deprecated as of 2026-07-29 | none needed |
++| Service `.spec.externalIPs` | **Deprecated in 1.36, not removed there.** Announced kube-proxy disablement is no earlier than 1.40 and full disablement no earlier than 1.43; these are earliest plans, not observed removals. The security rejection remains because of CVE-2020-8554 | a `LoadBalancer` Service, or Ingress or Gateway API; a cluster administrator can enable `DenyServiceExternalIPs` to block new use |
++| `autoscaling/v2`, `policy/v1`, `networking.k8s.io/v1`, `rbac.authorization.k8s.io/v1` | Stable APIs retained across the authoring band; target discovery still decides availability | none needed |
++| `gateway.networking.k8s.io/v1` | Separately installed Gateway API, not guaranteed by a Kubernetes minor | verify installed CRDs and controller support |
++
++The externalIPs timeline was verified 2026-09-26 at https://kubernetes.io/blog/2026/05/14/kubernetes-v1-36-deprecation-and-removal-of-service-externalips/ .
+ 
+ ## Feature gating
+ 
+@@ -65,26 +80,33 @@ Re-derive the whole table: https://kubernetes.io/docs/reference/using-api/deprec
+ 
+ - Chart API `v2`, `values.schema.json`, OCI chart distribution
+ - `kubectl debug` for ephemeral-container workflows
+-- `VolumeAttributesClass`: GA since 1.34, and only when the CSI driver supports it. Confirm with `kubectl get volumeattributesclass` and the driver's own documentation.
++- `VolumeAttributesClass`: GA since 1.34; its feature gate could still be disabled in 1.34-1.35 and is locked on from 1.36. Emit only when the target serves it and the CSI driver supports it. Confirm with `kubectl get volumeattributesclass` and the driver's own documentation. The GA announcement and current feature-gate explanation were checked 2026-09-26: https://kubernetes.io/blog/2025/09/08/kubernetes-v1-34-volume-attributes-class/ and https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ .
+ - Gateway API: only when `kubectl api-resources --api-group=gateway.networking.k8s.io` returns rows. Note that several experimental route kinds still live in `gateway.networking.k8s.io/v1alpha2`, which `scripts/detect_crd.py` classifies as custom.
+ - Dynamic Resource Allocation `resource.k8s.io/v1`: GA since 1.34.
+ 
+ ### Do not emit without an explicit statement from the user
+ 
+ - Helm 4-only template functions in an estate that still runs Helm 3
+-- alpha feature gates of any kind, including configurable HPA tolerance
++- alpha feature gates of any kind
++- configurable HPA tolerance: stable since 1.37 and first available in 1.33, per https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/#tolerance (verified 2026-09-26). On older targets, verify that minor's feature stage, `HPAConfigurableTolerance` gate and served field before emitting it; do not assume it works throughout the default band
+ - cluster-specific Gateway filters or vendor extensions
+ 
+ ## Check sequence before version-sensitive advice
+ 
+-Run the smallest set that answers the question.
++Run the smallest authorized set that answers the question. For offline authoring or prohibited cluster access, use supplied target evidence and local client versions, mark server/API evidence unknown, and do not run discovery commands:
+ 
+ ```bash
+ helm version
++kubectl version --client --output=yaml
++python3 scripts/check_versions.py
++```
++
++When target API access is authorized, obtain the server and served-API evidence separately:
++
++```bash
+ kubectl version --output=yaml
+ oc version
+ kubectl api-versions | grep -E 'gateway.networking.k8s.io|route.openshift.io|security.openshift.io'
+-python3 scripts/check_versions.py
+ ```
+ 
+-`scripts/check_versions.py` compares the "Pinned values" table above against the vendors' own pages and exits `1` when they have moved apart, so the drift is a finding rather than a discovery. When the network is unavailable it exits `2`, which is not a clean verdict.
++`scripts/check_versions.py` compares the three stated fields against vendor pages: exit `0` means those fields match, `1` means drift, and `2` means unavailable evidence, including fetch or parse failure. It is read-only; resolve findings before version-sensitive advice and never turn unavailable evidence into a pass. `--self-test` uses fixed synthetic fixtures, not live release evidence.
+diff --git a/skills/sohrab/alaa-k8s-helm/scripts/check_manifests.py b/skills/sohrab/alaa-k8s-helm/scripts/check_manifests.py
+index 130a23d52..8db448e1f 100644
+--- a/skills/sohrab/alaa-k8s-helm/scripts/check_manifests.py
++++ b/skills/sohrab/alaa-k8s-helm/scripts/check_manifests.py
+@@ -327,8 +327,9 @@ def check_service(path: str, doc: dict, port_names: set[str], port_numbers: set[
+     if spec.get("externalIPs"):
+         findings.append(Finding(
+             path, line_of(spec), subject, "EXTERNAL-IPS",
+-            "spec.externalIPs trusts every cluster user (CVE-2020-8554) and is being "
+-            "removed from Kubernetes 1.36; use a LoadBalancer Service, Ingress, or Gateway API",
++            "spec.externalIPs trusts every cluster user (CVE-2020-8554); use a "
++            "LoadBalancer Service, Ingress, or Gateway API. See references/version-awareness.md "
++            "for the deprecation timeline",
+         ))
+     for port in spec.get("ports") or []:
+         if not isinstance(port, dict):
+diff --git a/skills/sohrab/alaa-k8s-helm/scripts/check_versions.py b/skills/sohrab/alaa-k8s-helm/scripts/check_versions.py
+index 832d8c900..a56ea6eb8 100644
+--- a/skills/sohrab/alaa-k8s-helm/scripts/check_versions.py
++++ b/skills/sohrab/alaa-k8s-helm/scripts/check_versions.py
+@@ -10,7 +10,7 @@ Exit codes, shared by every script in this skill:
+     0  the pinned values match the vendors' pages
+     1  findings: at least one pinned value has drifted
+     2  could not run: no network, a blocked proxy, an unreadable reference file,
+-       or a page whose shape changed so much that nothing could be extracted
++       or a page from which no stable version or required date could be extracted
+ 
+ Windows: pure Python 3 with the standard library only, no shell, no curl.
+ Proxies: `urllib` reads `HTTPS_PROXY` and `NO_PROXY` from the environment, so a
+@@ -46,7 +46,7 @@ CHECKS = [
+         "id": "kubernetes-latest",
+         "label": "latest Kubernetes minor",
+         "url": "https://kubernetes.io/releases/",
+-        "page_pattern": r"\b1\.(\d{2})\.\d+\b",
++        "page_pattern": r"\b1\.(\d{2})\.\d+(?![\w.+-])",
+         "pinned_row": "Latest Kubernetes minor",
+         "pinned_pattern": r"\b(1\.\d{2})\b",
+         "reduce": "max",
+@@ -55,7 +55,7 @@ CHECKS = [
+         "id": "helm-latest",
+         "label": "latest Helm release",
+         "url": "https://github.com/helm/helm/releases",
+-        "page_pattern": r"\bv(\d+\.\d+\.\d+)\b",
++        "page_pattern": r"\bv(\d+\.\d+\.\d+)(?![\w.+-])",
+         "pinned_row": "Current Helm major",
+         "pinned_pattern": r"latest (\d+\.\d+\.\d+)",
+         "reduce": "max-semver",
+@@ -141,8 +141,8 @@ def compare(check: dict, pinned: str, observed: str) -> str | None:
+             year, month, day = iso.split("-")
+         except ValueError:
+             return f"pinned date {iso!r} is not ISO-8601"
+-        prose = f"February {int(day)}"
+-        if iso in observed or (month == "02" and prose in observed):
++        prose = rf"\bFebruary {int(day)}(?:th)?,? {re.escape(year)}\b"
++        if iso in observed.split("|") or (month == "02" and re.search(prose, observed)):
+             return None
+         return (f"pinned {check['label']} is {pinned}, and that date is not mentioned on "
+                 f"{check['url']}")
+@@ -184,7 +184,8 @@ def self_test() -> int:
+ 
+     matching = os.path.join(FIXTURE_DIR, "versions-matching")
+     drifted = os.path.join(FIXTURE_DIR, "versions-drifted")
+-    reference = os.path.join(SKILL_DIR, "references", "version-awareness.md")
++    # Synthetic expectations must not change when the live snapshot is refreshed.
++    reference = os.path.join(FIXTURE_DIR, "version-reference.md")
+ 
+     load_pages = load_fixture_pages
+ 
+@@ -221,11 +222,55 @@ def self_test() -> int:
+     else:
+         failures.append("a missing reference file returned a verdict instead of exit 2")
+ 
++    by_id = {check["id"]: check for check in CHECKS}
++    stable_cases = [
++        ("helm-latest", "v4.3.0 v4.4.0-rc.1 v4.4.0-beta.1", "4.3.0"),
++        ("helm-latest", "v4.3.10 v4.3.11-rc.1", "4.3.10"),
++        ("kubernetes-latest", "1.37.1 1.38.0-alpha.1 1.38.0-rc.1", "1.37"),
++        ("kubernetes-latest", "1.37.10 1.38.10-beta.1", "1.37"),
++    ]
++    for check_id, page, expected in stable_cases:
++        try:
++            actual = observed_value(by_id[check_id], page)
++        except CouldNotRun as exc:
++            failures.append(f"{check_id} mixed stable/preview page: {exc}")
++        else:
++            if actual != expected:
++                failures.append(f"{check_id} selected {actual}, expected stable {expected}")
++
++    preview_cases = [
++        ("helm-latest", "v4.4.10-rc.1"),
++        ("kubernetes-latest", "1.38.10-alpha.1"),
++    ]
++    for check_id, page in preview_cases:
++        try:
++            observed_value(by_id[check_id], page)
++        except CouldNotRun:
++            pass
++        else:
++            failures.append(f"{check_id} preview-only page returned a stable verdict")
++
++    date_cases = [
++        ("February 10th, 2027", True),
++        ("February 10, 2027", True),
++        ("February 10 2027", True),
++        ("2027-02-10", True),
++        ("February 10th, 2028", False),
++        ("February 10, 2026", False),
++        ("2028-02-10", False),
++    ]
++    for page, expected_match in date_cases:
++        observed = observed_value(by_id["helm3-eol"], page)
++        matched = compare(by_id["helm3-eol"], "2027-02-10", observed) is None
++        if matched != expected_match:
++            failures.append(f"EOL date {page!r}: match={matched}, expected {expected_match}")
++
+     if failures:
+         for line in failures:
+             print(f"SELF-TEST FAIL: {line}", file=sys.stderr)
+         return EXIT_FINDINGS
+-    print("check_versions --self-test: 4 cases passed (offline)")
++    cases = 4 + len(stable_cases) + len(preview_cases) + len(date_cases)
++    print(f"check_versions --self-test: {cases} cases passed (offline)")
+     return EXIT_CLEAN
+ 
+ 
+--- /dev/null
++++ b/skills/sohrab/alaa-k8s-helm/scripts/fixtures/version-reference.md
+@@ -0,0 +1,11 @@
++# Synthetic version reference
++
++Fixed parser and comparison data for `check_versions.py --self-test`, not current
++release or support guidance. Matching and drifted fixture pages use these values
++independently of the live snapshot in `references/version-awareness.md`.
++
++| Value | Synthetic value |
++|---|---|
++| Latest Kubernetes minor | 1.36 |
++| Current Helm major | 4; latest 4.2.0 |
++| Helm 3 end of life | **2027-02-10** |

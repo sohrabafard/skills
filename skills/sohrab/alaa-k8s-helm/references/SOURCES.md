@@ -2,7 +2,19 @@
 
 Provenance ledger. Use it when Kubernetes, Helm, OpenShift, kubectl, oc, or managed-platform behaviour must be current, and to learn which official URL answers which question.
 
-Last re-verified: **2026-07-29**. Every URL below was fetched on that date unless the row says otherwise. The values derived from them live in `references/version-awareness.md`; `scripts/check_versions.py` re-derives them.
+Kubernetes and Helm compatibility sources listed under the refresh below were re-verified **2026-09-26**. Other entries retain their **2026-07-29** evidence date; OpenShift was not revalidated by this refresh. Derived version facts live in `references/version-awareness.md`; that file also states the three fields covered by `scripts/check_versions.py` and the manual checks it cannot replace.
+
+## Compatibility refresh, 2026-09-26
+
+- Kubernetes release branches, patches and EOL dates: https://kubernetes.io/releases/ and https://kubernetes.io/releases/1.37/ .
+- Component and HA skew: https://kubernetes.io/releases/version-skew-policy/ . API removals: https://kubernetes.io/docs/reference/using-api/deprecation-guide/ .
+- Helm stable releases, excluding previews and schedules: https://github.com/helm/helm/releases . Compatibility: https://helm.sh/docs/topics/version_skew/ and https://helm.sh/docs/v3/topics/version_skew/ .
+- Exact compiled client dependencies: tagged `go.mod` files linked in `references/version-awareness.md`. Read the tag matching the binary, not branch-head source.
+- Helm lifecycle and the final client-library update: https://helm.sh/blog/helm-v3-end-of-life/ .
+- Rollback flag aliases: tagged install and upgrade sources linked in `references/version-awareness.md`; deprecated aliases may be hidden from generated help. Helm legacy CLI: https://docs.helm.sh/docs/v3/helm/helm_install/ and https://docs.helm.sh/docs/v3/helm/helm_upgrade/ .
+- Service externalIPs deprecation and earliest removal plans: https://kubernetes.io/blog/2026/05/14/kubernetes-v1-36-deprecation-and-removal-of-service-externalips/ .
+- VolumeAttributesClass maturity and CSI prerequisites: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ and https://kubernetes.io/blog/2025/09/08/kubernetes-v1-34-volume-attributes-class/ . Distinguish initial GA from the later locked feature gate.
+- Configurable HPA tolerance maturity: https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/#tolerance . Version-specific conditions remain in `references/version-awareness.md`.
 
 ## Freshness triggers
 
