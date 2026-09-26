@@ -4,9 +4,9 @@ This adapter contains Hindsight mechanics only. `SKILL.md` and its policy refere
 
 ## Current upstream surface
 
-Verified 2026-08-15: stable Hindsight is `0.9.1`, and the official `@vectorize-io/hindsight-coding-agents` package is `0.3.4`. Re-check the official changelog, GitHub release, and npm registry before changing either exact pin; never infer a current version from this file alone.
+Verified 2026-09-26: the official `@vectorize-io/hindsight-coding-agents` package is `0.7.0`, and core Hindsight server is `0.10.1`. Re-check the official changelog, GitHub release, and npm registry before changing either exact pin; never infer a current version from this file alone.
 
-Coding Agents owns Claude Code and Codex hooks, MCP wiring, its staged runtime and companion skill, config merging/backups, install/update/uninstall, bank resolution, retain/recall/reflect tools, session write-back, optional git seeding, and optional conversation import. Do not add a second hook, spool, transcript parser, MCP registration, or installer around it.
+Coding Agents owns Claude Code and Codex hooks, MCP wiring, its staged runtime and companion skill, config merging/backups, install/update/uninstall, bank resolution, retain/recall/reflect tools, session write-back, optional git seeding, and optional conversation import. Its own `install`/`update`/`uninstall` commands are user-scope only: they write `~/.claude/settings.json`, register the MCP server with `claude mcp add --scope user`, and read config only from `HINDSIGHT_CONFIG` or `~/.hindsight/coding-agent.json` — there is no project-scope install path, no project config search, and no dotenv reader. Alaa service repositories never run those commands; each adopts Hindsight through the project-scoped launcher and hook wiring in "Installation and configuration" below, which calls the same official dist script directly. Do not add a second hook, spool, transcript parser, or MCP registration around it.
 
 ## Upstream skill routing
 
@@ -30,23 +30,61 @@ mechanics are unavailable and continue only where this adapter's fail-open rule 
 
 ## Installation and configuration
 
-Install explicit targets and an explicit server mode:
+Hindsight is set up per project, never globally. Use the official installer's user-scope path and its
+`~/.hindsight/coding-agent.json` default only for a genuinely personal, cross-project setup outside any Alaa
+service repository; every Alaa service repository uses the project-scoped pattern below instead, built from
+official pieces where they exist and custom code only for the gaps the installer leaves.
 
-```text
-hindsight-coding-agents install claude-code codex --server self-hosted --api-url <url>
-```
+Project-scoped pattern (identical launcher and doctor script across repositories):
 
-Use `cloud` or `daemon` only when current user/repository truth selects it. Non-interactive installation otherwise defaults to Cloud. The installer may change only its documented Hindsight-owned entries and backups.
+- An exact devDependency pin on `@vectorize-io/hindsight-coding-agents` in the repository's `package.json`.
+- `.hindsight/coding-agent.json` as the repository-committed policy file (bank, scope, opt-in paths, retain
+  tags); it carries no token.
+- `.hindsight/hook.cjs`, a launcher that only sets `HINDSIGHT_CONFIG` to the repository's policy file, lifts
+  `HINDSIGHT_API_TOKEN` and `HINDSIGHT_API_URL` from the gitignored `.env`, and execs the official dist script.
+  The launcher always passes `--preserve-symlinks-main`; it is required under pnpm — measured on `0.7.0`,
+  without it the MCP server never answers `initialize` — and a no-op under a flat npm install. It adds no
+  memory behavior of its own.
+- Repository `.claude/settings.json` and `.codex/hooks.json` entries that call the launcher for the same
+  official events and timeouts the upstream installer would wire: `SessionStart` (30s), `UserPromptSubmit`
+  (30s), `Stop` (60s).
+- MCP registration in `.mcp.json` and `.codex/config.toml`, through the same launcher, with
+  `HINDSIGHT_MCP_HARNESS` set to `claude-code` or `codex`. This variable is required since `0.7.0`: without
+  it the MCP server exits while the hooks keep running, so the failure is silent unless the doctor check below
+  is run.
+- `.hindsight/doctor.cjs`, exposed as the `hindsight:doctor` npm script, is the health gate. Upstream ships no
+  doctor, only `stats`; treat a passing `hindsight:doctor` as the adoption proof this adapter requires.
 
-The single trusted client configuration is `~/.hindsight/coding-agent.json`; there is no repository-carried config. Credentials belong only in this user-global file or persistent approved environment injection. Never pass a token on command argv: package managers and process surfaces may echo it. Never commit or print credentials.
+Credentials belong only in the repository's gitignored `.env`, read by the launcher, or in persistent approved
+environment injection. Never pass a token on command argv: package managers and process surfaces may echo it.
+Never commit or print credentials, and never put a token in `.hindsight/coding-agent.json`.
+
+Config layering in `0.7.0`: the environment layer applies first, then the file layer, and the file wins for
+any key it sets. `bankId` set in the file is honored with `dynamicBankId: false`. `autoReflect` is deprecated
+in favor of `autoInject` (`reflect` | `pages` | `recall` | `none`; unset defaults to `reflect`).
+`retainSessions` is the Stop-hook retention kill switch (default `true`, from `raw.retainSessions ?? true`):
+`claude-stop-hook.js` and `codex-stop-hook.js` both return early with diagnostic `retain_disabled` when it is
+`false`, so setting it `false` suppresses session retention on `Stop` entirely. `customPages` with `tags` give
+a service its own knowledge pages on a shared bank — tags match `"all"`, and seeding never deletes another
+service's pages. Auto-injection runs once per session, and the page roster repeats every
+`pageRefreshEveryTurns` turns.
 
 ## Scope and banks
 
-With no override, both agents resolve the same harness-neutral bank `coding-agent::{gitProject}`. Worktrees resolve to their main repository by default. Use `mapPathToBank` for an explicit trusted path mapping and `banks.<resolved-id>.bank` when several resolved IDs must converge on one shared bank. Do not use per-harness bank names unless deliberate isolation is required.
+Alaa's decision is one shared, fixed bank across services rather than the installer's per-repository default:
+set `bankId` explicitly in each service's `.hindsight/coding-agent.json` (with `dynamicBankId: false`) to the
+same shared bank id, and distinguish services on that bank through `retainTags` and `retainMetadata`
+provenance, not through separate banks. Do not use per-harness or per-repository bank names for services that
+share this decision.
 
-`optInOnly: true` is the fail-closed admission switch. `optInPaths` and `mapPathToBank` are trusted prefix approvals; approving a parent approves repositories beneath it. Keep paths unapproved when real-data ingestion is not authorized.
+`optInOnly: true` is the fail-closed admission switch, kept per this adapter's default. `optInPaths` holds only
+the current repository's own path; approving a parent approves repositories beneath it, so do not approve
+above the current repository. Keep a repository's path unapproved when real-data ingestion is not authorized
+for it.
 
-`retainTags` and `retainMetadata` may add fixed-shape provenance to official session writes. They do not replace the bank boundary, and remembered service dependency edges remain prohibited because they are derived from live code/contracts.
+`retainTags` and `retainMetadata` add fixed-shape service provenance to official session writes on the shared
+bank; they do not replace the opt-in boundary, and remembered service dependency edges remain prohibited
+because they are derived from live code/contracts.
 
 ## Recall and write mechanics
 
@@ -54,7 +92,11 @@ Use the official MCP tools exposed by the selected harness. Start with bounded r
 
 Use official retain or document-ingest tools only after the policy admission test passes. A write is successful only when Hindsight reports terminal completion. If the intended write cannot complete, report the unwritten durable note in the handoff; never claim it was stored.
 
-Official hook harnesses retain the completed session on `Stop` and ignore `retainSessions`. `autoSeed`, `gitIngest`, `codebaseSurvey`, and `autoReflect` are separate automatic behaviors. While ingestion is unapproved, keep `optInOnly: true` with no real paths, `gitIngest: "none"`, `autoSeed: false`, `codebaseSurvey: false`, and `autoReflect: false`.
+Official hook harnesses retain the completed session on `Stop` unless `retainSessions: false` disables it (see
+Config layering above). `autoSeed`, `gitIngest`, `codebaseSurvey`, and `autoInject` (the successor to the
+deprecated `autoReflect`) are separate automatic behaviors. While ingestion is unapproved, keep `optInOnly:
+true` with no real paths, `gitIngest: "none"`, `autoSeed: false`, `codebaseSurvey: false`, `autoInject:
+"none"`, and `retainSessions: false`.
 
 ## Import and migration
 
