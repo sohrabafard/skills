@@ -22,11 +22,10 @@ need them, which turns a partial outage into a blind one.
 - **Vector's own internal metric names** are upstream's and are listed here.
 - **Every Ala-side name** — log field names, event and code names, the `alaa_*`
   metric catalog, `OTEL_*` variables and their defaults — belongs to
-  `/alaa-services-contract` (`$alaa-services-contract`). Do not invent one here.
+  `/alaa-services-contract`. Do not invent one here.
 - **Whether a signal is required, what gates on it, and why** belongs to
-  `/alaa-observability-soc` (`$alaa-observability-soc`).
-- **Every Ala threshold and budget value** belongs to `/alaa-services-contract`
-  (`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md`.
+  `/alaa-observability-soc`.
+- **Every Ala threshold and budget value** belongs to `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
 This file names the Vector metric to watch and the condition that makes it
 interesting. It does not set an Ala number.
@@ -41,7 +40,7 @@ interesting. It does not set an Ala number.
 | `component_discarded_events_total` | Any non-zero value | Events deliberately dropped. On a fail-open path this is expected and must still be graphed, because it is the cost of the policy |
 | `buffer_size_events`, `buffer_size_bytes` | Approaching the `max` counterpart | Saturation. The lead indicator for both a stall and a drop |
 | `buffer_max_size_events`, `buffer_max_size_bytes` | The denominator | Utilisation is meaningless without it |
-| `buffer_discarded_events_total` | Any non-zero value | Drops attributable to the buffer specifically, rather than to a transform |
+| `buffer_discarded_events_total`, `buffer_discarded_bytes_total` | Any increase, including `intentional="false"` | Buffer loss; the 0.58.0 oversized-record case can be acknowledged despite being dropped. The delivery caveat is owned by `30-buffers-acks-and-backpressure.md` |
 | `source_buffer_utilization_mean`, `transform_buffer_utilization_mean` | Sustained rise | Moving averages added in 0.53.0; better for alerting than the instantaneous gauges, which are spiky |
 | `component_latency_seconds`, `component_latency_mean_seconds` | One transform's latency rising while its input rate is flat | Time an event spends in a single transform **including that transform's buffer**. Histogram and gauge respectively, both added in 0.54.0. Separates a slow VRL program from a downstream stall |
 | `source_send_latency_seconds`, `source_send_batch_latency_seconds` | Rise at a source that previously handed off instantly | How long the source takes to hand events on. Added in 0.55.0 — `35-pass-through-and-relay-paths.md` |
@@ -68,7 +67,7 @@ ten minutes. Two conditions worth encoding:
   which means the sink degraded rather than the input growing.
 
 Requirement levels, burn rates and the question of what pages a human belong to
-`/alaa-observability-soc` (`$alaa-observability-soc`).
+`/alaa-observability-soc`.
 
 ## The 0.53.0 metric migration, stated correctly
 
@@ -86,10 +85,18 @@ found nothing, and reported the migration clean. The correct list:
 All four are one family. Migrating only the byte-sized pair leaves the event-sized
 pair broken.
 
-**The old gauges still exist for a transition period.** So a dashboard can read a
-deprecated name indefinitely without erroring, and finding the old name proves
-nothing about whether the new one is wired. Search for both, migrate to the new
-name, and only then remove the old.
+The original transition applied to older releases. **In 0.58.0 `buffer_byte_size`
+and `buffer_events` are removed.** Migrate those queries before the binary upgrade.
+Across mixed versions, use a version-aware fallback, not a sum of old and new
+series that double-counts one buffer. Do not infer removal of the old maximum-size
+pair: this release names only the two usage gauges. Prove both versions' dashboard
+queries before removing compatibility branches.
+
+The confinement-disabled gauge now persists for the sink lifetime and refreshes
+on reload. On older releases it could expire while confinement remained disabled;
+absence is not evidence of a safe configuration. The AWS sink connector also gains
+HTTP metrics, and graceful component shutdown gains explicit logs. Inspect the
+actual component labels before aggregation; neither addition proves delivery.
 
 **Internal histogram buckets went from 20 to 26**, across all internal histograms.
 Confirmed live on 0.57.0: 26 buckets, smallest upper limit exactly
@@ -145,4 +152,4 @@ two options fail in opposite directions:
 
 The choice follows the delivery contract for the path, which is written once in
 `10-topology-and-delivery-contract.md` and constrained by
-`/alaa-observability-soc` (`$alaa-observability-soc`).
+`/alaa-observability-soc`.

@@ -15,58 +15,59 @@ alert rule.
 
 ## Why the alert surface is unconfirmed
 
-The vendor contradicts itself on one page and across two pages, and all three statements were live
-on 2026-07-30.
+Public docs still disagree at the refresh date in `90-versions.md`: the
+[ClickHouse overview](https://signoz.io/docs/operate/clickhouse/clickhouse-queries/)
+mentions alerts in its introduction but limits SQL to dashboards in its notice; the
+[log alert guide](https://signoz.io/docs/alerts-management/log-based-alerts/) offers SQL.
+These describe public product surfaces, not the deployed capability.
 
-`https://signoz.io/docs/operate/clickhouse/clickhouse-queries/`, opening paragraph:
+## Released alert API lifecycle
 
-> You can write ClickHouse SQL queries directly to build custom dashboard panels and alerts when the
-> visual Query Builder does not cover your use case.
+Read the dated release and route evidence in `90-versions.md` before selecting an API.
+History, rule CRUD, notification channels and query languages are separate contracts.
+History migration proves neither SQL-alert support nor rule-list removal.
 
-The same page, further down:
+The [official history migration guide](https://signoz.io/docs/alerts-management/migrate-alert-history-api-v1-to-v2/)
+deprecates four v1 POST history endpoints for security reasons. Its table says removed,
+but the reviewed release still registers them; no removal release is confirmed.
+Prefer supported v2 history on a version-matched target. Do not fall back to deprecated
+v1 after a 401/403 or 404; resolve authorization, endpoint and version evidence first.
+Retain legacy request shapes only when documenting an existing older consumer.
 
-> ClickHouse queries are only supported in **Dashboards**.
+Migration changes: `stats`, `timeline`, `top_contributors`, `overall_status` move from
+POST bodies to GET query parameters under `/api/v2/rules/{id}/history/`; `{id}` is a UUID.
+Use millisecond `start`/`end`; timeline uses URL-encoded `filterExpression`, `inactive`
+instead of `normal`, and `cursor` from `nextCursor` instead of offsets. Response changes
+include `ruleId`, structured labels, numeric resolution seconds and optional related links.
+The new `filter_keys`/`filter_values` endpoints use `startUnixMilli`/`endUnixMilli`.
+Do not reuse timeline parameters for them. Validate request and response contracts
+against the target release; the guide describes Viewer access, not every deployment's policy.
 
-`https://signoz.io/docs/alerts-management/log-based-alerts/`:
+## Authorized deployment discovery
 
-> You can define your log query using **Query Builder** or **ClickHouse queries**.
+No network probe is authorized by loading this skill. Use supplied sanitized, version-matched
+evidence first. If live discovery is explicitly authorized:
 
-No ordering of these sources resolves the question: the contradiction is inside a single page, so
-"prefer the more specific page" and "prefer the more recent page" both return two answers. Reading
-more documentation cannot settle it. Only the install can.
+1. Read the release-matched rule-list API. The reviewed release still registers
+   `GET /api/v1/rules`; paginate according to that release. Persisted SQL can survive an
+   upgrade even when current saves reject it; treat it only as a discovery lead. Keep
+   the surface unconfirmed without current version-matched acceptance evidence for
+   that alert type. An empty list proves nothing.
+2. Observe the rule editor and record which alert types expose a ClickHouse tab.
+   A visible tab alone does not prove backend acceptance.
+3. Saving or deleting a probe rule requires separate explicit authorization and an
+   isolated notification-safe target. Do not assume a trivially true or disabled rule
+   cannot notify. If that authority or environment is absent, stop at unconfirmed.
 
-Picking a side is the expensive mistake in both directions. Assume alerts accept SQL and an agent
-hands over a rule the surface rejects, which is a deliverable that cannot ship. Assume they do not
-and an agent refuses work the install would have accepted, and pushes the user into a Query Builder
-rewrite they did not need.
-
-## The discovery test
-
-Run it against this fleet's own SigNoz. Steps 1 and 2 are read-only; step 3 writes one throwaway
-rule and deletes it.
-
-1. **Read-only probe, settles a yes.** With any credential that can list alert rules,
-   `GET /api/v1/rules` on the SigNoz API and look for a ClickHouse SQL string in the returned rule
-   payloads. If an existing rule on this install already carries one, alerts accept ClickHouse SQL:
-   record `dashboards-and-alerts` and stop. Finding none proves nothing — this fleet may simply
-   never have written one — so continue to step 2.
-2. **Observe the editor.** Open Alerts, then New Alert Rule, and for each alert type the install
-   offers, record whether a **ClickHouse Query** tab appears beside the Query Builder tab. Record
-   the alert types where it appears.
-3. **Save one, because a rendered tab is not an accepted rule.** The vendor sentence "only supported
-   in Dashboards" could describe a backend restriction that the frontend still draws. Where the tab
-   appeared, enter a trivially true ClickHouse query, save the rule, and record whether the save
-   succeeded or returned an error. Delete the rule afterwards. A saved rule is the observation that
-   settles the question; a visible tab is not.
-
-Record the outcome in `assets/alert-surface.json`, whose `status` is one of `unconfirmed`,
-`dashboards-only`, or `dashboards-and-alerts`, together with the SigNoz version the observation was
-made against.
-
-**A recorded answer expires when the install's version changes.** `90-versions.md` gives the command
-that reads the running version. When it differs from `signoz_version` in the record, treat the status
-as `unconfirmed` again and rerun the test. This is what makes the record survive the vendor changing
-its mind: the answer is dated evidence about one install, not a belief about the product.
+Record deployment identity, application version, alert types, timestamp, method and
+sanitized acceptance evidence in `assets/alert-surface.json`. Keep secrets and customer
+payloads out. A result applies only to that target and those alert types, not all installs.
+A changed or unknown target identity/version invalidates the record. Public release notes
+never set its status to `dashboards-and-alerts`.
+The SQL checker reads the recorded status only; it does not verify deployment identity,
+version, age or per-alert-type applicability. Bind those facts to current authorized evidence
+before using the record; missing or stale evidence requires the unconfirmed fallback even
+if the checker accepts a recorded status.
 
 ## What to do while the status is `unconfirmed`
 
@@ -89,6 +90,7 @@ and preserve that signal's default time variables exactly as its reference gives
 
 ## Field ambiguity
 
+Read `90-versions.md` for Query Builder context precedence; raw SQL names its context explicitly.
 The same key can arrive as a resource attribute, a span or log attribute, and a top-level column,
 and the three do not agree. Resolve it in this order:
 

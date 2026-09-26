@@ -27,6 +27,11 @@ So an unconfined routing template and an undersized disk buffer both validate
 run `vector validate` without that flag to catch confinement issues before
 startup."*
 
+That table is historical binary evidence, not a current-version assertion.
+**0.58.0 catches confinement under `--no-environment`**, as the tagged release
+notes report. Keep `--skip-healthchecks --deny-warnings`: the fix does not restore
+the other environment/component checks skipped by `--no-environment`.
+
 `--no-environment` has one legitimate use: checking syntax and VRL compilation on a
 machine where the config's `data_dir` does not exist and cannot be created. It is a
 weaker check, and calling it "validated" is the mistake.
@@ -113,7 +118,7 @@ transform, cover the inputs that made you write the code:
 
 `assets/templates/vector-tests.yaml` ships five cases in this shape and all five
 fail if the `string!` to `string` correction is reverted. Test design in general
-belongs to `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+belongs to `/alaa-testing-strategy`.
 
 Current unit-test schema keys, verified: `tests[].name`, `inputs[].insert_at`,
 `inputs[].type`, `inputs[].log_fields`, `outputs[].extract_from`,
@@ -172,6 +177,7 @@ argument list and a broken pipeline config were indistinguishable to any caller.
 ```bash
 node scripts/check-vector-configs.mjs              # every shipped template + unit tests
 node scripts/check-vector-configs.mjs --self-test  # prove the checker still detects the red fixtures
+node scripts/check-vector-configs.mjs --self-test-diagnostics # offline Node diagnostic controls only
 node scripts/check-vector-configs.mjs my.yaml      # any config of your own
 node scripts/check-upstream-version.mjs            # version drift against upstream
 node scripts/check-upstream-version.mjs --self-test
@@ -183,3 +189,39 @@ Both take `--help`. Both are Node `.mjs` so they run on Windows, where the previ
 Run `--self-test` whenever you change a checker. A green checker with no red
 fixture is decoration: it proves only that it found nothing, not that it can find
 anything.
+
+## Versioned regression coverage
+
+`assets/fixtures/v0.58/` contains the documented HTTP `encoding` migration's
+green replacement, a red removed-option config and a red URI-authority template.
+The config self-test runs these only on a detected binary at or above their
+introduction version and reports each skip on older binaries. Existing E651,
+confinement and disk-bound red fixtures stay active; an unsupported-acknowledgement
+fixture proves warnings still fail the strict gate. Unexpected diagnostics do not
+count as the intended new red-fixture result.
+
+Run `--self-test-diagnostics` alone to test the URI fixture's diagnostic matcher
+without Vector. It rejects unrelated authority/host/path errors and requires the
+fixture URI's `PartialUriAuthority` class on a failed validation result. The class
+comes from [tagged confinement source](https://github.com/vectordotdev/vector/blob/v0.58.0/src/template/confinement.rs);
+[tagged HTTP config](https://github.com/vectordotdev/vector/blob/v0.58.0/src/sinks/http/config.rs)
+applies it to `uri`. These offline controls do not replace either runtime command.
+
+For affected components, extend consumer tests with explicit YAML/JSON nulls,
+generated-schema untagged-enum cases, malformed URI ports, invalid Sematext token
+templates, one-byte GELF with trace logging, GELF pending-message/timeout limits,
+and varint frames split across reads. The release fixes these classes; a local
+parse check cannot establish network framing, memory, concurrency or recovery.
+Match diagnostic class/field, not the full text: new errors include field paths.
+
+The upstream self-test is offline Node evidence for numeric stable product
+selection, draft/prerelease/nightly/vdev exclusion, missing publication flags and
+separate chart selection. The regular upstream check needs complete bounded
+release metadata and the released chart tag; failure returns 2, never a Cargo-tag
+guess. Fixtures do not establish current upstream versions.
+
+No target Vector binary was found in this refresh's bounded local discovery.
+Therefore new fixtures, existing VRL tests and released runtime behavior have no
+new execution proof here. Run both regular config checks and self-tests on the
+actual supported binaries when available; never install a tool implicitly to
+replace a missing-proof report.

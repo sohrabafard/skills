@@ -1,0 +1,13 @@
+# RED: --deny-warnings must reject unsupported source acknowledgements.
+sources:
+  sample:
+    type: demo_logs
+    format: json
+sinks:
+  output:
+    type: console
+    inputs: [sample]
+    encoding:
+      codec: json
+    acknowledgements:
+      enabled: true

@@ -3,8 +3,9 @@
 Read this to answer what calls what, to read the service map, or to explain an edge that is not
 there.
 
-**This endpoint appears in no SigNoz documentation page.** Every fact below was read from SigNoz
-source on 2026-07-30 and carries the command that re-derives it. That is why it is written down: an
+**This is a source-derived API, not an installed capability guarantee.** The layout below was
+read on 2026-07-30; route registration was rechecked at the application tag in `90-versions.md`
+on 2026-09-26. Reconfirm request/response and authorization on the target release. That is why it is written down: an
 undocumented dependency that lives only in one session's memory is lost when that session ends.
 
 ## The one rule this file exists to state
@@ -100,14 +101,16 @@ used.
 
 ## Re-derivation
 
+Select `SIGNOZ_TAG` and `COLLECTOR_TAG` through `90-versions.md`; placeholders are not fetchable URLs.
+
 ```bash
-curl -s https://raw.githubusercontent.com/SigNoz/signoz/main/pkg/query-service/app/http_handler.go \
+curl -s https://raw.githubusercontent.com/SigNoz/signoz/SIGNOZ_TAG/pkg/query-service/app/http_handler.go \
   | grep -n 'dependency_graph'
-curl -s https://raw.githubusercontent.com/SigNoz/signoz/main/pkg/query-service/app/clickhouseReader/options.go \
+curl -s https://raw.githubusercontent.com/SigNoz/signoz/SIGNOZ_TAG/pkg/query-service/app/clickhouseReader/options.go \
   | grep -n 'defaultDependencyGraphTable'
-curl -s https://raw.githubusercontent.com/SigNoz/signoz/main/pkg/query-service/model/response.go \
+curl -s https://raw.githubusercontent.com/SigNoz/signoz/SIGNOZ_TAG/pkg/query-service/model/response.go \
   | grep -n -A12 'ServiceMapDependencyResponseItem'
-curl -s https://raw.githubusercontent.com/SigNoz/signoz-otel-collector/main/cmd/signozschemamigrator/schema_migrator/traces_migrations.go \
+curl -s https://raw.githubusercontent.com/SigNoz/signoz-otel-collector/COLLECTOR_TAG/cmd/signozschemamigrator/schema_migrator/traces_migrations.go \
   | grep -n -A24 'dependency_graph_minutes_.*_mv_v2'
 ```
 

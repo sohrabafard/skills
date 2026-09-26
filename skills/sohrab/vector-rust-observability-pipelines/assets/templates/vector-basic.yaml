@@ -1,5 +1,5 @@
 # Minimal Vector pipeline: demo source -> normalising remap -> console sink.
-# Validate with:  vector validate --skip-healthchecks assets/templates/vector-basic.yaml
+# Validate with:  vector validate --skip-healthchecks --deny-warnings assets/templates/vector-basic.yaml
 # `data_dir` must exist on the validating host, or validation reports an environment error.
 data_dir: /var/lib/vector
 

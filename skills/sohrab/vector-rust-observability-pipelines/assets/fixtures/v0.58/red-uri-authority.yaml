@@ -1,0 +1,12 @@
+# RED on Vector >=0.58: dynamic hostname rejected before sending an event.
+sources:
+  sample:
+    type: demo_logs
+    format: json
+sinks:
+  output:
+    type: http
+    inputs: [sample]
+    uri: "https://tenant.{{ env }}.example.com/"
+    encoding:
+      codec: json

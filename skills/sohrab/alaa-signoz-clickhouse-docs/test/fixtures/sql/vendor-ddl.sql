@@ -1,0 +1,1 @@
+OPTIMIZE TABLE signoz_traces.distributed_signoz_index_v3 FINAL;

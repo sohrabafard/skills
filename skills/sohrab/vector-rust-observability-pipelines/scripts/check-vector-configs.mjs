@@ -40,6 +40,9 @@ Usage:
 Options:
   --self-test        Run the committed red/green fixtures in assets/fixtures/
                      and verify this checker reports each one correctly.
+  --self-test-diagnostics
+                     Test diagnostic discrimination offline (Node only).
+                     Use alone; this does not validate any Vector config.
   --allow-warnings   Do not treat Vector warnings as findings. Off by default:
                      the "acknowledgements are not supported by this source"
                      warning is a silent-data-loss defect, not noise.
@@ -53,7 +56,10 @@ Why not --no-environment:
   confinement errors and disk-buffer bound errors are component checks, so a
   config with either defect validates CLEAN under --no-environment. The
   fixtures assets/fixtures/red-unconfined-template.yaml and
-  red-undersized-disk-buffer.yaml exist to prove this checker does not use it.`);
+  red-undersized-disk-buffer.yaml preserve that regression coverage. Vector
+  0.58.0 fixes confinement detection under --no-environment, but that flag still
+  skips other component checks and never replaces this strict gate.
+  Versioned fixtures print SKIP on older binaries; that is not newer-runtime proof.`);
 }
 
 function findVector() {
@@ -151,25 +157,77 @@ function report(results) {
   return findings;
 }
 
-function selfTest(bin, tmpRoot) {
+// v0.58.0 src/template/confinement.rs: BuildError::PartialUriAuthority.
+// HttpSinkConfig confines the `uri` field; this prefix is that fixture's URI.
+// A filename, a generic host error, or another confinement class is not proof.
+const URI_AUTHORITY_DIAGNOSTIC = /HTTP\/HTTPS template "https:\/\/tenant\." has a `\{\{ field \}\}` reference inside\s+the authority \(host\) component:/;
+
+function fixtureMatches(expectation, results) {
+  const failures = results.filter((r) => r.code !== 0);
+  if (!expectation.expectFinding) return failures.length === 0;
+  return failures.length > 0 && (!expectation.diagnostic
+    || failures.some((r) => expectation.diagnostic.test(r.output)));
+}
+
+function diagnosticSelfTest() {
+  const expected = { expectFinding: true, diagnostic: URI_AUTHORITY_DIAGNOSTIC };
+  const partialAuthority = 'HTTP/HTTPS template "https://tenant." has a `{{ field }}` reference inside the authority (host) component: the static prefix does not contain a `/` after the host';
+  const cases = [
+    ['partial URI authority', [{ code: 78, output: partialAuthority }], true],
+    ['wrapped component diagnostic', [{ code: 78, output: `Sink output: ${partialAuthority.replace('inside the', 'inside\n the')}` }], true],
+    ['fixture path with unrelated field', [{ code: 78, output: 'Failed to load v0.58/red-uri-authority.yaml: unknown field unexpected' }], false],
+    ['authority field error', [{ code: 78, output: 'unknown field authority' }], false],
+    ['host connection error', [{ code: 78, output: 'failed to connect to host tenant.example.com' }], false],
+    ['confinement path error', [{ code: 78, output: 'cannot read /confinement/host/authority.yaml: permission denied' }], false],
+    ['different URI error class', [{ code: 78, output: 'HTTP/HTTPS template "https://tenant." has no static authority (host): invalid host' }], false],
+    ['different URI field value', [{ code: 78, output: partialAuthority.replace('https://tenant.', 'https://other.') }], false],
+    ['matching text on success', [{ code: 0, output: partialAuthority }], false],
+    ['success text beside unrelated failure', [{ code: 0, output: partialAuthority }, { code: 78, output: 'unknown field unexpected' }], false],
+  ];
+  let failures = 0;
+  for (const [name, results, want] of cases) {
+    const ok = fixtureMatches(expected, results) === want;
+    if (!ok) failures += 1;
+    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${name}`);
+  }
+  console.log(`Offline diagnostic self-test: ${cases.length - failures}/${cases.length}; no Vector runtime proof.`);
+  return failures === 0 ? EXIT_CLEAN : EXIT_FINDINGS;
+}
+
+function selfTest(bin, version, tmpRoot) {
   const dir = path.join(SKILL_ROOT, 'assets', 'fixtures');
   const expectations = [
     { file: 'green-minimal.yaml', expectFinding: false },
     { file: 'red-e651.yaml', expectFinding: true },
     { file: 'red-unconfined-template.yaml', expectFinding: true },
     { file: 'red-undersized-disk-buffer.yaml', expectFinding: true },
+    { file: 'red-unsupported-ack.yaml', expectFinding: true, diagnostic: /acknowledgements are not supported by this source/i },
+    { file: 'v0.58/green-http-decoding.yaml', expectFinding: false, minVersion: [0, 58, 0] },
+    { file: 'v0.58/red-http-encoding.yaml', expectFinding: true, minVersion: [0, 58, 0], diagnostic: /unknown field [`'"]?encoding/i },
+    { file: 'v0.58/red-uri-authority.yaml', expectFinding: true, minVersion: [0, 58, 0], diagnostic: URI_AUTHORITY_DIAGNOSTIC },
   ];
   console.log('Self-test: every assertion this checker makes must fail on a fixture that violates it.');
   let failures = 0;
+  const detected = /\b(\d+)\.(\d+)\.(\d+)\b/.exec(version);
+  if (!detected) return { blocked: true, message: 'cannot identify Vector version for versioned fixtures' };
+  const tuple = detected.slice(1).map(Number);
   for (const e of expectations) {
+    if (e.minVersion) {
+      const comparison = tuple[0] - e.minVersion[0] || tuple[1] - e.minVersion[1] || tuple[2] - e.minVersion[2];
+      if (comparison < 0) {
+        console.log(`  SKIP  ${e.file}: requires Vector >= ${e.minVersion.join('.')}; not runtime proof`);
+        continue;
+      }
+    }
     const outcome = checkGroup(bin, { name: e.file, files: [path.join(dir, e.file)], unitTests: false }, tmpRoot, true);
     if (outcome.blocked) return { blocked: true, message: outcome.message };
     const sawFinding = outcome.results.some((r) => r.code !== 0);
-    const ok = sawFinding === e.expectFinding;
+    const diagnosticMatches = !e.diagnostic || outcome.results.some((r) => r.code !== 0 && e.diagnostic.test(r.output));
+    const ok = fixtureMatches(e, outcome.results);
     if (!ok) failures += 1;
     const want = e.expectFinding ? 'finding' : 'clean';
     const got = sawFinding ? 'finding' : 'clean';
-    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${e.file}: expected ${want}, got ${got}`);
+    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${e.file}: expected ${want}, got ${got}${diagnosticMatches ? '' : '; expected diagnostic absent'}`);
   }
   return { blocked: false, failures };
 }
@@ -177,6 +235,13 @@ function selfTest(bin, tmpRoot) {
 function main() {
   const argv = process.argv.slice(2);
   if (argv.includes('--help') || argv.includes('-h')) { usage(); return EXIT_CLEAN; }
+  if (argv.includes('--self-test-diagnostics')) {
+    if (argv.length !== 1) {
+      console.error('BLOCKED: --self-test-diagnostics must be used alone; it cannot replace runtime checks.');
+      return EXIT_CANNOT_RUN;
+    }
+    return diagnosticSelfTest();
+  }
   const wantSelfTest = argv.includes('--self-test');
   const denyWarnings = !argv.includes('--allow-warnings');
   const extra = argv.filter((a) => !a.startsWith('-'));
@@ -184,7 +249,7 @@ function main() {
   const found = findVector();
   if (!found.bin) {
     console.error(`BLOCKED: ${found.reason}.`);
-    console.error('Install Vector, or run this where Vector is on PATH. Exiting 2 (could not run), not 0.');
+    console.error('Run where an approved Vector binary is already on PATH. Exiting 2 (could not run), not 0.');
     return EXIT_CANNOT_RUN;
   }
   console.log(`Using ${found.version}`);
@@ -192,10 +257,10 @@ function main() {
   const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'vector-check-'));
   try {
     if (wantSelfTest) {
-      const st = selfTest(found.bin, tmpRoot);
+      const st = selfTest(found.bin, found.version, tmpRoot);
       if (st.blocked) { console.error(`BLOCKED: ${st.message}`); return EXIT_CANNOT_RUN; }
       if (st.failures > 0) { console.error(`Self-test FAILED: ${st.failures} fixture(s) behaved unexpectedly.`); return EXIT_FINDINGS; }
-      console.log('Self-test passed: red fixtures are reported, the green fixture is clean.');
+      console.log('Self-test passed for executed fixtures; any SKIP remains unproven.');
       return EXIT_CLEAN;
     }
 

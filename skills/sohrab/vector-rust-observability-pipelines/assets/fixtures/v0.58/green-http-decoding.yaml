@@ -1,0 +1,15 @@
+# Released HTTP encoding migration; validate only, no server is started.
+sources:
+  ingest:
+    type: http_server
+    address: 127.0.0.1:18080
+    decoding:
+      codec: json
+    framing:
+      method: newline_delimited
+sinks:
+  output:
+    type: console
+    inputs: [ingest]
+    encoding:
+      codec: json

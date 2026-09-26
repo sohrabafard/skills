@@ -24,10 +24,10 @@ const EXIT_CLEAN = 0;
 const EXIT_FINDINGS = 1;
 const EXIT_CANNOT_RUN = 2;
 
-const RELEASES_API = 'https://api.github.com/repos/vectordotdev/vector/releases?per_page=100';
-const MASTER_CARGO = 'https://raw.githubusercontent.com/vectordotdev/vector/master/Cargo.toml';
-const TAG_CARGO = (v) => `https://raw.githubusercontent.com/vectordotdev/vector/v${v}/Cargo.toml`;
-const CHART_YAML = 'https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/charts/vector/Chart.yaml';
+const RELEASES_API = 'https://api.github.com/repos/vectordotdev/vector/releases';
+const CHART_RELEASES_API = 'https://api.github.com/repos/vectordotdev/helm-charts/releases';
+const CHART_YAML = (v) => `https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-${v}/charts/vector/Chart.yaml`;
+const MAX_PAGES = 5;
 
 const TIMEOUT_MS = 20000;
 
@@ -52,14 +52,16 @@ and this checker cannot disagree about what is pinned.`);
 }
 
 // The Vector repository tags its `vdev` developer tool in the same repository.
-// GitHub's /releases/latest returns `vdev-v0.3.3`, which is NOT a Vector
-// release. Only vX.Y.Z tags count.
+// Product tags alone are insufficient: GitHub can mark a numeric tag as a draft
+// or prerelease. A tag's existence and Cargo.toml never prove publication.
 const RELEASE_TAG = /^v(\d+)\.(\d+)\.(\d+)$/;
+const CHART_TAG = /^vector-(\d+)\.(\d+)\.(\d+)$/;
 
-function resolveLatestFromReleases(releases) {
+function resolveLatestFromReleases(releases, tagPattern = RELEASE_TAG) {
   const versions = [];
   for (const r of releases) {
-    const m = RELEASE_TAG.exec(r.tag_name || '');
+    if (!r || r.draft !== false || r.prerelease !== false) continue;
+    const m = tagPattern.exec(r.tag_name || '');
     if (m) versions.push([Number(m[1]), Number(m[2]), Number(m[3])]);
   }
   if (versions.length === 0) return null;
@@ -78,44 +80,38 @@ async function httpGet(url) {
   } catch (err) {
     // Some environments route egress through a proxy that Node's fetch does not
     // pick up. curl honours HTTPS_PROXY and ships with Windows 10+ and macOS.
-    const curl = spawnSync('curl', ['-sS', '--max-time', String(TIMEOUT_MS / 1000), url], { encoding: 'utf8' });
+    const curl = spawnSync('curl', ['-fLsS', '--max-time', String(TIMEOUT_MS / 1000), url], { encoding: 'utf8', timeout: TIMEOUT_MS + 1000 });
     if (!curl.error && curl.status === 0 && curl.stdout) return { ok: true, body: curl.stdout };
     return { ok: false, error: err.message };
   }
 }
 
-async function resolveVectorRelease() {
-  const api = await httpGet(RELEASES_API);
-  if (api.ok) {
-    try {
-      const latest = resolveLatestFromReleases(JSON.parse(api.body));
-      if (latest) return { ok: true, version: latest, how: 'GitHub releases API, vX.Y.Z tags only' };
-    } catch { /* fall through to tag probing */ }
-  }
-  // Fallback that needs only raw.githubusercontent.com: master's Cargo.toml
-  // carries the in-development version, so the newest RELEASED minor is at most
-  // one below it. Probe downward until a tag resolves.
-  const cargo = await httpGet(MASTER_CARGO);
-  if (!cargo.ok) return { ok: false, reason: `could not reach GitHub (api: ${api.status || api.error}, raw: ${cargo.status || cargo.error})` };
-  const m = /^version\s*=\s*"(\d+)\.(\d+)\.(\d+)"/m.exec(cargo.body);
-  if (!m) return { ok: false, reason: 'could not parse version from master Cargo.toml' };
-  const major = Number(m[1]);
-  for (let minor = Number(m[2]); minor >= 0; minor -= 1) {
-    for (let patch = 9; patch >= 0; patch -= 1) {
-      const cand = `${major}.${minor}.${patch}`;
-      const probe = await httpGet(TAG_CARGO(cand));
-      if (probe.ok) return { ok: true, version: cand, how: 'highest existing vX.Y.Z tag on raw.githubusercontent.com' };
+async function resolvePublishedRelease(apiUrl, tagPattern) {
+  const releases = [];
+  for (let page = 1; page <= MAX_PAGES; page += 1) {
+    const api = await httpGet(`${apiUrl}?per_page=100&page=${page}`);
+    if (!api.ok) return { ok: false, reason: `release metadata unavailable (${api.status || api.error})` };
+    let batch;
+    try { batch = JSON.parse(api.body); } catch { return { ok: false, reason: 'invalid release metadata JSON' }; }
+    if (!Array.isArray(batch)) return { ok: false, reason: 'release metadata is not an array' };
+    releases.push(...batch);
+    if (batch.length < 100) {
+      const version = resolveLatestFromReleases(releases, tagPattern);
+      return version ? { ok: true, version, how: 'published stable product releases, numeric maximum' }
+        : { ok: false, reason: 'no published stable product release found' };
     }
   }
-  return { ok: false, reason: 'no released tag found' };
+  return { ok: false, reason: `release inventory exceeds ${MAX_PAGES} pages; latest stable is unproven` };
 }
 
 async function resolveChartVersion() {
-  const res = await httpGet(CHART_YAML);
+  const release = await resolvePublishedRelease(CHART_RELEASES_API, CHART_TAG);
+  if (!release.ok) return release;
+  const res = await httpGet(CHART_YAML(release.version));
   if (!res.ok) return { ok: false, reason: `could not read Chart.yaml (${res.status || res.error})` };
   const version = /^version:\s*"?([^"\s]+)"?/m.exec(res.body);
   const appVersion = /^appVersion:\s*"?([^"\s]+)"?/m.exec(res.body);
-  if (!version) return { ok: false, reason: 'could not parse chart version' };
+  if (!version || version[1] !== release.version || !appVersion) return { ok: false, reason: 'released Chart.yaml version/appVersion missing or inconsistent' };
   return { ok: true, version: version[1], appVersion: appVersion ? appVersion[1] : null };
 }
 
@@ -126,7 +122,7 @@ function readPins() {
   for (const m of text.matchAll(/^\s*PIN\s+([a-z0-9-]+)\s*=\s*([0-9][0-9A-Za-z.\-]*)\s*$/gm)) {
     pins[m[1]] = m[2];
   }
-  if (Object.keys(pins).length === 0) return { ok: false, reason: `no PIN lines found in ${PIN_FILE}` };
+  if (!pins.vector || !pins['helm-chart']) return { ok: false, reason: `required PIN lines missing in ${PIN_FILE}` };
   return { ok: true, pins };
 }
 
@@ -140,7 +136,7 @@ function compare(pins, current) {
 }
 
 function selfTest() {
-  console.log('Self-test (offline): the release resolver must reject vdev-* tags.');
+  console.log('Self-test (offline): stable product selection and version comparison.');
   let failures = 0;
   let fixture;
   try {
@@ -157,7 +153,7 @@ function selfTest() {
   console.log(`  ${okTrap ? 'PASS' : 'FAIL'}  vdev trap: expected ${wantLatest}, got ${got}`);
 
   const naive = (fixture.releases[0] || {}).tag_name;
-  const okNaive = naive === 'vdev-v0.3.3' && got !== '0.3.3';
+  const okNaive = naive.startsWith('vdev-') && got === wantLatest;
   if (!okNaive) failures += 1;
   console.log(`  ${okNaive ? 'PASS' : 'FAIL'}  the naive "take /releases/latest" answer (${naive}) is rejected`);
 
@@ -165,6 +161,13 @@ function selfTest() {
   const okEmpty = onlyVdev === null;
   if (!okEmpty) failures += 1;
   console.log(`  ${okEmpty ? 'PASS' : 'FAIL'}  a vdev-only list resolves to null rather than a bogus version`);
+
+  for (const test of fixture.cases) {
+    const actual = resolveLatestFromReleases(test.releases, test.chart ? CHART_TAG : RELEASE_TAG);
+    const ok = actual === test.expected;
+    if (!ok) failures += 1;
+    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${test.name}: expected ${test.expected}, got ${actual}`);
+  }
 
   const drift = compare({ vector: '0.53.0' }, { vector: '0.57.0' });
   const okDrift = drift.length === 1;
@@ -194,7 +197,7 @@ async function main() {
   const pinned = readPins();
   if (!pinned.ok) { console.error(`BLOCKED: ${pinned.reason}`); return EXIT_CANNOT_RUN; }
 
-  const vector = await resolveVectorRelease();
+  const vector = await resolvePublishedRelease(RELEASES_API, RELEASE_TAG);
   if (!vector.ok) { console.error(`BLOCKED: ${vector.reason}`); return EXIT_CANNOT_RUN; }
   const chart = await resolveChartVersion();
   if (!chart.ok) { console.error(`BLOCKED: ${chart.reason}`); return EXIT_CANNOT_RUN; }
@@ -202,7 +205,7 @@ async function main() {
   console.log(`vector      pinned ${pinned.pins.vector || '(unpinned)'}  current ${vector.version}  (${vector.how})`);
   console.log(`helm-chart  pinned ${pinned.pins['helm-chart'] || '(unpinned)'}  current ${chart.version}  appVersion ${chart.appVersion}`);
 
-  if (chart.appVersion && !chart.appVersion.startsWith(vector.version)) {
+  if (chart.appVersion && !new RegExp(`^${vector.version.replaceAll('.', '\\.')}($|-)`).test(chart.appVersion)) {
     console.log(`note: chart appVersion (${chart.appVersion}) is not the current Vector release (${vector.version}); a Helm-deployed pipeline runs a different Vector build from a package-installed one.`);
   }
 

@@ -42,8 +42,7 @@ point. Most "no data" incidents are a field name that differs from the assumptio
 
 **Escalate** when the events reach the sink and the destination still shows nothing:
 that is a destination-side question, and for a fleet-owned ClickHouse table it
-belongs to `/clickhouse-performance-schema-ops`
-(`$clickhouse-performance-schema-ops`).
+belongs to `/clickhouse-performance-schema-ops`.
 
 ---
 
@@ -106,6 +105,15 @@ arithmetic is in `30-buffers-acks-and-backpressure.md`.
 - **Loss, acks enabled, source cannot acknowledge** → run `vector validate
   --deny-warnings`. If the source does not support acknowledgements, Vector says so
   at validate time: *"Silent data loss could occur."* The durability was never real.
+- **Loss despite disk buffering and source acknowledgements, on 0.58.0** → an
+  oversized encoded record can be dropped and acknowledged/checkpointed without
+  storage. Check `buffer_discarded_events_total` and
+  `buffer_discarded_bytes_total` with `intentional="false"`; a running process and
+  advancing source checkpoint do not prove delivery. Counters measure loss, not
+  record identity or replayability. Use `30-buffers-acks-and-backpressure.md` for
+  invalid-record semantics and `75-ala-ingest-pipeline.md` for the consumer owner's
+  exactness/recoverability/privacy decision before retrying. Never log rejected
+  payloads to identify the loss; missing recovery proof leaves exactness unverified.
 - **Loss with `skip_unknown_fields` set** → fields the table does not declare are
   discarded server-side with no error. The rows arrive; the columns do not.
 - **Duplication across several sinks in a fanout** → the worst-status rule. One
@@ -115,7 +123,7 @@ arithmetic is in `30-buffers-acks-and-backpressure.md`.
 - **Duplication into one sink** → a retry after a partial success. At-least-once
   delivery means the destination must tolerate duplicates; for ClickHouse that is a
   deduplicating engine or a query-time strategy, owned by
-  `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`).
+  `/clickhouse-performance-schema-ops`.
 
 ---
 
@@ -139,8 +147,7 @@ by its `component_latency_seconds` and its request metrics, per
   changing anything.
 
 **Escalate** when the per-event cost itself is the problem rather than its
-distribution: a stated throughput bound is `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`).
+distribution: a stated throughput bound is `/alaa-algorithms-data-structures`.
 
 ---
 
@@ -156,6 +163,17 @@ Check these three first; each silently changes behaviour rather than failing lou
 3. **Dashboards using pre-0.53.0 buffer metric names.** Renamed, with the old
    gauges kept for a transition period — so a dashboard can look fine and be
    reading a deprecated name that is about to disappear.
+
+For 0.58.0, the two old buffer usage gauges are removed, and config removals and
+endpoint validation can reject a previously loadable config. Use the migration
+table in `80-version-and-upgrade-deltas.md` rather than weakening validation.
+
+When an older Redis channel source stops after disconnect, check source recovery
+and `component_errors_total` / `connection_established_total`: 0.58.0 adds
+reconnection and resubscription with exponential backoff capped at 30 seconds.
+For a disk-buffer stall or recovery problem, use the version-qualified fixes and
+loss caveats in `30-buffers-acks-and-backpressure.md`; a healthy running process
+does not exclude the new invalid-record drops.
 
 Full deltas and re-derivation commands: `80-version-and-upgrade-deltas.md`.
 

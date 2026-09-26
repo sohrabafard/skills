@@ -1,0 +1,447 @@
+{
+  "method": "SHA-256 of sorted UTF-8 relative-path TAB file-SHA256 LF rows; all files including untracked",
+  "scope": [
+    "skills/sohrab/alaa-signoz-clickhouse-docs",
+    "skills/sohrab/vector-rust-observability-pipelines"
+  ],
+  "file_count": 109,
+  "sha256": "1a890b9bd8f908041a0d63ee32a1fce2eb1c4d67ce56911c2aac13b4e964665f",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/SKILL.md",
+      "sha256": "53c1b7c265a3092b20b8d09851a061d1c7c1ffdbdf9ebbefc48457c40136ab1c"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/agents/openai.yaml",
+      "sha256": "8232c8244e9a6f080e6a82406c39ec0c3fb0c231797d611a4f08d8f552fdfcf5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/assets/alert-surface.json",
+      "sha256": "f9c88bfb251ebd31dbf7d1f8daf87ccacd365624f534804bdf450d9c36a67f63"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/00-topic-map.md",
+      "sha256": "2c1feb0d9a48363277d00d0a4dcd151510a15a17f8941d9c92fc69b6af2985f5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/10-docs-navigation.md",
+      "sha256": "2d6d3dfd05f8c1a1f8eefd9ef6f1ffab5b6468069a58bd47f700cd9aef76c48f"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/40-missing-spans.md",
+      "sha256": "51cd2e88c484430b1fbabba73e27d578795a94d106985ae51250d60bb7823383"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/50-service-topology.md",
+      "sha256": "7405538973097e547f486022d2e18c6dc5f44766ac4506084dd0d6c1d7b6e07d"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+      "sha256": "95c736dc008d25c77c81cd3a89f8170fe1125040c4ee8144f95a336208f95980"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/clickhouse-logs-reference.md",
+      "sha256": "cebcdd4ae66523510eac4c3a2fdec8a816837de487f134381cc0674db5fffbae"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/clickhouse-metrics-reference.md",
+      "sha256": "a5bfada83c3f4a7f3b466c52424d1d7d32ad66030675c43d45b54fec9d2c70e4"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/clickhouse-traces-reference.md",
+      "sha256": "0b08870339ec502dc3ca7ccb15e06c8f00cf6fde30b6914d9861910b01d17103"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/10-schema.md",
+      "sha256": "109b0516382aa88952ad278ab6c4801e8327a81e2a72eb8fb19c8cc2911cb13e"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/20-time-resource.md",
+      "sha256": "abd10e7d8de2e66d88a155e2bcfccdaa39c20582b493369a4a671d19c084ad23"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/30-column-access.md",
+      "sha256": "a2ac55fa79c8a0c6b2cff52890a2d8dbe7f5504840cc07756625dbd9fe07a524"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/40-body-search.md",
+      "sha256": "aae543924172a231c047005bb3120739c29a8a89ab18b668e566e9e7e9184b0e"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/50-panel-shapes.md",
+      "sha256": "1a9150fb7c040c8fa3172c9dc2ac9bb6d9e8671db797d59b57a5dceb7e18f8a8"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/60-counts-errors.md",
+      "sha256": "60424ad4e5f133e6d583ace6f91c8a01a889c3574db396ee2af5b634634ced5a"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/logs/70-payload-audit.md",
+      "sha256": "6fd9e619db6af78bfef563c908c85cc602a69719a1bc514dd1f2537ff5e8b265"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/10-table-families.md",
+      "sha256": "aa70fd579d2173f37d8d5a8b1e69f0d4f787f8abdc7cc089340b7f3310ed7325"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/20-time-flags.md",
+      "sha256": "8fcbdac5c7c43b10edf61e18c7a32614c2d4eaaff934286c367b236a5db96881"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/30-metadata.md",
+      "sha256": "aaab8aae86659d273f1feebaf583b6e412a3a44c649804026ef38cc11d5631d6"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/40-raw-or-rollup.md",
+      "sha256": "af0e83a2db9a096090ee270f6666edc7e1b1aae58fe521e6015d56d9796515b2"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/50-gauge.md",
+      "sha256": "9a540b31e9cc0717c85629a903e7eaded0b57043b13c3e2102482c0536480c85"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/60-counter-rate.md",
+      "sha256": "76b736f0fa716bb5fef98e355dd6c588a3bdfff43eb695df3520baf765f1047f"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/70-error-ratio.md",
+      "sha256": "4d647c93aa022fa37db424b47167af95dd4b615754477507a0fcc24e2e51675a"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/80-histograms.md",
+      "sha256": "1548ba73093e8c80b7038fe98c6bcc9118627a0071e571addca773dba24f8553"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/metrics/90-repair.md",
+      "sha256": "aa680d543accacb818f81445fa3ca0a525ec1467653ae19979a9382a9982e3b1"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/query-language-routing.md",
+      "sha256": "2d8c1d2729b2fd234a5fe121c7a7b05f20bb3d7afc8317405224cfee5d404e0c"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/10-physical-layout.md",
+      "sha256": "061431dae00bfee2ceb36a0134bad8e73a2daf54edee4028fd11651cb663185f"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/20-schema.md",
+      "sha256": "d44d8c4848b726c558e271b0634d5dae4dd22e11bcf6dbad1eaa9ec140bbc942"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/30-time-resource.md",
+      "sha256": "3d9916b8268d9ce09966712a86742fb2b0cded96b5c55ee026507e529d94d15e"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/40-column-access.md",
+      "sha256": "f59ceb1a972b4357895e6cc51cc1e8f0c2d22b0c0e005a21ba9f753d4d9aa8a9"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/50-panel-shapes.md",
+      "sha256": "a9f49fb897c67675b4f2b81422c7a2f3b1cb31ab335e589ca93ba9b4f83048e9"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/60-errors-duration.md",
+      "sha256": "82ca230e9d36b7ff7b3c3cc9dd01f98dd8996cdd9697f5973b69398f5c5e204d"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/traces/70-missing-parent.md",
+      "sha256": "a4a483caa0935df12a88b0c7f4162ae611d2da30ec42e4f95bc6e66f524687fd"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/validation-checklists.md",
+      "sha256": "b3a281c713261f15fe56fe0b1a47121344b99f17313b292a38874364d2d780db"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/scripts/check-signoz-links.py",
+      "sha256": "fbbc90284f89c5e34c192e6b374bd6509518447f436900b0219dec7b7dd35850"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/scripts/check-signoz-schema.py",
+      "sha256": "68a21468f7506c0de0a269a241c9b42b00f59a1e94a0a5dc25dc688fd5aec817"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/scripts/check-signoz-sql.py",
+      "sha256": "d2436601d96d578d218c2c5555eb15d3ab73bc8816f360fb6a93481a173d2aa4"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/links/red-links.md",
+      "sha256": "9f2a310acb614daebc880a68f11a7d07e1ee2bbaa06fd3d3456acd706753f891"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/README.md",
+      "sha256": "ac5b00cb9356836cb5d09d7acb5e0112ff42000000a2cf9d46bf63d5e9c2eeb7"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_logs.distributed_logs_v2.tsv",
+      "sha256": "245fcf1156c001f2da4d74abc8557ca0c9f178e5b091fca5592fe718b0cd4604"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_logs.distributed_logs_v2_resource.tsv",
+      "sha256": "81b6835fbbae2cec4e2b745cc7c833d0b3620f00b3ce6c33ef5311b3fe9ac425"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metadata.distributed_attributes_metadata.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metadata.distributed_field_keys.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_exp_hist.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_metadata.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_metric_reduction_rules.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_samples_v4.tsv",
+      "sha256": "9adece605d99d628bee9e7cf3614a0537e35ac84ea4b36f499ba18ced4d10352"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_samples_v4_agg_30m.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_samples_v4_agg_5m.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_time_series_v4.tsv",
+      "sha256": "f4f9e3834d31dc4275a4279000224a06a1f07cfa36906bdcd2281cd3298b56b8"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_time_series_v4_1day.tsv",
+      "sha256": "b2f803425a80039fcc0d53496f2d14a33a73e7a7a9bfca94114bab6870a72b48"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_time_series_v4_1week.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_time_series_v4_6hrs.tsv",
+      "sha256": "b2f803425a80039fcc0d53496f2d14a33a73e7a7a9bfca94114bab6870a72b48"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.distributed_updated_metadata.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.samples_v4_agg_30m.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_metrics.samples_v4_agg_5m.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_traces.distributed_dependency_graph_minutes_v2.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_traces.distributed_signoz_error_index_v2.tsv",
+      "sha256": "16877e93c45ab85391595c41bc6cc497e1741765677289a4a6f9116224383fe5"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_traces.distributed_signoz_index_v3.tsv",
+      "sha256": "e54fc1d2b53aad227fd30338dc8bfccc716f81476314a063d2b0bf248bfbdf13"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_traces.distributed_traces_v3_resource.tsv",
+      "sha256": "81b6835fbbae2cec4e2b745cc7c833d0b3620f00b3ce6c33ef5311b3fe9ac425"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/signoz_traces.signoz_index_v3.tsv",
+      "sha256": "e54fc1d2b53aad227fd30338dc8bfccc716f81476314a063d2b0bf248bfbdf13"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/green/sorting-keys.tsv",
+      "sha256": "3c6a60d09a727ae4e5b6bfbae3d710720693fa77893b97a0d63c562cb3bac70a"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-missing-column/signoz_traces.distributed_signoz_index_v3.tsv",
+      "sha256": "666ac2498b3ad7fff2b7250ef823d82eb31eecd564d7e1f070c9705104d4355e"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-missing-column/signoz_traces.distributed_traces_v3_resource.tsv",
+      "sha256": "81b6835fbbae2cec4e2b745cc7c833d0b3620f00b3ce6c33ef5311b3fe9ac425"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-missing-column/signoz_traces.signoz_index_v3.tsv",
+      "sha256": "fc41cc89491fc2348c61242f29f1f5efc308393b3dcaa1ebcd5a9b2c5403ed91"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-missing-column/sorting-keys.tsv",
+      "sha256": "3c6a60d09a727ae4e5b6bfbae3d710720693fa77893b97a0d63c562cb3bac70a"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-sorting-key/signoz_traces.distributed_signoz_index_v3.tsv",
+      "sha256": "fc41cc89491fc2348c61242f29f1f5efc308393b3dcaa1ebcd5a9b2c5403ed91"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-sorting-key/signoz_traces.distributed_traces_v3_resource.tsv",
+      "sha256": "81b6835fbbae2cec4e2b745cc7c833d0b3620f00b3ce6c33ef5311b3fe9ac425"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-sorting-key/signoz_traces.signoz_index_v3.tsv",
+      "sha256": "fc41cc89491fc2348c61242f29f1f5efc308393b3dcaa1ebcd5a9b2c5403ed91"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/schema/red-sorting-key/sorting-keys.tsv",
+      "sha256": "29ea21f7c56e086ca14520c40a5bbb2439b29814a7b29090afc92e8b1d62b2e2"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/sql/nonvendor-ddl.sql",
+      "sha256": "2b0f0e7c1dcd4e4954185c5fa4d2cb172c9800d189a4f9858d550afa8fe7e36e"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/sql/quoted-nonvendor-ddl.sql",
+      "sha256": "b316b7d5ff8d225e8656d37c358190b18fce5aba39024d05ab5e68f1f22c6ee8"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/sql/quoted-vendor-ddl.sql",
+      "sha256": "cf4fab4a0b820d4cea13fcb69be46cf63068cfeacbffb13d5fba396475611463"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/test/fixtures/sql/vendor-ddl.sql",
+      "sha256": "1884f092bec8949c2113c893a68c0e2407edcc7b72301b2db8d52e12fb1f32da"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/SKILL.md",
+      "sha256": "e8e32f81c9db3b32b2d21c77de68a05d63eb135edbf02a1163032cdfa2e30799"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/agents/openai.yaml",
+      "sha256": "e524d2d846fced9b7491d4983981fc48937a2d98317e6b4a19e7b491fe94d68c"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/green-minimal.yaml",
+      "sha256": "3be152192322ade19c2a2fe8988e0b952292395c907f095768568280fdc5ee88"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-e651.yaml",
+      "sha256": "5a1aef5ca66a31b41b25d0ac025f5536efd07b4d590128b9985c47fb068ae032"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-unconfined-template.yaml",
+      "sha256": "556cd210d1b9e2d5ca41bc3cdf1e25d04132e0033106bc11c31faaf60ea5f274"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-undersized-disk-buffer.yaml",
+      "sha256": "787a55991e5bb553d3545ee64edd89c8ed0487bd6da27179eacaa5a113c7fa76"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/red-unsupported-ack.yaml",
+      "sha256": "60338979d90a469a4a90af3dcbcd99d67b12bf3f45cae44077b7f62d7bd67b3a"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/upstream-releases.sample.json",
+      "sha256": "0660bb5c17ee66ddfb78ec6f6ee7df954587403046b04303a4208b7ddcc9f948"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/green-http-decoding.yaml",
+      "sha256": "9839dc4b696069cd92e3614d1b6c61523a90ad5c0f126a2aa109fde8d5fa2338"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/red-http-encoding.yaml",
+      "sha256": "d5c20be7fea10b58233c32c71905b0f91eef055bba3d88cdb56721f57d11ef53"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/fixtures/v0.58/red-uri-authority.yaml",
+      "sha256": "3cbed6886abb1a40755a5d9c0c4216f17e2809156122c9e8d4602e3d7b9b40a5"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/common.vrl",
+      "sha256": "c9c87b3e584c8e92b9741db29df3e9e5aa5c5ceb810d5ff191684aa21a50f1df"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-basic.yaml",
+      "sha256": "67a7233c2c5d5e209fc11b98e21cfff21c4e94c742f9b24d6d456d6f60892ab5"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-clickhouse.yaml",
+      "sha256": "7818de28bbaf346d26786a178a613980ee292bf422b09b8570f0229975d0111a"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/assets/templates/vector-tests.yaml",
+      "sha256": "f049e4feab52e19d9906c9fa4106492f2e75d1acd16ad74a642ce75a35275360"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/00-topic-map.md",
+      "sha256": "be694d436f58f8a94fc3925528e652f845fff5eb475a7f45232c19af4ed1ac0d"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/10-topology-and-delivery-contract.md",
+      "sha256": "67147429e8316f42048fb8bf1ccadf2c256bae97f0fe5abc01a751513d9ea38a"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/20-vrl-transforms.md",
+      "sha256": "bb4dfabf04d5b6310db0ab700437d9335f75b9579c1a030022dc9e3f097f19ee"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/30-buffers-acks-and-backpressure.md",
+      "sha256": "4b378e5537af9db00bbd95f96c8fd39220ccd0619c125c3630346e501737a72d"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/35-pass-through-and-relay-paths.md",
+      "sha256": "1c00f92fb573e908d0196ce51777aed7f9363746eee2b895fe49c934b665838c"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/40-clickhouse-sink.md",
+      "sha256": "d330f9f0f3748be1bcbc4ac8157975203094f12257b047487b36e9adbe808f88"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/50-validation-and-testing.md",
+      "sha256": "6fbe5ab14b4342693a49be0ad7163566ab9b25c0eb599e89fec35e171d514509"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/60-internal-monitoring.md",
+      "sha256": "71dc06321e743515dddd90607f2d898bc44f91e8594f74c80463a91ba164a6e8"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/65-troubleshooting.md",
+      "sha256": "5f8f3fefcdd97fa6223745442c2b407c466afb8902456485cdb6a5eae0d54b78"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/70-helm-chart-operations.md",
+      "sha256": "89c1ab5f836027409bb111c98571d3be9e2aec66603f48b27226ea722f27a884"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/75-ala-ingest-pipeline.md",
+      "sha256": "263fda57bc6f95327c2184486cb849d42d711b176ba37cedd0b12c0f7a43c049"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/80-version-and-upgrade-deltas.md",
+      "sha256": "1209dd697f270cdbd206a675aef0879212ec128962de544ef0bc31a9feef590c"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/81-release-coverage.md",
+      "sha256": "b0318ae64a8630908330c8a5651b7240baad0ef56acfe9773fd508ebef8ee9ec"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/82-capability-surface.md",
+      "sha256": "41fe5b5d10377ca4cd65f13ab5781ae3959691fe908fdc303c6637ac6f3ef093"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/85-security-and-secrets.md",
+      "sha256": "422a9dd7105976b3eabcb6cffa41e7beeaba695e4c56780bf2f9f12b9e6e2527"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/references/90-source-map.md",
+      "sha256": "af3fbfafeb5d19a309e9cd2da2ab293f31209945b13a5b6c227a89495961b167"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/scripts/check-upstream-version.mjs",
+      "sha256": "5472c2dfdf65bca361aff3ac45971c132d8c0fe3d2553aa1af72301c311cba77"
+    },
+    {
+      "path": "skills/sohrab/vector-rust-observability-pipelines/scripts/check-vector-configs.mjs",
+      "sha256": "66eeabdb52f32e728ba39d2db21afc0261e8ae2f46ee2e9a42fb172766aeeb65"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ Every pin below carries the command that re-derives it. A version written in a f
 goes stale silently; a re-derivation command beside it does not.
 
 ```
-PIN vector = 0.57.0
+PIN vector = 0.58.0
 PIN helm-chart = 0.58.0
 ```
 
@@ -13,26 +13,51 @@ compares them to upstream, so this document and the checker cannot disagree.
 Run it with `node scripts/check-upstream-version.mjs`: exit 0 current, 1 drift,
 2 could not run.
 
+## Compatibility and evidence ledger (verified 2026-09-26)
+
+| Surface | Evidence and scope |
+| --- | --- |
+| Latest stable Vector product | `0.58.0`, released 2026-08-26; [release index](https://vector.dev/releases/), [published tag](https://github.com/vectordotdev/vector/releases/tag/v0.58.0), and [tag-matched full changelog](https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/cue/reference/releases/0.58.0.cue) agree |
+| Skill refresh baseline | `0.57.0`; the complete new stable-release interval is `(0.57.0, 0.58.0]`: one release, no intervening stable patch listed by the release index |
+| Bundled VRL | `0.35.0`, released 2026-08-20; the tagged Vector changelog links the [VRL release](https://github.com/vectordotdev/vrl/releases/tag/v0.35.0) |
+| Released Helm chart | `vector-0.58.0`, released 2026-08-26; its [Chart.yaml](https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/Chart.yaml) declares appVersion `0.58.0-distroless-libc` and Kubernetes `>=1.28.0-0` |
+| Previous chart evidence correction | Released `vector-0.57.0` carries appVersion `0.57.0-distroless-libc`. The old pairing of chart `0.58.0` with that appVersion came from mutable `develop`; do not carry it forward as released evidence |
+| Documented compatibility paths | Retain the historical consumer `0.53.0` path and version-qualified migrations through `0.58.0`; existing `0.57.0` runtime observations remain dated evidence, not tests of this refresh |
+| Current local binary / consumer | No Vector executable found on PATH or bounded conventional install locations in this run. Current consumer image, chart override and runtime versions remain unknown; `75-ala-ingest-pipeline.md` is a historical snapshot, not current deployment inventory |
+| Support promise | No upstream LTS/support window established. This documented range is not an upstream maintenance promise or authorization to drop older consumers; inspect the actual target and apply only its version's options |
+| Runtime proof | No Vector process, container, deployment or provider accessed. Latest-release guidance is released documentation/source evidence; exact-binary validation remains required |
+
+The full item-by-item coverage, including VRL and justified omissions, lives in
+`81-release-coverage.md`. Read it when auditing refresh completeness. Read
+`82-capability-surface.md` when choosing an optional capability.
+
 ## Re-deriving the pins
 
-Vector release (verified 2026-07-30: `0.57.0`, released 2026-07-14):
+Select the numeric maximum among published, non-draft, non-prerelease `vX.Y.Z`
+product releases; exclude `vdev`, nightly and suffixed candidate tags. The checker
+walks at most five API pages and returns exit 2 if the inventory is incomplete.
 
 ```bash
 curl -s 'https://api.github.com/repos/vectordotdev/vector/releases?per_page=100' \
-  | jq -r '[.[] | select(.tag_name | test("^v[0-9]+\\.[0-9]+\\.[0-9]+$"))] | .[0] | "\(.tag_name) \(.published_at)"'
+  | jq -r '.[] | select(.draft == false and .prerelease == false) | select(.tag_name | test("^v[0-9]+\\.[0-9]+\\.[0-9]+$")) | "\(.tag_name) \(.published_at)"'
 ```
 
-**Do not use `/releases/latest` for this repository.** It returns `vdev-v0.3.3`,
+The command shows one page only; use the checker for bounded inventory and numeric
+ordering. **Do not use `/releases/latest` for this repository.** On 2026-09-26 it
+redirected to [vdev-v0.3.24](https://github.com/vectordotdev/vector/releases/tag/vdev-v0.3.24),
 the tag of the `vdev` developer tool that lives in the same repository, not a
-Vector release. A resolver that trusts it reports Vector 0.3.3, and every version
+Vector release. A resolver that trusts it reports the wrong product, and every version
 comparison downstream is then wrong in the direction that looks safe.
 `scripts/check-upstream-version.mjs --self-test` asserts this trap is rejected,
 using the committed fixture `assets/fixtures/upstream-releases.sample.json`.
 
-Helm chart (verified 2026-07-30: chart `0.58.0`, appVersion `0.57.0-distroless-libc`):
+Resolve chart releases separately with the `vector-X.Y.Z` pattern and the same
+publication filters, then read `Chart.yaml` at that released tag. Neither a raw
+Cargo tag probe nor mutable `master`/`develop` proves a stable release. On a fetch
+failure, keep proof unavailable; do not guess downward through version numbers.
 
 ```bash
-curl -s https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/charts/vector/Chart.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/Chart.yaml
 ```
 
 The chart version and the Vector version are separate numbers and have drifted
@@ -44,12 +69,46 @@ one environment and not the other.
 ## Release line since the version this skill previously pinned
 
 `0.53.0` 2026-01-27 · `0.54.0` 2026-03-10 · `0.55.0` 2026-04-22 ·
-`0.56.0` 2026-06-03 · `0.57.0` 2026-07-14.
+`0.56.0` 2026-06-03 · `0.57.0` 2026-07-14 · `0.58.0` 2026-08-26.
 
 This file records what **breaks** across that line. What the pin can **do** — new
 components, VRL, config keys, CLI flags, metrics, and the deprecations to stop
 recommending — is `82-capability-surface.md`. Read it before concluding Vector
 cannot do something.
+
+## 0.58.0 migration decisions
+
+Source: [released upgrade guide](https://vector.dev/highlights/2026-08-26-0-58-0-upgrade-guide/),
+checked against its [tagged source](https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/content/en/highlights/2026-08-26-0-58-0-upgrade-guide.md).
+
+| Affected configuration | Migration before upgrading |
+| --- | --- |
+| `azure_monitor_logs` | Removed. Move to `azure_logs_ingestion`; obtain Data Collection Endpoint/Rule configuration and map `endpoint`, `dcr_immutable_id`, `stream_name`, `auth`. A sink-type rename alone is insufficient |
+| `buffer_byte_size`, `buffer_events` | Removed. Use `buffer_size_bytes`, `buffer_size_events`; monitoring owner: `60-internal-monitoring.md` |
+| `http_server` or deprecated `http` source `encoding` | Removed. Replace with `decoding.codec` and `framing.method` using the table below |
+| `influxdb_logs.namespace` | Removed. If `measurement` is already set, retain it; otherwise preserve the old name as `measurement: <old-namespace>.vector` |
+| `type: logdna` | Removed alias; use `type: mezmo` |
+| URI templates within or adjacent to hostname | Rejected at build time. Keep a static host and a literal `/` before dynamic path segments; security owner: `85-security-and-secrets.md` |
+| Scheme-less `webhdfs.endpoint` | Now resolves as HTTPS. Specify the intended scheme explicitly; never disable certificate verification to hide a migration failure |
+
+| Removed HTTP encoding | `decoding.codec` | `framing.method` |
+| --- | --- | --- |
+| `text` | `bytes` | `newline_delimited` |
+| `json` | `json` | `bytes` |
+| `ndjson` | `json` | `newline_delimited` |
+| `binary` | `bytes` | `bytes` |
+
+Sink endpoint validation also rejects empty, host-less and non-HTTP(S) URLs for
+the components listed in the full release ledger. Missing schemes resolve as
+HTTPS. Keep explicit schemes and hosts; do not extrapolate this component list
+to every URI field or infer a new ClickHouse default.
+
+Before upgrading an exactness path, read `30-buffers-acks-and-backpressure.md`:
+some invalid records are now dropped while the process survives, and an
+oversized disk record can still cause a source acknowledgement. This does not
+change the fleet's loss policy or make that path exact. Rollback requires the
+previous binary, matching config and dashboard queries; do not assume a changed
+buffer on disk is downgrade-compatible without an authorized recovery test.
 
 ## The three 0.57.0 changes that change what you must write
 
@@ -107,7 +166,7 @@ table: "logs_{{ tenant }}"   -> exit 0
 header value carries a literal prefix. This is a security control, not a style
 preference — it is the fix for injection through a routing field.
 
-**Trap, stated by upstream as a known issue:** *"`vector validate
+**Historical 0.57.0 trap, fixed in 0.58.0:** *"`vector validate
 --no-environment` doesn't catch unconfined routing templates."* See
 `50-validation-and-testing.md` for the flag set that does catch it.
 
@@ -199,11 +258,13 @@ release notes:
 All four are renames of the same family; a migration that handles only the two
 byte-sized ones leaves the two event-sized ones broken.
 
-**The old gauges still exist.** Upstream: *"while keeping the old related gauges
+**On the earlier release line the old gauges still exist.** Upstream: *"while keeping the old related gauges
 available for a transition period."* That is what makes a safe migration
 possible — dashboards can carry both names across one release, and the cutover
 does not have to be atomic. It also means a grep that finds the old name proves
-nothing about whether the new one is wired.
+nothing about whether the new one is wired. In 0.58.0, `buffer_byte_size` and
+`buffer_events` are removed; do not extend the transition promise to that version
+or infer removal of the two old maximum-size names from this release note.
 
 **Histogram buckets went 20 to 26, across all internal histograms**, not for one
 metric. The smallest bucket is now approximately `0.000244` (2^-12). Upstream

@@ -1,6 +1,6 @@
 ---
 name: alaa-signoz-clickhouse-docs
-description: "SigNoz ClickHouse SQL for dashboard panels over OpenTelemetry logs, traces and metrics, plus docs routing: the vendor-owned signoz_logs, signoz_traces and signoz_metrics tables, their sorting keys, the bucket-filter and resource-CTE idioms, rollup selection, missing-span diagnosis, and the service-topology read path. Use it to write or repair raw SigNoz panel SQL, to confirm a SigNoz table or column, to diagnose a trace with missing spans, or to choose the SigNoz docs page for a setup question. Do not use it to decide what a ClickHouse table must be, which /clickhouse-performance-schema-ops ($clickhouse-performance-schema-ops) owns; nor for telemetry requirement levels, cardinality ceilings or alert severity, which /alaa-observability-soc ($alaa-observability-soc) owns; nor for Vector pipeline config, which /vector-rust-observability-pipelines ($vector-rust-observability-pipelines) owns."
+description: "SigNoz ClickHouse SQL for dashboard panels over OpenTelemetry logs, traces and metrics, plus docs routing: the vendor-owned signoz_logs, signoz_traces and signoz_metrics tables, their sorting keys, the bucket-filter and resource-CTE idioms, rollup selection, missing-span diagnosis, and the service-topology read path. Use it to write or repair raw SigNoz panel SQL, to confirm a SigNoz table or column, to diagnose a trace with missing spans, or to choose the SigNoz docs page for a setup question. Do not use it to decide what a ClickHouse table must be, which /clickhouse-performance-schema-ops owns; nor for telemetry requirement levels, cardinality ceilings or alert severity, which /alaa-observability-soc owns; nor for Vector pipeline config, which /vector-rust-observability-pipelines owns."
 ---
 
 # SigNoz ClickHouse Docs and Query Reference
@@ -17,11 +17,11 @@ Write and repair raw ClickHouse SQL against SigNoz's vendor-owned tables, and ro
 
 ## The alert-surface gate
 
-The vendor contradicts itself about whether a SigNoz alert rule accepts ClickHouse SQL, and both statements were live on 2026-07-30. Neither the vendor nor the owner has resolved it, so assume nothing and discover it. `references/query-language-routing.md` carries both quotes, both URLs, and the discovery test.
+The vendor contradicts itself about whether a SigNoz alert rule accepts ClickHouse SQL, and the conflict remains in the public docs at the refresh date in `references/90-versions.md`. Public documentation cannot confirm an installation. `references/query-language-routing.md` owns released API lifecycle evidence and the deployment discovery test.
 
 Read `assets/alert-surface.json` before answering any request for alert SQL. While its `status` is `unconfirmed`:
 
-1. Run the discovery test in `references/query-language-routing.md` against this fleet's own SigNoz and record the result in `assets/alert-surface.json`. It needs one account that can open the alert-rule editor, and about one minute.
+1. Run the discovery test in `references/query-language-routing.md` only with explicit authorization for the target and its effects. A source-only refresh performs no live discovery and leaves `assets/alert-surface.json` unconfirmed.
 2. When the test cannot be run in this session, deliver the dashboard-panel form of the query and the Query Builder alert path, and state that the ClickHouse alert surface is unconfirmed on this install. Do not label SQL as alert SQL, because a rule the surface rejects is work that cannot ship.
 
 `check-signoz-sql.py --surface alert` reports finding `S11` for exactly this case, so the gate is enforced rather than remembered.
@@ -30,7 +30,7 @@ Read `assets/alert-surface.json` before answering any request for alert SQL. Whi
 
 1. Name the signal before writing SQL — logs, traces, or metrics — and read only that signal's reference. Joining two `signoz_*` databases needs an explicit `JOIN ... ON`, a shared key and one time window, because the three families share no fingerprint space.
 2. Bound every query in time with the variables that signal's reference names, and pair a logs or traces query with the `ts_bucket_start` predicate, because `ts_bucket_start` is the first column of the sorting key and a query without it reads every part in the partition.
-3. Group only by a column whose distinct-value count is inside the ceiling that `/alaa-observability-soc` (`$alaa-observability-soc`) `references/30-quantitative-budgets.md` sets. That file states the number; this skill states none and enforces the denylist as `check-signoz-sql.py` rule `S7`.
+3. Group only by a column whose distinct-value count is inside the ceiling that `/alaa-observability-soc` `references/30-quantitative-budgets.md` sets. That file states the number; this skill states none and enforces the denylist as `check-signoz-sql.py` rule `S7`.
 4. Return the panel shape the widget expects: `ts` and `value` for a timeseries, one column named `value` for a value widget, labelled columns and a `LIMIT` for a table.
 5. Keep an unknown value as an explicit placeholder — `{{service_name}}`, `{{metric_name}}`, `{{attribute_key}}` — rather than inventing one, and never put a credential, token or real customer payload in an example.
 6. When the live schema cannot be reached, emit the query with a literal `-- UNVERIFIED SCHEMA: db.table` comment above it and name the command that verifies it. Never silently downgrade to this reference's assumption.
@@ -41,10 +41,10 @@ Route the task through `references/00-topic-map.md`, which maps the situation yo
 
 ## Checkers
 
-Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not run; a `2` is never a pass. Each ships a red fixture reachable with `--self-test`.
+Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not run; a `2` is never a pass. Each ships offline red fixtures reachable with `--self-test`; self-tests do not prove network or installed-schema availability.
 
-- `python3 scripts/check-signoz-links.py --skill-dir .` — every URL in the skill resolves 200 and does not silently redirect to a docs index. Exits `2` when the network is unreachable, so a dead link can never read as clean.
-- `python3 scripts/check-signoz-schema.py --describe-dir DIR` (or `--dsn URL`) — every table and column this skill claims is present on the target, and `signoz_index_v3` still sorts by `ts_bucket_start, resource_fingerprint` first. A finding here means this skill is stale against the installed SigNoz, not that your query is wrong: fix the reference first, then the query.
+- `python3 scripts/check-signoz-links.py --skill-dir .` — every documentation URL outside test fixtures resolves 200 and does not silently redirect to a docs index. Exits `2` when the network is unreachable, so a dead link can never read as clean.
+- `python3 scripts/check-signoz-schema.py --describe-dir DIR` (or `--dsn URL`) — every table and column this skill claims is present on the target, and `signoz_index_v3` still sorts by `ts_bucket_start, resource_fingerprint` first. Missing sorting-key evidence blocks the traces assertion. A finding identifies a mismatch with the selected target: retain older consumer paths, qualify the reference, then repair the query. Synthetic fixtures prove checker behavior, not an installed schema.
 - `python3 scripts/check-signoz-sql.py --skill-dir .` — this skill's own examples obey the rules above. Add `--sql FILE` to check a query you are about to hand over.
 
 ## Not owned here
@@ -53,7 +53,7 @@ Run these from the skill directory. Exit `0` clean, `1` findings, `2` could not 
 `alaa-signoz-clickhouse-docs` owns how a SigNoz-owned table is queried, and states that those tables are vendor-owned and read-only to the fleet.
 `vector-rust-observability-pipelines` owns what the pipeline writes into a ClickHouse table and how it behaves when that table is unreachable, and decides no schema.
 
-Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`) `references/40-query-tuning-and-read-lane.md`. Telemetry requirement levels, gates and reasons: `/alaa-observability-soc` (`$alaa-observability-soc`). Who may hold a SigNoz credential, and what a saved panel executes with: `/alaa-security-review` (`$alaa-security-review`). Model and effort: `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`. Every other owner is named at the rule it governs inside `references/`.
+Read-lane settings and scan-cost reasoning over `signoz_*` tables: `/clickhouse-performance-schema-ops` `references/40-query-tuning-and-read-lane.md`. Telemetry requirement levels, gates and reasons: `/alaa-observability-soc`. Who may hold a SigNoz credential, and what a saved panel executes with: `/alaa-security-review`. Model and effort: `/alaa-prompting-guide` `references/50-effort-and-thinking.md`. Every other owner is named at the rule it governs inside `references/`.
 
 ## When NOT to use
 

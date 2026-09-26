@@ -29,6 +29,8 @@ Runs on Windows and POSIX: pure Python 3, no shell pipelines.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import json
 import re
 import sys
@@ -165,10 +167,31 @@ def strip_comments(sql: str) -> str:
     return re.sub(r"--[^\n]*", " ", without_block)
 
 
+def normalized_identifiers(sql: str) -> str:
+    """Expose simple quoted identifiers, but never treat string data as a target name."""
+    tokens = r"'(?:\\.|''|[^'\\])*'|`(?:\\.|``|[^`\\])*`|\"(?:\\.|\"\"|[^\"\\])*\""
+
+    def normalize(match):
+        token = match.group(0)
+        if token[0] == "'":
+            return "''"
+        name = token[1:-1].replace(token[0] * 2, token[0])
+        name = re.sub(r"\\(.)", r"\1", name)
+        return name if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name) else '""'
+
+    return re.sub(tokens, normalize, sql)
+
+
 def classify(sql: str):
     """Return (kind, signal). kind is 'statement', 'fragment', or 'template'."""
     stripped = strip_comments(sql).strip()
     head = stripped.lstrip("(").lstrip().lower()
+    first = head.split(None, 1)[0] if head else ""
+    if first in DESTRUCTIVE:
+        identifiers = normalized_identifiers(head)
+        for signal in ("logs", "traces", "metrics", "metadata", "meter"):
+            if re.search(r"\bsignoz_" + signal + r"\s*\.", identifiers):
+                return "statement", signal if signal in TIME_VARS else "metrics"
     if not head.startswith("with") and not head.startswith("select"):
         return "fragment", None
     if re.search(r"^\s*SELECT\s*\.\.\.\s*$", stripped, re.M) or re.search(r"FROM\s*\{\{", stripped):
@@ -287,9 +310,12 @@ def check_statement(sql, signal, denylist, surface_status, surface_reason):
     data_table = reads_data_table(clean, signal)
 
     head = clean.strip().lstrip("(").lstrip().split(None, 1)
-    if head and head[0].lower() in DESTRUCTIVE:
+    if (head and head[0].lower() in DESTRUCTIVE
+            and re.search(r"\bsignoz_(?:logs|traces|metrics|metadata|meter)\s*\.",
+                          normalized_identifiers(lowered))):
         findings.append(("S8", "statement begins with `{}`: this skill proposes no DDL or mutation "
                                "against a vendor-owned table".format(head[0].upper())))
+        return findings
 
     if data_table:
         start_var, end_var = TIME_VARS[signal]
@@ -491,8 +517,27 @@ def self_test() -> int:
     if len(split_statements("SELECT 1; SELECT 2")) != 2:
         failures.append("split_statements failed to split two real statements")
 
+    # Exercise the actual file-to-run dispatch; direct check_statement tests missed this bypass.
+    fixture = default_skill_dir() / "test" / "fixtures" / "sql"
+    dispatch_cases = (("vendor-ddl.sql", FINDINGS, 1), ("nonvendor-ddl.sql", CLEAN, 0),
+                      ("quoted-vendor-ddl.sql", FINDINGS, 2), ("quoted-nonvendor-ddl.sql", CLEAN, 0))
+    for filename, expected_exit, expected_findings in dispatch_cases:
+        args = argparse.Namespace(sql=[str(fixture / filename)], scan_skill=False,
+                                  skill_dir=default_skill_dir(), cardinality_denylist=None,
+                                  surface="dashboard", as_json=True)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            result = run(args)
+        payload = json.loads(output.getvalue())
+        if result != expected_exit:
+            failures.append("{} dispatch returned {}, expected {}".format(filename, result, expected_exit))
+        s8_count = sum(f["rule"] == "S8" for f in payload["findings"])
+        if s8_count != expected_findings or payload["checked"] != expected_findings:
+            failures.append("{} dispatch checked {} with {} S8 findings, expected {}".format(
+                filename, payload["checked"], s8_count, expected_findings))
+
     print("self-test: {} red case(s) + 1 clean + 2 surface case(s) + 4 splitter case(s), "
-          "{} failure(s)".format(len(cases), len(failures)))
+          "4 dispatch case(s), {} failure(s)".format(len(cases), len(failures)))
     for failure in failures:
         print("  FAIL {}".format(failure))
     return FINDINGS if failures else CLEAN

@@ -46,10 +46,12 @@ def strip_trailing(url: str) -> str:
     return url
 
 
-def collect_urls(skill_dir: Path):
+def collect_urls(skill_dir: Path, include_fixtures: bool = False):
     """Yield (relative_path, line_number, url) for every checkable URL in the skill's markdown."""
     found = []
     for md in sorted(skill_dir.rglob("*.md")):
+        if not include_fixtures and "test" in md.relative_to(skill_dir).parts:
+            continue
         try:
             text = md.read_text(encoding="utf-8")
         except OSError as exc:
@@ -148,13 +150,7 @@ def run(skill_dir: Path, timeout: int, concurrency: int, allow_redirect: bool, a
 
 
 def self_test(skill_dir: Path) -> int:
-    """Two parts. Part A is offline and deterministic: it is the committed red fixture.
-
-    Part A drives the same judge() and collect_urls() the live run uses, against
-    test/fixtures/links/, with a stubbed responder. It must fail on a 404 and on a
-    silent redirect with no network at all -- otherwise a green run proves nothing.
-    Part B tries the network and records BLOCKED rather than FAIL when it cannot.
-    """
+    """Offline fixtures prove decisions; the regular run separately proves reachability."""
     fixture = skill_dir / "test" / "fixtures" / "links"
     if not fixture.is_dir():
         print("BLOCKED: fixture missing: {}".format(fixture), file=sys.stderr)
@@ -167,7 +163,7 @@ def self_test(skill_dir: Path) -> int:
     }
     failures = []
 
-    extracted = {url for _, _, url in collect_urls(fixture)}
+    extracted = {url for _, _, url in collect_urls(fixture, include_fixtures=True)}
     for url in stub:
         if url not in extracted:
             failures.append("extraction missed {}".format(url))
@@ -189,21 +185,19 @@ def self_test(skill_dir: Path) -> int:
              "https://example.invalid/docs/", allow_redirect=True) is not None:
         failures.append("--allow-redirect did not downgrade a redirect")
 
-    print("self-test part A (offline, red fixture): {} assertion(s), {} failure(s)".format(
-        len(expectations) + 3, len(failures)))
+    production = collect_urls(skill_dir)
+    if any(rel.startswith("test/") for rel, _, _ in production):
+        failures.append("production scan included test fixtures")
+    if not any(rel.startswith("references/") and "signoz.io" in url for rel, _, url in production):
+        failures.append("production scan omitted real reference URLs")
+    print("self-test (offline, red fixture and production scope): {} assertion(s), {} failure(s)".format(
+        len(expectations) + 7, len(failures)))
     for failure in failures:
         print("  FAIL {}".format(failure))
     if failures:
         return FINDINGS
 
-    try:
-        fetch("https://example.invalid/good/", 5)
-        print("self-test part B (live): network reachable")
-        return CLEAN
-    except TransportError as exc:
-        print("self-test part B (live): BLOCKED, not FAIL -- {}".format(exc))
-        print("exit 2: part A passed, part B could not run.", file=sys.stderr)
-        return BLOCKED
+    return CLEAN
 
 
 def main() -> int:

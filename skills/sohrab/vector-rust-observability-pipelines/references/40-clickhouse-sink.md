@@ -14,9 +14,8 @@ that those tables are vendor-owned and read-only to the fleet.
 ClickHouse table and how it behaves when that table is unreachable, and decides no
 schema.
 
-Route accordingly: `/clickhouse-performance-schema-ops`
-(`$clickhouse-performance-schema-ops`) for DDL, `ORDER BY`, part counts, merges and
-retention; `/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) for
+Route accordingly: `/clickhouse-performance-schema-ops` for DDL, `ORDER BY`, part counts, merges and
+retention; `/alaa-signoz-clickhouse-docs` for
 SigNoz-managed tables and their query surface. The counterparty has already written
 its half: *"that skill owns what the pipeline writes, this one owns what the table
 must be."*
@@ -28,7 +27,7 @@ Two seams, as rules:
    column is a schema-change request filed against SigNoz, never a workaround with
    `skip_unknown_fields`.
 2. **Writing into a fleet-owned table.** The ingest-pipeline repository owns the DDL
-   per `/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`);
+   per `/clickhouse-performance-schema-ops`;
    `75-ala-ingest-pipeline.md` names which repository that is in this fleet. The
    part-count and latency budget is that repository's rule; the `batch` and `buffer`
    settings that satisfy it are this skill's. When a sink produces too many parts, the
@@ -108,8 +107,8 @@ routing field, and disabling it sets
 `vector_security_confinement_disabled{component_type=...}` to `1` — a signal
 someone will eventually have to explain.
 
-`vector validate --no-environment` does **not** catch this. See
-`50-validation-and-testing.md` for the flag set that does.
+On 0.57.0 `vector validate --no-environment` did **not** catch this; 0.58.0 fixes
+confinement validation. Keep the full flag set in `50-validation-and-testing.md`.
 
 **Minimum version for a templated identifier is 0.57.0**, which is where the
 ClickHouse SQL-injection fix landed: `database` and `table` are now passed as query
@@ -144,7 +143,7 @@ the config interpolates — `85-security-and-secrets.md` rule 1 owns that decisi
 states it once.
 
 Set `tls.verify_certificate: true` explicitly. Trust-boundary review for a new
-external destination belongs to `/alaa-security-review` (`$alaa-security-review`).
+external destination belongs to `/alaa-security-review`.
 
 ## When ClickHouse is unreachable
 

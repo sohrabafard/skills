@@ -8,15 +8,15 @@ Read this when the answer is a documentation page rather than a query, or when t
    `GET /api/v1/version`. A live schema outranks every document: the document describes a release,
    the install is the fact.
 2. **SigNoz source** — the schema migrator in `signoz-otel-collector`, `query-service` in
-   `SigNoz/signoz`. Outranks the docs, because the migrator is what created the tables. Cite the file
+   `SigNoz/signoz`. Outranks the docs, because the migrator is what created the tables. Select the application/collector tags through `90-versions.md`; never use `main` as released proof. Cite the file
    and the symbol, never a line number: line numbers move between reads.
 3. **Official SigNoz and OpenTelemetry documentation.** Authoritative for surface behaviour,
    dashboard variables and the documented query idioms.
 4. **Community material** — issues, Stack Overflow, blogs. Use it to recognise an observed failure,
    never to establish a schema, a macro or a UI capability.
 
-When tiers 2 and 3 conflict, state both and name which you followed. When tier 3 conflicts with
-itself, reading more cannot resolve it — see the alert-surface case in `query-language-routing.md`
+When tiers 2 and 3 conflict, state both and name which release each describes. Route registration proves released code presence, not deployed enablement or authorization. When tier 3 conflicts with
+itself about deployment behavior, public docs cannot confirm the install — see the alert-surface case in `query-language-routing.md`
 for the pattern that does. Every factual claim added to this skill carries its source and the date it
 was read; a claim with no date is treated as unverified.
 
@@ -32,10 +32,11 @@ when it goes stale. What survives a reorganisation is the method plus the few UR
 every rename. `python3 scripts/check-signoz-links.py --skill-dir .` is what turns "these links still
 work" from a belief into an exit code.
 
-## The six URLs that carry schema and surface facts
+## Schema and surface documentation
 
-These are the pages this skill's factual claims rest on. Each was fetched and its content quoted on
-the date beside it. Fetch the page again before contradicting it.
+These historical guide reads remain useful routing leads. Released schema/version and API
+refresh evidence is centralized in `90-versions.md`; do not treat the dates below as refreshed
+deployment proof. Fetch the selected page before contradicting it.
 
 | Page | URL | Last read |
 |---|---|---|
@@ -92,4 +93,4 @@ Prefer the Collector whenever the requirement is retries, batching, redaction, r
 centralised credentials, or filtering before data leaves the environment.
 
 Whether a log record may leave the environment at all, and what must be redacted before it does, is
-decided by `/alaa-observability-soc` (`$alaa-observability-soc`), not here.
+decided by `/alaa-observability-soc`, not here.

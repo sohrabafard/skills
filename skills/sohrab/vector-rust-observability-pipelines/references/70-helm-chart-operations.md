@@ -1,19 +1,21 @@
 # Helm chart operations
 
-The official chart, verified 2026-07-30: chart `0.58.0`, appVersion
-`0.57.0-distroless-libc`. Every claim below was read from the chart's own
-`values.yaml` on that date.
+The released chart/appVersion pair and minimum Kubernetes constraint are recorded
+once in `80-version-and-upgrade-deltas.md`. The configuration precedence below was
+rechecked against that chart's tagged `values.yaml` on 2026-09-26. Older chart
+consumers must inspect their own tag; a current chart constraint is not permission
+to drop an older cluster path.
 
 Re-derive the versions:
 
 ```bash
-curl -s https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/charts/vector/Chart.yaml
+node scripts/check-upstream-version.mjs
 ```
 
 Re-derive the option semantics:
 
 ```bash
-curl -s https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/charts/vector/values.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/values.yaml
 ```
 
 **The chart version and the Vector version are two different numbers.** Compare the
@@ -25,8 +27,8 @@ one environment and not the other. `scripts/check-upstream-version.mjs` prints b
 and flags the mismatch.
 
 Kubernetes platform mechanics beyond these Vector-specific keys belong to
-`/alaa-k8s-helm` (`$alaa-k8s-helm`), and Arvan CaaS platform constraints to
-`/caas-arvan-kuber` (`$caas-arvan-kuber`).
+`/alaa-k8s-helm`, and Arvan CaaS platform constraints to
+`/caas-arvan-kuber`.
 
 ## Role determines the workload, so pick it first
 
@@ -120,7 +122,7 @@ volume against the sum of every configured `max_size`, per
 helm lint .
 helm template . -f values.yaml > rendered.yaml
 # then extract the Vector config from the rendered ConfigMap and validate it:
-vector validate --skip-healthchecks vector.yaml
+vector validate --skip-healthchecks --deny-warnings vector.yaml
 ```
 
 Validate the **rendered** config, not the values file. The values file is not a

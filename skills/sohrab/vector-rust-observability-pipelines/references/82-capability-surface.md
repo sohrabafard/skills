@@ -5,10 +5,40 @@ This file records what the pin can **do**. An agent holding only the breaking
 changes will not reach for a component that has existed since 0.54.0, and will keep
 recommending options 0.57.0 deprecated.
 
-Scope: additions and deprecations across `0.54.0` → `0.57.0`, taken from the four
+Historical scope: additions and deprecations across `0.54.0` → `0.57.0`, taken from the four
 release pages, the `/highlights/` index, and the `0.55.0` and `0.57.0` upgrade
 guides. Every row is version-tagged. **Absence from these tables is absence from
-those pages, not evidence a capability does not exist.**
+those pages, not evidence a capability does not exist.** The new-release section
+below extends this inventory; current version/support evidence is owned by
+`80-version-and-upgrade-deltas.md`, exhaustive delta mapping by `81-release-coverage.md`.
+
+## Additions available from 0.58.0
+
+Use only on a target binary that supports them. Existing templates retain their
+older option paths; these additions do not upgrade a consumer automatically.
+
+| Capability | Selection constraint |
+| --- | --- |
+| `memory` enrichment cuckoo/bloom filters | Approximate membership admits false positives; never substitute for an exactness or authorization decision |
+| `prometheus_exporter.flush_period_secs: 0` | Disables expiry for sink lifetime; choose only with bounded series cardinality because retained series can grow memory without bound |
+| Delimited decoding `oversized_action: truncate` | `character_delimited`/`newline_delimited` default remains `drop`; truncation discards the remainder through the next delimiter. Treat as an explicit loss decision and test malformed truncated payloads |
+| `kubernetes_logs.max_merged_line_action: truncate` | Default remains `drop`; truncates to `max_merged_line_bytes` with `..TRUNCATED` suffix. Individual file lines above `max_line_bytes` still drop; this is not file-level truncation |
+| Kafka source `decompression` | Application payload `gzip`, `zlib`, `zstd`, optional zstd `dictionary_path`; runs before framing/decoding. Broker protocol compression is separate |
+| `metric_tag_values: auto` | Single tags remain strings, multiple values arrays; test consumers of both shapes. Lua still supports only `single`/`full` |
+| OTLP native metric encoding | Counter, Gauge, AggregatedHistogram and AggregatedSummary map to OTLP Sum, Gauge, Histogram and Summary. This is codec support, not proof every sink transports every metric type |
+| HTTP-source custom-auth VRL enrichment | Covers `http_server`, `heroku_logs`, `prometheus_pushgateway`, `prometheus_remote_write`; `%field` goes under `http_server.<field>` metadata in Vector namespace or event body in legacy namespace, without overwriting existing fields. Enrichment is not a substitute for gateway authorization |
+| Influx sink `version` | Explicit API selection added; absence retains inference for this release. Upstream plans a future requirement without naming its release; do not invent a removal version |
+| Azure Blob `tags` / `metadata` | Index tags and custom metadata; apply redaction before export, not just to the payload |
+| Datadog Agent LLMObs | `/api/v2/llmobs`, log events on `llmobs` when `multiple_outputs` is enabled; consuming this port is a new data/privacy path |
+| S3 source `request_payer: requester` | Optional Requester Pays support; availability is not authorization to incur charges |
+| Databricks Zerobus OTel v2 | Released compatibility addition; no provider runtime tested here |
+
+Payload regression cases: OTLP trace decoding in legacy namespace no longer adds
+an extraneous timestamp; dnstap restores `httpProtocol`; Datadog metric V2 preserves
+`resource.<type>` resources; aggregated-histogram integer `upper_limit` values now
+deserialize. Kubernetes fallback from log paths populates pod/container names and
+namespace, but calls the directory segment `pod_log_directory_id`, not `pod_uid`:
+static pods can use a config hash. Preserve that distinction in identity logic.
 
 ## New components
 
@@ -100,7 +130,7 @@ verified schema key list is in `50-validation-and-testing.md`.
 
 | Deprecated or removed | Version | Use instead |
 | --- | --- | --- |
-| `azure_monitor_logs` sink | deprecated 0.54.0 | `azure_logs_ingestion`. The 0.54.0 notes give a deadline: migrate before Microsoft ends support for the old Data Collector API, scheduled at the time of writing for September 2026. Paraphrase — re-read the release page before quoting the date |
+| `azure_monitor_logs` sink | deprecated 0.54.0, removed 0.58.0 | `azure_logs_ingestion`; resource and auth migration in `80-version-and-upgrade-deltas.md` |
 | Top-level `headers` on the `http` and `opentelemetry` sinks | **removed** 0.55.0 | `request.headers` |
 | GraphQL API, `/graphql`, `/playground` | **removed** 0.55.0 | The gRPC API. `api.graphql` and `api.playground` are now rejected at config load — `80-version-and-upgrade-deltas.md` |
 | Boolean `compression` on the `vector` sink | deprecated 0.56.0 | String syntax: `gzip`, `zstd`, `none` |
@@ -117,9 +147,12 @@ improvement carry **no** figure — do not supply one. Two regressions were also
 fixed: metric-normalization sink CPU, present since 0.50.0 (0.56.0), and `file` /
 `kubernetes_logs` CPU (0.55.0).
 
-## What these sources do not say — and do not infer it
+## What the historical sources did not say — do not extend silence to newer versions
 
-Every page in range fetched successfully, so nothing here is UNFETCHED. Everything
+The following records only the earlier range through 0.57.0. It does not describe
+0.58.0, which changes exporter expiration, removes buffer metrics and changes HTTP
+source configuration, disk recovery and loss behavior as mapped above.
+Every page in that historical range was recorded as fetched. Everything
 here is UNCONFIRMED in the sense that the pages are silent, which is not the same as
 the pages denying it:
 
@@ -149,5 +182,6 @@ digest `sha256:19e3526faf4d4b1ed0c28a0d68d4cc3a1e13e437099986a5b7a768707907497c`
 build `0.57.0 (x86_64-unknown-linux-musl 8832452 2026-07-14 20:58:30)`, on
 2026-08-08. The release pages do not address the `-alpine` tag either way.
 
-All of the above reached this file through a summarising fetch rather than raw page
-text. A claim that has to be exact gets re-read at its source: `90-source-map.md`.
+The historical inventory reached this file through a summarising fetch. The newer
+section uses tagged raw release source. Re-read exact claims at their source:
+`90-source-map.md`.

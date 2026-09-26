@@ -1,8 +1,9 @@
 # The Ala watch-time ingest pipeline
 
-`wa` is the fleet's only Vector deployment and its only ClickHouse. It is also the one
-Vector path in the fleet where the fail-open telemetry rule does not apply, and the
-reason is not a Vector fact — it is what the data is for.
+This is a historical `wa` consumer snapshot, not a current fleet inventory. At the
+recorded revision it was the identified Vector/ClickHouse deployment. Its exactness
+ruling makes its product-data path different from fail-open telemetry.
+No consumer checkout or deployment was revalidated in the current refresh.
 
 Measured against the `wa` working tree at commit `5bbe3c2` on 2026-07-30. Every number
 below has a re-derivation command in the last section. Run the command before repeating
@@ -17,7 +18,7 @@ telemetry** — and it is that classification, not the fact that Vector is the p
 moving it, that decides the pipeline's failure behaviour.
 
 This has to be said out loud here, because the general rule points the other way.
-`/alaa-observability-soc` (`$alaa-observability-soc`) binds the fleet to fail-open for
+`/alaa-observability-soc` binds the fleet to fail-open for
 product traffic, and `30-buffers-acks-and-backpressure.md` names the Vector option that
 expresses it. An agent arriving at this pipeline holding that rule and nothing else will
 set `when_full: drop_newest` on a billing record and will be able to cite a rule for it.
@@ -25,7 +26,7 @@ SOC's rule governs telemetry *about* the product. It does not reach a table whos
 *are* the product.
 
 **Do not decide this by which tool moves the data.** Use the discrimination rule that
-`/alaa-reliability-sla` (`$alaa-reliability-sla`) owns at its `SKILL.md:18-30`: when this
+`/alaa-reliability-sla` owns at its `SKILL.md:18-30`: when this
 dependency cannot answer, does proceeding without it let something through that must not
 get through? Answer it per path, and one Vector process answers it twice:
 
@@ -38,11 +39,11 @@ One pipeline, two answers, decided by what the data is for and not by which tool
 it. Three boundaries hold around that ruling, and none of them belongs to this file:
 
 - **Whether a signal is required at all, and at which gate:**
-  `/alaa-observability-soc` (`$alaa-observability-soc`).
+  `/alaa-observability-soc`.
 - **Why a fail-open or fail-closed mechanism exists and how to choose its shape:**
-  `/alaa-reliability-sla` (`$alaa-reliability-sla`). It states no Ala number.
+  `/alaa-reliability-sla`. It states no Ala number.
 - **Every Ala value** — tolerable outage duration, retry budget, request deadline:
-  `/alaa-services-contract` (`$alaa-services-contract`) `references/22-failure-load-and-deprecation-contract.md`.
+  `/alaa-services-contract` `references/22-failure-load-and-deprecation-contract.md`.
 
 This file owns one thing: which Vector option expresses the chosen shape on this
 pipeline, and what this pipeline does when ClickHouse is unreachable.
@@ -103,7 +104,7 @@ pattern worth copying wherever a config has to exist twice.
 **Where this file's seam begins.** The public edge is `POST /wa/ingest/v1/events` on the
 gateway: unauthenticated, matched by a path-prefix ACL, rewritten, and forwarded to
 `wa:8686` under the gateway's `timeout server 30s`, with no rate limiting in the rendered
-configuration. `/alaa-haproxy` (`$alaa-haproxy`) owns every one of those directives, and
+configuration. `/alaa-haproxy` owns every one of those directives, and
 no proxy configuration is written from here. This file's half starts at the TCP
 connection: the source's `response_code`, what has actually happened to the event by the
 time that code is emitted, and how long the source may hold the request open. The two
@@ -160,7 +161,7 @@ open until every sink confirms. Silent loss becomes visible backpressure, which 
 right direction, and the ingest endpoint can hang under sustained overload, which is a
 genuine new failure mode. It needs a bounded request deadline in front of it and an
 alert on buffer utilisation. The mechanism is `30-buffers-acks-and-backpressure.md`;
-the deadline value is `/alaa-services-contract` (`$alaa-services-contract`)
+the deadline value is `/alaa-services-contract`
 `references/22-failure-load-and-deprecation-contract.md`.
 
 **Do not read that cost as the only way the client can be slowed.** Acknowledgements
@@ -208,7 +209,7 @@ written. Any exactness plan has two parts — stop new duplicates, and rebuild t
 rollup ranges — and the second part is not optional.
 
 Which engine or table setting delivers exactness is not this skill's decision.
-`/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`) owns engine,
+`/clickhouse-performance-schema-ops` owns engine,
 sorting key and table settings, and `65-troubleshooting.md` already routes the
 duplication-into-one-sink class there. What this skill owns is the pipeline's obligation:
 state the delivery guarantee in the path's delivery contract, and file the exactness
@@ -234,9 +235,9 @@ The dangerous ones are the defaults that fail open. A default that starts reject
 config is discovered at validate time. A default that starts assigning a different meaning
 to the same text is discovered in production, or not at all.
 
-**In this pipeline.** Vector is pinned to `0.53.0` in five places while current stable is
-`0.57.0`; nothing has been bumped. Two dormant changes are waiting in that gap, and
-running the unchanged config on a 0.57.0 binary shows both, in order:
+**In the historical snapshot.** Vector was pinned to `0.53.0` in five places while
+the comparison binary was `0.57.0`; this skill bumped nothing. Running the unchanged
+config on that binary exposed two dormant changes, in order:
 
 1. `api.graphql: false` and `api.playground: false` are still in the config. 0.55.0
    rejects both at load: `x unknown field 'graphql', expected 'enabled' or 'address'`,
@@ -264,6 +265,12 @@ That is the evidence for the rule `50-validation-and-testing.md` already states 
 validate gate has to be able to see the defect class it is gating, or it reports clean
 on the one thing it exists to catch.
 
+For a later upgrade, use the current ledger in `80-version-and-upgrade-deltas.md`.
+The invalid-record acknowledgement caveat in `30-buffers-acks-and-backpressure.md`
+is an additional exactness review item; the historical 0.57.0 experiment does not
+prove it safe on a newer binary. The consumer's exactness and privacy owners must
+resolve that gap before making a storage-receipt claim.
+
 ### 5. A dropped-events counter is not a dead-letter queue
 
 A counter answers how many events were rejected. It never answers which ones, or what they
@@ -289,7 +296,7 @@ is unvalidated input arriving on an unauthenticated public path, governed by
 neither `.dropped` output be wired to a sink. So this is not an oversight. It is an
 unresolved conflict between a security policy and an exactness ruling that post-dates it.
 Whether unvalidated public input may be stored at all belongs to
-`/alaa-security-review` (`$alaa-security-review`); what the exactness requirement demands
+`/alaa-security-review`; what the exactness requirement demands
 belongs to the owner and is recorded in `<repo>/docs/DECISIONS.md`. The pipeline's job is
 to name the conflict in its delivery contract, not to settle it.
 
@@ -299,7 +306,7 @@ to name the conflict in its delivery contract, not to settle it.
 `<repo>/clickhouse/ddl/001_init.sql` and `<repo>/clickhouse/ddl/002_agg.sql`. They are not
 SigNoz's, and the distinction decides which skill answers a question about them.
 
-`/alaa-signoz-clickhouse-docs` (`$alaa-signoz-clickhouse-docs`) owns how a **SigNoz-owned**
+`/alaa-signoz-clickhouse-docs` owns how a **SigNoz-owned**
 table is queried and states that those tables are vendor-owned and read-only to the fleet.
 Its rules do not transfer here in either direction. A schema change to `wa_raw` is a change
 this repository makes, not a request filed against a vendor. And SigNoz's tenancy posture —
@@ -309,7 +316,7 @@ a licence to omit `project_id` from a `wa_agg` query.
 
 The three-way ClickHouse boundary itself is stated once, in `40-clickhouse-sink.md`, and is
 not restated here. What that statement leaves open, this file closes:
-`/clickhouse-performance-schema-ops` (`$clickhouse-performance-schema-ops`) `SKILL.md:14-15`
+`/clickhouse-performance-schema-ops` `SKILL.md:14-15`
 assigns the DDL directory and the Vector topology writing into it to "the ingest-pipeline
 repository". **In this fleet that repository is `wa`**, the same repository described above,
 holding both `<repo>/clickhouse/ddl/` and `<repo>/vector/wa-vector.yaml`. An agent looking
@@ -321,7 +328,7 @@ for the owner of a `wa_raw` column type has now found it.
 90-second ceiling, and whether a report scans a rollup or the raw table are all questions
 about how a cost grows with the input, not about which Vector option exists. State the
 bound the path must hold as ingest rate, event size and retention grow, then take it to
-`/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`), which owns
+`/alaa-algorithms-data-structures`, which owns
 complexity budgets and the method for deriving a bound from the system rather than from one
 observed operating point. Measure the inputs first: `60-internal-monitoring.md` names the
 metrics that supply them.

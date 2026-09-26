@@ -1,8 +1,7 @@
 # Secrets, redaction, and the config trust boundary
 
 Verified against Vector `0.57.0` on 2026-07-30. Trust-boundary review for a new
-destination or a new credential path belongs to `/alaa-security-review`
-(`$alaa-security-review`); this file states how Vector expresses the decision.
+destination or a new credential path belongs to `/alaa-security-review`; this file states how Vector expresses the decision.
 
 ## Rule 1 — a credential's only interpolation site is never format-unconstrained
 
@@ -93,8 +92,7 @@ deployment path — interpolation is a legitimate choice, provided all three hol
 
 Deployment-layer sourcing is where the security benefit is obtained under this
 option: the variable comes from a secret object rather than a mounted configuration
-object. That is a platform decision, not a Vector one — `/alaa-k8s-helm`
-(`$alaa-k8s-helm`), and `/alaa-security-review` (`$alaa-security-review`) for whether
+object. That is a platform decision, not a Vector one — `/alaa-k8s-helm`, and `/alaa-security-review` for whether
 the resulting trust boundary is acceptable.
 
 **Use a secret backend where nothing forces the other choice.** Declare it once and
@@ -160,6 +158,56 @@ choice. Runtime confinement failures increment
 0.57.0.** Below it, the identifier is an injection surface and confinement does not
 exist to bound it.
 
+### Field-specific changes in the new release
+
+The 0.58.0 released source narrows confinement for these fields only:
+
+| Sink | No longer requires a literal prefix | Still confined |
+| --- | --- | --- |
+| `loki` | Label and structured-metadata **values** | Template keys and tenant IDs |
+| `aws_cloudwatch_logs` | `stream_name` | `group_name` |
+| `gcp_stackdriver_logs` | Label templates | Do not infer an exception for destination identifiers |
+
+On older binaries retain their existing literal prefixes. On the newer binary,
+use a field exception only after checking that field's data and destination policy;
+it never authorizes `dangerously_allow_unconfined_template_resolution` or removes
+ClickHouse `table`/`database` confinement. Keep hostile routing input tests.
+
+URI templates inside the host or immediately adjacent without `/` are now rejected
+at build time. Use a static, approved host and a literal path separator, for example
+`https://ingest.example.com/events/{{ route }}`. A static hostname alone is not a
+path allowlist: validate event-derived routing values and keep confinement enabled.
+The versioned authority red fixture in `assets/fixtures/v0.58/` catches this case.
+
+## New-release credential and transport regression cases
+
+All items here are 0.58.0 released-source evidence linked by `81-release-coverage.md`.
+They require authorized synthetic runtime tests before deployment claims:
+
+- Hyphens in secret-backend names now resolve instead of leaving `SECRET[...]`
+  literal. Keep the existing non-hyphenated backend example for older consumers;
+  validate alone does not prove secret retrieval. Verify substitution with synthetic
+  values and never print resolved credentials.
+- Plain-HTTP proxy credentials now stay in `Proxy-Authorization`, rather than
+  leaking through origin `Authorization`. Check the two destinations separately;
+  do not disable TLS to work around proxy behavior.
+- `tls.server_name` now controls hostname verification as well as SNI on the
+  OpenSSL path. The proxy certificate still verifies against the proxy host.
+  Keep certificate verification enabled and test both allowed and mismatching names.
+- TCP `socket`, `syslog`, `statsd`, plus `logstash` and `fluent` gain optional
+  `tls_handshake_timeout_secs`. It remains unset by default; TCP keepalive and
+  maximum connection duration do not bound an unfinished handshake. Set a justified
+  timeout from the path's resource policy and test stalled-handshake release.
+- Logstash fixes bound oversized declared frames and problematic compressed frames,
+  and retain valid events preceding a malformed frame. Preserve decompressed-size
+  limits and test oversized, malformed and partial-valid input; no security fix
+  makes unlimited untrusted input safe.
+- AWS FIPS endpoint selection now reaches STS AssumeRole; MQTT honors configured
+  ALPN while retaining its previous default when unset; S3 KMS time templates honor
+  the configured timezone; Azure account-key uploads above 4 MiB fix final-request
+  signing. For affected consumers, test the actual selected endpoint/protocol/key
+  and upload completion rather than weakening authentication on failure.
+
 ## Rule 3 — redaction is a named field list, not an example
 
 `.token` alone is an example. A redaction step must enumerate every field the
@@ -176,14 +224,12 @@ for_each(["token", "password", "authorization", "api_key", "secret", "set_cookie
 
 Two ownership boundaries, and this skill owns neither:
 
-- **What must never be logged** is `/alaa-observability-soc`
-  (`$alaa-observability-soc`): *"Secrets, credentials, tokens, session values, raw
+- **What must never be logged** is `/alaa-observability-soc`: *"Secrets, credentials, tokens, session values, raw
   PII, unrestricted payloads, and customer-private content never enter logs, span
   attributes, metric labels, alert annotations, Sentry contexts, or SOC exports.
   Emit a stable internal reference an authorised human can resolve in the source
   system instead."*
-- **The field names themselves** are `/alaa-services-contract`
-  (`$alaa-services-contract`).
+- **The field names themselves** are `/alaa-services-contract`.
 
 Redact in the pipeline as defence in depth, never as the primary control: an event
 that should not contain a secret should not have been emitted with one. Place the

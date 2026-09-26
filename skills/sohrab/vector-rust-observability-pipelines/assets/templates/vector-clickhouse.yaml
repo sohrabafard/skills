@@ -1,9 +1,9 @@
 # Vector -> ClickHouse landing pipeline, with every delivery-relevant option set
 # explicitly. Defaults are stated in comments so a reviewer can see what was
 # chosen and what was merely inherited.
-# Validate with:  vector validate --skip-healthchecks assets/templates/vector-clickhouse.yaml
-# Do not add --no-environment: it suppresses the component checks that catch
-# routing-template confinement and buffer bound errors.
+# Validate with:  vector validate --skip-healthchecks --deny-warnings assets/templates/vector-clickhouse.yaml
+# Keep component checks: the newer confinement fix under --no-environment does
+# not restore the other environment checks that flag skips.
 data_dir: /var/lib/vector
 
 # Credentials come from a secret backend, never from ${VAR} interpolation.

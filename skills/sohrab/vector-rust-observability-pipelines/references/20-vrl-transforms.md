@@ -96,8 +96,8 @@ for_each(["token", "password", "authorization", "api_key"]) -> |_i, field| {
 ```
 
 Redacting one example field is not a policy. What must never be logged is owned by
-`/alaa-observability-soc` (`$alaa-observability-soc`); the field **names** are owned
-by `/alaa-services-contract` (`$alaa-services-contract`).
+`/alaa-observability-soc`; the field **names** are owned
+by `/alaa-services-contract`.
 
 ## Sharp edges
 
@@ -111,7 +111,7 @@ by `/alaa-services-contract` (`$alaa-services-contract`).
   pinned below it and parse large payloads, that is a crash you can still hit.
 - Per-event VRL cost multiplies by throughput. When a transform's cost must be
   stated as a bound rather than measured, that is
-  `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
+  `/alaa-algorithms-data-structures`.
 
 ## Reading internal metrics from VRL
 
@@ -119,3 +119,16 @@ by `/alaa-services-contract` (`$alaa-services-contract`).
 of 0.53.0 and are current on 0.57.0. If a program indexes histogram buckets
 directly, note that internal histograms went from 20 to 26 buckets in 0.53.0 and
 every index shifted — see `80-version-and-upgrade-deltas.md`.
+
+## Newer arithmetic and parser behavior
+
+Vector 0.58.0 bundles VRL 0.35.0; source and dates are centralized in
+`80-version-and-upgrade-deltas.md` and the full mapping in `81-release-coverage.md`.
+Its `parse_aws_vpc_flow_log` understands producer-format fields from versions
+7 through 11. Select fixtures by the producer format; do not infer field presence
+on older producers. `round` now declares a float result for float input; assert
+the downstream type rather than relying on its earlier incorrect integer typing.
+NaN-producing float arithmetic returns a runtime error instead of panic/zero;
+`reduce` with `sum` also reports NaN addition errors. Test these error branches
+alongside valid arithmetic and keep the deliberate fallibility handling above.
+These are released-source claims, not locally executed VRL results.

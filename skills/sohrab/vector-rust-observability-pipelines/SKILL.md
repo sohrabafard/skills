@@ -9,9 +9,10 @@ description: "Production Vector pipelines: topology and per-path delivery contra
 itself.** That is the failure this skill exists to prevent, and why every rule below
 is about making loss visible, chosen, and bounded rather than about tidy config.
 
-Pinned to Vector `0.57.0` (`references/80-version-and-upgrade-deltas.md`). Vector
-changed interpolation defaults, template confinement and internal metric names within
-five releases, so state the version you verified against and re-derive every
+The current documentation target, retained consumer paths and proof limits live in
+`references/80-version-and-upgrade-deltas.md`. Vector changes interpolation,
+template confinement, buffer loss handling and internal metrics across releases,
+so state the version you verified against and re-derive every
 version-sensitive claim rather than recalling it: `references/90-source-map.md`.
 
 ## Rules
@@ -28,10 +29,10 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
    `references/30-buffers-acks-and-backpressure.md`.
 
 3. **Fail open or fail closed follows what the data is for, not which tool moves it.**
-   `/alaa-reliability-sla` (`$alaa-reliability-sla`) supplies the test: when this
+   `/alaa-reliability-sla` supplies the test: when this
    dependency cannot answer, does proceeding without it let something through that
    must not get through? Telemetry, no — a contributor: `when_full: drop_newest`, sized
-   for the burst, never `block`, as `/alaa-observability-soc` (`$alaa-observability-soc`) binds.
+   for the burst, never `block`, as `/alaa-observability-soc` binds.
    Product data under an exactness ruling, yes — a gate: `references/75-ala-ingest-pipeline.md`.
 
 4. **A path that must never slow its client is configured that way, or it is not
@@ -57,15 +58,15 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
    requiring exit 78 without the opt-in and exit 0 with it.
    `references/85-security-and-secrets.md`.
 
-7. **Every templated `table`, `database`, object key, file path or header carries a
-   literal prefix.** Vector 0.57.0 confines routing templates and rejects unprefixed
-   ones at startup. It is the mitigation for injection through a routing field, so
-   take the prefix rather than the opt-out.
+7. **Keep routing templates confined.** Use a literal prefix for routing identifiers;
+   read `references/85-security-and-secrets.md` for version-qualified field exceptions
+   and URI authority rejection. Never generalize an exception to a destination or
+   enable the confinement opt-out to make an upgrade validate.
 
 8. **Validate with `vector validate --skip-healthchecks --deny-warnings`, not with
-   `--no-environment`.** That flag suppresses component checks, so an unconfined
-   template and an undersized disk buffer both validate clean under it — proven by
-   two committed fixtures. Warnings matter too: "acknowledgements are not supported
+   `--no-environment`.** It suppresses component checks. The historical confinement
+   hole was fixed in the current release; that does not make it the full gate.
+   Warnings matter too: "acknowledgements are not supported
    by this source" means the durability you configured does not exist, and an
    unconsumed `route` leg fails the gate rather than scrolling past.
    `references/50-validation-and-testing.md`.
@@ -85,7 +86,10 @@ version-sensitive claim rather than recalling it: `references/90-source-map.md`.
     Vector forcefully stop itself, by design, because it can no longer guarantee what
     reached disk. Alert on free bytes on the `data_dir` volume and keep it larger than
     the sum of every configured `max_size`, whose minimum is 268435488 bytes —
-    exactly 256 MiB is rejected.
+    exactly 256 MiB is rejected on the historically observed binary. A full buffer
+    follows `when_full`; a full volume is an I/O failure. For invalid-record drops
+    that can still be acknowledged, read `references/30-buffers-acks-and-backpressure.md`
+    before promising exact delivery.
 
 ## When NOT to use
 
@@ -112,9 +116,7 @@ Both honour `0` clean, `1` findings, `2` could not run, and both take `--help`. 
 
 This skill owns what the pipeline writes into a ClickHouse table and how it behaves
 when that table is unreachable, and decides no schema. The three-way ClickHouse
-boundary against `/clickhouse-performance-schema-ops`
-(`$clickhouse-performance-schema-ops`) and `/alaa-signoz-clickhouse-docs`
-(`$alaa-signoz-clickhouse-docs`) is stated once, in `references/40-clickhouse-sink.md`.
+boundary against `/clickhouse-performance-schema-ops` and `/alaa-signoz-clickhouse-docs` is stated once, in `references/40-clickhouse-sink.md`.
 Every other owner — requirement levels, Ala names and values, reliability shape,
 design, testing, security, platform — is listed once in `references/00-topic-map.md`,
 at the question it governs.

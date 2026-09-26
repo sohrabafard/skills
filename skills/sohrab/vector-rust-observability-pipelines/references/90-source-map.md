@@ -24,20 +24,19 @@ produce a fresh answer rather than a possibly-stale page.
 # Defaults the installed binary actually applies
 vector generate 'demo_logs//clickhouse'
 
-# Current Vector release. Do NOT use /releases/latest: it returns vdev-v0.3.3,
-# the tag of the vdev developer tool that shares this repository.
-curl -s 'https://api.github.com/repos/vectordotdev/vector/releases?per_page=100' \
-  | jq -r '[.[] | select(.tag_name | test("^v[0-9]+\\.[0-9]+\\.[0-9]+$"))] | .[0].tag_name'
+# Published stable Vector product and released Helm chart, independently selected.
+# Selection rules and dated evidence belong to 80-version-and-upgrade-deltas.md.
+node scripts/check-upstream-version.mjs
 
 # Release notes for one version, as machine-readable source
-curl -s https://raw.githubusercontent.com/vectordotdev/vector/master/website/cue/reference/releases/0.57.0.cue
+curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/cue/reference/releases/0.58.0.cue
 
 # Buffering model, in full
-curl -s https://raw.githubusercontent.com/vectordotdev/vector/master/website/content/en/docs/architecture/buffering-model.md
+curl -fsS https://raw.githubusercontent.com/vectordotdev/vector/v0.58.0/website/content/en/docs/architecture/buffering-model.md
 
 # Helm chart version and every option's documented semantics
-curl -s https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/charts/vector/Chart.yaml
-curl -s https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/charts/vector/values.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/Chart.yaml
+curl -fsS https://raw.githubusercontent.com/vectordotdev/helm-charts/vector-0.58.0/charts/vector/values.yaml
 ```
 
 `node scripts/check-upstream-version.mjs` automates the version comparison and exits
@@ -62,7 +61,7 @@ curl -s https://raw.githubusercontent.com/vectordotdev/helm-charts/develop/chart
 | Releases index | https://vector.dev/releases/ |
 | Helm install | https://vector.dev/docs/setup/installation/package-managers/helm/ |
 | Helm chart repository | https://github.com/vectordotdev/helm-charts |
-| Chart README | https://github.com/vectordotdev/helm-charts/blob/develop/charts/vector/README.md |
+| Chart README | https://github.com/vectordotdev/helm-charts/blob/vector-0.58.0/charts/vector/README.md |
 | Security policy | https://github.com/vectordotdev/vector/security/policy |
 | Open disk-buffer bugs | https://github.com/vectordotdev/vector/issues?q=is%3Aissue+state%3Aopen+label%3A%22domain%3A+buffers%22+type%3ABug |
 
@@ -75,6 +74,22 @@ anything security-sensitive. Those are exactly the claims that go stale without
 announcing it.
 
 ## What was verified, when, and how
+
+**2026-09-26 — compatibility refresh.** Read the complete tagged latest-release
+source, including bundled VRL notes, and its upgrade guide; cross-check product
+selection against the official release index and published GitHub tag. The dated
+version/support matrix is `80-version-and-upgrade-deltas.md`; every release item is
+mapped in `81-release-coverage.md`. The tagged buffering model still warns against
+production overflow and retains fatal flush I/O behavior. Tagged chart metadata
+replaces the earlier mutable-branch pairing. Runtime claims below remain historical.
+No installed Vector execution or consumer/deployment inventory was established.
+
+Official sources were readable through web retrieval. Local PowerShell HTTPS and
+the one curl retry failed TLS initialization; that environment failure is not a
+source-content result. The Node upstream checker independently completed and
+matched both release pins and chart appVersion. Config checks could not launch
+Vector (`spawnSync vector.exe EPERM`); no runtime result is claimed. A successful
+version check does not establish executable validation or deployment behavior.
 
 Two passes with different provenance. Claims taken from documentation rather than
 observation say so where they are made, and a claim carrying no stated observation

@@ -94,7 +94,8 @@ on every version bump; the pin and its re-derivation command are in
   ~500 ms of acknowledged-to-buffer events can be lost in a hard power failure.
 - A disk buffer requires the global `data_dir` to exist and be writable.
 
-**A full disk buffer stops Vector.** This is documented upstream behaviour, not a
+**A full backing volume or flush I/O failure stops Vector; a full configured
+buffer follows `when_full`.** This is documented upstream behaviour, not a
 field hypothesis: *"Vector will forcefully stop itself when an I/O error occurs
 during flushing to disk"*, and *"If Vector cannot write to a disk buffer because
 of a lack of free space, it must exit, as we can no longer be sure what data has
@@ -109,6 +110,32 @@ Two consequences an operator must plan for:
    it cannot detect another process consuming the same free space at runtime.
 2. Sum `max_size` across every disk-buffered sink and keep the volume larger than
    that total, with headroom no other process can claim.
+
+## Released invalid-record and recovery changes
+
+The 0.58.0 tagged changelog in `81-release-coverage.md` changes the outcome for
+invalid records, not the full-volume rule above:
+
+- An encoded record exceeding the disk buffer's maximum record size is dropped
+  instead of tearing down the process. Its finalizers use `Dropped`, which
+  end-to-end acknowledgement sources treat as `Delivered`: the source can ack or
+  checkpoint it without storing it. Both discarded-event and discarded-byte
+  metrics carry `intentional="false"`; `60-internal-monitoring.md` owns the signals.
+- Excessively nested event data or metadata is detected before disk buffering or
+  Vector-to-Vector sending. Without overflow the affected event is dropped;
+  with overflow the original event goes to the next stage even if the first buffer
+  has space. The released buffering documentation still marks overflow unsuitable
+  for production; this fix grants no exception.
+- Fixes cover false-full accounting after crash recovery, writer/read notification
+  ordering, metric-sink disk-buffer deadlock, and the `expire_metrics_secs: 0`
+  panic. They do not prove a destination outage or recovery deadline on a consumer.
+
+For a path requiring exactness, bound/reject unsupported records before acceptance
+and prove the rejection and recovery contract with the owner. Disk buffering plus
+acks alone is insufficient. In an authorized exact-binary test, cover oversized
+and deeply nested records, ordinary-record survival, source acknowledgement,
+discard counters, restart recovery and sink outage. If that proof is missing,
+report exactness unverified; never enable overflow or weaken the loss policy.
 
 ## Sizing a buffer instead of guessing
 
@@ -126,14 +153,15 @@ Both inputs are measurements, not estimates: `ingest_rate` comes from
 `component_sent_events_total` and the encoded size from
 `component_sent_bytes_total / component_sent_events_total`, both named in
 `60-internal-monitoring.md`. If a throughput or batching bound needs deriving
-rather than measuring, that belongs to `/alaa-algorithms-data-structures`
-(`$alaa-algorithms-data-structures`), which owns complexity budgets and the
+rather than measuring, that belongs to `/alaa-algorithms-data-structures`, which owns complexity budgets and the
 method for stating a bound.
 
 ## End-to-end acknowledgements
 
-With `acknowledgements.enabled: true` a source withholds its own acknowledgement
-to its upstream until every sink has durably handled the event.
+With end-to-end acknowledgements enabled through an ack-capable source, source
+completion waits on the path's finalizer statuses. That is not an unconditional
+storage receipt: see the invalid-record `Dropped`/`Delivered` case above and
+`35-pass-through-and-relay-paths.md` for the source-versus-sink enablement distinction.
 
 **Not every source can acknowledge, and Vector says so at validate time.** A
 `demo_logs` source with an acknowledging sink produces:
@@ -197,7 +225,7 @@ sink becomes a reportable error, and choose `when_full` from the rule below.
 The fleet has already decided, and this skill's job is to name the Vector option
 that expresses that decision — not to re-open it.
 
-`/alaa-observability-soc` (`$alaa-observability-soc`) states the requirement:
+`/alaa-observability-soc` states the requirement:
 *"Telemetry is fail-open for product traffic: a failed backend, Collector, Vector
 sidecar, or SOC destination degrades observability and never the hot path.
 Fail-closed telemetry ships only on a written operator request."* SOC owns
@@ -216,13 +244,13 @@ path; the safe value is not the default one.
 Boundaries, so this file is not read as the owner of things it is not:
 
 - **Why a fail-open/fail-closed mechanism exists, and how to choose its shape in
-  general:** `/alaa-reliability-sla` (`$alaa-reliability-sla`). It states no Ala
+  general:** `/alaa-reliability-sla`. It states no Ala
   number.
 - **Every Ala value** — timeout, retry budget, burst allowance, tolerable outage
-  duration: `/alaa-services-contract` (`$alaa-services-contract`)
+  duration: `/alaa-services-contract`
   `references/22-failure-load-and-deprecation-contract.md`. Do not invent one here.
 - **Whether telemetry is required at all, and at what gate:**
-  `/alaa-observability-soc` (`$alaa-observability-soc`).
+  `/alaa-observability-soc`.
 - **This skill owns only** which Vector option implements the chosen shape, and
   what the pipeline does when the sink is unreachable.
 

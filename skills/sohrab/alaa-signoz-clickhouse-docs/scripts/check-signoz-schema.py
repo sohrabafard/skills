@@ -16,6 +16,7 @@ Exit codes:
   0  every asserted table and column is present, and the sorting-key prefix still holds
   1  something asserted is absent, or the sorting key changed
   2  no input, unreadable input, DSN unreachable, credentials refused, or DESCRIBE denied
+     (including unavailable sorting-key evidence for the traces assertion)
 
 Runs on Windows and POSIX: pure Python 3, no shell pipelines.
 """
@@ -87,6 +88,9 @@ PROBES = {
         ("signoz_metadata.distributed_attributes_metadata", None),
     ],
     "traces": [
+        ("signoz_traces.distributed_signoz_index_v3", "scope"),
+        ("signoz_traces.distributed_signoz_index_v3", "attributes"),
+        ("signoz_traces.distributed_signoz_index_v3", "attributes_promoted"),
         ("signoz_traces.distributed_dependency_graph_minutes_v2", None),
         ("signoz_traces.distributed_signoz_error_index_v2", None),
     ],
@@ -229,7 +233,7 @@ def check(source, signals):
         for qualified, expected in sorted(SORTING_KEY_PREFIX.items()):
             actual = source.sorting_key(qualified)
             if actual is None:
-                notes.append("{}: sorting key unavailable, prefix assertion not run".format(qualified))
+                raise Blocked("{}: sorting key unavailable, prefix assertion not run".format(qualified))
             elif actual[:len(expected)] != expected:
                 findings.append("{}: sorting key begins {} -- this skill's rules require {}. "
                                 "Rewrite the traces reference before any query.".format(
@@ -288,7 +292,16 @@ def self_test(skill_dir: Path) -> int:
     except Blocked:
         pass
 
-    print("self-test: 4 fixture case(s), {} failure(s)".format(len(failures)))
+    source = DirSource(base / "green")
+    source.keys = {}
+    try:
+        check(source, ["traces"])
+        failures.append("missing sorting-key evidence did not block")
+    except Blocked as exc:
+        if "sorting key unavailable" not in str(exc):
+            failures.append("missing key blocked for the wrong reason")
+
+    print("self-test: 5 fixture case(s), {} failure(s)".format(len(failures)))
     for failure in failures:
         print("  FAIL {}".format(failure))
     return FINDINGS if failures else CLEAN

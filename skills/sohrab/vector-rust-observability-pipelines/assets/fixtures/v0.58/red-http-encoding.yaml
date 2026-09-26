@@ -1,0 +1,12 @@
+# RED on Vector >=0.58: the legacy encoding option was removed.
+sources:
+  ingest:
+    type: http_server
+    address: 127.0.0.1:18080
+    encoding: ndjson
+sinks:
+  output:
+    type: console
+    inputs: [ingest]
+    encoding:
+      codec: json

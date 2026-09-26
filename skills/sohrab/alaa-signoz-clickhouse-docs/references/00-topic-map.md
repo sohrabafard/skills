@@ -8,7 +8,7 @@ Read a second file only when its own row also matches.
 | write or repair ClickHouse SQL over log records | `clickhouse-logs-reference.md` |
 | write or repair ClickHouse SQL over spans | `clickhouse-traces-reference.md` |
 | write or repair ClickHouse SQL over metric samples, a counter rate, an error ratio, or a histogram quantile | `clickhouse-metrics-reference.md` |
-| decide whether a request belongs in Query Builder, a dashboard panel, or an alert rule, or promise a ClickHouse alert path | `query-language-routing.md` |
+| decide whether a request belongs in Query Builder, a dashboard panel, or an alert rule, promise a ClickHouse alert path, or migrate alert history APIs | `query-language-routing.md` |
 | explain or diagnose a trace SigNoz reports as having missing spans, or a span whose parent was never collected | `40-missing-spans.md` |
 | answer what calls what, read the service dependency graph, or explain a missing edge in it | `50-service-topology.md` |
 | state a SigNoz, collector or ClickHouse version, or judge whether a ClickHouse feature exists on the target | `90-versions.md` |
@@ -29,5 +29,6 @@ for why a span never arrived.
 
 **A docs question plus a SQL question is two tasks.** Answer the docs one from
 `10-docs-navigation.md`, then the SQL one from the signal reference. Do not open a routing file to
-answer a schema question — every schema fact this skill asserts lives in the three ClickHouse
-references and is checked by `scripts/check-signoz-schema.py`.
+answer a schema question: schema guidance lives in each ClickHouse reference and its linked
+children. `scripts/check-signoz-schema.py` checks declared table/column names and sorting-key
+assertions; it does not validate every documented type or installed capability.
