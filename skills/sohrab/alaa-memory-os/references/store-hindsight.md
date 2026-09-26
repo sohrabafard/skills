@@ -89,14 +89,22 @@ for it.
 
 `retainTags` and `retainMetadata` add fixed-shape service provenance to official session writes on the shared
 bank; they do not replace the opt-in boundary, and remembered service dependency edges remain prohibited
-because they are derived from live code/contracts.
+because they are derived from live code/contracts. Every repository's `retainTags` carries its catalog tag
+(`service:<name>` or `area:<name>`, as the hindsight project's `service-catalog.json` assigns it) plus the
+official template `project:{gitProject}`, which resolves to the main worktree's directory name. A page about one
+repository is tagged with that repository's unique tag — `service:<name>` where the catalog gives the repository
+its own service, otherwise `project:<repo>` — so it is built only from that repository's memories; an area page
+(for example octane-base's `shared libraries: …`) is tagged with the area tag and asks area-wide questions. Name
+each page distinctively, because page search is bank-wide (BM25 plus vector, no tag filter) and near-identical
+names such as `comment:` and `content:` are confused.
 
 A shared bank has one consequence the per-repository default does not: `deepen.js` (the engine that seeds
 knowledge pages, including `customPages`, and git history) takes a single lock file keyed by bank id, stale
 after 30 minutes, and a second run for the same bank exits immediately with no retry — so when the
 `SessionStart` hook fires for two repositories on the same bank close together, only the first repo's session
 actually seeds; the other's pages and git ingest are silently skipped. `hindsight:deepen` (above) is the
-recovery: it waits out a fresh lock, then runs `deepen.js` for that repository. `hindsight:doctor`'s checks (g)
+recovery: it waits out a lock that is fresh and whose holder process is alive (the same rule as `deepen.js`),
+then runs `deepen.js` for that repository, and retries if it loses the race for the lock in between. `hindsight:doctor`'s checks (g)
 and (h) surface the two symptoms (missing pages, a held lock) as WARNs pointing at `hindsight:deepen`.
 
 ## Recall and write mechanics
