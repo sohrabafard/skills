@@ -53,7 +53,12 @@ Project-scoped pattern (identical launcher and doctor script across repositories
   it the MCP server exits while the hooks keep running, so the failure is silent unless the doctor check below
   is run.
 - `.hindsight/doctor.cjs`, exposed as the `hindsight:doctor` npm script, is the health gate. Upstream ships no
-  doctor, only `stats`; treat a passing `hindsight:doctor` as the adoption proof this adapter requires.
+  doctor, only `stats`; treat a passing `hindsight:doctor` as the adoption proof this adapter requires. It also
+  checks (g) this repo's `customPages` all exist as knowledge pages on the server, and (h) whether the shared
+  bank's deepen lock (see below) is currently held — both WARN, never FAIL, since neither blocks normal use.
+- `.hindsight/deepen.cjs`, exposed as the `hindsight:deepen` npm script, waits out a held deepen lock (polling,
+  default 20 minutes) and then runs the official `deepen.js` engine for this repository. Use it to force-seed a
+  repository's knowledge pages and git history on a shared bank instead of waiting on the next `SessionStart`.
 
 Credentials belong only in the repository's gitignored `.env`, read by the launcher, or in persistent approved
 environment injection. Never pass a token on command argv: package managers and process surfaces may echo it.
@@ -85,6 +90,14 @@ for it.
 `retainTags` and `retainMetadata` add fixed-shape service provenance to official session writes on the shared
 bank; they do not replace the opt-in boundary, and remembered service dependency edges remain prohibited
 because they are derived from live code/contracts.
+
+A shared bank has one consequence the per-repository default does not: `deepen.js` (the engine that seeds
+knowledge pages, including `customPages`, and git history) takes a single lock file keyed by bank id, stale
+after 30 minutes, and a second run for the same bank exits immediately with no retry — so when the
+`SessionStart` hook fires for two repositories on the same bank close together, only the first repo's session
+actually seeds; the other's pages and git ingest are silently skipped. `hindsight:deepen` (above) is the
+recovery: it waits out a fresh lock, then runs `deepen.js` for that repository. `hindsight:doctor`'s checks (g)
+and (h) surface the two symptoms (missing pages, a held lock) as WARNs pointing at `hindsight:deepen`.
 
 ## Recall and write mechanics
 
