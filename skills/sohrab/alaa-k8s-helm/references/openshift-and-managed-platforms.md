@@ -55,7 +55,7 @@ kubectl api-resources --namespaced=false -o name   # empty or tiny on a namespac
 kubectl auth can-i --list -n NS                    # what this identity may actually do
 ```
 
-For **ArvanCloud CaaS specifically**, load `/caas-arvan-kuber` (`$caas-arvan-kuber`) only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise stay in `/alaa-k8s-helm` (`$alaa-k8s-helm`) and use the generic posture above, including when the target cluster happens to be Arvan.
+For **ArvanCloud CaaS specifically**, load `/caas-arvan-kuber` only when the answer depends on a fact that is true of Arvan CaaS and false of stock Kubernetes at the same minor version; otherwise stay in `/alaa-k8s-helm` and use the generic posture above, including when the target cluster happens to be Arvan.
 
 ## Access surfaces and what they unlock
 
@@ -134,8 +134,9 @@ Assume a stricter runtime posture than vanilla Kubernetes.
 
 - Do not rely on a fixed runtime UID.
 - Do not hardcode ownership under `/app`, `/var/lib/...`, or `$HOME`.
-- Keep writable paths group-owned by `0` and mirror the user's permissions to the group during the image build. `/alaa-docker-production` (`$alaa-docker-production`) owns the image side of this.
+- Keep writable paths group-owned by `0` and mirror the user's permissions to the group during the image build. `/alaa-docker-production` owns the image side of this.
 - Set `readOnlyRootFilesystem: true` and mount an `emptyDir` at every path the process writes. When the write paths are unknown, find them before shipping: run the container with the flag set and read the failures, or `kubectl exec POD -- sh -c 'find / -xdev -newer /proc -type f 2>/dev/null | head -50'` on a running instance.
+- When the Pod sets no `spec.securityContext.fsGroup`, render mode `0444`, through `defaultMode` or a per-item `mode`, on every Secret or ConfigMap file a non-root process reads, unless every platform the chart targets injects an `fsGroup`. Reason: the kubelet writes such a file with UID 0 and with GID `fsGroup` when set, else 0, so a non-root process outside that group reads it only through the other-read bit. `defaultMode` defaults to `0644`. Per-file `user` and `defaultUser` need the `AtomicWriteVolumeUserFields` gate, alpha and off by default in 1.37, so the mode is the portable control. OpenShift `restricted-v2`, and `restricted-v3` built on it, inject an `fsGroup`: the minimum of the first range in the namespace's `openshift.io/sa.scc.supplemental-groups` annotation. When a target is Arvan CaaS, read `/caas-arvan-kuber` `references/arvan-constraints.md` section 7 before treating it as injecting one. Sources, checked 2026-09-30: Kubernetes [file owner](https://kubernetes.io/docs/concepts/storage/volumes/#user-ownership-uid), [Volume API](https://kubernetes.io/docs/reference/kubernetes-api/core/pod-v1/#Volume), and [kubelet `volume_linux.go`](https://github.com/kubernetes/kubernetes/blob/release-1.37/pkg/volume/volume_linux.go) for the GID without `fsGroup`; openshift-docs [SCC about](https://github.com/openshift/openshift-docs/blob/main/modules/security-context-constraints-about.adoc) and [pre-allocated values](https://github.com/openshift/openshift-docs/blob/main/modules/security-context-constraints-pre-allocated-values.adoc).
 
 Applications listen on high ports such as 8080 or 8443; 80 and 443 are exposed by the Service, Ingress, or Route.
 
