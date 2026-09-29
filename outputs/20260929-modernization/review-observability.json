@@ -1,0 +1,34 @@
+{
+  "recorded_by": "parent from independent observability_review final",
+  "verdict": "BLOCK",
+  "configured": "gpt-6-sol/medium",
+  "observed": "unknown",
+  "candidate": "candidate-2",
+  "findings": [
+    {
+      "id": "OBS-1",
+      "severity": "major",
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/playbackQoe.ts",
+      "line": 177,
+      "trigger": "Capacity eviction or send rejection",
+      "impact": "No signal/status query distinguishes no playback from lost QoE or indicates retry need",
+      "owner_requirement": "alaa-observability-soc references/10-signal-model.md and80-review-gates.md",
+      "remedy": "Bounded local delivery diagnostics for eviction/sendfailure/pendingdepth; isolate diagnostic callback errors; map to registered fleet names only at service boundary",
+      "related": "COR-3 final session snapshot on disposal"
+    }
+  ],
+  "static_pass": [
+    "RabbitMQ timeout/cancellation readiness and recovery diagnostics",
+    "Ansible stage/teardown failure accounting",
+    "Arvan unavailableproof vs capability outcomes"
+  ],
+  "privacy": [
+    "No URLs/grants/payloads/user IDs in diagnostics",
+    "Bounded outcomes, no unbounded labels",
+    "No invented alert threshold; consumer query required before complete QoE count claims"
+  ],
+  "limits": [
+    "No consumer/broker/browser/live telemetry proof",
+    "Read-only restriction obeyed; runtime enforcementunknown"
+  ]
+}

@@ -12,8 +12,14 @@ every shared rule is edited here and nowhere else.
   under it. `skills/sohrab/AGENTS.md` states that rule in full and owns it.
 - `skills/.curated/`, `skills/.system/` — third-party skills. Referenceable, not pack-local.
 - `scripts/` — this repository's checkers. `install-skills.md` is authoritative for install paths.
-- `artifacts/`, `outputs/`, `test-results/` — scratch. Cluster the products of one piece of work into
+- `artifacts/`, `outputs/`, `test-results/` — task artifacts. Cluster the products of one piece of work into
   a single directory named for its subject under one of these, creating it if absent.
+
+## Upgrade history
+
+Before upgrading first-party skills or their model policy, read [the upgrade evidence index](outputs/README.md)
+for prior assessments, plans and verification records. Treat those records as dated evidence;
+verify current repository and upstream facts before reusing their conclusions.
 
 ## Commands
 

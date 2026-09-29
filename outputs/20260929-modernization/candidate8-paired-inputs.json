@@ -1,0 +1,206 @@
+{
+  "baseline": "candidate-6",
+  "current": "candidate-8",
+  "rows": [
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "candidate6_sha256": "62a60722d2afffa2cbaca48ac2bd642148a0072f4ab157f3204d9211fe459a38",
+      "current_sha256": "62a60722d2afffa2cbaca48ac2bd642148a0072f4ab157f3204d9211fe459a38"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md",
+      "candidate6_sha256": "bcee62b91e66865d130cb62a0b4f6e37b5c2634ac584e3d34d90c2939842c1fa",
+      "current_sha256": "bcee62b91e66865d130cb62a0b4f6e37b5c2634ac584e3d34d90c2939842c1fa"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md",
+      "candidate6_sha256": "20d97fd040660cfb4934ad4828a68110c1904feeae7c53a10b5d4c532638301e",
+      "current_sha256": "20d97fd040660cfb4934ad4828a68110c1904feeae7c53a10b5d4c532638301e"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md",
+      "candidate6_sha256": "adc72ed146d384ee2c8e7de903f00e181623e3908e5962f48ff6fec5e44710ba",
+      "current_sha256": "adc72ed146d384ee2c8e7de903f00e181623e3908e5962f48ff6fec5e44710ba"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md",
+      "candidate6_sha256": "d78bc2e27dcd8c8cb3e80ca8811f224733082c247cb67478498ea0788e6a836f",
+      "current_sha256": "d78bc2e27dcd8c8cb3e80ca8811f224733082c247cb67478498ea0788e6a836f"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md",
+      "candidate6_sha256": "b9da8c3b163140c5fa1be45b3ea732042cd9fe4eaa377592a9baef1a714199c7",
+      "current_sha256": "b9da8c3b163140c5fa1be45b3ea732042cd9fe4eaa377592a9baef1a714199c7"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+      "candidate6_sha256": "3043a4578cef46687d0288cb4c1db7cd9ee88d9aab0eb2524a4ed407fd94c3c0",
+      "current_sha256": "3043a4578cef46687d0288cb4c1db7cd9ee88d9aab0eb2524a4ed407fd94c3c0"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md",
+      "candidate6_sha256": "dd2d10b9603d3ef03966eaaf9b345d97002afa101aac04f4abe635db8fb791cb",
+      "current_sha256": "dd2d10b9603d3ef03966eaaf9b345d97002afa101aac04f4abe635db8fb791cb"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md",
+      "candidate6_sha256": "e4a79dc03885c0ceeb5606d9b8929778d3f06d62a0173ae414dff21ba9053143",
+      "current_sha256": "e4a79dc03885c0ceeb5606d9b8929778d3f06d62a0173ae414dff21ba9053143"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md",
+      "candidate6_sha256": "9527a637df24a161372552457c726def1f9b132af0365b820b07dbb48895f76d",
+      "current_sha256": "9527a637df24a161372552457c726def1f9b132af0365b820b07dbb48895f76d"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md",
+      "candidate6_sha256": "4721c57074ee904452f59439b010ca0e41d3d8dff5c9b65e8b87555fca6018c7",
+      "current_sha256": "4721c57074ee904452f59439b010ca0e41d3d8dff5c9b65e8b87555fca6018c7"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md",
+      "candidate6_sha256": "bea3193c57930ac5a3ee2bf9b7ccc39d9e4900d20f8bed7dec1c1f218a7b52a3",
+      "current_sha256": "bea3193c57930ac5a3ee2bf9b7ccc39d9e4900d20f8bed7dec1c1f218a7b52a3"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md",
+      "candidate6_sha256": "82d5319f231eba78a3af3531b49524f781095ae54170b8b517b0362474113612",
+      "current_sha256": "82d5319f231eba78a3af3531b49524f781095ae54170b8b517b0362474113612"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "candidate6_sha256": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340",
+      "current_sha256": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "candidate6_sha256": "f88d476e0d43e5b08e29fc9eb9519f9fff4112803003d0c2d079a5b797abb1cd",
+      "current_sha256": "f88d476e0d43e5b08e29fc9eb9519f9fff4112803003d0c2d079a5b797abb1cd"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "candidate6_sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf",
+      "current_sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "candidate6_sha256": "3d20a9545f27658e8512dea5c37bacc47e4b212d7861de2b3ef2cb607f7cfe55",
+      "current_sha256": "3d20a9545f27658e8512dea5c37bacc47e4b212d7861de2b3ef2cb607f7cfe55"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "candidate6_sha256": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890",
+      "current_sha256": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "candidate6_sha256": "25bd87265c6ac9738c6d0488b19d332b2f79333cea84765ea7aeb6c744fccc61",
+      "current_sha256": "25bd87265c6ac9738c6d0488b19d332b2f79333cea84765ea7aeb6c744fccc61"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "candidate6_sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a",
+      "current_sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+      "candidate6_sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1",
+      "current_sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "candidate6_sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306",
+      "current_sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "candidate6_sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3",
+      "current_sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "candidate6_sha256": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a",
+      "current_sha256": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "candidate6_sha256": "a154afab91672912ca85ae22c64ef2fd4ba04c2a99a16f7b94e45e5ef67ee47c",
+      "current_sha256": "a154afab91672912ca85ae22c64ef2fd4ba04c2a99a16f7b94e45e5ef67ee47c"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "candidate6_sha256": "be9267f5523715fd26f0f6c5c71dac3f99827da7ce22a645c17a17c53f88928b",
+      "current_sha256": "be9267f5523715fd26f0f6c5c71dac3f99827da7ce22a645c17a17c53f88928b"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "candidate6_sha256": "d523982c3eeeac5c6a4da3fbfc6cd9103e198060f835876983f1a53f3c967e76",
+      "current_sha256": "d523982c3eeeac5c6a4da3fbfc6cd9103e198060f835876983f1a53f3c967e76"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "candidate6_sha256": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340",
+      "current_sha256": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "candidate6_sha256": "8ce39e72e61189f31c9e3f187b6873834f54d58368f0ca1de8253c3f6178eae7",
+      "current_sha256": "8ce39e72e61189f31c9e3f187b6873834f54d58368f0ca1de8253c3f6178eae7"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "candidate6_sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf",
+      "current_sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "candidate6_sha256": "f8ef47c1f94d95d8d85915af05cf3ac85fe2c46f6a058fe80a85fefe6f8a1d76",
+      "current_sha256": "f8ef47c1f94d95d8d85915af05cf3ac85fe2c46f6a058fe80a85fefe6f8a1d76"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "candidate6_sha256": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890",
+      "current_sha256": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "candidate6_sha256": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66",
+      "current_sha256": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "candidate6_sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a",
+      "current_sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "candidate6_sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1",
+      "current_sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "candidate6_sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306",
+      "current_sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "candidate6_sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3",
+      "current_sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "candidate6_sha256": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a",
+      "current_sha256": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "candidate6_sha256": "a154afab91672912ca85ae22c64ef2fd4ba04c2a99a16f7b94e45e5ef67ee47c",
+      "current_sha256": "a154afab91672912ca85ae22c64ef2fd4ba04c2a99a16f7b94e45e5ef67ee47c"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "candidate6_sha256": "22413a2dbfc35497b09f4087b5d82df407f640747fb539762e9b8abaa8cabb04",
+      "current_sha256": "22413a2dbfc35497b09f4087b5d82df407f640747fb539762e9b8abaa8cabb04"
+    }
+  ]
+}

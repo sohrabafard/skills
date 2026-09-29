@@ -2,7 +2,7 @@
 
 Replace every capitalised placeholder before handing this to an operator. A placeholder left in place is a decision nobody made.
 
-Two skills own the material behind this guide: `/caas-arvan-kuber` (`$caas-arvan-kuber`) for Arvan platform facts, and `/alaa-k8s-helm` (`$alaa-k8s-helm`) for chart authoring, the validation gate register, and the manifest checker invoked below.
+Two skills own the material behind this guide: `/caas-arvan-kuber` for Arvan platform facts, and `/alaa-k8s-helm` for chart authoring, the validation gate register, and the manifest checker invoked below.
 
 ## What this is
 
@@ -14,7 +14,13 @@ One paragraph: what the service does and why it exists.
 - Portable to: standard Kubernetes, through the toggles in `values.yaml`
 - OpenShift: only behind the explicit `openshift.enabled` toggle
 
-**Kubernetes line this package was built for: LINE.** Record what the discovery below reported on the day this file was written, and re-run it before any upgrade. Arvan publishes no version, so the cluster is the only source.
+Record the server-reported Kubernetes version as `VERSION or UNKNOWN`, with the
+observation date and context. Record required API capabilities and the evaluated
+principal's permissions separately. The operator must confirm `MATRIX COLUMN AND
+EVIDENCE` against `caas-arvan-kuber references/arvan-capability-matrix.md` before
+selecting a target. The helper does not select a Kubernetes line; missing APIs or
+unknown version information never justify guessing one. Refresh these observations
+before every upgrade.
 
 ## Prerequisites
 
@@ -26,7 +32,9 @@ One paragraph: what the service does and why it exists.
 ## Before every install or upgrade
 
 ```bash
-# 1. Which line is this cluster on, and does it have what the release needs?
+# 1. Observe server version or unknown, APIs and caller permissions separately.
+# The operator confirms matrix-column applicability from this evidence.
+# Use a pre-authorized context authenticated as RUNNER_SERVICEACCOUNT.
 bash scripts/verify-cluster.sh NAMESPACE RUNNER_SERVICEACCOUNT
 
 # 2. Render deterministically. The output holds every decoded Secret, so the
@@ -34,17 +42,19 @@ bash scripts/verify-cluster.sh NAMESPACE RUNNER_SERVICEACCOUNT
 bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
   --values values.yaml --values values.ENV.yaml \
   --secret-values values.secret.yaml \
-  --out build/rendered.yaml --keep
+  --out build/private/rendered.yaml --keep
 
 # 3. Gate it.
-python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml --profile arvan
-kubectl apply --dry-run=server -f build/rendered.yaml
+python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/private/rendered.yaml --profile arvan
+kubectl apply --dry-run=server -f build/private/rendered.yaml
 
 # 4. Remove the render as soon as step 3 has passed.
-rm -f build/rendered.yaml
+rm -f build/private/rendered.yaml
 ```
 
-`build/rendered.yaml` contains credentials in decodable form. It must be listed in this repository's `.gitignore` before the first render — see "Files that must never be committed".
+The render refuses an existing `--out` path and blocks if mode 0600 cannot be established and verified. Choose a fresh path or explicitly retire prior output before retrying.
+
+`build/private/rendered.yaml` contains credentials in decodable form. It must be listed in this repository's `.gitignore` before the first render — see "Files that must never be committed".
 
 ## Install and upgrade
 
@@ -59,7 +69,7 @@ helm upgrade --install RELEASE ./helm/CHART \
 
 **No `--create-namespace`.** The namespace exists, and a namespace-scoped identity is usually forbidden from creating or even reading the Namespace object. Passing the flag turns a working deployment into a permission error.
 
-**TIMEOUT** is not a magic number. Derive it from the CI job timeout minus the time the job needs afterwards, and never let it exceed the job timeout, or the job is killed mid-rollout with the release in a pending state. `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns the value.
+**TIMEOUT** is not a magic number. Derive it from the CI job timeout minus the time the job needs afterwards, and never let it exceed the job timeout, or the job is killed mid-rollout with the release in a pending state. `/alaa-reliability-sla` owns the value.
 
 **Rollback safety flag.** The flag was renamed in Helm 4, and each name fails on the other major:
 
@@ -104,7 +114,7 @@ Use a `kubernetes.io/dockerconfigjson` Secret and `imagePullSecrets`, in one of 
 1. the chart creates the Secret from `values.secret.yaml`, or
 2. the chart references a Secret that already exists and does not overwrite it.
 
-Runner-side pull configuration is not this file's business: `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns it.
+Runner-side pull configuration is not this file's business: `/alaa-gitlab-ci-cd` owns it.
 
 ## Files that must never be committed
 
@@ -116,7 +126,7 @@ values.secret.yaml
 *.secrets.yaml
 rendered.yaml
 *.rendered.yaml
-build/rendered.yaml
+build/private/
 ```
 
 ## Verify a deployment
@@ -136,7 +146,10 @@ helm get values RELEASE -n NAMESPACE -a
 kubectl -n NAMESPACE get events --sort-by=.lastTimestamp
 ```
 
-`helm get manifest` writes the same secret-bearing content as a render. If you need it, send it to a mode-0600 file and delete it afterwards.
+`helm get manifest` writes secret-bearing content too. Use the runbook's exclusive,
+restrictive baseline capture in `build/private/current.yaml`; never redirect to a
+permissive file and chmod afterwards. The private directory ignore rule covers both
+render and baseline; retire these files after validation.
 
 ## When authorization looks inconsistent
 
@@ -146,4 +159,14 @@ If a job is forbidden while the Helm release looks healthy, collect both namespa
 - canonical namespace (hash-prefixed, when it is observable)
 - the principal being evaluated: `system:serviceaccount:NAMESPACE:NAME`
 
-`caas-arvan-kuber references/arvan-rbac-namespace-facts.md` holds the model and the conclusive token-based check. Do not broaden a RoleBinding before running it.
+`caas-arvan-kuber references/arvan-rbac-namespace-facts.md` holds the model and the current-context identity and permission checks. Do not broaden a RoleBinding before running it.
+
+Use `build/private/` as the caller-owned mode-0700 direct output parent. Its ancestors
+must be root/caller-owned and not group/other-writable, except root-owned sticky
+ancestors. An existing caller-owned `build/` at mode0755 can contain this private
+child. The helper creates missing parents privately; an existing `build/private/`
+with a different mode or owner blocks. Do not automatically chmod a shared directory;
+choose a fresh private child or resolve its ownership deliberately. The helper writes
+through one retained descriptor and rejects replaced paths or unprovable permissions.
+Existing output files remain untouched. GNU-compatible `stat` and `/dev/fd` are
+required; use a supported POSIX environment when unavailable.

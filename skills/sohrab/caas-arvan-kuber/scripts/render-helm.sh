@@ -10,7 +10,11 @@
 # Fail-closed doctrine for anything holding a decoded secret is owned by
 # /alaa-security-review ($alaa-security-review).
 #
-# Requires bash 4.0 or newer and helm on PATH. On Windows use Git Bash or WSL.
+# Requires bash 4.0 or newer, helm on PATH, and demonstrable POSIX mode 0600.
+# Git Bash/WSL support depends on the output filesystem enforcing that mode;
+# otherwise rendering blocks before Helm. GNU-compatible stat and /dev/fd are required.
+# Output parent must be caller-owned mode 0700; ancestors must be root/caller-owned
+# and not group/other-writable, except root-owned sticky ancestors such as /tmp.
 #
 # Exit codes, shared by every script in this skill:
 #   0  clean: the chart rendered and linted
@@ -41,8 +45,9 @@ Options:
   --values FILE         non-secret values file; repeatable, applied left to right
   --secret-values FILE  secret values file, applied last; optional, so this script
                         also runs in CI where the file is absent by design
-  --out FILE            output path (default: a mode-0600 file in the system temp
-                        directory, deleted on exit)
+  --out FILE            new output path; existing files and symlinks are refused
+                        parent must be caller-owned mode 0700 with trusted ancestors
+                        (default: private system-temp directory, deleted on exit)
   --keep                do not delete the output file on exit
   --release NAME        release name for `helm template` (default: arvan-preview,
                         or HELM_RELEASE_NAME when set)
@@ -66,16 +71,88 @@ OUT=""
 KEEP=0
 RELEASE_NAME="${HELM_RELEASE_NAME:-arvan-preview}"
 CLEANUP_TARGET=""
+OUTPUT_ID=""
+OUTPUT_OPEN=0
+PRIVATE_TEMP_DIR=""
 
 die() {
   echo "render-helm: could not run: $*" >&2
   return ${EXIT_CANNOT_RUN}
 }
 
+# The retained descriptor is the write authority; the pathname is only a label.
+output_matches() {
+  [[ -n "${OUTPUT_ID}" && ! -L "${OUT}" && -f "${OUT}" ]] || return 1
+  [[ "$(stat -Lc '%d:%i' -- "${OUT}" 2>/dev/null)" == "${OUTPUT_ID}" ]]
+}
+
 cleanup() {
-  if [[ ${KEEP} -eq 0 && -n "${CLEANUP_TARGET}" && -f "${CLEANUP_TARGET}" ]]; then
+  if [[ ${KEEP} -eq 0 && -n "${CLEANUP_TARGET}" ]] && output_matches; then
     rm -f -- "${CLEANUP_TARGET}"
   fi
+  if [[ ${OUTPUT_OPEN} -eq 1 ]]; then exec 9>&-; OUTPUT_OPEN=0; fi
+  # Remove only an empty private directory created by this invocation.
+  if [[ ${KEEP} -eq 0 && -n "${PRIVATE_TEMP_DIR}" ]]; then
+    rmdir -- "${PRIVATE_TEMP_DIR}" 2>/dev/null || true
+  fi
+}
+
+trusted_parent() {
+  local parent="$1" current="$1" owner mode bits caller
+  caller="$(id -u)" || return 1
+  while :; do
+    read -r owner mode < <(stat -Lc '%u %a' -- "${current}" 2>/dev/null)
+    [[ "${owner}" =~ ^[0-9]+$ && "${mode}" =~ ^[0-7]+$ ]] || return 1
+    [[ "${owner}" == "${caller}" || "${owner}" == 0 ]] || return 1
+    bits=$((8#${mode}))
+    if [[ "${current}" == "${parent}" ]]; then
+      # Other identities cannot enter or replace entries in the output directory.
+      [[ "${owner}" == "${caller}" && ${bits} -eq $((8#700)) ]] || return 1
+    elif (( bits & 8#22 )); then
+      # A root-owned sticky ancestor (e.g. /tmp) protects our owned child entry.
+      [[ "${owner}" == 0 ]] && (( bits & 8#1000 )) || return 1
+    fi
+    [[ "${current}" == / ]] && break
+    current="$(dirname -- "${current}")"
+  done
+}
+
+validate_descriptor() {
+  local owner mode
+  [[ ${OUTPUT_OPEN} -eq 1 && -f /dev/fd/9 ]] || return 1
+  read -r owner mode < <(stat -Lc '%u %a' /dev/fd/9 2>/dev/null)
+  [[ "${owner}" == "$(id -u)" && "${mode}" == 600 ]]
+}
+
+prepare_output() {
+  local parent previous_noclobber=0 previous_umask
+  if [[ -z "${OUT}" ]]; then
+    PRIVATE_TEMP_DIR="$(umask 077; mktemp -d)" || { die "cannot create a private temporary directory"; return $?; }
+    OUT="${PRIVATE_TEMP_DIR}/rendered.yaml"
+  else
+    [[ ! -e "${OUT}" && ! -L "${OUT}" ]] || { die "output already exists; choose a new --out path"; return $?; }
+    (umask 077; mkdir -p -- "$(dirname -- "${OUT}")") 2>/dev/null || { die "cannot create the output directory"; return $?; }
+  fi
+  parent="$(cd -- "$(dirname -- "${OUT}")" && pwd -P)" || { die "cannot resolve output directory"; return $?; }
+  trusted_parent "${parent}" || { die "output needs a caller-owned mode-0700 directory and trusted ancestors"; return $?; }
+  OUT="${parent}/$(basename -- "${OUT}")"
+  case $- in *C*) previous_noclobber=1 ;; esac
+  previous_umask="$(umask)"
+  umask 077
+  set -o noclobber
+  if { exec 9> "${OUT}"; } 2>/dev/null; then
+    OUTPUT_OPEN=1
+  else
+    umask "${previous_umask}"
+    [[ ${previous_noclobber} -eq 1 ]] || set +o noclobber
+    die "cannot exclusively create output"; return $?
+  fi
+  umask "${previous_umask}"
+  [[ ${previous_noclobber} -eq 1 ]] || set +o noclobber
+  CLEANUP_TARGET="${OUT}"
+  OUTPUT_ID="$(stat -Lc '%d:%i' /dev/fd/9 2>/dev/null)" || { die "cannot inspect retained output descriptor"; return $?; }
+  chmod 600 /dev/fd/9 2>/dev/null || { die "cannot restrict output permissions; render blocked"; return $?; }
+  validate_descriptor || { die "cannot prove regular caller-owned mode-0600 output descriptor"; return $?; }
 }
 
 render() {
@@ -97,17 +174,7 @@ render() {
     values_args+=(-f "${SECRET_VALUES}")
   fi
 
-  if [[ -z "${OUT}" ]]; then
-    OUT="$(mktemp 2>/dev/null || mktemp -t arvan-rendered)" || { die "cannot create a temporary output file"; return $?; }
-  else
-    mkdir -p -- "$(dirname -- "${OUT}")" 2>/dev/null || { die "cannot create the output directory for ${OUT}"; return $?; }
-    : > "${OUT}" || { die "cannot write ${OUT}"; return $?; }
-  fi
-  # Restrict the file before helm writes a single byte into it. Doing this after
-  # the render would leave a window in which the decoded secrets are readable by
-  # every account on the machine.
-  chmod 600 -- "${OUT}" 2>/dev/null || echo "render-helm: warning: could not set mode 0600 on ${OUT}" >&2
-  CLEANUP_TARGET="${OUT}"
+  prepare_output || return $?
 
   echo "== helm dependency build"
   if ! helm dependency build "${CHART_DIR}" >/dev/null; then
@@ -121,15 +188,19 @@ render() {
     return ${EXIT_FINDINGS}
   fi
 
+  if ! validate_descriptor || ! output_matches; then
+    die "output identity or permissions changed before rendering"; return $?
+  fi
   echo "== helm template -> ${OUT}"
   if ! helm template "${RELEASE_NAME}" "${CHART_DIR}" -n "${NAMESPACE}" \
-        ${values_args[@]+"${values_args[@]}"} > "${OUT}"; then
+        ${values_args[@]+"${values_args[@]}"} >&9; then
     echo "render-helm: helm template failed" >&2
     return ${EXIT_FINDINGS}
   fi
 
+  output_matches || { die "output pathname changed during rendering; replacement preserved"; return $?; }
   local secret_count
-  secret_count="$(grep -c '^kind: Secret' "${OUT}" 2>/dev/null || true)"
+  secret_count="$(grep -c '^kind: Secret' /dev/fd/9 2>/dev/null || true)"
   secret_count="${secret_count:-0}"
 
   echo "Rendered manifests written to: ${OUT} (mode 0600)"
@@ -188,8 +259,7 @@ self_test() {
   tmp="$(mktemp -d)" || { echo "SELF-TEST FAIL: cannot create a temp dir" >&2; return ${EXIT_CANNOT_RUN}; }
   (
     OUT="${tmp}/rendered.yaml"
-    : > "${OUT}"
-    chmod 600 -- "${OUT}"
+    prepare_output || exit $?
     mode="$(stat -c '%a' "${OUT}" 2>/dev/null || stat -f '%Lp' "${OUT}" 2>/dev/null)"
     [[ "${mode}" == "600" ]] || { echo "SELF-TEST FAIL: mode was ${mode}, expected 600" >&2; exit 1; }
     KEEP=0
@@ -197,17 +267,87 @@ self_test() {
     cleanup
     [[ ! -f "${OUT}" ]] || { echo "SELF-TEST FAIL: cleanup did not remove the output file" >&2; exit 1; }
     KEEP=1
-    : > "${OUT}"
-    CLEANUP_TARGET="${OUT}"
+    prepare_output || exit $?
     cleanup
     [[ -f "${OUT}" ]] || { echo "SELF-TEST FAIL: --keep did not retain the output file" >&2; exit 1; }
   )
   rc=$?
-  rm -rf -- "${tmp}"
   [[ ${rc} -eq 0 ]] || failures=$((failures+1))
 
+  # Exercise the real render entrypoint with a synthetic Helm function only.
+  # Any Helm call on these failure paths is a regression, not a network action.
+  mkdir -p "${tmp}/chart"
+  printf 'apiVersion: v2\nname: fixture\nversion: 0.1.0\n' > "${tmp}/chart/Chart.yaml"
+  local scenario
+  for scenario in existing chmod_failure wrong_mode; do
+    (
+      CHART_DIR="${tmp}/chart"
+      OUT="${tmp}/${scenario}.yaml"
+      CLEANUP_TARGET=""
+      helm() { echo unexpected_helm_call >> "${tmp}/helm-calls"; return 99; }
+      case "${scenario}" in
+        existing) printf 'preserve this synthetic content' > "${OUT}" ;;
+        chmod_failure) chmod() { return 1; } ;;
+        wrong_mode) stat() { echo 644; } ;;
+      esac
+      render >/dev/null 2>&1
+      rc=$?
+      [[ ${rc} -eq ${EXIT_CANNOT_RUN} && ! -e "${tmp}/helm-calls" ]] || exit 1
+      if [[ "${scenario}" == existing ]]; then
+        [[ "$(cat "${OUT}")" == 'preserve this synthetic content' && -z "${CLEANUP_TARGET}" ]] || exit 1
+      else
+        [[ ! -s "${OUT}" ]] || exit 1
+      fi
+    )
+    rc=$?
+    [[ ${rc} -eq 0 ]] || { echo "SELF-TEST FAIL: ${scenario} did not protect output" >&2; failures=$((failures+1)); }
+  done
+  for scenario in dependency_swap template_swap unsafe_parent; do
+    (
+      CHART_DIR="${tmp}/chart"
+      OUT="${tmp}/${scenario}.yaml"
+      CLEANUP_TARGET=""
+      OUTPUT_ID=""
+      OUTPUT_OPEN=0
+      local replacement="${tmp}/${scenario}-replacement"
+      printf 'unchanged' > "${replacement}"
+      helm() {
+        case "$1" in
+          dependency)
+            if [[ "${scenario}" == dependency_swap ]]; then
+              rm -f -- "${OUT}"
+              ln -s "${replacement}" "${OUT}"
+            fi ;;
+          template)
+            if [[ "${scenario}" == template_swap ]]; then
+              rm -f -- "${OUT}"
+              ln -s "${replacement}" "${OUT}"
+            fi
+            printf 'kind: Secret\nsynthetic-secret-sentinel\n' ;;
+        esac
+        return 0
+      }
+      if [[ "${scenario}" == unsafe_parent ]]; then
+        mkdir "${tmp}/unsafe-parent"
+        chmod 0777 "${tmp}/unsafe-parent"
+        OUT="${tmp}/unsafe-parent/output.yaml"
+      fi
+      render >/dev/null 2>&1
+      rc=$?
+      [[ ${rc} -eq ${EXIT_CANNOT_RUN} ]] || exit 1
+      cleanup
+      [[ "$(cat "${replacement}")" == unchanged ]] || exit 1
+      if [[ "${scenario}" != unsafe_parent ]]; then
+        [[ -L "${OUT}" ]] || exit 1
+      fi
+    )
+    rc=$?
+    [[ ${rc} -eq 0 ]] || { echo "SELF-TEST FAIL: ${scenario} did not protect retained output" >&2; failures=$((failures+1)); }
+  done
+  rm -rf -- "${tmp}"
+
   if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "render-helm --self-test: 6 cases passed (no helm and no cluster required)"
+  echo "render-helm --self-test: 12 cases passed (mocked; no helm and no cluster required)"
   return ${EXIT_CLEAN}
 }
 

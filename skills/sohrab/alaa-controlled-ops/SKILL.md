@@ -1,6 +1,6 @@
 ---
 name: alaa-controlled-ops
-description: "Ownership boundary and release governance for the `alaa/controlled-ops` Composer package (ControlledOps) and the services that adopt it. Use when deciding whether a behaviour is package-owned or adopter-owned, releasing or semver-tagging the package, publishing it to Ala Satis, verifying a Composer lock or Satis dist source, moving an adopter service onto a new tag, specifying dry-run canonical hashes or payload fingerprints, handling a reviewed-hash mismatch, classifying replay versus conflict, or validating the ControlledOps write boundary and ControlledOps route/Postman parity. Do not use it for generic queue, docs, Postman, or Laravel work that has no ControlledOps surface. Route general idempotency-store, retry, timeout, and backoff design to /alaa-reliability-sla ($alaa-reliability-sla), and the design of an approval workflow inside a service to /alaa-services-contract ($alaa-services-contract)."
+description: "Ownership boundary and release governance for the `alaa/controlled-ops` Composer package (ControlledOps) and the services that adopt it. Use when deciding whether a behaviour is package-owned or adopter-owned, releasing or semver-tagging the package, publishing it to Ala Satis, verifying a Composer lock or Satis dist source, moving an adopter service onto a new tag, specifying dry-run canonical hashes or payload fingerprints, handling a reviewed-hash mismatch, classifying replay versus conflict, or validating the ControlledOps write boundary and ControlledOps route/Postman parity. Do not use it for generic queue, docs, Postman, or Laravel work that has no ControlledOps surface. Route general idempotency-store, retry, timeout, and backoff design to /alaa-reliability-sla, and the design of an approval workflow inside a service to /alaa-services-contract."
 ---
 
 # Alaa ControlledOps
@@ -33,7 +33,11 @@ Beyond the negatives in the description: do not use it for approval-workflow des
 
 - Package availability does not create service runtime behavior. A service must implement and validate its own routes, requests, resources, locks, transactions, workers, and outbox behavior.
 - Every claim about dry-run, approval, execution, retry, cancellation, or recovery behaviour names the file and symbol it was read from, or is reported as unverified.
-- Never publish a ControlledOps package release, push a release tag, push package code as part of a release, run the Satis build, or perform the consuming-service release adoption step without explicit user approval, unless the user explicitly said approval is not required or that publishing is authorized in the current request.
+- Creating or pushing a release tag, pushing package code, publishing a release, rebuilding Satis and adopting the
+  release in a consuming service each require explicit user authorization covering that effect and target.
+  Reuse applicable authorization already given in the session; ask only for missing or changed scope.
+  A generic "approval is not required" waiver does not authorize unrelated effects, and approval to push does
+  not itself authorize a Satis rebuild or adopter update.
 
 ## References
 

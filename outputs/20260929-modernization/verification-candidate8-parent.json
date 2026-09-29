@@ -1,0 +1,47 @@
+{
+  "operator": "parent",
+  "snapshot": "candidate-8",
+  "checks": [
+    {
+      "name": "whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "HEAD",
+        "--check",
+        "--",
+        "skills/sohrab"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "idb-links",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+        "--line-budget"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "robust-eof-334-docs",
+      "exit": 0,
+      "findings": []
+    },
+    {
+      "name": "candidate7-to8-preimage",
+      "exit": 0,
+      "changed": [
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+      ],
+      "only_removed_bytes": "LF CR LF",
+      "proof": "Adding removed bytes reproduces candidate7 raw SHA256; allother377sourcehashes identical"
+    }
+  ],
+  "cited": "All unaffected candidate7 parent checks; custom oldEOFcheck is invalid and replaced",
+  "pending": "Independentreview and verifier provenanceclosure"
+}

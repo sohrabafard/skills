@@ -23,7 +23,7 @@ All read on 2026-07-27.
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/ | The two regional endpoint hostnames and the Simin and Shahriar region names; SDK languages covered |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/prerequisite/ | Unmodified AWS SDK packages are the documented clients; no signature or addressing override shown |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/credentials/ | Access Key, Secret Key and endpoint URL come from the dashboard and belong to the user account; no scoped machine user documented |
-| https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/ | Initiate, upload part, complete and abort are documented; abort is the uploader's responsibility; no automatic cleanup described |
+| https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/ | Initiate, upload part, complete and abort are documented; abort is the uploader's responsibility; no automatic cleanup described on that SDK page; superseded for panel capability by the 2026-09-29 lifecycle read |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/upload-presigned/ | Presigned URL generation via the standard SDK call; expiry in hours with a 12-hour example; no maximum lifetime stated |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/put-bucket-policy/ | Bucket policy uses the AWS IAM shape; `s3:GetObject`, `Principal: "*"`, prefix-scoped resource ARN |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/get-bucket-cors/ | `GetBucketCors` and the rule fields; no put or delete operation documented |
@@ -44,8 +44,14 @@ All read on 2026-07-27.
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/credentials/ | The client is constructed with `BasicAWSCredentials` and `new AmazonS3Config { ServiceURL = ... }` and nothing else — no signature version, no region, no path-style flag |
 | https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/upload-presigned/ | Presigned generation sets no signature version and no path-style flag; the expiry example is 12 hours; no maximum lifetime is stated |
 | https://docs.arvancloud.ir/en/object-storage/limits/ | Re-read: 5 GB single upload, 5 TB multipart object, 400 MB maximum part, 5 MB minimum part, 10,000 parts, 50 buckets, 3,700,000 objects, DNS-label bucket naming, Virtual Host format `[bucketname].s3.[region].arvanstorage.ir` |
-| https://docs.arvancloud.ir/en/object-storage/buckets | Re-read for the panel's bucket settings: public-access toggle, tags, CDN caching and static website hosting appear; **no lifecycle configuration appears in the panel** |
+| https://docs.arvancloud.ir/en/object-storage/buckets | Re-read for the panel's bucket settings: public-access toggle, tags, CDN caching and static website hosting appear; no lifecycle configuration appeared on that page; this historical absence is superseded by the 2026-09-29 lifecycle read |
 | https://rclone.org/s3/ | Re-read: ArvanCloud is a named provider with both endpoint hostnames, and rclone documents no ArvanCloud-specific signature-version or path-style override, so rclone's Signature Version 4 default applies |
+
+## Pages read on 2026-09-29
+
+| URL | What it established |
+|---|---|
+| https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle | Panel lifecycle controls include current/noncurrent version expiry and incomplete multipart cleanup. This supersedes the older panel-absence claim; S3 API parity and live rule execution remain unverified. |
 
 ## Pages indexed but not retrieved
 
@@ -105,17 +111,13 @@ assume the AWS or MinIO behaviour.
    the CDN is stated nowhere**, so the question is what Arvan accepts rather than what it recommends: it
    recommends and uses virtual-hosted, and acceptance of path-style is unestablished.
    `STORAGE_USE_PATH_STYLE` carries `false` on Arvan in the meantime.
-3. **Which lifecycle rule types does Arvan support?** *Answered in part on 2026-07-28.* `Expiration` is
-   supported and is applied through the S3 API rather than through the panel: Arvan's worked example builds a
-   `LifecycleConfiguration` whose rule carries a prefix `Filter`, `Expiration` with `Days`, and `Status:
-   "Enabled"` `[source: https://docs.arvancloud.ir/fa/developer-tools/sdk/object-storage/put-bucket-lifecycle-config/,
-   read: 2026-07-28]`. **No lifecycle configuration appears anywhere in the panel's documented bucket settings**
-   `[source: https://docs.arvancloud.ir/en/object-storage/buckets, read: 2026-07-28]`, so the S3 API is the only
-   documented route. `AbortIncompleteMultipartUpload`, `NoncurrentVersionExpiration` and `Transition` are absent
-   from that page, which is absence of documentation and not documented absence. **Ask Arvan whether the three
-   absent actions are accepted**, because the abort rule is the one `/alaa-minio-object-storage`
-   (`$alaa-minio-object-storage`) makes mandatory and the noncurrent-version rule is the only thing that would
-   bound a versioned bucket's growth.
+3. **Which lifecycle actions have S3 API parity?** *Narrowed on 2026-09-29.* The panel documents current and
+   noncurrent version expiry and incomplete multipart cleanup `[source:
+   https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle, read: 2026-09-29]`. The SDK example proves
+   `Expiration` only `[source: https://docs.arvancloud.ir/fa/developer-tools/sdk/object-storage/put-bucket-lifecycle-config/,
+   read: 2026-07-28]`. Confirm `AbortIncompleteMultipartUpload`, `NoncurrentVersionExpiration` and `Transition`
+   through current API documentation or an authorized scratch-bucket probe before relying on those API actions.
+   Panel capability does not prove API parity or that a deployed bucket has an effective rule.
 4. **How is an access key rotated, can two keys be valid at once, and how many keys may an account hold?** No rotation,
    key-count or key-lifecycle documentation was found. This determines whether a zero-downtime rotation is possible.
 5. **What is the true maximum object size?** *Ruled on 2026-07-28, and still worth asking.* Arvan publishes a

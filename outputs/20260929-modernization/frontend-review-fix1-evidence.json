@@ -1,0 +1,401 @@
+{
+  "date": "2026-09-29",
+  "lane": "model_implementation frontend review-fix1 replacement",
+  "outcome": "Implementation frozen; focused executable gates pass; independent browser evidence passes; lexical Shaka scanner exit1 preserved for independent disposition.",
+  "metadata": {
+    "agent": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "requested": null,
+    "observed": "unknown",
+    "sandbox": "workspace-write",
+    "effective_authority": "Two named skills plus modernization artifacts only; no install, consumer mutation, commit, staging, or external publication",
+    "enforcement_beyond_reported_sandbox": "unknown",
+    "subagents_dispatched": 0,
+    "tokens": "not observable in this runtime"
+  },
+  "ownership": [
+    "alaa-indexeddb-browser-storage",
+    "alaa-shaka-player"
+  ],
+  "baseline": "candidate-2 content plus preserved interrupted-review-fix1 partial work; HEAD 0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "read_coverage": {
+    "before_edits": {
+      "files": 83,
+      "lines": 11841,
+      "indexeddb": 47,
+      "shaka": 36,
+      "omitted": 0,
+      "paths": [
+        "skills/sohrab/alaa-indexeddb-browser-storage/agents/openai.yaml",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/alaa-indexeddb-adr.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/browser-test-matrix.yaml",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/capability-tier-contract.json",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/data-classification-policy.yaml",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/indexeddb-decision-record-template.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/indexeddb-feature-plan-template.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/assets/storage-budget-policy-template.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/browser-capabilities.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/fallback-memory-store.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/idb-core.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/migration-pattern.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/offline-asset-guard.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/outbox-pattern.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/outbox-reaper.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/playwright-quota-smoke.spec.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/quota-manager.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/examples/vitest-idb-pattern.test.ts",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/00-topic-map.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/05-source-priority-and-freshness.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/10-indexeddb-mental-model-and-boundaries.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/20-browser-compatibility-and-capability-tiers.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/25-storage-buckets-api.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/30-quota-model-and-budgets.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/31-quota-exceeded-and-cleanup.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/32-eviction-and-recovery.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/41-multitab-versionchange-and-locks.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/50-transactions-performance-and-query-patterns.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/60-data-classification.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/61-authority-boundary.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/70-cache-and-drafts.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/72-offline-media-store.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/81-debugging-runbook.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/90-agent-workflows-prompts-and-output-contracts.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/95-alaa-integration-playbook.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/99-sources-and-maintenance.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/capability_contract_conformance.py",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check-storage-regressions.mjs",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py",
+        "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json",
+        "skills/sohrab/alaa-indexeddb-browser-storage/SKILL.md",
+        "skills/sohrab/alaa-shaka-player/agents/openai.yaml",
+        "skills/sohrab/alaa-shaka-player/assets/templates/offlineDownload.ts",
+        "skills/sohrab/alaa-shaka-player/assets/templates/playbackQoe.ts",
+        "skills/sohrab/alaa-shaka-player/assets/templates/ShakaPlayer.vue",
+        "skills/sohrab/alaa-shaka-player/assets/templates/shakaTypes.ts",
+        "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+        "skills/sohrab/alaa-shaka-player/references/00-topic-map.md",
+        "skills/sohrab/alaa-shaka-player/references/05-provenance-and-freshness.md",
+        "skills/sohrab/alaa-shaka-player/references/10-architecture-and-module-seams.md",
+        "skills/sohrab/alaa-shaka-player/references/11-vue-quasar-binding.md",
+        "skills/sohrab/alaa-shaka-player/references/12-bundling-and-vite-loading.md",
+        "skills/sohrab/alaa-shaka-player/references/15-configure-surface-and-safe-defaults.md",
+        "skills/sohrab/alaa-shaka-player/references/20-core-lifecycle.md",
+        "skills/sohrab/alaa-shaka-player/references/22-streaming-formats-and-native-hls.md",
+        "skills/sohrab/alaa-shaka-player/references/24-adaptive-bitrate-and-restrictions.md",
+        "skills/sohrab/alaa-shaka-player/references/26-tracks-audio-video-text.md",
+        "skills/sohrab/alaa-shaka-player/references/28-subtitles-and-text-displayer.md",
+        "skills/sohrab/alaa-shaka-player/references/30-playback-speed-seek-trickplay.md",
+        "skills/sohrab/alaa-shaka-player/references/32-live-and-low-latency.md",
+        "skills/sohrab/alaa-shaka-player/references/35-unstable-networks-and-resilience.md",
+        "skills/sohrab/alaa-shaka-player/references/37-switching-source.md",
+        "skills/sohrab/alaa-shaka-player/references/40-networking-engine-and-filters.md",
+        "skills/sohrab/alaa-shaka-player/references/42-media-url-trust-and-presigned.md",
+        "skills/sohrab/alaa-shaka-player/references/45-drm.md",
+        "skills/sohrab/alaa-shaka-player/references/50-offline-and-in-app-download.md",
+        "skills/sohrab/alaa-shaka-player/references/55-ads-vast-vmap-and-ima.md",
+        "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md",
+        "skills/sohrab/alaa-shaka-player/references/65-ui-library-skin-and-localisation.md",
+        "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md",
+        "skills/sohrab/alaa-shaka-player/references/75-platform-and-browser-matrix.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas.md",
+        "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom.md",
+        "skills/sohrab/alaa-shaka-player/references/90-qa-modes-and-checklist.md",
+        "skills/sohrab/alaa-shaka-player/scripts/check-shaka-api.mjs",
+        "skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs",
+        "skills/sohrab/alaa-shaka-player/SKILL.md"
+      ]
+    },
+    "additional": "Global/repository instructions, compression owner, frontend/Vue owners, plan/brief/design, review correctness/security/observability/migration, frontend evidence, interrupted snapshot. New harness scripts were authored and reviewed in full."
+  },
+  "design": {
+    "idb": "Additive v4 compound ['accountKey'] metadata index; all-store/index preflight before cursor work; completion/abort handlers registered first; one readwrite transaction; orphan metadata cursor independent of data rows; count only data rows; success only after commit.",
+    "shaka": "Serial initialization tail includes obsolete destruction. Failed cleanup prevents subsequent attachment to uncertain media ownership. Session guard armed by loading and consumed before callback on unloading/final dispose. Disposal promise published before callbacks for reentrant identity. Null/undefined/primitives classified safely.",
+    "qoe": "Existing bounded eviction retained; additive local status and optional issue observer expose only capped counters/depth/inflight state. Observer exceptions/rejections isolated. No raw errors, records, identifiers, URLs, fleet names or thresholds.",
+    "alternatives_rejected": [
+      "Per-data-row metadata deletion misses orphans; separate transactions allow partial purge.",
+      "Run token alone cannot protect shared media element from obsolete destruction.",
+      "Removing unloading listener before a final snapshot loses final-session statistics.",
+      "Installing test dependencies unnecessary; actual-source browser harness and bounded doubles separate proof.",
+      "No platform index registry was invented. Example names require consumer registration before adoption."
+    ]
+  },
+  "findings": {
+    "COR-1/SEC-2": "Repaired account purge, v4 index and consumer migration/rollback guidance; real engine cases cover atomic rollback, orphans, count, other account, repeat, missing index.",
+    "COR-2": "Repaired serial initial attach/stale destruction; executable deferred-promise regressions prove ordering and fail-closed ownership on stale cleanup failure.",
+    "COR-3": "Repaired exactly-once final snapshot before listener removal; normal switch, disposal, repeated disposal and observer reentry tested.",
+    "COR-4": "Repaired null/undefined/primitive cleanup classification; hook rejection and callback failure tests.",
+    "OBS-1": "Local bounded delivery diagnostics plus synchronous/asynchronous callback isolation; queue ownership and retry retention tests."
+  },
+  "authoring": {
+    "drafts": {
+      "idb": "For the example schema version4 migration, create a compound single-field accountKey index on storage_items only inside oldVersion<4, retaining every existing store and row. Names are local demo constants, never evidence of consumer registry. Register before consumer integration merge. Preflight every user store plus metadata and all required indexes before queueing any deletion, observe completion immediately, explicitly abort after sync or request errors and return only after commit. Purge orphan metadata independently; return data-row count only. Version3 explicit openers cannot read committed4: VersionError is expected, rollback requires4-compatible code or rollforward, never delete DB. Additive index creation can build over all rows under an exclusive upgrade and may fail quota; prove blocking and abort preservation. Prove fresh4/1to4/3to4, existing indexed metadata, old3 rejection, blocked/versionchange close, aborted upgrade preservation, orphan/all-store/count/other-account/repeat purge and injected purge abort preserving all stores. Browser proof and doubles must stay distinct.",
+      "shaka": "Serially initialize new players and finish obsolete player's destruction before another player attaches same video. Refuse new initialization after cleanup fails because ownership is uncertain. Arm session snapshot on loading, consume once at unloading or explicit disposal, and capture before removing listeners, including reentrant/callback failures. Preserve shared disposal identity. Normalize primitive/null/undefined cleanup errors to safe default. QoE queue exposes local bounded eviction and sendfailure counters plus pending depth/inflight status; callback failures must not change queue behavior, raw errors or records never diagnostics. Consumers map only to registered metrics, no new names/thresholds."
+    },
+    "compression": "Drafts rewritten into focused owner paragraphs and canonical example pointers. Preserved triggers, atomicity, bounds, unsynced-data consent/journal path, registration ownership, rollback, source dates, diagnostics privacy and proof limits. Removed duplicate runtime call forms only in touched prose."
+  },
+  "source_evidence": [
+    {
+      "read_date": "2026-09-29",
+      "url": "https://github.com/shaka-project/shaka-player/blob/v5.2.12/lib/player.js",
+      "observation": "load() unloads previous asset before Loading event; used for session guard and faithful test double ordering."
+    }
+  ],
+  "verification": {
+    "executions": 9,
+    "distinct_commands": 8,
+    "checks": [
+      {
+        "command": "& skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1 -FilePath node -ArgumentList @('--experimental-vm-modules','skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 45",
+        "exit_code": 0,
+        "output": "PASS: queue-cap/send concurrency, repeated entries, retry retention, null-source unload, shared disposal, pending attach, hook rejection\nPASS: serialized initial attach/stale cleanup, exactly-once final snapshot, unknown rejection classification, bounded private delivery diagnostics, observer isolation\n(node:40148) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:40148) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n[alaa-low-priority] pid=40148 priority=BelowNormal cpuCount=2 durationMs=242 timedOut=False exitCode=0\r\n"
+      },
+      {
+        "command": "& skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1 -FilePath node -ArgumentList @('skills/sohrab/alaa-indexeddb-browser-storage/scripts/build-browser-regressions.mjs','skills/sohrab/alaa-workflow/outputs/20260929-modernization/browser-idb-fix1') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 45",
+        "exit_code": 0,
+        "output": "Prepared isolated browser harness: <repo>\\skills\\sohrab\\alaa-workflow\\outputs\\20260929-modernization\\browser-idb-fix1\n(node:12580) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n[alaa-low-priority] pid=12580 priority=BelowNormal cpuCount=2 durationMs=216 timedOut=False exitCode=0\r\n"
+      },
+      {
+        "command": "& skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1 -FilePath node -ArgumentList @('skills/sohrab/alaa-indexeddb-browser-storage/scripts/check-storage-regressions.mjs') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 45",
+        "exit_code": 0,
+        "output": "PASS: bounded claims/reaping, quota cleanup and exactly one retry, close-before-notify; IDB double only\nPASS: all-store preflight, immediate completion observation, metadata cursor/count, commit wait; control-flow double only\n(node:5832) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n[alaa-low-priority] pid=5832 priority=BelowNormal cpuCount=2 durationMs=191 timedOut=False exitCode=0\r\n"
+      },
+      {
+        "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+        "exit_code": 0,
+        "output": "OK: structure, description, triggers, storage boundaries, classification and manifest all validate\r\n"
+      },
+      {
+        "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+        "exit_code": 0,
+        "output": "OK: 21 reference file(s) routed, every router path resolves\r\n"
+      },
+      {
+        "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/capability_contract_conformance.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+        "exit_code": 0,
+        "output": "OK: the capability field set, the tier contract and the test matrix agree; every tier is reachable and laned; every index key path names a declared field. This bounds the three artifacts against each other, not against any real browser.\r\n"
+      },
+      {
+        "command": "& skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1 -FilePath node -ArgumentList @('--experimental-vm-modules','skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 45",
+        "exit_code": 0,
+        "output": "PASS: queue-cap/send concurrency, repeated entries, retry retention, null-source unload, shared disposal, pending attach, hook rejection\nPASS: serialized initial attach/stale cleanup, exactly-once final snapshot, unknown rejection classification, bounded private delivery diagnostics, observer isolation\n(node:46124) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:46124) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n[alaa-low-priority] pid=46124 priority=BelowNormal cpuCount=2 durationMs=264 timedOut=False exitCode=0\r\n"
+      },
+      {
+        "command": "node skills/sohrab/alaa-shaka-player/scripts/check-shaka-api.mjs --repo skills/sohrab/alaa-shaka-player/assets/templates --target 5.2.12 --json --strict",
+        "exit_code": 1,
+        "output": "{\n  \"anchorVersion\": \"5.2.3\",\n  \"anchorReadDate\": \"2026-07-28\",\n  \"installed\": null,\n  \"targetVersion\": \"5.2.12\",\n  \"filesScanned\": 5,\n  \"removed\": [\n    {\n      \"symbol\": \"selectAudioLanguage\",\n      \"kind\": \"removed\",\n      \"removedIn\": \"5.0.0\",\n      \"replacement\": \"selectAudioTrack(audioTrack, safeMargin)\",\n      \"ref\": \"26-tracks-audio-video-text.md\",\n      \"line\": 12,\n      \"text\": \"* here on purpose: `selectAudioLanguage`, `getAudioLanguagesAndRoles`, `setTextTrackVisibility`\",\n      \"file\": \"shakaTypes.ts\"\n    },\n    {\n      \"symbol\": \"selectAudioLanguage\",\n      \"kind\": \"removed\",\n      \"removedIn\": \"5.0.0\",\n      \"replacement\": \"selectAudioTrack(audioTrack, safeMargin)\",\n      \"ref\": \"26-tracks-audio-video-text.md\",\n      \"line\": 160,\n      \"text\": \"/** v5 replacement for the removed selectAudioLanguage(). */\",\n      \"file\": \"shakaTypes.ts\"\n    },\n    {\n      \"symbol\": \"getAudioLanguagesAndRoles\",\n      \"kind\": \"removed\",\n      \"removedIn\": \"5.0.0\",\n      \"replacement\": \"getAudioTracks()\",\n      \"ref\": \"26-tracks-audio-video-text.md\",\n      \"line\": 12,\n      \"text\": \"* here on purpose: `selectAudioLanguage`, `getAudioLanguagesAndRoles`, `setTextTrackVisibility`\",\n      \"file\": \"shakaTypes.ts\"\n    },\n    {\n      \"symbol\": \"setTextTrackVisibility\",\n      \"kind\": \"removed\",\n      \"removedIn\": \"5.0.0\",\n      \"replacement\": \"selectTextTrack() - selecting makes a track visible\",\n      \"ref\": \"26-tracks-audio-video-text.md\",\n      \"line\": 12,\n      \"text\": \"* here on purpose: `selectAudioLanguage`, `getAudioLanguagesAndRoles`, `setTextTrackVisibility`\",\n      \"file\": \"shakaTypes.ts\"\n    },\n    {\n      \"symbol\": \"isTextTrackVisible\",\n      \"kind\": \"removed\",\n      \"removedIn\": \"5.0.0\",\n      \"replacement\": \"read TextTrack.active from getTextTracks()\",\n      \"ref\": \"26-tracks-audio-video-text.md\",\n      \"line\": 13,\n      \"text\": \"* and `isTextTrackVisible` are gone, and declaring them as optional members is what lets a\",\n      \"file\": \"shakaTypes.ts\"\n    }\n  ],\n  \"deprecated\": []\n}\n"
+      },
+      {
+        "command": "git diff --check HEAD -- skills/sohrab/alaa-indexeddb-browser-storage skills/sohrab/alaa-shaka-player",
+        "exit_code": 0,
+        "output": "warning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/examples/migration-pattern.ts', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/examples/vitest-idb-pattern.test.ts', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-shaka-player/SKILL.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-shaka-player/references/11-vue-quasar-binding.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-shaka-player/references/20-core-lifecycle.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs', CRLF will be replaced by LF the next time Git touches it\n"
+      }
+    ],
+    "browser": {
+      "operator": "Parent independently executed prepared harness; not this writer",
+      "evidence": "browser-idb-fix1-evidence.json",
+      "manifest": "browser-idb-fix1-manifest.json",
+      "manifest_sha256": "3e4abae90a066922317d027a8d40a636239de941d5012f3c4fdbd6bccc8b44c8",
+      "cases": 9,
+      "status": "PASS from saved parent evidence, 25 files reconciled, engine version unobserved",
+      "scope": "Real IndexedDB on isolated IAB origin; synthetic data only; no consumer integration proof"
+    },
+    "matrix": [
+      {
+        "cases": "fresh4/lower configured version; v1-to4; v3-to4 with data+metadata preservation/indexing",
+        "proof": "real-browser PASS, parent evidence"
+      },
+      {
+        "cases": "blocked/versionchange; old3 VersionError; helper closes before notification",
+        "proof": "real-browser PASS, parent evidence"
+      },
+      {
+        "cases": "upgrade abort preserves v3; missing-index preflight; forced purge abort rolls back all stores",
+        "proof": "real-browser PASS, parent evidence"
+      },
+      {
+        "cases": "all-store/orphan purge; other account; data-only count; repeated purge",
+        "proof": "real-browser PASS, parent evidence"
+      },
+      {
+        "cases": "preflight before requests, handler registration, commit wait, metadata count",
+        "proof": "Node source-function double PASS"
+      },
+      {
+        "cases": "Shaka initial attach/stale destroy ordering; stale cleanup failure; final snapshot/disposal/reentry; unknown errors",
+        "proof": "Node source-function Vue/Shaka doubles PASS; actual media runtime unrun"
+      },
+      {
+        "cases": "QoE eviction/send failure/depth diagnostics; sync+async observer failure; in-flight entry retention",
+        "proof": "Node source-function double PASS"
+      },
+      {
+        "cases": "real quota pressure, multi-browser/device, service worker coordination, consumer Vitest/SFC typecheck/lint",
+        "proof": "UNRUN; no consumer runner/dependencies installed; root package.json absent"
+      }
+    ],
+    "scanner": {
+      "status": "exit1 preserved, manual comment-only triage; independent disposition pending",
+      "authority": "SKILL implementation step2 requires running scanner against repository; ref90 recommends CI scan for player changes. Exact source-template target/strict invocation selected by writer; not an exact owner-prescribed command. No root package.json exists; target override is supported.",
+      "unchanged_path": "skills/sohrab/alaa-shaka-player/assets/templates/shakaTypes.ts",
+      "before_sha256": "c3826a7dc6d7a2b8d56e04d91da534e5d9e17f9597b466a0e9ead10673d39445",
+      "after_sha256": "c3826a7dc6d7a2b8d56e04d91da534e5d9e17f9597b466a0e9ead10673d39445",
+      "lines": {
+        "12": " * here on purpose: `selectAudioLanguage`, `getAudioLanguagesAndRoles`, `setTextTrackVisibility`",
+        "13": " * and `isTextTrackVisible` are gone, and declaring them as optional members is what lets a",
+        "160": "  /** v5 replacement for the removed selectAudioLanguage(). */"
+      },
+      "matches": [
+        "selectAudioLanguage:12",
+        "selectAudioLanguage:160",
+        "getAudioLanguagesAndRoles:12",
+        "setTextTrackVisibility:12",
+        "isTextTrackVisible:13"
+      ],
+      "retries": 0,
+      "no_pass_claim": true
+    },
+    "unchanged_checker_selftests": "Not rerun: no production checker changed; prior optional host failures remain in frontend-evidence.md. Expanded executable regression scripts are the tests themselves."
+  },
+  "files": {
+    "repair_changed": 20,
+    "after_bundle_files": 85,
+    "changed": [
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts",
+        "before_sha256": "f18e6c4dd183dd4aa1ea4d5631e12a0ed9490068ac05b7b52dc357d0c307433c",
+        "after_sha256": "2c0fbb903558da0606942b8c65db43f08a0049fecc8f019f99360ac9fbf187b2"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/migration-pattern.ts",
+        "before_sha256": "898bce06cfef53b0ffbf2ec531caa4afbab840e47052a080572748eaf2da659a",
+        "after_sha256": "2e478623ba47217cc74f7df77518fbd9b6462bcf878317a6870b6ec19940edeb"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/vitest-idb-pattern.test.ts",
+        "before_sha256": "d81f12f6a04b53b9c48caec8e34b7669652b5f79f2f08ee2518f5fae92affa3d",
+        "after_sha256": "1a3e41062d8793cb76dea2bf80e6f5811147b537084cb75dd66a5c3f1d7961a5"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/25-storage-buckets-api.md",
+        "before_sha256": "3757a73cb92f47907bc4f0f4eaf12a036d01dcfb834978fca62a16d5bc28a156",
+        "after_sha256": "7afdbf2d57dac5cd8ad27e8f79fd5e2bea87c3ffcef0c9f0438a48703564e0d9"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+        "before_sha256": "9db1e20e66c5509731edeffe67d8a570a807e463dd4136453da90a508a0639e0",
+        "after_sha256": "76cc9be14620368e8556e268ae33ac6a6cba6f9033a4693c668d9ddb560acd07"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+        "before_sha256": "1ee7b32f5574c8b42a30fa11093ecc174ae63bb3b5b1709eae2b85efa333dff2",
+        "after_sha256": "02a81b3edf733f020143ed81307baba426d9e72a745999dcc905958fbfa48943"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+        "before_sha256": "f29b8593964997516a74e856cba7922fe9189b235ea5f196fd09a0da6507b4d3",
+        "after_sha256": "34f862a56c553b5cdb049e2b081e1a0973ee9669422663b8098486adb876bd80"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/browser-storage-cases.mjs",
+        "before_sha256": null,
+        "after_sha256": "bb45c634d99a64769d547e989705b44e1d143506c72575591966b963534b52aa"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/build-browser-regressions.mjs",
+        "before_sha256": null,
+        "after_sha256": "32e56ad056ffcd5f3a432d974433bbe9b25b25ba64736f071400c3ad76ea98a9"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check-storage-regressions.mjs",
+        "before_sha256": "8010558b85bdb4cea21541b1bac2495c7ab14235154d8529750794e381dbb36c",
+        "after_sha256": "86d4bac16ed0e7e2d8642ea077eb19e4b1ead8225738b7730240d74c24171e19"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json",
+        "before_sha256": "854268b36e9ea7ec450df62b118a4970ae60421f266101e678a1a09a58faf9a1",
+        "after_sha256": "fcbe228d4e358f04e8a85bfb5a701415bfa529c1ae3d13c49c1465d4502ffa63"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/assets/templates/playbackQoe.ts",
+        "before_sha256": "e233ac88026b13ad61b562a1156f4d8099874487e248619b834fd27a041ecb75",
+        "after_sha256": "da156430e83f24b9fc7762218706bacad022fcdde1720836f282dacc5c6484ec"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/assets/templates/ShakaPlayer.vue",
+        "before_sha256": "7683ac3d33155e2caf2b282d00043d05128919fd1f2f28bfaae473fad82255ad",
+        "after_sha256": "cfce309196a66334c6d51ea4a8083f40d397a7c2beb260da58a083f0e2fcfdb3"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+        "before_sha256": "838b4cca3c979772465f8e62ef0420abc88908d0cb46943dc9d38b0951358cce",
+        "after_sha256": "91b13d0486f5f0bdd0ced112906a771f37de2e3b026e50ada4adadfc5580e17b"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/11-vue-quasar-binding.md",
+        "before_sha256": "2701ea3ece72f646e05855ed1a074aa2bdf447d54669b114243c0f22f64aa168",
+        "after_sha256": "02b1ba0088ffa0f93bbf9643183fe00b32994d9a3f12ad97dca902e3fc54756e"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/20-core-lifecycle.md",
+        "before_sha256": "409878fefe416cc5e6442988478445cdf52ef8d0eb863c1a23fefefcbd8702f2",
+        "after_sha256": "d6e1a641d5a270a89c4c4ad2a4e17800f56a2068745f10224f1492c7d966aff8"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md",
+        "before_sha256": "8d313bbfc0ce8498519996e1a67e9b0d7d0ac04a6d34b3772df83a55a3ad2748",
+        "after_sha256": "3c38759d9d05111bd509aea93cae00b398471f307376cd86a743615b0b17fbc5"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md",
+        "before_sha256": "9e142d779b328f6cf083c69780afc0e7a4b3b3daae6c1887052a76a14e7b509e",
+        "after_sha256": "ea9f5218c6e1ab3ab8218ac9af031bba4362641d24f86f1b93dc5d3b18af43fd"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs",
+        "before_sha256": "caae61c419bb47af2231cdf15234b3b03ffb1640e299e5b3949c217612f69f12",
+        "after_sha256": "0aa1060eabd651e5cbf105f668dea65241585b4cbcde976b32674043e73cc1b9"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/SKILL.md",
+        "before_sha256": "7ee67cb881170bb4bf592b1cb7da180038e97e14f0716b13c8b8ebe7f3e32056",
+        "after_sha256": "bd8951c4748108706f59c0287ab35cc43c77f0a56c92caff1e7a4ae89cddc443"
+      }
+    ],
+    "selection": "Compared pre-lane raw hashes with final bundle, including new files. Full candidate selection remains git diff HEAD plus untracked; index preserved."
+  },
+  "compatibility": [
+    "Example schema4 intentionally rejects supplied versions below4. Previously deployed explicit v3 opener receives VersionError after upgrade; rollback requires schema4-compatible code or rollforward, never DB deletion.",
+    "Index build duration/quota failure and browser coverage remain consumer adoption gates.",
+    "onSessionEnd accepts void or Promise<void>; existing synchronous Vue emit remains valid.",
+    "QoE signature extends with optional third callback and status() without changing enqueue/flush semantics."
+  ],
+  "residuals": [
+    "Shaka scanner comment findings await independent disposition.",
+    "Actual media, DRM, networking shutdown, consumer typecheck/Vitest and cross-browser/quota-pressure proof unrun.",
+    "No benchmark, deployment, package installation, git commit or staging performed."
+  ],
+  "suggested_commit_message": "fix(skills): make account purge atomic and player teardown deterministic",
+  "skills_used": [
+    "alaa-prompting-guide",
+    "alaa-low-noise",
+    "alaa-codex-orchestrator",
+    "alaa-workflow",
+    "alaa-frontend-developer",
+    "alaa-vue-typescript-clean-code",
+    "alaa-services-contract",
+    "alaa-trust-gateway-auth",
+    "alaa-indexeddb-browser-storage",
+    "alaa-shaka-player"
+  ],
+  "session_accounting": {
+    "model": "not observable in this runtime",
+    "tokens": "not observable in this runtime",
+    "subagents": 0
+  }
+}

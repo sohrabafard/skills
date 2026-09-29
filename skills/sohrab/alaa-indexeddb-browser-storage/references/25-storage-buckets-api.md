@@ -15,37 +15,52 @@ const drafts = await navigator.storageBuckets.open('drafts', {
   persisted: true,      // false is the default
   durability: 'strict', // 'relaxed' is the default
 });
-const request = drafts.indexedDB.open('alaa-client-storage', 3);
+// Demonstration schema version; consumer names/versions require registration before adoption.
+const request = drafts.indexedDB.open('alaa-client-storage', 4);
 ```
 
 - `persisted` — `false` (default) or `true`; whether the bucket survives storage pressure.
 - `durability` — `'relaxed'` (default) or `'strict'`. A relaxed bucket may forget writes completed in the
   last few seconds when power is lost; strict minimises that and is slower.
-- `StorageBucket.indexedDB` is the shipped storage surface. Cache API and File API integration are described
-  in the explainer as intended, not shipped.
+- `StorageBucket.indexedDB`, `caches` and `getDirectory()` are recorded as supported from Chrome 122
+  in [MDN BCD](https://github.com/mdn/browser-compat-data/blob/main/api/StorageBucket.json), read
+  2026-09-29. Probe each surface used; the Chrome introduction's IndexedDB-only note is stale.
 
-Chrome for Developers, read 2026-07-28. An `expires` option is
-`not documented (searched 2026-07-28)`; treat it as absent.
+The [WICG draft](https://wicg.github.io/storage-buckets/), read 2026-09-29, defines `expires`
+on `open()` and `expires()`/`setExpires()` on a bucket. The earlier unsuccessful search is not
+absence evidence. Expiration can remove a persistent bucket too; never apply it to unsynced drafts.
+`persisted: true` requests persistence: check `await bucket.persisted()` before promising it.
+The draft omits the Chrome introduction's `durability` option; verify that option against the
+target implementation rather than assuming a portable durability guarantee.
 
 ## Support, and what follows
 
-Chromium 122+ (Chrome, Edge), Opera 108+, Samsung Internet 26+. **Absent in every version of Firefox and in
-every version of Safari and iOS Safari.** caniuse 70.28% global, read 2026-07-28.
+MDN BCD read 2026-09-29 lists Chrome 122+, with Firefox and Safari `version_added: false`;
+that is a dated compatibility observation, not a prediction about future versions or embedded runtimes.
+The former 70.28% figure was a caniuse snapshot on 2026-07-28, not this fleet's user share.
 
 1. **Never make a bucket a requirement.** Every feature works with the default bucket. A design that only
-   holds together when eviction is per-bucket fails for half the fleet's users.
+   holds together only when eviction is per-bucket is not portable.
 2. **Feature-detect and fall through.**
 
    ```ts
-   const bucket = 'storageBuckets' in navigator
-     ? await navigator.storageBuckets.open(name, { persisted, durability })
-     : null;
-   const idb = bucket?.indexedDB ?? indexedDB;
+   // For a new/refetchable store only; existing draft locations must be reconciled first.
+   let idb = globalThis.indexedDB;
+   try {
+     if (typeof navigator !== 'undefined' && 'storageBuckets' in navigator) {
+       const bucket = await navigator.storageBuckets.open(name, { persisted });
+       idb = bucket.indexedDB;
+     }
+   } catch {
+     // Report bucket unavailability without payloads; the default store still needs a write probe.
+   }
    ```
 
-3. **The same records must be findable in both shapes.** Store name, key path and record shape are
-   identical whether a named bucket or the default one opened the database; the only difference is which
-   `IDBFactory` was used. A migration that runs in one and not the other is the failure this prevents.
+3. **The two factories address separate databases even with identical names.** Keep schema and migration
+   logic compatible with both, but never assume records move when capabilities change. Record the chosen
+   location; reconcile or migrate existing unsynced work before changing it. A failed bucket open must
+   not silently present an empty default database as if the user's drafts disappeared. If IndexedDB
+   itself is unavailable, use the tier-0 recovery in `20-browser-compatibility-and-capability-tiers.md`.
 
 ## When a bucket earns its complexity
 

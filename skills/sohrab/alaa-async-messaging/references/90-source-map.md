@@ -16,17 +16,19 @@ version could change. It states where truth lives and in what order, and what ob
    `alaa-services-contract references/22-failure-load-and-deprecation-contract.md` for values,
    `alaa-services-contract references/23-queue-and-exchange-registry.md` for broker names and topology
    grammar, and `alaa-services-contract references/24-metric-registry.md` for metric names —
-   `/alaa-services-contract` (`$alaa-services-contract`).
+   `/alaa-services-contract`.
 4. **Official broker documentation**, for behaviour the repository does not settle:
    - RabbitMQ documentation: https://www.rabbitmq.com/docs
    - Dead-letter exchanges: https://www.rabbitmq.com/docs/dlx
    - Consumer prefetch: https://www.rabbitmq.com/docs/consumer-prefetch
    - Heartbeats: https://www.rabbitmq.com/docs/heartbeats
    - Quorum queues: https://www.rabbitmq.com/docs/quorum-queues
+   - RabbitMQ 4.3 counter and cancellation changes (verified 2026-09-29):
+     https://www.rabbitmq.com/blog/2026/04/23/rabbitmq-4.3-release
    - Publisher confirms: https://www.rabbitmq.com/docs/confirms
 5. **Official framework documentation** for the Laravel queue plane, at the version the service runs:
    https://laravel.com/docs — queues, events, and Horizon. For the RabbitMQ transport package's own
-   behaviour, switch to `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`), which owns it.
+   behaviour, switch to `/alaa-laravel-job-rabbitmq`, which owns it.
 6. **Community posts and answers**, for locating an official term or recognising a symptom only. They are
    never authority for broker safety, acknowledgement semantics, retry behaviour, or current version
    behaviour.
@@ -38,7 +40,8 @@ looks authoritative and gets copied forward, which is how a skill rots without a
 
 - The task names `latest`, `current`, `upgrade`, a CVE, or a broker or framework major version.
 - The task changes prefetch, heartbeat, delivery limit, quorum-queue policy, dead-lettering, publisher
-  confirms, or reconnect behaviour.
+  confirms, or reconnect behaviour; or depends on acquired/delivery counters, `basic.nack` versus
+  `basic.reject`, acknowledgement timeouts, or negotiated `consumer_cancel_notify`.
 - The task depends on a kit capability: whether `mqkit` exposes a publish timeout, how it reports a nack,
   what `outboxkit` does on a failing publish. **`mqkit`'s publisher-confirm surface, its timeout behaviour
   and its nack behaviour were not verified when this file was written** — check kit source and record what

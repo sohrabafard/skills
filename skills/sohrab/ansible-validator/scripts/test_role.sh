@@ -113,14 +113,10 @@ cd "$ROLE_ABS" || av_cannot_run "could not enter $ROLE_ABS"
 STAGE_ERRORS=0
 
 run_stage() {
-    local stage="$1" description="$2" required="${3:-required}"
+    local stage="$1" description="$2"
     printf "%b[%s] %s%b\n" "$COLOR_BLUE" "$stage" "$description" "$COLOR_RESET"
     if "$MOLECULE_BIN" "$stage" -s "$SCENARIO"; then
         printf "  %bok%b  %s\n\n" "$COLOR_GREEN" "$COLOR_RESET" "$description"
-        return 0
-    fi
-    if [ "$required" = optional ]; then
-        printf "  %b--%b  %s did not run; the scenario does not declare it\n\n" "$COLOR_YELLOW" "$COLOR_RESET" "$description"
         return 0
     fi
     printf "  %bfail%b %s\n\n" "$COLOR_RED" "$COLOR_RESET" "$description"
@@ -132,16 +128,19 @@ run_stage() {
 # that destroy and the summary always run. Under the pre-repair `set -e` the
 # first failing stage killed the script, leaving the test containers running
 # and printing no summary at all.
-run_stage dependency "Resolve dependencies" optional
+run_stage dependency "Resolve dependencies"
 run_stage syntax     "Syntax check"
 run_stage create     "Create instances"
-run_stage prepare    "Prepare instances" optional
+run_stage prepare    "Prepare instances"
 run_stage converge   "Apply the role"
 run_stage idempotence "Idempotence (second apply changes nothing)"
 run_stage verify     "Verification playbook"
 
 printf "%b[destroy] Tear down instances%b\n" "$COLOR_BLUE" "$COLOR_RESET"
-"$MOLECULE_BIN" destroy -s "$SCENARIO" || printf "  %bwarning%b destroy failed; instances may still be running. Run 'molecule destroy -s %s' from %s.\n" "$COLOR_YELLOW" "$COLOR_RESET" "$SCENARIO" "$ROLE_ABS"
+if ! "$MOLECULE_BIN" destroy -s "$SCENARIO"; then
+    STAGE_ERRORS=$((STAGE_ERRORS + 1))
+    printf "  %bfail%b destroy failed; instances may still be running. Run 'molecule destroy -s %s' from %s.\n" "$COLOR_RED" "$COLOR_RESET" "$SCENARIO" "$ROLE_ABS"
+fi
 echo ""
 
 if [ $STAGE_ERRORS -gt 0 ]; then

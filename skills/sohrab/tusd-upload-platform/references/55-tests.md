@@ -1,6 +1,6 @@
 # Required Tests
 
-Every test below names a behaviour that a plausible-looking implementation gets wrong. A change to an upload plane is not finished until the tests covering the behaviour it touched exist and pass. Layering doctrine — which of these is a unit, an integration or an end-to-end test — is `/alaa-testing-strategy` (`$alaa-testing-strategy`); this file names what must be proven, not where.
+Every test below names a behaviour that a plausible-looking implementation gets wrong. A change to an upload plane is not finished until the tests covering the behaviour it touched exist and pass. Layering doctrine — which of these is a unit, an integration or an end-to-end test — is `/alaa-testing-strategy`; this file names what must be proven, not where.
 
 ## Resume and offset
 
@@ -10,6 +10,16 @@ Every test below names a behaviour that a plausible-looking implementation gets 
 | Restart the transfer process mid-`PATCH` with a graceful signal, then resume. | the shutdown budget exceeds the drain, and the offset survives | the offset regresses, or the upload cannot resume |
 | Resume after a project switch with a stored fingerprint from the previous project. | the client matches a stored upload against the current application identifier | resumes the wrong upload — the class 2 fault in `50-failure-modes.md` |
 | Go offline mid-upload, then reconnect. Assert the client state is the paused state and not the terminal one, and that resume succeeds. | the offline path does not fall through to the terminal error handler | reports permanent failure while the server holds a resumable upload |
+
+## Upgrade regressions
+
+Before adopting the tusd release recorded in `10-source-map.md`, test the consumer's enabled protocol paths:
+
+- For IETF draft creates, reject declared sizes above `MaxSize` before accepting payload; record not applicable when that draft is disabled rather than enabling it for the test.
+- For deferred-length uploads with `Content-Length`, attempt to exceed `MaxSize` and assert the cap still holds.
+- For deferred-length S3 uploads, resume after interruption and assert completed object size and checksum match the input; a successful response alone cannot detect silent truncation.
+
+Keep the existing authorization, retry and storage-lifecycle checks for the changed path. These are consumer gates, not proof from the skill-pack validator.
 
 ## Authorization
 

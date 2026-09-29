@@ -1,0 +1,131 @@
+{
+  "changed_existing": [
+    "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md"
+  ],
+  "new_paths": [
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md"
+  ],
+  "full_role_sections_verified": 45,
+  "original_fenced_payload_counts": {
+    "alaa-codex-orchestrator": 23,
+    "alaa-cc-orchestrator": 24
+  },
+  "common_envelopes_identical": true,
+  "archived_intro_and_worked_example_restored": true,
+  "all_other_bundle_hashes_unchanged": true,
+  "files": {
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md": {
+      "sha256_raw_bytes": "8ce39e72e61189f31c9e3f187b6873834f54d58368f0ca1de8253c3f6178eae7",
+      "lines": 31
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md": {
+      "sha256_raw_bytes": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf",
+      "lines": 22
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md": {
+      "sha256_raw_bytes": "f8ef47c1f94d95d8d85915af05cf3ac85fe2c46f6a058fe80a85fefe6f8a1d76",
+      "lines": 20
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md": {
+      "sha256_raw_bytes": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890",
+      "lines": 32
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md": {
+      "sha256_raw_bytes": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66",
+      "lines": 37
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md": {
+      "sha256_raw_bytes": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a",
+      "lines": 33
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md": {
+      "sha256_raw_bytes": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1",
+      "lines": 22
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md": {
+      "sha256_raw_bytes": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306",
+      "lines": 24
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md": {
+      "sha256_raw_bytes": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3",
+      "lines": 22
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md": {
+      "sha256_raw_bytes": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a",
+      "lines": 23
+    },
+    "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md": {
+      "sha256_raw_bytes": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340",
+      "lines": 39
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md": {
+      "sha256_raw_bytes": "f88d476e0d43e5b08e29fc9eb9519f9fff4112803003d0c2d079a5b797abb1cd",
+      "lines": 31
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md": {
+      "sha256_raw_bytes": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf",
+      "lines": 22
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md": {
+      "sha256_raw_bytes": "3d20a9545f27658e8512dea5c37bacc47e4b212d7861de2b3ef2cb607f7cfe55",
+      "lines": 40
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md": {
+      "sha256_raw_bytes": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890",
+      "lines": 32
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md": {
+      "sha256_raw_bytes": "25bd87265c6ac9738c6d0488b19d332b2f79333cea84765ea7aeb6c744fccc61",
+      "lines": 37
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md": {
+      "sha256_raw_bytes": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a",
+      "lines": 33
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md": {
+      "sha256_raw_bytes": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1",
+      "lines": 22
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md": {
+      "sha256_raw_bytes": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306",
+      "lines": 24
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md": {
+      "sha256_raw_bytes": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3",
+      "lines": 22
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md": {
+      "sha256_raw_bytes": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a",
+      "lines": 23
+    },
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md": {
+      "sha256_raw_bytes": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340",
+      "lines": 39
+    },
+    "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md": {
+      "sha256_raw_bytes": "87c6bab4f1f357a7d853a6bacd40469fe7d96114fa7de18d133b598a9af5bebe",
+      "lines": 72
+    }
+  }
+}

@@ -67,7 +67,7 @@ export async function detectBrowserStorageCapabilities(): Promise<BrowserStorage
       typeof ServiceWorkerRegistration !== 'undefined' && 'sync' in ServiceWorkerRegistration.prototype,
     opfs: !!storage && typeof storage.getDirectory === 'function',
     workerIdb: typeof Worker === 'undefined' ? 'unknown' : true,
-    // Chromium 122+ only. references/25-storage-buckets-api.md; never a requirement.
+    // Presence only, not an open/write proof. references/25-storage-buckets-api.md owns fallback.
     storageBuckets: !!nav && 'storageBuckets' in nav,
     privateModeLikely: await inferPrivateModeWeakSignal(estimate),
   };

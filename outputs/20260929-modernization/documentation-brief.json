@@ -1,0 +1,38 @@
+{
+  "state": "prepared; await operations template cycle2 and release/instruction closure",
+  "scope": "Documentation-only final lane in skills/sohrab; no executable/config edits; preserve staged changes",
+  "read_first": [
+    "AGENTS.md",
+    "skills/sohrab/AGENTS.md",
+    "skills/sohrab/alaa-repo-docs/SKILL.md",
+    "skills/sohrab/alaa-repo-docs/references/15-document-size-and-clustering.md",
+    "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md"
+  ],
+  "inputs": [
+    "candidate.json",
+    "candidate.sha256",
+    "assessment.json",
+    "candidate3-doc-inventory.json",
+    "review-correctness-frontend-fix2.json",
+    "review-correctness-operations-fix1.json",
+    "review-security-fix1.json",
+    "review-migration-fix1.json",
+    "review-observability-frontend-fix1.json",
+    "review-release-fix1.json"
+  ],
+  "requirements": [
+    "Read full affected skill bundle before an edit; unchanged eligibility review may read only needed documents.",
+    "Classify every touched Markdown file. Preserve named exempt state/artifacts and genuinely atomic whole contracts/procedures with individual reasons. Integrated layout alone is not exemption.",
+    "For eligible narrative files cluster toward green; every yellow/orange needs semantic coherence justification; no red waivers or blanket exemptions. Preserve every verified fact, exact code blocks, authority, safety, exceptions, failure rules, and sources.",
+    "Use one canonical topic owner and condition-bearing relative links; preserve stronger skill reference hierarchy with two-digit child names. Update sole routing owner when reference-count threshold requires; do not create duplicate routers.",
+    "Mirrored orchestrator behavior stays identical. Templates may be split by complete independent templates, never split one payload needing whole consumption.",
+    "Draft then behavior-preserving compress agent-controlling wording; record fidelity evidence.",
+    "No deletions, no root/vendor/outside-sohrab edits, no memory publication, commit or installation.",
+    "Write final documentation-grades.json with one row per touched document: classification, physical lines, grade if eligible, reason and movement/fidelity mapping.",
+    "Run bounded affected link/line checks, no previously passed unrelated tests. Hash-manifest updates that need executable/config changes return to owner.",
+    "Final source edits require candidate recapture and affected independent verification/review; parent owns these gates.",
+    "Do not blindly split SKILL execution contracts or whole operator procedures; document actual atomic dependency when exempt. Narrative version guides and topic catalogs still need semantic clustering. Source/checker facts remain frozen; do not introduce new best-practice claims during final documentation."
+  ],
+  "output": "documentation-evidence.json with changed paths, grades reference, checks and explicit limits; <=15-line handoff",
+  "coverage": "110 current touched Markdown/template files measured,18 raw RED; classify individually, not blanket atomic exemption. Parent workflow artifacts separately exempt-named."
+}

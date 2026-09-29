@@ -26,8 +26,9 @@ outbox dispatched to RabbitMQ from a separate command.
    default holds unbounded unacknowledged deliveries, stranding the queue's working set in one process.
 3. **A consumer commits its receipt row and business effect first, and acknowledges second.** A crash between
    ack and commit loses the message; the reverse order only redelivers, which rule 1 has made safe.
-4. **Every declared queue declares a dead-letter target in the same change, with redelivery bounded by a
-   delivery limit.** Without both, a poison message loops forever or is dropped, and both look healthy.
+4. **Every live queue declares a dead-letter target and a verified retry bound in the same change.**
+   Quorum delivery limits bound counted failures; other return paths need an explicit application bound.
+   Broker-version rules and the DLQ exception are `references/40-dead-letter-and-replay.md`.
 5. **A message is published only after the transaction that made its fact true commits, and a fact that must
    survive an unreachable broker goes to a durable outbox row inside that transaction.** Publishing inside it
    exposes a row that may roll back; publishing after commit without the row loses the fact on a crash.
@@ -55,19 +56,18 @@ outbox dispatched to RabbitMQ from a separate command.
 ## When not to use this skill, and what owns each thing instead
 
 - Retry, backoff, deadline, breaker, degradation and request-side idempotency, as doctrine carrying no Ala
-  value: `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+  value: `/alaa-reliability-sla`.
 - Every broker, metric, event and error-code **name**, and every platform **value**:
-  `/alaa-services-contract` (`$alaa-services-contract`).
+  `/alaa-services-contract`.
 - Laravel driver mechanics — `config/queue.php`, worker commands, `queue:work` versus `rabbitmq:consume`:
-  `/alaa-laravel-job-rabbitmq` (`$alaa-laravel-job-rabbitmq`); on conflict, mechanics there, architecture here.
-- Event emission layer and timing: `/alaa-laravel-architecture` (`$alaa-laravel-architecture`). Outbox claim
-  query: `/alaa-data-layer` (`$alaa-data-layer`). Telemetry levels: `/alaa-observability-soc`
-  (`$alaa-observability-soc`). Fail-closed controls: `/alaa-security-review` (`$alaa-security-review`).
-  Quality bar: `/alaa-project-constitution` (`$alaa-project-constitution`). Model and effort:
-  `/alaa-prompting-guide` (`$alaa-prompting-guide`).
+  `/alaa-laravel-job-rabbitmq`; on conflict, mechanics there, architecture here.
+- Event emission layer and timing: `/alaa-laravel-architecture`. Outbox claim
+  query: `/alaa-data-layer`. Telemetry levels: `/alaa-observability-soc`. Fail-closed controls: `/alaa-security-review`.
+  Quality bar: `/alaa-project-constitution`. Model and effort:
+  `/alaa-prompting-guide`.
 - A kit capability that does not exist: file
   `alaa-go-chi-development assets/templates/kit-change-request.md` and stop —
-  `/alaa-go-chi-development` (`$alaa-go-chi-development`).
+  `/alaa-go-chi-development`.
 
 ## Required tests
 
@@ -75,8 +75,8 @@ Both ship with every change to a consumer or dead-letter route; assertions in `r
 
 - **A redelivery test** delivers one message twice to the real handler and asserts one business effect and
   one receipt row. Idempotency established by inspection is not established.
-- **A dead-letter test** fails the handler past the delivery limit and asserts the message lands on
-  `<queue>.dlq` with key `<live-key>.failed`. An unexercised dead-letter route is a hope.
+- **A dead-letter test** exhausts the actual versioned retry path and asserts the message lands on
+  `<queue>.dlq` with key `<live-key>.failed`; non-counting returns need their own bounded-path proof.
 
 ## Gate script
 

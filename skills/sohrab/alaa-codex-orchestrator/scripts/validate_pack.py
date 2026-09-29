@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from check_agent_contracts import agent_failures, orchestrator_failures
+from check_agent_contracts import agent_failures, dispatch_failures, orchestrator_failures
 from render_agents import policy_api, expected_outputs, drift
 import re
 import subprocess
@@ -80,6 +80,7 @@ errors: list[str] = []
 
 skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 errors.extend(orchestrator_failures(skill))
+errors.extend(dispatch_failures((ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")))
 match = re.match(r"^---\n(.*?)\n---\n", skill, re.S)
 if not match:
     errors.append("SKILL.md is missing YAML frontmatter")

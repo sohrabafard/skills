@@ -25,8 +25,8 @@ From caniuse.com or MDN on 2026-07-28. Re-read before repeating any of them
 | `BroadcastChannel` | Chrome 54+, Firefox 38+, Safari 15.4+ (94.82%) | baseline for this fleet; ship no `storage`-event or polling fallback |
 | Web Locks (`navigator.locks`) | Chrome 69+, Firefox 96+, Safari 15.4+ (94.21%); workers and service workers | baseline; the lease-record fallback in `41-multitab-versionchange-and-locks.md` applies only to a runtime the probe reports without it |
 | OPFS `getDirectory()` | Chrome 86+, Firefox 111+, Safari 15.2+ (93.51%) | large binary content; pair with a persistence request |
-| Storage Buckets | Chromium 122+ only; **absent in every Firefox and every Safari** (70.28%) | `25-storage-buckets-api.md`; never a requirement |
-| Background Sync | Chrome 49+, Edge 79+; **absent in every Firefox and every Safari/iOS** (77.48%) | owned by `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`); never the only flush trigger |
+| Storage Buckets | Dated support and source conflicts refreshed 2026-09-29 in `25-storage-buckets-api.md` | probe the operation; retain default-bucket and tier-0 recovery |
+| Background Sync | Chrome 49+, Edge 79+; **absent in every Firefox and every Safari/iOS** (77.48%) | owned by `/alaa-quasar-app-vite-v3`; never the only flush trigger |
 
 ## Engine notes, read 2026-07-28
 

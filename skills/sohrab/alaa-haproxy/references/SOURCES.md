@@ -11,12 +11,13 @@ user asks for current or latest behaviour.
 
 ## Pinned values and how to re-derive each one
 
-Read date for every row: **2026-07-29**.
+Historical read date: **2026-07-29**, except the first three release/status rows
+refreshed **2026-09-29**. Runtime captures below and example image pins remain historical.
 
 | Pinned value | Where it is written | Re-derive with |
 |---|---|---|
-| 3.4 is the current LTS; 3.3 carries no label; 3.2 and 3.0 are LTS; 3.1 and below are EOL | `10-version-and-branch.md` branch table | open `https://docs.haproxy.org/` and read the labels beside each branch in the index |
-| 3.4.2 released 2026-07-03; 3.3.12; 3.2.21; 3.0.25; 2.8.26; 2.6.31 | `10-version-and-branch.md` branch table | `https://www.haproxy.org/` front-page table, or list `https://www.haproxy.org/download/<branch>/src/` and take the highest tarball |
+| 3.4 is the current LTS; 3.3 carries no label; 3.2 and 3.0 are LTS; 2.8/2.6 receive critical fixes; 3.1 is EOL | `10-version-and-branch.md` branch table | open `https://docs.haproxy.org/` and read the labels beside each branch in the index |
+| 3.4.6, 3.3.16, 3.2.25, 3.0.29 and 2.8.30 released 2026-09-28; 2.6.34 released 2026-09-24 | `10-version-and-branch.md` branch table | `https://www.haproxy.org/` front-page table, or list `https://www.haproxy.org/download/<branch>/src/` and take the highest tarball |
 | 3.3 end of life 2027-Q1; 3.4 to 2031-Q2; 3.2 to 2030-Q2 | `10-version-and-branch.md` branch table | the end-of-life column on `https://www.haproxy.org/` |
 | the 3.2 to 3.3 deprecation and breaking-change list | `10-version-and-branch.md` | `https://www.haproxy.com/blog/announcing-haproxy-3-3` |
 | the 3.3 to 3.4 deprecation and breaking-change list | `10-version-and-branch.md` | `https://www.haproxy.com/blog/announcing-haproxy-3-4` |

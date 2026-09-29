@@ -1,8 +1,11 @@
-# Claude Sonnet 5
+# Claude Sonnet 5 (historical)
+
+Retained for explicit historical comparison only. Current prompting and migration use
+`references/31-sonnet-5-5.md`; the structured policy no longer assigns Sonnet 5 profiles.
 
 API model id `claude-sonnet-5`. The balanced tier: 1M-token context (default and maximum), 128k max output, $2/$10 per MTok in the 25 September 2026 model overview. Adaptive thinking, vision, and the `computer_20251124` computer-use tool. Anthropic calls it the most agentic Sonnet yet, with particular strength in sustained multi-step tool use, unprompted self-verification, and finishing tasks end to end rather than stalling halfway.
 
-The structured Claude policy owns role assignments. Sonnet remains a supported candidate
+The structured Claude policy owns role assignments. At the historical snapshot, Sonnet was a supported candidate
 for bounded engineering and evidence work; published price and latency classes are not local
 measurements. No blanket high-effort ceiling applies: xhigh and max are valid capabilities,
 whose value must be measured on the target workload.

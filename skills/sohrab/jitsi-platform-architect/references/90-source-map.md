@@ -22,13 +22,13 @@ has; go and read the source, then add the row.
 
 **This ledger could not be refreshed in the session that created it.** That session had no network access to Jitsi
 upstream documentation, which is why most rows below carry `unverified as of 2026-07-27` rather than a read date.
-The three dated rows carry their real, and now expired, dates.
+The 2026-09-29 refresh covers release and rootless/internal-port facts only; other rows retain their original status.
 
 ## The ledger
 
 | # | Fact class | What this skill asserts | Source | Applies to release | Read | Status |
 |---|---|---|---|---|---|---|
-| 1 | container release snapshot | `jitsi/docker-jitsi-meet` latest release was `stable-10888`, published 2026-03-30 | https://github.com/jitsi/docker-jitsi-meet/releases | `stable-10888` | 2026-04-24 | expired 2026-07-23 |
+| 1 | container release snapshot | latest official release is `stable-11248`, published 2026-09-14 | https://github.com/jitsi/docker-jitsi-meet/releases | `stable-11248` | 2026-09-29 | documentation verified; installed release unknown |
 | 2 | handbook currency | the handbook releases page was updated 2026-04-11 | https://jitsi.github.io/handbook/docs/releases | unpinned | 2026-04-24 | expired 2026-07-23 |
 | 3 | IFrame API page currency | the IFrame API page was updated 2026-04-16 | https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe | unpinned | 2026-04-24 | expired 2026-07-23 |
 | 4 | token claim names | `iss`, `aud`, `sub`, `room`, `exp`, `nbf`, `iat` and the `context.*` object are the claims the verifier reads | https://github.com/jitsi/lib-jitsi-meet/blob/master/doc/tokens.md | unpinned | unverified as of 2026-07-27 | read before first use |
@@ -42,9 +42,10 @@ The three dated rows carry their real, and now expired, dates.
 | 12 | embed-time override limits | which configuration keys can be overridden at embed time, and that host and moderator semantics cannot | https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-configuration | unpinned | unverified as of 2026-07-27 | read before promising an override |
 | 13 | reservation system | whether an external reservation service is supported, and its request and response contract | reservation-system handbook material | unpinned | unverified as of 2026-07-27 | read before designing on it |
 | 14 | Helm chart capability | that bridge scaling, OCTO and exposure modes in the community chart are community-supported and partly under-tested | https://github.com/jitsi-contrib/jitsi-helm | unpinned | unverified as of 2026-07-27 | read before proposing the chart |
-| 15 | restricted-platform support | rootless execution and OpenShift restricted-policy compatibility across all Jitsi containers | upstream issues and `jitsi-contrib` material | unpinned | unverified as of 2026-07-27 | read before promising either |
+| 15 | restricted-platform support | OpenShift restricted-policy compatibility across the selected containers still requires target-platform proof; rootless images alone do not establish it | https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/ and target admission/runtime evidence | deployment pin required | 2026-09-29 | compatibility unverified |
 | 16 | bridge websockets and proxying | what the deployment requires of a reverse proxy for bridge websocket paths | handbook FAQ and proxy material | unpinned | unverified as of 2026-07-27 | read before writing an edge configuration |
 | 17 | node sizing examples | the published starting sizes quoted in `references/60-scale-and-capacity.md` | https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-requirements | unpinned | unverified as of 2026-07-27 | read before quoting a size |
+| 18 | rootless images and web ports | rootless execution and internal web ports `8000`/`8443` introduced | https://github.com/jitsi/docker-jitsi-meet/releases/tag/stable-11146 | `stable-11146` onward; inspect deployment pin | 2026-09-29 | release-note proof; target runtime unverified |
 
 ## Source priority
 

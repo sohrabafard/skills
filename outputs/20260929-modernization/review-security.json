@@ -1,0 +1,59 @@
+{
+  "recorded_by": "parent from independent security_review final; no reviewer writes",
+  "verdict": "BLOCK",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "candidate": "f7605421917a1985af8c2729a2e493170b9fb12fd0be91c719af148a32e03480",
+  "integrity": "140 hashes match",
+  "findings": [
+    {
+      "id": "SEC-1",
+      "severity": "medium",
+      "confidence": "high; static",
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+      "line": 138,
+      "trigger": "Local actor has replacement rights in shared output directory or mutable ancestor during dependency build/lint",
+      "impact": "Path reopened after permissions check; replacement may receive Secret bytes or redirect writes",
+      "remedy": "Trusted private parent; exclusive creation; retained descriptor with descriptor-based type/owner/permission checks; writes via same descriptor; replacement-safe cleanup",
+      "test": "Mock dependency build replacing output with synthetic symlink; replacement must receive no sentinel bytes",
+      "introduced": false
+    },
+    {
+      "id": "SEC-2",
+      "severity": "medium",
+      "confidence": "high; static",
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts",
+      "line": 175,
+      "trigger": "Logout account purge followed by browser profile reuse",
+      "impact": "storage_items account/record identifiers and timestamps survive; touched logout fixture misses facade metadata",
+      "remedy": "Purge indexed account metadata including orphans atomically; compatible schema migration if index needed",
+      "test": "Actual account data plus metadata/orphans removed while another account survives",
+      "introduced": false
+    },
+    {
+      "id": "SEC-3",
+      "severity": "low",
+      "confidence": "high; static",
+      "path": "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+      "line": 133,
+      "trigger": "Existing cached tools; installation opt-in unset",
+      "impact": "Read-only validation unnecessarily requires installation authority; no privilege bypass demonstrated",
+      "remedy": "Discover existing cached tools before checking authority to create/install",
+      "test": "Resolve cached tools without installation permission or installer calls",
+      "introduced": true
+    }
+  ],
+  "static_pass": [
+    "bootstrap opt-in/no-bootstrap precedence",
+    "scanner source-value redaction",
+    "Molecule failure/teardown accounting",
+    "Arvan identity match; no token/impersonation fallback",
+    "Fiber/OpenFGA explicit trust and consistency caveats"
+  ],
+  "limits": [
+    "Read-only role enforcement unknown; no mutations performed",
+    "No exploit execution",
+    "No browser/Vitest/livecluster/deployed-security proof",
+    "Only listed scoped surfaces examined"
+  ]
+}

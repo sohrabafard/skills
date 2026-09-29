@@ -415,6 +415,16 @@ def build_fixture_tree(root: Path) -> tuple[dict[str, str], str] | tuple[None, s
     return environment, scratch
 
 
+def classify_parse_warnings(display: str, output: str) -> list[Finding]:
+    """No approved deprecation exceptions: every unresolved warning needs review.
+
+    An exception requires an exact message/branch and source-backed safety rationale,
+    plus a regression fixture. A deprecation keyword alone is not approval.
+    """
+    return [Finding(display, 1, "HP-EX-WARNING", line.strip()[:400])
+            for line in output.splitlines() if "[WARNING]" in line]
+
+
 def run_parse_phase(root: Path, haproxy: str, allow_skips: bool) -> tuple[list[Finding], list[str], list[str], str | None]:
     findings: list[Finding] = []
     skipped: list[str] = []
@@ -468,9 +478,7 @@ def run_parse_phase(root: Path, haproxy: str, allow_skips: bool) -> tuple[list[F
                     display, 1, "HP-EX-PARSE",
                     detail or "haproxy -c -f exited {} with no alert".format(result.returncode)))
             else:
-                for line in output.splitlines():
-                    if "[WARNING]" in line:
-                        notes.append("{}: {}".format(display, line.split("config : ", 1)[-1].strip()))
+                findings.extend(classify_parse_warnings(display, output))
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
 
@@ -571,6 +579,22 @@ def self_test(script_dir: Path) -> int:
     else:
         print("self-test: bundle -> ['HP-EX-012']")
 
+    warning_cases = [
+        ("functional-warning.txt", {"HP-EX-WARNING"}),
+        ("unreviewed-deprecation.txt", {"HP-EX-WARNING"}),
+        ("clean-parse.txt", set()),
+    ]
+    for name, want in warning_cases:
+        path = script_dir / "fixtures" / "warnings" / name
+        if not path.is_file():
+            print("self-test: warning fixture missing", file=sys.stderr)
+            return EXIT_CANNOT_RUN
+        got = {item.rule for item in classify_parse_warnings(name, path.read_text(encoding="utf-8"))}
+        if got != want:
+            failures.append("{}: warning classification mismatch".format(name))
+        else:
+            print("self-test: {} -> {}".format(name, sorted(got) or "clean"))
+
     # Could-not-run path: a binary that does not exist.
     if binary_branch(str(script_dir / "not-a-binary")) is not None:
         failures.append("binary_branch accepted a nonexistent binary")
@@ -607,6 +631,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Rules\n"
             + "".join("  {}  {}\n".format(rule, text) for rule, text in sorted(RULES.items()))
             + "  HP-EX-PARSE  `haproxy -c -f` accepts the file\n"
+            + "  HP-EX-WARNING  unresolved parser warnings require review\n"
             "\n"
             "Exit codes\n"
             "  0  clean\n"

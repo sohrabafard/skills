@@ -1,0 +1,178 @@
+{
+  "status": "Manifest-only refresh complete and frozen; independent documentation routing finding remains open with parent.",
+  "agent": {
+    "role": "alaa-implementer-sol",
+    "configured_model": "gpt-6-astra",
+    "configured_effort": "high",
+    "requested_override": null,
+    "observed_model_effort": "unknown"
+  },
+  "scope": {
+    "source_path": "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json",
+    "field": "root_files",
+    "no_other_source_changes": true,
+    "authority": "Parent bounded manifest-only dispatch; workspace-write sandbox, narrower lane enforced by scope/readback; no commit/stage/install."
+  },
+  "mutation": {
+    "added": 20,
+    "count": 69,
+    "before_sha256": "fcbe228d4e358f04e8a85bfb5a701415bfa529c1ae3d13c49c1465d4502ffa63",
+    "after_sha256": "6a720104d0b98a7348d91d85ee2aafbf6e65eff032999d7ffb6022437aec84a6",
+    "other_fields_unchanged": true
+  },
+  "added_paths": [
+    "references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+    "references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+    "references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+    "references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+    "references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md",
+    "references/62-poisoning-and-purge/20-account-purge-procedure.md",
+    "references/62-poisoning-and-purge/20-account-purge-procedure/10-transaction-and-journal.md",
+    "references/62-poisoning-and-purge/20-account-purge-procedure/20-recovery-and-verification.md",
+    "references/71-browser-outbox/10-browser-outbox-boundary.md",
+    "references/71-browser-outbox/20-record-and-cursor-invariant.md",
+    "references/71-browser-outbox/30-flush-and-classification.md",
+    "references/71-browser-outbox/40-reaper-and-recovery.md",
+    "references/71-browser-outbox/50-bounds-and-operations.md",
+    "references/71-browser-outbox/60-retry-policy.md",
+    "references/80-testing-and-proof-levels/10-proof-levels.md",
+    "references/80-testing-and-proof-levels/20-required-scenarios.md",
+    "references/80-testing-and-proof-levels/30-quota-reproduction.md",
+    "references/80-testing-and-proof-levels/40-debug-and-performance.md",
+    "references/80-testing-and-proof-levels/50-release-checklist.md",
+    "references/80-testing-and-proof-levels/60-real-indexeddb-harness.md"
+  ],
+  "full_read_reconciliation": {
+    "prior_bundle": "Full IndexedDB and Shaka bundles reconciled as 83 files in frontend-review-fix1 evidence; reused per dispatch.",
+    "current_changed_reference_paths_read_fully": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/10-transaction-and-journal.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/20-recovery-and-verification.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/10-browser-outbox-boundary.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/20-record-and-cursor-invariant.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/30-flush-and-classification.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/40-reaper-and-recovery.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/50-bounds-and-operations.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/60-retry-policy.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-proof-levels.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-required-scenarios.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-quota-reproduction.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-debug-and-performance.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md"
+    ],
+    "current_reference_count": 24,
+    "frozen_foundation_hash_mismatches": [],
+    "checkpoint": "docs/agents/20260929-120000_sohrab-modernization-state.md",
+    "plan": "docs/_agent_plans/20260929-120000_sohrab-modernization.md",
+    "owner_evidence": "documentation-foundation-evidence.json",
+    "validator_semantics": "root_files must equal recursive files excluding dot basenames and __pycache__; reference checker checks top-level Markdown routing only."
+  },
+  "gates": [
+    {
+      "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+      "chunk_id": "49c3ac",
+      "wall_time_seconds": 0.2646711,
+      "exit_code": 0,
+      "original_token_count": 25,
+      "output": "OK: structure, description, triggers, storage boundaries, classification and manifest all validate\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+      "chunk_id": "402a03",
+      "wall_time_seconds": 0.225941,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "OK: 21 reference file(s) routed, every router path resolves\r\n"
+    }
+  ],
+  "final_reconciliation": {
+    "changed_paths": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json"
+    ],
+    "listed_count": 69,
+    "actual_count": 69,
+    "missing": [],
+    "extra": [],
+    "raw_sha256": "6a720104d0b98a7348d91d85ee2aafbf6e65eff032999d7ffb6022437aec84a6"
+  },
+  "existing_browser_proof": {
+    "artifact": "browser-idb-fix1-evidence.json",
+    "manifest": "browser-idb-fix1-manifest.json",
+    "reconciled_files": 25,
+    "mismatches": [],
+    "existing_cases_passed": 9,
+    "browser": "Codex In-app Browser; engine version unobserved",
+    "rerun": false,
+    "limits": "Existing single-browser synthetic IndexedDB proof only; no new runtime, cross-browser, quota-pressure or consumer proof."
+  },
+  "inspection_error": {
+    "operation": "Read candidate4 reference80 from documentation-before-candidate4.zip after browser hash reconciliation",
+    "first_exit": 1,
+    "first_error": "UnicodeEncodeError: cp1252 cannot encode U+2192 in printed archive text; browser25 hash reconciliation had completed with no mismatches.",
+    "cause_specific_retry": "Print decoded source through json.dumps(..., ensure_ascii=True)",
+    "retry_exit": 0
+  },
+  "open_out_of_scope_finding": {
+    "id": "IDB-DOC80-ROUTING",
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+    "status": "Reported to parent; parent independently confirmed; source prose preserved.",
+    "baseline": "documentation-before-candidate4.zip, same path, 106 lines, fully read after output-encoding retry.",
+    "expected_candidate4_mapping": [
+      {
+        "heading": "What every storage change must exercise",
+        "content": "Scenario/Level matrix",
+        "actual_child": "80-testing-and-proof-levels/10-proof-levels.md",
+        "wrong_link_label": "Proof levels",
+        "router_line": 19
+      },
+      {
+        "heading": "Reproducing a quota condition locally",
+        "content": "Unit, Playwright and real-device quota recipes",
+        "actual_child": "80-testing-and-proof-levels/20-required-scenarios.md",
+        "wrong_link_label": "Required scenarios",
+        "router_line": 23
+      },
+      {
+        "heading": "Debug surfaces per engine",
+        "content": "Engine-specific debugging tools and uncertainty",
+        "actual_child": "80-testing-and-proof-levels/30-quota-reproduction.md",
+        "wrong_link_label": "Quota reproduction",
+        "router_line": 27
+      },
+      {
+        "heading": "Performance budgets to assert",
+        "content": "Measurement lane, budgets and complexity limit",
+        "actual_child": "80-testing-and-proof-levels/40-debug-and-performance.md",
+        "wrong_link_label": "Debug surfaces",
+        "router_line": 31
+      },
+      {
+        "heading": "Release checklist",
+        "content": "Storage proof and product-safety checklist",
+        "actual_child": "80-testing-and-proof-levels/40-debug-and-performance.md",
+        "wrong_link_label": "Performance budgets",
+        "router_line": 35
+      },
+      {
+        "heading": "Real IndexedDB regression harness",
+        "content": "Harness preparation/execution, cases and proof limitations",
+        "actual_child": "80-testing-and-proof-levels/50-release-checklist.md",
+        "wrong_link_label": "Release checklist",
+        "router_line": 39
+      }
+    ],
+    "duplicate_unrouted_child": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md",
+    "limits": "File existence and line/anchor checks do not prove semantic route fidelity; native reference PASS must not close this finding. Manifest enumerates all real files, including this known duplicate."
+  },
+  "source_freeze": true
+}

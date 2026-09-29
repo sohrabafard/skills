@@ -1,7 +1,6 @@
 # Official-first source map, and the freshness procedure
 
-This is the pair's single source map. `ansible-generator` (`/ansible-generator`,
-`$ansible-generator`) does not keep a second copy; it routes here. Read this
+This is the pair's single source map. `ansible-generator` (`/ansible-generator`) does not keep a second copy; it routes here. Read this
 file before making any version-sensitive claim about Ansible, a collection,
 ansible-lint, Molecule or Checkov.
 
@@ -37,7 +36,17 @@ The two `ansible.readthedocs.io` hostnames that both skills carried until
 still resolve, with a 302 to `docs.ansible.com`. The canonical host is the one
 in the table above.
 
-## Pinned values, and the command that re-derives each one
+## Current release observations
+
+Checked 2026-09-29 against publisher metadata: [ansible-core](https://pypi.org/project/ansible-core/)
+2.21.4 and [Ansible community](https://pypi.org/project/ansible/) 14.4.0, both released
+2026-09-08. Core 2.22.0b1 and community 15.0.0a1 are previews, not stable defaults.
+These observations do not raise `scripts/requirements.txt` floors or replace historical
+runtime evidence below. For custom module/action failure semantics, apply
+`references/best_practices.md` section 5 and the
+[2.21 porting guide](https://docs.ansible.com/projects/ansible/latest/porting_guides/porting_guide_core_2.21.html).
+
+## Historical pinned values, and the command that re-derives each one
 
 Verified 2026-07-29. A version written into a file goes stale silently, so each
 row carries the command that re-derives it. `scripts/setup_tools.sh` compares

@@ -1,0 +1,1269 @@
+[
+  {
+    "skill": "alaa-algorithms-data-structures",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://go.dev/doc/diagnostics"
+    ],
+    "stable_preview": "Version-neutral diagnostics/complexity guidance",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "SKILL.md measured complexity and enforced input bounds remain supported.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-arvan-object-storage",
+    "group": "specialized",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle",
+      "https://docs.arvancloud.ir/en/object-storage/limits/"
+    ],
+    "stable_preview": "Current documented panel lifecycle capability; S3 API parity unknown",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "SKILL.md and references/15-environment-contract-deltas.md,20-s3-compatibility-matrix.md,SOURCES.md falsely deny panel lifecycle/noncurrent expiry/incomplete multipart cleanup. Correct UI capability; preserve immediate client Abort and API uncertainty.",
+    "disposition": "changed",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-async-messaging",
+    "group": "backend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.rabbitmq.com/blog/2026/04/23/rabbitmq-4.3-release",
+      "https://www.rabbitmq.com/release-information"
+    ],
+    "stable_preview": "RabbitMQ 4.3.6 stable",
+    "consumer_applicability": "Local guidance/fixtures checked; private kit phase, installed consumers and live broker proof unrun.",
+    "finding": "references/40-dead-letter-and-replay.md needs broker-version-qualified acquired-count vs delivery-count semantics: ordinary returns may not exhaust delivery limit; verify actual dead-letter outcome.",
+    "disposition": "changed",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified.",
+    "implementation_evidence": "backend-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-bale-provider",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.bale.ai/safir"
+    ],
+    "stable_preview": "Current unversioned Safir wire contract",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Core send/header/phone/idempotency content agrees; private notification command contract still consumer-owned.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-bash-shell",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html",
+      "https://github.com/koalaman/shellcheck/releases",
+      "https://github.com/mvdan/sh/releases",
+      "https://github.com/actions/checkout/releases"
+    ],
+    "stable_preview": "POSIX Issue8; ShellCheck0.11; shfmt3.14.1; checkout v7 stable",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/official-reference-map.md and validation-and-debugging.md require installed-tool checks; no stale operative guidance found.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "alaa-cc-orchestrator",
+    "group": "model",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://code.claude.com/docs/en/model-config",
+      "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5"
+    ],
+    "stable_preview": "Exact5.5 requires ClaudeCode2.1.284+; provider sonnet alias not exact pin",
+    "consumer_applicability": "Source policy/projections checked; live serving identity and calibration unrun.",
+    "finding": "Twelve controlled Sonnet5 projections need migration; blanket prohibition on verification instructions conflicts with5.5 low-effort completion caveat; use proportional required gates.",
+    "disposition": "changed",
+    "evidence": "model-research.json; model-evidence.md",
+    "verification": "16 focused executions/13 distinct commands reported passing; complete-contract read outstanding; independent gates pending",
+    "implementation_evidence": "model-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-cicd-laravel-postgres",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://laravel.com/framework/docs/database-testing"
+    ],
+    "stable_preview": "Laravel13 current; consumer PG unknown",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "SKILL.md separates quick SQLite checks and actual PostgreSQL proof; source map imposes no stale fixed major.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "alaa-code-intelligence-routing",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://developers.openai.com/api/docs/guides/agents-api/environments/security",
+      "https://code.claude.com/docs/en/sub-agents"
+    ],
+    "stable_preview": "Current runtime docs; project grants unknown",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "SKILL.md and references/80-agent-scoping.md distinguish sandbox from MCP authority correctly.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-codex-orchestrator",
+    "group": "model",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "skills/sohrab/AGENTS.md",
+      "https://developers.openai.com/api/docs/models"
+    ],
+    "stable_preview": "GPT6 profiles current; paired behavior is repository contract",
+    "consumer_applicability": "Source policy/projections checked; live serving identity and calibration unrun.",
+    "finding": "Mirror shared proportional verification/progress/recovery contract while preserving Codex-specific mechanics and pins.",
+    "disposition": "changed",
+    "evidence": "model-research.json; model-evidence.md",
+    "verification": "16 focused executions/13 distinct commands reported passing; complete-contract read outstanding; independent gates pending",
+    "implementation_evidence": "model-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-codex-runtime-ops",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://developers.openai.com/api/docs/guides/agents/sandboxes",
+      "https://learn.microsoft.com/powershell/"
+    ],
+    "stable_preview": "Current docs; Windows failures environment-specific",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Error-specific bounded recovery maintained; observations not universal guarantees.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-controlled-ops",
+    "group": "governance",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://getcomposer.org/doc/01-basic-usage.md",
+      "https://getcomposer.org/doc/articles/versions.md",
+      "skills/sohrab/AGENTS.md"
+    ],
+    "stable_preview": "Current Composer contracts; private release versions unknown",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "SKILL.md authorization waiver should preserve explicit named-action authorization but not extend generic approval-not-required language to separate publish/tag/Satis/adopter effects.",
+    "disposition": "changed",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-crockford-base32-codecs",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.rfc-editor.org/rfc/rfc9562.html"
+    ],
+    "stable_preview": "Published RFC9562",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "UUIDv7 is not a secret; existing rule agrees. Changed codecs would require four-language conformance harness.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-data-layer",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.postgresql.org/docs/18/",
+      "https://www.postgresql.org/docs/release/"
+    ],
+    "stable_preview": "PostgreSQL 18.6 stable; 19 Beta4 preview",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/20-schema-migrations-and-performance.md keeps consumer-server checks and dated PG16.13 lock measurements; no contradiction established.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-docker-production",
+    "group": "operations",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.docker.com/engine/release-notes/29/",
+      "https://github.com/docker/compose/releases"
+    ],
+    "stable_preview": "Engine29.8.1 and Compose5.5.1 stable",
+    "consumer_applicability": "Local source/available focused checks only; new shell fixtures and independent whole-candidate acceptance pending; no live deployment or consumer upgrade.",
+    "finding": "references/00-source-map.md,45-registry-and-mirrors.md and scripts/check-image-pinning.mjs register are stale29.6.2/5.3.1. Preserve historical compose validation claim in20-compose-authorship.md unless rerun.",
+    "disposition": "changed",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof.",
+    "implementation_evidence": "operations-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-extract-agent-lessons",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://developers.openai.com/api/docs/guides/agents",
+      "https://developers.openai.com/api/docs/guides/tools-skills"
+    ],
+    "stable_preview": "Current agent/skill guidance",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Reusable knowledge vs task-state separation and memory-owner publication correct.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-frontend-developer",
+    "group": "frontend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/GoogleChrome/lighthouse/releases",
+      "https://web.dev/articles/defining-core-web-vitals-thresholds"
+    ],
+    "stable_preview": "Lighthouse 13.4.1 stable",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/41-lighthouse-and-web-vitals.md is consistent with Lighthouse 13 and current LCP/INP/CLS guidance; no Lighthouse 14 statement must remain dated.",
+    "disposition": "no_change",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown."
+  },
+  {
+    "skill": "alaa-frontend-devops",
+    "group": "frontend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/vitejs/vite/releases"
+    ],
+    "stable_preview": "Vite 8.3.1 stable",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/00-source-map.md already gates on installed toolchain; no stale fixed Vite floor found.",
+    "disposition": "no_change",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown."
+  },
+  {
+    "skill": "alaa-frontend-doc-annotations",
+    "group": "frontend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html"
+    ],
+    "stable_preview": "Current official JSDoc reference",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/50-checkable-annotations.md dated fixture is historical; JS type-bearing JSDoc and TS documentation tag distinction remains supported.",
+    "disposition": "no_change",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown."
+  },
+  {
+    "skill": "alaa-gitlab-ci-cd",
+    "group": "operations",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.gitlab.com/releases/19/gitlab-19-4-released/",
+      "https://docs.gitlab.com/policy/maintenance/"
+    ],
+    "stable_preview": "GitLab/Runner19.4 stable;19.3/19.2 security maintenance",
+    "consumer_applicability": "Local source/available focused checks only; new shell fixtures and independent whole-candidate acceptance pending; no live deployment or consumer upgrade.",
+    "finding": "references/feature-version-notes.md latest snapshot outdated; templates/k8s-dind-tls.gitlab-ci.yml paired Docker29.6.2 pins need tag/runner evidence before update.",
+    "disposition": "changed",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof.",
+    "implementation_evidence": "operations-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-go-chi-development",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/go-chi/chi/releases",
+      "https://go.dev/doc/devel/release"
+    ],
+    "stable_preview": "Private kit phase and consumer go.mod unverified",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "No safe framework-pin change; current private kit phase must govern implementation choice.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-golang",
+    "group": "backend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://go.dev/doc/go1.27",
+      "https://go.dev/doc/devel/release"
+    ],
+    "stable_preview": "Go1.27.1 stable",
+    "consumer_applicability": "Local guidance/fixtures checked; private kit phase, installed consumers and live broker proof unrun.",
+    "finding": "references/70-modern-go-baseline.md incorrectly calls1.26 latest; update current stable claim while preserving consumer go.mod authority; assess stdversion vet/goroutine-leak guidance applicability.",
+    "disposition": "changed",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified.",
+    "implementation_evidence": "backend-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-golang-clean-code-principles",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://go.dev/doc/go1.27"
+    ],
+    "stable_preview": "Go1.27 current; private kit phase unknown",
+    "consumer_applicability": "Private kit phase remains unknown; preserve existing phase and resolve through canonical owner in the consumer repository.",
+    "finding": "SKILL.md embeds dated KIT_FIRST_STABILIZATION phase. Possible drift is inference only; preserve phase absent current private kit evidence and route current decisions to canonical phase owner.",
+    "disposition": "no_change_with_unknown",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-golang-fiber",
+    "group": "backend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/gofiber/fiber/releases/tag/v3.5.0",
+      "https://docs.gofiber.io/middleware/proxy#security"
+    ],
+    "stable_preview": "Fiber v3.5.0 stable",
+    "consumer_applicability": "Local guidance/fixtures checked; private kit phase, installed consumers and live broker proof unrun.",
+    "finding": "references/SOURCES.md,10-fiber-v3-core.md,45-v2-to-v3-migration.md stop at3.3.0; add version-qualified proxy SecurityPolicy, binding precedence and SkipUnmatchedRoutes; proxy consumers need egress/redirect-policy tests.",
+    "disposition": "changed",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified.",
+    "implementation_evidence": "backend-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-haproxy",
+    "group": "operations",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.haproxy.org/"
+    ],
+    "stable_preview": "HAProxy3.4.6 LTS stable",
+    "consumer_applicability": "Local source/available focused checks only; new shell fixtures and independent whole-candidate acceptance pending; no live deployment or consumer upgrade.",
+    "finding": "references/SOURCES.md,10-version-and-branch.md current3.4.2 snapshot stale; examples/kubernetes/haproxy-deployment.yaml and examples/helm/values*.yaml pin3.4.1. Verify tags before update; preserve historical haproxy -c claims unless rerun.",
+    "disposition": "changed",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof.",
+    "implementation_evidence": "operations-evidence.md",
+    "review_findings": [
+      "COR-6"
+    ],
+    "review_evidence": [
+      "review-correctness.json",
+      "review-security.json",
+      "review-release.json",
+      "review-observability.json"
+    ],
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-haproxy-lua",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.haproxy.org/"
+    ],
+    "stable_preview": "HAProxy3.4 manual; installed binary unknown",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/SOURCES.md routes to installed binary manual and HAProxy owner; historical2.8.16 failure measurement remains history.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "alaa-indexeddb-browser-storage",
+    "group": "frontend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://developer.chrome.com/docs/web-platform/storage-buckets",
+      "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria"
+    ],
+    "stable_preview": "Chromium 122+ support confirmed; current Firefox/Safari coverage unverified",
+    "consumer_applicability": "Local skill/examples verified; installed consumer, browser/media and Vue SFC integration unrun.",
+    "finding": "references/25-storage-buckets-api.md freezes July browser-share value 70.28% and categorical availability; refresh compatibility evidence or clearly retain dated observation plus feature detection.",
+    "disposition": "changed",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown.",
+    "implementation_evidence": "frontend-evidence.md",
+    "review_findings": [
+      "COR-1",
+      "SEC-2"
+    ],
+    "review_evidence": [
+      "review-correctness.json",
+      "review-security.json",
+      "review-release.json",
+      "review-observability.json"
+    ],
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-input-normalization",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.unicode.org/reports/tr15/"
+    ],
+    "stable_preview": "Current Unicode UAX15 dated2026-08-12",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Normalization/validation boundary sound; new Unicode version does not authorize private folding-corpus changes.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-k8s-helm",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://kubernetes.io/releases/",
+      "https://github.com/helm/helm/releases"
+    ],
+    "stable_preview": "Kubernetes1.37; Helm4.3.0/3.22.0 stable",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/version-awareness.md Sep26 snapshot current and authoring floor1.34 clearly separate.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "alaa-keyset-pagination",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://laravel.com/framework/docs/13.x/pagination",
+      "https://www.postgresql.org/docs/18/queries-limit.html"
+    ],
+    "stable_preview": "Laravel13/PG18 official references",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Unique ordering/indexed cursor traversal align; consumer Laravel version governs applicability.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-laravel-architecture",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://laravel.com/framework/docs/releases"
+    ],
+    "stable_preview": "Laravel13 current",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/source-map.md already routes current major; target composer.lock still authoritative.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-laravel-job-rabbitmq",
+    "group": "backend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.rabbitmq.com/blog/2026/04/23/rabbitmq-4.3-release",
+      "https://laravel.com/framework/docs/13.x/horizon",
+      "https://github.com/vyuldashev/laravel-queue-rabbitmq/blob/master/README.md"
+    ],
+    "stable_preview": "RabbitMQ4.3 delivery semantics; official Horizon requires Redis",
+    "consumer_applicability": "Local guidance/fixtures checked; private kit phase, installed consumers and live broker proof unrun.",
+    "finding": "references/driver-facts.md and SKILL.md delivery-limit wording need acquired/delivery split. Preserve Horizon prohibition: driver README advertises optional support, but no pinned-driver runtime proof overrides Laravel official configuration.",
+    "disposition": "changed",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified.",
+    "implementation_evidence": "backend-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-laravel-public-api-contract-pack",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://spec.openapis.org/oas/v3.2.1.html"
+    ],
+    "stable_preview": "OpenAPI3.2.1 published2026-09-10",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Version choice already governed by project tools/canonical spec; no blind floor increase.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-laravel-upgrade-all-packages",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://getcomposer.org/doc/03-cli.md"
+    ],
+    "stable_preview": "Current Composer CLI; installed version governs",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "update -W, why-not and lockfile truth guidance agrees.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-low-noise",
+    "group": "model",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5",
+      "https://developers.openai.com/api/docs/models"
+    ],
+    "stable_preview": "Current model output guidance; no live calibration",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Existing model-output references route to canonical policy; model author found no independent change required, full-read reconciliation pending.",
+    "disposition": "no_change",
+    "evidence": "model-research.json; model-evidence.md",
+    "verification": "16 focused executions/13 distinct commands reported passing; complete-contract read outstanding; independent gates pending"
+  },
+  {
+    "skill": "alaa-makefile",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://ftp.gnu.org/gnu/make/",
+      "https://github.com/checkmake/checkmake/releases"
+    ],
+    "stable_preview": "GNU Make4.4.1/checkmake0.3.2 stable",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/SOURCES.md versions align; installed toolchain still unknown.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "alaa-memory-os",
+    "group": "governance",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/vectorize-io/hindsight/releases",
+      "https://www.npmjs.com/package/%40vectorize-io/hindsight-coding-agents"
+    ],
+    "stable_preview": "Hindsight0.10.1/coding-agents0.7.0 stable; installed state unknown",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "SKILL.md says unreachable selected store must stop task, then recall fails open. Fix contradictory lead-in; preserve missing-adapter stop, fail-open recall and fail-closed writes/handoff.",
+    "disposition": "changed",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-minio-object-storage",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.min.io/aistor/administration/object-lifecycle-management/"
+    ],
+    "stable_preview": "AIStor lifecycle docs; OSS equivalence not assumed",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Multipart Abort rule supported; product/version unknown prevents version mandate.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-mongodb-patterns",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.mongodb.com/docs/manual/release-notes/8.3/",
+      "https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/"
+    ],
+    "stable_preview": "MongoDB8.3/current Laravel MongoDB docs; consumer applicability unknown",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "No stale rule established in references/source-map.md; availability does not authorize upgrade.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-mono-package",
+    "group": "frontend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/pnpm/pnpm/releases"
+    ],
+    "stable_preview": "pnpm 11.28.2 stable; client 11.10.0 remains historical observation",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/15-package-manager-modes.md is dated consumer evidence; newest release does not prove client upgrade.",
+    "disposition": "no_change",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown."
+  },
+  {
+    "skill": "alaa-observability-soc",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://opentelemetry.io/docs/collector/resiliency/",
+      "https://vector.dev/docs/reference/configuration/sinks/opentelemetry/"
+    ],
+    "stable_preview": "Vector OTLP sink beta, not stable promotion",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/90-source-map.md is version-neutral; production use remains consumer compatibility/rollback decision.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "alaa-octane-performance",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://laravel.com/framework/docs/13.x/octane",
+      "https://github.com/laravel/octane/releases"
+    ],
+    "stable_preview": "Laravel13 Octane current documentation",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Worker reuse, scoped state and Swoole-only concurrent-task guidance remain aligned; driver/config decide applicability.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-partitioned-table-fk-audit",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.postgresql.org/docs/18/release-18.html",
+      "https://www.postgresql.org/docs/18/ddl-partitioning.html"
+    ],
+    "stable_preview": "PG18 conditional capability; PG16.13 measured history retained",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/20-lock-safety-and-the-fix.md already gates partitioned NOT VALID FK by server major; no change needed.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-permission-generator",
+    "group": "specialized",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "skills/sohrab/AGENTS.md"
+    ],
+    "stable_preview": "Internal catalog contract; upstream version not applicable",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "SKILL.md hardcodes machine-specific catalog source_root, conflicting with repository portability. Read actual catalog source_root dynamically; preserve missing-checkout stop and prohibition on routing around missing sources.",
+    "disposition": "changed",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-php-clean-code",
+    "group": "backend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://laravel.com/framework/docs/releases",
+      "https://www.php.net/supported-versions.php"
+    ],
+    "stable_preview": "PHP8.5/Laravel13 supported baseline",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "SKILL.md baseline plus consumer composer.json authority remains current.",
+    "disposition": "no_change",
+    "evidence": "backend-research.json",
+    "verification": "Official-source and repository inspection, no runtime tests; consumer versions and private Go kit phase unverified."
+  },
+  {
+    "skill": "alaa-postman-collections",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://learning.postman.com/docs/postman-cli/postman-cli-collections",
+      "https://learning.postman.com/api-docs/api-reference/collections/create-collection"
+    ],
+    "stable_preview": "Postman CLIv3 YAML and APIv2.1 both current",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Existing v2.1 rationale for Insomnia/Newman remains valid; v3 availability alone does not justify conversion.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-project-constitution",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://owasp.org/projects/asvs?tab=main",
+      "https://wa.aws.amazon.com/index.en.html"
+    ],
+    "stable_preview": "ASVS5.0.0/current AWS guidance",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Freshness source map requires authoritative jurisdiction-specific evidence; facts and ratified obligations remain separate.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-prompting-guide",
+    "group": "model",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+      "https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide",
+      "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5",
+      "https://platform.claude.com/docs/en/build-with-claude/effort",
+      "https://code.claude.com/docs/en/model-config",
+      "https://developers.openai.com/api/docs/models"
+    ],
+    "stable_preview": "Sonnet5.5 released2026-09-28; GPT6 trio/Fable5.1/Opus5.5 current catalogs",
+    "consumer_applicability": "Source policy/projections checked; live serving identity and calibration unrun.",
+    "finding": "Canonical Sonnet5 role pins/guidance require5.5 migration, new effort/thinking/API/completion boundaries and explicit provider/runtime guards; historical guides retained.",
+    "disposition": "changed",
+    "evidence": "model-research.json; model-evidence.md",
+    "verification": "16 focused executions/13 distinct commands reported passing; complete-contract read outstanding; independent gates pending",
+    "implementation_evidence": "model-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-quasar-app-vite-v3",
+    "group": "frontend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/quasarframework/quasar/releases",
+      "https://github.com/vitejs/vite/releases",
+      "https://github.com/vuejs/core/releases"
+    ],
+    "stable_preview": "app-vite 3.10.0, Quasar UI 2.33.2, Vite 8.3.1, Vue 3.5.43 stable",
+    "consumer_applicability": "Local skill/examples verified; installed consumer, browser/media and Vue SFC integration unrun.",
+    "finding": "references/80-upstream-deltas-and-live-checks.md calls older versions latest; references/05-authority-and-api-lookup.md future-MCP wording stale. App-vite 3.10 PWA/SSG precache/icon changes need applicability checks. Optional MCP must not trigger installation.",
+    "disposition": "changed",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown.",
+    "implementation_evidence": "frontend-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-reliability-sla",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://sre.google/workbook/implementing-slos/",
+      "https://sre.google/workbook/error-budget-policy/"
+    ],
+    "stable_preview": "Current SRE guidance; private targets unknown",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Numerical ownership, security fail-closed and exercised degradation/error-budget consequence intact.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-repo-docs",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.github.com/en/contributing/writing-for-github-docs/best-practices-for-github-docs"
+    ],
+    "stable_preview": "Current official writing practices",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Source-backed claims/localization authority/placeholders sound. Legacy dual forms allowed; no independent sweep.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-security-review",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://api-security.owasp.org/editions/2023/en/0x00-header/"
+    ],
+    "stable_preview": "OWASP API Security2023 current edition found",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Fail-closed and auditable verdict remain aligned.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-services-contract",
+    "group": "specialized",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://openfga.dev/docs/interacting/consistency"
+    ],
+    "stable_preview": "OpenFGA current consistency modes; consumer version/settings unknown",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "references/26-request-time-authorization-openfga.md Check omits consistency and uses sidecar short-TTL cache. Document cache/staleness proof boundary; no invented immediate revoke guarantee/bound or blanket HIGHER_CONSISTENCY. Numeric fleet policy remains unresolved consumer decision.",
+    "disposition": "changed",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-shaka-player",
+    "group": "frontend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/shaka-project/shaka-player/releases/tag/v5.2.12"
+    ],
+    "stable_preview": "Shaka 5.2.12 stable released 2026-09-25",
+    "consumer_applicability": "Local skill/examples verified; installed consumer, browser/media and Vue SFC integration unrun.",
+    "finding": "SKILL.md and references/05-provenance-and-freshness.md call 5.2.3 current; update provenance and assess DRM teardown, destroy hang, low-latency retry, DASH key ID and caption fixes before altering API examples.",
+    "disposition": "changed",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown.",
+    "implementation_evidence": "frontend-evidence.md",
+    "review_findings": [
+      "COR-2",
+      "COR-3",
+      "COR-4",
+      "OBS-1"
+    ],
+    "review_evidence": [
+      "review-correctness.json",
+      "review-security.json",
+      "review-release.json",
+      "review-observability.json"
+    ],
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-signoz-clickhouse-docs",
+    "group": "operations",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/SigNoz/signoz/releases",
+      "https://packages.clickhouse.com/",
+      "https://signoz.io/docs/operate/clickhouse/clickhouse-queries/",
+      "https://signoz.io/docs/alerts-management/trace-based-alerts/"
+    ],
+    "stable_preview": "SigNoz0.143.0; ClickHouse26.9.4.3 stable/26.8.13.2 LTS",
+    "consumer_applicability": "Local source/available focused checks only; new shell fixtures and independent whole-candidate acceptance pending; no live deployment or consumer upgrade.",
+    "finding": "references/90-versions.md upstream ClickHouse snapshot stale; never infer SigNoz bundled version. SQL query/trace-alert docs disagreement remains explicit.",
+    "disposition": "changed",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof.",
+    "implementation_evidence": "operations-evidence.md",
+    "latest_observation": "Writer refreshed official ClickHouse package feed on 2026-09-29: stable26.9.5.2 / LTS26.8.14.3, released2026-09-28. Supersedes earlier research snapshot; SigNoz bundled25.12.5 unchanged.",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-sms-provider-mediana",
+    "group": "specialized",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://ippanelcom.github.io/Edge-Document/docs/send/pattern/"
+    ],
+    "stable_preview": "Current Edge pattern contract; account version unknown",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "references/10-send-contract.md calls vendor docs unverified July27; official pattern endpoint/header/single recipient/placeholder semantics now corroborated. Verify other affected modes before broad provenance upgrade.",
+    "disposition": "changed",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-system-design",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://wa.aws.amazon.com/index.en.html"
+    ],
+    "stable_preview": "Current architecture guidance",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Mixed-version, rollback and deprecation proof preserved; private service compatibility unknown.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-testing-strategy",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://martinfowler.com/articles/practical-test-pyramid.html",
+      "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals"
+    ],
+    "stable_preview": "Current primary-author testing/agent guidance",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Plausible defect and negative-effect checks, four validity conditions and repo-policy precedence intact.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "alaa-trust-gateway-auth",
+    "group": "specialized",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://www.rfc-editor.org/info/rfc8725/"
+    ],
+    "stable_preview": "Published JWT BCP",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Token/trusted-header boundary aligned; private Auth wire contract requires consumer evidence for changes.",
+    "disposition": "no_change",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified."
+  },
+  {
+    "skill": "alaa-ui-ux-design-system",
+    "group": "frontend",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/position-anchor",
+      "https://www.w3.org/WAI/standards-guidelines/wcag/"
+    ],
+    "stable_preview": "WCAG 2.2 conformance; no established CSS tier promotion",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/72-modern-css-baseline-tiers.md requires browser rechecks; unknown consumer browser matrix prevents promoting anchor positioning support.",
+    "disposition": "no_change",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown."
+  },
+  {
+    "skill": "alaa-vue-typescript-clean-code",
+    "group": "frontend",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/vuejs/core/releases",
+      "https://github.com/microsoft/TypeScript/releases",
+      "https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/"
+    ],
+    "stable_preview": "Vue 3.5.43 stable, 3.6.0-rc.8 preview; TS 7.0.2 stable but Vue/Volar still need TS6 programmatic API",
+    "consumer_applicability": "Local skill/examples verified; installed consumer, browser/media and Vue SFC integration unrun.",
+    "finding": "references/20-typescript-composition-contract.md preview guard remains correct; references/24-typescript-project-and-antipatterns.md should ground TS6 rationale in direct TS7 compiler API limitation instead of absent Quasar support.",
+    "disposition": "changed",
+    "evidence": "frontend-research.json",
+    "verification": "Official-source and repository inspection; no runtime checks; consumer versions unknown.",
+    "implementation_evidence": "frontend-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "alaa-workflow",
+    "group": "governance",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://developers.openai.com/api/docs/guides/agents/sandboxes"
+    ],
+    "stable_preview": "Current runtime guidance; host details version-specific",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Plan-first resume, evidence-backed ticks and durable handoff already specified; model assumptions routed to owner.",
+    "disposition": "no_change",
+    "evidence": "governance-research.json",
+    "verification": "Official-source and repository inspection; runtime isolation, MCP grants and private service state unknown. No memory writes."
+  },
+  {
+    "skill": "ansible-generator",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.ansible.com/projects/ansible/latest/reference_appendices/release_and_maintenance.html"
+    ],
+    "stable_preview": "Core2.21 stable/2.22 preview",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "Routes source register to validator owner; no independent version bump or template floor justified.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "ansible-validator",
+    "group": "operations",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://pypi.org/project/ansible-core/",
+      "https://pypi.org/project/ansible/",
+      "https://github.com/ansible/ansible-lint/releases",
+      "https://docs.ansible.com/projects/ansible/latest/porting_guides/porting_guide_core_2.21.html"
+    ],
+    "stable_preview": "Core2.21.4/community14.4.0/lint26.6.0 stable; core2.22.0b1 preview",
+    "consumer_applicability": "Local source/available focused checks only; new shell fixtures and independent whole-candidate acceptance pending; no live deployment or consumer upgrade.",
+    "finding": "references/source-map.md,module_alternatives.md and scripts/requirements.txt old2.21.2/14.2.0 snapshots. Core2.21 deprecates inferring failed from nonzero rc for custom action/module returns; describe explicit failed semantics.",
+    "disposition": "changed",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof.",
+    "implementation_evidence": "operations-evidence.md",
+    "review_findings": [
+      "COR-5",
+      "SEC-3"
+    ],
+    "review_evidence": [
+      "review-correctness.json",
+      "review-security.json",
+      "review-release.json",
+      "review-observability.json"
+    ],
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "caas-arvan-kuber",
+    "group": "operations",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.arvancloud.ir/en/cloud-container/",
+      "https://kubernetes.io/releases/"
+    ],
+    "stable_preview": "Upstream Kubernetes1.37 stable; vendor supported version unknown",
+    "consumer_applicability": "Local source/available focused checks only; new shell fixtures and independent whole-candidate acceptance pending; no live deployment or consumer upgrade.",
+    "finding": "references/arvan-capability-matrix.md upstream1.34-1.36 range stale; do not infer vendor capability/floor from upstream release.",
+    "disposition": "changed",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof.",
+    "implementation_evidence": "operations-evidence.md",
+    "review_findings": [
+      "SEC-1",
+      "REL-1"
+    ],
+    "review_evidence": [
+      "review-correctness.json",
+      "review-security.json",
+      "review-release.json",
+      "review-observability.json"
+    ],
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "clickhouse-performance-schema-ops",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://packages.clickhouse.com/"
+    ],
+    "stable_preview": "ClickHouse26.9.4.3 stable/26.8.13.2 LTS",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/90-source-map.md version-neutral; target-server feature proof remains required.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "jitsi-platform-architect",
+    "group": "specialized",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/jitsi/docker-jitsi-meet/releases",
+      "https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker/"
+    ],
+    "stable_preview": "stable-11248 current; rootless/internal8000/8443 since11146",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "references/90-source-map.md latest10888 stale;30-deployment-substrate.md needs version-qualified rootless/port/topology guidance, not unsupported OpenShift restricted claim.",
+    "disposition": "changed",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "service-runtime-kit-governance",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://docs.docker.com/compose/compose-file/"
+    ],
+    "stable_preview": "Current Compose specification; kit/consumer pins unknown",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/source-map.md uses actual renderer/validator and consumer version; no source-backed contradiction found.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  },
+  {
+    "skill": "tusd-upload-platform",
+    "group": "specialized",
+    "status": "implemented_verified",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://github.com/tus/tusd/releases",
+      "https://tus.io/protocols/resumable-upload"
+    ],
+    "stable_preview": "tusd2.10.1 current; tus1.0 stable protocol",
+    "consumer_applicability": "Local guidance, structure and protected-contract evidence; live provider/runtime/deployment behavior unrun.",
+    "finding": "references/10-source-map.md latest2.9.2 stale.2.10.1 fixes IETF/deferred MaxSize enforcement and S3 truncation. Preserve MaxSize doctrine and private consumer2.8.0 historical snapshot; conditional upgraded-consumer tests.",
+    "disposition": "changed",
+    "evidence": "specialized-research.json",
+    "verification": "Official-source and repository inspection only; private consumers, provider accounts and live compatibility unverified.",
+    "implementation_evidence": "specialized-evidence.md",
+    "independent_review": "Candidate2 initial reviews plus candidate3/4 affected closure reports; actual consumer adoption and calibration remain unrun.",
+    "final_snapshot": "candidate-8",
+    "final_review": "review-instructions-docs-candidate8.json; prior executable closure reports",
+    "final_verification": "verification-candidate8-final.json plus verification-candidate8-diagnostic-closure.json and parentfinalstatusgate"
+  },
+  {
+    "skill": "vector-rust-observability-pipelines",
+    "group": "operations",
+    "status": "assessed_no_change",
+    "checked_on": "2026-09-29",
+    "sources": [
+      "https://vector.dev/releases/"
+    ],
+    "stable_preview": "Vector0.58.0 stable",
+    "consumer_applicability": "Existing guidance retained; no consumer upgrade is inferred from upstream freshness.",
+    "finding": "references/80-version-and-upgrade-deltas.md Sep26 snapshot remains current.",
+    "disposition": "no_change",
+    "evidence": "operations-research.json",
+    "verification": "Read-only official-source/repository research; no consumer manifest, binary, image or live-service compatibility proof."
+  }
+]

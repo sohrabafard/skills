@@ -1,0 +1,26 @@
+{
+  "verdict": "APPROVED",
+  "reviewer": "instruction_review",
+  "configured": "gpt-6-astra/high",
+  "requested": "no override",
+  "observed": "unknown",
+  "snapshot": "candidate-8",
+  "manifest_sha256": "78de558ae3d3ef8b60e26f0860636952652ed198ad6595a7a7527838c6d1672f",
+  "source_hashes": "378/378 match;25skills",
+  "findings": [],
+  "closed": {
+    "R1": "Go/Vue/Jitsi original prerequisite scope and mandatoryloading retained",
+    "R2": "All12GitLab childroutes explicitconditions/correctdestinations",
+    "R3": "Go/Fiber/HAProxy canonical siblingcontent reached"
+  },
+  "evidence": "Reconstructed candidate6 hashes for117changedfiles:11precise prose repairs plus106EOF-only changes; noadded/missingpaths",
+  "carry_forward": "Candidate6 fidelity and prior executableapprovals valid; D1-D8 closed",
+  "grades": {
+    "GREEN": 232,
+    "YELLOW": 73,
+    "ORANGE": 18,
+    "EXEMPT_ATOMIC": 11,
+    "eligible_RED": 0
+  },
+  "limits": "No test/live/deployment/calibrationrerun. Historical renameoperation limits remain. Read-only conduct; runtimeenforcementunknown."
+}

@@ -16,7 +16,7 @@ Nothing in Arvan's public documentation describes any of the platform observatio
 1. A ServiceAccount principal is namespace-scoped and is evaluated as `system:serviceaccount:<namespace>:<name>`.
 2. A `RoleBinding` subject matches on exact kind, name, and namespace. There is no fuzzy matching and no aliasing in the authorizer.
 3. An in-cluster client authenticates with its mounted ServiceAccount token and no kubeconfig.
-4. `kubectl auth can-i --as=...` performs a `SubjectAccessReview` **on behalf of the caller**, so it requires impersonation rights for the caller. A `no` can mean the caller cannot impersonate rather than that the subject lacks the permission.
+4. `kubectl auth can-i --as=...` requires the caller to impersonate that principal before the access review is evaluated. An impersonation error is unavailable subject proof, not a subject denial.
 
 ## What has been observed on Arvan CaaS
 
@@ -35,19 +35,16 @@ Nothing in Arvan's public documentation describes any of the platform observatio
 
 ## The conclusive check
 
-Impersonation asks "may the caller act as this subject, and may that subject do X"; a token asks only the second question. Issue a token for the ServiceAccount and use it:
+Use an already authorized context authenticated as the ServiceAccount. Verify its identity before attributing permission results to it:
 
 ```bash
-TOKEN="$(kubectl -n NS create token SA)"
-kubectl --token="$TOKEN" -n NS auth can-i create pods
-kubectl --token="$TOKEN" -n NS auth can-i create secrets
-unset TOKEN
+kubectl auth whoami -o 'jsonpath={.status.userInfo.username}'
+bash scripts/verify-cluster.sh NS SA
 ```
 
-This performs a `SelfSubjectAccessReview` as the ServiceAccount itself, with no impersonation involved, so the answer is about the real principal. Two caveats, both observable:
+The username must equal `system:serviceaccount:NS:SA`, using the namespace form the server authenticates. The helper returns `2` when identity discovery is unsupported, denied, empty or mismatched; it never substitutes caller permissions for ServiceAccount proof. This can block older clusters without identity discovery, and does not raise their supported-version floor. Obtain an authorized identity-proof path before claiming the ServiceAccount is ready.
 
-- Minting the token requires `create serviceaccounts/token` in that namespace for the caller. When that fails, say so and fall back to `--as`, labelling the result indicative rather than conclusive.
-- The token is a live credential for the lifetime it was issued with. Do not echo it, do not put it in a file, and unset it when finished. `scripts/verify-cluster.sh` runs this check and never prints the token.
+The helper creates no credential and performs no impersonation. Credential issuance is a separate authorized operation outside this read-only procedure; never paste credentials into commands, reports or logs. API catalog visibility establishes available kinds, not authorization to list their objects.
 
 ## Reasoning guardrails
 
@@ -66,4 +63,4 @@ kubectl -n NS get serviceaccount SA -o yaml
 kubectl -n NS get events --sort-by=.lastTimestamp | grep -i forbidden
 ```
 
-`bash scripts/verify-cluster.sh NS SA` collects all of it, plus the conclusive check, in one read-only pass.
+`bash scripts/verify-cluster.sh NS SA` collects discovery, permission and RoleBinding evidence in one read-only pass; collect ServiceAccount objects and events separately when needed.

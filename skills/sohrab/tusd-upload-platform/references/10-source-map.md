@@ -25,12 +25,15 @@ This is the only file in this skill that carries a version string. Every asset t
 
 | Artifact | Version | Read on | Read from |
 |---|---|---|---|
-| `tus/tusd` latest release | `v2.9.2`, published 2026-03-11 | 2026-04-24 | GitHub releases |
+| `tus/tusd` latest release | `v2.10.1`, published 2026-09-16 | 2026-09-29 | https://github.com/tus/tusd/releases/tag/v2.10.1 |
+| Historical upstream baseline for existing handler/storage details | `v2.9.2` | 2026-04-24 | prior source snapshot; not re-verified at the latest tag |
 | `tus/tus-js-client` latest stable | `v4.3.1`; a `v5.0.0-pre2` prerelease exists and is not stable | 2026-04-24 | GitHub releases |
 | `github.com/tus/tusd/v2` module used by the Ala service | `v2.8.0` | 2026-07-27 | Ala `tusd` `go.mod` |
 | Ala `tusd` Go toolchain | `go 1.25.0` | 2026-07-27 | Ala `tusd` `go.mod` |
 
-The Ala service is one minor release behind the latest upstream tag. Confirm both numbers before asserting that a fixed upstream bug is fixed in the Ala service.
+The browser and Ala rows are historical snapshots, not current installed-version claims. The latest-release refresh covers release notes only; existing handler/storage details retain the historical baseline and need re-verification at the consumer's pin. Re-read its lock/module and image pin before asserting it contains an upstream fix.
+
+The latest tusd release fixes `MaxSize` enforcement for IETF draft creates and deferred uploads with `Content-Length`, plus silent S3 truncation of deferred-length uploads. Before consumer adoption, run the relevant size, integrity and resume gates in `55-tests.md` against its actual enabled protocols and storage backend. Release-note evidence does not prove the consumer is fixed; preserve its existing cap and protocol policy.
 
 ## Freshness triggers
 

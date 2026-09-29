@@ -1,0 +1,11 @@
+{
+  "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "branch": "codex/sohrab-sonnet55-modernization",
+  "files": 140,
+  "skills": 25,
+  "manifest_sha256": "2809135720497a6214f06123176c1c09ce422259b3953726e92317de1e85c614",
+  "excluded": "skills/sohrab/alaa-workflow/outputs/20260929-modernization",
+  "selection": "git diff HEAD plus untracked source; raw bytes SHA256; sorted hash-double-space-path LF lines",
+  "publication": "uncommitted; preserve existing staging",
+  "independent_gates": "pending"
+}

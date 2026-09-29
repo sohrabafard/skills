@@ -8,9 +8,13 @@ to start from. Every rule in this skill is stated in exactly one of these files.
 | Open this | When the task is |
 |---|---|
 | `10-version-and-branch.md` | choosing a branch, reading `haproxy -vv`, planning an upgrade, or checking whether a directive exists in the branch that will run the config |
-| `20-core-config-and-timeouts.md` | structuring a config, the `defaults` association rule, timeouts, retries, connection ceilings, maps, environment variables and the config preprocessor, or diagnosing a live symptom |
+| `20-core-config-and-timeouts/10-defaults-association.md` | naming and associating `defaults` sections with frontends, backends and listeners |
+| `20-core-config-and-timeouts/20-timeouts-and-retries.md` | choosing timeouts, retry counts or redispatch behavior |
+| `20-core-config-and-timeouts/30-connection-capacity.md` | connection ceilings, queueing or backend connection reuse |
+| `20-core-config-and-timeouts/40-maps-and-preprocessor.md` | choosing map files instead of ACL chains, or using environment variables and preprocessing |
+| `20-core-config-and-timeouts/50-symptom-diagnosis.md` | diagnosing bursts of 502/503, tail latency, file descriptor exhaustion or backend flapping |
 | `25-tls-and-mtls.md` | certificates, `crt-store`, `ssl-f-use`, TLS version and ticket policy, SNI, client certificates, backend TLS, or ACME |
-| `30-quic-http3.md` | QUIC or HTTP/3 on either side, or deciding what to do when `haproxy -vv` reports no QUIC |
+| `30-quic-http3.md` | Before any QUIC configuration, read its build-requirements guide; then follow the frontend, backend, or tuning route for the mode being changed, or the build guide when `haproxy -vv` reports no QUIC |
 | `40-rate-limiting-and-peers.md` | stick tables, rate limiting, abuse counters, `peers`, or what a limiter does when a peer is gone |
 | `50-caching-routing-and-rewrites.md` | caching, `Cache-Control`, compression, path rewrites, deep-link fallback, or backend selection |
 | `60-observability-and-runtime.md` | the Runtime API, the Prometheus exporter, the `log-format` string, tracing, or persistent stats |

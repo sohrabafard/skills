@@ -42,6 +42,19 @@ Rules:
   the validator step" (https://docs.gofiber.io/api/bind, verified 2026-07-26) - so a map
   destination is an unvalidated request body.
 
+### Multiple binding sources (v3.5.0)
+
+`Bind().All()` accepts a top-level `binding_source` tag to set source precedence, cached by struct
+type; omitted sources are excluded and invalid names fail binding. Use a single-source binder
+for a single-source contract. For a combined DTO, state the accepted order and test conflicting
+values from URI, body, query, headers and cookies; do not infer precedence from field order.
+Binding precedence grants no authority: keep trusted identity separate from request DTOs and apply
+`/alaa-trust-gateway-auth` when a client selector conflicts with trusted context.
+
+Verified 2026-09-29: https://github.com/gofiber/fiber/releases/tag/v3.5.0 and
+https://docs.gofiber.io/api/bind/#custom-precedence. Earlier v3 consumers must check their tag
+before using `binding_source`.
+
 ### What Fiber's binder does not do
 
 The kit's `httpkit.Bind[T]` enforces four things beyond decoding: it requires the JSON content type,
@@ -112,7 +125,7 @@ Run the focused test after each step, then `go test ./...` before calling the wo
 value copied out of a `fiber.Ctx`.
 
 Test design beyond this loop - what to test at which layer, fixture strategy, coverage policy - is
-owned by `/alaa-testing-strategy` (`$alaa-testing-strategy`).
+owned by `/alaa-testing-strategy`.
 
 ## Handler tests
 

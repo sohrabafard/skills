@@ -1,0 +1,46 @@
+{
+  "state": "Await repair2 freeze and candidate7; candidate6 partial receipt persisted",
+  "authority": "Independent verifier, read-only source, evidence artifacts only; no install/stage/commit/provider/consumer calls",
+  "read_first": [
+    "candidate.json",
+    "candidate.sha256",
+    "documentation-foundation-evidence.json",
+    "documentation-operations-evidence.json",
+    "verification-candidate3.json",
+    "documentation-grades.json"
+  ],
+  "checks": [
+    {
+      "gate": "Source identity and scope",
+      "action": "Reconcile HEAD, HEAD-relative+untracked exactpathset/rawhashes; compare prior snapshot and preserve index; no root/vendor/installed changes"
+    },
+    {
+      "gate": "Root structure and fleetreferences",
+      "action": "Run once on final new docs and routing; rootindex/lifecycle only if affected otherwise cite reconciled priorPASS"
+    },
+    {
+      "gate": "Markdown links and size",
+      "action": "Run links on every touched doc and newchild; linebudget only individually eligible list. No allow-red. Foundation writer used a red_allowlist for three claimed atomic exemptions; preserve that observation but do not accept it as human approval or the final size gate. Exclude independently accepted atomic files from size grading, not from link checking. Validate every yellow/orange/exemption reason and coverage count"
+    },
+    {
+      "gate": "Owner validation",
+      "action": "Run only manifest/reference/pack gates affected by docs changes, based on consumercheckers; unchanged executable tests cited. Never modify validator or golden expectation to manufacturepass"
+    },
+    {
+      "gate": "Workflow and evidence",
+      "action": "Validate final plan/checkpoint after parent updates;69assessment uniqueexactcoverage and evidenceexistence; tracked+untracked whitespace including artifacts"
+    },
+    {
+      "gate": "Evidence provenance",
+      "action": "Reconcile cited writerShellCheck5/Ansible5/render12/Shaka and parentrealIDB9 against unchanged relevantinputs; preserve optionalcomment-scanFAIL and historicalWindowsblocks. Record exact priornativeHAProxy10 command and observedtoolversions ifavailable"
+    }
+  ],
+  "resource_policy": "BelowNormal/twoCPU for CPU-heavy via ownerwrapper, boundedtime; no repeatedpassedchecks without affectedinputs",
+  "return": "Precise ran/cited matrix, snapshot/toolversions, exits and counts, explicit blockers/limits; evidence-only JSON ifpermitted",
+  "capture_recovery": "Diagnose prior empty output capture from actual tool result shape. Use Python subprocess.run stdout/stderr/returncode directly into durable logs and JSON; do not parse rendered tool text. Batch paths at most70 to avoid Windows argv limit. Record exact path union. No allow-red. Capture exceptions and timeout as failed, not empty-pass.",
+  "candidate6_receipt": "verification-candidate6.json",
+  "workflow_repair": "Parent corrected Phase D HEAD/SHA256/paths snapshot and checkpoint Touched surfaces; native workflow validator now exits0. Recheck final statuses after parent closure.",
+  "native_capture_warning": "Invoke-AlaaLowPriority.ps1 writes child output via Console.Out/Console.Error, not PowerShell pipeline objects. Do not capture with assignment or pipeline. Use its StdoutPath/StderrPath parameters or subprocess pipes; return status via actual process exit. This source fact is verified; whether it caused candidate6 loss still needs reconciliation with actual invocation.",
+  "template_link_scope": "check_markdown_links.py run_checks filters suffix .md at line283.334 document rows include2 .md.template, so native links cover332 Markdown. Record template checks separately using actual targets/approved prior template review; never claim334 native-checked.",
+  "repair2_scope_proof": "Use candidate6 manifest and repair2 receipts. Exactly11 authorized semantic paths; every other changed source must be Markdown EOF-only. For EOF-only hash proof, reconstruct preimage by appending the removed original LF/CRLF emptyline bytes to current content and compare its SHA256 with candidate6. No source additions/removals or non-Markdown changes allowed."
+}

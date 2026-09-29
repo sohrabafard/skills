@@ -2,11 +2,11 @@
 
 Organised by what you are facing rather than by phase number, so an agent that arrives mid-incident does not read three ladders to reach the one paragraph it needs.
 
-Everything generic — chart shape, validation gates, rollout debugging — belongs to `/alaa-k8s-helm` (`$alaa-k8s-helm`). What is here is the Arvan-specific step or the Arvan-specific cause.
+Everything generic — chart shape, validation gates, rollout debugging — belongs to `/alaa-k8s-helm`. What is here is the Arvan-specific step or the Arvan-specific cause.
 
 ## A. Starting a delivery task
 
-1. **Detect the line.** Run the Step 1 block in `SKILL.md`, or `bash scripts/verify-cluster.sh NS [runner-sa]`. Write the answer into the deliverable. Everything after this depends on it.
+1. **Detect the line.** Run the Step 1 block in `SKILL.md`, or `bash scripts/verify-cluster.sh NS [runner-sa]`. Report the server version or unknown, discovered kinds, and permissions separately.
 2. **Read the budget.** `kubectl -n NS get resourcequota,limitrange -o yaml`. The LimitRange tells you whether `ephemeral-storage` is expected and what maximum a container may request; the ResourceQuota tells you how many replicas the namespace can hold at all.
 3. **Read the existing exposure.** The jsonpath in `references/arvan-constraints.md` section 4 tells you which exposure mode the cluster already uses. Match it rather than introducing a second one.
 4. **State the constraints that are active** for this workload — parity, stateless-only scaling, disk lifecycle, exposure mode — and only those. A constraint listed but not applicable is noise that hides the ones that matter.
@@ -22,7 +22,7 @@ Symptom: `helm lint` or `helm template` returns an error, so nothing reached the
 
 1. `bash scripts/render-helm.sh --chart CHART --namespace NS --values values.yaml` reproduces it deterministically and writes nothing world-readable.
 2. Almost always one of: a wrong chart path, a dependency that was never built (`helm dependency build`), or YAML indentation or quoting inside a template.
-3. This is a chart problem, not an Arvan problem. `/alaa-k8s-helm` (`$alaa-k8s-helm`) owns it from here.
+3. This is a chart problem, not an Arvan problem. `/alaa-k8s-helm` owns it from here.
 
 ## C. Admission rejected the manifest
 
@@ -39,13 +39,13 @@ Symptom: `no matches for kind` or `the server could not find the requested resou
 1. Re-run the line detection. A manifest written for the wrong column produces exactly this.
 2. Look the kind up in `references/arvan-capability-matrix.md` for the discovered line.
 3. If the kind is absent on that line, follow "How to act when a kind is absent" in the matrix: say so, offer the alternative, and do not emit the object with a hopeful comment.
-4. If discovery says the kind **is** served and the matrix says it is not, discovery wins. Run `bash scripts/summarize-openapi.sh --check` and record that the vendored spec no longer describes the platform, because that is the signal that Arvan has upgraded.
+4. If discovery says the kind **is** served and the matrix says it is not, discovery wins. Run `bash scripts/summarize-openapi.sh --check` and record that the vendored spec no longer describes the platform, because the live surface differs; it does not by itself prove a vendor version upgrade.
 
 ## E. A job is forbidden while the release looks healthy
 
-This is the alias-versus-canonical case and it has its own file. Collect the evidence and run the conclusive token check in `references/arvan-rbac-namespace-facts.md` **before** touching any RoleBinding. Broadening a binding here grants a real permission to the wrong principal and leaves the mismatch in place.
+This is the alias-versus-canonical case and it has its own file. Collect the evidence and run the existing-context identity and permission checks in `references/arvan-rbac-namespace-facts.md` **before** touching any RoleBinding. Broadening a binding here grants a real permission to the wrong principal and leaves the mismatch in place.
 
-Two adjacent causes to rule out at the same time, both owned by `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`): the job pod's pull secrets, and a runner job that tried `kubectl get namespace` or `helm --create-namespace` and died on a scope it never had.
+Two adjacent causes to rule out at the same time, both owned by `/alaa-gitlab-ci-cd`: the job pod's pull secrets, and a runner job that tried `kubectl get namespace` or `helm --create-namespace` and died on a scope it never had.
 
 ## F. The rollout never completed
 
@@ -53,12 +53,12 @@ Symptom: `helm upgrade` returned, and the pods are not ready.
 
 1. `kubectl -n NS rollout status deploy/NAME` and `kubectl -n NS get events --sort-by=.lastTimestamp`.
 2. If the pods are `Pending`, read the ResourceQuota: on a tenant platform, exhausted quota looks exactly like insufficient cluster capacity.
-3. If the pods are `ImagePullBackOff`, the pull Secret is the cause; `/alaa-docker-production` (`$alaa-docker-production`) owns registry and image policy and `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns the runner's copy of it.
-4. Everything else — probe timing, `maxSurge`, PDB deadlock, endpoint-removal races — is `/alaa-k8s-helm` (`$alaa-k8s-helm`) `references/failure-and-load.md`.
+3. If the pods are `ImagePullBackOff`, the pull Secret is the cause; `/alaa-docker-production` owns registry and image policy and `/alaa-gitlab-ci-cd` owns the runner's copy of it.
+4. Everything else — probe timing, `maxSurge`, PDB deadlock, endpoint-removal races — is `/alaa-k8s-helm` `references/failure-and-load.md`.
 
 ## G. A stateful workload needs to scale
 
-There is no in-place answer. Arvan disables both manual and automatic scaling while persistent storage is enabled. The only paths are to run more independent instances with their own disks, or to detach storage, which restarts the application. Both are runbook actions, and the RUNBOOK must contain the chosen one before anyone needs it. `/alaa-reliability-sla` (`$alaa-reliability-sla`) decides which is acceptable for the service's availability target.
+There is no in-place answer. Arvan disables both manual and automatic scaling while persistent storage is enabled. The only paths are to run more independent instances with their own disks, or to detach storage, which restarts the application. Both are runbook actions, and the RUNBOOK must contain the chosen one before anyone needs it. `/alaa-reliability-sla` decides which is acceptable for the service's availability target.
 
 ## H. Rotating a secret or a registry credential
 

@@ -1,0 +1,62 @@
+{
+  "snapshot": "candidate-8",
+  "candidate_manifest_sha256": "78de558ae3d3ef8b60e26f0860636952652ed198ad6595a7a7527838c6d1672f",
+  "source_hash_audit": {
+    "paths": 378,
+    "mismatches": 0,
+    "missing": 0
+  },
+  "candidate4_nonmarkdown_reconciliation": {
+    "input_count": 44,
+    "current_changed_paths": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json"
+    ],
+    "runtime_executable_proof_inputs_unchanged": true
+  },
+  "candidate6_paired_owner_reconciliation": {
+    "recorded_paths": 40,
+    "recorded_mismatches": [],
+    "independent_pathset_reconciliation": "not possible from receipt; receipt does not enumerate the 40 paths"
+  },
+  "idb_owner_gates": {
+    "pack": {
+      "stdout_log": "candidate8-idb-pack.stdout.log",
+      "observed_stdout": "OK: structure, description, triggers, storage boundaries, classification and manifest all validate",
+      "recorded_exit": 0
+    },
+    "references": {
+      "stdout_log": "candidate8-idb-references.stdout.log",
+      "observed_stdout": "OK: 21 reference file(s) routed, every router path resolves",
+      "recorded_exit": 0
+    }
+  },
+  "parent_candidate8_checks": {
+    "whitespace_exit": 0,
+    "targeted_idb_links_exit": 0,
+    "robust_eof_documents": 334,
+    "eof_findings": 0,
+    "candidate7_to8_changed_paths": 1,
+    "changed_path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+    "delta": "removed LF CR LF; previous invalid simple EOF check preserved as superseded"
+  },
+  "browser_inputs": {
+    "count": 25,
+    "mismatches": 0,
+    "cases": 9
+  },
+  "workflow": {
+    "argv": [
+      "C:\\Users\\Alaa-AI\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe",
+      "-B",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.md"
+    ],
+    "cwd": "<repo>",
+    "stdout": "Validation completed without blocking errors (profile: resumable).",
+    "exit_code": "unknown: tool result exit metadata was not captured; no rerun authorized"
+  },
+  "haproxy_native_selftest": "historical exact argv unavailable in this receipt; not independently reconfirmed",
+  "source_mutations": false,
+  "overall": "PASS with workflow exit-metadata limitation and paired-owner pathset unenumerated"
+}

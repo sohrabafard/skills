@@ -2,7 +2,7 @@
 
 ## The doctrine this file implements
 
-The Ala fleet has one rule for shared components: change the shared component, release it, then bump the pinned reference downstream. `alaa-services-contract/references/15-deployment-and-runtime-contract.md` states it for `service-ci-kit` and `/alaa-services-contract` ($alaa-services-contract) owns it. This file applies that doctrine to a Composer package instead of a CI kit; it does not restate or amend it.
+The Ala fleet has one rule for shared components: change the shared component, release it, then bump the pinned reference downstream. `alaa-services-contract/references/15-deployment-and-runtime-contract.md` states it for `service-ci-kit` and `/alaa-services-contract` owns it. This file applies that doctrine to a Composer package instead of a CI kit; it does not restate or amend it.
 
 **One deliberate exception.** There, CI performs the release; here a developer performs it by hand, because the Ala Satis instance distributing this package is a local Docker stack with no CI runner attached, so no pipeline can rebuild its index. The approval gate in `SKILL.md` substitutes for CI's review. The exception ends the moment a pipeline can push the tag and rebuild the index: move this sequence into CI then and delete the manual steps, rather than keeping both.
 
@@ -24,10 +24,10 @@ Use this when the user asks to release, publish, push, or make a new version ava
 1. Confirm repository truth from the current checkout: `git status --short --branch`, `git log --oneline --decorate -5`, `git tag --sort=-creatordate`, `git remote -v`, and, when network access is available, `git ls-remote --tags origin <tag>`.
 2. Choose the next semantic version from the actual latest tag and the change type. Do not recreate a tag that already exists locally or remotely; if `HEAD` is already tagged and the remote has that tag, the Git publish step is already done.
 3. Run every package gate in `references/40-validation-and-release-gates.md`. Do not tag while a gate is failing or unrun.
-4. Tag only after the working tree is committed and every gate is clean: `git tag -a vX.Y.Z -m "vX.Y.Z"`.
-5. Stop at the approval gate in `SKILL.md`. It covers exactly four actions: `git push origin <branch>`; `git push origin vX.Y.Z`; the Satis build in `$SATIS_LOCAL_DIR`; updating a consuming service to the new tag.
-6. After approval, push the verified branch, then the verified tag.
-7. After an approved release branch/tag push, refresh the local Ala Satis repository by running `docker compose --profile build run --rm satis-build` from the resolved `$SATIS_LOCAL_DIR`. The Git push alone does not rebuild the index, so the package is not available to adopters until that build runs; stopping at the push and reporting the package as published is the defect this step exists to prevent.
+4. Apply the authorization gate in `SKILL.md` to each planned effect and target before acting; ask only for authority it does not already cover.
+5. Once tag creation is authorized, the working tree is committed and every gate is clean, create the tag: `git tag -a vX.Y.Z -m "vX.Y.Z"`.
+6. With authority for both pushes, push the verified branch, then the verified tag.
+7. After the branch/tag push and with authority for the Satis rebuild, run `docker compose --profile build run --rm satis-build` from the resolved `$SATIS_LOCAL_DIR`. Git push alone does not rebuild the index; until the build is authorized and succeeds, report the package as unavailable to adopters rather than published.
 8. `satis-build` is a one-shot builder: it must exit `0` and write `satis-output`, and is not expected to stay `Up`. On any other exit code, stop, report the code with the last twenty lines of output, and tell the user the package is not published. Never continue to adoption on a failed build.
 9. Verify availability before adoption: confirm the tag on the primary remote; when the Satis web stack is running, fetch `$SATIS_PACKAGES_URL` and confirm the tag is listed; confirm `composer show alaa/controlled-ops --available -vvv` resolves it before update, and the adopter's lock after.
 

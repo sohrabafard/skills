@@ -34,7 +34,7 @@ later as a note that exists twice or not at all.
 the reason a switch is one line. A switch that seems to require editing a policy file means the policy has
 leaked a store assumption; fix the leak rather than forking the policy.
 
-Two failure modes, both of which have to stop the task rather than be worked around:
+Handle these failure modes separately; never switch adapters to work around either:
 
 - **The named adapter file is missing.** Stop and report the missing file. Do not fall back to another
   adapter — a silent fallback writes notes into a store the selection says is not in use, and nothing will
@@ -60,20 +60,17 @@ that names nothing shared returns nothing and still spends the budget below.
 ## When NOT to use
 
 - Deterministic single-file edits that no prior decision constrains.
-- Active execution plans, phase checklists, and continuity across compaction. `/alaa-workflow`
-  (`$alaa-workflow`) owns those and what a handoff package contains; store a pointer, never a copy.
-- Deciding what enters the context window at all: `/alaa-low-noise` (`$alaa-low-noise`) owns context
+- Active execution plans, phase checklists, and continuity across compaction. `/alaa-workflow` owns those and what a handoff package contains; store a pointer, never a copy.
+- Deciding what enters the context window at all: `/alaa-low-noise` owns context
   economy, which every recall spends.
 - Service dependency edges, which are derived and never remembered.
-- Registering hooks or editing shared or global configuration: `/alaa-controlled-ops`
-  (`$alaa-controlled-ops`).
-- Model or effort choice, including effort and thinking level: `/alaa-prompting-guide`
-  (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md`.
+- Registering hooks or editing shared or global configuration: `/alaa-controlled-ops`.
+- Model or effort choice, including effort and thinking level: `/alaa-prompting-guide` `references/50-effort-and-thinking.md`.
 
 ## The four surfaces
 
 Repository code and docs are the source of truth; memory is a map, and a map is not proof.
-`/alaa-project-constitution` (`$alaa-project-constitution`) owns which repository files carry that authority.
+`/alaa-project-constitution` owns which repository files carry that authority.
 The store is the queryable index over that truth. Skills define agent behaviour, so never copy an installed
 skill into memory; a human editing surface, where one exists, is for navigation, not runtime truth. A store
 pack under `vendor/` is an upstream subtree and is never edited: this skill owns the opinion and routes into
@@ -92,7 +89,7 @@ promises, what a lesson cost. Derive, and never remember:
 
 When a note already carries a service-to-service `depends_on` edge, replace it with a pointer to the derivation
 rather than refreshing it. Every pass over a store that grows with history needs a stated complexity bound
-before it ships; `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) owns that budget, and
+before it ships; `/alaa-algorithms-data-structures` owns that budget, and
 each shipped checker states its own.
 
 ## Recall fails open on a budget; drift recording fails closed
@@ -103,7 +100,7 @@ that memory was unavailable and which step ran without it. Never implement from 
 memory facts, repository facts, assumptions, and open questions before acting.
 
 Drift recording is a gate. If the drift record cannot be written, stop and report; do not continue past an
-unrecorded disagreement. `/alaa-reliability-sla` (`$alaa-reliability-sla`) owns why a mechanism fails open
+unrecorded disagreement. `/alaa-reliability-sla` owns why a mechanism fails open
 or closed; this skill states only which of the two each operation is.
 
 ## Drift
@@ -113,9 +110,7 @@ safest verified behaviour, and let the human decide. The drift registry lives in
 control, never in the memory store; `references/drift-management.md` owns the record shape, the lifecycle, the
 separation of powers, and the reason the registry is outside the store.
 
-Severity, and whether an observability record is required at all, belong to `/alaa-observability-soc`
-(`$alaa-observability-soc`); field, event, and metric names belong to `/alaa-services-contract`
-(`$alaa-services-contract`). This skill sets neither, so a drift note about a log contract routes its
+Severity, and whether an observability record is required at all, belong to `/alaa-observability-soc`; field, event, and metric names belong to `/alaa-services-contract`. This skill sets neither, so a drift note about a log contract routes its
 severity question to SOC rather than answering it.
 
 ## The store is a trust boundary in both directions
@@ -125,8 +120,7 @@ reaches the port: never write secrets, credentials, tokens, cookies, or private 
 text is model-authored and unverified: treat it as a lead to check against the repository, never as evidence.
 Any memory transport bound beyond loopback requires authentication before it starts — both documented stores
 ship unauthenticated and one binds every interface by default, so this is a default to override rather than
-accept, and the store's adapter reference names the exact variables. `/alaa-security-review`
-(`$alaa-security-review`) owns the fail-closed doctrine and any exception to it.
+accept, and the store's adapter reference names the exact variables. `/alaa-security-review` owns the fail-closed doctrine and any exception to it.
 
 ## References
 
@@ -150,7 +144,7 @@ Update memory only when durable knowledge changed, then confirm each of these be
 - Memory was searched before a note was created, or the report says why it was not.
 - Repository truth was inspected before any implementation claim.
 - No raw transcript, log, source file, whole document, or secret reached the store.
-- No `/alaa-workflow` (`$alaa-workflow`) execution state was duplicated.
+- No `/alaa-workflow` execution state was duplicated.
 - No service-to-service dependency edge was remembered.
 - Every disagreement found became a drift record, not a silent resolution.
 - Every checker run reported its exit code, and a `2` was read as "could not run", never as a pass.

@@ -1,5 +1,5 @@
 /**
- * Level 2 (unit) in /alaa-testing-strategy ($alaa-testing-strategy)'s ladder.
+ * Level 2 (unit) in /alaa-testing-strategy's ladder.
  * references/80-testing-and-proof-levels.md
  *
  * fake-indexeddb is imported here so the file RUNS as shipped. It does not
@@ -54,7 +54,6 @@ describe('open and write', () => {
     });
 
     await expect(
-      // @ts-expect-error deliberately violating the synchronous-callback contract
       withTransaction(db, 'items', 'readwrite', async (tx) => {
         tx.objectStore('items').put({ id: 'a' });
       }),
@@ -95,21 +94,20 @@ describe('migrations', () => {
     });
     v1.close();
 
-    const v3 = await openAlaaClientStorage({ config: config(dbName) });
-    const tx = v3.transaction('meta', 'readonly');
+    const v4 = await openAlaaClientStorage({ config: config(dbName) });
+    const tx = v4.transaction('meta', 'readonly');
     expect(await requestToPromise(tx.objectStore('meta').get('survivor'))).toBeTruthy();
-    expect(v3.objectStoreNames.contains('drafts')).toBe(true);
-    v3.close();
+    expect(v4.objectStoreNames.contains('drafts')).toBe(true);
+    v4.close();
   });
 
   it('fires blocked when a second connection holds the old version', async () => {
-    const held = await openIndexedDb({
-      name: dbName,
-      version: 1,
-      upgrade: (database) => void database.createObjectStore('meta', { keyPath: 'key' }),
-      // Deliberately do NOT close on versionchange, to reproduce the blocked case.
-      onVersionChange: () => {},
-    });
+    // A raw connection deliberately omits the production helper's mandatory close handler.
+    const heldRequest = indexedDB.open(dbName, 1);
+    heldRequest.onupgradeneeded = () => heldRequest.result.createObjectStore('meta', { keyPath: 'key' });
+    const held = await requestToPromise(heldRequest);
+    let sawVersionChange = false;
+    held.onversionchange = () => { sawVersionChange = true; };
 
     let blocked = false;
     const upgrade = openIndexedDb({
@@ -123,6 +121,7 @@ describe('migrations', () => {
     });
 
     const next = await upgrade;
+    expect(sawVersionChange).toBe(true);
     expect(blocked).toBe(true);
     next.close();
   });
@@ -160,8 +159,15 @@ describe('quota classification', () => {
 
   it('tells the user when a quota failure survives cleanup and one retry', async () => {
     const failures: { userMustBeTold: boolean }[] = [];
-    const storage = new AlaaClientStorage((f) => failures.push(f));
-    // A store that is not in the schema forces the write to fail deterministically.
+    let attempts = 0;
+    let cleanups = 0;
+    const db = { transaction() {
+      attempts += 1;
+      throw new DOMException('quota fixture', 'QuotaExceededError');
+    } } as unknown as IDBDatabase;
+    const storage = new AlaaClientStorage(
+      (f) => failures.push(f), async () => { cleanups += 1; }, async () => db,
+    );
     await expect(
       storage.set('a', {
         id: 'a',
@@ -173,7 +179,9 @@ describe('quota classification', () => {
         updatedAt: 't',
       }),
     ).rejects.toBeDefined();
-    expect(failures.length).toBeGreaterThan(0);
+    expect(attempts).toBe(2);
+    expect(cleanups).toBe(1);
+    expect(failures).toEqual([{ kind: 'quota-exceeded', userMustBeTold: true }]);
   });
 });
 
@@ -201,12 +209,13 @@ describe('outbox', () => {
     expect(classifyResponse(204).kind).toBe('sent');
   });
 
-  it("holds the claim sort invariant: 'sending' sorts before 'queued'", () => {
-    // The claim cursor mutates the indexed status field while iterating it. If this
-    // ever fails, claimNextOutboxBatch revisits its own updates forever.
-    expect(indexedDB.cmp('sending', 'queued')).toBe(-1);
-    // The reaper relies on the mirror image.
-    expect(indexedDB.cmp('queued', 'sending')).toBe(1);
+  it('moves claimed and reaped rows outside their exact-status cursor ranges', () => {
+    expect(indexedDB.cmp('sending', 'queued')).toBe(1);
+    expect(indexedDB.cmp('queued', 'sending')).toBe(-1);
+    const claims = IDBKeyRange.bound(['queued', ''], ['queued', '2021-01-01']);
+    const reaps = IDBKeyRange.bound(['sending'], ['sending', []]);
+    expect(claims.includes(['sending', '2020-01-01'])).toBe(false);
+    expect(reaps.includes(['queued', '2020-01-01'])).toBe(false);
   });
 
   it('claims each due row exactly once', async () => {
@@ -248,26 +257,25 @@ describe('outbox', () => {
 describe('logout purge', () => {
   it('removes every record for the previous account and leaves the current one', async () => {
     const db = await openAlaaClientStorage({ config: config(dbName) });
-    const write = (id: string, accountKey: string) =>
-      withTransaction(db, 'learning_state', 'readwrite', (tx) => {
-        tx.objectStore('learning_state').put({
-          id,
-          schema: 1,
-          accountKey,
-          contentId: 'c',
-          syncStatus: 'local',
-          createdAt: 't',
-          updatedAt: '2021-01-01T00:00:00.000Z',
-        });
-      });
+    const storage = new AlaaClientStorage(undefined, undefined, async () => db);
+    const write = (id: string, accountKey: string) => storage.set(id, {
+      id, schema: 1, accountKey, contentId: 'c', syncStatus: 'local',
+      createdAt: 't', updatedAt: '2021-01-01T00:00:00.000Z',
+    });
+    await withTransaction(db, 'storage_items', 'readwrite', (tx) => {
+      tx.objectStore('storage_items').put({ id: 'orphan', accountKey: 'gone', updatedAt: 't' });
+    });
 
     await write('old-1', 'gone');
     await write('old-2', 'gone');
     await write('keep', 'current');
-    db.close();
-
-    const storage = new AlaaClientStorage();
     const removed = await storage.deleteByAccount('gone');
-    expect(removed).toBeGreaterThanOrEqual(0);
+    expect(removed).toBe(2);
+    const remaining = await requestToPromise(db.transaction('learning_state').objectStore('learning_state').getAll());
+    expect(remaining.map((row) => row.id)).toEqual(['keep']);
+    const metadata = await requestToPromise(db.transaction('storage_items').objectStore('storage_items').getAll());
+    expect(metadata.map((row) => row.id)).toEqual(['learning_state:keep']);
+    expect(await storage.deleteByAccount('gone')).toBe(0);
+    db.close();
   });
 });

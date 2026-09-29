@@ -1,0 +1,103 @@
+[
+  {
+    "gate": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-golang",
+      "skills/sohrab/alaa-golang-fiber",
+      "skills/sohrab/alaa-async-messaging",
+      "skills/sohrab/alaa-laravel-job-rabbitmq"
+    ],
+    "cwd": "repository root",
+    "exit_code": 0,
+    "log": "backend-diff-check.log",
+    "checked_at": "2026-09-29T09:28:20.858186+00:00"
+  },
+  {
+    "gate": "async-fixtures",
+    "argv": [
+      "sh",
+      "skills/sohrab/alaa-async-messaging/scripts/check-consumer-bounds.sh",
+      "--self-test"
+    ],
+    "cwd": "repository root",
+    "exit_code": 3221225794,
+    "log": "backend-async-fixtures.log",
+    "checked_at": "2026-09-29T09:28:20.949074+00:00"
+  },
+  {
+    "gate": "fleet-references",
+    "argv": [
+      "python",
+      "-B",
+      "scripts/check_fleet_references.py",
+      "--skill",
+      "alaa-golang",
+      "--skill",
+      "alaa-golang-fiber",
+      "--skill",
+      "alaa-async-messaging",
+      "--skill",
+      "alaa-laravel-job-rabbitmq"
+    ],
+    "cwd": "repository root",
+    "exit_code": 0,
+    "log": "backend-fleet-references.log",
+    "checked_at": "2026-09-29T09:28:21.146853+00:00"
+  },
+  {
+    "gate": "markdown-links",
+    "argv": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "skills/sohrab/alaa-async-messaging/SKILL.md",
+      "skills/sohrab/alaa-async-messaging/references/10-transport-and-topology.md",
+      "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch.md",
+      "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay.md",
+      "skills/sohrab/alaa-async-messaging/references/50-failure-classes.md",
+      "skills/sohrab/alaa-async-messaging/references/60-telemetry-and-proof.md",
+      "skills/sohrab/alaa-async-messaging/references/90-source-map.md",
+      "skills/sohrab/alaa-golang-fiber/SKILL.md",
+      "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+      "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors.md",
+      "skills/sohrab/alaa-golang-fiber/references/30-validation-testing.md",
+      "skills/sohrab/alaa-golang-fiber/references/45-v2-to-v3-migration.md",
+      "skills/sohrab/alaa-golang-fiber/references/SOURCES.md",
+      "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+      "skills/sohrab/alaa-laravel-job-rabbitmq/SKILL.md",
+      "skills/sohrab/alaa-laravel-job-rabbitmq/references/driver-facts.md",
+      "skills/sohrab/alaa-laravel-job-rabbitmq/references/failure-classes.md",
+      "skills/sohrab/alaa-laravel-job-rabbitmq/references/source-map.md"
+    ],
+    "cwd": "repository root",
+    "exit_code": 0,
+    "log": "backend-markdown-links.log",
+    "checked_at": "2026-09-29T09:28:21.281824+00:00"
+  },
+  {
+    "gate": "Fiber eval JSON integrity",
+    "argv": "inline python -B: parse JSON; skill_name; IDs 0..7; unique names; exact keys; nonempty strings; files lists",
+    "cwd": "repository root",
+    "exit_code": 0,
+    "runtime_eval": "not run"
+  },
+  {
+    "gate": "async-fixtures",
+    "argv": [
+      "sh",
+      "skills/sohrab/alaa-async-messaging/scripts/check-consumer-bounds.sh",
+      "--self-test"
+    ],
+    "cwd": "repository root",
+    "exit_code": 0,
+    "log": "backend-async-fixtures-retry.log",
+    "environment": "same unchanged command outside sandbox; approved escalation after Win32 signal-pipe error",
+    "checked_at": "2026-09-29T09:29:17.058697+00:00"
+  }
+]

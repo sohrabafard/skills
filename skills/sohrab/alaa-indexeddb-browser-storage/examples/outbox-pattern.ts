@@ -2,12 +2,12 @@
  * The browser-side outbox. references/71-browser-outbox.md
  *
  * The state set is deliberately NOT the server-side one. /alaa-async-messaging
- * ($alaa-async-messaging) owns pending|claimed|published, where a claim releases
+ * owns pending|claimed|published, where a claim releases
  * itself by transaction rollback. Here a claim releases only via the reaper in
  * ./outbox-reaper.ts, because the claiming context can simply cease to exist.
  *
- * Retry doctrine — backoff, jitter, caps, timeouts — is /alaa-reliability-sla
- * ($alaa-reliability-sla). This file takes a policy; it embeds no literal.
+ * Retry doctrine â€” backoff, jitter, caps, timeouts â€” is /alaa-reliability-sla
+ *. This file takes a policy; it embeds no literal.
  */
 import { txDone } from './idb-core';
 
@@ -32,7 +32,7 @@ export interface BrowserOutboxItem<TBody = unknown> {
   expiresAt?: string;
 }
 
-/** Every value here is registered in /alaa-services-contract ($alaa-services-contract). */
+/** Every value here is registered in /alaa-services-contract. */
 export interface OutboxPolicy {
   readonly storeName: string;
   readonly indexName: string;
@@ -80,10 +80,10 @@ export async function enqueueOutboxItem<TBody>(
  * Claim a batch in one short transaction.
  *
  * SORT INVARIANT: this cursor walks ['queued', ...] and writes 'sending' into the
- * indexed `status` field while iterating. 'sending' < 'queued' lexicographically, so
- * an updated record moves BEHIND the cursor and is not visited twice. Renaming either
- * token without re-checking that ordering yields an infinite claim loop.
- * The test in ./vitest-idb-pattern.test.ts asserts it.
+ * indexed `status` field while iterating. 'sending' sorts AFTER 'queued', but leaves
+ * the cursor's bounded ['queued', ...] range, so it is not visited twice. Preserve
+ * the exact-status range when changing states or indexes; lexical direction alone
+ * does not establish safety. ./vitest-idb-pattern.test.ts exercises repeated claims.
  */
 export async function claimNextOutboxBatch(
   db: IDBDatabase,

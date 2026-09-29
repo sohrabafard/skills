@@ -100,21 +100,28 @@ an explicit `Timeout`; see `30-validation-testing.md` for why the default is a t
 
 ## Toolchain
 
-Fiber v3.3.0 declares `go 1.25.0` and the docs state "Version `1.25` or higher is required"
-(https://raw.githubusercontent.com/gofiber/fiber/v3.3.0/go.mod and https://docs.gofiber.io/, both
-verified 2026-07-26). Raise the repository's `go` directive to at least `1.25` as the first commit
-of the migration, run the full suite on the new toolchain, and only then start the Fiber upgrade.
+Fiber v3.5.0 declares `go 1.25.0` and the docs state "Version `1.25` or higher is required"
+(https://raw.githubusercontent.com/gofiber/fiber/v3.5.0/go.mod, verified 2026-09-29). If the repository's
+directive is lower, treat the required toolchain upgrade as a separate authorized change and validate it
+before changing Fiber. Keep a higher directive; commit only with explicit authorization.
 Two toolchain-and-framework changes in one commit make a bisect useless.
 
-`github.com/gofiber/utils/v2` is a direct dependency of Fiber v3.3.0 at `v2.0.6` and is where
+`github.com/gofiber/utils/v2` is a direct dependency of Fiber v3.5.0 at `v2.4.1` and is where
 `CopyString` and `CopyBytes` live
-(https://raw.githubusercontent.com/gofiber/fiber/v3.3.0/go.mod, verified 2026-07-26). Confirm the
+(https://raw.githubusercontent.com/gofiber/fiber/v3.5.0/go.mod, verified 2026-09-29). Confirm the
 import path against the repository's own `go.mod` before writing it, because the module has its own
 release line.
 
+## Minor-version behavior also needs proof
+
+When the target is v3.5.0, review outbound proxy policy in `20-routing-middleware-errors.md`,
+combined binding in `30-validation-testing.md`, and the unmatched-route fast path in
+`10-fiber-v3-core.md`. Passing the v2-to-v3 compiler fixes does not exercise these behaviors.
+
 ## Order of work
 
-1. Raise the `go` directive to 1.25 or higher. Run the suite. Commit.
+1. Compare the selected Fiber tag's toolchain requirement with the consumer directive. Complete any
+   required, authorized toolchain change separately and run the suite; do not lower a higher directive.
 2. Add or fix handler tests for every route that has none, on v2, so the migration has a baseline
    that can fail. A migration without this step cannot distinguish "ported correctly" from
    "compiles".
@@ -127,5 +134,5 @@ release line.
    non-production environment before promoting.
 
 A framework major upgrade is architecture work, not routine cleanup. On an `alaa-go-chi` consumer it
-is a change request through `/alaa-go-chi-development` (`$alaa-go-chi-development`) before any of
+is a change request through `/alaa-go-chi-development` before any of
 the above begins.

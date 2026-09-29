@@ -94,7 +94,15 @@ player.addEventListener('streaming', () => {
 });
 
 // 5. Flush telemetry while the counters still exist.
-player.addEventListener('unloading', () => flushQoe(player.getStats()));
+let sessionPending = false;
+player.addEventListener('loading', () => { sessionPending = true; });
+function snapshotSession() {
+  if (!sessionPending) return;
+  sessionPending = false;
+  try { void Promise.resolve(flushQoe(player.getStats())).catch(onError); }
+  catch (error) { onError(error); }
+}
+player.addEventListener('unloading', snapshotSession);
 
 try {
   await player.load(manifestUri);         // load() unloads any previous stream itself
@@ -104,6 +112,7 @@ try {
 
 // 6. Teardown, in this order.
 async function teardown() {
+  snapshotSession();                       // before removing the unloading listener
   clearTimersAndIntervals();
   removeEveryListenerYouRegistered();     // player, <video>, and document
   await player.destroy();                 // destroy() implies unload(); the instance is now dead
@@ -111,7 +120,9 @@ async function teardown() {
 }
 
 function onError(error) {
-  console.error('Shaka error', error.code, error.category, error.severity);
+  const code = error !== null && typeof error === 'object' && Number.isFinite(error.code)
+    ? error.code : null;
+  console.error('Shaka error code', code);
   // Do NOT log the whole error object: error.data for a network error carries the
   // failing URI and its query string. See 42-media-url-trust-and-presigned.md.
 }
@@ -122,3 +133,9 @@ teardown `await player.destroy()` exactly once and then drop the reference.
 **Common mistake.** Reusing a Player after `destroy()`, or `new shaka.Player(video)` — the latter
 still works but hides the async attach step, which is the step that fails on iOS Safari when the
 element is not ready.
+
+The Vue template owns idempotent disposal and initialization races (`11-vue-quasar-binding.md`). Its
+session guard is armed by `loading`, consumed by `unloading` or explicit disposal, and prevents a second
+snapshot during `destroy()`. In [v5.2.12 player source](https://github.com/shaka-project/shaka-player/blob/v5.2.12/lib/player.js),
+read 2026-09-29, switching content unloads the previous asset before emitting the next `loading` event.
+Preserve that ordering in doubles; browser playback remains separate proof.

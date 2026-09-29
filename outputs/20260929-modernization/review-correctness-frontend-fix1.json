@@ -1,0 +1,43 @@
+{
+  "recorded_by": "parent from independent correctness_review final",
+  "verdict": "CHANGES-REQUESTED",
+  "scope": "Frozen frontend review-fix1 only",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "repair_digest": "b81e4ac0c9bf951ea230171dbfc8898d6e578bff110000e3a3542bd4a3fb2f01",
+  "integrity": "20 changed-file hashes independently matched",
+  "closed": [
+    "COR-1/SEC-2",
+    "COR-2",
+    "COR-3",
+    "COR-4",
+    "OBS-1"
+  ],
+  "findings": [
+    {
+      "id": "COR-7",
+      "severity": "minor",
+      "confidence": 1.0,
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+      "line": 351,
+      "trigger": "Stale destruction rejects and initialization promise settles/leaves pending set; dispose called later with no player",
+      "impact": "dispose resolves despite retained cleanup failure, falsely claiming teardown completion",
+      "remedy": "Preserve known cleanup failure in shared disposal result, including null/undefined; test late/repeated disposal after settled failed initialization"
+    }
+  ],
+  "scanner_disposition": {
+    "result": "exit1 preserved",
+    "classification": "optional exact-template source audit has five unchanged explanatory-comment matches; no removed executableAPI demonstrated",
+    "required_change": "none to establish these repair claims; never relabelPASS"
+  },
+  "cited": [
+    "frontend-review-fix1-evidence.json",
+    "browser-idb-fix1-evidence.json",
+    "review-migration.json"
+  ],
+  "limits": [
+    "No passing test rerun",
+    "No actual media/DRM/networkshutdown/consumerVitest/typecheck/quota/crossbrowser proof",
+    "Operations stillmutable/unreviewed"
+  ]
+}

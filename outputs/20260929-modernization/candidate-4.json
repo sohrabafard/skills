@@ -1,0 +1,17 @@
+{
+  "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "branch": "codex/sohrab-sonnet55-modernization",
+  "files": 154,
+  "skills": 25,
+  "manifest_sha256": "f502125cdda2acdadc4115ce289c95abc92cd9953d1b33a20c67ecd5bf76dc2d",
+  "excluded": "skills/sohrab/alaa-workflow/outputs/20260929-modernization",
+  "selection": "git diff HEAD plus untracked source; sorted raw-byte SHA256 double-space path LF lines",
+  "previous_snapshot": "candidate-3",
+  "changed_from_previous": [
+    "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+    "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template"
+  ],
+  "missing_from_previous": [],
+  "publication": "uncommitted; staging preserved",
+  "independent_gates": "Executable candidate3 verification remains valid; two template release closure passed; affected instruction/final documentation pending"
+}

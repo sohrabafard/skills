@@ -1,0 +1,6 @@
+# Path support must not suppress the separate invalid rules:if expression.
+check:
+  script: [echo check]
+  rules:
+    - if: '${CI_COMMIT_BRANCH} == "main"'
+      changes: ["$SOURCE_DIR/**/*"]

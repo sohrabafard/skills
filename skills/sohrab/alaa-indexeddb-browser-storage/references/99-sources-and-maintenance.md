@@ -1,6 +1,6 @@
 # Sources and maintenance
 
-Every browser claim in this pack was read on **2026-07-28**. A claim with no source and no read date is a
+The broad browser baseline was read on **2026-07-28**. Storage Buckets was refreshed on **2026-09-29** in `25-storage-buckets-api.md` using MDN BCD and the WICG draft; other rows retain their original dates. A claim with no source and no read date is a
 defect; report it. Three statuses are used and they are distinct: **verified** (someone read that source on
 that date), **unverified as of 2026-07-28** (retained for the caution it carries, never asserted, never
 dropped), and **not documented (searched 2026-07-28)** (searched and not found, which is not proof of
@@ -14,7 +14,7 @@ absence).
 | quota, persistence, eviction | MDN *Storage quotas and eviction criteria* — https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria ; MDN `StorageManager.estimate` and `StorageManager.persist` ; WebKit *Updates to Storage Policy*, published 2023-08-10 for Safari 17 / iOS 17 / macOS Sonoma — https://webkit.org/blog/14403/updates-to-storage-policy/ ; web.dev *Storage for the web*, page updated 2024-09-23 — https://web.dev/articles/storage-for-the-web |
 | buckets and coordination | Chrome for Developers *Storage Buckets* — https://developer.chrome.com/docs/web-platform/storage-buckets ; caniuse `wf-storage-buckets`, `mdn-api_lockmanager`, `broadcastchannel` ; MDN Web Locks API |
 | API availability | Chrome for Developers *IndexedDB durability defaults to relaxed* — https://developer.chrome.com/blog/indexeddb-durability-mode-now-defaults-to-relaxed ; MDN `IDBObjectStore.getAllRecords`, `IDBFactory.databases` ; caniuse `mdn-api_idbfactory_databases`, `mdn-api_idbtransaction_durability`, `mdn-api_idbtransaction_commit`, `mdn-api_storagemanager_getdirectory`, `background-sync` |
-| Shaka v5.2.3 | `shaka.offline.Storage` never calls `navigator.storage.persist()`, and no resume or repair API exists for an interrupted `store()`. Researched by the `/alaa-shaka-player` (`$alaa-shaka-player`) lane, read 2026-07-28. Consumed in `72-offline-media-store.md`. |
+| Shaka v5.2.3 | `shaka.offline.Storage` never calls `navigator.storage.persist()`, and no resume or repair API exists for an interrupted `store()`. Researched by the `/alaa-shaka-player` lane, read 2026-07-28. Consumed in `72-offline-media-store.md`. |
 
 ## Claim register
 
@@ -44,8 +44,7 @@ Firefox 38+, Safari 15.4+ (94.82%); Web Locks Chrome 69+, Firefox 96+, Safari 15
 workers and service workers — baseline enough that the lease-record fallback is now conditional rather than
 default; OPFS `getDirectory()` Chrome 86+, Firefox 111+, Safari 15.2+ (93.51%); Background Sync Chrome 49+,
 Edge 79+ and **absent in every Firefox and every Safari/iOS** (77.48%); Storage Buckets Chromium 122+ and
-**absent in every Firefox and every Safari** (70.28%) — a capability the pack previously did not mention at
-all. MDN: `getAllRecords()` is **not Baseline**, limited availability; `getAllKeys()` widely available;
+**unsupported in Firefox/Safari in that snapshot** (70.28% global share then). Current Buckets evidence is in `25-storage-buckets-api.md`. MDN: `getAllRecords()` is **not Baseline**, limited availability; `getAllKeys()` widely available;
 IndexedDB is available in Web Workers and service workers.
 
 **Unverified as of 2026-07-28**, retained and not asserted:
@@ -60,14 +59,13 @@ IndexedDB is available in Web Workers and service workers.
 | recent Safari moved some storage inspection to Develop → Inspect Apps and Devices | look there before concluding data is absent |
 | iOS/iPadOS alternate browser engines under EU rules | a regulatory claim that has moved; detect engine behaviour, do not brand-detect |
 
-**Not documented (searched 2026-07-28):** an `expires` option on `navigator.storageBuckets.open()`; treat
-it as absent.
+**Resolved 2026-09-29:** the WICG draft documents the `expires` option. The earlier search missed it; `25-storage-buckets-api.md` records semantics and remaining implementation differences.
 
 **House policy, not vendor fact**, and labelled as such wherever stated: `softStop`, `hardStop`, every
 default cap in the budget table, `outboxBatchSize`, `outboxMaxAttempts`, `outboxSendTimeoutMs`,
 `outboxReaperStaleAfterMs`, `cleanupBatchSize`, `writeChunkSize`, `draftDebounceMs`, `leaseTtlMs`. Their
-**names** are `/alaa-services-contract` (`$alaa-services-contract`); their retry semantics are
-`/alaa-reliability-sla` (`$alaa-reliability-sla`).
+**names** are `/alaa-services-contract`; their retry semantics are
+`/alaa-reliability-sla`.
 
 ## Reproducing the retired `full-guide.md`
 

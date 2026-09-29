@@ -43,39 +43,32 @@ Load `references/00-topic-map.md` and read the one row that matches what you are
 ## When not to use this skill, and what owns each thing instead
 
 - Service-worker registration, routing, Workbox strategies, the Cache API, Background Sync and the PWA
-  update flow: `/alaa-quasar-app-vite-v3` (`$alaa-quasar-app-vite-v3`), `references/30-service-worker-excellence.md`.
+  update flow: `/alaa-quasar-app-vite-v3`, `references/30-service-worker-excellence.md`.
   This skill owns only the IndexedDB a service worker touches and the concurrency around it.
 - What a media player stores offline, how it fetches and licenses it, `shaka.offline.Storage`,
-  `offline.trackSelectionCallback`, download progress and persistent DRM licences: `/alaa-shaka-player`
-  (`$alaa-shaka-player`). This skill owns the substrate under it —
+  `offline.trackSelectionCallback`, download progress and persistent DRM licences: `/alaa-shaka-player`. This skill owns the substrate under it —
   `references/72-offline-media-store.md`.
-- Retry, backoff, timeout, attempt caps, deadlines and degradation as doctrine: `/alaa-reliability-sla`
-  (`$alaa-reliability-sla`). This skill states only where an outbox row keeps the counter.
+- Retry, backoff, timeout, attempt caps, deadlines and degradation as doctrine: `/alaa-reliability-sla`. This skill states only where an outbox row keeps the counter.
 - The server-side outbox, its row states, consumer-side dedupe and dead-letter replay:
-  `/alaa-async-messaging` (`$alaa-async-messaging`), `references/20-publishing-and-the-outbox.md`. The
+  `/alaa-async-messaging`, `references/20-publishing-and-the-outbox.md`. The
   browser outbox is deliberately a different state set — `references/71-browser-outbox.md` states why.
 - Every registered event, metric, log-field, database, store, index and configuration **name**, and every
-  platform **value**: `/alaa-services-contract` (`$alaa-services-contract`).
-- Requirement levels and observability gates on the events this skill emits: `/alaa-observability-soc`
-  (`$alaa-observability-soc`).
-- Security-review triggers, threat classes and fail-closed doctrine: `/alaa-security-review`
-  (`$alaa-security-review`).
-- Test design and the proof levels a change owes: `/alaa-testing-strategy` (`$alaa-testing-strategy`).
-- The permission-bitmap contract and its canonical TypeScript decoder: `/alaa-permission-generator`
-  (`$alaa-permission-generator`). The trust property of any client-held value:
-  `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
-- Complexity-budget doctrine and structure choice: `/alaa-algorithms-data-structures`
-  (`$alaa-algorithms-data-structures`). Paginating an unbounded collection over the network:
-  `/alaa-keyset-pagination` (`$alaa-keyset-pagination`).
-- Server-side store selection, query shape and indexes: `/alaa-data-layer` (`$alaa-data-layer`).
+  platform **value**: `/alaa-services-contract`.
+- Requirement levels and observability gates on the events this skill emits: `/alaa-observability-soc`.
+- Security-review triggers, threat classes and fail-closed doctrine: `/alaa-security-review`.
+- Test design and the proof levels a change owes: `/alaa-testing-strategy`.
+- The permission-bitmap contract and its canonical TypeScript decoder: `/alaa-permission-generator`. The trust property of any client-held value:
+  `/alaa-trust-gateway-auth`.
+- Complexity-budget doctrine and structure choice: `/alaa-algorithms-data-structures`. Paginating an unbounded collection over the network:
+  `/alaa-keyset-pagination`.
+- Server-side store selection, query shape and indexes: `/alaa-data-layer`.
 - Digit and text normalization of anything a user typed, before it is stored or compared:
-  `/alaa-input-normalization` (`$alaa-input-normalization`). Domain identifier codecs:
-  `/alaa-crockford-base32-codecs` (`$alaa-crockford-base32-codecs`).
-- Vue and TypeScript code shape, naming and file size: `/alaa-vue-typescript-clean-code`
-  (`$alaa-vue-typescript-clean-code`). Vue and Quasar feature implementation:
-  `/alaa-frontend-developer` (`$alaa-frontend-developer`).
-- The quality bar: `/alaa-project-constitution` (`$alaa-project-constitution`). Model and effort:
-  `/alaa-prompting-guide` (`$alaa-prompting-guide`), `references/50-effort-and-thinking.md`.
+  `/alaa-input-normalization`. Domain identifier codecs:
+  `/alaa-crockford-base32-codecs`.
+- Vue and TypeScript code shape, naming and file size: `/alaa-vue-typescript-clean-code`. Vue and Quasar feature implementation:
+  `/alaa-frontend-developer`.
+- The quality bar: `/alaa-project-constitution`. Model and effort:
+  `/alaa-prompting-guide`, `references/50-effort-and-thinking.md`.
 
 ## Gate scripts
 
@@ -83,7 +76,10 @@ Load `references/00-topic-map.md` and read the one row that matches what you are
 python3 scripts/validate_skill_pack.py --root .
 python3 scripts/check_references.py --root .
 python3 scripts/capability_contract_conformance.py --root .
+node scripts/check-storage-regressions.mjs
 ```
+
+The Node regression script requires Node 24+ and uses IDB doubles: it proves bounded cursor and failure logic, not browser timing. The Vitest examples require the consumer's installed `vitest` and `fake-indexeddb`; do not install dependencies implicitly.
 
 Exit **0** no findings. Exit **1** findings, each with file and line: resolve every one before reporting the
 change complete. Exit **2** could not run — a required file is missing or unreadable: exit 2 is never a pass,

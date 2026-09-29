@@ -5,8 +5,7 @@ when deciding what a reviewer must see before a message-plane change merges. Eve
 registered in `alaa-services-contract references/24-metric-registry.md`; this file states which registered
 observable proves which condition, and states no name of its own.
 
-**Never invent a metric, log-field, event or error-code name.** Take it from `/alaa-services-contract`
-(`$alaa-services-contract`) and request registration there when the one you need is missing. An invented
+**Never invent a metric, log-field, event or error-code name.** Take it from `/alaa-services-contract` and request registration there when the one you need is missing. An invented
 name diverges across services, and no dashboard or alert can read three spellings of one idea.
 
 ## Which observable proves which failure class
@@ -54,7 +53,7 @@ duplicated effects cannot show whether the key derivation was the defect.
 **Never log a message body containing personal data.** The body is available from the dead-letter queue when
 one is genuinely needed, and a log pipeline retains it far longer than the message plane does.
 
-Requirement levels, gates and alert authoring are `/alaa-observability-soc` (`$alaa-observability-soc`).
+Requirement levels, gates and alert authoring are `/alaa-observability-soc`.
 
 ## The two required tests
 
@@ -65,15 +64,21 @@ real uniqueness constraint in place. Assert three things: exactly one business e
 receipt row exists; the duplicate counter incremented by exactly one. A test that asserts only "no error on
 the second delivery" passes against a handler that silently performed the effect twice.
 
-**The dead-letter test.** Fail the handler past the delivery limit. Assert the message is present on
+**The dead-letter test.** Record broker version, queue type, effective policy and the driver's actual
+AMQP return method. Exhaust counted failures past the delivery limit; separately prove the application
+bound for any non-counting returns identified in `40-dead-letter-and-replay.md`. Assert the message is present on
 `<queue>.dlq` with routing key `<live-key>.failed`, that the live queue is empty, and that
 `alaa_queue_dead_letter_total` incremented. A route no test has exercised is a configuration hope, and the
 incident is where it gets discovered.
 
+**When timeout or consumer recovery changes**, also exercise cancellation on the deployed capability
+combination from `30-consuming-ack-and-prefetch.md`: an open channel with no subscription must fail
+readiness or recover, and repeated timeouts must not silently bypass the retry bound.
+
 **Both tests run against a real broker and a real database, not a fake.** An in-memory double cannot
 reproduce a delivery limit, a dead-letter route, or a uniqueness constraint, which are the only three things
 these tests exist to prove. Test-layer doctrine — what makes a test a test, and which layer proves what — is
-`/alaa-testing-strategy` (`$alaa-testing-strategy`).
+`/alaa-testing-strategy`.
 
 ## What a reviewer must see before this merges
 

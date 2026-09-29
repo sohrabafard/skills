@@ -1,0 +1,9 @@
+{
+  "candidate": "candidate-4",
+  "files": 110,
+  "archive": "documentation-before-candidate4.zip",
+  "sha256": "206b6a7ba4ce92f834f648a9710ebd1cc1dc67a6eda3577d43634ac1855af3be",
+  "missing": [],
+  "purpose": "Exact pre-restructuring Markdown bytes for independent fidelity review",
+  "recovery": "Reference62 original reconstructed from exact nit replacement and verified against candidate4; older staged blob not used"
+}

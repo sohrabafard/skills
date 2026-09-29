@@ -1,0 +1,29 @@
+{
+  "recorded_by": "parent from independent release_review final",
+  "verdict": "NOT-READY",
+  "configured": "gpt-6-sol/medium",
+  "observed": "unknown",
+  "scope": "Candidate3 Arvan operator templates",
+  "findings": [
+    {
+      "id": "REL-2",
+      "severity": "blocking local guidance",
+      "paths": [
+        "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+        "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template"
+      ],
+      "finding": "Residual platform/discovery/maintenance wording still implies verify-cluster selects Kubernetes line. Compare observed server version and capabilities with recorded operator-confirmed column."
+    },
+    {
+      "id": "REL-3",
+      "severity": "blocking local guidance",
+      "finding": "Output build/rendered.yaml fails if existing build0755; use private0700 child consistently across commands/ignore/cleanup."
+    }
+  ],
+  "acknowledged": "Corrected runbook scope and strict renderer safety contract; recorded render12PASS not rerun",
+  "limits": [
+    "Pending native HAProxy full gate",
+    "Consumer CI, runtime/provider availability and target cluster proof remain separate",
+    "No installation or publication"
+  ]
+}

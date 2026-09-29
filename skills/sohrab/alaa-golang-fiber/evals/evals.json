@@ -35,6 +35,27 @@
       "prompt": "We need distributed tracing on our Fiber v3 service so it shows up in our platform traces alongside the chi services. What do we use and what do we have to write ourselves?",
       "expected_output": "Names the real released package: github.com/gofiber/contrib/v3/otel, installed with go get -u github.com/gofiber/contrib/v3/otel, imported and registered via app.Use, and states that it is compatible with Fiber v3. Does not claim that no Fiber v3 OpenTelemetry middleware exists, and does not recommend github.com/gofiber/contrib/otelfiber/v2, which is v2-only. Separately states that the package supplies server spans but NOT this platform's correlation contract, which requires X-Request-Id and traceparent on every response including error responses and both probes, with an inbound traceparent validated through the TraceContext propagator and replaced when missing or malformed. Concludes that the service ships both the released span middleware and its own correlation middleware, and that on a kit consumer that correlation middleware would be a kit change request through alaa-go-chi-development rather than service-local code. Does not hedge with phrases like 'where the platform supports it'. Cites sources with dates rather than asserting from memory.",
       "files": []
+    },
+    {
+      "id": 5,
+      "eval_name": "v35-unmatched-route-contract",
+      "prompt": "Our Fiber v3.5.0 API uses middleware for correlation, access logs and the public error contract. Enable SkipUnmatchedRoutes for faster 404s. Is a passing route happy-path test enough?",
+      "expected_output": "Keeps the option disabled until missing-path, wrong-method and preflight tests prove the platform contracts. Explains that the fast path precedes middleware; checks the resolved version and does not infer correlation coverage from successful routes.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "eval_name": "v35-proxy-client-security",
+      "prompt": "On Fiber v3.5.0 we proxy a client-supplied URL through a reused per-call fasthttp client. Can we toggle AllowPrivateIPs for an internal request and restore it afterwards? Are all proxy paths protected from DNS rebinding?",
+      "expected_output": "Rejects per-request global policy changes because concurrent requests share them. Keeps destination allowlisting and trusted-context controls, inspects the tagged client path, distinguishes guarded dedicated clients from cached pre-guard clients and custom Balancer Config.Client, and records the docs/tag disagreement. Requires blocked-target, DNS-change and redirect/credential tests; makes no universal protection claim.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "eval_name": "v35-binding-source-trust",
+      "prompt": "A Fiber v3.5.0 DTO uses Bind().All() with binding_source. The body, URI and trusted gateway context contain conflicting project identifiers. Make whichever source has highest precedence authoritative.",
+      "expected_output": "Separates binding order from authorization, checks the resolved API, records and tests source precedence and omissions, and applies alaa-trust-gateway-auth to deny a client/trusted-context mismatch. Does not let binding order grant tenant authority.",
+      "files": []
     }
   ]
 }

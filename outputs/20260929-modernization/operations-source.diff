@@ -1,0 +1,5 @@
+# Patch evidence pointer
+
+Exact original patch bytes are preserved losslessly in operations-source.diff.gz.
+Uncompressed SHA256: 09dfacf50f69462b186945c15cac547e741898da55abb0e22584556679ea42d1
+Uncompressed bytes: 175863

@@ -110,9 +110,8 @@ export async function reapOrphanedOutboxRows(options: {
 
   await txDone(tx);
 
-  // 'queued' sorts after 'sending', so a reaped row moves ahead of this cursor and
-  // is not revisited. The claim cursor in outbox-pattern.ts relies on the mirror
-  // image of the same property. Both break if either token is renamed.
+  // 'queued' sorts before 'sending' and leaves the bounded 'sending' range.
+  // The exact-status range protects both this cursor and the claim cursor.
   return result;
 }
 

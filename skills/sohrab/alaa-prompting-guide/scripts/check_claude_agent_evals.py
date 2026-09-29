@@ -231,7 +231,10 @@ def availability_self_test(corpus, policy, completed_row):
                 row.update(scenario=case["id"], configuration=kind, repetition=repetition,
                            requested=pair.copy(), observed=pair.copy(),
                            criterion_verdicts=["pass"] * len(case["acceptance_criteria"]))
-                row["resolution"].update(claude_code_version="2.1.280", selected_source="frontmatter",
+                minimum = policy["models"][pair["model"]]["minimum_claude_code"]
+                if kind == "candidate":
+                    minimum = max((minimum, policy["profiles"][case["profile"]]["availability"]["minimum_claude_code"]), key=semver_key)
+                row["resolution"].update(claude_code_version=minimum, selected_source="frontmatter",
                     model_controls={"invocation":None,"frontmatter":pair["model"],
                                     "environment":None,"parent":None,"force":None})
                 results["runs"].append(row)
@@ -261,7 +264,8 @@ def availability_self_test(corpus, policy, completed_row):
             minimum = max((minimum, profile_minimum), key=semver_key)
         parts = minimum.split(".")
         below = ".".join(parts[:-1] + [str(int(parts[-1]) - 1)])
-        for version, findings in ((below, True), (minimum, False), ("2.1.282", False)):
+        above = ".".join(parts[:-1] + [str(int(parts[-1]) + 1)])
+        for version, findings in ((below, True), (minimum, False), (above, False)):
             changed = copy.deepcopy(results)
             changed["runs"][index]["resolution"]["claude_code_version"] = version
             errors = validate_results(changed, corpus, policy)
@@ -273,7 +277,8 @@ def availability_self_test(corpus, policy, completed_row):
     assert any("minimum_claude_code" in e for e in validate_results(impossible, corpus, policy))
     assert any("minimum_claude_code" in e for e in calibration_errors(impossible))
     higher = copy.deepcopy(policy)
-    higher["profiles"][role]["availability"]["minimum_claude_code"] = "2.1.281"
+    role_minimum = policy["profiles"][role]["availability"]["minimum_claude_code"].split(".")
+    higher["profiles"][role]["availability"]["minimum_claude_code"] = ".".join(role_minimum[:-1] + [str(int(role_minimum[-1]) + 1)])
     assert any("minimum_claude_code" in e for e in validate_results(results, corpus, higher))
     assert any("minimum_claude_code" in e for e in calibration_errors(results, higher))
     unknown = copy.deepcopy(policy)
@@ -328,7 +333,7 @@ def self_test(corpus, policy):
     complete = copy.deepcopy(base)
     first=complete["runs"][0]
     pair=first["requested"]
-    first.update(status="passed",output_evidence="synthetic/output",reviewer="independent fixture",execution_surface="synthetic",fixture_revision="fixture-v1",account_type="synthetic",independent_review=True,elapsed_seconds="unknown",usage="unknown",correction_count=0,criterion_verdicts=["pass"]*len(corpus["scenarios"][0]["acceptance_criteria"]),forbidden_actions_observed=[],configuration_verified=True,observed=pair.copy(),resolution={"claude_code_version":"2.1.280","model_controls":{"invocation":None,"frontmatter":pair["model"],"environment":"claude-opus-5-5","parent":"claude-opus-5-5","force":None},"selected_source":"frontmatter","provider_and_caps_checked":True,"evidence":"synthetic/control"},fallback={"kind":"none","disclosed":True,"safeguards_preserved":True})
+    first.update(status="passed",output_evidence="synthetic/output",reviewer="independent fixture",execution_surface="synthetic",fixture_revision="fixture-v1",account_type="synthetic",independent_review=True,elapsed_seconds="unknown",usage="unknown",correction_count=0,criterion_verdicts=["pass"]*len(corpus["scenarios"][0]["acceptance_criteria"]),forbidden_actions_observed=[],configuration_verified=True,observed=pair.copy(),resolution={"claude_code_version":policy["profiles"][corpus["scenarios"][0]["profile"]]["availability"]["minimum_claude_code"],"model_controls":{"invocation":None,"frontmatter":pair["model"],"environment":"claude-opus-5-5","parent":"claude-opus-5-5","force":None},"selected_source":"frontmatter","provider_and_caps_checked":True,"evidence":"synthetic/control"},fallback={"kind":"none","disclosed":True,"safeguards_preserved":True})
     assert not validate_results(complete,corpus,policy)
     availability_self_test(corpus, policy, first)
     for field,value in (("observed",{"model":"unknown","effort":"unknown"}),("forbidden_actions_observed",["edited outside scope"]),("independent_review",False),("configuration_verified",False)):

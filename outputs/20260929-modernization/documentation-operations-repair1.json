@@ -1,0 +1,1264 @@
+{
+  "lane": "documentation-operations",
+  "cycle": 1,
+  "review": "review-instructions-docs-candidate5.json",
+  "status": "source_frozen_pending_independent_verification_and_review",
+  "verdict": "Operations-owned D4, D5 and D8 changes addressed; no approval claim",
+  "agent_metadata": {
+    "agent": "alaa-documenter",
+    "configured": "gpt-6-luna/high",
+    "requested": "none",
+    "observed": "unknown",
+    "sandbox_enforcement": "unknown",
+    "memory_used": false
+  },
+  "scope": {
+    "current_documents": 129,
+    "markdown": 127,
+    "atomic_templates": 2,
+    "line_budget_eligible": 125,
+    "existing_files_changed": [
+      "skills/sohrab/alaa-docker-production/references/00-topic-map.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "skills/sohrab/ansible-validator/references/best_practices/50-variable-precedence.md",
+      "skills/sohrab/ansible-validator/references/best_practices.md",
+      "skills/sohrab/ansible-validator/references/security_checklist.md",
+      "skills/sohrab/ansible-validator/references/best_practices/10-structure-and-naming.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "skills/sohrab/alaa-haproxy/references/00-topic-map.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+      "skills/sohrab/ansible-validator/references/molecule.md",
+      "skills/sohrab/ansible-validator/test/README.md"
+    ],
+    "new_children": [
+      "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/10-compute-supported-baseline.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/40-quic-tuning.md",
+      "skills/sohrab/ansible-validator/references/molecule/10-setup-and-configuration.md",
+      "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+      "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+      "skills/sohrab/ansible-validator/test/corpus-usage.md",
+      "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/30-exposure-mode-selection.md"
+    ],
+    "manifest_refresh_needs": []
+  },
+  "findings": {
+    "D4": {
+      "status": "addressed",
+      "details": [
+        "GitLab DAG See below now links to the resource-group owner document; prose names the exact topic because code-only headings have no checker anchor.",
+        "Ansible cache-timeout reference links to the current performance rule.",
+        "Docker task/symptom links now reach actual child topics; secret and load children no longer use moved section numbers."
+      ]
+    },
+    "D5": {
+      "status": "addressed",
+      "route_counts": {
+        "Ansible best practices": 11,
+        "Ansible security checklist": 13,
+        "Ansible compatibility router": 2,
+        "Arvan constraints and CPU style": 12
+      },
+      "details": [
+        "Routes name a reader condition and the child-owned topic.",
+        "Arvan Step 1 discovery conditions remain.",
+        "HAProxy QUIC routing requires build eligibility before any mode guide."
+      ]
+    },
+    "D8": {
+      "status": "addressed",
+      "decompositions": [
+        "Arvan task templates: three complete templates",
+        "GitLab feature-version notes: baseline vs status/limits/deprecations",
+        "HAProxy QUIC: build requirements, frontend, backend, tuning",
+        "Ansible Molecule: setup/configuration, execution, verifier",
+        "Ansible test README: corpus usage vs fixture maintenance"
+      ],
+      "section_payloads": [
+        {
+          "source": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+          "child": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/10-compute-supported-baseline.md",
+          "sections": [
+            "Compute the baseline, do not read it",
+            "Writing an answer when the target versions are unknown"
+          ],
+          "source_sha256": "804c2516d088100ba711cd23db63624196ee44fe0f550c89f679683630a216a1",
+          "child_sha256": "804c2516d088100ba711cd23db63624196ee44fe0f550c89f679683630a216a1",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+          "child": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+          "sections": [
+            "Generally available, and therefore safe to use without a caveat",
+            "Still experimental â€” do not build a production pipeline on these",
+            "Hard limits â€” these are checkable rules, not guidance",
+            "Deprecations, each with its replacement"
+          ],
+          "source_sha256": "ef15948d2841ed6a209abafb10ce4c9894d59779bdef8d3c2f3819eaefe11ca5",
+          "child_sha256": "ef15948d2841ed6a209abafb10ce4c9894d59779bdef8d3c2f3819eaefe11ca5",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+          "sections": [
+            "The build requirement, which comes before everything else",
+            "What to do when `haproxy -vv` reports no QUIC"
+          ],
+          "source_sha256": "1e6188e3172192e1f027ede92ad98d89ecf5acf1d7cb0f854e50fcb5391e4efd",
+          "child_sha256": "1e6188e3172192e1f027ede92ad98d89ecf5acf1d7cb0f854e50fcb5391e4efd",
+          "exact": true,
+          "fenced_blocks": 2
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+          "sections": [
+            "Frontend HTTP/3"
+          ],
+          "source_sha256": "9907f02caa32ca481130ef9ac5877116a931a6782e2d18d9eab1762ab079e9c9",
+          "child_sha256": "9907f02caa32ca481130ef9ac5877116a931a6782e2d18d9eab1762ab079e9c9",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+          "sections": [
+            "Backend HTTP/3"
+          ],
+          "source_sha256": "e20dabd1bb26fb3b84331ab351dadebba542dfb6774ca115d0eea67d863bdeb7",
+          "child_sha256": "e20dabd1bb26fb3b84331ab351dadebba542dfb6774ca115d0eea67d863bdeb7",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/40-quic-tuning.md",
+          "sections": [
+            "Tuning and naming"
+          ],
+          "source_sha256": "ad75e51b146666d0e01c23a096eaa8b7434bff2e0f422a439fd46ea9ba6f9d59",
+          "child_sha256": "ad75e51b146666d0e01c23a096eaa8b7434bff2e0f422a439fd46ea9ba6f9d59",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/references/molecule.md",
+          "child": "skills/sohrab/ansible-validator/references/molecule/10-setup-and-configuration.md",
+          "sections": [
+            "Installing the driver",
+            "The configuration model this skill ships",
+            "Which image a scenario uses"
+          ],
+          "source_sha256": "f2d9c276d7040d5b7134845608dbd5c38866b776974b1c3582d35263e9562f00",
+          "child_sha256": "f2d9c276d7040d5b7134845608dbd5c38866b776974b1c3582d35263e9562f00",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/references/molecule.md",
+          "child": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+          "sections": [
+            "When running a scenario is correct",
+            "The actions, and what each asserts",
+            "Running one",
+            "When a scenario cannot run"
+          ],
+          "source_sha256": "3706d8b90fee2fdbc279677c8eaf2bf9e62dedfbd2050ea3c00f086a16af23e0",
+          "child_sha256": "3706d8b90fee2fdbc279677c8eaf2bf9e62dedfbd2050ea3c00f086a16af23e0",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/references/molecule.md",
+          "child": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+          "sections": [
+            "Writing the verifier"
+          ],
+          "source_sha256": "4cbc4de9f5ed9102eb4c01a85671423ee069c71c4d0652b8850cfae71243febb",
+          "child_sha256": "4cbc4de9f5ed9102eb4c01a85671423ee069c71c4d0652b8850cfae71243febb",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/test/README.md",
+          "child": "skills/sohrab/ansible-validator/test/corpus-usage.md",
+          "sections": [
+            "Layout",
+            "The playbook pair",
+            "Running one checker against the corpus",
+            "Using the corpus in CI"
+          ],
+          "source_sha256": "3f777fab18889597708310c43ec3e6fa99f35571ba70f09d619d45ff6916c566",
+          "child_sha256": "3f777fab18889597708310c43ec3e6fa99f35571ba70f09d619d45ff6916c566",
+          "exact": true,
+          "fenced_blocks": 2
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/test/README.md",
+          "child": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+          "sections": [
+            "Why each fixture exists",
+            "The vendored role: `roles/geerlingguy.mysql/`",
+            "Adding a fixture"
+          ],
+          "source_sha256": "2bfd07cf1020e60f0192cc260b8da34ebf068c2538ef920c613f899c70961052",
+          "child_sha256": "2bfd07cf1020e60f0192cc260b8da34ebf068c2538ef920c613f899c70961052",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+          "child": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+          "sections": [
+            "Template 1: Helm or manifest implementation"
+          ],
+          "source_sha256": "8c80413ae6e7e8a83217b75e40b190157f003499bb41acfd8d7cfe65dee3e3fb",
+          "child_sha256": "8c80413ae6e7e8a83217b75e40b190157f003499bb41acfd8d7cfe65dee3e3fb",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+          "child": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+          "sections": [
+            "Template 2: RBAC incident triage"
+          ],
+          "source_sha256": "d640781274a23c67f6d25bfd37eeb498dcbca7659a0872e46f8e5d9d404615b1",
+          "child_sha256": "d640781274a23c67f6d25bfd37eeb498dcbca7659a0872e46f8e5d9d404615b1",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+          "child": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/30-exposure-mode-selection.md",
+          "sections": [
+            "Template 3: Exposure mode selection"
+          ],
+          "source_sha256": "999c9bf68f71a4326dbb6f3075c4c606eb755c032f4a342d106b544a94b6d9af",
+          "child_sha256": "999c9bf68f71a4326dbb6f3075c4c606eb755c032f4a342d106b544a94b6d9af",
+          "exact": true,
+          "fenced_blocks": 1
+        }
+      ],
+      "preambles_byte_preserved": {
+        "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md": true,
+        "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md": true,
+        "skills/sohrab/alaa-haproxy/references/30-quic-http3.md": true,
+        "skills/sohrab/ansible-validator/references/molecule.md": true,
+        "skills/sohrab/ansible-validator/test/README.md": true
+      }
+    }
+  },
+  "checks": [
+    {
+      "gate": "whole-set links run 1",
+      "scope": 127,
+      "result": "FAIL:12 LINK-ANCHOR",
+      "cause": "Checker strips inline-code heading text; fragments included removed words and code-only resource_group had no anchor."
+    },
+    {
+      "gate": "whole-set links run 2",
+      "scope": 127,
+      "result": "FAIL:3 LINK-ANCHOR",
+      "cause": "Three Docker fragments still included stripped inline-code heading words."
+    },
+    {
+      "gate": "whole-set links run 3",
+      "scope": 127,
+      "result": "PASS exit 0",
+      "timing": "Before final resource_group document-link restoration and three QUIC prerequisite lead-ins."
+    },
+    {
+      "gate": "eligible line budget",
+      "scope": 125,
+      "result": "PASS exit 0; zero RED; no allow-red",
+      "timing": "Before three final lead-ins; current recount leaves each GREEN."
+    },
+    {
+      "gate": "focused GitLab route links",
+      "scope": 2,
+      "result": "PASS exit 0"
+    },
+    {
+      "gate": "focused QUIC child links and line budget",
+      "scope": 3,
+      "result": "PASS exit 0",
+      "lines": [
+        24,
+        24,
+        30
+      ]
+    },
+    {
+      "gate": "exact source sections",
+      "scope": 14,
+      "result": "PASS 14/14 exact",
+      "before_archive_sha256": "81c7d66dd1414b50d2a740415fec9de49af8c30a48ab1c05ace532909fde12a9"
+    }
+  ],
+  "grade_counts": {
+    "GREEN": 80,
+    "YELLOW": 40,
+    "ORANGE": 5,
+    "RED": 0
+  },
+  "documentation_gate_satisfied": false,
+  "expected_unchanged": [
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "baseline_sha256": "0a7fb3c2cee7730555443931bcc56a2ed655c5d75e7191afccc92c300dcf3819",
+      "current_sha256": "0a7fb3c2cee7730555443931bcc56a2ed655c5d75e7191afccc92c300dcf3819",
+      "unchanged": true
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "baseline_sha256": "0c9a3525e9ba8465a94e3459c0d5395ca447017fbdb9d5a9a78eb8f6efcaabbf",
+      "current_sha256": "0c9a3525e9ba8465a94e3459c0d5395ca447017fbdb9d5a9a78eb8f6efcaabbf",
+      "unchanged": true
+    }
+  ],
+  "limits": [
+    "No whole-set scan was repeated after final narrow edits; changed-route files passed focused checks.",
+    "Independent whole-scope verifier/reviewer remain pending.",
+    "No executable, checker, config, schema, manifest or operator template payload changed."
+  ],
+  "before_archive": {
+    "path": "documentation-operations-repair1-before.zip",
+    "sha256": "81c7d66dd1414b50d2a740415fec9de49af8c30a48ab1c05ace532909fde12a9",
+    "files": 61
+  },
+  "final_hash_inventory": [
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+      "sha256": "8f1d8dfb4d192ed70a37e1cc49cbe849e3a8bbe43467c0afef3216867b136bd6",
+      "lines": 105,
+      "grade": "ORANGE",
+      "reason": "ORANGE: Source priority, conflict resolution and re-derivation are one provenance decision; splitting detaches conflict rules from source authority."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "sha256": "59069978417e8b4c0fbedf7113a382b19c16bc7b7b3bce723920e05592e3e114",
+      "lines": 48,
+      "grade": "GREEN",
+      "reason": "GREEN: Each secret-delivery trigger routes to a matching child and preserves build, Compose and security ownership."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "sha256": "3b9797af5b68eced56677bb786e0558db14f0bddb10b42e79a63815a64cf4059",
+      "lines": 27,
+      "grade": "GREEN",
+      "reason": "GREEN: Network, exposure and diagnosis triggers route to matching owners."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "sha256": "c1f01da2e4507c3a6e3d7dfcfab0ffc0824b4b8f073006563a94648a10e1038f",
+      "lines": 40,
+      "grade": "GREEN",
+      "reason": "GREEN: Sizing and load-diagnosis triggers route to their matching resource child."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+      "sha256": "4043572a6cb4ae43a806ffcf14f5822cbbf9937850866e4f2fecf36d3c68e329",
+      "lines": 88,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Owner and authority rows form one boundary lookup; splitting weakens each row’s comparison to alternatives."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/00-source-map.md",
+      "sha256": "99d0527a6bff8c2e14e7952dbe1ccd15b7fec7e51e31237e3da4c6a23ac5d552",
+      "lines": 114,
+      "grade": "ORANGE",
+      "reason": "ORANGE: Official-source precedence and re-derivation routes form one cross-topic evidence contract."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+      "sha256": "3dac501135f6bdd0a60454489c03f200fd570e36398aece79ad25285675d463f",
+      "lines": 33,
+      "grade": "GREEN",
+      "reason": "GREEN: Unknown baselines and feature qualification now route to separate baseline and lookup children."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "sha256": "eecbc2bbd73f50328eda1bb95be0aa19ae9158fcedc281ac4cf26a04b1b8941a",
+      "lines": 58,
+      "grade": "YELLOW",
+      "reason": "YELLOW: The task router keeps graph, concurrency and retry triggers in one lookup to select the owning child."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "sha256": "87f587641e6e1105d277bce1137ddce4bfd74b011311179fb058e3d21ced15be",
+      "lines": 44,
+      "grade": "GREEN",
+      "reason": "GREEN: Table of contents is one bounded topic or integrated reader task at 44 physical lines; its prerequisites, conditions and proof stay together."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "sha256": "58c9dec767b18148df020358174fba6a555b634345128ef4180cd574c291bb0f",
+      "lines": 64,
+      "grade": "YELLOW",
+      "reason": "YELLOW: The gate router compares local checks, live CI Lint boundaries and failure triage in one decision path."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "sha256": "68d816afa48fbefada72ffcce5cf4918c3e1d01fb5b990a69bf18520cf9967cb",
+      "lines": 55,
+      "grade": "YELLOW",
+      "reason": "YELLOW: The route table connects variable mechanisms, precedence, protected values and forwarding to their owners."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/10-version-and-branch.md",
+      "sha256": "0fa2cb9d168c96412edc91c6575539b1dcccb1b41bf7292d9062c279aa7a1afe",
+      "lines": 131,
+      "grade": "ORANGE",
+      "reason": "ORANGE: Branch selection, feature proof, compatibility changes and upgrade validation form one ordered branch decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "sha256": "89c362b20c3c8b7159f1b0577b32046dda83acf019fe2e2f455a9e3f41f3e4bb",
+      "lines": 49,
+      "grade": "GREEN",
+      "reason": "GREEN: The `defaults` association rule is one bounded topic or integrated reader task at 49 physical lines; its prerequisites, conditions and proof stay together."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+      "sha256": "dce66df642d1df0d0a456329a3796e9fddb698c94ad73cf629370b8b7c67e265",
+      "lines": 23,
+      "grade": "GREEN",
+      "reason": "GREEN: QUIC build eligibility is an explicit prerequisite before frontend, backend or tuning guidance."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "sha256": "90025d7524ad3d1d1c032688133b4c2a8fd99e70f05172c8aa92f8db8bd4d7c0",
+      "lines": 83,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Predicates, commands and expected artifacts form one ship/no-ship proof register."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+      "sha256": "7d677f2a66f0295dde35afdd6009a24a279c069d00c6ce02cc0884c3bb1d9bfd",
+      "lines": 52,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Owner, authority and escalation rows form one cross-skill boundary lookup."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/SOURCES.md",
+      "sha256": "84dfd56d826cb38faedf44e70557019622fb9233df332fb87736e46e393aadf5",
+      "lines": 96,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Source date, precedence and freshness steps form one provenance route."
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+      "sha256": "6dbd28ebaedbf115e793a869e6a0787977c57ebf8e238e8a5c24f485953b7eb2",
+      "lines": 128,
+      "grade": "ORANGE",
+      "reason": "ORANGE: The dated release/API snapshot keeps observed version, behavior and its matching re-derivation source together."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/SKILL.md",
+      "sha256": "98d4b764389239a8922681e1de427861ed2be76357aa7df60e484e8dd23ea03c",
+      "lines": 100,
+      "grade": "EXEMPT-ATOMIC",
+      "reason": "EXEMPT-ATOMIC: Atomic always-loaded execution contract: triggers, decisions, authority, safety and stops must load together."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices.md",
+      "sha256": "2448ed94780b4c1063fe218ab948752bdba1cfcb1b0dac97987c1ff34cc49699",
+      "lines": 60,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Rule-number headings and condition routes preserve the remediation citation map to one owning child per rule."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule.md",
+      "sha256": "a4d9506e5c35cf1f0f69b3e6bd21e405f95f322c7ba3a5d3e47e664d97b6ad41",
+      "lines": 43,
+      "grade": "GREEN",
+      "reason": "GREEN: The entry trigger and dated verification remain while setup, execution and verifier tasks route separately."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist.md",
+      "sha256": "9ced3eff10c59c005dc28ca7c4a13ecd87934fc676c3728a4c92ee041325c2ba",
+      "lines": 72,
+      "grade": "YELLOW",
+      "reason": "YELLOW: The checklist and audit-command route remain one index, with each security trigger routed to its owner."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/source-map.md",
+      "sha256": "4e6933755908071de04ee225d4ddee0d32e02a365949de87eb7926acd8f86c87",
+      "lines": 147,
+      "grade": "ORANGE",
+      "reason": "ORANGE: Source authority, precedence, verification dates and re-derivation commands form one global provenance ledger."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/README.md",
+      "sha256": "36f95b72ffede9cca998cb4035b4d7e7429c9eec134e559bfa8c137115537cb7",
+      "lines": 32,
+      "grade": "GREEN",
+      "reason": "GREEN: The self-test contract stays at the entry point; usage and fixture maintenance have separate routes."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "sha256": "8f1ad6cd0f575259b1af197c7a1e53a166a78e54089fae99b4e720f5c2ea5682",
+      "lines": 99,
+      "grade": "EXEMPT-ATOMIC",
+      "reason": "EXEMPT-ATOMIC: Atomic always-loaded platform contract: discovery, authority, stop and output rules must load together."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "sha256": "0a7fb3c2cee7730555443931bcc56a2ed655c5d75e7191afccc92c300dcf3819",
+      "lines": 172,
+      "grade": "EXEMPT-ATOMIC",
+      "reason": "EXEMPT-ATOMIC: Approved complete operator payload; keep reviewed commands and secret contract intact."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "sha256": "0c9a3525e9ba8465a94e3459c0d5395ca447017fbdb9d5a9a78eb8f6efcaabbf",
+      "lines": 191,
+      "grade": "EXEMPT-ATOMIC",
+      "reason": "EXEMPT-ATOMIC: Approved complete runbook payload; keep reviewed commands and secret contract intact."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/SOURCES.md",
+      "sha256": "0bf3382a4b6220aba88d2a51b79f609ed17c6713d788c9c05ea27b9a4fe0da95",
+      "lines": 90,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Source precedence, capture dates and refresh steps form one platform evidence contract."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-capability-matrix.md",
+      "sha256": "e04340069c42b1c9b47fb2449a91597fbec084e15162bfa197d144d90caf9fa0",
+      "lines": 92,
+      "grade": "YELLOW",
+      "reason": "YELLOW: The paired-line comparison and unknown/absence rule form one discovery decision artifact."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "sha256": "19e65f24552fe999a8e6bb1eb368e571f7fcd508262d697d48a3e14a438ae366",
+      "lines": 56,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Numbered Arvan rules route conditions to one topic owner while retaining Step 1 and single-owner constraints."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-execution-loop.md",
+      "sha256": "4dc49d684fa6d351f56d0436bb456c56b75c2c0812dcf4d654968edaadfcd867",
+      "lines": 68,
+      "grade": "YELLOW",
+      "reason": "YELLOW: The ordered discovery-to-delivery loop is one procedure whose stages carry prerequisites."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-rbac-namespace-facts.md",
+      "sha256": "bd8a8d044d66f897cf753026aa9e40a2345f393878b74ea7032ca6bb27320698",
+      "lines": 66,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Principal, namespace form and permission evidence are one bounded authorization diagnostic."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "sha256": "2fb85b8f806de06f02eb45a8c0190c259f25a4b5636156d7e0252d03a445e499",
+      "lines": 17,
+      "grade": "GREEN",
+      "reason": "GREEN: Template 1: Helm or manifest implementation is one bounded topic or integrated reader task at 17 physical lines; its prerequisites, conditions and proof stay together."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/00-topic-map.md",
+      "sha256": "e79121c94820bb5bb9b9d9788a12ecafd1022a590d783e5e4ecb8d3e14433156",
+      "lines": 76,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Task and symptom routes share one entry map connecting triggers, follow-up checks and canonical owners."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md",
+      "sha256": "73bf2b83eac3e34135e2e0a05efc0b453d261f6ede8fa601970858baa23eaced",
+      "lines": 40,
+      "grade": "GREEN",
+      "reason": "GREEN: The concise task-to-owner map routes authoring, variable, graph and validation triggers."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/00-topic-map.md",
+      "sha256": "4c94c4fa2c3ec9835caacb0a2f8e03bf987810c3e5c2ee8beb216906616bef82",
+      "lines": 81,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Task routes, minimum branches and starting examples are one compatibility-aware index."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+      "sha256": "fd79629bde01f9e3aa1944ff0ae0db38e0d64115684247645aa1a2a662d87659",
+      "lines": 18,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+      "sha256": "7fa9bcdd8ea14649634c3db773e5643310b0dd7a4c24d52795bee40c09619838",
+      "lines": 42,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+      "sha256": "d5009240f785b5b5a4256c8297929af4b88636fd7fec282991964c97687c80b9",
+      "lines": 33,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+      "sha256": "240b6d3f34058af339d403a0e854cef7129aac848f9b5ced20909e7797dec280",
+      "lines": 45,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "sha256": "167edafc78037c63ac1fc657fc75f365daf4b768ec846cf702606dbdd3f5abe2",
+      "lines": 64,
+      "grade": "YELLOW",
+      "reason": "Swarm secret rotation is one ordered lifecycle with proof conditions."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+      "sha256": "7c8894dc01da7fa35b68413cbca9607014e3320aa2cffa35322abafc48138265",
+      "lines": 49,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+      "sha256": "422b896a41e00ab4e12bcfd89c8c23bab1c00cd9ae915ca9a363c770526ee735",
+      "lines": 77,
+      "grade": "YELLOW",
+      "reason": "DNS/network reachability is one diagnostic path with ordered resolution checks."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+      "sha256": "9ca43ccdcc2ed5eb447c43e7b2d92c4d2d863bd7510112be272483aa95a5e829",
+      "lines": 82,
+      "grade": "YELLOW",
+      "reason": "Exposure and trust controls are one boundary decision with linked prerequisites."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/30-discovery-diagnosis.md",
+      "sha256": "a12cd4b60277b17b27c691104469d702ec8aae56838511f8fc7c35443d0af58b",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+      "sha256": "3684b7bfab49b800c56067faecec401077bd95f62ea98d263671c2e1f59ac7db",
+      "lines": 54,
+      "grade": "YELLOW",
+      "reason": "Resource ceilings are one limit-selection procedure with their symptoms and verification."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+      "sha256": "b8af13b05f399215968698ebf142394968047d37bd27c0346bcca66e0a7b6695",
+      "lines": 97,
+      "grade": "YELLOW",
+      "reason": "Process, descriptor, and pool sizing form one capacity diagnosis and tuning workflow."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+      "sha256": "f168c9db671efcd0fce97d10056ba6bc77b91efcd7e81caeb4630e0151d2d29c",
+      "lines": 89,
+      "grade": "YELLOW",
+      "reason": "Process, descriptor, and pool sizing form one capacity diagnosis and tuning workflow."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md",
+      "sha256": "68bc9d7c16d5f66fee04b560fa75ece36e5e2385226cf5f50da1943579567876",
+      "lines": 25,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/10-compute-supported-baseline.md",
+      "sha256": "0977770ec9ec4678f723c6eef87f4bd9fe2f0c6b04f6aeefb1efbc0bfd5054ad",
+      "lines": 53,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Release cadence, supported-line calculation, live versions and dated observations form one baseline answer path."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+      "sha256": "e71f4c28b227974c1ecbc097558f77dd6e0bd73e465d5e541a5055ba361c9ba6",
+      "lines": 56,
+      "grade": "YELLOW",
+      "reason": "YELLOW: GA/experimental state, hard limits and replacements form one feature qualification lookup with per-claim sources."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "sha256": "2f2f26f7053482c1511a742411d2a7342c8ee5263a3a53be01995498ce77a422",
+      "lines": 57,
+      "grade": "YELLOW",
+      "reason": "DAG edge and critical-path decisions are one scheduling lookup."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+      "sha256": "4ec797a81cdb3a2921ff1dfa3fe49f4363683376e0e37e7c6f19ec10b5fc4403",
+      "lines": 30,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+      "sha256": "0bf264fbd5432b3353f1e5cc0022cb69397879a5eae4469623d788b2855bd875",
+      "lines": 48,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+      "sha256": "37f6c803fe748f307b37a7250407531621f03f2bb03c8ff2a845ff8c53de6486",
+      "lines": 43,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "sha256": "7cd97e282f0dc6fab115894831f9e85020d7806317ce903827e381eef3c851dc",
+      "lines": 12,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+      "sha256": "d98253b9579a074475db2c74807b616d4628cd5393fc8566adee83446e3019d9",
+      "lines": 28,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/60-job-creation-conditions.md",
+      "sha256": "7a3f09a8952ed576eebe3dc1fecf790b5987633de47d821ec5cea92c57405c75",
+      "lines": 24,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+      "sha256": "33f5993a427884e9318426f5f2c31b5aeb2cd0781fab97a96c7c7636d7f0b79a",
+      "lines": 66,
+      "grade": "YELLOW",
+      "reason": "Pipeline creation conditions are a compact ordered decision route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+      "sha256": "994230edb851a3aab528dfb92b6d55f633dfce1b50cc3c487c94b15ae5a26d5d",
+      "lines": 20,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "sha256": "5c53fe7a1ac82dcc91d114e722f2481d04d30b8c8e59d107c84ec88182a4d410",
+      "lines": 12,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+      "sha256": "fb6678bc938283531734384207336c63864d17cf70416609ca14ab73ad66d698",
+      "lines": 73,
+      "grade": "YELLOW",
+      "reason": "Environment and rollback form one deployment lifecycle with prerequisites."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+      "sha256": "5261d6b8fb18c8281fc8452fb412875fb7d5c119b2841f93639264c7269052f4",
+      "lines": 52,
+      "grade": "YELLOW",
+      "reason": "Reuse/composition mechanisms are compared in one concise authoring decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/40-child-pipelines-and-checklist.md",
+      "sha256": "f21bcc993aa235fc97d33b0321e12d074791e0d152669f780b01f8277ee9fb33",
+      "lines": 31,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/10-static-validation-and-checkers.md",
+      "sha256": "01d6a100351a64ac0217dc24bb9f9606c2e11146ca99be1fceb78eed4444fe39",
+      "lines": 86,
+      "grade": "YELLOW",
+      "reason": "Static validation tools are one local validation procedure with explicit boundaries."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+      "sha256": "a82252d0b08edbdf78e8a700648bf246f2b07f54713d5b8bb5d468bb4a00302c",
+      "lines": 18,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+      "sha256": "0ae457dc1a8121f939b80349d8f451943810d13dc482c2cd78b391b378587de9",
+      "lines": 35,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-failure-class-triage.md",
+      "sha256": "6df0a4e03606432b88f1da2c3984bc689bdaadba12d439aa655d7468b3874ec7",
+      "lines": 7,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+      "sha256": "375060a8231a6eaeccbad7fc7abee0609b03c808da9d9437e7d8ef36d64cc061",
+      "lines": 26,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+      "sha256": "ef74a65a996b25e654c76e0b3254cb475033775f4c4a9c1d0f1c3f0882a08640",
+      "lines": 64,
+      "grade": "YELLOW",
+      "reason": "Runner/runtime failures form one symptom-to-diagnosis procedure."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/50-symptoms-and-cross-file.md",
+      "sha256": "9af62618c85af3964540718bcac3acb83f3bc7e74f38295add2adc5931379996",
+      "lines": 26,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+      "sha256": "e836a1ff8a6f644632e1d4961c3d68825d63662783e09fc5242fd14e455f122a",
+      "lines": 52,
+      "grade": "YELLOW",
+      "reason": "Variable/input expansion is one precedence and evaluation decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "sha256": "538ea891359d21881fa52cf9e9988da77fb98df4ac8cd8d9d228277c0d4f9bc9",
+      "lines": 12,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "sha256": "69fc0b46ca3f29c0715b7905de98c00769fb618d78676ddddc49f2487dc927d0",
+      "lines": 16,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+      "sha256": "b7c04266e93a9c377702da81ebd16f608d41be7430b8fbab0b11f5f245c069f3",
+      "lines": 18,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+      "sha256": "57e578afa48c3f74c724333ce39051a6ad977738015c727b931a93365d7a8369",
+      "lines": 19,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "sha256": "b3338660cd20c834848affd2799e7739e8a1ed8614558dcff69b66a01976fecd",
+      "lines": 16,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+      "sha256": "3df962787366c06bcf40053c131ec186a4f05ec9f5f32880e609c6401f4fb803",
+      "lines": 32,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+      "sha256": "f231c29e2a1d384627e39912ef105a5e65830bc64038c93f1de679167f22929c",
+      "lines": 50,
+      "grade": "YELLOW",
+      "reason": "Variable/input expansion is one precedence and evaluation decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+      "sha256": "1b6645c98341422988e95268959c45b5de7ed1eb6fc43d603845e1566d27cb38",
+      "lines": 14,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+      "sha256": "05b7d7154158ed8dbebb4b14d845386f981e5d60d62e20ce3f48967af83cf171",
+      "lines": 12,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/80-variable-debugging-and-inventory.md",
+      "sha256": "9caf8fc21c9e249297ecc2a65a97aed5622d1f82c24b33fb3c81b00460f1b61c",
+      "lines": 32,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+      "sha256": "9098ce6f71f2c876c9ea39e68f858c9ac6cd2ee7a8589aed8e832b5916e8649c",
+      "lines": 77,
+      "grade": "YELLOW",
+      "reason": "Defaults association is a compact decision table whose links and exceptions are read together."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+      "sha256": "b59edf2afb9c90f44d0e41bede7444aa05158c57f969135bf50f8bc36a92ee01",
+      "lines": 34,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+      "sha256": "b4420660267293b53800cd0591df037260b4f4b15a7e74452a5a7510e0856231",
+      "lines": 44,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+      "sha256": "db22ce1e68a589684c36c133fa96a7311f300edc2f9f908ddc99419989ab2de4",
+      "lines": 46,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/50-symptom-diagnosis.md",
+      "sha256": "bf5e3146266ac49088a5c9daa92b42a74214ffc4e050f363120f1ac4b63a31b4",
+      "lines": 37,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "sha256": "861f34aee4205b95082d30cfff1ffc3dd5364c1eb8a484cf95fbd44e1ed3d2bd",
+      "lines": 67,
+      "grade": "YELLOW",
+      "reason": "YELLOW: TLS-stack/build compatibility and no-QUIC outcomes jointly decide HTTP/3 eligibility on the actual binary."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+      "sha256": "7ed5628c6e99a2bbf8d1fd650f5807aeb46f7c14b1118c36ef85636c84d778b8",
+      "lines": 24,
+      "grade": "GREEN",
+      "reason": "GREEN: The Frontend HTTP/3 template is separately triggered and complete at 24 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+      "sha256": "bed59b5150951401a6d71f7e1d3c88eea4e2c5265b8d9dd3d4ab6eb9527d6646",
+      "lines": 24,
+      "grade": "GREEN",
+      "reason": "GREEN: The Backend HTTP/3 template is separately triggered and complete at 24 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/40-quic-tuning.md",
+      "sha256": "7677a09b3b2e7f1d222ef04d976a8ba2c85597ba8a6af378a7657a8558a8d022",
+      "lines": 30,
+      "grade": "GREEN",
+      "reason": "GREEN: The Tuning and naming template is separately triggered and complete at 30 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+      "sha256": "6a83821c83e30da8ecc2bbf4c0a8b4ffd02d5194f2bfffe3243dd2479d81222b",
+      "lines": 27,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+      "sha256": "a9f11d79ec7eb94478dca31a5d810b39912f48c00eb897966bb1cdf5b9d5bca2",
+      "lines": 26,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/10-structure-and-naming.md",
+      "sha256": "61f034cc8bda852c478581a7ef36607e849253ffcdda08a1494d9d1fef9bda28",
+      "lines": 9,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/20-module-selection.md",
+      "sha256": "3ed63e8dbe38a8638dc159b6a0b99f13493edd5ded7be26350d7f1f7e0a25ff8",
+      "lines": 40,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+      "sha256": "dfa5ea603737759d18ef703dc6ba2beb7aae4cc5d451d219309ba6a33e2a18fd",
+      "lines": 21,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/40-error-handling.md",
+      "sha256": "e48bf1e4520c3e8c3e04ce7c1616a2989d31bece5877850259e3977bb540d046",
+      "lines": 43,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/50-variable-precedence.md",
+      "sha256": "276d6daac9d06a1a851a2d3e58c5eab2e66e4f258760b5a89a6d2a44a2981031",
+      "lines": 57,
+      "grade": "YELLOW",
+      "reason": "Variable/input expansion is one precedence and evaluation decision."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/60-conditionals-and-loops.md",
+      "sha256": "45d1006eb62d296563884a17e27de22013ff526637d4c0d42b9709159bc31906",
+      "lines": 23,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+      "sha256": "cb62ce6e433c9b114b161a745c1913e40ffccabf85509f2ec36262dfdd1a9f3a",
+      "lines": 35,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/80-performance.md",
+      "sha256": "afb63a672db678af06997a9430635ba8312def78d44c4df0fb5ff1d2000d31df",
+      "lines": 65,
+      "grade": "YELLOW",
+      "reason": "One integrated decision/procedure requires its prerequisites and ordered checks together."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/90-check-mode-and-documentation.md",
+      "sha256": "02dd96a0749d2222e2d98f3ea8a1004e644d7d35b11fc7273d0a2029b8be283c",
+      "lines": 28,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/10-setup-and-configuration.md",
+      "sha256": "4bb98160ecf17312599edba894729101c2c336aacf7df4ae7146734da28d3cf3",
+      "lines": 49,
+      "grade": "GREEN",
+      "reason": "GREEN: The Installing the driver template is separately triggered and complete at 49 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+      "sha256": "1d244f983423bd611f40dce0d4b204feb86d8b79d137fc386c5aa4b719420107",
+      "lines": 98,
+      "grade": "YELLOW",
+      "reason": "YELLOW: User/disposable-host gate, stage order, teardown and failure outcomes make one execution lifecycle."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+      "sha256": "d476cddb66b2abf6f0116c39544cc69554a5d7d51faef051f0b16045696bcb26",
+      "lines": 41,
+      "grade": "GREEN",
+      "reason": "GREEN: The Writing the verifier template is separately triggered and complete at 41 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+      "sha256": "08268c83a410d7c9bf2c0127f957f170e0dede0d691aa529c61fde2da05712ac",
+      "lines": 29,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+      "sha256": "67bf86dfc1ef7c40dd91cc019bf27b3e415207b984c1e6c298e6e24ce1f0abbf",
+      "lines": 17,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+      "sha256": "2b15e5d3a35dda308eb23d81bb62bfb22c12dc41c4268f0fe4ba42ed4663dc3a",
+      "lines": 25,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+      "sha256": "4d24d59e1894a6ac93e5f2258cba3e08bf6e6ba2322a20f7245b3bc096532bab",
+      "lines": 17,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/130-tool-boundaries.md",
+      "sha256": "1b1ba2f465c3a58e37785a729ac5d6f064ec9d46299a43f34dc087cb719ad4c4",
+      "lines": 21,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+      "sha256": "da8d64b256ae4199fe657f69147153e8a62cd1528b27caebad4fcd8cef2c1f2e",
+      "lines": 48,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+      "sha256": "b8832f0f5b78ec25fb9d9629f8009ecfb6e650d649620710e8a837405353b5d6",
+      "lines": 23,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+      "sha256": "9124f8d901a038eec9de6ff586044feb16fe8ba6c10c749179eafee5c97ac0b2",
+      "lines": 66,
+      "grade": "YELLOW",
+      "reason": "Vault mechanics are one secret lifecycle with ordered checks."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+      "sha256": "1f73584e01c076e80f6b0ebed97b0479fd4e4703a97c81ea5149025b30337fb8",
+      "lines": 27,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+      "sha256": "b6c5ab38ad8c680d49eb06c0c1ae80c63e37d776bf3faedc3faad517cee556f2",
+      "lines": 32,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+      "sha256": "f73d04ffde23b24534790549982934cd847093f7ddd94617be3e527012fb7383",
+      "lines": 42,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+      "sha256": "471514d4cb7d1a601815c909f2b1fa2b112e2b9379eb847ac96d8d09be60e06f",
+      "lines": 25,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+      "sha256": "c1eb09bd692b36a88e3f88db5462a93525d8609794b1f0e0e66e3728303a0112",
+      "lines": 26,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/corpus-usage.md",
+      "sha256": "12f9c8205c82fb7a31267bd70f0a6a4147ead97d20bf44a97c6918f753f64303",
+      "lines": 62,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Layout, checker commands, assertion contract and CI interpretation form one corpus-use path."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+      "sha256": "cf5df91cc5bdf5935d4c377cf4b1fd5f22de18dab0f64ac13bdc77b50d17bba4",
+      "lines": 83,
+      "grade": "YELLOW",
+      "reason": "YELLOW: Regression purpose, fixture-addition rules, vendored provenance and refresh bounds form one maintenance decision."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/10-resource-parity.md",
+      "sha256": "92988722652bb31e1f91dfbe1e4ed6f440ce625f2119429ace6df4702e784857",
+      "lines": 38,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/20-stateful-storage.md",
+      "sha256": "71675d535ea12cd3dad0f522edada6eee48db0daa33cb194f42d5069a78c6ce8",
+      "lines": 25,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/30-exposure-config-and-secrets.md",
+      "sha256": "3b6ef92d290f1ee6b093920f8f427891199972d39b08a33d295b5ba6bb3351b3",
+      "lines": 46,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/40-namespace-and-panel-scope.md",
+      "sha256": "cc8f708ae1197816458eb3400aa6c099b30ea434ec2b568e2e8792c8c5d3dc24",
+      "lines": 17,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/50-node-placement-and-portability.md",
+      "sha256": "a67390927eea0a0b3466b4b4d4e6075abb9c0651fd295c18a93b91a064356fae",
+      "lines": 29,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/60-delivery-failure-map.md",
+      "sha256": "f7fb9d0b1ae3f47a14835defb02bb8458bdf0133f63151a0217262ed829435b2",
+      "lines": 16,
+      "grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+      "sha256": "3c1305bdf113a7f6dd4e714332d8097a5c03ca5b068c7d19891d41e41ab98405",
+      "lines": 43,
+      "grade": "GREEN",
+      "reason": "GREEN: The Template 1: Helm or manifest implementation template is separately triggered and complete at 43 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+      "sha256": "260e7234418f7b78db4de608459f50fcc8be8fbdaa03b131335bdaee4886980b",
+      "lines": 36,
+      "grade": "GREEN",
+      "reason": "GREEN: The Template 2: RBAC incident triage template is separately triggered and complete at 36 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/30-exposure-mode-selection.md",
+      "sha256": "ed7c6e53050a2c1d68183670e4c01b34bdc8930930aac53aeac8c657c7953e1f",
+      "lines": 40,
+      "grade": "GREEN",
+      "reason": "GREEN: The Template 3: Exposure mode selection template is separately triggered and complete at 40 physical lines; its Step 1 precondition stays with it."
+    }
+  ],
+  "report_snapshot_correction": {
+    "status": "refreshed_after_final_source_write",
+    "reason": "Six D4-targeted Markdown files had later same-lane relative-link repairs after the initial report hash snapshot; parent confirmed no other authorized writer touched these directories.",
+    "paths": [
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "skills/sohrab/ansible-validator/references/best_practices/10-structure-and-naming.md",
+      "skills/sohrab/ansible-validator/references/best_practices/50-variable-precedence.md"
+    ],
+    "refresh": "Recomputed final hashes and physical line counts from current files for every inventory and grade row."
+  }
+}

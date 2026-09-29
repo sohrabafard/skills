@@ -1,0 +1,66 @@
+{
+  "recorded_by": "parent from independent integrated_verification final",
+  "agent": "alaa-verifier",
+  "configured": "gpt-6-luna/low",
+  "observed": "unknown",
+  "snapshot": "candidate-3",
+  "verdict": "PASS for frozen snapshot; later two-template edits require final reconciliation",
+  "checks": [
+    {
+      "name": "HAProxy changed checker --self-test",
+      "result": "PASS",
+      "exit": 0,
+      "cases": 10,
+      "environment": "Existing python:3.11-slim, Python3.11.16; pullnever/networknone/read-only mount/nonroot/resourcebounds; hostBelowNormal2CPU",
+      "proof": "Checker fixture behavior, not live HAProxy parse"
+    },
+    {
+      "name": "Root structure/index/fleet/lifecycle",
+      "result": "PASS",
+      "exit": 0,
+      "fleet": {
+        "skills": 69,
+        "markdown_files": 864,
+        "citations": 4544
+      }
+    },
+    {
+      "name": "Workflow plan validator",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "name": "Assessment coverage",
+      "result": "PASS",
+      "unique_skills": 69,
+      "evidence_references": 73,
+      "missing": 0
+    },
+    {
+      "name": "HEAD whitespace and untracked source whitespace",
+      "result": "PASS",
+      "tracked_exit": 0,
+      "untracked_files": 5,
+      "limits": "Tracked CRLF warnings only"
+    },
+    {
+      "name": "Candidate3 initial manifest",
+      "result": "PASS",
+      "paths": 154,
+      "mismatches": 0
+    }
+  ],
+  "cited_not_rerun": [
+    "Writer ShellCheck5",
+    "Writer Ansible5",
+    "Writer native render12",
+    "Writer Shaka focused green",
+    "Parent actual IndexedDB9 browser evidence"
+  ],
+  "postcheck": "Only two expected Arvan operator templates changed after tests; executable inputs unchanged, candidate4 captures updates",
+  "pending": [
+    "Final documentation grading and affected final refs/scope/whitespace",
+    "Exact container argv/tool-version record to reconcile on final verifier followup"
+  ],
+  "artifacts": "Operator wrote no verification artifact; this report records returned observations, not raw logs"
+}

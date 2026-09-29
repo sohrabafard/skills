@@ -1,7 +1,7 @@
 # QA modes and the player checklist
 
 Test design, the six proof levels, doubles, flake and what counts as evidence are owned by
-`/alaa-testing-strategy` (`$alaa-testing-strategy`). This file states only which **player** facts each
+`/alaa-testing-strategy`. This file states only which **player** facts each
 mode can prove and what a player change must exercise.
 
 ## Mode selection
@@ -12,8 +12,8 @@ Pick the lightest mode that can actually prove the claim.
 |---|---|---|
 | **Unit** (`vitest`, no browser) | Pure policy: the config builder and its range validation (`15-…`), track-row mapping (`26-…`), the QoE derivation and its `NaN` guards (`60-…`), the TTL assertion (`42-…`), schedule boundary selection (`37-…`) | Anything involving MSE, EME or a real network |
 | **Component** (`@vue/test-utils` + a fake player) | Lifecycle ordering, teardown completeness, run-token behaviour on a fast source change, that the error path reaches the UI | Real playback |
-| **Headless browser** (`/playwright`, `$playwright`) | Emitted event sequence, filter behaviour and per-attempt refresh, retry counts, teardown integrity, `getStats()` shape, offline `store()` flow | Anything visual |
-| **Visual browser** (`/playwright`, `$playwright`) | Control layout, caption readability and position, overlay stacking, ad chrome, focus order, breakpoints, remote-control navigation | Event correctness |
+| **Headless browser** (`/playwright`) | Emitted event sequence, filter behaviour and per-attempt refresh, retry counts, teardown integrity, `getStats()` shape, offline `store()` flow | Anything visual |
+| **Visual browser** (`/playwright`) | Control layout, caption readability and position, overlay stacking, ad chrome, focus order, breakpoints, remote-control navigation | Event correctness |
 | **Real device** | iOS Safari load mode, FairPlay, TV `stallSkip` behaviour, persistent-licence support | – |
 
 A screenshot never proves event correctness, and an event log never proves caption readability.
@@ -75,20 +75,20 @@ tolerance · behaviour when the playhead falls out of the window.
 
 **Analytics** — quantities emitted match `getStats()` · `NaN` fields are `null`, never `0` · a
 snapshot is flushed on `unloading` and on `pagehide` · every wire name traced to
-`/alaa-services-contract` (`$alaa-services-contract`) · an idempotency key is present.
+`/alaa-services-contract` · an idempotency key is present.
 
 **Lifecycle** — route change · repeated mount/unmount · timer cleanup · listener cleanup · no memory
 growth across ten mounts · no network activity after unmount.
 
 **Visual** — loading, empty and error states · control contrast and hit targets · caption readability
 · overlay stacking and dismissal · keyboard and remote navigation · RTL layout with
-`showMenusOnTheRight`. Design acceptance is `/alaa-ui-ux-design-system` (`$alaa-ui-ux-design-system`),
+`showMenusOnTheRight`. Design acceptance is `/alaa-ui-ux-design-system`,
 `references/90-quality-gates-and-review.md`.
 
 ## What "verified" means for a player change
 
 A claim of verification names the mode, the scenario and the observation. "Tested in Chrome" is not a
-claim. `/alaa-testing-strategy` (`$alaa-testing-strategy`), `references/80-evidence-and-reporting.md`
+claim. `/alaa-testing-strategy`, `references/80-evidence-and-reporting.md`
 owns the reporting form; the player-specific minimum is:
 
 - the emitted event sequence for the scenario, or the screenshot for a visual claim;
@@ -101,3 +101,10 @@ It costs one process and catches the class of bug — a call to an API removed t
 amount of visual QA finds, because an optional-chained removed method produces no error at all.
 **Common mistake.** Doing a full visual pass when the defect is in a request filter, or concluding
 event correctness from a screenshot. Both waste the expensive mode on a claim it cannot prove.
+
+## Template regression gate
+
+Run `node --experimental-vm-modules scripts/check-template-regressions.mjs` from this skill
+on Node 24+. It executes the templates with Vue/Shaka doubles to check source clearing, pending
+attachment/disposal, rejection handling and QoE queue retention during concurrent sends. It proves
+logic only; the browser/device matrix remains required for consumer playback claims.

@@ -1,0 +1,23 @@
+{
+  "recorded_by": "parent from independent instruction_review final",
+  "verdict": "APPROVED-WITH-NITS",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "scope": "Candidate3 affected prose plus two authorized candidate4 operator templates",
+  "blocking_findings": [],
+  "nits": [
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+      "line": 53,
+      "finding": "Clarify registration of completion/error handlers before requests, awaiting completion afterward",
+      "related_comment": "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts:179",
+      "disposition": "Final foundation docs lane owns prose clarification; source-comment polish separate, behavior unchanged"
+    }
+  ],
+  "evidence": "152candidate3hashes match; only2authorizedtemplate replacements, both exactfix2hashes. Ownership, compatibility, privacy, installationauthority, privateoutputstop and warninggates intact.",
+  "limits": [
+    "Intermediate candidate2 text hashes only, not all historical wording reconstructed",
+    "No deployments/calibration/consumerintegration/runtimeenforcement",
+    "Final documentation restructuring reopens affected fidelity review"
+  ]
+}

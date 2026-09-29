@@ -113,12 +113,10 @@ class NormalizationError(ValueError):
 
 
 def fold_and_strip(raw: str) -> str:
-    """Fold Persian and Arabic-Indic digits to ASCII and drop every display separator.
+    """Fold Unicode decimal digits (Nd) to ASCII and drop display separators.
 
-    Only those two digit families are folded. Any other Unicode digit family, and
-    every superscript digit, survives cleanup and is rejected by the shape check,
-    because a normaliser that accepts every Unicode digit accepts input no Iranian
-    subscriber types and no vendor renders.
+    Non-decimal numeric characters, including superscripts, remain unchanged and
+    fail the phone-shape check; folding follows _fold_digit and the shared corpus.
     """
     out = []
     for char in raw:

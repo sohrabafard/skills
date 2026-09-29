@@ -1,0 +1,27 @@
+{
+  "artifact": "documentation-eof-mixed-repair.json",
+  "status": "FIXED_SOURCE_FROZEN",
+  "scope": "One authorized EOF-only repair; no semantic changes.",
+  "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+  "before_sha256": "d02d3453416b64461fde2eea72fdd7dbeeb088e91afb42803b1cd63b356ad214",
+  "after_sha256": "8d633eb7014ff6e0218d96d5238f443d13555102e797af7fc83b9f9b211f1ae2",
+  "before_bytes": 2420,
+  "after_bytes": 2417,
+  "before_tail_repr": "b'othing detects\\nthat.\\n\\n\\r\\n'",
+  "after_tail_repr": "b'd nothing detects\\nthat.\\n'",
+  "change": "Removed only trailing CR/LF empty-line bytes b\"\\n\\r\\n\"; retained existing content-line LF. All bytes before the suffix are identical.",
+  "focused_checks": [
+    {
+      "command": "git diff --check -- skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --cached --check -- skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+      "exit_code": 2,
+      "stdout": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md:41: new blank line at EOF.\n",
+      "stderr": ""
+    }
+  ]
+}

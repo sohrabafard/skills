@@ -1,0 +1,116 @@
+{
+  "outcome": "Manifest-only path refresh complete and frozen; 4 additions/4 removals, 69 listed/actual files.",
+  "metadata": {
+    "agent": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "requested": "none",
+    "observed": "unknown"
+  },
+  "authority": "Parent explicitly granted only IndexedDB skill-pack-manifest.json root_files after foundation repair1 freeze.",
+  "handoff": "documentation-foundation-repair1.json#manifest_owner_handoff",
+  "change": {
+    "added": [
+      "references/80-testing-and-proof-levels/10-required-scenarios.md",
+      "references/80-testing-and-proof-levels/20-quota-reproduction.md",
+      "references/80-testing-and-proof-levels/30-debug-surfaces.md",
+      "references/80-testing-and-proof-levels/40-performance-budgets.md"
+    ],
+    "removed": [
+      "references/80-testing-and-proof-levels/10-proof-levels.md",
+      "references/80-testing-and-proof-levels/20-required-scenarios.md",
+      "references/80-testing-and-proof-levels/30-quota-reproduction.md",
+      "references/80-testing-and-proof-levels/40-debug-and-performance.md"
+    ],
+    "actual_count": 69,
+    "before_sha256_raw_bytes": "6a720104d0b98a7348d91d85ee2aafbf6e65eff032999d7ffb6022437aec84a6",
+    "after_sha256_raw_bytes": "4ce9484ff5bb06cbe0312fcb782ea3164941835dce2852c7e1a8e3bc15caf795",
+    "other_fields_unchanged": true
+  },
+  "read_reconciliation": {
+    "previous_evidence": "indexeddb-manifest-refresh-evidence.json",
+    "changed_references_fully_read": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-required-scenarios.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-quota-reproduction.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-debug-surfaces.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md"
+    ],
+    "checker_semantics": "Unchanged manifest checker recursively enumerates files; unchanged reference checker only covers top-level reference routing."
+  },
+  "gates": [
+    {
+      "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+      "chunk_id": "0e5bfd",
+      "wall_time_seconds": 0.2874996,
+      "exit_code": 0,
+      "original_token_count": 25,
+      "output": "OK: structure, description, triggers, storage boundaries, classification and manifest all validate\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py --root skills/sohrab/alaa-indexeddb-browser-storage",
+      "chunk_id": "d2b411",
+      "wall_time_seconds": 0.2594952,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "OK: 21 reference file(s) routed, every router path resolves\r\n"
+    }
+  ],
+  "final_hash_reconciliation": {
+    "changed_idb_paths": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json"
+    ],
+    "browser_inputs": 25,
+    "browser_mismatches": [],
+    "contract_source_mismatches": []
+  },
+  "retained_browser_proof": {
+    "artifact": "browser-idb-fix1-evidence.json",
+    "cases": 9,
+    "rerun": false,
+    "all25_source_and_build_hashes_match": true,
+    "limits": "Single observed real browser; no new engine/consumer/cross-browser/quota proof."
+  },
+  "preservation_limits": {
+    "old_paths_absent": true,
+    "new_paths_present": true,
+    "renames_performed_by_this_lane": false,
+    "operation_history": "Unobserved. Handoff calls these renames, but this lane cannot certify move versus remove/recreate, prior size verification, or a retirement destination. No source file was removed by this lane.",
+    "earlier_evidence_preserved": "indexeddb-manifest-refresh-evidence.json remains unchanged."
+  },
+  "remaining_documentation_finding": {
+    "id": "D1-residual-checklist-duplication",
+    "paths": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md",
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md"
+    ],
+    "finding": "The complete Release checklist remains in the renamed performance-budget child and is duplicated in the release-checklist child.",
+    "reported_to_parent": true,
+    "markdown_repair": "Outside manifest-only grant; no Markdown changed.",
+    "gate_limit": "Manifest/reference PASS validates inventory/path presence, not prose uniqueness or instruction fidelity.",
+    "exact_duplicate": {
+      "normalization": "CRLF to LF; outer whitespace trimmed; one final newline",
+      "equal": true,
+      "copies": [
+        {
+          "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md",
+          "file_sha256_raw_bytes": "b87404503b1609d86220f921835e371a6948e1adc457a939ee5cc19ddec8e873",
+          "block_start_line": 16,
+          "block_line_count": 15,
+          "block_sha256_utf8_lf_trimmed_one_final_newline": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed"
+        },
+        {
+          "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+          "file_sha256_raw_bytes": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed",
+          "block_start_line": 1,
+          "block_line_count": 15,
+          "block_sha256_utf8_lf_trimmed_one_final_newline": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed"
+        }
+      ],
+      "block": "## Release checklist\n\n- [ ] Decision record names the data class and source of truth for every store touched.\n- [ ] Every index key path verified against the record type it indexes.\n- [ ] Every read's bound stated; no `O(n)` read on a user-facing route.\n- [ ] Capability detection implemented and the tier persisted.\n- [ ] Quota error path exercised at level 2 and level 4.\n- [ ] Cleanup implemented for every refetchable class, with a cap in the budget file.\n- [ ] Logout purge indexed, atomic or journalled, verified by a ranged count.\n- [ ] Multi-tab upgrade and the service-worker connection both exercised.\n- [ ] A WebKit lane completed if the product supports Safari or iOS.\n- [ ] Private-mode checked; no offline promise at tier 0 or 1.\n- [ ] Older-schema and malformed records rejected on read.\n- [ ] Telemetry per failure class, registered and bucketed, with no payload.\n- [ ] User-facing copy matches the wording table in `70-cache-and-drafts.md`.\n"
+    }
+  },
+  "source_freeze": true
+}

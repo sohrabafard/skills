@@ -2,7 +2,7 @@
 /**
  * Player component for Vue 3 + Quasar, against Shaka v5.2.3.
  *
- * Follows /alaa-vue-typescript-clean-code ($alaa-vue-typescript-clean-code),
+ * Follows /alaa-vue-typescript-clean-code,
  * references/10-vue-style-contract.md: `interface Props` + `withDefaults`, typed emits,
  * defaults stated exactly once.
  *
@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   ready: [];
   error: [value: PlayerError];
-  /** Fires on `unloading` - the last moment getStats() holds this session's counters. */
+  /** Fires once per pending session on unloading or before final disposal removes listeners. */
   sessionEnd: [stats: ShakaStats];
 }>();
 
@@ -60,7 +60,7 @@ const player = useShakaPlayer({
 watch(player.ready, isReady => { if (isReady) emit("ready"); });
 watch(player.error, value => { if (value) emit("error", value); });
 
-// The composable's onBeforeUnmount awaits dispose(); nothing to do here.
+// The hook starts cleanup. A parent requiring completed teardown awaits this before removal.
 defineExpose({ dispose: player.dispose });
 </script>
 
@@ -86,7 +86,7 @@ defineExpose({ dispose: player.dispose });
     <!--
       The error slot receives the stable `kind`, never a raw Shaka code and never the error
       object: `error.data` for a network failure carries the failing URI and its query string.
-      Copy for each kind belongs to /alaa-ui-ux-design-system ($alaa-ui-ux-design-system),
+      Copy for each kind belongs to /alaa-ui-ux-design-system,
       references/35-ux-writing-and-microcopy.md.
     -->
     <div v-else-if="player.error.value" class="alaa-shaka-player__state" role="alert">

@@ -1020,7 +1020,7 @@ def validate_config(path: Path) -> list[Issue]:
                             "block belongs to the skill that owns the stack.",
                         )
                     )
-                for key in ("changes", "exists", "compare_to"):
+                for key in ("changes", "exists"):
                     value = rule.get(key)
                     candidates: list[str] = []
                     if isinstance(value, str):
@@ -1031,16 +1031,21 @@ def validate_config(path: Path) -> list[Issue]:
                         for maybe_list in value.values():
                             if isinstance(maybe_list, list):
                                 candidates.extend(str(v) for v in maybe_list)
+                            elif isinstance(maybe_list, str):
+                                candidates.append(maybe_list)
                     if any(VAR_IN_PATH_RE.search(c) for c in candidates):
                         out.append(
                             issue(
                                 path,
-                                "warning",
+                                "note",
                                 job_line,
                                 "rules-path-var",
                                 f"{owner} uses variable syntax inside rules:{key}",
-                                "GitLab does not expand variables in path filters; "
-                                "write the literal paths",
+                                "Variables are supported, but this static checker "
+                                "cannot resolve their runtime scope or prove matching. "
+                                "In changes paths, undefined variables remain literal; "
+                                "compare_to variables require GitLab 17.2+. Validate "
+                                "the target version and pipeline context with CI Lint.",
                             )
                         )
 
@@ -1350,6 +1355,13 @@ def fixtures_dir() -> Path:
 
 
 SELF_TEST_EXPECTATIONS: dict[str, dict[str, Any]] = {
+    "variable-paths.gitlab-ci.yml": {
+        "present": {"rules-path-var"},
+        "max_severity": "note",
+    },
+    "invalid-rule-expression.gitlab-ci.yml": {
+        "present": {"rules-if-brace-var", "rules-path-var"},
+    },
     "good-pipeline.gitlab-ci.yml": {"absent": {"*"}},
     "reference-tag.gitlab-ci.yml": {"absent": {"*"}},
     # The fleet's standard wrapper must never produce an error: every unresolved

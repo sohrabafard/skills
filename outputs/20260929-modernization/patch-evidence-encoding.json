@@ -1,0 +1,8 @@
+{
+  "original": "operations-source.diff",
+  "lossless_archive": "operations-source.diff.gz",
+  "uncompressed_sha256": "09dfacf50f69462b186945c15cac547e741898da55abb0e22584556679ea42d1",
+  "uncompressed_bytes": 175863,
+  "reason": "Unified diff context lines inherently contain trailing spaces; preserve exact bytes outside Git text whitespace checking, not by trimming patch data.",
+  "roundtrip_verified": true
+}

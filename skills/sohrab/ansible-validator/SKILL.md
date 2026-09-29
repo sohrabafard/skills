@@ -1,6 +1,6 @@
 ---
 name: ansible-validator
-description: Validate, lint, security-audit and dry-run existing Ansible playbooks, roles, collections and inventories with ansible-lint, yamllint, check mode, Checkov and Molecule, reporting a verdict with per-finding remediation citations. Use when every file you need already exists and your job is to produce a verdict about it. Do not use when a file that does not yet exist has to exist when you are done (use /ansible-generator, $ansible-generator), for Terraform, Helm, Dockerfile or CI-config validation unless Ansible is the main artifact, or for plain YAML edits with no Ansible semantics.
+description: Validate, lint, security-audit and dry-run existing Ansible playbooks, roles, collections and inventories with ansible-lint, yamllint, check mode, Checkov and Molecule, reporting a verdict with per-finding remediation citations. Use when every file you need already exists and your job is to produce a verdict about it. Do not use when a file that does not yet exist has to exist when you are done (use /ansible-generator), for Terraform, Helm, Dockerfile or CI-config validation unless Ansible is the main artifact, or for plain YAML edits with no Ansible semantics.
 ---
 
 # Ansible Validator
@@ -20,9 +20,8 @@ an observed failure; they do not establish that a module parameter exists.
 ## When NOT to use
 
 The deciding test between this skill and its sibling: **does a file that does
-not yet exist have to exist when you are done? If yes, `/ansible-generator`
-(`$ansible-generator`). If every file you need already exists and your job is to
-produce a verdict about it, `/ansible-validator` (`$ansible-validator`).**
+not yet exist have to exist when you are done? If yes, `/ansible-generator`. If every file you need already exists and your job is to
+produce a verdict about it, `/ansible-validator`.**
 
 Also not for Terraform, Helm, Dockerfile or CI-config validation unless Ansible
 is the main artifact, nor for YAML with no Ansible semantics.
@@ -46,6 +45,16 @@ table, the report format and the stopping condition.
 | `test_role.sh <dir> <scenario> --i-confirm-disposable-host` | a Molecule scenario applies, is idempotent, verifies |
 | `extract_ansible_info_wrapper.sh`, `self_test.sh` | every file parses; every checker above passes |
 
+Installed system or cached tools remain usable without installation authority.
+Missing tools block by default without creating a cache or installing packages.
+`scripts/lib/common.sh` permits installation only with `AV_ALLOW_BOOTSTRAP=1`;
+set it only after the user has authorized installation. `AV_NO_BOOTSTRAP=1`
+overrides that opt-in. Prior automatic bootstrap behavior is retired.
+For the synthetic security regressions, run
+`python scripts/test_security_regressions.py --bash <explicit-bash-path>`.
+Exit 0 means assertions passed, 1 findings, 2 unavailable interpreter; this runs
+mock tools and fixture scans, never a real Molecule driver or package installer.
+
 ## Workflow
 
 1. `setup_tools.sh`. A floor not met is a blocked audit.
@@ -59,25 +68,24 @@ table, the report format and the stopping condition.
 
 ## Boundaries
 
-- **Authoring** is `/ansible-generator`'s (`$ansible-generator`): it owns the
+- **Authoring** is `/ansible-generator`'s: it owns the
   bytes, this skill owns the verdict. Jinja, lookups and module call patterns
   live there; the ruleset, name mapping, lint configs, Molecule, security
   predicates, source map and test corpus live here.
-- **CI.** `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns the job that runs
+- **CI.** `/alaa-gitlab-ci-cd` owns the job that runs
   these scripts — image, `rules:`, caching, artifacts, the masked vault
   password. This skill publishes the predicate and decides no gate placement.
-- **Containers.** `/alaa-docker-production` (`$alaa-docker-production`) owns the
+- **Containers.** `/alaa-docker-production` owns the
   image and the Compose file, including the fail-closed `${VAR:?}` invariant;
   this skill owns the host state a play manages around it.
-- **Kubernetes.** `/alaa-k8s-helm` (`$alaa-k8s-helm`) owns the manifest; this
+- **Kubernetes.** `/alaa-k8s-helm` owns the manifest; this
   skill validates the play that applies it.
-- **Fail-closed** is `/alaa-security-review`'s (`$alaa-security-review`); a
+- **Fail-closed** is `/alaa-security-review`'s; a
   scanner that could not run is a blocked audit, not a clean one.
 - **Retry, timeout, `serial`, `forks`, degradation** are
-  `/alaa-reliability-sla`'s (`$alaa-reliability-sla`). This skill reports a
+  `/alaa-reliability-sla`'s. This skill reports a
   missing `changed_when`, `until` or `any_errors_fatal`; it picks no number.
-- **Model and effort settings** are `/alaa-prompting-guide`'s
-  (`$alaa-prompting-guide`), at `references/50-effort-and-thinking.md`.
+- **Model and effort settings** are `/alaa-prompting-guide`'s, at `references/50-effort-and-thinking.md`.
 
 ## Reference map
 

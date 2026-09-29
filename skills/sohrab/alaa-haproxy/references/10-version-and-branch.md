@@ -2,18 +2,18 @@
 
 ## The branch table
 
-Read on 2026-07-29 from `https://docs.haproxy.org/` (branch labels) and `https://www.haproxy.org/`
+Branch table refreshed on 2026-09-29 from `https://docs.haproxy.org/` (branch labels) and `https://www.haproxy.org/`
 (latest patch and end-of-life dates). Re-derive both with the commands in `SOURCES.md`.
 
-| Branch | Label | Latest patch, read 2026-07-29 | End of life |
+| Branch | Label | Latest patch, read 2026-09-29 | End of life |
 |---|---|---|---|
 | 3.5 | DEV | not for production | — |
-| **3.4** | **LTS** | **3.4.2, released 2026-07-03** (branch opened 2026-06-03) | 2031-Q2 |
-| 3.3 | no label (stable) | 3.3.12 | **2027-Q1** |
-| 3.2 | LTS | 3.2.21 | 2030-Q2 |
-| 3.0 | LTS | 3.0.25 | 2029-Q2 |
-| 2.8 | LTS, critical fixes only | 2.8.26 | 2028-Q2 |
-| 2.6 | LTS, critical fixes only | 2.6.31 | 2027-Q2 |
+| **3.4** | **LTS** | **3.4.6, released 2026-09-28** (branch opened 2026-06-03) | 2031-Q2 |
+| 3.3 | no label (stable) | 3.3.16 | **2027-Q1** |
+| 3.2 | LTS | 3.2.25 | 2030-Q2 |
+| 3.0 | LTS | 3.0.29 | 2029-Q2 |
+| 2.8 | LTS, critical fixes only | 2.8.30 | 2028-Q2 |
+| 2.6 | LTS, critical fixes only | 2.6.34 | 2027-Q2 |
 | 3.1 and below, except the rows above | EOL | — | passed |
 
 ## Which branch to target
@@ -24,7 +24,10 @@ Read on 2026-07-29 from `https://docs.haproxy.org/` (branch labels) and `https:/
   the estate needs a feature 3.2 does not have, or when 2030 is close enough to plan for.
 - **An estate on 3.3 moves to 3.4.** 3.3 is not an LTS and its security support ends 2027-Q1.
   There is no version of "stay here" that survives past that date.
-- **An estate on 3.1 or below is already unsupported.** Move to 3.4.
+- **Check the exact branch, not a numeric cutoff.** 3.0, 2.8 and 2.6 remain
+  supported as shown above; 3.1 is EOL. Plan unsupported-branch migration with
+  config, build-feature and rollback checks. Current patches do not prove that
+  the historical example image pins or runtime captures were revalidated.
 
 The `-3.3` suffix on four example files means "requires 3.3 or later". Those four features -
 backend HTTP/3, `shm-stats-file`, `sni-auto`, `ktls` - shipped in 3.3 under those directive names
@@ -79,7 +82,7 @@ Breaking - these fail startup or change behaviour after an upgrade:
   `transfer-encoding`.
 - Multiple match types after `-m` in an ACL are no longer allowed.
 - Email alerts now require the Lua implementation to be enabled. Lua work in HAProxy is owned by
-  `/alaa-haproxy-lua` (`$alaa-haproxy-lua`).
+  `/alaa-haproxy-lua`.
 - `no-quic` is renamed `tune.quic.listen`.
 - **The default load-balancing algorithm becomes `random`** when `balance` is absent. Every
   backend in this skill's examples states `balance` explicitly for this reason.
@@ -101,7 +104,7 @@ if a tool parses it.
 
 Deprecated: `compression-direction`, and OpenTracing, which is removed in 3.5. The replacement for
 OpenTracing is the native OpenTelemetry integration added in 3.4; whether tracing is required at
-all is decided by `/alaa-observability-soc` (`$alaa-observability-soc`).
+all is decided by `/alaa-observability-soc`.
 
 Added, in case a task needs one of them: backends that can be added and removed at runtime without
 a reload; QMux, experimental QUIC over TCP for networks that block UDP; JWE decryption and AES-CBC

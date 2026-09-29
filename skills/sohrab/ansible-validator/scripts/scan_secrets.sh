@@ -36,6 +36,8 @@ What it asserts:
   credential, and no line contains a private-key block, an AWS access key ID,
   or a database DSN with an inline password.
 
+Output retains finding categories and path/line locations; source values are redacted.
+
 What it deliberately does not report:
   A value that is a Jinja expression ({{ ... }}), a reference to a vault_-
   prefixed variable, an inline !vault block, or a lookup() call. Those are the
@@ -115,7 +117,7 @@ TARGET="${AV_ARGS[0]}"
 
 if [ -f "$TARGET" ]; then
     TARGET_ABS="$(cd "$(dirname "$TARGET")" && pwd)/$(basename "$TARGET")"
-    SCAN_TYPE=file
+    SCAN_TYPE="file"
 elif [ -d "$TARGET" ]; then
     TARGET_ABS="$(cd "$TARGET" && pwd)"
     SCAN_TYPE=directory
@@ -133,6 +135,8 @@ fi
 
 # A value is indirected, and therefore correct, when it is a Jinja expression,
 # a vault_-prefixed variable, an inline !vault block, or a lookup() call.
+# Match the literal Vault header; expanding the environment would change the regex.
+# shellcheck disable=SC2016
 INDIRECTION_RE='(\{\{|!vault|\$ANSIBLE_VAULT|vault_|lookup\()'
 
 scan() {
@@ -140,9 +144,9 @@ scan() {
     local pattern="$1" description="$2" severity="$3" results=""
 
     if [ "$SCAN_TYPE" = file ]; then
-        results="$(grep -n -i -E -- "$pattern" "$TARGET_ABS" 2>/dev/null || true)"
+        results="$(grep -H -n -i -E -- "$pattern" "$TARGET_ABS" 2>/dev/null || true)"
     else
-        results="$(grep -r -n -i -E --include='*.yml' --include='*.yaml' -- "$pattern" "$TARGET_ABS" 2>/dev/null \
+        results="$(grep -r -H -n -i -E --include='*.yml' --include='*.yaml' -- "$pattern" "$TARGET_ABS" 2>/dev/null \
             | grep -v '/\.git/' || true)"
     fi
 
@@ -163,7 +167,7 @@ scan() {
     fi
     if [ "$AV_FORMAT" = "text" ]; then
         printf '%s\n' "$results" | while IFS= read -r line; do
-            echo "    $line"
+            printf '    %s\n' "$line" | sed -n -E 's/(:[0-9]+:).*/\1 [redacted]/p'
         done
     fi
 }
@@ -198,8 +202,9 @@ if [ "$AV_FORMAT" = "text" ] && [ $AV_ERRORS -gt 0 ]; then
     cat <<'EOF'
 
 Remediation, in the order to try them:
-  1. ansible-vault encrypt_string 'value' --name 'variable_name'
-     and reference the variable, not the literal.
+  1. ansible-vault encrypt_string --stdin-name 'variable_name'
+     Supply the value privately on stdin; never put it in shell history.
+     Reference the variable, not the literal.
   2. "{{ lookup('env', 'DB_PASSWORD') }}" when the value reaches the control
      node as an environment variable from the CI job.
   3. "{{ lookup('community.hashi_vault.hashi_vault', 'secret=...') }}" when an
@@ -209,7 +214,7 @@ Remediation, in the order to try them:
      condition under which no_log is required.
 
 Whether a finding here blocks the run is not this skill's decision:
-/alaa-security-review ($alaa-security-review) owns fail-closed. A secret-scan
+/alaa-security-review owns fail-closed. A secret-scan
 finding is fail-closed by default, because proceeding with a leaked credential
 lets something through that must not get through.
 EOF

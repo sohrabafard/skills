@@ -1,0 +1,2190 @@
+{
+  "lane": "documentation-operations",
+  "state": "D4, D5 and D8 operations findings repaired; source frozen pending independent re-review",
+  "candidate": "candidate-5 plus operations repair cycle 1",
+  "classification_owner": "skills/sohrab/alaa-repo-docs/references/15-document-size-and-clustering.md",
+  "documents": [
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+      "initial_sha256": "8f1d8dfb4d192ed70a37e1cc49cbe849e3a8bbe43467c0afef3216867b136bd6",
+      "initial_physical_lines": 105,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Integrated source-priority and re-derivation ledger; splitting scatters provenance and conflict rules.",
+      "final_grade": "ORANGE",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "8f1d8dfb4d192ed70a37e1cc49cbe849e3a8bbe43467c0afef3216867b136bd6",
+      "final_physical_lines": 105,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": "ORANGE",
+      "final_grade_reason": "ORANGE: Source priority, conflict resolution and re-derivation are one provenance decision; splitting detaches conflict rules from source authority."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "initial_sha256": "cd1c10fa2a8f49e356bc94d848cbd192a93da9b4260712dfc67627cad3871c59",
+      "initial_physical_lines": 223,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Secret-file/Compose delivery and Swarm rotation/proof are separable workflows.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 9,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "ef6cbd8b92e3a4806a1fed5cc58bc6b995e6cdbe9532eed8dc31f5f05f52cede",
+      "final_physical_lines": 47,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: Each secret-delivery trigger routes to a matching child and preserves build, Compose and security ownership.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "initial_sha256": "4b0bea92a5e1740cbd5a3cc02e4f27608ea8df90d490e270cc982ae0b9d53043",
+      "initial_physical_lines": 176,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Network reachability, DNS, exposure, and trust are independently triggered topics.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 5,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "fdfd63b149659d29753804c5867865bc0ab1189dacd21a0aff306d1902e93917",
+      "final_physical_lines": 26,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: Network, exposure and diagnosis triggers route to matching owners.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "initial_sha256": "c25d877c00c595aada066aa2a946a451ee75bb803552c3028d05c3a2f5387c6b",
+      "initial_physical_lines": 261,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: CPU/memory, process/file limits, and pool sizing/symptoms are separately routed.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 7,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "f6444034709c0e16ea73bb182c8a8ec64ae29ecbc9ad696645b4cafeded0cdd8",
+      "final_physical_lines": 39,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: Sizing and load-diagnosis triggers route to their matching resource child.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+      "initial_sha256": "4043572a6cb4ae43a806ffcf14f5822cbbf9937850866e4f2fecf36d3c68e329",
+      "initial_physical_lines": 88,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Integrated owner matrix; splitting rows weakens boundary lookup.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "4043572a6cb4ae43a806ffcf14f5822cbbf9937850866e4f2fecf36d3c68e329",
+      "final_physical_lines": 88,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Owner and authority rows form one boundary lookup; splitting weakens each row’s comparison to alternatives."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/00-source-map.md",
+      "initial_sha256": "99d0527a6bff8c2e14e7952dbe1ccd15b7fec7e51e31237e3da4c6a23ac5d552",
+      "initial_physical_lines": 114,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Integrated source-priority and re-derivation ledger; splitting scatters provenance and conflict rules.",
+      "final_grade": "ORANGE",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "99d0527a6bff8c2e14e7952dbe1ccd15b7fec7e51e31237e3da4c6a23ac5d552",
+      "final_physical_lines": 114,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": "ORANGE",
+      "final_grade_reason": "ORANGE: Official-source precedence and re-derivation routes form one cross-topic evidence contract."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+      "initial_sha256": "2126e16bed3536bedf3713bc91d6f0334ad4c9cf9e0e7db8456ba1eb5f9b3038",
+      "initial_physical_lines": 107,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Baseline, GA/experimental features, limits, and deprecations are distinct lookup topics.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "original_heading_to_child": {
+          "Compute the baseline, do not read it": "feature-version-notes/10-compute-supported-baseline.md",
+          "Writing an answer when the target versions are unknown": "feature-version-notes/10-compute-supported-baseline.md",
+          "Generally available, and therefore safe to use without a caveat": "feature-version-notes/20-feature-status-limits-and-deprecations.md",
+          "Still experimental — do not build a production pipeline on these": "feature-version-notes/20-feature-status-limits-and-deprecations.md",
+          "Hard limits — these are checkable rules, not guidance": "feature-version-notes/20-feature-status-limits-and-deprecations.md",
+          "Deprecations, each with its replacement": "feature-version-notes/20-feature-status-limits-and-deprecations.md"
+        },
+        "preamble": "Original entry preamble preserved byte-for-byte; route condition and prerequisites recorded in repair1 evidence."
+      },
+      "final_sha256": "3dac501135f6bdd0a60454489c03f200fd570e36398aece79ad25285675d463f",
+      "final_physical_lines": 33,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: Unknown baselines and feature qualification now route to separate baseline and lookup children."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "initial_sha256": "f366bbb5911df70895cc743f15d76abd0128570b2fd251ea259930ca9bf4b4a8",
+      "initial_physical_lines": 216,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Graph, concurrency/resource groups, and retry/timeout behavior are independent decisions.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 10,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "6663bb77410ffcdedc5b567573c470cb9ae64442c536ad3253e15f0d424d4290",
+      "final_physical_lines": 57,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: The task router keeps graph, concurrency and retry triggers in one lookup to select the owning child.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "initial_sha256": "7b872df3701fc146beda63011db5df839853fdabfa6c0ef24f83cc693dc77194",
+      "initial_physical_lines": 232,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Workflow creation, job reuse/authoring, and environment/rollback are independent.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 7,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "7b4dcadef71a279afe76602155f6ec089f3935ccab305570ac139cbac9b4501b",
+      "final_physical_lines": 43,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: Table of contents is one bounded topic or integrated reader task at 43 physical lines; its prerequisites, conditions and proof stay together.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "initial_sha256": "ec02eae5dae1a4b29c8d71c52a71fe633f99d06e190bbed8176b5493ae75848b",
+      "initial_physical_lines": 241,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Local checks, live lint boundaries, and symptom diagnosis have separate triggers.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 7,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "6ec2f7fb6a328e2b90c6683a933578e319707a5a3aaf90b4b373290199dfd5be",
+      "final_physical_lines": 63,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: The gate router compares local checks, live CI Lint boundaries and failure triage in one decision path.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "initial_sha256": "d1994d92b64a619ffee4ba30d793f6546fe9654477a0cb4e2cd2c9aeed128f73",
+      "initial_physical_lines": 212,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Precedence/inputs, credentials, and dotenv/forwarding are distinct topics.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 10,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "e5b26538080b0dc2c1271862c70e91cdd5a883d955039735cbf428f562369af1",
+      "final_physical_lines": 54,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: The route table connects variable mechanisms, precedence, protected values and forwarding to their owners.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/10-version-and-branch.md",
+      "initial_sha256": "0fa2cb9d168c96412edc91c6575539b1dcccb1b41bf7292d9062c279aa7a1afe",
+      "initial_physical_lines": 131,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Branch selection, feature proof, compatibility changes, and upgrade order are distinct.",
+      "final_grade": "ORANGE",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "0fa2cb9d168c96412edc91c6575539b1dcccb1b41bf7292d9062c279aa7a1afe",
+      "final_physical_lines": 131,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": "ORANGE",
+      "final_grade_reason": "ORANGE: Branch selection, feature proof, compatibility changes and upgrade validation form one ordered branch decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "initial_sha256": "d0e8adb159968b4bd017edb0a7c40678d8c71b8d630c401386ce75544b430fb5",
+      "initial_physical_lines": 214,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Defaults association, timeout/retry, ceilings/reuse, maps/preprocessor, and diagnosis are distinct.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 8,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "3e6aab89f4ff60321ba98f3d20d731052e9c186b736b37a6213c4fcdd04ff9f2",
+      "final_physical_lines": 48,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: The `defaults` association rule is one bounded topic or integrated reader task at 48 physical lines; its prerequisites, conditions and proof stay together.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+      "initial_sha256": "76d0dfc7780d6c11662e7675b2c87e1b17207d9fbda139ea2738c453cf22d744",
+      "initial_physical_lines": 125,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Build eligibility, frontend, backend, and tuning have distinct triggers.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "original_heading_to_child": {
+          "The build requirement, which comes before everything else": "30-quic-http3/10-build-requirements.md",
+          "What to do when `haproxy -vv` reports no QUIC": "30-quic-http3/10-build-requirements.md",
+          "Frontend HTTP/3": "mandatory build child then 30-quic-http3/20-frontend-http3.md",
+          "Backend HTTP/3": "mandatory build child then 30-quic-http3/30-backend-http3.md",
+          "Tuning and naming": "mandatory build child then 30-quic-http3/40-quic-tuning.md"
+        },
+        "preamble": "Original entry preamble preserved byte-for-byte; route condition and prerequisites recorded in repair1 evidence."
+      },
+      "final_sha256": "dce66df642d1df0d0a456329a3796e9fddb698c94ad73cf629370b8b7c67e265",
+      "final_physical_lines": 23,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: QUIC build eligibility is an explicit prerequisite before frontend, backend or tuning guidance."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "initial_sha256": "90025d7524ad3d1d1c032688133b4c2a8fd99e70f05172c8aa92f8db8bd4d7c0",
+      "initial_physical_lines": 83,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Compact integrated gate register with predicates, commands, and artifacts.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "90025d7524ad3d1d1c032688133b4c2a8fd99e70f05172c8aa92f8db8bd4d7c0",
+      "final_physical_lines": 83,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Predicates, commands and expected artifacts form one ship/no-ship proof register."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+      "initial_sha256": "7d677f2a66f0295dde35afdd6009a24a279c069d00c6ce02cc0884c3bb1d9bfd",
+      "initial_physical_lines": 52,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Integrated owner/authority matrix; splitting rows weakens boundary lookup.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "7d677f2a66f0295dde35afdd6009a24a279c069d00c6ce02cc0884c3bb1d9bfd",
+      "final_physical_lines": 52,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Owner, authority and escalation rows form one cross-skill boundary lookup."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/SOURCES.md",
+      "initial_sha256": "84dfd56d826cb38faedf44e70557019622fb9233df332fb87736e46e393aadf5",
+      "initial_physical_lines": 96,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Dated source ledger and freshness procedure form one provenance route.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "84dfd56d826cb38faedf44e70557019622fb9233df332fb87736e46e393aadf5",
+      "final_physical_lines": 96,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Source date, precedence and freshness steps form one provenance route."
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+      "initial_sha256": "6dbd28ebaedbf115e793a869e6a0787977c57ebf8e238e8a5c24f485953b7eb2",
+      "initial_physical_lines": 128,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Dated release/API lifecycle evidence appears separable by reader trigger.",
+      "final_grade": "ORANGE",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "6dbd28ebaedbf115e793a869e6a0787977c57ebf8e238e8a5c24f485953b7eb2",
+      "final_physical_lines": 128,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": "ORANGE",
+      "final_grade_reason": "ORANGE: The dated release/API snapshot keeps observed version, behavior and its matching re-derivation source together."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/SKILL.md",
+      "initial_sha256": "98d4b764389239a8922681e1de427861ed2be76357aa7df60e484e8dd23ea03c",
+      "initial_physical_lines": 100,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "EXEMPT-ATOMIC",
+      "classification_reason": "EXEMPT-ATOMIC: Always-loaded skill execution contract with trigger, decisions, safety, stop, and output; splitting breaks entry workflow.",
+      "final_grade": "EXEMPT-ATOMIC",
+      "disposition": "Unchanged atomic entry/operator payload; raw band is measurement only.",
+      "fidelity_mapping": null,
+      "final_sha256": "98d4b764389239a8922681e1de427861ed2be76357aa7df60e484e8dd23ea03c",
+      "final_physical_lines": 100,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": null,
+      "final_grade_reason": "EXEMPT-ATOMIC: Atomic always-loaded execution contract: triggers, decisions, authority, safety and stops must load together."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices.md",
+      "initial_sha256": "e64c18c55a58adfb0aa08b11d3fd86d6e82cf1db400a302a298274d040ac5b03",
+      "initial_physical_lines": 348,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Task design/idempotence, validation/failure, and custom module contracts are separately routed.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 11,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "2448ed94780b4c1063fe218ab948752bdba1cfcb1b0dac97987c1ff34cc49699",
+      "final_physical_lines": 60,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Rule-number headings and condition routes preserve the remediation citation map to one owning child per rule."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule.md",
+      "initial_sha256": "e409965db0fbbeb9db635e03212c932d3001f3965167c08b238cde076abeca8e",
+      "initial_physical_lines": 186,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Setup/configuration, test lifecycle, and failure diagnosis have distinct triggers.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "original_heading_to_child": {
+          "When running a scenario is correct": "molecule/20-execution-lifecycle.md",
+          "Installing the driver": "molecule/10-setup-and-configuration.md",
+          "The configuration model this skill ships": "molecule/10-setup-and-configuration.md",
+          "The actions, and what each asserts": "molecule/20-execution-lifecycle.md",
+          "Running one": "molecule/20-execution-lifecycle.md",
+          "Writing the verifier": "molecule/30-verifier.md",
+          "When a scenario cannot run": "molecule/20-execution-lifecycle.md",
+          "Which image a scenario uses": "molecule/10-setup-and-configuration.md"
+        },
+        "preamble": "Original entry preamble preserved byte-for-byte; route condition and prerequisites recorded in repair1 evidence."
+      },
+      "final_sha256": "a4d9506e5c35cf1f0f69b3e6bd21e405f95f322c7ba3a5d3e47e664d97b6ad41",
+      "final_physical_lines": 43,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: The entry trigger and dated verification remain while setup, execution and verifier tasks route separately."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist.md",
+      "initial_sha256": "0b7c8e3b2ae07bb061c305c078e10d139434d28101d29f179280b6cc76f5d7af",
+      "initial_physical_lines": 393,
+      "initial_measurement_grade": "RED",
+      "classification": "RED",
+      "classification_reason": "RED: Secret handling, authority/file boundaries, host trust, and audit ownership are separate.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 13,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "9ced3eff10c59c005dc28ca7c4a13ecd87934fc676c3728a4c92ee041325c2ba",
+      "final_physical_lines": 72,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: The checklist and audit-command route remain one index, with each security trigger routed to its owner."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/source-map.md",
+      "initial_sha256": "4e6933755908071de04ee225d4ddee0d32e02a365949de87eb7926acd8f86c87",
+      "initial_physical_lines": 147,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Integrated source-priority and re-derivation ledger; splitting scatters provenance.",
+      "final_grade": "ORANGE",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "4e6933755908071de04ee225d4ddee0d32e02a365949de87eb7926acd8f86c87",
+      "final_physical_lines": 147,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": "ORANGE",
+      "final_grade_reason": "ORANGE: Source authority, precedence, verification dates and re-derivation commands form one global provenance ledger."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/README.md",
+      "initial_sha256": "3b837aa03e2bbab278aecbcf1b5ee03d9554b65ab9b7b08e4a544a6101688ed7",
+      "initial_physical_lines": 154,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Fixture purpose, corpus contract, and operations are distinct reader tasks if the corpus route stays canonical.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "original_heading_to_child": {
+          "Layout": "corpus-usage.md",
+          "The playbook pair": "corpus-usage.md",
+          "Running one checker against the corpus": "corpus-usage.md",
+          "Using the corpus in CI": "corpus-usage.md",
+          "Why each fixture exists": "fixture-maintenance.md",
+          "The vendored role: `roles/geerlingguy.mysql/`": "fixture-maintenance.md",
+          "Adding a fixture": "fixture-maintenance.md"
+        },
+        "preamble": "Original entry preamble preserved byte-for-byte; route condition and prerequisites recorded in repair1 evidence."
+      },
+      "final_sha256": "36f95b72ffede9cca998cb4035b4d7e7429c9eec134e559bfa8c137115537cb7",
+      "final_physical_lines": 32,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: The self-test contract stays at the entry point; usage and fixture maintenance have separate routes."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "initial_sha256": "8f1ad6cd0f575259b1af197c7a1e53a166a78e54089fae99b4e720f5c2ea5682",
+      "initial_physical_lines": 99,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "EXEMPT-ATOMIC",
+      "classification_reason": "EXEMPT-ATOMIC: Always-loaded platform execution contract with discovery, authority, stop, and output; splitting breaks entry workflow.",
+      "final_grade": "EXEMPT-ATOMIC",
+      "disposition": "Unchanged atomic entry/operator payload; raw band is measurement only.",
+      "fidelity_mapping": null,
+      "final_sha256": "8f1ad6cd0f575259b1af197c7a1e53a166a78e54089fae99b4e720f5c2ea5682",
+      "final_physical_lines": 99,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": null,
+      "final_grade_reason": "EXEMPT-ATOMIC: Atomic always-loaded platform contract: discovery, authority, stop and output rules must load together."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "initial_sha256": "0968c113dc63c6b2018da9d18e1b9f25511b95a99a021205c1ce230b463492d6",
+      "initial_physical_lines": 172,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "EXEMPT-ATOMIC",
+      "classification_reason": "EXEMPT-ATOMIC: Complete generated operator handoff payload; retain reviewed command/security contract.",
+      "final_grade": "EXEMPT-ATOMIC",
+      "disposition": "Unchanged atomic entry/operator payload; raw band is measurement only.",
+      "fidelity_mapping": null,
+      "final_sha256": "0a7fb3c2cee7730555443931bcc56a2ed655c5d75e7191afccc92c300dcf3819",
+      "final_physical_lines": 172,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": null,
+      "final_grade_reason": "EXEMPT-ATOMIC: Approved complete operator payload; keep reviewed commands and secret contract intact."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "initial_sha256": "7e8743af15d8ad1eaffb5274f0ecdd5bb9277df0552c3348beef7f3ae28c2e9e",
+      "initial_physical_lines": 191,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "EXEMPT-ATOMIC",
+      "classification_reason": "EXEMPT-ATOMIC: Complete generated runbook payload; retain reviewed commands and secret contract.",
+      "final_grade": "EXEMPT-ATOMIC",
+      "disposition": "Unchanged atomic entry/operator payload; raw band is measurement only.",
+      "fidelity_mapping": null,
+      "final_sha256": "0c9a3525e9ba8465a94e3459c0d5395ca447017fbdb9d5a9a78eb8f6efcaabbf",
+      "final_physical_lines": 191,
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": null,
+      "final_grade_reason": "EXEMPT-ATOMIC: Approved complete runbook payload; keep reviewed commands and secret contract intact."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/SOURCES.md",
+      "initial_sha256": "0bf3382a4b6220aba88d2a51b79f609ed17c6713d788c9c05ea27b9a4fe0da95",
+      "initial_physical_lines": 90,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Platform source ledger with one precedence/freshness procedure.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "0bf3382a4b6220aba88d2a51b79f609ed17c6713d788c9c05ea27b9a4fe0da95",
+      "final_physical_lines": 90,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Source precedence, capture dates and refresh steps form one platform evidence contract."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-capability-matrix.md",
+      "initial_sha256": "e04340069c42b1c9b47fb2449a91597fbec084e15162bfa197d144d90caf9fa0",
+      "initial_physical_lines": 92,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Paired-line comparative matrix and absence rule are one decision artifact.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "e04340069c42b1c9b47fb2449a91597fbec084e15162bfa197d144d90caf9fa0",
+      "final_physical_lines": 92,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: The paired-line comparison and unknown/absence rule form one discovery decision artifact."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "initial_sha256": "d932f072646824e92b960db5ba0fc269aabf7dd4f94a20786dba8cd954b7d62d",
+      "initial_physical_lines": 149,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Resource parity, scaling/storage, exposure, and failure evidence are distinct.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "source_h2_payloads_exactly_moved": 11,
+        "destination": "Child documents listed by the router; section conditions preserved. See evidence.fidelity."
+      },
+      "final_sha256": "19e65f24552fe999a8e6bb1eb368e571f7fcd508262d697d48a3e14a438ae366",
+      "final_physical_lines": 56,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Numbered Arvan rules route conditions to one topic owner while retaining Step 1 and single-owner constraints."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-execution-loop.md",
+      "initial_sha256": "4dc49d684fa6d351f56d0436bb456c56b75c2c0812dcf4d654968edaadfcd867",
+      "initial_physical_lines": 68,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Sequenced delivery workflow whose order is its operative contract.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "4dc49d684fa6d351f56d0436bb456c56b75c2c0812dcf4d654968edaadfcd867",
+      "final_physical_lines": 68,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: The ordered discovery-to-delivery loop is one procedure whose stages carry prerequisites."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-rbac-namespace-facts.md",
+      "initial_sha256": "bd8a8d044d66f897cf753026aa9e40a2345f393878b74ea7032ca6bb27320698",
+      "initial_physical_lines": 66,
+      "initial_measurement_grade": "YELLOW",
+      "classification": "YELLOW",
+      "classification_reason": "YELLOW: Bounded identity/authorization diagnostic with one evidence contract.",
+      "final_grade": "YELLOW",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null,
+      "final_sha256": "bd8a8d044d66f897cf753026aa9e40a2345f393878b74ea7032ca6bb27320698",
+      "final_physical_lines": 66,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Principal, namespace form and permission evidence are one bounded authorization diagnostic."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "initial_sha256": "b1a08ff7c5aa33a903fac7eade253e1c224fc73f77db22264eecc3d89330489b",
+      "initial_physical_lines": 113,
+      "initial_measurement_grade": "ORANGE",
+      "classification": "ORANGE",
+      "classification_reason": "ORANGE: Three complete payloads have separate triggers and can be routed.",
+      "final_grade": "GREEN",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": {
+        "original_heading_to_child": {
+          "Template 1: Helm or manifest implementation": "arvan-task-templates/10-helm-or-manifest-implementation.md",
+          "Template 2: RBAC incident triage": "arvan-task-templates/20-rbac-incident-triage.md",
+          "Template 3: Exposure mode selection": "arvan-task-templates/30-exposure-mode-selection.md"
+        },
+        "preamble": "Original entry preamble preserved byte-for-byte; route condition and prerequisites recorded in repair1 evidence."
+      },
+      "final_sha256": "2fb85b8f806de06f02eb45a8c0190c259f25a4b5636156d7e0252d03a445e499",
+      "final_physical_lines": 17,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade_reason": "GREEN: Template 1: Helm or manifest implementation is one bounded topic or integrated reader task at 17 physical lines; its prerequisites, conditions and proof stay together."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/00-topic-map.md",
+      "initial_sha256": null,
+      "initial_physical_lines": null,
+      "initial_measurement_grade": null,
+      "classification": "newly surfaced touched router; baseline inventory omitted it",
+      "classification_reason": "Parent candidate-5 coverage audit identified this existing router as touched; included in final touched set.",
+      "final_sha256": "e79121c94820bb5bb9b9d9788a12ecafd1022a590d783e5e4ecb8d3e14433156",
+      "final_physical_lines": 76,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Task and symptom routes share one entry map connecting triggers, follow-up checks and canonical owners.",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md",
+      "initial_sha256": null,
+      "initial_physical_lines": null,
+      "initial_measurement_grade": null,
+      "classification": "newly surfaced touched router; baseline inventory omitted it",
+      "classification_reason": "Parent candidate-5 coverage audit identified this existing router as touched; included in final touched set.",
+      "final_sha256": "73bf2b83eac3e34135e2e0a05efc0b453d261f6ede8fa601970858baa23eaced",
+      "final_physical_lines": 40,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "final_grade_reason": "GREEN: The concise task-to-owner map routes authoring, variable, graph and validation triggers.",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/00-topic-map.md",
+      "initial_sha256": null,
+      "initial_physical_lines": null,
+      "initial_measurement_grade": null,
+      "classification": "newly surfaced touched router; baseline inventory omitted it",
+      "classification_reason": "Parent candidate-5 coverage audit identified this existing router as touched; included in final touched set.",
+      "final_sha256": "4c94c4fa2c3ec9835caacb0a2f8e03bf987810c3e5c2ee8beb216906616bef82",
+      "final_physical_lines": 81,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "final_grade_reason": "YELLOW: Task routes, minimum branches and starting examples are one compatibility-aware index.",
+      "disposition": "Current grade from physical lines; specific cohesion reason recorded.",
+      "fidelity_mapping": null
+    }
+  ],
+  "new_children": [
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+      "sha256": "8805a1322ed42b839f90f6d7f356ca2f1e9ad70f758bcbd38afecdbb4294162b",
+      "physical_lines": 17,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 17 physical lines.",
+      "source_sections": [
+        "Container file delivery",
+        "1. Why `environment:` is not secret delivery",
+        "2. The two modes, and which applies",
+        "3. The `_FILE` convention",
+        "4. Compose: file-backed secrets"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+      "sha256": "38081ad6a75f7e239cb7bdf6e3dc7409147b6928e6def05613a0cb126fa349bc",
+      "physical_lines": 41,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 41 physical lines.",
+      "source_sections": [
+        "Secret delivery modes",
+        "1. Why `environment:` is not secret delivery",
+        "2. The two modes, and which applies"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+      "sha256": "c694892e33b5a986cf1a0c16908c0cfc9e0c745d7d91a7814425b451de6687b0",
+      "physical_lines": 32,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 32 physical lines.",
+      "source_sections": [
+        "The `_FILE` convention",
+        "3. The `_FILE` convention",
+        "Contract, restated so it can be reimplemented for a non-PHP service.",
+        "For each VAR_FILE in the environment:",
+        "1. the file must exist and be readable, or the entrypoint exits non-zero naming the path;",
+        "2. the value is the file contents with a single trailing newline removed and nothing else",
+        "trimmed, because a passphrase may legitimately begin or end with a space;",
+        "3. VAR is exported and VAR_FILE is unset, so the path does not leak into child processes;",
+        "4. if VAR is already set, the file wins and a warning names both sources, because two sources",
+        "for one credential is a configuration defect that must be visible."
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+      "sha256": "2027af531b3e0c75068cbb9f5b4efa552d3aaed5d3445cc1e3cb0e91beac6345",
+      "physical_lines": 44,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 44 physical lines.",
+      "source_sections": [
+        "Compose file-backed secrets",
+        "4. Compose: file-backed secrets"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "sha256": "10b1d64b86dd6d63bbdbec863edb97fa847685f6fab3309b4351f82a723d0d40",
+      "physical_lines": 63,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Swarm secret rotation is one ordered lifecycle with proof conditions.",
+      "source_sections": [
+        "20 Swarm Rotation",
+        "5. Swarm: external secrets",
+        "6. Rotation is a create-new-name operation",
+        "1. create the new secret under a new name",
+        "2. update the stack file: source: comment_app_key_v4, target unchanged",
+        "the target stays `app_key`, so no application code or env var changes",
+        "3. deploy, which is an ordinary rolling update",
+        "4. confirm no task references the old secret, then remove it"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+      "sha256": "7c8894dc01da7fa35b68413cbca9607014e3320aa2cffa35322abafc48138265",
+      "physical_lines": 49,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "30 Key Material And Audit",
+        "7. Key material with two parties",
+        "8. What must never appear in `docker inspect`",
+        "9. Checklist for a secret change"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+      "sha256": "4e39793ffb47b9f21b9b60092346b44fed6770dfabd02125eebb49948d9221e9",
+      "physical_lines": 76,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "DNS/network reachability is one diagnostic path with ordered resolution checks.",
+      "source_sections": [
+        "10 Network And Dns",
+        "1. One shared network per family",
+        "2. Stable DNS: one name per HTTP backend"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+      "sha256": "54384d7d24708c330e06ff3bee5f17daf8b21d2c0d05884b5d4592bc5dd2470e",
+      "physical_lines": 81,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Exposure and trust controls are one boundary decision with linked prerequisites.",
+      "source_sections": [
+        "20 Exposure And Forwarded Trust",
+        "3. Exposure, with a scope",
+        "4. Trust boundaries and forwarded headers"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/30-discovery-diagnosis.md",
+      "sha256": "a12cd4b60277b17b27c691104469d702ec8aae56838511f8fc7c35443d0af58b",
+      "physical_lines": 22,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "30 Discovery Diagnosis",
+        "5. Diagnosing discovery and routing"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+      "sha256": "a4be10f3f7ef483168818a33d0331694e53b66a1ee9e41c7a8142cc05f5d2891",
+      "physical_lines": 53,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Resource ceilings are one limit-selection procedure with their symptoms and verification.",
+      "source_sections": [
+        "10 Container Resource Ceilings",
+        "1. `limits` and `reservations` do different jobs"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+      "sha256": "df059dd22c291cc07fa5f31b3f6051e96fa78354a41b0b9696c649337debe9b6",
+      "physical_lines": 96,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Process, descriptor, and pool sizing form one capacity diagnosis and tuning workflow.",
+      "source_sections": [
+        "20 Process And Php Workers",
+        "2. The `nproc` trap",
+        "3. OPcache and JIT for a long-lived worker"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+      "sha256": "1757e9941309b9e97bd0ea214429ccb887ad6270f0f02d69bd84fba5ca5bb718",
+      "physical_lines": 88,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Process, descriptor, and pool sizing form one capacity diagnosis and tuning workflow.",
+      "source_sections": [
+        "30 File Descriptors And Pools",
+        "4. `nofile` and the sysctls that matter",
+        "5. Connection pool sizing against the container"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md",
+      "sha256": "68bc9d7c16d5f66fee04b560fa75ece36e5e2385226cf5f50da1943579567876",
+      "physical_lines": 25,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "40 Complexity And Load Diagnosis",
+        "6. Complexity budgets",
+        "7. Diagnosing a load problem"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/10-compute-supported-baseline.md",
+      "sha256": "0977770ec9ec4678f723c6eef87f4bd9fe2f0c6b04f6aeefb1efbc0bfd5054ad",
+      "physical_lines": 53,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "YELLOW: Release cadence, supported-line calculation, live versions and dated observations form one baseline answer path.",
+      "source_sections": [
+        "Compute the baseline, do not read it",
+        "Writing an answer when the target versions are unknown"
+      ],
+      "route_condition": "When target GitLab/Runner versions are unknown or a current baseline is needed.",
+      "provenance_and_prerequisite_route": "Official maintenance/release/runner sources and dated observations preserved."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+      "sha256": "bf55cbf2688ac1f4a4edf6360fc340af7faf9ba112c5f8ce8b2cd5a122ae65b4",
+      "physical_lines": 55,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "YELLOW: GA/experimental state, hard limits and replacements form one feature qualification lookup with per-claim sources.",
+      "source_sections": [
+        "Generally available, and therefore safe to use without a caveat",
+        "Still experimental — do not build a production pipeline on these",
+        "Hard limits — these are checkable rules, not guidance",
+        "Deprecations, each with its replacement"
+      ],
+      "route_condition": "When checking feature status, limits, experiments or deprecations.",
+      "provenance_and_prerequisite_route": "Per-entry re-derivation URLs preserved.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "sha256": "6bec1c784018f3883869e5d5b7e0786c70b3b4f6abb79ca4d2aaeea1c26a88ae",
+      "physical_lines": 56,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "DAG edge and critical-path decisions are one scheduling lookup.",
+      "source_sections": [
+        "DAG edges and critical path",
+        "Stages versus `needs:`",
+        "What an edge means, and what a missing edge means",
+        "Critical path and the cost of a stage boundary"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+      "sha256": "04aa6c1b74e713b141def9874d85885f788d63208c7d8b1e0ebc2d1dea716292",
+      "physical_lines": 29,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 29 physical lines.",
+      "source_sections": [
+        "Needs and artifacts",
+        "`needs:` size and artifact fetching"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+      "sha256": "4b165ddcd0aa880f0660f8b118c41cbaec39470ba7903aaedb5b10baf264d7ed",
+      "physical_lines": 47,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 47 physical lines.",
+      "source_sections": [
+        "Parallelism and resource groups",
+        "`parallel:` and `parallel:matrix`",
+        "`resource_group`"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+      "sha256": "e45cd847588757aaffe735beecf3f058a48d6019ad6e3be2fe9e7e0137c865f1",
+      "physical_lines": 42,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 42 physical lines.",
+      "source_sections": [
+        "Cancellation and timeouts",
+        "`interruptible`",
+        "Job `timeout:`"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "sha256": "1969326d25c9f97d224868f9cadf15d073704286a0f7138fb893aab0df12e3cb",
+      "physical_lines": 11,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines.",
+      "source_sections": [
+        "Retries and job creation",
+        "`retry:` and its failure classes",
+        "Skipping inside a script versus not creating the job"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+      "sha256": "d06d7f3cf3ce0706042ea393928a6d65eee5bd602c3ac5cbc331a240bf01d423",
+      "physical_lines": 27,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 27 physical lines.",
+      "source_sections": [
+        "Retry failure classes",
+        "`retry:` and its failure classes"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/60-job-creation-conditions.md",
+      "sha256": "7a3f09a8952ed576eebe3dc1fecf790b5987633de47d821ec5cea92c57405c75",
+      "physical_lines": 24,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Job creation conditions",
+        "Skipping inside a script versus not creating the job"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+      "sha256": "f789563582378e498dcec19ed25d2c143aba3236ea7febc7aee252aa07c76f64",
+      "physical_lines": 65,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Pipeline creation conditions are a compact ordered decision route.",
+      "source_sections": [
+        "Pipeline creation and path rules",
+        "`workflow:rules` and job `rules:`",
+        "`rules:changes` and path filters"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+      "sha256": "d9f17caf24ff66a6231449fb56d35e323d6cde155cf18fb5b6d25dda74a42a37",
+      "physical_lines": 19,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 19 physical lines.",
+      "source_sections": [
+        "Authoring defaults",
+        "Authoring defaults"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "sha256": "2d9bf76ff738ad8c985f2c3ae2e9513e6e7d6f1f842dbedd867af3aeb22fd190",
+      "physical_lines": 11,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines.",
+      "source_sections": [
+        "Job authoring and reuse",
+        "Authoring defaults",
+        "Reuse: hidden jobs, `extends`, `!reference`, includes and components"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+      "sha256": "c4bbf9d3f36b023fb216ac4d584e06eb5e29e34a88d7c074a7a35994a9324080",
+      "physical_lines": 72,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Environment and rollback form one deployment lifecycle with prerequisites.",
+      "source_sections": [
+        "Environments and rollback",
+        "Environments and rollback"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+      "sha256": "818368e21a02de7d30fa51b872d1e866c8cebaf34ab5f7609029a066bfa584fe",
+      "physical_lines": 51,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Reuse/composition mechanisms are compared in one concise authoring decision.",
+      "source_sections": [
+        "Reuse and composition",
+        "Reuse: hidden jobs, `extends`, `!reference`, includes and components"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/40-child-pipelines-and-checklist.md",
+      "sha256": "f21bcc993aa235fc97d33b0321e12d074791e0d152669f780b01f8277ee9fb33",
+      "physical_lines": 31,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Child pipelines and checklist",
+        "Child pipelines and multi-file layouts",
+        "Authoring checklist"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/10-static-validation-and-checkers.md",
+      "sha256": "01d6a100351a64ac0217dc24bb9f9606c2e11146ca99be1fceb78eed4444fe39",
+      "physical_lines": 86,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Static validation tools are one local validation procedure with explicit boundaries.",
+      "source_sections": [
+        "Static validation and checker limits",
+        "Validation ladder",
+        "The bundled checkers: what they assert and what they cannot see",
+        "`validate_gitlab_ci.py`",
+        "`validate_runner_config.py`",
+        "Gate-eligible versus advisory, and who chooses"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+      "sha256": "438218f4f7b283e548d370276c374a0f8cee33091da30db197e2d15a103b81b2",
+      "physical_lines": 17,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 17 physical lines.",
+      "source_sections": [
+        "Live GitLab validation",
+        "Live GitLab validation"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+      "sha256": "6bfd573cf3a1a2a5680b6126f3cc9b0c808c22ba3d60945d3ff45cee24e70479",
+      "physical_lines": 34,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 34 physical lines.",
+      "source_sections": [
+        "Configuration and rule failures",
+        "1. YAML or schema failure",
+        "2. Pipeline creation or rule evaluation failure"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-failure-class-triage.md",
+      "sha256": "6df0a4e03606432b88f1da2c3984bc689bdaadba12d439aa655d7468b3874ec7",
+      "physical_lines": 7,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Failure-class triage"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+      "sha256": "6eee0f6763f54c235ce4e85be5c611f1183a1549f0095a7865eb200fd539e024",
+      "physical_lines": 25,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 25 physical lines.",
+      "source_sections": [
+        "Gate eligibility",
+        "Gate-eligible versus advisory, and who chooses"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+      "sha256": "dcf852419e471c356be89030c73dc3e3091229604ba839ad39a5a95e85460449",
+      "physical_lines": 63,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Runner/runtime failures form one symptom-to-diagnosis procedure.",
+      "source_sections": [
+        "Runner and runtime failures",
+        "3. Runner matching failure",
+        "4. Executor startup failure",
+        "5. Runtime failure"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/50-symptoms-and-cross-file.md",
+      "sha256": "9af62618c85af3964540718bcac3acb83f3bc7e74f38295add2adc5931379996",
+      "physical_lines": 26,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Symptoms and cross-file debugging",
+        "Symptom map",
+        "Debugging across multiple files"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+      "sha256": "9e153294bf2a54ad475f2b4e4ca1090afa8fe3ca62ad31cb53edce307a2bf4db",
+      "physical_lines": 51,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Variable/input expansion is one precedence and evaluation decision.",
+      "source_sections": [
+        "Mechanisms and expansion",
+        "Choose the right mechanism",
+        "What GitLab's expansion does and does not do"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "sha256": "ed549bdc07b92e7afd2869c2fd54a085dca52eccec66f63206fd48149d3de1b7",
+      "physical_lines": 11,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines.",
+      "source_sections": [
+        "Variable sources and precedence",
+        "Choose the right mechanism",
+        "Variable precedence"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "sha256": "70d2718c1bfa9f4b1691c543bb2228f180ab40ec568cfa8364aca90bd1df144e",
+      "physical_lines": 15,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 15 physical lines.",
+      "source_sections": [
+        "Secret and component inputs",
+        "Masked, protected and file variables",
+        "`id_tokens:`, `secrets:` and secure files",
+        "Inputs and components"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+      "sha256": "6b4093ec4fb38ddd08b947d1ed48cbc02a7d006317d356c5a2dcb86e237330e8",
+      "physical_lines": 17,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 17 physical lines.",
+      "source_sections": [
+        "Variable precedence",
+        "Variable precedence"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+      "sha256": "90bc4bb5645a4fd2915ab53254f2591ea3fa894b4b01d9807d9cd61b93b49e7d",
+      "physical_lines": 18,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 18 physical lines.",
+      "source_sections": [
+        "Protected and file variables",
+        "Masked, protected and file variables"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "sha256": "b433273529a42eb63749f46f9faf6652a89041f768cecdcffcdde07e85d219d2",
+      "physical_lines": 15,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 15 physical lines.",
+      "source_sections": [
+        "Rules, forwarding and debugging",
+        "Rules and variable limitations",
+        "Downstream pipelines and forwarding",
+        "Debugging an unexpected value"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+      "sha256": "d951e424dbafff49f1cf2ed4ae8e2497d2d9990d718184c8d726349255818990",
+      "physical_lines": 31,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 31 physical lines.",
+      "source_sections": [
+        "Tokens and secure files",
+        "`id_tokens:`, `secrets:` and secure files"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+      "sha256": "470ab29119f216d077dbc2f56ec22d02efcac1388001d63c789c82610da09eb4",
+      "physical_lines": 49,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: Reusable pipeline inputs and components are a bounded topic with one evaluation and precedence decision; 49 physical lines.",
+      "source_sections": [
+        "Inputs and components",
+        "Inputs and components"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+      "sha256": "c2385081eca7bd8117bafbf559237cd4f5e3f7c76df5d3fffe7091f52010e436",
+      "physical_lines": 13,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 13 physical lines.",
+      "source_sections": [
+        "Rules and value availability",
+        "Rules and variable limitations"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+      "sha256": "12979a2d782ce6d5b3d7ad29580cd26f996442809993b58469f66361a1b1d24f",
+      "physical_lines": 11,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines.",
+      "source_sections": [
+        "Downstream forwarding",
+        "Downstream pipelines and forwarding"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/80-variable-debugging-and-inventory.md",
+      "sha256": "9caf8fc21c9e249297ecc2a65a97aed5622d1f82c24b33fb3c81b00460f1b61c",
+      "physical_lines": 32,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Variable debugging and inventory",
+        "Debugging an unexpected value",
+        "Variable inventory template"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+      "sha256": "25a50f0e3c8309a7d15a30f526ddaf6350db689a93909c49ce3a99eaa8f28c89",
+      "physical_lines": 76,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Defaults association is a compact decision table whose links and exceptions are read together.",
+      "source_sections": [
+        "Defaults association",
+        "The `defaults` association rule",
+        "Why this is the rule and not a preference"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+      "sha256": "f5047248f0f9ed284175a24620d9010f48dd4c58dc5fe9c97eea49696a179d28",
+      "physical_lines": 33,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 33 physical lines.",
+      "source_sections": [
+        "Timeouts and retries",
+        "Timeouts",
+        "Retries and redispatch"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+      "sha256": "fb3b7887ecd1a745caa7956877082eb11d3fccefaf8fbfc0d07a5cf3f07c7c46",
+      "physical_lines": 43,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 43 physical lines.",
+      "source_sections": [
+        "Connection capacity and reuse",
+        "Connection ceilings and queueing",
+        "Connection reuse"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+      "sha256": "d452c4b2afc290e8c9e5704b43581301ee472e72752251820f1075fede69f140",
+      "physical_lines": 45,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 45 physical lines.",
+      "source_sections": [
+        "Maps and preprocessor",
+        "Maps instead of ACL chains",
+        "Environment variables and the preprocessor"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/50-symptom-diagnosis.md",
+      "sha256": "bf5e3146266ac49088a5c9daa92b42a74214ffc4e050f363120f1ac4b63a31b4",
+      "physical_lines": 37,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Symptom diagnosis",
+        "Diagnosing by symptom",
+        "502 or 503 in bursts",
+        "Tail latency spikes with normal median",
+        "Too many open files",
+        "Backends flapping in and out of rotation"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "sha256": "203842c856cb9e9e4eabda0f23b2205ff78961f3ff740d24858480f99b60d16e",
+      "physical_lines": 65,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "YELLOW: TLS-stack/build compatibility and no-QUIC outcomes jointly decide HTTP/3 eligibility on the actual binary.",
+      "source_sections": [
+        "The build requirement, which comes before everything else",
+        "What to do when `haproxy -vv` reports no QUIC"
+      ],
+      "route_condition": "When checking TLS/build support or the no-QUIC outcome.",
+      "provenance_and_prerequisite_route": "Mandatory prerequisite to every mode; dated version/source routes retained.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+      "sha256": "3a8a209122b08e9dcb28d505fbfbce5ed2f872a992bd30a0168db9586e194fb1",
+      "physical_lines": 23,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Frontend HTTP/3 template is separately triggered and complete at 23 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Frontend HTTP/3"
+      ],
+      "route_condition": "When enabling client-side HTTP/3.",
+      "provenance_and_prerequisite_route": "Mandatory build child plus version and source ledger.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+      "sha256": "f31db7441d4621e8632de023323e361fb10861eda9f413d03d2d273aefe3dfd4",
+      "physical_lines": 23,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Backend HTTP/3 template is separately triggered and complete at 23 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Backend HTTP/3"
+      ],
+      "route_condition": "When configuring HTTP/3 to an origin.",
+      "provenance_and_prerequisite_route": "Mandatory build child plus version and source ledger.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/40-quic-tuning.md",
+      "sha256": "7677a09b3b2e7f1d222ef04d976a8ba2c85597ba8a6af378a7657a8558a8d022",
+      "physical_lines": 30,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Tuning and naming template is separately triggered and complete at 30 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Tuning and naming"
+      ],
+      "route_condition": "When selecting branch-specific QUIC tuning.",
+      "provenance_and_prerequisite_route": "Mandatory build child plus version and source ledger."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+      "sha256": "7c5d2e04e7ed93e9a2c73ab370ab2bb573a24df7d9d8931c269440e1d2d6d97b",
+      "physical_lines": 26,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 26 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: 1. Structure",
+        "1. Structure"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+      "sha256": "2bba6d101acd3df731e3701e9abee9ebcd9a51ff3514f6b716c39c73d0d87b55",
+      "physical_lines": 25,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 25 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: 2. Naming",
+        "2. Naming"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/10-structure-and-naming.md",
+      "sha256": "61f034cc8bda852c478581a7ef36607e849253ffcdda08a1494d9d1fef9bda28",
+      "physical_lines": 9,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Structure and Naming",
+        "1. Structure",
+        "2. Naming"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/20-module-selection.md",
+      "sha256": "3ed63e8dbe38a8638dc159b6a0b99f13493edd5ded7be26350d7f1f7e0a25ff8",
+      "physical_lines": 40,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Module Selection",
+        "3. Module selection"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+      "sha256": "e1efe9ed61dc2d29802b352358784f39a733299268e4c5cd936edb20a0f32afe",
+      "physical_lines": 20,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 20 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Idempotency",
+        "4. Idempotency"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/40-error-handling.md",
+      "sha256": "e48bf1e4520c3e8c3e04ce7c1616a2989d31bece5877850259e3977bb540d046",
+      "physical_lines": 43,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Error Handling",
+        "5. Error handling"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/50-variable-precedence.md",
+      "sha256": "276d6daac9d06a1a851a2d3e58c5eab2e66e4f258760b5a89a6d2a44a2981031",
+      "physical_lines": 57,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Variable/input expansion is one precedence and evaluation decision.",
+      "source_sections": [
+        "Ansible ruleset: Variable Precedence",
+        "6. Variables"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/60-conditionals-and-loops.md",
+      "sha256": "45d1006eb62d296563884a17e27de22013ff526637d4c0d42b9709159bc31906",
+      "physical_lines": 23,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Conditionals And Loops",
+        "7. Conditionals and loops"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+      "sha256": "d50eca6aa798f2b238f33fbafcec5d45d4cc01a95fdb4cdcf60df975656bf7e2",
+      "physical_lines": 34,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 34 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Authoring Security",
+        "8. Security rules that apply at authoring time"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/80-performance.md",
+      "sha256": "afb63a672db678af06997a9430635ba8312def78d44c4df0fb5ff1d2000d31df",
+      "physical_lines": 65,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "One integrated decision/procedure requires its prerequisites and ordered checks together.",
+      "source_sections": [
+        "Ansible ruleset: Performance",
+        "9. Performance"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/90-check-mode-and-documentation.md",
+      "sha256": "02dd96a0749d2222e2d98f3ea8a1004e644d7d35b11fc7273d0a2029b8be283c",
+      "physical_lines": 28,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Ansible ruleset: Check Mode And Documentation",
+        "10. Check mode",
+        "11. Documentation"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/10-setup-and-configuration.md",
+      "sha256": "4bb98160ecf17312599edba894729101c2c336aacf7df4ae7146734da28d3cf3",
+      "physical_lines": 49,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Installing the driver template is separately triggered and complete at 49 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Installing the driver",
+        "The configuration model this skill ships",
+        "Which image a scenario uses"
+      ],
+      "route_condition": "When configuring a driver, molecule.yml or test image.",
+      "provenance_and_prerequisite_route": "2026-07-29 verification date and source-map route preserved."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+      "sha256": "d36d638d9d0087efbf69338ab960fa7514ba7f5422790055c47f0c890533febc",
+      "physical_lines": 97,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "YELLOW: User/disposable-host gate, stage order, teardown and failure outcomes make one execution lifecycle.",
+      "source_sections": [
+        "When running a scenario is correct",
+        "The actions, and what each asserts",
+        "Running one",
+        "When a scenario cannot run"
+      ],
+      "route_condition": "When selecting, running or diagnosing Molecule stages; user request and disposable-host gate required.",
+      "provenance_and_prerequisite_route": "Execution guard, destroy failures, exit 2 and source-map route preserved.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+      "sha256": "35e3c315685555c00749545fb1a361647ea42b22707ebb80ae8b0f07efde6452",
+      "physical_lines": 40,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Writing the verifier template is separately triggered and complete at 40 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Writing the verifier"
+      ],
+      "route_condition": "When writing or reviewing scenario assertions.",
+      "provenance_and_prerequisite_route": "2026-07-29 verification date and source-map route preserved.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+      "sha256": "f03b87b026e70ff0997396b1fb14da209441a1c7ad49702d0fb6cc3a8206b514",
+      "physical_lines": 28,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 28 physical lines.",
+      "source_sections": [
+        "Security checklist: Audit Commands",
+        "The three commands that make up an audit"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+      "sha256": "d1ef5d33af60323eda43d6447662621e965d1f966586b1c663291fd64179a1c5",
+      "physical_lines": 16,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 16 physical lines.",
+      "source_sections": [
+        "Security checklist: Service Binding",
+        "S9. A service binds to an address, not to everything"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+      "sha256": "d308b14be4c0a835b5f40825377b192b6789e8721f6475bdb21096da788e4738",
+      "physical_lines": 24,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 24 physical lines.",
+      "source_sections": [
+        "Security checklist: Mandatory Access Control",
+        "S10. SELinux and AppArmor stay enforcing"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+      "sha256": "b4bcd880cb179bc6bc1d4267584c65143e5b045b0a8ef01e3357866ea9416c16",
+      "physical_lines": 16,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 16 physical lines.",
+      "source_sections": [
+        "Security checklist: Audit Trail",
+        "S11. A security-relevant change is visible after the fact"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/130-tool-boundaries.md",
+      "sha256": "1b1ba2f465c3a58e37785a729ac5d6f064ec9d46299a43f34dc087cb719ad4c4",
+      "physical_lines": 21,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Security checklist: Tool Boundaries",
+        "S12. The tools that are not this skill's"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+      "sha256": "14c09ed03b4c1b7e7b07c0866dafc52e9d24295ddde4c7a4f4e58a36123c379a",
+      "physical_lines": 47,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 47 physical lines.",
+      "source_sections": [
+        "Security checklist: Credential Storage",
+        "S1. No credential is a literal in a tracked file",
+        "1. A vaulted variable. The value lives in an encrypted file.",
+        "2. An environment variable the CI job injects.",
+        "3. An external secret store."
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+      "sha256": "07668f016fbd20c0659d1d89294b06ab9274e6a309ba78e9faff01b049ce4a76",
+      "physical_lines": 22,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 22 physical lines.",
+      "source_sections": [
+        "Security checklist: Secret Redaction",
+        "S2. `no_log` covers every task that can print a secret"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+      "sha256": "00fc47554cc3cb92575daf3bf30e432e098ffe9a5341eae691b07b0f78428eb0",
+      "physical_lines": 65,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "Vault mechanics are one secret lifecycle with ordered checks.",
+      "source_sections": [
+        "Security checklist: Vault Mechanics",
+        "S3. Vault mechanics"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+      "sha256": "47fc98f696d7e50f10d9b0ab48a8a16ef811ae82e0d619915717488efaa02f14",
+      "physical_lines": 26,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 26 physical lines.",
+      "source_sections": [
+        "Security checklist: Privilege Escalation",
+        "S4. Privilege escalation is scoped",
+        "/etc/sudoers.d/ansible"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+      "sha256": "394cce3e31be896ddb4c2454047803a9ebb778dc3b6e05046c3863672a31ceae",
+      "physical_lines": 31,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 31 physical lines.",
+      "source_sections": [
+        "Security checklist: File Permissions",
+        "S5. Every written path has an explicit mode, and none is world-writable"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+      "sha256": "0c5e9ff18ecbcdd294d6808a89dfe5882890934c46fc00caf9f9f00aad8050d4",
+      "physical_lines": 41,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 41 physical lines.",
+      "source_sections": [
+        "Security checklist: Shell Inputs",
+        "S6. No unvalidated value reaches a shell",
+        "Reported",
+        "Correct: the value cannot break out of the argument",
+        "Better: no shell at all"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+      "sha256": "1e945bf169fc0be3d4168455e4af7739bcdf6b7245b7bca3e63f1610d1a86b3d",
+      "physical_lines": 24,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 24 physical lines.",
+      "source_sections": [
+        "Security checklist: Transport Verification",
+        "S7. Transport is encrypted and verified",
+        "CKV_ANSIBLE_1  uri disabling certificate validation",
+        "CKV_ANSIBLE_2  get_url disabling certificate validation",
+        "CKV2_ANSIBLE_1 uri over HTTP",
+        "CKV2_ANSIBLE_2 get_url over HTTP"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+      "sha256": "af5cbf00efbc59f43e9c00ffef78b7910f5644d74818ccbe4757bf484e2d4e18",
+      "physical_lines": 25,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 25 physical lines.",
+      "source_sections": [
+        "Security checklist: Host Key Verification",
+        "S8. Host keys are checked"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/corpus-usage.md",
+      "sha256": "12f9c8205c82fb7a31267bd70f0a6a4147ead97d20bf44a97c6918f753f64303",
+      "physical_lines": 62,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "YELLOW: Layout, checker commands, assertion contract and CI interpretation form one corpus-use path.",
+      "source_sections": [
+        "Layout",
+        "The playbook pair",
+        "Running one checker against the corpus",
+        "Using the corpus in CI"
+      ],
+      "route_condition": "When running or selecting existing corpus checks.",
+      "provenance_and_prerequisite_route": "63 assertion claim, exact commands and CI boundary retained."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+      "sha256": "8cbc31ff5f09e6fb5e3e1c68516c00acee98465b9c55bcd5d7ced960968578f7",
+      "physical_lines": 82,
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": "YELLOW",
+      "final_grade": "YELLOW",
+      "reason": "YELLOW: Regression purpose, fixture-addition rules, vendored provenance and refresh bounds form one maintenance decision.",
+      "source_sections": [
+        "Why each fixture exists",
+        "The vendored role: `roles/geerlingguy.mysql/`",
+        "Adding a fixture"
+      ],
+      "route_condition": "When changing fixtures or refreshing the vendored integration role.",
+      "provenance_and_prerequisite_route": "Fixture ownership, unknown pin, refresh limit/date and source provenance retained.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/10-resource-parity.md",
+      "sha256": "92988722652bb31e1f91dfbe1e4ed6f440ce625f2119429ace6df4702e784857",
+      "physical_lines": 38,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Arvan constraints: Resource Parity",
+        "1. Resources are mandatory and parity is enforced",
+        "CPU written as decimal cores, and why this is style rather than a constraint"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/20-stateful-storage.md",
+      "sha256": "71675d535ea12cd3dad0f522edada6eee48db0daa33cb194f42d5069a78c6ce8",
+      "physical_lines": 25,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Arvan constraints: Stateful Storage",
+        "2. Scaling is stateless-only",
+        "3. Disk lifecycle"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/30-exposure-config-and-secrets.md",
+      "sha256": "3b6ef92d290f1ee6b093920f8f427891199972d39b08a33d295b5ba6bb3351b3",
+      "physical_lines": 46,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Arvan constraints: Exposure Config And Secrets",
+        "4. Exposure has three modes, and one uses annotations Arvan does not document",
+        "7. Config mount safety",
+        "10. Secrets"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/40-namespace-and-panel-scope.md",
+      "sha256": "cc8f708ae1197816458eb3400aa6c099b30ea434ec2b568e2e8792c8c5d3dc24",
+      "physical_lines": 17,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Arvan constraints: Namespace And Panel Scope",
+        "5. Namespace scope",
+        "6. Panel behaviour"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/50-node-placement-and-portability.md",
+      "sha256": "a67390927eea0a0b3466b4b4d4e6075abb9c0651fd295c18a93b91a064356fae",
+      "physical_lines": 29,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Arvan constraints: Node Placement And Portability",
+        "8. Node affinity for CPU generation",
+        "9. Portability toggles"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/60-delivery-failure-map.md",
+      "sha256": "f7fb9d0b1ae3f47a14835defb02bb8458bdf0133f63151a0217262ed829435b2",
+      "physical_lines": 16,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "One bounded topic or procedure with a single reader trigger; below 50 physical lines.",
+      "source_sections": [
+        "Arvan constraints: Delivery Failure Map",
+        "11. Failure map for delivery on Arvan"
+      ],
+      "fidelity_note": "Moved content is retained in this child; source router preserves the applicable heading and condition route."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+      "sha256": "271771ce415ea6c5d422c576c736c41dab5bea320c87887900226cca780d63ea",
+      "physical_lines": 42,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Template 1: Helm or manifest implementation template is separately triggered and complete at 42 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Template 1: Helm or manifest implementation"
+      ],
+      "route_condition": "When implementing a Helm chart or rendered manifest; Step 1 discovery required.",
+      "provenance_and_prerequisite_route": "Step 1 in SKILL.md repeated in child.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+      "sha256": "b9a39acd221c5d5cb6f3c91b2cb19e1ed4b1807395ab6c2bee50c347becdda4f",
+      "physical_lines": 35,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Template 2: RBAC incident triage template is separately triggered and complete at 35 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Template 2: RBAC incident triage"
+      ],
+      "route_condition": "When investigating an authorization failure; Step 1 discovery required.",
+      "provenance_and_prerequisite_route": "Step 1 in SKILL.md repeated in child.",
+      "repair2_verified": true
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/30-exposure-mode-selection.md",
+      "sha256": "ed7c6e53050a2c1d68183670e4c01b34bdc8930930aac53aeac8c657c7953e1f",
+      "physical_lines": 40,
+      "raw_measurement_grade": "GREEN",
+      "applicable_grade": "GREEN",
+      "final_grade": "GREEN",
+      "reason": "GREEN: The Template 3: Exposure mode selection template is separately triggered and complete at 40 physical lines; its Step 1 precondition stays with it.",
+      "source_sections": [
+        "Template 3: Exposure mode selection"
+      ],
+      "route_condition": "When selecting an application exposure mode; Step 1 discovery required.",
+      "provenance_and_prerequisite_route": "Step 1 in SKILL.md repeated in child."
+    }
+  ],
+  "grade_counts_initial_measurement": {
+    "GREEN": 0,
+    "YELLOW": 10,
+    "ORANGE": 14,
+    "RED": 9
+  },
+  "note": "Initial grades from the operations brief; refresh final grades and fidelity after edits.",
+  "classification_counts_initial": {
+    "ORANGE": 12,
+    "RED": 9,
+    "YELLOW": 8,
+    "EXEMPT-ATOMIC": 4
+  },
+  "final_grade_counts_eligible": {
+    "ORANGE": 5,
+    "GREEN": 81,
+    "YELLOW": 39
+  },
+  "atomic_exemptions": [
+    {
+      "path": "skills/sohrab/ansible-validator/SKILL.md",
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": null,
+      "reason": "EXEMPT-ATOMIC: Always-loaded skill execution contract with trigger, decisions, safety, stop, and output; splitting breaks entry workflow."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "raw_measurement_grade": "YELLOW",
+      "applicable_grade": null,
+      "reason": "EXEMPT-ATOMIC: Always-loaded platform execution contract with discovery, authority, stop, and output; splitting breaks entry workflow."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": null,
+      "reason": "EXEMPT-ATOMIC: Complete generated operator handoff payload; retain reviewed command/security contract."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "raw_measurement_grade": "ORANGE",
+      "applicable_grade": null,
+      "reason": "EXEMPT-ATOMIC: Complete generated runbook payload; retain reviewed commands and secret contract."
+    }
+  ],
+  "documentation_gate_satisfied": false,
+  "known_grade_finding": "D8 decompositions completed. Independent full-scope verification and re-review remain pending.",
+  "manifest_refresh_needs": [],
+  "total_current_documents": 129,
+  "current_markdown_documents": 127,
+  "atomic_md_template_documents": 2,
+  "new_child_documents": 93,
+  "repair2": {
+    "status": "final documentation repair cycle 2; operation EOF inventory and R2/R3 route repairs recorded",
+    "changed_paths": 72,
+    "eof_inventory_operations_paths": 72,
+    "eof_paths_normalized": 72,
+    "focused_link_scope_paths": 72,
+    "checked_at": "2026-09-29"
+  }
+}

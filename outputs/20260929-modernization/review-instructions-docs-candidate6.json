@@ -1,0 +1,57 @@
+{
+  "verdict": "CHANGES-REQUESTED",
+  "reviewer": "instruction_review",
+  "configured": "gpt-6-astra/high",
+  "requested": "no override",
+  "observed": "unknown",
+  "isolation": "Read-only conduct; runtime enforcement unknown",
+  "snapshot": "candidate-6",
+  "manifest_sha256": "46e39f5f0f464035e43416f3e05a2e33877110cb2d916fc0aa5c724cca969367",
+  "scope": "All378 source hashes and334 document hashes match",
+  "closed": ["D1", "D2", "D3", "D4", "D6"],
+  "closure_evidence": "Correct IndexedDB destinations and single checklist/harness owners; restored OpenFGA handoffs; mandatory migration foundations; complete mirrored dispatch contracts independently confirmed.",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "major",
+      "owner": "documentation_foundation",
+      "paths": [
+        "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+        "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns.md",
+        "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate.md"
+      ],
+      "finding": "Formerly universal prerequisites narrowed: Go directive/release qualifications optional for library/testing; Vue bind-every-task constraints only load for compiler selection; Jitsi four questions before ANY manifest only load during substrate selection/comparison.",
+      "required": "Require prerequisite children before their governed topic decisions, preserving EXACT original scope from candidate4, neither narrowing nor broadening it. Keep payloads unchanged."
+    },
+    {
+      "id": "R2",
+      "severity": "minor",
+      "owner": "documentation_operations",
+      "paths": [
+        "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md"
+      ],
+      "finding": "Compatibility routers still use bare See links at line7.",
+      "required": "Give every child link an explicit reader condition and owned topic; no payload duplication or unrelated rewriting."
+    },
+    {
+      "id": "R3",
+      "severity": "minor",
+      "owner": "both original disjoint documentation owners",
+      "paths": [
+        "skills/sohrab/alaa-golang/references/70-modern-go-baseline/40-testing-security-and-experiments.md",
+        "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/40-outbound-proxy-security.md",
+        "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md"
+      ],
+      "finding": "Go stable profile and JSON compatibility rule refer above, now in child10. Fiber TrustProxy refers above, now in child30. HAProxy network failure refers below, now in frontend child.",
+      "required": "Use exact canonical sibling links, with section/topic in prose; no guessed fragment solely to satisfy checker."
+    }
+  ],
+  "grades": {"verdict":"ACCEPTED subject to routing corrections","GREEN":231,"YELLOW":74,"ORANGE":18,"EXEMPT_ATOMIC":11,"eligible_RED":0},
+  "evidence": "13 newly split trees compared to exact candidate4; no missing paragraphs;65fenced blocks retained;47original delegation sections occur once with runtime differences preserved.",
+  "limits": "No tests/live/deployment/calibration. Prior executable approvals valid. Four rename operations lack move-versus-recreate history proof; current content/path reconciliation does not establish historical operation compliance.",
+  "repair_policy": "Final documentation review-fix cycle2: exactly eleven Markdown files, no new files/moves/decomposition, code/policy/manifest edits. Wait for candidate6 verifier to release source freeze before writer dispatch. Preserve successful unchanged proof and re-run only affected final gates."
+}

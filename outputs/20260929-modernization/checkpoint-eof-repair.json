@@ -1,0 +1,6 @@
+{
+  "before": "62ad93b4ba82aa9267cc9d269fccba25a96ac76dd342da7cefd86ab8d2ac05a2",
+  "after": "0789fa8d3c6bfe6333edc62fc1b72193834443569a35b65404ee35d670ab48f3",
+  "change": "Remove only trailing empty newline bytes; preserve CRLF terminal newline",
+  "reason": "Native git whitespace finding"
+}

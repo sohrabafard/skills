@@ -3,8 +3,8 @@
  *
  * THIS FILE DEFINES NO WIRE NAME. Every field below is a local identifier. The event names,
  * field names, metric names and the idempotency key's name are requested from
- * /alaa-services-contract ($alaa-services-contract), references/24-metric-registry.md.
- * Requirement levels are /alaa-observability-soc ($alaa-observability-soc).
+ * /alaa-services-contract, references/24-metric-registry.md.
+ * Requirement levels are /alaa-observability-soc.
  *
  * Two WA pipeline facts bound every count derived from these records
  * (references/60-analytics-and-getstats.md):
@@ -174,29 +174,62 @@ export function createQoeCollector(player: ShakaPlayer): QoeCollector {
  * clearing before the await loses the interval permanently on a single rejection.
  * The endpoint and the payload's field names come from /alaa-services-contract.
  */
+/** Local diagnostics only; consumers map quantities to registered telemetry names. */
+export interface QoeDeliveryStatus {
+  readonly pendingDepth: number;
+  readonly inFlight: boolean;
+  readonly evictedCount: number;
+  readonly sendFailureCount: number;
+}
+
 export function createQoeSink(
   send: (records: readonly PlaybackQuantities[]) => Promise<void>,
-  maxBuffered = 50
-): { enqueue(record: PlaybackQuantities): void; flush(): Promise<void> } {
-  let pending: PlaybackQuantities[] = [];
+  maxBuffered = 50,
+  onDeliveryIssue?: (status: QoeDeliveryStatus) => void | Promise<void>
+): { enqueue(record: PlaybackQuantities): void; flush(): Promise<void>; status(): QoeDeliveryStatus } {
+  if (!Number.isInteger(maxBuffered) || maxBuffered < 1) {
+    throw new RangeError("maxBuffered must be a positive integer");
+  }
+  // Queue-entry identity distinguishes repeated enqueues of the same record object.
+  let pending: Array<{ record: PlaybackQuantities }> = [];
   let inFlight = false;
+  let evictedCount = 0;
+  let sendFailureCount = 0;
+  const status = (): QoeDeliveryStatus => Object.freeze({
+    pendingDepth: pending.length, inFlight, evictedCount, sendFailureCount
+  });
+  const notify = (): void => {
+    // No records, identifiers, URLs or caught error values cross this diagnostic seam.
+    // Diagnostics are optional: observer failures cannot corrupt delivery state.
+    try { void Promise.resolve(onDeliveryIssue?.(status())).catch(() => {}); }
+    catch { /* The status query remains available when the observer itself fails. */ }
+  };
 
   return {
+    status,
     enqueue(record: PlaybackQuantities): void {
-      pending.push(record);
+      pending.push({ record });
       // Bounded: drop the OLDEST, so the most recent session is the one that survives.
-      if (pending.length > maxBuffered) pending = pending.slice(pending.length - maxBuffered);
+      if (pending.length > maxBuffered) {
+        evictedCount = Math.min(Number.MAX_SAFE_INTEGER, evictedCount + pending.length - maxBuffered);
+        pending = pending.slice(pending.length - maxBuffered);
+        notify();
+      }
     },
     async flush(): Promise<void> {
       if (inFlight || pending.length === 0) return;
       inFlight = true;
       const batch = [...pending];
       try {
-        await send(batch);
-        // Only now is it safe to drop them.
-        pending = pending.slice(batch.length);
+        await send(batch.map(entry => entry.record));
+        // Capacity eviction may have removed old entries during send. Remove only acknowledged
+        // queue entries; slicing by the old batch length would discard newly enqueued records.
+        const acknowledged = new Set(batch);
+        pending = pending.filter(entry => !acknowledged.has(entry));
       } catch {
-        // Keep the batch. Every record carries an idempotency key, so a duplicate send
+        sendFailureCount = Math.min(Number.MAX_SAFE_INTEGER, sendFailureCount + 1);
+        notify();
+        // Keep entries still inside the capacity limit. Every record carries an idempotency key, so a duplicate send
         // is deduplicable downstream even though the sink itself cannot dedupe.
       } finally {
         inFlight = false;

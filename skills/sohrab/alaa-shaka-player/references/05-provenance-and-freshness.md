@@ -1,6 +1,6 @@
 # Provenance, freshness, conflicts and open questions
 
-Every upstream fact in this skill was read on **2026-07-28** from the tagged repository
+The API baseline in this skill was read on **2026-07-28** from the tagged repository
 `v5.2.3` (commit `25651923afafc7e39c736b46a377c3648b3aeb1a`) or from a live URL listed below.
 A Shaka claim written anywhere in this skill without a URL and a read date is not yet a fact.
 
@@ -8,7 +8,8 @@ A Shaka claim written anywhere in this skill without a URL and a read date is no
 
 | Fact | Value | Source |
 |---|---|---|
-| Current release | **v5.2.3**, 2026-07-27 | `https://github.com/shaka-project/shaka-player/releases/latest` (read 2026-07-28) |
+| Latest release observed | **v5.2.12**, 2026-09-25 | [Tagged release](https://github.com/shaka-project/shaka-player/releases/tag/v5.2.12), read 2026-09-29; deltas and required scenarios in `80-version-migration-and-release-deltas.md` |
+| API baseline | **v5.2.3**, 2026-07-27 | Tagged source below, read 2026-07-28; not a complete API revalidation at v5.2.12 |
 | `package.json` version at tag | `"5.2.3"` | `https://github.com/shaka-project/shaka-player/blob/v5.2.3/package.json` (read 2026-07-28) |
 | Maintained branches | v5.2 (latest), v5.1 (previous), v4.16 (LTS until 2027-01-31), v4.15 (Cast Application Framework) | `.../blob/v5.2.3/maintained-branches.md` (read 2026-07-28) |
 | Versioning policy | Semantic versioning since v3.0; any same-major upgrade is backward compatible | `.../blob/v5.2.3/docs/tutorials/upgrade.md` (read 2026-07-28) |
@@ -37,8 +38,7 @@ Re-read the sources below and update this file when **any** of the following is 
 observable conditions, not a schedule:
 
 1. You are about to change the pinned `shaka-player` version in any repository.
-2. The anchor date above is more than **60 days** old and the task asserts a "current" or "latest"
-   Shaka behaviour.
+2. The task asserts a "current" or "latest" release or Shaka behaviour; re-read the claim's source.
 3. The task concerns DRM, iOS/Safari, a TV or console platform, ABR, ads, or a security property.
 4. You are about to carry forward a workaround that this skill or a repository comment records.
 5. A console deprecation warning names a key or method this skill still teaches.

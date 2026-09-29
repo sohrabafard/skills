@@ -60,7 +60,7 @@ This section owns the rule; other references point here rather than restating it
 
 - **Claude Opus 5.5 — bound delegation.** Current guidance, including inherited Opus coordination advice, states that the model delegates to subagents more readily than prior models, that delegation multiplies cost and time when applied to small tasks, and that authors should give explicit guidance on which scenarios warrant delegation or set deterministic caps on how many agents may launch. Delegation language for current Opus is a ceiling rather than a permission: delegate only for large, genuinely independent, parallelizable tracks; do not delegate work finishable in a handful of tool calls; prefer one subagent over several; keep spawn counts low.
 - **Claude Fable 5.1 — constrain the work shape.** Current Fable dispatches parallel subagents readily, and the guidance is to use subagents frequently while giving explicit criteria for when delegation is appropriate, preferring asynchronous orchestrator-to-subagent communication over blocking on each return. Add selection criteria and non-blocking dispatch, not encouragement.
-- **Claude Sonnet 5 — treat as neutral-to-eager, and verify.** The Sonnet 5 guide does not address delegation. It does state that Sonnet 5 is more agentic than its predecessor and will reach for tools and run self-verification loops more readily. Absence of a delegation note is not evidence of under-fan-out; measure on your own harness before writing polarity either way.
+- **Claude Sonnet 5.5 — general polarity remains unmeasured.** Current guidance describes extra reviewer delegation at higher efforts, not a universal delegation bias. Give explicit independent scopes and stopping conditions; measure fan-out in the target harness before adding broader encouragement or suppression.
 - **Codex — explicit authorization and bounded lanes.** Use the current host's delegation
   rules and available tools. When authorized, name concrete independent scopes and their result
   contracts. Do not infer a universal GPT-6 delegation bias from a previous generation or an API
@@ -83,7 +83,7 @@ changes on the target workload instead of assuming that less checking proves equ
 1. The message opens with either the exact skill trigger or a goal command that names the needed skill's role, using the exact installed name for the executing surface, never a buried mid-paragraph trigger.
 2. The session has one role, consistent with the invoked skill, and implementation verbs live in lane rules.
 3. The single-message form is chosen deliberately: trigger-led for deterministic activation, goal-led for harness auto-continue. Two messages only to get both.
-4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.
+4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.5.
 5. Skills needed by lanes are named inside dispatch text, not as top-level triggers.
 6. In goal form, the completion condition is demonstrable from the transcript and carries an explicit turn or time clause.
 7. If the prompt will be pasted raw into a surface outside this plugin, the mention sigil matches that surface.
@@ -98,7 +98,7 @@ For durable multi-phase work that outgrows a single goal, route to `/alaa-workfl
 
 ## Freshness
 
-Claude delegation guidance refreshed 25 September 2026; unchanged invocation and harness mechanics retain their 6 August 2026 verification. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, whether Codex has since documented a goal cap, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. The Sonnet 5 position is marked unverified because its guide is silent on delegation, not because it was measured and found neutral. The Codex `/` palette listing skills is observed in a bug report against the shipping app rather than documented; `/skills` is the documented path.
+Claude delegation guidance refreshed 25 September 2026; unchanged invocation and harness mechanics retain their 6 August 2026 verification. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, whether Codex has since documented a goal cap, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. Sonnet 5.5 guidance was refreshed 29 September 2026; its general delegation polarity remains unmeasured. The documented higher-effort reviewer tendency does not establish a model-wide default. The Codex `/` palette listing skills is observed in a bug report against the shipping app rather than documented; `/skills` is the documented path.
 
 ## Sources
 
@@ -108,7 +108,7 @@ Claude delegation guidance refreshed 25 September 2026; unchanged invocation and
 - [Keep Claude working toward a goal (Claude Code)](https://code.claude.com/docs/en/goal)
 - [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
 - [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
-- [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
+- [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
 - [Create custom subagents (Claude Code)](https://code.claude.com/docs/en/sub-agents)
 - [Orchestrate subagents at scale with dynamic workflows](https://code.claude.com/docs/en/workflows)
 - [Subagents (Codex)](https://developers.openai.com/codex/subagents)

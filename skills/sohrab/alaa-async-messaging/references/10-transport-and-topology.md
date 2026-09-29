@@ -23,7 +23,7 @@ offset notion.
 are the genuine cases, and both are properties of the requirement rather than preferences about tooling:
 long-retention replay to consumers that do not exist yet, and fan-out wider than a topic exchange serves.
 The path is the template at `alaa-go-chi-development assets/templates/kit-change-request.md`, reached
-through `/alaa-go-chi-development` (`$alaa-go-chi-development`), filed against the kit and naming the
+through `/alaa-go-chi-development`, filed against the kit and naming the
 requirement and the retention or fan-out figure that a topic exchange cannot meet. Designing against a broker the platform does not run
 produces a design nobody can deploy, and the cost lands on the service that believed the design.
 
@@ -57,9 +57,10 @@ notification. A quorum queue replicates the message before confirming it, at a h
 queue on a failed node loses its unreplicated messages, and that loss is invisible to both producer and
 consumer.
 
-**A quorum queue's `x-delivery-limit` is set explicitly at declaration.** Redelivery is what turns a poison
-message into an infinite loop, and the delivery limit is the only bound the broker itself enforces. The
-value is `alaa-services-contract`'s; that one is set is this file's rule.
+**A quorum queue has an explicit effective delivery-limit policy when provisioned.** Use broker policy
+where the driver cannot emit the argument; `/alaa-laravel-job-rabbitmq` owns its driver mechanics. The
+value is `alaa-services-contract`'s. This bounds only the counted failure paths in
+`40-dead-letter-and-replay.md`; non-counting returns still require a bounded application path.
 
 ## Delayed retry
 
@@ -92,7 +93,6 @@ commit that removed it, so the only remedy is rotation.
 
 ## Not owned here
 
-Names and the registry: `/alaa-services-contract` (`$alaa-services-contract`). Broker cluster, vhost and
-permission administration on the platform: `/caas-arvan-kuber` (`$caas-arvan-kuber`). Container and chart
-expression of a broker: `/alaa-docker-production` (`$alaa-docker-production`) and `/alaa-k8s-helm`
-(`$alaa-k8s-helm`).
+Names and the registry: `/alaa-services-contract`. Broker cluster, vhost and
+permission administration on the platform: `/caas-arvan-kuber`. Container and chart
+expression of a broker: `/alaa-docker-production` and `/alaa-k8s-helm`.

@@ -1,0 +1,15 @@
+{
+  "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "branch": "codex/sohrab-sonnet55-modernization",
+  "files": 378,
+  "skills": 25,
+  "manifest_sha256": "78de558ae3d3ef8b60e26f0860636952652ed198ad6595a7a7527838c6d1672f",
+  "excluded": "skills/sohrab/alaa-workflow/outputs/20260929-modernization",
+  "selection": "git diff HEAD plus untracked source; sorted raw-byte SHA256 double-space path LF lines",
+  "changed_from_previous": [
+    "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+  ],
+  "missing_from_previous": [],
+  "publication": "uncommitted; staging preserved",
+  "independent_gates": "Reconcile changed inputs before citing prior proof"
+}

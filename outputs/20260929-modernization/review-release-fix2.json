@@ -1,0 +1,25 @@
+{
+  "recorded_by": "parent from independent release_review final",
+  "verdict": "READY-WITH-CONDITIONS",
+  "configured": "gpt-6-sol/medium",
+  "observed": "unknown",
+  "scope": "Two operator templates finalcycle2",
+  "closed": [
+    "REL-1",
+    "REL-2",
+    "REL-3"
+  ],
+  "findings": [],
+  "evidence": "Version/capability/permission/operator matrix separation; consistent private paths/ignore/cleanup; baseline umask077/noclobber protected descriptor before bytes; failure stops upgrade",
+  "cited_proof": "Writer static10 and whitespacePASS; independent verifier nativeHAProxy10PASS reported, not rerun",
+  "consumer_conditions": [
+    "Target context/APIpermissions/matrixcolumn",
+    "Private output and secret operational handling",
+    "Manifest and server admission then authorized rollout/readiness",
+    "CI Lint and model/provider activation/calibration"
+  ],
+  "limits": [
+    "Remaining integrated gates before local final completion",
+    "No actual installation/Helm/cluster/deployment"
+  ]
+}

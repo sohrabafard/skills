@@ -1,0 +1,1061 @@
+{
+  "verdict": "IMPLEMENTED; source frozen for independent instruction acceptance. D2 and D6 locally verified.",
+  "metadata": {
+    "agent": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "requested": "no override",
+    "observed": "unknown",
+    "authority": "workspace-write sandbox; explicit parent scope limited to three Markdown source roots and new complete-template children. Runtime enforcement of the narrower role scope is unknown; hash reconciliation checks compliance."
+  },
+  "finding_resolution": [
+    {
+      "id": "D2",
+      "restored": "Exact candidate4 LF-normalized introductory paragraphs: fine-grained request-time scope, ownership pointer, mandatory trust-gateway handoff, conditional HAProxy and OpenFGA pairings, and worked-example introduction.",
+      "source_archive": "documentation-before-candidate4.zip",
+      "source_archive_sha256": "206b6a7ba4ce92f834f648a9710ebd1cc1dc67a6eda3577d43634ac1855af3be",
+      "payloads_changed": false
+    },
+    {
+      "id": "D6",
+      "restored": "Both existing paths keep identical common envelopes and required checker tokens. Observable role-dispatch conditions route ten compact topic children per runtime. All45 role sections and47 fenced payloads remain complete and exact after LF normalization.",
+      "scope_and_authority_changed": false
+    }
+  ],
+  "design": {
+    "chosen": "Restore lost introduction verbatim; move complete independently selected role sections into conditional topic clusters, keeping the mandatory envelope at the checker-owned path.",
+    "rejected": [
+      "Treat 280/300-line packets as indivisible: smallest-applicable-template selection contradicts that exemption.",
+      "Move the common envelope: breaks checker path contract and weakens unconditional loading.",
+      "Rewrite role payloads: unnecessarily risks changing runtime authority or role semantics."
+    ],
+    "manifest_refresh": "None required by inspected consumers. Generated Codex manifest covers agent/policy outputs, not these dispatch references; both pack checks pass without regeneration. Services-contract has no file-list manifest.",
+    "new_capability": "None; structural disclosure repair and restoration of already-required handoffs. Topic headings and route sentences add navigation overhead; no new product, policy, model or authorization capability."
+  },
+  "read_reconciliation": {
+    "previous_evidence": [
+      "model-evidence.md",
+      "specialized-evidence.md"
+    ],
+    "existing_bundle_files": 119,
+    "current_hash_deltas": [
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md"
+    ],
+    "full_read_changed_files": [
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+      "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md"
+    ],
+    "other_files_reused_from_complete_prior_reads": 111,
+    "current_consumer_rereads": [
+      "alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "alaa-codex-orchestrator/scripts/validate_pack.py",
+      "alaa-cc-orchestrator/scripts/validate_pack.py"
+    ],
+    "consumer_contracts": "Common progress/watchdog tokens remain at delegation-prompts.md. No checker change, so checker self-tests not rerun.",
+    "archive_dispatchers": "Both prior live full reads match exact candidate4 archive after LF normalization."
+  },
+  "before_after": [
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "8ce39e72e61189f31c9e3f187b6873834f54d58368f0ca1de8253c3f6178eae7"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "f8ef47c1f94d95d8d85915af05cf3ac85fe2c46f6a058fe80a85fefe6f8a1d76"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "before_sha256_raw_bytes": "6759401a2e0f5690c57700dd0d3013fa81059e725ebc58ecfba0f43ca1db0911",
+      "after_sha256_raw_bytes": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "f88d476e0d43e5b08e29fc9eb9519f9fff4112803003d0c2d079a5b797abb1cd"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "3d20a9545f27658e8512dea5c37bacc47e4b212d7861de2b3ef2cb607f7cfe55"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "25bd87265c6ac9738c6d0488b19d332b2f79333cea84765ea7aeb6c744fccc61"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "before_sha256_raw_bytes": null,
+      "after_sha256_raw_bytes": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "before_sha256_raw_bytes": "b64af563443f9f564171ab68357f9689bd65e3810693b9692817cfd12ed8c60d",
+      "after_sha256_raw_bytes": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "before_sha256_raw_bytes": "26dc1626fbd9de5b750ec2c9c0312a514da0f03bf9037ab2afa2b154a252cbbe",
+      "after_sha256_raw_bytes": "87c6bab4f1f357a7d853a6bacd40469fe7d96114fa7de18d133b598a9af5bebe"
+    }
+  ],
+  "unchanged_source_files": 116,
+  "new_children": 20,
+  "changed_existing_files": 3,
+  "payload_route_map": [
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Spec analyst",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "section_sha256_lf": "c28c56db7a513ab045541306374e45199f016d47a89213794b6c3e82a1fedaa6"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Explorer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "section_sha256_lf": "d5dd15708854014f37b5075bdb535a75397dcd6a469fd319ac8293e44ccc0cf0"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Researcher",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "section_sha256_lf": "82acb15d5768111f9f78786b0087d6bfbfefb9d9fd52cad74c68aa7230b05268"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Test strategist",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "section_sha256_lf": "6911871fb4eb6035065ce46f4f395bacd4fee7dbdccdafc6fa8309ca9114f555"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Architecture critic",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "section_sha256_lf": "2e8a75549831010a5a7d60983ca34b6c9b81b48762cfa351fb592a2ec5b9cf06"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Implementer lane",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "section_sha256_lf": "fcfd39d0d0c150bb227f2def321f82f19dcff9f9feb3554a4f8ea019d0130295"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Verifier",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "section_sha256_lf": "f516d377d7c5ede0efbb9847fa821054167a61ea1e464bf8ecc06c2723e9dcde"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Failure analyst",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "section_sha256_lf": "945d4262551052b4422dd635b2c11d01997d3baf7ff1db80eacce517bd5ee093"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "section_sha256_lf": "2e7ca749642e3488c06d0e49caa5cae68f213c3453e86a7ec0f43970da0a0317"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Instruction reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "section_sha256_lf": "040f7dbee488af24938cda9ff53748db766bf4b6b3aa49d6aebaa46de48b23ef"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Adversarial reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "section_sha256_lf": "ab548f8ebbf54beb83268cda537a3915c353e7763d9d2232504f3f447eec6ae2"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "API contract reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "section_sha256_lf": "2e65645da604c7e6b6821d9813c4116aa9b19130bc3125100d3f0e03507ead4c"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Security reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "section_sha256_lf": "3e345383b39d91b664b012284ab114c2f1bf0b02b6108fdb5a5b73dcca5c0fa7"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Migration guardian",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "section_sha256_lf": "4ff3070af648981aac62e6230de775a69062277a98ca9969675653af1c0ee605"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Dependency auditor",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "section_sha256_lf": "a777f9bca26442c15ee322847952b3f5bb9a49bb235d566d01edce3eec68ba2e"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Release guardian",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "section_sha256_lf": "6d37ad2bb4ec0cca5a94e6931a82bd249b54a045e362dee314ac6d4ccfac27eb"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Accessibility reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "section_sha256_lf": "15938b68d734d43b83c7dcea53c6337c441806405bca480ffac7a22fb825fce4"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Browser QA",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "section_sha256_lf": "cb44b8d4e7913bd87795eb878f077b0e3c1192585b26881006bc96d80aeb13c8"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Performance profiler",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "section_sha256_lf": "fa468db732c30e17fa6a26a04934ff60ae6016c3a86551a6d9294187cce1fd30"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Observability reviewer",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "section_sha256_lf": "30e25b05b41ec8da3d8ec74d40071810e95225fb60c51ee891d9fc794435ee98"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Fix-cycle dispatch",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "section_sha256_lf": "abc45fc0ced34d4d6a4470255e80a94e4cc9ae1ba2e6cf522f1c42374237b950"
+    },
+    {
+      "runtime": "alaa-codex-orchestrator",
+      "heading": "Documenter",
+      "destination": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "section_sha256_lf": "e7aa2ce69239138ab10b6a6feb60c75427d4cb17118def3a3f3ea803eaeb214a"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Spec analyst",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "section_sha256_lf": "a039f80e306124ee6bbcb7df12d70d66b08dcc4edcfa2572c5778ef4af10d4dd"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Explorer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "section_sha256_lf": "d5dd15708854014f37b5075bdb535a75397dcd6a469fd319ac8293e44ccc0cf0"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Researcher",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "section_sha256_lf": "82acb15d5768111f9f78786b0087d6bfbfefb9d9fd52cad74c68aa7230b05268"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Test strategist",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "section_sha256_lf": "6911871fb4eb6035065ce46f4f395bacd4fee7dbdccdafc6fa8309ca9114f555"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Architecture critic",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "section_sha256_lf": "2e8a75549831010a5a7d60983ca34b6c9b81b48762cfa351fb592a2ec5b9cf06"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Implementer lane",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "section_sha256_lf": "36e11f8a50a4abfab225d1f52dceef9d1907fecd5b6b430e5a2d8cbae9491921"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Implementer escalation lane",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "section_sha256_lf": "47fe78728c4de303177f2e423fc20eac02984883c68f50dd07b9037cc945bed6"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Verifier",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "section_sha256_lf": "f516d377d7c5ede0efbb9847fa821054167a61ea1e464bf8ecc06c2723e9dcde"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Failure analyst",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "section_sha256_lf": "945d4262551052b4422dd635b2c11d01997d3baf7ff1db80eacce517bd5ee093"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "section_sha256_lf": "2e7ca749642e3488c06d0e49caa5cae68f213c3453e86a7ec0f43970da0a0317"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Instruction reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "section_sha256_lf": "11c9d3fc823574aab270a492772f5162843740f7ca6d568d6ae772b04101db7f"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Adversarial reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "section_sha256_lf": "78a1f45743213a4766003b9a9e1f53c35f09ba9f12d6cd22913b5c4aecf54ad7"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "API contract reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "section_sha256_lf": "2e65645da604c7e6b6821d9813c4116aa9b19130bc3125100d3f0e03507ead4c"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Security reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "section_sha256_lf": "3e345383b39d91b664b012284ab114c2f1bf0b02b6108fdb5a5b73dcca5c0fa7"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Migration guardian",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "section_sha256_lf": "4ff3070af648981aac62e6230de775a69062277a98ca9969675653af1c0ee605"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Dependency auditor",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+      "section_sha256_lf": "a777f9bca26442c15ee322847952b3f5bb9a49bb235d566d01edce3eec68ba2e"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Release guardian",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+      "section_sha256_lf": "6d37ad2bb4ec0cca5a94e6931a82bd249b54a045e362dee314ac6d4ccfac27eb"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Accessibility reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "section_sha256_lf": "15938b68d734d43b83c7dcea53c6337c441806405bca480ffac7a22fb825fce4"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Browser QA",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "section_sha256_lf": "cb44b8d4e7913bd87795eb878f077b0e3c1192585b26881006bc96d80aeb13c8"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Performance profiler",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "section_sha256_lf": "fa468db732c30e17fa6a26a04934ff60ae6016c3a86551a6d9294187cce1fd30"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Observability reviewer",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "section_sha256_lf": "30e25b05b41ec8da3d8ec74d40071810e95225fb60c51ee891d9fc794435ee98"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Fix-cycle dispatch",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "section_sha256_lf": "abc45fc0ced34d4d6a4470255e80a94e4cc9ae1ba2e6cf522f1c42374237b950"
+    },
+    {
+      "runtime": "alaa-cc-orchestrator",
+      "heading": "Documenter",
+      "destination": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "section_sha256_lf": "e7aa2ce69239138ab10b6a6feb60c75427d4cb17118def3a3f3ea803eaeb214a"
+    }
+  ],
+  "conditional_topic_routes": [
+    {
+      "destination": "10-discovery.md",
+      "topic": "Discovery and acceptance templates",
+      "roles": [
+        "Spec analyst",
+        "Explorer",
+        "Researcher"
+      ],
+      "draft": "When dispatching a spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for the complete acceptance, repository-mapping, or research template."
+    },
+    {
+      "destination": "20-design.md",
+      "topic": "Design and test strategy templates",
+      "roles": [
+        "Test strategist",
+        "Architecture critic"
+      ],
+      "draft": "When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for the complete matrix-design or architecture-review template."
+    },
+    {
+      "destination": "30-implementation.md",
+      "topic": "Implementation templates",
+      "roles": [
+        "Implementer lane",
+        "Implementer escalation lane"
+      ],
+      "draft": "When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for the complete lane template and escalation instructions."
+    },
+    {
+      "destination": "40-verification.md",
+      "topic": "Verification and failure analysis templates",
+      "roles": [
+        "Verifier",
+        "Failure analyst"
+      ],
+      "draft": "When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for the complete evidence-run or failure-diagnosis template."
+    },
+    {
+      "destination": "50-correctness-review.md",
+      "topic": "Correctness and instruction review templates",
+      "roles": [
+        "Reviewer",
+        "Instruction reviewer",
+        "Adversarial reviewer"
+      ],
+      "draft": "When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for the complete selected review template and its boundary."
+    },
+    {
+      "destination": "60-contract-review.md",
+      "topic": "Contract and security review templates",
+      "roles": [
+        "API contract reviewer",
+        "Security reviewer",
+        "Migration guardian"
+      ],
+      "draft": "When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for the complete compatibility, trust-boundary, or migration template."
+    },
+    {
+      "destination": "70-release-review.md",
+      "topic": "Dependency and release review templates",
+      "roles": [
+        "Dependency auditor",
+        "Release guardian"
+      ],
+      "draft": "When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for the complete supply-chain or release-readiness template."
+    },
+    {
+      "destination": "80-interface-review.md",
+      "topic": "Interface review templates",
+      "roles": [
+        "Accessibility reviewer",
+        "Browser QA"
+      ],
+      "draft": "When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for the complete accessibility or browser-scenario template."
+    },
+    {
+      "destination": "90-completion/10-operability-evidence.md",
+      "topic": "Operability evidence templates",
+      "roles": [
+        "Performance profiler",
+        "Observability reviewer"
+      ],
+      "draft": "When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for the complete measurement or diagnosability template."
+    },
+    {
+      "destination": "90-completion/20-review-followup.md",
+      "topic": "Review follow-up templates",
+      "roles": [
+        "Fix-cycle dispatch",
+        "Documenter"
+      ],
+      "draft": "When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for the complete finding-repair or verified-documentation template."
+    }
+  ],
+  "compression": {
+    "common_selection": {
+      "draft": "For every role dispatch, use the common dispatch envelope already in this file. Read the child for the role you are about to dispatch. Select only the smallest applicable complete role template from that child, and combine it with the common envelope. Do not copy unrelated role templates.",
+      "final": "Combine the common envelope with the smallest applicable complete template from the routed child.",
+      "preserved": "Every dispatch retains common envelope, smallest applicable complete role template, and conditional child loading; no scope, force or authority changes."
+    },
+    "routes": [
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for the complete acceptance, repository-mapping, or research template.",
+        "final": "- When dispatching a spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for the complete matrix-design or architecture-review template.",
+        "final": "- When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for matrix-design or architecture-review template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for the complete lane template and escalation instructions.",
+        "final": "- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for lane template and escalation instructions.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for the complete evidence-run or failure-diagnosis template.",
+        "final": "- When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for evidence-run or failure-diagnosis template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for the complete selected review template and its boundary.",
+        "final": "- When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for selected review template and its boundary.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for the complete compatibility, trust-boundary, or migration template.",
+        "final": "- When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for compatibility, trust-boundary, or migration template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for the complete supply-chain or release-readiness template.",
+        "final": "- When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for supply-chain or release-readiness template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for the complete accessibility or browser-scenario template.",
+        "final": "- When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for accessibility or browser-scenario template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for the complete measurement or diagnosability template.",
+        "final": "- When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for measurement or diagnosability template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-codex-orchestrator",
+        "draft": "- When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for the complete finding-repair or verified-documentation template.",
+        "final": "- When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for finding-repair or verified-documentation template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for the complete acceptance, repository-mapping, or research template.",
+        "final": "- When dispatching a spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for the complete matrix-design or architecture-review template.",
+        "final": "- When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for matrix-design or architecture-review template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for the complete lane template and escalation instructions.",
+        "final": "- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for lane template and escalation instructions.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for the complete evidence-run or failure-diagnosis template.",
+        "final": "- When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for evidence-run or failure-diagnosis template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for the complete selected review template and its boundary.",
+        "final": "- When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for selected review template and its boundary.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for the complete compatibility, trust-boundary, or migration template.",
+        "final": "- When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for compatibility, trust-boundary, or migration template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for the complete supply-chain or release-readiness template.",
+        "final": "- When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for supply-chain or release-readiness template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for the complete accessibility or browser-scenario template.",
+        "final": "- When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for accessibility or browser-scenario template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for the complete measurement or diagnosability template.",
+        "final": "- When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for measurement or diagnosability template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      },
+      {
+        "runtime": "alaa-cc-orchestrator",
+        "draft": "- When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for the complete finding-repair or verified-documentation template.",
+        "final": "- When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for finding-repair or verified-documentation template.",
+        "invariant": "The common selection sentence already requires a complete template; role triggers, destinations and topics are unchanged."
+      }
+    ],
+    "done_test": "All role conditions, destinations, topic ownership and complete-template obligations survive. Runtime-specific payload differences are preserved. Restored archive prose is a fidelity restoration, not newly authored policy."
+  },
+  "paired_runtime_differences_preserved": [
+    {
+      "heading": "Spec analyst",
+      "reason": "Existing runtime-specific wording/policy expression preserved byte-for-byte after LF normalization.",
+      "codex": "c28c56db7a513ab045541306374e45199f016d47a89213794b6c3e82a1fedaa6",
+      "cc": "a039f80e306124ee6bbcb7df12d70d66b08dcc4edcfa2572c5778ef4af10d4dd"
+    },
+    {
+      "heading": "Implementer lane",
+      "reason": "Existing runtime-specific wording/policy expression preserved byte-for-byte after LF normalization.",
+      "codex": "fcfd39d0d0c150bb227f2def321f82f19dcff9f9feb3554a4f8ea019d0130295",
+      "cc": "36e11f8a50a4abfab225d1f52dceef9d1907fecd5b6b430e5a2d8cbae9491921"
+    },
+    {
+      "heading": "Instruction reviewer",
+      "reason": "Existing runtime-specific wording/policy expression preserved byte-for-byte after LF normalization.",
+      "codex": "040f7dbee488af24938cda9ff53748db766bf4b6b3aa49d6aebaa46de48b23ef",
+      "cc": "11c9d3fc823574aab270a492772f5162843740f7ca6d568d6ae772b04101db7f"
+    },
+    {
+      "heading": "Adversarial reviewer",
+      "reason": "Existing runtime-specific wording/policy expression preserved byte-for-byte after LF normalization.",
+      "codex": "ab548f8ebbf54beb83268cda537a3915c353e7763d9d2232504f3f447eec6ae2",
+      "cc": "78a1f45743213a4766003b9a9e1f53c35f09ba9f12d6cd22913b5c4aecf54ad7"
+    },
+    {
+      "heading": "Implementer escalation lane",
+      "reason": "Existing separate escalation packet is specific to the CC runtime; preserved.",
+      "codex": null,
+      "cc": "47fe78728c4de303177f2e423fc20eac02984883c68f50dd07b9037cc945bed6"
+    }
+  ],
+  "grades": [
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "lines": 31,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "8ce39e72e61189f31c9e3f187b6873834f54d58368f0ca1de8253c3f6178eae7"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "lines": 20,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "f8ef47c1f94d95d8d85915af05cf3ac85fe2c46f6a058fe80a85fefe6f8a1d76"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "lines": 32,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "lines": 37,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "lines": 33,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "lines": 24,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "lines": 23,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "lines": 39,
+      "grade": "GREEN",
+      "reason": "GREEN: common envelope and conditional role-template index; required checker tokens stay at the existing path.",
+      "sha256_raw_bytes": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "lines": 31,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "f88d476e0d43e5b08e29fc9eb9519f9fff4112803003d0c2d079a5b797abb1cd"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "lines": 40,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "3d20a9545f27658e8512dea5c37bacc47e4b212d7861de2b3ef2cb607f7cfe55"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "lines": 32,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "lines": 37,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "25bd87265c6ac9738c6d0488b19d332b2f79333cea84765ea7aeb6c744fccc61"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "lines": 33,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "lines": 24,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "lines": 22,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "lines": 23,
+      "grade": "GREEN",
+      "reason": "GREEN: coherent dispatch topic cluster with complete independent role templates; select the smallest applicable payload through the common router.",
+      "sha256_raw_bytes": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "lines": 39,
+      "grade": "GREEN",
+      "reason": "GREEN: common envelope and conditional role-template index; required checker tokens stay at the existing path.",
+      "sha256_raw_bytes": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "lines": 72,
+      "grade": "YELLOW",
+      "reason": "YELLOW: one mandatory entrypoint retains restored trust/ownership prerequisites, worked-example context, original heading anchors and ordered decision-hop routes. Separating its common prerequisites would recreate D2's loading-condition defect; the detailed topics already live in seven children.",
+      "sha256_raw_bytes": "87c6bab4f1f357a7d853a6bacd40469fe7d96114fa7de18d133b598a9af5bebe"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+      "lines": 46,
+      "grade": "GREEN",
+      "reason": "GREEN, unchanged: existing complete authorization topic; retained and checked as part of the D2 moved-tree scope.",
+      "sha256_raw_bytes": "8abf0f6beba7b5a52ab7b76a3d09c8baf1069c71fab3ea3161eadf6520085e97"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+      "lines": 44,
+      "grade": "GREEN",
+      "reason": "GREEN, unchanged: existing complete authorization topic; retained and checked as part of the D2 moved-tree scope.",
+      "sha256_raw_bytes": "66c3b21ed1dca36a2cafe451eb17ffeea54492811b02e84fa5248615e82d2905"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+      "lines": 66,
+      "grade": "YELLOW",
+      "reason": "YELLOW, unchanged: one sidecar-to-OpenFGA decision flow joins trusted request context, check payload and cache/consistency caveats; further splitting separates proof limits from the request they qualify.",
+      "sha256_raw_bytes": "9d6214cf1ca85b335416a1d9f95b99b7c08993eb7abf2d7638550809f23b9398"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+      "lines": 19,
+      "grade": "GREEN",
+      "reason": "GREEN, unchanged: existing complete authorization topic; retained and checked as part of the D2 moved-tree scope.",
+      "sha256_raw_bytes": "5ac05b76fb8b2895ba68684ac1f93e3637182018be7d9fcbee04d15fe394fe10"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+      "lines": 37,
+      "grade": "GREEN",
+      "reason": "GREEN, unchanged: existing complete authorization topic; retained and checked as part of the D2 moved-tree scope.",
+      "sha256_raw_bytes": "7620c64b8e69a871342617e8170c3e029df81d31ea13c2b35144e5d3e8a0b565"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+      "lines": 38,
+      "grade": "GREEN",
+      "reason": "GREEN, unchanged: existing complete authorization topic; retained and checked as part of the D2 moved-tree scope.",
+      "sha256_raw_bytes": "6a352d3dcb02f3155352989d038384d811515918e23a8174ad4399aa1dec09bc"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md",
+      "lines": 57,
+      "grade": "YELLOW",
+      "reason": "YELLOW, unchanged: ordered diagnosis, prohibited paths and implementation owners form one troubleshooting lookup. No D2 prose changes to this child; its existing navigation is outside the handoff-restoration change.",
+      "sha256_raw_bytes": "ad7814058974cc39141eb3c978004408a6662e417e773b6e61a8c336111d9731"
+    }
+  ],
+  "grade_summary": {
+    "eligible": 30,
+    "green": 27,
+    "yellow": 3,
+    "orange": 0,
+    "red": 0,
+    "allow_red_used": false
+  },
+  "final_gates": [
+    {
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "chunk_id": "149956",
+      "wall_time_seconds": 0.2603545,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "CONTRACT CHECK OK: metadata and authority source requirements\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "chunk_id": "1f810e",
+      "wall_time_seconds": 0.2435495,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "CONTRACT CHECK OK: metadata and authority source requirements\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "chunk_id": "41dd5e",
+      "wall_time_seconds": 0.4203288,
+      "exit_code": 0,
+      "original_token_count": 11,
+      "output": "PACK VALID: 23 agents, skill version 4.0.0\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "chunk_id": "4f5d36",
+      "wall_time_seconds": 0.5229783,
+      "exit_code": 0,
+      "original_token_count": 11,
+      "output": "PACK VALID: 22 agents, skill version 4.1.0\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md --line-budget",
+      "chunk_id": "f587de",
+      "wall_time_seconds": 0.2551289,
+      "exit_code": 0,
+      "original_token_count": 931,
+      "output": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md: GREEN 31 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md: GREEN 20 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md: GREEN 32 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md: GREEN 37 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md: GREEN 33 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md: GREEN 24 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md: GREEN 23 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md: GREEN 39 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md: GREEN 31 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md: GREEN 40 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md: GREEN 32 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md: GREEN 37 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md: GREEN 33 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md: GREEN 24 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md: GREEN 23 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md: GREEN 39 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md: YELLOW 72 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md: GREEN 46 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md: GREEN 44 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md: YELLOW 66 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md: GREEN 19 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md: GREEN 37 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md: GREEN 38 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md: YELLOW 57 physical lines\r\nValidated links, line budgets in 30 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n"
+    }
+  ],
+  "earlier_checks": [
+    {
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "chunk_id": "abd25d",
+      "wall_time_seconds": 0.2122807,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "CONTRACT CHECK OK: metadata and authority source requirements\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "chunk_id": "a1c44b",
+      "wall_time_seconds": 0.2041529,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "CONTRACT CHECK OK: metadata and authority source requirements\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "chunk_id": "e192be",
+      "wall_time_seconds": 0.4641894,
+      "exit_code": 0,
+      "original_token_count": 11,
+      "output": "PACK VALID: 23 agents, skill version 4.0.0\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "chunk_id": "f91901",
+      "wall_time_seconds": 0.4778346,
+      "exit_code": 0,
+      "original_token_count": 11,
+      "output": "PACK VALID: 22 agents, skill version 4.1.0\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts --line-budget",
+      "chunk_id": "2d6679",
+      "wall_time_seconds": 0.2544583,
+      "exit_code": 0,
+      "original_token_count": 98,
+      "output": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md: YELLOW 72 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md: GREEN 39 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md: GREEN 39 physical lines\r\nValidated links, line budgets in 3 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n"
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md --line-budget",
+      "chunk_id": "615f96",
+      "wall_time_seconds": 0.2727925,
+      "exit_code": 0,
+      "original_token_count": 931,
+      "output": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md: GREEN 31 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md: GREEN 20 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md: GREEN 32 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md: GREEN 37 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md: GREEN 33 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md: GREEN 24 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md: GREEN 23 physical lines\r\nskills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md: GREEN 39 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md: GREEN 31 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md: GREEN 40 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md: GREEN 32 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md: GREEN 37 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md: GREEN 33 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md: GREEN 24 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md: GREEN 22 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md: GREEN 23 physical lines\r\nskills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md: GREEN 39 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md: YELLOW 72 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md: GREEN 46 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md: GREEN 44 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md: YELLOW 66 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md: GREEN 19 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md: GREEN 37 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md: GREEN 38 physical lines\r\nskills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md: YELLOW 57 physical lines\r\nValidated links, line budgets in 30 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n"
+    }
+  ],
+  "proof_limits": {
+    "static_only": true,
+    "independent_review": "pending",
+    "live_model_execution": "unrun",
+    "consumer_services": "unrun",
+    "install_or_stage_or_commit": false,
+    "other_bundle_files_unchanged": true
+  },
+  "inspection_failures": [
+    {
+      "operation": "Initial scoped rg included guessed root checker names/glob",
+      "result": "rg returned missing-file/invalid-pattern diagnostics; exact checker paths were subsequently read from the owning skill directories; no proof claimed."
+    },
+    {
+      "operation": "First Markdown check passed with explicit roots plus directory arguments",
+      "result": "Checker selected only three explicit Markdown files. Expanded an exact30-file list and reran; all30 passed. Three-file pass is a subset, not full proof."
+    },
+    {
+      "operation": "Initial inline fidelity probe used platform-default text decoding",
+      "exit_code": 1,
+      "finding": "False section-hash mismatch at Verifier em dash; diagnostic diff identified cp1252 decoding of UTF-8.",
+      "repair": "Specify encoding='utf-8' for every text read; no source repair.",
+      "retry_exit": 0,
+      "output": "{\"changed_existing\": [\"skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md\", \"skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md\", \"skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md\"], \"full_role_sections_verified\": 45, \"original_fenced_payload_counts\": {\"alaa-codex-orchestrator\": 23, \"alaa-cc-orchestrator\": 24}, \"common_envelopes_identical\": true, \"archived_intro_and_worked_example_restored\": true, \"all_other_bundle_hashes_unchanged\": true}\r"
+    }
+  ],
+  "artifacts": [
+    "instruction-contract-doc-repair1-work.json",
+    "instruction-contract-doc-repair1-fidelity.json"
+  ],
+  "source_freeze": true
+}

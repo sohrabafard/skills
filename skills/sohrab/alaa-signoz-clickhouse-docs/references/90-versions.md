@@ -3,7 +3,11 @@
 Read before stating versions, selecting release-specific syntax/APIs or assessing upgrades.
 This file owns version facts; topic references own query procedures.
 
-## Snapshot: 2026-09-26
+## Snapshot: 2026-09-26; upstream package refresh 2026-09-29
+
+Only the upstream ClickHouse package row was refreshed on 2026-09-29. Application,
+chart, collector, bundled database and prior local verification keep their original
+evidence dates; this refresh establishes no installed upgrade or new consumer floor.
 
 | Evidence level | Observed value | Official source |
 |---|---|---|
@@ -11,7 +15,7 @@ This file owns version facts; topic references own query procedures.
 | Released SigNoz Helm chart / appVersion | `0.143.0` / `v0.143.0` | [Chart.yaml](https://raw.githubusercontent.com/SigNoz/charts/signoz-0.143.0/charts/signoz/Chart.yaml) |
 | Collector image in that chart | `v0.144.11` | [values.yaml](https://raw.githubusercontent.com/SigNoz/charts/signoz-0.143.0/charts/signoz/values.yaml) |
 | ClickHouse server image in that chart | `25.12.5`; dependency chart version `24.1.18` is not the server version | same released chart and values |
-| Upstream ClickHouse stable / LTS | `26.9.2.8` / `26.8.11.7`, package dates 2026-09-22 | [official packages](https://packages.clickhouse.com/) |
+| Upstream ClickHouse stable / LTS | `26.9.5.2` / `26.8.14.3`, package dates 2026-09-28; observed 2026-09-29 | [official packages](https://packages.clickhouse.com/) |
 | Previous skill snapshot | application `v0.135.0`, collector `v0.144.6`, ClickHouse `25.12.5`, upstream `26.7`; recorded 2026-07-30 from then-current main | historical provenance, not an installed pin |
 | Local consumer application / collector / ClickHouse / chart | `UNKNOWN`; no version-matched deployment evidence supplied, no live discovery authorized | none |
 | Installed schema, API permissions and SQL alert acceptance | `UNVERIFIED`; alert record remains `unconfirmed` | `../assets/alert-surface.json` |

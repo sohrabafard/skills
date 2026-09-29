@@ -2,14 +2,16 @@
 
 Replace every capitalised placeholder. This file is for the person on call, so keep every command copy-and-paste ready and keep every answer above the fold.
 
-Two skills own the material behind this runbook: `/caas-arvan-kuber` (`$caas-arvan-kuber`) for Arvan platform facts, and `/alaa-k8s-helm` (`$alaa-k8s-helm`) for chart authoring, the validation gate register, and the manifest checker invoked below.
+Two skills own the material behind this runbook: `/caas-arvan-kuber` for Arvan platform facts, and `/alaa-k8s-helm` for chart authoring, the validation gate register, and the manifest checker invoked below.
 
 ## Scope
 
 - Namespace: `NAMESPACE`
 - Release: `RELEASE`
 - Chart version: `VERSION`
-- Kubernetes line this release targets: `LINE` — re-derive with `bash scripts/verify-cluster.sh NAMESPACE`
+- Server-reported Kubernetes version: `VERSION or UNKNOWN`; record discovery date and context.
+- Required API kinds/versions and caller permissions: `OBSERVED CAPABILITIES`; record separately from the server version.
+- Capability-matrix column: `OPERATOR-CONFIRMED COLUMN AND EVIDENCE`; reconcile the script observations with the target. Missing APIs or an unknown server version do not select a column automatically.
 - Persistent storage attached: `YES or NO` — if YES, this workload **cannot be scaled** while the storage is attached
 
 ## Day 0: first install
@@ -22,10 +24,10 @@ Two skills own the material behind this runbook: `/caas-arvan-kuber` (`$caas-arv
    ```bash
    bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
      --values values.yaml --secret-values values.secret.yaml \
-     --out build/rendered.yaml --keep
-   python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml --profile arvan
-   kubectl apply --dry-run=server -f build/rendered.yaml
-   rm -f build/rendered.yaml
+     --out build/private/rendered.yaml --keep
+   python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/private/rendered.yaml --profile arvan
+   kubectl apply --dry-run=server -f build/private/rendered.yaml
+   rm -f build/private/rendered.yaml
    ```
 
 5. **Deploy.** Use the install command in the operator README, including the Helm-major-dependent rollback flag. No `--create-namespace`.
@@ -48,7 +50,7 @@ Check the ResourceQuota first: on a tenant platform an exhausted quota looks exa
 1. run additional independent instances, each with its own disk, or
 2. detach the storage, which restarts the application.
 
-Record which one this service uses, who approves it, and what the expected downtime is. `/alaa-reliability-sla` (`$alaa-reliability-sla`) decides whether the downtime is acceptable.
+Record which one this service uses, who approves it, and what the expected downtime is. `/alaa-reliability-sla` decides whether the downtime is acceptable.
 
 ### Rotate an application secret
 
@@ -62,25 +64,57 @@ Record which one this service uses, who approves it, and what the expected downt
 2. Confirm the workload's `imagePullSecrets` still names it.
 3. Force a fresh pull and watch it succeed. A wrong pull credential is invisible until the next pull, which may be days away.
 
+Existing render paths are preserved: choose a new `--out` path, or explicitly retire old output. Unverifiable private permissions block before Helm writes rendered data.
+
 ## Day 2: maintenance
 
 ### Upgrade the chart or the application
 
 ```bash
-bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
-  --values values.yaml --secret-values values.secret.yaml --out build/rendered.yaml --keep
-python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml \
-  --baseline build/current.yaml --profile arvan
-rm -f build/rendered.yaml build/current.yaml
-helm upgrade RELEASE ./helm/CHART -n NAMESPACE \
-  -f values.yaml -f values.secret.yaml --wait --timeout TIMEOUT
+(
+  set -e
+  bash scripts/render-helm.sh --chart ./helm/CHART --namespace NAMESPACE \
+    --values values.yaml --secret-values values.secret.yaml \
+    --out build/private/rendered.yaml --keep
+
+  # The successful render established a private parent with trusted ancestors.
+  # Capture a fresh baseline; never overwrite an existing file or symlink.
+  (
+    set -eu
+    umask 077
+    [ ! -L build/private ]
+    [ "$(stat -Lc '%u:%a' build/private)" = "$(id -u):700" ]
+    [ ! -e build/private/current.yaml ]
+    [ ! -L build/private/current.yaml ]
+    set -o noclobber
+    exec 9> build/private/current.yaml
+    [ -f /dev/fd/9 ]
+    [ "$(stat -Lc '%u:%a' /dev/fd/9)" = "$(id -u):600" ]
+    helm get manifest RELEASE -n NAMESPACE >&9
+  )
+  python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/private/rendered.yaml \
+    --baseline build/private/current.yaml --profile arvan
+  rm -f build/private/rendered.yaml build/private/current.yaml
+  helm upgrade RELEASE ./helm/CHART -n NAMESPACE \
+    -f values.yaml -f values.secret.yaml --wait --timeout TIMEOUT
+)
 ```
 
-`--baseline` compares against the currently deployed render (`helm get manifest RELEASE -n NAMESPACE > build/current.yaml`, written to a mode-0600 file) and fails when an immutable selector or a StatefulSet volume-claim name changed. Both are rejected by the API server, and finding out at `helm upgrade` time costs a failed release.
+Add `build/private/` to `.gitignore` before either capture. `--baseline` compares
+against the currently deployed render and fails when an immutable selector or a
+StatefulSet volume-claim name changed. Both are rejected by the API server; detect
+them before upgrade. A failed capture or gate stops the example and may leave private
+files for diagnosis. Retire them deliberately before retrying; never overwrite them
+or create a permissive baseline and repair its permissions after secret bytes arrive.
 
-### Re-check the platform line
+### Re-check the observed platform capabilities
 
-Run `bash scripts/verify-cluster.sh NAMESPACE` at least once per quarter and after any Arvan maintenance announcement. If the reported line changed, re-read `caas-arvan-kuber references/arvan-capability-matrix.md` and re-gate the release: a manifest built for the old line may now be rejected.
+Run `bash scripts/verify-cluster.sh NAMESPACE` at least once per quarter and after
+any Arvan maintenance announcement. Compare the observed server version or unknown,
+API capabilities and caller permissions separately. If evidence changes, re-read
+`caas-arvan-kuber references/arvan-capability-matrix.md`, have the operator confirm
+column applicability, and re-gate. The helper does not report a selected Kubernetes
+line; absent APIs and an unknown version do not establish one.
 
 ### Rollback
 
@@ -106,7 +140,7 @@ kubectl -n NAMESPACE describe pod POD
 kubectl -n NAMESPACE get secret PULL_SECRET -o jsonpath='{.type}'
 ```
 
-Confirm the Secret type is `kubernetes.io/dockerconfigjson` and that the Pod or its ServiceAccount references it. For a GitLab Runner job pod, the executor's own pull configuration is separate from the manager's, and `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) owns both.
+Confirm the Secret type is `kubernetes.io/dockerconfigjson` and that the Pod or its ServiceAccount references it. For a GitLab Runner job pod, the executor's own pull configuration is separate from the manager's, and `/alaa-gitlab-ci-cd` owns both.
 
 ### 3. Forbidden, while the Helm release looks healthy
 
@@ -114,12 +148,12 @@ Confirm the Secret type is `kubernetes.io/dockerconfigjson` and that the Pod or 
 
 ```bash
 kubectl -n NAMESPACE get rolebinding -o custom-columns=NAME:.metadata.name,SUBJECT_KINDS:.subjects[*].kind,SUBJECT_NAMESPACES:.subjects[*].namespace,SUBJECT_NAMES:.subjects[*].name
-TOKEN="$(kubectl -n NAMESPACE create token SERVICEACCOUNT)"
-kubectl --token="$TOKEN" -n NAMESPACE auth can-i create pods
-unset TOKEN
+# Use an already authorized context authenticated as this ServiceAccount.
+kubectl auth whoami -o 'jsonpath={.status.userInfo.username}'
+bash scripts/verify-cluster.sh NAMESPACE SERVICEACCOUNT
 ```
 
-The token check evaluates the ServiceAccount's real identity; `--as` does not, because it also needs impersonation rights for the caller. If the RoleBinding subject namespace differs from the one you typed, this is the alias-versus-canonical case: read `caas-arvan-kuber references/arvan-rbac-namespace-facts.md`.
+The helper requires the current identity to match the requested ServiceAccount; unsupported or mismatched identity blocks with exit 2. It never mints a token or impersonates. If the RoleBinding subject namespace differs from the one you typed, this is the alias-versus-canonical case: read `caas-arvan-kuber references/arvan-rbac-namespace-facts.md`.
 
 ### 4. No rollout after a successful upgrade
 
@@ -136,7 +170,7 @@ Quota exhaustion, a failing probe, and an image pull error all present as "the u
 Almost always a container without resources, or `requests` not equal to `limits`. Migration, init, and hook Jobs are containers too and are the usual omission.
 
 ```bash
-python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/rendered.yaml --profile arvan
+python3 PATH/TO/alaa-k8s-helm/scripts/check_manifests.py build/private/rendered.yaml --profile arvan
 kubectl -n NAMESPACE get limitrange -o yaml
 ```
 
@@ -144,4 +178,14 @@ The checker names the container; the LimitRange tells you whether a bound was ex
 
 ### 6. A kind is rejected as unknown
 
-The cluster is not on the line this release was built for. Re-run `bash scripts/verify-cluster.sh NAMESPACE`, read the matching column of the capability matrix, and re-gate. Do not remove the object silently; record what was dropped and what replaces it.
+The API may be unavailable, disabled, or absent from incomplete discovery; this does not establish the server version. Re-run `bash scripts/verify-cluster.sh NAMESPACE`, have the operator confirm the applicable capability-matrix column from the new evidence, and re-gate. Do not remove the object silently; record what was dropped and what replaces it.
+
+Use `build/private/` as the caller-owned mode-0700 direct output parent. Its ancestors
+must be root/caller-owned and not group/other-writable, except root-owned sticky
+ancestors. An existing caller-owned `build/` at mode0755 can contain this private
+child. The helper creates missing parents privately; an existing `build/private/`
+with a different mode or owner blocks. Do not automatically chmod a shared directory;
+choose a fresh private child or resolve its ownership deliberately. The helper writes
+through one retained descriptor and rejects replaced paths or unprovable permissions.
+Existing output files remain untouched. GNU-compatible `stat` and `/dev/fd` are
+required; use a supported POSIX environment when unavailable.

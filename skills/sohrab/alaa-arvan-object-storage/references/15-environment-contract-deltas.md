@@ -2,7 +2,7 @@
 
 Read this when a service's `STORAGE_ENDPOINT` points at an `arvanstorage.ir` host. The variable names, the
 validation rules, the evidence markers and every default not restated here are
-`/alaa-minio-object-storage` (`$alaa-minio-object-storage`) `references/05-environment-contract.md`, which owns the
+`/alaa-minio-object-storage` `references/05-environment-contract.md`, which owns the
 family. **Use the names in that file unchanged on ArvanCloud**, because a service that moves from MinIO to Arvan
 must change env values only, and a second set of names would turn that move into a code change.
 
@@ -11,7 +11,7 @@ Only the values that differ appear below. Where a row is absent from this file, 
 **The delta table below is ArvanCloud's column of the provider-profile table, and it appears in full nowhere else
 in this skill.** The mechanism that reads it — what a profile is, the resolution order, the three rules that keep it
 safe, the evidence markers and the other providers' columns — is
-`/alaa-minio-object-storage` (`$alaa-minio-object-storage`) `references/05-environment-contract.md` under "The
+`/alaa-minio-object-storage` `references/05-environment-contract.md` under "The
 provider profile". Read that file before changing how a value is chosen, and this one before changing which value
 Arvan gets, because a mechanism restated here would drift from the file that owns it.
 
@@ -23,11 +23,11 @@ Arvan gets, because a mechanism restated here would drift from the file that own
 | `STORAGE_ENDPOINT` | required, no default | `https://s3.ir-thr-at1.arvanstorage.ir` for Simin, or `https://s3.ir-tbz-sh1.arvanstorage.ir` for Shahriar | published by ArvanCloud and read on 2026-07-28 `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/, read: 2026-07-28]` | a bucket is reachable only at its own region's endpoint, so the other endpoint returns a not-found identical to a deleted object |
 | `STORAGE_REGION` | `us-east-1` | `ir-thr-at1`, paired with the endpoint it belongs to | published by ArvanCloud and read on 2026-07-28 `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/, read: 2026-07-28]` | the AWS-shaped baseline region reaches a namespace where the bucket does not exist |
 | `STORAGE_USE_PATH_STYLE` | `true` | `false` | published by ArvanCloud and read on 2026-07-28: the Virtual Host format `[bucketname].s3.[region].arvanstorage.ir` is stated as required for CDN caching `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]` | `true` loses edge caching with no error, so the cost arrives as a traffic bill rather than a failed request |
-| `STORAGE_TLS_ENABLED` | `false` | `true` | this skill's stated default, following `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) constraint 6, because no `arvanstorage.ir` host is a loopback address | a plaintext hop to a public endpoint exposes the object bytes and the signed request across the open internet |
+| `STORAGE_TLS_ENABLED` | `false` | `true` | this skill's stated default, following `/alaa-minio-object-storage` constraint 6, because no `arvanstorage.ir` host is a loopback address | a plaintext hop to a public endpoint exposes the object bytes and the signed request across the open internet |
 | `STORAGE_MAX_PART_SIZE_BYTES` | `5368709120`, which is 5 GiB | `400000000` | published by ArvanCloud and read on 2026-07-28 as a 400 MB part ceiling, taken at its smaller reading `[source: https://docs.arvancloud.ir/en/object-storage/limits/, read: 2026-07-28]` | a part size copied from an AWS or MinIO guide is rejected only after the bytes crossed the network |
 | `STORAGE_MAX_OBJECT_BYTES` | `5000000000000`, which is 5 TB | `4000000000000`, which is 4 TB | derived below from ArvanCloud's own conflicting published numbers by the minimum rule | an object accepted above the reachable ceiling fails at completion, after every part was uploaded and billed |
 | `STORAGE_SIGNATURE_VERSION` | `s3v4` | `s3v4`, the same value on different evidence | this skill's conservative estimate pending confirmation: ArvanCloud publishes no statement that v4 is required or that v2 is accepted, and every reachable ArvanCloud SDK example sets no signature option at all, which signs v4 by SDK default `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/credentials/, read: 2026-07-28]` `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/, read: 2026-07-28]` | a mismatch returns `SignatureDoesNotMatch`, which reads as a wrong secret key and sends the investigation to key rotation |
-| `STORAGE_MULTIPART_ABORT_DAYS` | `7` | `7`, and the client-side abort is mandatory alongside it | published by ArvanCloud and read on 2026-07-28: the abort is described as the uploader's job with no automatic cleanup `[source: https://docs.arvancloud.ir/en/developer-tools/sdk/object-storage/multipart-upload/, read: 2026-07-28]`, and Arvan's support for the `AbortIncompleteMultipartUpload` lifecycle action is unverified | relying on the lifecycle rule alone leaves abandoned parts billed on a store that may never run the rule |
+| `STORAGE_MULTIPART_ABORT_DAYS` | `7` | `7`, with immediate client-side abort alongside lifecycle cleanup | panel incomplete-multipart cleanup is documented `[source: https://docs.arvancloud.ir/en/object-storage/buckets/lifecycle, read: 2026-09-29]`; S3 `AbortIncompleteMultipartUpload` API parity remains unverified | relying on age-based cleanup alone keeps failed-upload parts billed until expiry; verify the configured rule |
 
 ## Why the object ceiling is 4 TB
 
@@ -73,7 +73,7 @@ fourth provider, which is the cost the profile exists to remove; a service reads
 instead and behaves the same everywhere.
 
 **When Arvan needs behaviour that no existing knob expresses, add a new `STORAGE_*` variable to
-`/alaa-minio-object-storage` (`$alaa-minio-object-storage`) `references/05-environment-contract.md` with a default
+`/alaa-minio-object-storage` `references/05-environment-contract.md` with a default
 in every profile column, and write no branch.** Constraint 5 of this skill's `SKILL.md` is the live example: the
 client-side multipart abort is mandatory on Arvan and optional elsewhere, so the shape that carries it is a boolean
 variable defaulted on in the `arvancloud` column and off where a lifecycle rule is proven, added to the file that
@@ -101,7 +101,6 @@ consequence of guessing high is an unrevocable bearer credential outliving its n
 ## Not owned here
 
 Variable names, validation rules, evidence markers, every baseline default, and the provider-profile mechanism
-with its resolution order and its other providers' columns: `/alaa-minio-object-storage`
-(`$alaa-minio-object-storage`) `references/05-environment-contract.md`. The full Arvan limit table and the cost
+with its resolution order and its other providers' columns: `/alaa-minio-object-storage` `references/05-environment-contract.md`. The full Arvan limit table and the cost
 model those numbers feed: `references/30-limits-quotas-and-cost.md`. Endpoint, region and credential doctrine:
 `references/10-connection-identity-and-addressing.md`.

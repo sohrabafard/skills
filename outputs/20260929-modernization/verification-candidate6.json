@@ -1,0 +1,50 @@
+{
+  "snapshot": "candidate-6",
+  "verifier": "integrated_verification",
+  "configured": "gpt-6-luna/low",
+  "observed": "unknown",
+  "freeze": "released; all tool calls returned; no active session/process IDs known",
+  "source_hashes": "378/378 match",
+  "doc_hashes": "334/334 match",
+  "scope": "No outside-sohrab tracked changes;291 staged paths preserved",
+  "ran": [
+    {
+      "gate": "structure",
+      "exit": 0,
+      "skills": 69
+    },
+    {
+      "gate": "fleet",
+      "exit": 0,
+      "skills": 69,
+      "markdown": 1085,
+      "citations": 4545
+    },
+    {
+      "gate": "workflow",
+      "exit": 1,
+      "findings": [
+        "Phase D snapshot format",
+        "checkpoint touched-surfaces"
+      ]
+    },
+    {
+      "gate": "git diff HEAD --check -- skills/sohrab",
+      "exit": 2,
+      "findings": "EOF blank lines; truncated original output, complete parent diagnostic retained"
+    }
+  ],
+  "unverified": [
+    "Five links batches and five size batches: empty captured logs, wrapper marked2 while visible runner output0; do not claim PASS",
+    "Four paired orchestrator plus two IndexedDB writer gates cited without finished independent input reconciliation"
+  ],
+  "cited": [
+    "Prior HAProxy10 Python3.11.16; exact argv not recovered",
+    "Browser9 with25 inputs reportedly unchanged"
+  ],
+  "pending": [
+    "Repair2 instruction acceptance",
+    "Final workflow/whitespace/links/size/coverage/reference checks"
+  ],
+  "process_inspection": "Optional parent Get-CimInstance denied access; no escalation/retry and no processes killed"
+}

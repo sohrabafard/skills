@@ -40,9 +40,9 @@ A number written in this skill never outranks a number the cluster reports.
 
 | Claim | Page |
 |---|---|
-| `autoscaling/v2beta2` was removed in Kubernetes 1.26, which makes it the line discriminator | https://kubernetes.io/blog/2022/11/18/upcoming-changes-in-kubernetes-1-26/ and https://kubernetes.io/docs/reference/using-api/deprecation-guide/ |
-| The supported Kubernetes minors are 1.36, 1.35, and 1.34 | https://kubernetes.io/releases/ |
-| Every other version fact this skill relies on | `/alaa-k8s-helm` (`$alaa-k8s-helm`) `references/version-awareness.md`, which is the single home for version numbers across both skills |
+| `autoscaling/v2beta2` was removed in Kubernetes 1.26, which is a positive legacy-API observation, not proof from its absence | https://kubernetes.io/blog/2022/11/18/upcoming-changes-in-kubernetes-1-26/ and https://kubernetes.io/docs/reference/using-api/deprecation-guide/ |
+| Supported upstream minors are 1.37, 1.36 and 1.35 (rechecked 2026-09-29); vendor support remains unknown | https://kubernetes.io/releases/ |
+| Every other version fact this skill relies on | `/alaa-k8s-helm` `references/version-awareness.md`, which is the single home for version numbers across both skills |
 
 ## Confirmed against GitLab on 2026-07-29
 
@@ -51,7 +51,7 @@ A number written in this skill never outranks a number the cluster reports.
 | Runner registration tokens are the legacy workflow; authentication tokens carry a `glrt-` prefix; from GitLab 17.0 an administrator or group owner can disable the legacy workflow, after which registration returns `410 Gone - runner registration disallowed` | https://docs.gitlab.com/ci/runners/new_creation_workflow/ |
 | GitLab Runner chart 0.53 and later configure pull secrets as `image_pull_secrets` in `config.toml`; 0.52 and earlier used `runners.imagePullSecrets` in `values.yaml` | https://docs.gitlab.com/runner/install/kubernetes_helm_chart_configuration/ |
 
-Runner configuration itself is owned by `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`). These two rows are recorded here only because this skill's `$SKILL_DIR/assets/values.secret.yaml.example` and its RBAC guidance touch them.
+Runner configuration itself is owned by `/alaa-gitlab-ci-cd`. These two rows are recorded here only because this skill's `$SKILL_DIR/assets/values.secret.yaml.example` and its RBAC guidance touch them.
 
 ## Arvan documentation map
 
@@ -84,3 +84,11 @@ Runner configuration itself is owned by `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-c
 - Put the URL in the deliverable whenever a decision rests on something found online.
 - Use community posts, Stack Overflow answers, and issue comments only for concrete troubleshooting, and only after live discovery, events, logs, and the official pages have been checked. They are never platform policy.
 - Never paste a token, a kubeconfig, or a values file into a search query or a shared command.
+
+## Discovery proof boundaries (checked 2026-09-29)
+
+The [API enable/disable guide](https://kubernetes.io/docs/tasks/administer-cluster/enable-disable-api/) permits disabling API versions; absence therefore establishes no server-version range. [Authorization](https://kubernetes.io/docs/reference/access-authn-authz/authorization/) is evaluated per action, separately from catalog visibility. [kubectl auth whoami](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_whoami/) reports the current authenticated identity; unavailable identity discovery blocks optional ServiceAccount proof without minting credentials.
+
+## Projected-file ownership (checked 2026-09-29)
+
+[Volume user and group ownership](https://kubernetes.io/docs/concepts/storage/volumes/#user-ownership-uid): projected Secret and ConfigMap files are owned by root unless the alpha, default-off `AtomicWriteVolumeUserFields` gate sets `defaultUser`, and their GID follows `fsGroup` only when set. The [Volume API](https://kubernetes.io/docs/reference/kubernetes-api/core/pod-v1/#Volume) gives Secret and ConfigMap `defaultMode` a default of `0644`. OpenShift `restricted-v2` injects `runAsUser` and `fsGroup` when a Pod omits them ([openshift-docs `security-context-constraints-about.adoc`](https://github.com/openshift/openshift-docs/blob/main/modules/security-context-constraints-about.adoc)). docs.arvancloud.ir documents no securityContext admission mutation and no Pod Security level; that absence is why `references/arvan-constraints/30-exposure-config-and-secrets.md` marks the no-injection claim unverified.

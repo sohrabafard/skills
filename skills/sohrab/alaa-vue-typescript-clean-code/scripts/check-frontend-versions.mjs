@@ -42,7 +42,8 @@ const REGISTRY = process.env.ALAA_NPM_REGISTRY || 'https://registry.npmjs.org'
 // skill states no major-specific rule for it.
 const GATED = {
   vue: 3,
-  'vue-router': 4,
+  // Router compatibility belongs to the installed app-vite peer range, not a fixed major here.
+  'vue-router': null,
   pinia: 3,
   vite: null,
   typescript: 6,

@@ -1,0 +1,1659 @@
+{
+  "pre_edit_backup": {
+    "state": "exact pre-nit candidate-4 bytes reconstructed in memory by reversing only the documented wording replacement; SHA-256 verified against candidate manifest",
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+    "sha256": "02a81b3edf733f020143ed81307baba426d9e72a745999dcc905958fbfa48943",
+    "byte_length": 5847,
+    "content_utf8_base64": "IyBSZWFkaW5nIHJlY29yZHMgYmFjaywgYW5kIHB1cmdpbmcgdGhlbQ0KDQpUd28gcGF0aHMsIG9uZSBwcmVtaXNlOiAqKmEgcmVjb3JkIHJlYWQgb3V0IG9mIEluZGV4ZWREQiBpcyB1bnRydXN0ZWQgaW5wdXQuKiogSXQgbWF5IGJlIHN0YWxlLCBmcm9tIGENCnNjaGVtYSB5b3Ugbm8gbG9uZ2VyIHNoaXAsIG9yIHdyaXR0ZW4gYnkgYW4gYXR0YWNrZXIgd2hvIGhhZCBzY3JpcHQgZXhlY3V0aW9uIGluIHRoaXMgb3JpZ2luIGFuIGhvdXIgYWdvDQphbmQgbm8gbG9uZ2VyIGRvZXMuIFZhbGlkYXRpb24gb24gcmVhZCBpcyB3aGF0IG1ha2VzIHRoYXQgZWFybGllciBjb21wcm9taXNlIG5vbi1wZXJzaXN0ZW50Lg0KDQojIyBWYWxpZGF0aW9uIG9uIHJlYWQNCg0KRXZlcnkgcmVhZCB2YWxpZGF0ZXMgYmVmb3JlIHVzZSwgaW5jbHVkaW5nIHJlYWRzIGluc2lkZSBjbGVhbnVwIGpvYnMuDQoNCmBgYHRzDQpmdW5jdGlvbiBwYXJzZUxlYXJuaW5nU3RhdGUodmFsdWU6IHVua25vd24pOiBMZWFybmluZ1N0YXRlUmVjb3JkIHwgbnVsbCB7DQogIGlmICghaXNPYmplY3QodmFsdWUpKSByZXR1cm4gbnVsbDsNCiAgaWYgKHZhbHVlLnNjaGVtYSAhPT0gTEVBUk5JTkdfU1RBVEVfU0NIRU1BKSByZXR1cm4gbnVsbDsgICAvLyB3cm9uZyBvciBhYnNlbnQgdmVyc2lvbg0KICBpZiAodHlwZW9mIHZhbHVlLmlkICE9PSAnc3RyaW5nJykgcmV0dXJuIG51bGw7DQogIGlmICh0eXBlb2YgdmFsdWUuYWNjb3VudEtleSAhPT0gJ3N0cmluZycpIHJldHVybiBudWxsOw0KICAvLyAuLi4gZXZlcnkgZmllbGQgdGhlIGNhbGxlciB3aWxsIHJlYWQNCiAgcmV0dXJuIHZhbHVlIGFzIExlYXJuaW5nU3RhdGVSZWNvcmQ7DQp9DQpgYGANCg0KLSAqKkEgYHNjaGVtYWAgZmllbGQgb24gZXZlcnkgcmVjb3JkLCBjaGVja2VkIG9uIGV2ZXJ5IHJlYWQuKiogQW4gb2xkZXItc2NoZW1hIHJlY29yZCBpcyBtaWdyYXRlZA0KICAoYDQwLXNjaGVtYS1hbmQtbWlncmF0aW9ucy5tZGApIG9yIGRpc2NhcmRlZC4gTmV2ZXIgdXNlZCBhcy1pcy4NCi0gKipBIHJlY29yZCB3aG9zZSBgYWNjb3VudEtleWAgZGlmZmVycyBmcm9tIHRoZSBjdXJyZW50IHNlc3Npb24gaXMgbm90IHJlYWQuKiogSXQgaXMgZGVsZXRlZC4NCi0gKipBIHZhbGlkYXRpb24gZmFpbHVyZSBkZWxldGVzIHRoZSByZWNvcmQgYW5kIGNvbnRpbnVlcy4qKiBBIHBvaXNvbmVkIHJlY29yZCB0aGF0IHN1cnZpdmVzIHRvIGJlIHJlYWQNCiAgYWdhaW4gaXMgYSBwZXJtYW5lbnQgZmFpbHVyZTsgYSBkZWxldGVkIG9uZSBpcyB0cmFuc2llbnQuDQotICoqTmV2ZXIgaW50ZXJwb2xhdGUgYSBjYWNoZWQgdmFsdWUgaW50byBIVE1MLioqIEEgY2FjaGVkIHN0cmluZyByZWFjaGluZyBgdi1odG1sYCBvciBgaW5uZXJIVE1MYCBpcw0KICBzdG9yZWQgWFNTIHdpdGggYSBwZXJzaXN0ZW5jZSBsYXllciB0aGUgcHJvZHVjdCBidWlsdCBpdHNlbGYuDQotICoqVmVyaWZ5IHRoZSBzZXJ2ZXIgcmV2aXNpb24gYmVmb3JlIHVzaW5nIGEgY2FjaGVkIHZhbHVlIGZvciBhbnl0aGluZyB0aGUgdXNlciBhY3RzIG9uLioqIEEgc3RhbGUgcHJpY2UsDQogIGVudGl0bGVtZW50IG9yIGRlYWRsaW5lIGlzIHdvcnNlIHRoYW4gYSBzcGlubmVyLg0KDQojIyBUaGlyZC1wYXJ0eSBzY3JpcHRzDQoNCkV2ZXJ5IHNjcmlwdCBpbiB0aGUgb3JpZ2luIHJlYWRzIGFuZCB3cml0ZXMgdGhpcyBkYXRhYmFzZS4gS2VlcCB0aGlyZC1wYXJ0eSBzY3JpcHRzIG9mZiByb3V0ZXMgdGhhdCByZWFkDQpgdXNlcl9nZW5lcmF0ZWRfdW5zeW5jZWRgIG9yIGBwaWlfbW9kZXJhdGVfaGlnaGAgZGF0YS4gU2hpcCBhIENvbnRlbnQgU2VjdXJpdHkgUG9saWN5LCBhbmQgVHJ1c3RlZCBUeXBlcw0Kd2hlcmUgdGhlIGZyYW1ld29yayBhbGxvd3Mg4oCUIHRoZSBwb2xpY3kgaXRzZWxmIGlzIGAvYWxhYS1zZWN1cml0eS1yZXZpZXdgIGdyb3VuZC4NCkF1ZGl0IHRhZyBtYW5hZ2VyczogYSB0YWcgbWFuYWdlciBpcyBhcmJpdHJhcnkgc2NyaXB0IGV4ZWN1dGlvbiBncmFudGVkIHRvIHdob2V2ZXIgaG9sZHMgaXRzIGNvbnNvbGUuDQpJc29sYXRlIHVudHJ1c3RlZCBjb250ZW50IGluIGEgc2FuZGJveGVkIG9yIGNyb3NzLW9yaWdpbiBpZnJhbWUsIHdoaWNoIGdldHMgaXRzIG93biBzdG9yYWdlIHBhcnRpdGlvbi4NCg0KIyMgVGhlIGxvZ291dCBhbmQgYWNjb3VudC1zd2l0Y2ggcHVyZ2UNCg0KQSBzZWN1cml0eSBvcGVyYXRpb24uIFR3byBwcm9wZXJ0aWVzIG1ha2UgaXQgY29ycmVjdC4NCg0KIyMjIEl0IG11c3QgYmUgYXRvbWljLCBvciBqb3VybmFsbGVkDQoNCkEgcHVyZ2UgcnVuIGFzIHNldmVyYWwgaW5kZXBlbmRlbnQgdHJhbnNhY3Rpb25zIGxlYXZlcyB0aGUgcHJldmlvdXMgYWNjb3VudCdzIHJlY29yZHMgcmVhZGFibGUgaWYgdGhlIHRhYg0KY3Jhc2hlcywgdGhlIGJyb3dzZXIgaXMga2lsbGVkLCBvciB0aGUgZGV2aWNlIHNsZWVwcyBiZXR3ZWVuIHRoZW0uDQoNCioqT25lIHRyYW5zYWN0aW9uIGFjcm9zcyBldmVyeSB1c2VyLXNjb3BlZCBzdG9yZSoqIOKAlCBjb3JyZWN0IGFuZCBzaW1wbGUgd2hlbiB0aGUgY291bnRzIGFyZSBzbWFsbDoNCg0KVXNlIGBBbGFhQ2xpZW50U3RvcmFnZS5kZWxldGVCeUFjY291bnRgIGluIGBleGFtcGxlcy9hbGFhLWNsaWVudC1zdG9yYWdlLnRzYC4gSW5jbHVkZSBgc3RvcmFnZV9pdGVtc2ANCmFuZCBwdXJnZSBpdHMgYWNjb3VudCBpbmRleCBpbmRlcGVuZGVudGx5IG9mIGRhdGEgcm93cywgc28gb3JwaGFuIG1ldGFkYXRhIGNhbm5vdCByZXRhaW4gaWRlbnRpZmllcnMNCm9yIHRpbWVzdGFtcHMuIFByZWZsaWdodCBldmVyeSByZXF1aXJlZCBzdG9yZSBhbmQgaW5kZXggYmVmb3JlIGRlbGV0aW5nOyBvYnNlcnZlIHRyYW5zYWN0aW9uIGNvbXBsZXRpb24NCmJlZm9yZSBxdWV1ZWluZyByZXF1ZXN0cy4gQWJvcnQgb24gc3luY2hyb25vdXMgb3IgcmVxdWVzdCBmYWlsdXJlOyByZXBvcnQgc3VjY2VzcyBvbmx5IGFmdGVyIGNvbW1pdC4NClRoZSByZXR1cm4gY291bnQgaW5jbHVkZXMgZGF0YSByb3dzIG9ubHksIG5ldmVyIG1ldGFkYXRhLiBNaXNzaW5nIHNjaGVtYS9pbmRleGVzIGZhaWwgdGhlIHB1cmdlIGFuZA0KcmV0YWluIHRoZSBwZW5kaW5nIG1hcmtlcjsgdXBncmFkZSB0aHJvdWdoIGA0MC1zY2hlbWEtYW5kLW1pZ3JhdGlvbnMubWRgIGJlZm9yZSByZXRyeWluZy4NCg0KKipPciBhIGpvdXJuYWxsZWQgcHVyZ2UqKiwgd2hlbiB0aGUgY291bnRzIGFyZSBsYXJnZSBlbm91Z2ggdGhhdCBvbmUgdHJhbnNhY3Rpb24gd291bGQgYmxvY2sgdGhlIFVJLiBXcml0ZQ0KdGhlIGludGVudCBmaXJzdCwgcHVyZ2UsIHRoZW4gY2xlYXIgaXQ6DQoNCmBgYHRzDQphd2FpdCBwdXRNZXRhKCdsb2dvdXRQdXJnZVBlbmRpbmcnLCB7IGFjY291bnRLZXksIHN0YXJ0ZWRBdDogbm93SXNvIH0pOyAgLy8gb3duIHRyYW5zYWN0aW9uLCBiZWZvcmUgYW55dGhpbmcNCi8vIHB1cmdlIGVhY2ggc3RvcmUsIGNodW5rZWQsIGVhY2ggaW4gaXRzIG93biB0cmFuc2FjdGlvbg0KYXdhaXQgZGVsZXRlTWV0YSgnbG9nb3V0UHVyZ2VQZW5kaW5nJyk7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvLyBvbmx5IGFmdGVyIGV2ZXJ5IHN0b3JlIHJlcG9ydHMgZG9uZQ0KYGBgDQoNCioqT24gdGhlIGZpcnN0IGFwcCBvcGVuIGFmdGVyIGEgc2Vzc2lvbiB3aG9zZSBwdXJnZSBkaWQgbm90IGNvbXBsZXRlLCBkZWxldGUgZXZlcnkgcmVjb3JkIHdob3NlDQpgYWNjb3VudEtleWAgZGlmZmVycyBmcm9tIHRoZSBjdXJyZW50IHNlc3Npb24gYmVmb3JlIHJlbmRlcmluZyBhbnkgdXNlci1zY29wZWQgdmlldy4qKiBUaGUNCmBsb2dvdXRQdXJnZVBlbmRpbmdgIG1hcmtlciBkZXRlY3RzIGl0LCBhbmQgdGhlIGJvb3Qgc2VxdWVuY2UgaW4gYDMyLWV2aWN0aW9uLWFuZC1yZWNvdmVyeS5tZGAgY2hlY2tzIGl0Lg0KRW1pdCB0aGUgZGVmZXJyZWQtcHVyZ2UgZXZlbnQgc28gdGhlIGluY2lkZW5jZSBpcyBtZWFzdXJhYmxlLg0KDQojIyMgSXQgbXVzdCBiZSBib3VuZGVkDQoNCkV2ZXJ5IHVzZXItc2NvcGVkIHN0b3JlIGNhcnJpZXMgYW4gaW5kZXggd2hvc2UgZmlyc3Qgc2VnbWVudCBpcyBgYWNjb3VudEtleWAsIGFuZCB0aGUgcHVyZ2UgY3Vyc29ycw0KYElEQktleVJhbmdlLmJvdW5kKFthY2NvdW50S2V5XSwgW2FjY291bnRLZXksIFtdXSlgIOKAlCBgTyhtYXRjaGluZyArIGxvZyBuKWAgcGVyIHN0b3JlLiBBIHB1cmdlIHRoYXQNCmZ1bGwtc2NhbnMgaXMgYE8obilgIHBlciBzdG9yZSBhbmQgb24gYSBkZXZpY2Ugd2l0aCBhIGxhcmdlIGNhY2hlIG1heSBub3QgZmluaXNoIGJlZm9yZSB0aGUgZGV2aWNlIGNoYW5nZXMNCmhhbmRzLiBBIHN0b3JlIHdpdGhvdXQgdGhhdCBpbmRleCBpcyBub3QgcmVhZHkgdG8gaG9sZCB1c2VyLXNjb3BlZCBkYXRhDQooYDUwLXRyYW5zYWN0aW9ucy1wZXJmb3JtYW5jZS1hbmQtcXVlcnktcGF0dGVybnMubWRgKS4NCg0KIyMjIFRoZSBzZXF1ZW5jZQ0KDQoxLiBTdG9wIGV2ZXJ5IHN5bmMgbG9vcCBhbmQgY2FuY2VsIGluLWZsaWdodCBmbHVzaGVzLiAyLiBXcml0ZSBgbG9nb3V0UHVyZ2VQZW5kaW5nYC4gMy4gUHVyZ2UgZWFjaA0KdXNlci1zY29wZWQgc3RvcmUsIGluY2x1ZGluZyBvcnBoYW4gbWV0YWRhdGEsIGJ5IHRoZSBgYWNjb3VudEtleWAgcmFuZ2UuIDQuIENsZWFyIGluLW1lbW9yeSBjYWNoZXMgYW5kIHJlYWN0aXZlIHN0b3Jlcy4gNS4gQnJvYWRjYXN0DQpgbG9nb3V0LXB1cmdlYCBzbyBvdGhlciB0YWJzIGRvIHRoZSBzYW1lIChgNDEtbXVsdGl0YWItdmVyc2lvbmNoYW5nZS1hbmQtbG9ja3MubWRgKS4gNi4gQ2xlYXINCmBsb2dvdXRQdXJnZVBlbmRpbmdgLiA3LiAqKlZlcmlmeSoqOiBhIHJhbmdlZCBjb3VudCBvbiBlYWNoIHN0b3JlIGZvciB0aGUgcHJldmlvdXMgYGFjY291bnRLZXlgIHJldHVybnMNCnplcm8uIElmIGl0IGRvZXMgbm90LCB0aGUgcHVyZ2UgZmFpbGVkIGFuZCB0aGUgbWFya2VyIHN0YXlzIHNldC4NCg0KIyMjIFVuc3luY2VkIGRyYWZ0cw0KDQpBIGRyYWZ0IHRoZSB1c2VyIGhhcyBub3Qgc3VibWl0dGVkIGlzIG5ldmVyIGRlbGV0ZWQgc2lsZW50bHkgYnkgdGhlIHB1cmdlLiBFaXRoZXIgYXNrIGJlZm9yZSBkaXNjYXJkaW5nLCBvcg0KYmluZCBpdCB0byBhIHN0YXRlZCByZXRlbnRpb24gcG9saWN5IHRoZSB1c2VyIGhhcyBzZWVuLiBTaWxlbnQgZGVsZXRpb24gb2YgdW5zZW50IHdvcmsgaXMgdGhlIG9uZSBkYXRhLWxvc3MNCmNhc2UgdGhpcyBwYWNrIHRyZWF0cyBhcyBuZXZlciBhY2NlcHRhYmxlLg0KDQojIyMgQWNjb3VudCBkZWxldGlvbg0KDQpEZWxldGlvbiBhdCB0aGUgc2VydmVyIGRvZXMgbm90IHJlYWNoIHRoZSBkZXZpY2UuIFRoZSBuZXh0IG9wZW4g4oCUIHdpdGggYSBzZXNzaW9uIGZvciB0aGF0IGFjY291bnQsIG9yIHdpdGgNCm5vbmUg4oCUIG11c3QgZmluZCBhbmQgcmVtb3ZlIHRoZSBkYXRhLiBUaGF0IGlzIHRoZSBzYW1lIGRlZmVycmVkLXB1cmdlIHBhdGgsIHdoaWNoIGlzIHdoeSB0aGUgYm9vdCBjaGVjaw0KcnVucyBiZWZvcmUgYW55IHVzZXItc2NvcGVkIHZpZXcgcmVuZGVycyByYXRoZXIgdGhhbiBsYXppbHkgb24gZmlyc3QgcmVhZC4NCg0KIyMgV2hhdCBpcyByZXBvcnRlZA0KDQpTdG9yZXMgdG91Y2hlZCwgY291bnRzIHJlbW92ZWQgcGVyIHN0b3JlIGJ1Y2tldGVkLCBhbmQgd2hldGhlciBhIGRlZmVycmVkIHB1cmdlIHdhcyBkZXRlY3RlZCBhbmQgY29tcGxldGVkLg0KTmFtZXMgYXJlIGAvYWxhYS1zZXJ2aWNlcy1jb250cmFjdGA7IGxldmVsIGFuZCBnYXRlIGFyZQ0KYC9hbGFhLW9ic2VydmFiaWxpdHktc29jYC4gTmV2ZXIgbG9nIHRoZSBgYWNjb3VudEtleWAgb3IgYW55IHJlY29yZCBjb250ZW50Lg0K"
+  },
+  "checkpoint": {
+    "state": "frozen",
+    "candidate": "candidate-4",
+    "archive": "documentation-before-candidate4.zip",
+    "archive_sha256_raw_bytes": "206b6a7ba4ce92f834f648a9710ebd1cc1dc67a6eda3577d43634ac1855af3be",
+    "archive_entries": 110,
+    "archive_mismatches": 0,
+    "read_coverage": {
+      "indexeddb": "Full bundle read completed after the initial nit edit: SKILL.md, all 22 references, examples, assets, agents, manifest, and all 6 scripts. The initial read-order lapse is recorded and the normative text was reconciled.",
+      "other_edited_bundles": "Full source documents and their routers/children were read for Async Messaging, Fiber, Quasar, Services Contract/OpenFGA, and Shaka. The unchanged async consumer checker and IndexedDB manifest consumer were inspected. Unedited neighboring documents were classified from the 77-file inventory and headings, not represented as full reads."
+    },
+    "initial_read_lapse": "The IndexedDB transaction-completion wording edit preceded full bundle read. The full bundle was then read; normative prose now specifies registration before queueing, synchronous request queueing, per-request error handlers, and awaiting transaction completion afterward."
+  },
+  "movement_map": [
+    {
+      "router": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch.md",
+      "original_lines": 152,
+      "final_lines": 41,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "The acknowledgement point",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/10-acknowledgement-point.md"
+          ]
+        },
+        {
+          "original_h2": "The three routes out of a handler",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/20-handler-outcomes.md"
+          ]
+        },
+        {
+          "original_h2": "Consumer-side deduplication",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/30-consumer-deduplication.md"
+          ]
+        },
+        {
+          "original_h2": "Prefetch",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/40-prefetch.md"
+          ]
+        },
+        {
+          "original_h2": "Consumer concurrency",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/50-consumer-concurrency.md"
+          ]
+        },
+        {
+          "original_h2": "Graceful stop and rolling restarts",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/60-graceful-stop-and-restarts.md"
+          ]
+        },
+        {
+          "original_h2": "Consumer acknowledgement timeout and cancellation",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/70-acknowledgement-timeout-and-cancellation.md"
+          ]
+        },
+        {
+          "original_h2": "Reconnect",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/80-reconnect.md"
+          ]
+        },
+        {
+          "original_h2": "Two things this file does not decide",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/90-boundaries.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/10-acknowledgement-point.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/20-handler-outcomes.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/30-consumer-deduplication.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/40-prefetch.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/50-consumer-concurrency.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/60-graceful-stop-and-restarts.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/70-acknowledgement-timeout-and-cancellation.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/80-reconnect.md",
+        "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/90-boundaries.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay.md",
+      "original_lines": 134,
+      "final_lines": 28,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "Topology",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/10-topology.md"
+          ]
+        },
+        {
+          "original_h2": "Broker-version gate for the retry bound",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/20-broker-version-gate.md"
+          ]
+        },
+        {
+          "original_h2": "Classification — three kinds of failure, three destinations",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/30-failure-classification.md"
+          ]
+        },
+        {
+          "original_h2": "The replay procedure",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/40-replay-procedure.md"
+          ]
+        },
+        {
+          "original_h2": "Unreplayable messages",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/50-unreplayable-messages.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/10-topology.md",
+        "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/20-broker-version-gate.md",
+        "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/30-failure-classification.md",
+        "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/40-replay-procedure.md",
+        "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/50-unreplayable-messages.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-async-messaging/references/50-failure-classes.md",
+      "original_lines": 157,
+      "final_lines": 44,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "1. Broker unreachable",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/10-broker-unreachable.md"
+          ]
+        },
+        {
+          "original_h2": "2. Consumer stuck with growing unacknowledged count",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/20-consumer-stuck.md"
+          ]
+        },
+        {
+          "original_h2": "3. Poison redelivery loop",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/30-poison-redelivery-loop.md"
+          ]
+        },
+        {
+          "original_h2": "4. Duplicate storm",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/40-duplicate-storm.md"
+          ]
+        },
+        {
+          "original_h2": "5. Outbox stalled, or a claimed row orphaned",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/50-outbox-stalled.md"
+          ]
+        },
+        {
+          "original_h2": "6. Dead-letter queue filling",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/60-dead-letter-queue-filling.md"
+          ]
+        },
+        {
+          "original_h2": "7. A replay produced duplicates",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/70-replay-duplicates.md"
+          ]
+        },
+        {
+          "original_h2": "8. Publish-confirm timeout",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-async-messaging/references/50-failure-classes/80-publish-confirm-timeout.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/10-broker-unreachable.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/20-consumer-stuck.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/30-poison-redelivery-loop.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/40-duplicate-storm.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/50-outbox-stalled.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/60-dead-letter-queue-filling.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/70-replay-duplicates.md",
+        "skills/sohrab/alaa-async-messaging/references/50-failure-classes/80-publish-confirm-timeout.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+      "original_lines": 214,
+      "final_lines": 47,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "Version and import",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md"
+          ]
+        },
+        {
+          "original_h2": "Context value lifetime: the one memory-corruption hazard",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/20-request-value-lifetime.md",
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md"
+          ]
+        },
+        {
+          "original_h2": "Server bounds",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md"
+          ]
+        },
+        {
+          "original_h2": "Unmatched-route fast path (v3.5.0)",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md"
+          ]
+        },
+        {
+          "original_h2": "Boot order",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md"
+          ]
+        },
+        {
+          "original_h2": "Listener and shutdown",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md"
+          ]
+        },
+        {
+          "original_h2": "Hooks",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md"
+          ]
+        },
+        {
+          "original_h2": "Custom context",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/20-request-value-lifetime.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md",
+        "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "original_lines": 152,
+      "final_lines": 37,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "Non-negotiable rules",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+          ]
+        },
+        {
+          "original_h2": "Names, and who owns them",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+          ]
+        },
+        {
+          "original_h2": "The `meta` store",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+          ]
+        },
+        {
+          "original_h2": "The upgrade shape",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md"
+          ]
+        },
+        {
+          "original_h2": "Migration strategies",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md"
+          ]
+        },
+        {
+          "original_h2": "Migration journal",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md"
+          ]
+        },
+        {
+          "original_h2": "What an upgrade owes other contexts",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md"
+          ]
+        },
+        {
+          "original_h2": "Upgrade tests",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md"
+          ]
+        },
+        {
+          "original_h2": "Example v4 account-metadata index",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+      "original_lines": 104,
+      "final_lines": 46,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "Validation on read",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md"
+          ]
+        },
+        {
+          "original_h2": "Third-party scripts",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md"
+          ]
+        },
+        {
+          "original_h2": "The logout and account-switch purge",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md"
+          ]
+        },
+        {
+          "original_h2": "What is reported",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/10-transaction-and-journal.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/20-recovery-and-verification.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox.md",
+      "original_lines": 144,
+      "final_lines": 31,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "This is not the server-side outbox, and the difference is structural",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/10-browser-outbox-boundary.md"
+          ]
+        },
+        {
+          "original_h2": "The record",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/20-record-and-cursor-invariant.md"
+          ]
+        },
+        {
+          "original_h2": "The flush",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/30-flush-and-classification.md"
+          ]
+        },
+        {
+          "original_h2": "Classification",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/30-flush-and-classification.md"
+          ]
+        },
+        {
+          "original_h2": "Retry, and who owns it",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/60-retry-policy.md"
+          ]
+        },
+        {
+          "original_h2": "The reaper — the failure class the server outbox does not have",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/40-reaper-and-recovery.md"
+          ]
+        },
+        {
+          "original_h2": "Bounds, triggers, reporting",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/50-bounds-and-operations.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/10-browser-outbox-boundary.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/20-record-and-cursor-invariant.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/30-flush-and-classification.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/40-reaper-and-recovery.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/50-bounds-and-operations.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/60-retry-policy.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "original_lines": 106,
+      "final_lines": 39,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "What every storage change must exercise",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-proof-levels.md"
+          ]
+        },
+        {
+          "original_h2": "Reproducing a quota condition locally",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-required-scenarios.md"
+          ]
+        },
+        {
+          "original_h2": "Debug surfaces per engine",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-quota-reproduction.md"
+          ]
+        },
+        {
+          "original_h2": "Performance budgets to assert",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-debug-and-performance.md"
+          ]
+        },
+        {
+          "original_h2": "Release checklist",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-debug-and-performance.md"
+          ]
+        },
+        {
+          "original_h2": "Real IndexedDB regression harness",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-proof-levels.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-required-scenarios.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-quota-reproduction.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-debug-and-performance.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks.md",
+      "original_lines": 211,
+      "final_lines": 43,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "1. Refresh before answering",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/10-refresh-and-authority.md"
+          ]
+        },
+        {
+          "original_h2": "2. Release refresh, read 2026-09-29",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/20-current-release-refresh.md",
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/30-historical-registry-snapshot.md",
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/30-historical-registry-snapshot.md"
+          ]
+        },
+        {
+          "original_h2": "3. Detect the installed major before any shape advice",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/40-installed-major.md"
+          ]
+        },
+        {
+          "original_h2": "4. Canonical v2 -> v3 delta table",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/50-v2-to-v3-deltas.md"
+          ]
+        },
+        {
+          "original_h2": "5. Framework and tool deltas",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/60-framework-tool-deltas.md"
+          ]
+        },
+        {
+          "original_h2": "6. Verify live before answering",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/70-live-checks-and-maintenance.md"
+          ]
+        },
+        {
+          "original_h2": "7. Skill maintenance",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/70-live-checks-and-maintenance.md"
+          ]
+        },
+        {
+          "original_h2": "8. Posture history",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md"
+          ]
+        },
+        {
+          "original_h2": "9. Package managers",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/10-refresh-and-authority.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/20-current-release-refresh.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/30-historical-registry-snapshot.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/40-installed-major.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/50-v2-to-v3-deltas.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/60-framework-tool-deltas.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/70-live-checks-and-maintenance.md",
+        "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "original_lines": 326,
+      "final_lines": 59,
+      "final_grade": "YELLOW",
+      "sections": [
+        {
+          "original_h2": "Why this layer exists",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md"
+          ]
+        },
+        {
+          "original_h2": "The two paths (and the single seam)",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md"
+          ]
+        },
+        {
+          "original_h2": "Read path, hop by hop (the contract)",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md"
+          ]
+        },
+        {
+          "original_h2": "Endpoint category -> permission mapping",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md"
+          ]
+        },
+        {
+          "original_h2": "The store, the model, and pinning",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md"
+          ]
+        },
+        {
+          "original_h2": "Adding a new request-time-authorized route",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md"
+          ]
+        },
+        {
+          "original_h2": "Debugging an authz decision",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md"
+          ]
+        },
+        {
+          "original_h2": "Anti-patterns",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md"
+          ]
+        },
+        {
+          "original_h2": "Source of truth",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+        "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md",
+      "original_lines": 241,
+      "final_lines": 35,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "The seam — read this before naming anything",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/10-contract-and-events.md"
+          ]
+        },
+        {
+          "original_h2": "`getStats()` — every field",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/20-stats-catalog.md"
+          ]
+        },
+        {
+          "original_h2": "`shaka.util.StateHistory` is not a public API",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/20-stats-catalog.md"
+          ]
+        },
+        {
+          "original_h2": "Events available for analytics",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/10-contract-and-events.md"
+          ]
+        },
+        {
+          "original_h2": "Deriving watch-time and QoE correctly",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/30-qoe-derivation.md"
+          ]
+        },
+        {
+          "original_h2": "Hidden-tab policy — a default, not a question",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/30-qoe-derivation.md"
+          ]
+        },
+        {
+          "original_h2": "Working snippet — a QoE quantity collector",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/40-qoe-collector-example.md"
+          ]
+        },
+        {
+          "original_h2": "Delivery diagnostics",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/50-delivery-diagnostics.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/10-contract-and-events.md",
+        "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/20-stats-catalog.md",
+        "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/30-qoe-derivation.md",
+        "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/40-qoe-collector-example.md",
+        "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/50-delivery-diagnostics.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md",
+      "original_lines": 220,
+      "final_lines": 31,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "Structure",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/10-structure-and-categories.md"
+          ]
+        },
+        {
+          "original_h2": "Categories and the mechanism that handles each",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/10-structure-and-categories.md"
+          ]
+        },
+        {
+          "original_h2": "The complete code list",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/20-complete-code-catalog.md"
+          ]
+        },
+        {
+          "original_h2": "Reading `error.data`",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/30-error-data-and-handling-paths.md"
+          ]
+        },
+        {
+          "original_h2": "The four error paths — you need all of them",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/30-error-data-and-handling-paths.md"
+          ]
+        },
+        {
+          "original_h2": "Mapping a code to a user-facing message",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/40-user-facing-mapping.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/10-structure-and-categories.md",
+        "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/20-complete-code-catalog.md",
+        "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/30-error-data-and-handling-paths.md",
+        "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/40-user-facing-mapping.md"
+      ]
+    },
+    {
+      "router": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas.md",
+      "original_lines": 205,
+      "final_lines": 38,
+      "final_grade": "GREEN",
+      "sections": [
+        {
+          "original_h2": "Which migrations are real",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/10-migration-boundaries.md"
+          ]
+        },
+        {
+          "original_h2": "v4 → v5: the breaking changes most likely to bite",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/20-v4-to-v5-breaking-changes.md"
+          ]
+        },
+        {
+          "original_h2": "Deprecated right now in 5.x",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/30-deprecations-and-v6.md"
+          ]
+        },
+        {
+          "original_h2": "v6.0 — write this spelling now",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/30-deprecations-and-v6.md"
+          ]
+        },
+        {
+          "original_h2": "5.2.0 — what is new",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/40-v520-features.md"
+          ]
+        },
+        {
+          "original_h2": "5.2.x patch releases",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/50-v52x-patches.md"
+          ]
+        },
+        {
+          "original_h2": "5.1.0 — what changed",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/60-v510-changes.md"
+          ]
+        },
+        {
+          "original_h2": "Upgrade procedure",
+          "source_content_nonempty": true,
+          "preserved_anchor_at_root": true,
+          "routes_to": [
+            "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/70-upgrade-procedure.md"
+          ]
+        }
+      ],
+      "children": [
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/10-migration-boundaries.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/20-v4-to-v5-breaking-changes.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/30-deprecations-and-v6.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/40-v520-features.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/50-v52x-patches.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/60-v510-changes.md",
+        "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/70-upgrade-procedure.md"
+      ]
+    }
+  ],
+  "owner_refreshes": [
+    {
+      "owner": "alaa-indexeddb-browser-storage manifest root_files",
+      "required_additions": [
+        "references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+        "references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+        "references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+        "references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+        "references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md",
+        "references/62-poisoning-and-purge/20-account-purge-procedure.md",
+        "references/62-poisoning-and-purge/20-account-purge-procedure/10-transaction-and-journal.md",
+        "references/62-poisoning-and-purge/20-account-purge-procedure/20-recovery-and-verification.md",
+        "references/71-browser-outbox/10-browser-outbox-boundary.md",
+        "references/71-browser-outbox/20-record-and-cursor-invariant.md",
+        "references/71-browser-outbox/30-flush-and-classification.md",
+        "references/71-browser-outbox/40-reaper-and-recovery.md",
+        "references/71-browser-outbox/50-bounds-and-operations.md",
+        "references/71-browser-outbox/60-retry-policy.md",
+        "references/80-testing-and-proof-levels/10-proof-levels.md",
+        "references/80-testing-and-proof-levels/20-required-scenarios.md",
+        "references/80-testing-and-proof-levels/30-quota-reproduction.md",
+        "references/80-testing-and-proof-levels/40-debug-and-performance.md",
+        "references/80-testing-and-proof-levels/50-release-checklist.md",
+        "references/80-testing-and-proof-levels/60-real-indexeddb-harness.md"
+      ],
+      "reason": "The skill-pack validator checks manifest file-list coverage. Add these 20 new Markdown children; no manifest was edited."
+    }
+  ],
+  "source_comment_nit": {
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts",
+    "status": "unchanged, outside documentation write grant",
+    "note": "The comment still says “Observe transaction completion before queueing requests.” The normative reference clarifies registering completion/error handlers before queueing and awaiting completion afterward; optional nonblocking comment polish remains."
+  },
+  "line_link_check_checkpoint": {
+    "checker": "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+    "scope": "77 candidate-4 documents plus 81 new Markdown children",
+    "selected_files": 158,
+    "validated_files": 158,
+    "exit_code": 0,
+    "link_anchor_findings": 0,
+    "line_budget_findings": 0,
+    "grades": {
+      "ORANGE": 25,
+      "YELLOW": 31,
+      "GREEN": 99,
+      "RED": 3
+    },
+    "red_allowlist": [
+      "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "skills/sohrab/alaa-laravel-job-rabbitmq/SKILL.md"
+    ],
+    "eligible_red": 0,
+    "atomic_red_exemptions": 3
+  },
+  "fidelity": {
+    "split_roots_checked": 13,
+    "original_root_h2_anchors_missing": 0,
+    "content_bearing_source_sections_without_route_or_nonempty_destination": 0,
+    "fenced_payload_mismatches": 0,
+    "fenced_payload_check": "Exact complete fenced payloads compared to candidate-4 after newline normalization, multiplicity preserved.",
+    "recovery_history": "A zero-byte IndexedDB real-harness child was restored from candidate-4 bytes (18 lines/1,305 bytes). The initial outbox retry/reaper/bounds destinations were misassigned; six destination files were rebuilt from candidate-4 and the root routes corrected. Final anchor checks caught and restored Third-party scripts and Quasar 7. Skill maintenance / 9. Package managers routes."
+  },
+  "frozen_markdown_sha256_manifest": {
+    "algorithm": "SHA-256 over raw file bytes",
+    "modified_originals": 13,
+    "new_children": 81,
+    "total_paths": 94,
+    "entries": [
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch.md",
+        "sha256_raw_bytes": "e3f1eee46c0db912c00122f62bb2be63b5f2eb6dd9146376b4a6b0ed0c2b0bb8",
+        "bytes": 2174,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/10-acknowledgement-point.md",
+        "sha256_raw_bytes": "2d4dd8e96755ac41dcbc832e764db1f7ec18ad9a30032d9a04fb02313a693ef4",
+        "bytes": 1160,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/20-handler-outcomes.md",
+        "sha256_raw_bytes": "b03284575263f39645920c6de9af98231df7cc05b1ddc4c6d1ec9cb87b1330f7",
+        "bytes": 1922,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/30-consumer-deduplication.md",
+        "sha256_raw_bytes": "9e85659d45e368b77e633e10c2c6282b3ded899c4562cc6d9d7356537538409e",
+        "bytes": 1157,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/40-prefetch.md",
+        "sha256_raw_bytes": "883fae5234447d1fc46ed5f793ed54f577bad4af94e8f44b3d4f5db1f81e2084",
+        "bytes": 1627,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/50-consumer-concurrency.md",
+        "sha256_raw_bytes": "6cfea717ac0a824c4d2a24a4c24003d70cbaafd98028645b99c54c18c896de01",
+        "bytes": 664,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/60-graceful-stop-and-restarts.md",
+        "sha256_raw_bytes": "609cc70c653e5ac48d07db35ce6d63a44c53244ed949bfdde88e4109dcd09c13",
+        "bytes": 1106,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/70-acknowledgement-timeout-and-cancellation.md",
+        "sha256_raw_bytes": "6e57f46d0712bf14c715205bf3b3cf39e768791c54123caa2976df93f12c72c5",
+        "bytes": 1218,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/80-reconnect.md",
+        "sha256_raw_bytes": "4b3ee7e25ba4d8d358044f884c8e9016c7f84ef053e6e2ace3bae125d3789194",
+        "bytes": 1058,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch/90-boundaries.md",
+        "sha256_raw_bytes": "098972fc8feb382266f55b1e4906d489583fd9245cc2b73c68a11ba9f6ae6747",
+        "bytes": 263,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay.md",
+        "sha256_raw_bytes": "3277f5e50fdb7796e15d3f4cb0b984d14de864898d3506f7f756993f4412271d",
+        "bytes": 1473,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/10-topology.md",
+        "sha256_raw_bytes": "e429ce700010d8e75093c0b2b869d666935ca5c45d484689f23b6c6cd19f57ab",
+        "bytes": 1518,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/20-broker-version-gate.md",
+        "sha256_raw_bytes": "dfe4e1c155ccadca7c70065a846ef969a9f81f0991a7998e1b3bfc17a3fc3795",
+        "bytes": 1531,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/30-failure-classification.md",
+        "sha256_raw_bytes": "0857ffeb1d3c71a31ebb7524b5f48a8f1092c079fa731bf3c9b61181c9aa6a1e",
+        "bytes": 1596,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/40-replay-procedure.md",
+        "sha256_raw_bytes": "74bd5a5c80e46b966617b3a68e41d29539ce4a753e0f438d9326c5ed0c2d5b72",
+        "bytes": 2878,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay/50-unreplayable-messages.md",
+        "sha256_raw_bytes": "30a82567883551a5a2a94424646ede80be844bc348545e4c58f596bb33750ef8",
+        "bytes": 1488,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes.md",
+        "sha256_raw_bytes": "6fb03b2f3fde1f6d90effd116c1307c39d157a2bbfc733332e0e281f31fad6d9",
+        "bytes": 2460,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/10-broker-unreachable.md",
+        "sha256_raw_bytes": "57805f096e1bc6b03df34161c62807389d8f28ea9563e5680740cc4e275eef0d",
+        "bytes": 1160,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/20-consumer-stuck.md",
+        "sha256_raw_bytes": "30a4485ffe6bab81bb264e750a3f6184a7d6f2a163884389c89770d2e88345e8",
+        "bytes": 1193,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/30-poison-redelivery-loop.md",
+        "sha256_raw_bytes": "be80d3f684b633f088ed65df4a46c0a5ee35b0a4ad0471d439d4691db33bac4a",
+        "bytes": 1286,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/40-duplicate-storm.md",
+        "sha256_raw_bytes": "91950649612f1d14044334850a138602d1244cb0272e2f9312bbf3ccdbdbaa74",
+        "bytes": 1076,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/50-outbox-stalled.md",
+        "sha256_raw_bytes": "bdf0bf86095611b886bdba567cab4b368d06ebe60be1cacc22501cf80aca1386",
+        "bytes": 1277,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/60-dead-letter-queue-filling.md",
+        "sha256_raw_bytes": "2c8296a586593ff3351d1202811ac0b1bf522d1dfa0273d2c6a4b265f3308274",
+        "bytes": 886,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/70-replay-duplicates.md",
+        "sha256_raw_bytes": "c9556a02559d349e5d7c1787ab94d80d7a05d4445f03cf36e044b6cea8ce0499",
+        "bytes": 935,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/80-publish-confirm-timeout.md",
+        "sha256_raw_bytes": "56c113b0adf2a6c19bdbc926becbbc74a053f9d4c575744bcb6f39f391ae6177",
+        "bytes": 1405,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+        "sha256_raw_bytes": "c1676347113ffdd574ebc3895d0da6cb80ca25b1005206b604c79f002b2b116e",
+        "bytes": 2426,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md",
+        "sha256_raw_bytes": "829527badec70a8fb9a130ef46f17f7ab42c81d5e3cc3edecee611fc5787bbe6",
+        "bytes": 823,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/20-request-value-lifetime.md",
+        "sha256_raw_bytes": "659db32d64ff171a22c6f947484350ec19ddea84fa7828f110bdd469ce6c1aec",
+        "bytes": 1639,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+        "sha256_raw_bytes": "06fc187b78f23355fb8e49e100fdf3c8b21af322cb0ede060988d8c358ada914",
+        "bytes": 1447,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md",
+        "sha256_raw_bytes": "48fe6f2bfc09560e3e658aab31cc147c2e671f0a5beb27f262e6b2a810faccf6",
+        "bytes": 1513,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md",
+        "sha256_raw_bytes": "60542621a9734ec7fc7420adc3db6d2594eca7b43b1290d7cd0977aad71c9f4f",
+        "bytes": 2993,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+        "sha256_raw_bytes": "8b33f9029b0c51146aa5dc56caddbb044ce4e116370d1574b7341385ecc79482",
+        "bytes": 912,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md",
+        "sha256_raw_bytes": "0e9a0c8312197b25f9b5dd9747dc84c84a2d385d922e8200427523fefe052c4c",
+        "bytes": 2112,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md",
+        "sha256_raw_bytes": "33f431880b53eadaf9e8df5e5827f3d16676e320442dfcc4768aecac08fa2be9",
+        "bytes": 929,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+        "sha256_raw_bytes": "229e1bb5c175be2521124f9120adc0fa3468c2efb7bec3231994eaf525f275a1",
+        "bytes": 1919,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+        "sha256_raw_bytes": "04ff8cfdc954312a75098c2ec87c9f1198f8a4bf1fb43e568c04de435f03baeb",
+        "bytes": 2389,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+        "sha256_raw_bytes": "b99cdd701ea3396e8ea0e36d7bdb16e7ccef49936a5abe9979498f8111f5b700",
+        "bytes": 2819,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+        "sha256_raw_bytes": "1e58d99554b8406b66666f182b2073e7f461c009233d658d37729fa78a9b6693",
+        "bytes": 910,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+        "sha256_raw_bytes": "e480e16359f566e97f11d1b060f2c5799e6acabe3b5086ae81e8c16607ae81fc",
+        "bytes": 1937,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+        "sha256_raw_bytes": "7c2060c57256633828437214ea63cbcd7c2058112238543ac21e244fe394489e",
+        "bytes": 2509,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/10-read-validation-and-script-boundaries.md",
+        "sha256_raw_bytes": "12d783ea16e39baa575b28fe952490f6669fba30aa560ff319f228d623d8e311",
+        "bytes": 1808,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure.md",
+        "sha256_raw_bytes": "de97ce559f12cd621c668f69bf77e83613404c22f8c02bfe36192e85ce881f56",
+        "bytes": 1393,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/10-transaction-and-journal.md",
+        "sha256_raw_bytes": "deb4242de467f6e15c12c57a0ab975f5ab9701f205939608a8a2c3debc19a94b",
+        "bytes": 1558,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge/20-account-purge-procedure/20-recovery-and-verification.md",
+        "sha256_raw_bytes": "f6f7335f80a935f1582f59924d25633e1d58700c69cf8b351a262c9cda2c4f38",
+        "bytes": 2230,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox.md",
+        "sha256_raw_bytes": "5a847701f2b61d7be5df1c97eeac27cece10e9eaefab034e11c0d3f3f870319d",
+        "bytes": 1606,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/10-browser-outbox-boundary.md",
+        "sha256_raw_bytes": "61fe548d31b712ffcd2043b2ba7096967c8198597267d8aaf14509966b2f8f3f",
+        "bytes": 2355,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/20-record-and-cursor-invariant.md",
+        "sha256_raw_bytes": "6a891a87652480c1548e29ef18a0395ab2aa272c7b4432598c9c55e7ba12c700",
+        "bytes": 1479,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/30-flush-and-classification.md",
+        "sha256_raw_bytes": "7fa1fe40f6720ae58573df83ed24a5d54652357bc3edbf849bad5504975e1cf8",
+        "bytes": 1748,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/40-reaper-and-recovery.md",
+        "sha256_raw_bytes": "b59dda392763405aafa2ddbfbb78e988fa7cf9293e0a4ebc1aacdba1522ff65a",
+        "bytes": 1129,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/50-bounds-and-operations.md",
+        "sha256_raw_bytes": "24caa48f3565b64a153c7f98118a6c996ee54c0423ba2c3f5d6c5e3f036a7ee0",
+        "bytes": 1569,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox/60-retry-policy.md",
+        "sha256_raw_bytes": "5b64da357489ff33449bd8942aeebbe901d9045d3cad5811b52758d3815b1d22",
+        "bytes": 756,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+        "sha256_raw_bytes": "d2add7e912f397bd2a5d6beaf4e5fc98f37d874543d3c07cc20f6a23e3b76222",
+        "bytes": 2829,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-proof-levels.md",
+        "sha256_raw_bytes": "318eff88e3b3731f8c87b1505904f56d4722cea9c162338a3dd96f95b799647d",
+        "bytes": 1312,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-required-scenarios.md",
+        "sha256_raw_bytes": "1621db1dd8a30f63b4067f57d0a509fb5ed85138fb1d0654360daf1b8d64f399",
+        "bytes": 851,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-quota-reproduction.md",
+        "sha256_raw_bytes": "1fba1f1e9c1bf3b0161a7e9fb3b7f9f3d30a2a6926a97219207fd4dd7f654f31",
+        "bytes": 591,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-debug-and-performance.md",
+        "sha256_raw_bytes": "b87404503b1609d86220f921835e371a6948e1adc457a939ee5cc19ddec8e873",
+        "bytes": 1598,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+        "sha256_raw_bytes": "e052da2af9c96f3871a5799ad3e893d15bdde8ecc21001eda0a80925e3792e8e",
+        "bytes": 1284,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md",
+        "sha256_raw_bytes": "ba529a4e1ff6107752c2d49608d6b1de60c4a498b43212c1a224810d3eb85076",
+        "bytes": 1305,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks.md",
+        "sha256_raw_bytes": "6637214dd082bfeb6c51d6dda93528d1cdd538b142f918b10b5ad6ff4305d080",
+        "bytes": 2955,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/10-refresh-and-authority.md",
+        "sha256_raw_bytes": "95ff34d515dc03d4ac322f166664b9334d3665e1ef67e8133584bd1d2e480ce9",
+        "bytes": 1642,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/20-current-release-refresh.md",
+        "sha256_raw_bytes": "ce17437c681b4d9d0ea225609123babc6c4f0b5daa207526029b156d80ecb9e7",
+        "bytes": 2141,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/30-historical-registry-snapshot.md",
+        "sha256_raw_bytes": "dfbad747fccc83ac3d8418016ba5c6233c71283aa18a5c9993d59f6ae728466f",
+        "bytes": 1868,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/40-installed-major.md",
+        "sha256_raw_bytes": "b46c2febe78346176ecee5b50dffdb15e9bcbcfeb17cde4a117d0f3c8ca2307b",
+        "bytes": 1782,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/50-v2-to-v3-deltas.md",
+        "sha256_raw_bytes": "252eda8592e2d0895cea84949f51325457f54a90b99f0da053e4270ea050bb86",
+        "bytes": 3947,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/60-framework-tool-deltas.md",
+        "sha256_raw_bytes": "ae404eae4fadcc7d0dc7a95c8e7112a6f72a14f2efabd9962d0ad018aaf8ba21",
+        "bytes": 3064,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/70-live-checks-and-maintenance.md",
+        "sha256_raw_bytes": "5defab7711106bd07d45a01319ad5dfcd64f9b4a8f7d948105b9d47590a9d5b2",
+        "bytes": 2606,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/80-posture-and-package-manager.md",
+        "sha256_raw_bytes": "30bbb821352ff5808203096776db97d8d22d8c70eccf646f42450910fb42e88e",
+        "bytes": 1601,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+        "sha256_raw_bytes": "26dc1626fbd9de5b750ec2c9c0312a514da0f03bf9037ab2afa2b154a252cbbe",
+        "bytes": 3546,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+        "sha256_raw_bytes": "8abf0f6beba7b5a52ab7b76a3d09c8baf1069c71fab3ea3161eadf6520085e97",
+        "bytes": 2554,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+        "sha256_raw_bytes": "66c3b21ed1dca36a2cafe451eb17ffeea54492811b02e84fa5248615e82d2905",
+        "bytes": 1668,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+        "sha256_raw_bytes": "9d6214cf1ca85b335416a1d9f95b99b7c08993eb7abf2d7638550809f23b9398",
+        "bytes": 3121,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+        "sha256_raw_bytes": "5ac05b76fb8b2895ba68684ac1f93e3637182018be7d9fcbee04d15fe394fe10",
+        "bytes": 1472,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+        "sha256_raw_bytes": "7620c64b8e69a871342617e8170c3e029df81d31ea13c2b35144e5d3e8a0b565",
+        "bytes": 1740,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+        "sha256_raw_bytes": "6a352d3dcb02f3155352989d038384d811515918e23a8174ad4399aa1dec09bc",
+        "bytes": 2421,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md",
+        "sha256_raw_bytes": "ad7814058974cc39141eb3c978004408a6662e417e773b6e61a8c336111d9731",
+        "bytes": 3589,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md",
+        "sha256_raw_bytes": "9091cef0a80c6532ef3b177c91200eb38034dc317ac6f4d7f0d0027c2d069e5a",
+        "bytes": 1744,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/10-contract-and-events.md",
+        "sha256_raw_bytes": "8530037c43800d272fe4ddd1d4ee2b53c516d5939f8eca084f7d7ed6c98cfe22",
+        "bytes": 3173,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/20-stats-catalog.md",
+        "sha256_raw_bytes": "91076ae61a61ca25a26c455dc9230a50be3bb611565b0a75cc1a03f8575e79e5",
+        "bytes": 3973,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/30-qoe-derivation.md",
+        "sha256_raw_bytes": "89fb3546860eb947a1421261c1d2420c2bb89afe5c633dc362d7ce9f55e84c09",
+        "bytes": 2638,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/40-qoe-collector-example.md",
+        "sha256_raw_bytes": "1c7980a609b9240c92784619c47384802e88bb60a7e1ce46de678e4629d35216",
+        "bytes": 4676,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/50-delivery-diagnostics.md",
+        "sha256_raw_bytes": "3c6556a1e8e07b09a9a7108b49f6e242c2ed8ad87712d56ce05bd3ff6ca3d2a6",
+        "bytes": 1231,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md",
+        "sha256_raw_bytes": "b6cdbe39ca97ddcf8c211593502ff21274d8099cba760ba27ea62db101af0fb7",
+        "bytes": 1790,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/10-structure-and-categories.md",
+        "sha256_raw_bytes": "cf707aee2d0667b5a3b80c7c2084c93ae3db6ecd724af6713803595d9eac0324",
+        "bytes": 3269,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/20-complete-code-catalog.md",
+        "sha256_raw_bytes": "4a57ddc3113fb4c6dc444c417087f05bb8d9d27bacfd2d97bf911573c7b01c8f",
+        "bytes": 5338,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/30-error-data-and-handling-paths.md",
+        "sha256_raw_bytes": "238a4c67e9567bf411640575e84c8ef50cd66bfb38ec4b1383a7cd15727780b7",
+        "bytes": 2761,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/40-user-facing-mapping.md",
+        "sha256_raw_bytes": "82a83c1e553ca9b356a86cf7ada14605927a6db927e975b6bdb33f0534636879",
+        "bytes": 1104,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas.md",
+        "sha256_raw_bytes": "1393fe249e6e225f9b127ca2c7cd3bb0187ae906e7be183e8455995ea5e59795",
+        "bytes": 2062,
+        "kind": "modified-original"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/10-migration-boundaries.md",
+        "sha256_raw_bytes": "be6acfe8676123abd9bc0f4f296ae7647e41cebfd943e85d6dd2ce3ad19d5620",
+        "bytes": 866,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/20-v4-to-v5-breaking-changes.md",
+        "sha256_raw_bytes": "15d756155786175224ed33d6041fcb59fd11b7050c546fac95c3f5ee3ea33254",
+        "bytes": 3602,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/30-deprecations-and-v6.md",
+        "sha256_raw_bytes": "9749229bb32a79349323d0ae0622f3f8fb445a048f781aa9bef9cd66b81415d4",
+        "bytes": 1717,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/40-v520-features.md",
+        "sha256_raw_bytes": "8562b289009b0e7e5c185b9f8e86ebf26b91b240f07a8ebd12fc6a5dc359e378",
+        "bytes": 2859,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/50-v52x-patches.md",
+        "sha256_raw_bytes": "2e88fda2c0c68b98563c905c03fbb022cdd6bb1e70316ab4dcba8a79a6fac565",
+        "bytes": 1969,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/60-v510-changes.md",
+        "sha256_raw_bytes": "78daeeeed8ec5cfbe73948ab39d5bd4de97ced0ad8768f8603c63e90ad36b569",
+        "bytes": 1657,
+        "kind": "new-child"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/70-upgrade-procedure.md",
+        "sha256_raw_bytes": "662e7aa2bdc1bca83004cc32af81f5537a5ca2303c476f7f1a7db2625f726881",
+        "bytes": 1179,
+        "kind": "new-child"
+      }
+    ]
+  },
+  "scope_coverage": {
+    "candidate4_originals": 77,
+    "new_children": 81,
+    "checked_paths": 158,
+    "operations_skill_directories_excluded": 6,
+    "source_code_or_runtime_files_edited": false,
+    "machine_manifest_or_policy_files_edited": false
+  }
+}

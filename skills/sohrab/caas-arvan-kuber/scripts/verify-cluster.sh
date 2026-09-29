@@ -3,9 +3,7 @@
 # nothing.
 #
 # It answers two questions in one pass:
-#   1. which Kubernetes line the target is on -- the pinned 1.25-era surface or a
-#      current one -- using `autoscaling/v2beta2` as the discriminator, because
-#      that group was removed upstream in 1.26;
+#   1. which API capabilities are visible, with server version reported separately;
 #   2. whether the capabilities and permissions a deployment needs are actually
 #      present, and it FAILS when they are not.
 #
@@ -19,14 +17,12 @@
 # Exit codes, shared by every script in this skill:
 #   0  clean: every required API and every required permission is present
 #   1  findings: a required API or permission is absent
-#   2  could not run: no kubectl, or the cluster API is unreachable
+#   2  blocked: discovery, identity, or required permission proof unavailable
 set -uo pipefail
 
 EXIT_CLEAN=0
 EXIT_FINDINGS=1
 EXIT_CANNOT_RUN=2
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 usage() {
   cat <<'EOF'
@@ -36,20 +32,21 @@ Usage:
   verify-cluster.sh --self-test
 
 Read-only checks:
-  - which Kubernetes line the API server is on
-  - whether the API surface is namespace-only
+  - server-reported version and visible API capabilities, without inferring a
+    version or authorization from an absent API or an empty catalog
   - which of the required namespaced resources are served
   - which line-dependent resources are served (PodDisruptionBudget, NetworkPolicy)
   - quota and LimitRange visibility
-  - can-i for the caller, and, when a ServiceAccount is named, the conclusive
-    token-based check for that ServiceAccount's own identity
+  - can-i for the caller; when a ServiceAccount is named, the current context
+    must already authenticate as that exact namespace/ServiceAccount principal
   - the RoleBinding subject table, which is what shows an alias-versus-canonical
     namespace mismatch
 
-Nothing is created, updated, or deleted.
+Nothing is created, updated, or deleted. No token is minted and no impersonation
+is attempted. An unavailable or mismatched ServiceAccount identity blocks proof.
 
 Exit codes: 0 every required API and permission present, 1 something required is
-absent, 2 no kubectl or the cluster is unreachable.
+absent or denied, 2 required discovery, identity, or permission proof unavailable.
 EOF
 }
 
@@ -124,7 +121,7 @@ detect_line() {
   elif printf '%s\n' "${versions}" | grep -qx 'resource.k8s.io/v1'; then
     printf 'current'
   else
-    printf 'between'
+    printf 'unknown'
   fi
 }
 
@@ -156,10 +153,62 @@ self_test() {
   [[ "${out}" == "current" ]] || { echo "SELF-TEST FAIL: detect_line on CRLF returned '${out}', expected 'current'" >&2; failures=$((failures+1)); }
 
   out="$(detect_line "$(printf 'apps/v1\nautoscaling/v2\n')")"
-  [[ "${out}" == "between" ]] || { echo "SELF-TEST FAIL: detect_line returned '${out}', expected 'between'" >&2; failures=$((failures+1)); }
+  [[ "${out}" == "unknown" ]] || { echo "SELF-TEST FAIL: detect_line returned '${out}', expected 'unknown'" >&2; failures=$((failures+1)); }
+
+  # Every probe command is mocked here, including a trap for credential issuance.
+  local scenario rc expected
+  for scenario in clean missing_api api_error partial_api resources_error denied unknown_permission runner_match runner_mismatch runner_unknown catalog_empty catalog_denied; do
+    case "${scenario}" in
+      missing_api|denied) expected=${EXIT_FINDINGS} ;;
+      api_error|partial_api|resources_error|unknown_permission|runner_mismatch|runner_unknown) expected=${EXIT_CANNOT_RUN} ;;
+      *) expected=${EXIT_CLEAN} ;;
+    esac
+    out="$(
+      kubectl() {
+        case "$*" in
+          'config current-context') echo synthetic ;;
+          'api-versions')
+            [[ "${scenario}" != api_error ]] || return 1
+            printf 'apps/v1\nautoscaling/v2\n'
+            [[ "${scenario}" != partial_api ]] ;;
+          'get --raw=/version') printf '{"gitVersion":"v1.37.0"}\n' ;;
+          'api-resources --namespaced=false -o name')
+            [[ "${scenario}" != catalog_denied ]] || return 1
+            [[ "${scenario}" == catalog_empty ]] || echo namespaces ;;
+          'api-resources --namespaced=true -o name')
+            [[ "${scenario}" != resources_error ]] || return 1
+            if [[ "${scenario}" == missing_api ]]; then echo pods
+            else printf '%s\n' "${REQUIRED_RESOURCES[@]}"; fi ;;
+          'auth whoami -o jsonpath={.status.userInfo.username}')
+            [[ "${scenario}" != runner_unknown ]] || return 1
+            if [[ "${scenario}" == runner_mismatch ]]; then echo operator
+            else echo system:serviceaccount:test:runner; fi ;;
+          '-n test auth can-i '*)
+            case "${scenario}" in
+              denied) echo no; return 1 ;;
+              unknown_permission) return 1 ;;
+              *) echo yes ;;
+            esac ;;
+          *'create token'*|*'--as='*) echo 'UNEXPECTED credential operation'; return 99 ;;
+          '-n test get '*) return 0 ;;
+          *) echo "UNEXPECTED command: $*"; return 99 ;;
+        esac
+      }
+      case "${scenario}" in
+        runner_*) probe test runner ;;
+        *) probe test '' ;;
+      esac
+    )"
+    rc=$?
+    [[ ${rc} -eq ${expected} && "${out}" != *UNEXPECTED* ]] || {
+      echo "SELF-TEST FAIL: ${scenario} exited ${rc}, expected ${expected}" >&2
+      failures=$((failures+1))
+    }
+    [[ "${out}" != *'server is 1.26'* && "${out}" != *'identity is broader'* ]] || failures=$((failures+1))
+  done
 
   if [[ ${failures} -gt 0 ]]; then return ${EXIT_FINDINGS}; fi
-  echo "verify-cluster --self-test: 8 cases passed (no cluster required)"
+  echo "verify-cluster --self-test: 20 cases passed (mocked; no cluster required)"
   return ${EXIT_CLEAN}
 }
 
@@ -167,40 +216,39 @@ self_test() {
 
 probe() {
   local ns="$1" runner_sa="$2"
-  local findings=()
+  local findings=() blocked=()
 
   echo "== Namespace: ${ns}"
   echo "== Current context: $(kubectl config current-context 2>/dev/null || echo unknown)"
   [[ -n "${runner_sa}" ]] && echo "== Runner ServiceAccount: ${runner_sa}"
 
-  section "Which Kubernetes line is this"
+  section "Visible API capabilities and server-reported version"
   local api_versions line
-  api_versions="$(kubectl api-versions 2>/dev/null | strip_cr | sort)"
-  if [[ -z "${api_versions}" ]]; then
-    echo "verify-cluster: the API server returned no api-versions" >&2
+  if ! api_versions="$(kubectl api-versions 2>/dev/null | strip_cr | sort)" || [[ -z "${api_versions}" ]]; then
+    echo "verify-cluster: API version discovery is unavailable or incomplete" >&2
     return ${EXIT_CANNOT_RUN}
   fi
   line="$(detect_line "${api_versions}")"
   case "${line}" in
-    pinned)  echo "PINNED LINE: autoscaling/v2beta2 is served, so the API server is at most Kubernetes 1.25. Read column A of references/arvan-capability-matrix.md." ;;
-    current) echo "CURRENT LINE: resource.k8s.io/v1 is served, so the API server is Kubernetes 1.34 or newer. Read column B of references/arvan-capability-matrix.md." ;;
-    between) echo "BETWEEN THE TWO: autoscaling/v2beta2 is absent, so the server is 1.26 or newer, and resource.k8s.io/v1 is absent, so it is older than 1.34. Read column B and confirm every kind with api-resources." ;;
+    pinned) echo "LEGACY API OBSERVED: autoscaling/v2beta2 was removed upstream in 1.26; this is a capability observation, not proof of the vendor server version." ;;
+    current) echo "CURRENT API OBSERVED: resource.k8s.io/v1 became stable upstream in 1.34; confirm the vendor server version separately." ;;
+    unknown) echo "VERSION UNKNOWN FROM APIs: missing discriminators establish no version range. Confirm required kinds individually." ;;
   esac
-  kubectl version -o json 2>/dev/null | grep -i 'gitVersion' | strip_cr || echo "(server version not readable by this identity)"
+  kubectl get --raw=/version 2>/dev/null | grep -i 'gitVersion' | strip_cr || echo "(server version not readable by this identity)"
 
-  section "Is the API surface namespace-only"
+  section "Cluster-scoped API catalog (not an authorization check)"
   local cluster_scoped
-  cluster_scoped="$(kubectl api-resources --namespaced=false -o name 2>/dev/null | strip_cr)"
-  if [[ -z "${cluster_scoped}" ]]; then
-    echo "No cluster-scoped resource is listable by this identity: treat the surface as namespace-only."
+  if ! cluster_scoped="$(kubectl api-resources --namespaced=false -o name 2>/dev/null | strip_cr)"; then
+    echo "Cluster-scoped discovery unavailable or denied; platform scope remains unknown."
+  elif [[ -z "${cluster_scoped}" ]]; then
+    echo "No cluster-scoped kind visible in this catalog; platform scope remains unknown."
   else
-    echo "Cluster-scoped resources are listable ($(printf '%s\n' "${cluster_scoped}" | wc -l | tr -d ' \r') kinds). This identity is broader than a normal Arvan tenant; say so in the deliverable."
+    echo "Cluster-scoped kinds visible: $(printf '%s\n' "${cluster_scoped}" | wc -l | tr -d ' \r'). Visibility grants no verb; check auth can-i for each required operation."
   fi
 
   section "Required namespaced resources"
   local resource_list missing_required
-  resource_list="$(kubectl api-resources --namespaced=true -o name 2>/dev/null | strip_cr)"
-  if [[ -z "${resource_list}" ]]; then
+  if ! resource_list="$(kubectl api-resources --namespaced=true -o name 2>/dev/null | strip_cr)" || [[ -z "${resource_list}" ]]; then
     echo "verify-cluster: cannot list namespaced resources" >&2
     return ${EXIT_CANNOT_RUN}
   fi
@@ -208,8 +256,8 @@ probe() {
   if [[ -z "${missing_required}" ]]; then
     echo "All ${#REQUIRED_RESOURCES[@]} required resources are served."
   else
-    echo "MISSING: $(printf '%s ' ${missing_required})"
-    findings+=("missing required resources: $(printf '%s ' ${missing_required})")
+    echo "MISSING: ${missing_required//$'\n'/, }"
+    findings+=("missing required resources: ${missing_required//$'\n'/, }")
   fi
 
   section "Line-dependent resources"
@@ -234,40 +282,29 @@ probe() {
   done
 
   section "Required permissions for the calling identity"
-  local verb answer
+  local verb answer permission_rc
   for verb in "${REQUIRED_VERBS[@]}"; do
     # shellcheck disable=SC2086
     answer="$(kubectl -n "${ns}" auth can-i ${verb} 2>/dev/null | strip_cr)"
+    permission_rc=$?
     printf '%-40s %s\n' "${verb}" "${answer:-unknown}"
-    if [[ "${answer}" != "yes" ]]; then
+    if [[ "${answer}" == "no" ]]; then
       findings+=("caller cannot '${verb}' in ${ns}")
+    elif [[ ${permission_rc} -ne 0 || "${answer}" != "yes" ]]; then
+      blocked+=("caller permission proof unavailable for '${verb}' in ${ns}")
     fi
   done
 
   if [[ -n "${runner_sa}" ]]; then
-    section "Conclusive check for the ServiceAccount's own identity"
-    echo "'--as' proves nothing when the caller lacks impersonation rights. A token"
-    echo "issued for the ServiceAccount evaluates the real principal instead."
-    local token
-    token="$(kubectl -n "${ns}" create token "${runner_sa}" 2>/dev/null | strip_cr)"
-    if [[ -z "${token}" ]]; then
-      echo "(could not mint a token for ${runner_sa}: the caller may lack serviceaccounts/token create, or the SA does not exist in ${ns})"
-      echo "Falling back to impersonation, which is indicative and not conclusive:"
-      for verb in "${REQUIRED_VERBS[@]}"; do
-        # shellcheck disable=SC2086
-        printf '%-40s %s\n' "${verb}" "$(kubectl -n "${ns}" auth can-i ${verb} --as="system:serviceaccount:${ns}:${runner_sa}" 2>/dev/null | strip_cr || echo unknown)"
-      done
+    section "ServiceAccount identity for the permission checks above"
+    local principal
+    if ! principal="$(kubectl auth whoami -o 'jsonpath={.status.userInfo.username}' 2>/dev/null | strip_cr)"; then
+      blocked+=("ServiceAccount identity unavailable; use an authorized context with identity discovery support")
+    elif [[ "${principal}" != "system:serviceaccount:${ns}:${runner_sa}" ]]; then
+      blocked+=("current identity does not match the requested namespace/ServiceAccount; confirm canonical namespace and context")
     else
-      for verb in "${REQUIRED_VERBS[@]}"; do
-        # shellcheck disable=SC2086
-        answer="$(kubectl --token="${token}" -n "${ns}" auth can-i ${verb} 2>/dev/null | strip_cr)"
-        printf '%-40s %s\n' "${verb}" "${answer:-unknown}"
-        if [[ "${answer}" != "yes" ]]; then
-          findings+=("serviceaccount ${runner_sa} cannot '${verb}' in ${ns}")
-        fi
-      done
+      echo "Current context matches the requested ServiceAccount; caller permission checks apply to it."
     fi
-    unset token
   fi
 
   section "RoleBinding subjects (alias versus canonical namespace evidence)"
@@ -275,6 +312,11 @@ probe() {
   echo "If a subject namespace differs from '${ns}', read references/arvan-rbac-namespace-facts.md before changing any RoleBinding."
 
   echo
+  if [[ ${#blocked[@]} -gt 0 ]]; then
+    echo "verify-cluster: required proof blocked:" >&2
+    for name in "${blocked[@]}" "${findings[@]}"; do echo "  - ${name}" >&2; done
+    return ${EXIT_CANNOT_RUN}
+  fi
   if [[ ${#findings[@]} -gt 0 ]]; then
     echo "verify-cluster: ${#findings[@]} finding(s):" >&2
     for name in "${findings[@]}"; do echo "  - ${name}" >&2; done

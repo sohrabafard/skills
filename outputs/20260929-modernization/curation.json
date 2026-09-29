@@ -1,0 +1,32 @@
+{
+  "state": "completed for candidate-8; no unowned reusable knowledge admitted",
+  "scope": "Implementation, reviews, both documentation repairs and final EOF repair; no new doctrine needed",
+  "admitted": [],
+  "not_published": "No memory write requested; no memory or external publication performed",
+  "considered": [
+    {
+      "candidate": "Differentiate Windows filesystem failure from native POSIX checker proof",
+      "disposition": "Existing memory and verification evidence already own this distinction; do not duplicate"
+    },
+    {
+      "candidate": "Account purge must include metadata and await transaction commit",
+      "disposition": "Canonical IndexedDB source/reference now owns behavior; no competing knowledge card"
+    },
+    {
+      "candidate": "Thread capacity versus usage limitation",
+      "disposition": "Volatile run-specific coordination state, not reusable doctrine"
+    },
+    {
+      "candidate": "Model pin or source check does not prove activation/calibration",
+      "disposition": "Existing prompting owner already states boundary"
+    },
+    {
+      "candidate": "Heading and fence preservation do not establish prose or prerequisite-loading fidelity",
+      "disposition": "Already owned by prompting-guide skill-authoring relocation contract and repo-docs clustering rules; repair evidence retained in workflow, no duplicate doctrine"
+    },
+    {
+      "candidate": "A reported full read must exclude truncated output and cannot borrow another agent read assertion",
+      "disposition": "Existing repository full-bundle read contract and grounding rules own this; ordering lapses and recovery retained in workflow, no new memory card"
+    }
+  ]
+}

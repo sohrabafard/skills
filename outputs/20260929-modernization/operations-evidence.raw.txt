@@ -1,0 +1,5 @@
+# Raw evidence pointer
+
+Exact original bytes are preserved in operations-evidence.raw.txt.gz.
+Uncompressed SHA256: acc62c0e0ac5e6ba360e3e7730d0ff07cfa7112912cf40df5a7f4371adb7297b
+Uncompressed bytes: 17214
