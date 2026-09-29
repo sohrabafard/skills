@@ -1,0 +1,192 @@
+{
+  "status": "implemented and frozen; HAProxy full self-test environment-blocked; independent checks/reviews pending",
+  "agent": "operations_implementation",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "base_candidate": "candidate-2",
+  "pre_edit_candidate2_mismatches": [],
+  "source_changes": [
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "before": "b88322edbee0b686dc96fcd7389cc6e5ac5bbd6ec099bc62902f72fda5fbedd3",
+      "after": "90025d7524ad3d1d1c032688133b4c2a8fd99e70f05172c8aa92f8db8bd4d7c0"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/scripts/check_examples.py",
+      "before": "c6b3cca2577805858f8d692e3899a023741836b9ae85322a7013faa5a179aa19",
+      "after": "0371fbfb034c99a12f4d9330ed23ed91033b529b1c7691831dd4cf0fbe44100c"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/scripts/fixtures/warnings/clean-parse.txt",
+      "before": null,
+      "after": "b919048a2c855c1a95ce8d06fcb89563338f76922a33f5d66f0373daf67406fc"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/scripts/fixtures/warnings/functional-warning.txt",
+      "before": null,
+      "after": "c28968dba54252b55eae128dea5af03978f62a54e3b1fad21489da362274ab3b"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/scripts/fixtures/warnings/unreviewed-deprecation.txt",
+      "before": null,
+      "after": "b2ff4c074bf5fac8b0a9b09a6107bd1564cd2a336274e2ccf54509c8db886d83"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/SKILL.md",
+      "before": "126b8f4e813d6a521c83da182fff7784399f0fbb9b312de1a9cbb6ffb1182ad8",
+      "after": "98d4b764389239a8922681e1de427861ed2be76357aa7df60e484e8dd23ea03c"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+      "before": "f9cc4e29bd969499754cc877c073e52524fbacb811356fc1a6becc5a5e99f590",
+      "after": "ceb7c5addbf8d74d9e61c26a787b0c692228518de7f0f253e2ce71e8bf69fb7d"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/scripts/test_security_regressions.py",
+      "before": "1a9f4898c5dd08731b791178aabd185bbb5544c6237a848e4d5f56655e430cd5",
+      "after": "e858996f46251313fb7c8ecf24bee5cb1ed552b824f494ccaa2a8f620f1dbb92"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "before": "c6ca9ac004f9063c1c57f95bbfdc333c381caf054f49cd27f34b2c0995394255",
+      "after": "8f1ad6cd0f575259b1af197c7a1e53a166a78e54089fae99b4e720f5c2ea5682"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "before": "bb0d8d34335dcbf5497036238862f73638ad3792186022b991690c3eb61eb704",
+      "after": "0968c113dc63c6b2018da9d18e1b9f25511b95a99a021205c1ce230b463492d6"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "before": "cb1ac2a6207ae70dc8e95c4fd163f577d2974bb2c1290d7f64089944f0176226",
+      "after": "7e8743af15d8ad1eaffb5274f0ecdd5bb9277df0552c3348beef7f3ae28c2e9e"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+      "before": "7e479650594bc0b35925faf9d1318a184979e5872a4629091b18878bd610ec9c",
+      "after": "afbcceec5024b3acfe5a96f5caa78a6e037406e42a4f3310d065a8b415a5399d"
+    }
+  ],
+  "full_reads": "Prior complete three-skill bundles reused after current callers/source/diff reconciliation; no frontend/index/staging edits.",
+  "draft_compression": "Preserved failure statuses, ownership, installation authority, descriptor trust assumptions, compatibility requirements and version uncertainty. Removed legacy dual call forms only from touched gate reference.",
+  "finding_resolution": {
+    "COR-5_SEC-3": "Existing cache lookup occurs before opt-in/NO guard; missing cache still cannot create/install without authorization. Synthetic cache resolves with no opt-in and with NO=1 while mkdir/python3/pip are trapped.",
+    "SEC-1": "Exclusive mode0600 creation retains fd9; descriptor regular-file/uid/mode checks; same descriptor receives render bytes. Caller-owned mode0700 parent and trusted root/caller ancestor chain required; only root-owned sticky writable ancestors allowed. Output path identity verified and cleanup never removes replacement. Tests replace path during dependency and during template emission, assert replacement unchanged and symlink preserved; unsafe parent blocked.",
+    "COR-6": "All unresolved successful-parser warning lines become HP-EX-WARNING findings, exit1. No approved deprecation exceptions exist; exception requires exact branch/message/source rationale and fixture. Three warning fixtures added.",
+    "REL-1": "Runbook records server version or unknown, capabilities and permissions separately, and explicit operator-confirmed matrix column."
+  },
+  "checks": [
+    {
+      "name": "ShellCheck same five shell scripts",
+      "args": [
+        "-x",
+        "-P",
+        "SCRIPTDIR",
+        "skills/sohrab/caas-arvan-kuber/scripts/verify-cluster.sh",
+        "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+        "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+        "skills/sohrab/ansible-validator/scripts/scan_secrets.sh",
+        "skills/sohrab/ansible-validator/scripts/test_role.sh"
+      ],
+      "first_exit": 1,
+      "first_reason": "SC2015 on new AND/OR compound",
+      "repair": "Explicit if",
+      "retry_exit": 0,
+      "retry_duration_ms": 1291,
+      "logs": "operations-review-fix1-shellcheck[.retry].stdout.log and stderr.log"
+    },
+    {
+      "name": "HAProxy changed checker self-test",
+      "args": [
+        "-B",
+        "skills/sohrab/alaa-haproxy/scripts/check_examples.py",
+        "--self-test"
+      ],
+      "first_exit": 1,
+      "reason": "Windows PermissionError writing existing CRLF fixture in system temp",
+      "retry": "Same invocation TEMP/TMP set to writable cache root",
+      "retry_exit": 1,
+      "retry_reason": "Same PermissionError in relocated temporary directory",
+      "new_warning_cases": "All three passed in both attempts; not a full self-test PASS",
+      "logs": "operations-review-fix1-haproxy[.retry].stdout.log and stderr.log",
+      "pending": "Independent verifier existing Python Linux image, no pull/network, read-only scoped mount and bounded isolated tmpfs; no further writer retry"
+    },
+    {
+      "name": "Ansible synthetic security regressions",
+      "args": [
+        "-B",
+        "skills/sohrab/ansible-validator/scripts/test_security_regressions.py",
+        "--bash",
+        "<Git>/bin/bash.exe"
+      ],
+      "context": "Known approved direct Git Bash context; escalated execution",
+      "exit": 0,
+      "methods": 5,
+      "duration_ms": 13248,
+      "logs": "operations-review-fix1-ansible.stdout.log and stderr.log"
+    },
+    {
+      "name": "Render native POSIX self-test",
+      "args": [
+        "run",
+        "--rm",
+        "--pull=never",
+        "--network=none",
+        "--read-only",
+        "--user",
+        "1000:1000",
+        "--cap-drop=ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--cpus",
+        "2",
+        "--memory",
+        "128m",
+        "--pids-limit",
+        "64",
+        "--tmpfs",
+        "/tmp:rw,exec,nosuid,nodev,size=32m,mode=1777",
+        "--mount",
+        "type=bind,source=<repo>/skills/sohrab/caas-arvan-kuber,target=/skill,readonly",
+        "bash:5.3.3",
+        "bash",
+        "/skill/scripts/render-helm.sh",
+        "--self-test"
+      ],
+      "context": "Existing authorized image; elevated Docker context",
+      "exit": 0,
+      "cases": 12,
+      "duration_ms": 6100,
+      "logs": "operations-review-fix1-render.stdout.log and stderr.log"
+    },
+    {
+      "name": "scoped HEAD whitespace",
+      "args": [
+        "git",
+        "diff",
+        "--check",
+        "HEAD",
+        "--",
+        "skills/sohrab/ansible-validator",
+        "skills/sohrab/caas-arvan-kuber",
+        "skills/sohrab/alaa-haproxy"
+      ],
+      "exit": 0
+    }
+  ],
+  "runner": "All test commands use Invoke-AlaaLowPriority.ps1 BelowNormal CpuCount2;90s cap Ansible,60s others. python -B.",
+  "inspection_failure": "One read-only docker image inspection in sandbox could not access daemon socket; native self-test used approved supported context. No image pull performed.",
+  "compatibility": [
+    "Previously cached tools are restored for read-only use without enabling installation.",
+    "Explicit --out now requires private0700 parent and trusted ancestors; default uses a private temp directory. GNU-compatible stat and /dev/fd required; unsupported permission environments block.",
+    "Functional and unreviewed-deprecation parser warnings now fail the gate.",
+    "No dependency floor/image pin/model policy changes."
+  ],
+  "limitations": [
+    "HAProxy full self-test not yet passed; three new fixture passes are partial evidence only.",
+    "No actual HAProxy binary parse, live Helm/provider/cluster operation or deployment proof.",
+    "Security assumes root and the invoking identity are trusted; same-identity compromise is outside Unix permission isolation."
+  ],
+  "effects": "No package install, live operation, network access from test container, staging, commit or publication.",
+  "release": "Source frozen; parent recaptures combined candidate and reopens affected independent gates."
+}

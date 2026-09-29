@@ -74,10 +74,11 @@ export class AlaaClientStorage implements KeyValueStore<LearningStateRecord> {
   constructor(
     private readonly onWriteFailure: (failure: StorageWriteFailure) => void = () => {},
     private readonly runCleanup: () => Promise<void> = async () => {},
+    private readonly openDatabase: () => Promise<IDBDatabase> = openAlaaClientStorage,
   ) {}
 
   private db(): Promise<IDBDatabase> {
-    this.dbPromise ??= openAlaaClientStorage();
+    this.dbPromise ??= this.openDatabase();
     return this.dbPromise;
   }
 
@@ -171,37 +172,48 @@ export class AlaaClientStorage implements KeyValueStore<LearningStateRecord> {
    */
   async deleteByAccount(accountKey: string): Promise<number> {
     const db = await this.db();
-    const stores = USER_SCOPED_STORES.filter((name) => db.objectStoreNames.contains(name));
-    const tx = db.transaction([...stores, 'storage_items'], 'readwrite');
+    const tx = db.transaction([...USER_SCOPED_STORES, 'storage_items'], 'readwrite');
     let removed = 0;
-
-    await Promise.all(
-      stores.map(
-        (name) =>
-          new Promise<void>((resolve, reject) => {
-            const store = tx.objectStore(name);
-            const indexName = accountIndexFor(name);
-            if (!store.indexNames.contains(indexName)) {
-              reject(new Error(`${name} has no ${indexName}; it is not ready for user-scoped data`));
-              return;
-            }
-            const request = store.index(indexName).openCursor(accountRange(accountKey));
-            request.onerror = () => reject(request.error ?? new Error(`Purge failed on ${name}`));
-            request.onsuccess = () => {
-              const cursor = request.result;
-              if (!cursor) {
-                resolve();
-                return;
-              }
-              cursor.delete();
-              removed += 1;
-              cursor.continue();
-            };
-          }),
-      ),
-    );
-
-    await txDone(tx);
+    let failure: unknown;
+    let aborting = false;
+    // Observe completion before queueing requests, and report success only after commit.
+    const done = new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onabort = () => reject(failure ?? tx.error ?? new DOMException('Purge aborted', 'AbortError'));
+    });
+    const abort = (cause: unknown): void => {
+      if (aborting) return;
+      aborting = true;
+      failure ??= cause;
+      try { tx.abort(); } catch { /* A request or external failure may already have aborted it. */ }
+    };
+    try {
+      const indexes = [...USER_SCOPED_STORES, 'storage_items'].map((name) => {
+        const store = tx.objectStore(name);
+        const indexName = name === 'storage_items' ? 'byAccount' : accountIndexFor(name);
+        if (!store.indexNames.contains(indexName)) {
+          throw new Error(`${name} has no ${indexName}; schema upgrade required`);
+        }
+        return { index: store.index(indexName), countsData: name !== 'storage_items' };
+      });
+      // Preflight every index before the first deletion. Metadata is purged independently
+      // of data-row existence, but never inflates the public data-row return count.
+      for (const { index, countsData } of indexes) {
+        const request = index.openCursor(accountRange(accountKey));
+        request.onerror = () => abort(request.error);
+        request.onsuccess = () => {
+          const cursor = request.result;
+          if (!cursor) return;
+          try {
+            const deletion = cursor.delete();
+            deletion.onerror = () => abort(deletion.error);
+            if (countsData) removed += 1;
+            cursor.continue();
+          } catch (cause) { abort(cause); }
+        };
+      }
+    } catch (cause) { abort(cause); }
+    await done;
     return removed;
   }
 }

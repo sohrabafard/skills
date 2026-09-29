@@ -19,12 +19,13 @@ Effort also does not control scope. A model that widens the task beyond what was
 ## Thinking: keep it on, lower the effort instead
 
 Use the registered model capability snapshot and refresh its API documentation before changing
-thinking controls. Opus 5.5 and Fable 5.1 require adaptive thinking; Sonnet permits disabling it;
-Haiku uses extended thinking and has no effort parameter. These model/API differences are not interchangeable Claude Code settings.
+thinking controls. Current Opus, Fable and Sonnet reject disabled/manual thinking; their
+model references own supported modes and exceptions. Haiku uses extended thinking and has
+no effort parameter. These API controls are not interchangeable Claude Code settings.
 
-For effort-enabled models, lower supported effort before using disabled thinking as a cost
-lever. Measure retrieval, tool-use reliability and task quality; report unsupported controls
-instead of substituting them. For Haiku, use its own supported thinking controls.
+For effort-enabled models, compare lower supported effort as a cost lever. Measure retrieval,
+tool-use reliability and task quality; report unsupported controls instead of substituting
+them. For Haiku, use its own supported thinking controls.
 
 Do not carry manual thinking budgets into adaptive-only models. Haiku is the extended-thinking
 exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor
@@ -32,7 +33,7 @@ exception. The value `adaptive` names a thinking mode, never an effort. Neither 
 
 ## Choosing a starting level
 
-Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/30-sonnet-5.md`, `references/42-fable-5-1.md`, `references/35-haiku-4-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
+Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/31-sonnet-5-5.md`, `references/42-fable-5-1.md`, `references/35-haiku-4-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
 
 Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Re-run the sweep.
 
@@ -109,6 +110,6 @@ Thinking-disable constraints and the availability of manual thinking budgets are
 
 - [Effort parameter reference](https://platform.claude.com/docs/en/build-with-claude/effort)
 - [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
-- [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5)
+- [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
 - [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
 - [Using the latest model](https://developers.openai.com/api/docs/guides/latest-model)

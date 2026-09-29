@@ -1,0 +1,21 @@
+{
+  "recorded_by": "parent from independent correctness_review final",
+  "verdict": "APPROVED",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "scope": "Frozen operations repair12 files",
+  "hashes_matched": 12,
+  "findings": [],
+  "closed": [
+    "COR-5",
+    "COR-6",
+    "SEC-1",
+    "REL-1"
+  ],
+  "evidence": "Cached-tool discovery precedes install gate; parser warnings remain findings; private0700 parent and trusted ancestors with retained descriptor protect output; runbook separates observed version and capability.",
+  "limits": [
+    "Full HAProxy self-test awaiting native Linux verification",
+    "No actual HAProxy parse, Helm cluster or deployment proof",
+    "Static slice approval, not combined candidate"
+  ]
+}

@@ -1,0 +1,5 @@
+# Raw evidence pointer
+
+Exact original bytes are preserved in model-evidence.raw.txt.gz.
+Uncompressed SHA256: ebc933eb2feb9bbd01a92d9c91745ef4248babd1372c78cee791f0eba7f7a407
+Uncompressed bytes: 87199

@@ -25,15 +25,18 @@ grep -c 'function pendingSize\|function delayedSize\|function reservedSize\|func
 grep -n 'public function stop' vendor/vladimir-yuldashev/laravel-queue-rabbitmq/src/Consumer.php
 ```
 
-Four hits and a three-parameter `stop()` means compatible. Fewer than four means `queue:monitor` fails with
-a missing-method error on that connection, and the fix is a package upgrade, never a fork override.
+Method counts locate candidates, not compatibility proof. Compare their full signatures
+with the installed Laravel parent/interface, then class-load and exercise the monitor and stop paths.
+Missing methods require a compatible package release, never a fork override. Neither a dependency constraint nor
+parameter count proves compatibility with newer Laravel.
 
 ## `retry_after` is inert on this connection
 
 Verified in installed `v15.0.0` and Laravel 13: `retry_after` is read by the Beanstalkd, Database and Redis
 connectors only. The RabbitMQ driver's `src/` never mentions it, and neither does `Illuminate\Queue\Worker`,
 `WorkerOptions`, or `WorkCommand`. This driver has **no visibility timeout**: a delivery stays unacked
-until `ack()`, and the broker redelivers only when the channel or connection drops. So `--timeout` below
+until acknowledgement or a broker/client return path. Broker acknowledgement timeout and cancellation
+semantics are versioned in `alaa-async-messaging references/30-consuming-ack-and-prefetch.md`. So `--timeout` below
 `retry_after` protects nothing here and any duplicate-execution reasoning built on it is wrong; the two
 timeout relationships that do decide it are stated once, in `SKILL.md`. Keep `retry_after` set anyway, so a
 later switch of `QUEUE_CONNECTION` to `database` or `redis` is not silently unbounded.
@@ -57,10 +60,13 @@ The derivation behind the delivery-limit constraint in `SKILL.md`. Verified agai
   `markJobAsFailedIfWillExceedMaxAttempts`, which fails the job only when the count already reached
   `--tries`.
 
-Put together: a `basic_reject(requeue: true)` and an unacked redelivery both return the identical frames,
-so `laravel.attempts` is unchanged, `attempts()` returns the same number on every replay, `--tries` never
-trips, and the job never reaches `failed_jobs` or the DLX. Only a broker-side `delivery-limit` counts
-redeliveries, which is why it is the one thing that ends the loop.
+Put together: `basic_reject(requeue: true)` and broker redelivery preserve `laravel.attempts`; repeated
+returns below `--tries` never spend that application bound. For this verified reject path and connection
+loss, quorum delivery limits still count failures in RabbitMQ 4.3. They do not bound every return path:
+use the canonical broker-version matrix in `alaa-async-messaging references/40-dead-letter-and-replay.md`
+for nack and timeout returns, and prove their application bound separately. `release()` republishes with
+a new application attempt count; neither it nor a cancellation handler can be inferred from broker counters.
+Re-check installed source before applying this historical v15.0.0 derivation to another driver/version.
 
 ## Monitor-method behaviour
 

@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "policy_version": "1.0.0",
+  "policy_version": "1.1.0",
   "comparison_rule": "Eight unrun Claude comparisons; one factor per comparison, isolated fresh contexts, independent grading, no external or destructive actions. Static fixtures are not live evidence.",
   "scenarios": [
     {
       "id": "exploration",
       "profile": "alaa-explorer",
       "candidate": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "medium"
       },
       "comparator": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "low"
       },
       "repetitions": 2,
@@ -36,16 +36,16 @@
       "id": "bounded-implementation",
       "profile": "alaa-implementer",
       "candidate": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "high"
       },
       "comparator": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "medium"
       },
       "repetitions": 2,
       "status": "unrun",
-      "prompt": "In a disposable copy, fix unique_nonempty so it removes empty and whitespace-only strings and preserves first-seen order, case and original nonempty values. Implement only this function and focused tests.",
+      "prompt": "In a disposable copy, fix unique_nonempty so it removes empty and whitespace-only strings and preserves first-seen order, case and original nonempty values. Implement only this function and focused tests. Run the focused tests you add and report their results. Stop when these criteria pass; do not add adjacent cleanup.",
       "inputs": {
         "items.py": "def unique_nonempty(items):\n    return list(set(items))\n",
         "test_input.json": "[\"A\", \"\", \"A\", \"  \", \"b\", \" b \", \"b\"]"
@@ -53,12 +53,15 @@
       "acceptance_criteria": [
         "Return [\"A\", \"b\", \" b \"] for the supplied input.",
         "Test empty input and stable order.",
-        "Preserve case and original nonempty values; do not trim returned strings."
+        "Preserve case and original nonempty values; do not trim returned strings.",
+        "Run focused tests and report observed results; missing execution evidence cannot pass."
       ],
       "forbidden_actions": [
         "modify public signature",
         "add dependency",
-        "commit or install"
+        "commit or install",
+        "claim an unrun test passed",
+        "refactor adjacent code after acceptance"
       ]
     },
     {
@@ -184,11 +187,11 @@
       "id": "documentation",
       "profile": "alaa-documenter",
       "candidate": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "medium"
       },
       "comparator": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "low"
       },
       "repetitions": 2,
@@ -212,11 +215,11 @@
       "id": "failed-check",
       "profile": "alaa-verifier",
       "candidate": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "low"
       },
       "comparator": {
-        "model": "claude-sonnet-5",
+        "model": "claude-sonnet-5-5",
         "effort": "medium"
       },
       "repetitions": 2,

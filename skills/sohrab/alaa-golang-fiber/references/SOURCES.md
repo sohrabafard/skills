@@ -16,17 +16,23 @@ its date against how long ago Fiber last released.
 
 ## Verification state
 
-Every Fiber claim currently in this skill was verified on **2026-07-26** against the pages below.
+Existing API claims retain their **2026-07-26** evidence unless individually refreshed. On
+**2026-09-29**, the v3.5.0 release and tagged module source verified the new compatibility guidance;
+this is not consumer-runtime proof or a revalidation of private-kit facts.
 
-Versions observed at that verification:
+Versions observed at the 2026-09-29 refresh (older companion observations remain labeled):
 
 | Module | Version | Published |
 | --- | --- | --- |
-| `github.com/gofiber/fiber/v3` | `v3.3.0` | 2026-05-22 |
-| `github.com/gofiber/utils/v2` (direct dependency of the above) | `v2.0.6` required by Fiber; `v2.4.0` latest | Fiber's pin per its `go.mod` |
-| `github.com/gofiber/contrib/v3/otel` | `v1.2.2` | 2026-07-15 |
+| `github.com/gofiber/fiber/v3` | `v3.5.0` | 2026-08-13 |
+| `github.com/gofiber/utils/v2` (direct dependency of the above) | `v2.4.1` required by Fiber | v3.5.0 tagged `go.mod` |
+| `github.com/gofiber/contrib/v3/otel` | `v1.2.2`, historical observation on 2026-07-26; not refreshed | 2026-07-15 |
 
-Minimum Go version for Fiber v3: `1.25`, and Fiber v3.3.0's own `go` directive is `go 1.25.0`.
+Fiber v3.5.0's tagged `go.mod` declares `go 1.25.0`; inspect the consumer directive before adoption.
+Release evidence: https://github.com/gofiber/fiber/releases/tag/v3.5.0 and
+https://raw.githubusercontent.com/gofiber/fiber/v3.5.0/go.mod (checked 2026-09-29).
+Proxy security and the docs/tag disagreement are owned by `20-routing-middleware-errors.md`;
+binding precedence by `30-validation-testing.md`; `SkipUnmatchedRoutes` by `10-fiber-v3-core.md`.
 
 ## Which page answers which question
 
@@ -73,13 +79,13 @@ When two sources disagree, the earlier entry wins:
 
 1. Official Fiber documentation for the released major, and the tagged source it documents.
 2. Official Go documentation.
-3. Platform contracts: `/alaa-services-contract` (`$alaa-services-contract`) for names and values,
-   `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) for trust semantics, and
-   `/alaa-go-chi-development` (`$alaa-go-chi-development`) for anything kit-governed.
-4. `/alaa-golang` (`$alaa-golang`) for Go depth and framework choice.
+3. Platform contracts: `/alaa-services-contract` for names and values,
+   `/alaa-trust-gateway-auth` for trust semantics, and
+   `/alaa-go-chi-development` for anything kit-governed.
+4. `/alaa-golang` for Go depth and framework choice.
 5. Vendored public Go skills.
 6. Community examples, for reproducing a concrete symptom only - never as the basis for a rule.
 
 A platform contract never loses to a framework default. Where Fiber's default and a value owned by
-`/alaa-services-contract` (`$alaa-services-contract`) disagree, the contract value is set explicitly
+`/alaa-services-contract` disagree, the contract value is set explicitly
 in `fiber.Config` and the disagreement is noted in the service's `docs/DECISIONS.md`.

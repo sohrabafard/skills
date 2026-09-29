@@ -225,7 +225,7 @@
         "chromium-desktop-stable",
         "safari-macos"
       ],
-      "note": "Chromium 122+ only; never a requirement"
+      "note": "Optional enhancement; dated support and fallback contract in references/25-storage-buckets-api.md"
     },
     {
       "feature": "service worker present",

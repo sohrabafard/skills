@@ -1,0 +1,42 @@
+{
+  "snapshot": "candidate-8",
+  "runtime_code_reconciliation": {
+    "baseline": "candidate-4",
+    "non_markdown_inputs": 44,
+    "changed": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json"
+    ],
+    "meaning": "Only IndexedDB root file inventory changed; runtime/test sources retain exact candidate4 hashes. Prior independent executable proof remains identified."
+  },
+  "paired_owner_reconciliation": {
+    "baseline": "candidate-6",
+    "paths": 40,
+    "mismatches": []
+  },
+  "commands": [
+    {
+      "name": "idb-pack",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py",
+        "--root",
+        "skills/sohrab/alaa-indexeddb-browser-storage"
+      ],
+      "exit": 0,
+      "output": "OK: structure, description, triggers, storage boundaries, classification and manifest all validate\r\n"
+    },
+    {
+      "name": "idb-references",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py",
+        "--root",
+        "skills/sohrab/alaa-indexeddb-browser-storage"
+      ],
+      "exit": 0,
+      "output": "OK: 21 reference file(s) routed, every router path resolves\r\n"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# Raw evidence pointer
+
+Exact original bytes are preserved in specialized-evidence.raw.txt.gz.
+Uncompressed SHA256: 4baaa6220f6c52e5dc1770857ce9c3d1f4d20be6cbe778c010c60033305ced42
+Uncompressed bytes: 39835

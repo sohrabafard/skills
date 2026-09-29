@@ -1,10 +1,10 @@
-5b88143bcad9a797a1646c9f034564b22e1423f7a3c1490b9b2c42596bb60609  ./SKILL.md
+d9ca04670f11f4cf89243b5b19c230abe44fdd7cccb7fa8acc15c54994f82f7f  ./SKILL.md
 94b417821c5c72b1cced7f9b8f4ac6539e493571cee3ec29a119887dfe5fa6f4  ./agents/openai.yaml
 e5018707af0b31101bfdff29f6d8c3be383a091719b9f9a2695a8abf586c6ee4  ./references/checkers-and-hooks.md
 ea5f03f5c06cfd467b853e5b0569724e6a1656096349ecb987df9c5d561df15f  ./references/drift-management.md
 c2fe1a6fdb5a85aa84a5ea2cd18441a3801b92f72a6f9c7408a2173df0b8cfa9  ./references/knowledge-shape.md
 1cec74457956a76396c88286c94ca9d9ec793d520429efa2bbc2e5f7f5071a01  ./references/prompt-3-publishing.md
-ef0718a50802bde906bdd2db8133308c56e540a73936d37138e64b51183462e6  ./references/skill-boundaries.md
+8e0f7fb8490f567fec0015f111b77098b978de7f8b4bb2460ad59999c8f409fc  ./references/skill-boundaries.md
 f422cd9f0001245cd05165d1db53be3c2ac22de3d26d9c1880b96a47d4a5fcbc  ./references/store-basic-memory.md
 717f364c481c560ec8a10162e731716d11185843f633f08993c06810f389a21d  ./references/store-hindsight.md
 004a08fb7541bda1deb49190940f494d175d544fb70f0e88059865cc847fa8d1  ./scripts/_common.ps1

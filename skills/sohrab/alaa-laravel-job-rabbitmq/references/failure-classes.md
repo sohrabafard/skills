@@ -4,11 +4,10 @@ Read this when a queue misbehaves, or when writing the runbook entry or alert fo
 5, 6 and 8 share symptoms — the diagnosis is what separates them, so never act on a symptom alone.
 
 Per class: **symptom** observed, **diagnosis** that separates it from neighbours, **smallest retry** that
-fixes it or disproves the diagnosis, **escalation**. Severity and paging: `/alaa-observability-soc`
-(`$alaa-observability-soc`). Degradation doctrine: `/alaa-reliability-sla` (`$alaa-reliability-sla`)
+fixes it or disproves the diagnosis, **escalation**. Severity and paging: `/alaa-observability-soc`. Degradation doctrine: `/alaa-reliability-sla`
 `alaa-reliability-sla references/50-degradation.md`. Every threshold and timeout value:
 `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. Broker and cluster
-operations: `/caas-arvan-kuber` (`$caas-arvan-kuber`).
+operations: `/caas-arvan-kuber`.
 
 ## 1. Broker unreachable at publish time
 
@@ -37,7 +36,7 @@ operations: `/caas-arvan-kuber` (`$caas-arvan-kuber`).
 - **Smallest retry.** Confirm `options.heartbeat` is non-zero. The underlying library default is `0`, and a
   zero heartbeat is the usual cause of a half-open connection that only surfaces minutes later.
 - **Escalation.** Heartbeats on and connections still drop: an idle-connection reaper between pod and
-  broker — `/alaa-k8s-helm` (`$alaa-k8s-helm`) and broker operations.
+  broker — `/alaa-k8s-helm` and broker operations.
 
 ## 3. Poison message
 
@@ -55,7 +54,9 @@ operations: `/caas-arvan-kuber` (`$caas-arvan-kuber`).
 
 - **Symptom.** Unacked collapses to zero and ready jumps by roughly the prefetch window, repeatedly;
   handler duration and error rate normal between bursts.
-- **Diagnosis.** A whole channel's unacked deliveries were requeued. Separate by close reason:
+- **Diagnosis.** Identify whether one consumer was cancelled or the whole channel closed; the version and
+  capability matrix is `alaa-async-messaging references/30-consuming-ack-and-prefetch.md`. Inspect active
+  subscriptions even if the channel stays open. For channel closure, separate by reason:
   `PRECONDITION_FAILED ... delivery acknowledgement ... timed out` is the broker's `consumer_timeout`
   against a slow handler; `CONNECTION_FORCED` is an operator action or node maintenance; no close reason
   plus a coincident pod restart is class 5. Prefetch count times p99 handler duration near
@@ -76,7 +77,7 @@ operations: `/caas-arvan-kuber` (`$caas-arvan-kuber`).
   rollout. Rollout mechanics: `/alaa-k8s-helm`; worker profile:
   `assets/helm/values.worker.rabbitmq.yaml.example`.
 - **Escalation.** A fatal error means no ack and no reject, so the attempt count did not advance — you are
-  also in class 8. Worker memory growth: `/alaa-octane-performance` (`$alaa-octane-performance`).
+  also in class 8. Worker memory growth: `/alaa-octane-performance`.
 
 ## 6. Duplicate execution
 
@@ -92,7 +93,7 @@ operations: `/caas-arvan-kuber` (`$caas-arvan-kuber`).
 - **Smallest retry.** None; retrying resolves nothing. Add the missing uniqueness at the storage layer on
   the business key — that fixes 1, 2 and 4 together — then re-run the required test in `SKILL.md`.
 - **Escalation.** Idempotency contract: `alaa-reliability-sla references/60-idempotency.md`.
-  Unique-constraint and upsert mechanics: `/alaa-data-layer` (`$alaa-data-layer`).
+  Unique-constraint and upsert mechanics: `/alaa-data-layer`.
 
 ## 7. Consumer stalled with queue depth rising
 
@@ -117,9 +118,11 @@ The class this skill exists to prevent; the rule and mechanism are `SKILL.md` co
   count is written only by `release()`, so unchanged proves requeue or redelivery rather than release, and
   neither `--tries` nor `markJobAsFailedIfWillExceedMaxAttempts` can end such a loop. Then check for a
   delivery cap: `rabbitmqctl list_queues name arguments effective_policy_definition`.
-- **Smallest retry.** Apply the delivery-limit policy. It takes effect on the next redelivery, needs no
-  deploy, and the loop stopping confirms the diagnosis.
-- **Escalation.** A classic queue cannot count deliveries at all; converting it is a topology change, so
+- **Smallest retry.** Verify broker version, queue type and actual AMQP return method against
+  `alaa-async-messaging references/40-dead-letter-and-replay.md`. For counted failures, correct the
+  delivery-limit/DLX policy through authorized operations and observe terminal disposition. For
+  non-counting returns, fix the bounded application path; lowering the policy limit cannot spend it.
+- **Escalation.** A classic queue has no quorum delivery-limit bound; converting it is a topology change, so
   names come from `alaa-services-contract references/23-queue-and-exchange-registry.md`. Immediate
   containment: stop the consumer, `basic_get` the message to a file for evidence, reject it without requeue
   so the DLX takes it. `rabbitmq:queue-purge` destroys data and is not the answer.
@@ -142,4 +145,4 @@ On Git Bash / MSYS a slash-valued variable in a generated wrapper is rewritten t
 `RABBITMQ_VHOST=/` becomes something like `C:/Program Files/Git/` and the connection fails with
 `NOT_ALLOWED - vhost ... not found`. Local-only; absent in CI and Linux containers. Confirm by echoing the
 variable **inside the generated wrapper**, not your own shell. The fix belongs to the wrapper generator:
-`/service-runtime-kit-governance` (`$service-runtime-kit-governance`).
+`/service-runtime-kit-governance`.

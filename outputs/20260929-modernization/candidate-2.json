@@ -1,0 +1,17 @@
+{
+  "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "branch": "codex/sohrab-sonnet55-modernization",
+  "files": 140,
+  "skills": 25,
+  "manifest_sha256": "f7605421917a1985af8c2729a2e493170b9fb12fd0be91c719af148a32e03480",
+  "excluded": "skills/sohrab/alaa-workflow/outputs/20260929-modernization",
+  "selection": "git diff HEAD plus untracked source; sorted raw-byte SHA256 double-space path LF lines",
+  "previous_snapshot": "candidate-1",
+  "changed_from_previous": [
+    "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+    "skills/sohrab/ansible-validator/scripts/scan_secrets.sh",
+    "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh"
+  ],
+  "publication": "uncommitted; existing staging preserved",
+  "independent_gates": "fix1 focused recheck pending; unchanged passing first-candidate evidence may be cited after input reconciliation"
+}

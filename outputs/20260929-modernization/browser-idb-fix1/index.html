@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>IndexedDB example regression harness</title>
+<h1>IndexedDB example regressions</h1><p>Uses isolated test databases on this origin. No network or application data.</p>
+<pre id="result">RUNNING</pre><script type="module">
+import { runStorageCases } from './cases.mjs';
+const output = document.querySelector('#result');
+const results = await runStorageCases();
+output.textContent = JSON.stringify(results, null, 2);
+document.title = results.every(row => row.status === 'PASS') ? 'PASS IndexedDB' : 'FAIL IndexedDB';
+</script></html>

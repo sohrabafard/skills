@@ -1,0 +1,253 @@
+{
+  "lane": "operations",
+  "state": "prepared, not dispatched",
+  "candidate": "candidate-4",
+  "ownership": "Only Markdown/template documentation in these skill directories and own named output reports; executable/config files excluded",
+  "skills": [
+    "alaa-docker-production",
+    "alaa-gitlab-ci-cd",
+    "alaa-haproxy",
+    "alaa-signoz-clickhouse-docs",
+    "ansible-validator",
+    "caas-arvan-kuber"
+  ],
+  "documents": [
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+      "sha256": "8f1d8dfb4d192ed70a37e1cc49cbe849e3a8bbe43467c0afef3216867b136bd6",
+      "physical_lines": 105,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "sha256": "cd1c10fa2a8f49e356bc94d848cbd192a93da9b4260712dfc67627cad3871c59",
+      "physical_lines": 223,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "sha256": "4b0bea92a5e1740cbd5a3cc02e4f27608ea8df90d490e270cc982ae0b9d53043",
+      "physical_lines": 176,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "sha256": "c25d877c00c595aada066aa2a946a451ee75bb803552c3028d05c3a2f5387c6b",
+      "physical_lines": 261,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+      "sha256": "4043572a6cb4ae43a806ffcf14f5822cbbf9937850866e4f2fecf36d3c68e329",
+      "physical_lines": 88,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/00-source-map.md",
+      "sha256": "99d0527a6bff8c2e14e7952dbe1ccd15b7fec7e51e31237e3da4c6a23ac5d552",
+      "physical_lines": 114,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+      "sha256": "2126e16bed3536bedf3713bc91d6f0334ad4c9cf9e0e7db8456ba1eb5f9b3038",
+      "physical_lines": 107,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "sha256": "f366bbb5911df70895cc743f15d76abd0128570b2fd251ea259930ca9bf4b4a8",
+      "physical_lines": 216,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "sha256": "7b872df3701fc146beda63011db5df839853fdabfa6c0ef24f83cc693dc77194",
+      "physical_lines": 232,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "sha256": "ec02eae5dae1a4b29c8d71c52a71fe633f99d06e190bbed8176b5493ae75848b",
+      "physical_lines": 241,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "sha256": "d1994d92b64a619ffee4ba30d793f6546fe9654477a0cb4e2cd2c9aeed128f73",
+      "physical_lines": 212,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/10-version-and-branch.md",
+      "sha256": "0fa2cb9d168c96412edc91c6575539b1dcccb1b41bf7292d9062c279aa7a1afe",
+      "physical_lines": 131,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "sha256": "d0e8adb159968b4bd017edb0a7c40678d8c71b8d630c401386ce75544b430fb5",
+      "physical_lines": 214,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+      "sha256": "76d0dfc7780d6c11662e7675b2c87e1b17207d9fbda139ea2738c453cf22d744",
+      "physical_lines": 125,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "sha256": "90025d7524ad3d1d1c032688133b4c2a8fd99e70f05172c8aa92f8db8bd4d7c0",
+      "physical_lines": 83,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+      "sha256": "7d677f2a66f0295dde35afdd6009a24a279c069d00c6ce02cc0884c3bb1d9bfd",
+      "physical_lines": 52,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/SOURCES.md",
+      "sha256": "84dfd56d826cb38faedf44e70557019622fb9233df332fb87736e46e393aadf5",
+      "physical_lines": 96,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+      "sha256": "6dbd28ebaedbf115e793a869e6a0787977c57ebf8e238e8a5c24f485953b7eb2",
+      "physical_lines": 128,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/SKILL.md",
+      "sha256": "98d4b764389239a8922681e1de427861ed2be76357aa7df60e484e8dd23ea03c",
+      "physical_lines": 100,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices.md",
+      "sha256": "e64c18c55a58adfb0aa08b11d3fd86d6e82cf1db400a302a298274d040ac5b03",
+      "physical_lines": 348,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule.md",
+      "sha256": "e409965db0fbbeb9db635e03212c932d3001f3965167c08b238cde076abeca8e",
+      "physical_lines": 186,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist.md",
+      "sha256": "0b7c8e3b2ae07bb061c305c078e10d139434d28101d29f179280b6cc76f5d7af",
+      "physical_lines": 393,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/source-map.md",
+      "sha256": "4e6933755908071de04ee225d4ddee0d32e02a365949de87eb7926acd8f86c87",
+      "physical_lines": 147,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/README.md",
+      "sha256": "3b837aa03e2bbab278aecbcf1b5ee03d9554b65ab9b7b08e4a544a6101688ed7",
+      "physical_lines": 154,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "sha256": "8f1ad6cd0f575259b1af197c7a1e53a166a78e54089fae99b4e720f5c2ea5682",
+      "physical_lines": 99,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "sha256": "0968c113dc63c6b2018da9d18e1b9f25511b95a99a021205c1ce230b463492d6",
+      "physical_lines": 172,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "sha256": "7e8743af15d8ad1eaffb5274f0ecdd5bb9277df0552c3348beef7f3ae28c2e9e",
+      "physical_lines": 191,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/SOURCES.md",
+      "sha256": "0bf3382a4b6220aba88d2a51b79f609ed17c6713d788c9c05ea27b9a4fe0da95",
+      "physical_lines": 90,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-capability-matrix.md",
+      "sha256": "e04340069c42b1c9b47fb2449a91597fbec084e15162bfa197d144d90caf9fa0",
+      "physical_lines": 92,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "sha256": "d932f072646824e92b960db5ba0fc269aabf7dd4f94a20786dba8cd954b7d62d",
+      "physical_lines": 149,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-execution-loop.md",
+      "sha256": "4dc49d684fa6d351f56d0436bb456c56b75c2c0812dcf4d654968edaadfcd867",
+      "physical_lines": 68,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-rbac-namespace-facts.md",
+      "sha256": "bd8a8d044d66f897cf753026aa9e40a2345f393878b74ea7032ca6bb27320698",
+      "physical_lines": 66,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "sha256": "b1a08ff7c5aa33a903fac7eade253e1c224fc73f77db22264eecc3d89330489b",
+      "physical_lines": 113,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    }
+  ],
+  "output_reports": [
+    "documentation-operations-grades.json",
+    "documentation-operations-evidence.json"
+  ],
+  "excluded": "Other lane skill directories; parent workflow artifacts, source code, machine-readable policy/config/manifests",
+  "requirements_owner": "documentation-brief.json"
+}

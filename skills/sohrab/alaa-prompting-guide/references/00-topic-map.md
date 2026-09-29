@@ -15,7 +15,8 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
 | Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
 | Compare historical Opus 5 behavior explicitly | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
-| Tune a prompt for Claude Sonnet 5 | `references/30-sonnet-5.md` | It follows instructions more literally than the flagship, which changes how a constraint must be scoped |
+| Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
+| Compare historical Sonnet 5 behavior explicitly | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
 | Tune current Fable prompting or assess an explicit comparison | `references/42-fable-5-1.md` | Its verification and API guidance differ from older Fable |
 | Compare historical Fable 5 behavior explicitly | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
 | Assess Haiku for a bounded comparison | `references/35-haiku-4-5.md` | It lacks effort support and uses a different thinking control |

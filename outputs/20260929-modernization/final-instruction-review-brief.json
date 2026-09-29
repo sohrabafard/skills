@@ -1,0 +1,34 @@
+{
+  "state": "Await final repair2 source freeze; previous candidate6 review remains authoritative for unchanged scope",
+  "owner": "Independent instruction reviewer; read-only",
+  "known_open_documentation_finding": "Only R1,R2,R3 in review-instructions-docs-candidate6.json remain. D1-D4/D6 closed; size classifications accepted subject to those routes. Repair2 permits11 semantic files and EOF-only cleanup, no decomposition/newpaths.",
+  "inputs": [
+    "candidate.json",
+    "candidate.sha256",
+    "documentation-before-candidate4.json",
+    "documentation-before-candidate4.zip",
+    "documentation-foundation-evidence.json",
+    "documentation-operations-evidence.json",
+    "documentation-grades.json",
+    "review-instructions-fix1.json",
+    "review-instructions-docs-candidate6.json",
+    "documentation-foundation-repair2.json",
+    "documentation-operations-repair2.json"
+  ],
+  "acceptance": [
+    "Every moved condition, source/date, code payload, safety boundary, exception, stop and authority remains reachable under an equivalent trigger",
+    "Compare prose as well as headings and code fences against exact before bytes. Writer anchor/fence checks alone do not establish that all prose survived. Foundation self-repaired mapping, empty-child and anchor defects; independently inspect those routes",
+    "Do not equate preserved words with preserved loading scope; parent routing must lead to required children before their decisions",
+    "One canonical owner and one router per skill; mirrored orchestrator behavior preserved",
+    "Inbound anchors and cross-skill paths remain valid; independently check Fiber section-to-router mapping",
+    "IndexedDB prose distinguishes registering transaction completion/abort handlers from awaiting commit and attaching per-request error handlers; source code remains unchanged",
+    "Individually judge atomic exemptions and yellow/orange semantic reasons; no blanket exemption, no eligible RED or implicit approval. Foundation writer used allow-red for three claimed atomic files; that command is not user approval. Final verifier must check all links and separately grade eligible files without allow-red",
+    "Changed instructions retain explicit uncertainty and consumer-only adoption gates; no new runtime/calibration/deployment claims"
+  ],
+  "limits": [
+    "Review only documentation delta against exact candidate4 baseline plus previously untouched routers against HEAD; prior executable reviews remain valid",
+    "No edits, installs, broad test reruns or live calls"
+  ],
+  "return": "Verdict, exact snapshot and scope, actionable findings only, movement/grade evidence and explicit limits",
+  "final_scope": "Verify candidate7 delta against candidate6, closure R1-R3, unchanged payloads for EOF-only files, final individual grades. Cite previous full fidelity review rather than repeat unchanged review. Final allowed documentation repair cycle."
+}

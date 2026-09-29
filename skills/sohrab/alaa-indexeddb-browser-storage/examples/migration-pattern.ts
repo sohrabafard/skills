@@ -2,8 +2,8 @@
  * Versioned schema with explicit oldVersion branches and a migration journal.
  * references/40-schema-and-migrations.md
  *
- * Every name below is a value owned by /alaa-services-contract ($alaa-services-contract).
- * They are constants here so a real application injects its registered values.
+ * Names below are demonstration-local. Register consumer names with
+ * /alaa-services-contract before integration; references/95 owns that prerequisite.
  */
 import { openIndexedDb } from './idb-core';
 
@@ -15,7 +15,7 @@ export interface StorageSchemaConfig {
 /** Defaults only. A real application reads these from its registered configuration. */
 export const DEFAULT_SCHEMA_CONFIG: StorageSchemaConfig = {
   dbName: 'alaa-client-storage',
-  dbVersion: 3,
+  dbVersion: 4,
 };
 
 /** Every user-scoped store, for the logout purge. references/62. */
@@ -34,6 +34,9 @@ export interface OpenStorageOptions {
 
 export async function openAlaaClientStorage(options: OpenStorageOptions = {}): Promise<IDBDatabase> {
   const config = options.config ?? DEFAULT_SCHEMA_CONFIG;
+  if (!Number.isSafeInteger(config.dbVersion) || config.dbVersion < 4) {
+    throw new RangeError('This schema requires an integer database version >= 4');
+  }
 
   return openIndexedDb({
     name: config.dbName,
@@ -72,6 +75,11 @@ export async function openAlaaClientStorage(options: OpenStorageOptions = {}): P
 
         const upload = db.createObjectStore('upload_resume_state', { keyPath: 'id' });
         upload.createIndex('byAccountUpdatedAt', ['accountKey', 'updatedAt']);
+      }
+
+      if (oldVersion < 4) {
+        // Compound one-field key matches accountRange(), including orphan metadata.
+        tx.objectStore('storage_items').createIndex('byAccount', ['accountKey']);
       }
 
       // Written once, outside every branch. Inside the newest branch it goes stale

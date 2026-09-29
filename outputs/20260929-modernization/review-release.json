@@ -1,0 +1,31 @@
+{
+  "recorded_by": "parent from independent release_review final",
+  "verdict": "READY-WITH-CONDITIONS for source candidate",
+  "configured": "gpt-6-sol/medium",
+  "requested": "none",
+  "observed": "unknown",
+  "candidate": "candidate-2",
+  "findings": [
+    {
+      "id": "REL-1",
+      "severity": "moderate",
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "line": 12,
+      "trigger": "Operator chooses target Kubernetes matrix column",
+      "impact": "Runbook assumes definitive line derivation while script only observes API capabilities and may leave server version unknown",
+      "remedy": "Record target API capabilities separately from server-reported version/unknown; operator confirms matrix-column applicability"
+    }
+  ],
+  "consumer_prerequisites": [
+    "ClaudeCode>=2.1.284 and exact provider model availability",
+    "Project-context CI Lint for affected consumer pipelines",
+    "Separate installation authority and activation proof"
+  ],
+  "rollback": "Keep model policy/comparison corpus/12 wrapper pins coherent; do not restore unsafe legacy behavior",
+  "limits": [
+    "No build/install/consumerCI/clustercheck run",
+    "Installed activation/liveidentity/calibration/consumercompatibility/providercluster unproved",
+    "Known security/correctness findings remain pending; actual release not requested",
+    "GitLab unresolvedvariablepath note is bounded by required consumer-context CI Lint"
+  ]
+}

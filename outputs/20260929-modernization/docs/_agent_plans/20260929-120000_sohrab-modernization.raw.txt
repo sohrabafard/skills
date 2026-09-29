@@ -1,0 +1,5 @@
+# Raw evidence pointer
+
+Exact original bytes are preserved in 20260929-120000_sohrab-modernization.raw.txt.gz.
+Uncompressed SHA256: 945cc7858496fe7ae83fd0a3d79a4b39049e4aed9472b9c6c50dd2ee11e94191
+Uncompressed bytes: 15108

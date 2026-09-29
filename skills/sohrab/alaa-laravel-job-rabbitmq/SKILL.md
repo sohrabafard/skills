@@ -1,6 +1,6 @@
 ---
 name: alaa-laravel-job-rabbitmq
-description: "Laravel queued jobs on RabbitMQ through vladimir-yuldashev/laravel-queue-rabbitmq: the queue:work versus rabbitmq:consume decision, config/queue.php driver keys, ack and nack policy, delivery limits and the crash-loop hazard, prefetch sizing, publisher confirms, worker recycling and graceful stop, and eight named failure classes. Use it when writing or reviewing a ShouldQueue job that runs on RabbitMQ, a rabbitmq connection block, a worker command or worker Deployment, or a live queue incident on this driver. Do not use it to choose between Kafka and RabbitMQ, to design event topologies or fan-out, or for Redis queues and Horizon: that is /alaa-async-messaging ($alaa-async-messaging). Queue and vhost names are /alaa-services-contract; retry, backoff, DLQ and idempotency doctrine is /alaa-reliability-sla; broker cluster administration is /caas-arvan-kuber; chart and rollout mechanics are /alaa-k8s-helm."
+description: "Laravel queued jobs on RabbitMQ through vladimir-yuldashev/laravel-queue-rabbitmq: the queue:work versus rabbitmq:consume decision, config/queue.php driver keys, ack and nack policy, delivery limits and the crash-loop hazard, prefetch sizing, publisher confirms, worker recycling and graceful stop, and eight named failure classes. Use it when writing or reviewing a ShouldQueue job that runs on RabbitMQ, a rabbitmq connection block, a worker command or worker Deployment, or a live queue incident on this driver. Do not use it to choose between Kafka and RabbitMQ, to design event topologies or fan-out, or for Redis queues and Horizon: that is /alaa-async-messaging. Queue and vhost names are /alaa-services-contract; retry, backoff, DLQ and idempotency doctrine is /alaa-reliability-sla; broker cluster administration is /caas-arvan-kuber; chart and rollout mechanics are /alaa-k8s-helm."
 ---
 
 # Purpose
@@ -12,7 +12,7 @@ message, no side effect applied twice, and a bounded outcome when the broker or 
 command line or Deployment, or a live queue incident on this driver.
 
 **Not for** the transport decision, event topology, fan-out or event versioning — that is
-`/alaa-async-messaging` (`$alaa-async-messaging`). **On conflict: broker-specific mechanics of this Laravel
+`/alaa-async-messaging`. **On conflict: broker-specific mechanics of this Laravel
 driver are decided here; messaging architecture and the fleet-wide DLQ replay procedure are decided there.**
 
 Before acting on a task naming a version, `queue:monitor`, a monitor method, a worker mode, DLX/DLQ, quorum
@@ -52,30 +52,32 @@ a second queue means a second Deployment.
 
 **1. Delivery is at-least-once; every handler is idempotent.** The guarantee lives in a database uniqueness
 constraint on the business key; a Redis or cache dedupe key is a fast path in front of it, never a
-replacement. Key contract, scope, retention, two-in-flight: `/alaa-reliability-sla`
-(`$alaa-reliability-sla`) `alaa-reliability-sla references/60-idempotency.md`.
+replacement. Key contract, scope, retention, two-in-flight: `/alaa-reliability-sla` `alaa-reliability-sla references/60-idempotency.md`.
 
 **2. Ack and nack policy.** Three outcomes, one route each. **Ack**: the handler completed and Laravel
 deleted the job, or Laravel released it — never call `ack()` from application code. **Reject without
-requeue**: Laravel marked the job failed, and this is the only path that reaches a dead-letter exchange; take
+requeue**: Laravel marked the job failed; this driver path reaches a dead-letter exchange. Take
 it deliberately for a non-retryable business error with `$this->fail($e)` rather than throwing and burning
 every attempt. **Reject with requeue**: permitted in exactly one place, the driver's own `close()` on worker
 stop — application code, job middleware and handlers must not call `reject($job, true)`. To retry, call
 `$job->release($delay)`: release increments the attempt count, requeue does not.
 
-**3. Every queue carries a broker-policy delivery limit; every worker passes an explicit `--tries`.** The
+**3. Every quorum queue carries a broker-policy delivery limit; every worker passes an explicit `--tries`.** The
 limit is a quorum-queue policy, never a queue argument — the driver emits no `x-delivery-limit` and silently
 drops an invented one. It is required because a requeue or unacked redelivery returns the identical message
-with its attempt header unchanged, so `--tries` never trips and a job that dies before Laravel can release it
-replays forever; add a `--max-jobs` or `--max-time` recycle and that is a crash loop on one message.
-Derivation: `references/driver-facts.md`. Diagnosis: `references/failure-classes.md` class 8. Values:
+with its attempt header unchanged. Repeated returns below `--tries` never spend that bound; a job dying
+before release can loop indefinitely, including across `--max-jobs` or `--max-time` recycling.
+Delivery limits bound only counted failures: verify the actual return path under
+`alaa-async-messaging references/40-dead-letter-and-replay.md`; non-counting returns and classic queues need
+a separately proven application bound. Derivation: `references/driver-facts.md`. Diagnosis: `references/failure-classes.md` class 8. Values:
 `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`. Doctrine:
 `alaa-reliability-sla references/20-retries.md`.
 
 **4. Two timeout relationships bound duplicate execution.** `retry_after` is not one of them; it is inert on
 this connection (`references/driver-facts.md`). Worker `--timeout` times the depth of the unacked window
-stays below the broker's `consumer_timeout` — past it the broker closes the channel and requeues **every**
-delivery in the window, not only the slow one. Pod `terminationGracePeriodSeconds` exceeds worker
+stays below the applicable broker acknowledgement timeout. Timeout scope and cancellation versus channel
+closure depend on broker version, queue type and negotiated capability; verify recovery through
+`alaa-async-messaging references/30-consuming-ack-and-prefetch.md`. An open channel alone is not health. Pod `terminationGracePeriodSeconds` exceeds worker
 `--timeout` plus the shutdown margin — below that, every rollout SIGKILLs a worker mid-job and replays the
 delivery with its attempt count unchanged. Both values and the margin: the contract file above.
 
@@ -103,8 +105,8 @@ publish call — are in `references/driver-facts.md`.
 **8. The seam carries the trace.** The trace field travels as a constructor property inside the serialised
 job payload, set at dispatch and read at the top of `handle()`, because this driver exposes no AMQP header
 injection point; the `correlation_id` it already sets is the broker-side join key for the same message. Field
-name: `/alaa-services-contract` (`$alaa-services-contract`). Whether carrying it is required:
-`/alaa-observability-soc` (`$alaa-observability-soc`). Signals this seam uniquely produces, to be registered
+name: `/alaa-services-contract`. Whether carrying it is required:
+`/alaa-observability-soc`. Signals this seam uniquely produces, to be registered
 rather than invented — queue depth, consumer count, unacked count, oldest-unacked age, redelivery rate,
 worker restart rate — are named in `alaa-services-contract references/24-metric-registry.md` and levelled by
 `/alaa-observability-soc`.
@@ -129,9 +131,8 @@ commit; every value comes from a Secret or a secret file.
 
 **13. Redis touches inside jobs.** RabbitMQ is the transport; Redis never carries these jobs. Job middleware
 backed by Redis (`RateLimited`, `WithoutOverlapping`, `Redis::throttle` funnels) has a defined outage
-behaviour recorded in the change — the fail-closed discriminator is `/alaa-security-review`
-(`$alaa-security-review`), and keys, TTL and the Redis-down fallback contract are
-`alaa-data-layer references/50-redis-laravel-octane.md` (`$alaa-data-layer`). No cache or Redis read in a
+behaviour recorded in the change — the fail-closed discriminator is `/alaa-security-review`, and keys, TTL and the Redis-down fallback contract are
+`alaa-data-layer references/50-redis-laravel-octane.md` via `/alaa-data-layer`. No cache or Redis read in a
 provider `register()` or `boot()`, or a Redis outage stops workers from starting.
 
 **14. Uniformity over local preference in job policy.** Use whichever form the repository already uses for
@@ -152,7 +153,7 @@ thrown" is not the assertion, because the duplicate path throws nothing. Assert 
 acked rather than released, so the test fails if someone "fixes" duplication by requeueing.
 
 What makes this a test rather than a replay of the happy path, which layer it belongs at, and whether the
-broker is real or faked: `/alaa-testing-strategy` (`$alaa-testing-strategy`)
+broker is real or faked: `/alaa-testing-strategy`
 `alaa-testing-strategy references/70-failure-mode-first.md` and
 `alaa-testing-strategy references/30-doubles.md`. Pest and PHPUnit syntax comes from the
 repository-local `pest-testing` skill, which this repository does **not** own and which can change between
@@ -177,36 +178,27 @@ elsewhere, and the named owner wins on conflict.
 
 - **The ten-point quality bar itself** — `alaa-project-constitution references/quality-bar.md`.
 - **Failure behaviour doctrine** (retries, backoff, deadlines, breakers, degradation, the idempotency
-  contract, error budgets) — `/alaa-reliability-sla` (`$alaa-reliability-sla`). **Every number** it implies —
+  contract, error budgets) — `/alaa-reliability-sla`. **Every number** it implies —
   timeout, retry count, prefetch value, delivery limit, threshold, margin —
   `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
 - **Names**: queue, exchange and vhost names and event-versus-command topology in
   `alaa-services-contract references/23-queue-and-exchange-registry.md`; log, event and metric names in
-  `alaa-services-contract references/24-metric-registry.md` — `/alaa-services-contract`
-  (`$alaa-services-contract`).
-- **Observability requirement levels, gates and alerts** — `/alaa-observability-soc`
-  (`$alaa-observability-soc`).
+  `alaa-services-contract references/24-metric-registry.md` — `/alaa-services-contract`.
+- **Observability requirement levels, gates and alerts** — `/alaa-observability-soc`.
 - **Messaging architecture**: transport choice, event design, fan-out, DLQ replay procedure, prefetch tuning
-  — `/alaa-async-messaging` (`$alaa-async-messaging`). Retry and DLQ **strategy** is `/alaa-reliability-sla`,
+  — `/alaa-async-messaging`. Retry and DLQ **strategy** is `/alaa-reliability-sla`,
   not this skill and not `/alaa-async-messaging`; earlier versions of this file mis-routed it.
-- **Deployment**: chart keys, probes, rollout strategy and autoscaler shapes — `/alaa-k8s-helm`
-  (`$alaa-k8s-helm`); runtime image contents including `ext-pcntl` — `/alaa-docker-production`
-  (`$alaa-docker-production`); broker cluster, vhost and permission administration and Arvan defaults —
-  `/caas-arvan-kuber` (`$caas-arvan-kuber`).
+- **Deployment**: chart keys, probes, rollout strategy and autoscaler shapes — `/alaa-k8s-helm`; runtime image contents including `ext-pcntl` — `/alaa-docker-production`; broker cluster, vhost and permission administration and Arvan defaults —
+  `/caas-arvan-kuber`.
 - **Correctness and testability**: what makes a test a test, layers, doubles, proof strength, flake —
-  `/alaa-testing-strategy` (`$alaa-testing-strategy`).
-- **Security**: fail-closed versus fail-open, threat classes, untrusted input — `/alaa-security-review`
-  (`$alaa-security-review`); trusted headers and tenant derivation — `/alaa-trust-gateway-auth`
-  (`$alaa-trust-gateway-auth`).
-- **Clean code, SOLID and design-pattern selection** — `alaa-php-clean-code references/design-patterns.md`
-  (`$alaa-php-clean-code`).
+  `/alaa-testing-strategy`.
+- **Security**: fail-closed versus fail-open, threat classes, untrusted input — `/alaa-security-review`; trusted headers and tenant derivation — `/alaa-trust-gateway-auth`.
+- **Clean code, SOLID and design-pattern selection** — `alaa-php-clean-code references/design-patterns.md` via `/alaa-php-clean-code`.
 - **Complexity budgets, structure choice and the N+1 family inside handlers** —
-  `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`).
-- **Long-lived worker hygiene, cross-request state and memory drift** — `/alaa-octane-performance`
-  (`$alaa-octane-performance`). **Pre-implementation design pass** — `/alaa-system-design`
-  (`$alaa-system-design`). **Generated wrappers and MSYS path conversion** —
-  `/service-runtime-kit-governance` (`$service-runtime-kit-governance`). **Plan files and phasing** —
-  `/alaa-workflow` (`$alaa-workflow`).
+  `/alaa-algorithms-data-structures`.
+- **Long-lived worker hygiene, cross-request state and memory drift** — `/alaa-octane-performance`. **Pre-implementation design pass** — `/alaa-system-design`. **Generated wrappers and MSYS path conversion** —
+  `/service-runtime-kit-governance`. **Plan files and phasing** —
+  `/alaa-workflow`.
 
 # Output contract
 

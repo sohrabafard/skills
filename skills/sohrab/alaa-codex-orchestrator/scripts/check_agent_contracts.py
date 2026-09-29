@@ -33,15 +33,31 @@ def orchestrator_failures(text: str) -> list[str]:
                      "Do not edit repository files, and do not create workflow artifacts",
                      "Commit only with explicit user authorization",
                      "local-only completion requires no merge prompt",
-                     "Independent verification and review inspect the actual artifact"):
+                     "Independent verification and review inspect the actual artifact",
+                     "Retain required retrieval, focused implementer checks and independent acceptance gates",
+                     "Do not infer a universal watchdog timeout"):
         if required not in text:
             errors.append(f"missing authority contract: {required}")
     for forbidden in ("On activation, idempotently installs", "Auto-install authority",
                       "Commit on the run's own work branch at each completed subtask",
                       "continue with general-purpose subagents",
-                      "Every profile runs all six phases"):
+                      "Every profile runs all six phases",
+                      "**Do not add verification instructions.**",
+                      "A watchdog ends a lane on silence rather than on duration"):
         if forbidden in text:
             errors.append(f"retired authority/fallback contract: {forbidden}")
+    return errors
+
+
+def dispatch_failures(text: str) -> list[str]:
+    errors = []
+    if "<progress>report meaningful progress under the active host contract" not in text:
+        errors.append("missing host-specific dispatch progress contract")
+    if "Do not infer a universal watchdog timeout" not in text:
+        errors.append("missing watchdog evidence boundary in dispatch")
+    for retired in ("emit one line between steps", "a stream watchdog can kill it mid-run"):
+        if retired in text:
+            errors.append(f"retired dispatch progress claim: {retired}")
     return errors
 
 
@@ -51,8 +67,13 @@ def self_test() -> int:
     # A source definition contains the same contract whether represented as a
     # multiline body or a serialized scalar; these checks do not execute it.
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    dispatch = (ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")
     cases = [
         ("valid identity and authority", not agent_failures(good)),
+        ("host-specific dispatch progress", not dispatch_failures(dispatch)),
+        ("dispatch missing progress rejected", bool(dispatch_failures(dispatch.replace("<progress>report meaningful progress under the active host contract", "<progress>silent")))),
+        ("per-command narration rejected", bool(dispatch_failures(dispatch + "\nemit one line between steps"))),
+        ("dispatch watchdog claim rejected", bool(dispatch_failures(dispatch + "\na stream watchdog can kill it mid-run"))),
         ("unknown observation required", bool(agent_failures(good.replace("otherwise unknown", "use the pin")))),
         ("identity assertion rejected", bool(agent_failures(good + "\nAGENT: fixture | MODEL: configured | EFFORT: high"))),
         ("verdict first", bool(agent_failures(good + "\nIdentity line: begin the report"))),
@@ -63,6 +84,9 @@ def self_test() -> int:
         ("forced integration rejected", bool(orchestrator_failures(skill + "\nEvery profile runs all six phases"))),
         ("independent review preserved", bool(orchestrator_failures(skill.replace("Independent verification and review inspect the actual artifact", "Check summaries")))),
         ("silent fallback rejected", bool(orchestrator_failures(skill + "\ncontinue with general-purpose subagents"))),
+        ("focused checks preserved", bool(orchestrator_failures(skill.replace("Retain required retrieval, focused implementer checks and independent acceptance gates", "Omit checks")))),
+        ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
+        ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
     for label, passed in cases:
         if not passed:
@@ -81,6 +105,7 @@ def main() -> int:
             print("usage: check_agent_contracts.py [--self-test]", file=sys.stderr)
             return 2
         errors = orchestrator_failures((ROOT / "SKILL.md").read_text(encoding="utf-8"))
+        errors.extend(dispatch_failures((ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")))
         for path in sorted((ROOT / "agents").glob("alaa-*")):
             if path.suffix in {".toml", ".md"}:
                 errors.extend(f"{path.name}: {item}" for item in agent_failures(path.read_text(encoding="utf-8")))

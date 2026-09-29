@@ -1,0 +1,33 @@
+{
+  "recorded_by": "parent from independent migration_review final",
+  "verdict": "SAFE-WITH-CONDITIONS",
+  "scope": "Candidate3 IndexedDB example only",
+  "configured": "gpt-6-sol/high",
+  "observed": "unknown",
+  "findings": [],
+  "closed": [
+    "Additive v4 index with preserved rows",
+    "Lower explicit version rejected",
+    "Atomic purge with preflight, early completion registration, abort and metadata orphan coverage",
+    "Example-local names need no invented platform registry"
+  ],
+  "hashes_matched": {
+    "candidate3": 154,
+    "browser_manifest": 25,
+    "screenshot": true
+  },
+  "proof": "Recorded parent-run real IndexedDB9PASS cases in one IAB environment; engine version unknown; no reruns",
+  "consumer_conditions": [
+    "Register actual consumer schema/version/index names before integration merge",
+    "Measure exclusive index build and quota failures with realistic data; test service worker and supported browsers",
+    "Respect unsynced draft consent/retention",
+    "Observe upgrade duration, blocked opens, quota/abort categories and bucketed purge counts without account keys",
+    "Require indexed ranged zero counts in four data stores plus storage_items after purge; retain pending marker and hold access otherwise",
+    "Large purge requires journalled resumable chunks and boot access gate"
+  ],
+  "rollback": "Aborted upgrade preserves v3; committed v4 requires compatible code or roll forward, never database deletion to satisfy old opener",
+  "limits": [
+    "No consumer rollout authorized/proved",
+    "Malformed legacy rows missing accountKey are not discoverable by this indexed purge"
+  ]
+}

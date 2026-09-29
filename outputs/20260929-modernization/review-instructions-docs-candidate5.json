@@ -1,0 +1,84 @@
+{
+  "verdict": "CHANGES-REQUESTED",
+  "reviewer": "instruction_review",
+  "configured": "gpt-6-astra/high",
+  "requested": "no override",
+  "observed": "unknown",
+  "isolation": "Declared read-only; active sandbox workspace-write; runtime enforcement not established. No mutations performed.",
+  "snapshot": "candidate-5",
+  "manifest_sha256": "05286640eb319d535877510327420c06a4e546de36f4cbc2af1b33f7a4a8ac47",
+  "scope": "317 hashes match;273 documents;24 moved trees compared against exact candidate4 bytes;85 original fenced blocks retained",
+  "findings": [
+    {
+      "id": "D1",
+      "severity": "major",
+      "owner": "documentation_foundation",
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "line": 19,
+      "finding": "Six section routes have shifted subjects/conditions: scenario coverage loads quota guidance, quota loads debugging, release loads harness. Children50/60 duplicate harness;60 has no incoming route.",
+      "required": "Restore subject-matched filenames, destinations and mandatory loading conditions; retain one harness owner and refresh manifest if actual path inventory changes."
+    },
+    {
+      "id": "D2",
+      "severity": "major",
+      "owner": "documentation_foundation",
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "line": 3,
+      "finding": "Exact candidate4 introductory prose required alaa-trust-gateway-auth, conditional alaa-haproxy and openfga pairing, and linked ownership reference. Those handoffs disappeared from entire moved tree; worked-example context was removed.",
+      "required": "Restore exact prior conditions, ownership pointer and worked-example context from archive."
+    },
+    {
+      "id": "D3",
+      "severity": "major",
+      "owner": "documentation_foundation",
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "line": 5,
+      "finding": "Previously universal migration rules now load only when editing schema rules; an upgrade can follow line17 without foundations containing idempotency/ADR exceptions, destructive-migration boundaries and oldVersion < N.",
+      "required": "Require foundations before every schema/migration implementation or review, with equivalent test-completion routing."
+    },
+    {
+      "id": "D4",
+      "severity": "minor",
+      "owner": "both disjoint documentation lanes",
+      "finding": "Relocation left dangling textual location references: Fiber core/60-boot-order.md says config above; IndexedDB schema/10-version-and-schema-foundations.md says shadow copy below; GitLab DAG child says See below; Ansible best_practices/50-variable-precedence.md points to absent section9; Docker00-topic-map retains absent section2, and secret/load children retain cross-file section references.",
+      "required": "Replace each with explicit relative links to actual canonical sections; preserve the original trigger and meaning."
+    },
+    {
+      "id": "D5",
+      "severity": "minor",
+      "owner": "documentation_operations",
+      "finding": "New routes in Ansible best_practices/security_checklist and Arvan constraints say only Read this section/topic plus filename; intermediate compatibility routers contain bare See links.",
+      "required": "Every child route states a reader condition and owned topic without duplicating child rules."
+    },
+    {
+      "id": "D6",
+      "severity": "major",
+      "owner": "documentation_foundation",
+      "finding": "Both orchestrators' delegation-prompts packets (280/300lines) were incorrectly exempted as indivisible. Each selects smallest applicable template; inspected checkers require common-envelope tokens at existing path, not every independent role payload there.",
+      "required": "Keep common envelope/checker contract at existing path and conditionally route complete role templates. Preserve runtime mirrors. No allow-red approval exists. Do not weaken checker or move required shared tokens."
+    },
+    {
+      "id": "D7",
+      "severity": "major",
+      "owner": "documentation_foundation",
+      "finding": "Unsupported ORANGE retention: Shaka85 troubleshooting symptom families; Jitsi30 deployment substrates and50 events/attendance versus recording; Fiber20 outbound proxy versus inbound pipeline; Vue24 augmentation versus compiler setup; Go70 language/toolchain/runtime versus library/testing.",
+      "required": "Split only these bounded coherent topics, preserving universal prerequisites, complete payloads and dated provenance; individually grade roots/children."
+    },
+    {
+      "id": "D8",
+      "severity": "major",
+      "owner": "documentation_operations",
+      "finding": "Unsupported ORANGE retention: Arvan task templates; GitLab feature-version-notes baseline derivation versus feature/limit/deprecation lookup; HAProxy30 QUIC prerequisites/frontend/backend/tuning; Ansible molecule setup/execution/verifier; Ansible test README vendored fixture maintenance versus corpus usage.",
+      "required": "Split bounded topics/complete templates, retaining mandatory prerequisites, complete code blocks and authority conditions; update individual grading reasons."
+    }
+  ],
+  "retained_approvals": "Prior executable approvals unchanged; IndexedDB handler-registration wording preserves intended sequencing.",
+  "limits": "No tests, external research, live adoption, deployment or calibration. Operations110-file gate remains subset of113 Markdown files; final complete-scope verification outstanding.",
+  "repair_policy": "Documentation repair cycle1 only, disjoint original lane ownership. No executable/checker/policy changes. Reopen independent fidelity review on captured repaired source. At most two documentation review-fix cycles; existing executable repair budgets are unchanged.",
+  "repair_assignments": {
+    "D2": "reserved for prior model_implementation owner after operations releases capacity",
+    "D6": "reserved for prior model_implementation owner after operations releases capacity",
+    "foundation": "D1,D3,foundation D4,D7 six files",
+    "operations": "operations D4,D5,D8"
+  }
+}

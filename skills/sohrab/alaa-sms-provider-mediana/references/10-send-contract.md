@@ -8,9 +8,9 @@ Every vendor fact in this file comes from the IPPanel Edge documentation and the
 
 - Documentation repository: `https://github.com/ippanelcom/Edge-Document`
 - Rendered documentation: `https://ippanelcom.github.io/Edge-Document/docs/`
-- **read: unverified as of 2026-07-27.** No session that produced or revised this file had network access to those URLs, so no read date can be asserted.
+- **Pattern subset verified 2026-09-29:** `https://ippanelcom.github.io/Edge-Document/docs/send/pattern/` confirms `POST /api/send`, raw-token `Authorization`, JSON content type, one top-level recipient, and `params` keys matching pattern placeholders. This is documentation proof, not account or delivery proof.
 
-Treat every table below as a local contract that has not been re-verified against the vendor. Before shipping a mode this repository has never sent, open the rendered documentation, confirm the field list, and replace the provenance line above with the URL and the date you actually read. An undated vendor fact looks authoritative and gets copied forward; that is how a provider skill rots.
+Other modes and claims retain their local, unverified provenance from 2026-07-27. Before shipping a previously unused mode, verify its fields against the rendered vendor page and record that mode's URL and read date; never extend the pattern check to the whole table.
 
 Repository code, production configuration, committed fixtures, and account-specific documentation outrank this file wherever they disagree. When they disagree and you cannot resolve it, mark the point `NEEDS_MEDIANA_CONFIRMATION` and stop rather than guessing.
 

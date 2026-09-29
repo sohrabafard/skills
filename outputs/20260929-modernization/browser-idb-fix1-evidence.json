@@ -1,0 +1,75 @@
+{
+  "operator": "parent, independently from source writer; lightweight browser proof, not a substituted verifier-role verdict",
+  "scope": "Actual transpiled skill example modules using real IndexedDB in Codex In-app Browser",
+  "browser": {
+    "observed_name": "Codex In-app Browser",
+    "type": "iab",
+    "tab_id": "1",
+    "engine_version": "unobserved"
+  },
+  "origin": "http://127.0.0.1:3512/index.html",
+  "test_count": 9,
+  "cases": [
+    {
+      "label": "fresh v4 schema and lower configured-version rejection",
+      "status": "PASS"
+    },
+    {
+      "label": "v1 to v4 preserves rows and indexes legacy metadata",
+      "status": "PASS"
+    },
+    {
+      "label": "v3 to v4 preserves rows and indexes legacy metadata",
+      "status": "PASS"
+    },
+    {
+      "label": "blocked v3 upgrade, versionchange and old-v3 VersionError",
+      "status": "PASS"
+    },
+    {
+      "label": "aborted additive upgrade preserves v3 and its rows",
+      "status": "PASS"
+    },
+    {
+      "label": "production versionchange handler closes before notifying",
+      "status": "PASS"
+    },
+    {
+      "label": "missing account index fails before any deletion",
+      "status": "PASS"
+    },
+    {
+      "label": "purge all stores, orphan metadata, other account, data count and repeat",
+      "status": "PASS"
+    },
+    {
+      "label": "forced abort after delete request rolls back every store",
+      "status": "PASS"
+    }
+  ],
+  "title_observed": "PASS IndexedDB",
+  "source_manifest": "browser-idb-fix1-manifest.json",
+  "source_manifest_sha256": "3e4abae90a066922317d027a8d40a636239de941d5012f3c4fdbd6bccc8b44c8",
+  "files_reconciled": 25,
+  "mismatches": [],
+  "screenshot": "browser-idb-fix1-pass.png",
+  "screenshot_sha256": "3fca3c0fafc757d381b916ac70890d881f3ccfaae70a7d0ab83d110557fa7ef8",
+  "server": {
+    "implementation": "Installed Python ThreadingHTTPServer, loopback ephemeral port, scoped directory; .mjs MIME set text/javascript",
+    "served_directory": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/browser-idb-fix1",
+    "session_id": 46827,
+    "requested_host_resources": "BelowNormal/two CPUs",
+    "startup": "observed loopback URL",
+    "requests": "index/cases/three imported source modules HTTP200; favicon404 non-test asset",
+    "shutdown": "Owned session intentionally interrupted after observed browser completion; returned exit1, not test failure"
+  },
+  "cleanup": "Created tab closed and owned server stopped; synthetic test databases retained, no database/file deletion",
+  "limits": [
+    "Single real browser environment; not cross-browser proof",
+    "No consumer application/Vitest/service-worker/media integration proof",
+    "No installation or external provider call",
+    "Source writer initially said10cases; visible result has9combined cases, used here",
+    "No additional passing-case rerun"
+  ],
+  "next": "Independent verifier and migration/security/correctness reviewers reconcile this exact manifest with final candidate and assess coverage"
+}

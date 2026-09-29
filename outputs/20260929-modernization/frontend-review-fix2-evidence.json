@@ -1,0 +1,79 @@
+{
+  "date": "2026-09-29",
+  "cycle": 2,
+  "outcome": "COR-7 repaired and source frozen; focused regression observed green after discriminating expected-red run.",
+  "metadata": {
+    "agent": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "requested": null,
+    "observed": "unknown",
+    "scope": "Only useShakaPlayer.ts and check-template-regressions.mjs; no IndexedDB, operations, staging, installation or live calls.",
+    "sandbox": "workspace-write; narrower parent ownership enforced by lane discipline",
+    "subagents": 0
+  },
+  "review": "review-correctness-frontend-fix1.json",
+  "prerequisites": "Reused reconciled 83-file/11841-line full reads. Both affected file hashes matched frontend-review-fix1-evidence.json before edits. Read current finding and current disposal/fixture source.",
+  "change": "After all currently pending cleanup settles and its failures are checked, dispose also rejects a retained cleanupFailure. Presence is checked using its wrapper object, preserving null/undefined/falsy cause. Shared disposal promise is still allocated once and reused before and after settlement.",
+  "alternatives_rejected": [
+    "Checking cause truthiness would lose null/undefined/false failures.",
+    "Returning early before awaiting current cleanup could report a result before cleanup settles.",
+    "Retrying failed destruction would introduce unrequested lifecycle effects."
+  ],
+  "finding": {
+    "id": "COR-7",
+    "status": "repaired; independent recheck pending",
+    "closed_previous": "COR-1/2/3/4, SEC-2 and OBS-1 remain closed per independent review; unchanged IDB/browser results were not rerun."
+  },
+  "tests": {
+    "proof": "Actual template functions with Vue/Shaka doubles; not real media or browser shutdown proof.",
+    "cases": [
+      "Late dispose after stale destruction failed and initialization settled out of pending set.",
+      "Reasons null, undefined, false, string and Error are rejected with exact original identity/value.",
+      "Repeated disposal before/after settlement returns the same promise.",
+      "Failure is not converted to success; failed destruction is not restarted."
+    ],
+    "executions": [
+      {
+        "purpose": "Expected red regression before production repair",
+        "command": "& skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1 -FilePath node -ArgumentList @('--experimental-vm-modules','skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 45",
+        "exit_code": 1,
+        "output": "PASS: queue-cap/send concurrency, repeated entries, retry retention, null-source unload, shared disposal, pending attach, hook rejection\n(node:46328) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:46328) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\nnode:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: known cleanup failure must not become teardown success\r\n+ actual - expected\r\n\r\n+ 'resolved'\r\n- 'rejected'\r\n     ^\r\n\r\n    at <repo>/skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs:171:10 {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: 'resolved',\r\n  expected: 'rejected',\r\n  operator: 'strictEqual',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.18.0\r\n[alaa-low-priority] pid=46328 priority=BelowNormal cpuCount=2 durationMs=223 timedOut=False exitCode=1\r\n"
+      },
+      {
+        "purpose": "Green after one-line retained-failure repair",
+        "command": "& skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1 -FilePath node -ArgumentList @('--experimental-vm-modules','skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs') -Priority BelowNormal -CpuCount 2 -TimeoutSeconds 45",
+        "exit_code": 0,
+        "output": "PASS: queue-cap/send concurrency, repeated entries, retry retention, null-source unload, shared disposal, pending attach, hook rejection\nPASS: serialized initial attach/stale cleanup, exactly-once final snapshot, unknown rejection classification, bounded private delivery diagnostics, observer isolation\n(node:41684) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:41684) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n[alaa-low-priority] pid=41684 priority=BelowNormal cpuCount=2 durationMs=281 timedOut=False exitCode=0\r\n"
+      }
+    ],
+    "expected_red": "Exit1: actual resolved, expected rejected at the new late-dispose assertion.",
+    "final_green": "Exit0: existing and expanded Shaka regression suite passed; BelowNormal/two CPUs/45-second bound.",
+    "not_rerun": [
+      "IndexedDB scripts/browser scenarios",
+      "Unchanged static Shaka scanner comment-only findings",
+      "Consumer Vitest/typecheck",
+      "Actual media/DRM/network shutdown"
+    ]
+  },
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+      "before_sha256": "91b13d0486f5f0bdd0ced112906a771f37de2e3b026e50ada4adadfc5580e17b",
+      "after_sha256": "171dab1edfa9ba00f955994588de9885ba3e08e3308e3a79dfd51ae24ec62096"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/scripts/check-template-regressions.mjs",
+      "before_sha256": "0aa1060eabd651e5cbf105f668dea65241585b4cbcde976b32674043e73cc1b9",
+      "after_sha256": "a8ff520e1f8ea93b525b554cf6d9ea7167ebd8a89049fb7702961b022f6c3ff9"
+    }
+  ],
+  "authoring": "No controlling prose or policy changed. Test comment draft described waiting for the prior failed initialization to settle; compressed to the exact pending-set condition without changing behavior.",
+  "compatibility": "No API/schema/telemetry change; result corrects a false success after known cleanup failure. Null/undefined are preserved as rejection reasons.",
+  "scanner": "Previous optional source-template scanner exit1 remains comment-only and independently dispositioned; no pass claim or repair.",
+  "source_frozen": true,
+  "session_accounting": {
+    "model": "not observable in this runtime",
+    "tokens": "not observable in this runtime",
+    "subagents": 0
+  }
+}

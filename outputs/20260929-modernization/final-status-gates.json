@@ -1,0 +1,95 @@
+{
+  "snapshot": "candidate-8",
+  "operator": "parent final status-only reconciliation after independent closure",
+  "checks": [
+    {
+      "name": "workflow",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+        "--plan",
+        "skills\\sohrab\\alaa-workflow\\outputs\\20260929-modernization\\docs\\_agent_plans\\20260929-120000_sohrab-modernization.md"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "artifact-links",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/authorization-guidance-review.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/backend-evidence.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/bash-environment-diagnosis.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/agents/20260929-120000_sohrab-modernization-state.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/design/0001-review-repair-boundaries.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/frontend-evidence.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/gate-brief.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/intake-evidence.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/model-evidence.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/operations-evidence.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/specialized-evidence.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/validation-strategy.md",
+        "skills/sohrab/alaa-workflow/outputs/20260929-modernization/verification-evidence.md"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "fleet",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "HEAD",
+        "--check",
+        "--",
+        "skills/sohrab"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "final-source-scope-and-hashes",
+      "exit": 0,
+      "findings": [],
+      "paths": 378
+    },
+    {
+      "name": "final-assessment",
+      "exit": 0,
+      "counts": {
+        "assessed_no_change": 44,
+        "implemented_verified": 25
+      }
+    },
+    {
+      "name": "outside-scope-tracked",
+      "exit": 0,
+      "paths": []
+    }
+  ],
+  "verdict": "PASS",
+  "completed_plan_recheck": {
+    "argv": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "--plan",
+      "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.md"
+    ],
+    "exit": 0,
+    "stdout": "plan: skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.md\r\ncheckpoint: skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/../agents/20260929-120000_sohrab-modernization-state.md\r\nValidation completed without blocking errors (profile: resumable).\r\n",
+    "stderr": ""
+  }
+}

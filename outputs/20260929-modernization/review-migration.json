@@ -1,0 +1,46 @@
+{
+  "recorded_by": "parent from independent migration_review final",
+  "verdict": "SAFE-WITH-CONDITIONS",
+  "scope": "Proposed example schema v4 and indexed atomic metadata purge; no consumer migration",
+  "configured": "gpt-6-sol/high",
+  "observed": "unknown",
+  "conditions": [
+    "Raise default to4; reject or safely handle supplied lower schema before purge",
+    "Add accountKey index to storage_items in oldVersion<4 branch; use matching key range; preserve data/stores and metadata including orphans",
+    "Preflight all required indexes before mutation; register tx completion immediately; abort on cursor error; return after commit only",
+    "Preserve public user-data row count excluding metadata; preserve other accounts",
+    "Document old explicit-v3 app VersionError after v4 commit; coordinate consumers and roll forward with v4-compatible code; aborted upgrade retains v3",
+    "Keep blocked/versionchange close paths; no destructive recovery",
+    "Index builds exclusively and may be slow/quota-fail; actual consumer proof required",
+    "Large purges follow existing journal/boot gate/chunking and unsynced retention/consent policy",
+    "Do not log account keys; record upgrade duration, blocked opens, quota/abort and bucketed purge outcomes; use existing source budget rather than inventing one",
+    "Register index naming with values owner; clarification needed whether consumer prerequisite suffices because current platform owner contains no exact example index registry"
+  ],
+  "required_proof": [
+    "freshv4",
+    "v1-to-v4 preservation",
+    "v3-to-v4 preservation",
+    "blocked/versionchange",
+    "oldv3openfailure",
+    "orphanmetadataremoval",
+    "otheraccountpreservation",
+    "unchangedreturncount",
+    "repeatpurge",
+    "forcedtransactionabortallstoresunchanged"
+  ],
+  "sources": [
+    "https://www.w3.org/TR/IndexedDB/"
+  ],
+  "limits": [
+    "No migration/runtimevalidation run",
+    "No new global platform registry assumed",
+    "Read-only restriction obeyed; enforcementunknown"
+  ],
+  "pending_clarification": "Exact example names absent in services-contract; follow-up attempted but host capacity denied. Preserve example-local names plus consumer registration unless guardian identifies mandatory owner edit.",
+  "parent_scope_resolution": {
+    "source": "skills/sohrab/alaa-indexeddb-browser-storage/references/95-alaa-integration-playbook.md",
+    "evidence": "Document is integration with client repository; name registration is required before code using it merges. Current demonstration defaults have no entries in services-contract.",
+    "decision": "Keep example-local demonstration identifier; explicitly require consumer registration/adoption before consumer merge. Do not invent a global registry in this source-only repair.",
+    "limit": "Parent scope interpretation, not a new guardian verdict; recheck during affected migration review."
+  }
+}

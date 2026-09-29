@@ -1,0 +1,978 @@
+{
+  "artifact": "documentation-foundation-repair1.json",
+  "cycle": 1,
+  "snapshot_baseline": "candidate-4",
+  "source_state": "frozen; no Markdown/source edits made during recovery turn",
+  "agent_metadata": {
+    "AGENT": "documentation_foundation",
+    "CONFIGURED_model_effort": "gpt-6-luna/high",
+    "REQUESTED_model_effort": "none",
+    "OBSERVED_model_effort": "unknown",
+    "runtime_enforcement": "unknown; active sandbox is workspace-write"
+  },
+  "ownership": {
+    "included": "D1,D3,foundation D4 and six D7 files; 9 routed document clusters plus their children",
+    "excluded": [
+      "D2 alaa-services-contract",
+      "D6 alaa-cc-orchestrator and alaa-codex-orchestrator; model owner active",
+      "operations scope"
+    ],
+    "source_changed_this_repair_cycle": false
+  },
+  "ordering_lapse_and_recovery": {
+    "disclosure": "Some source edits from the prior documentation pass (including the reference62 wording nit and the affected moved/clustered references) preceded completion of my own full neighboring-bundle reads. My first combined read output was truncated and I initially reported partial coverage too broadly. Parent corrected the gap; I then completed the full required bundles in bounded reads, compared frozen sections/routes/fences against candidate4, and made no further source edits. The initial ordering/reporting lapse remains disclosed.",
+    "recovery": "Full read coverage below uses only my own completed reads; initial truncated output was not counted."
+  },
+  "bundle_reads": [
+    {
+      "skill": "alaa-indexeddb-browser-storage",
+      "coverage": "SKILL.md; every references Markdown file; examples, assets and scripts needed to understand the skill bundle",
+      "completed_before_further_source_edits": true,
+      "reused_prior_full_read": true
+    },
+    {
+      "skill": "alaa-golang-fiber",
+      "coverage": "SKILL.md; all references and SOURCES.md; agents/openai.yaml; evals/evals.json; no additional scripts/assets present",
+      "completed_before_reconciliation": true
+    },
+    {
+      "skill": "alaa-vue-typescript-clean-code",
+      "coverage": "SKILL.md; every references Markdown file; scripts/check-frontend-versions.mjs; agents/openai.yaml; evals/evals.json; no further assets present",
+      "completed_before_reconciliation": true
+    },
+    {
+      "skill": "alaa-golang",
+      "coverage": "SKILL.md; every references Markdown file and SOURCES.md; agents/openai.yaml; no scripts/assets/evals present",
+      "completed_before_reconciliation": true
+    },
+    {
+      "skill": "jitsi-platform-architect",
+      "coverage": "SKILL.md; every references Markdown file including SOURCES map; agents/openai.yaml; scripts/check_jitsi_jwt.py; no other assets/evals present",
+      "completed_before_reconciliation": true
+    },
+    {
+      "skill": "alaa-shaka-player",
+      "coverage": "SKILL.md; all reference Markdown roots and children; agents/openai.yaml; scripts/check-shaka-api.mjs and check-template-regressions.mjs; all five assets/templates files (offlineDownload.ts, playbackQoe.ts, ShakaPlayer.vue, shakaTypes.ts, useShakaPlayer.ts); no evals or other assets present",
+      "completed_before_reconciliation": true
+    }
+  ],
+  "finding_closure": {
+    "D1": {
+      "status": "resolved in source",
+      "router": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "required_six_topics_route_to_correctly_named_children": true,
+      "h2_count": 6,
+      "routes": [
+        {
+          "original_h2": "What every storage change must exercise",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-required-scenarios.md"
+          ]
+        },
+        {
+          "original_h2": "Reproducing a quota condition locally",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-quota-reproduction.md"
+          ]
+        },
+        {
+          "original_h2": "Debug surfaces per engine",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-debug-surfaces.md"
+          ]
+        },
+        {
+          "original_h2": "Performance budgets to assert",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md"
+          ]
+        },
+        {
+          "original_h2": "Release checklist",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md"
+          ]
+        },
+        {
+          "original_h2": "Real IndexedDB regression harness",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md"
+          ]
+        }
+      ],
+      "single_harness_owner": "60-real-indexeddb-harness.md; 50-release-checklist.md owns the checklist; the performance child no longer duplicates that section.",
+      "indexeddb_root_files_additions": [
+        "references/80-testing-and-proof-levels/10-required-scenarios.md",
+        "references/80-testing-and-proof-levels/20-quota-reproduction.md",
+        "references/80-testing-and-proof-levels/30-debug-surfaces.md",
+        "references/80-testing-and-proof-levels/40-performance-budgets.md"
+      ],
+      "indexeddb_root_files_removals": [
+        "references/80-testing-and-proof-levels/10-proof-levels.md",
+        "references/80-testing-and-proof-levels/20-required-scenarios.md",
+        "references/80-testing-and-proof-levels/30-quota-reproduction.md",
+        "references/80-testing-and-proof-levels/40-debug-and-performance.md"
+      ]
+    },
+    "D3": {
+      "status": "resolved in source",
+      "router": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "unconditional_prerequisite": "Before implementing or reviewing any schema or migration change, load version/schema foundations before any strategy or example. Upgrade-test design/review also routes to those rules.",
+      "h2_count": 9,
+      "routes": [
+        {
+          "original_h2": "Non-negotiable rules",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+          ]
+        },
+        {
+          "original_h2": "Names, and who owns them",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+          ]
+        },
+        {
+          "original_h2": "The `meta` store",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+          ]
+        },
+        {
+          "original_h2": "The upgrade shape",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md"
+          ]
+        },
+        {
+          "original_h2": "Migration strategies",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md"
+          ]
+        },
+        {
+          "original_h2": "Migration journal",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md"
+          ]
+        },
+        {
+          "original_h2": "What an upgrade owes other contexts",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md"
+          ]
+        },
+        {
+          "original_h2": "Upgrade tests",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md"
+          ]
+        },
+        {
+          "original_h2": "Example v4 account-metadata index",
+          "routes_to": [
+            "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md"
+          ]
+        }
+      ]
+    },
+    "D4": {
+      "status": "resolved in source",
+      "repairs": [
+        {
+          "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+          "change": "“validated config above” is now an explicit relative link to the server-bounds child.",
+          "target_exists": true
+        },
+        {
+          "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+          "change": "“shadow copy below” is now an explicit relative link to sibling upgrade strategies #migration-strategies.",
+          "target_exists": true
+        }
+      ]
+    },
+    "D7": {
+      "status": "resolved in source; six required files explicitly covered",
+      "files": [
+        {
+          "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors.md",
+          "h2_count": 9,
+          "children": 5,
+          "reason": "Separates inbound route/middleware/error/trust work from outbound proxy security and edge-only/adaptation guidance."
+        },
+        {
+          "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom.md",
+          "h2_count": 10,
+          "children": 4,
+          "reason": "Routes startup/load, playback/quality/captions, protected/offline/ads, and lifecycle/diagnostics symptom families."
+        },
+        {
+          "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate.md",
+          "h2_count": 10,
+          "children": 5,
+          "reason": "Separates platform selection, VM/container, Kubernetes, OpenShift and deployment boundary/handoff choices."
+        },
+        {
+          "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance.md",
+          "h2_count": 6,
+          "children": 4,
+          "reason": "Separates event truth/client signals, attendance/watch time, recording governance, and analytics privacy."
+        },
+        {
+          "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns.md",
+          "h2_count": 5,
+          "children": 4,
+          "reason": "Separates fleet baseline, compiler/module setup, declaration augmentation, and symptom-based antipatterns."
+        },
+        {
+          "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+          "h2_count": 11,
+          "children": 5,
+          "reason": "Separates release applicability, directive/toolchain, runtime/library, testing/security/experiments, and adoption rules."
+        }
+      ]
+    }
+  },
+  "routing_and_fidelity": {
+    "audited_cluster_count": 9,
+    "original_h2_count": 74,
+    "original_h2_retained_and_routed": 74,
+    "every_original_h2_exactly_retained_as_root_anchor": true,
+    "all_original_root_preambles_present": true,
+    "source_date_and_provenance_reachability": "Reconciled in edited bundles: Shaka dated claims link back to 05-provenance-and-freshness; Fiber claim dates have SOURCES.md path reachable; Jitsi source map is retained; Vue/Go provenance context remains reachable from moved topic claims.",
+    "complete_fenced_payloads": {
+      "source_block_count": 12,
+      "destination_block_count": 12,
+      "per_cluster_multiset_equal": true,
+      "normalization": "CRLF/LF normalized only; fence language tags and complete payload bytes otherwise compared with multiplicity",
+      "fiber_core_context_section": "Original heading routes to request-value, immutable-mode, and cancellation children; its three code fences are compared as the combined destination payload, with no split fenced block."
+    },
+    "self_detected_section_mapping_repairs": "Previously stale positional movement map was not used. Exact candidate4 H2 identity and current link targets were rechecked. Fiber core, IndexedDB schema and proof routers use section identity; current proof router has six correct names and a single harness owner."
+  },
+  "grades": {
+    "inventory_scope": "54 files across D1,D3,D4 and six D7 topic families; D2/D6 and operations excluded for parent integration",
+    "rows": [
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+        "physical_lines": 39,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 6 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "87e778caa0338e86771dfdbe535dfbd73e506cc778abbcb90587a099461bc624"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-required-scenarios.md",
+        "physical_lines": 20,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (20 lines): the required scenarios topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "318eff88e3b3731f8c87b1505904f56d4722cea9c162338a3dd96f95b799647d"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-quota-reproduction.md",
+        "physical_lines": 15,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (15 lines): the quota reproduction topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "1621db1dd8a30f63b4067f57d0a509fb5ed85138fb1d0654360daf1b8d64f399"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-debug-surfaces.md",
+        "physical_lines": 9,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (9 lines): the debug surfaces topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "1fba1f1e9c1bf3b0161a7e9fb3b7f9f3d30a2a6926a97219207fd4dd7f654f31"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md",
+        "physical_lines": 13,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (13 lines): the measured performance budgets and their growth caveat form one standalone topic; the separate release checklist remains solely in its canonical child.",
+        "sha256_raw_bytes": "be201fe558f3077f5359fb05ea957b92495d8bca564325f14005c1094ab88434"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+        "physical_lines": 15,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (15 lines): the release checklist topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md",
+        "physical_lines": 18,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (18 lines): the real indexeddb harness topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "ba529a4e1ff6107752c2d49608d6b1de60c4a498b43212c1a224810d3eb85076"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+        "physical_lines": 39,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 9 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "9e490af6c0adc29d47477867b791e64794d2753b4bcccc11ca52f6c978fd1ab0"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+        "physical_lines": 42,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (42 lines): the version and schema foundations topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "d02d3453416b64461fde2eea72fdd7dbeeb088e91afb42803b1cd63b356ad214"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+        "physical_lines": 58,
+        "grade": "YELLOW",
+        "classification": "RETAIN-YELLOW",
+        "reason": "YELLOW: additive/lazy/shadow-copy strategy is one ordered choice, and its rollback, transaction, and verification conditions must remain together.",
+        "sha256_raw_bytes": "b99cdd701ea3396e8ea0e36d7bdb16e7ccef49936a5abe9979498f8111f5b700"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+        "physical_lines": 27,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (27 lines): the journal and other contexts topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "1e58d99554b8406b66666f182b2073e7f461c009233d658d37729fa78a9b6693"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+        "physical_lines": 29,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (29 lines): the upgrade tests and example topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "e480e16359f566e97f11d1b060f2c5799e6acabe3b5086ae81e8c16607ae81fc"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+        "physical_lines": 47,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 8 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "c1676347113ffdd574ebc3895d0da6cb80ca25b1005206b604c79f002b2b116e"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md",
+        "physical_lines": 14,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (14 lines): the version and import topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "829527badec70a8fb9a130ef46f17f7ab42c81d5e3cc3edecee611fc5787bbe6"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/20-request-value-lifetime.md",
+        "physical_lines": 35,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (35 lines): the request value lifetime topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "659db32d64ff171a22c6f947484350ec19ddea84fa7828f110bdd469ce6c1aec"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+        "physical_lines": 22,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (22 lines): the immutable mode topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "06fc187b78f23355fb8e49e100fdf3c8b21af322cb0ede060988d8c358ada914"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md",
+        "physical_lines": 33,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (33 lines): the context cancellation topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "48fe6f2bfc09560e3e658aab31cc147c2e671f0a5beb27f262e6b2a810faccf6"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md",
+        "physical_lines": 48,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (48 lines): the server bounds topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "60542621a9734ec7fc7420adc3db6d2594eca7b43b1290d7cd0977aad71c9f4f"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+        "physical_lines": 19,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (19 lines): the boot order topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "9dfc14a2f97bfeba4f77885d755dc85395fad7fa0f52823d3cab7a8bcee32923"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md",
+        "physical_lines": 36,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (36 lines): the listener shutdown topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "0e9a0c8312197b25f9b5dd9747dc84c84a2d385d922e8200427523fefe052c4c"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md",
+        "physical_lines": 15,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (15 lines): the hooks and custom context topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "33f431880b53eadaf9e8df5e5827f3d16676e320442dfcc4768aecac08fa2be9"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors.md",
+        "physical_lines": 33,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 9 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "92e0607e837ff13cf2acc298e33b6bf0e26e95c8817da4f3d0023cdb6ebbbfc2"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/10-route-and-middleware-order.md",
+        "physical_lines": 56,
+        "grade": "YELLOW",
+        "classification": "RETAIN-YELLOW",
+        "reason": "YELLOW: the route-registration and fixed middleware sequence is one trust-sensitive ordered pipeline; extracting a step would detach its ordering condition.",
+        "sha256_raw_bytes": "270b94eb634788d83dc8eb7d1eb2041edab263ac3c0a5104f8d517afacd9b88c"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/20-errors-and-correlation.md",
+        "physical_lines": 36,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (36 lines): the errors and correlation topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "8f27e9fe2be162f7bb74204e01be68ed9a5644cf5446a31353a1b82902c8d000"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/30-proxy-trust.md",
+        "physical_lines": 25,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (25 lines): the proxy trust topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "9239efdb682bc1df187fa9671f25a28657e68d5a6e420f2f1afd88f5bd475770"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/40-outbound-proxy-security.md",
+        "physical_lines": 24,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (24 lines): the outbound proxy security topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "0490a074f69c1443d8c3880e59f7781b5e6cb8779e35293cbf2cded4b9c98e4f"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/50-edge-controls-and-adaptation.md",
+        "physical_lines": 41,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (41 lines): the edge controls and adaptation topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "e3cd4116a6151568ffb27e560120d174f384b081d656216d41bcd937214efa23"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom.md",
+        "physical_lines": 33,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 10 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "d6f7da54fb2e704a8329220ed49d21026a6c30dd0f4aae556253f051fb5fb497"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/10-loading-and-startup.md",
+        "physical_lines": 22,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (22 lines): the loading and startup topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "ccf73827bc24edceca409068af735df940118d737ee7272c7d7ba9f8252700db"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/20-playback-quality-and-captions.md",
+        "physical_lines": 36,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (36 lines): the playback quality and captions topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "937971b65c7f16328b030ad9530c6e80e2a18f1cb4d9cc56972d5e6166f6e27b"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/30-protected-and-offline-playback.md",
+        "physical_lines": 34,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (34 lines): the protected and offline playback topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "d6c44316f7a2383d7ffed03db5492144bf71e3737baf50bbde86598dca03b035"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/40-lifecycle-and-diagnostics.md",
+        "physical_lines": 28,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (28 lines): the lifecycle and diagnostics topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "8c75ce497ecb617e022e48395fea4a26fd2222274894e2aeef0f92aedfd78cdb"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate.md",
+        "physical_lines": 40,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 10 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "45d20f8fcc910e2af4b8e1544013dd6fdac69fd103a341fc69bceae966b96e48"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/10-selection-and-platform-matrix.md",
+        "physical_lines": 25,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (25 lines): the selection and platform matrix topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "7e1eca284a030a29e87bf4dbc81e5d573996fb81ff154bb88caa02bf4a62b754"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/20-vm-and-container-substrates.md",
+        "physical_lines": 33,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (33 lines): the vm and container substrates topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "e6c014d8b3eb1c1739fb5d01d6527c6d9d37a03fd908dd4a0761d2f6bd5c22d2"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/30-kubernetes-substrate.md",
+        "physical_lines": 27,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (27 lines): the kubernetes substrate topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "e75a3cd0e5d816110572bcd041fa349d0f7a4ca205f36d52754af954748999b8"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/40-openshift-substrate.md",
+        "physical_lines": 25,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (25 lines): the openshift substrate topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "c62b5b111fe9083329b71100f6caae5c670e53d9f49c42c3fd10dfe5de8aa7df"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/50-boundaries-and-handoff.md",
+        "physical_lines": 36,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (36 lines): the boundaries and handoff topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "79b746e28fa9f551ea58d31953b0c08367063ceac610a57a9032048de27b16c2"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance.md",
+        "physical_lines": 23,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 6 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "64e89cb9bd1544c1f3a6ae356464017cd0f454e9c063b1ac5682acd1ddede452"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/10-event-truth-and-client-signals.md",
+        "physical_lines": 49,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (49 lines): the event truth and client signals topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "a4db9e50bc507ab1147251725ab0acaa1d38515c161f7179b15ea84399bf56e1"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/20-attendance-and-watch-time.md",
+        "physical_lines": 34,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (34 lines): the attendance and watch time topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "ecec7c89a984891f59b71e4b1bab174392905c5280a4326edb17371e8c701461"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/30-recording-governance.md",
+        "physical_lines": 71,
+        "grade": "YELLOW",
+        "classification": "RETAIN-YELLOW",
+        "reason": "YELLOW: authorization, consent, retention, access, export, and legal-review rules form one recording-governance lifecycle.",
+        "sha256_raw_bytes": "b0eaeb3fb923ecf67017b8e7e99fe92282465ee64f3e6aa47ae048e9c52336bd"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/40-analytics-privacy.md",
+        "physical_lines": 10,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (10 lines): the analytics privacy topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "0e36c9780d0d1ecc0d1774a6f4e4a40adb716f342c3f71ab452dfaf24919f546"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns.md",
+        "physical_lines": 18,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 5 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "340c9d56ac3d40580842b7e90ba21bb8d1352bbac5d2067fe349a0d24399a02d"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/10-fleet-typescript-line.md",
+        "physical_lines": 22,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (22 lines): the fleet typescript line topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "16cf8defaf3b26c196bcf5680f3ec33ac714fcc650c018055c04b04df578ec85"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/20-compiler-and-module-settings.md",
+        "physical_lines": 42,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (42 lines): the compiler and module settings topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "59b0983de9ff6c38bbcf8bb94224de458d8c258e1c06da79f18f1414e80beeb9"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/30-module-augmentation.md",
+        "physical_lines": 51,
+        "grade": "YELLOW",
+        "classification": "RETAIN-YELLOW",
+        "reason": "YELLOW: declaration augmentation depends on the compiler/module-resolution setup and its type boundary; keeping the configuration and augmentation together prevents invalid ambient types.",
+        "sha256_raw_bytes": "6c08a76022690e446a2177417893becbe6c5b266bfd48aecb2d6cdacb2d90fc6"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/40-antipatterns.md",
+        "physical_lines": 46,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (46 lines): the antipatterns topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "7f953913401592be5596c312a2049c455b9f0a0f4a4348a3de52d25c8072a702"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+        "physical_lines": 36,
+        "grade": "GREEN",
+        "classification": "RESTRUCTURED-ROUTER",
+        "reason": "GREEN router: 11 original headings remain as anchors and each heading routes by reader condition to its semantic child.",
+        "sha256_raw_bytes": "df8467a956b91c2bf7bf73db9a15159f4356c2b404bd425d9bcb48026c33fe0b"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/10-release-status-and-changes.md",
+        "physical_lines": 25,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (25 lines): the release status and changes topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "57caedf89a7925e2120233a464d6bb1b92c0902eeef93a1f0a0c0e003efea659"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/20-directive-language-and-toolchain.md",
+        "physical_lines": 42,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (42 lines): the directive language and toolchain topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "c7a3b34f88fcceaf409a9b77b393d65c4f99af140170a3bfa68afd006a2836e3"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md",
+        "physical_lines": 37,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (37 lines): the runtime and standard library topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "a7fcab122d977e09400cffaeee20e35424a9b884d2d11573a6aab6f177e94bf8"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/40-testing-security-and-experiments.md",
+        "physical_lines": 41,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (41 lines): the testing security and experiments topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "ec780e60b6067ade244f447a15e2171837500402ef5ea644dfebc3ae9b38017a"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/50-adoption-rules.md",
+        "physical_lines": 15,
+        "grade": "GREEN",
+        "classification": "RETAIN-GREEN",
+        "reason": "GREEN (15 lines): the adoption rules topic is one independently triggered unit with a complete source section and its applicable provenance.",
+        "sha256_raw_bytes": "66afa31803ac63f619b3f33bcdaabb1ff0558cedd404ea09267eb02e58d594bd"
+      }
+    ],
+    "grade_counts": {
+      "GREEN": 50,
+      "YELLOW": 4
+    },
+    "reasoning": "Every root is a GREEN routed index with preserved original H2 anchors and reader-conditioned destinations. Individual YELLOW child reasons are per-file; all remaining children are standalone semantic units."
+  },
+  "raw_byte_sha256_manifest": {
+    "count": 54,
+    "entries": [
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+        "sha256": "c1676347113ffdd574ebc3895d0da6cb80ca25b1005206b604c79f002b2b116e"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md",
+        "sha256": "829527badec70a8fb9a130ef46f17f7ab42c81d5e3cc3edecee611fc5787bbe6"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/20-request-value-lifetime.md",
+        "sha256": "659db32d64ff171a22c6f947484350ec19ddea84fa7828f110bdd469ce6c1aec"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+        "sha256": "06fc187b78f23355fb8e49e100fdf3c8b21af322cb0ede060988d8c358ada914"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md",
+        "sha256": "48fe6f2bfc09560e3e658aab31cc147c2e671f0a5beb27f262e6b2a810faccf6"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md",
+        "sha256": "60542621a9734ec7fc7420adc3db6d2594eca7b43b1290d7cd0977aad71c9f4f"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+        "sha256": "9dfc14a2f97bfeba4f77885d755dc85395fad7fa0f52823d3cab7a8bcee32923"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md",
+        "sha256": "0e9a0c8312197b25f9b5dd9747dc84c84a2d385d922e8200427523fefe052c4c"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/80-hooks-and-custom-context.md",
+        "sha256": "33f431880b53eadaf9e8df5e5827f3d16676e320442dfcc4768aecac08fa2be9"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors.md",
+        "sha256": "92e0607e837ff13cf2acc298e33b6bf0e26e95c8817da4f3d0023cdb6ebbbfc2"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/10-route-and-middleware-order.md",
+        "sha256": "270b94eb634788d83dc8eb7d1eb2041edab263ac3c0a5104f8d517afacd9b88c"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/20-errors-and-correlation.md",
+        "sha256": "8f27e9fe2be162f7bb74204e01be68ed9a5644cf5446a31353a1b82902c8d000"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/30-proxy-trust.md",
+        "sha256": "9239efdb682bc1df187fa9671f25a28657e68d5a6e420f2f1afd88f5bd475770"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/40-outbound-proxy-security.md",
+        "sha256": "0490a074f69c1443d8c3880e59f7781b5e6cb8779e35293cbf2cded4b9c98e4f"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors/50-edge-controls-and-adaptation.md",
+        "sha256": "e3cd4116a6151568ffb27e560120d174f384b081d656216d41bcd937214efa23"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+        "sha256": "df8467a956b91c2bf7bf73db9a15159f4356c2b404bd425d9bcb48026c33fe0b"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/10-release-status-and-changes.md",
+        "sha256": "57caedf89a7925e2120233a464d6bb1b92c0902eeef93a1f0a0c0e003efea659"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/20-directive-language-and-toolchain.md",
+        "sha256": "c7a3b34f88fcceaf409a9b77b393d65c4f99af140170a3bfa68afd006a2836e3"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md",
+        "sha256": "a7fcab122d977e09400cffaeee20e35424a9b884d2d11573a6aab6f177e94bf8"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/40-testing-security-and-experiments.md",
+        "sha256": "ec780e60b6067ade244f447a15e2171837500402ef5ea644dfebc3ae9b38017a"
+      },
+      {
+        "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/50-adoption-rules.md",
+        "sha256": "66afa31803ac63f619b3f33bcdaabb1ff0558cedd404ea09267eb02e58d594bd"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+        "sha256": "9e490af6c0adc29d47477867b791e64794d2753b4bcccc11ca52f6c978fd1ab0"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md",
+        "sha256": "d02d3453416b64461fde2eea72fdd7dbeeb088e91afb42803b1cd63b356ad214"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+        "sha256": "b99cdd701ea3396e8ea0e36d7bdb16e7ccef49936a5abe9979498f8111f5b700"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+        "sha256": "1e58d99554b8406b66666f182b2073e7f461c009233d658d37729fa78a9b6693"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/40-upgrade-tests-and-example.md",
+        "sha256": "e480e16359f566e97f11d1b060f2c5799e6acabe3b5086ae81e8c16607ae81fc"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+        "sha256": "87e778caa0338e86771dfdbe535dfbd73e506cc778abbcb90587a099461bc624"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-required-scenarios.md",
+        "sha256": "318eff88e3b3731f8c87b1505904f56d4722cea9c162338a3dd96f95b799647d"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-quota-reproduction.md",
+        "sha256": "1621db1dd8a30f63b4067f57d0a509fb5ed85138fb1d0654360daf1b8d64f399"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-debug-surfaces.md",
+        "sha256": "1fba1f1e9c1bf3b0161a7e9fb3b7f9f3d30a2a6926a97219207fd4dd7f654f31"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/40-performance-budgets.md",
+        "sha256": "be201fe558f3077f5359fb05ea957b92495d8bca564325f14005c1094ab88434"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/50-release-checklist.md",
+        "sha256": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed"
+      },
+      {
+        "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/60-real-indexeddb-harness.md",
+        "sha256": "ba529a4e1ff6107752c2d49608d6b1de60c4a498b43212c1a224810d3eb85076"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom.md",
+        "sha256": "d6f7da54fb2e704a8329220ed49d21026a6c30dd0f4aae556253f051fb5fb497"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/10-loading-and-startup.md",
+        "sha256": "ccf73827bc24edceca409068af735df940118d737ee7272c7d7ba9f8252700db"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/20-playback-quality-and-captions.md",
+        "sha256": "937971b65c7f16328b030ad9530c6e80e2a18f1cb4d9cc56972d5e6166f6e27b"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/30-protected-and-offline-playback.md",
+        "sha256": "d6c44316f7a2383d7ffed03db5492144bf71e3737baf50bbde86598dca03b035"
+      },
+      {
+        "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom/40-lifecycle-and-diagnostics.md",
+        "sha256": "8c75ce497ecb617e022e48395fea4a26fd2222274894e2aeef0f92aedfd78cdb"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns.md",
+        "sha256": "340c9d56ac3d40580842b7e90ba21bb8d1352bbac5d2067fe349a0d24399a02d"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/10-fleet-typescript-line.md",
+        "sha256": "16cf8defaf3b26c196bcf5680f3ec33ac714fcc650c018055c04b04df578ec85"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/20-compiler-and-module-settings.md",
+        "sha256": "59b0983de9ff6c38bbcf8bb94224de458d8c258e1c06da79f18f1414e80beeb9"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/30-module-augmentation.md",
+        "sha256": "6c08a76022690e446a2177417893becbe6c5b266bfd48aecb2d6cdacb2d90fc6"
+      },
+      {
+        "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns/40-antipatterns.md",
+        "sha256": "7f953913401592be5596c312a2049c455b9f0a0f4a4348a3de52d25c8072a702"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate.md",
+        "sha256": "45d20f8fcc910e2af4b8e1544013dd6fdac69fd103a341fc69bceae966b96e48"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/10-selection-and-platform-matrix.md",
+        "sha256": "7e1eca284a030a29e87bf4dbc81e5d573996fb81ff154bb88caa02bf4a62b754"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/20-vm-and-container-substrates.md",
+        "sha256": "e6c014d8b3eb1c1739fb5d01d6527c6d9d37a03fd908dd4a0761d2f6bd5c22d2"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/30-kubernetes-substrate.md",
+        "sha256": "e75a3cd0e5d816110572bcd041fa349d0f7a4ca205f36d52754af954748999b8"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/40-openshift-substrate.md",
+        "sha256": "c62b5b111fe9083329b71100f6caae5c670e53d9f49c42c3fd10dfe5de8aa7df"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate/50-boundaries-and-handoff.md",
+        "sha256": "79b746e28fa9f551ea58d31953b0c08367063ceac610a57a9032048de27b16c2"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance.md",
+        "sha256": "64e89cb9bd1544c1f3a6ae356464017cd0f454e9c063b1ac5682acd1ddede452"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/10-event-truth-and-client-signals.md",
+        "sha256": "a4db9e50bc507ab1147251725ab0acaa1d38515c161f7179b15ea84399bf56e1"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/20-attendance-and-watch-time.md",
+        "sha256": "ecec7c89a984891f59b71e4b1bab174392905c5280a4326edb17371e8c701461"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/30-recording-governance.md",
+        "sha256": "b0eaeb3fb923ecf67017b8e7e99fe92282465ee64f3e6aa47ae048e9c52336bd"
+      },
+      {
+        "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance/40-analytics-privacy.md",
+        "sha256": "0e36c9780d0d1ecc0d1774a6f4e4a40adb716f342c3f71ab452dfaf24919f546"
+      }
+    ]
+  },
+  "validation": {
+    "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files <54 frozen D1/D3/D4/D7 Markdown paths> --line-budget",
+    "exit_code": 0,
+    "result": "Validated links and line budgets in all 54 selected Markdown files; no RED eligible docs. Yellow: IndexedDB migration strategies (58), Fiber route/middleware order (56), Jitsi recording governance (71), Vue module augmentation (51).",
+    "scope": "Only links/line budgets for owned changed documentation; no executable tests rerun because no source changes."
+  },
+  "cross_scope_comment_nit": {
+    "path": "skills/sohrab/alaa-shaka-player/assets/templates/offlineDownload.ts",
+    "location": "top comment near line 6",
+    "exact_issue": "Its comment names IndexedDB references/30-storage-quota-persistence-and-eviction.md, which does not exist. The current related owner reference is references/72-offline-media-store.md; eviction recovery specifically lives at references/32-eviction-and-recovery.md.",
+    "assessment": "The named path is stale, but the surrounding storage-substrate ownership is conceptually related; this is optional source-comment polish outside Markdown scope. No template edit made."
+  },
+  "manifest_owner_handoff": {
+    "file": "skills/sohrab/alaa-indexeddb-browser-storage/skill-pack-manifest.json (root_files field)",
+    "action": "Refresh only the root_files path inventory; this report does not edit JSON/manifests.",
+    "additions": [
+      "references/80-testing-and-proof-levels/10-required-scenarios.md",
+      "references/80-testing-and-proof-levels/20-quota-reproduction.md",
+      "references/80-testing-and-proof-levels/30-debug-surfaces.md",
+      "references/80-testing-and-proof-levels/40-performance-budgets.md"
+    ],
+    "removals": [
+      "references/80-testing-and-proof-levels/10-proof-levels.md",
+      "references/80-testing-and-proof-levels/20-required-scenarios.md",
+      "references/80-testing-and-proof-levels/30-quota-reproduction.md",
+      "references/80-testing-and-proof-levels/40-debug-and-performance.md"
+    ],
+    "net_path_count_change": 0
+  },
+  "limits": [
+    "No independent approval is claimed.",
+    "D2/D6 remain separately owned; their grades/hashes must be integrated by parent after that owner freezes.",
+    "No executable, checker, policy, manifest or source-template changes were made."
+  ],
+  "D1_targeted_correction": {
+    "finding": "Performance child duplicated the full canonical release checklist.",
+    "before": {
+      "sha256_raw_bytes": "b87404503b1609d86220f921835e371a6948e1adc457a939ee5cc19ddec8e873",
+      "byte_length": 1598,
+      "base64_exact_bytes": "IyMgUGVyZm9ybWFuY2UgYnVkZ2V0cyB0byBhc3NlcnQNCg0KTWVhc3VyZWQgb24gdGhlIGxvd2VzdC1jYXBhYmlsaXR5IGxhbmUgaW4gYGFzc2V0cy9icm93c2VyLXRlc3QtbWF0cml4LnlhbWxgOyBhIGZlYXR1cmUgbWF5IHN0YXRlIGl0cyBvd24uDQoNCmBgYHRleHQNCmRhdGFiYXNlIG9wZW4gb24gYXBwbGljYXRpb24gYm9vdDogPCAxMDAgbXMgcDc1LCA8IDUwMCBtcyBwOTUNCnJvdXRlLWxldmVsIGNhY2hlZCByZWFkOiAgICAgICAgICAgPCA1MCBtcyBwNzUNCm1pZ3JhdGlvbiB3aXRob3V0IHByb2dyZXNzIFVJOiAgICAgPCAyIHMsIG9yIHNoaXAgcHJvZ3Jlc3MgYW5kIGEgcmV0cnkNCm91dGJveCBmbHVzaCBiYXRjaDogICAgICAgICAgICAgICAgb3V0Ym94QmF0Y2hTaXplLCBkZWZhdWx0IDI1DQpgYGANCg0KVGhlIGNvbXBsZXhpdHkgYm91bmQgYmVoaW5kIGVhY2ggaXMgaW4gYDUwLXRyYW5zYWN0aW9ucy1wZXJmb3JtYW5jZS1hbmQtcXVlcnktcGF0dGVybnMubWRgLiBBIG1lYXN1cmVkDQpudW1iZXIgdGhhdCBtZWV0cyBpdHMgYnVkZ2V0IG9uIGEgc21hbGwgc3RvcmUgYW5kIHN0YXRlcyBubyBib3VuZCB3aWxsIHN0b3AgbWVldGluZyBpdCBhcyB0aGUgc3RvcmUgZ3Jvd3MuDQoNCgojIyBSZWxlYXNlIGNoZWNrbGlzdA0KDQotIFsgXSBEZWNpc2lvbiByZWNvcmQgbmFtZXMgdGhlIGRhdGEgY2xhc3MgYW5kIHNvdXJjZSBvZiB0cnV0aCBmb3IgZXZlcnkgc3RvcmUgdG91Y2hlZC4NCi0gWyBdIEV2ZXJ5IGluZGV4IGtleSBwYXRoIHZlcmlmaWVkIGFnYWluc3QgdGhlIHJlY29yZCB0eXBlIGl0IGluZGV4ZXMuDQotIFsgXSBFdmVyeSByZWFkJ3MgYm91bmQgc3RhdGVkOyBubyBgTyhuKWAgcmVhZCBvbiBhIHVzZXItZmFjaW5nIHJvdXRlLg0KLSBbIF0gQ2FwYWJpbGl0eSBkZXRlY3Rpb24gaW1wbGVtZW50ZWQgYW5kIHRoZSB0aWVyIHBlcnNpc3RlZC4NCi0gWyBdIFF1b3RhIGVycm9yIHBhdGggZXhlcmNpc2VkIGF0IGxldmVsIDIgYW5kIGxldmVsIDQuDQotIFsgXSBDbGVhbnVwIGltcGxlbWVudGVkIGZvciBldmVyeSByZWZldGNoYWJsZSBjbGFzcywgd2l0aCBhIGNhcCBpbiB0aGUgYnVkZ2V0IGZpbGUuDQotIFsgXSBMb2dvdXQgcHVyZ2UgaW5kZXhlZCwgYXRvbWljIG9yIGpvdXJuYWxsZWQsIHZlcmlmaWVkIGJ5IGEgcmFuZ2VkIGNvdW50Lg0KLSBbIF0gTXVsdGktdGFiIHVwZ3JhZGUgYW5kIHRoZSBzZXJ2aWNlLXdvcmtlciBjb25uZWN0aW9uIGJvdGggZXhlcmNpc2VkLg0KLSBbIF0gQSBXZWJLaXQgbGFuZSBjb21wbGV0ZWQgaWYgdGhlIHByb2R1Y3Qgc3VwcG9ydHMgU2FmYXJpIG9yIGlPUy4NCi0gWyBdIFByaXZhdGUtbW9kZSBjaGVja2VkOyBubyBvZmZsaW5lIHByb21pc2UgYXQgdGllciAwIG9yIDEuDQotIFsgXSBPbGRlci1zY2hlbWEgYW5kIG1hbGZvcm1lZCByZWNvcmRzIHJlamVjdGVkIG9uIHJlYWQuDQotIFsgXSBUZWxlbWV0cnkgcGVyIGZhaWx1cmUgY2xhc3MsIHJlZ2lzdGVyZWQgYW5kIGJ1Y2tldGVkLCB3aXRoIG5vIHBheWxvYWQuDQotIFsgXSBVc2VyLWZhY2luZyBjb3B5IG1hdGNoZXMgdGhlIHdvcmRpbmcgdGFibGUgaW4gYDcwLWNhY2hlLWFuZC1kcmFmdHMubWRgLg0KDQo="
+    },
+    "canonical_release_file_before_sha256": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed",
+    "edit": "Removed the performance child suffix beginning at the duplicate exact `## Release checklist` heading; retained all preceding performance-budget text and code fence.",
+    "source_freeze_after_edit": true,
+    "after": {
+      "sha256_raw_bytes": "be201fe558f3077f5359fb05ea957b92495d8bca564325f14005c1094ab88434",
+      "byte_length": 620,
+      "physical_lines": 13
+    },
+    "canonical_release_file_after_sha256": "ea3fbde9ce9c75f5d363da9261c862b86a6533a9a4e917285f184fed857751ed",
+    "canonical_file_unchanged": true,
+    "performance_section_retained": true,
+    "verification": {
+      "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files <40-performance-budgets.md> <50-release-checklist.md> --line-budget",
+      "exit_code": 0,
+      "result": "Both links resolve; performance child is GREEN at 13 physical lines and canonical release checklist remains GREEN at 15 lines. Exact checklist sentence occurs once in the 80 tree; exact Release checklist H2 occurs once. All four performance rules and the original text code fence remain."
+    },
+    "prior_four_child_rename_operation": {
+      "status": "unknown",
+      "reason": "Available durable lane reports and the candidate4 byte archive record the old/new paths and content, but not the command or filesystem operation used. I cannot distinguish a move/rename from create/delete without an operation log."
+    }
+  }
+}

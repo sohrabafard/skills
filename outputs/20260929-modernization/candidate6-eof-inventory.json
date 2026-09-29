@@ -1,0 +1,446 @@
+[
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/10-broker-unreachable.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/20-consumer-stuck.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/30-poison-redelivery-loop.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/40-duplicate-storm.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/50-outbox-stalled.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/60-dead-letter-queue-filling.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes/70-replay-duplicates.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/10-version-and-import.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/30-immutable-mode.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/40-context-cancellation.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/50-server-bounds.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/60-boot-order.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core/70-listener-shutdown.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/20-upgrade-and-migration-strategies.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/30-journal-and-other-contexts.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/10-required-scenarios.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/20-quota-reproduction.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/30-debug-surfaces.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/10-refresh-and-authority.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks/30-historical-registry-snapshot.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+    "lane": "contract-owner"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+    "lane": "contract-owner"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+    "lane": "contract-owner"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+    "lane": "contract-owner"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+    "lane": "contract-owner"
+  },
+  {
+    "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+    "lane": "contract-owner"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/10-contract-and-events.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/20-stats-catalog.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/30-qoe-derivation.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats/40-qoe-collector-example.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/10-structure-and-categories.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/20-complete-code-catalog.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes/30-error-data-and-handling-paths.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/10-migration-boundaries.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/20-v4-to-v5-breaking-changes.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/30-deprecations-and-v6.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/40-v520-features.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/50-v52x-patches.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas/60-v510-changes.md",
+    "lane": "foundation"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+    "lane": "operations"
+  },
+  {
+    "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+    "lane": "operations"
+  }
+]

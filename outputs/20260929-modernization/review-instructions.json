@@ -1,0 +1,19 @@
+{
+  "recorded_by": "parent from independent instruction_review final; reviewer role forbids report writes",
+  "verdict": "APPROVED",
+  "configured": "gpt-6-astra/high",
+  "requested": "none",
+  "observed": "unknown",
+  "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "candidate": "f7605421917a1985af8c2729a2e493170b9fb12fd0be91c719af148a32e03480",
+  "findings": [],
+  "scope": "Instruction-contract review: model ownership, historical labeling, API/runtime boundaries, mirrored gates, authority and recovery constraints; HEAD-relative instruction diffs, twelve wrapper migrations, policy/corpus, gate brief and research provenance inspected",
+  "integrity": "All140 manifest hashes match;69assessment rows25changed44retained",
+  "not_assessed": [
+    "independent external-source retrieval",
+    "runtime activation",
+    "calibration",
+    "domain implementation correctness",
+    "runtime enforcement of read-only restrictions"
+  ]
+}

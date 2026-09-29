@@ -1,0 +1,18 @@
+{
+  "agent": "integrated_verification",
+  "snapshot": "candidate-8",
+  "completed": [
+    "378sourcehashesmatch",
+    "25browserinputsmatch;9casespreserved",
+    "fourpaired/twoIDBgatesrecordedexit0",
+    "parentcandidate8whitespace/link/EOFrecordedexit0",
+    "oneEOFonlydeltafromcandidate7"
+  ],
+  "unfinished": [
+    "finalreceipt",
+    "allcitedruntimeprooflogsreconciliation",
+    "finalworkflowstatus"
+  ],
+  "processes": "No activecommand/session/source reader after controlledinterrupt",
+  "not_final_approval": true
+}

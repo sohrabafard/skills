@@ -1,0 +1,50 @@
+[
+  {
+    "file": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/backend-evidence.md",
+    "raw_backup": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/backend-evidence.raw.txt.gz",
+    "raw_sha256": "87d9b2ff76fdda9fbc0a6d8363c19eac6dce0c896d65dcfab4d4609d8c4cc503",
+    "findings_repaired": 17,
+    "encoding": "gzip; SHA256 is uncompressed bytes",
+    "roundtrip_verified": true
+  },
+  {
+    "file": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.md",
+    "raw_backup": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.raw.txt.gz",
+    "raw_sha256": "945cc7858496fe7ae83fd0a3d79a4b39049e4aed9472b9c6c50dd2ee11e94191",
+    "findings_repaired": 1,
+    "encoding": "gzip; SHA256 is uncompressed bytes",
+    "roundtrip_verified": true
+  },
+  {
+    "file": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/frontend-evidence.md",
+    "raw_backup": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/frontend-evidence.raw.txt.gz",
+    "raw_sha256": "3f4df2645b59efecf95d03d395f89ad0b530922b4c5800de04293805f7e7a1b2",
+    "findings_repaired": 24,
+    "encoding": "gzip; SHA256 is uncompressed bytes",
+    "roundtrip_verified": true
+  },
+  {
+    "file": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/model-evidence.md",
+    "raw_backup": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/model-evidence.raw.txt.gz",
+    "raw_sha256": "ebc933eb2feb9bbd01a92d9c91745ef4248babd1372c78cee791f0eba7f7a407",
+    "findings_repaired": 452,
+    "encoding": "gzip; SHA256 is uncompressed bytes",
+    "roundtrip_verified": true
+  },
+  {
+    "file": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/operations-evidence.md",
+    "raw_backup": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/operations-evidence.raw.txt.gz",
+    "raw_sha256": "acc62c0e0ac5e6ba360e3e7730d0ff07cfa7112912cf40df5a7f4371adb7297b",
+    "findings_repaired": 20,
+    "encoding": "gzip; SHA256 is uncompressed bytes",
+    "roundtrip_verified": true
+  },
+  {
+    "file": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/specialized-evidence.md",
+    "raw_backup": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/specialized-evidence.raw.txt.gz",
+    "raw_sha256": "4baaa6220f6c52e5dc1770857ce9c3d1f4d20be6cbe778c010c60033305ced42",
+    "findings_repaired": 150,
+    "encoding": "gzip; SHA256 is uncompressed bytes",
+    "roundtrip_verified": true
+  }
+]

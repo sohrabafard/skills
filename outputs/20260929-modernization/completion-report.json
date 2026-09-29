@@ -1,0 +1,70 @@
+{
+  "status": "completed",
+  "scope": {
+    "assessed_skills": 69,
+    "changed_skills": 25,
+    "retained_skills": 44,
+    "source_boundary": "skills/sohrab/",
+    "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+    "branch": "codex/sohrab-sonnet55-modernization"
+  },
+  "lifecycle": {
+    "IMPLEMENTED": "proven on the identified candidate8 worktree; focused proof and independent review passed. Source remains uncommitted.",
+    "MERGE_CANDIDATE": "proven for the current worktree: affected integration gates and independent reviews passed. Existing staged content is older and is not the verified candidate.",
+    "RELEASE_CANDIDATE": "not requested",
+    "PUBLISHED": "not requested"
+  },
+  "changes": [
+    "Canonical Sonnet5.5 policy and controlled agent projections; GPT6/Claude family boundaries remain owned by prompting-guide",
+    "Evidence-based domain updates and compatibility guards across25skills;44 researched and retained",
+    "Production examples repaired for IndexedDB atomic account purge, Shaka lifecycle/QoE, Ansible explicit bootstrap/redaction and Arvan secret-output safety",
+    "Condition-based reference decomposition with intact payloads, ownership and stopping rules"
+  ],
+  "proof_limits": [
+    "Configured policy does not prove model activation, live identity or calibration",
+    "No consumer deployment, cluster/provider/broker mutation, real consumer Vitest/typecheck or load benchmark",
+    "Optional unchanged Windows ACL and memory self-tests failed; strict Shaka comment scan failure remains recorded separately",
+    "Initial full-bundle read order lapses recovered but not erased; four document rename operation histories unavailable",
+    "Uncommitted source: preserve worktree and existing staging; no commit/push/install performed",
+    "Existing staged blobs predate final worktree repairs. Cached single-file whitespace check failed on the old staged content; HEAD-relative current worktree check passes. Index preserved; stage current intended source before any later authorized commit."
+  ],
+  "roster": "agent-roster.json",
+  "research_coverage": "assessment.json",
+  "document_grades": "documentation-grades.json",
+  "curation": "curation.json",
+  "pending": [],
+  "local_verification": "Required affected local gates passed after bounded repairs. Candidate7 records retain the initial whitespace failure and the invalid simple EOF assertion. Candidate8 receipts replace these with native HEAD-relative whitespace and robust EOF checks. All 377 other source hashes stayed identical; the final source delta was EOF-only.",
+  "blocker": null,
+  "snapshot": {
+    "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+    "branch": "codex/sohrab-sonnet55-modernization",
+    "files": 378,
+    "skills": 25,
+    "manifest_sha256": "78de558ae3d3ef8b60e26f0860636952652ed198ad6595a7a7527838c6d1672f",
+    "excluded": "skills/sohrab/alaa-workflow/outputs/20260929-modernization",
+    "selection": "git diff HEAD plus untracked source; sorted raw-byte SHA256 double-space path LF lines",
+    "changed_from_previous": [
+      "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations/10-version-and-schema-foundations.md"
+    ],
+    "missing_from_previous": [],
+    "publication": "uncommitted; staging preserved",
+    "independent_gates": "Reconcile changed inputs before citing prior proof"
+  },
+  "document_counts": {
+    "GREEN": 232,
+    "YELLOW": 73,
+    "ORANGE": 18,
+    "EXEMPT_ATOMIC": 11,
+    "eligible_RED": 0,
+    "Markdown": 332,
+    "templates": 2
+  },
+  "instruction_review": "review-instructions-docs-candidate8.json: APPROVED; allfindingsclosed",
+  "independent_verification": [
+    "verification-candidate8-final.json",
+    "verification-candidate8-diagnostic-closure.json"
+  ],
+  "checks_accounting": "Final parent candidate7 recorded 22 checks: 21 returned exit 0, but the simple EOF assertion was invalid and was replaced. Candidate8 targeted links, native whitespace, robust EOF, preimage proof and two IndexedDB owner gates passed. The independent verifier matched 378 source paths, 25 browser inputs and 44 non-Markdown inputs. Independent diagnosis verified 40 paired-owner rows and captured the workflow exit code of 0. Seven final status gates passed. Historical executions are not summed across retries; per-lane counts remain in their original receipts.",
+  "branch_span": "No commits were authorized or created; HEAD is unchanged. A committed branch span is not applicable.",
+  "final_status_gate": "final-status-gates.json: PASS"
+}

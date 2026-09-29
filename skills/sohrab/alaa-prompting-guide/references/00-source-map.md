@@ -9,7 +9,7 @@ Ground every version-sensitive claim here. This file decides which source wins a
 3. Live official documentation:
    - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
    - Codex and ChatGPT skills, commands, and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, and the Codex pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents`, `guides/agents-md`, and `config-reference`
-   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Sonnet 5, and Fable 5.1 pages under that path
+   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Sonnet 5.5, and Fable 5.1 pages under that path
    - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, and `goal`
 4. This skill's dated references and local policy; they do not override current official capability facts. Use `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
 
@@ -39,3 +39,7 @@ dates until re-fetched. For lifecycle, use the official model-deprecations page;
 semantics, use model-ids-and-versions. Full system cards were unavailable after bounded retrieval;
 release summaries are weaker evidence. Vendor scores and source validation do not prove
 local runtime activation, account access or a profile's comparative quality.
+
+Sonnet 5.5 model, migration, prompting, effort and Claude Code selection sources were
+refreshed 29 September 2026. Read `references/31-sonnet-5-5.md` for their exact URLs and
+provider/API boundaries. Other dated model snapshots retain their own verification dates.

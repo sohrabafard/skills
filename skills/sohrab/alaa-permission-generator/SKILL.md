@@ -1,6 +1,6 @@
 ---
 name: alaa-permission-generator
-description: "Register, generate, apply, and validate Alaa coarse permissions through alaa-permission-catalog. Use when adding, renaming, deprecating, or reserving a permission key or bitmap id, onboarding a Laravel config/permissions.php consumer, a Go internal/authz/permissions_gen.go consumer, or a TypeScript aggregate consumer such as the client permission-catalog.ts, syncing the auth seed, decoding a trusted X-Access bitmap, deriving unverified frontend UI capability hints, investigating catalog drift, or removing service-local permission-map duplication. Do not use for OpenFGA object-level can_* relations - use /openfga ($openfga). Do not use for gateway route authorization policy, JWT verification, or who may assert a trusted header - use /alaa-trust-gateway-auth ($alaa-trust-gateway-auth)."
+description: "Register, generate, apply, and validate Alaa coarse permissions through alaa-permission-catalog. Use when adding, renaming, deprecating, or reserving a permission key or bitmap id, onboarding a Laravel config/permissions.php consumer, a Go internal/authz/permissions_gen.go consumer, or a TypeScript aggregate consumer such as the client permission-catalog.ts, syncing the auth seed, decoding a trusted X-Access bitmap, deriving unverified frontend UI capability hints, investigating catalog drift, or removing service-local permission-map duplication. Do not use for OpenFGA object-level can_* relations - use /openfga. Do not use for gateway route authorization policy, JWT verification, or who may assert a trusted header - use /alaa-trust-gateway-auth."
 ---
 
 # Alaa Permission Generator
@@ -27,8 +27,8 @@ every path you tried, stop, and ask the requester where the catalog is. Do not h
 hand-built permission map is the outcome every other rule here exists to prevent; "catalog root not found, need the
 path" is the correct report.
 
-**Second stop, the most common false alarm.** `catalog/services.json` sets `source_root` to the absolute path
-`D:/Sohrab/Project`, and every command that reads an owner's source file resolves
+**Second stop, the most common false alarm.** Read `source_root` from the resolved catalog's
+`catalog/services.json`; commands reading an owner's source file resolve
 `<source_root>/<owner_repo>/<source_path>`. With the sibling repositories absent from that path, those commands exit `2`
 with `Configured source file not found: <path>`. That is a missing checkout, not a broken tool: report which
 repositories are missing at which path and stop. Do not edit `source_root` to route around it.
@@ -46,8 +46,7 @@ only when the request names it.
 - Applying the auth seed, and assigning a permission to a user, role, or admin: each requires explicit words naming the
   seed or the assignment. A request to "add a permission" authorizes neither.
 - Anything you cannot place in one of those three lines: ask. Report each unauthorized operation the change still needs
-  as remaining work, named and pathed. Lane procedure and proof strength are owned by `/alaa-controlled-ops`
-  (`$alaa-controlled-ops`).
+  as remaining work, named and pathed. Lane procedure and proof strength are owned by `/alaa-controlled-ops`.
 
 ## Non-negotiable contract
 
@@ -114,10 +113,8 @@ from this skill, which is generated-adjacent source a service does not edit loca
   `alaa-services-contract references/22-failure-load-and-deprecation-contract.md`.
 - **The frontend is a consumer of `assets/permission-bitmap/permission-bitmap.ts`, never the author of a second
   decoder.** A client-side permission read is a UI hint and never an authorization decision:
-  `alaa-vue-typescript-clean-code references/72-frontend-security-binding.md` — `/alaa-vue-typescript-clean-code`
-  (`$alaa-vue-typescript-clean-code`) — and
-  `alaa-ui-ux-design-system references/25-untrusted-content-and-ui-authority.md` — `/alaa-ui-ux-design-system`
-  (`$alaa-ui-ux-design-system`) — both state that framing, and the affordance rule (hide, disable-with-reason, or
+  `alaa-vue-typescript-clean-code references/72-frontend-security-binding.md` — `/alaa-vue-typescript-clean-code` — and
+  `alaa-ui-ux-design-system references/25-untrusted-content-and-ui-authority.md` — `/alaa-ui-ux-design-system` — both state that framing, and the affordance rule (hide, disable-with-reason, or
   show-and-fail) is owned by the design-system skill.
 
 The durable fix is for the catalog tool to emit the decoder beside the map, so there is one source rather than one
@@ -128,15 +125,14 @@ it would break, and what deciding it needs. It is a proposal, and this skill doe
 
 Read `references/00-topic-map.md` and load only the file whose triggering condition matches the task in front of you.
 
-Load `/alaa-services-contract` (`$alaa-services-contract`) and `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
-for every implementation. Add `/alaa-golang` (`$alaa-golang`) for Go, `/alaa-laravel-architecture`
-(`$alaa-laravel-architecture`) and `/alaa-php-clean-code` (`$alaa-php-clean-code`) for Laravel, or
-`/alaa-vue-typescript-clean-code` (`$alaa-vue-typescript-clean-code`) and `/alaa-mono-package` (`$alaa-mono-package`)
-for TypeScript. Add `/alaa-security-review` (`$alaa-security-review`) whenever a consumer reads token claims.
+Load `/alaa-services-contract` and `/alaa-trust-gateway-auth`
+for every implementation. Add `/alaa-golang` for Go, `/alaa-laravel-architecture` and `/alaa-php-clean-code` for Laravel, or
+`/alaa-vue-typescript-clean-code` and `/alaa-mono-package`
+for TypeScript. Add `/alaa-security-review` whenever a consumer reads token claims.
 
 ## When not to use
 
-Do not use this skill to decide whether a caller may act on a resource, or what a service may believe about the header a permission arrived on — that is `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). Do not use it for object-level relationship authorization, which is the vendored `openfga` skill. Do not use it for the TOTP step-up contract, which is `/alaa-services-contract` (`$alaa-services-contract`) `references/32-auth-totp-and-step-up-contract.md`. Do not use it to write the application code that consumes a decoded permission set; take that shape from the owning language skill.
+Do not use this skill to decide whether a caller may act on a resource, or what a service may believe about the header a permission arrived on — that is `/alaa-trust-gateway-auth`. Do not use it for object-level relationship authorization, which is the vendored `openfga` skill. Do not use it for the TOTP step-up contract, which is `/alaa-services-contract` `references/32-auth-totp-and-step-up-contract.md`. Do not use it to write the application code that consumes a decoded permission set; take that shape from the owning language skill.
 
 ## Ownership boundary
 
@@ -148,19 +144,19 @@ listed owner wins on conflict**, with two refinements: `/alaa-services-contract`
 
 | Not owned here | Owner |
 | --- | --- |
-| Trusted-header assertion, JWT verification, header sanitisation, tenant derivation | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
-| Object-level relations, `can_*`, tuples | `/openfga` (`$openfga`) |
-| Log, metric, event and code **names**; request deadlines; the error envelope | `/alaa-services-contract` (`$alaa-services-contract`) |
-| Whether a signal is **required**, and its gate | `/alaa-observability-soc` (`$alaa-observability-soc`) |
-| Retry, backoff, circuit-breaking, degradation doctrine | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
-| Complexity budgets, structure choice, the whole N+1 family | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
-| What makes a test a test, and which layer it belongs at | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
-| Design pass when an interface, a data writer, or a consistency, ordering, idempotency, concurrency or caching property changes | `/alaa-system-design` (`$alaa-system-design`) |
-| Security review triggers, threat classes, the fail-closed discriminator | `/alaa-security-review` (`$alaa-security-review`) |
-| Controlled-operation procedure and proof strength for the apply lanes | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
-| Long-task phasing and resumable state | `/alaa-workflow` (`$alaa-workflow`) |
+| Trusted-header assertion, JWT verification, header sanitisation, tenant derivation | `/alaa-trust-gateway-auth` |
+| Object-level relations, `can_*`, tuples | `/openfga` |
+| Log, metric, event and code **names**; request deadlines; the error envelope | `/alaa-services-contract` |
+| Whether a signal is **required**, and its gate | `/alaa-observability-soc` |
+| Retry, backoff, circuit-breaking, degradation doctrine | `/alaa-reliability-sla` |
+| Complexity budgets, structure choice, the whole N+1 family | `/alaa-algorithms-data-structures` |
+| What makes a test a test, and which layer it belongs at | `/alaa-testing-strategy` |
+| Design pass when an interface, a data writer, or a consistency, ordering, idempotency, concurrency or caching property changes | `/alaa-system-design` |
+| Security review triggers, threat classes, the fail-closed discriminator | `/alaa-security-review` |
+| Controlled-operation procedure and proof strength for the apply lanes | `/alaa-controlled-ops` |
+| Long-task phasing and resumable state | `/alaa-workflow` |
 | The quality bar itself | `alaa-project-constitution references/quality-bar.md` |
-| Model choice and reasoning effort | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
+| Model choice and reasoning effort | `/alaa-prompting-guide` |
 | Per-language validation commands and design-pattern selection | `/alaa-golang`, `/alaa-vue-typescript-clean-code`, `/alaa-mono-package`, `/alaa-laravel-architecture`, `alaa-php-clean-code references/design-patterns.md` |
 
 The test **cases** named in the three consumer references stay here: byte-boundary bit indexing and drift-code coverage

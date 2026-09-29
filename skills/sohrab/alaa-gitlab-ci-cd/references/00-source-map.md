@@ -105,3 +105,10 @@ re-derives it. To re-baseline the whole skill:
   `fallback_keys` maximum of five; `read_only_root_filesystem` absent from every
   documented Kubernetes executor security context, which is why the rule that
   keyed on it was removed from `validate_runner_config.py`.
+
+- **2026-09-29.** Verified GitLab 19.4 release, workflow no-match behavior,
+  project-scoped resource groups and all four queue modes, and supported variable
+  path filters. Sources: https://docs.gitlab.com/releases/19/gitlab-19-4-released/,
+  https://docs.gitlab.com/ci/yaml/workflow/, https://docs.gitlab.com/api/resource_groups/,
+  https://docs.gitlab.com/ci/resource_groups/, https://docs.gitlab.com/ci/yaml/.
+  Historical image pins and runtime observations were retained.

@@ -1,0 +1,73 @@
+{
+  "recorded_by": "parent from independent correctness_review final",
+  "verdict": "CHANGES-REQUESTED",
+  "configured": "gpt-6-astra/high",
+  "requested": "none",
+  "observed": "unknown",
+  "candidate": "f7605421917a1985af8c2729a2e493170b9fb12fd0be91c719af148a32e03480",
+  "integrity": "All140 hashes and manifest independently matched",
+  "findings": [
+    {
+      "id": "COR-1",
+      "severity": "major",
+      "confidence": 1.0,
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/examples/alaa-client-storage.ts",
+      "line": 175,
+      "trigger_and_impact": "Logout purge omits account metadata; fixture bypasses facade writes",
+      "remedy": "Delete metadata atomically; test actual writes, rollback and retained-account rows"
+    },
+    {
+      "id": "COR-2",
+      "severity": "major",
+      "confidence": 0.98,
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+      "line": 222,
+      "trigger_and_impact": "Overlapping initial attaches create Players sharing one video; stale destroy can clear new source",
+      "remedy": "Serialize initialization and stale cleanup; overlapping attach test"
+    },
+    {
+      "id": "COR-3",
+      "severity": "minor",
+      "confidence": 1.0,
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+      "line": 312,
+      "trigger_and_impact": "Removing unloading listener before destroy suppresses session-end callback",
+      "remedy": "Snapshot session once before listener removal; disposal QoE assertion"
+    },
+    {
+      "id": "COR-4",
+      "severity": "minor",
+      "confidence": 1.0,
+      "path": "skills/sohrab/alaa-shaka-player/assets/templates/useShakaPlayer.ts",
+      "line": 296,
+      "trigger_and_impact": "Teardown catch classifier dereferences null/undefined rejection and rejects again",
+      "remedy": "Guard unknown values; null/primitive rejection fixtures"
+    },
+    {
+      "id": "COR-5",
+      "severity": "minor",
+      "confidence": 1.0,
+      "path": "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+      "line": 133,
+      "trigger_and_impact": "Installation opt-in blocks existing cached-tool discovery",
+      "remedy": "Resolve existing cache before installation authorization; trap installers in test"
+    },
+    {
+      "id": "COR-6",
+      "severity": "minor",
+      "confidence": 0.85,
+      "path": "skills/sohrab/alaa-haproxy/scripts/check_examples.py",
+      "line": 470,
+      "trigger_and_impact": "Blanket parser-warning downgrade can pass ineffective configuration; no live failure observed",
+      "remedy": "Distinguish accepted deprecations from unresolved functional warnings"
+    }
+  ],
+  "external_source": "https://raw.githubusercontent.com/shaka-project/shaka-player/v5.2.3/lib/player.js",
+  "not_assessed": [
+    "test reruns",
+    "browser/consumer Vitest",
+    "liveproviders",
+    "other release-claim independent refresh"
+  ],
+  "scope": "Source diffs, manifest entries, instructions, lane evidence and verification-fix1; static read-only review"
+}

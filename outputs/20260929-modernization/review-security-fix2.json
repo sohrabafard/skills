@@ -1,0 +1,17 @@
+{
+  "recorded_by": "parent from independent security_review final",
+  "verdict": "PASS",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "scope": "Two operator templates finalcycle2 and baselinecapture snippet",
+  "findings": [],
+  "hashes_matched": 2,
+  "candidate4_manifest_entries": 154,
+  "candidate4_digest_matched": true,
+  "evidence": "Successful render establishes trusted private parent; baseline rechecks mode0700/owner, refuses existing path/symlink, umask077+noclobber, FD9 regular/caller0600 before bytes; failed capture/gate stops upgrade and leaves private partial output. README preserves ancestors/ignore/POSIX conditions.",
+  "limits": [
+    "Static only; no snippet command execution/test rerun/live call",
+    "Root, invoking identity and tools trusted",
+    "Other source not re-reviewed"
+  ]
+}

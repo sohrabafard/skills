@@ -1,7 +1,7 @@
 /**
  * Client-only Shaka Player core wrapper for Vue 3 + Quasar + Vite, against Shaka v5.2.3.
  *
- * Obeys /alaa-vue-typescript-clean-code ($alaa-vue-typescript-clean-code):
+ * Obeys /alaa-vue-typescript-clean-code:
  * no `any`, one frozen return object, derived primitives only in reactivity.
  *
  * Properties this file exists to guarantee, each with its reference:
@@ -83,7 +83,7 @@ export interface UseShakaPlayerOptions {
   readonly getGrant?: () => Promise<MediaGrant>;
   readonly tuning?: Partial<PlayerTuning>;
   /** Receives QoE quantities on session end. Wire NAMES come from /alaa-services-contract. */
-  readonly onSessionEnd?: (stats: ShakaStats) => void;
+  readonly onSessionEnd?: (stats: ShakaStats) => void | Promise<void>;
 }
 
 /** Validates tuning and builds the Shaka config. Throws on a value outside its stated range. */
@@ -154,6 +154,11 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
   let player: ShakaPlayer | null = null;
   let run = 0;
   let disposed = false;
+  let disposal: Promise<void> | null = null;
+  let initializationTail: Promise<void> = Promise.resolve();
+  let cleanupFailure: { cause: unknown } | null = null;
+  let sessionPending = false;
+  const pendingInitializations = new Set<Promise<boolean>>();
   let streamingRetries = 0;
   const disposers: Array<() => void> = [];
 
@@ -162,18 +167,30 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
     if (disposed || next === prev) return;
     void loadSource(next);
   });
-  // Awaited: the component does not finish unmounting until teardown completes.
-  onBeforeUnmount(async () => { await dispose(); });
+  // Vue does not await this hook. An owner needing completion awaits dispose() before removal.
+  onBeforeUnmount(() => {
+    void dispose().catch(raw => { error.value = classify(raw); });
+  });
 
   async function loadSource(uri: string | null): Promise<void> {
     const token = ++run;
     error.value = null;
     ready.value = false;
-    if (!uri || disposed) { loading.value = false; return; }
+    if (disposed) { loading.value = false; return; }
 
-    loading.value = true;
+    loading.value = !!uri;
     try {
-      if (!(await ensurePlayer(token))) return;
+      if (!uri) {
+        buffering.value = false;
+        await player?.unload();
+        return;
+      }
+      const initialization = ensurePlayer(token);
+      pendingInitializations.add(initialization);
+      let initialized: boolean;
+      try { initialized = await initialization; }
+      finally { pendingInitializations.delete(initialization); }
+      if (!initialized) { if (token === run) loading.value = false; return; }
       if (!player || disposed || token !== run) return;
       streamingRetries = 0;
       await player.load(uri);
@@ -187,7 +204,16 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
     }
   }
 
-  async function ensurePlayer(token: number): Promise<boolean> {
+  function ensurePlayer(token: number): Promise<boolean> {
+    const next = initializationTail.then(() => initializePlayer(token));
+    // Keep creation and stale-instance destruction in one serial lane.
+    initializationTail = next.then(() => {}, () => {});
+    return next;
+  }
+
+  async function initializePlayer(token: number): Promise<boolean> {
+    if (cleanupFailure) throw cleanupFailure.cause;
+    if (disposed || token !== run) return false;
     if (player) return true;
 
     const video = options.videoEl.value;
@@ -206,8 +232,9 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
     }
 
     const next = new shaka.Player();                   // no arguments: the one-arg form is deprecated
-    await next.attach(video);
-    if (disposed || token !== run) { await next.destroy(); return false; }
+    try { await next.attach(video); }
+    catch (raw) { await destroyUnpublished(next); throw raw; }
+    if (disposed || token !== run) { await destroyUnpublished(next); return false; }
 
     player = next;
     next.configure(config);
@@ -215,6 +242,14 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
     installResiliencePolicy(next);
     registerListeners(next);
     return true;
+  }
+
+  async function destroyUnpublished(next: ShakaPlayer): Promise<void> {
+    try { await next.destroy(); }
+    catch (cause) {
+      cleanupFailure = { cause }; // Do not attach another Player to an uncertain video owner.
+      throw cause;
+    }
   }
 
   /** The ONLY place a credential enters the player. Reads a getter, so a refresh during a
@@ -269,16 +304,26 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
     on<{ buffering: boolean }>("buffering", e => { buffering.value = e.buffering === true; });
     on<{ detail: ShakaError }>("error", e => { error.value = classify(e.detail); });
     on<unknown>("loaded", () => { streamingRetries = 0; });
+    on<unknown>("loading", () => { if (!disposed) sessionPending = true; });
     // 'unloading' is the last moment getStats() still holds this session's counters.
-    on<unknown>("unloading", () => { options.onSessionEnd?.(p.getStats()); });
+    on<unknown>("unloading", () => { snapshotSession(p); });
+  }
+
+  function snapshotSession(p: ShakaPlayer): void {
+    if (!sessionPending) return;
+    sessionPending = false; // Consume before callbacks, including reentrant dispose().
+    try { void Promise.resolve(options.onSessionEnd?.(p.getStats())).catch(raw => { error.value = classify(raw); }); }
+    catch (raw) { error.value = classify(raw); } // Observer failure cannot prevent cleanup.
   }
 
   /** Maps a failure to a stable kind. Never logs the error object: for a network error
    *  `data` carries the failing URI and its query string. */
   function classify(raw: unknown): PlayerError {
-    if (raw instanceof Error) return { kind: "playback-failed", code: null };  // a Shaka crash
+    if (raw instanceof Error || raw === null || typeof raw !== "object") {
+      return { kind: "playback-failed", code: null };
+    }
     const e = raw as Partial<ShakaError>;
-    const code = typeof e.code === "number" ? e.code : null;
+    const code = typeof e.code === "number" && Number.isFinite(e.code) ? e.code : null;
     if (code === null) return { kind: "playback-failed", code: null };
     if (code === 4042) return { kind: "secure-context-required", code };       // NO_WEB_CRYPTO_API
     if (code >= 6000 && code < 7000) return { kind: "drm-failed", code };
@@ -288,16 +333,30 @@ export function useShakaPlayer(options: UseShakaPlayerOptions) {
   }
 
   /** The only teardown path. Timers and listeners first, then destroy(). */
-  async function dispose(): Promise<void> {
-    if (disposed) return;
+  function dispose(): Promise<void> {
+    if (disposal) return disposal;
+    let finish = (): void => {};
+    let fail = (_reason: unknown): void => {};
+    disposal = new Promise<void>((resolve, reject) => { finish = resolve; fail = reject; });
     disposed = true;
     run += 1;
     loading.value = false;
     ready.value = false;
-    while (disposers.length > 0) disposers.pop()?.();
     const current = player;
+    if (current) snapshotSession(current);
+    while (disposers.length > 0) disposers.pop()?.();
     player = null;
-    await current?.destroy();
+    void (async () => {
+      // A pending attach observes disposed and destroys its own unpublished instance.
+      const results = await Promise.allSettled([
+        ...pendingInitializations,
+        current?.destroy()
+      ]);
+      const failed = results.find(result => result.status === "rejected");
+      if (failed?.status === "rejected") throw failed.reason;
+      if (cleanupFailure) throw cleanupFailure.cause;
+    })().then(finish, fail);
+    return disposal;
   }
 
   // ONE frozen handle. No inner init() returning a second API object.

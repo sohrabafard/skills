@@ -1,0 +1,12 @@
+# Supported forms, including an unresolved/literal dollar path: never rejected.
+variables:
+  SOURCE_DIR: src
+check:
+  script: [echo check]
+  rules:
+    - changes: ["$SOURCE_DIR/**/*", "$UNDEFINED/**/*"]
+    - changes:
+        paths: ["${SOURCE_DIR}/**/*"]
+        compare_to: "$CI_DEFAULT_BRANCH"
+    - exists:
+        paths: ["$SOURCE_DIR/main.py"]

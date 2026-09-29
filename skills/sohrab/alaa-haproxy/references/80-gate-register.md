@@ -2,8 +2,7 @@
 
 Each row is a predicate, the command that evaluates it, and the artifact it inspects. **No
 provider syntax appears here.** How a gate is expressed on a runner — the job graph, `rules:`,
-`needs:`, artifact retention, the runner image reference — is decided by `/alaa-gitlab-ci-cd`
-(`$alaa-gitlab-ci-cd`), which owns how a gate is expressed and decides no gate. This file decides
+`needs:`, artifact retention, the runner image reference — is decided by `/alaa-gitlab-ci-cd`, which owns how a gate is expressed and decides no gate. This file decides
 the gates and expresses none of them.
 
 ## The HAProxy gates
@@ -26,13 +25,13 @@ Named here only so a pipeline that needs them knows where they are decided:
 
 | Predicate | Owner |
 |---|---|
-| the chart renders, and lints | `/alaa-k8s-helm` (`$alaa-k8s-helm`) |
-| the rendered manifests are accepted by the API server | `/alaa-k8s-helm` (`$alaa-k8s-helm`) |
-| the image builds, is scanned, and is pinned | `/alaa-docker-production` (`$alaa-docker-production`) |
-| a frontend delivery gate — the predicate, the command, the artifact | `/alaa-frontend-devops` (`$alaa-frontend-devops`) |
-| the job graph, stages, artifacts and runner images that express any of the above | `/alaa-gitlab-ci-cd` (`$alaa-gitlab-ci-cd`) |
-| the local invocation that must give the same verdict as the runner | `/alaa-makefile` (`$alaa-makefile`) |
-| what proof strength a change requires before it may ship | `/alaa-controlled-ops` (`$alaa-controlled-ops`) |
+| the chart renders, and lints | `/alaa-k8s-helm` |
+| the rendered manifests are accepted by the API server | `/alaa-k8s-helm` |
+| the image builds, is scanned, and is pinned | `/alaa-docker-production` |
+| a frontend delivery gate — the predicate, the command, the artifact | `/alaa-frontend-devops` |
+| the job graph, stages, artifacts and runner images that express any of the above | `/alaa-gitlab-ci-cd` |
+| the local invocation that must give the same verdict as the runner | `/alaa-makefile` |
+| what proof strength a change requires before it may ship | `/alaa-controlled-ops` |
 
 Two CI files formerly shipped in this skill — a GitHub Actions workflow and a GitLab CI snippet —
 have been retired for exactly this reason: they were provider YAML, their HAProxy substance was
@@ -77,5 +76,8 @@ tokens the build must have, and, with a leading `!`, the tokens it must not have
 real QUIC API rather than the OpenSSL compatibility layer declares
 `# Requires-build: QUIC !QUIC_OPENSSL_COMPAT`.
 
-Warnings from `haproxy -c -f` are printed as `NOTE` lines rather than counted as findings, because
-a warning is a fix due before the branch after next and a finding is a fix due now.
+Unresolved warnings from `haproxy -c -f` are `HP-EX-WARNING` findings and block the
+gate with exit1, even when the parser exits0. A warning can indicate an ineffective
+control today. No deprecation exception is currently approved. Accept one only with
+an exact message and branch, authoritative support/safety evidence, and a checker
+fixture; matching the word deprecated alone never grants an exception.

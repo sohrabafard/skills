@@ -65,20 +65,23 @@ Exit codes:
      no files
 `;
 
-// Every row was verified on 2026-07-29 against the source named in `source`. `recheck` is the one
+// Rows default to the historical 2026-07-29 observation; refreshed rows carry their own date.
+// `recheck` is the one
 // command or URL that re-derives the value, so a later wave checks rather than trusts.
 export const VERSION_REGISTER = {
   verified: '2026-07-29',
   rows: [
     {
       subject: 'Docker Engine',
-      value: '29.6.2 (16 July 2026)',
+      value: '29.8.1 (15 September 2026)',
+      verified: '2026-09-29',
       source: 'https://docs.docker.com/engine/release-notes/29/',
       recheck: 'docker version --format "{{.Server.Version}}" ; https://docs.docker.com/engine/release-notes/29/',
     },
     {
       subject: 'Docker Compose',
-      value: 'v5.3.1 (7 July 2026); v5.3.0 added native init containers',
+      value: 'v5.5.1 (3 September 2026); v5.3.0 added native init containers',
+      verified: '2026-09-29',
       source: 'https://github.com/docker/compose/releases',
       recheck: 'docker compose version ; https://github.com/docker/compose/releases',
     },
@@ -175,9 +178,9 @@ function main(argv) {
 }
 
 function printVersions() {
-  process.stdout.write(`pinned upstream values, verified ${VERSION_REGISTER.verified}\n`);
+  process.stdout.write(`upstream observations; default date ${VERSION_REGISTER.verified}\n`);
   for (const row of VERSION_REGISTER.rows) {
-    process.stdout.write(`\n${row.subject}\n  value:   ${row.value}\n  source:  ${row.source}\n  recheck: ${row.recheck}\n`);
+    process.stdout.write(`\n${row.subject} (observed ${row.verified || VERSION_REGISTER.verified})\n  value:   ${row.value}\n  source:  ${row.source}\n  recheck: ${row.recheck}\n`);
   }
   return EXIT_CLEAN;
 }

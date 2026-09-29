@@ -78,7 +78,7 @@
       {
         "path": [
           "models",
-          "claude-sonnet-5",
+          "claude-sonnet-5-5",
           "alias"
         ],
         "value": "sonnet"
@@ -92,7 +92,7 @@
       {
         "path": [
           "models",
-          "claude-sonnet-5"
+          "claude-sonnet-5-5"
         ],
         "value": null
       }
@@ -105,7 +105,7 @@
       {
         "path": [
           "models",
-          "claude-sonnet-5",
+          "claude-sonnet-5-5",
           "source_ids"
         ],
         "value": [
@@ -206,7 +206,7 @@
       {
         "path": [
           "models",
-          "claude-sonnet-5",
+          "claude-sonnet-5-5",
           "supported_efforts"
         ],
         "value": [
@@ -361,7 +361,7 @@
       {
         "path": [
           "models",
-          "claude-sonnet-5",
+          "claude-sonnet-5-5",
           "supported_efforts"
         ],
         "delete": true
@@ -447,5 +447,48 @@
       }
     ],
     "cannot_run": true
+  },
+  {
+    "name": "retired-sonnet-pin",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-explorer",
+          "model"
+        ],
+        "value": "claude-sonnet-5"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "sonnet55-runtime-too-old",
+    "changes": [
+      {
+        "path": [
+          "profiles",
+          "alaa-explorer",
+          "availability",
+          "minimum_claude_code"
+        ],
+        "value": "2.1.283"
+      }
+    ],
+    "findings": true
+  },
+  {
+    "name": "sonnet55-disabled-thinking-invalid",
+    "changes": [
+      {
+        "path": [
+          "models",
+          "claude-sonnet-5-5",
+          "thinking_mode"
+        ],
+        "value": "disabled"
+      }
+    ],
+    "findings": true
   }
 ]

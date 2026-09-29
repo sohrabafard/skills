@@ -19,6 +19,9 @@ for pin changes, installation boundaries, and the validation status. For the dat
 migration snapshot, read [the Claude migration report](docs/claude-model-migration.md) for profile
 changes, compatibility evidence, review results, and unrun comparisons.
 
+For a later first-party skill upgrade, start with [the upgrade evidence index](outputs/README.md)
+to find prior assessments, completed plans and verification records.
+
 Third-party skills sit under `skills/.curated/` and `skills/.system/`. Upstream packs are committed
 under `vendor/` and listed below.
 

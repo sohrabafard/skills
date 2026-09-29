@@ -1,0 +1,242 @@
+[
+  {
+    "name": "alaa-accessibility-reviewer",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-adversarial-reviewer",
+    "pins": [
+      "model = \"gpt-6-astra\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-api-contract-reviewer",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-architecture-critic",
+    "pins": [
+      "model = \"gpt-6-astra\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-browser-qa",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"workspace-write\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-dependency-auditor",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-documenter",
+    "pins": [
+      "model = \"gpt-6-luna\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"workspace-write\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-explorer",
+    "pins": [
+      "model = \"gpt-6-luna\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-failure-analyst",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-implementer-sol",
+    "pins": [
+      "model = \"gpt-6-astra\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"workspace-write\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-implementer",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"workspace-write\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-instruction-reviewer",
+    "pins": [
+      "model = \"gpt-6-astra\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-migration-guardian",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-observability-reviewer",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-performance-profiler",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"workspace-write\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-release-guardian",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-researcher",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-reviewer-deep",
+    "pins": [
+      "model = \"gpt-6-astra\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-reviewer",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-rule-writer",
+    "pins": [
+      "sandbox_mode = \"read-only\"",
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-security-reviewer",
+    "pins": [
+      "model = \"gpt-6-astra\"",
+      "model_reasoning_effort = \"high\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-spec-analyst",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-test-strategist",
+    "pins": [
+      "model = \"gpt-6-sol\"",
+      "model_reasoning_effort = \"medium\"",
+      "sandbox_mode = \"read-only\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  },
+  {
+    "name": "alaa-verifier",
+    "pins": [
+      "model = \"gpt-6-luna\"",
+      "model_reasoning_effort = \"low\"",
+      "sandbox_mode = \"workspace-write\""
+    ],
+    "runtime_identity": "unknown",
+    "effective_isolation": "unknown"
+  }
+]

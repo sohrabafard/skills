@@ -1,0 +1,574 @@
+{
+  "lane": "foundation",
+  "state": "prepared, not dispatched",
+  "candidate": "candidate-4",
+  "ownership": "Only Markdown/template documentation in these skill directories and own named output reports; executable/config files excluded",
+  "skills": [
+    "alaa-arvan-object-storage",
+    "alaa-async-messaging",
+    "alaa-cc-orchestrator",
+    "alaa-codex-orchestrator",
+    "alaa-controlled-ops",
+    "alaa-golang",
+    "alaa-golang-fiber",
+    "alaa-indexeddb-browser-storage",
+    "alaa-laravel-job-rabbitmq",
+    "alaa-memory-os",
+    "alaa-permission-generator",
+    "alaa-prompting-guide",
+    "alaa-quasar-app-vite-v3",
+    "alaa-services-contract",
+    "alaa-shaka-player",
+    "alaa-sms-provider-mediana",
+    "alaa-vue-typescript-clean-code",
+    "jitsi-platform-architect",
+    "tusd-upload-platform"
+  ],
+  "documents": [
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/SKILL.md",
+      "sha256": "0efc55eb69bf6ab289576e116ba9b5880287b8a508c580f64dd1593ed4859b06",
+      "physical_lines": 108,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/15-environment-contract-deltas.md",
+      "sha256": "3820db920b39b2617c252c5fbb67311b8f5ef8aab4af06354cb466e68d578486",
+      "physical_lines": 106,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/20-s3-compatibility-matrix.md",
+      "sha256": "aa7dd5ab0422f0063de55d919546ec6d95a2dde634bcea477df88ff4c0735ccd",
+      "physical_lines": 79,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-arvan-object-storage/references/SOURCES.md",
+      "sha256": "cc5e209afdf67e48f777576261c9ade12a47f02cbdebe5c12206114b17d4b792",
+      "physical_lines": 144,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/SKILL.md",
+      "sha256": "b978fc5f925045ef80677a06c79366d17871e7170b79d7fd960d55754a945560",
+      "physical_lines": 97,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/references/10-transport-and-topology.md",
+      "sha256": "aace4dcdbe729d117ea83a81f792effaabab955a731c0ba6d8cf3af8e55996c9",
+      "physical_lines": 98,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/references/30-consuming-ack-and-prefetch.md",
+      "sha256": "0af1e5eb74fd6e3ca74906af39d12c31cfc7f76637c16f083af600cb6d4081e0",
+      "physical_lines": 152,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/references/40-dead-letter-and-replay.md",
+      "sha256": "0e5f37cafa3fe9c70c13d504b0c4c293514e861cf59cb5d0aa58c64d4287a3ed",
+      "physical_lines": 134,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/references/50-failure-classes.md",
+      "sha256": "a10641fef4e3dc5a0d9e34f0e95cc75c136685ac7b8ad506ea072e76a87dbdcf",
+      "physical_lines": 157,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/references/60-telemetry-and-proof.md",
+      "sha256": "3622a57f39a2b872a3e895c8bbadab072c86c058059627c792056d0d9b962b90",
+      "physical_lines": 94,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-async-messaging/references/90-source-map.md",
+      "sha256": "7c9aa0fb49c914b2a51cbd6c692b89b9f38b3b688e6901d2791ab101e50ffadb",
+      "physical_lines": 60,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "62a60722d2afffa2cbaca48ac2bd642148a0072f4ab157f3204d9211fe459a38",
+      "physical_lines": 174,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md",
+      "sha256": "bcee62b91e66865d130cb62a0b4f6e37b5c2634ac584e3d34d90c2939842c1fa",
+      "physical_lines": 46,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md",
+      "sha256": "20d97fd040660cfb4934ad4828a68110c1904feeae7c53a10b5d4c532638301e",
+      "physical_lines": 38,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md",
+      "sha256": "adc72ed146d384ee2c8e7de903f00e181623e3908e5962f48ff6fec5e44710ba",
+      "physical_lines": 41,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md",
+      "sha256": "d78bc2e27dcd8c8cb3e80ca8811f224733082c247cb67478498ea0788e6a836f",
+      "physical_lines": 38,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md",
+      "sha256": "b9da8c3b163140c5fa1be45b3ea732042cd9fe4eaa377592a9baef1a714199c7",
+      "physical_lines": 37,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+      "sha256": "3043a4578cef46687d0288cb4c1db7cd9ee88d9aab0eb2524a4ed407fd94c3c0",
+      "physical_lines": 55,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md",
+      "sha256": "dd2d10b9603d3ef03966eaaf9b345d97002afa101aac04f4abe635db8fb791cb",
+      "physical_lines": 40,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md",
+      "sha256": "e4a79dc03885c0ceeb5606d9b8929778d3f06d62a0173ae414dff21ba9053143",
+      "physical_lines": 46,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md",
+      "sha256": "9527a637df24a161372552457c726def1f9b132af0365b820b07dbb48895f76d",
+      "physical_lines": 44,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md",
+      "sha256": "4721c57074ee904452f59439b010ca0e41d3d8dff5c9b65e8b87555fca6018c7",
+      "physical_lines": 40,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md",
+      "sha256": "bea3193c57930ac5a3ee2bf9b7ccc39d9e4900d20f8bed7dec1c1f218a7b52a3",
+      "physical_lines": 43,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md",
+      "sha256": "82d5319f231eba78a3af3531b49524f781095ae54170b8b517b0362474113612",
+      "physical_lines": 42,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "sha256": "b64af563443f9f564171ab68357f9689bd65e3810693b9692817cfd12ed8c60d",
+      "physical_lines": 300,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "d523982c3eeeac5c6a4da3fbfc6cd9103e198060f835876983f1a53f3c967e76",
+      "physical_lines": 174,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "sha256": "6759401a2e0f5690c57700dd0d3013fa81059e725ebc58ecfba0f43ca1db0911",
+      "physical_lines": 280,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-controlled-ops/SKILL.md",
+      "sha256": "f18f3ca7c17accb4bac095178d4431f7f4ed9ba89753d4a17f507d56542883a7",
+      "physical_lines": 48,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-controlled-ops/references/20-package-service-adoption.md",
+      "sha256": "3a1ce0347d1bd6488cd46528be4e30c2321add1c49d361a0719183834d7b9c86",
+      "physical_lines": 48,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/SKILL.md",
+      "sha256": "6fae7987392d36f560c53a076e36c7a8ce6c5db8b7ffbfdeee61621283ad21c8",
+      "physical_lines": 119,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/10-fiber-v3-core.md",
+      "sha256": "29ee62a4895ab08f6abfda403c3e38f597b058112fc54b18488745af937778d3",
+      "physical_lines": 214,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/20-routing-middleware-errors.md",
+      "sha256": "35a131108b7bf38ef941257087fc374c14acee0422648a767f8909bff1023b62",
+      "physical_lines": 188,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/30-validation-testing.md",
+      "sha256": "af20edc65de32add466bf8ef842eebe5a3285a54b131fd0e9ddd3eb0f89b9491",
+      "physical_lines": 172,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/45-v2-to-v3-migration.md",
+      "sha256": "20924d9f9bb51ddc468cf50936b561860aa8c76ce474b6202a138d61021587be",
+      "physical_lines": 138,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang-fiber/references/SOURCES.md",
+      "sha256": "6d112adc60e2247b5c22b510a098ed18ce7178b551f6c470749ad2fdca45c4ee",
+      "physical_lines": 91,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+      "sha256": "60f31c8a747df76b472a1cca222f81347d0d8a96528b6ebd0b9447e509dc5beb",
+      "physical_lines": 165,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/SKILL.md",
+      "sha256": "74a966ae17916b91d0cd947984b66818e5a0cb1cc769fd93a63bc478b72855fb",
+      "physical_lines": 94,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/20-browser-compatibility-and-capability-tiers.md",
+      "sha256": "b55863888586deeaa47d288aa594636446f67d1efcda5722498f8605cbc73311",
+      "physical_lines": 71,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/25-storage-buckets-api.md",
+      "sha256": "7afdbf2d57dac5cd8ad27e8f79fd5e2bea87c3ffcef0c9f0438a48703564e0d9",
+      "physical_lines": 79,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/40-schema-and-migrations.md",
+      "sha256": "76cc9be14620368e8556e268ae33ac6a6cba6f9033a4693c668d9ddb560acd07",
+      "physical_lines": 152,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/62-poisoning-and-purge.md",
+      "sha256": "02a81b3edf733f020143ed81307baba426d9e72a745999dcc905958fbfa48943",
+      "physical_lines": 104,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/71-browser-outbox.md",
+      "sha256": "9b03f383a1da52fea3ead124e41bb296ef09be5a67186eef96157bfc9b8402e8",
+      "physical_lines": 144,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+      "sha256": "34f862a56c553b5cdb049e2b081e1a0973ee9669422663b8098486adb876bd80",
+      "physical_lines": 106,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-indexeddb-browser-storage/references/99-sources-and-maintenance.md",
+      "sha256": "14d12602a60876453c966a350e1a9116360bff9eb301497174b61dd81d5a7b4b",
+      "physical_lines": 100,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-laravel-job-rabbitmq/SKILL.md",
+      "sha256": "955f233225b6f5d430ea1e59d75d0cbd237d99ecbdc55e3ca75ddea0607aa741",
+      "physical_lines": 209,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-laravel-job-rabbitmq/references/driver-facts.md",
+      "sha256": "36fdda20ac56f26b05eea26a5546b215e605145046bd329fd7732e2af5cc643c",
+      "physical_lines": 134,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-laravel-job-rabbitmq/references/failure-classes.md",
+      "sha256": "c13b8bef78f9f1ad0f4dd0cd240a1cd4a1f6d1d7789dd03136481f897d9997c9",
+      "physical_lines": 148,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-laravel-job-rabbitmq/references/source-map.md",
+      "sha256": "12bc34f752511e21e5e783848d9687778ae307e82e6e740460332d2bfa894738",
+      "physical_lines": 76,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-memory-os/SKILL.md",
+      "sha256": "805e0ba9d73940aa3171aaa5d0203b053c60aa79bc5e6e7f3f1066e554f6a7a9",
+      "physical_lines": 152,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-permission-generator/SKILL.md",
+      "sha256": "e92ae2afa75f39da49ef06d5031e99353561944af4192c1518c5bf5928ff91b0",
+      "physical_lines": 170,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "sha256": "203c85bc80958d3400a2ad4760ea1add9891c32dfa90082a9a3726d17a46afed",
+      "physical_lines": 70,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+      "sha256": "60f53ced08910f649c566af256358e2bb46254ed867052eabc2fdb90639d5074",
+      "physical_lines": 45,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "sha256": "e2174298f143299553c3803f9f7c965640860659286ee919076cae96b3933b18",
+      "physical_lines": 32,
+      "measurement_grade": "GREEN",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+      "sha256": "a4f813b15caceece150383bc31982ed3fb04a95af56d495508251ffe1d4f1859",
+      "physical_lines": 116,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/30-sonnet-5.md",
+      "sha256": "23a59c554f64345eb98ca2e860dbf7c68b97239b992e90e6b5b81adb21114bfe",
+      "physical_lines": 116,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/31-sonnet-5-5.md",
+      "sha256": "d5b93336cd539a6d7507491c36842774dcdef83a9615dd2545dcfc13464c99ab",
+      "physical_lines": 71,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+      "sha256": "8db2279e1f3119f2ecb8d55f77aed31dd6866c950a3c7f8d675ca9b0528ea9fe",
+      "physical_lines": 115,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-quasar-app-vite-v3/SKILL.md",
+      "sha256": "e3606222214ea5ca3e37a1d27047d8648bf01b6028c156d9f512fce7571ba24c",
+      "physical_lines": 59,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/05-authority-and-api-lookup.md",
+      "sha256": "ff6a2453a26852a359930518b28dcf8a74c20917669ad01333283890bdac61e8",
+      "physical_lines": 65,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-quasar-app-vite-v3/references/80-upstream-deltas-and-live-checks.md",
+      "sha256": "63f31c3ba7764742ddd1bd36bf1e08eb05405ceb7c53397e510f1702b531f249",
+      "physical_lines": 211,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "sha256": "dd187645cd9cda0d1432aad1e794bcdc83e8a60ed7993edee2cb5864b0130ff9",
+      "physical_lines": 326,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/SKILL.md",
+      "sha256": "bd8951c4748108706f59c0287ab35cc43c77f0a56c92caff1e7a4ae89cddc443",
+      "physical_lines": 69,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/05-provenance-and-freshness.md",
+      "sha256": "bcf55ed3435440c6105e5910259c42fd72d989d691887e23e585c906b253995a",
+      "physical_lines": 133,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/11-vue-quasar-binding.md",
+      "sha256": "02b1ba0088ffa0f93bbf9643183fe00b32994d9a3f12ad97dca902e3fc54756e",
+      "physical_lines": 84,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/20-core-lifecycle.md",
+      "sha256": "d6e1a641d5a270a89c4c4ad2a4e17800f56a2068745f10224f1492c7d966aff8",
+      "physical_lines": 141,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/60-analytics-and-getstats.md",
+      "sha256": "3c38759d9d05111bd509aea93cae00b398471f307376cd86a743615b0b17fbc5",
+      "physical_lines": 241,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/70-error-taxonomy-and-codes.md",
+      "sha256": "ea9f5218c6e1ab3ab8218ac9af031bba4362641d24f86f1b93dc5d3b18af43fd",
+      "physical_lines": 220,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/80-version-migration-and-release-deltas.md",
+      "sha256": "ed10158e3c195691945fe117e2601ce3b64fbfff26ee752ea4dd91d5e8ecafa5",
+      "physical_lines": 205,
+      "measurement_grade": "RED",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/85-troubleshooting-by-symptom.md",
+      "sha256": "18598647c03809e3544354d0f6890254986ad9dc67373d22d9733a29286fa54f",
+      "physical_lines": 126,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-shaka-player/references/90-qa-modes-and-checklist.md",
+      "sha256": "b682ea1ab00f0e9ac90d871a67f9fb7f76873405fc18649e70772151dff2c1b5",
+      "physical_lines": 110,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-sms-provider-mediana/references/10-send-contract.md",
+      "sha256": "9560b256c3908a7ab4a8801b0dcd445327635391adebe4cd7c7eb2750f84b25c",
+      "physical_lines": 148,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/alaa-vue-typescript-clean-code/references/24-typescript-project-and-antipatterns.md",
+      "sha256": "786b681a774fb98e74e522ee97c968544ffa09ba7a10d585268eeb0afa5a712a",
+      "physical_lines": 162,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/jitsi-platform-architect/references/30-deployment-substrate.md",
+      "sha256": "629196c1bfd9e37413b59530608650b94bb0c3619e51e990bd6d46d3a77f0704",
+      "physical_lines": 157,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/jitsi-platform-architect/references/50-events-recording-governance.md",
+      "sha256": "5a934c8a00548eaca6f8716a4681ea2a00f8b69b7233f204753fe0b7e55105d0",
+      "physical_lines": 168,
+      "measurement_grade": "ORANGE",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/jitsi-platform-architect/references/90-source-map.md",
+      "sha256": "e9bba2feb3d1d6dc7d0e0893675466c43cab13f81b210b34bdbccb524b3f254c",
+      "physical_lines": 95,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/10-source-map.md",
+      "sha256": "cf88337a91b439f4a98795a1de307e04c59b10eba684624501b1a323f8dc1419",
+      "physical_lines": 53,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    },
+    {
+      "path": "skills/sohrab/tusd-upload-platform/references/55-tests.md",
+      "sha256": "bbfb259e26eb0f5a94f1b77ef75b97ba7d449c1730ebd7028c1bd66f48760193",
+      "physical_lines": 80,
+      "measurement_grade": "YELLOW",
+      "eligibility": "not_yet_classified"
+    }
+  ],
+  "output_reports": [
+    "documentation-foundation-grades.json",
+    "documentation-foundation-evidence.json"
+  ],
+  "excluded": "Other lane skill directories; parent workflow artifacts, source code, machine-readable policy/config/manifests",
+  "requirements_owner": "documentation-brief.json"
+}

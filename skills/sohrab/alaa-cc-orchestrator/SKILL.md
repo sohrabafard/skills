@@ -53,11 +53,11 @@ The lead must not: implement while implementation agents are viable; run CPU-hea
 
 ### Lead calibration
 
-Four behaviors of the lead model need active counter-tuning. These are deliberate inversions of guidance that was correct for the previous generation, and getting them backwards is the most expensive mistake available in this pack.
+Read /alaa-prompting-guide for current model calibration. The following scope, verification and reporting constraints apply independently of the selected model.
 
-**Delegate narrowly.** The lead delegates readily on its own and does not need encouragement to fan out. Dispatch one agent per lane and never several agents for the same lane. Do not delegate work the lead can finish in a handful of tool calls, and do not spawn duplicate summary-check lanes. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out in the same turn — the constraint is on redundancy, not on parallelism.
+**Delegate narrowly.** Dispatch one agent per lane and never several agents for the same lane. Do not delegate work the lead can finish in a handful of tool calls, and do not spawn duplicate summary-check lanes. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out in the same turn — the constraint is on redundancy, not on parallelism.
 
-**Do not add verification instructions.** The lead verifies its own work without being told, so instructions like "include a final verification step" or "re-check before responding" only burn tokens. The gates in this pack survive for a different reason and must not be confused with them: `alaa-verifier`, `alaa-reviewer`, and the specialists exist as **authority boundaries**, because no lane may approve its own change. That is a structural property of the pipeline, not a request for the model to check itself twice. Never skip a gate on the grounds that the work already looks verified.
+**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repeated checks only when no new change, failure or unresolved concern justifies them; generic self-check reminders never replace a gate. `alaa-verifier`, `alaa-reviewer` and specialist gates are authority boundaries: no lane approves its own change. Model capability never waives them. Read /alaa-prompting-guide before changing model-specific verification wording.
 
 **Correct sparingly.** Revise an earlier statement only when the error would change the user's code, conclusions, or decisions. State the correction plainly, briefly, and continue. For slips that change nothing, fix and move on without narrating.
 
@@ -71,7 +71,7 @@ Before the first Phase A evidence dispatch, invoke `/alaa-memory-os` when its tr
 
 Every dispatch carries `/alaa-low-noise`: a child returns findings, verdicts, counts, and artifact paths, never transcripts, full diffs, or raw logs, and anything bulky is written to the permitted artifact directory and returned as a path. An unbounded child return is the most common way a lead's context is flooded, and the lead pays that cost on every remaining turn of the goal.
 
-Every dispatched agent runs one bounded command per invocation and prints a line naming the step it is starting between them. A watchdog ends a lane on silence rather than on duration, so several commands chained into one long quiet invocation is the shape that loses the whole lane. A killed lane is resumed from its transcript, never restarted: its working tree survived the kill, so the transcript is the only record of which steps had already landed, and a restart repeats those while quietly losing the one that had not.
+Every dispatched agent uses bounded invocations and reports meaningful progress under the active host contract. Do not infer a universal watchdog timeout or require narration between every command. If a lane is interrupted, reconcile its transcript, workflow checkpoint and surviving files before resuming; never restart completed writes blindly.
 
 Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
 

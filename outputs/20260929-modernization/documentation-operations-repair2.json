@@ -1,0 +1,2356 @@
+{
+  "lane": "documentation-operations",
+  "cycle": 2,
+  "review": "review-instructions-docs-candidate6.json",
+  "status": "source_frozen_pending_independent_re_review",
+  "verdict": "R2 and operations-owned R3 routing corrections plus EOF cleanup completed; no approval claim",
+  "agent_metadata": {
+    "agent": "alaa-documenter",
+    "configured": "gpt-6-luna/high",
+    "requested": "none",
+    "observed": "unknown",
+    "sandbox_enforcement": "unknown",
+    "memory_used": false
+  },
+  "read_coverage": {
+    "prior_evidence": "documentation-operations-evidence.json read_coverage.full_read; reused for the GitLab parent routers, HAProxy SKILL.md, QUIC root and related source ledger/version references.",
+    "current_turn_full_text_read": [
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md"
+    ],
+    "statement": "No executable, policy, config, or runtime behavior claims were changed; routing was limited to the six named Markdown documents."
+  },
+  "scope": {
+    "semantic_files": [
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md"
+    ],
+    "operation_owned_cycle1_files": 30,
+    "focused_inventory_files": 35,
+    "changed_files": 72,
+    "routes_rewritten": 13,
+    "new_files": 0,
+    "moves": 0,
+    "templates_unchanged": true,
+    "operations_markdown_grade_lane": 129,
+    "candidate6_eof_inventory_paths": 72,
+    "eof_trimmed_paths": 72,
+    "atomic_templates_unchanged": 2
+  },
+  "partial_first_write_event": {
+    "result": "The first write changed the five GitLab router links, then stopped when the HAProxy sentence did not match the script’s single-line assumption; the actual source wrapped it across two lines. The targeted two-line replacement completed afterward. No other files were written by the failed attempt.",
+    "before_hashes": "GitLab pre-cycle2 hashes match the frozen repair1 inventory and staged blobs; HAProxy hash also matched repair1 and staged blob."
+  },
+  "changes": [
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "before_sha256": "59069978417e8b4c0fbedf7113a382b19c16bc7b7b3bce723920e05592e3e114",
+      "after_sha256": "ef6cbd8b92e3a4806a1fed5cc58bc6b995e6cdbe9532eed8dc31f5f05f52cede",
+      "before_physical_lines": 48,
+      "after_physical_lines": 47,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+      "before_sha256": "fd79629bde01f9e3aa1944ff0ae0db38e0d64115684247645aa1a2a662d87659",
+      "after_sha256": "8805a1322ed42b839f90f6d7f356ca2f1e9ad70f758bcbd38afecdbb4294162b",
+      "before_physical_lines": 18,
+      "after_physical_lines": 17,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+      "before_sha256": "7fa9bcdd8ea14649634c3db773e5643310b0dd7a4c24d52795bee40c09619838",
+      "after_sha256": "38081ad6a75f7e239cb7bdf6e3dc7409147b6928e6def05613a0cb126fa349bc",
+      "before_physical_lines": 42,
+      "after_physical_lines": 41,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+      "before_sha256": "d5009240f785b5b5a4256c8297929af4b88636fd7fec282991964c97687c80b9",
+      "after_sha256": "c694892e33b5a986cf1a0c16908c0cfc9e0c745d7d91a7814425b451de6687b0",
+      "before_physical_lines": 33,
+      "after_physical_lines": 32,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+      "before_sha256": "240b6d3f34058af339d403a0e854cef7129aac848f9b5ced20909e7797dec280",
+      "after_sha256": "2027af531b3e0c75068cbb9f5b4efa552d3aaed5d3445cc1e3cb0e91beac6345",
+      "before_physical_lines": 45,
+      "after_physical_lines": 44,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "before_sha256": "167edafc78037c63ac1fc657fc75f365daf4b768ec846cf702606dbdd3f5abe2",
+      "after_sha256": "10b1d64b86dd6d63bbdbec863edb97fa847685f6fab3309b4351f82a723d0d40",
+      "before_physical_lines": 64,
+      "after_physical_lines": 63,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "before_sha256": "3b9797af5b68eced56677bb786e0558db14f0bddb10b42e79a63815a64cf4059",
+      "after_sha256": "fdfd63b149659d29753804c5867865bc0ab1189dacd21a0aff306d1902e93917",
+      "before_physical_lines": 27,
+      "after_physical_lines": 26,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+      "before_sha256": "422b896a41e00ab4e12bcfd89c8c23bab1c00cd9ae915ca9a363c770526ee735",
+      "after_sha256": "4e39793ffb47b9f21b9b60092346b44fed6770dfabd02125eebb49948d9221e9",
+      "before_physical_lines": 77,
+      "after_physical_lines": 76,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+      "before_sha256": "9ca43ccdcc2ed5eb447c43e7b2d92c4d2d863bd7510112be272483aa95a5e829",
+      "after_sha256": "54384d7d24708c330e06ff3bee5f17daf8b21d2c0d05884b5d4592bc5dd2470e",
+      "before_physical_lines": 82,
+      "after_physical_lines": 81,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "before_sha256": "c1f01da2e4507c3a6e3d7dfcfab0ffc0824b4b8f073006563a94648a10e1038f",
+      "after_sha256": "f6444034709c0e16ea73bb182c8a8ec64ae29ecbc9ad696645b4cafeded0cdd8",
+      "before_physical_lines": 40,
+      "after_physical_lines": 39,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+      "before_sha256": "3684b7bfab49b800c56067faecec401077bd95f62ea98d263671c2e1f59ac7db",
+      "after_sha256": "a4be10f3f7ef483168818a33d0331694e53b66a1ee9e41c7a8142cc05f5d2891",
+      "before_physical_lines": 54,
+      "after_physical_lines": 53,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+      "before_sha256": "b8af13b05f399215968698ebf142394968047d37bd27c0346bcca66e0a7b6695",
+      "after_sha256": "df059dd22c291cc07fa5f31b3f6051e96fa78354a41b0b9696c649337debe9b6",
+      "before_physical_lines": 97,
+      "after_physical_lines": 96,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+      "before_sha256": "f168c9db671efcd0fce97d10056ba6bc77b91efcd7e81caeb4630e0151d2d29c",
+      "after_sha256": "1757e9941309b9e97bd0ea214429ccb887ad6270f0f02d69bd84fba5ca5bb718",
+      "before_physical_lines": 89,
+      "after_physical_lines": 88,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+      "before_sha256": "e71f4c28b227974c1ecbc097558f77dd6e0bd73e465d5e541a5055ba361c9ba6",
+      "after_sha256": "bf55cbf2688ac1f4a4edf6360fc340af7faf9ba112c5f8ce8b2cd5a122ae65b4",
+      "before_physical_lines": 56,
+      "after_physical_lines": 55,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "before_sha256": "eecbc2bbd73f50328eda1bb95be0aa19ae9158fcedc281ac4cf26a04b1b8941a",
+      "after_sha256": "6663bb77410ffcdedc5b567573c470cb9ae64442c536ad3253e15f0d424d4290",
+      "before_physical_lines": 58,
+      "after_physical_lines": 57,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "before_sha256": "2f2f26f7053482c1511a742411d2a7342c8ee5263a3a53be01995498ce77a422",
+      "after_sha256": "6bec1c784018f3883869e5d5b7e0786c70b3b4f6abb79ca4d2aaeea1c26a88ae",
+      "before_physical_lines": 57,
+      "after_physical_lines": 56,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+      "before_sha256": "4ec797a81cdb3a2921ff1dfa3fe49f4363683376e0e37e7c6f19ec10b5fc4403",
+      "after_sha256": "04aa6c1b74e713b141def9874d85885f788d63208c7d8b1e0ebc2d1dea716292",
+      "before_physical_lines": 30,
+      "after_physical_lines": 29,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+      "before_sha256": "0bf264fbd5432b3353f1e5cc0022cb69397879a5eae4469623d788b2855bd875",
+      "after_sha256": "4b165ddcd0aa880f0660f8b118c41cbaec39470ba7903aaedb5b10baf264d7ed",
+      "before_physical_lines": 48,
+      "after_physical_lines": 47,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+      "before_sha256": "37f6c803fe748f307b37a7250407531621f03f2bb03c8ff2a845ff8c53de6486",
+      "after_sha256": "e45cd847588757aaffe735beecf3f058a48d6019ad6e3be2fe9e7e0137c865f1",
+      "before_physical_lines": 43,
+      "after_physical_lines": 42,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "before_sha256": "7cd97e282f0dc6fab115894831f9e85020d7806317ce903827e381eef3c851dc",
+      "after_sha256": "1969326d25c9f97d224868f9cadf15d073704286a0f7138fb893aab0df12e3cb",
+      "before_physical_lines": 12,
+      "after_physical_lines": 11,
+      "changes": [
+        "R2/R3 condition-bearing route",
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+      "before_sha256": "d98253b9579a074475db2c74807b616d4628cd5393fc8566adee83446e3019d9",
+      "after_sha256": "d06d7f3cf3ce0706042ea393928a6d65eee5bd602c3ac5cbc331a240bf01d423",
+      "before_physical_lines": 28,
+      "after_physical_lines": 27,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "before_sha256": "87f587641e6e1105d277bce1137ddce4bfd74b011311179fb058e3d21ced15be",
+      "after_sha256": "7b4dcadef71a279afe76602155f6ec089f3935ccab305570ac139cbac9b4501b",
+      "before_physical_lines": 44,
+      "after_physical_lines": 43,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+      "before_sha256": "33f5993a427884e9318426f5f2c31b5aeb2cd0781fab97a96c7c7636d7f0b79a",
+      "after_sha256": "f789563582378e498dcec19ed25d2c143aba3236ea7febc7aee252aa07c76f64",
+      "before_physical_lines": 66,
+      "after_physical_lines": 65,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+      "before_sha256": "994230edb851a3aab528dfb92b6d55f633dfce1b50cc3c487c94b15ae5a26d5d",
+      "after_sha256": "d9f17caf24ff66a6231449fb56d35e323d6cde155cf18fb5b6d25dda74a42a37",
+      "before_physical_lines": 20,
+      "after_physical_lines": 19,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "before_sha256": "5c53fe7a1ac82dcc91d114e722f2481d04d30b8c8e59d107c84ec88182a4d410",
+      "after_sha256": "2d9bf76ff738ad8c985f2c3ae2e9513e6e7d6f1f842dbedd867af3aeb22fd190",
+      "before_physical_lines": 12,
+      "after_physical_lines": 11,
+      "changes": [
+        "R2/R3 condition-bearing route",
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+      "before_sha256": "fb6678bc938283531734384207336c63864d17cf70416609ca14ab73ad66d698",
+      "after_sha256": "c4bbf9d3f36b023fb216ac4d584e06eb5e29e34a88d7c074a7a35994a9324080",
+      "before_physical_lines": 73,
+      "after_physical_lines": 72,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+      "before_sha256": "5261d6b8fb18c8281fc8452fb412875fb7d5c119b2841f93639264c7269052f4",
+      "after_sha256": "818368e21a02de7d30fa51b872d1e866c8cebaf34ab5f7609029a066bfa584fe",
+      "before_physical_lines": 52,
+      "after_physical_lines": 51,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "before_sha256": "58c9dec767b18148df020358174fba6a555b634345128ef4180cd574c291bb0f",
+      "after_sha256": "6ec2f7fb6a328e2b90c6683a933578e319707a5a3aaf90b4b373290199dfd5be",
+      "before_physical_lines": 64,
+      "after_physical_lines": 63,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+      "before_sha256": "a82252d0b08edbdf78e8a700648bf246f2b07f54713d5b8bb5d468bb4a00302c",
+      "after_sha256": "438218f4f7b283e548d370276c374a0f8cee33091da30db197e2d15a103b81b2",
+      "before_physical_lines": 18,
+      "after_physical_lines": 17,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+      "before_sha256": "0ae457dc1a8121f939b80349d8f451943810d13dc482c2cd78b391b378587de9",
+      "after_sha256": "6bfd573cf3a1a2a5680b6126f3cc9b0c808c22ba3d60945d3ff45cee24e70479",
+      "before_physical_lines": 35,
+      "after_physical_lines": 34,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+      "before_sha256": "375060a8231a6eaeccbad7fc7abee0609b03c808da9d9437e7d8ef36d64cc061",
+      "after_sha256": "6eee0f6763f54c235ce4e85be5c611f1183a1549f0095a7865eb200fd539e024",
+      "before_physical_lines": 26,
+      "after_physical_lines": 25,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+      "before_sha256": "ef74a65a996b25e654c76e0b3254cb475033775f4c4a9c1d0f1c3f0882a08640",
+      "after_sha256": "dcf852419e471c356be89030c73dc3e3091229604ba839ad39a5a95e85460449",
+      "before_physical_lines": 64,
+      "after_physical_lines": 63,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "before_sha256": "68d816afa48fbefada72ffcce5cf4918c3e1d01fb5b990a69bf18520cf9967cb",
+      "after_sha256": "e5b26538080b0dc2c1271862c70e91cdd5a883d955039735cbf428f562369af1",
+      "before_physical_lines": 55,
+      "after_physical_lines": 54,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+      "before_sha256": "e836a1ff8a6f644632e1d4961c3d68825d63662783e09fc5242fd14e455f122a",
+      "after_sha256": "9e153294bf2a54ad475f2b4e4ca1090afa8fe3ca62ad31cb53edce307a2bf4db",
+      "before_physical_lines": 52,
+      "after_physical_lines": 51,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "before_sha256": "538ea891359d21881fa52cf9e9988da77fb98df4ac8cd8d9d228277c0d4f9bc9",
+      "after_sha256": "ed549bdc07b92e7afd2869c2fd54a085dca52eccec66f63206fd48149d3de1b7",
+      "before_physical_lines": 12,
+      "after_physical_lines": 11,
+      "changes": [
+        "R2/R3 condition-bearing route",
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "before_sha256": "69fc0b46ca3f29c0715b7905de98c00769fb618d78676ddddc49f2487dc927d0",
+      "after_sha256": "70d2718c1bfa9f4b1691c543bb2228f180ab40ec568cfa8364aca90bd1df144e",
+      "before_physical_lines": 16,
+      "after_physical_lines": 15,
+      "changes": [
+        "R2/R3 condition-bearing route",
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+      "before_sha256": "b7c04266e93a9c377702da81ebd16f608d41be7430b8fbab0b11f5f245c069f3",
+      "after_sha256": "6b4093ec4fb38ddd08b947d1ed48cbc02a7d006317d356c5a2dcb86e237330e8",
+      "before_physical_lines": 18,
+      "after_physical_lines": 17,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+      "before_sha256": "57e578afa48c3f74c724333ce39051a6ad977738015c727b931a93365d7a8369",
+      "after_sha256": "90bc4bb5645a4fd2915ab53254f2591ea3fa894b4b01d9807d9cd61b93b49e7d",
+      "before_physical_lines": 19,
+      "after_physical_lines": 18,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "before_sha256": "b3338660cd20c834848affd2799e7739e8a1ed8614558dcff69b66a01976fecd",
+      "after_sha256": "b433273529a42eb63749f46f9faf6652a89041f768cecdcffcdde07e85d219d2",
+      "before_physical_lines": 16,
+      "after_physical_lines": 15,
+      "changes": [
+        "R2/R3 condition-bearing route",
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+      "before_sha256": "3df962787366c06bcf40053c131ec186a4f05ec9f5f32880e609c6401f4fb803",
+      "after_sha256": "d951e424dbafff49f1cf2ed4ae8e2497d2d9990d718184c8d726349255818990",
+      "before_physical_lines": 32,
+      "after_physical_lines": 31,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+      "before_sha256": "f231c29e2a1d384627e39912ef105a5e65830bc64038c93f1de679167f22929c",
+      "after_sha256": "470ab29119f216d077dbc2f56ec22d02efcac1388001d63c789c82610da09eb4",
+      "before_physical_lines": 50,
+      "after_physical_lines": 49,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+      "before_sha256": "1b6645c98341422988e95268959c45b5de7ed1eb6fc43d603845e1566d27cb38",
+      "after_sha256": "c2385081eca7bd8117bafbf559237cd4f5e3f7c76df5d3fffe7091f52010e436",
+      "before_physical_lines": 14,
+      "after_physical_lines": 13,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+      "before_sha256": "05b7d7154158ed8dbebb4b14d845386f981e5d60d62e20ce3f48967af83cf171",
+      "after_sha256": "12979a2d782ce6d5b3d7ad29580cd26f996442809993b58469f66361a1b1d24f",
+      "before_physical_lines": 12,
+      "after_physical_lines": 11,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "before_sha256": "89c362b20c3c8b7159f1b0577b32046dda83acf019fe2e2f455a9e3f41f3e4bb",
+      "after_sha256": "3e6aab89f4ff60321ba98f3d20d731052e9c186b736b37a6213c4fcdd04ff9f2",
+      "before_physical_lines": 49,
+      "after_physical_lines": 48,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+      "before_sha256": "9098ce6f71f2c876c9ea39e68f858c9ac6cd2ee7a8589aed8e832b5916e8649c",
+      "after_sha256": "25a50f0e3c8309a7d15a30f526ddaf6350db689a93909c49ce3a99eaa8f28c89",
+      "before_physical_lines": 77,
+      "after_physical_lines": 76,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+      "before_sha256": "b59edf2afb9c90f44d0e41bede7444aa05158c57f969135bf50f8bc36a92ee01",
+      "after_sha256": "f5047248f0f9ed284175a24620d9010f48dd4c58dc5fe9c97eea49696a179d28",
+      "before_physical_lines": 34,
+      "after_physical_lines": 33,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+      "before_sha256": "b4420660267293b53800cd0591df037260b4f4b15a7e74452a5a7510e0856231",
+      "after_sha256": "fb3b7887ecd1a745caa7956877082eb11d3fccefaf8fbfc0d07a5cf3f07c7c46",
+      "before_physical_lines": 44,
+      "after_physical_lines": 43,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+      "before_sha256": "db22ce1e68a589684c36c133fa96a7311f300edc2f9f908ddc99419989ab2de4",
+      "after_sha256": "d452c4b2afc290e8c9e5704b43581301ee472e72752251820f1075fede69f140",
+      "before_physical_lines": 46,
+      "after_physical_lines": 45,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "before_sha256": "861f34aee4205b95082d30cfff1ffc3dd5364c1eb8a484cf95fbd44e1ed3d2bd",
+      "after_sha256": "203842c856cb9e9e4eabda0f23b2205ff78961f3ff740d24858480f99b60d16e",
+      "before_physical_lines": 67,
+      "after_physical_lines": 65,
+      "changes": [
+        "R2/R3 condition-bearing route",
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+      "before_sha256": "7ed5628c6e99a2bbf8d1fd650f5807aeb46f7c14b1118c36ef85636c84d778b8",
+      "after_sha256": "3a8a209122b08e9dcb28d505fbfbce5ed2f872a992bd30a0168db9586e194fb1",
+      "before_physical_lines": 24,
+      "after_physical_lines": 23,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+      "before_sha256": "bed59b5150951401a6d71f7e1d3c88eea4e2c5265b8d9dd3d4ab6eb9527d6646",
+      "after_sha256": "f31db7441d4621e8632de023323e361fb10861eda9f413d03d2d273aefe3dfd4",
+      "before_physical_lines": 24,
+      "after_physical_lines": 23,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+      "before_sha256": "6a83821c83e30da8ecc2bbf4c0a8b4ffd02d5194f2bfffe3243dd2479d81222b",
+      "after_sha256": "7c5d2e04e7ed93e9a2c73ab370ab2bb573a24df7d9d8931c269440e1d2d6d97b",
+      "before_physical_lines": 27,
+      "after_physical_lines": 26,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+      "before_sha256": "a9f11d79ec7eb94478dca31a5d810b39912f48c00eb897966bb1cdf5b9d5bca2",
+      "after_sha256": "2bba6d101acd3df731e3701e9abee9ebcd9a51ff3514f6b716c39c73d0d87b55",
+      "before_physical_lines": 26,
+      "after_physical_lines": 25,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+      "before_sha256": "dfa5ea603737759d18ef703dc6ba2beb7aae4cc5d451d219309ba6a33e2a18fd",
+      "after_sha256": "e1efe9ed61dc2d29802b352358784f39a733299268e4c5cd936edb20a0f32afe",
+      "before_physical_lines": 21,
+      "after_physical_lines": 20,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+      "before_sha256": "cb62ce6e433c9b114b161a745c1913e40ffccabf85509f2ec36262dfdd1a9f3a",
+      "after_sha256": "d50eca6aa798f2b238f33fbafcec5d45d4cc01a95fdb4cdcf60df975656bf7e2",
+      "before_physical_lines": 35,
+      "after_physical_lines": 34,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+      "before_sha256": "1d244f983423bd611f40dce0d4b204feb86d8b79d137fc386c5aa4b719420107",
+      "after_sha256": "d36d638d9d0087efbf69338ab960fa7514ba7f5422790055c47f0c890533febc",
+      "before_physical_lines": 98,
+      "after_physical_lines": 97,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+      "before_sha256": "d476cddb66b2abf6f0116c39544cc69554a5d7d51faef051f0b16045696bcb26",
+      "after_sha256": "35e3c315685555c00749545fb1a361647ea42b22707ebb80ae8b0f07efde6452",
+      "before_physical_lines": 41,
+      "after_physical_lines": 40,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+      "before_sha256": "08268c83a410d7c9bf2c0127f957f170e0dede0d691aa529c61fde2da05712ac",
+      "after_sha256": "f03b87b026e70ff0997396b1fb14da209441a1c7ad49702d0fb6cc3a8206b514",
+      "before_physical_lines": 29,
+      "after_physical_lines": 28,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+      "before_sha256": "67bf86dfc1ef7c40dd91cc019bf27b3e415207b984c1e6c298e6e24ce1f0abbf",
+      "after_sha256": "d1ef5d33af60323eda43d6447662621e965d1f966586b1c663291fd64179a1c5",
+      "before_physical_lines": 17,
+      "after_physical_lines": 16,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+      "before_sha256": "2b15e5d3a35dda308eb23d81bb62bfb22c12dc41c4268f0fe4ba42ed4663dc3a",
+      "after_sha256": "d308b14be4c0a835b5f40825377b192b6789e8721f6475bdb21096da788e4738",
+      "before_physical_lines": 25,
+      "after_physical_lines": 24,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+      "before_sha256": "4d24d59e1894a6ac93e5f2258cba3e08bf6e6ba2322a20f7245b3bc096532bab",
+      "after_sha256": "b4bcd880cb179bc6bc1d4267584c65143e5b045b0a8ef01e3357866ea9416c16",
+      "before_physical_lines": 17,
+      "after_physical_lines": 16,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+      "before_sha256": "da8d64b256ae4199fe657f69147153e8a62cd1528b27caebad4fcd8cef2c1f2e",
+      "after_sha256": "14c09ed03b4c1b7e7b07c0866dafc52e9d24295ddde4c7a4f4e58a36123c379a",
+      "before_physical_lines": 48,
+      "after_physical_lines": 47,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+      "before_sha256": "b8832f0f5b78ec25fb9d9629f8009ecfb6e650d649620710e8a837405353b5d6",
+      "after_sha256": "07668f016fbd20c0659d1d89294b06ab9274e6a309ba78e9faff01b049ce4a76",
+      "before_physical_lines": 23,
+      "after_physical_lines": 22,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+      "before_sha256": "9124f8d901a038eec9de6ff586044feb16fe8ba6c10c749179eafee5c97ac0b2",
+      "after_sha256": "00fc47554cc3cb92575daf3bf30e432e098ffe9a5341eae691b07b0f78428eb0",
+      "before_physical_lines": 66,
+      "after_physical_lines": 65,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+      "before_sha256": "1f73584e01c076e80f6b0ebed97b0479fd4e4703a97c81ea5149025b30337fb8",
+      "after_sha256": "47fc98f696d7e50f10d9b0ab48a8a16ef811ae82e0d619915717488efaa02f14",
+      "before_physical_lines": 27,
+      "after_physical_lines": 26,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+      "before_sha256": "b6c5ab38ad8c680d49eb06c0c1ae80c63e37d776bf3faedc3faad517cee556f2",
+      "after_sha256": "394cce3e31be896ddb4c2454047803a9ebb778dc3b6e05046c3863672a31ceae",
+      "before_physical_lines": 32,
+      "after_physical_lines": 31,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+      "before_sha256": "f73d04ffde23b24534790549982934cd847093f7ddd94617be3e527012fb7383",
+      "after_sha256": "0c5e9ff18ecbcdd294d6808a89dfe5882890934c46fc00caf9f9f00aad8050d4",
+      "before_physical_lines": 42,
+      "after_physical_lines": 41,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+      "before_sha256": "471514d4cb7d1a601815c909f2b1fa2b112e2b9379eb847ac96d8d09be60e06f",
+      "after_sha256": "1e945bf169fc0be3d4168455e4af7739bcdf6b7245b7bca3e63f1610d1a86b3d",
+      "before_physical_lines": 25,
+      "after_physical_lines": 24,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+      "before_sha256": "c1eb09bd692b36a88e3f88db5462a93525d8609794b1f0e0e66e3728303a0112",
+      "after_sha256": "af5cbf00efbc59f43e9c00ffef78b7910f5644d74818ccbe4757bf484e2d4e18",
+      "before_physical_lines": 26,
+      "after_physical_lines": 25,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+      "before_sha256": "cf5df91cc5bdf5935d4c377cf4b1fd5f22de18dab0f64ac13bdc77b50d17bba4",
+      "after_sha256": "8cbc31ff5f09e6fb5e3e1c68516c00acee98465b9c55bcd5d7ced960968578f7",
+      "before_physical_lines": 83,
+      "after_physical_lines": 82,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+      "before_sha256": "3c1305bdf113a7f6dd4e714332d8097a5c03ca5b068c7d19891d41e41ab98405",
+      "after_sha256": "271771ce415ea6c5d422c576c736c41dab5bea320c87887900226cca780d63ea",
+      "before_physical_lines": 43,
+      "after_physical_lines": 42,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+      "before_sha256": "260e7234418f7b78db4de608459f50fcc8be8fbdaa03b131335bdaee4886980b",
+      "after_sha256": "b9a39acd221c5d5cb6f3c91b2cb19e1ed4b1807395ab6c2bee50c347becdda4f",
+      "before_physical_lines": 36,
+      "after_physical_lines": 35,
+      "changes": [
+        "remove EOF-only extra blank line"
+      ],
+      "extra_eof_empty_lines_removed": 1,
+      "terminal_style": "LF"
+    }
+  ],
+  "updated_grades": [
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 47,
+      "reason": "GREEN: Each secret-delivery trigger routes to a matching child and preserves build, Compose and security ownership."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 17,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 17 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 41,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 41 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 32,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 32 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 44,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 44 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 63,
+      "reason": "Swarm secret rotation is one ordered lifecycle with proof conditions."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 26,
+      "reason": "GREEN: Network, exposure and diagnosis triggers route to matching owners."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 76,
+      "reason": "DNS/network reachability is one diagnostic path with ordered resolution checks."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 81,
+      "reason": "Exposure and trust controls are one boundary decision with linked prerequisites."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 39,
+      "reason": "GREEN: Sizing and load-diagnosis triggers route to their matching resource child."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 53,
+      "reason": "Resource ceilings are one limit-selection procedure with their symptoms and verification."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 96,
+      "reason": "Process, descriptor, and pool sizing form one capacity diagnosis and tuning workflow."
+    },
+    {
+      "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 88,
+      "reason": "Process, descriptor, and pool sizing form one capacity diagnosis and tuning workflow."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 55,
+      "reason": "YELLOW: GA/experimental state, hard limits and replacements form one feature qualification lookup with per-claim sources."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 57,
+      "reason": "YELLOW: The task router keeps graph, concurrency and retry triggers in one lookup to select the owning child."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 56,
+      "reason": "DAG edge and critical-path decisions are one scheduling lookup."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 29,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 29 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 47,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 47 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 42,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 42 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 11,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 27,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 27 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 43,
+      "reason": "GREEN: Table of contents is one bounded topic or integrated reader task at 43 physical lines; its prerequisites, conditions and proof stay together."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 65,
+      "reason": "Pipeline creation conditions are a compact ordered decision route."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 19,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 19 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 11,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 72,
+      "reason": "Environment and rollback form one deployment lifecycle with prerequisites."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 51,
+      "reason": "Reuse/composition mechanisms are compared in one concise authoring decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 63,
+      "reason": "YELLOW: The gate router compares local checks, live CI Lint boundaries and failure triage in one decision path."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 17,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 17 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 34,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 34 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 25,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 25 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 63,
+      "reason": "Runner/runtime failures form one symptom-to-diagnosis procedure."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 54,
+      "reason": "YELLOW: The route table connects variable mechanisms, precedence, protected values and forwarding to their owners."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 51,
+      "reason": "Variable/input expansion is one precedence and evaluation decision."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 11,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 15,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 15 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 17,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 17 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 18,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 18 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 15,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 15 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 31,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 31 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 49,
+      "reason": "GREEN: Reusable pipeline inputs and components are a bounded topic with one evaluation and precedence decision; 49 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 13,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 13 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 11,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 11 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 48,
+      "reason": "GREEN: The `defaults` association rule is one bounded topic or integrated reader task at 48 physical lines; its prerequisites, conditions and proof stay together."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 76,
+      "reason": "Defaults association is a compact decision table whose links and exceptions are read together."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 33,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 33 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 43,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 43 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 45,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 45 physical lines."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 65,
+      "reason": "YELLOW: TLS-stack/build compatibility and no-QUIC outcomes jointly decide HTTP/3 eligibility on the actual binary."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 23,
+      "reason": "GREEN: The Frontend HTTP/3 template is separately triggered and complete at 23 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 23,
+      "reason": "GREEN: The Backend HTTP/3 template is separately triggered and complete at 23 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 26,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 26 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 25,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 25 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 20,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 20 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 34,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 34 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 97,
+      "reason": "YELLOW: User/disposable-host gate, stage order, teardown and failure outcomes make one execution lifecycle."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 40,
+      "reason": "GREEN: The Writing the verifier template is separately triggered and complete at 40 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 28,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 28 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 16,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 16 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 24,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 24 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 16,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 16 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 47,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 47 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 22,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 22 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 65,
+      "reason": "Vault mechanics are one secret lifecycle with ordered checks."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 26,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 26 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 31,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 31 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 41,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 41 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 24,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 24 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 25,
+      "reason": "One bounded topic or procedure with a single reader trigger; below 25 physical lines."
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+      "grade": "YELLOW",
+      "raw_measurement_grade": "YELLOW",
+      "physical_lines": 82,
+      "reason": "YELLOW: Regression purpose, fixture-addition rules, vendored provenance and refresh bounds form one maintenance decision."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 42,
+      "reason": "GREEN: The Template 1: Helm or manifest implementation template is separately triggered and complete at 42 physical lines; its Step 1 precondition stays with it."
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+      "grade": "GREEN",
+      "raw_measurement_grade": "GREEN",
+      "physical_lines": 35,
+      "reason": "GREEN: The Template 2: RBAC incident triage template is separately triggered and complete at 35 physical lines; its Step 1 precondition stays with it."
+    }
+  ],
+  "grade_counts_eligible": {
+    "ORANGE": 5,
+    "GREEN": 81,
+    "YELLOW": 39
+  },
+  "checks": [
+    {
+      "gate": "focused Markdown links and eligible size budget",
+      "scope_files": 72,
+      "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files <72 operations paths from candidate6-eof-inventory.json> --line-budget",
+      "result": "PASS exit 0; no RED",
+      "output_tail": "Validated links, line budgets in 72 Markdown file(s) under D:\\Sohrab\\Project\\skills."
+    },
+    {
+      "gate": "explicit GitLab router conditions and topic ownership",
+      "scope_files": 5,
+      "result": "PASS; 12 child links have an observable When condition and name owned topic; no bare See links remain."
+    },
+    {
+      "gate": "HAProxy network-failure sibling route",
+      "scope_files": 1,
+      "result": "PASS; canonical sibling ./20-frontend-http3.md names UDP reachability and advertisement checks."
+    }
+  ],
+  "limits": [
+    "Independent whole-334-document verifier and reviewer own final acceptance.",
+    "This cycle did not run live, deployment, executable, or broad unrelated gates."
+  ],
+  "source_freeze": {
+    "hash_inventory": [
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+        "before_sha256": "59069978417e8b4c0fbedf7113a382b19c16bc7b7b3bce723920e05592e3e114",
+        "after_sha256": "ef6cbd8b92e3a4806a1fed5cc58bc6b995e6cdbe9532eed8dc31f5f05f52cede",
+        "before_physical_lines": 48,
+        "after_physical_lines": 47,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+        "before_sha256": "fd79629bde01f9e3aa1944ff0ae0db38e0d64115684247645aa1a2a662d87659",
+        "after_sha256": "8805a1322ed42b839f90f6d7f356ca2f1e9ad70f758bcbd38afecdbb4294162b",
+        "before_physical_lines": 18,
+        "after_physical_lines": 17,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+        "before_sha256": "7fa9bcdd8ea14649634c3db773e5643310b0dd7a4c24d52795bee40c09619838",
+        "after_sha256": "38081ad6a75f7e239cb7bdf6e3dc7409147b6928e6def05613a0cb126fa349bc",
+        "before_physical_lines": 42,
+        "after_physical_lines": 41,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+        "before_sha256": "d5009240f785b5b5a4256c8297929af4b88636fd7fec282991964c97687c80b9",
+        "after_sha256": "c694892e33b5a986cf1a0c16908c0cfc9e0c745d7d91a7814425b451de6687b0",
+        "before_physical_lines": 33,
+        "after_physical_lines": 32,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+        "before_sha256": "240b6d3f34058af339d403a0e854cef7129aac848f9b5ced20909e7797dec280",
+        "after_sha256": "2027af531b3e0c75068cbb9f5b4efa552d3aaed5d3445cc1e3cb0e91beac6345",
+        "before_physical_lines": 45,
+        "after_physical_lines": 44,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+        "before_sha256": "167edafc78037c63ac1fc657fc75f365daf4b768ec846cf702606dbdd3f5abe2",
+        "after_sha256": "10b1d64b86dd6d63bbdbec863edb97fa847685f6fab3309b4351f82a723d0d40",
+        "before_physical_lines": 64,
+        "after_physical_lines": 63,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+        "before_sha256": "3b9797af5b68eced56677bb786e0558db14f0bddb10b42e79a63815a64cf4059",
+        "after_sha256": "fdfd63b149659d29753804c5867865bc0ab1189dacd21a0aff306d1902e93917",
+        "before_physical_lines": 27,
+        "after_physical_lines": 26,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+        "before_sha256": "422b896a41e00ab4e12bcfd89c8c23bab1c00cd9ae915ca9a363c770526ee735",
+        "after_sha256": "4e39793ffb47b9f21b9b60092346b44fed6770dfabd02125eebb49948d9221e9",
+        "before_physical_lines": 77,
+        "after_physical_lines": 76,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+        "before_sha256": "9ca43ccdcc2ed5eb447c43e7b2d92c4d2d863bd7510112be272483aa95a5e829",
+        "after_sha256": "54384d7d24708c330e06ff3bee5f17daf8b21d2c0d05884b5d4592bc5dd2470e",
+        "before_physical_lines": 82,
+        "after_physical_lines": 81,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+        "before_sha256": "c1f01da2e4507c3a6e3d7dfcfab0ffc0824b4b8f073006563a94648a10e1038f",
+        "after_sha256": "f6444034709c0e16ea73bb182c8a8ec64ae29ecbc9ad696645b4cafeded0cdd8",
+        "before_physical_lines": 40,
+        "after_physical_lines": 39,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+        "before_sha256": "3684b7bfab49b800c56067faecec401077bd95f62ea98d263671c2e1f59ac7db",
+        "after_sha256": "a4be10f3f7ef483168818a33d0331694e53b66a1ee9e41c7a8142cc05f5d2891",
+        "before_physical_lines": 54,
+        "after_physical_lines": 53,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+        "before_sha256": "b8af13b05f399215968698ebf142394968047d37bd27c0346bcca66e0a7b6695",
+        "after_sha256": "df059dd22c291cc07fa5f31b3f6051e96fa78354a41b0b9696c649337debe9b6",
+        "before_physical_lines": 97,
+        "after_physical_lines": 96,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+        "before_sha256": "f168c9db671efcd0fce97d10056ba6bc77b91efcd7e81caeb4630e0151d2d29c",
+        "after_sha256": "1757e9941309b9e97bd0ea214429ccb887ad6270f0f02d69bd84fba5ca5bb718",
+        "before_physical_lines": 89,
+        "after_physical_lines": 88,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+        "before_sha256": "e71f4c28b227974c1ecbc097558f77dd6e0bd73e465d5e541a5055ba361c9ba6",
+        "after_sha256": "bf55cbf2688ac1f4a4edf6360fc340af7faf9ba112c5f8ce8b2cd5a122ae65b4",
+        "before_physical_lines": 56,
+        "after_physical_lines": 55,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+        "before_sha256": "eecbc2bbd73f50328eda1bb95be0aa19ae9158fcedc281ac4cf26a04b1b8941a",
+        "after_sha256": "6663bb77410ffcdedc5b567573c470cb9ae64442c536ad3253e15f0d424d4290",
+        "before_physical_lines": 58,
+        "after_physical_lines": 57,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+        "before_sha256": "2f2f26f7053482c1511a742411d2a7342c8ee5263a3a53be01995498ce77a422",
+        "after_sha256": "6bec1c784018f3883869e5d5b7e0786c70b3b4f6abb79ca4d2aaeea1c26a88ae",
+        "before_physical_lines": 57,
+        "after_physical_lines": 56,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+        "before_sha256": "4ec797a81cdb3a2921ff1dfa3fe49f4363683376e0e37e7c6f19ec10b5fc4403",
+        "after_sha256": "04aa6c1b74e713b141def9874d85885f788d63208c7d8b1e0ebc2d1dea716292",
+        "before_physical_lines": 30,
+        "after_physical_lines": 29,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+        "before_sha256": "0bf264fbd5432b3353f1e5cc0022cb69397879a5eae4469623d788b2855bd875",
+        "after_sha256": "4b165ddcd0aa880f0660f8b118c41cbaec39470ba7903aaedb5b10baf264d7ed",
+        "before_physical_lines": 48,
+        "after_physical_lines": 47,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+        "before_sha256": "37f6c803fe748f307b37a7250407531621f03f2bb03c8ff2a845ff8c53de6486",
+        "after_sha256": "e45cd847588757aaffe735beecf3f058a48d6019ad6e3be2fe9e7e0137c865f1",
+        "before_physical_lines": 43,
+        "after_physical_lines": 42,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+        "before_sha256": "7cd97e282f0dc6fab115894831f9e85020d7806317ce903827e381eef3c851dc",
+        "after_sha256": "1969326d25c9f97d224868f9cadf15d073704286a0f7138fb893aab0df12e3cb",
+        "before_physical_lines": 12,
+        "after_physical_lines": 11,
+        "changes": [
+          "R2/R3 condition-bearing route",
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+        "before_sha256": "d98253b9579a074475db2c74807b616d4628cd5393fc8566adee83446e3019d9",
+        "after_sha256": "d06d7f3cf3ce0706042ea393928a6d65eee5bd602c3ac5cbc331a240bf01d423",
+        "before_physical_lines": 28,
+        "after_physical_lines": 27,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+        "before_sha256": "87f587641e6e1105d277bce1137ddce4bfd74b011311179fb058e3d21ced15be",
+        "after_sha256": "7b4dcadef71a279afe76602155f6ec089f3935ccab305570ac139cbac9b4501b",
+        "before_physical_lines": 44,
+        "after_physical_lines": 43,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+        "before_sha256": "33f5993a427884e9318426f5f2c31b5aeb2cd0781fab97a96c7c7636d7f0b79a",
+        "after_sha256": "f789563582378e498dcec19ed25d2c143aba3236ea7febc7aee252aa07c76f64",
+        "before_physical_lines": 66,
+        "after_physical_lines": 65,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+        "before_sha256": "994230edb851a3aab528dfb92b6d55f633dfce1b50cc3c487c94b15ae5a26d5d",
+        "after_sha256": "d9f17caf24ff66a6231449fb56d35e323d6cde155cf18fb5b6d25dda74a42a37",
+        "before_physical_lines": 20,
+        "after_physical_lines": 19,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+        "before_sha256": "5c53fe7a1ac82dcc91d114e722f2481d04d30b8c8e59d107c84ec88182a4d410",
+        "after_sha256": "2d9bf76ff738ad8c985f2c3ae2e9513e6e7d6f1f842dbedd867af3aeb22fd190",
+        "before_physical_lines": 12,
+        "after_physical_lines": 11,
+        "changes": [
+          "R2/R3 condition-bearing route",
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+        "before_sha256": "fb6678bc938283531734384207336c63864d17cf70416609ca14ab73ad66d698",
+        "after_sha256": "c4bbf9d3f36b023fb216ac4d584e06eb5e29e34a88d7c074a7a35994a9324080",
+        "before_physical_lines": 73,
+        "after_physical_lines": 72,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+        "before_sha256": "5261d6b8fb18c8281fc8452fb412875fb7d5c119b2841f93639264c7269052f4",
+        "after_sha256": "818368e21a02de7d30fa51b872d1e866c8cebaf34ab5f7609029a066bfa584fe",
+        "before_physical_lines": 52,
+        "after_physical_lines": 51,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+        "before_sha256": "58c9dec767b18148df020358174fba6a555b634345128ef4180cd574c291bb0f",
+        "after_sha256": "6ec2f7fb6a328e2b90c6683a933578e319707a5a3aaf90b4b373290199dfd5be",
+        "before_physical_lines": 64,
+        "after_physical_lines": 63,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+        "before_sha256": "a82252d0b08edbdf78e8a700648bf246f2b07f54713d5b8bb5d468bb4a00302c",
+        "after_sha256": "438218f4f7b283e548d370276c374a0f8cee33091da30db197e2d15a103b81b2",
+        "before_physical_lines": 18,
+        "after_physical_lines": 17,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+        "before_sha256": "0ae457dc1a8121f939b80349d8f451943810d13dc482c2cd78b391b378587de9",
+        "after_sha256": "6bfd573cf3a1a2a5680b6126f3cc9b0c808c22ba3d60945d3ff45cee24e70479",
+        "before_physical_lines": 35,
+        "after_physical_lines": 34,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+        "before_sha256": "375060a8231a6eaeccbad7fc7abee0609b03c808da9d9437e7d8ef36d64cc061",
+        "after_sha256": "6eee0f6763f54c235ce4e85be5c611f1183a1549f0095a7865eb200fd539e024",
+        "before_physical_lines": 26,
+        "after_physical_lines": 25,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+        "before_sha256": "ef74a65a996b25e654c76e0b3254cb475033775f4c4a9c1d0f1c3f0882a08640",
+        "after_sha256": "dcf852419e471c356be89030c73dc3e3091229604ba839ad39a5a95e85460449",
+        "before_physical_lines": 64,
+        "after_physical_lines": 63,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+        "before_sha256": "68d816afa48fbefada72ffcce5cf4918c3e1d01fb5b990a69bf18520cf9967cb",
+        "after_sha256": "e5b26538080b0dc2c1271862c70e91cdd5a883d955039735cbf428f562369af1",
+        "before_physical_lines": 55,
+        "after_physical_lines": 54,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+        "before_sha256": "e836a1ff8a6f644632e1d4961c3d68825d63662783e09fc5242fd14e455f122a",
+        "after_sha256": "9e153294bf2a54ad475f2b4e4ca1090afa8fe3ca62ad31cb53edce307a2bf4db",
+        "before_physical_lines": 52,
+        "after_physical_lines": 51,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+        "before_sha256": "538ea891359d21881fa52cf9e9988da77fb98df4ac8cd8d9d228277c0d4f9bc9",
+        "after_sha256": "ed549bdc07b92e7afd2869c2fd54a085dca52eccec66f63206fd48149d3de1b7",
+        "before_physical_lines": 12,
+        "after_physical_lines": 11,
+        "changes": [
+          "R2/R3 condition-bearing route",
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+        "before_sha256": "69fc0b46ca3f29c0715b7905de98c00769fb618d78676ddddc49f2487dc927d0",
+        "after_sha256": "70d2718c1bfa9f4b1691c543bb2228f180ab40ec568cfa8364aca90bd1df144e",
+        "before_physical_lines": 16,
+        "after_physical_lines": 15,
+        "changes": [
+          "R2/R3 condition-bearing route",
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+        "before_sha256": "b7c04266e93a9c377702da81ebd16f608d41be7430b8fbab0b11f5f245c069f3",
+        "after_sha256": "6b4093ec4fb38ddd08b947d1ed48cbc02a7d006317d356c5a2dcb86e237330e8",
+        "before_physical_lines": 18,
+        "after_physical_lines": 17,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+        "before_sha256": "57e578afa48c3f74c724333ce39051a6ad977738015c727b931a93365d7a8369",
+        "after_sha256": "90bc4bb5645a4fd2915ab53254f2591ea3fa894b4b01d9807d9cd61b93b49e7d",
+        "before_physical_lines": 19,
+        "after_physical_lines": 18,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+        "before_sha256": "b3338660cd20c834848affd2799e7739e8a1ed8614558dcff69b66a01976fecd",
+        "after_sha256": "b433273529a42eb63749f46f9faf6652a89041f768cecdcffcdde07e85d219d2",
+        "before_physical_lines": 16,
+        "after_physical_lines": 15,
+        "changes": [
+          "R2/R3 condition-bearing route",
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+        "before_sha256": "3df962787366c06bcf40053c131ec186a4f05ec9f5f32880e609c6401f4fb803",
+        "after_sha256": "d951e424dbafff49f1cf2ed4ae8e2497d2d9990d718184c8d726349255818990",
+        "before_physical_lines": 32,
+        "after_physical_lines": 31,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+        "before_sha256": "f231c29e2a1d384627e39912ef105a5e65830bc64038c93f1de679167f22929c",
+        "after_sha256": "470ab29119f216d077dbc2f56ec22d02efcac1388001d63c789c82610da09eb4",
+        "before_physical_lines": 50,
+        "after_physical_lines": 49,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+        "before_sha256": "1b6645c98341422988e95268959c45b5de7ed1eb6fc43d603845e1566d27cb38",
+        "after_sha256": "c2385081eca7bd8117bafbf559237cd4f5e3f7c76df5d3fffe7091f52010e436",
+        "before_physical_lines": 14,
+        "after_physical_lines": 13,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+        "before_sha256": "05b7d7154158ed8dbebb4b14d845386f981e5d60d62e20ce3f48967af83cf171",
+        "after_sha256": "12979a2d782ce6d5b3d7ad29580cd26f996442809993b58469f66361a1b1d24f",
+        "before_physical_lines": 12,
+        "after_physical_lines": 11,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+        "before_sha256": "89c362b20c3c8b7159f1b0577b32046dda83acf019fe2e2f455a9e3f41f3e4bb",
+        "after_sha256": "3e6aab89f4ff60321ba98f3d20d731052e9c186b736b37a6213c4fcdd04ff9f2",
+        "before_physical_lines": 49,
+        "after_physical_lines": 48,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+        "before_sha256": "9098ce6f71f2c876c9ea39e68f858c9ac6cd2ee7a8589aed8e832b5916e8649c",
+        "after_sha256": "25a50f0e3c8309a7d15a30f526ddaf6350db689a93909c49ce3a99eaa8f28c89",
+        "before_physical_lines": 77,
+        "after_physical_lines": 76,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+        "before_sha256": "b59edf2afb9c90f44d0e41bede7444aa05158c57f969135bf50f8bc36a92ee01",
+        "after_sha256": "f5047248f0f9ed284175a24620d9010f48dd4c58dc5fe9c97eea49696a179d28",
+        "before_physical_lines": 34,
+        "after_physical_lines": 33,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+        "before_sha256": "b4420660267293b53800cd0591df037260b4f4b15a7e74452a5a7510e0856231",
+        "after_sha256": "fb3b7887ecd1a745caa7956877082eb11d3fccefaf8fbfc0d07a5cf3f07c7c46",
+        "before_physical_lines": 44,
+        "after_physical_lines": 43,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+        "before_sha256": "db22ce1e68a589684c36c133fa96a7311f300edc2f9f908ddc99419989ab2de4",
+        "after_sha256": "d452c4b2afc290e8c9e5704b43581301ee472e72752251820f1075fede69f140",
+        "before_physical_lines": 46,
+        "after_physical_lines": 45,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+        "before_sha256": "861f34aee4205b95082d30cfff1ffc3dd5364c1eb8a484cf95fbd44e1ed3d2bd",
+        "after_sha256": "203842c856cb9e9e4eabda0f23b2205ff78961f3ff740d24858480f99b60d16e",
+        "before_physical_lines": 67,
+        "after_physical_lines": 65,
+        "changes": [
+          "R2/R3 condition-bearing route",
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+        "before_sha256": "7ed5628c6e99a2bbf8d1fd650f5807aeb46f7c14b1118c36ef85636c84d778b8",
+        "after_sha256": "3a8a209122b08e9dcb28d505fbfbce5ed2f872a992bd30a0168db9586e194fb1",
+        "before_physical_lines": 24,
+        "after_physical_lines": 23,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+        "before_sha256": "bed59b5150951401a6d71f7e1d3c88eea4e2c5265b8d9dd3d4ab6eb9527d6646",
+        "after_sha256": "f31db7441d4621e8632de023323e361fb10861eda9f413d03d2d273aefe3dfd4",
+        "before_physical_lines": 24,
+        "after_physical_lines": 23,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+        "before_sha256": "6a83821c83e30da8ecc2bbf4c0a8b4ffd02d5194f2bfffe3243dd2479d81222b",
+        "after_sha256": "7c5d2e04e7ed93e9a2c73ab370ab2bb573a24df7d9d8931c269440e1d2d6d97b",
+        "before_physical_lines": 27,
+        "after_physical_lines": 26,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+        "before_sha256": "a9f11d79ec7eb94478dca31a5d810b39912f48c00eb897966bb1cdf5b9d5bca2",
+        "after_sha256": "2bba6d101acd3df731e3701e9abee9ebcd9a51ff3514f6b716c39c73d0d87b55",
+        "before_physical_lines": 26,
+        "after_physical_lines": 25,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+        "before_sha256": "dfa5ea603737759d18ef703dc6ba2beb7aae4cc5d451d219309ba6a33e2a18fd",
+        "after_sha256": "e1efe9ed61dc2d29802b352358784f39a733299268e4c5cd936edb20a0f32afe",
+        "before_physical_lines": 21,
+        "after_physical_lines": 20,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+        "before_sha256": "cb62ce6e433c9b114b161a745c1913e40ffccabf85509f2ec36262dfdd1a9f3a",
+        "after_sha256": "d50eca6aa798f2b238f33fbafcec5d45d4cc01a95fdb4cdcf60df975656bf7e2",
+        "before_physical_lines": 35,
+        "after_physical_lines": 34,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+        "before_sha256": "1d244f983423bd611f40dce0d4b204feb86d8b79d137fc386c5aa4b719420107",
+        "after_sha256": "d36d638d9d0087efbf69338ab960fa7514ba7f5422790055c47f0c890533febc",
+        "before_physical_lines": 98,
+        "after_physical_lines": 97,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+        "before_sha256": "d476cddb66b2abf6f0116c39544cc69554a5d7d51faef051f0b16045696bcb26",
+        "after_sha256": "35e3c315685555c00749545fb1a361647ea42b22707ebb80ae8b0f07efde6452",
+        "before_physical_lines": 41,
+        "after_physical_lines": 40,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+        "before_sha256": "08268c83a410d7c9bf2c0127f957f170e0dede0d691aa529c61fde2da05712ac",
+        "after_sha256": "f03b87b026e70ff0997396b1fb14da209441a1c7ad49702d0fb6cc3a8206b514",
+        "before_physical_lines": 29,
+        "after_physical_lines": 28,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+        "before_sha256": "67bf86dfc1ef7c40dd91cc019bf27b3e415207b984c1e6c298e6e24ce1f0abbf",
+        "after_sha256": "d1ef5d33af60323eda43d6447662621e965d1f966586b1c663291fd64179a1c5",
+        "before_physical_lines": 17,
+        "after_physical_lines": 16,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+        "before_sha256": "2b15e5d3a35dda308eb23d81bb62bfb22c12dc41c4268f0fe4ba42ed4663dc3a",
+        "after_sha256": "d308b14be4c0a835b5f40825377b192b6789e8721f6475bdb21096da788e4738",
+        "before_physical_lines": 25,
+        "after_physical_lines": 24,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+        "before_sha256": "4d24d59e1894a6ac93e5f2258cba3e08bf6e6ba2322a20f7245b3bc096532bab",
+        "after_sha256": "b4bcd880cb179bc6bc1d4267584c65143e5b045b0a8ef01e3357866ea9416c16",
+        "before_physical_lines": 17,
+        "after_physical_lines": 16,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+        "before_sha256": "da8d64b256ae4199fe657f69147153e8a62cd1528b27caebad4fcd8cef2c1f2e",
+        "after_sha256": "14c09ed03b4c1b7e7b07c0866dafc52e9d24295ddde4c7a4f4e58a36123c379a",
+        "before_physical_lines": 48,
+        "after_physical_lines": 47,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+        "before_sha256": "b8832f0f5b78ec25fb9d9629f8009ecfb6e650d649620710e8a837405353b5d6",
+        "after_sha256": "07668f016fbd20c0659d1d89294b06ab9274e6a309ba78e9faff01b049ce4a76",
+        "before_physical_lines": 23,
+        "after_physical_lines": 22,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+        "before_sha256": "9124f8d901a038eec9de6ff586044feb16fe8ba6c10c749179eafee5c97ac0b2",
+        "after_sha256": "00fc47554cc3cb92575daf3bf30e432e098ffe9a5341eae691b07b0f78428eb0",
+        "before_physical_lines": 66,
+        "after_physical_lines": 65,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+        "before_sha256": "1f73584e01c076e80f6b0ebed97b0479fd4e4703a97c81ea5149025b30337fb8",
+        "after_sha256": "47fc98f696d7e50f10d9b0ab48a8a16ef811ae82e0d619915717488efaa02f14",
+        "before_physical_lines": 27,
+        "after_physical_lines": 26,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+        "before_sha256": "b6c5ab38ad8c680d49eb06c0c1ae80c63e37d776bf3faedc3faad517cee556f2",
+        "after_sha256": "394cce3e31be896ddb4c2454047803a9ebb778dc3b6e05046c3863672a31ceae",
+        "before_physical_lines": 32,
+        "after_physical_lines": 31,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+        "before_sha256": "f73d04ffde23b24534790549982934cd847093f7ddd94617be3e527012fb7383",
+        "after_sha256": "0c5e9ff18ecbcdd294d6808a89dfe5882890934c46fc00caf9f9f00aad8050d4",
+        "before_physical_lines": 42,
+        "after_physical_lines": 41,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+        "before_sha256": "471514d4cb7d1a601815c909f2b1fa2b112e2b9379eb847ac96d8d09be60e06f",
+        "after_sha256": "1e945bf169fc0be3d4168455e4af7739bcdf6b7245b7bca3e63f1610d1a86b3d",
+        "before_physical_lines": 25,
+        "after_physical_lines": 24,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+        "before_sha256": "c1eb09bd692b36a88e3f88db5462a93525d8609794b1f0e0e66e3728303a0112",
+        "after_sha256": "af5cbf00efbc59f43e9c00ffef78b7910f5644d74818ccbe4757bf484e2d4e18",
+        "before_physical_lines": 26,
+        "after_physical_lines": 25,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+        "before_sha256": "cf5df91cc5bdf5935d4c377cf4b1fd5f22de18dab0f64ac13bdc77b50d17bba4",
+        "after_sha256": "8cbc31ff5f09e6fb5e3e1c68516c00acee98465b9c55bcd5d7ced960968578f7",
+        "before_physical_lines": 83,
+        "after_physical_lines": 82,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+        "before_sha256": "3c1305bdf113a7f6dd4e714332d8097a5c03ca5b068c7d19891d41e41ab98405",
+        "after_sha256": "271771ce415ea6c5d422c576c736c41dab5bea320c87887900226cca780d63ea",
+        "before_physical_lines": 43,
+        "after_physical_lines": 42,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      },
+      {
+        "path": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+        "before_sha256": "260e7234418f7b78db4de608459f50fcc8be8fbdaa03b131335bdaee4886980b",
+        "after_sha256": "b9a39acd221c5d5cb6f3c91b2cb19e1ed4b1807395ab6c2bee50c347becdda4f",
+        "before_physical_lines": 36,
+        "after_physical_lines": 35,
+        "changes": [
+          "remove EOF-only extra blank line"
+        ],
+        "extra_eof_empty_lines_removed": 1,
+        "terminal_style": "LF"
+      }
+    ],
+    "operation_grades_report": "documentation-operations-grades.json",
+    "operation_grades_sha256": "ea031550ce2f2f8fb25596b736d41bb03f7f5e2e2bdf3116b7b125f83adbc991"
+  },
+  "eof_inventory": {
+    "source": "candidate6-eof-inventory.json",
+    "operations_paths": 72,
+    "normalized_paths": 72,
+    "remaining_extra_eof_paths": 0,
+    "atomic_templates_in_inventory": 0,
+    "atomic_templates_unchanged": true,
+    "path_inventory_sha256": "cc25c3a5b708bc5bdfb31e14f329905df46e6d74a95f0e832e82750e672d7f92"
+  },
+  "expected_unchanged": [
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "sha256": "0a7fb3c2cee7730555443931bcc56a2ed655c5d75e7191afccc92c300dcf3819",
+      "unchanged_from_candidate4": true
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "sha256": "0c9a3525e9ba8465a94e3459c0d5395ca447017fbdb9d5a9a78eb8f6efcaabbf",
+      "unchanged_from_candidate4": true
+    }
+  ]
+}

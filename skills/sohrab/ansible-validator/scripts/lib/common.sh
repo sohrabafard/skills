@@ -38,14 +38,12 @@ if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
     COLOR_YELLOW='\033[1;33m'
     COLOR_RED='\033[0;31m'
     COLOR_BLUE='\033[0;34m'
-    COLOR_CYAN='\033[0;36m'
     COLOR_RESET='\033[0m'
 else
     COLOR_GREEN=''
     COLOR_YELLOW=''
     COLOR_RED=''
     COLOR_BLUE=''
-    COLOR_CYAN=''
     COLOR_RESET=''
 fi
 
@@ -70,13 +68,13 @@ av_banner() {
 av_usage_error() {
     printf "%bUsage error: %s%b\n" "$COLOR_RED" "$1" "$COLOR_RESET" >&2
     echo "Run with --help for the full argument list." >&2
-    exit $AV_EXIT_USAGE
+    exit "$AV_EXIT_USAGE"
 }
 
 av_cannot_run() {
     printf "%b[BLOCKED] %s%b\n" "$COLOR_RED" "$1" "$COLOR_RESET" >&2
     echo "This is exit 2: the check could not run. It is not a pass." >&2
-    exit $AV_EXIT_CANNOT_RUN
+    exit "$AV_EXIT_CANNOT_RUN"
 }
 
 # ---------------------------------------------------------------------------
@@ -100,9 +98,8 @@ av_assert_no_crlf() {
 # a pip install per file reviewed. It is never created inside the repository,
 # because the owner's mount is read-only in places and forbids unlink.
 #
-# Set AV_NO_BOOTSTRAP=1 to forbid the bootstrap entirely: a missing tool then
-# exits 2 instead of reaching for the network. That is the correct setting in a
-# locked-down CI runner.
+# Installation requires prior user authorization and AV_ALLOW_BOOTSTRAP=1.
+# Default resolution is read-only; AV_NO_BOOTSTRAP always overrides the opt-in.
 # ---------------------------------------------------------------------------
 AV_VENV=""
 
@@ -125,16 +122,14 @@ av_cache_root() {
     echo "$root"
 }
 
+# Optional pip specs are this library helper's documented fallback API; callers
+# using the bundled requirements intentionally pass no specs.
+# shellcheck disable=SC2120
 av_bootstrap() {
     # av_bootstrap <pip-spec...>
     # Creates or reuses the cached venv and sets AV_VENV. Returns non-zero when
     # the bootstrap is forbidden or impossible; the caller decides whether that
     # is exit 2.
-    if [ -n "${AV_NO_BOOTSTRAP:-}" ]; then
-        return 1
-    fi
-    command -v python3 >/dev/null 2>&1 || return 1
-
     local req key root venv bindir
     req="$(av_requirements_file)"
     if [ -f "$req" ]; then
@@ -150,6 +145,12 @@ av_bootstrap() {
         AV_VENV="$venv"
         return 0
     fi
+
+    # Existing cache discovery is read-only and needs no installation authority.
+    if [ -n "${AV_NO_BOOTSTRAP:-}" ] || [ "${AV_ALLOW_BOOTSTRAP:-}" != 1 ]; then
+        return 1
+    fi
+    command -v python3 >/dev/null 2>&1 || return 1
 
     mkdir -p "$root" || return 1
     echo "Creating a cached tool environment at $venv (first run only)..." >&2
@@ -179,7 +180,7 @@ av_hash_file() {
 av_resolve_tool() {
     # av_resolve_tool <name> -> prints an invocable path, or nothing.
     # Prefers the system tool; falls back to the cached venv; bootstraps only
-    # when AV_NO_BOOTSTRAP is unset.
+    # when explicitly authorized via AV_ALLOW_BOOTSTRAP=1 and not forbidden.
     local name="$1" bindir
     # AV_UNAVAILABLE_TOOLS is a deliberate test hook, not a workaround. Each
     # script's --self-test uses it to exercise the "tool is missing" path and
@@ -200,6 +201,8 @@ av_resolve_tool() {
             return 0
         fi
     fi
+    # Use the bundled requirements; do not forward the caller's CLI arguments.
+    # shellcheck disable=SC2119
     if av_bootstrap; then
         bindir="$(av_venv_bin "$AV_VENV")"
         if [ -x "$bindir/$name" ]; then
@@ -286,9 +289,11 @@ av_parse_common_flags() {
         case "$1" in
             -h|--help)
                 av_print_help
-                exit $AV_EXIT_OK
+                exit "$AV_EXIT_OK"
                 ;;
             --self-test)
+                # Read by sourcing entrypoints after av_parse_common_flags returns.
+                # shellcheck disable=SC2034
                 AV_SELF_TEST=1
                 shift
                 ;;
@@ -343,7 +348,9 @@ then the nearest .yamllint / .ansible-lint found by walking up from the target,
 then the skill's own assets/ copy.
 
 Environment:
-  AV_NO_BOOTSTRAP=1   Never create a tool environment. A missing tool exits 2.
+  AV_ALLOW_BOOTSTRAP=1  Opt in to installation only with prior user authorization.
+                       Unset by default: missing tools exit 2 without installation.
+  AV_NO_BOOTSTRAP=1   Overrides opt-in; never create a tool environment.
   AV_CACHE_DIR=PATH   Where the cached tool environment lives. Defaults to
                       $XDG_CACHE_HOME/ansible-validator (never inside the repo).
   NO_COLOR=1          Plain output.
@@ -401,9 +408,9 @@ av_summary() {
     else
         echo ""
         av_banner "$title"
-        if [ $AV_ERRORS -eq 0 ] && [ $AV_WARNINGS -eq 0 ]; then
+        if [ "$AV_ERRORS" -eq 0 ] && [ "$AV_WARNINGS" -eq 0 ]; then
             printf "%bPASS - no findings%b\n" "$COLOR_GREEN" "$COLOR_RESET"
-        elif [ $AV_ERRORS -eq 0 ]; then
+        elif [ "$AV_ERRORS" -eq 0 ]; then
             printf "%bPASS with %d warning(s)%b\n" "$COLOR_YELLOW" "$AV_WARNINGS" "$COLOR_RESET"
         else
             printf "%bFAIL - %d error(s), %d warning(s)%b\n" "$COLOR_RED" "$AV_ERRORS" "$AV_WARNINGS" "$COLOR_RESET"
@@ -413,10 +420,10 @@ av_summary() {
             echo "against is references/best_practices.md."
         fi
     fi
-    if [ $AV_ERRORS -gt 0 ]; then
-        return $AV_EXIT_FINDINGS
+    if [ "$AV_ERRORS" -gt 0 ]; then
+        return "$AV_EXIT_FINDINGS"
     fi
-    return $AV_EXIT_OK
+    return "$AV_EXIT_OK"
 }
 
 # ---------------------------------------------------------------------------
@@ -450,17 +457,17 @@ av_expect_exit() {
 
 av_self_test_summary() {
     echo ""
-    if [ $AV_ST_FAIL -eq 0 ] && [ $AV_ST_BLOCKED -eq 0 ]; then
+    if [ "$AV_ST_FAIL" -eq 0 ] && [ "$AV_ST_BLOCKED" -eq 0 ]; then
         printf "%bself-test: %d assertion(s) passed%b\n" "$COLOR_GREEN" "$AV_ST_PASS" "$COLOR_RESET"
-        exit $AV_EXIT_OK
+        exit "$AV_EXIT_OK"
     fi
-    if [ $AV_ST_FAIL -eq 0 ]; then
+    if [ "$AV_ST_FAIL" -eq 0 ]; then
         printf "%bself-test: %d passed, %d BLOCKED by a missing tool%b\n" "$COLOR_YELLOW" "$AV_ST_PASS" "$AV_ST_BLOCKED" "$COLOR_RESET"
         printf "Install scripts/requirements.txt and run again. Nothing failed; nothing was proved either.\n"
-        exit $AV_EXIT_CANNOT_RUN
+        exit "$AV_EXIT_CANNOT_RUN"
     fi
     printf "%bself-test: %d passed, %d FAILED, %d blocked%b\n" "$COLOR_RED" "$AV_ST_PASS" "$AV_ST_FAIL" "$AV_ST_BLOCKED" "$COLOR_RESET"
-    exit $AV_EXIT_FINDINGS
+    exit "$AV_EXIT_FINDINGS"
 }
 
 av_fixture_dir() {

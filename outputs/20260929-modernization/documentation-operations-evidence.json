@@ -1,0 +1,774 @@
+{
+  "lane": "documentation-operations",
+  "state": "D4/D5/D8 operations repair cycle 1 complete; source frozen; independent full-scope verification and re-review pending",
+  "candidate": "candidate-5 plus operations repair cycle 1",
+  "workspace": "D:/Sohrab/Project/skills",
+  "read_coverage": {
+    "full_read": [
+      "skills/sohrab/AGENTS.md",
+      "skills/sohrab/alaa-docker-production/SKILL.md",
+      "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+      "skills/sohrab/alaa-docker-production/references/00-topic-map.md",
+      "skills/sohrab/alaa-docker-production/references/10-dockerfile-authorship.md",
+      "skills/sohrab/alaa-docker-production/references/15-build-secrets-and-attestations.md",
+      "skills/sohrab/alaa-docker-production/references/20-compose-authorship.md",
+      "skills/sohrab/alaa-docker-production/references/25-fail-closed-interpolation.md",
+      "skills/sohrab/alaa-docker-production/references/30-swarm-delivery.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "skills/sohrab/alaa-docker-production/references/40-healthcheck-and-lifecycle.md",
+      "skills/sohrab/alaa-docker-production/references/45-registry-and-mirrors.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "skills/sohrab/alaa-docker-production/references/70-container-observability.md",
+      "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+      "skills/sohrab/alaa-haproxy/SKILL.md",
+      "skills/sohrab/alaa-haproxy/references/00-topic-map.md",
+      "skills/sohrab/alaa-haproxy/references/10-version-and-branch.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "skills/sohrab/alaa-haproxy/references/25-tls-and-mtls.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+      "skills/sohrab/alaa-haproxy/references/40-rate-limiting-and-peers.md",
+      "skills/sohrab/alaa-haproxy/references/50-caching-routing-and-rewrites.md",
+      "skills/sohrab/alaa-haproxy/references/60-observability-and-runtime.md",
+      "skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md",
+      "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+      "skills/sohrab/alaa-haproxy/references/SOURCES.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "skills/sohrab/ansible-validator/SKILL.md",
+      "skills/sohrab/ansible-validator/references/best_practices.md",
+      "skills/sohrab/ansible-validator/references/security_checklist.md",
+      "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+      "skills/sohrab/alaa-haproxy/scripts/check_defaults_scope.py",
+      "skills/sohrab/alaa-haproxy/scripts/check_examples.py"
+    ],
+    "partial_or_output_truncated": [],
+    "not_yet_full_read": [],
+    "outside_scope_or_not_read_required_for_document_restructure": [
+      "skills/sohrab/alaa-signoz-clickhouse-docs/ (only targeted references/90-versions.md was inspected; unchanged and no edit was warranted)",
+      "Broad all-folder diagnostic findings outside the authorized 33-document initial scope; preserved as out-of-scope."
+    ],
+    "hash_archive": {
+      "path": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/documentation-operations-router-before.zip",
+      "sha256": "dd7f35ce47d5b5445a4df156b31378c40e770420a60694667ed4b076a04ccd5c"
+    },
+    "repair1_full_read": [
+      "GitLab feature-version-notes and DAG child",
+      "Ansible best-practices root/variable child/compatibility router, security checklist, Molecule and test README",
+      "HAProxy topic map and full QUIC reference",
+      "Arvan constraint router and task templates",
+      "Previously recorded complete Docker secret/resource and Ansible/Arvan bundle reads reused."
+    ]
+  },
+  "classification_snapshot": {
+    "initial_documents": 33,
+    "initial_grade_counts_from_documentation_operations_brief": {
+      "GREEN": 0,
+      "YELLOW": 10,
+      "ORANGE": 14,
+      "RED": 9
+    },
+    "classified_individually": 33,
+    "edit_scope_confirmed": "six named skill directories; only Markdown and .md.template; report files in this output directory"
+  },
+  "proposed_clusters": {
+    "alaa-docker-production": {
+      "35-secret-delivery.md": [
+        "secret-file-and-compose-delivery",
+        "swarm-rotation-and-proof"
+      ],
+      "60-resource-limits-and-load.md": [
+        "cpu-and-memory",
+        "process-and-file-descriptors",
+        "database-pools-and-symptoms"
+      ]
+    },
+    "alaa-gitlab-ci-cd": {
+      "job-graph-and-scheduling.md": [
+        "job-graph-and-critical-path",
+        "concurrency-and-resource-groups",
+        "retry-and-timeouts"
+      ],
+      "pipeline-authoring.md": [
+        "pipeline-creation-and-workflow",
+        "job-authoring-and-reuse",
+        "deployment-environments-and-rollback"
+      ],
+      "validation-and-debugging.md": [
+        "local-validation",
+        "live-ci-lint-boundaries",
+        "failure-class-triage"
+      ],
+      "variables-and-inputs.md": [
+        "precedence-and-inputs",
+        "secret-and-token-surfaces",
+        "dotenv-and-downstream-forwarding"
+      ]
+    },
+    "alaa-haproxy": {
+      "20-core-config-and-timeouts.md": [
+        "defaults-and-scope",
+        "timeouts-and-retries",
+        "capacity-and-connection-reuse",
+        "maps-acls-and-preprocessing",
+        "symptom-diagnosis"
+      ]
+    },
+    "alaa-signoz-clickhouse-docs": {
+      "90-versions.md": [
+        "release-snapshot-and-history",
+        "release-coverage",
+        "qualified-decision-and-schema-proof"
+      ]
+    },
+    "ansible-validator": {
+      "best_practices.md": [
+        "task-structure-and-idempotency",
+        "validation-and-failure-handling",
+        "custom-module-contracts"
+      ],
+      "security_checklist.md": [
+        "secrets-and-vault",
+        "authority-and-file-boundaries",
+        "shell-transport-and-host-trust",
+        "service-boundaries-and-audit"
+      ]
+    },
+    "caas-arvan-kuber": {
+      "arvan-constraints.md": [
+        "verified-platform-capabilities",
+        "deployment-and-storage-boundaries",
+        "failure-and-evidence-status"
+      ]
+    }
+  },
+  "unresolved": [],
+  "runtime_metadata": {
+    "agent": "alaa-documenter",
+    "configured_model_effort": "gpt-6-luna/high",
+    "requested_model_effort": "none",
+    "observed_model_effort": "unknown",
+    "sandbox_enforcement_evidence": "unknown; role restriction is not proof of enforcement",
+    "memory_used": false
+  },
+  "checkpoint": {
+    "completed": [
+      "Applied D4 explicit links to current canonical topics.",
+      "Added condition-and-owned-topic routes for Ansible best practices/security, compatibility router and Arvan constraint rules.",
+      "Split all five D8 subjects into condition-routed children with prerequisites and original section payloads preserved.",
+      "Compared 14 moved H2 payloads byte-for-byte with repair1 before archive; verified original preambles byte-for-byte on five source roots.",
+      "Ran link and eligible-size checks; recorded failed attempts and final focused checks in repair1 evidence."
+    ],
+    "remaining": [
+      "Independent verifier must run the complete final 127-Markdown link scope and 125-eligible size scope after freeze.",
+      "Independent final instruction review remains pending."
+    ],
+    "blocker": null,
+    "current": "Source frozen with complete SHA-256 inventory in documentation-operations-repair1.json."
+  },
+  "docker_edit_state": {
+    "parent_documents": [
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md"
+    ],
+    "new_children": [
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/30-discovery-diagnosis.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md"
+    ],
+    "archive": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/documentation-operations-router-before.zip",
+    "validation": "Candidate4 H2 payloads mapped to correctly labeled children; repair1 D4 section references fixed; exact final hashes in grades report."
+  },
+  "haproxy_edit_state": {
+    "source": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+    "children": [
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/50-symptom-diagnosis.md"
+    ],
+    "sections": {
+      "The `defaults` association rule": "37ae253669b0ce0dd68e49c028633bbeeff677b5cd5d69c742975343b0c23b86",
+      "Timeouts": "05e164d881562588e786856825e8508601e90da4ce8cf9ee636759b916119939",
+      "Retries and redispatch": "31b4d809e21408b73c130b7085a821c98b3e0fac6e35defaa419a14d4d7da125",
+      "Connection ceilings and queueing": "d28811217e5853ad3ef91d2d87ceca26e051481f3ac949c568106517b0d33221",
+      "Connection reuse": "9c78295379d5b278cb83697daa6cdb0b29792bcd16433d1f383c74a9a10bf1a8",
+      "Maps instead of ACL chains": "c2af18e38e020d1cce685b61e0a573dc696a700bedf9afea56a02237c0d9792e",
+      "Environment variables and the preprocessor": "95614a1dfc7817e26ff3bde4712415a7abd6a2833c6ef1b70970f3d7821a811a",
+      "Diagnosing by symptom": "daefe2ece152ad1f3930a2811cd743e54adb24fa6357ec799d0aed46541bb2b9"
+    },
+    "router_before_archive": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/documentation-operations-router-before.zip",
+    "router_before_sha256": "71110c42ebc431ace06a4cd7467ce777a961ed2fd49d8c4f4cc7f67ae9569ba3",
+    "source_ledger_route": "All QUIC children link to SOURCES.md and 10-version-and-branch.md; each mode child mandates the build eligibility child."
+  },
+  "final_touched_inventory": {
+    "markdown_documents": 127,
+    "atomic_md_template_documents": 2,
+    "total_documents": 129,
+    "initial_scope_markdown_subset": 31,
+    "additional_topic_maps_from_candidate5_audit": 3,
+    "new_child_documents": 93,
+    "repair1_new_children": 14,
+    "paths": [
+      "skills/sohrab/alaa-docker-production/references/00-source-map.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+      "skills/sohrab/alaa-docker-production/references/90-companion-boundary.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/00-source-map.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+      "skills/sohrab/alaa-haproxy/references/10-version-and-branch.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+      "skills/sohrab/alaa-haproxy/references/80-gate-register.md",
+      "skills/sohrab/alaa-haproxy/references/90-companion-boundary.md",
+      "skills/sohrab/alaa-haproxy/references/SOURCES.md",
+      "skills/sohrab/alaa-signoz-clickhouse-docs/references/90-versions.md",
+      "skills/sohrab/ansible-validator/SKILL.md",
+      "skills/sohrab/ansible-validator/references/best_practices.md",
+      "skills/sohrab/ansible-validator/references/molecule.md",
+      "skills/sohrab/ansible-validator/references/security_checklist.md",
+      "skills/sohrab/ansible-validator/references/source-map.md",
+      "skills/sohrab/ansible-validator/test/README.md",
+      "skills/sohrab/caas-arvan-kuber/SKILL.md",
+      "skills/sohrab/caas-arvan-kuber/assets/README.operator.md.template",
+      "skills/sohrab/caas-arvan-kuber/assets/RUNBOOK.operator.md.template",
+      "skills/sohrab/caas-arvan-kuber/references/SOURCES.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-capability-matrix.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-execution-loop.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-rbac-namespace-facts.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+      "skills/sohrab/alaa-docker-production/references/00-topic-map.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/00-topic-map.md",
+      "skills/sohrab/alaa-haproxy/references/00-topic-map.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/10-delivery-modes.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/20-file-convention.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/10-container-file-delivery/30-compose-file-secrets.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+      "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/10-network-and-dns.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/20-exposure-and-forwarded-trust.md",
+      "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure/30-discovery-diagnosis.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/10-container-resource-ceilings.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/20-process-and-php-workers.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/30-file-descriptors-and-pools.md",
+      "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/10-compute-supported-baseline.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/20-needs-and-artifacts.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/30-parallelism-and-resource-groups.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/40-interruptible-and-timeouts.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retries-and-job-creation.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/50-retry-failure-classes.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/60-job-creation-conditions.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/10-pipeline-creation-and-paths.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-authoring-defaults.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/20-job-authoring-and-reuse.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-environments-and-rollback.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/30-reuse-composition.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring/40-child-pipelines-and-checklist.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/10-static-validation-and-checkers.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/20-live-validation.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-configuration-and-rule-failures.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/30-failure-class-triage.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-gate-eligibility.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/40-runner-and-runtime-failures.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging/50-symptoms-and-cross-file.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-mechanism-and-expansion.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/10-variable-sources-and-precedence.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-secrets-and-components.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/20-variable-precedence.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-protected-and-file-variables.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/30-rules-forwarding-and-debugging.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/40-tokens-and-secure-files.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/50-inputs-and-components.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/60-rules-and-value-availability.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/70-downstream-forwarding.md",
+      "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs/80-variable-debugging-and-inventory.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/10-defaults-association.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/30-connection-capacity.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md",
+      "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/50-symptom-diagnosis.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+      "skills/sohrab/alaa-haproxy/references/30-quic-http3/40-quic-tuning.md",
+      "skills/sohrab/ansible-validator/references/best_practices/01-project-structure.md",
+      "skills/sohrab/ansible-validator/references/best_practices/02-task-and-variable-naming.md",
+      "skills/sohrab/ansible-validator/references/best_practices/10-structure-and-naming.md",
+      "skills/sohrab/ansible-validator/references/best_practices/20-module-selection.md",
+      "skills/sohrab/ansible-validator/references/best_practices/30-idempotency.md",
+      "skills/sohrab/ansible-validator/references/best_practices/40-error-handling.md",
+      "skills/sohrab/ansible-validator/references/best_practices/50-variable-precedence.md",
+      "skills/sohrab/ansible-validator/references/best_practices/60-conditionals-and-loops.md",
+      "skills/sohrab/ansible-validator/references/best_practices/70-authoring-security.md",
+      "skills/sohrab/ansible-validator/references/best_practices/80-performance.md",
+      "skills/sohrab/ansible-validator/references/best_practices/90-check-mode-and-documentation.md",
+      "skills/sohrab/ansible-validator/references/molecule/10-setup-and-configuration.md",
+      "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+      "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/10-audit-commands.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/100-service-binding.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/110-mandatory-access-control.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/120-audit-trail.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/130-tool-boundaries.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/20-credential-storage.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/30-secret-redaction.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/40-vault-mechanics.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/50-privilege-escalation.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/60-file-permissions.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/70-shell-inputs.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/80-transport-verification.md",
+      "skills/sohrab/ansible-validator/references/security_checklist/90-host-key-verification.md",
+      "skills/sohrab/ansible-validator/test/corpus-usage.md",
+      "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/10-resource-parity.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/20-stateful-storage.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/30-exposure-config-and-secrets.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/40-namespace-and-panel-scope.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/50-node-placement-and-portability.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/60-delivery-failure-map.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+      "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/30-exposure-mode-selection.md"
+    ]
+  },
+  "source_freeze": {
+    "date": "2026-09-29",
+    "status": "declared; parent verifier/reviewer pending",
+    "archive": {
+      "path": "documentation-operations-repair1-before.zip",
+      "sha256": "81c7d66dd1414b50d2a740415fec9de49af8c30a48ab1c05ace532909fde12a9",
+      "files": 61
+    },
+    "hash_inventory": "documentation-operations-repair1.json"
+  },
+  "checks": [
+    {
+      "name": "owner Markdown links/anchors and physical line budget",
+      "status": "PASS",
+      "command": "python skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files <exact touched/new Markdown set> --line-budget",
+      "result": "exit 0; exactly 110 Markdown files at that time; no RED and no allow-red. This was before candidate-5 audit added the three topic maps to final reporting coverage; do not claim this gate covered all 113 final Markdown documents.",
+      "scope_limit": "Scoped link/anchor/line-budget only; does not resolve the known Orange decomposition finding."
+    }
+  ],
+  "fidelity": {
+    "archive_baseline": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/documentation-before-candidate4.zip",
+    "archive_sha256": "206b6a7ba4ce92f834f648a9710ebd1cc1dc67a6eda3577d43634ac1855af3be",
+    "routers": [
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/35-secret-delivery.md",
+        "source_h2_payloads_exactly_moved": 9,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/50-network-dns-and-exposure.md",
+        "source_h2_payloads_exactly_moved": 5,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load.md",
+        "source_h2_payloads_exactly_moved": 7,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling.md",
+        "source_h2_payloads_exactly_moved": 10,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/pipeline-authoring.md",
+        "source_h2_payloads_exactly_moved": 7,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/validation-and-debugging.md",
+        "source_h2_payloads_exactly_moved": 7,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-gitlab-ci-cd/references/variables-and-inputs.md",
+        "source_h2_payloads_exactly_moved": 10,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts.md",
+        "source_h2_payloads_exactly_moved": 8,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/best_practices.md",
+        "source_h2_payloads_exactly_moved": 11,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/ansible-validator/references/security_checklist.md",
+        "source_h2_payloads_exactly_moved": 13,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      },
+      {
+        "path": "skills/sohrab/caas-arvan-kuber/references/arvan-constraints.md",
+        "source_h2_payloads_exactly_moved": 11,
+        "mapping": "Original section payloads were compared against correctly labeled child destinations; exact count recorded. See new_children source_sections and router links."
+      }
+    ],
+    "gitlab_validation_special_case": "Six of seven H2 payloads are direct exact section moves; the five failure-class subsections were decomposed into correctly labeled child destinations. The exact two-sentence prerequisite preamble under the parent H2 was restored verbatim before the routes.",
+    "fenced_payloads": "All fenced payloads across the 11 restructured source documents match the candidate-4 archive exactly; no command/code blocks changed.",
+    "archive_hashes": [
+      {
+        "path": "documentation-operations-router-before.zip",
+        "sha256": "dd7f35ce47d5b5445a4df156b31378c40e770420a60694667ed4b076a04ccd5c"
+      },
+      {
+        "path": "documentation-operations-ansible-child-router-before.zip",
+        "sha256": "a31fe983edd309ce6729e2b1131ee10c7a984f61759070a356a6ac7a0d8ae17e"
+      },
+      {
+        "path": "documentation-operations-ansible-version-route-before.zip",
+        "sha256": "e5303814cf17c57b84e482f15fd275b96dc3e9464b53ade9ff8e6c1359988e2d"
+      }
+    ],
+    "provenance": "Version-sensitive child routes link to the canonical SOURCES/source-map owner, preserving the source/date ledger on each loading path."
+  },
+  "links_and_scope": {
+    "markdown_documents": 127,
+    "eligible_for_line_budget": 125,
+    "atomic_templates": 2,
+    "no_allow_red": true,
+    "manifest_refresh_needs": [],
+    "scope_note": "Three topic maps from candidate-5 coverage are included. Whole-scope pass occurred before final narrow route edits; final impacted files passed focused checks.",
+    "out_of_scope_broad_scan": "Prior 14 unrelated RED findings outside initial 33-document scope remain unchanged and non-gating."
+  },
+  "openapi_data_inspection": {
+    "path": "skills/sohrab/caas-arvan-kuber/references/openapi.json",
+    "method": "complete JSON parse plus schema/provenance inspection, not manual line-by-line review",
+    "bytes": 1549137,
+    "sha256": "8e7a00ea44cdf611f95f56f7ee71d59fc64d50ac86a0a2c327caef62aa15f572",
+    "openapi": "3.0.3",
+    "title": "Arvan CaaS",
+    "version": "1.25",
+    "servers": 2,
+    "paths": 134,
+    "operations": 299,
+    "schemas": 254,
+    "scope": "Relevant namespace/workload/RBAC resource operations inspected; no schema claims or data changes authorized."
+  },
+  "report_integrity": {
+    "updated": "2026-09-29 repair1 final hash refresh",
+    "frozen_markdown_documents": 127,
+    "atomic_operator_templates": 2,
+    "report_json_files": [
+      "documentation-operations-grades.json",
+      "documentation-operations-evidence.json",
+      "documentation-operations-repair1.json"
+    ],
+    "all_source_hashes_and_reasons": "documentation-operations-repair1.json; six late D4 route edits reconciled",
+    "gate_satisfied": false,
+    "remaining": "Independent whole-scope verifier and review pending."
+  },
+  "repair_cycle_1": {
+    "D4": {
+      "status": "addressed",
+      "details": [
+        "GitLab DAG See below now links to the resource-group owner document; prose names the exact topic because code-only headings have no checker anchor.",
+        "Ansible cache-timeout reference links to the current performance rule.",
+        "Docker task/symptom links now reach actual child topics; secret and load children no longer use moved section numbers."
+      ]
+    },
+    "D5": {
+      "status": "addressed",
+      "route_counts": {
+        "Ansible best practices": 11,
+        "Ansible security checklist": 13,
+        "Ansible compatibility router": 2,
+        "Arvan constraints and CPU style": 12
+      },
+      "details": [
+        "Routes name a reader condition and the child-owned topic.",
+        "Arvan Step 1 discovery conditions remain.",
+        "HAProxy QUIC routing requires build eligibility before any mode guide."
+      ]
+    },
+    "D8": {
+      "status": "addressed",
+      "decompositions": [
+        "Arvan task templates: three complete templates",
+        "GitLab feature-version notes: baseline vs status/limits/deprecations",
+        "HAProxy QUIC: build requirements, frontend, backend, tuning",
+        "Ansible Molecule: setup/configuration, execution, verifier",
+        "Ansible test README: corpus usage vs fixture maintenance"
+      ],
+      "section_payloads": [
+        {
+          "source": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+          "child": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/10-compute-supported-baseline.md",
+          "sections": [
+            "Compute the baseline, do not read it",
+            "Writing an answer when the target versions are unknown"
+          ],
+          "source_sha256": "804c2516d088100ba711cd23db63624196ee44fe0f550c89f679683630a216a1",
+          "child_sha256": "804c2516d088100ba711cd23db63624196ee44fe0f550c89f679683630a216a1",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md",
+          "child": "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes/20-feature-status-limits-and-deprecations.md",
+          "sections": [
+            "Generally available, and therefore safe to use without a caveat",
+            "Still experimental â€” do not build a production pipeline on these",
+            "Hard limits â€” these are checkable rules, not guidance",
+            "Deprecations, each with its replacement"
+          ],
+          "source_sha256": "ef15948d2841ed6a209abafb10ce4c9894d59779bdef8d3c2f3819eaefe11ca5",
+          "child_sha256": "ef15948d2841ed6a209abafb10ce4c9894d59779bdef8d3c2f3819eaefe11ca5",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md",
+          "sections": [
+            "The build requirement, which comes before everything else",
+            "What to do when `haproxy -vv` reports no QUIC"
+          ],
+          "source_sha256": "1e6188e3172192e1f027ede92ad98d89ecf5acf1d7cb0f854e50fcb5391e4efd",
+          "child_sha256": "1e6188e3172192e1f027ede92ad98d89ecf5acf1d7cb0f854e50fcb5391e4efd",
+          "exact": true,
+          "fenced_blocks": 2
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/20-frontend-http3.md",
+          "sections": [
+            "Frontend HTTP/3"
+          ],
+          "source_sha256": "9907f02caa32ca481130ef9ac5877116a931a6782e2d18d9eab1762ab079e9c9",
+          "child_sha256": "9907f02caa32ca481130ef9ac5877116a931a6782e2d18d9eab1762ab079e9c9",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/30-backend-http3.md",
+          "sections": [
+            "Backend HTTP/3"
+          ],
+          "source_sha256": "e20dabd1bb26fb3b84331ab351dadebba542dfb6774ca115d0eea67d863bdeb7",
+          "child_sha256": "e20dabd1bb26fb3b84331ab351dadebba542dfb6774ca115d0eea67d863bdeb7",
+          "exact": true,
+          "fenced_blocks": 0
+        },
+        {
+          "source": "skills/sohrab/alaa-haproxy/references/30-quic-http3.md",
+          "child": "skills/sohrab/alaa-haproxy/references/30-quic-http3/40-quic-tuning.md",
+          "sections": [
+            "Tuning and naming"
+          ],
+          "source_sha256": "ad75e51b146666d0e01c23a096eaa8b7434bff2e0f422a439fd46ea9ba6f9d59",
+          "child_sha256": "ad75e51b146666d0e01c23a096eaa8b7434bff2e0f422a439fd46ea9ba6f9d59",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/references/molecule.md",
+          "child": "skills/sohrab/ansible-validator/references/molecule/10-setup-and-configuration.md",
+          "sections": [
+            "Installing the driver",
+            "The configuration model this skill ships",
+            "Which image a scenario uses"
+          ],
+          "source_sha256": "f2d9c276d7040d5b7134845608dbd5c38866b776974b1c3582d35263e9562f00",
+          "child_sha256": "f2d9c276d7040d5b7134845608dbd5c38866b776974b1c3582d35263e9562f00",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/references/molecule.md",
+          "child": "skills/sohrab/ansible-validator/references/molecule/20-execution-lifecycle.md",
+          "sections": [
+            "When running a scenario is correct",
+            "The actions, and what each asserts",
+            "Running one",
+            "When a scenario cannot run"
+          ],
+          "source_sha256": "3706d8b90fee2fdbc279677c8eaf2bf9e62dedfbd2050ea3c00f086a16af23e0",
+          "child_sha256": "3706d8b90fee2fdbc279677c8eaf2bf9e62dedfbd2050ea3c00f086a16af23e0",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/references/molecule.md",
+          "child": "skills/sohrab/ansible-validator/references/molecule/30-verifier.md",
+          "sections": [
+            "Writing the verifier"
+          ],
+          "source_sha256": "4cbc4de9f5ed9102eb4c01a85671423ee069c71c4d0652b8850cfae71243febb",
+          "child_sha256": "4cbc4de9f5ed9102eb4c01a85671423ee069c71c4d0652b8850cfae71243febb",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/test/README.md",
+          "child": "skills/sohrab/ansible-validator/test/corpus-usage.md",
+          "sections": [
+            "Layout",
+            "The playbook pair",
+            "Running one checker against the corpus",
+            "Using the corpus in CI"
+          ],
+          "source_sha256": "3f777fab18889597708310c43ec3e6fa99f35571ba70f09d619d45ff6916c566",
+          "child_sha256": "3f777fab18889597708310c43ec3e6fa99f35571ba70f09d619d45ff6916c566",
+          "exact": true,
+          "fenced_blocks": 2
+        },
+        {
+          "source": "skills/sohrab/ansible-validator/test/README.md",
+          "child": "skills/sohrab/ansible-validator/test/fixture-maintenance.md",
+          "sections": [
+            "Why each fixture exists",
+            "The vendored role: `roles/geerlingguy.mysql/`",
+            "Adding a fixture"
+          ],
+          "source_sha256": "2bfd07cf1020e60f0192cc260b8da34ebf068c2538ef920c613f899c70961052",
+          "child_sha256": "2bfd07cf1020e60f0192cc260b8da34ebf068c2538ef920c613f899c70961052",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+          "child": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/10-helm-or-manifest-implementation.md",
+          "sections": [
+            "Template 1: Helm or manifest implementation"
+          ],
+          "source_sha256": "8c80413ae6e7e8a83217b75e40b190157f003499bb41acfd8d7cfe65dee3e3fb",
+          "child_sha256": "8c80413ae6e7e8a83217b75e40b190157f003499bb41acfd8d7cfe65dee3e3fb",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+          "child": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/20-rbac-incident-triage.md",
+          "sections": [
+            "Template 2: RBAC incident triage"
+          ],
+          "source_sha256": "d640781274a23c67f6d25bfd37eeb498dcbca7659a0872e46f8e5d9d404615b1",
+          "child_sha256": "d640781274a23c67f6d25bfd37eeb498dcbca7659a0872e46f8e5d9d404615b1",
+          "exact": true,
+          "fenced_blocks": 1
+        },
+        {
+          "source": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md",
+          "child": "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates/30-exposure-mode-selection.md",
+          "sections": [
+            "Template 3: Exposure mode selection"
+          ],
+          "source_sha256": "999c9bf68f71a4326dbb6f3075c4c606eb755c032f4a342d106b544a94b6d9af",
+          "child_sha256": "999c9bf68f71a4326dbb6f3075c4c606eb755c032f4a342d106b544a94b6d9af",
+          "exact": true,
+          "fenced_blocks": 1
+        }
+      ],
+      "preambles_byte_preserved": {
+        "skills/sohrab/caas-arvan-kuber/references/arvan-task-templates.md": true,
+        "skills/sohrab/alaa-gitlab-ci-cd/references/feature-version-notes.md": true,
+        "skills/sohrab/alaa-haproxy/references/30-quic-http3.md": true,
+        "skills/sohrab/ansible-validator/references/molecule.md": true,
+        "skills/sohrab/ansible-validator/test/README.md": true
+      }
+    },
+    "hash_snapshot_correction": {
+      "status": "refreshed_after_final_source_write",
+      "reason": "Six D4-targeted Markdown files had later same-lane relative-link repairs after the initial report hash snapshot; parent confirmed no other authorized writer touched these directories.",
+      "paths": [
+        "skills/sohrab/alaa-docker-production/references/35-secret-delivery/20-swarm-rotation.md",
+        "skills/sohrab/alaa-docker-production/references/35-secret-delivery/30-key-material-and-audit.md",
+        "skills/sohrab/alaa-docker-production/references/60-resource-limits-and-load/40-complexity-and-load-diagnosis.md",
+        "skills/sohrab/alaa-gitlab-ci-cd/references/job-graph-and-scheduling/10-dag-edges-and-critical-path.md",
+        "skills/sohrab/ansible-validator/references/best_practices/10-structure-and-naming.md",
+        "skills/sohrab/ansible-validator/references/best_practices/50-variable-precedence.md"
+      ],
+      "refresh": "Recomputed final hashes and physical line counts from current files for every inventory and grade row."
+    }
+  },
+  "repair1_checks": [
+    {
+      "gate": "whole-set links run 1",
+      "scope": 127,
+      "result": "FAIL:12 LINK-ANCHOR",
+      "cause": "Checker strips inline-code heading text; fragments included removed words and code-only resource_group had no anchor."
+    },
+    {
+      "gate": "whole-set links run 2",
+      "scope": 127,
+      "result": "FAIL:3 LINK-ANCHOR",
+      "cause": "Three Docker fragments still included stripped inline-code heading words."
+    },
+    {
+      "gate": "whole-set links run 3",
+      "scope": 127,
+      "result": "PASS exit 0",
+      "timing": "Before final resource_group document-link restoration and three QUIC prerequisite lead-ins."
+    },
+    {
+      "gate": "eligible line budget",
+      "scope": 125,
+      "result": "PASS exit 0; zero RED; no allow-red",
+      "timing": "Before three final lead-ins; current recount leaves each GREEN."
+    },
+    {
+      "gate": "focused GitLab route links",
+      "scope": 2,
+      "result": "PASS exit 0"
+    },
+    {
+      "gate": "focused QUIC child links and line budget",
+      "scope": 3,
+      "result": "PASS exit 0",
+      "lines": [
+        24,
+        24,
+        30
+      ]
+    },
+    {
+      "gate": "exact source sections",
+      "scope": 14,
+      "result": "PASS 14/14 exact",
+      "before_archive_sha256": "81c7d66dd1414b50d2a740415fec9de49af8c30a48ab1c05ace532909fde12a9"
+    }
+  ],
+  "final_grade_counts": {
+    "GREEN": 80,
+    "YELLOW": 40,
+    "ORANGE": 5,
+    "RED": 0
+  },
+  "documentation_gate_satisfied": false,
+  "final_report": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/documentation-operations-repair1.json"
+}

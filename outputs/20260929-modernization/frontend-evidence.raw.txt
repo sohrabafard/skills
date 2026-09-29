@@ -1,0 +1,5 @@
+# Raw evidence pointer
+
+Exact original bytes are preserved in frontend-evidence.raw.txt.gz.
+Uncompressed SHA256: 3f4df2645b59efecf95d03d395f89ad0b530922b4c5800de04293805f7e7a1b2
+Uncompressed bytes: 16046

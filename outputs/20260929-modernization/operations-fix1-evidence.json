@@ -1,0 +1,94 @@
+{
+  "status": "fix1 implemented; focused checks PASS; independent revalidation pending",
+  "agent": "operations_implementation",
+  "configured": "gpt-6-astra/high",
+  "observed": "unknown",
+  "base_candidate": "2809135720497a6214f06123176c1c09ce422259b3953726e92317de1e85c614",
+  "pre_fix_operations_mismatches": 0,
+  "source_changes": [
+    {
+      "path": "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+      "before": "8396d9186a0634ce7579d0415d3e3af024b0ed0803e9b7527cd3696e243492df",
+      "after": "f9cc4e29bd969499754cc877c073e52524fbacb811356fc1a6becc5a5e99f590"
+    },
+    {
+      "path": "skills/sohrab/ansible-validator/scripts/scan_secrets.sh",
+      "before": "d908d1ac26771fbec999fca690d88600e7878258152c2c7976aaf768924087fd",
+      "after": "209a465ea41f983b8f116dc8fdcb1763b93a5a29084ab4a5c3c57abedaceb201"
+    },
+    {
+      "path": "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+      "before": "712d6eaa0ca2ba457482bb35e87c4c24879b067a6202779aafabcfa51afe8d23",
+      "after": "7e479650594bc0b35925faf9d1318a184979e5872a4629091b18878bd610ec9c"
+    }
+  ],
+  "scope": "Only three authorized source paths differ from prior operations manifest; original candidate artifact left unchanged for lead recapture.",
+  "decisions": [
+    "Quote numeric status/count expansions; remove unused COLOR_CYAN after all script caller search.",
+    "SC2034 annotation limited to AV_SELF_TEST assignment consumed by sourcing entrypoints.",
+    "SC2120 and SC2119 annotations retain documented optional pip-spec fallback API while internal resolution intentionally uses requirements; forwarding arbitrary caller CLI would be incorrect.",
+    "SC2016 annotation preserves literal Vault header regex; SC2209 fixed with quoted literal.",
+    "Render Git Bash/WSL wording requires filesystem-enforced demonstrable0600; no permission guard changed."
+  ],
+  "commands": [
+    {
+      "runner": "skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1",
+      "executable_resolution": "(Get-Command shellcheck).Source; observed native WinGet shellcheck.exe",
+      "arguments": [
+        "-x",
+        "-P",
+        "SCRIPTDIR",
+        "skills/sohrab/caas-arvan-kuber/scripts/verify-cluster.sh",
+        "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh",
+        "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+        "skills/sohrab/ansible-validator/scripts/scan_secrets.sh",
+        "skills/sohrab/ansible-validator/scripts/test_role.sh"
+      ],
+      "priority": "BelowNormal",
+      "cpu_count": 2,
+      "timeout_seconds": 60,
+      "duration_ms": 1191,
+      "exit": 0,
+      "stdout": "operations-fix1-shellcheck.stdout.log",
+      "stderr": "operations-fix1-shellcheck.stderr.log"
+    },
+    {
+      "runner": "skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1",
+      "executable_resolution": "(Get-Command python).Source; observed python.exe",
+      "arguments": [
+        "skills/sohrab/ansible-validator/scripts/test_security_regressions.py",
+        "--bash",
+        "<Git>/bin/bash.exe"
+      ],
+      "bash_resolution": "Existing explicit Git installation bin/bash.exe; same approved direct executable as successful verifier, no nested unqualified launcher.",
+      "context": "require_escalated approved, no initial known-broken sandbox attempt",
+      "priority": "BelowNormal",
+      "cpu_count": 2,
+      "timeout_seconds": 90,
+      "duration_ms": 12018,
+      "exit": 0,
+      "tests": 4,
+      "unittest_seconds": 11.776,
+      "stdout": "operations-fix1-ansible.stdout.log",
+      "stderr": "operations-fix1-ansible.stderr.log"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "HEAD",
+        "--",
+        "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+        "skills/sohrab/ansible-validator/scripts/scan_secrets.sh",
+        "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh"
+      ],
+      "exit": 0
+    }
+  ],
+  "pending": [
+    "Lead recapture and independent changed-proof verification; no broad suite run."
+  ],
+  "effects": "No install, network/live operation, driver execution, staging or commit. Only synthetic mock test subprocesses.",
+  "release": "Source refrozen and write slot released."
+}

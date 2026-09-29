@@ -22,12 +22,17 @@ That command is the freshness procedure. It prints every value below with its so
 re-derivation command, and `check-image-pinning.mjs` reports `image-eol-line` when a Compose file
 references a language or distribution line that has left support.
 
-## Verification ledger — checked 2026-07-29
+## Verification ledger - dated observations
 
-| Subject | Value as of 2026-07-29 | Source | Re-derive with |
+Engine and Compose rows were refreshed on 2026-09-29; other rows retain the
+2026-07-29 observation date. These are upstream releases, not installed versions
+or tested replacement image pins. Preserve consumer requirements and validate an
+exact image tag and compatibility before changing examples.
+
+| Subject | Value at the stated observation date | Source | Re-derive with |
 |---|---|---|---|
-| Docker Engine | 29.6.2, released 16 July 2026 (29.6.1 on 26 June, 29.6.0 on 18 June) | https://docs.docker.com/engine/release-notes/29/ | `docker version --format '{{.Server.Version}}'` |
-| Docker Compose | v5.3.1, released 7 July 2026. v5.3.0 (2 July) added native init-container support; v5.2.0 (23 June) replaced the state-reconciliation algorithm | https://github.com/docker/compose/releases | `docker compose version` |
+| Docker Engine | 29.8.1, released 2026-09-15; observed 2026-09-29 | https://docs.docker.com/engine/release-notes/29/ | `docker version --format '{{.Server.Version}}'` |
+| Docker Compose | v5.5.1, released 2026-09-03; observed 2026-09-29. Earlier v5.3.0 added native init-container support | https://github.com/docker/compose/releases | `docker compose version` |
 | Compose `version:` property | Obsolete. "Only informative"; Compose warns when present and "always uses the most recent schema to validate the Compose file, regardless of the `version` field". `name:` is current and is exposed as `COMPOSE_PROJECT_NAME` | https://docs.docker.com/reference/compose-file/version-and-name/ | Add `version: "3.8"` to a file and run `docker compose config`; the warning is the check |
 | Compose interpolation forms | `${VAR:-d}`, `${VAR-d}`, `${VAR:?e}`, `${VAR?e}`, `${VAR:+a}`, `${VAR+a}`; `$$` escapes a literal `$` | https://docs.docker.com/reference/compose-file/interpolation/ | `docker compose config` on a file using each form |
 | What interpolation reads | Shell environment; the file named by `--env-file`; otherwise the project `.env`. **Not** the service-level `env_file:` key | https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/ | Put a value only in a service `env_file:` and read it back with `docker compose config` |

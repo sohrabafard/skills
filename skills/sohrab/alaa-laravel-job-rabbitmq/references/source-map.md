@@ -17,7 +17,7 @@ Read this when deciding which source wins, or when a freshness trigger below fir
    version — `references/driver-facts.md` records what the snapshots can and cannot prove.
 3. **Package source code over README examples**, when the two disagree. The README lags the code.
 4. **Official Laravel and RabbitMQ documentation** over community material.
-5. **Platform policy.** `/caas-arvan-kuber` (`$caas-arvan-kuber`) for Arvan Kubernetes defaults;
+5. **Platform policy.** `/caas-arvan-kuber` for Arvan Kubernetes defaults;
    `alaa-services-contract references/23-queue-and-exchange-registry.md` for every queue, exchange and vhost
    name.
 6. **Community and StackOverflow material — troubleshooting only.** Use it to recognise a symptom or find
@@ -35,7 +35,10 @@ Verify against installed package source and official docs before acting when the
   issue status, or package driver compatibility.
 - `queue:monitor`, `pendingSize`, `delayedSize`, `reservedSize`, `creationTimeOfOldestPendingJob`, Horizon
   mode, `rabbitmq:consume`, `queue:work`, DLX/DLQ, quorum queues, `x-delivery-limit`, prefetch, heartbeat,
-  `consumer_timeout`, TLS, or failed reroute behaviour.
+  `consumer_timeout`, TLS, or failed reroute behaviour. Record broker version, queue type, actual AMQP
+  method and negotiated `consumer_cancel_notify`; package defaults alone do not settle broker behavior.
+  Broker counter rules are `alaa-async-messaging references/40-dead-letter-and-replay.md`; cancellation
+  recovery is `alaa-async-messaging references/30-consuming-ack-and-prefetch.md` (4.3 refresh: 2026-09-29).
 
 ### Upstream signals to re-check when a trigger fires
 

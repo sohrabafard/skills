@@ -1,0 +1,227 @@
+[
+  {
+    "name": "model_research",
+    "role": "alaa-researcher",
+    "configured": "gpt-6-sol/medium",
+    "observed": "unknown",
+    "lanes": [
+      "model research",
+      "backend research",
+      "specialized research"
+    ],
+    "state": "completed read-only",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "spec_contract",
+    "role": "alaa-spec-analyst",
+    "configured": "gpt-6-sol/medium",
+    "observed": "unknown",
+    "lanes": [
+      "acceptance contract"
+    ],
+    "state": "completed read-only",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "frontend_research",
+    "role": "alaa-researcher",
+    "configured": "gpt-6-sol/medium",
+    "observed": "unknown",
+    "lanes": [
+      "frontend research",
+      "operations research",
+      "governance research"
+    ],
+    "state": "completed read-only",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "model_implementation",
+    "role": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "criterion": "judgment-dense instruction authoring; concurrency and atomic migration repair",
+    "lanes": [
+      "model policy/projections",
+      "specialized/governance eight skills",
+      "replacement frontend review-fix1 after original agent reactivation capacity failure"
+    ],
+    "state": "completed D2/D6 agent-contract repair and IDB69path manifest refresh; source frozen",
+    "requested": "none; configured role selected",
+    "escalation_criterion": "Judgment-dense model/authority instructions; later atomic storage and asynchronous player lifecycle repairs"
+  },
+  {
+    "name": "frontend_implementation",
+    "role": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "criterion": "judgment-dense instruction authoring",
+    "lanes": [
+      "four frontend skills"
+    ],
+    "state": "implemented frozen; focused evidence recorded",
+    "requested": "none; configured role selected",
+    "escalation_criterion": "Concurrency-sensitive browser storage and player lifecycle templates"
+  },
+  {
+    "name": "validation_strategy",
+    "role": "alaa-test-strategist",
+    "configured": "gpt-6-sol/medium",
+    "observed": "unknown",
+    "lanes": [
+      "integrated validation strategy"
+    ],
+    "state": "completed read-only",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "authorization_guidance_review",
+    "role": "alaa-architecture-critic",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "lanes": [
+      "OpenFGA documentation boundary"
+    ],
+    "state": "SOUND-WITH-CONDITIONS",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "backend_implementation",
+    "role": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "criterion": "judgment-dense instruction authoring",
+    "lanes": [
+      "four backend skills"
+    ],
+    "state": "implemented frozen; focused evidence recorded",
+    "requested": "none; configured role selected",
+    "escalation_criterion": "Cross-system broker/runtime compatibility and security-sensitive integration guidance"
+  },
+  {
+    "name": "operations_implementation",
+    "role": "alaa-implementer-sol",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "lanes": [
+      "six operations skills"
+    ],
+    "state": "completed operations repair cycle1; source frozen",
+    "requested": "none; configured role selected",
+    "escalation_criterion": "Secret-file safety, installation authority and release-contract interactions"
+  },
+  {
+    "name": "bash_environment_diagnosis",
+    "role": "alaa-failure-analyst",
+    "configured": "gpt-6-sol/high",
+    "observed": "unknown",
+    "lanes": [
+      "read-only shell-routing diagnosis",
+      "candidate8 final evidence-capture diagnosis"
+    ],
+    "state": "completed Bash diagnosis and final independent40hash/workflow captureclosure",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "integrated_verification",
+    "role": "alaa-verifier",
+    "configured": "gpt-6-luna/low",
+    "observed": "unknown",
+    "lanes": [
+      "missing focused shell proof",
+      "integrated candidate verification"
+    ],
+    "state": "completed candidate8 verification; two capture/provenance gaps subsequently closed independently",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "correctness_review",
+    "role": "alaa-reviewer-deep",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "lanes": [
+      "candidate2 independent review"
+    ],
+    "state": "APPROVED all affected repairs; completed read-only",
+    "requested": "none; configured role selected",
+    "escalation_criterion": "Interacting model projections, validators, asynchronous examples and operational trust boundaries require deep review"
+  },
+  {
+    "name": "instruction_review",
+    "role": "alaa-instruction-reviewer",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "lanes": [
+      "candidate2 independent review"
+    ],
+    "state": "candidate8 APPROVED; allfindingsclosed",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "security_review",
+    "role": "alaa-security-reviewer",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "lanes": [
+      "candidate2 security gate"
+    ],
+    "state": "PASS affected repairs; completed read-only",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "release_review",
+    "role": "alaa-release-guardian",
+    "configured": "gpt-6-sol/medium",
+    "observed": "unknown",
+    "lanes": [
+      "candidate2 release/operability gate"
+    ],
+    "state": "READY-WITH-CONDITIONS finalcycle2; complete",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "migration_review",
+    "role": "alaa-migration-guardian",
+    "configured": "gpt-6-sol/high",
+    "observed": "unknown",
+    "lanes": [
+      "IndexedDB preimplementation migration safety"
+    ],
+    "state": "SAFE-WITH-CONDITIONS consumer-only; complete",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "observability_review",
+    "role": "alaa-observability-reviewer",
+    "configured": "gpt-6-sol/medium",
+    "observed": "unknown",
+    "lanes": [
+      "candidate2 observability gate"
+    ],
+    "state": "PASS-WITH-GAPS affected frontend; completed read-only",
+    "requested": "none; configured role selected"
+  },
+  {
+    "name": "documentation_foundation",
+    "role": "alaa-documenter",
+    "configured": "gpt-6-luna/high",
+    "requested": "none",
+    "observed": "unknown",
+    "lanes": [
+      "19skills77docs"
+    ],
+    "state": "completed documentation repair2; frozen"
+  },
+  {
+    "name": "documentation_operations",
+    "role": "alaa-documenter",
+    "configured": "gpt-6-luna/high",
+    "requested": "none",
+    "observed": "unknown",
+    "lanes": [
+      "6skills33docs"
+    ],
+    "state": "completed documentation repair2; frozen"
+  }
+]

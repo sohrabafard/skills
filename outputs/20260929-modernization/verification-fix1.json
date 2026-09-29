@@ -1,0 +1,77 @@
+{
+  "agent": "alaa-verifier",
+  "configured_model_effort": "gpt-6-luna/low",
+  "requested_model_effort": "unknown",
+  "observed_model_effort": "unknown",
+  "repository": "D:\\Sohrab\\Project\\skills",
+  "head": "0e9681c8253de0373a9bbbe4a9ff24a91b38c6db",
+  "candidate": "candidate-2.json",
+  "candidate_sha256": "f7605421917a1985af8c2729a2e493170b9fb12fd0be91c719af148a32e03480",
+  "candidate_integrity": "140 files, 25 skills, hash issues 0, exact path set",
+  "checks": [
+    {
+      "proof": "focused static",
+      "log": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/verification-fix1-shellcheck.stdout.log and .stderr.log",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "duration": "1.180s",
+      "classification": "PASS",
+      "limits": "BelowNormal, 2 CPUs, 60s",
+      "exit": 0,
+      "command": "ShellCheck -x -P SCRIPTDIR <five dispatched files>"
+    },
+    {
+      "proof": "affected whitespace",
+      "log": "skills/sohrab/alaa-workflow/outputs/20260929-modernization/verification-fix1-git-diff-check.log",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "duration": "0.238s",
+      "classification": "PASS",
+      "limits": "60s",
+      "exit": 0,
+      "command": "git diff HEAD --check -- skills/sohrab"
+    },
+    {
+      "result": "69/69 skills, 863 Markdown files, 4538 citations; no findings",
+      "proof": "full repository reference scan",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "duration": "2.574s",
+      "classification": "PASS",
+      "limits": "BelowNormal, 2 CPUs, 60s",
+      "exit": 0,
+      "command": "python -B scripts/check_fleet_references.py"
+    },
+    {
+      "result": "completed without blocking errors (resumable)",
+      "proof": "affected workflow plan validation",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "duration": "0.235s",
+      "classification": "PASS",
+      "limits": "BelowNormal, 2 CPUs, 60s",
+      "exit": 0,
+      "command": "python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan skills/sohrab/alaa-workflow/outputs/20260929-modernization/docs/_agent_plans/20260929-120000_sohrab-modernization.md"
+    },
+    {
+      "result": "4 tests OK; see operations-fix1-evidence.json; not rerun",
+      "proof": "mocked harness on fixed input hashes",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "duration": "12.018s",
+      "classification": "PASS",
+      "limits": "BelowNormal, 2 CPUs",
+      "exit": 0,
+      "command": "Ansible mocked four-method harness (writer evidence)"
+    }
+  ],
+  "cited": {
+    "arvan_mock": "20 pass + 9 pass, prior unchanged",
+    "documents": "16 RED preliminary PhaseE grades remain; no regrade",
+    "native_render_and_cluster": "prior proof unchanged; no rerun",
+    "index": "prior PASS, unchanged",
+    "lifecycle": "prior PASS, unchanged",
+    "source_changes": [
+      "skills/sohrab/ansible-validator/scripts/lib/common.sh",
+      "skills/sohrab/ansible-validator/scripts/scan_secrets.sh",
+      "skills/sohrab/caas-arvan-kuber/scripts/render-helm.sh"
+    ],
+    "root_structure": "prior PASS, unchanged; 69 skills"
+  },
+  "unrun": "No extra tests rerun; final repository status beyond the 140-file candidate integrity check not independently observed in this fix1 artifact."
+}

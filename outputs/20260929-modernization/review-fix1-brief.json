@@ -1,0 +1,75 @@
+{
+  "cycle": 1,
+  "state": "Frontend frozen; operations original writer resumed; affected frontend correctness/observability re-reviews active",
+  "source_base": "candidate-2",
+  "authority": "Only local first-party skill source; no live consumer/provider, installation, schema execution, commit or publication",
+  "writers": [
+    {
+      "agent": "model_implementation",
+      "owned_skills": [
+        "alaa-indexeddb-browser-storage",
+        "alaa-shaka-player"
+      ],
+      "findings": [
+        "COR-1",
+        "COR-2",
+        "COR-3",
+        "COR-4",
+        "SEC-2",
+        "OBS-1"
+      ],
+      "requirements": [
+        "Honor pending migration guardian conditions for additive account metadata index; actual consumer databases untouched.",
+        "Purge all matching account metadata including orphans with user data in one transaction; preserve other accounts and data-record return count; failures must not partially purge.",
+        "Serialize initial player attachment and stale cleanup so concurrent source changes cannot destroy the active video state.",
+        "Deliver session-end snapshot exactly once on disposal; no unhandled rejection for null/undefined/primitive cleanup failures.",
+        "Use meaningful source-function tests; accurately distinguish doubles from real IndexedDB/browser/Vitest proof.",
+        "Update only affected contract references, fixtures and owner manifest; no unrelated frontend version changes.",
+        "Add bounded local QoE delivery diagnostics for eviction/send failure/pending depth; isolate observer exceptions; no PII, external telemetry names or new metric thresholds. See review-observability.json."
+      ],
+      "original_agent": "frontend_implementation",
+      "handoff_reason": "Host agent-thread limit blocks original frontend reactivation; available same-role implementer receives full evidence and reads complete skill bundles.",
+      "read_checkpoint": {
+        "files": 83,
+        "lines": 11841,
+        "indexeddb_files": 47,
+        "shaka_files": 36,
+        "source": "independent implementer progress message",
+        "omitted": 0
+      },
+      "runtime_proof_followup": "Assess dependency-free real-IndexedDB browser harness from actual source modules using installed Node TypeScript stripping; independent browser execution later, no install/browser/server action in writer lane. If unavailable report exact limitation; mocks never prove browser engine semantics."
+    },
+    {
+      "agent": "operations_implementation",
+      "owned_skills": [
+        "ansible-validator",
+        "caas-arvan-kuber",
+        "alaa-haproxy"
+      ],
+      "findings": [
+        "COR-5",
+        "COR-6",
+        "SEC-1",
+        "SEC-3",
+        "REL-1"
+      ],
+      "requirements": [
+        "Resolve already installed cached tools before any installation-authority gate; absent opt-in must still prevent create/install, and AV_NO_BOOTSTRAP precedence remains. Trap installers in cache-reuse regression.",
+        "Render secrets through one exclusively created retained descriptor with type/owner/permission validation; enforce trusted parent/ancestor assumptions and replacement-safe cleanup. Test synthetic output-path replacement; replacement receives no secret sentinel. Preserve existing-file refusal; no stdout rendering mode assumed.",
+        "Treat unresolved functional HAProxy warnings as review-blocking; only explicitly supported known deprecations may be accepted with evidence. Add changed-checker self-tests; no actual HAProxy runtime available claim.",
+        "Align operator runbook with separately observed API capabilities and server version/unknown; operator confirms matrix selection.",
+        "Preserve all existing redaction, failure, identity, no-token, no-impersonation, opt-in, and CLI exit semantics except explicitly justified safety corrections."
+      ],
+      "state": "running original writer; resumed after frontend completion freed slot"
+    }
+  ],
+  "common": [
+    "You are not alone; no reverting/staging other changes. At most two writers and disjoint whole skills.",
+    "Read full affected skill bundles before editing, reusing already completed full reads only if current content reconciled. Apply draft/compression contract to controlling prose.",
+    "Record exact changes, before/after hashes, command exits/logs, limitations and original-finding resolution in compact JSON evidence; no standalone final until artifact saved/read back.",
+    "CPU-heavy commands BelowNormal/two CPU bounded runner; python -B; no installs/network mutations. Use known supported shell context, no repeated sandbox startup probes.",
+    "One cause-specific repair/materially different retry per operation; preserve failures. No broad previously passing reruns.",
+    "Freeze source and release slot when done. Parent recaptures snapshot; independent verification and affected review reopen."
+  ],
+  "migration_conditions": "review-migration.json; clarify values-owner condition before any assumed global registry edit"
+}
