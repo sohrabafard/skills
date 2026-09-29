@@ -1,0 +1,147 @@
+{
+  "status": "PASS",
+  "merge": "841057985ee7ae8e40302b864ee1909e310f5be7",
+  "main_commit": "6af1d7eb804083aa8faa8c1e92b6b58a1e616ac5",
+  "feature_commit": "82a66c98b",
+  "merge_preserves_feature_tree": true,
+  "changed_path_overlap": [],
+  "before_repair": {
+    "validator": "validate_skill_pack.py",
+    "exit": 1,
+    "unlisted_files": 4
+  },
+  "retirement": {
+    "from": "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels/",
+    "to": "_to_delete/20260930-idb-merge-duplicates/",
+    "token_equivalence": true,
+    "byte_preservation": true,
+    "files": [
+      {
+        "file": "10-proof-levels.md",
+        "bytes": 1292,
+        "sha256": "5e78badd9c5651367ac812619cc5cb4a451a3daa68a2bb81470d0c444d5774ce"
+      },
+      {
+        "file": "20-required-scenarios.md",
+        "bytes": 836,
+        "sha256": "4407e8a91f1df249f3dd12c7cb0b44ac93dfe9eef91bdce6fee6554e9fe77f3c"
+      },
+      {
+        "file": "30-quota-reproduction.md",
+        "bytes": 582,
+        "sha256": "9b3594af48a86df131f409bc8ae99c47ca2ef48ecc0748ee4269f7d9e0a9c213"
+      },
+      {
+        "file": "40-debug-and-performance.md",
+        "bytes": 1568,
+        "sha256": "7450b2fc807584622318bb3d33679a9a5b8cef3ba1b603c221576e781b8e8e5f"
+      }
+    ]
+  },
+  "independent_review": {
+    "agent": "merge_reference_review",
+    "verdict": "APPROVED",
+    "unique_behavior_lost": false,
+    "read_scope": "Full IndexedDB skill, all 46 reference files, six scripts and manifest",
+    "limits": "Pre-move review; no runtime behavior changed"
+  },
+  "checks": [
+    {
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/validate_skill_pack.py",
+        "--root",
+        "skills/sohrab/alaa-indexeddb-browser-storage"
+      ],
+      "exit": 0,
+      "stdout": "OK: structure, description, triggers, storage boundaries, classification and manifest all validate\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check_references.py",
+        "--root",
+        "skills/sohrab/alaa-indexeddb-browser-storage"
+      ],
+      "exit": 0,
+      "stdout": "OK: 21 reference file(s) routed, every router path resolves\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/capability_contract_conformance.py",
+        "--root",
+        "skills/sohrab/alaa-indexeddb-browser-storage"
+      ],
+      "exit": 0,
+      "stdout": "OK: the capability field set, the tier contract and the test matrix agree; every tier is reachable and laned; every index key path names a declared field. This bounds the three artifacts against each other, not against any real browser.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "skills/sohrab/alaa-indexeddb-browser-storage/scripts/check-storage-regressions.mjs"
+      ],
+      "exit": 0,
+      "stdout": "PASS: bounded claims/reaping, quota cleanup and exactly one retry, close-before-notify; IDB double only\nPASS: all-store preflight, immediate completion observation, metadata cursor/count, commit wait; control-flow double only\n",
+      "stderr": "(node:1672) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "scripts/validate_sohrab_skill_pack.py"
+      ],
+      "exit": 0,
+      "stdout": "D:\\Sohrab\\Project\\skills\\skills\\sohrab: 69 skills\nWarnings:\n- alaa-algorithms-data-structures: top-level body is 153 lines\n- alaa-bale-provider: top-level body is 135 lines\n- alaa-cc-orchestrator: top-level body is 171 lines\n- alaa-codex-orchestrator: top-level body is 171 lines\n- alaa-gitlab-ci-cd: top-level body is 167 lines\n- alaa-golang-clean-code-principles: top-level body is 147 lines\n- alaa-laravel-job-rabbitmq: top-level body is 206 lines\n- alaa-laravel-public-api-contract-pack: top-level body is 180 lines\n- alaa-memory-os: top-level body is 149 lines\n- alaa-minio-object-storage: top-level body is 135 lines\n- alaa-octane-performance: top-level body is 151 lines\n- alaa-permission-generator: top-level body is 167 lines\n- alaa-php-clean-code: top-level body is 206 lines\n- alaa-project-constitution: top-level body is 207 lines\n- alaa-reliability-sla: top-level body is 140 lines\n- alaa-security-review: top-level body is 144 lines\n- alaa-services-contract: top-level body is 156 lines\n- alaa-system-design: top-level body is 166 lines\n- alaa-testing-strategy: top-level body is 179 lines\n- vector-rust-observability-pipelines: top-level body is 130 lines\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py"
+      ],
+      "exit": 0,
+      "stdout": "check_fleet_references.py: 69 of 69 skills, 1071 Markdown files, 3861 citations\n\nFINDINGS: none\n\nINFO (325 unmarked target-repository paths across 30 skills; these never fail the run)\n    96  alaa-repo-docs\n    52  alaa-services-contract\n    31  alaa-go-chi-development\n    27  alaa-shaka-player\n    15  service-runtime-kit-governance\n    11  alaa-permission-generator\n    10  alaa-golang-clean-code-principles\n    10  alaa-trust-gateway-auth\n    10  ansible-validator\n     9  alaa-docker-production\n     9  alaa-minio-object-storage\n     7  alaa-gitlab-ci-cd\n     6  alaa-makefile\n     5  alaa-golang\n     4  alaa-golang-fiber\n     3  alaa-controlled-ops\n     3  alaa-postman-collections\n     3  clickhouse-performance-schema-ops\n     2  alaa-codex-orchestrator\n     2  alaa-k8s-helm\n     1  alaa-bale-provider\n     1  alaa-data-layer\n     1  alaa-input-normalization\n     1  alaa-laravel-architecture\n     1  alaa-laravel-upgrade-all-packages\n     1  alaa-octane-performance\n     1  alaa-quasar-app-vite-v3\n     1  alaa-sms-provider-mediana\n     1  ansible-generator\n     1  caas-arvan-kuber\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+        ".",
+        "--files",
+        "outputs/README.md",
+        "outputs\\20260930-merge-audit\\README.md",
+        "skills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md",
+        "--line-budget"
+      ],
+      "exit": 0,
+      "stdout": "outputs/README.md: GREEN 15 physical lines\noutputs/20260930-merge-audit/README.md: GREEN 31 physical lines\nskills/sohrab/alaa-indexeddb-browser-storage/references/80-testing-and-proof-levels.md: GREEN 39 physical lines\nValidated links, line budgets in 3 Markdown file(s) under D:\\Sohrab\\Project\\skills.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'skills/sohrab/alaa-k8s-helm/references/openshift-and-managed-platforms.md', CRLF will be replaced by LF the next time Git touches it\n"
+    }
+  ],
+  "root_baseline_checks": "root-gates.json",
+  "excluded_concurrent_changes": [
+    "skills/sohrab/alaa-k8s-helm/references/openshift-and-managed-platforms.md",
+    "skills/sohrab/caas-arvan-kuber/references/arvan-constraints/30-exposure-config-and-secrets.md"
+  ],
+  "scope_limit": "Merge-parent preservation and retirement of four duplicate references; no restoration of historical candidate sources, browser rerun, deployment or push."
+}

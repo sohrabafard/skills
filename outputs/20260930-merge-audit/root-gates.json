@@ -1,0 +1,42 @@
+[
+  {
+    "argv": [
+      "python",
+      "-B",
+      "scripts/validate_sohrab_skill_pack.py"
+    ],
+    "exit": 0,
+    "stdout": "D:\\Sohrab\\Project\\skills\\skills\\sohrab: 69 skills\nWarnings:\n- alaa-algorithms-data-structures: top-level body is 153 lines\n- alaa-bale-provider: top-level body is 135 lines\n- alaa-cc-orchestrator: top-level body is 171 lines\n- alaa-codex-orchestrator: top-level body is 171 lines\n- alaa-gitlab-ci-cd: top-level body is 167 lines\n- alaa-golang-clean-code-principles: top-level body is 147 lines\n- alaa-laravel-job-rabbitmq: top-level body is 206 lines\n- alaa-laravel-public-api-contract-pack: top-level body is 180 lines\n- alaa-memory-os: top-level body is 149 lines\n- alaa-minio-object-storage: top-level body is 135 lines\n- alaa-octane-performance: top-level body is 151 lines\n- alaa-permission-generator: top-level body is 167 lines\n- alaa-php-clean-code: top-level body is 206 lines\n- alaa-project-constitution: top-level body is 207 lines\n- alaa-reliability-sla: top-level body is 140 lines\n- alaa-security-review: top-level body is 144 lines\n- alaa-services-contract: top-level body is 156 lines\n- alaa-system-design: top-level body is 166 lines\n- alaa-testing-strategy: top-level body is 179 lines\n- vector-rust-observability-pipelines: top-level body is 130 lines\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      "-B",
+      "scripts/check_skill_index.py"
+    ],
+    "exit": 0,
+    "stdout": "check_skill_index.py\n  README.md map located by: markers\n  README.md map entries: 69\n  README.fa.md table entries: 69\n  skill directories: 69\n\nFINDINGS: none\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      "-B",
+      "scripts/check_fleet_references.py"
+    ],
+    "exit": 0,
+    "stdout": "check_fleet_references.py: 69 of 69 skills, 1075 Markdown files, 3860 citations\n\nFINDINGS: none\n\nINFO (325 unmarked target-repository paths across 30 skills; these never fail the run)\n    96  alaa-repo-docs\n    52  alaa-services-contract\n    31  alaa-go-chi-development\n    27  alaa-shaka-player\n    15  service-runtime-kit-governance\n    11  alaa-permission-generator\n    10  alaa-golang-clean-code-principles\n    10  alaa-trust-gateway-auth\n    10  ansible-validator\n     9  alaa-docker-production\n     9  alaa-minio-object-storage\n     7  alaa-gitlab-ci-cd\n     6  alaa-makefile\n     5  alaa-golang\n     4  alaa-golang-fiber\n     3  alaa-controlled-ops\n     3  alaa-postman-collections\n     3  clickhouse-performance-schema-ops\n     2  alaa-codex-orchestrator\n     2  alaa-k8s-helm\n     1  alaa-bale-provider\n     1  alaa-data-layer\n     1  alaa-input-normalization\n     1  alaa-laravel-architecture\n     1  alaa-laravel-upgrade-all-packages\n     1  alaa-octane-performance\n     1  alaa-quasar-app-vite-v3\n     1  alaa-sms-provider-mediana\n     1  ansible-generator\n     1  caas-arvan-kuber\n  Rerun with --show-info for every site, or --format json for all of them.\n  Mark each one as <repo>/<path> to retire it from this list.\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      "-B",
+      "scripts/check_lifecycle_contract.py"
+    ],
+    "exit": 0,
+    "stdout": "check_lifecycle_contract.py\n  root: D:\\Sohrab\\Project\\skills\n  owner: alaa-workflow references/workspace-and-integration.md\n  states: IMPLEMENTED, MERGE_CANDIDATE, RELEASE_CANDIDATE, PUBLISHED\n  reporters: alaa-cc-orchestrator, alaa-codex-orchestrator\n\nFINDINGS: none\n",
+    "stderr": ""
+  }
+]

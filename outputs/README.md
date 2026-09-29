@@ -6,6 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
+| 2026-09-30 | [Modernization merge audit](20260930-merge-audit/README.md) | Parent-tree preservation, retirement of four duplicate IndexedDB references, and current validation |
 | 2026-09-29 | [Sohrab modernization](20260929-modernization/README.md) | Research across 69 skills, Sonnet 5.5 policy, domain updates, review repairs and verification evidence |
 
 When adding a future upgrade archive, add its date, relative entry-point link and scope here.
