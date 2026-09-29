@@ -55,6 +55,23 @@ proposed value carries `[proposal]`, `[draft_contract]`, or `[decision_needed]`,
 `needs_review` until the decision is recorded in repository truth. A Design Mode value that reaches `active`
 without that record has become a fact nobody agreed to.
 
+## Source language of curated knowledge
+
+For a source-derived candidate or note, choose the language for each prose span from its source. Keep
+Persian prose in Persian. Render Arabic, Dari, Tajik, Luri, Bakhtiari, Tati, Talysh, Kurdish, Gilaki,
+Mazandarani/Tabari, Balochi, Pashto, Ossetian, and Pamiri prose (including Shughni and Wakhi) in fluent
+Persian. Render all other prose in English. Apply these rules separately to the parts of a mixed source;
+do not impose one language on the whole document.
+
+Keep names, code, paths, URLs, identifiers, and verbatim quotations exactly as in the source. Check
+meaning and provenance against that source; script detection alone does not establish language or
+accuracy. If the source or its language is ambiguous, leave the disputed text unchanged and mark the
+candidate `needs_review` until the source can be checked.
+
+This policy governs candidate authoring; it does not enforce server-side extraction. Where a store extracts
+facts automatically, check each fact against its source and effective processing configuration before
+claiming language compliance.
+
 ## Store this
 
 - Architecture maps.

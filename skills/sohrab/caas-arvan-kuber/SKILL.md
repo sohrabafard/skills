@@ -55,6 +55,8 @@ Live discovery outranks every local file, because a local file describes a snaps
 
 Two runner-adjacent rules stay here because they are Arvan consequences, not runner settings: a job must not rely on `kubectl create namespace`, `kubectl get namespace`, or `helm --create-namespace` unless discovery proves the runner holds that scope; and an RBAC denial inside a job is an alias-versus-canonical identity question before it is a permissions question.
 
+**Portable-chart routing.** When a chart targets Arvan CaaS and OpenShift or OKD, read `/alaa-k8s-helm` `references/openshift-and-managed-platforms.md` before setting `runAsUser`, `privileged`, or `hostPath`; that file owns the non-root, arbitrary-UID, and restricted-field rules. Passing Arvan checks does not prove OpenShift/OKD SCC admission or runtime compatibility; validate the rendered chart and image on each target with its deployment identity.
+
 **Stack versus platform (D8).** This skill owns the Arvan platform facts that change a manifest or a deployment decision, and contributes Arvan-only **predicates** to the gate register in `alaa-k8s-helm references/validation-workflows.md`: no rendered container omits resources and `requests` equals `limits`; no rendered document uses a kind absent from the discovered line's column of the capability matrix; no rendered manifest references a cluster-scoped object. It owns **no gate placement and no runner configuration**.
 
 ## Reference list, with the condition that opens each file

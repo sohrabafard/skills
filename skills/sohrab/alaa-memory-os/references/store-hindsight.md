@@ -109,6 +109,13 @@ and (h) surface the two symptoms (missing pages, a held lock) as WARNs pointing 
 
 ## Recall and write mechanics
 
+When authoring source-derived candidates or checking stored-language quality, read
+`references/knowledge-shape.md`; it owns the language policy and the boundary between candidate authoring
+and server extraction. The policy does not set Hindsight's LLM extraction language: verify effective
+API/worker and bank/strategy settings, then compare source-linked facts. A Reflect response must use the
+question's language. Assess page prose quality separately from fact accuracy; mixed-source pages need not
+have one language throughout.
+
 Use the official MCP tools exposed by the selected harness. Start with bounded recall/reflect for the current repository bank, verify important claims against repository truth, and expand only the specific memory needed. Recall failure fails open after the skill's budget; continue from current source and disclose the missing memory evidence.
 
 Use official retain or document-ingest tools only after the policy admission test passes. A write is successful only when Hindsight reports terminal completion. If the intended write cannot complete, report the unwritten durable note in the handoff; never claim it was stored.
