@@ -1,6 +1,6 @@
 name = "alaa-release-guardian"
 description = "Read-only release and operability gate for CI/CD, Docker, deployment, environment/configuration, dependency/version, feature flag, packaging, or production-readiness changes. Never deploys, publishes, tags, or edits."
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp

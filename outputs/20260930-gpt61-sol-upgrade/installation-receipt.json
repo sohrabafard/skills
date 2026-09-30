@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "installer_exit_code": 0,
+  "orchestrator_definitions_updated": 23,
+  "already_current": 0,
+  "rule_writer": "copied after source grants passed; installed pin matches policy",
+  "managed_pin_check": {
+    "exit_code": 0,
+    "definitions": 24
+  },
+  "active_grants_and_role_semantics": "preserved; see installed-verification.json",
+  "materialized_payload": "all 23 installed hashes exactly match already validated materialization",
+  "recovery": "26 previous managed files hash-verified in caller task cache outside Git",
+  "global_configuration": "hash unchanged",
+  "inactive_overlay_refresh": "disabled node_repl/cua_repl transport discriminators refreshed; new code-review overlay explicitly disabled",
+  "supplementary_checker_attempts": "two wrong-mode invocations failed; retained in installed-byte-proof.json; no further rerun and no false pass claim"
+}

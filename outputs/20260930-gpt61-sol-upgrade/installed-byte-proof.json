@@ -1,0 +1,133 @@
+{
+  "status": "passed",
+  "proof": "All installed orchestrator bytes equal the official materializer output already validated against seven live MCP servers. No supplementary checker failure is relabeled as a pass.",
+  "managed_agents": [
+    {
+      "name": "alaa-accessibility-reviewer.toml",
+      "sha256": "6cb6ea1e2e454efed03adddfc73b182bb34a48c9d85b13fb36333715889aaf1d",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-adversarial-reviewer.toml",
+      "sha256": "bc2ca222a9be7cab0cde74defd090506153b58fa82c6c307fe47441c4d8b11f5",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-api-contract-reviewer.toml",
+      "sha256": "c95e5aff492859cae5b46f2043207098ac4348b6ee3b16a62a4690ea784b40de",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-architecture-critic.toml",
+      "sha256": "13609e6c70b502ca5be228a3b40936eb8fa16d9ee728e11a41e0bbd494a6b9e7",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-browser-qa.toml",
+      "sha256": "3ab71653fa2ba6bc688314393fff6e923b171dd7da8ae07a88d72af1e0fc2de8",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-dependency-auditor.toml",
+      "sha256": "e809bddb1e8ffb53a29b71e399e1c6778782b2db8c402885d7c5e5a6db0f9b5a",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-documenter.toml",
+      "sha256": "3a831fdb7c2b134f1f16481670f523bed9a6c1d2f45d558b5a2ab5e212b03f91",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-explorer.toml",
+      "sha256": "e46563cf2ccaa2c39e2a16daa14e21ae5541a8697931c450da66dfaa1d2f6b2e",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-failure-analyst.toml",
+      "sha256": "ee24cbd951eefa03dc942b0287c38205c81e13e7584977e618413791172bc834",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-implementer-sol.toml",
+      "sha256": "3e07676deac9a3cebc8261ac4f7bd6b6b18b9781a29874d1f3aab8a25ed77664",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-implementer.toml",
+      "sha256": "7152bf766a45c88514613e03aa8803b203a74fdc68a11234c4fa6e300c5837b3",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-instruction-reviewer.toml",
+      "sha256": "160e7af36e464e053afc0c6ddc0951a5c02a614886fe63b98b9d37d2c9f06004",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-migration-guardian.toml",
+      "sha256": "2f973e307734b115c058002a3f2d18c76bed14dcce5d7ab973bd8093f41b4ab6",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-observability-reviewer.toml",
+      "sha256": "1c3fa4c3da17fcdfa4d21d77e8aabc77ef74093c618a1467ec5c720dc6236398",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-performance-profiler.toml",
+      "sha256": "733b0a450710c428a1823b7d8e95263d801c4af93bdcfb7a47a481db2ce8b579",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-release-guardian.toml",
+      "sha256": "88ea1695d966036672b6227ab0bfc17c75bc19157304e5df07c8aa9bec025541",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-researcher.toml",
+      "sha256": "271d59d199fa193077410b6810a57b9424b4a7c18d1bc2bc43ad0d365e2c42a3",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-reviewer-deep.toml",
+      "sha256": "4ece6887e73d71e94ec937158a7f62e4b23f349cae7e3a5d393b5817a488eadf",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-reviewer.toml",
+      "sha256": "2b2615a81ccc9a413ecf19ae4d31e7b994ab3a385d9b0ae3b606281618f16660",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-security-reviewer.toml",
+      "sha256": "749885ed46152bfddb80dcaa6f50dbcfad84463946caf5e4f3deb1a748f7af53",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-spec-analyst.toml",
+      "sha256": "2746b74d5cb3cba9242e05ca9937f75b88ce02b85496986b000ba2e432995d67",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-test-strategist.toml",
+      "sha256": "98198acdd23b859c1770bc5cb7734ee3df92b62d6fc1a06a9f26c6cf6f9cc695",
+      "equals_validated_materialization": true
+    },
+    {
+      "name": "alaa-verifier.toml",
+      "sha256": "d80758c79a8302e2291e84d3f99891df000a7ef9a1d03f0efefaa8432e2acff0",
+      "equals_validated_materialization": true
+    }
+  ],
+  "supplementary_commands": [
+    {
+      "mode": "--agents-dir all user agents",
+      "status": "failed",
+      "cause": "Includes separately owned rule-writer role"
+    },
+    {
+      "mode": "--agents-dir byte-copied orchestrator subset",
+      "status": "failed",
+      "cause": "That flag validates source templates, not resolved installed definitions; retry budget exhausted, no further rerun"
+    }
+  ]
+}

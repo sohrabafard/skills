@@ -1,0 +1,1 @@
+Installed scoped grant check exit: 1; 23 byte-verified installed inspection copies. Prior all-user-directory check rejected the separately owned rule-writer role.

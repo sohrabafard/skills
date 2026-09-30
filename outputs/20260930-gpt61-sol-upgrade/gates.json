@@ -1,0 +1,140 @@
+{
+  "snapshot": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855",
+  "results": [
+    {
+      "gate": "preservation",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B <repo>\\outputs\\20260930-gpt61-sol-upgrade\\verify_preservation.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 1.731,
+      "output": "gate-preservation.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "model-policy",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py --agent-root skills/sohrab/alaa-codex-orchestrator/agents --agent-root skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.216,
+      "output": "gate-model-policy.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "model-policy-self-test",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py --self-test",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.246,
+      "output": "gate-model-policy-self-test.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "eval-corpus",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.175,
+      "output": "gate-eval-corpus.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "eval-self-test",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py --self-test",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.191,
+      "output": "gate-eval-self-test.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "rule-writer",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.394,
+      "output": "gate-rule-writer.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "renderer",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py --check",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.167,
+      "output": "gate-renderer.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "agent-contracts",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.122,
+      "output": "gate-agent-contracts.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "agent-grants",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.197,
+      "output": "gate-agent-grants.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "orchestrator-pack",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.392,
+      "output": "gate-orchestrator-pack.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "skill-structure",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B scripts/validate_sohrab_skill_pack.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.273,
+      "output": "gate-skill-structure.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "skill-index",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B scripts/check_skill_index.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.193,
+      "output": "gate-skill-index.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "fleet-references",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B scripts/check_fleet_references.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 3.563,
+      "output": "gate-fleet-references.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "lifecycle",
+      "command": "<user-home>\\AppData\\Roaming\\uv\\python\\cpython-3.13-windows-x86_64-none\\python.exe -B scripts/check_lifecycle_contract.py",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.462,
+      "output": "gate-lifecycle.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    },
+    {
+      "gate": "whitespace",
+      "command": "git diff --check",
+      "working_directory": "repository root",
+      "exit_code": 0,
+      "elapsed_seconds": 0.094,
+      "output": "gate-whitespace.txt",
+      "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855"
+    }
+  ]
+}

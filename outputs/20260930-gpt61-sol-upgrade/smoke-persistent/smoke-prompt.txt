@@ -1,0 +1,13 @@
+Run the authorized custom-agent activation smoke. Do no implementation or installation. Use only the following THREE named installed custom roles, each exactly once. Their TOML model/effort pins are the configuration under test; do not override them or choose a substitute role/model. Do not delegate any additional work. The controller model intentionally differs from the target agent pins. If target selection fails, report BLOCKED and the exact host error; do not fix configuration or retry with another model. Native and MCP writes, network/app actions and unrelated reads are forbidden for all smoke lanes.
+
+1. Dispatch alaa-spec-analyst on requirements.txt: extract checkable acceptance criteria, the email/messaging exclusion and material ambiguities. Read only that fixture. Preserve its role output contract.
+2. Dispatch alaa-reviewer on invoice.py: review only its explicit tenant-ownership contract. Report the planted blocking authorization defect with file and line evidence, preserve its verdict-first findings/evidence/risks contract, and never fix it. Do not run application suites or inspect unrelated repositories.
+3. Dispatch alaa-rule-writer using this envelope:
+item_id: smoke-tenant-rule
+artifact_type: rule or prompt
+draft: When handling any request to read an invoice belonging to a tenant, make sure to reject any mismatch in tenant ownership before returning the invoice. You must never change data that belongs to another tenant. If you cannot establish ownership, stop.
+immutable_behavior_and_decisions: Applies to tenant-scoped invoice reads; reject tenant mismatch before returning; never change another tenant's data; stop if ownership cannot be established. Preserve constraint force and scope; invent no policy.
+required_sources_of_truth: the supplied draft and invariants; the installed prompting-guide doctrine required by its definition. No other sources.
+output_mode: single
+
+Wait for all dispatched agents. Return each child's complete output in a JSON object with keys role, activation_status, requested_model, requested_effort, observed_model, observed_effort, configuration_control_evidence, output, blocker. Requested pins are gpt-6.1-sol/medium, gpt-6.1-sol/high and gpt-6.1-sol/medium respectively. Observed identity is unknown unless reliable host evidence exposes it; self-report is not proof. Record dispatch identifiers and any host evidence of resolution separately. Do not declare quality benchmark superiority or calibration. Do not add commit messages for this read-only smoke.

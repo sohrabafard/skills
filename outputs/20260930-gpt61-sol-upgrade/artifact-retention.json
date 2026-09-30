@@ -1,0 +1,7 @@
+{
+  "raw_path_audit": "failed initial check and retry: executable case/JSON escaping remained in native command text",
+  "safe_alternative": "Native command strings and output bodies are represented by SHA256; raw transcripts remain in task cache. No third raw-path audit attempt.",
+  "source_and_controller_results": "complete results and exact server errors preserved",
+  "workflow_initial_gate": "failed missing fields/snapshot shape; repaired once, retry passed",
+  "runtime_retry_budget": "no more model activation attempts"
+}

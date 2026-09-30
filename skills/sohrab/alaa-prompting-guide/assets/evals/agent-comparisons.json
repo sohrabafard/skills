@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "1.0.0",
+  "policy_version": "1.1.0",
   "comparison_rule": "Change one factor only; isolate each run; do not execute external or destructive actions.",
   "scenarios": [
     {
@@ -36,12 +36,12 @@
       "id": "bounded-implementation",
       "profile": "alaa-implementer",
       "candidate": {
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "effort": "high"
       },
       "comparator": {
         "model": "gpt-6-sol",
-        "effort": "medium"
+        "effort": "high"
       },
       "repetitions": 2,
       "status": "unrun",
@@ -65,12 +65,12 @@
       "id": "debugging",
       "profile": "alaa-failure-analyst",
       "candidate": {
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "effort": "high"
       },
       "comparator": {
         "model": "gpt-6-sol",
-        "effort": "medium"
+        "effort": "high"
       },
       "repetitions": 2,
       "status": "unrun",
@@ -96,12 +96,12 @@
       "id": "known-defect-review",
       "profile": "alaa-reviewer",
       "candidate": {
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "effort": "high"
       },
       "comparator": {
         "model": "gpt-6-sol",
-        "effort": "medium"
+        "effort": "high"
       },
       "repetitions": 2,
       "status": "unrun",
@@ -153,12 +153,12 @@
       "id": "instruction-rewrite",
       "profile": "alaa-rule-writer",
       "candidate": {
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "effort": "medium"
       },
       "comparator": {
         "model": "gpt-6-sol",
-        "effort": "low"
+        "effort": "medium"
       },
       "repetitions": 2,
       "status": "unrun",

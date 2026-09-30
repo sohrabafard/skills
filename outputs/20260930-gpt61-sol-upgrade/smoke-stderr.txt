@@ -1,0 +1,48 @@
+2026-09-30T15:16:23.975034Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:23.985765Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:24.113041Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:24.118207Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:24.118762Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:24.227780Z  WARN codex_skills::interface: ignoring interface.icon_small: icon path with '..' must resolve under plugin assets/
+2026-09-30T15:16:24.227803Z  WARN codex_skills::interface: ignoring interface.icon_large: icon path with '..' must resolve under plugin assets/
+2026-09-30T15:16:24.247593Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-09-30T15:16:24.621887Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:24.622515Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:24.623182Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:24.623276Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:24.624189Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:24.624357Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:24.625120Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:16:25.193429Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:25.240891Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.sentry.dev/.well-known/oauth-protected-resource/mcp?utm_source=plugin\"" })
+2026-09-30T15:16:25.242179Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name="sentry" error=handshaking with MCP server failed: Send message error Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: Auth required, when send initialize request: Send message error Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: Auth required, when send initialize request
+2026-09-30T15:16:25.283385Z  WARN codex_skills::interface: ignoring interface.icon_small: icon path with '..' must resolve under plugin assets/
+2026-09-30T15:16:25.283414Z  WARN codex_skills::interface: ignoring interface.icon_large: icon path with '..' must resolve under plugin assets/
+2026-09-30T15:16:25.655392Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer realm=\"OAuth\", resource_metadata=\"https://mcp.sentry.dev/.well-known/oauth-protected-resource/mcp?utm_source=plugin\"" })
+2026-09-30T15:16:25.655464Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name="sentry" error=handshaking with MCP server failed: Send message error Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: Auth required, when send initialize request: Send message error Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: Auth required, when send initialize request
+2026-09-30T15:16:25.703193Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:28.293415Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:42.264817Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:52.858914Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:16:59.283752Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:17:08.718787Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:17:14.920454Z  WARN codex_models_manager::model_info: Unknown model gpt-6.1-sol is used. This will use fallback model metadata.
+2026-09-30T15:17:14.920695Z  WARN codex_models_manager::model_info: Unknown model gpt-6.1-sol is used. This will use fallback model metadata.
+2026-09-30T15:17:15.215753Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.218050Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.218236Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.218959Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.219290Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.220169Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.220491Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-09-30T15:17:15.364015Z ERROR codex_core::tools::router: error=collab spawn failed: no thread with id: 01a0f2e3-65ca-7e61-aef3-1ea25e2fa152
+2026-09-30T15:17:15.377177Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:17:24.697738Z  WARN codex_models_manager::model_info: Unknown model gpt-6.1-sol is used. This will use fallback model metadata.
+2026-09-30T15:17:24.697812Z  WARN codex_models_manager::model_info: Unknown model gpt-6.1-sol is used. This will use fallback model metadata.
+2026-09-30T15:17:24.787645Z ERROR codex_core::tools::router: error=collab spawn failed: no thread with id: 01a0f2e3-65ca-7e61-aef3-1ea25e2fa152
+2026-09-30T15:17:24.851504Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:17:36.334814Z  WARN codex_models_manager::model_info: Unknown model gpt-6.1-sol is used. This will use fallback model metadata.
+2026-09-30T15:17:36.334942Z  WARN codex_models_manager::model_info: Unknown model gpt-6.1-sol is used. This will use fallback model metadata.
+2026-09-30T15:17:36.426916Z ERROR codex_core::tools::router: error=collab spawn failed: no thread with id: 01a0f2e3-65ca-7e61-aef3-1ea25e2fa152
+2026-09-30T15:17:36.479927Z  WARN codex_features: unknown feature key in config: powershell_utf8
+2026-09-30T15:18:11.049136Z  WARN codex_mcp::rmcp_client: failed to initialize MCP client during shutdown: MCP startup failed: handshaking with MCP server failed: Send message error Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: Auth required, when send initialize request: Send message error Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: Auth required, when send initialize request

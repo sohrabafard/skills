@@ -1,6 +1,6 @@
 name = "alaa-failure-analyst"
 description = "Read-only diagnostic specialist for failed, flaky, timed-out, contaminated, cross-lane, or environment-dependent verification. Determines the most likely failure class and owning lane; never edits or reruns broad suites without instruction."
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp

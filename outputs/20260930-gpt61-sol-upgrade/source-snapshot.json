@@ -1,0 +1,630 @@
+{
+  "head": "3aa602487ff9f347b12a9b332db37cca527ab558",
+  "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/agents/openai.yaml",
+      "sha256": "2c592b27a32b857747fc24aff2218a1b851c5e4928fc069b7a275bd7690881fb"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+      "sha256": "4d3ebdd310df52afcfbb6a6b23b6f3e53b1e0218e77ce00b93cbbd57c8e67064"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "sha256": "26052114ee946b8f7fa1a619ab2b6561b4825845fba84cefadc1ac4fe3206346"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json",
+      "sha256": "390200dd34e7b2211954ab3904f77569bbfbe7fef536bc6ab6d68b009e3821b3"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/claude-agent-comparisons.json",
+      "sha256": "8b8854a3f7e5e8a432492b265ab053ff6675c4e32e2be3c18fff173f8b4c6ece"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "a2a4ccf6f9786bea27eb175bed28b7aaf430e33f4cc8753965d3d46ff06dc6ce"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "ae91dd32886ae116aedfa23805a729343c326a49550226fe0bb65660ee9cfffc"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/contract.md",
+      "sha256": "aee2ad96fb3f6709debda793701474f992a48b15837426f228a6be03ebbc57c6"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/dispatch.md",
+      "sha256": "6d42cf3cede1b8f1ab3dd5d0e1158a1216a8c96a4d455a8212dba5574a8107bb"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+      "sha256": "60f53ced08910f649c566af256358e2bb46254ed867052eabc2fdb90639d5074"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "sha256": "e2174298f143299553c3803f9f7c965640860659286ee919076cae96b3933b18"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+      "sha256": "a4f813b15caceece150383bc31982ed3fb04a95af56d495508251ffe1d4f1859"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/10-gpt-5-6.md",
+      "sha256": "0a2b9d21817d8d3cea76b4066a7e4ddbea766b0f801eabc84e50c39d9f0c8021"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+      "sha256": "4e4a1f2876a8a00d5153fcf2d7745d38e0b944f5bcb199319053dbdc402086a5"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md",
+      "sha256": "256c3249d0e86c2265c881a53e4dbf8aa3207959349737616156930803395172"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/20-opus-5.md",
+      "sha256": "ff303b3c316c7682d9df4c3c69e6ac2bf3bc11d317dd5dcf72cd3e4baab9d8a4"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/21-opus-5-5.md",
+      "sha256": "a66906f627a23553c295eda8c47cbf02876d788a8e576738900601a41e72a069"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/30-sonnet-5.md",
+      "sha256": "23a59c554f64345eb98ca2e860dbf7c68b97239b992e90e6b5b81adb21114bfe"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/31-sonnet-5-5.md",
+      "sha256": "d5b93336cd539a6d7507491c36842774dcdef83a9615dd2545dcfc13464c99ab"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/35-haiku-4-5.md",
+      "sha256": "0c5ddb78b786528e345bf2a06be2285858064e351424425d5a75e9f995f1353a"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/40-fable-5.md",
+      "sha256": "f5f57f1c97475e38f87c837c65f40bb730ddbe5f34565bdd453139c4e381c2ab"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+      "sha256": "b1e031480dc8fb02756defef63ea161ca8a64538d43b42c82a4ff77506732f4f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/42-fable-5-1.md",
+      "sha256": "6e142dfe7f4c7c77165f18a334d12bd10957ca38760c4ba6fb374fc01c5115b1"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+      "sha256": "8db2279e1f3119f2ecb8d55f77aed31dd6866c950a3c7f8d675ca9b0528ea9fe"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md",
+      "sha256": "8c8271e0c30b1dd326091432da41dff4e1ca6b22d7d16bf851bb82be3df61ebc"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/61-skill-platform-mechanics.md",
+      "sha256": "8440ef4c55375d287e07c2aca40313fba939701e4394bb8b7370aae056189657"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/70-agent-instruction-files.md",
+      "sha256": "349e1be2bc49893682c208d91214e164d0d64f4948ce1277d26c78b0808cc694"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md",
+      "sha256": "ad6c507dbbe3423b4d52bd5c5349008beb11824d0744334218f9f1c1d108b08d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "sha256": "7a5fecbef3c320591c77470da517bcb097f08ab8bdfeadbd290264e909a47702"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+      "sha256": "d8cb52e56617107ce9c314a14e5d6e1871287bdb3cc15ea1075ab3c84d115817"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/93-claude-evaluation.md",
+      "sha256": "47a118efff1ea5ae079f5815eb428e6d0914ecc98f52ad476bb248abe7558d8c"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py",
+      "sha256": "0e0aa7cfd870929e80fe4d3928e6fe874793f7cda84f2f4e0c5abc5f24e09c71"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py",
+      "sha256": "35089c86da4a5797501ce9ccda0086149ca5844ff3f97322cd01754b52cc7516"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py",
+      "sha256": "d86002dfd4e65afc1e0760f61eeb8435bb49eac05749f69f8bc354de5a6283cb"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py",
+      "sha256": "68439d494ab49df9e6122e11995d6f1d821405915170271332e15abefeff919a"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py",
+      "sha256": "f302d14d09dab76615293d19a63ee6afc31f5a643165b3b79c7effe4146820c5"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py",
+      "sha256": "85953698538693d86934a95c3adf9eab2b1352eae272a0aa5fc4ba2fec1b6f53"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py",
+      "sha256": "e521ef4a6cba52a0a7bce6ebb06887dbbfd0068de1cec909104c2784e0574c1e"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/duplicate.json",
+      "sha256": "ef99a162b17520320cf141fe3ff0574b99d659919be45441acf627c686bc5092"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/malformed.json",
+      "sha256": "7c0bb0046634c2a3cd53224c0bf665eb88f4cdffb06ada9d3d0c8f1b34252f41"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/policy-cases.json",
+      "sha256": "1938aa417f253e80f7ba5e0df568f52de43d4ffa399465fcb53293ac84c1b21e"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-anchor.md",
+      "sha256": "fc716ad4258916ca184215a2440953997560427c5bd30cdf0516a216e08476b8"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-duplicate.md",
+      "sha256": "19740d40dd5989a9f56556c3af78a828a00f702795db76fe65b85547c2388457"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-flow.md",
+      "sha256": "4c734339be90e2903ea3352396214aeec3ced404daa94ca9d4824842ebe5b6c9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/red-unterminated.md",
+      "sha256": "e85b84ca87a47f8c18808112870bef55d8ee61c71c751ae553fa57b7e12be12b"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/green/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/green/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "1fc85208a56fc0ad09110005e401c90545a7b26eb82cd36b83fc9b9730757574"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/green/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/green/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g1-missing-codex-wrapper/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g1-missing-codex-wrapper/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g1-missing-codex-wrapper/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g10-unpreloaded-skill/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "fc092eb1c0f339145c256a0977b8a459fc33466b1d49a44f918850c59a071125"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g10-unpreloaded-skill/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "1fc85208a56fc0ad09110005e401c90545a7b26eb82cd36b83fc9b9730757574"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g10-unpreloaded-skill/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g10-unpreloaded-skill/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g2-claude-grants-write/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "22fededd0237e30dc4f9bb97eb39eb80d2c8dda4e6a82308a2a50e8a91cdf703"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g2-claude-grants-write/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "1fc85208a56fc0ad09110005e401c90545a7b26eb82cd36b83fc9b9730757574"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g2-claude-grants-write/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g2-claude-grants-write/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g3-codex-grants-mcp/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g3-codex-grants-mcp/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "f75c4245ccdfbbb9a2e3b5730f27a405b2c56b928864325cc23676cedbcd3b9a"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g3-codex-grants-mcp/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g3-codex-grants-mcp/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g4-codex-not-read-only/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g4-codex-not-read-only/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "39dacbbc8a310dff9e1c7c9034695dc40910a3d39e42b0b7f5f09755996d1367"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g4-codex-not-read-only/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g4-codex-not-read-only/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-contract-drift/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-contract-drift/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "53fbc06670542a479eca9bee99964cee991b751335ae7f5e3794fcf39296c654"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-contract-drift/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-contract-drift/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-toml-escape-drift/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "6910b8f08088c119d8d9cac9a9ae8234fecb3e508e51af7a2502665991ae0086"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-toml-escape-drift/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "57b8c8c6136652026b8357b0e0ee6f8199dc0d012666fc06f22357875da58b13"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-toml-escape-drift/assets/rule-writer/contract.md",
+      "sha256": "bec51d9724827c23db5ebf00f96959ea78e108e614bc1f9b77baeba86de56e50"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g5-toml-escape-drift/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g6-identity-line/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "70487dd49dd779a8706e8ab0c76557735ac4c3b238c29fc8887113d519c042c4"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g6-identity-line/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "af2c17a30bba2d1b1444927b7be70ca6169e391bd499a9654b2f28042fc8fd8c"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g6-identity-line/assets/rule-writer/contract.md",
+      "sha256": "a0daffd6c0c65beccf0b5bf161dc15b5cb583f51c433405b50ad5efc65875f40"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g6-identity-line/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g7-dangling-doctrine-path/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g7-dangling-doctrine-path/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "1fc85208a56fc0ad09110005e401c90545a7b26eb82cd36b83fc9b9730757574"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g7-dangling-doctrine-path/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g8-description-mismatch/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "4dd71cf4cc37b96d593d8ca229a2190f463d1dfd4522096e4722186912dce37f"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g8-description-mismatch/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "565fc2ff7d00e54d079798307faaf7aab0c7680cb498bbecc3f3881b5525d1e9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g8-description-mismatch/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g8-description-mismatch/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "9456658c7875aa98b8b3d7e1f6f58841d86b11d58b64f260698a9f4285d4cf7d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "d85082cd42da918df2085e47f1e66bdd9bb50945c89b101ddf4fd7b23de0e1ad"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/assets/rule-writer/contract.md",
+      "sha256": "7e6088b19609626e6e1743efb1c84be5873c30b2e6a42ed1ed3990ef53d81da9"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-g9-effort-max/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-unparseable-toml/assets/rule-writer/claude/alaa-rule-writer.md",
+      "sha256": "2cea7c1e211f1a607c4fac883bb5ca241b04cf1ca618a98aac9547ded32947fc"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-unparseable-toml/assets/rule-writer/codex/alaa-rule-writer.toml",
+      "sha256": "ae5978b3b8c07992e11ce2b0caef85238da72e2d768bff8616fbf6f6103c5542"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-unparseable-toml/assets/rule-writer/contract.md",
+      "sha256": "2180315efda961511f0a3d87a16ac74af0dbb0eb918869ca61e97b4ffbda5b4a"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/rule-writer/red-unparseable-toml/references/10-detail.md",
+      "sha256": "9160e781ec2eb9a84d325bf7b17cb2066ac4f4749b2866b5a2d5bb5ad2e92c1d"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "sha256": "203c85bc80958d3400a2ad4760ea1add9891c32dfa90082a9a3726d17a46afed"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml",
+      "sha256": "baede2a04f57cae9f582a73b232f409d3e43867007fddac5039a6fee3b453e66"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml",
+      "sha256": "867210ded42bc548f5f7e2e02bb102baf71dbc038f4cb9f5e9643258f5eb3888"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml",
+      "sha256": "9b1816f2deb0b08dbb5c223a8e56aebab27495c2bcb8590c30fa024c6f1ed8f3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml",
+      "sha256": "5ced3f10047cc7cb086247a1d846f01cb292e70e5c4b5ead7a868a6726121777"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml",
+      "sha256": "bccd9167ba295ac8e35805154df68aca409d8313f26753c8e61e7e069640560b"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml",
+      "sha256": "82aefcf39a91d8d47c43785c25830dd8583e1243e77cf1a8e3aa5c1a5a2d7568"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml",
+      "sha256": "422f4e7561fabbf183e69ad60c40b05973c8df518761c64f08fde71653a3dcd8"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml",
+      "sha256": "bd47e2a06417660b55b8849099dcadbd60f63e9dfcc5bf777e4d863bd1832d3e"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml",
+      "sha256": "e50376cd32a7b24c9b6ce110510d68a826ec0b384b29e4acf3e41888c68e345b"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-sol.toml",
+      "sha256": "8381dee3d127a8ef29856e8559ca03797c8b2a46c0a9d6c0a57a11fefc39c5a4"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+      "sha256": "7b055ed348753abd5b2b5c5c87d21dabd0864903db2646085289f9883d1366aa"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml",
+      "sha256": "2067c85864531b1a768802cd97ad3d3e89154b726020adde93c4baccd0710549"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml",
+      "sha256": "5b07311f27638456396f1d1e2412521f6b0ba848ea7a19721e05d7c47e47ef29"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml",
+      "sha256": "0181009372ba32c4d0897298651a4da306ff58ddfa81ea8d2ec4813e8c3d80ef"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml",
+      "sha256": "d166420fe6364e9f6d7d9b4bde879312fe7b077ef571721fa4a9f1318683d129"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml",
+      "sha256": "f09715cd0168901d5858240268b8113edb5a4148bf9983ad4d48a54b9718641c"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml",
+      "sha256": "58112aa60ca2c844bebfeca9e075ea8b36cc21bb83a120401ac82fed97c1c35f"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml",
+      "sha256": "7e6293421171420e61a1a0a60978c83cbd25e88e3de0f7238ccada64255521b4"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml",
+      "sha256": "cc46c6fa794d934c777cf82de4d949bff056777c45252fa4233559c1626f1cbb"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml",
+      "sha256": "76200c7040030d2dc147241dd9183e4eacaaa8274431d00f22146a348dfbe4f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml",
+      "sha256": "70cad343f637b57f56e004d956a769527213ab19b3142b45561a7be40ab41f10"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml",
+      "sha256": "4090be8f315c377853ebc9aa4dc5c352fc867acd498243692b3f53665a417cc1"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml",
+      "sha256": "5d3ad349a82df8ae33b420a804fc2d0e28c5674d872278ba460e7f8ef9d80867"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/openai.yaml",
+      "sha256": "e78f7a6b290a19ee7055b649aaa1cf58def2b573fe7fe8d809c524810fd38651"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+      "sha256": "752bb1a321d87f1b86d64816b3a52b70b9052eea3c6c266dca973e309c155e50"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/assets/reviewer-contract.md",
+      "sha256": "dfc528a4efad37083a6bbbcfbef32e02ad9fc498fec1c0d013caac4951542a05"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md",
+      "sha256": "571c86fdbb99e1383ec819bce6e0c84eb8d63e4e8268073c18ce8d988f93df7c"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/README-fa.md",
+      "sha256": "ae07a9dca5cb3eb8bacfa3e6388acb7a6c74f7de97b76778e21499ee04cf95fb"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+      "sha256": "c88313fbe4e1c0ab1bc02af308c944ff415faead10f518e7fa80aa32879c3833"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "sha256": "8ce39e72e61189f31c9e3f187b6873834f54d58368f0ca1de8253c3f6178eae7"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "sha256": "f8ef47c1f94d95d8d85915af05cf3ac85fe2c46f6a058fe80a85fefe6f8a1d76"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "sha256": "adba29d6f8e0238c2f5478c1f719724a4a63f2226b18718f93cdffa2abf81890"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "sha256": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "sha256": "ada2e182e240a5d377f098902a88830a32683d2db87477174e9fcae3cab8613a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "sha256": "ed9c9a9048a05a7b6fdac72042b6baefbdc83d40fdc03aa4d97e4179d82ab340"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md",
+      "sha256": "d95a44f4749468ef67d1a4dddf9b1ec1029d6279493788850757ca37a8456ba4"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/installation.md",
+      "sha256": "fee26330cdbf546137957c022003903626254422af0e06b41ad510b575312ce3"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+      "sha256": "116d917e82e4e578675f2f95217af392d576e32783ecb22048c08e88263090f7"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/resource-policy.md",
+      "sha256": "18787192c9691b3956b4e6772590091f407afcef4dcaf445d73656b1fca0bd21"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "sha256": "49e1688b40d8f607838c1c3f054e79debb5b4aa7b63b8aaf990df7edf8e2b4bd"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+      "sha256": "c230574d049f60145ff92b26579b9d71f8bcb58aa0ed620823edcb31c183b639"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "sha256": "a154afab91672912ca85ae22c64ef2fd4ba04c2a99a16f7b94e45e5ef67ee47c"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+      "sha256": "a0379947e7fb84be6215806827eb3e81ec9b970ea9c195ca19e52e47bbcf1169"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Get-AlaaCodexAgentStatus.ps1",
+      "sha256": "df1de5d19ec280b3a7396e1661c14b6e928560db34e3af618715401f9f794a7c"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh",
+      "sha256": "b13cd13fd223c7f71024d8c57c95ba4f6b3e03dbef5fd098e98c381d98f0e6f8"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Install-AlaaCodexAgents.ps1",
+      "sha256": "1bc62f02fb62e1a4a0f4bd034595f528dfaac85ec89f4ec883d58c67bcbd12c6"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Install-AlaaCodexOrchestrator.ps1",
+      "sha256": "856f94b6f2633fbd93e1c731640d5f6abc517a27f400a25864bf18cc59eaf7b7"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/install-skill.sh",
+      "sha256": "288a84b21ebecd7974b9ac1d701f18f584f9bd355361234b5f742c73902e9e1a"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1",
+      "sha256": "bf2667dbcb23b4d33fa5015e5d29d8cd2024a4057fb85ab23d7d6f8865c9f714"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py",
+      "sha256": "e397b48954194ec6448e698ad4836862ba2360cf4caceb8ecb8d957f737add34"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "sha256": "a629cd29554ba67cdd5b37759a058bc787f21582129f48c7ad55fb484d73bc5d"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/test_install_preflight.py",
+      "sha256": "37dc555af44bfceb43c6437e33d01413acd55645b408a7d1256b1ea55225a782"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "sha256": "22413a2dbfc35497b09f4087b5d82df407f640747fb539762e9b8abaa8cabb04"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "d523982c3eeeac5c6a4da3fbfc6cd9103e198060f835876983f1a53f3c967e76"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/VERSION",
+      "sha256": "3b10b6ad566eadbcacadb33c591f1ec629593d6adf47442e56e0f61996829ef7"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "controller": {
+    "model": "gpt-6-sol",
+    "effort": "low",
+    "purpose": "Fresh-session orchestration only; not a fallback for target agents"
+  },
+  "cli_version": "codex-cli 0.157.0",
+  "exit_code": 0,
+  "elapsed_seconds": 109.9,
+  "pins": {
+    "alaa-spec-analyst": {
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "definition_sha256": "2746b74d5cb3cba9242e05ca9937f75b88ce02b85496986b000ba2e432995d67"
+    },
+    "alaa-reviewer": {
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "definition_sha256": "2b2615a81ccc9a413ecf19ae4d31e7b994ab3a385d9b0ae3b606281618f16660"
+    },
+    "alaa-rule-writer": {
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "definition_sha256": "ae91dd32886ae116aedfa23805a729343c326a49550226fe0bb65660ee9cfffc"
+    }
+  },
+  "fixtures": {
+    "requirements.txt": "12f2e85ca90c9411881026c4db9264e8f84768031c49f2b560c27fb8e600a9b1",
+    "invoice.py": "8fe61d52195ff4de59a30bf63dc5ee2bc120682353d620cfa6c5dff086c7fed7"
+  },
+  "fixtures_unchanged": true,
+  "comparison_or_calibration": "unrun",
+  "verdict": "requires evidence review",
+  "served_identity": "unknown"
+}

@@ -1,0 +1,16 @@
+{
+  "verified_on": "2026-09-30",
+  "target": "gpt-6.1-sol",
+  "sources": [
+    {"url": "https://learn.chatgpt.com/docs/models", "finding": "GPT-6.1 Sol is recommended for complex coding and agentic workflows when available; Astra remains appropriate for the hardest work and Luna for repeatable tasks."},
+    {"url": "https://learn.chatgpt.com/docs/agent-configuration/subagents", "finding": "GPT-6.1 Sol is a starting point for demanding agents; custom model and effort pins override dispatch values."},
+    {"url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol", "finding": "API efforts are low, medium, high, xhigh and max; none and minimal are unsupported. Tool calling requires Responses. API effort controls do not define Codex Ultra."},
+    {"url": "https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices", "finding": "The family-wide prompting examples explicitly describe Astra behavior and require evaluation with the chosen model/workload. No new Sol-specific instruction rewrite is established."},
+    {"url": "https://developers.openai.com/api/docs/changelog#september-2026", "finding": "GPT-6.1 Sol released September 29. Standard API input/output rates match GPT-6 Sol; cached input costs less. This does not prove total task cost or Codex credit savings."}
+  ],
+  "runtime_evidence": "Current desktop tool metadata exposes gpt-6.1-sol with low, medium, high, xhigh, max and ultra. This is a configuration capability snapshot, not served identity or task-quality proof.",
+  "decision": "User selected official documentation plus bounded smoke and authorized managed installed updates; preserve existing efforts and the tiered Astra/Luna routing.",
+  "comparative_quality": "unrun",
+  "calibration": "unrun",
+  "prompting_decision": "Preserve existing behavioral instruction text. Update only active model/capability/evidence metadata."
+}

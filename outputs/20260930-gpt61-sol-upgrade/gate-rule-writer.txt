@@ -1,0 +1,1 @@
+OK: both wrappers embed the contract unchanged, hold read-only grants, and keep their pins out of the output

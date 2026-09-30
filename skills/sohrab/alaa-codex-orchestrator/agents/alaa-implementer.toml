@@ -1,6 +1,6 @@
 name = "alaa-implementer"
 description = "Routine implementation lane worker for orchestrated goals. Spawn one per independent write scope to implement a bounded slice with tests and evidence. Not for architecture review, research-only, verification-only, docs-only, or high-risk design lanes."
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 # grant-template: materialize-live-parent-mcp

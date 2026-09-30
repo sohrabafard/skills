@@ -1,0 +1,10 @@
+{
+  "smoke_setup_initial_attempt": {
+    "status": "failed",
+    "cause": "Python Windows cp1252 decoding of UTF-8 catalog; no controller or target agent was dispatched"
+  },
+  "repair": "Explicit UTF-8 subprocess decoding for version/catalog; preserve prior fixtures and use a fresh retry directory",
+  "smoke_retry": "completed; ephemeral dispatch blocked",
+  "dispatch_repair": "one persisted fresh-controller retry; all three targets created then server rejected target model",
+  "last_message_path": "relative output path failed; recovered final JSONL message and resolved helper path; no additional smoke"
+}

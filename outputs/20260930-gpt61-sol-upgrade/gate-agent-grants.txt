@@ -1,0 +1,1 @@
+OK: 23 transport-neutral templates have exact per-role grant policies

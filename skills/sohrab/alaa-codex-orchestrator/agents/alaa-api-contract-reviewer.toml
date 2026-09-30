@@ -1,7 +1,7 @@
 name = "alaa-api-contract-reviewer"
 description = "Read-only compatibility gate for public HTTP/RPC endpoints, event and message schemas, shared DTOs, SDK surfaces, and persisted serialization formats. Judges whether the transition is safe for existing consumers. Never edits."
 
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp

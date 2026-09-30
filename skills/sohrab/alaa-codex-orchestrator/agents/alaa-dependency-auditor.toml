@@ -1,7 +1,7 @@
 name = "alaa-dependency-auditor"
 description = "Read-only dependency and supply-chain audit gate. Fires when a dependency is added, upgraded, removed, or replaced, or when a lockfile drifts outside a scoped upgrade lane. Reports only; never upgrades, pins, or edits."
 
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp

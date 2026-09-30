@@ -1,0 +1,186 @@
+[
+  {
+    "agent": "alaa-accessibility-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-adversarial-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-api-contract-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-architecture-critic",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-browser-qa",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-dependency-auditor",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-documenter",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-explorer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-failure-analyst",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-implementer-sol",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-implementer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-instruction-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-migration-guardian",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-observability-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-performance-profiler",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-release-guardian",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-researcher",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-reviewer-deep",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-security-reviewer",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-spec-analyst",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-test-strategist",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  },
+  {
+    "agent": "alaa-verifier",
+    "non_model_changed_fields": [
+      ".mcp_servers.code-review",
+      ".mcp_servers.cua_repl.command",
+      ".mcp_servers.node_repl.command"
+    ]
+  }
+]

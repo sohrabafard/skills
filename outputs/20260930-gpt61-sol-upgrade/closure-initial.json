@@ -1,0 +1,67 @@
+{
+  "source_snapshot_unchanged": true,
+  "scoped_sha256": "ef61057c4d8ab519dfadb57605628afe6623f2438e7ec41f0a84fa38f8403855",
+  "head": "3aa602487ff9f347b12a9b332db37cca527ab558",
+  "checks": [
+    {
+      "name": "workflow",
+      "command": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+        "--plan",
+        "outputs/20260930-gpt61-sol-upgrade/docs/_agent_plans/20260930-120000_gpt61-sol-upgrade.md"
+      ],
+      "exit_code": 1,
+      "output": "closure-workflow.txt"
+    },
+    {
+      "name": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "closure-whitespace.txt"
+    }
+  ],
+  "machine_path_findings": [
+    "smoke-events.jsonl",
+    "smoke-persistent/smoke-events.jsonl"
+  ],
+  "tracked_changed_paths": [
+    "outputs/README.md",
+    "skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md",
+    "skills/sohrab/alaa-codex-orchestrator/VERSION",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml",
+    "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+    "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+    "skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json",
+    "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml",
+    "skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md",
+    "skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py",
+    "skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py"
+  ],
+  "unexpected_tracked_changes": [],
+  "commit_created": false,
+  "lifecycle": {
+    "IMPLEMENTED": "proven",
+    "MERGE_CANDIDATE": "not proven: activation blocked",
+    "RELEASE_CANDIDATE": "not requested",
+    "PUBLISHED": "not requested"
+  }
+}

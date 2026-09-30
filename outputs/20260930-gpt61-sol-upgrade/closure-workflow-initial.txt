@@ -1,0 +1,7 @@
+plan: outputs/20260930-gpt61-sol-upgrade/docs/_agent_plans/20260930-120000_gpt61-sol-upgrade.md
+ERROR [plan.phase-fields] Phase 1 - Source upgrade is missing phase fields: Depends on. Remediation: Add them per assets/plan-template.md so a fresh agent can own the phase without re-deriving its boundaries.
+ERROR [plan.phase-snapshot] Phase 1 - Source upgrade is complete but records no commit ID or scoped worktree snapshot. Remediation: Record an authorized commit ID, the actual HEAD and SHA-256 digest of the scoped path/content manifest, or state exactly that no files changed.
+ERROR [plan.phase-snapshot] Phase 2 - Validation and independent review is complete but records no commit ID or scoped worktree snapshot. Remediation: Record an authorized commit ID, the actual HEAD and SHA-256 digest of the scoped path/content manifest, or state exactly that no files changed.
+ERROR [plan.phase-fields] Phase 4 - Closure is missing phase fields: Owned scope, Excluded from this phase, Evidence observed. Remediation: Add them per assets/plan-template.md so a fresh agent can own the phase without re-deriving its boundaries.
+ERROR [plan.phase-snapshot] Phase 4 - Closure records neither a commit nor a scoped worktree snapshot, so its evidence has no identity. Remediation: Record an authorized 'Commit' or an observed 'Snapshot' per assets/plan-template.md; a phase that changed no files states that explicitly.
+checkpoint: outputs/20260930-gpt61-sol-upgrade/docs/agents/20260930-120000_gpt61-sol-upgrade-state.md

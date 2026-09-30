@@ -1,0 +1,36 @@
+{
+  "controller_thread": "01a0f2ea-e6e7-7850-8028-23d3f05cfaa5",
+  "source": "persisted host response_item calls and results; encrypted prompt payloads excluded",
+  "dispatches": [
+    {
+      "task_name": "spec_smoke",
+      "agent_type": "alaa-spec-analyst",
+      "call_id": "call_pWNiSLZQhdCPbbrG7OlGgFUf",
+      "model_override_present": false,
+      "effort_override_present": false,
+      "host_output": {
+        "task_name": "/root/spec_smoke"
+      }
+    },
+    {
+      "task_name": "review_smoke",
+      "agent_type": "alaa-reviewer",
+      "call_id": "call_gw30LCqI3FcOtYm1ea2KQIJ0",
+      "model_override_present": false,
+      "effort_override_present": false,
+      "host_output": {
+        "task_name": "/root/review_smoke"
+      }
+    },
+    {
+      "task_name": "rule_smoke",
+      "agent_type": "alaa-rule-writer",
+      "call_id": "call_QBAcPbwKmoBUpxiYAIC6swE8",
+      "model_override_present": false,
+      "effort_override_present": false,
+      "host_output": {
+        "task_name": "/root/rule_smoke"
+      }
+    }
+  ]
+}

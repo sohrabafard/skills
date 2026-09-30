@@ -1,0 +1,5 @@
+PACK VALID: 23 agents, skill version 4.1.0
+OK: 23 transport-neutral templates have exact per-role grant policies
+OK: 23 resolved agents match exact grants across 7 live MCP servers
+{"Status":"OK","InstalledOrUpdated":23,"AlreadyCurrent":0,"TargetDirectory":"<user-codex>/agents"}
+

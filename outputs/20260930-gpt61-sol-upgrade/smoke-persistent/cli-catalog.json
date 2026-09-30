@@ -1,0 +1,16 @@
+{
+  "exit_code": 0,
+  "target_present": false,
+  "target": null,
+  "model_slugs": [
+    "gpt-6-astra",
+    "gpt-6-sol",
+    "gpt-6-luna",
+    "gpt-reserve",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.6-luna",
+    "gpt-5.5",
+    "codex-auto-review"
+  ]
+}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.0 - 2026-09-30
+
+- Move existing Sol Codex role pins to GPT-6.1 Sol following OpenAI's current coding-agent recommendation. Preserve role instructions, effort levels, and MCP grants. Calibration remains unrun; no project-specific quality advantage is claimed.
+
 ## 4.0.0 - 2026-09-25
 
 - Require explicit installation and commit authority; activation only inspects availability. Integration applies only when requested and authorized; local-only work has no merge prompt.

@@ -1,6 +1,6 @@
 name = "alaa-researcher"
 description = "Read-only external and repository research specialist. Spawn for version-specific APIs, official documentation, standards, third-party behavior, prior decisions, or evidence-based comparisons. Never edits or makes the final decision."
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp

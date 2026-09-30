@@ -1,0 +1,203 @@
+{
+  "head": "3aa602487ff9f347b12a9b332db37cca527ab558",
+  "scope": "upgrade index plus subject evidence; excludes workflow/closure metadata and this manifest to avoid self-reference",
+  "scoped_sha256": "f3acb0ab2123211d4b36b26426602bfd19ae826ad53664334ae619acc198c6f0",
+  "files": [
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/cli-catalog.json",
+      "sha256": "443ac7ab5a3400363893e72dba028d519e2de006200eb0f197aab24d2d230673"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/curation.json",
+      "sha256": "726550bc63fa62c759670346d415800bf2b39019a008638ee2e43081a70f30c5"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-agent-contracts.txt",
+      "sha256": "5591406b720e0c5b89fb05b4f2da73751add89a08f7e04e27e59c9df169bb078"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-agent-grants.txt",
+      "sha256": "206c9d11a8a38f56a82dd1d0ffae3789198359d357f231180ef88004141db7cb"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-eval-corpus.txt",
+      "sha256": "1669b26b80dce0b3bd9cae4c31403d0692d3c1546179049291ed1c943692d42e"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-eval-self-test.txt",
+      "sha256": "1cfaebb1f7ade774b9a3da6869f044f31849e60b1816bd8d0687579b11c0e3ce"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-fleet-references.txt",
+      "sha256": "e468530f56a408ac86e24c9d6f5877adcb4bd7537f1a949abed5409fb3967b07"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-lifecycle.txt",
+      "sha256": "872ce7338af93723693f65af4baeab2598137640022a3b2b71626be46ed04c02"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-model-policy-self-test.txt",
+      "sha256": "f3723f0871a208a9830d2aac6956e710f09b2055f15c0e8435d37c407b9d0fff"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-model-policy.txt",
+      "sha256": "aaa916918faf0db7a3b976f28d16d81d157f195d1ce3b157f0d5e9318aecc6cc"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-orchestrator-pack.txt",
+      "sha256": "f9911a552ee25089366e823dbfaca958c8a7e912b2d3110f8c60d2351211afae"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-preservation.txt",
+      "sha256": "e83689aeb126111beb23fa1e753ba5326be6cd4407072ddff67a11a1a9036a32"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-renderer.txt",
+      "sha256": "31c183fffc4b20e434d50232ba952e92cb17f1c64a8d333aecd14b03cf1e2569"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-rule-writer.txt",
+      "sha256": "64adc06c54b852709c803233321986fa5ddfa402f2f647e90311363b04963a96"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-skill-index.txt",
+      "sha256": "f965cc1a2b6dac77edd105a2e8ced596acda0a62f9b760ff63791557dc5acd89"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-skill-structure.txt",
+      "sha256": "08e5e3929094848ec2d5051b915b532011b1683047fe290b8258ffc434792c3c"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gate-whitespace.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/gates.json",
+      "sha256": "801ade2fe460311e829e2f388576696863e86da87b4cecfee19c20478e43bf54"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/independent-review.json",
+      "sha256": "6b0eaef77dad18cdf50116cfdafbd718db5726b417a7ad6b7884f0a9d03cb473"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/install-preflight-drift.json",
+      "sha256": "b0144300ef4005c427e31a2a97669483c3cc20039c947b89aa053e5509a12c31"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/installation-receipt.json",
+      "sha256": "00bd072bd62abe11e2cd483477c79f1f5670d4533dd9287be48a5d76d73ba9f3"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/installation.txt",
+      "sha256": "b1d76d66732e23d9cf7f4cddec51bc79de81ade36a7a18b986fe08e09a0aaf70"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/installed-byte-proof.json",
+      "sha256": "1ab687c71141ff62cff023b5e48f07d004b1b07552bdc0f454a34655f32c65eb"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/installed-grants.txt",
+      "sha256": "07811cd4639e8da6a9dde2c2004b3540e1badefc308e3b846ab4bbe32c38b76c"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/installed-verification.json",
+      "sha256": "c942cca600c89e38a6d3cedc3ab89a29c3a6506169c8f032f3d5a951cc06f8b4"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/installed_state.py",
+      "sha256": "3bcaa267d3b110c297708f03b937de07923a182528d7daab57ab878a15a99d7c"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/preinstall.json",
+      "sha256": "238af27d05577282b3500ddbf5f398b12a92367d360781bce59cf3faf8dd4768"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/README.md",
+      "sha256": "6094e01d5d3b8c2de9f82dd8987a6601e3a048eebbe8878b8ac97979d9b7c404"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/research.json",
+      "sha256": "0d8e3e923481ae6e51564b73480e4e4f50b24bb5ca5bc0c4edc559bbb874a5b2"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/run_gates.py",
+      "sha256": "204d31e22a3a4eb44a0262ac4f487838b26233d6b5c1022db1c4b9c410d49436"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/run_smoke.py",
+      "sha256": "82a8f0f3c1395a6e0e8491cceb38f7a24100de95e7cc5c9572dc96f4c87a3c1b"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/runtime-recovery.json",
+      "sha256": "f059341b49146b3a3bb7adce9082e0dd69d96f895b507ce085224bdd759b389f"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-controller-output.txt",
+      "sha256": "b9401ef7e39e0e63cad7370e5e9f3a82b43058ef1ac457663001b9f96ee05e74"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-events.jsonl",
+      "sha256": "09179fc65092f9d0ada360f178dd0a4567645e63b19d0ee7277f9903744fa783"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-execution.json",
+      "sha256": "9158c6269b8a365fb7d5604b002934cb483a97ad4eab9412197b2bc595b42729"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/cli-catalog.json",
+      "sha256": "443ac7ab5a3400363893e72dba028d519e2de006200eb0f197aab24d2d230673"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/dispatch-evidence.json",
+      "sha256": "0618f5e040509ae0a532b44b62579f7856ae55e6a5cc092f7aa018199342229f"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/smoke-controller-output.txt",
+      "sha256": "b39c14c02984bcfc19ee0346310214dd61fe5093a5e268ec55a0d6ec58c203b5"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/smoke-events.jsonl",
+      "sha256": "df42de09f3e9d96f2358b4755b0c5b7724721afc0140c78bad48cd260a147818"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/smoke-execution.json",
+      "sha256": "b4b225a7e1a978706db6cc83a97898742160c50280e6551b8df562d0f6b3cb80"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/smoke-prompt.txt",
+      "sha256": "1f37fabfc146cf19ae603a208fdc9fadc1881b65a3fa1de48e86dd9c559ce3f2"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-persistent/smoke-stderr.txt",
+      "sha256": "9fe879948805817efd748e1249b7b55dec5b58a5e6aa886000a0ff8c3b48c2b0"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-prompt.txt",
+      "sha256": "1f37fabfc146cf19ae603a208fdc9fadc1881b65a3fa1de48e86dd9c559ce3f2"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-result.json",
+      "sha256": "ca25a02413f848ea16f982f4f98439167d292c219c61a79b3403aeaeec08a04e"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/smoke-stderr.txt",
+      "sha256": "41fa07bd5b9c043383ff549837576884e03ccdf24a7722b7fb9cbe26aebe58dd"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/source-snapshot.json",
+      "sha256": "2534edce3a5f40e9efb2510ffa2c3f8073d62b6c079ecb287b907e61dcebf01f"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/source.diff",
+      "sha256": "7d204aa51586e3bd9c344f506cca061bc0355a7d5d03f198c79d3cbf9267b1f9"
+    },
+    {
+      "path": "outputs/20260930-gpt61-sol-upgrade/verify_preservation.py",
+      "sha256": "466a7ffc95912487e0178a7f07d66bb8989212ade0a433185be668db4a9fb531"
+    },
+    {
+      "path": "outputs/README.md",
+      "sha256": "73e050afdfcda28e12ad5d445924d9f1a11c428f1a840c352f9bf61eab5f0877"
+    }
+  ]
+}

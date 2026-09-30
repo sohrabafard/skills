@@ -1,0 +1,51 @@
+{
+  "activation": "blocked",
+  "controller_exit_code": 0,
+  "actual_persistent_dispatches": 3,
+  "ephemeral_attempts": "three failed before target creation: missing controller thread",
+  "persistent_targets": [
+    {
+      "dispatch_identifier": "/root/spec_smoke",
+      "role": "alaa-spec-analyst",
+      "activation_status": "BLOCKED",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "observed_model": "unknown",
+      "observed_effort": "unknown",
+      "configuration_control_evidence": "Installed role TOML pins gpt-6.1-sol/medium. The host rejected activation; no runtime identity was exposed.",
+      "output": "Agent errored: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.\"}}",
+      "blocker": "The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account."
+    },
+    {
+      "dispatch_identifier": "/root/review_smoke",
+      "role": "alaa-reviewer",
+      "activation_status": "BLOCKED",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "observed_model": "unknown",
+      "observed_effort": "unknown",
+      "configuration_control_evidence": "Installed role TOML pins gpt-6.1-sol/high. The host rejected activation; no runtime identity was exposed.",
+      "output": "Agent errored: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.\"}}",
+      "blocker": "The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account."
+    },
+    {
+      "dispatch_identifier": "/root/rule_smoke",
+      "role": "alaa-rule-writer",
+      "activation_status": "BLOCKED",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "observed_model": "unknown",
+      "observed_effort": "unknown",
+      "configuration_control_evidence": "Installed role TOML pins gpt-6.1-sol/medium. The host rejected activation; no runtime identity was exposed.",
+      "output": "Agent errored: {\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account.\"}}",
+      "blocker": "The 'gpt-6.1-sol' model is not supported when using Codex with a ChatGPT account."
+    }
+  ],
+  "fixtures_unchanged": true,
+  "served_identity": "unknown",
+  "behavioral_output_contract": "not exercised: targets rejected before execution",
+  "calibration": "unrun",
+  "benchmark": "unrun",
+  "last_message_recovery": "Recovered final agent_message from JSONL after relative last-message path failure; helper fixed, no extra runtime retry",
+  "desktop_host_availability": "not established by CLI rejection"
+}

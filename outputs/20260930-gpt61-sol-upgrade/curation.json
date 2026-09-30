@@ -1,0 +1,28 @@
+{
+  "boundaries_scanned": [
+    "approved model choice",
+    "source preservation and source gates",
+    "inactive installed MCP overlays",
+    "setup/dispatch/server failures",
+    "final independent review"
+  ],
+  "retained_candidates": [],
+  "rejected_or_merged": [
+    {
+      "candidate": "official guidance plus smoke instead of local A/B",
+      "reason": "already owned by policy/research for this authorized upgrade"
+    },
+    {
+      "candidate": "API and Codex capability separation",
+      "reason": "already explicit in central owner"
+    },
+    {
+      "candidate": "inactive overlay and fresh CLI failure details",
+      "reason": "volatile task evidence, not durable doctrine"
+    }
+  ],
+  "notes_created": 0,
+  "notes_updated": 0,
+  "memory_publication": "not authorized; none performed",
+  "pipeline_reopen_required": false
+}

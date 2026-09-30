@@ -1,0 +1,52 @@
+{
+  "agents": [
+    {
+      "role": "alaa-spec-analyst",
+      "activation_status": "BLOCKED",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "observed_model": "unknown",
+      "observed_effort": "unknown",
+      "configuration_control_evidence": "The named role was requested without a model or effort override; activation failed before its TOML pins could be observed.",
+      "output": null,
+      "blocker": "collab spawn failed: no thread with id: 01a0f2e3-65ca-7e61-aef3-1ea25e2fa152"
+    },
+    {
+      "role": "alaa-reviewer",
+      "activation_status": "BLOCKED",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "high",
+      "observed_model": "unknown",
+      "observed_effort": "unknown",
+      "configuration_control_evidence": "The named role was requested without a model or effort override; activation failed before its TOML pins could be observed.",
+      "output": null,
+      "blocker": "collab spawn failed: no thread with id: 01a0f2e3-65ca-7e61-aef3-1ea25e2fa152"
+    },
+    {
+      "role": "alaa-rule-writer",
+      "activation_status": "BLOCKED",
+      "requested_model": "gpt-6.1-sol",
+      "requested_effort": "medium",
+      "observed_model": "unknown",
+      "observed_effort": "unknown",
+      "configuration_control_evidence": "The named role was requested without a model or effort override; activation failed before its TOML pins could be observed.",
+      "output": null,
+      "blocker": "collab spawn failed: no thread with id: 01a0f2e3-65ca-7e61-aef3-1ea25e2fa152"
+    }
+  ],
+  "dispatch_identifiers": {
+    "alaa-spec-analyst": null,
+    "alaa-reviewer": null,
+    "alaa-rule-writer": null
+  },
+  "host_resolution_evidence": "Each of the three single dispatch attempts returned the same host error. No dispatch identifier or target-model resolution evidence was returned.",
+  "skills_used": {
+    "requested_by_you": [],
+    "invoked_on_my_own": ["alaa-prompting-guide", "alaa-codex-orchestrator"]
+  },
+  "session_accounting": {
+    "model": "not observable in this runtime",
+    "tokens": "not observable in this runtime",
+    "subagents": "0 dispatched; 3 activation attempts blocked"
+  }
+}

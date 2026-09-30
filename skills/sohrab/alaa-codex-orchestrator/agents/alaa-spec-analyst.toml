@@ -1,7 +1,7 @@
 name = "alaa-spec-analyst"
 description = "Read-only specification analyst. Spawn before any implementation dispatch to convert a vague goal into a checkable acceptance contract and a proposed lane decomposition. Never edits files or designs the implementation."
 
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp

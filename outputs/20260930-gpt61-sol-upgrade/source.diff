@@ -1,0 +1,669 @@
+diff --git a/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md b/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md
+index af2e6c3f2..408771465 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md
++++ b/skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md
+@@ -1,5 +1,9 @@
+ # Changelog
+ 
++## 4.1.0 - 2026-09-30
++
++- Move existing Sol Codex role pins to GPT-6.1 Sol following OpenAI's current coding-agent recommendation. Preserve role instructions, effort levels, and MCP grants. Calibration remains unrun; no project-specific quality advantage is claimed.
++
+ ## 4.0.0 - 2026-09-25
+ 
+ - Require explicit installation and commit authority; activation only inspects availability. Integration applies only when requested and authorized; local-only work has no merge prompt.
+diff --git a/skills/sohrab/alaa-codex-orchestrator/VERSION b/skills/sohrab/alaa-codex-orchestrator/VERSION
+index fcdb2e109..ee74734aa 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/VERSION
++++ b/skills/sohrab/alaa-codex-orchestrator/VERSION
+@@ -1 +1 @@
+-4.0.0
++4.1.0
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml
+index e6f1efa97..eeabdc849 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml
+@@ -1,7 +1,7 @@
+ name = "alaa-accessibility-reviewer"
+ description = "Read-only accessibility gate for new or changed user-visible interface. Judges whether the interface is usable without a mouse and without sight, including right-to-left correctness. Reviews source and supplied rendered evidence; never fixes."
+ 
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml
+index 48298d31d..e5725ceca 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml
+@@ -1,7 +1,7 @@
+ name = "alaa-api-contract-reviewer"
+ description = "Read-only compatibility gate for public HTTP/RPC endpoints, event and message schemas, shared DTOs, SDK surfaces, and persisted serialization formats. Judges whether the transition is safe for existing consumers. Never edits."
+ 
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "high"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml
+index 758ec6ceb..9ba32aafb 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-browser-qa"
+ description = "Browser evidence and user-flow QA specialist for frontend changes and regressions. Reproduces declared scenarios, captures screenshots/console/network evidence, and reports behavior. Never edits application code or changes the configured Chromium browser without permission."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "workspace-write"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml
+index f2fe2ea48..7ee4f6c46 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml
+@@ -1,7 +1,7 @@
+ name = "alaa-dependency-auditor"
+ description = "Read-only dependency and supply-chain audit gate. Fires when a dependency is added, upgraded, removed, or replaced, or when a lockfile drifts outside a scoped upgrade lane. Reports only; never upgrades, pins, or edits."
+ 
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml
+index 71a69ac41..dfc054d17 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-failure-analyst"
+ description = "Read-only diagnostic specialist for failed, flaky, timed-out, contaminated, cross-lane, or environment-dependent verification. Determines the most likely failure class and owning lane; never edits or reruns broad suites without instruction."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "high"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
+index 7fe6d3482..fbdf50b57 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-implementer"
+ description = "Routine implementation lane worker for orchestrated goals. Spawn one per independent write scope to implement a bounded slice with tests and evidence. Not for architecture review, research-only, verification-only, docs-only, or high-risk design lanes."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "high"
+ sandbox_mode = "workspace-write"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml
+index 8c7ecfd26..afc18263c 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-migration-guardian"
+ description = "Read-only data and schema migration safety gate. Spawn for migrations, backfills, index operations, data transformations, compatibility windows, cleanup, or zero-downtime rollout concerns. Never runs or edits migrations."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "high"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml
+index 52f7e6d75..eb916a00a 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-observability-reviewer"
+ description = "Read-only production observability gate for new failure modes, background jobs, retries, distributed calls, async workflows, or operationally significant changes. Checks logs, metrics, traces, alerts, and runbook diagnosability."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml
+index 0ec28a17f..fa521f0d4 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-performance-profiler"
+ description = "Performance measurement specialist for a specific latency, throughput, CPU, allocation, query, or memory question with a declared baseline and budget. Collects artifacts and analysis; never performs speculative code optimization."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "high"
+ sandbox_mode = "workspace-write"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml
+index a6e290e2b..d6aa4bd1b 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-release-guardian"
+ description = "Read-only release and operability gate for CI/CD, Docker, deployment, environment/configuration, dependency/version, feature flag, packaging, or production-readiness changes. Never deploys, publishes, tags, or edits."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml
+index 6362ce466..fce66423b 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-researcher"
+ description = "Read-only external and repository research specialist. Spawn for version-specific APIs, official documentation, standards, third-party behavior, prior decisions, or evidence-based comparisons. Never edits or makes the final decision."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml
+index 13d0ea13a..bed430021 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml
+@@ -1,7 +1,7 @@
+ # Generated by scripts/render_agents.py; edit assets/reviewer-contract.md.
+ name = "alaa-reviewer"
+ description = "Fresh-context independent read-only reviewer for complete orchestrated changes or user-authored work. Judges correctness, regressions, security, tests, and production risks. Never edits or fixes."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "high"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml
+index 37ad79801..ad325a47f 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml
+@@ -1,7 +1,7 @@
+ name = "alaa-spec-analyst"
+ description = "Read-only specification analyst. Spawn before any implementation dispatch to convert a vague goal into a checkable acceptance contract and a proposed lane decomposition. Never edits files or designs the implementation."
+ 
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml
+index 843efb1e8..ad699eaf4 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml
++++ b/skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml
+@@ -1,6 +1,6 @@
+ name = "alaa-test-strategist"
+ description = "Read-only test strategy specialist for subtle behavior, legacy code, concurrency, migrations, failure paths, and acceptance criteria that need a rigorous test matrix before implementation. Never writes tests or production code."
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ sandbox_mode = "read-only"
+ # grant-template: materialize-live-parent-mcp
+diff --git a/skills/sohrab/alaa-codex-orchestrator/assets/manifest.json b/skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+index 79dc3bbec..1dc39d6b3 100644
+--- a/skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
++++ b/skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+@@ -1,11 +1,11 @@
+ {
+   "pack": "alaa-codex-orchestrator",
+-  "version": "4.0.0",
++  "version": "4.1.0",
+   "managed_agents": [
+     {
+       "name": "alaa-accessibility-reviewer",
+       "file": "agents/alaa-accessibility-reviewer.toml",
+-      "sha256": "7a1aae67562990c0bac34b7bf6174d16e0a8716e6e3ede260db5c6119be17088"
++      "sha256": "baede2a04f57cae9f582a73b232f409d3e43867007fddac5039a6fee3b453e66"
+     },
+     {
+       "name": "alaa-adversarial-reviewer",
+@@ -15,7 +15,7 @@
+     {
+       "name": "alaa-api-contract-reviewer",
+       "file": "agents/alaa-api-contract-reviewer.toml",
+-      "sha256": "519d7832d4df6934959a10f81465f2de4dd6d1a564dd9daf66f8c1e865886dc0"
++      "sha256": "9b1816f2deb0b08dbb5c223a8e56aebab27495c2bcb8590c30fa024c6f1ed8f3"
+     },
+     {
+       "name": "alaa-architecture-critic",
+@@ -25,12 +25,12 @@
+     {
+       "name": "alaa-browser-qa",
+       "file": "agents/alaa-browser-qa.toml",
+-      "sha256": "0eb195f26485ba079fcf192e807b9a772d7d57d2a68f0be6f1cff256bd27b2ca"
++      "sha256": "bccd9167ba295ac8e35805154df68aca409d8313f26753c8e61e7e069640560b"
+     },
+     {
+       "name": "alaa-dependency-auditor",
+       "file": "agents/alaa-dependency-auditor.toml",
+-      "sha256": "c449bbb19ad9c83946253346a85b68bb0fd6e77bff21f7e36a458a8865363f52"
++      "sha256": "82aefcf39a91d8d47c43785c25830dd8583e1243e77cf1a8e3aa5c1a5a2d7568"
+     },
+     {
+       "name": "alaa-documenter",
+@@ -45,7 +45,7 @@
+     {
+       "name": "alaa-failure-analyst",
+       "file": "agents/alaa-failure-analyst.toml",
+-      "sha256": "0ad5d22bb055736f8c116f21b36e7cdd0c5c933501c87e8700ebdc335df4e61b"
++      "sha256": "e50376cd32a7b24c9b6ce110510d68a826ec0b384b29e4acf3e41888c68e345b"
+     },
+     {
+       "name": "alaa-implementer-sol",
+@@ -55,7 +55,7 @@
+     {
+       "name": "alaa-implementer",
+       "file": "agents/alaa-implementer.toml",
+-      "sha256": "c85e785b6f5555bc4d92880e1d626120279df2d0ff6ca594839b9df31b8d3217"
++      "sha256": "7b055ed348753abd5b2b5c5c87d21dabd0864903db2646085289f9883d1366aa"
+     },
+     {
+       "name": "alaa-instruction-reviewer",
+@@ -65,27 +65,27 @@
+     {
+       "name": "alaa-migration-guardian",
+       "file": "agents/alaa-migration-guardian.toml",
+-      "sha256": "b22e63ce9e1951423589fe70a88857abf525fa3ff4ca5835fe01632041cb9ded"
++      "sha256": "5b07311f27638456396f1d1e2412521f6b0ba848ea7a19721e05d7c47e47ef29"
+     },
+     {
+       "name": "alaa-observability-reviewer",
+       "file": "agents/alaa-observability-reviewer.toml",
+-      "sha256": "c8324f5843aa14799ca60bd9eac81a5158c55dc1b6230c351a8188c6e6ff7930"
++      "sha256": "0181009372ba32c4d0897298651a4da306ff58ddfa81ea8d2ec4813e8c3d80ef"
+     },
+     {
+       "name": "alaa-performance-profiler",
+       "file": "agents/alaa-performance-profiler.toml",
+-      "sha256": "5f0ad5ad773c2762c91119fb17821ec2cf18b44ae7d5b205fe5e2b1d3354be27"
++      "sha256": "d166420fe6364e9f6d7d9b4bde879312fe7b077ef571721fa4a9f1318683d129"
+     },
+     {
+       "name": "alaa-release-guardian",
+       "file": "agents/alaa-release-guardian.toml",
+-      "sha256": "d14eab90602509e662ec72e30a5b796aa08476188b9aff2dc089702764122028"
++      "sha256": "f09715cd0168901d5858240268b8113edb5a4148bf9983ad4d48a54b9718641c"
+     },
+     {
+       "name": "alaa-researcher",
+       "file": "agents/alaa-researcher.toml",
+-      "sha256": "b8270e705a402a4575dc7d73c139ea38d37b9a27b62dae10406c667fa0cd62ee"
++      "sha256": "58112aa60ca2c844bebfeca9e075ea8b36cc21bb83a120401ac82fed97c1c35f"
+     },
+     {
+       "name": "alaa-reviewer-deep",
+@@ -95,7 +95,7 @@
+     {
+       "name": "alaa-reviewer",
+       "file": "agents/alaa-reviewer.toml",
+-      "sha256": "8bf61f9d3342c938e8676455dcc0711ef927dac94de898d25956cb7186b8c47b"
++      "sha256": "cc46c6fa794d934c777cf82de4d949bff056777c45252fa4233559c1626f1cbb"
+     },
+     {
+       "name": "alaa-security-reviewer",
+@@ -105,12 +105,12 @@
+     {
+       "name": "alaa-spec-analyst",
+       "file": "agents/alaa-spec-analyst.toml",
+-      "sha256": "06899448aad7667243699289baf965892fec8d5b8836919d5fa51324a387cf35"
++      "sha256": "70cad343f637b57f56e004d956a769527213ab19b3142b45561a7be40ab41f10"
+     },
+     {
+       "name": "alaa-test-strategist",
+       "file": "agents/alaa-test-strategist.toml",
+-      "sha256": "feb00b29dca1a8a27d88d8c7651a8d9df763e4ea4bab8ea2ad2be5a0d6945a84"
++      "sha256": "4090be8f315c377853ebc9aa4dc5c352fc867acd498243692b3f53665a417cc1"
+     },
+     {
+       "name": "alaa-verifier",
+diff --git a/skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json b/skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json
+index 570652cec..abdb47adf 100644
+--- a/skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json
++++ b/skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json
+@@ -1,21 +1,26 @@
+ {
+   "schema_version": 1,
+-  "policy_version": "1.0.0",
++  "policy_version": "1.1.0",
+   "surface": "codex",
+-  "verified_on": "2026-09-25",
++  "verified_on": "2026-09-30",
+   "sources": [
+     {
+       "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+-      "verified_on": "2026-09-25",
+-      "scope": "Codex custom-agent pin precedence and recommended starting efforts"
++      "verified_on": "2026-09-30",
++      "scope": "Codex custom-agent pin precedence, GPT-6.1 Sol recommendation, and effort guidance"
+     },
+     {
+       "url": "https://learn.chatgpt.com/docs/models",
+-      "verified_on": "2026-09-25",
+-      "scope": "Codex model availability and Max/Ultra distinction"
++      "verified_on": "2026-09-30",
++      "scope": "Codex model availability, GPT-6.1 Sol recommendation, and Max/Ultra distinction"
++    },
++    {
++      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
++      "verified_on": "2026-09-30",
++      "scope": "GPT-6.1 Sol API reasoning-effort range; not Codex host configuration"
+     }
+   ],
+-  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas; revalidate on the target host before use. API parameter ranges are separate.",
++  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability.",
+   "models": {
+     "gpt-6-astra": {
+       "supported_efforts": [
+@@ -39,6 +44,17 @@
+       ],
+       "recommended_start": "medium"
+     },
++    "gpt-6.1-sol": {
++      "supported_efforts": [
++        "low",
++        "medium",
++        "high",
++        "xhigh",
++        "max",
++        "ultra"
++      ],
++      "recommended_start": "medium"
++    },
+     "gpt-6-luna": {
+       "supported_efforts": [
+         "low",
+@@ -52,7 +68,7 @@
+   },
+   "profiles": {
+     "main": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Balanced lead for defined goals.",
+       "calibration_status": "unrun"
+@@ -64,7 +80,7 @@
+       "calibration_status": "unrun"
+     },
+     "alaa-spec-analyst": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Extract acceptance criteria and material ambiguity.",
+       "calibration_status": "unrun"
+@@ -76,19 +92,19 @@
+       "calibration_status": "unrun"
+     },
+     "alaa-researcher": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Resolve source disagreement and version-specific evidence.",
+       "calibration_status": "unrun"
+     },
+     "alaa-test-strategist": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Design discriminating tests and agent evaluations.",
+       "calibration_status": "unrun"
+     },
+     "alaa-implementer": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "high",
+       "rationale": "Implement multi-step changes within a ratified design.",
+       "calibration_status": "unrun"
+@@ -106,13 +122,13 @@
+       "calibration_status": "unrun"
+     },
+     "alaa-failure-analyst": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "high",
+       "rationale": "Diagnose failure from incomplete and interacting evidence.",
+       "calibration_status": "unrun"
+     },
+     "alaa-reviewer": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "high",
+       "rationale": "Independent standard correctness review.",
+       "calibration_status": "unrun"
+@@ -148,55 +164,55 @@
+       "calibration_status": "unrun"
+     },
+     "alaa-migration-guardian": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "high",
+       "rationale": "Analyze rollout ordering, compatibility, and recovery.",
+       "calibration_status": "unrun"
+     },
+     "alaa-api-contract-reviewer": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "high",
+       "rationale": "Trace consumer compatibility and transition windows.",
+       "calibration_status": "unrun"
+     },
+     "alaa-dependency-auditor": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Assess dependency evidence against explicit criteria.",
+       "calibration_status": "unrun"
+     },
+     "alaa-accessibility-reviewer": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Compare source and rendered evidence to accessibility criteria.",
+       "calibration_status": "unrun"
+     },
+     "alaa-browser-qa": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Navigate browser state and distinguish product from environment failure.",
+       "calibration_status": "unrun"
+     },
+     "alaa-performance-profiler": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "high",
+       "rationale": "Interpret measurements and separate bottlenecks from noise.",
+       "calibration_status": "unrun"
+     },
+     "alaa-observability-reviewer": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Assess diagnosability of declared failure modes.",
+       "calibration_status": "unrun"
+     },
+     "alaa-release-guardian": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Review packaging, configuration, and rollout evidence.",
+       "calibration_status": "unrun"
+     },
+     "alaa-rule-writer": {
+-      "model": "gpt-6-sol",
++      "model": "gpt-6.1-sol",
+       "effort": "medium",
+       "rationale": "Compress drafted instructions without changing behavior.",
+       "calibration_status": "unrun"
+diff --git a/skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json b/skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json
+index f6ac43464..03d7fff07 100644
+--- a/skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json
++++ b/skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "policy_version": "1.0.0",
++  "policy_version": "1.1.0",
+   "comparison_rule": "Change one factor only; isolate each run; do not execute external or destructive actions.",
+   "scenarios": [
+     {
+@@ -36,12 +36,12 @@
+       "id": "bounded-implementation",
+       "profile": "alaa-implementer",
+       "candidate": {
+-        "model": "gpt-6-sol",
++        "model": "gpt-6.1-sol",
+         "effort": "high"
+       },
+       "comparator": {
+         "model": "gpt-6-sol",
+-        "effort": "medium"
++        "effort": "high"
+       },
+       "repetitions": 2,
+       "status": "unrun",
+@@ -65,12 +65,12 @@
+       "id": "debugging",
+       "profile": "alaa-failure-analyst",
+       "candidate": {
+-        "model": "gpt-6-sol",
++        "model": "gpt-6.1-sol",
+         "effort": "high"
+       },
+       "comparator": {
+         "model": "gpt-6-sol",
+-        "effort": "medium"
++        "effort": "high"
+       },
+       "repetitions": 2,
+       "status": "unrun",
+@@ -96,12 +96,12 @@
+       "id": "known-defect-review",
+       "profile": "alaa-reviewer",
+       "candidate": {
+-        "model": "gpt-6-sol",
++        "model": "gpt-6.1-sol",
+         "effort": "high"
+       },
+       "comparator": {
+         "model": "gpt-6-sol",
+-        "effort": "medium"
++        "effort": "high"
+       },
+       "repetitions": 2,
+       "status": "unrun",
+@@ -153,12 +153,12 @@
+       "id": "instruction-rewrite",
+       "profile": "alaa-rule-writer",
+       "candidate": {
+-        "model": "gpt-6-sol",
++        "model": "gpt-6.1-sol",
+         "effort": "medium"
+       },
+       "comparator": {
+         "model": "gpt-6-sol",
+-        "effort": "low"
++        "effort": "medium"
+       },
+       "repetitions": 2,
+       "status": "unrun",
+diff --git a/skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml b/skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml
+index 59f9dc1b5..33e6c3cd9 100644
+--- a/skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml
++++ b/skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml
+@@ -2,7 +2,7 @@ name = "alaa-rule-writer"
+ description = "Wording-only rewriter for already-drafted text that controls another agent — a rule or prompt, a SKILL.md section, a subagent definition, or an AGENTS.md or CLAUDE.md section. Returns replacement text that is the fewest words leaving the executing agent's behavior unchanged. Never authors, decides, researches, judges correctness, or edits a file, and stops blocked rather than invent a decision."
+ sandbox_mode = "read-only"
+ # Pin owner: alaa-prompting-guide assets/codex-model-policy.json, profile alaa-rule-writer.
+-model = "gpt-6-sol"
++model = "gpt-6.1-sol"
+ model_reasoning_effort = "medium"
+ 
+ developer_instructions = """
+diff --git a/skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md b/skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md
+index e39712a7e..a06a3e5d4 100644
+--- a/skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md
++++ b/skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md
+@@ -16,11 +16,12 @@ controlled historical comparison only, read `references/10-gpt-5-6.md`.
+ 
+ ## Starting points and local routing
+ 
+-The official Codex subagent guide recommends starting Sol at `medium`, Luna at `high`, and
+-Astra at `low`; it recommends more effort for complex or security-sensitive review. Those
+-starting points are not measured results for this pack.
++The official Codex models page recommends GPT-6.1 Sol for complex coding and agentic work;
++the subagent guide recommends it for demanding agents. For GPT-6.1 Sol, start at the client
++default; the guides start Luna at `high` and Astra at `low`. The pack's `medium` Sol starting
++pin is a local hypothesis. These recommendations do not establish a measured quality advantage.
+ 
+-This pack uses Sol for most engineering, Luna for bounded evidence and procedure execution,
++This pack uses GPT-6.1 Sol for most engineering, Luna for bounded evidence and procedure execution,
+ and Astra for difficult design and independent judgment. Exact role pins, including
+ deliberate departures from the generic starting points, live only in the policy JSON.
+ All migrated pins start with `calibration_status: unrun`; only recorded comparative evidence
+@@ -47,18 +48,22 @@ can change that status. Model and effort are separate choices; use
+ 
+ API reasoning parameters, asynchronous tool calling, cache controls, Pro modes, or API
+ multi-agent features do not become Codex configuration keys by appearing in a model guide.
+-Verify each on the surface being configured. Do not transfer API `none` effort to Codex
+-when its active host exposes only reasoning efforts. Do not infer tool access from a model ID.
++Verify each on the surface being configured. The GPT-6.1 Sol API page lists `low`, `medium`,
++`high`, `xhigh`, and `max`, excluding `none` and `minimal`; the active Codex host schema also
++lists `ultra`. Do not transfer Codex `ultra` to API configuration or infer tool access from a model ID.
++Do not transfer an API `none` setting to Codex when its active host exposes only reasoning efforts.
+ 
+ ## Evidence and sources
+ 
+-Verified 25 September 2026 against the official pages below and this session's Codex host
+-tool schemas. No workload-specific benchmark superiority, cost saving, or live installed-agent
+-activation is claimed by this migration.
++GPT-6.1 Sol availability and effort facts verified 30 September 2026 against the official
++pages below and the active Codex host schema; other model facts retain their 25 September 2026
++verification. Comparative calibration remains `unrun`. No workload-specific superiority, cost
++saving, or live installed-agent activation is claimed.
+ 
+ - [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+ - [Codex models and effort](https://learn.chatgpt.com/docs/models)
+ - [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra)
+ - [GPT-6 Sol](https://developers.openai.com/api/docs/models/gpt-6-sol)
++- [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol)
+ - [GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna)
+ - [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)
+diff --git a/skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py b/skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py
+index 871ecfc65..b8f2e546d 100644
+--- a/skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py
++++ b/skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py
+@@ -17,12 +17,27 @@ def self_test() -> None:
+     profile = policy["profiles"]["alaa-rule-writer"]
+     good = {"name": "alaa-rule-writer", "model": profile["model"], "model_reasoning_effort": profile["effort"]}
+     assert not validate_agent_pin(good, policy)
++    assert policy["models"]["gpt-6.1-sol"]["supported_efforts"] == ["low", "medium", "high", "xhigh", "max", "ultra"]
++    for role, effort in (("alaa-rule-writer", "medium"), ("alaa-reviewer", "high")):
++        assert policy["profiles"][role]["model"] == "gpt-6.1-sol"
++        assert policy["profiles"][role]["effort"] == effort
++        assert not validate_agent_pin({"name": role, "model": "gpt-6.1-sol", "model_reasoning_effort": effort}, policy)
+     for key, value in (("model", "gpt-5.6-sol"), ("model_reasoning_effort", "max"), ("name", "unregistered")):
+         assert validate_agent_pin({**good, key: value}, policy), (key, value)
+-    for model, effort in (("gpt-6-luna", "ultra"), ("gpt-6-sol", "none"), ("gpt-6-astra", "max"), ("gpt-6-sol", "ultra"), ("gpt-5.6-sol", "medium")):
++    for model, effort in (("gpt-6-luna", "ultra"), ("gpt-6-sol", "none"), ("gpt-6.1-sol", "none"), ("gpt-6-astra", "max"), ("gpt-6.1-sol", "ultra"), ("gpt-5.6-sol", "medium")):
+         bad = copy.deepcopy(policy)
+         bad["profiles"]["alaa-rule-writer"].update(model=model, effort=effort)
+         assert validate_policy(bad), (model, effort)
++    old_sol = copy.deepcopy(policy)
++    old_sol["profiles"]["alaa-rule-writer"]["model"] = "gpt-6-sol"
++    assert not validate_policy(old_sol)
++    unregistered = copy.deepcopy(policy)
++    unregistered["profiles"]["alaa-rule-writer"]["model"] = "gpt-6.1-sol-preview"
++    assert any("unsupported model/effort" in finding for finding in validate_policy(unregistered))
++    impostor = copy.deepcopy(policy)
++    impostor["models"]["gpt-6.1-sol-preview"] = impostor["models"]["gpt-6.1-sol"].copy()
++    impostor["profiles"]["alaa-rule-writer"]["model"] = "gpt-6.1-sol-preview"
++    assert any("legacy pin" in finding for finding in validate_policy(impostor))
+     bad = copy.deepcopy(policy)
+     bad["legacy_exceptions"] = [{"profile": "alaa-rule-writer"}]
+     assert validate_policy(bad)
+diff --git a/skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py b/skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py
+index e04487d79..17a44ae56 100644
+--- a/skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py
++++ b/skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py
+@@ -83,7 +83,7 @@ def validate_policy(policy: dict) -> list[str]:
+             errors.append(f"{role}: unsupported model/effort pair {model}/{effort}")
+         if effort in ("max", "ultra"):
+             errors.append(f"{role}: default max/ultra pins are prohibited")
+-        if not model.startswith("gpt-6-"):
++        if not (model.startswith("gpt-6-") or model == "gpt-6.1-sol"):
+             exception = valid_exceptions.get(role, {})
+             if not model.startswith("gpt-5.6-") or exception.get("model") != model or exception.get("effort") != effort:
+                 errors.append(f"{role}: legacy pin has no matching approved exception")

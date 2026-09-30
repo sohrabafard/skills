@@ -1,0 +1,1 @@
+RENDER CHECK OK: 3 generated files

@@ -1,21 +1,26 @@
 {
   "schema_version": 1,
-  "policy_version": "1.0.0",
+  "policy_version": "1.1.0",
   "surface": "codex",
-  "verified_on": "2026-09-25",
+  "verified_on": "2026-09-30",
   "sources": [
     {
       "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
-      "verified_on": "2026-09-25",
-      "scope": "Codex custom-agent pin precedence and recommended starting efforts"
+      "verified_on": "2026-09-30",
+      "scope": "Codex custom-agent pin precedence, GPT-6.1 Sol recommendation, and effort guidance"
     },
     {
       "url": "https://learn.chatgpt.com/docs/models",
-      "verified_on": "2026-09-25",
-      "scope": "Codex model availability and Max/Ultra distinction"
+      "verified_on": "2026-09-30",
+      "scope": "Codex model availability, GPT-6.1 Sol recommendation, and Max/Ultra distinction"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "verified_on": "2026-09-30",
+      "scope": "GPT-6.1 Sol API reasoning-effort range; not Codex host configuration"
     }
   ],
-  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas; revalidate on the target host before use. API parameter ranges are separate.",
+  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability.",
   "models": {
     "gpt-6-astra": {
       "supported_efforts": [
@@ -39,6 +44,17 @@
       ],
       "recommended_start": "medium"
     },
+    "gpt-6.1-sol": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "recommended_start": "medium"
+    },
     "gpt-6-luna": {
       "supported_efforts": [
         "low",
@@ -52,7 +68,7 @@
   },
   "profiles": {
     "main": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Balanced lead for defined goals.",
       "calibration_status": "unrun"
@@ -64,7 +80,7 @@
       "calibration_status": "unrun"
     },
     "alaa-spec-analyst": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Extract acceptance criteria and material ambiguity.",
       "calibration_status": "unrun"
@@ -76,19 +92,19 @@
       "calibration_status": "unrun"
     },
     "alaa-researcher": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Resolve source disagreement and version-specific evidence.",
       "calibration_status": "unrun"
     },
     "alaa-test-strategist": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Design discriminating tests and agent evaluations.",
       "calibration_status": "unrun"
     },
     "alaa-implementer": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "high",
       "rationale": "Implement multi-step changes within a ratified design.",
       "calibration_status": "unrun"
@@ -106,13 +122,13 @@
       "calibration_status": "unrun"
     },
     "alaa-failure-analyst": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "high",
       "rationale": "Diagnose failure from incomplete and interacting evidence.",
       "calibration_status": "unrun"
     },
     "alaa-reviewer": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "high",
       "rationale": "Independent standard correctness review.",
       "calibration_status": "unrun"
@@ -148,55 +164,55 @@
       "calibration_status": "unrun"
     },
     "alaa-migration-guardian": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "high",
       "rationale": "Analyze rollout ordering, compatibility, and recovery.",
       "calibration_status": "unrun"
     },
     "alaa-api-contract-reviewer": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "high",
       "rationale": "Trace consumer compatibility and transition windows.",
       "calibration_status": "unrun"
     },
     "alaa-dependency-auditor": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Assess dependency evidence against explicit criteria.",
       "calibration_status": "unrun"
     },
     "alaa-accessibility-reviewer": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Compare source and rendered evidence to accessibility criteria.",
       "calibration_status": "unrun"
     },
     "alaa-browser-qa": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Navigate browser state and distinguish product from environment failure.",
       "calibration_status": "unrun"
     },
     "alaa-performance-profiler": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "high",
       "rationale": "Interpret measurements and separate bottlenecks from noise.",
       "calibration_status": "unrun"
     },
     "alaa-observability-reviewer": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Assess diagnosability of declared failure modes.",
       "calibration_status": "unrun"
     },
     "alaa-release-guardian": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Review packaging, configuration, and rollout evidence.",
       "calibration_status": "unrun"
     },
     "alaa-rule-writer": {
-      "model": "gpt-6-sol",
+      "model": "gpt-6.1-sol",
       "effort": "medium",
       "rationale": "Compress drafted instructions without changing behavior.",
       "calibration_status": "unrun"

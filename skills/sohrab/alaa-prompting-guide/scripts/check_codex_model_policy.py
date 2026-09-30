@@ -17,12 +17,27 @@ def self_test() -> None:
     profile = policy["profiles"]["alaa-rule-writer"]
     good = {"name": "alaa-rule-writer", "model": profile["model"], "model_reasoning_effort": profile["effort"]}
     assert not validate_agent_pin(good, policy)
+    assert policy["models"]["gpt-6.1-sol"]["supported_efforts"] == ["low", "medium", "high", "xhigh", "max", "ultra"]
+    for role, effort in (("alaa-rule-writer", "medium"), ("alaa-reviewer", "high")):
+        assert policy["profiles"][role]["model"] == "gpt-6.1-sol"
+        assert policy["profiles"][role]["effort"] == effort
+        assert not validate_agent_pin({"name": role, "model": "gpt-6.1-sol", "model_reasoning_effort": effort}, policy)
     for key, value in (("model", "gpt-5.6-sol"), ("model_reasoning_effort", "max"), ("name", "unregistered")):
         assert validate_agent_pin({**good, key: value}, policy), (key, value)
-    for model, effort in (("gpt-6-luna", "ultra"), ("gpt-6-sol", "none"), ("gpt-6-astra", "max"), ("gpt-6-sol", "ultra"), ("gpt-5.6-sol", "medium")):
+    for model, effort in (("gpt-6-luna", "ultra"), ("gpt-6-sol", "none"), ("gpt-6.1-sol", "none"), ("gpt-6-astra", "max"), ("gpt-6.1-sol", "ultra"), ("gpt-5.6-sol", "medium")):
         bad = copy.deepcopy(policy)
         bad["profiles"]["alaa-rule-writer"].update(model=model, effort=effort)
         assert validate_policy(bad), (model, effort)
+    old_sol = copy.deepcopy(policy)
+    old_sol["profiles"]["alaa-rule-writer"]["model"] = "gpt-6-sol"
+    assert not validate_policy(old_sol)
+    unregistered = copy.deepcopy(policy)
+    unregistered["profiles"]["alaa-rule-writer"]["model"] = "gpt-6.1-sol-preview"
+    assert any("unsupported model/effort" in finding for finding in validate_policy(unregistered))
+    impostor = copy.deepcopy(policy)
+    impostor["models"]["gpt-6.1-sol-preview"] = impostor["models"]["gpt-6.1-sol"].copy()
+    impostor["profiles"]["alaa-rule-writer"]["model"] = "gpt-6.1-sol-preview"
+    assert any("legacy pin" in finding for finding in validate_policy(impostor))
     bad = copy.deepcopy(policy)
     bad["legacy_exceptions"] = [{"profile": "alaa-rule-writer"}]
     assert validate_policy(bad)

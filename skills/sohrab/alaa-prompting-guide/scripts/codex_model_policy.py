@@ -83,7 +83,7 @@ def validate_policy(policy: dict) -> list[str]:
             errors.append(f"{role}: unsupported model/effort pair {model}/{effort}")
         if effort in ("max", "ultra"):
             errors.append(f"{role}: default max/ultra pins are prohibited")
-        if not model.startswith("gpt-6-"):
+        if not (model.startswith("gpt-6-") or model == "gpt-6.1-sol"):
             exception = valid_exceptions.get(role, {})
             if not model.startswith("gpt-5.6-") or exception.get("model") != model or exception.get("effort") != effort:
                 errors.append(f"{role}: legacy pin has no matching approved exception")
