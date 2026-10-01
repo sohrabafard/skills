@@ -1,6 +1,8 @@
 -- Red fixture for HL002: the PRNG is seeded from the clock, never from /dev/urandom.
 -- Requires Lua 5.3 or newer.
 local M = {}
+-- Merely mentioning an entropy device as a string is not provenance.
+local unused_entropy_path = "/dev/urandom"
 
 local seeded = false
 

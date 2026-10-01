@@ -86,6 +86,8 @@ local rejected = {
     { name = "embedded newline", token = "abcdef\ngh" },
     { name = "embedded NUL", token = "abcdef\0gh" },
     { name = "non-string sample", token = 12345 },
+    { name = "non-numeric limit", token = "abcdefgh", limit = "wrong" },
+    { name = "fractional limit", token = "abcdefgh", limit = "8.5" },
     { name = "limit above the module maximum", token = "abcdefgh", limit = "9999" },
 }
 

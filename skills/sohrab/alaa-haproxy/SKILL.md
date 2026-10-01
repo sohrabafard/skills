@@ -1,6 +1,6 @@
 ---
 name: alaa-haproxy
-description: "HAProxy configuration, tuning, troubleshooting, delivery and upgrade work: turning a routing, TLS, caching, rate-limiting, load-balancing or drain decision into HAProxy directives, choosing between supported branches, and reading the Runtime API. Use when authoring or reviewing an haproxy.cfg, when a change must be proved with haproxy -c -f, when stick tables, peers, QUIC, mTLS, compression or the Prometheus exporter are in scope, or when planning a branch upgrade. Do not use to decide caching policy, owned by /alaa-frontend-devops ($alaa-frontend-devops); for HAProxy Lua, owned by /alaa-haproxy-lua ($alaa-haproxy-lua); for Kubernetes chart authorship, owned by /alaa-k8s-helm ($alaa-k8s-helm); for pipeline YAML, owned by /alaa-gitlab-ci-cd ($alaa-gitlab-ci-cd)."
+description: "HAProxy configuration, tuning, troubleshooting, delivery and upgrade work: turning a routing, TLS, caching, rate-limiting, load-balancing or drain decision into HAProxy directives, choosing between supported branches, and reading the Runtime API. Use when authoring or reviewing an haproxy.cfg, when a change must be proved with haproxy -c -f, when stick tables, peers, QUIC, mTLS, compression or the Prometheus exporter are in scope, or when planning a branch upgrade. Do not use to decide caching policy, owned by /alaa-frontend-devops; for HAProxy Lua, owned by /alaa-haproxy-lua; for Kubernetes chart authorship, owned by /alaa-k8s-helm; for pipeline YAML, owned by /alaa-gitlab-ci-cd."
 ---
 
 # Alaa HAProxy
@@ -17,7 +17,7 @@ HAProxy source of truth for this pack.
 `http-response set-header Cache-Control` rule, the `cache` section, the `compression` settings, the
 path rewrite, the deep-link fallback, and the ACL or map that selects a backend — and it decides
 no policy: which `Cache-Control` value belongs to which response class is decided by
-`/alaa-frontend-devops` (`$alaa-frontend-devops`), `alaa-frontend-devops
+`/alaa-frontend-devops`, `alaa-frontend-devops
 references/30-serving-caching-and-public-path.md`, because that policy follows from whether the
 build gave the file a content-hashed name and the build owns that. **When a caching or routing
 task arrives here without a stated policy, ask for the policy and emit no directive rather than
@@ -27,13 +27,13 @@ Every other boundary — the owner, and the condition under which that owner dec
 `references/90-companion-boundary.md`. Three that come up in almost every task, so that silence is
 never mistaken for authority:
 
-- **HAProxy Lua is not this skill's subject.** `/alaa-haproxy-lua` (`$alaa-haproxy-lua`) owns
+- **HAProxy Lua is not this skill's subject.** `/alaa-haproxy-lua` owns
   `lua-load`, `http-request lua.<name>`, Lua converters and fetches, and Lua-backed SPOE. Route
   there the moment a task would write or debug any of them.
-- **What a timeout, retry or degradation should be** is decided by `/alaa-reliability-sla`
-  (`$alaa-reliability-sla`). This skill states which timeouts exist and how they are written.
+- **What a timeout, retry or degradation should be** is decided by `/alaa-reliability-sla`.
+  This skill states which timeouts exist and how they are written.
 - **What a change lets through when it fails** is decided by `/alaa-security-review`
-  (`$alaa-security-review`) whenever the answer to *when this dependency cannot answer, does
+  whenever the answer to *when this dependency cannot answer, does
   proceeding without it let something through that must not get through?* is yes.
 
 ## Quick start
@@ -46,7 +46,7 @@ never mistaken for authority:
    example config to start from.
 4. Run `haproxy -c -f <cfg>` on a binary of that branch. A config checked on the wrong branch has
    not been checked.
-5. Run both checkers below. `haproxy -c -f` proves the file parses; it does not prove the file is
+5. Run the applicable checkers below. `haproxy -c -f` proves the file parses; it does not prove the file is
    correct, and the two most expensive HAProxy mistakes — a `defaults` section that governs a
    proxy you did not intend, and a `peers` section that never activates — both pass it.
 
@@ -54,11 +54,21 @@ never mistaken for authority:
 
 ```
 python3 scripts/check_defaults_scope.py examples/haproxy
-python3 scripts/check_examples.py --haproxy $(command -v haproxy)
+python3 scripts/check_examples.py --haproxy <path-to-haproxy>
+# Offline container alternative (host Python and OpenSSL required):
+python3 scripts/check_examples.py --docker-image <cached-image>
+# When standalone HTTP error responses are changed:
+python3 scripts/check_http_error_bytes.py <response.http>
+# When a change depends on dynamic-backend lifecycle/reload behavior:
+python3 scripts/check_runtime_3_4.py --docker-image <cached-3.4.6-alpine-image>
+# When changing checker or runner behavior (synthetic, no Docker required):
+python3 scripts/test_runner_contracts.py
 ```
 
-Both take `--help` and `--self-test`. Exit codes are **0 clean, 1 findings, 2 could not run**; a
-missing binary or an unreadable path is 2, never 0. Full contract and the gate register:
+All take `--help`; the static/byte checkers also take `--self-test`. Checker exit codes are
+**0 clean, 1 findings, 2 could not run**; a missing binary or an unreadable path is
+2, never 0. The synthetic unittest suite returns **0 success, 1 failure/error**.
+Run commands from this package directory. Full contract and gate register:
 `references/80-gate-register.md`.
 
 ## Maintenance
@@ -70,3 +80,13 @@ missing binary or an unreadable path is 2, never 0. Full contract and the gate r
 - Add an example only when it represents a production pattern no existing example covers, and give
   it the same header every other example has: charter, minimum branch, preconditions, variables,
   failure mode. `scripts/check_examples.py` enforces that header.
+
+## Completion and authority
+
+Edit only the requested configuration/package scope. Installation, publication,
+deployment and external mutation require explicit authority. Report target version,
+build, changed files, source/static/runtime proof and skipped or failed gates.
+Stop when the requested behavior and applicable gates agree. For a failed operation,
+allow one cause-specific repair and one materially different retry; then preserve
+the evidence and report the missing prerequisite. An unavailable binary/component
+leaves its gate unrun, never passed.

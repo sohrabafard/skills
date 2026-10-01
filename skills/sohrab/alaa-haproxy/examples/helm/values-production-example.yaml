@@ -1,7 +1,7 @@
 # values-production-example.yaml
 # Charter: the same value set at production scale, with spread and autoscaling added.
 # Preconditions: everything stated in values-example.yaml applies here and is not repeated.
-#   Image tag verified 2026-07-29; re-derive with `docker run --rm haproxy:lts haproxy -v`.
+#   Image tag metadata checked 2026-10-01 in references/SOURCES.md; recheck before adoption.
 # Failure mode: `topologySpreadConstraints` with `whenUnsatisfiable: DoNotSchedule` will leave
 #   pods Pending rather than violate the spread. On a cluster with fewer zones than replicas
 #   that means an autoscale-up that never lands, and the HPA reports the desired count as met
@@ -11,7 +11,7 @@
 
 image:
   repository: haproxy
-  tag: "3.4.1"
+  tag: "3.4.6"
   pullPolicy: IfNotPresent
 
 replicaCount: 3

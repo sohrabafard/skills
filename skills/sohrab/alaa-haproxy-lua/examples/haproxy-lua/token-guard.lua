@@ -8,7 +8,7 @@
 --
 -- The converter returns the input unchanged when the token is well formed and
 -- calls error(message, 0) otherwise. An error makes the HAProxy sample fail, so
--- the target variable stays unset and the configuration can reject the request.
+-- an initially unset target variable stays unset and the configuration can reject the request.
 -- Returning nil instead would produce a boolean-false sample that renders as 0
 -- and passes every "-m found" guard.
 
@@ -19,7 +19,7 @@ local M = {}
 local string_byte = string.byte
 local string_format = string.format
 
--- Byte allowlist precomputed at load time: lowercase Crockford-style tokens use
+-- Byte allowlist precomputed at load time: this illustrative opaque token alphabet uses
 -- 0-9 and a-z. Building this table per request would allocate on every call.
 local ALLOWED_BYTE = {}
 for code = 48, 57 do ALLOWED_BYTE[code] = true end -- 0-9
@@ -36,8 +36,8 @@ function M.validate(token, max_length)
         error("token-guard: sample is not a string", 0)
     end
 
-    local limit = tonumber(max_length) or MAX_LENGTH
-    if limit < MIN_LENGTH or limit > MAX_LENGTH then
+    local limit = max_length == nil and MAX_LENGTH or tonumber(max_length)
+    if limit == nil or limit ~= limit or limit % 1 ~= 0 or limit < MIN_LENGTH or limit > MAX_LENGTH then
         error(
             string_format(
                 "token-guard: configured max length %s is outside [%d,%d]",

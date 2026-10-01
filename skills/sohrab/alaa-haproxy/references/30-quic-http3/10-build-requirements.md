@@ -52,8 +52,9 @@ therefore assert the absence of that token, not merely the presence of QUIC; the
 `haproxy -vv` reports the build options and the TLS library. When QUIC is absent, there are
 exactly three correct outcomes and "ship it and see" is not among them:
 
-1. **Change the binary.** Use an image built against AWS-LC or quictls. This is the answer for a
-   new deployment, because it is the only one that gets 0-RTT.
+1. **Change the binary.** Select a build and TLS stack providing the required QUIC APIs.
+   Modern stock OpenSSL is version-dependent; AWS-LC/quictls are not the only
+   possible answer. Verify backend and 0-RTT requirements individually.
 2. **Use `limited-quic` only with a compiled compatibility layer**
    (`+QUIC +QUIC_OPENSSL_COMPAT`). It cannot add missing build features. Accept
    losing 0-RTT and verify frontend parsing on that binary.

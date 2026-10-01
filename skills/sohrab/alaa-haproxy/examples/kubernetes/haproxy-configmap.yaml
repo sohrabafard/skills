@@ -30,7 +30,6 @@ data:
     defaults k8s_http
       log stdout format raw local0 info
       mode http
-      option httplog
       option dontlognull
       timeout connect 5s
       timeout client 30s
@@ -43,6 +42,7 @@ data:
 
     # Traffic.
     frontend fe_public from k8s_http
+      option httplog
       bind :8080
       http-request del-header X-Request-Id
       http-request set-header X-Request-Id %[unique-id]
@@ -71,7 +71,7 @@ data:
       server app1 app.default.svc.cluster.local:8080 check resolvers dns init-addr none maxconn 200 maxqueue 100
 
     resolvers dns
-      nameserver kube-dns 10.96.0.10:53
+      nameserver kube-dns "${HAPROXY_DNS-10.96.0.10:53}"
       resolve_retries 3
       timeout resolve 1s
       timeout retry 1s

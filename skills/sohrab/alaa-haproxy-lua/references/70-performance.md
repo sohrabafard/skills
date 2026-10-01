@@ -7,12 +7,12 @@ The honest position first: **Lua should be the exception in an HAProxy configura
 Use the native mechanism, and delete the Lua, when any of these is observable:
 
 - **A native sample fetch or converter already produces the value.** `uuid([4|7])`, `rand([range])`, `digest`, `hmac`, `base64`, `url_dec`, `regsub`, `field`, `word`, and the header and URI fetches cover most of what edge Lua gets written for. Check the configuration manual for the running branch before writing a handler.
-- **The logic is a lookup keyed by a string.** A map file with `map_str`, `map_beg`, `map_dom`, or `map_reg` is a hash lookup in C, is reloadable through the runtime API without restarting, and is auditable by an operator who does not read Lua.
+- **The logic is a lookup keyed by a string.** A map file with `map_str`, `map_beg`, `map_dom`, or `map_reg` uses the selected native matching method (not all are hash lookups), is reloadable through the runtime API without restarting, and is auditable by an operator who does not read Lua.
 - **The logic is a boolean decision on request attributes.** An ACL expresses it, and an ACL is visible in the configuration where a reviewer will look for it.
 - **The logic is arithmetic or counting across requests.** A stick table does it in C with shared state, and peers replicate it across nodes.
-- **The work needs an external service.** A Lua `Socket` or `HTTPClient` call in a request path adds an unbounded dependency to every request; an SPOE agent or a backend keeps it out of the Lua state. Route the reliability shape of that dependency to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+- **The work needs an external service.** A Lua `Socket` or `HTTPClient` call in a request path adds a dependency requiring explicit bounds to every request; an SPOE agent or a backend keeps it out of the Lua state. Route the reliability shape of that dependency to `/alaa-reliability-sla`.
 
-Lua is the right tool when the transformation is stateful across several fields of one request, when it needs a real parser, when it produces a response body, or when the alternative is a chain of native converters nobody can read. Directive selection for the native mechanisms is owned by `/alaa-haproxy` (`$alaa-haproxy`).
+Lua is the right tool when the transformation is stateful across several fields of one request, when it needs a real parser, when it produces a response body, or when the alternative is a chain of native converters nobody can read. Directive selection for the native mechanisms is owned by `/alaa-haproxy`.
 
 ## What a converter costs
 
@@ -36,13 +36,13 @@ Rules that remove most per-request allocation:
 
 ## What to precompute at load time
 
-Anything that does not depend on the request: alphabets and byte allowlists, parsed load-time arguments, compiled patterns, constant strings, and localised globals. Load time is the one place where cost is paid once and blocking is permitted, so spend it freely there.
+Anything that does not depend on the request: alphabets and byte allowlists, parsed load-time arguments, compiled patterns, constant strings, and localised globals. Load time is the one place where cost is paid once and blocking is permitted, but bound it to meet startup/reload budgets.
 
 Under `lua-load-per-thread`, remember the multiplier: a precomputed table costs its size times `nbthread`, and `tune.lua.maxmem` bounds Lua memory per process.
 
 ## Pattern matching on attacker-controlled input
 
-Lua patterns are not regular expressions and have no backtracking engine, so they do not exhibit catastrophic exponential backtracking. They can still be driven quadratic by nested `%s*`-style repetitions over a long subject, and every `gsub` allocates a result string.
+Lua patterns have their own matching semantics, including backtracking. Repeated ambiguous repetitions and unanchored searches can be expensive; do not assume linear complexity. Bound inputs and exercise adversarial near-matches. `gsub` may allocate a result string.
 
 The rule that covers both: **bound the length before matching.** Reject anything longer than the maximum you accept, then match. This is a security rule as much as a performance one; `references/80-security.md` states its threat form.
 
@@ -54,4 +54,4 @@ Three observations to take before changing anything, in this order:
 2. The stats page or Prometheus exporter under representative load, before and after — request rate and response time, which is where a Lua stall shows up as latency on requests that do not touch Lua at all.
 3. `tune.lua.burst-timeout` aborts in the log. One abort is a design fact, not a tuning parameter: it says the handler is doing more work than a request path allows.
 
-Raising a `tune.lua.*` timeout to stop aborts hides the symptom and leaves the stall. Reduce the work, or move it out of Lua.
+First isolate excessive work, GC pressure, blocking native calls and scheduler contention. Optimize or relocate work; tune only against measured load and retain a finite bound.

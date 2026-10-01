@@ -2,10 +2,10 @@
 
 ## The branch table
 
-Branch table refreshed on 2026-09-29 from `https://docs.haproxy.org/` (branch labels) and `https://www.haproxy.org/`
+Branch table refreshed on 2026-10-01 from `https://docs.haproxy.org/` (branch labels) and `https://www.haproxy.org/`
 (latest patch and end-of-life dates). Re-derive both with the commands in `SOURCES.md`.
 
-| Branch | Label | Latest patch, read 2026-09-29 | End of life |
+| Branch | Label | Latest patch, read 2026-10-01 | End of life |
 |---|---|---|---|
 | 3.5 | DEV | not for production | — |
 | **3.4** | **LTS** | **3.4.6, released 2026-09-28** (branch opened 2026-06-03) | 2031-Q2 |
@@ -43,84 +43,20 @@ while **`ktls` is still experimental on 3.4** and removing the gate there is a f
 fact is discoverable from the release notes; both come from the binary. `15-persistent-stats-3.3.cfg`
 puts the gate behind `.if !version_atleast(3.4)` for this reason and `17-ktls-3.3.cfg` does not.
 
-## Confirming a directive exists before using it
+## Directive and migration routes
 
-A directive that exists in one branch may not exist in the branch that will run the config, and
-the config file gives no hint either way. Two checks, in order:
-
-1. `haproxy -vv` on the binary that will run it. It prints a `Feature list` of `+NAME`/`-NAME`
-   tokens - `+QUIC`, `+KTLS`, `+PROMEX`, `+ZLIB`, `-LUA` and so on - and the TLS library it was
-   built against. That list, not a document, is what says whether this build has QUIC, kTLS, Lua,
-   tracing or the Prometheus exporter. `haproxy -v` alone also prints the branch's own support
-   status, for example "long-term supported branch - will stop receiving fixes around Q2 2031",
-   which is the fastest single check that a binary is on a branch worth deploying.
-2. `haproxy -c -f <cfg>` on that same binary. This answers "does this directive exist in this
-   branch, spelled this way, in this section". An unknown keyword is a fatal error naming the
-   line and the section, so the check is conclusive.
-
-**When the directive is absent**, the replacement is one of three things and never "leave it out
-and hope": use the documented predecessor named in the branch manual for the branch you run; put
-the whole block behind `.if version_atleast(<branch>)` so a mixed estate loads what it can (see
-`20-core-config-and-timeouts.md`); or upgrade the binary. Choosing silently to omit the directive
-is what turns a missing security control into a config that starts.
-
-On 3.3 and later, `haproxy -vq`, `haproxy -vqs` and `haproxy -vqb` print the version, the status
-and the branch as bare strings, which is what a script should parse instead of the `-v` banner.
-
-## 3.2 to 3.3: deprecations and breaking changes
-
-Confirmed 2026-07-29 against `https://www.haproxy.com/blog/announcing-haproxy-3-3`.
-
-Breaking - these fail startup or change behaviour after an upgrade:
-
-- The minimum Linux kernel rises to **4.17**.
-- The `program` section is **removed** (deprecated in 3.1).
-- Duplicate names across `frontend`, `backend`, `listen`, `defaults` and `log-forward` are now
-  errors, as are duplicate `server` names within a backend. This makes naming every `defaults`
-  section cheap: a collision is caught at startup rather than resolved silently.
-- `http-send-name-header` may no longer overwrite `connection`, `content-length`, `host` or
-  `transfer-encoding`.
-- Multiple match types after `-m` in an ACL are no longer allowed.
-- Email alerts now require the Lua implementation to be enabled. Lua work in HAProxy is owned by
-  `/alaa-haproxy-lua`.
-- `no-quic` is renamed `tune.quic.listen`.
-- **The default load-balancing algorithm becomes `random`** when `balance` is absent. Every
-  backend in this skill's examples states `balance` explicitly for this reason.
-- **`mode http` backends default to `option abortonclose`**, which changes what happens to an
-  in-flight request when the client disconnects.
-
-Deprecated - these warn now and will be removed:
-
-- the `master-worker` global directive, replaced by the `-W` or `-Ws` command-line argument
-- `tune.quic.frontend.*`, replaced by `tune.quic.fe.*`
-- `dispatch` and `option transparent`
-
-## 3.3 to 3.4
-
-Confirmed 2026-07-29 against `https://www.haproxy.com/blog/announcing-haproxy-3-4`.
-
-Breaking: the stats page no longer shows the HAProxy version; re-enable with `stats show-version`
-if a tool parses it.
-
-Deprecated: `compression-direction`, and OpenTracing, which is removed in 3.5. The replacement for
-OpenTracing is the native OpenTelemetry integration added in 3.4; whether tracing is required at
-all is decided by `/alaa-observability-soc`.
-
-Added, in case a task needs one of them: backends that can be added and removed at runtime without
-a reload; QMux, experimental QUIC over TCP for networks that block UDP; JWE decryption and AES-CBC
-at the proxy; ACME DNS-PERSIST-01, External Account Binding and IP addresses in SANs; extended
-HTTP/1 glitch detection; `http-request set-timeout` extended to connect, queue and tarpit;
-reusable health-check sections; `tune.bufsize.large` and `tune.bufsize.small`; `cpu-affinity` and
-`threads-per-core`.
+When checking build presence or directive syntax, read [Build and directive proof](10-version-and-branch/10-build-and-directive-proof.md) for feature inspection, parser checks and absent-directive alternatives.
+When migrating from 3.2, read [3.2 to 3.3](10-version-and-branch/20-migration-3.2-to-3.3.md) for defaults, removals and deprecations.
+When migrating from 3.3, read [3.3 to 3.4](10-version-and-branch/30-migration-3.3-to-3.4.md) for introductions, replacements and patch qualifications.
 
 ## Upgrading
 
 The upgrade is a config change and a binary change, and the config change comes first:
 
-1. Run `haproxy -c -f <cfg>` **on the new binary** before the new binary runs anything. Every
-   breaking change above surfaces here.
-2. Fix what it reports. A warning about a deprecated directive is a fix due before the branch
-   after next, not a fix due today; an alert is due now.
+1. Run `haproxy -c -f <cfg>` **on the new binary** before the new binary runs anything. Startup compatibility failures surface here; runtime/default changes require
+   focused behavior checks. Compare feature lists and effective defaults as well.
+2. Fix what it reports. Unresolved warnings block the gate under `80-gate-register.md`; a warning
+   is not exempt merely because it says deprecated. Alerts block startup.
 3. `scripts/check_examples.py --haproxy <path-to-new-binary>` if the estate copied from these
    examples, so the same check runs over every config at once.
 4. Roll the binary. Rollback is the previous image tag; the config must remain loadable by both

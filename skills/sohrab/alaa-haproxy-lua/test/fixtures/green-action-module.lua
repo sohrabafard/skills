@@ -1,8 +1,7 @@
 -- Green fixture: the action shape this fleet's gateway actually uses. It registers
 -- an action and no converter, drives a subrequest over the yieldable Socket class,
 -- uses the idiomatic "return nil, err" pair in its internal helpers, and wraps a
--- fallible call in pcall. None of that is a finding, because HAProxy reads no return
--- value back from an action. A checker that reports HL004 or HL009 here is the
+-- fallible call in pcall. None of that is a finding, because helpers do not produce samples. Actions may return act.* codes. A checker that reports HL004 or HL009 here is the
 -- false-positive class this fixture exists to hold shut.
 -- Requires Lua 5.3 or newer.
 local M = {}
@@ -56,7 +55,8 @@ function M.enforce(txn)
         return txn.sf:path()
     end)
     local path = "/"
-    if ok and type(fetched) == "string" then
+    if ok and type(fetched) == "string" and #fetched <= 128
+        and fetched:match("^/[a-z0-9/_-]*$") then
         path = fetched
     end
 

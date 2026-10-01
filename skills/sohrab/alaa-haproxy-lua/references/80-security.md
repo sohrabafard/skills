@@ -2,17 +2,17 @@
 
 Lua runs inside the HAProxy process, with HAProxy's privileges, on the first hop that touches untrusted bytes. Everything a client sends can reach a Lua function, and anything that function writes is trusted by everything behind it.
 
-Security **review triggers, threat classes, and the fail-closed doctrine** are owned by `/alaa-security-review` (`$alaa-security-review`); apply that skill to decide whether a change needs review and what "fail closed" requires. **Header names, field names, wire formats, and error codes** are owned by `/alaa-services-contract` (`$alaa-services-contract`); this file names none. **Whether a header arriving at the gateway may be trusted at all** is owned by `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`). This file states only what is specific to Lua inside HAProxy.
+Security **review triggers, threat classes, and the fail-closed doctrine** are owned by `/alaa-security-review`; apply that skill to decide whether a change needs review and what "fail closed" requires. **Header names, field names, wire formats, and error codes** are owned by `/alaa-services-contract`; this file names none. **Whether a header arriving at the gateway may be trusted at all** is owned by `/alaa-trust-gateway-auth`. This file states only what is specific to Lua inside HAProxy.
 
 ## The trust rule
 
-**Every value that reached your handler from the network is untrusted, including the ones that look structural.** Headers, the path, the query string, cookies, the body, the TLS SNI value, and the PROXY protocol fields are all client-controlled unless a preceding rule proved otherwise. A value that a previous hop set is trusted only to the extent that the hop was authenticated and the header could not be spoofed past it, which is the question `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) answers.
+**Every value that reached your handler from the network is untrusted, including the ones that look structural.** Headers, the path, the query string, cookies, the body, the TLS SNI value, and the PROXY protocol fields are all client-controlled unless a preceding rule proved otherwise. A value that a previous hop set is trusted only to the extent that the hop was authenticated and the header could not be spoofed past it, which is the question `/alaa-trust-gateway-auth` answers.
 
 **Validate before use, and state the positive replacement for every rejection.** A validation with no defined outcome is not a validation. For each field, decide and write down three things before the code: the accepted shape, what happens on rejection, and what the request looks like afterwards.
 
 | Rejection outcome | When it applies | Mechanism |
 |---|---|---|
-| deny the request | the value gates access or identifies a caller | `error(message, 0)` in Lua, `deny unless { var(…) -m found }` in the configuration |
+| deny the request | the value gates access or identifies a caller | converter/fetch rejection: `references/30-failure-visibility.md`; action/service rejection: `references/25-actions-services-and-subrequests.md` |
 | strip the value and continue | the value is advisory and the backend behaves correctly without it | do not set the variable, and delete any inbound copy of the field |
 | substitute a defined sentinel | a downstream consumer needs to distinguish absent from invalid | return a string the contract defines; never `nil`, never the empty string |
 
@@ -33,9 +33,9 @@ A Lua handler's return value flows into `set-header`, `set-var`, `set-path`, `se
 
 ## Secrets
 
-**Never place a secret in a Lua global, a module-level local, or any message passed to `error` or `core.log`.**
+**Keep secrets out of globals, exported module tables, HAProxy variables and logs.** A private upvalue can hold a required credential loaded from an authorized source; it is encapsulation, not isolation from other trusted Lua code in the process.
 
-- Under `lua-load` a module-level value is visible to every other Lua file loaded into the same shared state, including files added later by someone else.
+- Globals share the Lua state. Lexical locals are not automatically globals, but debug introspection and native extensions defeat treating closures as a security boundary.
 - Lua error messages reach the operator log at ALERT, and the traceback HAProxy appends names the file and line even when `error(message, 0)` is used.
 - Anything logged is retained by the log pipeline, which is a different trust domain than the proxy.
 
@@ -45,18 +45,18 @@ Read secrets at init time from a source outside the repository, keep them in a s
 
 `core.tcp()` and `core.httpclient()` let an edge process open outbound connections. That changes the process from a thing that receives traffic into a thing that initiates it, with these consequences:
 
-- **A request-path call adds an unbounded dependency to every request it runs on.** The edge is the layer with the least tolerance for a slow dependency.
+- **A request-path call adds latency and availability dependency. Bound it with operation timeouts, an overall deadline and response limits.** The edge is the layer with the least tolerance for a slow dependency.
 - **Server-side request forgery becomes reachable** the moment any part of the destination is derived from client input. Never build a destination address, host, port, or path from a request value; select from a fixed set of destinations that exist in the code.
-- **The outbound path must be constrained where it is enforceable**, which is the network policy, not the Lua. Route that to `/alaa-haproxy` (`$alaa-haproxy`) for the configuration side.
+- **The outbound path must be constrained where it is enforceable**, which is the network policy, not the Lua. Route that to `/alaa-haproxy` for the configuration side.
 
-Prefer a task context over a request context for anything that must talk to another service: `core.register_task` runs concurrently with traffic and can sleep, so a slow dependency costs a stale cached value instead of a stalled request.
+Use a task when the owner contract permits cached/stale data, with a freshness bound and explicit behavior on expiry: `core.register_task` runs concurrently with traffic and can sleep, so a slow dependency costs a stale cached value instead of a stalled request.
 
 ## Resource exhaustion
 
 Lua is inside the proxy's own memory and scheduling budget, so a handler that consumes them is a denial-of-service vector against everything the proxy serves.
 
 - **Never loop over an attacker-controlled length without a bound you enforced.**
-- **Never allocate proportionally to an attacker-controlled size** — no `string.rep`, no table built one entry per input byte, no `gsub` over an unbounded subject.
+- **Never allocate proportionally to an unbounded attacker-controlled size** — no `string.rep`, no table built one entry per input byte, no `gsub` over an unbounded subject.
 - **Never recurse on attacker-controlled structure.** Lua's stack overflow becomes an error inside the request path, and the error path is also attacker-triggerable.
 - **Set `tune.lua.maxmem`.** The manual's stated reason is that a limit ensures "a bug in a script will not result in the system running out of memory". The default is unlimited.
 - **Treat each raised error as an attacker-controllable log line.** HAProxy logs a Lua runtime error at ALERT, once per occurrence: verified on HAProxy 2.8.16 on 26 July 2026, two malformed requests produced exactly two ALERT lines. A handler that raises on every malformed request lets a client drive log volume, so keep the message short and constant-shaped and rate-limit the source in the configuration rather than suppressing the error.
@@ -73,4 +73,4 @@ Every line must be answerable with evidence, not intent.
 6. Does the module open any outbound connection, and is any part of the destination derived from the request?
 7. Does the module mutate load-balancer state — server weight, drain, maintenance, map, or ACL contents?
 
-Answer 6 or 7 affirmatively and the change is a trust-boundary change: apply `/alaa-security-review` (`$alaa-security-review`) before it ships.
+Answer 6 or 7 affirmatively and the change is a trust-boundary change: apply `/alaa-security-review` before it ships.

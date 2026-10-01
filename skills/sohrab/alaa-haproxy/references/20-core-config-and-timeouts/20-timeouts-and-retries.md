@@ -24,10 +24,13 @@ each one bounds, and how the directive is written.
 
 ## Retries and redispatch
 
-`retries N` alone re-sends the request **to the same server**. `option redispatch` is what makes a
-retry pick a different server. A config with `retries 3` and no `option redispatch` sends all
-three attempts into the same failure and returns 503 with three times the latency.
+`retries N` defaults to retrying failed new connection attempts. `retry-on`
+extends the triggering failures and can replay an HTTP request; it requires the
+workload's replay/idempotency decision from `/alaa-reliability-sla`.
+`option redispatch` allows breaking persistence to select another usable server;
+without an argument, this normally applies on the last retry, not every attempt.
+Health and available-server state also affect selection. Do not promise that all
+retries use the same failed server or that a retry is a safe request replay.
 
-Every backend in this skill's examples carries both. A retry is only safe on an idempotent
-request; whether the request is idempotent, and whether retrying is the correct response at all,
-is decided by `/alaa-reliability-sla`.
+This package's examples pair retries with redispatch as a reviewable engineering
+pattern, enforced by HP-EX-009. That is not an upstream parsing restriction.

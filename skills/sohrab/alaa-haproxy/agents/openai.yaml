@@ -1,7 +1,7 @@
 interface:
   display_name: "Alaa HAProxy"
-  short_description: "HAProxy config, ops, and observability"
-  default_prompt: "Use $alaa-haproxy to follow its workflow for HAProxy config, production operations, and upgrade guidance."
+  short_description: "HAProxy config, build gates, and upgrades"
+  default_prompt: "Use $alaa-haproxy to follow its workflow for HAProxy config, production operations, build verification, and HAProxy 3.4.6 compatibility guidance."
 
 policy:
   allow_implicit_invocation: true

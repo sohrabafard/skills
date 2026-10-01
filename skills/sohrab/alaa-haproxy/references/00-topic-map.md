@@ -7,11 +7,14 @@ to start from. Every rule in this skill is stated in exactly one of these files.
 
 | Open this | When the task is |
 |---|---|
+| `05-coverage-and-gaps.md` | auditing practical topic coverage, bounded gaps or ownership |
+| `15-capabilities-3.4.md` | deciding activation, prerequisites, defaults and proof for a 3.4 feature or patch change |
+| `65-dynamic-backends.md` | creating, publishing, routing to, draining, deleting or recovering dynamic backends |
 | `10-version-and-branch.md` | choosing a branch, reading `haproxy -vv`, planning an upgrade, or checking whether a directive exists in the branch that will run the config |
 | `20-core-config-and-timeouts/10-defaults-association.md` | naming and associating `defaults` sections with frontends, backends and listeners |
 | `20-core-config-and-timeouts/20-timeouts-and-retries.md` | choosing timeouts, retry counts or redispatch behavior |
 | `20-core-config-and-timeouts/30-connection-capacity.md` | connection ceilings, queueing or backend connection reuse |
-| `20-core-config-and-timeouts/40-maps-and-preprocessor.md` | choosing map files instead of ACL chains, or using environment variables and preprocessing |
+| `20-core-config-and-timeouts/40-maps-and-preprocessor.md` | choosing native ACL/fetch/converter samples, header/URI handling, maps, DNS discovery, environment variables or preprocessing |
 | `20-core-config-and-timeouts/50-symptom-diagnosis.md` | diagnosing bursts of 502/503, tail latency, file descriptor exhaustion or backend flapping |
 | `25-tls-and-mtls.md` | certificates, `crt-store`, `ssl-f-use`, TLS version and ticket policy, SNI, client certificates, backend TLS, or ACME |
 | `30-quic-http3.md` | Before any QUIC configuration, read its build-requirements guide; then follow the frontend, backend, or tuning route for the mode being changed, or the build guide when `haproxy -vv` reports no QUIC |
@@ -25,10 +28,14 @@ to start from. Every rule in this skill is stated in exactly one of these files.
 
 ## Executable checks
 
-Run both before shipping a config change. Full contract in `80-gate-register.md`.
+Run the two config checks before shipping a config change; run scenario checks
+when their artifact or behavior changes. Full contract in `80-gate-register.md`.
 
 - `scripts/check_defaults_scope.py` — enforces the `defaults` association rule.
 - `scripts/check_examples.py` — parses every shipped example and checks its in-file contract.
+- `scripts/check_http_error_bytes.py` — checks raw standalone response body lengths.
+- `scripts/check_runtime_3_4.py` — probes isolated dynamic-backend routing, removal and reload.
+- `scripts/test_runner_contracts.py` — synthetic regressions for runner isolation, cleanup and result classification.
 
 ## Example index
 
@@ -57,6 +64,7 @@ failure mode in its own header. The `-3.3` suffix means **3.3 or later**, not 3.
 | `18-tiered-edge-gateway.cfg` | outer load balancer to gateway, with header hygiene | 3.2 |
 | `19-tls-bridge-mtls-backend.cfg` | TLS bridge with a client certificate towards the backend | 3.2 |
 | `20-static-asset-cache-and-rewrite.cfg` | caching, compression and rewrites as directives | 3.2 |
+| `21-request-budgets-healthcheck-3.4.cfg` | per-request budgets and reusable application check | 3.4 |
 
 Kubernetes bundle: `examples/kubernetes/` — configmap, deployment, service, networkpolicy, pdb,
 hpa, servicemonitor. The seven files share three port numbers and are only correct together.
@@ -79,3 +87,4 @@ Helm value patterns: `examples/helm/values-example.yaml` and `values-production-
 | dashboards that must survive a reload | `15-persistent-stats-3.3.cfg` |
 | TLS to virtual-hosted origins | `16-server-tls-sni-auto-3.3.cfg` |
 | moving TLS work into the kernel | `17-ktls-3.3.cfg` |
+| reusable application checks and per-request connection/queue budgets | `21-request-budgets-healthcheck-3.4.cfg` |

@@ -5,8 +5,8 @@ Detects the defect classes that survive code review but change behaviour at the
 edge: CPU-time used as a clock or as entropy, failure signalled by returning nil
 from a handler whose return value HAProxy reads, error messages that carry an
 absolute source path, Lua 5.3-only syntax with no recorded minimum version,
-unguarded load-time access to the HAProxy `core` object, and stdlib calls
-HAProxy forbids at runtime.
+unguarded load-time access to the HAProxy `core` object, and potential blocking stdlib calls in registered runtime handlers. These are
+package policy checks, not a Lua parser, sandbox or complete call-graph analysis.
 
 The checker is lexical: it strips Lua comments and string literals, then tracks
 block nesting so that a rule can ask whether a token sits inside a function body,
@@ -21,7 +21,7 @@ import re
 import sys
 from pathlib import Path
 
-VERSION = "2.0.0"
+VERSION = "3.0.0"
 
 EXIT_CLEAN = 0
 EXIT_FINDINGS = 1
@@ -172,15 +172,9 @@ def function_spans(scrubbed):
 # Which handlers HAProxy reads a return value back from
 # --------------------------------------------------------------------------
 #
-# HAProxy turns the value returned by a converter or a sample fetch into a sample
-# and uses it. It reads nothing back from an action, a service, a task, an init
-# function, or a CLI handler: doc/lua-api/index.rst gives those prototypes as
-# returning nothing. So "failure signalled by returning nil" is a defect only
-# inside a converter or a sample fetch, and the internal `return nil, err` pair
-# that HAProxy never sees is idiomatic Lua and not a finding. Reporting it
-# everywhere was measured against this fleet's only Lua estate on 31 July 2026:
-# 35 of 54 findings were that false positive, and a checker with that rate is
-# switched off, which silently discards its true findings too.
+# Only converters/fetches turn a Lua result into a sample. Actions may return
+# act.* codes; an internal helper's nil/error pair is not a failed sample.
+# The checker must not apply sample-return rules to action helpers.
 
 REGISTER_RE = re.compile(
     r"core\.register_(converters|fetches|action|service|filter|task|cli|init)\b"
@@ -350,33 +344,15 @@ def check_source(path, source):
             "from the HAProxy clock.",
         )
 
-    # HL008 - os.time scaled past one-second resolution.
-    for m in re.finditer(r"\bos\.time\s*\(\s*\)\s*\*\s*\d+", scrubbed):
-        add(
-            "HL008",
-            m.start(),
-            "os.time() has one-second resolution, so multiplying it does not add "
-            "sub-second precision",
-            "Take milliseconds from core.now(): local n = core.now(); local ms = "
-            "n.sec * 1000 + n.usec // 1000.",
-        )
-
-    # HL002 - seeding the Lua PRNG without reading an operating-system entropy
-    # source. The seed then comes from the clock or from a Lua default, and every
-    # process that starts in the same second produces the same stream.
-    has_entropy_source = bool(ENTROPY_SOURCE_RE.search(source))
+    # HL008 retired: scaling whole-second timestamps changes units legitimately.
+    # HL002 catches direct clock seeds, without treating a filename string as proof
+    # of entropy provenance. Aliased/computed seed provenance needs manual review.
     for m in re.finditer(r"\bmath\.randomseed\s*\(", scrubbed):
-        if not has_entropy_source:
-            add(
-                "HL002",
-                m.start(),
-                "math.randomseed() is called in a file that never reads /dev/urandom, "
-                "so the seed comes from the clock and processes starting in the same "
-                "second produce the same stream",
-                "Read 8 bytes from /dev/urandom in the file body or in "
-                "core.register_init and seed from those bytes, or delete the generator "
-                "and use the native uuid() sample fetch.",
-            )
+        args = split_call_arguments(scrubbed, m.end())
+        if args and re.search(r"\b(?:os\.(?:time|clock)|core\.now)\s*\(", args[0][0]):
+            add("HL002", m.start(), "PRNG seed is derived directly from a clock",
+                "Use the native generator if its contract matches; otherwise review "
+                "entropy provenance. A PRNG is not suitable for security tokens.")
 
     # HL003 - error() without level 0 prefixes the message with file:line.
     for m in re.finditer(r"(?<![.:\w])error\s*\(", scrubbed):
@@ -421,7 +397,7 @@ def check_source(path, source):
             "a registered converter or sample fetch returns nil, which HAProxy turns "
             "into a boolean-false sample: the variable is set and renders as 0",
             "Call error(message, 0) instead so the sample fails, the variable stays "
-            "unset, and a config rule can reject the request.",
+            "unset after an explicit reset, and a config rule can reject the request.",
         )
 
     # HL009 - pcall and a nil return inside the same converter or sample fetch.
@@ -473,26 +449,35 @@ def check_source(path, source):
             add(
                 "HL006",
                 m.start(),
-                "the file body touches core outside any guard, so the module cannot be "
-                "loaded by a unit test",
+                "unguarded top-level core access violates the package testability convention",
                 "Wrap every registration in if core ~= nil and core.register_converters "
                 "~= nil then ... end and return the module table.",
             )
 
-    # HL007 - stdlib calls HAProxy forbids at runtime, inside a function body.
-    if registers:
-        for pattern, label in FORBIDDEN_RUNTIME:
-            for m in re.finditer(pattern, scrubbed):
-                if depths[m.start()][1]:
-                    add(
-                        "HL007",
-                        m.start(),
-                        "{0} is forbidden at runtime because it never yields and stalls "
-                        "the HAProxy scheduler".format(label),
-                        "Move the call into the file body or core.register_init, which "
-                        "run before traffic, and store the result in an upvalue. For "
-                        "network work inside a handler use core.tcp(), which yields.",
-                    )
+    # HL007: direct registered runtime callbacks only. Init/body helper functions
+    # may do blocking initialization; lexical nesting alone cannot classify them.
+    runtime_spans = list(sample_spans)
+    by_start = {start: (start, end) for start, end in spans}
+    for registration in re.finditer(r"core\.register_(action|service|task|cli)\s*\(", scrubbed):
+        args = split_call_arguments(scrubbed, registration.end())
+        index = 0 if registration.group(1) == "task" else 2
+        if not args or len(args) <= index:
+            continue
+        body, offset = args[index]
+        name = body.strip()
+        if name.startswith("function"):
+            start = offset + len(body) - len(body.lstrip())
+            if start in by_start:
+                runtime_spans.append(by_start[start])
+        elif IDENTIFIER_RE.match(name):
+            runtime_spans.extend(definition_spans(scrubbed, name, by_start))
+    for pattern, label in FORBIDDEN_RUNTIME:
+        for m in re.finditer(pattern, scrubbed):
+            if any(start <= m.start() < end for start, end in runtime_spans):
+                add("HL007", m.start(),
+                    "{0} in a registered runtime callback may block or mutate the process".format(label),
+                    "Move blocking initialization to body/init; use a supported "
+                    "scheduler-aware API for runtime I/O and core.log for logging.")
 
     findings.sort(key=lambda f: (f.lineno, f.code))
     return findings
@@ -515,11 +500,11 @@ RED_FIXTURES = (
     ("red-hl005-lua53-no-version.lua", "HL005"),
     ("red-hl006-unguarded-core.lua", "HL006"),
     ("red-hl007-forbidden-runtime.lua", "HL007"),
-    ("red-hl008-os-time-scaled.lua", "HL008"),
     ("red-hl009-pcall-nil.lua", "HL009"),
     ("red-hl010-unresolvable-handler.lua", "HL010"),
 )
-GREEN_FIXTURES = ("green-converter-module.lua", "green-action-module.lua")
+GREEN_FIXTURES = ("green-converter-module.lua", "green-action-module.lua",
+                  "red-hl008-os-time-scaled.lua", "green-init-library.lua")
 
 
 def read_fixture(name):
@@ -565,7 +550,7 @@ def self_test():
 
     # The regression that this checker version exists for: an action-only module
     # using the idiomatic "return nil, err" pair and a pcall must produce neither
-    # HL004 nor HL009, because HAProxy reads no return value back from an action.
+    # HL004 nor HL009, because actions do not turn nil into a sample.
     cases.append(
         (
             "an action-only module reports no HL004 and no HL009",
@@ -609,7 +594,7 @@ def self_test():
 
 EPILOG = """\
 exit codes:
-  0  no finding, or every self-test case passed. The module may ship.
+  0  no lexical finding, or all self-tests passed. Continue unit/runtime gates.
   1  at least one finding, or a self-test case failed. Fix every finding, then run
      this checker again; do not ship the module while any finding stands.
   2  a path could not be read, the fixture directory is missing, or the arguments
@@ -618,21 +603,18 @@ exit codes:
 
 checks:
   HL001  os.clock() used anywhere
-  HL002  math.randomseed() seeded from the clock
+  HL002  math.randomseed() directly seeded from a clock (aliases require review)
   HL003  error() called without level 0
   HL004  return nil inside a function registered as a converter or a sample fetch.
          Those are the only two handler types whose return value HAProxy reads back
-         and turns into a sample. An action, service, task, init or CLI handler
-         returns nothing HAProxy consumes, so an internal "return nil, err" pair in
-         such a module is idiomatic Lua and is not reported.
+         and turns into a sample. Actions may return act.* codes; internal helper nil/error pairs are not
+         samples. Services, tasks, init and CLI handlers have separate contracts.
   HL005  Lua 5.3-only construct with no minimum version recorded in a comment
   HL006  core touched in the file body outside a guard
-  HL007  runtime-forbidden stdlib call inside a function body. It is permitted only
-         when that function is called solely from the file body or from
-         core.register_init, which run before traffic; name the call site. Network
-         work inside a handler belongs on core.tcp(), which yields and is not
-         reported here.
-  HL008  os.time() multiplied to fake sub-second resolution
+  HL007  potential blocking/process stdlib call directly inside a registered
+         runtime callback. Body/init work is permitted; helper reachability,
+         aliases, filter/event callbacks and dynamic registrations need review.
+  HL008  retired: os.time() scaling is valid unit conversion, not added precision
   HL009  pcall() and a nil return inside the same converter or sample fetch
   HL010  a converter or sample fetch registered with a handler expression whose body
          this checker cannot locate, so HL004 was not evaluated for it
@@ -642,9 +624,9 @@ limits, stated rather than hidden:
   `return decode(value)` whose helper returns nil is the same defect and is not
   lexically detectable; the obligation for that shape is in
   references/30-failure-visibility.md.
-  HL007 is a reachability question a lexical checker cannot settle, so it is
-  reported wherever the pattern appears inside a function body, and clearing it
-  means naming the call site rather than deleting the check.
+  HL006 recognizes top-level access only, not arbitrary guard correctness.
+  HL007 does not follow helper calls. Neither a clean checker nor a comment is
+  runtime proof. Review the full dependency/call closure and execute failure tests.
 """
 
 

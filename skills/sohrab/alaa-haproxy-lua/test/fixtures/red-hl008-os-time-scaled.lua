@@ -1,4 +1,5 @@
--- Red fixture for HL008: os.time() multiplied to fake sub-second resolution.
+-- Regression: historical HL008 red fixture is now valid coarse unit conversion.
+-- Millisecond units with whole-second precision are deliberate, not extra precision.
 -- Requires Lua 5.3 or newer.
 local M = {}
 

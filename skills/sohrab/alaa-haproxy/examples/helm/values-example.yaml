@@ -5,7 +5,7 @@
 #   silently ignored by `helm template`, which is why a values file can render cleanly and
 #   change nothing. Chart authorship and key naming are decided by /alaa-k8s-helm
 #   ($alaa-k8s-helm); on Arvan CaaS by /caas-arvan-kuber ($caas-arvan-kuber).
-#   Image tag verified 2026-07-29; re-derive with `docker run --rm haproxy:lts haproxy -v`.
+#   Image tag metadata checked 2026-10-01 in references/SOURCES.md; recheck before adoption.
 # Failure mode: the preStop command below SLEEPS BEFORE SIGNALLING. Reversing the two produces
 #   connection refusals on every rollout; the reasoning is stated once, in
 #   examples/kubernetes/haproxy-deployment.yaml.
@@ -15,7 +15,7 @@
 
 image:
   repository: haproxy
-  tag: "3.4.1"
+  tag: "3.4.6"
   pullPolicy: IfNotPresent
 
 replicaCount: 2

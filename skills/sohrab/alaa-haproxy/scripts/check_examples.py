@@ -29,6 +29,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import uuid
 from pathlib import Path
 
 EXIT_CLEAN = 0
@@ -146,10 +147,64 @@ def declared_build_features(lines: list[str]) -> list[str]:
     return []
 
 
+def run_haproxy(haproxy: str, arguments: list[str], *, env: dict[str, str] | None = None,
+                root: Path | None = None, scratch: str | None = None,
+                fixture_env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+    """Run the real binary, optionally in a cached, isolated Docker image."""
+    if not haproxy.startswith("docker://"):
+        return subprocess.run([haproxy, *arguments], capture_output=True, text=True,
+                              timeout=120, env=env)
+    name = "haproxy-skill-parse-" + uuid.uuid4().hex[:12]
+    command = ["docker", "run", "--pull", "never", "--rm", "--name", name, "--network", "none",
+               "--read-only", "--cpus", "1", "--memory", "256m",
+               "--entrypoint", "haproxy"]
+    mappings: list[tuple[str, str]] = []
+    for source, destination in [(root, "/skill"), (scratch, "/fixtures")]:
+        if source is not None:
+            absolute = str(Path(source).resolve())
+            command += ["--mount", "type=bind,source={},target={},readonly".format(absolute, destination)]
+            mappings.append((absolute, destination))
+
+    def translate(value: str) -> str:
+        for source, destination in mappings:
+            if value == source or value.startswith(source + os.sep):
+                return destination + value[len(source):].replace("\\", "/")
+        return value
+
+    # Only values constructed by build_fixture_tree may cross into Docker args.
+    for key, value in sorted((fixture_env or {}).items()):
+        command += ["--env", key + "=" + translate(value)]
+    command += [haproxy.removeprefix("docker://"), *[translate(arg) for arg in arguments]]
+    try:
+        return subprocess.run(command, capture_output=True, text=True, timeout=120)
+    finally:
+        remove_owned_container(name)
+
+
+def remove_owned_container(name: str) -> None:
+    """Bound cleanup after success, failed creation or client timeout."""
+    result = subprocess.run(["docker", "rm", "-f", name], capture_output=True,
+                            text=True, timeout=30)
+    if result.returncode and "No such container" not in result.stderr:
+        raise OSError("could not remove owned container {}: {}".format(name, result.stderr.strip()[:400]))
+
+
+def missing_features(required: list[str], features: set[str]) -> list[str]:
+    """Space-separated requirements are AND; a pipe separates alternatives."""
+    missing = []
+    for token in required:
+        if token.startswith("!"):
+            if token[1:] in features:
+                missing.append("build has {} and this file needs it absent".format(token[1:]))
+        elif not any(option in features for option in token.split("|")):
+            missing.append("build lacks {}".format(token))
+    return missing
+
+
 def binary_features(haproxy: str) -> set[str] | None:
     """The `+NAME` tokens from the binary's feature list."""
     try:
-        result = subprocess.run([haproxy, "-vv"], capture_output=True, text=True, timeout=60)
+        result = run_haproxy(haproxy, ["-vv"])
     except (OSError, subprocess.SubprocessError):
         return None
     output = result.stdout + result.stderr
@@ -194,7 +249,8 @@ def check_structure(path: Path, display: str) -> list[Finding]:
             findings.append(Finding(
                 display, section_has_retries, "HP-EX-009",
                 "`retries` with no `option redispatch` in section `{}` starting at line {}: "
-                "every retry goes to the same failed server".format(section, section_line)))
+                "this package's examples require the explicit pairing; actual retry selection "
+                "also depends on persistence, health and usable servers".format(section, section_line)))
         section_has_retries = 0
         section_has_redispatch = False
 
@@ -361,7 +417,7 @@ def check_version_pins(root: Path) -> tuple[list[Finding], str | None]:
 
 def binary_branch(haproxy: str) -> tuple[int, int] | None:
     try:
-        result = subprocess.run([haproxy, "-v"], capture_output=True, text=True, timeout=30)
+        result = run_haproxy(haproxy, ["-v"])
     except (OSError, subprocess.SubprocessError):
         return None
     return parse_branch(result.stdout + result.stderr)
@@ -406,6 +462,8 @@ def build_fixture_tree(root: Path) -> tuple[dict[str, str], str] | tuple[None, s
         "HAPROXY_CA_DIR": str(ca),
         "HAPROXY_CLIENT_DIR": str(client),
         "HAPROXY_MAP_DIR": str(maps),
+        # Isolated parser fixtures need a routable address even with --network none.
+        "HAPROXY_DNS": "127.0.0.1:53",
         # Policy values that examples/haproxy/20 refuses to start without, by design.
         "HAPROXY_ASSET_PREFIX": "/assets",
         "HAPROXY_HASHED_ASSET_CACHE_CONTROL": "public, max-age=31536000, immutable",
@@ -446,8 +504,25 @@ def run_parse_phase(root: Path, haproxy: str, allow_skips: bool) -> tuple[list[F
         env = dict(os.environ)
         env.update(environment)
         directory = root / "examples" / "haproxy"
-        for path in sorted(directory.glob("*.cfg")):
-            display = str(path.relative_to(root))
+        targets = [(path, str(path.relative_to(root))) for path in sorted(directory.glob("*.cfg"))]
+        configmap = root / "examples" / "kubernetes" / "haproxy-configmap.yaml"
+        if configmap.is_file():
+            # Extract this package's literal ConfigMap block, then let HAProxy parse it.
+            # This is not a YAML or HAProxy parser; unsupported shapes cannot pass silently.
+            lines = read_lines(configmap)
+            try:
+                marker = lines.index("  haproxy.cfg: |")
+            except ValueError:
+                return findings, skipped, notes, "ConfigMap lacks the supported haproxy.cfg literal block"
+            body = lines[marker + 1:]
+            if any(line.strip() and not line.startswith("    ") for line in body):
+                return findings, skipped, notes, "ConfigMap block contains an unsupported indentation/shape"
+            extracted = Path(scratch) / "configmap.cfg"
+            header = [line for line in lines[:marker] if line.startswith("#")]
+            extracted.write_text("\n".join(header + [line[4:] for line in body]) + "\n", encoding="utf-8")
+            targets.append((extracted, str(configmap.relative_to(root)) + ":haproxy.cfg"))
+            notes.append("also checks the Kubernetes ConfigMap's effective haproxy.cfg")
+        for path, display in targets:
             required = declared_branch(read_lines(path))
             if required is None:
                 findings.append(Finding(display, 1, "HP-EX-002",
@@ -457,19 +532,13 @@ def run_parse_phase(root: Path, haproxy: str, allow_skips: bool) -> tuple[list[F
                 skipped.append("{}: needs branch {}.{}, binary is {}.{}".format(
                     display, required[0], required[1], branch[0], branch[1]))
                 continue
-            missing = []
-            for token in declared_build_features(read_lines(path)):
-                if token.startswith("!"):
-                    if token[1:] in features:
-                        missing.append("build has {} and this file needs it absent".format(token[1:]))
-                elif token not in features:
-                    missing.append("build lacks {}".format(token))
+            missing = missing_features(declared_build_features(read_lines(path)), features)
             if missing:
                 skipped.append("{}: {}".format(display, "; ".join(missing)))
                 continue
             # -dr: a placeholder backend hostname must not read as a config defect.
-            result = subprocess.run([haproxy, "-dr", "-c", "-f", str(path)],
-                                    capture_output=True, text=True, timeout=120, env=env)
+            result = run_haproxy(haproxy, ["-dr", "-c", "-f", str(path)],
+                                 env=env, root=root, scratch=scratch, fixture_env=environment)
             output = (result.stdout + result.stderr)
             if result.returncode != 0:
                 detail = " | ".join(
@@ -595,6 +664,16 @@ def self_test(script_dir: Path) -> int:
         else:
             print("self-test: {} -> {}".format(name, sorted(got) or "clean"))
 
+    for required, features, want in [
+            (["ZLIB|SLZ"], {"SLZ"}, False),
+            (["ZLIB|SLZ"], {"ZLIB"}, False),
+            (["ZLIB|SLZ"], set(), True),
+            (["QUIC", "!QUIC_OPENSSL_COMPAT"], {"QUIC", "QUIC_OPENSSL_COMPAT"}, True),
+            (["QUIC", "PROMEX"], {"QUIC"}, True)]:
+        if bool(missing_features(required, features)) != want:
+            failures.append("build requirement alternatives/AND/negation mismatch")
+    print("self-test: build requirement alternatives, AND and negation checked")
+
     # Could-not-run path: a binary that does not exist.
     if binary_branch(str(script_dir / "not-a-binary")) is not None:
         failures.append("binary_branch accepted a nonexistent binary")
@@ -651,11 +730,15 @@ def main(argv: list[str]) -> int:
                         help="run the pure-Python phase only; makes no claim that anything parses")
     parser.add_argument("--haproxy", default=None,
                         help="path to the haproxy binary to parse with. Defaults to `haproxy` on PATH.")
+    parser.add_argument("--docker-image", default=None,
+                        help="cached image containing haproxy; --pull never, no network, read-only mounts, 1 CPU/256m")
     parser.add_argument("--allow-skips", action="store_true",
                         help="report, rather than fail, examples whose branch the binary is older than")
     parser.add_argument("--root", default=None,
                         help="skill root. Defaults to the nearest ancestor containing SKILL.md.")
     args = parser.parse_args(argv)
+    if args.haproxy and args.docker_image:
+        parser.error("choose --haproxy or --docker-image")
 
     script_dir = Path(__file__).resolve().parent
 
@@ -701,17 +784,21 @@ def main(argv: list[str]) -> int:
     if args.structure_only:
         print("structure phase only: no claim is made that any example parses")
     else:
-        haproxy = args.haproxy or shutil.which("haproxy")
-        if haproxy is None or not Path(haproxy).exists():
+        haproxy = ("docker://" + args.docker_image) if args.docker_image else (args.haproxy or shutil.which("haproxy"))
+        if haproxy is None or (not args.docker_image and not Path(haproxy).exists()):
             for finding in findings:
                 print(str(finding))
             print("could not run: no haproxy binary. Pass --haproxy <path>, or --structure-only "
                   "to run the pure-Python phase and claim nothing about parsing.", file=sys.stderr)
             return EXIT_CANNOT_RUN
-        parse_findings, skipped, notes, parse_error = run_parse_phase(
-            root, haproxy, args.allow_skips)
+        try:
+            parse_findings, skipped, notes, parse_error = run_parse_phase(
+                root, haproxy, args.allow_skips)
+        except (OSError, subprocess.SubprocessError) as exc:
+            print("could not run: {}".format(exc), file=sys.stderr)
+            return EXIT_CANNOT_RUN
         findings.extend(parse_findings)
-        parsed = len(configs) - len(skipped)
+        parsed = len(configs) + int((root / "examples" / "kubernetes" / "haproxy-configmap.yaml").is_file()) - len(skipped)
         for line in notes:
             print("NOTE    {}".format(line))
         for line in skipped:
