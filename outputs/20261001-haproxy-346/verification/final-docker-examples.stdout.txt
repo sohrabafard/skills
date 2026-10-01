@@ -1,0 +1,2 @@
+NOTE    also checks the Kubernetes ConfigMap's effective haproxy.cfg
+checked 21 example config(s); parsed 22; skipped 0; 0 finding(s)

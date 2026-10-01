@@ -1,0 +1,24 @@
+warning: in the working copy of 'outputs/README.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/SKILL.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/agents/openai.yaml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/haproxy/03-quic-http3.cfg', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/haproxy/06-dns-service-discovery.cfg', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/haproxy/10-prometheus-runtime-api.cfg', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/haproxy/12-peers-global-rate-limit.cfg', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/haproxy/20-static-asset-cache-and-rewrite.cfg', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/helm/values-example.yaml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/helm/values-production-example.yaml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/kubernetes/haproxy-configmap.yaml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/examples/kubernetes/haproxy-deployment.yaml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/00-topic-map.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/10-version-and-branch.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/50-symptom-diagnosis.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/25-tls-and-mtls.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/50-caching-routing-and-rewrites.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/60-observability-and-runtime.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'skills/sohrab/alaa-haproxy/references/SOURCES.md', CRLF will be replaced by LF the next time Git touches it
+

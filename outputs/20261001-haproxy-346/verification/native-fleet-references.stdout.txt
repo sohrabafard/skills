@@ -1,0 +1,38 @@
+check_fleet_references.py: 69 of 69 skills, 1076 Markdown files, 3894 citations
+
+FINDINGS: none
+
+INFO (325 unmarked target-repository paths across 30 skills; these never fail the run)
+    96  alaa-repo-docs
+    52  alaa-services-contract
+    31  alaa-go-chi-development
+    27  alaa-shaka-player
+    15  service-runtime-kit-governance
+    11  alaa-permission-generator
+    10  alaa-golang-clean-code-principles
+    10  alaa-trust-gateway-auth
+    10  ansible-validator
+     9  alaa-docker-production
+     9  alaa-minio-object-storage
+     7  alaa-gitlab-ci-cd
+     6  alaa-makefile
+     5  alaa-golang
+     4  alaa-golang-fiber
+     3  alaa-controlled-ops
+     3  alaa-postman-collections
+     3  clickhouse-performance-schema-ops
+     2  alaa-codex-orchestrator
+     2  alaa-k8s-helm
+     1  alaa-bale-provider
+     1  alaa-data-layer
+     1  alaa-input-normalization
+     1  alaa-laravel-architecture
+     1  alaa-laravel-upgrade-all-packages
+     1  alaa-octane-performance
+     1  alaa-quasar-app-vite-v3
+     1  alaa-sms-provider-mediana
+     1  ansible-generator
+     1  caas-arvan-kuber
+  Rerun with --show-info for every site, or --format json for all of them.
+  Mark each one as <repo>/<path> to retire it from this list.
+

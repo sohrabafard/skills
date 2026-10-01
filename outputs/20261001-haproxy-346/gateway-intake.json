@@ -1,0 +1,6 @@
+{
+  "HEAD": "94cdfa5cf72ea0a77a7cdc490d34914ecc057008",
+  "status": "A  .gitattributes\n M .gitlab-ci.yml\n M Makefile\n M README.md\n M ci/scripts/public-http-api-behavior.sh\n M docker-compose.yml\n M docker/Dockerfile\n M docs/BIG_PICTURE.md\n",
+  "tracked_file_count": 176,
+  "tracked_content_sha256": "bbc91250901b0016debec52f938100e173d30973c3402a82584313549a2d60e3"
+}

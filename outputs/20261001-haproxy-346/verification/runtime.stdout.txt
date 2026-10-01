@@ -1,0 +1,54 @@
+HAProxy version 3.4.6-56332c5 2026/09/28 - https://haproxy.org/
+Built with Lua version : Lua 5.4.8
+ok   registers converter token_guard
+ok   accepts minimum length
+ok   accepts digits and letters
+ok   accepts at the configured limit
+ok   rejects empty string
+ok   rejection of empty string carries no source position
+ok   rejects too short
+ok   rejection of too short carries no source position
+ok   rejection of too short does not echo the token
+ok   rejects longer than the limit
+ok   rejection of longer than the limit carries no source position
+ok   rejection of longer than the limit does not echo the token
+ok   rejects uppercase byte
+ok   rejection of uppercase byte carries no source position
+ok   rejection of uppercase byte does not echo the token
+ok   rejects embedded newline
+ok   rejection of embedded newline carries no source position
+ok   rejection of embedded newline does not echo the token
+ok   rejects embedded NUL
+ok   rejection of embedded NUL carries no source position
+ok   rejection of embedded NUL does not echo the token
+ok   rejects non-string sample
+ok   rejection of non-string sample carries no source position
+ok   rejects non-numeric limit
+ok   rejection of non-numeric limit carries no source position
+ok   rejection of non-numeric limit does not echo the token
+ok   rejects fractional limit
+ok   rejection of fractional limit carries no source position
+ok   rejection of fractional limit does not echo the token
+ok   rejects limit above the module maximum
+ok   rejection of limit above the module maximum carries no source position
+ok   rejection of limit above the module maximum does not echo the token
+ok   property: 5000 random inputs (seed 20260726), 309 accepted, none out of alphabet
+ok   property case set is not vacuous
+
+34 of 34 checks passed
+PASS embedded Lua 5.4.8 unit suite
+PASS openlibs default
+PASS openlibs all
+PASS openlibs none
+PASS openlibs string
+PASS openlibs string,math,table,os
+PASS parser rejects missing_os
+PASS parser rejects late_load
+PASS parser rejects late_perthread
+PASS parser rejects late_path
+PASS parser rejects invalid
+PASS parser rejects mixed_none
+PASS parser rejects args13
+PASS normal samples, booleans, error levels and action denial
+PASS pre-3.1-bug samples, booleans, error levels and action denial
+PASS example parser and token accepted/rejected/missing HTTP cases

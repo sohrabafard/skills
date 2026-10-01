@@ -1,0 +1,6 @@
+command=python -B scripts/validate_sohrab_skill_pack.py | cwd=repository root | start=2026-10-01T19:03:44.0812667+00:00 | end=2026-10-01T19:03:44.4108348+00:00 | durationMs=325 | exit=0
+command=python -B scripts/check_skill_index.py | cwd=repository root | start=2026-10-01T19:03:44.4226148+00:00 | end=2026-10-01T19:03:44.5650458+00:00 | durationMs=142 | exit=0
+command=python -B scripts/check_fleet_references.py | cwd=repository root | start=2026-10-01T19:03:44.5670916+00:00 | end=2026-10-01T19:03:47.5535757+00:00 | durationMs=2986 | exit=0
+command=python -B scripts/check_lifecycle_contract.py | cwd=repository root | start=2026-10-01T19:03:47.5562311+00:00 | end=2026-10-01T19:03:47.9502808+00:00 | durationMs=394 | exit=0
+command=python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan outputs/20261001-haproxy-346/20261001-120000_haproxy-346.md | cwd=repository root | start=2026-10-01T19:03:47.9546039+00:00 | end=2026-10-01T19:03:48.1132860+00:00 | durationMs=158 | exit=0
+command=git diff --check -- skills/sohrab/alaa-haproxy skills/sohrab/alaa-haproxy-lua outputs/20261001-haproxy-346 docs/agents/20261001-120000_haproxy-346-state.md | cwd=repository root | start=2026-10-01T19:03:48.1156300+00:00 | end=2026-10-01T19:03:48.1818066+00:00 | durationMs=66 | exit=0

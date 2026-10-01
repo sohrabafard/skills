@@ -1,0 +1,11 @@
+self-test: contract.cfg -> clean
+self-test: no-contract.cfg -> ['HP-EX-001', 'HP-EX-002', 'HP-EX-003', 'HP-EX-004', 'HP-EX-005', 'HP-EX-006', 'HP-EX-007', 'HP-EX-008', 'HP-EX-009', 'HP-EX-010', 'HP-EX-011']
+self-test: bundle -> ['HP-EX-012']
+self-test: functional-warning.txt -> ['HP-EX-WARNING']
+self-test: unreviewed-deprecation.txt -> ['HP-EX-WARNING']
+self-test: clean-parse.txt -> clean
+self-test: build requirement alternatives, AND and negation checked
+self-test: nonexistent binary -> could not run
+self-test: CRLF copy of contract.cfg -> clean
+self-test: all checks passed
+

@@ -1,0 +1,9 @@
+Preflight observations (console outputs retained here; isolated per-command timing was not captured).
+CWD: repository root
+python --version -> Python 3.13.14; observed exit 0
+Execution context: default PowerShell sandbox
+Docker guard command: docker image inspect haproxy:3.4.6-alpine --format '{{.Id}}'
+Docker guard execution context: require_escalated host
+Docker guard stdout: sha256:7af8255207ee9964ccb4eec8ce4b7a40b777769665e3ae83897fb01b24d8a43a
+Docker guard exit: 0
+No network pull or installation.

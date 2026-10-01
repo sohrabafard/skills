@@ -1,0 +1,7 @@
+Lua executable-input comparison
+Prior source manifest: outputs/20261001-haproxy-346/verification/lua-manifest-before.sha256
+Prior manifest byte SHA256: f5807f64f9fed9cdcaa15775739ad90e488b7ccccde0af4cc555f30fd5d36604
+Prior manifest contained 38 files; current package has 23 non-Markdown files.
+Compared all current non-Markdown paths and SHA256 values with prior entries.
+New=0; changed=0; removed=0.
+This comparison covers executable, configuration, fixture, and runtime harness inputs. Markdown clustering is outside this equality claim.

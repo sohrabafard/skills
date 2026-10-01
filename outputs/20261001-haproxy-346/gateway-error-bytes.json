@@ -1,0 +1,112 @@
+[
+  {
+    "path": "haproxy/errors/400.http",
+    "HEAD": {
+      "declared": 101,
+      "body": 101
+    },
+    "checkout": {
+      "declared": 101,
+      "body": 102
+    }
+  },
+  {
+    "path": "haproxy/errors/401.http",
+    "HEAD": {
+      "declared": 92,
+      "body": 92
+    },
+    "checkout": {
+      "declared": 92,
+      "body": 93
+    }
+  },
+  {
+    "path": "haproxy/errors/404.http",
+    "HEAD": {
+      "declared": 100,
+      "body": 100
+    },
+    "checkout": {
+      "declared": 100,
+      "body": 101
+    }
+  },
+  {
+    "path": "haproxy/errors/408.http",
+    "HEAD": {
+      "declared": 124,
+      "body": 124
+    },
+    "checkout": {
+      "declared": 124,
+      "body": 125
+    }
+  },
+  {
+    "path": "haproxy/errors/413.http",
+    "HEAD": {
+      "declared": 131,
+      "body": 131
+    },
+    "checkout": {
+      "declared": 131,
+      "body": 132
+    }
+  },
+  {
+    "path": "haproxy/errors/429.http",
+    "HEAD": {
+      "declared": 95,
+      "body": 95
+    },
+    "checkout": {
+      "declared": 95,
+      "body": 96
+    }
+  },
+  {
+    "path": "haproxy/errors/500.http",
+    "HEAD": {
+      "declared": 120,
+      "body": 120
+    },
+    "checkout": {
+      "declared": 120,
+      "body": 121
+    }
+  },
+  {
+    "path": "haproxy/errors/502.http",
+    "HEAD": {
+      "declared": 109,
+      "body": 109
+    },
+    "checkout": {
+      "declared": 109,
+      "body": 110
+    }
+  },
+  {
+    "path": "haproxy/errors/503.http",
+    "HEAD": {
+      "declared": 118,
+      "body": 118
+    },
+    "checkout": {
+      "declared": 118,
+      "body": 119
+    }
+  },
+  {
+    "path": "haproxy/errors/504.http",
+    "HEAD": {
+      "declared": 109,
+      "body": 109
+    },
+    "checkout": {
+      "declared": 109,
+      "body": 110
+    }
+  }
+]

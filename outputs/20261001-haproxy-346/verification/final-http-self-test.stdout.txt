@@ -1,0 +1,2 @@
+self-test: 8 byte fixtures; 0 failures
+

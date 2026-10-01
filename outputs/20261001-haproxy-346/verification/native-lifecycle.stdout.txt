@@ -1,0 +1,8 @@
+check_lifecycle_contract.py
+  root: D:\Sohrab\Project\skills
+  owner: alaa-workflow references/workspace-and-integration.md
+  states: IMPLEMENTED, MERGE_CANDIDATE, RELEASE_CANDIDATE, PUBLISHED
+  reporters: alaa-cc-orchestrator, alaa-codex-orchestrator
+
+FINDINGS: none
+

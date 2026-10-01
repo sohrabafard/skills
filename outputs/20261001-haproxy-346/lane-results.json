@@ -1,0 +1,75 @@
+{
+  "test_strategy": {
+    "verdict": "pass-with-actions",
+    "configured": "gpt-6.1-sol/medium",
+    "observed": "unknown",
+    "scope": "read-only test design",
+    "required_discriminators": [
+      "positive request control",
+      "nil and boolean conversion modes",
+      "stale variable reset",
+      "openlibs dependency and ordering",
+      "action denial",
+      "dynamic backend recovery",
+      "raw HTTP body bytes"
+    ]
+  },
+  "lua_package": {
+    "verdict": "implemented, frozen for review",
+    "configured": "gpt-6-astra/high",
+    "observed": "unknown",
+    "escalation": "subtle version-specific scheduler and sample/security failure semantics",
+    "focused": {
+      "checker_self_tests": "16/16",
+      "production_example_findings": 0,
+      "embedded_unit_assertions": "34/34",
+      "openlibs_positive_cases": 5,
+      "negative_parser_cases": 7,
+      "conversion_mode_matrices": 2,
+      "token_http_cases": 4
+    },
+    "repair": "CRLF shell transport normalized to LF on stdin; one repaired retry passed",
+    "later_delta": "Independent synthetic 4/4 and runtime 34/34 plus integrated probes passed; all 23 non-Markdown inputs and cached image ID match at final verification",
+    "unrun": [
+      "standalone Lua CLI",
+      "real subrequest failures",
+      "filter/task/CLI lifecycle",
+      "load/performance",
+      "consumer reload/drain",
+      "deployment"
+    ]
+  },
+  "haproxy_package": {
+    "verdict": "edited; partially validated",
+    "runtime": "exit 1: active stream prevents deletion: lifecycle assertion",
+    "retry_authority": "extra authorized cycle consumed",
+    "focused": "12 runner cases and 8 HTTP byte fixtures passed",
+    "cause": "unknown; actual CLI reply not retained",
+    "parser": "21 configurations, 22 parsed, zero skips/findings",
+    "unrun": [
+      "post-failure stream completion",
+      "drained deletion",
+      "reload reconstruction",
+      "consumer deployment"
+    ]
+  },
+  "final": {
+    "disposition": "partially validated, permitted by objective",
+    "durable_curation": "empty; no memory publication",
+    "broader_head_whitespace_check": "exit 1: intentional byte fixtures, raw evidence whitespace and receipt terminal blanks",
+    "lifecycle": {
+      "IMPLEMENTED": "not proven for combined change",
+      "RELEASE_CANDIDATE": "not requested",
+      "PUBLISHED": "not requested",
+      "MERGE_CANDIDATE": "not proven"
+    },
+    "reviews": {
+      "correctness": "APPROVED, static findings closed",
+      "instruction": "APPROVED after routing nits narrowed",
+      "release": "NOT-READY: lifecycle gate failed",
+      "security": "PASS"
+    },
+    "source_snapshot": "5d59faf0ec9e18ef0c25bdabe46ed62bd8a9ea8d34b6788f3aac689e41270b5c",
+    "file_count": 477
+  }
+}

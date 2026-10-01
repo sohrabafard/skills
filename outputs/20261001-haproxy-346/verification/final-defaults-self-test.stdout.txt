@@ -1,0 +1,7 @@
+self-test: good.cfg -> clean
+self-test: no-defaults.cfg -> clean
+self-test: bad.cfg -> ['HP-DEF-001', 'HP-DEF-002', 'HP-DEF-003']
+self-test: duplicate-name.cfg -> ['HP-DEF-004']
+self-test: nonexistent path -> could not run (path does not exist: D:\Sohrab\Project\skills\skills\sohrab\alaa-haproxy\scripts\definitely-not-here)
+self-test: empty directory -> could not run (no *.cfg files under directory: C:\Users\Alaa-AI\AppData\Local\Temp\haproxy-defaults-selftest-tioqtk0l)
+

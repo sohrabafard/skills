@@ -1,0 +1,1 @@
+FAIL [active stream prevents deletion]: lifecycle assertion

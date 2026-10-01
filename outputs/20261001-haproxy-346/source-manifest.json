@@ -1,0 +1,37 @@
+{
+  "archive_sha256": "791e1815f8af6e8b850a227a9a0a190f3d3478c9e8d38a0f51c98b7f4bfe368b",
+  "files": [
+    {
+      "path": "CHANGELOG",
+      "sha256": "16e6a6a137d6a5ca0e8fa315e49fdcf36d8518f37ee4adff6517d03c2dde306c"
+    },
+    {
+      "path": "INSTALL",
+      "sha256": "f2091c0bf509e8e2062f8647fa79de224cab884897c022fa8dc59273bad95836"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "47079b3096eb33e5b9f085d86e52250b7a876f134be3fae5d2328584f67af6b1"
+    },
+    {
+      "path": "doc/configuration.txt",
+      "sha256": "218390dfc748e85dec0e9ae3fa990cd4fe91e087eb0bae40150fca81b2dd7206"
+    },
+    {
+      "path": "doc/lua-api/index.rst",
+      "sha256": "bfa157209f73ebfb6766545e540ec715b3076ed6129de0cd00c6bc5880aa0909"
+    },
+    {
+      "path": "doc/lua.txt",
+      "sha256": "2c3253667e2600bd87c10a2305bcc5d094200e5e23dcbb236625590a2b1fda2b"
+    },
+    {
+      "path": "doc/management.txt",
+      "sha256": "093c4fc3f7336547790da38226b7ced9bc4a8361026bad2a1d0b03cdf8248603"
+    },
+    {
+      "path": "src/hlua.c",
+      "sha256": "88fc92f8728722fe518294f754f09f99ab4c5d9d4badff986cd0c1a2d48e581f"
+    }
+  ]
+}

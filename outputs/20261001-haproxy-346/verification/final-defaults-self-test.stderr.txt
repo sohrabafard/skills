@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "D:\Sohrab\Project\skills\skills\sohrab\alaa-haproxy\scripts\check_defaults_scope.py", line 389, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "D:\Sohrab\Project\skills\skills\sohrab\alaa-haproxy\scripts\check_defaults_scope.py", line 357, in main
+    return self_test(script_dir)
+  File "D:\Sohrab\Project\skills\skills\sohrab\alaa-haproxy\scripts\check_defaults_scope.py", line 305, in self_test
+    crlf.write_bytes(GOOD_FIXTURE.replace("\n", "\r\n").encode("utf-8"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alaa-AI\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\pathlib\_abc.py", line 641, in write_bytes
+    with self.open(mode='wb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Alaa-AI\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\Alaa-AI\\AppData\\Local\\Temp\\haproxy-defaults-crlf-xyrpqicl\\crlf.cfg'
+

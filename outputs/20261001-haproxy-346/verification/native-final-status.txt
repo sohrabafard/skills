@@ -1,0 +1,87 @@
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0jpgm2sb/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0_km1ar9/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-35ewheyo/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6m1s_7qt/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6p4y1wba/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-7iti0y11/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-f44vwy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-faznmppg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-fcc1majp/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-g5ldl87f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-irqap9y1/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-jwqodzp8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-nc7wzr4k/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-oe_ej8t8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-pqr858jg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-ri65mz7f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tcd67ob6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tpd6kyku/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-vfgxpvfj/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-w5nihy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-wlzn74i6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x0lnu3kc/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-xko8o0np/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x_siyr9v/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-y1m6slz7/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-yya74gqq/': Permission denied
+ M outputs/README.md
+ M skills/sohrab/alaa-haproxy-lua/SKILL.md
+ M skills/sohrab/alaa-haproxy-lua/agents/openai.yaml
+ M skills/sohrab/alaa-haproxy-lua/examples/haproxy-lua/token-guard.cfg
+ M skills/sohrab/alaa-haproxy-lua/examples/haproxy-lua/token-guard.lua
+ M skills/sohrab/alaa-haproxy-lua/examples/haproxy-lua/token-guard.test.lua
+ M skills/sohrab/alaa-haproxy-lua/references/00-topic-map.md
+ M skills/sohrab/alaa-haproxy-lua/references/10-execution-model.md
+ M skills/sohrab/alaa-haproxy-lua/references/20-api-surface.md
+ M skills/sohrab/alaa-haproxy-lua/references/25-actions-services-and-subrequests.md
+ M skills/sohrab/alaa-haproxy-lua/references/30-failure-visibility.md
+ M skills/sohrab/alaa-haproxy-lua/references/40-time-randomness-identity.md
+ M skills/sohrab/alaa-haproxy-lua/references/50-testing.md
+ M skills/sohrab/alaa-haproxy-lua/references/60-clean-code-and-patterns.md
+ M skills/sohrab/alaa-haproxy-lua/references/70-performance.md
+ M skills/sohrab/alaa-haproxy-lua/references/80-security.md
+ M skills/sohrab/alaa-haproxy-lua/references/90-operations.md
+ M skills/sohrab/alaa-haproxy-lua/references/SOURCES.md
+ M skills/sohrab/alaa-haproxy-lua/scripts/check_haproxy_lua.py
+ M skills/sohrab/alaa-haproxy-lua/test/fixtures/green-action-module.lua
+ M skills/sohrab/alaa-haproxy-lua/test/fixtures/red-hl002-clock-seed.lua
+ M skills/sohrab/alaa-haproxy-lua/test/fixtures/red-hl008-os-time-scaled.lua
+ M skills/sohrab/alaa-haproxy/SKILL.md
+ M skills/sohrab/alaa-haproxy/agents/openai.yaml
+ M skills/sohrab/alaa-haproxy/examples/haproxy/03-quic-http3.cfg
+ M skills/sohrab/alaa-haproxy/examples/haproxy/06-dns-service-discovery.cfg
+ M skills/sohrab/alaa-haproxy/examples/haproxy/10-prometheus-runtime-api.cfg
+ M skills/sohrab/alaa-haproxy/examples/haproxy/12-peers-global-rate-limit.cfg
+ M skills/sohrab/alaa-haproxy/examples/haproxy/20-static-asset-cache-and-rewrite.cfg
+ M skills/sohrab/alaa-haproxy/examples/helm/values-example.yaml
+ M skills/sohrab/alaa-haproxy/examples/helm/values-production-example.yaml
+ M skills/sohrab/alaa-haproxy/examples/kubernetes/haproxy-configmap.yaml
+ M skills/sohrab/alaa-haproxy/examples/kubernetes/haproxy-deployment.yaml
+ M skills/sohrab/alaa-haproxy/references/00-topic-map.md
+ M skills/sohrab/alaa-haproxy/references/10-version-and-branch.md
+ M skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/20-timeouts-and-retries.md
+ M skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/40-maps-and-preprocessor.md
+ M skills/sohrab/alaa-haproxy/references/20-core-config-and-timeouts/50-symptom-diagnosis.md
+ M skills/sohrab/alaa-haproxy/references/30-quic-http3/10-build-requirements.md
+ M skills/sohrab/alaa-haproxy/references/40-rate-limiting-and-peers.md
+ M skills/sohrab/alaa-haproxy/references/50-caching-routing-and-rewrites.md
+ M skills/sohrab/alaa-haproxy/references/60-observability-and-runtime.md
+ M skills/sohrab/alaa-haproxy/references/70-delivery-and-drain.md
+ M skills/sohrab/alaa-haproxy/references/80-gate-register.md
+ M skills/sohrab/alaa-haproxy/references/SOURCES.md
+ M skills/sohrab/alaa-haproxy/scripts/check_examples.py
+?? docs/agents/20261001-120000_haproxy-346-state.md
+?? outputs/20261001-haproxy-346/
+?? skills/sohrab/alaa-haproxy-lua/references/05-coverage.md
+?? skills/sohrab/alaa-haproxy-lua/references/15-standard-libraries.md
+?? skills/sohrab/alaa-haproxy-lua/scripts/check_runtime.py
+?? skills/sohrab/alaa-haproxy-lua/test/fixtures/green-init-library.lua
+?? skills/sohrab/alaa-haproxy-lua/test/runtime/
+?? skills/sohrab/alaa-haproxy-lua/test/test_runtime_runner.py
+?? skills/sohrab/alaa-haproxy/examples/haproxy/21-request-budgets-healthcheck-3.4.cfg
+?? skills/sohrab/alaa-haproxy/references/05-coverage-and-gaps.md
+?? skills/sohrab/alaa-haproxy/references/15-capabilities-3.4.md
+?? skills/sohrab/alaa-haproxy/references/65-dynamic-backends.md
+?? skills/sohrab/alaa-haproxy/scripts/check_http_error_bytes.py
+?? skills/sohrab/alaa-haproxy/scripts/check_runtime_3_4.py
+?? skills/sohrab/alaa-haproxy/scripts/fixtures/http_errors/
