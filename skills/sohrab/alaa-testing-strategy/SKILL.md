@@ -106,6 +106,17 @@ Classify first, then act, because a repair applied to the wrong class is how a h
 
 A tier is never made to pass by deleting an assertion, widening a tolerance, adding a retry, skipping a case, or lowering a threshold. An unreachable tier is reported unreached with its blocker named, under `references/80-evidence-and-reporting.md`.
 
+### On a Windows host, a long process-heavy gate runs in the CI job image
+
+When the host is Windows and an affected- or exhaustive-tier gate is long (its last host run, or the repository's documentation, exceeds ten minutes) and process-heavy — shell suites, or many short CLI invocations — run it in a container of the Linux image the repository's CI runs that gate in, as named by its CI configuration or documentation. Process creation under Git Bash or MSYS makes such a gate several times slower, and the CI image's tool variants (for example BusyBox instead of GNU utilities) expose defects a Windows run hides.
+
+- Mount the worktree read-only and run the gate on a copy inside the container's filesystem that includes the git metadata the gate reads: a bind mount is slow, and a writable one lets the gate change the tree.
+- Run the CI job's own setup steps and services before the gate.
+- Use the gate's own parallel mode when it has one, otherwise run it sequentially; never parallelize its steps yourself.
+- Report the image reference and that the result is container evidence. Host and container are different environments under the validity rule above, so neither result is cited for the other.
+- A tool the gate invokes that behaves differently in the CI image is a product or harness defect, because CI runs that image; a setup, mount, copy, or missing-service failure stays a host-environment block.
+- Run on the host instead, and report why, when Docker is unavailable, when the image is neither present locally nor pullable as a declared action from a registry the repository allows, or when repository policy places the gate on the host. Never substitute another image.
+
 ## Output contract
 
 Return these fields, in this order, for every test design, test review, or reported test run:
