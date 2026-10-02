@@ -96,6 +96,17 @@ exit `1` reports a grant mismatch, and exit `2` means the checker could not run;
 fail the gate. The pack validator checks the templates, and both installers materialize and validate
 the resolved live grants. Plain copies are unsupported because they would inherit the parent grant.
 
+## Memory scope
+
+`alaa-researcher`, `alaa-explorer`, and `alaa-architecture-critic` receive the `hindsight` server
+restricted to `hindsight_search_knowledge_pages`, `hindsight_read_knowledge_page`,
+`hindsight_list_knowledge_pages`, and `hindsight_reflect`; every other role has it disabled, like any
+unassigned server. These are the roles whose question can be whether something already exists or who owns
+it, which `/alaa-memory-os` answers; reflect is in the set because knowledge-page search cannot reveal a
+topic that has no page. No role holds a retain, ingest, or capture tool, because a memory write is the main
+thread's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight` adapter: when its
+`ACTIVE_ADAPTER` changes, change this set and the grant checker together.
+
 ## Policy and runtime evidence
 
 Read `model-effort-policy.md` for the canonical policy route and profile precedence. Catalog sandbox/access labels are requested role restrictions; inspect effective sandbox, parent overrides, and MCP permissions before relying on enforcement. Unknown runtime identity or permission state remains unknown.

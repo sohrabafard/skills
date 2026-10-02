@@ -71,7 +71,7 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-opus` | full, minus Serena's shell tool | full |
+| `alaa-implementer`, `alaa-implementer-opus` | full, minus Serena's shell tool and the Hindsight server | full |
 | `alaa-researcher` | none | docs |
 | `alaa-dependency-auditor` | none | docs |
 | `alaa-release-guardian` | none | docs |
@@ -93,6 +93,17 @@ list does. The same reason removes Serena's shell tool from the implementation l
 Every lane granted a server also carries `/alaa-code-intelligence-routing`, because a lane holding
 three servers and no contract for choosing among them is the problem the grants were meant to solve.
 
+## Memory scope
+
+`alaa-researcher`, `alaa-explorer`, and `alaa-architecture-critic` hold the Hindsight read set and
+nothing more: `mcp__hindsight__hindsight_search_knowledge_pages`,
+`mcp__hindsight__hindsight_read_knowledge_page`, `mcp__hindsight__hindsight_list_knowledge_pages`, and
+`mcp__hindsight__hindsight_reflect`. These are the roles whose question can be whether something already
+exists or who owns it, which `/alaa-memory-os` answers; reflect is in the set because knowledge-page
+search cannot reveal a topic that has no page. No role holds a retain, ingest, or capture tool — the implementation roles deny the
+whole server — because a memory write is the lead's decision under `/alaa-memory-os`. The set belongs to that skill's `hindsight`
+adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checker together.
+
 ## How a lane gets its skills
 
 **A role can always reach a skill it is told to apply.** Two mechanisms serve that, and they are
@@ -113,7 +124,8 @@ Withholding `Skill` from the allowlists was tried and reverted. It narrows nothi
 already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `clean_code_skill`
 field unsatisfiable; and it removes runtime invocation from every specialist on the theory that its
 preload list is complete, which no evidence supports. The safety deny set is therefore exactly
-Serena's shell tool, a real second path to the shell that bypasses the runtime's approval rules.
+Serena's shell tool, a real second path to the shell that bypasses the runtime's approval rules, and
+the Hindsight server (`mcp__hindsight`), whose write tools an inheriting role would otherwise receive.
 
 The checker enforces reachability in both directions. Every preloaded name must resolve to an
 installed skill, because a stale preload removes a standard silently. And a role that does not hold

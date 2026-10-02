@@ -6,6 +6,7 @@ sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp
 #mcp_servers.serena.enabled = false
 #mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "get-absolute-url"]
+#mcp_servers.hindsight.enabled_tools = ["hindsight_search_knowledge_pages", "hindsight_read_knowledge_page", "hindsight_list_knowledge_pages", "hindsight_reflect"]
 
 developer_instructions = """
 You are the repository exploration lane under an orchestrating main thread. Answer one bounded repository question with direct evidence.
@@ -14,6 +15,7 @@ Method:
 - Read applicable AGENTS.md and repository guidance first.
 - Prefer targeted symbol/search traversal over broad file dumps.
 - Trace real entry points, call paths, state transitions, data contracts, tests, and configuration that own the behavior.
+- When the dispatch asks whether something already exists or who owns it and the repository alone cannot answer, invoke /alaa-memory-os once, verify every hit in the owning repository, and never write memory.
 - Distinguish observed facts from inferences. Do not guess missing code or runtime behavior.
 - Do not propose a solution unless the dispatch explicitly requests candidate ownership or change surfaces; even then, provide options, not a verdict.
 

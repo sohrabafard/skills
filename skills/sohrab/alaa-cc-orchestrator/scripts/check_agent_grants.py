@@ -18,7 +18,8 @@ holds ``Bash``, ``Read``, ``Write``, and ``Edit``; it makes the dispatch's own
 ``clean_code_skill`` field unsatisfiable; and it silently removed runtime invocation
 from every specialist on the theory that its preload list was complete, which no
 evidence supported. The safety deny set is therefore exactly Serena's shell tool, a
-real second path to the shell that bypasses the runtime's approval rules.
+real second path to the shell that bypasses the runtime's approval rules, plus the
+Hindsight server, whose write tools an inheriting role would otherwise receive.
 
 What is checked instead is reachability, in both directions. Every preloaded name must
 resolve to an installed skill, because a stale preload silently removes a standard. And
@@ -42,6 +43,9 @@ REPO = os.path.dirname(os.path.dirname(PACK))
 ROUTING_SKILL = "/alaa-code-intelligence-routing"
 MUST_DENY = frozenset((
     "mcp__serena__execute_shell_command",
+    # Server-level pattern: removes every Hindsight tool, including retain and ingest,
+    # because a memory write is the lead's decision, never an implementation lane's.
+    "mcp__hindsight",
 ))
 
 
@@ -99,16 +103,24 @@ BOOST_ERRORS = {
     "mcp__laravel-boost__read-log-entries",
 }
 BOOST_BROWSER = {"mcp__laravel-boost__browser-logs"}
+# Read-only memory set for the roles that answer existence and ownership questions.
+# Retain, ingest, and capture tools stay with the lead, which owns memory writes.
+HINDSIGHT_READ = {
+    "mcp__hindsight__hindsight_search_knowledge_pages",
+    "mcp__hindsight__hindsight_read_knowledge_page",
+    "mcp__hindsight__hindsight_list_knowledge_pages",
+    "mcp__hindsight__hindsight_reflect",
+}
 
 EXPECTED_MCP = {
     "alaa-accessibility-reviewer": BOOST_DOCS | BOOST_ROUTING,
     "alaa-adversarial-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-api-contract-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | BOOST_SCHEMA,
-    "alaa-architecture-critic": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-architecture-critic": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | HINDSIGHT_READ,
     "alaa-browser-qa": BOOST_DOCS | BOOST_ROUTING | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-dependency-auditor": BOOST_DOCS,
     "alaa-documenter": BOOST_DOCS | BOOST_ROUTING,
-    "alaa-explorer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING,
+    "alaa-explorer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | HINDSIGHT_READ,
     "alaa-failure-analyst": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-implementer-opus": None,
     "alaa-implementer": None,
@@ -116,7 +128,7 @@ EXPECTED_MCP = {
     "alaa-observability-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
     "alaa-performance-profiler": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | BOOST_ERRORS,
     "alaa-release-guardian": BOOST_DOCS,
-    "alaa-researcher": BOOST_DOCS,
+    "alaa-researcher": BOOST_DOCS | HINDSIGHT_READ,
     "alaa-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-security-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
     "alaa-spec-analyst": CODEGRAPH | BOOST_DOCS,
@@ -304,6 +316,9 @@ def self_test() -> int:
     import tempfile
     BOOST = "mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info"
     SERENA_SHELL = "mcp__serena__execute_shell_command"
+    HREAD = ", ".join(sorted(HINDSIGHT_READ))
+    SCHEMA = ", ".join(sorted(BOOST_SCHEMA))
+    SERENA = ", ".join(sorted(SERENA_READ))
     # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
     cases = [
         ("reviewer extra Write", "alaa-reviewer", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
@@ -321,6 +336,8 @@ def self_test() -> int:
          f"tools: Read, Bash, {BOOST}", None, [], "body", "requires preloaded"),
         ("inherited role missing the Serena shell deny", "alaa-implementer",
          None, "disallowedTools: ", [ROUTING_SKILL], "body", "safety deny set differs"),
+        ("inherited role missing the Hindsight server deny", "alaa-implementer-opus",
+         None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
         ("inherited role carrying an extra deny", "alaa-implementer",
          None, f"disallowedTools: {SERENA_SHELL}, Write", [ROUTING_SKILL], "body",
          "safety deny set differs"),
@@ -334,6 +351,15 @@ def self_test() -> int:
          f"tools: Read, Bash, {BOOST}", None, [ROUTING_SKILL],
          "Domain baseline: apply /alaa-testing-strategy when installed.",
          "holds no Skill tool and does not preload it"),
+        ("memory role holding a Hindsight write tool", "alaa-researcher",
+         f"tools: Read, Bash, {BOOST}, {HREAD}, mcp__hindsight__hindsight_ingest_document", None,
+         [ROUTING_SKILL], "body", "MCP grant differs"),
+        ("memory role missing the Hindsight read set", "alaa-architecture-critic",
+         f"tools: Read, Bash, mcp__codegraph, {BOOST}, {SCHEMA}", None,
+         [ROUTING_SKILL], "body", "MCP grant differs"),
+        ("Hindsight granted to a role with no memory question", "alaa-reviewer",
+         f"tools: Read, Bash, mcp__codegraph, {SERENA}, {BOOST}, {SCHEMA}, mcp__hindsight__hindsight_reflect",
+         None, [ROUTING_SKILL], "body", "MCP grant differs"),
         ("inherited role that denies Skill and names an unpreloaded one", "alaa-implementer",
          None, f"disallowedTools: {SERENA_SHELL}, Skill", [ROUTING_SKILL],
          "Domain baseline: apply /alaa-php-clean-code when installed.",

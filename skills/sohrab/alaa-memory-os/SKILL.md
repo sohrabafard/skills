@@ -55,6 +55,7 @@ that names nothing shared returns nothing and still spends the budget below.
 - It names a prior session, a prior decision, or a file a prior session wrote.
 - It will outlive one context window: it has phases, it is a migration, or it reviews a system.
 - Two sources of truth disagree, or you are about to establish whether they do.
+- It asks whether existing infrastructure, another repository, or a prior decision already provides a capability, or who owns it.
 - You are about to write a note, or publish curated lessons from the evidence warehouse.
 
 ## When NOT to use
@@ -96,7 +97,9 @@ each shipped checker states its own.
 
 Recall is a contributor: proceeding without it lets nothing through that must not get through. Budget five
 seconds; when that is exceeded or the store is unreachable, continue from repository truth alone and report
-that memory was unavailable and which step ran without it. Never implement from memory alone: separate
+that memory was unavailable and which step ran without it. The deep recall that the active adapter assigns to
+existence and ownership questions synthesizes over raw memories and gets sixty seconds instead; past that it
+fails open the same way, and the answer is recorded as no memory evidence, never as absence. Never implement from memory alone: separate
 memory facts, repository facts, assumptions, and open questions before acting.
 
 Drift recording is a gate. If the drift record cannot be written, stop and report; do not continue past an

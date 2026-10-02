@@ -118,6 +118,8 @@ have one language throughout.
 
 Use the official MCP tools exposed by the selected harness. Start with bounded recall/reflect for the current repository bank, verify important claims against repository truth, and expand only the specific memory needed. Recall failure fails open after the skill's budget; continue from current source and disclose the missing memory evidence.
 
+Answer an existence or ownership question (does something already provide X, who owns X) with `hindsight_reflect`, querying the capability rather than a proposed artifact name. Page search and listing reach only topics that already have a knowledge page, so an empty or off-topic page result is not evidence of absence; this overrides the hook's page-first guidance for that question. Verify each reflect hit in the owning repository, and report an empty reflect as no memory evidence, never as absence.
+
 Use official retain or document-ingest tools only after the policy admission test passes. A write is successful only when Hindsight reports terminal completion. If the intended write cannot complete, report the unwritten durable note in the handoff; never claim it was stored.
 
 Official hook harnesses retain the completed session on `Stop` unless `retainSessions: false` disables it (see
