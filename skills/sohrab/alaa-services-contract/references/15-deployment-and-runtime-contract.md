@@ -2,25 +2,25 @@
 
 Use this file when the task touches how an Ala service is deployed, discovered, bootstrapped, or supplied with runtime infrastructure.
 
-This file is Ala-specific and normative. Use `$alaa-docker-production` for generic Docker engineering details and `$caas-arvan-kuber` for the primary Arvan Kubernetes production path.
+This file is Ala-specific and normative. Before creating or choosing a shared image, chart, CI include, generator, hook pack, or shared script, read `16-infrastructure-services-and-delivery-artifacts.md` first; it owns the registry of what already exists. Use `$alaa-docker-production` for generic Docker engineering details, `$alaa-k8s-helm` for chart and manifest mechanics, and `$caas-arvan-kuber` for Arvan CaaS platform facts.
 
 ## Ownership split
 
 Rules:
-- treat Arvan Kubernetes as the primary production path for Ala services
-- treat Docker Compose and Docker Swarm as supported Ala runtime modes that must still satisfy the same service contract
-- load `$caas-arvan-kuber` for Helm, values layering, OCI chart delivery, cluster secrets, and GitLab rollout mechanics
+- treat Kubernetes/OpenShift, released only from the `deploy` repository, as the only Ala production path; the current target is one offline OpenShift namespace
+- treat Docker Compose and Docker Swarm as supported Ala runtime modes that must still satisfy the same service contract; whether either becomes a production target is undecided (`16-infrastructure-services-and-delivery-artifacts.md`)
+- load `$alaa-k8s-helm` for Helm, values layering, OCI chart delivery, and rollout mechanics, `$alaa-gitlab-ci-cd` for pipeline mechanics, and `$caas-arvan-kuber` for a fact that differs on Arvan CaaS
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
-- do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$caas-arvan-kuber`
+- do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$alaa-k8s-helm` or `$caas-arvan-kuber`
 
 ## GitLab CI/CD baseline contract
 
 Rules:
-- for Ala Laravel backend services that follow the shared `platform-app-php` delivery model, default to the shared `service-ci-kit` project for GitLab CI/CD
-- keep `.gitlab-ci.yml` as a thin include-based wrapper and pin an explicit `SERVICE_CI_KIT_REF`
+- for every Ala service image, default to the shared `service-ci-kit` project for GitLab CI/CD: Laravel and PHP services include its PHP pipeline, other services its stack-neutral contract-and-handoff include (`16-infrastructure-services-and-delivery-artifacts.md` names both)
+- keep `.gitlab-ci.yml` as a thin include-based wrapper and pin the kit only through the include `ref:`; do not set `SERVICE_CI_KIT_REF` in a wrapper
 - keep shared CI logic in `service-ci-kit`; do not copy shared `ci/scripts/*` trees or local semantic-release helper trees into service repositories
-- keep only service-local CI assets in the app repo, such as `.gitlab-ci.yml`, `.releaserc.json`, `ci/helm/values.app.yaml`, `ci/helm/values.app.ops.yaml`, `ci/helm/values.app.hpa.yaml`, `ci/helm/values.ci.runtime.yaml`, and optional local overlays that the shared kit intentionally consumes
-- when shared CI behavior must change, update `service-ci-kit` first, release a new kit ref, and then bump the pinned ref in service repositories
+- keep only these CI inputs in the app repo: `.gitlab-ci.yml`, `.releaserc.json`, `deploy/service.yaml`, and a `Dockerfile` (with a `runtime` target for the PHP pipeline); a service repository holds no releasable chart, release values, deploy job, or cluster credential, because deployment lives only in the `deploy` repository (the gateway's render-only `charts/gateway` is image content)
+- when shared CI behavior must change, update `service-ci-kit` first, release a new kit tag, and then bump the include `ref:` in service repositories
 - load `$alaa-gitlab-ci-cd` for GitLab authoring, validation, and debugging, but keep the Ala fleet policy in this skill instead of moving it into the generic GitLab skill
 - if a repository cannot use `service-ci-kit`, report the blocker explicitly instead of silently reintroducing a repo-owned pipeline
 
@@ -28,14 +28,17 @@ Rules:
 
 Normalized Ala deployment modes:
 
-| Mode             | Status in the Ala contract | Primary use                                                         |
-|------------------|----------------------------|---------------------------------------------------------------------|
-| Arvan Kubernetes | primary production path    | managed production rollout                                          |
-| Docker Compose   | supported Ala runtime mode | single-host local, validation, or operator-managed runtime          |
-| Docker Swarm     | supported Ala runtime mode | multi-node Docker runtime with production-capable service discovery |
+| Mode                 | Status in the Ala contract | Primary use                                                    |
+|----------------------|----------------------------|----------------------------------------------------------------|
+| Kubernetes/OpenShift | only production path       | release from `deploy` with the image-embedded service contract |
+| Docker Compose       | supported Ala runtime mode | single-host local, validation, or operator-managed runtime     |
+| Docker Swarm         | supported Ala runtime mode | multi-node Docker runtime; production use undecided            |
+
+Which project owns each delivery step, and the current state of a Compose or Swarm production target for the
+gateway, live in `16-infrastructure-services-and-delivery-artifacts.md`.
 
 Rules:
-- new or refactored Ala services must document the Arvan Kubernetes path and both Docker paths, Compose and Swarm
+- new or refactored Ala services must ship `deploy/service.yaml` for the Kubernetes/OpenShift path and document both Docker paths, Compose and Swarm
 - when a repository cannot support one of the Docker modes yet, report the blocker explicitly instead of silently omitting the mode
 - prefer one wrapper entrypoint such as `scripts/docker/up-local.sh <compose|swarm>` or `dev|compose|swarm|prod` aliases when a repo exposes both modes
 - keep mode names explicit in docs, scripts, and examples
@@ -59,13 +62,12 @@ Rules:
 - if the existing shared infra is unhealthy, unreachable, misnamed, or incompatible, fail fast and report the blocker explicitly
 - only create shared infra when shared mode is explicitly selected, the canonical shared infra is absent, and the service owns a safe idempotent bootstrap path
 
-#### Helm and Arvan Kubernetes shared mode
+#### Kubernetes/OpenShift
 
 Rules:
-- support the current Ala `infra-pipeline` model where runtime DB settings and bootstrap DB settings are provided through the shared platform flow
-- keep the app runtime connection tuple explicit even when some values come from `infra-pipeline`-managed secrets or overlays
-- keep app runtime DB host selection separate from `dbBootstrap.pgHost`
-- do not require service-local chart logic to invent a second Postgres when `infra-pipeline`-managed shared Postgres is the selected mode
+- PostgreSQL, Redis, RabbitMQ, and the OTel Collector are external inputs of a release; the organization creates the database, role, and RabbitMQ vhost (deploy EO-03, EO-05), and no release creates a Postgres
+- the operator grants privileges with the deploy script `<repo>/scripts/db-ensure-privileges.sh` (idempotent), once per service after the database and role exist and before the first apply
+- keep the app runtime tuple explicit: the database defaults come from the service contract and the credentials from the service's runtime Secret
 
 #### Docker Compose and Docker Swarm shared mode
 
@@ -82,7 +84,7 @@ Rules:
 - use the explicit app runtime tuple `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD`
 - do not auto-switch into shared mode just because shared infra is discoverable
 - do not create shared infra in external mode
-- in Helm or Arvan Kubernetes external mode, allow runtime secrets or overlays to supply the full app tuple from an operator-managed external database
+- in Kubernetes/OpenShift external mode, the service's runtime Secret and its contract's database defaults supply the full app tuple from an operator-managed external database
 - in Docker Compose and Docker Swarm external mode, allow the app to connect directly to an external database without starting shared Postgres
 - if the external database and user already exist, allow provisioning to be disabled
 
@@ -145,7 +147,7 @@ exact-assertion tests still use a disposable container, never the shared instanc
 
 Environment philosophy (owner-finalized 2026-07-19): committed `.env` values and examples are written for the
 **Docker deploy** — in-network aliases (`amqp://…@rabbitmq:5672/`, `redis://redis:6379/0`,
-`postgres://…@postgres:5432/<db>`, `clickhouse:9000`). When a service deploys to Arvan Kubernetes instead, the
+`postgres://…@postgres:5432/<db>`, `clickhouse:9000`). When a service deploys to Kubernetes/OpenShift instead, the
 operator sets that environment's own endpoints (external managed infra hosts, or in-namespace service DNS) —
 the env KEYS are the stable contract, the VALUES are deployment-environment-owned.
 
@@ -185,7 +187,7 @@ Rules:
 
 Rules:
 - never bake application secrets, App keys, Passport keys, or runtime credentials into images or committed files
-- in Arvan Kubernetes, let the infra pipeline or chart-driven secret mounts provide the runtime secret material and follow `$caas-arvan-kuber`
+- in Kubernetes/OpenShift, reference pre-existing per-service Secrets by name; the operator creates them with the deploy script `<repo>/scripts/sync-openshift-secret.sh` (flow B in `16-infrastructure-services-and-delivery-artifacts.md`), and a release fails clearly when a required Secret or key is absent
 - in Docker Compose and Docker Swarm, let wrapper scripts generate, synchronize, or provision the runtime secret material before bringing services up
 - auth owns its own App key and Passport private and public key pair
 - gateway may consume only the auth public key required to verify access tokens
@@ -195,16 +197,11 @@ Rules:
 ## Registry contract
 
 Rules:
-- route public upstream image pulls through a configurable pull-through mirror
-- use `mirror.cdn.ir` as the normalized Ala default when the environment does not explicitly override the mirror
-- treat the pull-through mirror rule as mandatory for all public upstream images in Ala repositories, including CI helper images, validation images, OpenFGA runtime or CLI images, and public Dockerfile base images
-- for Ala GitLab pipelines, treat `MAIN_PUBLIC_DOCKER_REGISTRY_MIRROR` as the canonical public-mirror input variable
-- normalize repo-local CI variables such as `PUBLIC_DOCKER_REGISTRY` from `MAIN_PUBLIC_DOCKER_REGISTRY_MIRROR` when a repository wants a shorter local alias, but do not invent direct-public fallback behavior in CI
-- push and pull first-party images and OCI artifacts through the private registry path
-- for Ala GitLab pipelines, keep first-party registry auth and OCI delivery on `MAIN_DOCKER_PRIVATE_REGISTRY`, `MAIN_DOCKER_PRIVATE_REGISTRY_USER`, and `MAIN_DOCKER_PRIVATE_REGISTRY_PASS`
-- for Arvan Kubernetes image pulls, treat `MAIN_IMAGE_PULL_SECRET_NAME` as the canonical input for the namespace-local docker-registry secret name and wire it into the chart or manifest instead of assuming anonymous pulls
-- keep registry credentials explicit in CI, runtime, and cluster configuration instead of relying on anonymous behavior
-- do not hardcode direct Docker Hub pulls when the family mirror contract exists
+- pull and push every image and OCI artifact, first-party or public upstream, only through internal Nexus; there is no public-registry fallback, and an image missing from Nexus is an import task (Nexus entry in `16-infrastructure-services-and-delivery-artifacts.md`)
+- treat the Nexus-only rule as mandatory for every image in Ala repositories, including CI helper images, validation images, OpenFGA runtime or CLI images, and Dockerfile base images
+- take the registry address from `DOCKER_REGISTRY`; in Ala GitLab pipelines use `MAIN_DOCKER_REGISTRY` with `MAIN_DOCKER_REGISTRY_USER` and `MAIN_DOCKER_REGISTRY_PASS`
+- the image pull Secret is a deploy input: `MAIN_IMAGE_PULL_SECRET_NAME` is optional with an empty default (whether Nexus needs one is deploy EO-07); a service repository sets no pull Secret
+- keep registry credentials explicit in CI and runtime configuration; whether cluster pulls need a Secret is deploy EO-07
 - keep the repo-local environment variable names explicit in docs and CI, even when different repos choose slightly different variable names
 - do not leave Kubernetes pull-secret values cosmetic; if a deploy script sets `image.pullSecrets` or an equivalent field, the chart or manifest must render that field into the pod spec
 
@@ -220,9 +217,10 @@ Rules:
 ## Review checklist
 
 Flag a problem when you see:
-- no documented Arvan Kubernetes production path
+- no `deploy/service.yaml` for the Kubernetes/OpenShift production path
 - no Compose or no Swarm story and no explicit blocker
-- no shared `service-ci-kit` baseline for an Ala Laravel backend that follows the shared `platform-app-php` delivery model
+- no shared `service-ci-kit` baseline for an Ala service image
+- a releasable chart, release values, deploy job, or cluster credential in a service repository
 - a non-thin `.gitlab-ci.yml` in a service repo that should use the shared kit
 - shared `ci/scripts/*` or local semantic-release helper trees reintroduced into a service repo
 - undocumented divergence from the shared kit baseline
@@ -236,6 +234,6 @@ Flag a problem when you see:
 - gateway or another proxy targeting replica names, task IDs, or host IPs instead of the canonical backend alias
 - no canonical `<service>-platform-app-php` alias for a PHP or Laravel HTTP service and no documented equivalent
 - secrets or keys copied manually instead of being generated, synchronized, or mounted by the deploy path
-- direct public-registry pulls instead of the configured pull-through mirror
+- direct public-registry pulls instead of internal Nexus
 - no private-registry story for first-party images or OCI artifacts
 - no SQLite fast-test path for a new Laravel service and no documented blocker

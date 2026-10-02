@@ -19,6 +19,8 @@ Use this file when the service contract depends on standards, framework behavior
    - GitLab CI/CD docs: https://docs.gitlab.com/ci/
 4. Community posts, StackOverflow answers, blog posts, or vendor blogs only for troubleshooting a concrete failure or filling a gap after official docs and repo truth are checked.
 
+For an infrastructure service or delivery artifact, the owning repository's README and variable files outrank `16-infrastructure-services-and-delivery-artifacts.md` on a pin, a name, a status, a command, a step, or an exit code; for a delivery flow, the deploy repository's `<repo>/docs/architecture-guide.md` and its runbooks win.
+
 ## Freshness triggers
 
 Re-check official docs and target repo truth when the task mentions:

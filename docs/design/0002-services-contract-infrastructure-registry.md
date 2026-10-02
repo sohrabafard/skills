@@ -1,6 +1,6 @@
 # 0002 - Infrastructure services and shared delivery artifacts in alaa-services-contract
 
-Status: proposed
+Status: implemented 2026-10-03 (proposed 2026-10-02); questions 3, 4, 6 open; section 8 records what shipped
 Trigger condition: an agent rebuilt shared infrastructure that already existed because no skill named it.
 Owner: skill pack maintainer; Reviewer: none yet; Date: 2026-10-02
 Supersedes: none; Superseded by: none
@@ -150,3 +150,52 @@ A new artifact that fits no entry adds an entry in the same effort (section 5).
 5. Is the Hindsight step mandatory for every agent runtime, or only where Hindsight is the active memory adapter?
 6. When `16` ships, Phase A step 4 of both orchestrators' `references/verification-and-gates.md` (the existing-infrastructure check) becomes a pointer to its check-before-creating rule, so the rule keeps a single owner.
 7. The gateway generates the HAProxy request-timeout code `REQUEST_TIMEOUT` (408, `timeout http-request` or a body wait) and `GATEWAY_TIMEOUT` (504), and neither is registered in the fleet error-code references; should `alaa-services-contract` register both, so the gateway's static errorfile codes are named once for every consumer?
+
+## 8. Resolution (2026-10-03)
+
+Sections 1 to 7 are kept as written on 2026-10-02.
+
+Shipped in `skills/sohrab/alaa-services-contract`:
+
+- `references/16-infrastructure-services-and-delivery-artifacts.md`: the registry in two tables (identity:
+  owner, reference form, provides, consumers; operations: how to verify presence, where decisions live,
+  mechanics owner, status), the check-before-creating rule, project roles, the delivery flows A, B1, B2, C, and D with owner
+  and affected projects per step, a responsibility matrix, the gateway's generated-config and non-Kubernetes
+  facts, and the items still open. The deploy-tools image is its own entry. Paths use the `<repo>/` marker.
+- Status values gained `unpublished`: implemented in the owning repository, not yet published or run in the
+  target, with a pointer to the blocking item.
+- `SKILL.md`: one trigger row and "delivery-artifact ownership" plus a "before creating a shared Ala image, chart,
+  CI include, or generator" use-when phrase in the description, inside the packaging limit.
+- `references/00-topic-map.md`: Mode A++ vocabulary, and `16` read before `15`.
+- `references/15-deployment-and-runtime-contract.md`: links to `16` and now matches the repositories it
+  points to. The include `ref:` is the only kit pin, and a service repository keeps no releasable chart, release
+  values, deploy job, or cluster credential. Kubernetes/OpenShift through `deploy` is the only production path.
+  The registry rule is Nexus-only, and the pull Secret is a deploy input. Database and Secret rules follow the
+  deploy external-input, `db-ensure-privileges.sh`, and `sync-openshift-secret.sh` model.
+- `skills/sohrab/service-runtime-kit-governance/references/change-routing.md`: Helm, Kubernetes, and OpenShift
+  changes route to `deploy` only; GitLab CI changes route to `service-ci-kit`.
+- `references/90-source-map.md`: the owning repository's README and variable files outrank `16` on a pin, a
+  name, a status, a command, a step, or an exit code; for a delivery flow, deploy's architecture guide and
+  runbooks win.
+- `agents/openai.yaml`: the default prompt names the registry.
+
+Open questions:
+
+1. Closed. `ci-image` stays a separate repository and the only owner of the CI toolchain; `deploy` is the only
+   writer of `RUNNER_JOB_IMAGE` and builds the deploy-tools image `FROM` it. Decision record: the deploy plan
+   `docs/_agent_plans/20261001-114507_alaa-service-gateway-client__service-contracts-ssot.md`, section
+   "ci-image placement decision (2026-10-02)". The entry is `unpublished` (deploy EO-32), not `being decided`.
+2. Closed as proposed. The registry lists fleet-owned artifacts plus Nexus and the gateway as dependencies.
+   GitLab, OpenShift, and Arvan CaaS are not entries; their owning skills and the deploy EO register cover them.
+3. Open. Until decided, the skill pack maintainer reviews entry changes.
+4. Open. The drift check is not built and its home is undecided; `16` records the requirement that it skip
+   with an explicit message when sibling repositories are absent.
+5. Closed. The memory step goes through `alaa-memory-os` under its active adapter's rule for existence and
+   ownership questions, and fails open. Hindsight `reflect` applies only where Hindsight is the active adapter.
+   This matches Phase A step 4 of both orchestrators.
+6. Open, outside this change. Phase A step 4 of both orchestrators' `references/verification-and-gates.md`
+   already defers to this rule when the registry exists, and `16` defers the in-run record format to the
+   orchestrator. Reducing step 4 to a pointer is an orchestrator-owned edit for both runtimes in parity.
+7. Closed without a fleet registration. `10-core-service-contract.md` requires each service to keep one
+   committed code registry; the gateway lists `REQUEST_TIMEOUT` (408) and `GATEWAY_TIMEOUT` (504) in its own
+   `docs/error-code-registry.md`, and `16` points there.

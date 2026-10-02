@@ -1,6 +1,6 @@
 ---
 name: alaa-services-contract
-description: "Normative shared-surface contract for Ala backend services and `@alaa/*` packages: response and error envelopes, health and readiness shapes, trusted gateway headers, public identifiers, event and code names, permission catalogs, broker and metric registries, deadlines, and the runtime and CI baseline. Use when a change must look identical across the fleet, or when touching @alaa/sdk, Page Kit, UI Kit, app-shell, or widgets. Do not use for feature work in one service that changes no shared surface. Route Docker, Kubernetes, HAProxy, Laravel, and Go work to /alaa-docker-production, /caas-arvan-kuber, /alaa-haproxy, /alaa-laravel-architecture, /alaa-golang; observability gates to /alaa-observability-soc; reliability doctrine to /alaa-reliability-sla; security verdicts to /alaa-security-review; UI design to /alaa-frontend-developer."
+description: "Normative shared-surface contract for Ala backend services and `@alaa/*` packages: response and error envelopes, health and readiness shapes, trusted gateway headers, public identifiers, event and code names, permission catalogs, broker and metric registries, deadlines, the runtime and CI baseline, and delivery-artifact ownership. Use when a change must look identical across the fleet, before creating a shared Ala image, chart, CI include, or generator, or when touching @alaa/sdk, Page Kit, UI Kit, app-shell, or widgets. Do not use for feature work in one service that changes no shared surface. Route Docker, Kubernetes, HAProxy, Laravel, and Go work to /alaa-docker-production, /alaa-k8s-helm, /alaa-haproxy, /alaa-laravel-architecture, /alaa-golang; observability gates to /alaa-observability-soc; reliability doctrine to /alaa-reliability-sla; security verdicts to /alaa-security-review; UI design to /alaa-frontend-developer."
 ---
 
 # Alaa Services Contract
@@ -53,6 +53,7 @@ identifier-level trigger vocabulary per mode; each reference file names its own 
 | Task touches | File |
 |---|---|
 | Health, readiness, service identity, route families | `10-core-service-contract.md` |
+| Creating or choosing an image, toolchain, chart, CI include, generator, hook pack, or shared script; which project owns a delivery step; the gateway's generated config; a Compose or Swarm production target | `16-infrastructure-services-and-delivery-artifacts.md` |
 | Deployment mode, shared infra, registry, CI baseline, fast tests | `15-deployment-and-runtime-contract.md` |
 | Correlation headers, log fields, event and code names, request middleware | `20-operational-and-observability-contract.md` |
 | OTLP exporter env, Prometheus scraping, per-service telemetry reality | `21-alaa-platform-observability-directive.md` |
@@ -113,8 +114,9 @@ opinion.
   reuse-or-fail-fast obligation.
 - **`alaa-laravel-architecture`** and **`alaa-php-clean-code`** own PHP and Composer package selection and
   framework idiom. This skill keeps middleware order, class and helper names, and response boundaries.
-- **`alaa-docker-production`**, **`caas-arvan-kuber`**, **`alaa-haproxy`**, and **`alaa-gitlab-ci-cd`** own
-  the mechanics of containers, clusters, proxies, and pipelines. This skill keeps the Ala fleet policy.
+- **`alaa-docker-production`**, **`alaa-k8s-helm`**, **`alaa-haproxy`**, and **`alaa-gitlab-ci-cd`** own
+  the mechanics of containers, clusters and charts, proxies, and pipelines; **`caas-arvan-kuber`** owns Arvan
+  CaaS platform facts. This skill keeps the Ala fleet policy.
 - **`alaa-async-messaging`** and **`alaa-laravel-job-rabbitmq`** own broker prefetch, acknowledgement
   mechanics, DLQ handling, and consumer tuning. This skill keeps the exchange, queues, routing keys, and
   envelope.
