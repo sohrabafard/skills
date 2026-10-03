@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.0 - 2026-10-02
+
+- Phase A adds an existing-infrastructure check: before the plan approves a lane that creates a container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline, the main thread asks `/alaa-memory-os` whether existing infrastructure already provides it, verifies each hit in the owning repository, records `found` or `none` with evidence in the plan, and carries that answer in the lane's dispatch. A run had designed a tools image that an existing CI job image already provided, because no step asked.
+- `alaa-researcher`, `alaa-explorer`, and `alaa-architecture-critic` hold the read-only Hindsight set (page search, page read, page list, reflect) and no write tool; the grant checker enforces the exact set. Installed agents receive it only after an authorized reinstall.
+
 ## 4.1.0 - 2026-09-30
 
 - Move existing Sol Codex role pins to GPT-6.1 Sol following OpenAI's current coding-agent recommendation. Preserve role instructions, effort levels, and MCP grants. Calibration remains unrun; no project-specific quality advantage is claimed.

@@ -109,7 +109,7 @@ Read next:
 ### Mode A++ - Deployment and runtime contract
 
 Adds:
-- Arvan Kubernetes versus Docker ownership
+- Kubernetes/OpenShift versus Docker ownership
 - shared `service-ci-kit` GitLab CI/CD baseline for Ala services
 - thin-wrapper `.gitlab-ci.yml` and shared-versus-local CI ownership
 - shared-versus-external Postgres mode selection

@@ -103,6 +103,14 @@ BOOST_ROUTING = ["get-absolute-url"]
 BOOST_SCHEMA = ["database-schema", "database-connections"]
 BOOST_ERRORS = ["last-error", "read-log-entries"]
 BOOST_BROWSER = ["browser-logs"]
+# Read-only memory set for the roles that answer existence and ownership questions.
+# Retain, ingest, and capture tools stay with the main thread, which owns memory writes.
+HINDSIGHT_READ = [
+    "hindsight_search_knowledge_pages",
+    "hindsight_read_knowledge_page",
+    "hindsight_list_knowledge_pages",
+    "hindsight_reflect",
+]
 
 
 def _only(tools: list[str]) -> dict[str, list[str]]:
@@ -120,6 +128,7 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     },
     "alaa-architecture-critic": {
         "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
+        "hindsight": _only(HINDSIGHT_READ),
     },
     "alaa-browser-qa": {
         "laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING + BOOST_BROWSER + BOOST_ERRORS),
@@ -128,6 +137,7 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-documenter": {"laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING)},
     "alaa-explorer": {
         "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_ROUTING),
+        "hindsight": _only(HINDSIGHT_READ),
     },
     "alaa-failure-analyst": {
         "codegraph": {}, "serena": _only(SERENA_READ),
@@ -153,7 +163,7 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
         "codegraph": {}, "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA + BOOST_ERRORS),
     },
     "alaa-release-guardian": {"laravel-boost": _only(BOOST_DOCS)},
-    "alaa-researcher": {"laravel-boost": _only(BOOST_DOCS)},
+    "alaa-researcher": {"laravel-boost": _only(BOOST_DOCS), "hindsight": _only(HINDSIGHT_READ)},
     "alaa-reviewer": {
         "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_SCHEMA),
@@ -437,7 +447,28 @@ def self_test() -> int:
                 "remote-docs": {"url": "https://example.invalid/mcp", "enabled": False},
             }}, inventory), "grant differs"),
     ]
+    memory_inventory = {"hindsight": ("command", "hindsight", True)}
+    cases += [
+        ("memory role overgranted Hindsight", _resolved_failures(
+            "alaa-researcher", {"mcp_servers": {
+                "hindsight": {"command": "hindsight", "enabled": True},
+            }}, memory_inventory), "grant differs"),
+        ("Hindsight write tool on a memory role", _resolved_failures(
+            "alaa-researcher", {"mcp_servers": {
+                "hindsight": {"command": "hindsight", "enabled": True,
+                              "enabled_tools": HINDSIGHT_READ + ["hindsight_ingest_document"]},
+            }}, memory_inventory), "grant differs"),
+        ("Hindsight left enabled on a role with no memory question", _resolved_failures(
+            "alaa-reviewer", {"mcp_servers": {
+                "hindsight": {"command": "hindsight", "enabled": True, "enabled_tools": HINDSIGHT_READ},
+            }}, memory_inventory), "grant differs"),
+    ]
     failures = []
+    for role in ("alaa-researcher", "alaa-explorer", "alaa-architecture-critic"):
+        good = {"mcp_servers": _expected_overlay(role, memory_inventory)}
+        if good["mcp_servers"]["hindsight"].get("enabled_tools") != HINDSIGHT_READ or _resolved_failures(
+                role, good, memory_inventory):
+            failures.append(f"{role}: exact Hindsight read grant not produced or rejected")
     for role in ("alaa-reviewer", "alaa-reviewer-deep", "alaa-instruction-reviewer"):
         good = {"sandbox_mode": "read-only", "mcp_servers": _expected_overlay(role, inventory)}
         if _resolved_failures(role, good, inventory):

@@ -6,6 +6,7 @@ sandbox_mode = "read-only"
 # grant-template: materialize-live-parent-mcp
 #mcp_servers.serena.enabled = false
 #mcp_servers.laravel-boost.enabled_tools = ["search-docs", "application-info", "database-schema", "database-connections"]
+#mcp_servers.hindsight.enabled_tools = ["hindsight_search_knowledge_pages", "hindsight_read_knowledge_page", "hindsight_list_knowledge_pages", "hindsight_reflect"]
 
 developer_instructions = """
 You are the architecture critic, not the architect of record. Pressure-test a proposed plan against repository reality before expensive implementation begins.
@@ -18,6 +19,7 @@ Evaluate:
 - API/event/data contract compatibility and versioning;
 - consistency, idempotency, ordering, concurrency, caching, retries, and partial failure;
 - migration/rollout/rollback path and mixed-version operation;
+- every existing-infrastructure answer the plan records (verification-and-gates.md Phase A step 4): re-check it through /alaa-memory-os and verify each hit in the owning repository;
 - security and trust boundaries;
 - observability and operability;
 - complexity, coupling, testability, and simpler alternatives.

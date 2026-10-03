@@ -13,7 +13,8 @@ Use this reference when the main question is where a runtime-related change shou
 | Add service-only env lines for app, worker, or scheduler | Service repo runtime extras | `runtime/env.*.extra` | generated compose |
 | Add service-specific provisioning or migration logic | Service repo hooks | `runtime/hooks/**` | generated `scripts/docker/*.sh` |
 | Change generated compose structure, generated shell behavior, generated Octane or PgBouncer files, render or validate logic, repo-support seeding, `.gitattributes` management, `.githooks`, or copied helper scripts for all services | Shared runtime kit | sibling `service-runtime-kit` repo | generated outputs in the service repo |
-| Change GitLab CI, Helm, Kubernetes, or OpenShift deployment behavior | Deployment layer | `service-ci-kit` or deploy files | `service-runtime-kit` or generated runtime files |
+| Change a service's GitLab CI pipeline: build, label, smoke, release, handoff | Shared CI kit | `service-ci-kit`, then the include `ref:` in the service's thin `.gitlab-ci.yml` | `service-runtime-kit` or generated runtime files |
+| Change Helm, Kubernetes, or OpenShift deployment behavior | Deployment repository | the `deploy` repository only; `service-ci-kit` has no cluster jobs | `service-ci-kit`, `service-runtime-kit`, or generated runtime files |
 
 ## Practical Examples
 

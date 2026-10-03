@@ -1,27 +1,88 @@
 /*
-  PhpStorm Markdown Preview — GitHub Light Style
-  ------------------------------------------------
-  Usage:
-  PhpStorm / JetBrains IDE:
-  Settings → Languages & Frameworks → Markdown → Custom CSS → Load from
-  Select this file.
+  PhpStorm Markdown Preview — GitHub Light, bidirectional (Persian / English)
+  ===========================================================================
 
-  Goal:
-  Make Markdown Preview look very close to GitHub's light markdown rendering,
-  while keeping the IDE/editor theme unchanged.
+  Install
+  -------
+  PhpStorm / any JetBrains IDE:
+  Settings → Languages & Frameworks → Markdown → Custom CSS → "Load from"
+  and select this file. The IDE and editor themes stay untouched.
+
+  Goal
+  ----
+  Render Markdown as close to GitHub's light theme as the JCEF preview allows,
+  and make Persian, English and mixed documents read correctly without the
+  stylesheet knowing which document it renders.
+
+  How direction is decided
+  ------------------------
+  Two layers work together.
+
+  1. Section layer. The nearest preceding `h1` or `h2` sets the direction of
+     every block after it. The preview gives each heading an `id` built from
+     its text, so a heading whose id contains Persian letters starts a
+     right-to-left section and any other heading starts a left-to-right one.
+     A fully Persian document is therefore right-to-left from its title down,
+     and an English plan with one Persian section flips only that section.
+     The section direction places list markers, quote bars, task checkboxes
+     and table columns on the correct side.
+
+  2. Block layer. Every text block (paragraph, heading, list item, table cell,
+     quote, caption) is `unicode-bidi: plaintext`: its own first strong
+     character decides how its words are ordered and which edge it aligns to.
+     An English line inside a Persian section still reads left-to-right. A
+     line with no strong character of its own (a list item holding only a
+     link or only code) falls back to the section direction.
+
+  List markers are drawn as `::before` content inside the text flow, because
+  a native marker can only sit on the side given by `direction` and ignores
+  `plaintext`. Ordered lists use a CSS counter for the same reason.
+
+  Escape hatches
+  --------------
+  Automatic detection reads the first strong character, as `dir="auto"` does.
+  A Persian sentence that opens with a Latin word therefore resolves
+  left-to-right. To force a direction:
+
+  1. Wrap a document or a part of it in `<div dir="rtl">` … `</div>` (blank
+     line after the opening tag). Every block inside then follows that
+     direction instead of guessing. `dir="ltr"` works the same way.
+  2. Write one block as raw HTML with `dir="rtl"`, for example `<p dir="rtl">`.
+  3. Put a RIGHT-TO-LEFT MARK (U+200F) as the first character of the line.
+
+  Code blocks, inline code and Mermaid diagrams are always left-to-right.
+
+  Structure
+  ---------
+   1. Tokens
+   2. Page and reset
+   3. Bidi block layer — automatic, per block
+   4. Bidi section layer — automatic, per h1/h2 section
+   5. Bidi override — explicit `dir`
+   6. Typography and headings
+   7. Lists
+   8. Task lists
+   9. Block quotes and alerts
+  10. Tables
+  11. Code
+  12. Syntax highlighting
+  13. Media, rules, details, footnotes
+  14. Mermaid diagrams
+  15. Selection, focus, print
 */
+
+/* ================================================================
+   1. Tokens
+   ================================================================ */
 
 :root {
   color-scheme: light !important;
 
   --gh-canvas-default: #ffffff;
   --gh-canvas-subtle: #f6f8fa;
-  --gh-canvas-inset: #f6f8fa;
 
   --gh-fg-default: #1f2328;
   --gh-fg-muted: #59636e;
-  --gh-fg-subtle: #6a737d;
-  --gh-fg-on-emphasis: #ffffff;
 
   --gh-border-default: #d1d9e0;
   --gh-border-muted: #d8dee4;
@@ -29,21 +90,46 @@
   --gh-accent-fg: #0969da;
   --gh-accent-emphasis: #0969da;
 
-  --gh-attention-subtle: #fff8c5;
-  --gh-attention-muted: #eac54f;
-
+  --gh-success-fg: #1a7f37;
+  --gh-attention-fg: #9a6700;
+  --gh-done-fg: #8250df;
   --gh-danger-fg: #cf222e;
 
   --gh-neutral-muted: rgba(175, 184, 193, 0.2);
-  --gh-shadow-small: 0 1px 0 rgba(31, 35, 40, 0.04);
 
-  --gh-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --gh-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    "Liberation Mono", monospace;
+  /* Persian faces first: used when installed, skipped when not. */
+  --gh-font-sans: "Vazirmatn", "Vazir", "IRANSansX", "IRANSans", "Sahel",
+    "Estedad", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text",
+    "Segoe UI", "Noto Sans", "Noto Naskh Arabic", Tahoma, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --gh-font-mono: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Mono",
+    Menlo, Consolas, "Liberation Mono", "Courier New", Tahoma, monospace;
+
+  /* One knob controls list indentation and marker width; they must match,
+     otherwise wrapped lines stop aligning with the first line. */
+  --gh-list-indent: 1.7em;
+
+  /* 1 while the section direction is unknown (content above the first h1/h2),
+     0 once a section or a `dir` container declares it. Space and accent bars
+     that belong to the "start" edge are mirrored onto the far edge while the
+     start edge is unknown, and dropped there once it is known. */
+  --gh-far: 1;
 }
 
-/* JetBrains preview root + generic browser root */
+/* ================================================================
+   2. Page and reset
+   ================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100% !important;
+}
+
 html,
 body,
 .markdown-body,
@@ -55,10 +141,6 @@ article {
   color: var(--gh-fg-default) !important;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-}
-
 body,
 .markdown-body {
   max-width: 980px !important;
@@ -66,35 +148,256 @@ body,
   padding: 45px !important;
   font-family: var(--gh-font-sans) !important;
   font-size: 16px !important;
-  line-height: 1.5 !important;
+  line-height: 1.65 !important;
   word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.markdown-body {
+  padding: 0 !important;
 }
 
 @media (max-width: 767px) {
-  body,
-  .markdown-body {
+  body {
     padding: 24px !important;
   }
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box !important;
-}
-
-.markdown-body::before {
-  display: table !important;
-  content: "" !important;
-}
-
+body::after,
 .markdown-body::after {
   display: table !important;
   clear: both !important;
   content: "" !important;
 }
 
-/* Typography */
+/* ================================================================
+   3. Bidi block layer — automatic, per block
+   ================================================================
+
+   The page itself stays left-to-right. Each block resolves its own direction
+   from its own text; `text-align: start` then follows that resolved
+   direction.                                                                */
+
+html,
+body,
+.markdown-body,
+#preview,
+.content,
+.main,
+article {
+  direction: ltr !important;
+}
+
+/* Zero specificity, so the section layer and explicit overrides can refine
+   it. */
+:where(p, li, dt, dd, th, td, caption, figcaption, summary, blockquote, h1, h2,
+  h3, h4, h5, h6, .markdown-alert, .markdown-alert-title) {
+  unicode-bidi: plaintext !important;
+  text-align: start !important;
+}
+
+/* Inline runs that must keep their own internal ordering. `isolate` stops them
+   from disturbing the sentence around them; the sentence still decides where
+   they are placed. */
+code,
+kbd,
+samp,
+var,
+tt {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Links are deliberately not isolated. `plaintext` takes its direction from
+   the first strong character outside isolates and, finding none, falls back
+   to left-to-right, not to the section direction; an isolated link would
+   therefore turn a table-of-contents item that holds only a Persian link
+   into a left-to-right line. */
+a {
+  unicode-bidi: normal !important;
+}
+
+/* ================================================================
+   4. Bidi section layer — automatic, per h1/h2 section
+   ================================================================
+
+   A heading is Persian when its generated id contains one of the most common
+   Persian letters; every Persian word contains at least one of them. Headings
+   with no id, or with only Latin letters and digits, are left-to-right.
+
+   Each rule below matches "after a heading of this kind, with this many
+   changes of kind before it". All rules sit inside `:where()`, so they carry
+   no specificity: the later rule wins when several match, which is exactly
+   the nearest heading, and any explicit rule (code blocks, `dir` overrides)
+   wins over all of them. The chain covers six changes of language between
+   h1/h2 headings; content past the sixth change keeps the sixth direction.
+
+   Inside a Persian section, paragraphs, list items and subheadings are forced
+   right-to-left instead of detecting, so a Persian line that opens with a
+   Latin word, a quoted term or a number («ServiceContract»: …, 5.1 bootstrap
+   …) still reads right-to-left. A fully English line there reads
+   right-to-left too; mark it `dir="ltr"` if that matters. Table cells always
+   detect, and left-to-right sections keep detecting, so a Persian line in an
+   English document still right-aligns.
+
+   Code blocks and diagrams are not section blocks and never change.         */
+
+:where(
+  :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: ltr !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: plaintext !important;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: rtl !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: isolate !important;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: ltr !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: plaintext !important;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: rtl !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: isolate !important;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: ltr !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: plaintext !important;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: rtl !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: isolate !important;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert)
+) {
+  direction: ltr !important;
+  --gh-far: 0;
+}
+
+:where(
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, h3, h4, h5, h6),
+  :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):is([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(h1, h2):not([id*="ا"], [id*="ی"], [id*="ي"], [id*="و"], [id*="ر"], [id*="د"], [id*="ن"], [id*="ه"], [id*="م"], [id*="ت"], [id*="ب"], [id*="س"], [id*="ک"], [id*="ك"], [id*="ل"], [id*="ش"]) ~ :is(p, ul, ol, dl, blockquote, table, details, h1, h2, h3, h4, h5, h6, .markdown-alert) :is(p, li, dt, dd, summary, .markdown-alert-title)
+) {
+  unicode-bidi: plaintext !important;
+}
+
+/* ================================================================
+   5. Bidi override — explicit `dir`
+   ================================================================
+
+   A `dir` attribute, or an `.rtl` / `.ltr` class, replaces both automatic
+   layers for that element and everything inside it. Text blocks inside are
+   isolated with the declared direction instead of guessing, which fixes a
+   Persian sentence that opens with a Latin word. Table cells keep ordering
+   their own words, so a code column is never reordered.                     */
+
+[dir="rtl"],
+.rtl {
+  direction: rtl !important;
+  --gh-far: 0;
+}
+
+[dir="ltr"],
+.ltr {
+  direction: ltr !important;
+  --gh-far: 0;
+}
+
+:is([dir="rtl"], [dir="ltr"], .rtl, .ltr),
+:is([dir="rtl"], [dir="ltr"], .rtl, .ltr)
+  :is(p, li, dt, dd, blockquote, summary, figcaption, caption, h1, h2, h3, h4,
+    h5, h6, .markdown-alert, .markdown-alert-title) {
+  unicode-bidi: isolate !important;
+  text-align: start !important;
+}
+
+:is([dir="rtl"], .rtl) :is(p, li, dt, dd, blockquote, summary, figcaption,
+    caption, h1, h2, h3, h4, h5, h6, .markdown-alert, .markdown-alert-title,
+    ul, ol, dl, table, details) {
+  direction: rtl !important;
+}
+
+:is([dir="ltr"], .ltr) :is(p, li, dt, dd, blockquote, summary, figcaption,
+    caption, h1, h2, h3, h4, h5, h6, .markdown-alert, .markdown-alert-title,
+    ul, ol, dl, table, details) {
+  direction: ltr !important;
+}
+
+[dir="auto"] {
+  unicode-bidi: plaintext !important;
+  text-align: start !important;
+}
+
+/* ================================================================
+   6. Typography and headings
+   ================================================================ */
+
 p,
 blockquote,
 ul,
@@ -126,13 +429,19 @@ a:not([href]) {
   text-decoration: none !important;
 }
 
-strong {
+strong,
+b {
   font-weight: 600 !important;
-  color: var(--gh-fg-default) !important;
+  color: inherit !important;
 }
 
-em {
+em,
+i {
   color: inherit !important;
+}
+
+del {
+  color: var(--gh-fg-muted) !important;
 }
 
 small {
@@ -155,7 +464,6 @@ sup {
   top: -0.5em !important;
 }
 
-/* Headings */
 h1,
 h2,
 h3,
@@ -164,8 +472,9 @@ h5,
 h6 {
   margin-top: 24px !important;
   margin-bottom: 16px !important;
+  padding-top: 0 !important;
   font-weight: 600 !important;
-  line-height: 1.25 !important;
+  line-height: 1.35 !important;
   color: var(--gh-fg-default) !important;
 }
 
@@ -207,32 +516,7 @@ h6:first-child {
   margin-top: 0 !important;
 }
 
-/* Lists */
-ul,
-ol {
-  padding-left: 2em !important;
-}
-
-ul ul,
-ul ol,
-ol ol,
-ol ul {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-li + li {
-  margin-top: 0.25em !important;
-}
-
-li > p {
-  margin-top: 16px !important;
-}
-
-li > p:first-child {
-  margin-top: 0 !important;
-}
-
+/* Definition lists */
 dl {
   padding: 0 !important;
 }
@@ -241,34 +525,208 @@ dl dt {
   padding: 0 !important;
   margin-top: 16px !important;
   font-size: 1em !important;
-  font-style: italic !important;
   font-weight: 600 !important;
 }
 
 dl dd {
-  padding: 0 16px !important;
+  padding-inline-start: 16px !important;
+  padding-inline-end: calc(16px * var(--gh-far)) !important;
+  margin: 0 0 16px 0 !important;
+}
+
+/* ================================================================
+   7. Lists
+   ================================================================
+
+   Native markers are dropped and rebuilt as `::before` content so they travel
+   with the text instead of being pinned to one edge.
+
+   The geometry is a hanging indent:
+     · start padding of one indent unit, mirrored on the far edge only while
+       the section direction is unknown (`--gh-far`),
+     · a negative text-indent of the same size, which Chromium applies at the
+       resolved start edge of a `plaintext` block,
+     · a marker box exactly one indent unit wide, so the text after it lands
+       on the edge that wrapped lines use.
+
+   Nested lists sit inside their parent item's content box, so each level steps
+   in on whichever side the text flows from.                                 */
+
+ul,
+ol {
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin-top: 0.25em !important;
+  margin-bottom: 0 !important;
+}
+
+li {
+  padding-inline-start: var(--gh-list-indent) !important;
+  padding-inline-end: calc(var(--gh-list-indent) * var(--gh-far)) !important;
+  text-indent: calc(-1 * var(--gh-list-indent)) !important;
+  list-style: none !important;
+  color: var(--gh-fg-default) !important;
+}
+
+li + li {
+  margin-top: 0.25em !important;
+}
+
+li::before {
+  display: inline-block !important;
+  width: var(--gh-list-indent) !important;
+  text-indent: 0 !important;
+  text-align: center !important;
+  unicode-bidi: isolate !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  color: var(--gh-fg-muted) !important;
+}
+
+ul > li::before {
+  content: "\2022" !important; /* • */
+}
+
+ul ul > li::before {
+  content: "\25E6" !important; /* ◦ */
+}
+
+ul ul ul > li::before {
+  content: "\25AA" !important; /* ▪ */
+}
+
+ol {
+  counter-reset: gh-ol !important;
+}
+
+ol > li {
+  counter-increment: gh-ol !important;
+}
+
+/* The marker inherits the item's direction, so it reads "1." in a
+   left-to-right section and ".1" (dot towards the text) in a right-to-left
+   one. */
+ol > li::before {
+  content: counter(gh-ol) "." !important;
+}
+
+/* Respect an explicit start attribute on ordered lists. */
+ol[start="0"] { counter-reset: gh-ol -1 !important; }
+ol[start="2"] { counter-reset: gh-ol 1 !important; }
+ol[start="3"] { counter-reset: gh-ol 2 !important; }
+ol[start="4"] { counter-reset: gh-ol 3 !important; }
+ol[start="5"] { counter-reset: gh-ol 4 !important; }
+ol[start="6"] { counter-reset: gh-ol 5 !important; }
+ol[start="7"] { counter-reset: gh-ol 6 !important; }
+ol[start="8"] { counter-reset: gh-ol 7 !important; }
+ol[start="9"] { counter-reset: gh-ol 8 !important; }
+ol[start="10"] { counter-reset: gh-ol 9 !important; }
+ol[start="11"] { counter-reset: gh-ol 10 !important; }
+ol[start="12"] { counter-reset: gh-ol 11 !important; }
+ol[start="13"] { counter-reset: gh-ol 12 !important; }
+ol[start="14"] { counter-reset: gh-ol 13 !important; }
+ol[start="15"] { counter-reset: gh-ol 14 !important; }
+ol[start="16"] { counter-reset: gh-ol 15 !important; }
+ol[start="17"] { counter-reset: gh-ol 16 !important; }
+ol[start="18"] { counter-reset: gh-ol 17 !important; }
+ol[start="19"] { counter-reset: gh-ol 18 !important; }
+ol[start="20"] { counter-reset: gh-ol 19 !important; }
+
+/* text-indent is inherited, so every block that can sit inside a list item has
+   to clear it or its own first line would hang. */
+li > p,
+li > ul,
+li > ol,
+li > dl,
+li > pre,
+li > table,
+li > blockquote,
+li > details,
+li > div,
+li > figure,
+li > h1,
+li > h2,
+li > h3,
+li > h4,
+li > h5,
+li > h6 {
+  text-indent: 0 !important;
+}
+
+li > p {
+  margin-top: 16px !important;
   margin-bottom: 16px !important;
 }
 
-/* Task lists */
-.task-list-item {
-  list-style-type: none !important;
+li > p:first-child {
+  margin-top: 0 !important;
 }
 
-.task-list-item input[type="checkbox"] {
-  margin: 0 0.2em 0.25em -1.4em !important;
+li > p:last-child {
+  margin-bottom: 0 !important;
+}
+
+li > pre,
+li > table,
+li > blockquote {
+  margin-top: 8px !important;
+}
+
+/* ================================================================
+   8. Task lists
+   ================================================================
+
+   The checkbox takes the marker's place: it hangs in the start indent and
+   keeps a gap on both sides, so it never covers the first letter in either
+   direction.                                                                */
+
+li.task-list-item::before,
+li:has(> input[type="checkbox"]:first-child)::before {
+  content: none !important;
+}
+
+li input[type="checkbox"] {
+  width: 1em !important;
+  height: 1em !important;
+  margin-block: 0 0.15em !important;
+  margin-inline: calc((var(--gh-list-indent) - 1em) / 2) !important;
+  font-size: inherit !important;
   vertical-align: middle !important;
+  accent-color: var(--gh-accent-emphasis) !important;
 }
 
 .contains-task-list {
-  padding-left: 2em !important;
+  padding: 0 !important;
 }
 
-/* Blockquotes */
-blockquote {
+/* ================================================================
+   9. Block quotes and alerts
+   ================================================================
+
+   The accent bar sits on the start edge of the section. Above the first
+   heading the start edge is unknown, so the bar is mirrored on both sides.  */
+
+blockquote,
+.markdown-alert,
+div[class*="markdown-alert"] {
   padding: 0 1em !important;
+  margin-inline: 0 !important;
+  border: 0 solid var(--gh-border-default) !important;
+  border-inline-start-width: 0.25em !important;
+  border-inline-end-width: calc(0.25em * var(--gh-far)) !important;
+}
+
+blockquote {
   color: var(--gh-fg-muted) !important;
-  border-left: 0.25em solid var(--gh-border-default) !important;
 }
 
 blockquote > :first-child {
@@ -279,16 +737,63 @@ blockquote > :last-child {
   margin-bottom: 0 !important;
 }
 
-/* Horizontal rule */
-hr {
-  height: 0.25em !important;
-  padding: 0 !important;
-  margin: 24px 0 !important;
-  background-color: var(--gh-border-default) !important;
-  border: 0 !important;
+blockquote p,
+blockquote li {
+  color: var(--gh-fg-muted) !important;
 }
 
-/* Tables */
+/* Only the container carries the bar. The wildcard above is scoped to div so
+   the title paragraph, whose class also contains "markdown-alert", does not
+   draw a second bar inside the callout. */
+.markdown-alert,
+div[class*="markdown-alert"] {
+  padding: 0.5rem 1rem !important;
+  margin-bottom: 16px !important;
+  color: var(--gh-fg-default) !important;
+}
+
+.markdown-alert > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-alert > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-alert-title,
+p[class*="markdown-alert"] {
+  border: 0 !important;
+  padding: 0 !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 4px !important;
+}
+
+.markdown-alert-title .markdown-alert-icon {
+  margin-inline: 0 8px !important;
+}
+
+.markdown-alert-note { border-color: var(--gh-accent-fg) !important; }
+.markdown-alert-tip { border-color: var(--gh-success-fg) !important; }
+.markdown-alert-important { border-color: var(--gh-done-fg) !important; }
+.markdown-alert-warning { border-color: var(--gh-attention-fg) !important; }
+.markdown-alert-caution { border-color: var(--gh-danger-fg) !important; }
+
+.markdown-alert-note .markdown-alert-title { color: var(--gh-accent-fg) !important; }
+.markdown-alert-tip .markdown-alert-title { color: var(--gh-success-fg) !important; }
+.markdown-alert-important .markdown-alert-title { color: var(--gh-done-fg) !important; }
+.markdown-alert-warning .markdown-alert-title { color: var(--gh-attention-fg) !important; }
+.markdown-alert-caution .markdown-alert-title { color: var(--gh-danger-fg) !important; }
+
+/* ================================================================
+   10. Tables
+   ================================================================
+
+   Column order follows the section: in a Persian section the first column is
+   on the right. Every cell orders its own words (`plaintext`) but aligns to
+   the table's start edge, so a column stays straight even when one cell is
+   English or code.                                                          */
+
 table {
   display: block !important;
   width: max-content !important;
@@ -298,8 +803,10 @@ table {
   border-collapse: collapse !important;
 }
 
-table th {
-  font-weight: 600 !important;
+table caption {
+  margin-bottom: 8px !important;
+  font-size: 0.9em !important;
+  color: var(--gh-fg-muted) !important;
 }
 
 table th,
@@ -307,6 +814,13 @@ table td {
   padding: 6px 13px !important;
   border: 1px solid var(--gh-border-default) !important;
   color: var(--gh-fg-default) !important;
+  vertical-align: top !important;
+  text-align: -webkit-match-parent !important;
+  text-align: match-parent !important;
+}
+
+table th {
+  font-weight: 600 !important;
 }
 
 table tr {
@@ -314,25 +828,58 @@ table tr {
   border-top: 1px solid var(--gh-border-muted) !important;
 }
 
-table tr:nth-child(2n) {
+table tbody tr:nth-child(2n) {
   background-color: var(--gh-canvas-subtle) !important;
+}
+
+/* An explicit alignment in the Markdown source must still win. */
+table th[align="left"],
+table td[align="left"] {
+  text-align: left !important;
+}
+
+table th[align="center"],
+table td[align="center"] {
+  text-align: center !important;
+}
+
+table th[align="right"],
+table td[align="right"] {
+  text-align: right !important;
 }
 
 table img {
   background-color: transparent !important;
 }
 
-/* Code */
+/* Lists inside cells keep their markers but lose the wide indent. */
+table li {
+  padding-inline: 1.1em calc(1.1em * var(--gh-far)) !important;
+  text-indent: -1.1em !important;
+}
+
+table li::before {
+  width: 1.1em !important;
+}
+
+/* ================================================================
+   11. Code
+   ================================================================ */
+
 code,
 kbd,
 samp,
+var,
+tt,
 pre {
   font-family: var(--gh-font-mono) !important;
-  font-size: 12px !important;
+  font-style: normal !important;
 }
 
 code,
-samp {
+samp,
+var,
+tt {
   padding: 0.2em 0.4em !important;
   margin: 0 !important;
   font-size: 85% !important;
@@ -345,13 +892,12 @@ samp {
 kbd {
   display: inline-block !important;
   padding: 3px 5px !important;
-  font: 11px var(--gh-font-mono) !important;
+  font-size: 11px !important;
   line-height: 10px !important;
   color: var(--gh-fg-default) !important;
   vertical-align: middle !important;
   background-color: var(--gh-canvas-subtle) !important;
   border: solid 1px var(--gh-border-default) !important;
-  border-bottom-color: var(--gh-border-default) !important;
   border-radius: 6px !important;
   box-shadow: inset 0 -1px 0 var(--gh-border-default) !important;
 }
@@ -365,12 +911,18 @@ pre {
   background-color: var(--gh-canvas-subtle) !important;
   border-radius: 6px !important;
   border: 0 !important;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  word-wrap: normal !important;
 }
 
 pre code,
-pre tt {
+pre samp,
+pre tt,
+pre span {
   display: inline !important;
-  max-width: auto !important;
   padding: 0 !important;
   margin: 0 !important;
   overflow: visible !important;
@@ -381,14 +933,20 @@ pre tt {
   border: 0 !important;
   border-radius: 0 !important;
   font-size: 100% !important;
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+  text-align: left !important;
 }
 
-/* JetBrains / highlight.js / common token classes.
-   Note: some syntax colors may still be partially controlled by IDE internals. */
+/* ================================================================
+   12. Syntax highlighting
+   ================================================================
+   Token classes emitted by highlight.js and Prism. Some colours may still be
+   partly controlled by the IDE's own preview internals.                      */
+
 .hljs,
 .highlight,
-pre .token,
-pre span {
+pre .token {
   background: transparent !important;
 }
 
@@ -461,7 +1019,18 @@ pre span {
   color: #57606a !important;
 }
 
-/* Images */
+/* ================================================================
+   13. Media, rules, details, footnotes
+   ================================================================ */
+
+hr {
+  height: 0.25em !important;
+  padding: 0 !important;
+  margin: 24px 0 !important;
+  background-color: var(--gh-border-default) !important;
+  border: 0 !important;
+}
+
 img {
   max-width: 100% !important;
   box-sizing: content-box !important;
@@ -476,52 +1045,13 @@ img[align="left"] {
   padding-right: 20px !important;
 }
 
-/* Alerts / notes, compatible with GitHub-style blockquote notes where possible */
-.markdown-alert,
-[class*="markdown-alert"] {
-  padding: 0.5rem 1rem !important;
-  margin-bottom: 16px !important;
-  color: inherit !important;
-  border-left: 0.25em solid var(--gh-border-default) !important;
-}
-
-.markdown-alert-title,
-[class*="markdown-alert-title"] {
-  display: flex !important;
-  font-weight: 600 !important;
-  align-items: center !important;
-  line-height: 1 !important;
-  margin-bottom: 8px !important;
-}
-
-.markdown-alert-note {
-  border-left-color: #0969da !important;
-}
-
-.markdown-alert-tip {
-  border-left-color: #1a7f37 !important;
-}
-
-.markdown-alert-important {
-  border-left-color: #8250df !important;
-}
-
-.markdown-alert-warning {
-  border-left-color: #9a6700 !important;
-}
-
-.markdown-alert-caution {
-  border-left-color: #cf222e !important;
-}
-
-/* Details / summary */
 details {
   display: block !important;
 }
 
 summary {
-  display: list-item !important;
   cursor: pointer !important;
+  font-weight: 600 !important;
   color: var(--gh-fg-default) !important;
 }
 
@@ -529,56 +1059,152 @@ details[open] summary {
   margin-bottom: 0.5em !important;
 }
 
-/* Footnotes */
 .footnotes {
-  font-size: 12px !important;
+  font-size: 0.85em !important;
   color: var(--gh-fg-muted) !important;
   border-top: 1px solid var(--gh-border-default) !important;
+  padding-top: 8px !important;
+  margin-top: 24px !important;
 }
 
-.footnotes ol {
-  padding-left: 16px !important;
-}
-
-.footnotes li {
-  position: relative !important;
-}
-
-.footnotes li:target::before {
-  position: absolute !important;
-  top: -8px !important;
-  right: -8px !important;
-  bottom: -8px !important;
-  left: -24px !important;
-  pointer-events: none !important;
-  content: "" !important;
-  border: 2px solid var(--gh-accent-emphasis) !important;
+/* Highlight the targeted footnote with an outline rather than a pseudo element,
+   so the generated list number is not overwritten. */
+.footnotes li:target {
+  color: var(--gh-fg-default) !important;
+  outline: 2px solid var(--gh-accent-emphasis) !important;
+  outline-offset: 4px !important;
   border-radius: 6px !important;
 }
 
-.footnotes li:target {
-  color: var(--gh-fg-default) !important;
-}
+/* ================================================================
+   14. Mermaid diagrams
+   ================================================================
 
-/* Mermaid / diagrams when rendered by JetBrains plugin */
+   Mermaid sizes each label box before this stylesheet styles the text inside
+   it, so the Markdown block rules (paragraph margins, list geometry, bidi
+   alignment) must not reach into a diagram: a paragraph margin there pushes
+   the text out of its box and leaves an empty grey label bar behind.        */
+
 .mermaid,
 .language-mermaid,
-pre.mermaid {
+pre.mermaid,
+.mermaid svg {
   background: var(--gh-canvas-default) !important;
+  color: var(--gh-fg-default) !important;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+.mermaid :is(p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th) {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: inherit !important;
+  text-indent: 0 !important;
+  text-align: center !important;
+  unicode-bidi: normal !important;
+  border: 0 !important;
+}
+
+.mermaid li::before {
+  content: none !important;
+}
+
+.mermaid svg .node .label-container,
+.mermaid svg .node rect,
+.mermaid svg .node polygon,
+.mermaid svg .node circle,
+.mermaid svg .node ellipse,
+.mermaid svg .node path {
+  fill: var(--gh-canvas-subtle) !important;
+  stroke: var(--gh-border-default) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid svg .nodeLabel,
+.mermaid svg .nodeLabel p,
+.mermaid svg .nodeLabel span,
+.mermaid svg .label,
+.mermaid svg .label p,
+.mermaid svg .label span,
+.mermaid svg foreignObject,
+.mermaid svg foreignObject div,
+.mermaid svg foreignObject span {
+  color: var(--gh-fg-default) !important;
+  fill: var(--gh-fg-default) !important;
+}
+
+/* Edge labels: plain text on the page colour, no tinted box. */
+.mermaid svg .edgeLabel,
+.mermaid svg .edgeLabel p,
+.mermaid svg .edgeLabel span,
+.mermaid svg .edgeLabel div {
+  color: var(--gh-fg-muted) !important;
+  fill: var(--gh-fg-muted) !important;
+  background-color: var(--gh-canvas-default) !important;
+}
+
+.mermaid svg .edgeLabel rect,
+.mermaid svg .labelBkg,
+.mermaid svg rect.background {
+  fill: var(--gh-canvas-default) !important;
+  background-color: var(--gh-canvas-default) !important;
+  opacity: 1 !important;
+}
+
+.mermaid svg .flowchart-link,
+.mermaid svg .edgePath path,
+.mermaid svg path.path,
+.mermaid svg line {
+  stroke: #8c959f !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid svg marker path,
+.mermaid svg marker polygon {
+  fill: #8c959f !important;
+  stroke: #8c959f !important;
+}
+
+.mermaid svg .cluster rect {
+  fill: var(--gh-canvas-subtle) !important;
+  stroke: var(--gh-border-default) !important;
+}
+
+.mermaid svg .cluster .nodeLabel,
+.mermaid svg .cluster text {
+  color: var(--gh-fg-default) !important;
+  fill: var(--gh-fg-default) !important;
+}
+
+.mermaid svg .note,
+.mermaid svg .noteBox {
+  fill: #fff8c5 !important;
+  stroke: var(--gh-border-default) !important;
+}
+
+.mermaid svg .noteText,
+.mermaid svg .actor,
+.mermaid svg .messageText,
+.mermaid svg .loopText {
+  fill: var(--gh-fg-default) !important;
   color: var(--gh-fg-default) !important;
 }
 
-/* Selection and focus */
+/* ================================================================
+   15. Selection, focus, print
+   ================================================================ */
+
 ::selection {
   background: rgba(9, 105, 218, 0.18) !important;
 }
 
-:focus {
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible {
   outline: 2px solid rgba(9, 105, 218, 0.45) !important;
   outline-offset: 2px !important;
 }
 
-/* Print */
 @media print {
   body,
   .markdown-body {
@@ -597,354 +1223,19 @@ pre.mermaid {
   code {
     background: #f6f8fa !important;
   }
-}
 
-/* Patch for PhpStorm Markdown Preview text contrast */
-body,
-.markdown-body,
-body p,
-body li,
-body dd,
-body dt,
-body table,
-body blockquote {
-  color: #1f2328 !important;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-after: avoid !important;
+  }
 
-body li,
-.markdown-body li {
-  color: #1f2328 !important;
-}
-
-body li::marker,
-.markdown-body li::marker {
-  color: #6e7781 !important;
-}
-
-body p span,
-body li span,
-.markdown-body p span,
-.markdown-body li span {
-  color: inherit !important;
-}
-
-body blockquote,
-.markdown-body blockquote {
-  color: #57606a !important;
-}
-
-body a,
-.markdown-body a {
-  color: #0969da !important;
-}
-
-body code,
-.markdown-body code,
-body pre code,
-.markdown-body pre code {
-  color: #1f2328 !important;
-}
-
-/* -------------------------------------------------
-   PhpStorm Markdown Preview final cleanup patch
-   Better text contrast + GitHub-light Mermaid diagrams
-------------------------------------------------- */
-
-/* Normal markdown text readability */
-body,
-.markdown-body,
-body p,
-body li,
-body td,
-body th,
-body dd,
-body dt,
-body summary,
-.markdown-body p,
-.markdown-body li,
-.markdown-body td,
-.markdown-body th,
-.markdown-body dd,
-.markdown-body dt,
-.markdown-body summary {
-  color: #1f2328 !important;
-}
-
-body li::marker,
-.markdown-body li::marker {
-  color: #6e7781 !important;
-}
-
-body p span,
-body li span,
-body td span,
-.markdown-body p span,
-.markdown-body li span,
-.markdown-body td span {
-  color: inherit !important;
-}
-
-body a,
-.markdown-body a {
-  color: #0969da !important;
-}
-
-/* Keep blockquote GitHub-like, not fully black */
-body blockquote,
-.markdown-body blockquote {
-  color: #57606a !important;
-}
-
-/* Mermaid / flowchart cleanup */
-.mermaid,
-.mermaid svg {
-  background: #ffffff !important;
-  color: #1f2328 !important;
-}
-
-/* Mermaid nodes: make them light instead of dark */
-.mermaid svg .node .label-container,
-.mermaid svg .node rect,
-.mermaid svg .node polygon,
-.mermaid svg .node circle,
-.mermaid svg .node ellipse {
-  fill: #f6f8fa !important;
-  stroke: #d1d9e0 !important;
-  stroke-width: 1px !important;
-}
-
-/* Mermaid node text */
-.mermaid svg .nodeLabel,
-.mermaid svg .nodeLabel p,
-.mermaid svg .nodeLabel span,
-.mermaid svg .label,
-.mermaid svg .label p,
-.mermaid svg .label span,
-.mermaid svg foreignObject,
-.mermaid svg foreignObject div,
-.mermaid svg foreignObject span {
-  color: #1f2328 !important;
-  fill: #1f2328 !important;
-}
-
-/* Mermaid edge labels: no/yes text on arrows */
-.mermaid svg .edgeLabel,
-.mermaid svg .edgeLabel p,
-.mermaid svg .edgeLabel span {
-  color: #57606a !important;
-  fill: #57606a !important;
-  background: #ffffff !important;
-}
-
-.mermaid svg .edgeLabel rect,
-.mermaid svg .labelBkg {
-  fill: #ffffff !important;
-  opacity: 0.95 !important;
-}
-
-/* Mermaid arrows and connectors */
-.mermaid svg .flowchart-link,
-.mermaid svg .edgePath path,
-.mermaid svg path.path,
-.mermaid svg line {
-  stroke: #8c959f !important;
-  stroke-width: 1.5px !important;
-}
-
-.mermaid svg marker path,
-.mermaid svg marker polygon {
-  fill: #8c959f !important;
-  stroke: #8c959f !important;
-}
-
-/* Mermaid clusters/subgraphs */
-.mermaid svg .cluster rect {
-  fill: #f6f8fa !important;
-  stroke: #d1d9e0 !important;
-}
-
-.mermaid svg .cluster .nodeLabel,
-.mermaid svg .cluster text {
-  color: #1f2328 !important;
-  fill: #1f2328 !important;
-}
-
-/* Mermaid notes / sequence diagrams if used */
-.mermaid svg .note,
-.mermaid svg .noteBox {
-  fill: #fff8c5 !important;
-  stroke: #d1d9e0 !important;
-}
-
-.mermaid svg .noteText,
-.mermaid svg .actor,
-.mermaid svg .messageText,
-.mermaid svg .loopText {
-  fill: #1f2328 !important;
-  color: #1f2328 !important;
-}
-
-/* -------------------------------------------------
-   PhpStorm-compatible Persian/English bidi rules
-------------------------------------------------- */
-
-html,
-body,
-.markdown-body,
-#preview,
-.content,
-.main,
-article {
-  direction: ltr;
-}
-
-body p,
-body li,
-body dd,
-body dt,
-body summary,
-body figcaption,
-body h1,
-body h2,
-body h3,
-body h4,
-body h5,
-body h6,
-body blockquote,
-.markdown-body p,
-.markdown-body li,
-.markdown-body dd,
-.markdown-body dt,
-.markdown-body summary,
-.markdown-body figcaption,
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6,
-.markdown-body blockquote {
-  unicode-bidi: plaintext !important;
-  text-align: start;
-}
-
-/* Native outside markers avoid injecting numbers into mixed bidi text. */
-body ul,
-body ol,
-.markdown-body ul,
-.markdown-body ol,
-#preview ul,
-#preview ol {
-  list-style-position: outside !important;
-}
-
-body li.task-list-item,
-.markdown-body li.task-list-item,
-#preview li.task-list-item {
-  list-style: none !important;
-}
-
-/* JetBrains generates a heading id beginning with this Persian slug. Plain
-   general-sibling selectors are used deliberately: some PhpStorm JCEF builds
-   discard newer relational selectors. All matching blocks after the Persian
-   algorithm heading are forced RTL first. */
-[id^="الگوریتم-کلان-راه"] ~ p,
-[id^="الگوریتم-کلان-راه"] ~ h3,
-[id^="الگوریتم-کلان-راه"] ~ h4,
-[id^="الگوریتم-کلان-راه"] ~ h5,
-[id^="الگوریتم-کلان-راه"] ~ h6,
-[id^="الگوریتم-کلان-راه"] ~ ul,
-[id^="الگوریتم-کلان-راه"] ~ ol,
-[id^="الگوریتم-کلان-راه"] ~ dl,
-[id^="الگوریتم-کلان-راه"] ~ blockquote {
-  direction: rtl !important;
-  unicode-bidi: isolate !important;
-  text-align: right !important;
-}
-
-[id^="الگوریتم-کلان-راه"] ~ ul,
-[id^="الگوریتم-کلان-راه"] ~ ol {
-  padding-right: 2em !important;
-  padding-left: 0 !important;
-  list-style-position: outside !important;
-}
-
-[id^="الگوریتم-کلان-راه"] ~ ul li,
-[id^="الگوریتم-کلان-راه"] ~ ol li {
-  direction: rtl !important;
-  unicode-bidi: isolate !important;
-  text-align: right !important;
-}
-
-/* Ordered work is the explicit end boundary. These later rules reset the
-   heading and every following prose/list block back to content-based LTR. */
-#ordered-work,
-#ordered-work ~ p,
-#ordered-work ~ h3,
-#ordered-work ~ h4,
-#ordered-work ~ h5,
-#ordered-work ~ h6,
-#ordered-work ~ ul,
-#ordered-work ~ ol,
-#ordered-work ~ dl,
-#ordered-work ~ blockquote {
-  direction: ltr !important;
-  unicode-bidi: plaintext !important;
-  text-align: start !important;
-}
-
-#ordered-work ~ ul,
-#ordered-work ~ ol {
-  padding-right: 0 !important;
-  padding-left: 2em !important;
-  list-style-position: outside !important;
-}
-
-#ordered-work ~ ul li,
-#ordered-work ~ ol li {
-  direction: ltr !important;
-  unicode-bidi: plaintext !important;
-  text-align: start !important;
-}
-
-/* Inline technical fragments keep their own ordering. */
-p a,
-li a,
-p code,
-li code,
-p samp,
-li samp,
-p kbd,
-li kbd,
-p var,
-li var {
-  direction: ltr !important;
-  unicode-bidi: isolate !important;
-}
-
-[dir="rtl"] {
-  direction: rtl !important;
-  text-align: right !important;
-  unicode-bidi: isolate !important;
-}
-
-[dir="ltr"],
-.ltr {
-  direction: ltr !important;
-  text-align: left !important;
-  unicode-bidi: isolate !important;
-}
-
-/* Structured content retains meaningful LTR ordering. */
-pre,
-pre *,
-table,
-table *,
-.mermaid,
-.mermaid *,
-.language-mermaid,
-.language-mermaid * {
-  direction: ltr !important;
-  unicode-bidi: normal !important;
-  text-align: left !important;
+  pre,
+  table,
+  blockquote {
+    break-inside: avoid !important;
+  }
 }

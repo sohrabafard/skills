@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.0 - 2026-10-02
+
+- Phase A adds an existing-infrastructure check: before the plan approves a lane that creates a container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline, the lead asks `/alaa-memory-os` whether existing infrastructure already provides it, verifies each hit in the owning repository, records `found` or `none` with evidence in the plan, and carries that answer in the lane's dispatch. A run had designed a tools image that an existing CI job image already provided, because no step asked.
+- `alaa-researcher`, `alaa-explorer`, and `alaa-architecture-critic` hold the read-only Hindsight set (page search, page read, page list, reflect) and no write tool; `alaa-implementer` and `alaa-implementer-opus` deny the whole `mcp__hindsight` server so they cannot inherit its write tools. The grant checker enforces both. Installed agents receive it only after an authorized reinstall.
+
 ## 4.1.0 - 2026-09-25
 
 - Project exact Claude model and effort pins from the prompting guide policy; retain existing role identifiers, bodies and grants.
