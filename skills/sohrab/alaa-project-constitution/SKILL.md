@@ -98,7 +98,8 @@ how to launch one, quote the matching launcher verbatim from `assets/first-messa
    amendments, exceptions, and one status footer. Authoring telemetry, evidence ledgers, claim
    labels, module classifications, decision state, and binding mechanics stay out of it.
 7. Do not modify application code, dependencies, deployments, shared systems, or Git history.
-   Modify `AGENTS.md` and `CLAUDE.md` only under authorised binding.
+   Modify `AGENTS.md` and `CLAUDE.md`, or the generator source that produces them, only under
+   authorised binding.
 
 ## Phase order
 
@@ -142,7 +143,8 @@ how to launch one, quote the matching launcher verbatim from `assets/first-messa
    under a canonical launcher sets `BINDING` and aligns the root bindings in the same run;
    `DEFERRED` leaves a new or non-binding result `DRAFT` and unbound, or preserves an existing
    `BINDING` baseline unchanged. `references/update-versioning-and-binding.md` owns the version
-   decision, the per-status adapter wording, and the delivery audit. Then run the validator.
+   decision, the per-status adapter wording, binding a generated `AGENTS.md` or `CLAUDE.md`, and
+   the delivery audit. Then run the validator.
 
 ## Validation
 
@@ -184,7 +186,8 @@ Allowed without extra approval when in scope: reading and searching repository f
 documents; inspecting Git status and diff; fetching authoritative external sources; creating or
 amending the constitution; correcting one misspelled constitution filename to the canonical name
 without leaving a duplicate active policy file; running the bundled non-destructive validator;
-minimally binding `AGENTS.md` and `CLAUDE.md` once the user has authorised binding; and minimally
+minimally binding `AGENTS.md` and `CLAUDE.md` once the user has authorised binding, through the
+generator's source and its regeneration command when a tool generates them; and minimally
 updating an existing README or docs index when its own contract requires new main documents to be
 registered.
 

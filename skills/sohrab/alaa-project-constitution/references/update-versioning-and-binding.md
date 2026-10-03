@@ -85,6 +85,45 @@ Canonical names are `constitution-template.md` and `CONSTITUTION.md`.
 - Do not keep the misspelled path as an active alias.
 - Update `AGENTS.md` and `CLAUDE.md` links to the corrected canonical filename.
 
+## Generated instruction files
+
+Before creating, changing, or removing an adapter, check whether a tool generates `AGENTS.md` or
+`CLAUDE.md`. A generator rewrites its output from source files, so a hand edit inside the generated
+region is lost on the next regeneration. Bind a generated file through the generator's source, never
+by editing the file.
+
+Laravel Boost is the known generator. Treat a repository as Boost-generated when it has
+`.ai/guidelines/` and `composer.json` requires `laravel/boost`, or when `AGENTS.md` or `CLAUDE.md`
+contains the `laravel-boost-guidelines` block. `php artisan boost:update` rewrites that whole block
+from `.ai/guidelines/*.md` into each file it generates: `AGENTS.md` when `boost.json` `agents` lists
+`codex`, and for `claude_code` the `guidelines_path` in `config/boost.php`, whose default varies by
+Boost version. A `CLAUDE.md` symlinked to `AGENTS.md` follows `AGENTS.md`. Where the repository's
+own instructions describe its generator procedure, read and follow them; they govern wherever they
+are stricter than this section.
+
+- Put the binding in one source file of its own — for Boost,
+  `.ai/guidelines/01-constitution-binding.md` — at a load-order position that keeps the adapter
+  within the first 8 KiB of every generated file. The `AGENTS.md` size and placement rules in the
+  delivery audit apply to every generated file; the `CLAUDE.md` import rule does not.
+- Every generated file receives the same text, so the source carries only the `AGENTS.md` adapter
+  below. Omit the `@CONSTITUTION.md` import and the `## Constitution Binding` section: the import is
+  Claude Code syntax that reads as a stray line in a file Codex loads, and the explicit read rule
+  binds both runtimes.
+- Never write the generator's delimiters literally in a source. For Boost these are the opening and
+  closing `laravel-boost-guidelines` tags: Boost locates its block by them, and a literal copy in a
+  guideline has corrupted a regeneration.
+- Regenerate with the generator's command — for Boost, `php artisan boost:update` with the flags the
+  repository's instructions name. Report every other file or hunk the regeneration changed; the
+  repository's procedure decides whether it is kept.
+- When the command cannot run, change only the source, report regeneration as the required
+  follow-up with the exact command, and do not claim binding active. Never patch a generated file by
+  hand to compensate.
+- Bind a file the generator does not produce by the sections below, unless the repository's
+  instructions forbid editing it; then report it as binding drift.
+
+Every status below follows the same route: SUPERSEDED wording and adapter removal are made in the
+source, then regenerated.
+
 ## Thin AGENTS.md binding — status BINDING
 
 Add or update one section and preserve every other instruction:
