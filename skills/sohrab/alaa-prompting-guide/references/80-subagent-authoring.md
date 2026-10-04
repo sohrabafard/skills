@@ -30,9 +30,8 @@ Personal agents live in `~/.codex/agents/`, project agents in `.codex/agents/`, 
 **`skills.config` is not the Codex equivalent of Claude's `skills:` preload, and reaching for it as one is the mistake to avoid.** It is `[ { path = "…", enabled = true } ]`: an enable/disable override naming a directory that contains a `SKILL.md`. It selects which skills an agent may use; it never injects one into the agent's context the way a preload does, and each entry carries a filesystem path, so a committed definition would hard-code one machine's layout. Codex documents no per-agent preload at all. Where a Codex lane must apply doctrine, name the files in `developer_instructions` and let it read them from the installed skills path.
 
 The executable Codex pin for each role is owned by `assets/codex-model-policy.json` and checked
-against its TOML wrapper. `alaa-implementer-sol` retains its historical role identifier for
-compatibility; it denotes difficult implementation, not a model promise. Custom TOML model and
-effort pins override dispatch parameters. Read `references/11-codex-runtime-features.md` before
+against its TOML wrapper. `alaa-implementer-astra` is the difficult implementation profile.
+Custom TOML model and effort pins override dispatch parameters. Read `references/11-codex-runtime-features.md` before
 selecting a different profile or relying on parent inheritance.
 
 The two runtimes express the same four decisions with different key names. A cross-runtime pack ships both files from one `agents/` directory and installs the right one per runtime.

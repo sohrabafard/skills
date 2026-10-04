@@ -1,0 +1,69 @@
+[
+  {
+    "check": "policy",
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py",
+      "--agent-root",
+      "skills/sohrab/alaa-codex-orchestrator/agents"
+    ],
+    "exit_code": 0
+  },
+  {
+    "check": "contracts",
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "check": "grants",
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "check": "grants-self-test",
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+      "--self-test"
+    ],
+    "exit_code": 0
+  },
+  {
+    "check": "renderer",
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py",
+      "--check"
+    ],
+    "exit_code": 0
+  },
+  {
+    "check": "pack",
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "check": "fleet-refs",
+    "command": [
+      "python",
+      "-B",
+      "scripts/check_fleet_references.py"
+    ],
+    "exit_code": 0
+  }
+]

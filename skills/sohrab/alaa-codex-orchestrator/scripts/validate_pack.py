@@ -43,7 +43,7 @@ REQUIRED = {
     "alaa-researcher",
     "alaa-test-strategist",
     "alaa-implementer",
-    "alaa-implementer-sol",
+    "alaa-implementer-astra",
     "alaa-verifier",
     "alaa-failure-analyst",
     "alaa-reviewer",

@@ -49,29 +49,24 @@ Do not spawn when the relevant paths and contracts are already established in cu
 
 ## Implementation routing
 
-Use `alaa-implementer` by default. Escalation is earned by decision density, not surface sensitivity: a lane that mechanically applies an already-ratified decision, an amended contract value, or a precise spec stays on the default implementer regardless of the surface it touches — the reviewer and specialist gates already provide independent scrutiny there.
+Use `alaa-implementer` by default, including on sensitive surfaces when applying a ratified design, contract value, or precise specification. Independent review and specialist gates provide scrutiny; surface sensitivity does not earn a different implementation role.
 
-Dispatch `alaa-implementer-opus` only when the lane itself must make non-obvious design decisions and at least one of these applies. Record which one in the dispatch:
+Before an initial assignment, material scope change, or fix-cycle follow-up, the lead assesses the remaining work. Dispatch `alaa-implementer-opus` only when the lane must resolve a non-obvious engineering design decision and at least one criterion below applies. Record the concrete open decision, its criterion, and its consequence for correctness or failure behavior in the existing lane/dispatch record and final roster:
 
 - public API, event, or data contract changes;
 - service boundaries or architecture decisions;
 - concurrency, races, locking, distributed ordering, idempotency;
 - auth or trust boundary, or cryptographic correctness;
 - schema or data migration coupled to application logic;
+- authoring or rewriting agent instructions, architecture documents, or standards whose meaning, ownership, loading scope, or structure still requires design judgment. Applying ratified wording or a specified behavior-preserving rewrite can remain default work; the file extension does not qualify;
 - complex backwards compatibility or rollout;
-- multiple plausible designs with materially different failure behavior;
-- **authoring or rewriting an artifact whose deliverable is judgment itself** — a skill, a prompt, an agent definition, an `AGENTS.md` or `CLAUDE.md`, an architecture document, or a standard other agents will follow.
+- multiple plausible designs with materially different failure behavior.
 
-That last criterion exists because the preceding six describe software surfaces, and a lane can be judgment-dense without touching any of them. Writing a skill is not mechanical application of a ratified decision: deciding what belongs in the body versus a reference, which rules to merge or delete, and whether the result actually meets its own bar is the entire work.
+Importance, surface labels, file counts, uncertainty, prior role, and failure count alone do not qualify. Missing facts, tools, or product intent go to their owners; they are not design-complexity evidence. When routing remains uncertain, use the default implementer and let the review gate decide; re-dispatch requires qualifying evidence.
 
-The wording carries as much of that weight as the structure. In these artifacts the prose *is* the executable logic — there is no compiler underneath to enforce what a sentence failed to say — so an ambiguous phrasing, a preference verb where a constraint was meant, or a rule with no stated scope becomes wrong behavior on every future run. Drafting that text is the judgment, not the write-up of it.
+At those follow-up boundaries, reapply admission to the work still unresolved: settled design returns to the default role. Continue the current difficult assignment while its same qualifying decision remains open; do not switch during a command or reassess ordinary progress updates. Before replacing a writer, retire its assignment and reconcile surviving edits and checkpoint. Hand off remaining work, scope, acceptance criteria, findings, and evidence; preserve required gates and never overlap writers.
 
-A lane like this reads as "no named criterion applies" against a purely software-shaped list, and would then be dispatched to the default implementer — contradicting the decision-density rule the list is supposed to serve. Judge the density, not the file extension.
-
-When uncertain, do not escalate: dispatch the default implementer and let the review gate decide. One justified re-dispatch after evidence is cheaper than habitual escalation.
-
-Read `model-effort-policy.md` before selecting a different profile; a tool or specification failure does not justify model escalation.
-
+Read `model-effort-policy.md` before profile changes. Diagnose tool, context, and specification failures through their owners before considering escalation.
 ## Correctness review depth
 
 Select the deep route when review involves complex interactions among subsystems, a broad failure impact, or documented insufficiency of the standard review. Dispatch the existing `alaa-reviewer` for both standard and deep routes; do not create a second reviewer. Record the trigger and select only one profile per scope. When replacing an insufficient standard review, retire that assignment and pass its evidence to the deep route; do not run them concurrently.
@@ -143,9 +138,9 @@ Never trigger it on a routine change. A second opinion on work that already pass
 
 ## Failure routing
 
-- Clear test failure owned by one lane: return to that implementer.
+- Clear test failure owned by one lane: return to that implementation lane.
 - Ambiguous, cross-lane, flaky, timeout, environment, or contamination failure: `alaa-failure-analyst` first.
-- Security, migration, or architecture blocker: route the fix through `alaa-implementer-opus`.
+- For every implementation fix, including security, migration, and architecture blockers, reapply Implementation routing above to the remaining work; preserve the finding verbatim.
 - Contract-compatibility blocker: route the fix through the owning implementer with the contract reviewer's finding verbatim.
 - Browser-only reproducible defect: browser QA provides evidence; the owning implementer fixes.
 - Test infrastructure defect: create an explicit infrastructure implementation lane; the verifier never fixes it.

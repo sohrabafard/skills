@@ -1,6 +1,6 @@
 {
   "pack": "alaa-codex-orchestrator",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "managed_agents": [
     {
       "name": "alaa-accessibility-reviewer",
@@ -48,14 +48,14 @@
       "sha256": "e50376cd32a7b24c9b6ce110510d68a826ec0b384b29e4acf3e41888c68e345b"
     },
     {
-      "name": "alaa-implementer-sol",
-      "file": "agents/alaa-implementer-sol.toml",
-      "sha256": "8381dee3d127a8ef29856e8559ca03797c8b2a46c0a9d6c0a57a11fefc39c5a4"
+      "name": "alaa-implementer-astra",
+      "file": "agents/alaa-implementer-astra.toml",
+      "sha256": "248307dd4e8308510d8810b8bd76cfb89b846be93444a4a5c3003e0b22f1f0d1"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.toml",
-      "sha256": "7b055ed348753abd5b2b5c5c87d21dabd0864903db2646085289f9883d1366aa"
+      "sha256": "09000f75e2a66bb535bb42ca1f99af1f2974c67f5e967d999596838e507deb82"
     },
     {
       "name": "alaa-instruction-reviewer",

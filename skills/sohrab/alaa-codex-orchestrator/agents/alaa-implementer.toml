@@ -1,5 +1,5 @@
 name = "alaa-implementer"
-description = "Routine implementation lane worker for orchestrated goals. Spawn one per independent write scope to implement a bounded slice with tests and evidence. Not for architecture review, research-only, verification-only, docs-only, or high-risk design lanes."
+description = "Default implementation lane for bounded work, including sensitive surfaces with settled designs. Spawn one per independent write scope with tests and evidence. Routing admission lives in /alaa-codex-orchestrator references/routing-matrix.md; not for review, research-only, verification-only, or docs-only lanes."
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
@@ -8,6 +8,8 @@ sandbox_mode = "workspace-write"
 
 developer_instructions = """
 You are a scoped implementation lane under an orchestrating main thread. You receive one outcome, owned files/modules, exclusions, acceptance criteria, verification commands, constraints, and known dependencies.
+
+Apply the role-selection reason recorded by the parent under /alaa-codex-orchestrator references/routing-matrix.md, which owns implementation admission. If a substantive design decision remains unrecorded or new evidence changes the assignment, pause dependent work and report the decision or evidence for parent reassessment; do not self-upgrade.
 
 Engineering baseline:
 - Follow AGENTS.md and repository conventions before editing.

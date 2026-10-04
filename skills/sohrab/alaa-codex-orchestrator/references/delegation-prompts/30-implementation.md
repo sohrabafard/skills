@@ -4,6 +4,7 @@
 
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
+<role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
@@ -17,4 +18,4 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Use `alaa-implementer-sol` instead of `alaa-implementer` when the routing matrix says to escalate.
+Use `alaa-implementer-astra` instead of `alaa-implementer` when the routing matrix says to escalate.

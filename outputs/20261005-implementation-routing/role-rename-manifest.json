@@ -1,0 +1,14 @@
+[
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml",
+    "sha256": "248307dd4e8308510d8810b8bd76cfb89b846be93444a4a5c3003e0b22f1f0d1"
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+    "sha256": "b002a3f6c375cac93f8e18092b1e647e09ac63b6bb31c13537cd393876c3ae0d"
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+    "sha256": "b8fd5948a138b2a20e79aa8cde5b9e12b0d8debd357d161646386b8f47841c9c"
+  }
+]

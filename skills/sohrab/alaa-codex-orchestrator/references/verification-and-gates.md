@@ -63,7 +63,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 ## Phase B — Implementation
 
 1. Dispatch one `alaa-implementer` per routine lane.
-2. Dispatch `alaa-implementer-sol` instead only when the lane meets a named escalation criterion from `references/routing-matrix.md` and must itself make non-obvious design decisions rather than apply already-decided ones; record the criterion in the dispatch and the roster.
+2. Apply Implementation routing in `references/routing-matrix.md` before assignment or reassignment; carry its role-selection evidence in the dispatch and roster.
 3. Concurrency policy: at most two workspace-writing implementation agents at once; never parallelize overlapping write scopes; reserve remaining capacity for read-only agents; only one CPU-heavy verification or profiling command at a time.
 4. Each lane runs the focused tier only — the tests naming its own failure modes, plus lint, type, and build checks scoped to the files it touched — and returns that evidence. A lane never runs the affected or exhaustive tier: it is the wrong authority and the wrong moment for both. `/alaa-testing-strategy` owns the tiers. That focused tier includes every cheap check that could falsify a property the lane's own report claims — the exported-surface, contract, type, or lint check its change could break — and the lane returns each check's observed output. A property asserted without the check that would have contradicted it is returned as not checked, whatever the lane believes.
 5. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
@@ -121,7 +121,7 @@ reusable-context curation. Durable memory publication alone does not reopen repo
 
 - Findings are routed verbatim to the lane that owns the behavior.
 - Cross-cutting findings become a new serialized lane with an explicit scope.
-- Security, migration, or architecture blockers default to an `alaa-implementer-sol` dispatch.
+- Select the fix owner through Implementation routing in `references/routing-matrix.md`.
 - The reviewer/specialist never fixes its own finding.
 
 ## Maximum cycles
