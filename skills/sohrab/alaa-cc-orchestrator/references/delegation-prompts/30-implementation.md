@@ -4,6 +4,7 @@
 
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
+<role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
@@ -17,14 +18,13 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-When the routing matrix says to escalate, dispatch the separate `alaa-implementer-opus` agent with the same lane block plus the named criterion that earned the escalation. It is its own agent with its own pin, not a per-invocation override on `alaa-implementer`.
+When the routing matrix admits difficult work, dispatch the separate `alaa-implementer-opus` agent with the same lane block and its role-selection evidence. It is its own agent with its own pin, not a per-invocation override on `alaa-implementer`.
 
 ## Implementer escalation lane
 
 ```xml
 <task>Implement escalated lane <n>: <bounded outcome whose design is not yet decided>.</task>
-<trigger>The lane itself must make non-obvious design decisions and meets a named criterion from the routing matrix.</trigger>
-<escalation_criterion><the single named routing-matrix criterion that earned this escalation></escalation_criterion>
+<role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>

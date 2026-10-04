@@ -4,7 +4,7 @@
 
 The canonical executable mapping is `alaa-prompting-guide assets/codex-model-policy.json`. Source TOMLs carry explicit pins checked against it; they are initial evaluation profiles, not benchmark results. No active fallback policy is defined here.
 
-Custom TOML model and effort fields take precedence over caller values. Select `alaa-reviewer-deep` for the deeper correctness review instead of attempting a dispatch override of `alaa-reviewer`. Both wrappers are generated from `assets/reviewer-contract.md`; never dispatch both for the same scope. The compatibility identifier `alaa-implementer-sol` denotes the difficult implementation role and does not name its current model.
+Custom TOML model and effort fields take precedence over caller values. Select `alaa-reviewer-deep` for the deeper correctness review instead of attempting a dispatch override of `alaa-reviewer`. Both wrappers are generated from `assets/reviewer-contract.md`; never dispatch both for the same scope. Select `alaa-implementer-astra` for difficult implementation; its configured model and effort remain owned by the canonical policy.
 
 Diagnose a shortfall before changing a profile: repair missing context, a tool failure, or an ambiguous specification through its owner. A comparison changes one factor at a time. Unavailable target profiles are reported explicitly; do not silently substitute another model. Observe effective permissions and tools; API features do not prove that this host exposes them.
 

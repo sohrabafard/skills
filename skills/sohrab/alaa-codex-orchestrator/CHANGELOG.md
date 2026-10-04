@@ -1,5 +1,16 @@
 # Changelog
 
+## 5.0.0 - 2026-10-05
+
+- Rename the difficult implementation role from `alaa-implementer-sol` to `alaa-implementer-astra`. Update dispatch callers to the new identifier; no source alias is retained. The model, effort, grants and routing behavior are unchanged.
+- Align the canonical policy, agent inventory, references and generated manifest with the new identifier. Installed definitions require an explicitly authorized update; the existing installers do not retire the old wrapper automatically.
+
+## 4.2.1 - 2026-10-05
+
+- Require decision-specific evidence for difficult implementation; sensitive surfaces and instruction edits with settled designs remain default work.
+- Reassess remaining work at assignment, material-change, and fix-cycle boundaries. Preserve evidence and gates during serialized writer handoffs; pipeline-profile escalation remains separate.
+- Remove sensitivity-only failure escalation and align role descriptions and dispatch evidence with the routing owner. Preserve role identifiers, model/effort pins, and grants.
+
 ## 4.2.0 - 2026-10-02
 
 - Phase A adds an existing-infrastructure check: before the plan approves a lane that creates a container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline, the main thread asks `/alaa-memory-os` whether existing infrastructure already provides it, verifies each hit in the owning repository, records `found` or `none` with evidence in the plan, and carries that answer in the lane's dispatch. A run had designed a tools image that an existing CI job image already provided, because no step asked.

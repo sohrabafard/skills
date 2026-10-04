@@ -52,6 +52,8 @@ Inspect only that fresh directory. This validates grants against the live parent
 
 ## Upgrade contract
 
+Version 5 renames `alaa-implementer-sol` to `alaa-implementer-astra` without a source alias. Update dispatch callers. During an explicitly authorized installed upgrade, materialize the new wrapper with the supported installer and archive the old managed wrapper outside the agent discovery directory under that upgrade's target-path authority. The current installers preserve files absent from the new source; installation alone therefore does not retire the old role. Verify the new role and absence of the retired role before claiming activation.
+
 Version 4 changes final-report parsing: verdict/status or opening outcome is first, followed by configured/requested settings and separately observed runtime identity. Unknown observations remain unknown. Existing verdict vocabularies remain unchanged. The deep profile is selected by role name because a custom TOML pin overrides caller model/effort values. Do not dispatch standard and deep profiles concurrently for one scope.
 
 Missing, stale, or unavailable required roles must be reported; there is no silent fallback or implicit installation. A changed MCP inventory requires an authorized rematerialization. Never change global runtime configuration as an installation repair.

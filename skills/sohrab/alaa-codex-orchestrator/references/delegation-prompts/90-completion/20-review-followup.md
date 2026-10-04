@@ -5,6 +5,8 @@
 ```xml
 <task>Resolve reviewer/specialist findings in original lane <n>.</task>
 <findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
+<role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
+<handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
 <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
 <verification><the focused checks for each fixed finding, plus the affected-tier checks the fix reaches></verification>
 <output>For each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>

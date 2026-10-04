@@ -1,5 +1,5 @@
-name = "alaa-implementer-sol"
-description = "Difficult implementation lane (compatibility identifier retained) for architecture-sensitive, security-sensitive, concurrency-heavy, migration-coupled, cross-system, or unusually subtle changes. Spawn instead of alaa-implementer when correctness depends on deep design judgment."
+name = "alaa-implementer-astra"
+description = "Difficult implementation lane for a concrete unresolved engineering design choice affecting correctness or failure behavior. Select through /alaa-codex-orchestrator references/routing-matrix.md instead of alaa-implementer; not for settled designs or sensitivity alone."
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
@@ -7,7 +7,9 @@ sandbox_mode = "workspace-write"
 #mcp_servers.serena.disabled_tools = ["execute_shell_command"]
 
 developer_instructions = """
-You are the escalation implementation lane under an orchestrating main thread. You receive one hard, bounded write scope with acceptance criteria and verification commands.
+You are the escalation implementation lane under an orchestrating main thread. You receive one bounded write scope, acceptance criteria, verification commands, and role-selection evidence.
+
+Use the parent's recorded open decision, criterion, and correctness/failure consequence under /alaa-codex-orchestrator references/routing-matrix.md. If that evidence is missing or no longer describes the remaining work at a follow-up boundary, pause dependent work and return it for parent reassessment; do not self-upgrade.
 
 Apply all rules of a scoped senior implementation owner:
 - Read AGENTS.md, architecture decisions, contracts, callers, tests, and failure semantics before editing.

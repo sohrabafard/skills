@@ -17,8 +17,8 @@ Twenty-two roles and one additional deep-review execution profile are available.
 
 | Agent | Sandbox | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer` | workspace-write | Routine bounded implementation lanes | High-judgment design lanes or self-review |
-| `alaa-implementer-sol` | workspace-write | Lanes that must themselves make non-obvious design decisions | Routine low-judgment edits |
+| `alaa-implementer` | workspace-write | Bounded implementation, including sensitive surfaces with settled designs | Lanes meeting difficult-role admission in `routing-matrix.md`, or self-review |
+| `alaa-implementer-astra` | workspace-write | Unresolved engineering design decisions admitted by `routing-matrix.md` | Settled designs or sensitivity alone |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
@@ -68,7 +68,7 @@ assigned here, including servers unknown to this pack, are disabled in that role
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
 | `alaa-reviewer`, `alaa-reviewer-deep`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-sol` | full, minus Serena's shell tool | full |
+| `alaa-implementer`, `alaa-implementer-astra` | full, minus Serena's shell tool | full |
 | `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
 | `alaa-accessibility-reviewer`, `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |

@@ -1,0 +1,149 @@
+[
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md",
+    "sha256": "48E062B866136057F8355012B1CE984901A8F7C1172DC224DB1D3F90C47B6B36",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "sha256": "4ED46E54CEBD60B29D7A72AC8AC900252F4552053178D4051BB7F8CFDDE2D58C",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/VERSION",
+    "sha256": "E5D77A995A7D89C4B24498CB8947C3B40E53F4D2C0BA2380796CDB059D237848",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+    "sha256": "3A0E8CD2F0DCAFE4BECF0DEBBFB54958C6F4870FCB6CDD13B73323DE2E915294",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+    "sha256": "0E2F1F295007CD6DEBCE33DFF4D98B06B94F4DD6CF0F9ED387B18EC45AE44CE2",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+    "sha256": "FDA89DCC8FD584B97EF999D4DCDA40B34A47902502F144957B8B1A7656705CFD",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+    "sha256": "97DC3E78A43666B2C2318C518AADFD0F281CC3775F4ED08E4CE7EF4C4DA70AC0",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+    "sha256": "95215997365AFBDF8592276E0816D4D57D88B2F1EE0B960B47CD873B813437D2",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "sha256": "5098C65711418116EE0EDA82AB7EA2F9AB6949E5C229C0372FB019C94919054A",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+    "sha256": "BE065179AB687248D785F76C21BAD6AD2F65D6E9BACB794C6C59E2A68B0B4301",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md",
+    "sha256": "28CC17F2AA20AB9ACF1DCBE2BD554AE4C3E839D2769098181822742F2FB97E4B",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "sha256": "F3870DE293AA8594994983D81176771F5C9CA4FFE0F8CFE6EED6924E9EBE5AEA",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/VERSION",
+    "sha256": "E5D77A995A7D89C4B24498CB8947C3B40E53F4D2C0BA2380796CDB059D237848",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-sol.toml",
+    "sha256": "01E2E3BACBFE472F85CA68D79157A550C68E3E9A19FC8209483EF23FE66BE826",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+    "sha256": "09000F75E2A66BB535BB42CA1F99AF1F2974C67F5E967D999596838E507DEB82",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+    "sha256": "B66EC719719081916DE31590B5868478942F23A14FD5176FD72A8619A9CFD4DB",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+    "sha256": "BE7058C42F48ABAD877C054E6B8C665630FE4CD4E92DBD127A727D6DD6BD92E3",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+    "sha256": "D94BB47E9C8C590172DADB527FCAFE1D899A005E049DC5911FFAEA9F00081AF9",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+    "sha256": "95215997365AFBDF8592276E0816D4D57D88B2F1EE0B960B47CD873B813437D2",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "sha256": "018AD9024AD0BE75C989754412F910858E0B90B5CDB5C1546E4F4D09004A6470",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+    "sha256": "BC4E3FB5895DB9263DAAA42AACBE7F9BF71DFEC5D2379F4050D3F6275848ECA5",
+    "utf8_bom": false,
+    "crlf_sequences": 0,
+    "bare_cr": 0
+  }
+]

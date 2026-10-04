@@ -109,10 +109,10 @@
       "rationale": "Implement multi-step changes within a ratified design.",
       "calibration_status": "unrun"
     },
-    "alaa-implementer-sol": {
+    "alaa-implementer-astra": {
       "model": "gpt-6-astra",
       "effort": "high",
-      "rationale": "Implement difficult changes requiring design judgment; retain legacy role identifier.",
+      "rationale": "Implement difficult changes requiring design judgment.",
       "calibration_status": "unrun"
     },
     "alaa-verifier": {

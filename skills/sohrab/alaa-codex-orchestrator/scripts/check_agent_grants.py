@@ -143,7 +143,7 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
         "codegraph": {}, "serena": _only(SERENA_READ),
         "laravel-boost": _only(BOOST_DOCS + BOOST_ERRORS + BOOST_BROWSER),
     },
-    "alaa-implementer-sol": {
+    "alaa-implementer-astra": {
         "codegraph": {},
         "serena": {"disabled_tools": ["execute_shell_command"]},
         "laravel-boost": {},

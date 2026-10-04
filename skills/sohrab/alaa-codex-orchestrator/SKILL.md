@@ -94,7 +94,7 @@ Phases A through E run in orchestrator mode; Phase F applies only to user-reques
 
 ### Execution profile: size the pipeline to the plan
 
-**Every profile preserves Phases A through E and their required gates.** Phase F is conditional on requested integration; local-only completion requires no merge prompt. The profile decides dispatch overhead, never whether an independent verification, review, or triggered specialist gate applies. What `lean` removes is dispatch overhead on a change that cannot justify it, where the cost lands on latency and the user's attention as much as on tokens. Choose the profile once, from the finished Phase A plan, and record it there. Escalate mid-run the moment a heavier profile's condition becomes true; never de-escalate, because the evidence that earned the heavier profile does not stop existing.
+**Every profile preserves Phases A through E and their required gates.** Phase F is conditional on requested integration; local-only completion requires no merge prompt. The profile decides dispatch overhead, never whether an independent verification, review, or triggered specialist gate applies. What `lean` removes is dispatch overhead on a change that cannot justify it, where the cost lands on latency and the user's attention as much as on tokens. Choose the profile once, from the finished Phase A plan, and record it there. Escalate mid-run the moment a heavier profile's condition becomes true; never de-escalate the pipeline profile, because its qualifying evidence persists. Implementation-role reassessment is separate and follows `references/routing-matrix.md`.
 
 | Profile | Conditions — every one must hold | Shape |
 |---|---|---|

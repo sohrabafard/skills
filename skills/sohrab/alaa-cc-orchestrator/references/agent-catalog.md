@@ -17,8 +17,8 @@ Twenty-two roles are available; standard and deep review use the same reviewer.
 
 | Agent | Access | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer` | workspace write | Routine bounded implementation lanes | High-judgment design lanes or self-review |
-| `alaa-implementer-opus` | workspace write | Lanes that must themselves make non-obvious design decisions | Routine low-judgment edits |
+| `alaa-implementer` | workspace write | Bounded implementation, including sensitive surfaces with settled designs | Lanes meeting difficult-role admission in `routing-matrix.md`, or self-review |
+| `alaa-implementer-opus` | workspace write | Unresolved engineering design decisions admitted by `routing-matrix.md` | Settled designs or sensitivity alone |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
