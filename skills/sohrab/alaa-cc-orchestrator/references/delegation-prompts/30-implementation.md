@@ -7,7 +7,7 @@
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
-<clean_code_skill>name the lane's matching clean-code skill to load, or the repository baseline</clean_code_skill>
+<skills><resolved lane bindings, including its matching clean-code owner or explicit repository baseline></skills>
 <verification tier="focused">
   <commands><exact targeted commands: this lane's failure-mode tests plus lint, type, and build checks scoped to its files></commands>
   <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>
@@ -29,7 +29,7 @@ When the routing matrix says to escalate, dispatch the separate `alaa-implemente
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
 <design_constraints><architecture decisions, contracts, call sites, tests, and documented failure semantics that bound the design></design_constraints>
-<clean_code_skill>name the lane's matching clean-code skill to load, or the repository baseline</clean_code_skill>
+<skills><resolved lane bindings, including its matching clean-code owner or explicit repository baseline></skills>
 <verification>
   <commands><exact targeted commands></commands>
   <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>

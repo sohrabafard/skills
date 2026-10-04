@@ -37,7 +37,7 @@ Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or
 
 ### Advisor mode
 
-Use when the user asks for a plan, critique, architecture advice, prompts, lane definitions, or review without implementation. Research and read-only specialist agents may be spawned. Do not edit repository files, and do not create workflow artifacts: the plan, critique, or review is the reply. Advisor mode creates a branch, a commit, or a plan file only when the user asks for one, because a request to think about the work is not authorization to change the tree.
+Use when the user asks for a plan, critique, architecture advice, prompts, lane definitions, or review without implementation. Research and read-only specialist agents may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md`; its admission and explicit exceptions govern planning artifacts. Plan-only work grants no product execution, branch, or commit authority.
 
 Resolve explicit wording first. When intent remains ambiguous, choose the lowest-side-effect interpretation that still answers the request; do not interrupt merely to ask which mode.
 
@@ -55,7 +55,7 @@ It must not: implement while implementation agents are viable; run CPU-heavy ver
 
 **One agent per lane.** Never several agents for the same lane, and no duplicate summary-check lane. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out together — the constraint is on redundancy, not on parallelism. Do not delegate work the main thread can finish in a handful of tool calls.
 
-**Keep dispatches lean.** Apply the instruction-authoring contract in /alaa-prompting-guide. Dispatch text carries lane facts only: outcome, owned files, exclusions, acceptance criteria, verification commands, dependencies, and the return contract. The role already lives in the agent TOML; restating it dilutes both. State each instruction once, expose only task-relevant tools, and keep examples only where they encode a real requirement.
+**Keep dispatches lean.** Apply the instruction-authoring contract in /alaa-prompting-guide. Dispatch text carries lane facts only: outcome, owned files, exclusions, acceptance criteria, verification commands, dependencies, resolved skill bindings, and the return contract. The role already lives in the agent TOML; restating it dilutes both. State each instruction once, expose only task-relevant tools, and keep examples only where they encode a real requirement.
 
 **Bound every return.** Each dispatch carries `/alaa-low-noise`: a child returns findings, verdicts, counts, and artifact paths, never transcripts, full diffs, or raw logs, and anything bulky is written to the permitted artifact directory and returned as a path. An unbounded child return is the most common way a main thread's context is flooded, and that cost is charged on every remaining turn of the goal. Anything a later turn or another agent might need again is written to a file first and referenced by path; the conversation is not the storage medium.
 
@@ -81,7 +81,7 @@ Missing target models or roles are explicit blocked/degraded execution, never si
 
 ## 5. Orchestrator execution pipeline
 
-Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs none of them: Phases A, B, and F perform workspace setup, write files, and may perform explicitly authorized integration, which is exactly what section 1 forbids there. They are also the gate order; there is no second list. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
+Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. They are also the gate order; there is no second list. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
 
 | Phase | Owns | Ends when |
 |---|---|---|
@@ -114,7 +114,9 @@ Close with one run-accounting line: agents dispatched and how many distinct role
 
 ## 6. Advisor-mode output
 
-Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; a recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Do not edit files or imply implementation occurred.
+Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; a recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission: report saved plan/checkpoint paths when admitted; otherwise deliver the plan in the reply. Do not imply implementation occurred.
+
+When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
 
 ## 7. Verification and resource rules
 

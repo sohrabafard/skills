@@ -46,9 +46,10 @@ or paid execution authority.
 
 ## Historical harness mechanics
 
-The remaining loop, workflow, scheduling, nesting and goal details retain their original
-24 July 2026 verification. They are lookup leads, not current capability promises; re-fetch
-the named feature's official page before use. Unverified limits receive no new date.
+The remaining loop, workflow, scheduling and nesting details retain their original
+24 July 2026 verification. The goal section has its own refresh date below. Historical
+details are lookup leads, not current capability promises; re-fetch the named feature's
+official page before use. Unverified limits receive no new date.
 
 ## `/loop` — recurring or self-paced interval execution
 
@@ -133,20 +134,29 @@ Plan mode is the closest thing to a launch gate for a large or risky autonomous 
 
 ## `/goal` — condition-based multi-turn autonomy (Claude Code's own mechanism)
 
-**Not the same mechanism as Codex's `/goal`** — same name, different implementation. Claude Code's `/goal` is a wrapper around a session-scoped prompt-based Stop hook: after every turn, the condition plus the conversation so far go to your configured small fast model (defaults to Haiku), which returns a yes/no decision plus a short reason. On "no," Claude starts another turn using that reason as guidance; on "yes," the goal clears and records an achieved entry. Setting a goal immediately starts a turn with the condition as the directive. One goal is active per session; a new one replaces it. Requires Claude Code v2.1.139 or later.
+Verified 4 October 2026 against the official goal, desktop and skills pages. Claude Code's `/goal <condition>` starts execution immediately and evaluates the condition after each turn using the transcript. Its evaluator returns **Not yet met** (continue with its reason), **Met** (clear as achieved), or **Impossible** (stop without achievement). One goal is active per session; a new one replaces it. These are evaluator verdicts, not evidence that repository gates passed.
 
 Codex's `/goal` instead runs a durable thread-scoped objective loop with its own budget accounting, not a Stop-hook evaluator — the two differ in what proves completion, how they're enabled, and what they cost. Never carry a `/goal` block between the runtimes unedited; read `references/11-codex-runtime-features.md` for Codex's mechanism.
 
-```text
-/goal migrate every call site off the deprecated `useLegacyAuth` composable to `useAuth`, all TypeScript
-compiles clean, and the full test suite passes, or stop after 25 turns
-```
+The condition limit is **4,000 characters**, excluding the leading command. The evaluator calls no tools and reads no files; the executing session must surface acceptance evidence and check outcomes in the transcript. A saved report's path alone cannot prove its contents. Composition, the soft authoring target, examples and stop clauses belong to `references/06-invocation-and-composition.md`; do not put an operating manual in the condition.
 
-The condition can be up to **4,000 characters**. The evaluator calls no tools and reads no files — it judges only what Claude has surfaced in the transcript — so write the condition as something the session's own output demonstrates, name the check explicitly (`npm test` exits 0, `git status` is clean), and include a turn or time clause, since the evaluator can only judge a bound that is stated in the condition itself.
+Measure the final text actually sent, after substitutions. `scripts/check_goal_condition.py` checks a declared surface and counts conservatively in UTF-16 code units against this dated cap. The documentation does not specify Unicode counting semantics; this assumption avoids undercounting astral characters relative to code points. A static pass is neither parser parity nor live Desktop acceptance, and a runtime rejection remains authoritative.
 
-Bare `/goal` shows status: the condition, elapsed time, turns evaluated, token spend, and the evaluator's latest reason. `/goal clear` removes it early (aliases `stop`, `off`, `reset`, `none`, `cancel`), and `/clear` also removes it. An active goal is restored on `--resume`/`--continue`, but the turn count, timer, and token baseline reset. It works in non-interactive mode (`claude -p "/goal …"` runs the loop to completion in one invocation; add `--output-format stream-json --verbose` or nothing prints until it finishes), in the desktop app, and through Remote Control.
+Bare `/goal` reports status and `/goal clear` ends it early. Other aliases, resume accounting and noninteractive flags retain their historical verification; re-fetch the goal page before generating those commands.
 
-A goal does **not** change permissions. In the default mode Claude still asks before tool calls your settings do not already allow, so an unattended goal run needs auto mode alongside it. `/goal` requires an accepted workspace trust dialog and is unavailable when `disableAllHooks` is set at any settings level or `allowManagedHooksOnly` is set in managed settings; in each case the command says why.
+A goal preserves the current permission mode; it grants no installation, commit, deployment or other side-effect authority. Workspace trust must be accepted, and `/goal` is unavailable when `disableAllHooks` is set at any level or `allowManagedHooksOnly` is set in managed settings. Report the restriction; never change trust, hooks or permissions to make a prompt run without authorization.
+
+### Surface preflight and rejected commands
+
+Claude Desktop's **Code tab** is the documented desktop Claude Code surface. Do not infer Chat or Cowork command support from the app name; their `/goal` support is not established by these sources. Resolve the actual surface, installed runtime version, registered skill command, goal availability and relevant trust/hook restrictions before issuing a runnable kickoff. Inspection does not authorize installation or settings changes.
+
+The user observed this Code-tab rejection on 4 October 2026 (Desktop version unprovided):
+
+> A command takes file @-mentions but no other @-mentions, slash commands, links, or inline formatting, so nothing was sent. Remove them.
+
+This is Desktop composer evidence, not an officially documented universal CLI grammar. It applies to **command arguments**, including a skill-led kickoff: use one leading registered command and plain arguments without secondary slash commands, non-file @mentions, links, backticks, bold or other inline formatting. Name companion skills without sigils and use plain paths. Generate the goal condition as plain text with no skill activation or file references by default; keep them in the kickoff or plan. The diagnostic permits file @mentions, but generated text cannot manufacture or validate their composer chips. A static text pass proves no structured-composer acceptance.
+
+For a rejection, record the supplied prompt, error, app/runtime version and tab; obtain only missing facts needed for diagnosis. Check composer tokens and rendered length, then classify command/surface availability, skill resolution, trust/hooks or remaining unknowns. Without the rejected payload, repair established defects but do not claim reproduction, a parser/cap change or incident closure. Provide a verified plain kickoff or report missing capability; never guess a fallback on another surface.
 
 ## Choosing between `/loop`, `/goal`, subagents, workflows, and the rest
 
@@ -162,9 +172,9 @@ These compose: a workflow's `agent()` calls are themselves subagents; a `/goal` 
 
 ## Caveats
 
-Verified against live documentation on 24 July 2026. Every version gate and hard limit above is time-sensitive and several changed within the current release line — re-check `code.claude.com/docs` before depending on an exact number. Specifically volatile: `/goal` at v2.1.139+ and its 4,000-character cap; dynamic workflows at v2.1.154+ with 16 concurrent and 1,000 total agents; `/effort ultracode` at v2.1.203+; the subagent caps (nesting off by default, 20 concurrent from v2.1.217, 200 per session from v2.1.212); the workflow size guideline at v2.1.202+ and the large-run warning thresholds at v2.1.203+; and the `/loop` figures (1-minute minimum, 50 tasks, 7-day expiry, 25,000-byte `loop.md`).
+Goal condition, evaluator, permissions, restrictions and Desktop Code guidance refreshed 4 October 2026. No live Desktop command was exercised and no parser/cap change is established. Other historical harness sections retain their 24 July 2026 verification. Re-check every version gate and exact limit before use: dynamic workflow concurrency and total caps, `ultracode`, nesting and subagent caps, workflow warnings, and loop limits are especially volatile.
 
-Ultraplan is documented as a research preview with no stated minimum version; do not carry forward a version gate for it. Current alias and selection rules are in the current-resolution section above; the historical model defaults are not activation evidence. Auto mode, which unattended `/goal` and workflow runs generally need, has its own plan, owner, model, and provider requirements.
+Ultraplan is documented as a research preview with no stated minimum version; do not carry forward a version gate for it. Current alias and selection rules are in the current-resolution section above; historical defaults are not activation evidence. A chosen autonomous permission mode has separate account, model and provider requirements; a goal prompt cannot enable it.
 
 ## Sources
 
@@ -177,6 +187,7 @@ Ultraplan is documented as a research preview with no stated minimum version; do
 - [Choose a permission mode](https://code.claude.com/docs/en/permission-modes)
 - [Plan in the cloud with ultraplan](https://code.claude.com/docs/en/ultraplan)
 - [Keep Claude working toward a goal (`/goal`)](https://code.claude.com/docs/en/goal)
+- [Claude Code on desktop](https://code.claude.com/docs/en/desktop)
 - [Model configuration](https://code.claude.com/docs/en/model-config)
 
 - [Model configuration](https://code.claude.com/docs/en/model-config)

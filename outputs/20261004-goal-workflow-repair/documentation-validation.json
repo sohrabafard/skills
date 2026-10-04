@@ -1,0 +1,78 @@
+[
+  {
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+      "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+      "skills/sohrab/alaa-low-noise/SKILL.md",
+      "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+      "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+      "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+      "skills/sohrab/alaa-workflow/SKILL.md",
+      "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+      "skills/sohrab/alaa-workflow/assets/plan-template.md",
+      "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+      "skills/sohrab/alaa-workflow/references/companion-routing.md",
+      "skills/sohrab/alaa-workflow/references/context-continuity.md",
+      "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+      "outputs/20261004-goal-workflow-repair/README.md",
+      "outputs/20261004-goal-workflow-repair/source-evidence.md",
+      "outputs/20261004-goal-workflow-repair/docs/agents/20261004-000000_goal-and-workflow-skill-repair-state.md",
+      "outputs/20261004-goal-workflow-repair/docs/_agent_plans/20261004-000000_goal-and-workflow-skill-repair.md"
+    ],
+    "cwd": ".",
+    "start_utc": "2026-10-04T16:12:19.666125+00:00",
+    "end_utc": "2026-10-04T16:12:19.840560+00:00",
+    "exit_code": 0,
+    "output": "Validated links in 26 Markdown file(s) under ..\n"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+      ".",
+      "--files",
+      "outputs/20261004-goal-workflow-repair/README.md",
+      "outputs/20261004-goal-workflow-repair/source-evidence.md",
+      "--line-budget"
+    ],
+    "cwd": ".",
+    "start_utc": "2026-10-04T16:12:19.840613+00:00",
+    "end_utc": "2026-10-04T16:12:20.029983+00:00",
+    "exit_code": 0,
+    "output": "outputs/20261004-goal-workflow-repair/README.md: GREEN 30 physical lines\noutputs/20261004-goal-workflow-repair/source-evidence.md: GREEN 36 physical lines\nValidated links, line budgets in 2 Markdown file(s) under ..\n"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "skills/sohrab/alaa-workflow",
+      "skills/sohrab/alaa-prompting-guide",
+      "skills/sohrab/alaa-cc-orchestrator",
+      "skills/sohrab/alaa-codex-orchestrator",
+      "skills/sohrab/alaa-low-noise",
+      "outputs/20261004-goal-workflow-repair"
+    ],
+    "cwd": ".",
+    "start_utc": "2026-10-04T16:12:20.030065+00:00",
+    "end_utc": "2026-10-04T16:12:20.095288+00:00",
+    "exit_code": 0,
+    "output": ""
+  }
+]

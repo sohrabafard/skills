@@ -86,6 +86,10 @@ A resuming agent reads in this order, and stops as soon as it has what it needs:
 
 Then verify position against reality before continuing: check `git status` and the diff against the checkpoint's touched surfaces. If the repository and the checkpoint disagree, the repository is the truth and the checkpoint is stale — reconcile it before acting, and record what was out of date.
 
+Before the next task, resolve and load its phase bindings and task overrides through `references/companion-routing.md`. Recheck mapped availability when the runtime or installed catalog changed; historical mappings do not prove current availability.
+
+On resume, migrate older active plans to explicit phase/task bindings before execution. Completed archives remain readable; reactivating one requires migration before its next task.
+
 ## After compaction, specifically
 
 Compaction is the one case where the agent continues in the same conversation and may not realise anything was lost. Two rules.
@@ -118,4 +122,4 @@ The failure mode opposite to losing context is drowning in it. These do not belo
 
 ## Caveats
 
-Compaction behavior, context window sizes, and whether a runtime signals compaction to the agent are all runtime- and model-specific and change between versions. The rules here are written to hold regardless, but re-check `$alaa-prompting-guide` / `/alaa-prompting-guide` and its runtime references before depending on any specific harness behavior.
+Compaction behavior, context window sizes, and whether a runtime signals compaction to the agent are all runtime- and model-specific and change between versions. The rules here are written to hold regardless, but re-check `/alaa-prompting-guide` and its runtime references before depending on any specific harness behavior.

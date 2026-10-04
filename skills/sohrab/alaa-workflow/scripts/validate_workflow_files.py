@@ -45,6 +45,12 @@ HANDOFF_FIELDS = (
 PHASE_FIELDS = ("Depends on", "Owned scope", "Excluded from this phase", "Evidence observed")
 COMBINED_VALIDATION_RE = re.compile(r"^\s*[-*]\s*validation commands\s*/\s*evidence\s*:", re.I | re.M)
 PLANNING_STATUSES = ("planning", "draft", "proposed", "not started")
+SKILL_HEADING_RE = re.compile(r"^##\s+Skill Bindings\s*$", re.I | re.M)
+SKILL_COLUMNS = ("Skill", "Source", "Load before", "When", "If unavailable")
+SKILL_NAME_RE = re.compile(r"[a-z0-9][a-z0-9_.:-]*")
+TASK_SKILLS_RE = re.compile(r"\[skills:\s*([^\]]+)\]\s*$", re.I)
+TASK_LINE_RE = re.compile(r"^\s*(?:[-*]\s+\[[ xX-]\]|\d+[.)])\s+(.+)$", re.M)
+VAGUE_SKILLS_RE = re.compile(r"\b(?:relevant|appropriate|related|matching)\s+skills?\b", re.I)
 
 
 def error(invariant: str, message: str, remediation: str) -> str:
@@ -83,12 +89,13 @@ def detect_profile(content: str) -> str:
 
 
 def detect_status(content: str) -> str:
-    match = re.search(r"^\s*[-*]?\s*(?:current\s+)?status\s*(?::|—|-)\s*`?([^\n`]+)", content, re.I | re.M)
+    header = re.split(r"^#{2,6}\s+", content, maxsplit=1, flags=re.M)[0]
+    match = re.search(r"^[ \t]*[-*]?[ \t]*(?:current[ \t]+)?status[ \t]*(?::|—|-)[ \t]*`?([^\n`]+)", header, re.I | re.M)
     return match.group(1).strip().lower() if match else ""
 
 
 def is_complete_status(status: str) -> bool:
-    return any(token in status for token in ("complete", "completed", "done", "closed"))
+    return status.strip().lower() in {"complete", "completed", "done", "closed"}
 
 
 def is_planning_status(status: str) -> bool:
@@ -110,15 +117,35 @@ def field_value(block: str, label: str) -> str | None:
 
 
 def phase_blocks(content: str) -> list[tuple[str, str]]:
-    blocks: list[tuple[str, str]] = []
+    return [(title, content[start:end]) for title, start, end in phase_regions(content)]
+
+
+def phase_regions(content: str) -> list[tuple[str, int, int]]:
+    blocks: list[tuple[str, int, int]] = []
     for match in re.finditer(r"^###\s+(.+)$", content, re.M):
         title = match.group(1).strip()
-        if "phase" not in title.lower():
+        if not re.match(r"phase\b", title, re.I):
             continue
         rest = content[match.end():]
         following = re.search(r"^#{1,3}\s+", rest, re.M)
-        blocks.append((title, rest[: following.start()] if following else rest))
+        end = match.end() + following.start() if following else len(content)
+        blocks.append((title, match.end(), end))
     return blocks
+
+
+def skill_frontmatter_name(content: str) -> str | None:
+    frontmatter = re.match(r"\A---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|\Z)", content)
+    if frontmatter is None:
+        return None
+    declarations = re.findall(r"^name:[ \t]*(.*)$", frontmatter.group(1), re.M)
+    if len(declarations) != 1:
+        return None
+    value = declarations[0].strip()
+    if value.startswith(("'", '"')):
+        if len(value) < 2 or value[-1] != value[0]:
+            return None
+        value = value[1:-1]
+    return value if SKILL_NAME_RE.fullmatch(value) else None
 
 
 def unresolved_messages(content: str, complete: bool, invariant: str) -> list[str]:
@@ -271,9 +298,108 @@ def validate_phases(content: str, profile: str, adaptive_plan: bool, status: str
     return messages
 
 
+def validate_skill_bindings(content: str, path: Path, profile: str, status: str) -> list[str]:
+    """Resolve phase/task owners without treating a conditional absence as installed."""
+    block = section_block(content, SKILL_HEADING_RE)
+    historical = is_complete_status(status) and (profile == "legacy" or block is None)
+    level = warning if historical else error
+    executing = not is_planning_status(status) or any(
+        (field_value(phase, "Status") or "pending").lower() not in {"pending", "planning", "draft"}
+        for _, phase in phase_blocks(content)
+    )
+    unresolved_level = level if executing and not historical else warning
+    messages: list[str] = []
+    bindings: dict[str, list[str]] = {}
+    if block is None:
+        messages.append(level("plan.skills", "Plan has no Skill Bindings table.", "Add exact skill names, sources, load points, conditions and absence actions before execution; retain completed history unchanged."))
+    else:
+        rows = [
+            [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            for line in block.splitlines() if line.strip().startswith("|")
+        ]
+        if not rows or tuple(rows[0]) != SKILL_COLUMNS:
+            messages.append(level("plan.skills", "Skill Bindings columns are missing or unsupported.", "Use Skill | Source | Load before | When | If unavailable."))
+        else:
+            for row in rows[1:]:
+                if all(re.fullmatch(r":?-+:?", cell) for cell in row):
+                    continue
+                if len(row) != len(SKILL_COLUMNS) or any(not cell for cell in row):
+                    messages.append(level("plan.skills", "Skill binding has empty or missing fields.", "Populate all five columns."))
+                    continue
+                if any(UNRESOLVED_RE.search(cell) for cell in row):
+                    messages.append(unresolved_level("plan.skills", "Skill binding is unresolved.", "Replace draft markers with verified catalog names and source paths before execution."))
+                    continue
+                name, source, load_before, condition, absence = row
+                if not SKILL_NAME_RE.fullmatch(name) or VAGUE_SKILLS_RE.search(" ".join(row)):
+                    messages.append(level("plan.skills", f"Skill binding is vague or has no exact name: {name}.", "Use the exact available catalog/frontmatter name and concrete activation facts."))
+                    continue
+                if name in bindings:
+                    messages.append(level("plan.skills", f"Duplicate skill binding: {name}.", "Keep one binding per exact skill name."))
+                    continue
+                bindings[name] = row
+                if source.lower() == "unavailable":
+                    if condition.lower() == "always":
+                        messages.append(level("plan.skills-source", f"Unconditional skill {name} is unavailable.", "Block its work or record an explicitly authorized fallback; never silently substitute or install."))
+                    continue
+                source_path = Path(source)
+                if not source_path.is_absolute() and not source_path.exists():
+                    source_path = path.parent / source_path
+                if source_path.name != "SKILL.md" or not source_path.is_file():
+                    messages.append(level("plan.skills-source", f"Skill {name} has a dangling source: {source}.", "Name a readable SKILL.md or explicitly mark a conditional owner unavailable."))
+                    continue
+                if skill_frontmatter_name(read_text(source_path)) != name:
+                    messages.append(level("plan.skills-source", f"Skill {name} does not match source frontmatter.", "Use the source's exact catalog name."))
+
+    def check_names(value: str | None, where: str, inherit: str | None = None) -> None:
+        if value is None or not value.strip():
+            messages.append(level("plan.skills-mapping", f"{where} has no skill mapping.", "Name exact Skill Bindings or use task [skills: inherit] under an explicit phase list."))
+            return
+        if value.lower() == "inherit":
+            if inherit is None:
+                messages.append(level("plan.skills-mapping", f"{where} has no phase list to inherit.", "Populate the phase Required skills field."))
+                return
+            value = inherit
+        if UNRESOLVED_RE.search(value):
+            messages.append(unresolved_level("plan.skills-mapping", f"{where} has unresolved skills.", "Populate exact names before executing the task."))
+            return
+        if re.fullmatch(r"none\s*\(.+\)", value, re.I):
+            return
+        names = [name.strip().strip("`") for name in value.split(",")]
+        if any(not SKILL_NAME_RE.fullmatch(name) for name in names) or VAGUE_SKILLS_RE.search(value):
+            messages.append(level("plan.skills-mapping", f"{where} uses vague skills: {value}.", "List exact names separated by commas, or none (specific reason)."))
+        else:
+            missing = [name for name in names if name not in bindings]
+            if missing:
+                messages.append(level("plan.skills-mapping", f"{where} refers to unbound skills: {', '.join(missing)}.", "Add their complete Skill Bindings rows."))
+
+    regions = phase_regions(content)
+    if not regions:
+        messages.append(level("plan.skills-structure", "Plan has no executable phase structure.", "Put ordered tasks inside Phase headings with explicit Required skills fields."))
+    for title, start, end in regions:
+        phase = content[start:end]
+        required = field_value(phase, "Required skills")
+        check_names(required, title)
+        for task in TASK_LINE_RE.finditer(phase):
+            mapping = TASK_SKILLS_RE.search(task.group(1))
+            check_names(mapping.group(1) if mapping else None, f"{title} task '{task.group(1)}'", required)
+    ordered = re.search(r"^##\s+Ordered Work\s*$", content, re.I | re.M)
+    ordered_end = len(content)
+    if ordered:
+        following = re.search(r"^#{1,2}\s+", content[ordered.end():], re.M)
+        if following:
+            ordered_end = ordered.end() + following.start()
+    for task in TASK_LINE_RE.finditer(content):
+        in_phase = any(start <= task.start() < end for _, start, end in regions)
+        checkbox = re.match(r"\s*[-*]\s+\[", task.group(0)) is not None
+        in_ordered_work = ordered is not None and ordered.end() <= task.start() < ordered_end
+        if not in_phase and (checkbox or in_ordered_work):
+            messages.append(level("plan.skills-structure", f"Task '{task.group(1)}' is outside a phase.", "Move it into an explicit phase; every task needs a mapping or phase inheritance."))
+    return messages
+
+
 def validate_plan(path: Path, profile: str) -> list[str]:
     content = read_text(path)
-    status = detect_status(content)
+    status = effective_plan_status(content, path, profile)
     complete = is_complete_status(status)
     messages: list[str] = []
 
@@ -307,6 +433,7 @@ def validate_plan(path: Path, profile: str) -> list[str]:
     messages.extend(validate_handoff(content, profile, status))
     messages.extend(validate_workspace(content, profile, status, adaptive_plan))
     messages.extend(validate_phases(content, profile, adaptive_plan, status))
+    messages.extend(validate_skill_bindings(content, path, profile, status))
     messages.extend(unresolved_messages(content, complete, "plan.placeholders"))
     return messages
 
@@ -375,6 +502,44 @@ def resolve_companions(plan_path: Path, content: str) -> dict[str, Path | None]:
             if resolved.get(kind) is None:
                 resolved[kind] = candidate
     return resolved
+
+
+def effective_plan_status(content: str, plan_path: Path, profile: str) -> str:
+    """An explicit plan status wins; correlated terminal legacy state can prove history."""
+    status = detect_status(content)
+    if status or profile != "legacy":
+        return status
+    state_path = resolve_companions(plan_path, content)["state"]
+    if state_path is None or not state_path.is_file():
+        return status
+    try:
+        data = json.loads(read_text(state_path))
+    except json.JSONDecodeError:
+        return status
+    if not isinstance(data, dict):
+        return status
+    declared_plan = data.get("plan_path") or data.get("plan")
+    if not isinstance(declared_plan, str) or not references_selected_plan(declared_plan, plan_path):
+        return status
+    terminal = {"complete", "completed", "done", "closed"}
+    declared_status = str(data.get("status", "")).strip().lower()
+    if declared_status:
+        return "complete" if declared_status in terminal else status
+    phases = data.get("phases")
+    all_terminal = isinstance(phases, dict) and bool(phases) and all(
+        isinstance(value, str) and value.strip().lower() in terminal for value in phases.values()
+    )
+    next_step = str(data.get("next_step", ""))
+    terminal_next = re.search(r"^none\b[^\n]*\bcomplete(?:d)?\b", next_step.strip(), re.I)
+    return "complete" if all_terminal and terminal_next else status
+
+
+def references_selected_plan(declared: str, plan_path: Path) -> bool:
+    candidate = Path(declared)
+    selected = plan_path.resolve()
+    if candidate.is_absolute():
+        return candidate.resolve() == selected
+    return candidate.resolve() == selected or (plan_path.parent / candidate).resolve() == selected
 
 
 def validate_checkpoint(path: Path, plan_path: Path | None, profile: str) -> list[str]:

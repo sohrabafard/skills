@@ -8,7 +8,7 @@ Three mechanisms, and a prompt author must know which one they are relying on.
 
 **Selection from the host's picker.** Typing `/` opens a command palette listing installed skills in Claude Code and in the Codex app and CLI, where `/skills` also opens a dedicated browser. Selection is deterministic: the chosen skill loads. It is a user action, so it is never available to a prompt. Treat the Codex palette as observed behaviour rather than documented behaviour — it is evidenced by a bug report against the shipping app, while the documentation describes only `/skills`.
 
-**An explicit textual mention.** This is the only mechanism a generated prompt controls, and the sigil belongs to the surface that reads the text rather than to the skill: `/name` in Claude Code, `$name` in Codex CLI and the IDE extension, `@name` in ChatGPT. A prompt aimed at Codex that carries `/name` mentions nothing, and nothing errors.
+**An explicit textual instruction.** The sigil belongs to the executing surface: `/name` in Claude Code, `$name` in Codex CLI and the IDE extension, `@name` in ChatGPT. In Claude Code, a leading registered slash command invokes its skill directly; a mid-message slash name grants permission to use it but does not directly load it. Do not treat that permission as observed activation. A prompt aimed at Codex that carries `/name` uses the wrong textual invocation form.
 
 **An implicit description match.** Both hosts load every skill's name and description first and load the body only after deciding the skill applies. A prompt that describes the work in the description's own trigger words can activate a skill with no sigil at all — reliably enough to depend on when the description is well written, never reliably enough to be the only mechanism when activation is required.
 
@@ -24,8 +24,8 @@ Resolve the registered name rather than guessing it. In Claude Code the command 
 
 ## Mention versus invocation
 
-- An **invocation** activates a skill: the trigger opens the message, or the prompt explicitly instructs "invoke the `<name>` skill now, before any other action."
-- A **mention** is inert. A trigger in backticks mid-sentence — "then use `/name` to…" — is a reference the model may ignore. Never rely on a mention when activation is required.
+- A leading registered Claude Code skill command is a direct **invocation**. An instruction to load a skill is a request; require evidence of loading before depending on its contract.
+- A mid-message Claude Code slash **mention** grants permission without direct invocation. Use a leading command when deterministic activation is required.
 - One primary trigger per message. Skills that lanes must load are named inside the lane dispatch text as instructions ("load `<name>` and apply it"), never as competing triggers at the top level.
 
 ## Role-consistency contract
@@ -36,21 +36,37 @@ A session holds exactly one role. The most common orchestration failure is a pro
 - Every implementation verb — implement, edit, fix, test-first, refactor, document — moves into **lane rules**, a block the orchestrator copies into dispatches, and never into the lead's own instructions.
 - Run a verb-ownership audit before sending: read each imperative and assign it to lead or lane. A lane verb aimed at the lead, or a lead verb aimed at a lane, is a defect.
 
-## Single-message forms, and the optional two-message split
+## Compose the kickoff and completion condition
 
-Two single-message shapes both work. Choose by whether you want the runtime's harness-enforced auto-continue.
+Resolve the executing surface before choosing syntax. For Claude Desktop, read `references/41-claude-code-runtime-features.md` to distinguish Code from Chat or Cowork and preflight command availability. Codex uses its own host goal tools and lifecycle, owned by `references/11-codex-runtime-features.md`.
 
-**Trigger-led — deterministic activation, no harness loop.** The message leads with the exact skill trigger, assigns the role and lane rules, and closes with the completion condition and a turn or time bound inline. The skill activates reliably because its trigger leads, and the invoked skill's own drive carries the work to completion. Best when the skill is itself the completion engine.
+**For orchestrated or long work, default to two messages when a harness goal is requested.** Invoke the registered skill with a short kickoff carrying outcome, scope, acceptance, task constraints and any plan pointer; the skill owns roles, lanes and gates. Load `/alaa-workflow` for exact phase/task skill mappings before execution; keep them in its plan and dispatches. Apply the Desktop command-argument rule to the kickoff too: plain companion names and paths, without secondary slash commands or rich formatting.
 
-**Goal-led — harness auto-continue, implicit activation.** The message is a single `/goal` whose text is both the directive for the first turn and the completion condition the harness re-checks each turn. Because the goal command must lead the message, the skill it needs activates only implicitly, so open the condition by naming and describing that skill's role — "Acting as the `<name>` orchestrator, lead the lanes…" — to make the description match fire, then give the operating context, lane rules, a measurable end state, and a turn or time bound. Keep it inside the runtime's limit: Claude Code caps the goal text, and `references/41-claude-code-runtime-features.md` carries the current figure. Codex documents no fixed cap, which is not permission to write a long one — a bloated objective dulls both the directive and the completion check the harness re-runs every turn. Accept that implicit activation is model judgment rather than a guaranteed trigger; that is the reliability cost of one message.
+After skill loading and any planning approval, send `/goal` with only the completion condition. Apply the Desktop plain-text composer rule in `references/41-claude-code-runtime-features.md` before sending to its Code tab. A Claude goal starts execution immediately; it is not a passive planning gate. Keep the messages separate and omit skill manuals, role rosters, lane instructions and model policy from the condition. Without a requested harness loop, the kickoff suffices.
 
-One Claude Code constraint belongs in this decision: the goal evaluator judges only what is already in the transcript, runs no tools, and reads no files. Write the condition as something the session's own output can demonstrate — "`npm test` exits 0", "`git status` is clean" — not as a state the evaluator would have to go and check.
+**Use a single goal only for self-contained work** whose outcome, evidence and stop rules fit without required skill activation or long instructions. Implicit matching is model judgment; naming an orchestrator in `/goal` proves no loading. Put overflow context in the kickoff or an authorized workflow plan, preserving constraints.
 
-**Two messages** are needed only to combine deterministic activation *and* harness auto-continue, since a leading skill trigger and a leading goal command cannot share one message. Send the skill-triggering operating prompt first, then a compact goal holding only the completion condition. Never inflate that compact goal back into an operating manual.
+Aim for one to three short sentences, normally **600 characters** or fewer. This soft house authoring target yields to required evidence, authority and stopping content; it is no vendor limit. The Claude hard limit lives in `references/41-claude-code-runtime-features.md`. Count the rendered condition after substitutions, including spaces and newlines; a template count proves no filled result.
+
+For Claude, require transcript evidence: acceptance verdicts, commands and exit results, because the evaluator cannot inspect files or run checks. A plan pointer alone proves no acceptance. Preserve unrelated dirty-tree work; use scoped criteria instead of requiring a clean tree.
+
+Example for a registered Claude Code skill (resolve the namespace before use; substitute the task and bound):
+
+```text
+/<registered-orchestrator> Orchestrator mode: deliver <outcome> within <scope>. Load alaa-workflow; save the execution plan with its exact phase/task skill mappings before dispatch. Preserve <invariants>. Local edits and checks only; no commit or external effects.
+```
+
+Send separately after loading and planning:
+
+```text
+/goal The scoped outcome meets the plan's acceptance criteria, with required checks passing and review disposition reported in the transcript; or a BLOCKED report names the cause and next safe action; or 25 goal evaluations end with an INCOMPLETE progress report.
+```
+
+The example bound is task input, not a runtime default. A blocked or bounded exit stops continuation without claiming successful completion.
 
 ## Satisfiable completion conditions
 
-A completion condition must be reachable, or the harness loops until the turn cap. "Zero findings from a fresh adversarial pass" is the canonical unreachable condition, because an adversarial reviewer with fresh context reliably finds new defensible items every pass. Bound convergence structurally instead: define done by a severity threshold — zero open blocker and major findings, with minors and nits reported rather than looped; cap review-fix cycles explicitly, two being the orchestrator packs' default; make the final adversarial pass a reporting pass whose findings go to the user rather than into another cycle; and pay the full gate set once after the last fix, with targeted checks per fix. Every goal-form prompt also carries an explicit turn or time cap as a safety net — the cap is the backstop, the structural bounds are the brake.
+Keep completion reachable: unlimited fresh adversarial passes may never converge. Use the orchestrator's severity, fix-cycle and reporting rules without copying them into the goal. Include a task-specific turn or time bound and a blocked exit naming the cause and next safe action. Distinguish success, blocked and incomplete; a bound proves no acceptance and a goal grants no new authority.
 
 ## Delegation polarity
 
@@ -80,25 +96,24 @@ changes on the target workload instead of assuming that less checking proves equ
 
 ## Pre-send checklist
 
-1. The message opens with either the exact skill trigger or a goal command that names the needed skill's role, using the exact installed name for the executing surface, never a buried mid-paragraph trigger.
+1. The executing surface and registered skill name are resolved; required activation is observed before the goal starts.
 2. The session has one role, consistent with the invoked skill, and implementation verbs live in lane rules.
-3. The single-message form is chosen deliberately: trigger-led for deterministic activation, goal-led for harness auto-continue. Two messages only to get both.
+3. Orchestrated or long work uses a skill-led kickoff followed by a compact condition when a harness loop is requested; a single goal is self-contained.
 4. Delegation wording matches the target model's default bias — bounded selection criteria for current Opus and Fable, current authorization and bounded scopes for Codex, measured rather than assumed for Sonnet 5.5.
-5. Skills needed by lanes are named inside dispatch text, not as top-level triggers.
+5. Exact phase/task skill mappings follow the workflow contract and reach dispatches; they are absent from the goal condition.
 6. In goal form, the completion condition is demonstrable from the transcript and carries an explicit turn or time clause.
 7. If the prompt will be pasted raw into a surface outside this plugin, the mention sigil matches that surface.
+8. The rendered condition was counted against the verified runtime limit; required content survived compression and neither activation nor live acceptance is inferred from a static pass.
 
 ## The failure shape to recognize
 
 Bad: a goal block opening "You are the senior implementer…", with "then use `/alaa-cc-orchestrator` to lead the lanes" buried mid-paragraph. The skill never loads and the session implements everything itself.
 
-Fix, in either single-message form. Trigger-led: start `/alaa-cc-orchestrator Orchestrator mode — <goal>`, assign the orchestrator role with the do-not-implement negative, put implementation discipline in lane rules, and state the completion condition and turn bound inline. Goal-led: start `/goal Acting as the <name> orchestrator, …` so the skill loads implicitly, with the same role, lane rules, and condition inline. Add a separate goal message only to layer the harness loop onto the trigger-led form.
-
-For durable multi-phase work that outgrows a single goal, route to `/alaa-workflow` rather than lengthening the completion condition.
+Fix: invoke the registered orchestrator in the kickoff, route durable planning to `/alaa-workflow`, then send a compact goal separately when a loop is requested. Keep task instructions in the kickoff, plan and dispatches rather than lengthening the evaluator's condition. Diagnose a rejected command through the runtime preflight before changing the prompt or suggesting another surface.
 
 ## Freshness
 
-Claude delegation guidance refreshed 25 September 2026; unchanged invocation and harness mechanics retain their 6 August 2026 verification. Re-check before quoting: the goal-command character cap and evaluator scope in Claude Code, whether Codex has since documented a goal cap, and the per-model delegation-bias claims, which are the values most likely to move — polarity in particular has inverted before and is the section to re-read on every model upgrade. Sonnet 5.5 guidance was refreshed 29 September 2026; its general delegation polarity remains unmeasured. The documented higher-effort reviewer tendency does not establish a model-wide default. The Codex `/` palette listing skills is observed in a bug report against the shipping app rather than documented; `/skills` is the documented path.
+Claude goal, Desktop Code and slash-invocation semantics refreshed 4 October 2026. The Desktop composer rejection is user-observed evidence in the runtime reference; its release boundary and the exact rejected payload remain unknown. Other invocation mechanics retain their 6 August 2026 verification. Claude delegation guidance was refreshed 25 September 2026 and Sonnet 5.5 on 29 September; its general polarity remains unmeasured. Re-fetch before relying on a cap, surface or bias. The Codex slash picker is observed in a bug report; `/skills` is documented.
 
 ## Sources
 
@@ -106,6 +121,7 @@ Claude delegation guidance refreshed 25 September 2026; unchanged invocation and
 - [Developer commands (OpenAI)](https://learn.chatgpt.com/docs/developer-commands)
 - [Extend Claude with skills (Claude Code)](https://code.claude.com/docs/en/skills)
 - [Keep Claude working toward a goal (Claude Code)](https://code.claude.com/docs/en/goal)
+- [Claude Code on desktop](https://code.claude.com/docs/en/desktop)
 - [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5)
 - [Prompting Claude Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1)
 - [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)

@@ -28,3 +28,13 @@
 - Documentation: `alaa-repo-docs` when the document language or task requires it.
 
 Repository truth and closer instructions override generic skill guidance. Do not duplicate a domain skill's rules in the workflow plan or state.
+
+## Executable skill bindings
+
+Before execution or handoff, inventory available skills from the active catalog and accessible source; choose only owners matching each phase/task. In `## Skill Bindings`, use `Skill | Source | Load before | When | If unavailable` columns. Each row names the exact catalog/frontmatter name, readable `SKILL.md` path, owned decision or activation point, observable condition (`always` when unconditional), and absence action. Paths resolve from the target repository root or plan directory; use portable repository paths for this pack. Generated consumer plans may use allowed installed absolute paths.
+
+Each phase lists exact names in `- Required skills:`. Every task checkbox ends `[skills: inherit]` to use that phase list or `[skills: name, name]` for its complete override. Do not write "relevant skills", guess a missing owner, or copy skill manuals into the plan. If no skill owns a phase, record `none (reason)` and inherit that explicit decision on its tasks.
+
+An unavailable conditional owner records `Source: unavailable` in its table cell and names the condition that activates it; stop that work when it activates unless the recorded authorized fallback applies. Never install or silently substitute it. A missing unconditional owner blocks its work. Draft `NEEDS_FILL` values remain visible warnings; unresolved or absent mappings block executable work. Existing active plans add these fields before continuing; completed legacy history remains readable without migration.
+
+Load mapped skills before their recorded decisions on first execution, resume, and delegated entry. Read inherited phase bindings before task overrides; pass exact skill names, sources, conditions, and absence actions to children. Resolve runtime-correct invocation through `/alaa-prompting-guide`; an empty installed result is unknown until its source is checked.

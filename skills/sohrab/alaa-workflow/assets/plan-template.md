@@ -36,6 +36,12 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 - Environment notes (command shapes that work here, and ones that look right but fail): none yet.
 - Traps (looks correct, is not): none yet.
 
+## Skill Bindings
+
+| Skill | Source | Load before | When | If unavailable |
+|---|---|---|---|---|
+| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
+
 ## Ordered Work
 
 ### Phase 1 - Ground and implement
@@ -44,9 +50,10 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 - Depends on: none
 - Owned scope: NEEDS_FILL
 - Excluded from this phase: NEEDS_FILL
+- Required skills: NEEDS_FILL
 - Work:
-  - [ ] Read the named sources and verify current behavior.
-  - [ ] Make the smallest in-scope change.
+  - [ ] Read the named sources and verify current behavior. [skills: inherit]
+  - [ ] Make the smallest in-scope change. [skills: inherit]
 - Acceptance criteria: NEEDS_FILL
 - Validation commands: NEEDS_FILL
 - Evidence observed: not run
@@ -58,9 +65,10 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 - Depends on: Phase 1
 - Owned scope: NEEDS_FILL
 - Excluded from this phase: NEEDS_FILL
+- Required skills: NEEDS_FILL
 - Work:
-  - [ ] Run the affected validation surface and repair failures.
-  - [ ] Reconcile documentation, status, blockers, and remaining work.
+  - [ ] Run the affected validation surface and repair failures. [skills: inherit]
+  - [ ] Reconcile documentation, status, blockers, and remaining work. [skills: inherit]
 - Acceptance criteria: required behavior and evidence agree.
 - Validation commands: NEEDS_FILL
 - Evidence observed: not run

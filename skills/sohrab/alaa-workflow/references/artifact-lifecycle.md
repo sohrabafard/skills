@@ -2,6 +2,14 @@
 
 Use the smallest artifact set with a real consumer.
 
+## Admission
+
+An actionable implementation/execution-plan request authorizes a saved plan and checkpoint without a separate request to save them. Authorized multi-phase, resumable, or delegated execution saves them before implementation or write-lane dispatch. A plan-only request authorizes these planning artifacts, never product implementation.
+
+Explicit no-file, read-only, or chat-only limits prevail. Native Plan Mode uses only its host-permitted planning surface until execution is approved; then materialize the admitted artifact family before implementation. Short advisory answers, ordinary review, and small bounded single-phase edits create no workflow files unless requested. A continuing authorized fix loop follows execution admission.
+
+When an admitted family already exists, update it rather than creating another. Fill ordered phase/task checklists, dependencies, ownership, exclusions, acceptance and validation, resume context, and skill bindings before execution. `references/companion-routing.md` owns binding semantics. Report the saved plan/checkpoint paths; a prose-only plan does not satisfy admitted durable planning.
+
 ## Profiles
 
 | Profile | Plan | Checkpoint | JSON state | Prompt pack | Use for |
@@ -13,7 +21,7 @@ Use the smallest artifact set with a real consumer.
 
 `resumable` is the documented default: work with more than one phase gets a plan and a checkpoint. The asymmetry is what settles it — the checkpoint is about ten lines written at four moments in the whole task, while losing position in the middle of long work costs a rediscovery from `git status` and diffs that is expensive and sometimes wrong. `direct` is therefore not the fallback for anything that does not obviously need state; it is a deliberate downgrade, chosen when the work is genuinely one phase and bounded, and it accepts that rediscovery as the price of an interruption.
 
-Before selecting any profile, check the stop condition in `SKILL.md` under *When NOT to use*, which owns it: some requests create no repository artifacts at all, and the cheapest profile is still the wrong answer for one of those.
+Apply admission before selecting a profile; no profile overrides its exceptions. An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile.
 
 ## Paths and correlation
 

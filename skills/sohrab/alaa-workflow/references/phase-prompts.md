@@ -6,24 +6,24 @@ Create a same-stem prompt pack only when the user explicitly requests reusable p
 
 Before resolving any runtime, model, agent feature, or skill-trigger syntax:
 
-1. Load `$alaa-prompting-guide` / `/alaa-prompting-guide`.
+1. Load `/alaa-prompting-guide`.
 2. Verify the current official OpenAI and Anthropic documentation relevant to the selected runtimes.
 3. Record the resolved implementer runtime/model, reviewer runtime/model, effort levels, source URLs, and verification date in the generated pack.
 4. Leave a visible `NEEDS_LIVE_VERIFICATION` marker when live verification cannot be completed. Never guess.
 
-**Resolved values belong in the generated prompt pack with their verification date, and never in stable skill text.** This is the rule that keeps this skill from decaying. A model name or effort level written into a reference file is wrong the next time either vendor ships, and it will be copied forward long after it stopped being true — into packs where nobody re-checked it, because it looked authoritative. Stable workflow files name the decision and point at its owner; only the dated pack carries the answer. Model and effort choices come from `$alaa-prompting-guide` / `/alaa-prompting-guide` and its `references/50-effort-and-thinking.md`, never from memory and never from a value copied out of an older prompt pack. Model and effort are two questions, not one; resolve them separately.
+**Resolved values belong in the generated prompt pack with their verification date, and never in stable skill text.** This is the rule that keeps this skill from decaying. A model name or effort level written into a reference file is wrong the next time either vendor ships, and it will be copied forward long after it stopped being true — into packs where nobody re-checked it, because it looked authoritative. Stable workflow files name the decision and point at its owner; only the dated pack carries the answer. Model and effort choices come from `/alaa-prompting-guide` and its `references/50-effort-and-thinking.md`, never from memory and never from a value copied out of an older prompt pack. Model and effort are two questions, not one; resolve them separately.
 
 ## Roles
 
 - `implementer`: makes the in-scope change, validates it, and reports blockers.
 - `independent reviewer`: inspects the resulting artifact or diff without inheriting the implementer's conclusions.
-- `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `$alaa-repo-docs` / `/alaa-repo-docs`.
+- `documenter` (optional): aligns repository documentation with the shipped phase. Include only when the phase alters behavior, APIs, configuration, or operations; route Ala-style documentation through `/alaa-repo-docs`.
 
 Choose the current runtime and model for each role only after the freshness gate, and use the trigger syntax that runtime accepts — `$name` in Codex, `/name` in Claude Code.
 
 When a phase runs through `/alaa-codex-orchestrator` (Codex) or `/alaa-cc-orchestrator` (Claude Code), these prompts feed that pack's role lanes; do not restate its dispatch machinery, review gate, roster, or role definitions. `/alaa-prompting-guide` owns model and effort policy and the checked Codex pin source. A prompt pack keeps only the three durable roles above; the orchestrator owns role triggers and chooses the runtime profile.
 
-Build such prompts under the invocation-and-composition rules of `$alaa-prompting-guide` / `/alaa-prompting-guide` (its `references/06-invocation-and-composition.md`): the orchestrator trigger opens the message with the exact installed name, the session role is the orchestrator with an explicit do-not-implement negative, implementation verbs live in lane rules, and any `/goal` text stays a compact bounded condition sent separately.
+Build such prompts under the invocation-and-composition rules of `/alaa-prompting-guide` (its `references/06-invocation-and-composition.md`): the orchestrator trigger opens the message with the exact installed name, the session role is the orchestrator with an explicit do-not-implement negative, implementation verbs live in lane rules, and any `/goal` text stays a compact bounded condition sent separately.
 
 ## Compact prompt shape
 
@@ -35,6 +35,8 @@ Each role prompt contains:
 4. Validation.
 5. Done condition.
 6. Blocked condition.
+
+Within read-first, give the selected phase/task's exact skill names and sources with load points, conditions, and absence actions, or an exact reference to its populated Skill Bindings and task overrides. Resolve these from the plan rather than writing "use relevant skills". Keep this within the six fields; `references/companion-routing.md` owns the mapping contract.
 
 The read-first section must carry the handoff-package facts that bear on this lane: the confirmed facts with how they were verified, the approaches already ruled out and why, and the environment notes and traps that apply to the surfaces this role owns. The executing agent has no shared context — it sees this prompt and the files it names, and nothing else. Copy the facts in rather than pointing at a conversation it never had. A prompt that omits them buys a rediscovery, or a repeat of an experiment that already failed. Field semantics are in `references/context-continuity.md`.
 

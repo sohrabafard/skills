@@ -1,0 +1,16 @@
+{
+  "command": "python -B -m unittest test_workflow_files.SkillBindingsTest test_workflow_files.WorkflowFilesTest.test_resumable_is_the_default_and_creates_a_plan_plus_checkpoint test_workflow_files.WorkflowFilesTest.test_direct_remains_available_as_one_small_plan test_workflow_files.WorkflowFilesTest.test_profiles_create_only_declared_companions test_workflow_files.WorkflowFilesTest.test_explicit_prompt_pack_records_roles_and_freshness test_workflow_files.WorkflowFilesTest.test_documenter_metadata_is_optional_and_paired test_workflow_files.WorkflowFilesTest.test_recorded_work_branch_and_base_satisfy_the_workspace_gate test_workflow_files.WorkflowFilesTest.test_a_phase_that_changed_nothing_records_none_and_passes test_workflow_files.WorkflowFilesTest.test_completed_uncommitted_phase_requires_observed_snapshot test_workflow_files.WorkflowFilesTest.test_existing_commit_field_remains_compatible test_workflow_files.WorkflowFilesTest.test_completed_phase_accepts_legacy_no_change_sentinel test_workflow_files.WorkflowFilesTest.test_previous_version_plan_without_a_handoff_package_only_warns test_workflow_files.WorkflowFilesTest.test_representative_completed_legacy_artifacts_are_accepted",
+  "cwd": "skills/sohrab/alaa-workflow/tests",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TEMP": "<approved temporary directory>",
+    "TMP": "<approved temporary directory>"
+  },
+  "priority": "Normal",
+  "start": "2026-10-04T19:13:41.9433850+03:30",
+  "end": "2026-10-04T19:13:47.5664795+03:30",
+  "duration_seconds": 5.616,
+  "exit_code": 0,
+  "log": "workflow-focused-test.log",
+  "environment_note": "Windows host execution outside the restrictive sandbox; process-local approved cache path used for temporary fixtures."
+}

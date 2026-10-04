@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 import shutil
 import subprocess
 import sys
@@ -35,6 +36,7 @@ HANDOFF_FIELDS = (
     "Traps",
 )
 PHASE_FIELDS = ("Depends on", "Owned scope", "Excluded from this phase", "Validation commands", "Evidence observed")
+SKILL_ROW = "| example-owner | skills/example-owner/SKILL.md | source edits | always | block this task |"
 
 # A plan in the shape the previous skill version produced: no handoff package, and phases that
 # still carry the combined "Validation commands/evidence" field. It must keep validating.
@@ -43,7 +45,7 @@ PREVIOUS_VERSION_PLAN = """# Workflow Plan - Previous version
 - Task ID: `20260101-000000_previous-version`
 - Mode: `plan`
 - Profile: `resumable`
-- Status: executing
+- Status: complete
 - Created: `2026-01-01T00:00:00Z`
 - Checkpoint: `docs/agents/20260101-000000_previous-version-state.md`
 
@@ -77,7 +79,7 @@ PREVIOUS_VERSION_PLAN = """# Workflow Plan - Previous version
 PREVIOUS_VERSION_CHECKPOINT = """# Workflow Checkpoint - Previous version
 
 - Plan: `docs/_agent_plans/20260101-000000_previous-version.md`
-- Status: executing
+- Status: complete
 - Current phase: Phase 1
 - Last verified result: not run
 - Blockers: none known
@@ -202,6 +204,13 @@ class WorkflowFilesTest(unittest.TestCase):
         self.assertIsNotNone(index, f"no line starting with {prefix!r} in {path.name}")
         del lines[index]
         path.write_text("".join(lines), encoding="utf-8")
+
+    def fill_skills(self, root: Path, plan: Path) -> None:
+        self.write_files(root, {"skills/example-owner/SKILL.md": "---\nname: example-owner\n---\n"})
+        content = plan.read_text(encoding="utf-8")
+        content = content.replace("| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |", SKILL_ROW)
+        content = content.replace("- Required skills: NEEDS_FILL", "- Required skills: example-owner")
+        plan.write_text(content, encoding="utf-8")
 
     def test_resumable_is_the_default_and_creates_a_plan_plus_checkpoint(self) -> None:
         with workspace_tempdir() as tmp:
@@ -540,6 +549,7 @@ class WorkflowFilesTest(unittest.TestCase):
             root = Path(tmp)
             payload, _ = self.init(root)
             plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
             self.edit(plan, "- Status: planning", "- Status: executing")
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
@@ -615,6 +625,7 @@ class WorkflowFilesTest(unittest.TestCase):
             root = Path(tmp)
             payload, _ = self.init(root)
             plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
             self.edit(plan, "- Status: planning", "- Status: executing")
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
@@ -631,6 +642,7 @@ class WorkflowFilesTest(unittest.TestCase):
             root = Path(tmp)
             payload, _ = self.init(root)
             plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
             self.edit(plan, "- Status: planning", "- Status: executing")
             self.edit(plan, "- Base branch and commit: NEEDS_FILL", "- Base branch and commit: `main` at `abc1234`")
             self.edit(plan, "- Work branch: NEEDS_FILL", "- Work branch: `agent/adaptive-workflow`")
@@ -649,6 +661,7 @@ class WorkflowFilesTest(unittest.TestCase):
             root = Path(tmp)
             payload, _ = self.init(root)
             plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
             self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
             self.edit(plan, "- Snapshot: not captured yet", "- Commit: abc1234")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
@@ -670,6 +683,7 @@ class WorkflowFilesTest(unittest.TestCase):
             root = Path(tmp)
             payload, _ = self.init(root)
             plan = root / str(payload["outputs"][0])
+            self.fill_skills(root, plan)
             self.edit(plan, "### Phase 1 - Ground and implement\n\n- Status: pending", "### Phase 1 - Ground and implement\n\n- Status: complete")
             self.edit(plan, "- Snapshot: not captured yet", "- Commit: none; this phase changed no files")
             result = self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
@@ -819,6 +833,199 @@ class WorkflowFilesTest(unittest.TestCase):
             payload = json.loads(result.stdout)
             state = root / str(payload["outputs"][-1])
             self.assertEqual('Quoted "task"', json.loads(state.read_text(encoding="utf-8"))["task"])
+
+
+class SkillBindingsTest(unittest.TestCase):
+    """Exercise missing-owner and inheritance failures against real skill source files."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        spec = importlib.util.spec_from_file_location("workflow_validator", VALIDATE)
+        assert spec is not None and spec.loader is not None
+        cls.validator = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.validator)
+
+    def check(self, replacement: tuple[str, str] | None = None, status: str = "executing", profile: str = "resumable", source_content: str = "---\nname: example-owner\n---\n", content_override: str | None = None) -> list[str]:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            source = root / "skills/example-owner/SKILL.md"
+            source.parent.mkdir(parents=True)
+            source.write_text(source_content, encoding="utf-8")
+            other = root / "skills/other-owner/SKILL.md"
+            other.parent.mkdir(parents=True)
+            other.write_text("---\nname: other-owner\n---\n", encoding="utf-8")
+            content = """## Handoff Package
+- Confirmed facts: none
+## Skill Bindings
+| Skill | Source | Load before | When | If unavailable |
+|---|---|---|---|---|
+""" + SKILL_ROW + """
+| other-owner | skills/other-owner/SKILL.md | review | always | block review |
+## Ordered Work
+### Phase 1 - Repair
+- Status: pending
+- Required skills: example-owner
+- Work:
+  - [ ] Repair behavior. [skills: inherit]
+  - [ ] Review the repair. [skills: other-owner]
+"""
+            if replacement:
+                self.assertIn(replacement[0], content)
+                content = content.replace(*replacement)
+            if content_override is not None:
+                content = content_override
+            return self.validator.validate_skill_bindings(content, root / "plan.md", profile, status)
+
+    def assert_blocked(self, messages: list[str], invariant: str) -> None:
+        self.assertTrue(any(line.startswith(f"ERROR [{invariant}]") for line in messages), messages)
+
+    def test_missing_bindings_block_an_active_plan(self) -> None:
+        messages = self.check(("## Skill Bindings", "## Missing bindings"))
+        self.assert_blocked(messages, "plan.skills")
+
+    def test_statusless_plan_cannot_inherit_first_completed_phase_status(self) -> None:
+        content = "# Plan\n### Phase 1\n- Status: done\n### Phase 2\n- Status: pending\n"
+        self.assertEqual("", self.validator.detect_status(content))
+        with workspace_tempdir() as tmp:
+            status = self.validator.effective_plan_status(content, Path(tmp) / "plan.md", "legacy")
+            self.assertEqual("", status)
+            self.assert_blocked(self.check(profile="legacy", status=status, content_override=content), "plan.skills")
+
+    def test_incomplete_status_never_admits_historical_mapping_exemption(self) -> None:
+        self.assertFalse(self.validator.is_complete_status("incomplete"))
+        self.assertFalse(self.validator.is_complete_status("not complete"))
+        self.assert_blocked(self.check(("## Skill Bindings", "## Missing bindings"), status="incomplete", profile="legacy"), "plan.skills")
+
+    def test_task_only_plan_with_empty_bindings_cannot_bypass_phase_mapping(self) -> None:
+        header = "## Skill Bindings\n| Skill | Source | Load before | When | If unavailable |\n|---|---|---|---|---|\n## Ordered Work\n"
+        for task in ("- [ ] Repair behavior.", "1. Repair behavior."):
+            with self.subTest(task=task):
+                self.assert_blocked(self.check(content_override=header + task), "plan.skills-structure")
+
+    def test_numbered_task_within_phase_requires_mapping(self) -> None:
+        self.assert_blocked(self.check(("  - [ ] Repair behavior. [skills: inherit]", "  1. Repair behavior.")), "plan.skills-mapping")
+
+    def test_numbered_task_with_explicit_inheritance_is_valid(self) -> None:
+        self.assertEqual([], self.check(("  - [ ] Repair behavior.", "  1. Repair behavior.")))
+
+    def test_numbered_resume_references_are_not_executable_tasks(self) -> None:
+        replacement = (
+            "- Confirmed facts: none",
+            "- Confirmed facts: none\n- Read first on resume:\n  1. README.md\n  2. docs/context.md",
+        )
+        self.assertEqual([], self.check(replacement))
+
+    def test_numbered_references_after_ordered_work_are_not_tasks(self) -> None:
+        old = "  - [ ] Review the repair. [skills: other-owner]"
+        self.assertEqual([], self.check((old, old + "\n## Resume references\n1. README.md\n2. docs/context.md")))
+
+    def test_numbered_work_outside_phase_still_blocks_with_valid_phase_present(self) -> None:
+        replacement = ("## Ordered Work\n### Phase", "## Ordered Work\n1. Unmapped repair.\n### Phase")
+        self.assert_blocked(self.check(replacement), "plan.skills-structure")
+
+    def test_unmapped_task_outside_existing_phase_blocks(self) -> None:
+        old = "  - [ ] Review the repair. [skills: other-owner]"
+        self.assert_blocked(self.check((old, old + "\n## Other work\n- [ ] Unmapped repair.")), "plan.skills-structure")
+
+    def test_body_only_or_malformed_name_is_not_skill_frontmatter(self) -> None:
+        for source in (
+            "# Owner\nname: example-owner\n",
+            "---\nname: example-owner\n",
+            "---\nname: 'example-owner\n---\n",
+            "---\nname: example-owner\nname: example-owner\n---\n",
+            "---\ndescription: Owner\n---\nname: example-owner\n",
+        ):
+            with self.subTest(source=source):
+                self.assert_blocked(self.check(source_content=source), "plan.skills-source")
+
+    def test_delimited_quoted_name_uses_frontmatter_not_body(self) -> None:
+        self.assertEqual([], self.check(source_content="---\nname: 'example-owner'\ndescription: Owner\n---\nname: wrong-body-name\n"))
+
+    def test_correlated_completion_rejects_same_basename_in_other_directory(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            plan = root / "plan.md"
+            state = root / "state.json"
+            state.write_text(json.dumps({"plan_path": "other/plan.md", "status": "complete"}), encoding="utf-8")
+            content = f"- Machine state: `{state.as_posix()}`\n"
+            self.assertEqual("", self.validator.effective_plan_status(content, plan, "legacy"))
+
+    def test_executing_old_plan_without_handoff_or_bindings_must_migrate(self) -> None:
+        replacement = (
+            "## Handoff Package\n- Confirmed facts: none\n## Skill Bindings",
+            "## Historical notes\n- Confirmed facts: none\n## Missing bindings",
+        )
+        self.assert_blocked(self.check(replacement), "plan.skills")
+
+    def test_completed_adaptive_archive_without_bindings_remains_readable(self) -> None:
+        messages = self.check(("## Skill Bindings", "## Archived notes"), status="complete")
+        self.assertTrue(messages)
+        self.assertTrue(all(line.startswith("WARN") for line in messages), messages)
+
+    def test_legacy_completion_requires_terminal_correlated_evidence(self) -> None:
+        cases = (
+            ({}, "None - complete", "", ""),
+            ({"phase-1": "done"}, "continue phase 2", "", ""),
+            ({"phase-1": "done"}, "None - complete", "", "complete"),
+            ({"phase-1": "done"}, "None - complete", "executing", "executing"),
+        )
+        for phases, next_step, declared, expected in cases:
+            with self.subTest(phases=phases, next_step=next_step, status=declared), workspace_tempdir() as tmp:
+                root = Path(tmp)
+                plan = root / "plan.md"
+                state = root / "plan-state.json"
+                state.write_text(json.dumps({"plan_path": "plan.md", "phases": phases, "next_step": next_step}), encoding="utf-8")
+                content = f"- Machine state: `{state.as_posix()}`\n"
+                if declared:
+                    content += f"- Status: {declared}\n"
+                self.assertEqual(expected, self.validator.effective_plan_status(content, plan, "legacy"))
+
+    def test_missing_phase_mapping_blocks(self) -> None:
+        self.assert_blocked(self.check(("- Required skills: example-owner", "")), "plan.skills-mapping")
+
+    def test_missing_task_mapping_blocks(self) -> None:
+        self.assert_blocked(self.check((" [skills: inherit]", "")), "plan.skills-mapping")
+
+    def test_vague_phase_skills_block(self) -> None:
+        self.assert_blocked(self.check(("- Required skills: example-owner", "- Required skills: relevant skills")), "plan.skills-mapping")
+
+    def test_unbound_task_override_blocks(self) -> None:
+        self.assert_blocked(self.check(("[skills: other-owner]", "[skills: invented-owner]")), "plan.skills-mapping")
+
+    def test_dangling_source_blocks(self) -> None:
+        self.assert_blocked(self.check(("skills/example-owner/SKILL.md", "skills/absent-owner/SKILL.md")), "plan.skills-source")
+
+    def test_source_name_mismatch_blocks(self) -> None:
+        self.assert_blocked(self.check(("skills/example-owner/SKILL.md", "skills/other-owner/SKILL.md")), "plan.skills-source")
+
+    def test_missing_load_point_condition_or_absence_blocks(self) -> None:
+        for old in ("| source edits |", "| always |", "| block this task |"):
+            with self.subTest(field=old):
+                self.assert_blocked(self.check((old, "| |")), "plan.skills")
+
+    def test_unavailable_unconditional_owner_blocks(self) -> None:
+        self.assert_blocked(self.check(("skills/example-owner/SKILL.md", "unavailable")), "plan.skills-source")
+
+    def test_conditional_absence_is_recorded_without_installation(self) -> None:
+        deferred = "| example-owner | unavailable | source edits | deployment is requested | block this task |"
+        self.assertEqual([], self.check((SKILL_ROW, deferred)))
+
+    def test_unresolved_mapping_warns_in_draft_and_blocks_on_resume(self) -> None:
+        replacement = ("- Required skills: example-owner", "- Required skills: NEEDS_FILL")
+        draft = self.check(replacement, status="planning")
+        self.assertTrue(all(line.startswith("WARN") for line in draft), draft)
+        self.assert_blocked(self.check(replacement), "plan.skills-mapping")
+
+    def test_completed_legacy_missing_mappings_remain_warnings(self) -> None:
+        messages = self.check(("- Required skills: example-owner", ""), status="complete", profile="legacy")
+        self.assertTrue(messages)
+        self.assertTrue(all(line.startswith("WARN") for line in messages), messages)
+
+    def test_valid_inheritance_and_task_override_need_no_duplicate_manuals(self) -> None:
+        self.assertEqual([], self.check())
+
+    def test_explicit_no_owner_reason_can_be_inherited(self) -> None:
+        self.assertEqual([], self.check(("- Required skills: example-owner", "- Required skills: none (plain fixture inspection)")))
 
 
 if __name__ == "__main__":

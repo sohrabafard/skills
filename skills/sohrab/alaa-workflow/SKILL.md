@@ -1,6 +1,6 @@
 ---
 name: alaa-workflow
-description: "Adaptive workflow control for long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack repository work. Use when execution needs an ordered plan, durable continuation across compaction or a fresh agent, machine-readable orchestration state, independent review, or generated agent prompts. Multi-phase work gets a plan plus a checkpoint by default. Do not create workflow files for native Plan Mode, review-only requests, short read-only answers, or small single-phase edits unless the user explicitly asks for repository artifacts."
+description: "Adaptive workflow control for actionable implementation plans and long-running, multi-phase, resumable, delegated, handoff-sensitive, review, or prompt-pack repository work. An execution-plan request saves a plan and checkpoint without a separate save request; authorized multi-phase work does so before implementation. Plans name exact skills per phase and task. Plan-only authorizes planning artifacts only. Respect native Plan Mode and explicit no-file, read-only, or chat-only limits; short advice, ordinary review, and small single-phase edits create no files unless requested."
 ---
 
 # Alaa Workflow
@@ -14,7 +14,7 @@ Coordinate long work so it survives losing the conversation, without making ever
 3. When `/alaa-memory-os` says its trigger holds, invoke it before planning from prior context or publishing durable knowledge. Memory may contribute verified leads; it never owns this workflow's plan, checkpoint, evidence, or handoff.
 4. Before the first non-trivial repository discovery or code-evidence choice, invoke `/alaa-code-intelligence-routing` once and reuse its routed result instead of retrieving the same fact through a second surface.
 5. Pair with `/alaa-low-noise` and the narrowest domain skill needed for technical decisions.
-6. Select the artifact profile before writing workflow files.
+6. Apply admission and select the profile through `references/artifact-lifecycle.md` before writing. Populate phase/task skill bindings through `references/companion-routing.md` before execution or handoff.
 
 ## Select the profile
 
@@ -52,7 +52,7 @@ Before writing, identify the base, working branch or checkout, and unrelated cha
 
 ## Curate reusable context
 
-At a completed or failed phase, or a material decision boundary, run an intermediate scan through `$alaa-extract-agent-lessons` / `/alaa-extract-agent-lessons` only when that boundary carries one of the seven signals `references/context-curation.md` lists, and park each admitted candidate in the matching handoff-package field. Before completion, run the same skill's final full-engagement gate even when the expected result is empty, and record its outcome in the final phase evidence and the checkpoint.
+At a completed or failed phase, or a material decision boundary, run an intermediate scan through `/alaa-extract-agent-lessons` only when that boundary carries one of the seven signals `references/context-curation.md` lists, and park each admitted candidate in the matching handoff-package field. Before completion, run the same skill's final full-engagement gate even when the expected result is empty, and record its outcome in the final phase evidence and the checkpoint.
 
 This workflow owns when and where curation happens. `references/context-curation.md` owns the seven signals, what a candidate is recorded as, where publication is authorized, and what a `pipeline reopen required` verdict obliges.
 
@@ -64,13 +64,13 @@ A dispatch is a one-way context wall; `references/context-continuity.md` covers 
 
 The parent owns the plan, integration, conflict resolution, and final validation, and reruns the combined validation surface. Put lane ownership inside the parent plan or the delegated prompt; do not create a separate lane-plan artifact.
 
-A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `$alaa-codex-orchestrator` in Codex or `/alaa-cc-orchestrator` in Claude Code for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
+A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `/alaa-codex-orchestrator` in Codex or `/alaa-cc-orchestrator` in Claude Code for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
 
 ## Generate prompts only on request
 
 Use `implementer` and `independent reviewer`; add `documenter` only when the phase alters behavior, APIs, configuration, or operations. Start from `assets/phase-prompts-template.md`; keep each role to the six required fields and at most 250 words; the target yields when the user requests an exhaustive prompt, and whenever required behavior-affecting content does not fit.
 
-Before resolving any runtime name, model name, effort level, feature syntax, or skill-trigger syntax, load `$alaa-prompting-guide` / `/alaa-prompting-guide` and verify current official documentation. `references/phase-prompts.md` owns the freshness gate, the role definitions, and where a resolved value is allowed to live.
+Before resolving any runtime name, model name, effort level, feature syntax, or skill-trigger syntax, load `/alaa-prompting-guide` and verify current official documentation. `references/phase-prompts.md` owns the freshness gate, the role definitions, and where a resolved value is allowed to live.
 
 ## Review
 
@@ -84,7 +84,7 @@ Exit `0` is clean, and warnings alone do not fail it. Exit `1` is a blocking err
 
 ## When NOT to use
 
-The frontmatter owns trigger boundaries. After this skill is selected, still create no repository artifacts for native Plan Mode, review-only requests, or small single-phase edits unless the user asks for files.
+`references/artifact-lifecycle.md` owns artifact admission and its exceptions; activation alone never authorizes product execution.
 
 ## Direct references
 

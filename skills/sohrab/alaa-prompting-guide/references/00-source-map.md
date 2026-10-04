@@ -10,7 +10,7 @@ Ground every version-sensitive claim here. This file decides which source wins a
    - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
    - Codex and ChatGPT skills, commands, and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, and the Codex pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents`, `guides/agents-md`, and `config-reference`
    - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Sonnet 5.5, and Fable 5.1 pages under that path
-   - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, and `goal`
+   - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, `goal`, and `desktop`
 4. This skill's dated references and local policy; they do not override current official capability facts. Use `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
 
 A redirect is a signal, not a detour: `developers.openai.com/codex/skills` now returns a permanent redirect to the `learn.chatgpt.com` skills page, so a citation to the old path is stale even though it still resolves. When a documented URL redirects across hosts, cite the destination and update the reference that named the origin.
@@ -43,3 +43,16 @@ local runtime activation, account access or a profile's comparative quality.
 Sonnet 5.5 model, migration, prompting, effort and Claude Code selection sources were
 refreshed 29 September 2026. Read `references/31-sonnet-5-5.md` for their exact URLs and
 provider/API boundaries. Other dated model snapshots retain their own verification dates.
+
+Claude goal, Desktop Code and slash-invocation sources refreshed 4 October 2026:
+`https://code.claude.com/docs/en/goal`, `https://code.claude.com/docs/en/desktop`, and
+`https://code.claude.com/docs/en/skills`. They establish the condition cap, three evaluator
+verdicts, transcript-only evidence, permission/trust/hook boundaries and direct versus
+mid-message invocation. They do not establish Chat/Cowork goal support, Unicode counting
+semantics, a recent parser/cap change, or acceptance of an unprovided rejected prompt.
+Source consistency and static fixtures do not prove live Desktop acceptance.
+
+The Desktop command-composer error quoted in `references/41-claude-code-runtime-features.md`
+is user-observed on 4 October 2026; no app version or official documentation of that exact
+restriction was supplied. Keep this evidence separate from the official goal limit and
+from any inferred release change. The rejected payload and live repaired submission remain unverified.

@@ -1,0 +1,12 @@
+{
+  "checked_at_utc": "2026-10-04T16:14:47.907807+00:00",
+  "snapshot": "final-source-snapshot.json",
+  "source_input_count": 535,
+  "changed_paths": [],
+  "source_documentation_artifact_gates": "PASS",
+  "independent_instruction_review": "APPROVED",
+  "independent_correctness_review": "APPROVED",
+  "live_desktop_acceptance": "unverified",
+  "installed_skills": "unchanged",
+  "commit": "not requested"
+}

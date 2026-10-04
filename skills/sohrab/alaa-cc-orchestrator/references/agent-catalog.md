@@ -106,8 +106,8 @@ adapter: when its `ACTIVE_ADAPTER` changes, change this set and the grant checke
 
 ## How a lane gets its skills
 
-**A role can always reach a skill it is told to apply.** Two mechanisms serve that, and they are
-complementary rather than alternatives.
+Before dispatch, verify the role can reach its bindings under `alaa-workflow references/companion-routing.md`.
+Preloading and runtime invocation are complementary mechanisms for that reachability.
 
 `skills:` preloads what a role always needs: the routing contract, and the doctrine its verdict is
 measured against. `alaa-architecture-critic` carries the constitution it reviews against,
@@ -121,7 +121,7 @@ rule is to name the one skill the lane needs rather than preload every candidate
 Every general allowlisted role keeps `Skill` for that reason, and every implementation role inherits it.
 
 Withholding `Skill` from the allowlists was tried and reverted. It narrows nothing on a role that
-already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `clean_code_skill`
+already holds `Bash`, `Read`, `Write`, and `Edit`; it makes the dispatch's own `skills`
 field unsatisfiable; and it removes runtime invocation from every specialist on the theory that its
 preload list is complete, which no evidence supports. The safety deny set is therefore exactly
 Serena's shell tool, a real second path to the shell that bypasses the runtime's approval rules, and

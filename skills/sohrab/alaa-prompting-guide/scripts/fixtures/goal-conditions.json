@@ -1,0 +1,98 @@
+[
+  {
+    "name": "plain-completion-and-stops",
+    "surface": "claude-desktop-code",
+    "condition": "The scoped outcome meets the plan's acceptance criteria, with required checks passing and review disposition reported in the transcript; or a BLOCKED report names the cause and next safe action; or 25 goal evaluations end with an INCOMPLETE progress report.",
+    "expected": []
+  },
+  {
+    "name": "plain-paths",
+    "surface": "claude-desktop-code",
+    "condition": "The transcript reports checks passing for docs/_agent_plans/phase.md and /repo/src/file.php, or reports a blocker, or stops after 25 evaluations.",
+    "expected": []
+  },
+  {
+    "name": "embedded-skill-command",
+    "surface": "claude-desktop-code",
+    "condition": "Use /alaa-workflow before completing the task.",
+    "expected": ["DESKTOP-COMMAND"]
+  },
+  {
+    "name": "namespaced-command",
+    "surface": "claude-desktop-code",
+    "condition": "Use /so:alaa-workflow before completing the task.",
+    "expected": ["DESKTOP-COMMAND"]
+  },
+  {
+    "name": "skill-mention",
+    "surface": "claude-desktop-code",
+    "condition": "Use @alaa-workflow before completing the task.",
+    "expected": ["DESKTOP-MENTION"]
+  },
+  {
+    "name": "file-chip-unverifiable-in-plain-input",
+    "surface": "claude-desktop-code",
+    "condition": "Complete @plan.md.",
+    "expected": ["DESKTOP-MENTION"]
+  },
+  {
+    "name": "markdown-link",
+    "surface": "claude-desktop-code",
+    "condition": "Follow [the plan](docs/plan.md).",
+    "expected": ["DESKTOP-LINK"]
+  },
+  {
+    "name": "url-link",
+    "surface": "claude-desktop-code",
+    "condition": "Review https://example.com/plan.",
+    "expected": ["DESKTOP-LINK"]
+  },
+  {
+    "name": "inline-code",
+    "surface": "claude-desktop-code",
+    "condition": "The transcript records `npm test` exiting 0.",
+    "expected": ["DESKTOP-FORMAT"]
+  },
+  {
+    "name": "bold-formatting",
+    "surface": "claude-desktop-code",
+    "condition": "The result is **complete**.",
+    "expected": ["DESKTOP-FORMAT"]
+  },
+  {
+    "name": "italic-formatting",
+    "surface": "claude-desktop-code",
+    "condition": "The result is *complete*.",
+    "expected": ["DESKTOP-FORMAT"]
+  },
+  {
+    "name": "cli-does-not-inherit-desktop-composer-rule",
+    "surface": "claude-code-cli",
+    "condition": "The transcript records `npm test` exiting 0.",
+    "expected": []
+  },
+  {
+    "name": "chat-support-unestablished",
+    "surface": "claude-desktop-chat",
+    "condition": "The task is complete.",
+    "expected": ["SURFACE"]
+  },
+  {
+    "name": "cowork-support-unestablished",
+    "surface": "claude-cowork",
+    "condition": "The task is complete.",
+    "expected": ["SURFACE"]
+  },
+  {
+    "name": "unknown-surface",
+    "surface": "unknown",
+    "condition": "The task is complete.",
+    "expected": ["SURFACE"]
+  },
+  {
+    "name": "empty-condition",
+    "surface": "claude-desktop-code",
+    "condition": " \n",
+    "expected": ["EMPTY"]
+  }
+]

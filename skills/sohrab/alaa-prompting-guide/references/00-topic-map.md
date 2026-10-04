@@ -6,7 +6,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 
 | You are about to | Read | Because |
 |---|---|---|
-| Decide how a generated prompt will actually activate a skill, write a call site, place a trigger, choose between a trigger-led and a goal-led message, or write a completion condition | `references/06-invocation-and-composition.md` | Syntax alone does not activate a skill; placement, role consistency, and reachability do |
+| Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase/task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
 | Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
 | Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
 | Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
@@ -20,7 +20,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Tune current Fable prompting or assess an explicit comparison | `references/42-fable-5-1.md` | Its verification and API guidance differ from older Fable |
 | Compare historical Fable 5 behavior explicitly | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
 | Assess Haiku for a bounded comparison | `references/35-haiku-4-5.md` | It lacks effort support and uses a different thinking control |
-| Use Claude Code's `/loop`, subagents, workflows, plan mode, or `/goal` | `references/41-claude-code-runtime-features.md` | Concurrency caps, nesting defaults, and evaluator scope decide whether a prompt can work |
+| Use Claude Code's `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface availability, evaluator scope and the actual rejection decide what can run |
 | Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
 | Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
 | Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |

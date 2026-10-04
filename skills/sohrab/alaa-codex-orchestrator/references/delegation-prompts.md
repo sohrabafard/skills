@@ -14,12 +14,15 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <acceptance_criteria><numbered checkable criteria></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
+<skills><exact names, sources, activation conditions, and absence actions from the plan's phase/task bindings></skills>
 <progress>report meaningful progress under the active host contract; use bounded invocations per package or target</progress>
 <return>the shape of the return and its line bound; findings, verdicts, counts, and artifact paths only, never transcripts, full diffs, or raw logs</return>
 <output>use the agent's native output contract</output>
 ```
 
 Every dispatch carries the `<return>` field. An unbounded child return is the most common way a parent's context is flooded, and the parent pays that cost on every remaining turn of the goal, not only on the turn the return arrives.
+
+Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context.
 
 Every dispatch that can run long carries `<progress>` with the active host's reporting requirements. Do not infer a universal watchdog timeout or require narration between every command. Follow `SKILL.md` for interrupted-lane recovery.
 

@@ -1,0 +1,51 @@
+{
+  "narrative_documents": [
+    {
+      "path": "outputs/20261004-goal-workflow-repair/README.md",
+      "grade": "GREEN",
+      "physical_lines": 30,
+      "reason": "Coherent navigation and result summary fits the green target without splitting its topic."
+    },
+    {
+      "path": "outputs/20261004-goal-workflow-repair/source-evidence.md",
+      "grade": "GREEN",
+      "physical_lines": 36,
+      "reason": "The source comparison and incident evidence form one concise, coherent record."
+    }
+  ],
+  "exempt_atomic": {
+    "reason": "Agent instructions, role contracts, routing maps, templates, and ordered verification procedures must be consumed whole; splitting them would divide executable behavior.",
+    "files": [
+      "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+      "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+      "skills/sohrab/alaa-low-noise/SKILL.md",
+      "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+      "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+      "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+      "skills/sohrab/alaa-workflow/SKILL.md",
+      "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+      "skills/sohrab/alaa-workflow/assets/plan-template.md",
+      "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+      "skills/sohrab/alaa-workflow/references/companion-routing.md",
+      "skills/sohrab/alaa-workflow/references/context-continuity.md",
+      "skills/sohrab/alaa-workflow/references/phase-prompts.md"
+    ]
+  },
+  "exempt_named": {
+    "reason": "Execution plan and checkpoint are workflow-state artifacts explicitly exempt from narrative size grading.",
+    "files": [
+      "outputs/20261004-goal-workflow-repair/docs/_agent_plans/20261004-000000_goal-and-workflow-skill-repair.md",
+      "outputs/20261004-goal-workflow-repair/docs/agents/20261004-000000_goal-and-workflow-skill-repair-state.md"
+    ]
+  },
+  "this_record": "Machine-readable inventory; exempt from narrative size grading."
+}

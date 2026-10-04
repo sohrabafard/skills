@@ -14,7 +14,7 @@ Before use, load the runtime-correct prompting guide and re-check official docum
 
 **Outcome:** Execute the selected phase in `{{plan_path}}` and leave repository behavior, tests, documentation, and workflow status consistent.
 
-**Read first:** Repository instructions, the plan, and every source named by the selected phase.
+**Read first:** Repository instructions, the plan, and every source named by the selected phase. Load its Required skills and task overrides from Skill Bindings before their recorded decisions; obey each condition and absence action.
 
 **Scope:** Change only the phase-owned surfaces. Preserve unrelated work. Delegate only independent, disjoint work or high-volume context isolation; the main agent owns integration.
 
@@ -28,7 +28,7 @@ Before use, load the runtime-correct prompting guide and re-check official docum
 
 **Outcome:** Independently review the implemented phase for correctness, production risk, contract drift, and missing evidence.
 
-**Read first:** Repository instructions, `{{plan_path}}`, the resulting diff/artifacts, and affected tests.
+**Read first:** Repository instructions, `{{plan_path}}`, the resulting diff/artifacts, and affected tests. Load the selected review phase/task's exact Skill Bindings before their decisions; obey conditions and absence actions.
 
 **Scope:** Report confirmed findings first. Separate out-of-scope recommendations. Do not inherit the implementer's conclusions.
 
@@ -44,7 +44,7 @@ Include this role only when the phase alters behavior, APIs, configuration, or o
 
 **Outcome:** Align repository documentation with the implemented phase.
 
-**Read first:** Repository instructions, `{{plan_path}}`, the phase diff/artifacts, and the affected documentation.
+**Read first:** Repository instructions, `{{plan_path}}`, the phase diff/artifacts, and the affected documentation. Load the documentation phase/task's exact Skill Bindings before their decisions; obey conditions and absence actions.
 
 **Scope:** Documentation files only. Document what actually changed, never intentions. Keep edits inside sections affected by the phase and repair repo-local links broken there.
 

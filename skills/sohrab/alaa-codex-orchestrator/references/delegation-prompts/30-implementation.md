@@ -7,7 +7,7 @@
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
-<clean_code_skill><matching installed skill or repository baseline></clean_code_skill>
+<skills><resolved lane bindings, including its matching clean-code owner or explicit repository baseline></skills>
 <verification tier="focused">
   <commands><exact targeted commands: this lane's failure-mode tests plus lint, type, and build checks scoped to its files></commands>
   <low_priority_runner><absolute path when CPU-heavy></low_priority_runner>

@@ -1,6 +1,6 @@
 ---
 name: alaa-prompting-guide
-description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 4.5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation and trigger placement, splitting a skill into references, skill and subagent authoring, Codex goals and subagents, or Claude Code /loop, agents, and workflows. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 4.5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, skill and subagent authoring, or runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
 ---
 
 # Alaa Prompting Guide
@@ -43,11 +43,15 @@ completion. Source consistency proves neither installed activation nor calibrati
 
 ## Decision procedure
 
-1. **Identify the target runtime and model.** Ask only when neither can be inferred safely. The runtime determines harness features and how a trigger resolves; the model determines tuning. These are separate questions and answering one does not answer the other.
+1. **Identify the runtime, surface and model.** Ask only for a missing value that changes the artifact. A Desktop app name proves no tab's command support. The runtime determines harness features and trigger resolution; the model determines tuning.
 2. **Route each question to its owning reference before answering it.** `references/00-topic-map.md` is this skill's router: it lists the situation that makes each reference necessary. Read it first, then read only what its condition selects — every unread reference is context you have not spent.
 3. **Resolve every version-sensitive fact from a source, never from recall.** Prices, caps, effort names, discovery paths, feature gates, and defaults move between releases.
 4. **Write the artifact as a draft, then ship its compressed rewrite.** For any artifact that controls another agent's behavior, including every subagent dispatch, the first text you produce is never the deliverable, and an edit to an existing one is a draft until it has been through pass two. The rewrite ships when it is the fewest words that leave the executing agent's behavior unchanged; a soft target yields to that, and a hard limit is met by restructuring or reported as blocked. `references/60-skill-authoring.md` owns the loop, what may never be cut, and the test. Conversational prose that no agent will execute as an instruction is exempt.
 5. **Choose the artifact type deliberately.** A prompt, an instruction file, a skill, and a subagent are four different answers, and picking the wrong one is the most common authoring defect. The router points at the file that decides it.
+
+For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
+
+For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` from this skill directory, substituting the observed surface. Run `python scripts/check_goal_condition.py --self-test` after checker changes. Exit `0` is static agreement, `1` findings to repair, and `2` unavailable proof; either nonzero blocks that gate. This check proves neither live acceptance nor instruction compliance.
 
 ## Principles that govern every artifact this skill produces
 

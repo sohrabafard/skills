@@ -30,7 +30,10 @@ def orchestrator_failures(text: str) -> list[str]:
     errors = []
     for required in ("Activation grants no installation or update authority",
                      "Never silently substitute a model or a generic role",
-                     "Do not edit repository files, and do not create workflow artifacts",
+                     "Do not implement product changes",
+                     "alaa-workflow references/artifact-lifecycle.md",
+                     "Plan-only work grants no product execution, branch, or commit authority",
+                     "report saved plan/checkpoint paths when admitted",
                      "Commit only with explicit user authorization",
                      "local-only completion requires no merge prompt",
                      "Independent verification and review inspect the actual artifact",
@@ -43,7 +46,10 @@ def orchestrator_failures(text: str) -> list[str]:
                       "continue with general-purpose subagents",
                       "Every profile runs all six phases",
                       "**Do not add verification instructions.**",
-                      "A watchdog ends a lane on silence rather than on duration"):
+                      "A watchdog ends a lane on silence rather than on duration",
+                      "Do not edit repository files, and do not create workflow artifacts",
+                      "Do not edit files or imply implementation occurred",
+                      "Advisor mode runs none of them: Phases A, B, and F"):
         if forbidden in text:
             errors.append(f"retired authority/fallback contract: {forbidden}")
     return errors
@@ -51,6 +57,10 @@ def orchestrator_failures(text: str) -> list[str]:
 
 def dispatch_failures(text: str) -> list[str]:
     errors = []
+    for required in ("<skills>", "exact names, sources, activation conditions, and absence actions",
+                     "alaa-workflow references/companion-routing.md"):
+        if required not in text:
+            errors.append(f"missing dispatch skill bindings: {required}")
     if "<progress>report meaningful progress under the active host contract" not in text:
         errors.append("missing host-specific dispatch progress contract")
     if "Do not infer a universal watchdog timeout" not in text:
@@ -61,6 +71,23 @@ def dispatch_failures(text: str) -> list[str]:
     return errors
 
 
+def planning_failures(gates: str, implementation: str) -> list[str]:
+    errors = []
+    for required in ("resolved skill bindings under `alaa-workflow references/companion-routing.md`",
+                     "executable phase/task skill bindings before implementation or write-lane dispatch"):
+        if required not in gates:
+            errors.append(f"missing plan/lane skill bindings: {required}")
+    blocks = re.findall(r"```xml\s*\n(.*?)```", implementation, re.S)
+    if not blocks:
+        errors.append("missing implementation dispatch template")
+    for index, block in enumerate(blocks, 1):
+        if "<skills>" not in block or "resolved lane bindings" not in block:
+            errors.append(f"implementation template {index}: missing resolved skill bindings")
+        if "<clean_code_skill>" in block:
+            errors.append(f"implementation template {index}: clean-code-only skill routing")
+    return errors
+
+
 def self_test() -> int:
     good = (ROOT / "agents" / next(iter(sorted(
         path.name for path in (ROOT / "agents").glob("alaa-instruction-reviewer.*"))))).read_text(encoding="utf-8")
@@ -68,6 +95,8 @@ def self_test() -> int:
     # multiline body or a serialized scalar; these checks do not execute it.
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     dispatch = (ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")
+    gates = (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")
+    implementation = (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")
     cases = [
         ("valid identity and authority", not agent_failures(good)),
         ("host-specific dispatch progress", not dispatch_failures(dispatch)),
@@ -79,6 +108,19 @@ def self_test() -> int:
         ("verdict first", bool(agent_failures(good + "\nIdentity line: begin the report"))),
         ("effective permissions required", bool(agent_failures(good.replace("parent overrides", "declaration")))),
         ("advisory and authority accepted", not orchestrator_failures(skill)),
+        ("plan-only execution boundary required", bool(orchestrator_failures(skill.replace("Plan-only work grants no product execution, branch, or commit authority", "Plan means execute")))),
+        ("workflow admission owner required", bool(orchestrator_failures(skill.replace("alaa-workflow references/artifact-lifecycle.md", "Unowned admission")))),
+        ("saved-plan report required", bool(orchestrator_failures(skill.replace("report saved plan/checkpoint paths when admitted", "Plans are chat-only")))),
+        ("blanket advisor no-files rejected", bool(orchestrator_failures(skill + "\nDo not edit repository files, and do not create workflow artifacts"))),
+        ("advisor output no-files rejected", bool(orchestrator_failures(skill + "\nDo not edit files or imply implementation occurred"))),
+        ("blanket phase-write rationale rejected", bool(orchestrator_failures(skill + "\nAdvisor mode runs none of them: Phases A, B, and F"))),
+        ("complete lane bindings accepted", not planning_failures(gates, implementation)),
+        ("lane bindings omitted rejected", bool(planning_failures(gates.replace("resolved skill bindings under `alaa-workflow references/companion-routing.md`", "clean code only"), implementation))),
+        ("phase bindings omitted rejected", bool(planning_failures(gates.replace("executable phase/task skill bindings before implementation or write-lane dispatch", "implicit skills"), implementation))),
+        ("implementation bindings omitted rejected", bool(planning_failures(gates, implementation.replace("<skills>", "<omitted>", 1)))),
+        ("clean-code-only implementation rejected", bool(planning_failures(gates, implementation.replace("<skills>", "<clean_code_skill>", 1)))),
+        ("dispatch bindings omitted rejected", bool(dispatch_failures(dispatch.replace("<skills>", "<omitted>")))),
+        ("dispatch binding owner omitted rejected", bool(dispatch_failures(dispatch.replace("alaa-workflow references/companion-routing.md", "implicit owner")))),
         ("activation install rejected", bool(orchestrator_failures(skill + "\nOn activation, idempotently installs"))),
         ("implicit commit rejected", bool(orchestrator_failures(skill + "\nCommit on the run's own work branch at each completed subtask"))),
         ("forced integration rejected", bool(orchestrator_failures(skill + "\nEvery profile runs all six phases"))),
@@ -106,6 +148,9 @@ def main() -> int:
             return 2
         errors = orchestrator_failures((ROOT / "SKILL.md").read_text(encoding="utf-8"))
         errors.extend(dispatch_failures((ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")))
+        errors.extend(planning_failures(
+            (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
+            (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
         for path in sorted((ROOT / "agents").glob("alaa-*")):
             if path.suffix in {".toml", ".md"}:
                 errors.extend(f"{path.name}: {item}" for item in agent_failures(path.read_text(encoding="utf-8")))
