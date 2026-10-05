@@ -108,6 +108,8 @@ Write dispatches assuming zero shared context: the outcome, the owned scope, the
 
 Require the child to return a compact structured result rather than a narrative, and record its evidence in the parent's artifacts. A finding that exists only inside a subagent's return has already been lost — the parent's context will compact too.
 
+A long-running lane, or one a host restart could kill, keeps a progress record at a path the dispatch names (inside the repository unless the plan says otherwise) and rewrites it after each completed item: items done, items remaining, last check result. It is lane-local, not a second checkpoint. After an interruption the parent re-dispatches a lane that reads the record and the actual diff before acting, re-verifies each item the record marks done, and does only the remainder.
+
 Keep the parent responsible for synthesis. Children return findings and artifact paths; the parent decides what those mean and writes the outcome down.
 
 ## What not to write
