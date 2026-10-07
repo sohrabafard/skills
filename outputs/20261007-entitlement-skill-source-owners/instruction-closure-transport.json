@@ -1,0 +1,8 @@
+{
+  "role": "alaa-instruction-reviewer",
+  "configured_model": "gpt-6-astra",
+  "configured_effort": "high",
+  "sandbox": "read-only",
+  "exit_code": 0,
+  "duration_seconds": 157.63
+}

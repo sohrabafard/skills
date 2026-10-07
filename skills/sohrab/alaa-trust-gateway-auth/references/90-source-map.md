@@ -1,12 +1,12 @@
 # Source priority and freshness
 
-Read this file before asserting any gateway or auth behaviour that a reader might
-act on, and whenever a fact in this skill is older than the change you are making.
+Read before asserting actionable gateway/auth behaviour or using a fact older
+than your change.
 
 ## Priority when sources disagree
 
-1. **The active HAProxy template and values in the gateway repository.** This is
-   what runs, and it wins over everything below it, including this skill.
+1. **Active gateway HAProxy template and values.** Executable authority over all
+   sources below, including this skill.
 2. **Rendered manifests from the gateway repository.**
 3. **The auth repository's `routes/api.php`**, then its `docs/ops/*` contracts, then
    its README.
@@ -16,18 +16,21 @@ act on, and whenever a fact in this skill is older than the change you are makin
    allocation and emitted decoders.
 6. **This skill's references**, for the trust doctrine that ties those together.
 7. **Primary standards** — RFC 7519 (JWT), RFC 8725 (JWT BCP), RFC 6750 (Bearer),
-   RFC 9700 (OAuth 2.0 Security BCP), the OpenFGA documentation, the HAProxy
-   documentation, the Laravel documentation.
-8. **Community answers and copied snippets**, only for troubleshooting an observed
-   error, and only after the repositories and the primary standards were checked.
+   RFC 9700 (OAuth 2.0 Security BCP); OpenFGA, HAProxy and Laravel documentation.
+8. **Community answers/copied snippets**, only for observed-error troubleshooting
+   after checking repositories and primary standards.
 
-If a README and the HAProxy configuration disagree, trust the configuration and
-treat the README as drift to fix.
+HAProxy configuration wins over README drift; fix the README.
 
-Repository paths in this skill are repository-relative. Resolve them against
-wherever your machine keeps the `gateway`, `auth` and `alaa-permission-catalog`
-checkouts. A skill that carries an absolute machine path is wrong on every other
-machine, and it was wrong here until 2026-07-27.
+Resolve repository-relative paths against the named checkout. Absolute machine
+paths are non-portable; this skill carried them until 2026-07-27.
+
+Checker interface: authz-sidecar
+`<repo>/docs/integrations/gateway/authz-sidecar-contract.md`.
+Canonical model/mapping: authz-openfga `<repo>/platform/openfga/contracts/`.
+`entitlement-api` owns business truth/events; `entitlement-projector` owns projection.
+Imported pinned bundles are consumer snapshots, never authoring roots; gateway
+executable configuration retains edge authority.
 
 ## Re-check the source when the task mentions any of these
 
@@ -56,8 +59,7 @@ machine, and it was wrong here until 2026-07-27.
 
 | A tokenless request that has no body carries its project id as a `project_id` query parameter, and a route may scope a read by that value only while it is on the receiving service's explicit read list | 2026-07-31 | maintainer ruling, ratified and recorded in `references/10-verification-and-ingress.md`. Gateway side confirmed in the rendered template: no query-string fetch, `path` matching, `set-path` prefix stripping. **Service side confirmed nowhere.** Establish what the receiving service does today before acting on this row |
 
-A fact without a read date in this skill is older than this table and is re-derived
-before it is acted on.
+Undated facts predate this table; re-derive them before acting.
 
 ## A domain-bounded example
 

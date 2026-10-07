@@ -1,0 +1,21 @@
+Follow up only the snapshot identity caveat in verification.md. Do not rerun the ten valid gates or inspect unrelated files. Same alaa-verifier role and gpt-6-luna/low profile, artifact-only writes. Cwd Git root; preserve original report and logs. Timeout 120 seconds for this cheap focused/static command; no retry. CLI runner persists your final supplement.
+
+Root diagnosis: your prior command used sha256 plus two spaces plus path plus LF. candidate-manifest.json actually declares sorted path plus NUL plus raw-file SHA256 plus LF. Parent recomputation with that declared method yielded 978b8b181a5381fe502232d3baa487a50b9ef55df97b4b54da1283068059048a. Source files and manifest were never changed. Run this exact PowerShell command to independently verify the declared encoding from both entries and current bytes:
+
+@'
+from pathlib import Path
+import json,hashlib,subprocess
+m=json.loads(Path('outputs/20261007-entitlement-skill-source-owners/candidate-manifest.json').read_text(encoding='utf-8'))
+entries=sorted(m['files'],key=lambda v:v['path'])
+rows=''.join(v['path']+'\0'+v['sha256']+'\n' for v in entries)
+actual=''.join(v['path']+'\0'+hashlib.sha256(Path(v['path']).read_bytes()).hexdigest()+'\n' for v in entries)
+declared=m['manifest_sha256']
+entry_hash=hashlib.sha256(rows.encode('utf-8')).hexdigest()
+current_hash=hashlib.sha256(actual.encode('utf-8')).hexdigest()
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+print(json.dumps({'head':head,'declared':declared,'manifest_entries':entry_hash,'current_bytes':current_hash,'files':len(entries),'mismatches':sum(hashlib.sha256(Path(v['path']).read_bytes()).hexdigest()!=v['sha256'] for v in entries)}))
+assert declared==entry_hash==current_hash
+assert head==m['head']
+'@ | python -B -
+
+Return role metadata, command result/duration/exit/proof, and whether the caveat is resolved. If resolved, explicitly supersede only the original aggregate-identity caveat, retaining all original gate evidence. Never change source, manifest, or the original report.

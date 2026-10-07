@@ -10,7 +10,7 @@ The Ala platform is organized in layers with clear ownership:
 - the gateway verifies access tokens for protected routes, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
 - when a route family needs fine-grained request-time authorization, the gateway calls `authz-sidecar` or `entitlement-spoa`
 - backend services own their business domains and internal logic
-- entitlement-platform keeps normalized authorization business truth in `entitlement-api`, projects derived tuples through `projector`, and serves request-time checks from OpenFGA
+- `entitlement-api` keeps business truth; `entitlement-projector` writes derived tuples; `authz-sidecar` checks OpenFGA under the `authz-openfga` model contract
 
 Rules:
 - do not let services recreate browser-facing trust assumptions on internal hops
@@ -45,10 +45,12 @@ Rules:
   - watch and analytics ingestion service for event intake and related processing flows
 - `entitlement-api`
   - normalized authorization business truth
-- `projector`
+- `entitlement-projector` (runtime `projector`)
   - derived tuple writer into OpenFGA
-- OpenFGA
-  - derived authorization graph for fast request-time checks
+- `authz-openfga`
+  - canonical model/contracts and derived OpenFGA graph for fast checks
+- `authz-sidecar`
+  - request-time checker for the gateway
 
 ### Components being evaluated
 
@@ -64,7 +66,7 @@ and load contract. Being under evaluation does not exempt a component from a sur
 
 Treat the default Ala flow like this:
 - public client or frontend -> gateway -> backend service
-- gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses entitlement-platform authorization
+- gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses fine-grained authorization
 - backend service -> backend service only for internal workloads that truly require a synchronous hop
 - backend service -> async infrastructure for queue, event, or job delivery when appropriate
 - normalized business change -> `entitlement-api` -> `projector` -> OpenFGA for derived fine-grained authorization state
@@ -93,13 +95,13 @@ This contract applies only to media playback positions, media durations, timepoi
 - At the client-to-WA boundary, convert seconds to milliseconds exactly once (`seconds * 1000`). When WA analytics is used to position a content timepoint or a comment/note, convert milliseconds to seconds exactly once (`milliseconds / 1000`) and apply the receiving field's documented integer/rounding policy.
 - Do not infer a unit from a bare field name. New cross-service media timeline fields must use an explicit `_seconds` or `_ms` suffix. A pre-existing bare field keeps its owning client/service contract and must be documented at the integration boundary.
 
-## How entitlement-platform fits into the Ala stack
+## How entitlement repositories fit into the Ala stack
 
-- entitlement-platform does not own authentication; the gateway does
-- entitlement-platform may own request-time fine-grained route authorization through `authz-sidecar` or `entitlement-spoa`
-- entitlement-platform keeps normalized authorization business truth in `entitlement-api`
-- `projector` writes derived tuples
-- OpenFGA stores derived effective authorization state
+- the gateway owns authentication
+- `authz-sidecar` owns request-time checks; `entitlement-spoa` is a future adapter
+- `entitlement-api` owns normalized authorization business truth
+- `entitlement-projector` writes derived tuples (runtime `projector`)
+- `authz-openfga` owns model/contracts; OpenFGA stores derived effective authorization state
 
 For a normal backend behind gateway, the practical rule is:
 - trust the gateway authentication result
@@ -142,7 +144,7 @@ Route-shape reminder:
 - for the current frontend SDK set, auth is special: preserve the auth child route prefix that already includes its service route family and point the auth core base at the gateway root; apply content, comment, tusd, and WA gateway prefixes through shared core `baseUrls`
 - do not pass child route-prefix overrides solely for gateway routing, and do not trim, rewrite, or de-duplicate repeated path segments between the gateway prefix and child-defined route path
 - before claiming a prefix is active in an environment, verify the gateway route table and the rendered HAProxy config: in the `gateway` repository, read `charts/gateway/values*.yaml` and `docker/values.shared-network.yaml`, then the rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`. Resolve those paths against the local checkout of `gateway`; never hardcode an absolute machine path into this skill or into a service repository.
-- use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
+- use `/alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `/alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
 
 ## Role snapshot propagation and provisional backend freeze
 
@@ -260,8 +262,7 @@ This file owns the **wire shape**: which parameters a list route accepts, which 
 and which keys it must not. It does not own the **design method** — how to derive an ordering tuple whose
 final component is unique, which composite index serves it, how the continuation predicate is written, what
 the signed cursor carries, and how nullable sort columns, mutable sort values, and backward traversal are
-handled. Those belong to `alaa-keyset-pagination`, invoked as `/alaa-keyset-pagination` in Claude Code and
-`$alaa-keyset-pagination` in Codex. Read that skill before writing or reviewing a paginated query; read this
+handled. Those belong to `/alaa-keyset-pagination`. Read it before writing or reviewing a paginated query; read this
 section for the keys that cross the wire.
 
 Every list route on every Ala service paginates by keyset cursor. Offset pagination is forbidden on any list
@@ -289,7 +290,7 @@ Response rules:
 - The client echoes back whichever of the two cursors it holds in the same `cursor` parameter. Direction is
   encoded inside the signed cursor, not in the parameter name, so a client cannot pair a forward boundary
   with a backward request. A route does not document backward pagination until the reversal tests named by
-  `alaa-keyset-pagination` (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`),
+  `/alaa-keyset-pagination`,
   `references/70-test-list.md`, pass.
 - `has_more` and `type` are not emitted. `has_more` is `next_cursor !== null` by construction, and a second
   spelling of one fact diverges the first time a service computes it from the row count instead; `type` is
@@ -332,8 +333,7 @@ other and no shared client parser has to guess which it received.
 Observable that decides whether a route has claimed the exception legitimately: a route emitting `total`,
 `total_pages`, `current_page`, `last_page`, or `per_page` that is reachable without an admin permission, or
 that appears in the public gateway route table, is a violation regardless of what its documentation says.
-The five conditions and their reasoning are owned by `alaa-keyset-pagination`
-(`/alaa-keyset-pagination`, `$alaa-keyset-pagination`), `references/10-route-mode-and-sort-allowlist.md`;
+The five conditions and their reasoning are owned by `/alaa-keyset-pagination`, `references/10-route-mode-and-sort-allowlist.md`;
 this section is the contract text that authorizes them.
 
 Scope:
@@ -418,9 +418,9 @@ Rules:
 - keep controllers and policies away from raw header parsing
 - do not use allow-side `X-Authz-*` metadata as authorization input
 
-### Entitlement-platform repository
+### Entitlement repositories
 
-- own fine-grained authorization contracts, request-time checker behavior, and tuple projection rules
+- keep model/contracts in `authz-openfga`, checks in `authz-sidecar`, business truth/events in `entitlement-api`, and projection in `entitlement-projector`
 - do not turn OpenFGA into business truth
 
 ## Why this file exists

@@ -1,0 +1,18 @@
+Verify the frozen minimal owner/path correction in alaa-services-contract and alaa-trust-gateway-auth. Cwd is this Git root. Only write evidence in outputs/20261007-entitlement-skill-source-owners/. Source edits, installs, commits, deployment checks and external effects are excluded.
+
+Read the plan and candidate-manifest.json in that artifact family. HEAD: 2a2340d3677945578b505fce49de60e11561037d. Aggregate candidate SHA256: 978b8b181a5381fe502232d3baa487a50b9ef55df97b4b54da1283068059048a. Verify manifest hashes before and after commands. Role definition was loaded verbatim from the installed alaa-verifier TOML; configured model/effort gpt-6-luna/low. CLI transport replaces unavailable collaboration spawn; observed identity must come from runtime evidence. No MCP is enabled.
+
+Execute these exact commands sequentially, timeout 120 seconds each, no retry. They are cheap static/focused checks; no CPU-heavy suite. Report proof strength using skills/sohrab/alaa-testing-strategy/references/40-proof-strength.md. Preserve command output and exit codes in this artifact directory.
+
+python -B scripts/validate_sohrab_skill_pack.py
+python -B scripts/check_skill_index.py
+python -B scripts/check_fleet_references.py
+python -B scripts/check_lifecycle_contract.py
+python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+python -B skills/sohrab/alaa-trust-gateway-auth/scripts/trust_boundary_check.py --self-test
+python -X utf8 -B "$env:USERPROFILE/.codex/skills/.system/skill-creator/scripts/quick_validate.py" skills/sohrab/alaa-services-contract
+python -X utf8 -B "$env:USERPROFILE/.codex/skills/.system/skill-creator/scripts/quick_validate.py" skills/sohrab/alaa-trust-gateway-auth
+python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-services-contract/references/00-topic-map.md skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md skills/sohrab/alaa-services-contract/references/10-core-service-contract.md skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md
+git diff --check
+
+Also inspect changed files for UTF-8/LF/no BOM, unchanged entrypoints/scripts/metadata and dated conformance/deadline/queue references, and normalized whole-skill size: services baseline 430883 bytes, trust baseline 135534 bytes. Verify source pointers in changed text against the named sibling checkout; use bounded native file inspection only. Acceptance is static: source owners, preserved contracts, pinned imported bundle distinction, stable projector runtime identity and gateway executable precedence. No runtime/deployed behavior is claimed. Return the role's evidence table, failures, contamination and skipped limits; write verification.md within the artifact family.

@@ -22,7 +22,8 @@ Rules:
 | `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
 | `gateway` | HAProxy ingress gateway, JWT verification, trusted-header injection, request-time authz hop, structured gateway logs, and HAProxy metrics | do not force app middleware or app spans onto it; preserve HAProxy metrics and Vector log-pipeline ownership |
 | `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
-| `projector` | derived tuple projection into OpenFGA | keep it as a derived-state writer, not as the business-truth owner |
+| `entitlement-projector` (runtime `projector`) | derived OpenFGA tuple writer | business truth remains API-owned |
+| `authz-openfga` | canonical model, contracts and derived OpenFGA graph | business grants remain entitlement-api-owned |
 | `authz-sidecar` | request-time authorization runtime for gateway-protected route families | emit decision evidence, propagate trace context, and keep route-time decisions separate from service business authorization |
 | `notification` | in-development notification service and delivery workflows | converge on this contract before production readiness, including exception evidence when Sentry is absent |
 
@@ -54,7 +55,7 @@ Every route belongs to exactly one family:
 | Family | Purpose | Public client use? | Contract rule |
 |---|---|---:|---|
 | public API | product-facing API behavior | yes, when documented | keep separate from operational probes |
-| trusted internal | sanitized gateway-derived context | no | align exactly with `$alaa-trust-gateway-auth` |
+| trusted internal | sanitized gateway-derived context | no | align exactly with `/alaa-trust-gateway-auth` |
 | operational | liveness, readiness, rollout diagnostics | no | keep auth expectations explicit and minimal |
 
 Rules:
@@ -160,8 +161,7 @@ Nothing a client should not see, and nothing that describes the inside of the se
 - PII beyond what the request itself already carried. Echoing back the mobile number the caller just sent is
   permitted; adding the account's email, national code, or address is not, because an error body is returned
   to whoever made the request, including a caller who guessed an identifier.
-- Decoded pagination cursor internals, per `alaa-keyset-pagination`
-  (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`), `references/40-wire-contract-limits-and-errors.md`.
+- Decoded pagination cursor internals, per `/alaa-keyset-pagination`, `references/40-wire-contract-limits-and-errors.md`.
   An error body is exactly where an attacker probing a cursor codec reads its structure.
 
 ### The shape rule

@@ -7,7 +7,7 @@ facts, or the current telemetry shape of a specific Ala service. For a metric na
 
 ## Ownership split, and it is binding
 
-This skill owns every observability **name and value**. `$alaa-observability-soc` owns every **requirement
+This skill owns every observability **name and value**. `/alaa-observability-soc` owns every **requirement
 level, gate, threshold, and reason**.
 
 - Here: log field names, `OTEL_*` variable names and their Ala default values, route and operation naming
@@ -18,7 +18,7 @@ level, gate, threshold, and reason**.
   placement, sampling policy, metric label allow and deny lists, resource-identity policy, exemplar
   requirement level, Sentry policy, and the data-retention and cardinality budgets.
 
-When this file and `$alaa-observability-soc` appear to disagree about whether something is required, that
+When this file and `/alaa-observability-soc` appear to disagree about whether something is required, that
 skill wins. When they appear to disagree about what something is called or what its default value is, this
 file wins. Do not resolve such a disagreement by inventing a third answer.
 
@@ -30,11 +30,11 @@ Two more boundaries inside this skill:
 - `40-apply-checklist-and-anti-patterns.md` owns the adoption checklist, the validation checklist, and the
   anti-pattern list for this whole skill.
 
-Also pair with `$vector-rust-observability-pipelines` for Vector topology, VRL transforms, buffering,
-acknowledgements, and log-to-OTLP conversion; `$alaa-trust-gateway-auth` when trusted headers or
-gateway-derived identity affect telemetry; `$openfga` when the work changes the OpenFGA model or tuples
-rather than only observing OpenFGA as a dependency; and `$alaa-laravel-architecture` plus
-`$alaa-php-clean-code` for which PHP or Composer observability packages to install, which this skill does
+Also pair with `/vector-rust-observability-pipelines` for Vector topology, VRL transforms, buffering,
+acknowledgements, and log-to-OTLP conversion; `/alaa-trust-gateway-auth` when trusted headers or
+gateway-derived identity affect telemetry; `/openfga` when the work changes the OpenFGA model or tuples
+rather than only observing OpenFGA as a dependency; and `/alaa-laravel-architecture` plus
+`/alaa-php-clean-code` for which PHP or Composer observability packages to install, which this skill does
 not decide.
 
 ## Current Ala service reality
@@ -49,7 +49,8 @@ truth wins over this table.
 | `comment-service` | Laravel service with canonical `APP_NAME=comment`, OTel traces/logs, Prometheus `/metrics`, and docs that explicitly keep metrics scrape-based. |
 | `content` | Laravel macroservice for course, set, and content. Uses manual OTel traces/logs, Prometheus `/metrics`, and outbox rows carrying `request_id` and `traceparent`; AMQP trace headers may require driver extension work. |
 | `gateway` | HAProxy gateway. HAProxy owns request serving, trusted-header injection, trace context preservation and generation, and built-in Prometheus metrics at internal `:8404/metrics`. Vector owns optional log parsing, PII guard, buffering, and OTLP log export. The gateway does not emit app spans just because it propagates trace context. |
-| `entitlement-platform` | Go services `entitlement-api`, `projector`, and `authz-sidecar` use OTel tracing and Prometheus metrics. OpenFGA uses native OTLP/gRPC and native Prometheus metrics. Logs are structured JSON; OTLP log export may be intentionally deferred per repo truth. |
+| `entitlement-api`, `entitlement-projector`, `authz-sidecar` | Separate Go repos with OTel traces, Prometheus metrics and JSON logs; OTLP log export may be deferred per repo truth. Projector runtime identity stays `projector`. |
+| `authz-openfga` | OpenFGA engine: native Prometheus metrics and JSON logs. Re-check native OTLP/gRPC trace export in `<repo>/docker-compose.yml`. |
 | `wa` | Vector plus ClickHouse ingestion runtime. Canonical routes are `POST /ingest/v1/events` and `GET /health`; trusted headers include `X-Project-Id`, `X-Request-Id`, and optional `X-User-Id`. Apply Vector pipeline rules, not Laravel middleware rules. |
 | `notification` | In-development Laravel service. It already uses `X-Request-Id`, `traceparent`, request observability middleware, and Sentry scaffolding, and must converge on the full contract before production readiness. |
 | `assessment` | Future or absent in this workspace. Apply the generic Ala service contract until repo-local source truth exists. |
@@ -83,7 +84,7 @@ Rules:
 - Signal-specific overrides exist only when the platform genuinely needs different values for traces,
   metrics, or logs; a signal-specific key set that duplicates the common one is removed.
 - Keep OTLP log and trace export batched and bounded so a Collector problem cannot add latency to a
-  request. `$alaa-observability-soc` owns how much loss is acceptable when it does.
+  request. `/alaa-observability-soc` owns how much loss is acceptable when it does.
 - Keep a code-level configuration equivalent for every env-driven value, so a service still boots with a
   valid configuration when the env is incomplete, and validate the values at startup rather than at first
   export.
@@ -93,7 +94,7 @@ Rules:
 - Resource identity uses the standard OTel keys `service.name`, `service.version`, and
   `deployment.environment.name`. `service.name` equals the canonical Ala service identity from
   `10-core-service-contract.md`. Which additional resource attributes are permitted is
-  `$alaa-observability-soc`'s decision, not this file's.
+  `/alaa-observability-soc`'s decision, not this file's.
 - Propagate W3C context across incoming HTTP, outgoing HTTP, gRPC or RPC, message queues, and background
   jobs, using the exact names `traceparent`, `tracestate`, and `baggage`.
 - Carry trace context in message headers or metadata for async work, and continue the trace in the
@@ -123,7 +124,7 @@ Never write these values into any log, span, or metric: a password, a secret, a 
 JWT, a raw `X-Access` value, a TOTP secret, `otpauth_uri`, a TOTP code, or a recovery code. For
 token-level correlation use the token `jti`, a short fingerprint, or a stable internal code. Full request
 bodies and PII appear only where an approved, audited flow allows it, masked or minimized; whether a given
-flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s call, not a per-service one.
+flow is approved is `/alaa-security-review`'s and `/alaa-observability-soc`'s call, not a per-service one.
 
 ## Prometheus endpoint
 
@@ -131,8 +132,8 @@ flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s ca
   by platform contract. It is internal and is never routed as a public client API.
 - Metrics are scraped. Do not push normal long-lived service metrics, and do not use the Pushgateway for
   them.
-- Whether a histogram carries exemplars is a requirement level, and `$alaa-observability-soc` owns it.
-- Which labels a metric may carry, and the cardinality budget, belong to `$alaa-observability-soc`. The
+- Whether a histogram carries exemplars is a requirement level, and `/alaa-observability-soc` owns it.
+- Which labels a metric may carry, and the cardinality budget, belong to `/alaa-observability-soc`. The
   request-middleware label boundary is in `20-operational-and-observability-contract.md`.
 
 ### Metrics scraper admission
@@ -169,7 +170,7 @@ Per-service metric-name conformance is recorded in `95-fleet-conformance.md`.
 ## Collector and Prometheus deployment notes for Ala
 
 These are the Ala-specific placement facts. Collector topology, pipeline design, processor placement, and
-sampling policy belong to `$alaa-observability-soc`.
+sampling policy belong to `/alaa-observability-soc`.
 
 - On Arvan Kubernetes or OpenShift, services target one shared Collector gateway tier per environment or
   cluster boundary. A service repository does not carry its own Collector topology.

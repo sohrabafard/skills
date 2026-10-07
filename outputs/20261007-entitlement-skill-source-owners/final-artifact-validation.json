@@ -1,0 +1,33 @@
+[
+  {
+    "command": "python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan outputs\\20261007-entitlement-skill-source-owners\\docs\\_agent_plans\\20261007-120000_entitlement-skill-source-owners.md",
+    "cwd": "repository root",
+    "duration_seconds": 0.154,
+    "exit_code": 0,
+    "tier": "final artifact",
+    "proof_level": 1,
+    "stdout": "plan: outputs/20261007-entitlement-skill-source-owners/docs/_agent_plans/20261007-120000_entitlement-skill-source-owners.md\ncheckpoint: outputs/20261007-entitlement-skill-source-owners/docs/agents/20261007-120000_entitlement-skill-source-owners-state.md\nValidation completed without blocking errors (profile: resumable).\n",
+    "stderr": ""
+  },
+  {
+    "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files outputs\\20261007-entitlement-skill-source-owners\\final-audit.md outputs\\20261007-entitlement-skill-source-owners\\parent-review.md outputs\\20261007-entitlement-skill-source-owners\\runtime-recovery.md outputs\\20261007-entitlement-skill-source-owners\\verification.md outputs\\20261007-entitlement-skill-source-owners\\docs\\_agent_plans\\20261007-120000_entitlement-skill-source-owners.md outputs\\20261007-entitlement-skill-source-owners\\docs\\agents\\20261007-120000_entitlement-skill-source-owners-state.md",
+    "cwd": "repository root",
+    "duration_seconds": 0.177,
+    "exit_code": 1,
+    "tier": "final artifact",
+    "proof_level": 1,
+    "stdout": "outputs/20261007-entitlement-skill-source-owners/final-audit.md:24: LINK-MISSING target does not exist: ./final-artifact-validation.json\noutputs/20261007-entitlement-skill-source-owners/final-audit.md:25: LINK-MISSING target does not exist: ./final-scope.json\n",
+    "stderr": "\nFound 2 issue(s) in 6 file(s).\n"
+  },
+  {
+    "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files outputs\\20261007-entitlement-skill-source-owners\\final-audit.md outputs\\20261007-entitlement-skill-source-owners\\parent-review.md outputs\\20261007-entitlement-skill-source-owners\\runtime-recovery.md outputs\\20261007-entitlement-skill-source-owners\\verification.md outputs\\20261007-entitlement-skill-source-owners\\docs\\_agent_plans\\20261007-120000_entitlement-skill-source-owners.md outputs\\20261007-entitlement-skill-source-owners\\docs\\agents\\20261007-120000_entitlement-skill-source-owners-state.md",
+    "cwd": "repository root",
+    "duration_seconds": 0.152,
+    "exit_code": 0,
+    "tier": "final artifact",
+    "proof_level": 1,
+    "retry_reason": "initial link check ran before its referenced validation and final-scope records existed; records now materialized; original evidence retained",
+    "stdout": "Validated links in 6 Markdown file(s) under D:\\Sohrab\\Project\\skills.\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "command": "python -B scripts/validate_sohrab_skill_pack.py",
+    "cwd": "repository root",
+    "duration_seconds": 0.297,
+    "exit_code": 0,
+    "tier": "affected static",
+    "proof_level": 1,
+    "candidate": "e6fa953819342848986a77ba0ce1e37f63969d0d639e395c478213842fa533cf"
+  },
+  {
+    "command": "python -B scripts/check_fleet_references.py --skill alaa-services-contract",
+    "cwd": "repository root",
+    "duration_seconds": 0.344,
+    "exit_code": 0,
+    "tier": "affected static",
+    "proof_level": 1,
+    "candidate": "e6fa953819342848986a77ba0ce1e37f63969d0d639e395c478213842fa533cf"
+  }
+]

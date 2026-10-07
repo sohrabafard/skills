@@ -4,14 +4,12 @@ Use this file when the task is about onboarding an agent to the Ala services con
 
 ## Purpose and use
 
-Use this skill to hard-code the Ala backend service contract across Ala services.
+Hard-code the Ala backend contract for consistent agent outputs and predictable operational visibility for developers, SOC operators and platform maintainers.
 
-This contract exists so agent outputs stay consistent across services and so operational visibility remains predictable for developers, SOC operators, and platform maintainers.
-
-This skill is intentionally Ala-specific. The portability requirement for this skill is about filesystem independence and reuse across machines, not about being generic to unrelated organizations.
+Portability means filesystem independence across machines; this skill remains Ala-specific.
 
 Use it when:
-- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-platform`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
+- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `entitlement-projector`, `authz-openfga`, `authz-sidecar`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
 - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
 - standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala services
 - standardizing `/api/health`
@@ -38,11 +36,11 @@ Use this picture before code changes when a repo needs platform orientation.
 Default Ala flow:
 - frontend or public client -> gateway -> backend service
 - gateway may call a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa`
-- entitlement-platform keeps fine-grained authorization state through `entitlement-api`, `projector`, and OpenFGA
+- `entitlement-api` owns business truth; `entitlement-projector` writes derived tuples; `authz-openfga` owns the model and contracts
 
 Plain meaning:
 - the gateway owns authentication, spoofed-header removal, and trusted header injection
-- entitlement-platform owns route-level fine-grained authorization state and runtime checks when those checks are enabled
+- `authz-sidecar` owns enabled request-time checks against OpenFGA
 - a normal backend service behind the gateway still owns request normalization, business authorization, response shaping, and observability inside the service
 - frontend code must use gateway-facing routes and must never generate trusted internal headers
 
@@ -77,7 +75,7 @@ Adds:
 Read next:
 - `20-operational-and-observability-contract.md`
 - `21-alaa-platform-observability-directive.md`
-- `$alaa-observability-soc` for every requirement level, gate, threshold, alert, Collector topology, label budget, exemplar decision, and Sentry policy, which this skill does not own
+- `/alaa-observability-soc` for every requirement level, gate, threshold, alert, Collector topology, label budget, exemplar decision, and Sentry policy, which this skill does not own
 
 ### Mode B - Laravel backend service
 
@@ -104,7 +102,7 @@ Adds:
 
 Read next:
 - `22-failure-load-and-deprecation-contract.md`
-- `$alaa-reliability-sla` for the doctrine behind these values
+- `/alaa-reliability-sla` for the doctrine behind these values
 
 ### Mode A++ - Deployment and runtime contract
 
@@ -129,7 +127,7 @@ Adds:
 
 Read next:
 - `30-trusted-ingress-and-laravel-contract.md`
-- `$alaa-trust-gateway-auth`
+- `/alaa-trust-gateway-auth`
 
 ### Mode C+ - Backend authorization and permission catalog consumer
 
@@ -146,7 +144,7 @@ Adds:
 Read next:
 - `28-backend-permission-authorization-and-role-freeze.md`
 - `35-permission-catalog-and-service-configs.md`
-- `$alaa-trust-gateway-auth`
+- `/alaa-trust-gateway-auth`
 
 ### Mode D - Laravel auth-boundary service
 
@@ -169,8 +167,8 @@ Use when the task is about optional TOTP enrollment, authenticator-app setup, QR
 
 Read next:
 - `32-auth-totp-and-step-up-contract.md`
-- `$alaa-trust-gateway-auth` for gateway trust boundaries and public/internal route separation
-- `$alaa-frontend-developer` for SDK and frontend challenge-and-retry behavior
+- `/alaa-trust-gateway-auth` for gateway trust boundaries and public/internal route separation
+- `/alaa-frontend-developer` for SDK and frontend challenge-and-retry behavior
 
 ## Auth-specific routing note
 

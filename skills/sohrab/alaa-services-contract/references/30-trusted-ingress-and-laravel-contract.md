@@ -49,7 +49,7 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet 
 - The obligation to read `X-Access` in any service that authorizes, and the observable that decides it,
   are owned by `28-backend-permission-authorization-and-role-freeze.md`.
 
-## How trusted ingress relates to entitlement-platform
+## How trusted ingress relates to request-time authorization
 
 - the gateway owns authentication and trusted header injection
 - a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` may already have enforced the route-level fine-grained decision
@@ -78,10 +78,10 @@ Required validation behavior:
 - when an existing integration or explicit passive-metadata requirement consumes `X-User-Roles`, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
 - keep trusted roles distinct from permissions: `X-User-Roles` projects the verified `rol` role snapshot, while `X-Access` projects the verified `prm` permission bitmap
 - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
-- handle `X-User-Mobile` exactly according to `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
+- handle `X-User-Mobile` exactly according to `/alaa-trust-gateway-auth`
 - normalize `X-User-Fname` and `X-User-Lname` as nullable trimmed strings
 - validate each `X-Location-*` header as a non-negative integer when present
-- use the exact auth error codes owned by `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
+- use the exact auth error codes owned by `/alaa-trust-gateway-auth`
 
 Actor context must be able to hold at least:
 - trusted project identifier
@@ -108,7 +108,7 @@ Required support components:
 - permission bitmap decoder and mapper
 - compact trusted user-projection normalizer
 - auth-state synchronizer
-- stable API-error mapping path aligned with `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
+- stable API-error mapping path aligned with `/alaa-trust-gateway-auth`
 
 Implementation rules:
 - do not parse raw trusted headers in controllers, policies, resources, or repositories
@@ -143,8 +143,7 @@ Trusted context rule:
   reads it only there, never on a request that carried the header, and rejects a body that carries none. The
   body value is client-asserted and therefore forgeable, so it attributes an anonymous write and does nothing
   else: it authorizes nothing, scopes no read, and grants no capability. The full rule, the rejection it
-  produces, and the constraint it places on such a route are owned by `/alaa-trust-gateway-auth`
-  (`$alaa-trust-gateway-auth`) in `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
+  produces, and the constraint it places on such a route are owned by `/alaa-trust-gateway-auth` in `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
 - downstream services normalize trusted `X-Project-Id` once inside their trusted request context builder
 - direct backend-only tests may keep numeric compatibility only when the service explicitly documents that local testing mode
 - controllers, policies, Resources, repositories, jobs, and observers must not independently parse raw project identifiers
