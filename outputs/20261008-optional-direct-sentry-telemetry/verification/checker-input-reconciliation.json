@@ -1,0 +1,33 @@
+{
+  "observation_time_utc": "2026-10-07T22:48:01.0494139Z",
+  "purpose": "post-run evidence reconciliation; passed checks were not rerun",
+  "baseline_head": "aa32353c7c38cf1700077f61d2f007128186f9de",
+  "source_manifest_pin": "9ab91e7dec7f4d948be91caa6201ab3205528d1561179bd4398512124c307e85",
+  "checker_inputs": [
+    {
+      "path": "scripts/validate_sohrab_skill_pack.py",
+      "sha256": "d26e1a9bd3145710cfbda7eda3816754dd330681b00720fa541f7f83253dfc89"
+    },
+    {
+      "path": "scripts/check_skill_index.py",
+      "sha256": "3d8d8fc5de9de02dc0a2ad7096f4b4f779bc488ea6d2176ac98006c2d7a3bc95"
+    },
+    {
+      "path": "scripts/check_fleet_references.py",
+      "sha256": "a314954a6a6c5b4408514a281d7a7eff532fbbf9afb54feaf685059f85fa4781"
+    },
+    {
+      "path": "scripts/check_lifecycle_contract.py",
+      "sha256": "39ce2054adbfa825eea5b13ce064d25d2aa008e7e21eb7a62617a17e616161c9"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "sha256": "61b024c3f2e242d2ade95d662f8f4f244b3374b983cf3930918824ccfc429bc1"
+    }
+  ],
+  "repository_python_helper_or_parser_imports": "none identified; all imports are Python standard-library modules and the MiniYaml parser is embedded in validate_sohrab_skill_pack.py",
+  "git_diff_HEAD_exit": 0,
+  "git_diff_HEAD_output": "",
+  "per_command_start_and_observation_timestamps": "unknown; not captured at execution time",
+  "execution_time_checker_input_hashes": "not captured; current hashes and unchanged Git inputs corroborate, but do not retroactively measure execution-time hashes"
+}

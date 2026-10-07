@@ -5,7 +5,7 @@ question is whether a signal is affordable.
 
 Three numbers are decided here and nowhere else: how many metric series a service may hold, where latency histogram
 buckets fall, and what fraction of traces and profiles survives. Which label names are permitted at all is the contract's
-list (`/alaa-services-contract`, `$alaa-services-contract` in Codex, `references/21-…`); this file sets the ceilings that
+list (`/alaa-services-contract`, `references/21-alaa-platform-observability-directive.md`); this file sets the ceilings that
 a permitted label can still breach.
 
 ## Cardinality: the series budget
@@ -32,7 +32,7 @@ Gate, before a metric or label change merges:
    replica count if any label carries an instance dimension. Record the number in the change.
 2. A change whose worst case cannot be computed is treated as unbounded and is refused. "It is probably small" is an
    unbounded answer. When the bound on a label's value set has to be established rather than merely declared, read
-   `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`): it owns the general procedure for finding a
+   `/alaa-algorithms-data-structures`: it owns the general procedure for finding a
    real bound on any input dimension and the rule that a bound carries its source. This file owns the ceilings alone.
 3. Answer yes to all four of these, or the value goes to a span or log attribute instead and is reached through
    `trace_id`: is the value set bounded and small **under attack traffic as well as normal traffic**; is it stable across
@@ -77,8 +77,8 @@ Rules:
 
 ## Sampling
 
-The decision: **head sampling stays at 100% inside every service; volume reduction happens by tail sampling at the
-central gateway Collector, and nowhere else.**
+For the platform trace path, **head sampling stays at 100% inside every service; volume reduction happens by tail
+sampling at the central gateway Collector, and nowhere else on that path.**
 
 Reason: a head sampler decides before the outcome is known, so on a service at 99.99% availability it drops the rare
 failing traces with the same probability as the common succeeding ones — and those rare traces are the entire content of
@@ -108,9 +108,11 @@ Rates for the auxiliary paths:
 | Path | Default | Ceiling without a written cost review |
 |---|---|---|
 | Sentry error capture | on, unsampled | — |
-| Sentry tracing | 0 | 0.01, and only after duplication with the platform trace path is reviewed |
+| Sentry tracing | 0 | 0.01 |
 | Sentry profiling | 0 | 0.01 |
 | continuous profiling on a service | 0 | 0.01 |
+
+When deciding direct Sentry delivery or duplication policy, read `60-sentry-and-profiling.md`.
 
 Every rate above 0 carries a named owner, a rollback switch, and a stated cost expectation in the change. Profiling in
 particular starts disabled and is raised only after trace and metric evidence has already localised a real performance

@@ -1,0 +1,109 @@
+{
+  "command": "python skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261008-020835_optional-direct-sentry-telemetry.md",
+  "cwd": ".",
+  "resource_limits": "one lightweight process; serial; default priority; no affinity limit; timeout 120s",
+  "environment_overrides": "none",
+  "observed_at_utc": "2026-10-07T22:50:31.7845954Z",
+  "duration_seconds": 0.267,
+  "exit_code": 0,
+  "classification": "PASS",
+  "tier": "affected",
+  "proof_level": "1 — static",
+  "head_before_after": [
+    "aa32353c7c38cf1700077f61d2f007128186f9de",
+    "aa32353c7c38cf1700077f61d2f007128186f9de"
+  ],
+  "source_manifest_before_after": [
+    "9ab91e7dec7f4d948be91caa6201ab3205528d1561179bd4398512124c307e85",
+    "9ab91e7dec7f4d948be91caa6201ab3205528d1561179bd4398512124c307e85"
+  ],
+  "before": {
+    "source_hashes": [
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/10-signal-model.md",
+        "sha256": "db2138d63676af6f7ebbb6bb0271837b13d7717715bd54565eaa354ac79d4482"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/30-quantitative-budgets.md",
+        "sha256": "deec8d941c44334ddd15e20b85609c2edcc978b3ff20bade5692f3fbb6c14b6d"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md",
+        "sha256": "ec2c63b3dac83b93e85e1cf46d99e3b8f9928c33a45921c0cb977c656edb95a2"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+        "sha256": "b6a8c4d0a58f1c42f848c1d161280d52401f14ae12a6f0a5acfd519e845da73c"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+        "sha256": "9f3ee47e807b7450b204d28b7d28094e10ae907449c87e4001c60773d394f0d9"
+      }
+    ],
+    "artifact_hashes": [
+      {
+        "path": "docs/_agent_plans/20261008-020835_optional-direct-sentry-telemetry.md",
+        "sha256": "52c209f264a5a3b88dd2911cd8ed04e5a94ece59bf804fe388041f54d3f42e81"
+      },
+      {
+        "path": "docs/agents/20261008-020835_optional-direct-sentry-telemetry-state.md",
+        "sha256": "20b272cbf192d193a1843a6a8b56b8c9ad44442f59303890fc29495b5a25faa8"
+      },
+      {
+        "path": "docs/drift/20261008-optional-direct-sentry-telemetry.md",
+        "sha256": "430a6bc98b644ec0b16f2c0cd966efe77d633c12a2a67a5849b3355985b66916"
+      }
+    ],
+    "tool_hashes": {
+      "path": "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "sha256": "56538bcbd52a25e19283a0b4701361f0b67f76087d3a8fdd4dfa60ed999e730a"
+    },
+    "source_manifest": "9ab91e7dec7f4d948be91caa6201ab3205528d1561179bd4398512124c307e85",
+    "head": "aa32353c7c38cf1700077f61d2f007128186f9de"
+  },
+  "after": {
+    "source_hashes": [
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/10-signal-model.md",
+        "sha256": "db2138d63676af6f7ebbb6bb0271837b13d7717715bd54565eaa354ac79d4482"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/30-quantitative-budgets.md",
+        "sha256": "deec8d941c44334ddd15e20b85609c2edcc978b3ff20bade5692f3fbb6c14b6d"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/50-telemetry-pipeline.md",
+        "sha256": "ec2c63b3dac83b93e85e1cf46d99e3b8f9928c33a45921c0cb977c656edb95a2"
+      },
+      {
+        "path": "skills/sohrab/alaa-observability-soc/references/60-sentry-and-profiling.md",
+        "sha256": "b6a8c4d0a58f1c42f848c1d161280d52401f14ae12a6f0a5acfd519e845da73c"
+      },
+      {
+        "path": "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+        "sha256": "9f3ee47e807b7450b204d28b7d28094e10ae907449c87e4001c60773d394f0d9"
+      }
+    ],
+    "artifact_hashes": [
+      {
+        "path": "docs/_agent_plans/20261008-020835_optional-direct-sentry-telemetry.md",
+        "sha256": "52c209f264a5a3b88dd2911cd8ed04e5a94ece59bf804fe388041f54d3f42e81"
+      },
+      {
+        "path": "docs/agents/20261008-020835_optional-direct-sentry-telemetry-state.md",
+        "sha256": "20b272cbf192d193a1843a6a8b56b8c9ad44442f59303890fc29495b5a25faa8"
+      },
+      {
+        "path": "docs/drift/20261008-optional-direct-sentry-telemetry.md",
+        "sha256": "430a6bc98b644ec0b16f2c0cd966efe77d633c12a2a67a5849b3355985b66916"
+      }
+    ],
+    "tool_hashes": {
+      "path": "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+      "sha256": "56538bcbd52a25e19283a0b4701361f0b67f76087d3a8fdd4dfa60ed999e730a"
+    },
+    "source_manifest": "9ab91e7dec7f4d948be91caa6201ab3205528d1561179bd4398512124c307e85",
+    "head": "aa32353c7c38cf1700077f61d2f007128186f9de"
+  },
+  "log": ".\\outputs\\20261008-optional-direct-sentry-telemetry\\verification\\workflow-preclosure.log"
+}

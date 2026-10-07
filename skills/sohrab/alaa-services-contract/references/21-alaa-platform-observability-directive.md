@@ -69,7 +69,7 @@ service from one Collector endpoint or backend to another, and a secret must nev
 
 | Variable | Ala default | Note |
 |---|---|---|
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://otel-collector:4318` | The shared Collector DNS endpoint on `alaa-shared-network`. `host.docker.internal` is a local developer override and must not be committed as a service default. |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://127.0.0.1:4318` | Application endpoint for Vector in the same network namespace. Compose/Swarm inject the deployment-defined co-located Vector address. The central endpoint `http://otel-collector:4318` on `alaa-shared-network` is Vector's upstream and the application's value only under the topology owner's no-local-process exception. `host.docker.internal` is a local developer override and must not be committed as a service default. |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` | Matches the `:4318` endpoint above. |
 | `OTEL_EXPORTER_OTLP_HEADERS` | unset | Backend-specific headers belong in Collector or deployment secrets, not in a service. |
 | `OTEL_EXPORTER_OTLP_TIMEOUT` | `500` | Milliseconds. |
@@ -169,12 +169,10 @@ Per-service metric-name conformance is recorded in `95-fleet-conformance.md`.
 
 ## Collector and Prometheus deployment notes for Ala
 
-These are the Ala-specific placement facts. Collector topology, pipeline design, processor placement, and
-sampling policy belong to `/alaa-observability-soc`.
+When choosing application export topology or its no-local-process exception, read `/alaa-observability-soc`,
+`references/50-telemetry-pipeline.md`. It owns placement; this file owns the endpoint values above.
 
-- On Arvan Kubernetes or OpenShift, services target one shared Collector gateway tier per environment or
-  cluster boundary. A service repository does not carry its own Collector topology.
-- Keep the same contract in Docker Compose and Docker Swarm: OTLP to the shared Collector endpoint above,
-  Prometheus scraping internal service metrics, and no publicly routed metrics endpoint.
+- A service repository does not carry its own Collector topology. Prometheus scrapes internal service metrics,
+  with no publicly routed metrics endpoint, in Kubernetes/OpenShift, Docker Compose and Docker Swarm.
 - When SigNoz is the selected backend, its exporter endpoint, access token, headers, and TLS options live
   only in Collector deployment configuration or secrets, never in a service.

@@ -4,31 +4,31 @@ Load when the task touches Collector or Vector topology, config, processor place
 choice of collection agent.
 
 Endpoints, DNS names, ports, env variable names, processor names, and their default settings belong to
-`/alaa-services-contract` (`$alaa-services-contract` in Codex), `references/21-…`. This file owns the topology decision,
+`/alaa-services-contract`, `references/21-alaa-platform-observability-directive.md`. This file owns the topology decision,
 the placement gates, and the load behaviour of the telemetry plane.
 
 Scope boundary: this file covers concurrency and load for the telemetry plane only. Product-traffic load behaviour —
-connection pools, lock contention, backpressure, load shedding, circuit breaking — belongs to `/alaa-reliability-sla`
-(`$alaa-reliability-sla`).
+connection pools, lock contention, backpressure, load shedding, circuit breaking — belongs to `/alaa-reliability-sla`.
 
 ## The default topology, and the one exception
 
-**Default:** every Alaa service emits OTLP only to a Vector sidecar running beside it, one per pod or replica over
-loopback, and that sidecar forwards to the horizontally scaled central OpenTelemetry Collector gateway, which exports to
+**Default platform path:** every Alaa service emits OTLP to a co-located Vector, one per pod or replica, and that
+Vector forwards to the horizontally scaled central OpenTelemetry Collector gateway, which exports to
 SigNoz and to the SOC branch.
 
 The application never holds the central Collector's address, because an application that knows the gateway address
 acquires a hard dependency on gateway availability at exactly the moment the gateway is the thing failing. Its only
-responsibility is to fire OTLP at loopback and forget.
+responsibility is to export to its local Vector endpoint and forget.
 
 **The one exception, with its condition:** a service emits OTLP directly to the central gateway only when its runtime
 cannot host a co-located process — a managed platform that forbids sidecars, or a single-binary deployment with no
 process supervisor. In that case export must still satisfy layer 1 below, and the missing local buffer is recorded in
 the readiness evidence with the reason.
 
-There is no third topology. A service does not build its own agent tier, and it does not fan out to vendor backends
-directly — fan-out in application code puts backend credentials, retry logic, and vendor coupling into every repository
-that must later be changed one repository at a time.
+These are the two platform OTLP topologies. When adding direct Sentry SDK delivery, read
+`60-sentry-and-profiling.md` for its policy. A service does not build its own agent tier or fan out to other vendor
+backends directly, because application fan-out puts backend credentials, retry logic, and vendor coupling into every
+repository that must later be changed one repository at a time.
 
 Deployment shapes for the sidecar:
 

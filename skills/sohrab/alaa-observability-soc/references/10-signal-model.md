@@ -6,9 +6,9 @@ Load when a change touches any code path, or when the task asks which signal ans
 
 OpenTelemetry is the instrumentation contract, not a dashboard: it standardises what a service emits and how context
 propagates. SigNoz is the operational backend for traces, logs, metrics, dashboards, and alerts. Prometheus-compatible
-metrics carry health, SLO math, and alerting. Sentry is a focused exception, release, and source-map tool, never a second
-backend — the split and its gates are in `60-sentry-and-profiling.md`. Where signals travel between the service and the
-backend is in `50-telemetry-pipeline.md`.
+metrics carry health, SLO math, and alerting. Sentry's role and direct SDK delivery policy are owned by
+`60-sentry-and-profiling.md`. Where signals travel between the service and the backend is in
+`50-telemetry-pipeline.md`.
 
 ## Start from the diff, not from the question
 
@@ -37,10 +37,10 @@ Read the diff and check it against each class below. The list is the floor, not 
 | a new dependency on time or ordering | clock skew, expiry evaluated in the wrong zone, out-of-order state transition |
 
 Where the failure mode concerns product-traffic *behaviour* rather than its *visibility* — how the pool should behave
-once exhausted, whether to shed load — the behaviour belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla` in
-Codex) and only the visibility belongs here. Name both owners in the change so neither half is dropped.
+once exhausted, whether to shed load — the behaviour belongs to `/alaa-reliability-sla` and only the visibility belongs
+here. Name both owners in the change so neither half is dropped.
 
-The same enumeration has a second consumer. `/alaa-testing-strategy` (`$alaa-testing-strategy` in Codex) derives the
+The same enumeration has a second consumer. `/alaa-testing-strategy` derives the
 test list for a change from these same modes, extending each row with the test that produces the mode on purpose and
 the layer and proof level it runs at. Produce one list carrying both halves, never two: two lists diverge silently
 because neither names the other's gaps, and each author assumes the other covered the mode. A row with an empty cell
@@ -91,7 +91,7 @@ Follow this order. Each step exists because skipping it produces a signal nobody
 2. Pick the primary signal and its strength for each mode.
 3. Inventory what already exists — signal names, fields, dashboards, alerts, runbooks — before adding anything, so the
    change extends the fleet's shape instead of forking it.
-4. Fix the signal contract: fields and semantics from `/alaa-services-contract` (`$alaa-services-contract`), and from
+4. Fix the signal contract: fields and semantics from `/alaa-services-contract`, and from
    this skill the requirement level, cardinality, sampling, retention, and named owner.
 5. Decide the path: stdout, OTLP to the local sidecar, Prometheus scrape, SOC branch. See `50-telemetry-pipeline.md`.
 6. Change implementation, dashboards, alerts, and runbooks in the same commit, because a dashboard that references a
