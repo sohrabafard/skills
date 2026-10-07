@@ -88,6 +88,106 @@ def planning_failures(gates: str, implementation: str) -> list[str]:
     return errors
 
 
+IMPLEMENTER_REQUIREMENTS = (
+    "Run only supplied",
+    "focused commands: this lane's failure-mode tests",
+    "this lane's failure-mode tests and lint/type/build scoped to touched files",
+    "Judge actual command scope, never its tier label",
+    "Never run affected/exhaustive checks",
+    "full suite, race detector, end-to-end suite, or another lane's checks",
+    "Independent gates own that breadth; duplicating it mixes authority and pays twice",
+    "If dispatch conflicts, report the conflict and excluded commands",
+    "run only known, separable focused commands",
+    "Leave ambiguous or inseparable mixed commands unrun",
+    "invent no substitutes or flags",
+    "If none qualify, report validation not run and request focused commands from the parent",
+    "Your results never discharge independent acceptance",
+)
+GATE_REQUIREMENTS = (
+    "Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels",
+    "send focused commands only and reserve affected/exhaustive commands for independent gates",
+    "Role definitions own dispatch-conflict handling",
+    "reconcile every excluded command and unrun check before accepting the lane",
+    "reuse requires the correct observer as well as unchanged tree",
+    "tool/dependency versions, environment/service state, and flags/seed/cwd",
+    "Independent acceptance requires an observer independent of the implementation with authority for that gate",
+    "An implementer's broad PASS cannot discharge it, even with unchanged inputs",
+    "cite valid unchanged independent evidence instead of repeating it",
+    "excludes exhaustive results from reuse",
+    "Run any required exhaustive tier once, fresh on the final candidate after documentation",
+)
+
+
+def implementer_failures(text: str) -> list[str]:
+    errors = [f"missing implementer verification boundary: {item}"
+              for item in IMPLEMENTER_REQUIREMENTS if item not in text]
+    # Contradictions must fail even when all required sentences remain present.
+    for pattern in (r"Run the dispatched checks only", r"run (?:all|every) dispatched command",
+                    r"run (?:the )?(?:affected|exhaustive) (?:tier|checks|suite)",
+                    r"run ambiguous or inseparable", r"invent (?:replacement|substitute) commands"):
+        if re.search(pattern, text, re.I):
+            errors.append(f"contradictory implementer instruction: {pattern}")
+    return errors
+
+
+def implementation_template_failures(text: str) -> list[str]:
+    errors = []
+    blocks = [block for block in re.findall(r"```xml\s*\n(.*?)```", text, re.S)
+              if re.search(r"<task>(?:Implement|Resolve reviewer/specialist findings)", block)]
+    if not blocks:
+        return ["missing implementation/fix-cycle dispatch template"]
+    for index, block in enumerate(blocks, 1):
+        prefix = f"implementation template {index}: "
+        verification = re.search(r'<verification tier="focused">(.*?)</verification>', block, re.S)
+        if not verification:
+            errors.append(prefix + "missing focused verification block")
+            continue
+        commands = re.search(r"<commands>(.*?)</commands>", verification[1], re.S)
+        excluded = re.search(r"<excluded>(.*?)</excluded>", verification[1], re.S)
+        if not commands or not all(term in commands[1] for term in ("exact", "scoped")):
+            errors.append(prefix + "missing exact scoped command contract")
+        if not excluded or not all(term in excluded[1] for term in
+                                   ("full suite", "race detector", "end-to-end suite", "other lane")):
+            errors.append(prefix + "missing broad-check exclusions")
+        if commands and re.search(r"affected|exhaustive|full suite|race detector|end-to-end|"
+                                  r"-race\b|\./\.\.\.|--all\b", commands[1], re.I):
+            errors.append(prefix + "overbroad command despite focused label")
+    return errors
+
+
+def verification_failures(gates: str, templates: list[str], roles: dict[str, str]) -> list[str]:
+    """Inspect integrated source contracts, never simulate model obedience."""
+    errors = [f"missing gate authority boundary: {item}"
+              for item in GATE_REQUIREMENTS if item not in gates]
+    if len(roles) != 2:
+        errors.append("expected both implementer variants")
+    for name, text in roles.items():
+        errors.extend(f"{name}: {item}" for item in implementer_failures(text))
+        if name.endswith(".toml") and name != "alaa-implementer.toml":
+            if "Run only supplied focused commands" not in text:
+                errors.append(f"{name}: dispatched-only command source widened")
+    for index, text in enumerate(templates, 1):
+        errors.extend(f"template file {index}: {item}"
+                      for item in implementation_template_failures(text))
+    for pattern in (r"author(?:'s)? (?:broad )?PASS (?:satisfies|discharges)",
+                    r"reuse implementer evidence for independent acceptance"):
+        if re.search(pattern, gates, re.I):
+            errors.append("author evidence substituted for independent acceptance")
+    return errors
+
+
+def verification_sources() -> tuple[str, list[str], dict[str, str]]:
+    return (
+        (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
+        [(ROOT / path).read_text(encoding="utf-8") for path in (
+            "references/delegation-prompts/30-implementation.md",
+            "references/delegation-prompts/90-completion/20-review-followup.md")],
+        {path.name: path.read_text(encoding="utf-8")
+         for path in sorted((ROOT / "agents").glob("alaa-implementer*"))
+         if path.suffix in {".toml", ".md"}},
+    )
+
+
 def self_test() -> int:
     good = (ROOT / "agents" / next(iter(sorted(
         path.name for path in (ROOT / "agents").glob("alaa-instruction-reviewer.*"))))).read_text(encoding="utf-8")
@@ -130,6 +230,46 @@ def self_test() -> int:
         ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
+    policy, templates, roles = verification_sources()
+    cases.append(("integrated verification authority accepted",
+                  not verification_failures(policy, templates, roles)))
+    for name, role in roles.items():
+        for requirement in IMPLEMENTER_REQUIREMENTS:
+            broken = {**roles, name: role.replace(requirement, "omitted", 1)}
+            cases.append((f"{name}: {requirement} required",
+                          bool(verification_failures(policy, templates, broken))))
+        for contradiction in ("run all dispatched commands", "run affected checks",
+                              "run ambiguous or inseparable commands",
+                              "invent substitute commands"):
+            broken = {**roles, name: role + "\n" + contradiction}
+            cases.append((f"{name}: contradiction {contradiction} rejected",
+                          bool(verification_failures(policy, templates, broken))))
+    cases.append(("missing implementer variant rejected", bool(verification_failures(
+        policy, templates, dict(list(roles.items())[:1])))))
+    for requirement in GATE_REQUIREMENTS:
+        cases.append((f"gate boundary {requirement} required", bool(verification_failures(
+            policy.replace(requirement, "omitted", 1), templates, roles))))
+    for contradiction in ("author broad PASS discharges independent acceptance",
+                          "reuse implementer evidence for independent acceptance"):
+        cases.append(("authority laundering rejected: " + contradiction,
+                      bool(verification_failures(policy + "\n" + contradiction, templates, roles))))
+    for file_index, template in enumerate(templates):
+        # Mutate each block independently, including escalation and fix-cycle paths.
+        for block_index, block in enumerate(re.findall(r"```xml\s*\n(.*?)```", template, re.S)):
+            if not re.search(r"<task>(?:Implement|Resolve reviewer/specialist findings)", block):
+                continue
+            for label, mutated in (
+                ("focused boundary omitted", block.replace(' tier="focused"', '', 1)),
+                ("exclusions omitted", re.sub(r"<excluded>.*?</excluded>", '', block, flags=re.S)),
+                ("scope omitted", block.replace("scoped", "unbounded", 1)),
+                ("affected breadth appended", block.replace('</commands>', '; affected-tier checks</commands>', 1)),
+                ("race mislabeled focused", block.replace('</commands>', '; go test -race ./...</commands>', 1)),
+                ("full suite mislabeled focused", block.replace('</commands>', '; full suite</commands>', 1)),
+            ):
+                changed = list(templates)
+                changed[file_index] = template.replace(block, mutated, 1)
+                cases.append((f"template {file_index + 1}/{block_index + 1}: {label}",
+                              bool(verification_failures(policy, changed, roles))))
     for label, passed in cases:
         if not passed:
             print(f"SELF-TEST FAILED: {label}", file=sys.stderr)
@@ -151,13 +291,14 @@ def main() -> int:
         errors.extend(planning_failures(
             (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
             (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
+        errors.extend(verification_failures(*verification_sources()))
         for path in sorted((ROOT / "agents").glob("alaa-*")):
             if path.suffix in {".toml", ".md"}:
                 errors.extend(f"{path.name}: {item}" for item in agent_failures(path.read_text(encoding="utf-8")))
         if errors:
             print("\n".join(errors), file=sys.stderr)
             return 1
-        print("CONTRACT CHECK OK: metadata and authority source requirements")
+        print("CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority")
         return 0
     except (OSError, ValueError, StopIteration) as exc:
         print(f"contract check unavailable: {exc}", file=sys.stderr)

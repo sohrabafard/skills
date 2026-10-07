@@ -11,7 +11,7 @@ the same pipeline drift and the agent follows whichever it read first.
 
 1. Inspect relevant repository guidance (`AGENTS.md`, local instructions, architecture docs, package manifests, CI, tests, and affected code paths).
 2. Restate internally: desired outcome; checkable acceptance criteria; constraints and preserved behavior; out-of-scope work; irreversible or externally visible actions.
-3. Split work into the smallest practical lanes with disjoint write scopes. Each lane gets: one concrete outcome; owned files and modules; explicit exclusions; acceptance criteria; focused-tier verification commands; dependencies on other lanes; resolved skill bindings under `alaa-workflow references/companion-routing.md`, including its matching clean-code owner; and its return contract — the shape of the return and its line bound.
+3. Split into the smallest practical disjoint lanes, each with one concrete outcome, owned files/modules, exclusions, acceptance criteria, focused commands, dependencies, resolved skill bindings under `alaa-workflow references/companion-routing.md` including its matching clean-code owner, and return shape/line bound. Before implementation or fix-cycle dispatch, classify actual command scope, never tier labels; send focused commands only and reserve affected/exhaustive commands for independent gates.
 4. Serialize lanes that overlap in files, data contracts, generated output, migrations, or runtime state — or run them under worktree isolation and merge deliberately.
 
 `references/routing-matrix.md` owns every specialist trigger; `references/delegation-prompts.md` owns
@@ -19,23 +19,11 @@ the dispatch contracts.
 
 ## Gate economics
 
-Gates differ in cost by orders of magnitude, so their order is a rule here rather than a per-phase
-judgement. A gate is **expensive** when it needs a container, a service, a full build, or minutes of CPU,
-and **cheap** when it reads the tree and needs none of those. Where a repository ships its own
-validation-policy file, that file outranks this section inside that repository; `/alaa-testing-strategy`
-owns that precedence.
+Gates run in cost order: expensive means containers, services, full builds or minutes of CPU; cheap means tree reads needing none. Repository validation policy overrides this section within its repository; `/alaa-testing-strategy` owns that precedence.
 
-1. **Cheap read-only gates run before the expensive one, never beside it.** Every cheap gate whose finding
-   can move the tree — the independent review, and each specialist lens whose trigger holds — returns its
-   verdict and has its findings resolved before the expensive verification gate is dispatched. Two gates
-   dispatched together spend the expensive pass on a tree the cheap one is still changing: each fix
-   invalidates the pass already running, and that pass cannot be repaired, only paid for again. Where the
-   verification gate is expensive this orders Phase D's read-only gates ahead of Phase C's dispatch; the
-   phases keep their names, their contents, and their owners.
-2. **The expensive gate runs once, on the tree the review verdict settled on.** A second dispatch of the
-   same gate inside one phase is the evidence that step 1 was skipped, not thoroughness the run earned.
-3. **Freeze before verifying.** With explicit commit permission, commit the tree on the work branch before dispatching the expensive gate. Otherwise pin an authorized content snapshot (tracked diff plus relevant untracked files and tool inputs) and prevent concurrent writes. A commit is not required to obtain evidence. `alaa-workflow references/workspace-and-integration.md`
-   owns the commit protocol and what may not land while a pass is in flight.
+1. **Resolve cheap read-only gates before expensive verification, never concurrently.** Independent review and every triggered specialist whose finding can change the tree must return and have findings resolved first: fixes invalidate an ongoing expensive pass and force repayment. For expensive verification, dispatch Phase D's read-only gates before Phase C; phase names, contents and owners stay unchanged.
+2. **Run the expensive gate once on the reviewed tree.** A second dispatch of the same gate inside one phase means step 1 was skipped, not earned thoroughness.
+3. **Freeze before verifying.** With explicit permission, commit on the work branch before expensive verification; otherwise pin an authorized content snapshot of tracked diff, relevant untracked files and tool inputs, and prevent concurrent writes. Evidence needs no commit. `alaa-workflow references/workspace-and-integration.md` owns the commit protocol and forbidden writes during a pass.
 
 ## Cross-phase reusable-context curation
 
@@ -65,14 +53,14 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 1. Dispatch one `alaa-implementer` per routine lane.
 2. Apply Implementation routing in `references/routing-matrix.md` before assignment or reassignment; carry its role-selection evidence in the dispatch and roster.
 3. Concurrency policy: at most two workspace-writing implementation agents at once; never parallelize overlapping write scopes; reserve remaining capacity for read-only agents; only one CPU-heavy verification or profiling command at a time.
-4. Each lane runs the focused tier only — the tests naming its own failure modes, plus lint, type, and build checks scoped to the files it touched — and returns that evidence. A lane never runs the affected or exhaustive tier: it is the wrong authority and the wrong moment for both. `/alaa-testing-strategy` owns the tiers. That focused tier includes every cheap check that could falsify a property the lane's own report claims — the exported-surface, contract, type, or lint check its change could break — and the lane returns each check's observed output. A property asserted without the check that would have contradicted it is returned as not checked, whatever the lane believes.
+4. Each lane runs focused tests for its failure modes and lint/type/build scoped to touched files, never affected/exhaustive checks: wrong authority and wrong moment. `/alaa-testing-strategy` owns the tiers. Include every cheap check that could falsify any claimed property, including exported-surface, contract, type, or lint properties; return observed output, or mark the property not checked. Role definitions own dispatch-conflict handling; reconcile every excluded command and unrun check before accepting the lane.
 5. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
 6. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage. Record each completed subtask and tick its box in the plan. Commit it only with explicit user permission.
 
 ## Phase C — Independent verification
 
 1. Build one integrated verification plan for the affected tier: every suite reachable from the changed surfaces, plus the acceptance criteria this phase claims. When required by repository policy or /alaa-testing-strategy, the exhaustive tier runs in Phase E on the final candidate, not here.
-2. Dispatch only the gates the delta's changed paths actually reach — a delta earns re-verification of what it touches, not the complete gate set. Do not re-dispatch a check whose recorded result is still valid: the tracked tree at the paths it reads, the tool and dependency versions, the environment and service state, and the flags, seed, and working directory all unchanged since it ran. Cite that result with its command, its timestamp, and the lane that observed it. When you do re-run, name which of the four conditions changed.
+2. Dispatch only gates reached by changed paths. Apply Evidence quality below before citing an unchanged result; reuse requires the correct observer as well as unchanged tree, tool/dependency versions, environment/service state, and flags/seed/cwd. Cite eligible results instead of re-running; when re-running, name the changed condition or missing independent authority.
 3. Dispatch `alaa-verifier` with exact commands, working directory, timeout, allowed artifact directory, and resource policy. Use only batching or orchestration tools the current host actually exposes; API capability is not host capability.
 4. On Windows, CPU-heavy commands must use `scripts/Invoke-AlaaLowPriority.ps1` with `BelowNormal` by default; `Idle` only for explicitly background-grade benchmark, fuzz, or very heavy diagnostics. On Unix-like systems use `scripts/run-low-priority.sh`. When `/alaa-testing-strategy` sends a gate into a container of the CI job image, the dispatch names the image reference, the read-only mount, the copy into the container filesystem, a `--cpus` limit below the host's logical CPU count, and the gate's parallel flag sized to that limit. That `--cpus` limit replaces the low-priority wrapper for the container run. The gate's own parallel mode inside it counts as the one CPU-heavy command Phase B step 3 allows. A container dispatch that returns `ENVIRONMENT-BLOCKED` for Docker, the image, a mount, the copy, a setup step, or a service is re-dispatched once on the host under the wrapper above, and the report names why. Under Codex, a Docker named-pipe permission failure goes to `/alaa-codex-runtime-ops` before that host re-dispatch.
 5. Do not proceed as if verification passed when status is `PRODUCT-FAILURE`, `TEST-INFRA-FAILURE`, `ENVIRONMENT-BLOCKED`, `TIMEOUT`, `FLAKY`, or `CONTAMINATED`. Classify the failure before any repair: `references/failure-taxonomy.md` separates a product defect from a test-infrastructure defect, a host-environment block — shell parsing, container runtime, permission, missing executable — and a contaminated tree, including stale build or test cache. A product edit made against any of the last three is a change with no defect behind it.
@@ -107,9 +95,9 @@ Integrate under `alaa-workflow references/workspace-and-integration.md`. If the 
 
 ## Evidence quality
 
-Accept evidence only when it includes the exact command, working directory, relevant environment/resource limits, exit/result, and observed output. A lane summary saying "tests pass" is insufficient.
+Accept evidence with exact command, cwd, environment/resource limits, exit/result and observed output; a summary saying "tests pass" is insufficient.
 
-A cited result — one carried forward instead of re-run — additionally names the timestamp of the run and the tree it ran against, and the lane that observed it. `/alaa-testing-strategy` owns the four conditions under which a result stays citable and the rule that the exhaustive tier is never among them.
+Independent acceptance requires an observer independent of the implementation with authority for that gate. An implementer's broad PASS cannot discharge it, even with unchanged inputs. A cited result names command, timestamp, tested tree and observer; cite valid unchanged independent evidence instead of repeating it. `/alaa-testing-strategy` owns the four unchanged-input conditions and excludes exhaustive results from reuse.
 
 ## Gate reopen rule
 

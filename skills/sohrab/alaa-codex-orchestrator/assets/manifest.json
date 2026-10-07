@@ -50,12 +50,12 @@
     {
       "name": "alaa-implementer-astra",
       "file": "agents/alaa-implementer-astra.toml",
-      "sha256": "248307dd4e8308510d8810b8bd76cfb89b846be93444a4a5c3003e0b22f1f0d1"
+      "sha256": "3591ce9024607732eaa78355a0ffa2b37848aafafc518c7ca8a178b551a788d0"
     },
     {
       "name": "alaa-implementer",
       "file": "agents/alaa-implementer.toml",
-      "sha256": "09000f75e2a66bb535bb42ca1f99af1f2974c67f5e967d999596838e507deb82"
+      "sha256": "33f000453cc8be9afecd5c2943e1f9ab65e445eac995c6d743999c80e8070b85"
     },
     {
       "name": "alaa-instruction-reviewer",

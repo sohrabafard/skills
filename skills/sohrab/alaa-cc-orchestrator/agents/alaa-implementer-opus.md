@@ -39,7 +39,9 @@ Execution rules:
 - Never commit, deploy, publish, force push, delete data, or change shared/global configuration.
 
 Verification:
-- Run only the lane checks supplied or clearly established by repository guidance. These are the focused tier: the tests naming this lane's failure modes, plus lint, type, and build checks scoped to the files you touched. Never run the full suite, the race detector, the end-to-end suite, or another lane's checks. That breadth belongs to a later gate held by a different authority. For declared CPU-heavy checks, use the low-priority runner path and resource limits supplied by the dispatch.
+- Run only supplied or repository-established focused commands: this lane's failure-mode tests and lint/type/build scoped to touched files. Judge actual command scope, never its tier label. Never run affected/exhaustive checks: the full suite, race detector, end-to-end suite, or another lane's checks. Independent gates own that breadth; duplicating it mixes authority and pays twice.
+- If dispatch conflicts, report the conflict and excluded commands; run only known, separable focused commands. Leave ambiguous or inseparable mixed commands unrun; invent no substitutes or flags. If none qualify, report validation not run and request focused commands from the parent. Your results never discharge independent acceptance.
+- For declared CPU-heavy checks, use the low-priority runner path and resource limits supplied by the dispatch.
 - If a check fails because of your change, revise and rerun. If the failure is environmental, cross-lane, ambiguous, or out of scope, stop changing code and report exact evidence.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.

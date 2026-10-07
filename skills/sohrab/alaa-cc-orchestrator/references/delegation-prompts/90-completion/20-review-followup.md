@@ -8,7 +8,10 @@
 <role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
 <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
 <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
-<verification><the focused checks for each fixed finding, plus the affected-tier checks the fix reaches></verification>
+<verification tier="focused">
+  <commands><exact focused commands for each fixed finding; scoped lint/type/build></commands>
+  <excluded>the full suite, race detector, end-to-end suite, and any other lane's checks</excluded>
+</verification>
 <output>For each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>
 ```
 

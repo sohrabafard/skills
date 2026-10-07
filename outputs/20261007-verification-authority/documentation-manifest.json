@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-10-07T18:52:15.456955+00:00",
+  "method": "SHA256 of UTF-8 sorted relative-path + NUL + file SHA256 + LF rows",
+  "sha256": "16ec04033fa6de0a50dbb22e576ccd3789122bf24bc3e762d43f0738dfc837ef",
+  "source_sha256": "73f0652e419f6e9fb57e6958308ea363a4c621d01dde24b6d94b3c3b9d61b107",
+  "files": [
+    {
+      "path": "outputs/20261007-verification-authority/compression.md",
+      "sha256": "5cb624a28ee1a53a558c9316c078f11baee005d8ca9467c0a9f02a062d3e8537"
+    },
+    {
+      "path": "outputs/20261007-verification-authority/docs-evidence.md",
+      "sha256": "7e5016fb50798695cd2254c8b5ad354183c7e6572c9b026d9de24637b392306d"
+    },
+    {
+      "path": "outputs/20261007-verification-authority/implementation-progress.md",
+      "sha256": "fa1c8147143e30c57852624591c40fe9cabf9440a6816b3f97dddf5a3d628940"
+    },
+    {
+      "path": "outputs/20261007-verification-authority/report.md",
+      "sha256": "97dcbe65f476c7e4799e400414c4d5a19f16ab2d77fde93e2b9493622b8871cd"
+    },
+    {
+      "path": "outputs/20261007-verification-authority/review.md",
+      "sha256": "88dc8317bee4976fb40162f822834e399a3243713b38960f10167bc6c9c107a9"
+    },
+    {
+      "path": "outputs/20261007-verification-authority/source-evidence.md",
+      "sha256": "719e623ba301dc5f0c3b4adb34fc602cd9c5b88a92cf6e11e4081370bcb3401f"
+    },
+    {
+      "path": "outputs/20261007-verification-authority/verification/verification.md",
+      "sha256": "9d8f15602432ed143dbf8e71f0905610a4b13fe811470004d8f826659e9b1d46"
+    },
+    {
+      "path": "outputs/README.md",
+      "sha256": "56f088058c5aa16a1918ce95fc44d5398ba34b490ee6f11416420d461609da11"
+    }
+  ]
+}
