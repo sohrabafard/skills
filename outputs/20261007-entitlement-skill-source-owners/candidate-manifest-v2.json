@@ -1,0 +1,228 @@
+{
+  "observed_at": "2026-10-07T15:10:14.409077+00:00",
+  "head": "2a2340d3677945578b505fce49de60e11561037d",
+  "branch": "codex/entitlement-skill-source-owners",
+  "scopes": [
+    "skills/sohrab/alaa-services-contract",
+    "skills/sohrab/alaa-trust-gateway-auth"
+  ],
+  "method": "sort tracked and nonignored untracked repo-relative paths; SHA256 of UTF8 path + NUL + raw-file SHA256 + LF rows",
+  "manifest_sha256": "e6fa953819342848986a77ba0ce1e37f63969d0d639e395c478213842fa533cf",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-services-contract/SKILL.md",
+      "bytes": 13341,
+      "sha256": "d69ded758465d95e193e6913ae80142fc411394b2d7fa04916253b459c7f149c"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/agents/openai.yaml",
+      "bytes": 709,
+      "sha256": "24f601f8e1aa256b2a1ce01ebd79abc6d9a7fe8eedcfa36bc21e632dd3622ddc"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/00-topic-map.md",
+      "bytes": 14401,
+      "sha256": "e136d879fe79f0f1b1050e0fb8876151b710aadf8f2040d9e8a9c38f9c283981"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md",
+      "bytes": 9876,
+      "sha256": "f8fd8b505dd332efcfb20cc3c996531aaa827c05ed66f45ee1dd0ac69223bd0f"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/10-core-service-contract.md",
+      "bytes": 22502,
+      "sha256": "29bf4936ba7cb64d00ca14ff13c25eb67b757197e25f812fcce370b5628e6d80"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/15-deployment-and-runtime-contract.md",
+      "bytes": 18528,
+      "sha256": "519c499a1587cbe6eb29d4d671d6ef9714c5ad9287a6a3036cb90a2c8e320d40"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/16-infrastructure-services-and-delivery-artifacts.md",
+      "bytes": 30079,
+      "sha256": "029f5d9d00d21156fdedcc64c97b9d8a359a977cbcd9964f8b9bbea2c9eaef9a"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/20-operational-and-observability-contract.md",
+      "bytes": 15636,
+      "sha256": "687d50aed4ec130b3e5881afca2f967ddfb60df99ec2018045b696345f709e34"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md",
+      "bytes": 13578,
+      "sha256": "0ff8925d6d7425735e1b16bdbfd01d05146cdb237c597e069d8c64ac7433f603"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/22-failure-load-and-deprecation-contract.md",
+      "bytes": 22798,
+      "sha256": "1f08266eba763400f2d6131cbbead04d9dc1755106b53406705a3dfebd6fc98b"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/23-queue-and-exchange-registry.md",
+      "bytes": 19927,
+      "sha256": "9f17c427d44b435358b0ddc762870ecd079ef3fc6a389b086995b6615c56f862"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/24-metric-registry.md",
+      "bytes": 29333,
+      "sha256": "ecc2b03bdb6773863a43c0795bec832ca591e46d80388622c804d08d18c6e0ae"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md",
+      "bytes": 32982,
+      "sha256": "eb9b556303142e28c985e19dc3f4561db47e7438040a65cd7d138d02caa6b003"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga.md",
+      "bytes": 4079,
+      "sha256": "87c6bab4f1f357a7d853a6bacd40469fe7d96114fa7de18d133b598a9af5bebe"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/10-model-and-tuple-flow.md",
+      "bytes": 2509,
+      "sha256": "1f96fa6dba79d819da2889068ec4889bbab3642e27ade4247fa398d239eea667"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/20-gateway-route-and-object-id.md",
+      "bytes": 1625,
+      "sha256": "3c494115e7f8059b035cb33a0d8f5105f221ba873bbe5d384136ddb30c7cafa0"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/30-sidecar-and-openfga-check.md",
+      "bytes": 3056,
+      "sha256": "6842aeb1b67738bc2126c98db5f73865c97ac81b5d4fd55d71a458b47df00cba"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/40-decision-and-enforcement.md",
+      "bytes": 1452,
+      "sha256": "c764e7b802b1dec111b8787bf80b00265d2a4e650f996b40075ab6dfc3ac268d"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md",
+      "bytes": 2003,
+      "sha256": "62df1faaef1598dd32a909c2637dc6074d751dbf935dc6b6620f7e66840830bf"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md",
+      "bytes": 2537,
+      "sha256": "9892d3fbe145f2b32084c71aa2c250504fbbd7db09ee372b8cadd75527648a61"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md",
+      "bytes": 3809,
+      "sha256": "5fabff62a5b709097327a77535f665884597e30347824357ea08c275faec44b5"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md",
+      "bytes": 14348,
+      "sha256": "ac32102155736ff4d7570524a320ca4f510e8c169afb9ba56147bb336122ab64"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/28-backend-permission-authorization-and-role-freeze.md",
+      "bytes": 5110,
+      "sha256": "aa06d771ad43489e1b1d4f2fe67d6433ce001402e613d22e256f4bcce16d7745"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md",
+      "bytes": 13858,
+      "sha256": "4c0d77659ccfb9d629ded6665236ff73bbaf2c9b273698b2fb8d8717d742a550"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/32-auth-totp-and-step-up-contract.md",
+      "bytes": 23025,
+      "sha256": "423b05eb8c9934cb6302dc82a58ad909c7c3f17bc2e986079bc1717a1e11782c"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md",
+      "bytes": 9450,
+      "sha256": "0ffca8992b5a2de26eec1fe0b3e0401881b786226818a460dd419f12c4e034ee"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/40-apply-checklist-and-anti-patterns.md",
+      "bytes": 20828,
+      "sha256": "9460d3bb1c9d1b7fb8d219c98754fd031b89322409434aadeff3c2eb0a288ac9"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/50-laravel-copy-baselines.md",
+      "bytes": 10017,
+      "sha256": "00d4ef5f36065c063f335f477ff55725dcb3420d00987fbb00e6a81d1174a30d"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/60-frontend-sdk-consumption-contract.md",
+      "bytes": 16920,
+      "sha256": "3038f3bf5d5d96260dbee6d7955535c3f5153b2469b293c971c94fda61c0c405"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/65-frontend-page-kit-and-widgets-contract.md",
+      "bytes": 7726,
+      "sha256": "ed7fb4d76fcdd2b1c282e5fc91cb9fb460f5805deb9ba46ad2cbb7a5ecda6e26"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/90-source-map.md",
+      "bytes": 2509,
+      "sha256": "2c163ac79e6284f8acbc41e6bb2568146c2aca9898bb458378e3f62b45f339e5"
+    },
+    {
+      "path": "skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md",
+      "bytes": 44627,
+      "sha256": "0c44edc7872e8056fe46e52c8f2d70ab298b1d23dc06e328bcb0cbcc22f9b709"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/SKILL.md",
+      "bytes": 9408,
+      "sha256": "d57cc363e4dd8a73c993c85b163ca21d892d6076c6f2bed85b475f583fdf1ec1"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/agents/openai.yaml",
+      "bytes": 513,
+      "sha256": "51014db4f4b42976f02d449f017ff4be8d60a2f9e76f09abcee3abcaa67d5be7"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/10-verification-and-ingress.md",
+      "bytes": 23842,
+      "sha256": "dc0e3c380df5e88752acdd3a11738f98379bc50e3c99d9b838df6be11a42bb4a"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/20-claims-headers-and-sentinels.md",
+      "bytes": 9252,
+      "sha256": "9e381a9d6d0e39d32026b1ec1eaaa1fb06bf06cad4febfb00c2c8d5bbf52df4e"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/30-fail-closed-cases.md",
+      "bytes": 17686,
+      "sha256": "92bd953696261930d62f3c47e2298a08df0da9b50e6cfdb7841f0858145251d1"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/40-downstream-normalization.md",
+      "bytes": 13150,
+      "sha256": "eec0c54bea239474a340670ad101fb18de612596029435683fe2fea08bf0cd95"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/50-deny-codes.md",
+      "bytes": 6010,
+      "sha256": "efb838a1ba39996b47465f44a12b4663f2a0f4d5d6bb402905f9134f3c9f44a9"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/60-auth-service-v3-contract.md",
+      "bytes": 7603,
+      "sha256": "e505f94180fdd34d2d96fb6d49d1b6f9015edcffad9076ed00925de8dbe95e46"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/70-review-and-anti-patterns.md",
+      "bytes": 7011,
+      "sha256": "3271b906f120be89c5851530d2cb35bb7086a32c1f51e5755af0714c0257d2dd"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md",
+      "bytes": 5639,
+      "sha256": "40b210c1b828379c6a94b34d0c666b137b94b115b0d5b0d08f0dca4a081430f2"
+    },
+    {
+      "path": "skills/sohrab/alaa-trust-gateway-auth/scripts/trust_boundary_check.py",
+      "bytes": 37881,
+      "sha256": "10295d4265f80e8c8cdfe6ffdb71a27242ef6b19e56c2859d1d477d4e5dd4f52"
+    }
+  ]
+}

@@ -2,7 +2,12 @@
 
 The sidecar resolves each endpoint category and target type to exactly one final
 `can_*` permission. Source of truth:
-`entitlement-platform/platform/openfga/contracts/endpoint-permissions.yaml`.
+authz-openfga `<repo>/platform/openfga/contracts/endpoint-permissions.yaml`.
+
+Author there. Consumers import immutable generated bundles pinned by
+`contracts.lock.json`; never hand-edit imported snapshots or pins. Local integrity
+does not prove upstream equality; verify against the reviewed canonical export
+(authz-openfga `<repo>/docs/readme/10-contract-bundle-export.md`).
 
 | Endpoint category | Target type | Final permission |
 |---|---|---|

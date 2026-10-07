@@ -11,13 +11,14 @@ Work the path in order. The structured logs make this fast because every hop sha
    above), a wrong `publicPathRegex`, or a missing resource tag. Check
    `canonical_object_id` in the log — empty or malformed confirms it.
 3. **`400 AUTHZ_ENDPOINT_CATEGORY_INVALID`:** the gateway's `endpointCategory` does not
-   exist in `endpoint-permissions.yaml`. The two repos disagree on the name.
+   exist in `endpoint-permissions.yaml`. Gateway and the imported contract disagree on the name.
 4. **`403 AUTHZ_TARGET_RULE_MISMATCH`:** the category exists but has no rule for that
    target type. Add the target rule to the contract.
 5. **`403 AUTHZ_DENIED`:** the contract resolved a `can_*`, but OpenFGA said no. This
    is a write-path question: does the expected `grant_*` tuple exist? Reproduce the
-   `check` against OpenFGA (the `entitlement-platform` Postman `openfga-runtime` group
-   has ready requests), then `read` the tuples for that user and object. If the tuple
+   `check` against OpenFGA, then `read` the user/object tuples. The legacy
+   `entitlement-platform` Postman `openfga-runtime` group is historical; its
+   extracted destination is unconfirmed. If the tuple
    is missing, look at `projector` (did the event arrive and validate?) and
    `entitlement-api` (was the grant actually created?).
 6. **`401 AUTH_CONTEXT_MISSING`:** identity did not reach the sidecar. The JWT/trusted
@@ -46,12 +47,13 @@ pin is a subtle cause of "the tuple exists but the check still denies."
 
 ## Source of truth
 
-- Gateway read path, full diagrams and worked example: gateway repo
-  `docs/authz-openfga-flow.md`.
-- Write path and reconciliation: gateway repo `docs/entitlement-projector.md`.
-- Route groups and Lua: gateway `charts/gateway/values.yaml`,
-  `charts/gateway/templates/configmap.yaml`, `haproxy/lua/authz-sidecar.lua`.
-- Model, object-id encoding, conditions, endpoint mapping: `entitlement-platform`
-  `platform/openfga/contracts/authorization-contract.yaml` and
-  `endpoint-permissions.yaml`.
-- Runnable OpenFGA `check`/`read`/`write`: `entitlement-platform` Postman collection.
+- Gateway executable edge authority: `<repo>/charts/gateway/values.yaml`,
+  `<repo>/charts/gateway/templates/configmap.yaml`, `<repo>/haproxy/lua/authz-sidecar.lua`;
+  diagrams: `<repo>/docs/authz-openfga-flow.md`.
+- Business truth/events: entitlement-api `<repo>/docs/api/event-contracts.md`.
+- Projection/reconciliation: entitlement-projector `<repo>/docs/projection-operations.md`.
+- Model/mapping: authz-openfga `<repo>/platform/openfga/contracts/authorization-contract.yaml`,
+  `<repo>/platform/openfga/contracts/endpoint-permissions.yaml` and
+  `<repo>/docs/architecture/06-domain-to-openfga-mapping.md`.
+- Checker interface: authz-sidecar `<repo>/docs/integrations/gateway/authz-sidecar-contract.md`.
+- Extraction ownership: entitlement-api `<repo>/docs/contracts/repository-extraction-v1.md`.

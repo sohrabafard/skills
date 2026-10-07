@@ -12,7 +12,7 @@ Use this file when an Ala service or shared frontend package changes `config/per
   (`packages/sdk-auth/src/generated/permission-catalog.ts`), owns no `service_key`, and never influences bitmap
   allocation. Permission owners are registered in the `services` array of `catalog/services.json`; aggregate consumers
   in the separate `aggregate_consumers` array.
-- Gateway, `authz-sidecar`, entitlement-platform, and OpenFGA are route or resource authorization infrastructure. They do not own service-local permission-name-to-bitmap-id maps.
+- Gateway and fine-grained authorization infrastructure do not own service-local permission-name-to-bitmap-id maps.
 
 ## Service Config Rules
 
@@ -94,10 +94,10 @@ Use this compact grouping instead of copying the full catalog into prompts:
 
 ## Companion Skill Boundary
 
-- Use `$alaa-trust-gateway-auth` for JWT claim semantics, `prm` to `X-Access` projection, bitmap packing, trusted-header spoofing defense, and gateway/auth ownership.
+- Use `/alaa-trust-gateway-auth` for JWT claim semantics, `prm` to `X-Access` projection, bitmap packing, trusted-header spoofing defense, and gateway/auth ownership.
 - Use this file for service-local generated config or Go map adoption, aggregate-consumer adoption, CI drift checks, and
   one-consumer-at-a-time apply discipline.
-- Use the `typescript-consumer` reference in `$alaa-permission-generator` for the TypeScript aggregate-consumer shape,
+- Use the `typescript-consumer` reference in `/alaa-permission-generator` for the TypeScript aggregate-consumer shape,
   the `AGGREGATE_CONSUMER_*` drift codes, and the frontend UI-hint decoding boundary.
 - Frontend consumption rules — what the app may read from a token and how the SDK exposes it — live in
   `60-frontend-sdk-consumption-contract.md`, not here.

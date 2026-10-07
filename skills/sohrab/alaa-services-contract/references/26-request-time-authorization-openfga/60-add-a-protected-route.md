@@ -1,20 +1,25 @@
 ## Adding a new request-time-authorized route
 
-This is the common task. It spans **two repositories**, and the order matters:
-prepare the authorization contract first, then expose the route. A route that is
-enforced before its permission rule and tuples exist will fail closed for everyone.
+Prepare contracts before exposing the route; enforcement before its permission
+rule and tuples exist fails closed for everyone.
 
-In `entitlement-platform` (the model and contract):
-1. Confirm the OpenFGA model has the target **type** and the final **`can_*`** relation
-   you need. If they are new, add them to the model, upload it, and re-pin
-   `OPENFGA_AUTHORIZATION_MODEL_ID` (and bump `OPENFGA_MODEL_LABEL`) for both
-   `projector` and `authz-sidecar`.
+In `authz-openfga` (canonical model and contracts):
+1. Confirm the target **type** and final **`can_*`** relation exist. For new ones,
+   add/upload the model, re-pin `OPENFGA_AUTHORIZATION_MODEL_ID` and bump
+   `OPENFGA_MODEL_LABEL` for both `projector` and `authz-sidecar`.
 2. Add the `endpoint_category` + `target_type` -> `final_permission` rule to
-   `platform/openfga/contracts/endpoint-permissions.yaml`. The endpoint category name
-   must match what the gateway will send.
-3. Make sure `projector` writes the grant/deny tuples for that scope type (its
-   per-scope managed-relation set) and that `entitlement-api` emits the change events.
-   Without tuples, every `can_*` check returns `allowed: false`.
+   `<repo>/platform/openfga/contracts/endpoint-permissions.yaml`; the category must
+   match the gateway.
+
+In `entitlement-api` and `entitlement-projector`:
+3. Ensure the API emits change events and the projector writes that scope type's
+   grant/deny tuples (its per-scope managed-relation set). Without tuples, every
+   `can_*` check returns `allowed: false`.
+
+`entitlement-api`, `entitlement-projector`, `authz-sidecar`: import reviewed bundles;
+verify canonical equality/shared pins before exposure. API runtime model SHA must
+match its validated manifest; follow `<repo>/docs/contracts/importer-provenance.md`
+migration/admission gates. Compatible consumer versions may differ.
 
 In `gateway` (the route surface):
 4. Add an entry to `authzRouteGroups` in `charts/gateway/values.yaml` and every active

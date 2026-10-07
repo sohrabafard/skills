@@ -1,0 +1,33 @@
+Affected verification only after the instruction-review fix. Do not repeat the ten passing static gates or snapshot follow-up. Same alaa-verifier role, configured gpt-6-luna/low, artifact-only writes under outputs/20261007-entitlement-skill-source-owners/. Cwd Git root; no source edits, installs, external effects or retry. Cheap focused/static commands, sequential, timeout 120 seconds each; no CPU-heavy suite.
+
+Candidate v2: HEAD 2a2340d3677945578b505fce49de60e11561037d; aggregate e6fa953819342848986a77ba0ce1e37f63969d0d639e395c478213842fa533cf. Only the protected-route reference differs from the independently verified v1. Execute these exact three commands and return the role evidence table with proof level 1, contamination and skipped limits. CLI runner persists final report.
+
+git diff --check
+python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md
+
+@'
+from pathlib import Path
+import json,hashlib,subprocess
+a=Path('outputs/20261007-entitlement-skill-source-owners')
+m=json.loads((a/'candidate-manifest-v2.json').read_text(encoding='utf-8'))
+prior=json.loads((a/'candidate-manifest.json').read_text(encoding='utf-8'))
+entries=sorted(m['files'],key=lambda v:v['path'])
+actual=''.join(v['path']+'\0'+hashlib.sha256(Path(v['path']).read_bytes()).hexdigest()+'\n' for v in entries)
+digest=hashlib.sha256(actual.encode('utf-8')).hexdigest()
+assert digest==m['manifest_sha256']=='e6fa953819342848986a77ba0ce1e37f63969d0d639e395c478213842fa533cf'
+assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==m['head']
+old={v['path']:v['sha256'] for v in prior['files']}
+changed=[v['path'] for v in entries if old[v['path']]!=v['sha256']]
+assert changed==['skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md']
+raw=Path(changed[0]).read_bytes();raw.decode('utf-8',errors='strict')
+assert not raw.startswith(b'\xef\xbb\xbf') and b'\r' not in raw
+sizes={}
+for scope,baseline in zip(m['scopes'],[430883,135534]):
+ size=sum(len(Path(v['path']).read_text(encoding='utf-8').encode('utf-8')) for v in entries if v['path'].startswith(scope+'/'))
+ assert size<=baseline
+ sizes[scope]=size
+assert Path('../entitlement-api/docs/contracts/importer-provenance.md').is_file()
+print(json.dumps({'aggregate':digest,'files':len(entries),'changed_from_v1':changed,'normalized_sizes':sizes,'encoding':'UTF8 LF no BOM','new_source_pointer':'exists'}))
+'@ | python -B -
+
+Recheck per-file manifest hashes after the commands and report no drift or the exact discrepancy. Preserve earlier reports and logs. No runtime/deployment proof is requested.

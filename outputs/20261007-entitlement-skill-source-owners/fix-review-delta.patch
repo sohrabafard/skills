@@ -1,0 +1,26 @@
+--- a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md
++++ b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md
+@@ -1,7 +1,7 @@
+ ## Adding a new request-time-authorized route
+ 
+-Prepare the authorization contract before exposing the route; enforcement before
+-its permission rule and tuples exist fails closed for everyone.
++Prepare contracts before exposing the route; enforcement before its permission
++rule and tuples exist fails closed for everyone.
+ 
+ In `authz-openfga` (canonical model and contracts):
+ 1. Confirm the target **type** and final **`can_*`** relation exist. For new ones,
+@@ -16,9 +16,10 @@
+    grant/deny tuples (its per-scope managed-relation set). Without tuples, every
+    `can_*` check returns `allowed: false`.
+ 
+-In `authz-sidecar` and `entitlement-projector`, import the reviewed bundle locally
+-and verify canonical-export equality and shared pins before exposing the route
+-(`50-permission-mapping-and-pins.md` owns snapshot/pin rules).
++`entitlement-api`, `entitlement-projector`, `authz-sidecar`: import reviewed bundles;
++verify canonical equality/shared pins before exposure. API runtime model SHA must
++match its validated manifest; follow `<repo>/docs/contracts/importer-provenance.md`
++migration/admission gates. Compatible consumer versions may differ.
+ 
+ In `gateway` (the route surface):
+ 4. Add an entry to `authzRouteGroups` in `charts/gateway/values.yaml` and every active

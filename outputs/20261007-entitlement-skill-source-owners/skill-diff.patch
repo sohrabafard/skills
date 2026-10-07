@@ -1,0 +1,745 @@
+diff --git a/skills/sohrab/alaa-services-contract/references/00-topic-map.md b/skills/sohrab/alaa-services-contract/references/00-topic-map.md
+index 49aed6ec0..6c3978a13 100644
+--- a/skills/sohrab/alaa-services-contract/references/00-topic-map.md
++++ b/skills/sohrab/alaa-services-contract/references/00-topic-map.md
+@@ -15,43 +15,43 @@ Use this file to choose the smallest reference file that owns the rule you need.
+   - Use when the task needs an exact observability name or value: an `OTEL_*` variable and its Ala default, a trace or route naming rule, an exception field name, or the current telemetry shape of a specific Ala service.
+   - Read `20-operational-and-observability-contract.md` and `21-alaa-platform-observability-directive.md`.
+   - For a metric name, its type, its labels, its owning service, or the rule that a metric is registered before it is emitted, read `24-metric-registry.md`; it owns every `alaa_*` name.
+-  - Requirement levels, gates, thresholds, alerts, Collector gateway topology, processor placement, sampling policy, label and cardinality budgets, exemplar requirement level, and Sentry policy are not in this skill. Load `$alaa-observability-soc` for those, and treat it as the winner on whether a signal is required.
++  - Requirement levels, gates, thresholds, alerts, Collector gateway topology, processor placement, sampling policy, label and cardinality budgets, exemplar requirement level, and Sentry policy are not in this skill. Load `/alaa-observability-soc` for those, and treat it as the winner on whether a signal is required.
+ - `Mode A++ - Deployment and runtime contract`
+   - Use when the task is about Kubernetes/OpenShift versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
+   - Use also when the task asks which image, chart, CI include, generator, hook pack, or toolchain already exists or which project owns it; creates a new tools image, base image, hook pack, or pipeline helper; asks the role of `deploy`, `service-ci-kit`, `service-runtime-kit`, `ci-image`, the deploy-tools image, `octane-base`, `gateway`, or `client`; follows a delivery flow (new service, first deployment, update, rollback, local runtime) and needs each step's owner; reads the gateway's generated HAProxy configuration or its committed snapshots; or asks whether a Compose or Swarm production target exists.
+   - Read `16-infrastructure-services-and-delivery-artifacts.md` before `15-deployment-and-runtime-contract.md`; read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
+ - `Mode A+++ - Failure, load, and deprecation contract`
+   - Use when the task is about an outbound timeout, a retry budget, backoff and jitter, an idempotency key on an internal call, what a backend does when `auth` / OpenFGA / the notification broker is unreachable, a bounded database connection pool, a pool acquire timeout, the shed-versus-queue decision at ingress, a request deadline, or deprecating and removing any contract surface this skill defines.
+-  - Read `22-failure-load-and-deprecation-contract.md`; pair with `$alaa-reliability-sla` for the doctrine behind the values and `$alaa-data-layer` for pool mechanics inside a driver.
++  - Read `22-failure-load-and-deprecation-contract.md`; pair with `/alaa-reliability-sla` for the doctrine behind the values and `/alaa-data-layer` for pool mechanics inside a driver.
+ - `Mode B - Laravel backend service`
+   - Use when the task is about Laravel API response boundaries, Resources, middleware order, public `project_id` validation and resolution, or Laravel-specific route and command expectations.
+   - Read `30-trusted-ingress-and-laravel-contract.md` after the core contract.
+ - `Mode C - Laravel downstream trusted service`
+   - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
+-  - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
++  - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `/alaa-trust-gateway-auth`.
+ - `Mode C+ - Permission catalog consumer`
+   - Use when the task is about backend authorization, access levels, `X-User-Roles`, role-derived behavior, `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.
+-  - Read `28-backend-permission-authorization-and-role-freeze.md` for the current backend decision rule and `35-permission-catalog-and-service-configs.md` for catalog consumption; pair with `$alaa-trust-gateway-auth` and `$alaa-permission-generator`.
++  - Read `28-backend-permission-authorization-and-role-freeze.md` for the current backend decision rule and `35-permission-catalog-and-service-configs.md` for catalog consumption; pair with `/alaa-trust-gateway-auth` and `/alaa-permission-generator`.
+   - When the consumer is the frontend, also read `60-frontend-sdk-consumption-contract.md` for the unverified UI-hint boundary.
+ - `Mode D - Laravel auth-boundary service`
+   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
+   - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.
+ - `Mode D+ - Auth TOTP management and forced route step-up`
+   - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, the four backend-only `X-TOTP-*` headers including the advisory `X-TOTP-PROOF-REJECTED` and its `TOTP_PROOF_*` value vocabulary, step-up errors, recovery codes, or SDK/frontend retry behavior.
+-  - Read `32-auth-totp-and-step-up-contract.md`; pair with `$alaa-trust-gateway-auth` for gateway boundaries and `$alaa-frontend-developer` for client/SDK flows.
++  - Read `32-auth-totp-and-step-up-contract.md`; pair with `/alaa-trust-gateway-auth` for gateway boundaries and `/alaa-frontend-developer` for client/SDK flows.
+ - `Mode E - Platform flow and boundaries view`
+   - Use also when the task is about the canonical UUIDv7 `project_id` form on an HTTP payload, event envelope, log field, or cache key, or about the recorded actor-identifier debt.
+   - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, keyset list pagination and the `cursor`/`limit`/`meta.next_cursor`/`meta.prev_cursor` contract, the admin-table offset exception, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
+   - Read `25-end-to-end-flow-and-boundaries.md`.
+ - `Mode E+ - Request-time authorization with OpenFGA`
+   - Use when the task is about how the per-resource decision is actually made: `authzRouteGroups`, the gateway -> `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` call and its `tuple_key`, endpoint-category to `can_*` mapping, canonical object id construction, `grant_*` vs `can_*`, the store/model/label pins, or adding or debugging a protected route.
+-  - Read `26-request-time-authorization-openfga.md`; pair with `$alaa-trust-gateway-auth`, `$alaa-haproxy`, and `$openfga`.
++  - Read `26-request-time-authorization-openfga.md`; pair with `/alaa-trust-gateway-auth`, `/alaa-haproxy`, and `/openfga`.
+ - `Mode E++ - Notification cross-service contract`
+-  - Use when the task is about how any service sends work to the `notification` service: the `notification.commands` ingress (exchange, queues, routing keys, canonical envelope), the snake_case-everywhere rule (including nested objects), the reserved channel-addressing model, the `entitlement-platform` audience-resolution handshake (`notif.retrieve_users`, `notif.expand_users`, `notif.recipient_chunks`), or the per-service notification matrix.
+-  - Read `27-notification-service-contract.md` (mirrors the authoritative `<repo>/notification/docs/async-contracts.md`); pair with `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq` for producers, `$alaa-golang` for Go producers, and `$alaa-observability-soc` for correlation.
++  - Use when the task is about how any service sends work to the `notification` service: the `notification.commands` ingress (exchange, queues, routing keys, canonical envelope), the snake_case-everywhere rule (including nested objects), the reserved channel-addressing model, the `entitlement-api` audience-resolution handshake (`notif.retrieve_users`, `notif.expand_users`, `notif.recipient_chunks`), or the per-service notification matrix.
++  - Read `27-notification-service-contract.md` (mirrors the authoritative `<repo>/notification/docs/async-contracts.md`); pair with `/alaa-async-messaging` and `/alaa-laravel-job-rabbitmq` for producers, `/alaa-golang` for Go producers, and `/alaa-observability-soc` for correlation.
+ - `Mode F - Frontend coding contract`
+   - Use when frontend or host-app code consumes the `@alaa/*` SDK packages, or when building/consuming Page Kit, UI Kit, app-shell, or widgets: which package to import, app-versus-SDK responsibility for trusted headers/token/refresh, public correlation headers, UI capability hints and permission-driven rendering, props-in/events-out widget contracts, three-layer data flow, dist-only package boundaries, or island isolation.
+-  - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `$alaa-frontend-developer`, `$alaa-mono-package`, and `$alaa-security-review`.
++  - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `/alaa-frontend-developer`, `/alaa-mono-package`, and `/alaa-security-review`.
+ 
+ ## Cross-cutting references
+ 
+@@ -89,6 +89,6 @@ Use this file to choose the smallest reference file that owns the rule you need.
+ ## Working rule
+ 
+ - Start with the smallest file that owns the rule you need.
+-- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `$alaa-observability-soc` owns them.
+-- When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `$alaa-reliability-sla` for the doctrine.
++- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `/alaa-observability-soc` owns them.
++- When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `/alaa-reliability-sla` for the doctrine.
+ - When you need to know whether a service already follows a rule, read `95-fleet-conformance.md` for the snapshot and the owning reference file for the rule. A conformance line never overrides a rule, and a repository that has moved since the snapshot overrides the snapshot.
+diff --git a/skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md b/skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md
+index cf52e09b8..8a4d13cde 100644
+--- a/skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md
++++ b/skills/sohrab/alaa-services-contract/references/05-scope-service-modes-and-auth-routing.md
+@@ -4,14 +4,12 @@ Use this file when the task is about onboarding an agent to the Ala services con
+ 
+ ## Purpose and use
+ 
+-Use this skill to hard-code the Ala backend service contract across Ala services.
++Hard-code the Ala backend contract for consistent agent outputs and predictable operational visibility for developers, SOC operators and platform maintainers.
+ 
+-This contract exists so agent outputs stay consistent across services and so operational visibility remains predictable for developers, SOC operators, and platform maintainers.
+-
+-This skill is intentionally Ala-specific. The portability requirement for this skill is about filesystem independence and reuse across machines, not about being generic to unrelated organizations.
++Portability means filesystem independence across machines; this skill remains Ala-specific.
+ 
+ Use it when:
+-- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-platform`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
++- creating or changing `auth`, `content`, `comment`, `ticket`, `gateway`, `entitlement-api`, `entitlement-projector`, `authz-openfga`, `authz-sidecar`, `vod`, `wa`, `notification`, `assessment`, or another Ala backend or platform service
+ - explaining how a frontend-facing backend sits behind the gateway and inside the wider Ala platform
+ - standardizing the shared `service-ci-kit` GitLab CI/CD baseline for new or refactored Ala services
+ - standardizing `/api/health`
+@@ -38,11 +36,11 @@ Use this picture before code changes when a repo needs platform orientation.
+ Default Ala flow:
+ - frontend or public client -> gateway -> backend service
+ - gateway may call a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa`
+-- entitlement-platform keeps fine-grained authorization state through `entitlement-api`, `projector`, and OpenFGA
++- `entitlement-api` owns business truth; `entitlement-projector` writes derived tuples; `authz-openfga` owns the model and contracts
+ 
+ Plain meaning:
+ - the gateway owns authentication, spoofed-header removal, and trusted header injection
+-- entitlement-platform owns route-level fine-grained authorization state and runtime checks when those checks are enabled
++- `authz-sidecar` owns enabled request-time checks against OpenFGA
+ - a normal backend service behind the gateway still owns request normalization, business authorization, response shaping, and observability inside the service
+ - frontend code must use gateway-facing routes and must never generate trusted internal headers
+ 
+@@ -77,7 +75,7 @@ Adds:
+ Read next:
+ - `20-operational-and-observability-contract.md`
+ - `21-alaa-platform-observability-directive.md`
+-- `$alaa-observability-soc` for every requirement level, gate, threshold, alert, Collector topology, label budget, exemplar decision, and Sentry policy, which this skill does not own
++- `/alaa-observability-soc` for every requirement level, gate, threshold, alert, Collector topology, label budget, exemplar decision, and Sentry policy, which this skill does not own
+ 
+ ### Mode B - Laravel backend service
+ 
+@@ -104,7 +102,7 @@ Adds:
+ 
+ Read next:
+ - `22-failure-load-and-deprecation-contract.md`
+-- `$alaa-reliability-sla` for the doctrine behind these values
++- `/alaa-reliability-sla` for the doctrine behind these values
+ 
+ ### Mode A++ - Deployment and runtime contract
+ 
+@@ -129,7 +127,7 @@ Adds:
+ 
+ Read next:
+ - `30-trusted-ingress-and-laravel-contract.md`
+-- `$alaa-trust-gateway-auth`
++- `/alaa-trust-gateway-auth`
+ 
+ ### Mode C+ - Backend authorization and permission catalog consumer
+ 
+@@ -146,7 +144,7 @@ Adds:
+ Read next:
+ - `28-backend-permission-authorization-and-role-freeze.md`
+ - `35-permission-catalog-and-service-configs.md`
+-- `$alaa-trust-gateway-auth`
++- `/alaa-trust-gateway-auth`
+ 
+ ### Mode D - Laravel auth-boundary service
+ 
+@@ -169,8 +167,8 @@ Use when the task is about optional TOTP enrollment, authenticator-app setup, QR
+ 
+ Read next:
+ - `32-auth-totp-and-step-up-contract.md`
+-- `$alaa-trust-gateway-auth` for gateway trust boundaries and public/internal route separation
+-- `$alaa-frontend-developer` for SDK and frontend challenge-and-retry behavior
++- `/alaa-trust-gateway-auth` for gateway trust boundaries and public/internal route separation
++- `/alaa-frontend-developer` for SDK and frontend challenge-and-retry behavior
+ 
+ ## Auth-specific routing note
+ 
+diff --git a/skills/sohrab/alaa-services-contract/references/10-core-service-contract.md b/skills/sohrab/alaa-services-contract/references/10-core-service-contract.md
+index fdbfbef00..1289561da 100644
+--- a/skills/sohrab/alaa-services-contract/references/10-core-service-contract.md
++++ b/skills/sohrab/alaa-services-contract/references/10-core-service-contract.md
+@@ -22,7 +22,8 @@ Rules:
+ | `wa` | watch-time and analytics ingestion into ClickHouse via Vector and related intake flows | non-Laravel runtime is fine, but it must still align to Ala operational and observability naming where applicable |
+ | `gateway` | HAProxy ingress gateway, JWT verification, trusted-header injection, request-time authz hop, structured gateway logs, and HAProxy metrics | do not force app middleware or app spans onto it; preserve HAProxy metrics and Vector log-pipeline ownership |
+ | `entitlement-api` | normalized authorization business truth | other services must not treat OpenFGA tuples as the source of truth for business grants |
+-| `projector` | derived tuple projection into OpenFGA | keep it as a derived-state writer, not as the business-truth owner |
++| `entitlement-projector` (runtime `projector`) | derived OpenFGA tuple writer | business truth remains API-owned |
++| `authz-openfga` | canonical model, contracts and derived OpenFGA graph | business grants remain entitlement-api-owned |
+ | `authz-sidecar` | request-time authorization runtime for gateway-protected route families | emit decision evidence, propagate trace context, and keep route-time decisions separate from service business authorization |
+ | `notification` | in-development notification service and delivery workflows | converge on this contract before production readiness, including exception evidence when Sentry is absent |
+ 
+@@ -54,7 +55,7 @@ Every route belongs to exactly one family:
+ | Family | Purpose | Public client use? | Contract rule |
+ |---|---|---:|---|
+ | public API | product-facing API behavior | yes, when documented | keep separate from operational probes |
+-| trusted internal | sanitized gateway-derived context | no | align exactly with `$alaa-trust-gateway-auth` |
++| trusted internal | sanitized gateway-derived context | no | align exactly with `/alaa-trust-gateway-auth` |
+ | operational | liveness, readiness, rollout diagnostics | no | keep auth expectations explicit and minimal |
+ 
+ Rules:
+@@ -160,8 +161,7 @@ Nothing a client should not see, and nothing that describes the inside of the se
+ - PII beyond what the request itself already carried. Echoing back the mobile number the caller just sent is
+   permitted; adding the account's email, national code, or address is not, because an error body is returned
+   to whoever made the request, including a caller who guessed an identifier.
+-- Decoded pagination cursor internals, per `alaa-keyset-pagination`
+-  (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`), `references/40-wire-contract-limits-and-errors.md`.
++- Decoded pagination cursor internals, per `/alaa-keyset-pagination`, `references/40-wire-contract-limits-and-errors.md`.
+   An error body is exactly where an attacker probing a cursor codec reads its structure.
+ 
+ ### The shape rule
+diff --git a/skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md b/skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md
+index 2096773aa..fa47a8796 100644
+--- a/skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md
++++ b/skills/sohrab/alaa-services-contract/references/21-alaa-platform-observability-directive.md
+@@ -7,7 +7,7 @@ facts, or the current telemetry shape of a specific Ala service. For a metric na
+ 
+ ## Ownership split, and it is binding
+ 
+-This skill owns every observability **name and value**. `$alaa-observability-soc` owns every **requirement
++This skill owns every observability **name and value**. `/alaa-observability-soc` owns every **requirement
+ level, gate, threshold, and reason**.
+ 
+ - Here: log field names, `OTEL_*` variable names and their Ala default values, route and operation naming
+@@ -18,7 +18,7 @@ level, gate, threshold, and reason**.
+   placement, sampling policy, metric label allow and deny lists, resource-identity policy, exemplar
+   requirement level, Sentry policy, and the data-retention and cardinality budgets.
+ 
+-When this file and `$alaa-observability-soc` appear to disagree about whether something is required, that
++When this file and `/alaa-observability-soc` appear to disagree about whether something is required, that
+ skill wins. When they appear to disagree about what something is called or what its default value is, this
+ file wins. Do not resolve such a disagreement by inventing a third answer.
+ 
+@@ -30,11 +30,11 @@ Two more boundaries inside this skill:
+ - `40-apply-checklist-and-anti-patterns.md` owns the adoption checklist, the validation checklist, and the
+   anti-pattern list for this whole skill.
+ 
+-Also pair with `$vector-rust-observability-pipelines` for Vector topology, VRL transforms, buffering,
+-acknowledgements, and log-to-OTLP conversion; `$alaa-trust-gateway-auth` when trusted headers or
+-gateway-derived identity affect telemetry; `$openfga` when the work changes the OpenFGA model or tuples
+-rather than only observing OpenFGA as a dependency; and `$alaa-laravel-architecture` plus
+-`$alaa-php-clean-code` for which PHP or Composer observability packages to install, which this skill does
++Also pair with `/vector-rust-observability-pipelines` for Vector topology, VRL transforms, buffering,
++acknowledgements, and log-to-OTLP conversion; `/alaa-trust-gateway-auth` when trusted headers or
++gateway-derived identity affect telemetry; `/openfga` when the work changes the OpenFGA model or tuples
++rather than only observing OpenFGA as a dependency; and `/alaa-laravel-architecture` plus
++`/alaa-php-clean-code` for which PHP or Composer observability packages to install, which this skill does
+ not decide.
+ 
+ ## Current Ala service reality
+@@ -49,7 +49,8 @@ truth wins over this table.
+ | `comment-service` | Laravel service with canonical `APP_NAME=comment`, OTel traces/logs, Prometheus `/metrics`, and docs that explicitly keep metrics scrape-based. |
+ | `content` | Laravel macroservice for course, set, and content. Uses manual OTel traces/logs, Prometheus `/metrics`, and outbox rows carrying `request_id` and `traceparent`; AMQP trace headers may require driver extension work. |
+ | `gateway` | HAProxy gateway. HAProxy owns request serving, trusted-header injection, trace context preservation and generation, and built-in Prometheus metrics at internal `:8404/metrics`. Vector owns optional log parsing, PII guard, buffering, and OTLP log export. The gateway does not emit app spans just because it propagates trace context. |
+-| `entitlement-platform` | Go services `entitlement-api`, `projector`, and `authz-sidecar` use OTel tracing and Prometheus metrics. OpenFGA uses native OTLP/gRPC and native Prometheus metrics. Logs are structured JSON; OTLP log export may be intentionally deferred per repo truth. |
++| `entitlement-api`, `entitlement-projector`, `authz-sidecar` | Separate Go repos with OTel traces, Prometheus metrics and JSON logs; OTLP log export may be deferred per repo truth. Projector runtime identity stays `projector`. |
++| `authz-openfga` | OpenFGA engine: native Prometheus metrics and JSON logs. Re-check native OTLP/gRPC trace export in `<repo>/docker-compose.yml`. |
+ | `wa` | Vector plus ClickHouse ingestion runtime. Canonical routes are `POST /ingest/v1/events` and `GET /health`; trusted headers include `X-Project-Id`, `X-Request-Id`, and optional `X-User-Id`. Apply Vector pipeline rules, not Laravel middleware rules. |
+ | `notification` | In-development Laravel service. It already uses `X-Request-Id`, `traceparent`, request observability middleware, and Sentry scaffolding, and must converge on the full contract before production readiness. |
+ | `assessment` | Future or absent in this workspace. Apply the generic Ala service contract until repo-local source truth exists. |
+@@ -83,7 +84,7 @@ Rules:
+ - Signal-specific overrides exist only when the platform genuinely needs different values for traces,
+   metrics, or logs; a signal-specific key set that duplicates the common one is removed.
+ - Keep OTLP log and trace export batched and bounded so a Collector problem cannot add latency to a
+-  request. `$alaa-observability-soc` owns how much loss is acceptable when it does.
++  request. `/alaa-observability-soc` owns how much loss is acceptable when it does.
+ - Keep a code-level configuration equivalent for every env-driven value, so a service still boots with a
+   valid configuration when the env is incomplete, and validate the values at startup rather than at first
+   export.
+@@ -93,7 +94,7 @@ Rules:
+ - Resource identity uses the standard OTel keys `service.name`, `service.version`, and
+   `deployment.environment.name`. `service.name` equals the canonical Ala service identity from
+   `10-core-service-contract.md`. Which additional resource attributes are permitted is
+-  `$alaa-observability-soc`'s decision, not this file's.
++  `/alaa-observability-soc`'s decision, not this file's.
+ - Propagate W3C context across incoming HTTP, outgoing HTTP, gRPC or RPC, message queues, and background
+   jobs, using the exact names `traceparent`, `tracestate`, and `baggage`.
+ - Carry trace context in message headers or metadata for async work, and continue the trace in the
+@@ -123,7 +124,7 @@ Never write these values into any log, span, or metric: a password, a secret, a
+ JWT, a raw `X-Access` value, a TOTP secret, `otpauth_uri`, a TOTP code, or a recovery code. For
+ token-level correlation use the token `jti`, a short fingerprint, or a stable internal code. Full request
+ bodies and PII appear only where an approved, audited flow allows it, masked or minimized; whether a given
+-flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s call, not a per-service one.
++flow is approved is `/alaa-security-review`'s and `/alaa-observability-soc`'s call, not a per-service one.
+ 
+ ## Prometheus endpoint
+ 
+@@ -131,8 +132,8 @@ flow is approved is `$alaa-security-review`'s and `$alaa-observability-soc`'s ca
+   by platform contract. It is internal and is never routed as a public client API.
+ - Metrics are scraped. Do not push normal long-lived service metrics, and do not use the Pushgateway for
+   them.
+-- Whether a histogram carries exemplars is a requirement level, and `$alaa-observability-soc` owns it.
+-- Which labels a metric may carry, and the cardinality budget, belong to `$alaa-observability-soc`. The
++- Whether a histogram carries exemplars is a requirement level, and `/alaa-observability-soc` owns it.
++- Which labels a metric may carry, and the cardinality budget, belong to `/alaa-observability-soc`. The
+   request-middleware label boundary is in `20-operational-and-observability-contract.md`.
+ 
+ ### Metrics scraper admission
+@@ -169,7 +170,7 @@ Per-service metric-name conformance is recorded in `95-fleet-conformance.md`.
+ ## Collector and Prometheus deployment notes for Ala
+ 
+ These are the Ala-specific placement facts. Collector topology, pipeline design, processor placement, and
+-sampling policy belong to `$alaa-observability-soc`.
++sampling policy belong to `/alaa-observability-soc`.
+ 
+ - On Arvan Kubernetes or OpenShift, services target one shared Collector gateway tier per environment or
+   cluster boundary. A service repository does not carry its own Collector topology.
+diff --git a/skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md b/skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md
+index 50385da46..132699039 100644
+--- a/skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md
++++ b/skills/sohrab/alaa-services-contract/references/25-end-to-end-flow-and-boundaries.md
+@@ -10,7 +10,7 @@ The Ala platform is organized in layers with clear ownership:
+ - the gateway verifies access tokens for protected routes, removes untrusted internal headers, injects trusted identity and project context, and forwards requests to the right backend
+ - when a route family needs fine-grained request-time authorization, the gateway calls `authz-sidecar` or `entitlement-spoa`
+ - backend services own their business domains and internal logic
+-- entitlement-platform keeps normalized authorization business truth in `entitlement-api`, projects derived tuples through `projector`, and serves request-time checks from OpenFGA
++- `entitlement-api` keeps business truth; `entitlement-projector` writes derived tuples; `authz-sidecar` checks OpenFGA under the `authz-openfga` model contract
+ 
+ Rules:
+ - do not let services recreate browser-facing trust assumptions on internal hops
+@@ -45,10 +45,12 @@ Rules:
+   - watch and analytics ingestion service for event intake and related processing flows
+ - `entitlement-api`
+   - normalized authorization business truth
+-- `projector`
++- `entitlement-projector` (runtime `projector`)
+   - derived tuple writer into OpenFGA
+-- OpenFGA
+-  - derived authorization graph for fast request-time checks
++- `authz-openfga`
++  - canonical model/contracts and derived OpenFGA graph for fast checks
++- `authz-sidecar`
++  - request-time checker for the gateway
+ 
+ ### Components being evaluated
+ 
+@@ -64,7 +66,7 @@ and load contract. Being under evaluation does not exempt a component from a sur
+ 
+ Treat the default Ala flow like this:
+ - public client or frontend -> gateway -> backend service
+-- gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses entitlement-platform authorization
++- gateway -> request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` when the route family uses fine-grained authorization
+ - backend service -> backend service only for internal workloads that truly require a synchronous hop
+ - backend service -> async infrastructure for queue, event, or job delivery when appropriate
+ - normalized business change -> `entitlement-api` -> `projector` -> OpenFGA for derived fine-grained authorization state
+@@ -93,13 +95,13 @@ This contract applies only to media playback positions, media durations, timepoi
+ - At the client-to-WA boundary, convert seconds to milliseconds exactly once (`seconds * 1000`). When WA analytics is used to position a content timepoint or a comment/note, convert milliseconds to seconds exactly once (`milliseconds / 1000`) and apply the receiving field's documented integer/rounding policy.
+ - Do not infer a unit from a bare field name. New cross-service media timeline fields must use an explicit `_seconds` or `_ms` suffix. A pre-existing bare field keeps its owning client/service contract and must be documented at the integration boundary.
+ 
+-## How entitlement-platform fits into the Ala stack
++## How entitlement repositories fit into the Ala stack
+ 
+-- entitlement-platform does not own authentication; the gateway does
+-- entitlement-platform may own request-time fine-grained route authorization through `authz-sidecar` or `entitlement-spoa`
+-- entitlement-platform keeps normalized authorization business truth in `entitlement-api`
+-- `projector` writes derived tuples
+-- OpenFGA stores derived effective authorization state
++- the gateway owns authentication
++- `authz-sidecar` owns request-time checks; `entitlement-spoa` is a future adapter
++- `entitlement-api` owns normalized authorization business truth
++- `entitlement-projector` writes derived tuples (runtime `projector`)
++- `authz-openfga` owns model/contracts; OpenFGA stores derived effective authorization state
+ 
+ For a normal backend behind gateway, the practical rule is:
+ - trust the gateway authentication result
+@@ -142,7 +144,7 @@ Route-shape reminder:
+ - for the current frontend SDK set, auth is special: preserve the auth child route prefix that already includes its service route family and point the auth core base at the gateway root; apply content, comment, tusd, and WA gateway prefixes through shared core `baseUrls`
+ - do not pass child route-prefix overrides solely for gateway routing, and do not trim, rewrite, or de-duplicate repeated path segments between the gateway prefix and child-defined route path
+ - before claiming a prefix is active in an environment, verify the gateway route table and the rendered HAProxy config: in the `gateway` repository, read `charts/gateway/values*.yaml` and `docker/values.shared-network.yaml`, then the rendered `gateway.loadbalancer.yaml` or `gateway.ingress.yaml`. Resolve those paths against the local checkout of `gateway`; never hardcode an absolute machine path into this skill or into a service repository.
+-- use `$alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `$alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
++- use `/alaa-trust-gateway-auth` for exact trusted-ingress and prefix-strip behavior when the task depends on those details; use `/alaa-haproxy` when actual HAProxy routing, ACL order, or path rewriting is in scope
+ 
+ ## Role snapshot propagation and provisional backend freeze
+ 
+@@ -260,8 +262,7 @@ This file owns the **wire shape**: which parameters a list route accepts, which
+ and which keys it must not. It does not own the **design method** — how to derive an ordering tuple whose
+ final component is unique, which composite index serves it, how the continuation predicate is written, what
+ the signed cursor carries, and how nullable sort columns, mutable sort values, and backward traversal are
+-handled. Those belong to `alaa-keyset-pagination`, invoked as `/alaa-keyset-pagination` in Claude Code and
+-`$alaa-keyset-pagination` in Codex. Read that skill before writing or reviewing a paginated query; read this
++handled. Those belong to `/alaa-keyset-pagination`. Read it before writing or reviewing a paginated query; read this
+ section for the keys that cross the wire.
+ 
+ Every list route on every Ala service paginates by keyset cursor. Offset pagination is forbidden on any list
+@@ -289,7 +290,7 @@ Response rules:
+ - The client echoes back whichever of the two cursors it holds in the same `cursor` parameter. Direction is
+   encoded inside the signed cursor, not in the parameter name, so a client cannot pair a forward boundary
+   with a backward request. A route does not document backward pagination until the reversal tests named by
+-  `alaa-keyset-pagination` (`/alaa-keyset-pagination`, `$alaa-keyset-pagination`),
++  `/alaa-keyset-pagination`,
+   `references/70-test-list.md`, pass.
+ - `has_more` and `type` are not emitted. `has_more` is `next_cursor !== null` by construction, and a second
+   spelling of one fact diverges the first time a service computes it from the row count instead; `type` is
+@@ -332,8 +333,7 @@ other and no shared client parser has to guess which it received.
+ Observable that decides whether a route has claimed the exception legitimately: a route emitting `total`,
+ `total_pages`, `current_page`, `last_page`, or `per_page` that is reachable without an admin permission, or
+ that appears in the public gateway route table, is a violation regardless of what its documentation says.
+-The five conditions and their reasoning are owned by `alaa-keyset-pagination`
+-(`/alaa-keyset-pagination`, `$alaa-keyset-pagination`), `references/10-route-mode-and-sort-allowlist.md`;
++The five conditions and their reasoning are owned by `/alaa-keyset-pagination`, `references/10-route-mode-and-sort-allowlist.md`;
+ this section is the contract text that authorizes them.
+ 
+ Scope:
+@@ -418,9 +418,9 @@ Rules:
+ - keep controllers and policies away from raw header parsing
+ - do not use allow-side `X-Authz-*` metadata as authorization input
+ 
+-### Entitlement-platform repository
++### Entitlement repositories
+ 
+-- own fine-grained authorization contracts, request-time checker behavior, and tuple projection rules
++- keep model/contracts in `authz-openfga`, checks in `authz-sidecar`, business truth/events in `entitlement-api`, and projection in `entitlement-projector`
+ - do not turn OpenFGA into business truth
+ 
+ ## Why this file exists
+diff --git a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md
+index cf24c05b5..7a8ef05d3 100644
+--- a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md
++++ b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/50-permission-mapping-and-pins.md
+@@ -2,7 +2,12 @@
+ 
+ The sidecar resolves each endpoint category and target type to exactly one final
+ `can_*` permission. Source of truth:
+-`entitlement-platform/platform/openfga/contracts/endpoint-permissions.yaml`.
++authz-openfga `<repo>/platform/openfga/contracts/endpoint-permissions.yaml`.
++
++Author there. Consumers import immutable generated bundles pinned by
++`contracts.lock.json`; never hand-edit imported snapshots or pins. Local integrity
++does not prove upstream equality; verify against the reviewed canonical export
++(authz-openfga `<repo>/docs/readme/10-contract-bundle-export.md`).
+ 
+ | Endpoint category | Target type | Final permission |
+ |---|---|---|
+diff --git a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md
+index 983560425..3bc9bf518 100644
+--- a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md
++++ b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/60-add-a-protected-route.md
+@@ -1,20 +1,24 @@
+ ## Adding a new request-time-authorized route
+ 
+-This is the common task. It spans **two repositories**, and the order matters:
+-prepare the authorization contract first, then expose the route. A route that is
+-enforced before its permission rule and tuples exist will fail closed for everyone.
++Prepare the authorization contract before exposing the route; enforcement before
++its permission rule and tuples exist fails closed for everyone.
+ 
+-In `entitlement-platform` (the model and contract):
+-1. Confirm the OpenFGA model has the target **type** and the final **`can_*`** relation
+-   you need. If they are new, add them to the model, upload it, and re-pin
+-   `OPENFGA_AUTHORIZATION_MODEL_ID` (and bump `OPENFGA_MODEL_LABEL`) for both
+-   `projector` and `authz-sidecar`.
++In `authz-openfga` (canonical model and contracts):
++1. Confirm the target **type** and final **`can_*`** relation exist. For new ones,
++   add/upload the model, re-pin `OPENFGA_AUTHORIZATION_MODEL_ID` and bump
++   `OPENFGA_MODEL_LABEL` for both `projector` and `authz-sidecar`.
+ 2. Add the `endpoint_category` + `target_type` -> `final_permission` rule to
+-   `platform/openfga/contracts/endpoint-permissions.yaml`. The endpoint category name
+-   must match what the gateway will send.
+-3. Make sure `projector` writes the grant/deny tuples for that scope type (its
+-   per-scope managed-relation set) and that `entitlement-api` emits the change events.
+-   Without tuples, every `can_*` check returns `allowed: false`.
++   `<repo>/platform/openfga/contracts/endpoint-permissions.yaml`; the category must
++   match the gateway.
++
++In `entitlement-api` and `entitlement-projector`:
++3. Ensure the API emits change events and the projector writes that scope type's
++   grant/deny tuples (its per-scope managed-relation set). Without tuples, every
++   `can_*` check returns `allowed: false`.
++
++In `authz-sidecar` and `entitlement-projector`, import the reviewed bundle locally
++and verify canonical-export equality and shared pins before exposing the route
++(`50-permission-mapping-and-pins.md` owns snapshot/pin rules).
+ 
+ In `gateway` (the route surface):
+ 4. Add an entry to `authzRouteGroups` in `charts/gateway/values.yaml` and every active
+diff --git a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md
+index bb4ca056b..cfe88960f 100644
+--- a/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md
++++ b/skills/sohrab/alaa-services-contract/references/26-request-time-authorization-openfga/70-debugging-and-source-owners.md
+@@ -11,13 +11,14 @@ Work the path in order. The structured logs make this fast because every hop sha
+    above), a wrong `publicPathRegex`, or a missing resource tag. Check
+    `canonical_object_id` in the log — empty or malformed confirms it.
+ 3. **`400 AUTHZ_ENDPOINT_CATEGORY_INVALID`:** the gateway's `endpointCategory` does not
+-   exist in `endpoint-permissions.yaml`. The two repos disagree on the name.
++   exist in `endpoint-permissions.yaml`. Gateway and the imported contract disagree on the name.
+ 4. **`403 AUTHZ_TARGET_RULE_MISMATCH`:** the category exists but has no rule for that
+    target type. Add the target rule to the contract.
+ 5. **`403 AUTHZ_DENIED`:** the contract resolved a `can_*`, but OpenFGA said no. This
+    is a write-path question: does the expected `grant_*` tuple exist? Reproduce the
+-   `check` against OpenFGA (the `entitlement-platform` Postman `openfga-runtime` group
+-   has ready requests), then `read` the tuples for that user and object. If the tuple
++   `check` against OpenFGA, then `read` the user/object tuples. The legacy
++   `entitlement-platform` Postman `openfga-runtime` group is historical; its
++   extracted destination is unconfirmed. If the tuple
+    is missing, look at `projector` (did the event arrive and validate?) and
+    `entitlement-api` (was the grant actually created?).
+ 6. **`401 AUTH_CONTEXT_MISSING`:** identity did not reach the sidecar. The JWT/trusted
+@@ -46,12 +47,13 @@ pin is a subtle cause of "the tuple exists but the check still denies."
+ 
+ ## Source of truth
+ 
+-- Gateway read path, full diagrams and worked example: gateway repo
+-  `docs/authz-openfga-flow.md`.
+-- Write path and reconciliation: gateway repo `docs/entitlement-projector.md`.
+-- Route groups and Lua: gateway `charts/gateway/values.yaml`,
+-  `charts/gateway/templates/configmap.yaml`, `haproxy/lua/authz-sidecar.lua`.
+-- Model, object-id encoding, conditions, endpoint mapping: `entitlement-platform`
+-  `platform/openfga/contracts/authorization-contract.yaml` and
+-  `endpoint-permissions.yaml`.
+-- Runnable OpenFGA `check`/`read`/`write`: `entitlement-platform` Postman collection.
++- Gateway executable edge authority: `<repo>/charts/gateway/values.yaml`,
++  `<repo>/charts/gateway/templates/configmap.yaml`, `<repo>/haproxy/lua/authz-sidecar.lua`;
++  diagrams: `<repo>/docs/authz-openfga-flow.md`.
++- Business truth/events: entitlement-api `<repo>/docs/api/event-contracts.md`.
++- Projection/reconciliation: entitlement-projector `<repo>/docs/projection-operations.md`.
++- Model/mapping: authz-openfga `<repo>/platform/openfga/contracts/authorization-contract.yaml`,
++  `<repo>/platform/openfga/contracts/endpoint-permissions.yaml` and
++  `<repo>/docs/architecture/06-domain-to-openfga-mapping.md`.
++- Checker interface: authz-sidecar `<repo>/docs/integrations/gateway/authz-sidecar-contract.md`.
++- Extraction ownership: entitlement-api `<repo>/docs/contracts/repository-extraction-v1.md`.
+diff --git a/skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md b/skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md
+index 224b2d6fa..a2106c10d 100644
+--- a/skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md
++++ b/skills/sohrab/alaa-services-contract/references/27-notification-service-contract.md
+@@ -3,12 +3,10 @@
+ This reference is the cross-service contract for how every Ala service talks to the `notification`
+ service, so producers integrate the same way.
+ 
+-Source of truth: the `notification` repository owns its async contract in
+-`notification/docs/async-contracts.md` and its channel inventory in
+-`notification/docs/list_of_channels.md`. This reference mirrors those for cross-service consistency and
+-adds the `entitlement-platform` audience-resolution handshake. When this file and the notification repo
+-disagree, the notification repo wins — reconcile this file (or update the notification repo in the same
+-change) rather than improvising a variant.
++The `notification` repository owns `notification/docs/async-contracts.md` and
++`notification/docs/list_of_channels.md`. This reference mirrors them and adds the
++`entitlement-api` audience handshake. Notification repo truth wins disagreements;
++reconcile this file or update that repo in the same change, never improvise a variant.
+ 
+ Status: the notification command ingress below is implemented in the notification repo. Per-producer
+ onboarding and the audience-resolution-to-command bridge are completed after producer contracts are
+@@ -24,20 +22,20 @@ or RabbitMQ). This reference documents the *currently implemented* cross-service
+ are an evaluated target, not finalized. Keep producer integrations on the implemented ingress and treat
+ the rest as `reserved` until the notification architecture is settled.
+ 
+-Platform shape: most Ala services are Laravel; only the `entitlement-platform` Go services are Go. This
+-contract is language-neutral but Laravel-first (snake_case JSON everywhere), because PHP `json_decode`
+-is case-sensitive and is the majority consumer/producer runtime.
++Most Ala services are Laravel; `entitlement-api` is Go. This language-neutral,
++Laravel-first contract requires snake_case JSON everywhere: majority-runtime PHP
++`json_decode` is case-sensitive.
+ 
+ ## Roles
+ 
+ - Producer service: publishes RabbitMQ commands to notification instead of calling it over business
+-  HTTP (`auth`, `content`, `comment`, `ticket`, `wa`, `entitlement-platform`, `assessment`, watchtime,
++  HTTP (`auth`, `content`, `comment`, `ticket`, `wa`, `entitlement-api`, `assessment`, watchtime,
+   future services).
+ - Notification service (the canonical **Notification Core** in the platform architecture): consumes
+   commands and performs delivery/storage/user-projection work, with receipt-based deduplication.
+   Online fan-out (Realtime Hub) and per-channel Delivery Workers are evaluated components, not yet a
+   fixed contract.
+-- Audience-resolution authority: for access-derived audiences, `entitlement-platform` expands an object
++- Audience-resolution authority: for access-derived audiences, `entitlement-api` expands an object
+   audience into explicit recipients; it owns the `notif.*` audience queues described below.
+ 
+ ## Canonical command ingress (authoritative)
+@@ -109,12 +107,12 @@ PHP with case-sensitive `json_decode`, so a capitalized nested key silently drop
+     - Status: reserved/planning. When channel addressing is implemented, update this section and the
+       notification channel document in the same change.
+ 
+-## Audience-resolution handshake (entitlement-platform)
++## Audience-resolution handshake (entitlement-api)
+ 
+-Separate from the notification command ingress above. These `notif.*` queues are owned and declared by
+-`entitlement-platform` and are registered in `23-queue-and-exchange-registry.md`; they turn an
+-access-derived object audience into explicit recipients. They use the entitlement-owned envelope below
+-(snake_case, with `schema_version`/`command_id`/`project_id`), not the notification command envelope.
++`entitlement-api` owns/declares the `notif.*` queues registered in
++`23-queue-and-exchange-registry.md`. They resolve access-derived object audiences
++to explicit recipients using the entitlement envelope below (snake_case,
++`schema_version`/`command_id`/`project_id`), separate from notification command ingress.
+ 
+ - `notif.retrieve_users` (consumed by the entitlement `expansion-worker`): `schema_version`,
+   `command_id`, `project_id` (UUIDv7), `notification_id`?, `target_type`, `object_type`
+@@ -126,8 +124,8 @@ access-derived object audience into explicit recipients. They use the entitlemen
+   `notification_id`?, `chunk_no`, `users[]` of `{ user_id, mobile?, reason { type, ref },
+   source_grant_revision_id }`.
+ 
+-The nested `reason` object is `{ type, ref }` (lowercase); see entitlement-platform
+-`docs/api/internal-api.md`. Reserved gap: bridging resolved recipient chunks into
++Lowercase `reason` is `{ type, ref }`; source: entitlement-api
++`<repo>/docs/api/internal-api.md`. Reserved gap: bridging resolved recipient chunks into
+ `notification.command.sms.*` commands is not built yet, and the notification consumer of these chunks
+ is reserved. These messages are an interim, not-yet-converged shape: they do not carry correlation
+ (`request_id`/`trace_id`) or `producer` attribution, and must gain those fields before any production
+@@ -138,7 +136,7 @@ consumer is wired. The contract-complete envelope is `notification.commands` (wh
+ 
+ | Service                | Runtime | Direction                                   | Contract                                                  | Status                                                                   |
+ |------------------------|---------|---------------------------------------------|-----------------------------------------------------------|--------------------------------------------------------------------------|
+-| `entitlement-platform` | Go      | audience resolution                         | entitlement-owned `notif.*` queues                        | entitlement side implemented; bridge to `notification.commands` reserved |
++| `entitlement-api` | Go      | audience resolution                         | entitlement-owned `notif.*` queues                        | entitlement side implemented; bridge to `notification.commands` reserved |
+ | `auth`                 | Laravel | producer                                    | `notification.commands` (e.g. `sms.send_pattern` for OTP) | reserved — define payloads at onboarding                                 |
+ | `content`              | Laravel | producer                                    | `notification.commands`                                   | reserved                                                                 |
+ | `comment`              | Laravel | producer                                    | `notification.commands`                                   | reserved                                                                 |
+@@ -155,10 +153,10 @@ stored message, which surfaces as a silent delivery failure rather than an error
+ 
+ - Laravel producers (majority): publish the canonical envelope with snake_case keys; `payload` is plain
+   JSON, never a serialized Laravel job; consumers read with case-sensitive `json_decode`. Pair with
+-  `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq`.
+-- Go producers (the two `entitlement-platform` Go services): every message struct must carry explicit
++  `/alaa-async-messaging` and `/alaa-laravel-job-rabbitmq`.
++- Go producers: every message struct must carry explicit
+   snake_case `json:"..."` tags, including nested value objects; an untagged nested struct serializes
+-  capitalized and breaks the case-sensitive consumer. Pair with `$alaa-golang`.
++  capitalized and breaks the case-sensitive consumer. Pair with `/alaa-golang`.
+ 
+ ## Anti-patterns
+ 
+@@ -174,10 +172,10 @@ stored message, which surfaces as a silent delivery failure rather than an error
+ 
+ ## Companion routing
+ 
+-- `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq` for producer queue/worker design.
+-- `$alaa-golang` for the Go producer message structs and tags.
+-- `$alaa-observability-soc` for `correlation_id` / `causation_id` tracing.
+-- `$alaa-repo-docs` when documenting producer integration or notification runbooks.
++- `/alaa-async-messaging` and `/alaa-laravel-job-rabbitmq` for producer queue/worker design.
++- `/alaa-golang` for the Go producer message structs and tags.
++- `/alaa-observability-soc` for `correlation_id` / `causation_id` tracing.
++- `/alaa-repo-docs` when documenting producer integration or notification runbooks.
+ 
+ ## Sources of truth
+ 
+@@ -186,4 +184,4 @@ stored message, which surfaces as a silent delivery failure rather than an error
+   model and the gateway trust boundary.
+ - `notification/docs/async-contracts.md` — authoritative for the command ingress and envelope.
+ - `notification/docs/list_of_channels.md` — channel inventory.
+-- `entitlement-platform/docs/api/internal-api.md` — the entitlement-owned `notif.*` audience messages.
++- entitlement-api `<repo>/docs/api/internal-api.md` — the entitlement-owned `notif.*` audience messages.
+diff --git a/skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md b/skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md
+index 0141661a1..3f1c2cf03 100644
+--- a/skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md
++++ b/skills/sohrab/alaa-services-contract/references/30-trusted-ingress-and-laravel-contract.md
+@@ -49,7 +49,7 @@ This set is frozen, and the fleet already agrees on it. In the 2026-07-25 fleet
+ - The obligation to read `X-Access` in any service that authorizes, and the observable that decides it,
+   are owned by `28-backend-permission-authorization-and-role-freeze.md`.
+ 
+-## How trusted ingress relates to entitlement-platform
++## How trusted ingress relates to request-time authorization
+ 
+ - the gateway owns authentication and trusted header injection
+ - a request-time authorization runtime such as `authz-sidecar` or `entitlement-spoa` may already have enforced the route-level fine-grained decision
+@@ -78,10 +78,10 @@ Required validation behavior:
+ - when an existing integration or explicit passive-metadata requirement consumes `X-User-Roles`, decode it as compact JSON and require an array of at most 16 unique bytewise-sorted strings matching `^[a-z][a-z0-9_]{0,47}$`, with a maximum compact serialized size of 1024 bytes
+ - keep trusted roles distinct from permissions: `X-User-Roles` projects the verified `rol` role snapshot, while `X-Access` projects the verified `prm` permission bitmap
+ - normalize `X-Access-Token-Id` as an optional non-empty trusted token identifier when present
+-- handle `X-User-Mobile` exactly according to `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
++- handle `X-User-Mobile` exactly according to `/alaa-trust-gateway-auth`
+ - normalize `X-User-Fname` and `X-User-Lname` as nullable trimmed strings
+ - validate each `X-Location-*` header as a non-negative integer when present
+-- use the exact auth error codes owned by `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
++- use the exact auth error codes owned by `/alaa-trust-gateway-auth`
+ 
+ Actor context must be able to hold at least:
+ - trusted project identifier
+@@ -108,7 +108,7 @@ Required support components:
+ - permission bitmap decoder and mapper
+ - compact trusted user-projection normalizer
+ - auth-state synchronizer
+-- stable API-error mapping path aligned with `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`)
++- stable API-error mapping path aligned with `/alaa-trust-gateway-auth`
+ 
+ Implementation rules:
+ - do not parse raw trusted headers in controllers, policies, resources, or repositories
+@@ -143,8 +143,7 @@ Trusted context rule:
+   reads it only there, never on a request that carried the header, and rejects a body that carries none. The
+   body value is client-asserted and therefore forgeable, so it attributes an anonymous write and does nothing
+   else: it authorizes nothing, scopes no read, and grants no capability. The full rule, the rejection it
+-  produces, and the constraint it places on such a route are owned by `/alaa-trust-gateway-auth`
+-  (`$alaa-trust-gateway-auth`) in `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
++  produces, and the constraint it places on such a route are owned by `/alaa-trust-gateway-auth` in `alaa-trust-gateway-auth references/10-verification-and-ingress.md`.
+ - downstream services normalize trusted `X-Project-Id` once inside their trusted request context builder
+ - direct backend-only tests may keep numeric compatibility only when the service explicitly documents that local testing mode
+ - controllers, policies, Resources, repositories, jobs, and observers must not independently parse raw project identifiers
+diff --git a/skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md b/skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md
+index 538538ed3..636f9e7fc 100644
+--- a/skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md
++++ b/skills/sohrab/alaa-services-contract/references/35-permission-catalog-and-service-configs.md
+@@ -12,7 +12,7 @@ Use this file when an Ala service or shared frontend package changes `config/per
+   (`packages/sdk-auth/src/generated/permission-catalog.ts`), owns no `service_key`, and never influences bitmap
+   allocation. Permission owners are registered in the `services` array of `catalog/services.json`; aggregate consumers
+   in the separate `aggregate_consumers` array.
+-- Gateway, `authz-sidecar`, entitlement-platform, and OpenFGA are route or resource authorization infrastructure. They do not own service-local permission-name-to-bitmap-id maps.
++- Gateway and fine-grained authorization infrastructure do not own service-local permission-name-to-bitmap-id maps.
+ 
+ ## Service Config Rules
+ 
+@@ -94,10 +94,10 @@ Use this compact grouping instead of copying the full catalog into prompts:
+ 
+ ## Companion Skill Boundary
+ 
+-- Use `$alaa-trust-gateway-auth` for JWT claim semantics, `prm` to `X-Access` projection, bitmap packing, trusted-header spoofing defense, and gateway/auth ownership.
++- Use `/alaa-trust-gateway-auth` for JWT claim semantics, `prm` to `X-Access` projection, bitmap packing, trusted-header spoofing defense, and gateway/auth ownership.
+ - Use this file for service-local generated config or Go map adoption, aggregate-consumer adoption, CI drift checks, and
+   one-consumer-at-a-time apply discipline.
+-- Use the `typescript-consumer` reference in `$alaa-permission-generator` for the TypeScript aggregate-consumer shape,
++- Use the `typescript-consumer` reference in `/alaa-permission-generator` for the TypeScript aggregate-consumer shape,
+   the `AGGREGATE_CONSUMER_*` drift codes, and the frontend UI-hint decoding boundary.
+ - Frontend consumption rules — what the app may read from a token and how the SDK exposes it — live in
+   `60-frontend-sdk-consumption-contract.md`, not here.
+diff --git a/skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md b/skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md
+index da50b12e5..c68559f5a 100644
+--- a/skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md
++++ b/skills/sohrab/alaa-trust-gateway-auth/references/90-source-map.md
+@@ -1,12 +1,12 @@
+ # Source priority and freshness
+ 
+-Read this file before asserting any gateway or auth behaviour that a reader might
+-act on, and whenever a fact in this skill is older than the change you are making.
++Read before asserting actionable gateway/auth behaviour or using a fact older
++than your change.
+ 
+ ## Priority when sources disagree
+ 
+-1. **The active HAProxy template and values in the gateway repository.** This is
+-   what runs, and it wins over everything below it, including this skill.
++1. **Active gateway HAProxy template and values.** Executable authority over all
++   sources below, including this skill.
+ 2. **Rendered manifests from the gateway repository.**
+ 3. **The auth repository's `routes/api.php`**, then its `docs/ops/*` contracts, then
+    its README.
+@@ -16,18 +16,21 @@ act on, and whenever a fact in this skill is older than the change you are makin
+    allocation and emitted decoders.
+ 6. **This skill's references**, for the trust doctrine that ties those together.
+ 7. **Primary standards** — RFC 7519 (JWT), RFC 8725 (JWT BCP), RFC 6750 (Bearer),
+-   RFC 9700 (OAuth 2.0 Security BCP), the OpenFGA documentation, the HAProxy
+-   documentation, the Laravel documentation.
+-8. **Community answers and copied snippets**, only for troubleshooting an observed
+-   error, and only after the repositories and the primary standards were checked.
++   RFC 9700 (OAuth 2.0 Security BCP); OpenFGA, HAProxy and Laravel documentation.
++8. **Community answers/copied snippets**, only for observed-error troubleshooting
++   after checking repositories and primary standards.
+ 
+-If a README and the HAProxy configuration disagree, trust the configuration and
+-treat the README as drift to fix.
++HAProxy configuration wins over README drift; fix the README.
+ 
+-Repository paths in this skill are repository-relative. Resolve them against
+-wherever your machine keeps the `gateway`, `auth` and `alaa-permission-catalog`
+-checkouts. A skill that carries an absolute machine path is wrong on every other
+-machine, and it was wrong here until 2026-07-27.
++Resolve repository-relative paths against the named checkout. Absolute machine
++paths are non-portable; this skill carried them until 2026-07-27.
++
++Checker interface: authz-sidecar
++`<repo>/docs/integrations/gateway/authz-sidecar-contract.md`.
++Canonical model/mapping: authz-openfga `<repo>/platform/openfga/contracts/`.
++`entitlement-api` owns business truth/events; `entitlement-projector` owns projection.
++Imported pinned bundles are consumer snapshots, never authoring roots; gateway
++executable configuration retains edge authority.
+ 
+ ## Re-check the source when the task mentions any of these
+ 
+@@ -56,8 +59,7 @@ machine, and it was wrong here until 2026-07-27.
+ 
+ | A tokenless request that has no body carries its project id as a `project_id` query parameter, and a route may scope a read by that value only while it is on the receiving service's explicit read list | 2026-07-31 | maintainer ruling, ratified and recorded in `references/10-verification-and-ingress.md`. Gateway side confirmed in the rendered template: no query-string fetch, `path` matching, `set-path` prefix stripping. **Service side confirmed nowhere.** Establish what the receiving service does today before acting on this row |
+ 
+-A fact without a read date in this skill is older than this table and is re-derived
+-before it is acted on.
++Undated facts predate this table; re-derive them before acting.
+ 
+ ## A domain-bounded example
+ 

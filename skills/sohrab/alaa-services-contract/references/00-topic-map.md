@@ -15,43 +15,43 @@ Use this file to choose the smallest reference file that owns the rule you need.
   - Use when the task needs an exact observability name or value: an `OTEL_*` variable and its Ala default, a trace or route naming rule, an exception field name, or the current telemetry shape of a specific Ala service.
   - Read `20-operational-and-observability-contract.md` and `21-alaa-platform-observability-directive.md`.
   - For a metric name, its type, its labels, its owning service, or the rule that a metric is registered before it is emitted, read `24-metric-registry.md`; it owns every `alaa_*` name.
-  - Requirement levels, gates, thresholds, alerts, Collector gateway topology, processor placement, sampling policy, label and cardinality budgets, exemplar requirement level, and Sentry policy are not in this skill. Load `$alaa-observability-soc` for those, and treat it as the winner on whether a signal is required.
+  - Requirement levels, gates, thresholds, alerts, Collector gateway topology, processor placement, sampling policy, label and cardinality budgets, exemplar requirement level, and Sentry policy are not in this skill. Load `/alaa-observability-soc` for those, and treat it as the winner on whether a signal is required.
 - `Mode A++ - Deployment and runtime contract`
   - Use when the task is about Kubernetes/OpenShift versus Docker ownership, Docker Compose or Docker Swarm support, explicit shared-versus-external Postgres mode selection, shared Docker networking, hard shared-infra reuse, duplicate shared-infra prevention, `DB_PROVISION_*` separation, canonical service DNS aliases, gateway DNS or VIP behavior, key ownership, registry usage, SQLite fast-test support, or the shared `service-ci-kit` GitLab CI/CD baseline and thin-wrapper `.gitlab-ci.yml` model for Ala Laravel services.
   - Use also when the task asks which image, chart, CI include, generator, hook pack, or toolchain already exists or which project owns it; creates a new tools image, base image, hook pack, or pipeline helper; asks the role of `deploy`, `service-ci-kit`, `service-runtime-kit`, `ci-image`, the deploy-tools image, `octane-base`, `gateway`, or `client`; follows a delivery flow (new service, first deployment, update, rollback, local runtime) and needs each step's owner; reads the gateway's generated HAProxy configuration or its committed snapshots; or asks whether a Compose or Swarm production target exists.
   - Read `16-infrastructure-services-and-delivery-artifacts.md` before `15-deployment-and-runtime-contract.md`; read `15-deployment-and-runtime-contract.md` after `10-core-service-contract.md`.
 - `Mode A+++ - Failure, load, and deprecation contract`
   - Use when the task is about an outbound timeout, a retry budget, backoff and jitter, an idempotency key on an internal call, what a backend does when `auth` / OpenFGA / the notification broker is unreachable, a bounded database connection pool, a pool acquire timeout, the shed-versus-queue decision at ingress, a request deadline, or deprecating and removing any contract surface this skill defines.
-  - Read `22-failure-load-and-deprecation-contract.md`; pair with `$alaa-reliability-sla` for the doctrine behind the values and `$alaa-data-layer` for pool mechanics inside a driver.
+  - Read `22-failure-load-and-deprecation-contract.md`; pair with `/alaa-reliability-sla` for the doctrine behind the values and `/alaa-data-layer` for pool mechanics inside a driver.
 - `Mode B - Laravel backend service`
   - Use when the task is about Laravel API response boundaries, Resources, middleware order, public `project_id` validation and resolution, or Laravel-specific route and command expectations.
   - Read `30-trusted-ingress-and-laravel-contract.md` after the core contract.
 - `Mode C - Laravel downstream trusted service`
   - Use when the service sits behind the Ala gateway, consumes sanitized trusted headers, or needs to normalize `X-Project-Id`.
-  - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `$alaa-trust-gateway-auth`.
+  - Read `30-trusted-ingress-and-laravel-contract.md` and pair with `/alaa-trust-gateway-auth`.
 - `Mode C+ - Permission catalog consumer`
   - Use when the task is about backend authorization, access levels, `X-User-Roles`, role-derived behavior, `config/permissions.php`, permission names, bitmap ids, generated service permission configs, the generated TypeScript `permission-catalog.ts`, `catalog/services.json` descriptors including `aggregate_consumers`, `X-Access` permission mapping, or catalog drift checks.
-  - Read `28-backend-permission-authorization-and-role-freeze.md` for the current backend decision rule and `35-permission-catalog-and-service-configs.md` for catalog consumption; pair with `$alaa-trust-gateway-auth` and `$alaa-permission-generator`.
+  - Read `28-backend-permission-authorization-and-role-freeze.md` for the current backend decision rule and `35-permission-catalog-and-service-configs.md` for catalog consumption; pair with `/alaa-trust-gateway-auth` and `/alaa-permission-generator`.
   - When the consumer is the frontend, also read `60-frontend-sdk-consumption-contract.md` for the unverified UI-hint boundary.
 - `Mode D - Laravel auth-boundary service`
   - Use when the service itself owns the trust boundary and still must satisfy the same outward trusted-ingress behavior.
   - Read `30-trusted-ingress-and-laravel-contract.md` and `50-laravel-copy-baselines.md`.
 - `Mode D+ - Auth TOTP management and forced route step-up`
   - Use when the task is about auth TOTP self-service enrollment, QR or authenticator-app setup, `AUTH_TOTP_ENABLED`, `require_totp:<purpose>`, signed step-up proof tokens, local proof caching, gateway `X-TOTP-Proof` verification, the four backend-only `X-TOTP-*` headers including the advisory `X-TOTP-PROOF-REJECTED` and its `TOTP_PROOF_*` value vocabulary, step-up errors, recovery codes, or SDK/frontend retry behavior.
-  - Read `32-auth-totp-and-step-up-contract.md`; pair with `$alaa-trust-gateway-auth` for gateway boundaries and `$alaa-frontend-developer` for client/SDK flows.
+  - Read `32-auth-totp-and-step-up-contract.md`; pair with `/alaa-trust-gateway-auth` for gateway boundaries and `/alaa-frontend-developer` for client/SDK flows.
 - `Mode E - Platform flow and boundaries view`
   - Use also when the task is about the canonical UUIDv7 `project_id` form on an HTTP payload, event envelope, log field, or cache key, or about the recorded actor-identifier debt.
   - Use when the task is about client -> gateway -> service flow, gateway route prefixes, the canonical gateway service-prefix map, `stripPathPrefix`, compact `rol` to trusted `X-User-Roles` projection, public prefixed routes versus service-local routes, frontend/client SDK URL composition, private versus public identifiers, keyset list pagination and the `cursor`/`limit`/`meta.next_cursor`/`meta.prev_cursor` contract, the admin-table offset exception, opaque cursor internals, service ownership, the role of `authz-sidecar` or `entitlement-spoa`, `entitlement-api`, `projector`, OpenFGA, `content` versus legacy `vod`, internal-hop discipline, or the platform-wide deferral of internal service-to-service mTLS.
   - Read `25-end-to-end-flow-and-boundaries.md`.
 - `Mode E+ - Request-time authorization with OpenFGA`
   - Use when the task is about how the per-resource decision is actually made: `authzRouteGroups`, the gateway -> `authz-sidecar`/`entitlement-spoa` `HEAD /internal/authz/check` hop, the OpenFGA `check` call and its `tuple_key`, endpoint-category to `can_*` mapping, canonical object id construction, `grant_*` vs `can_*`, the store/model/label pins, or adding or debugging a protected route.
-  - Read `26-request-time-authorization-openfga.md`; pair with `$alaa-trust-gateway-auth`, `$alaa-haproxy`, and `$openfga`.
+  - Read `26-request-time-authorization-openfga.md`; pair with `/alaa-trust-gateway-auth`, `/alaa-haproxy`, and `/openfga`.
 - `Mode E++ - Notification cross-service contract`
-  - Use when the task is about how any service sends work to the `notification` service: the `notification.commands` ingress (exchange, queues, routing keys, canonical envelope), the snake_case-everywhere rule (including nested objects), the reserved channel-addressing model, the `entitlement-platform` audience-resolution handshake (`notif.retrieve_users`, `notif.expand_users`, `notif.recipient_chunks`), or the per-service notification matrix.
-  - Read `27-notification-service-contract.md` (mirrors the authoritative `<repo>/notification/docs/async-contracts.md`); pair with `$alaa-async-messaging` and `$alaa-laravel-job-rabbitmq` for producers, `$alaa-golang` for Go producers, and `$alaa-observability-soc` for correlation.
+  - Use when the task is about how any service sends work to the `notification` service: the `notification.commands` ingress (exchange, queues, routing keys, canonical envelope), the snake_case-everywhere rule (including nested objects), the reserved channel-addressing model, the `entitlement-api` audience-resolution handshake (`notif.retrieve_users`, `notif.expand_users`, `notif.recipient_chunks`), or the per-service notification matrix.
+  - Read `27-notification-service-contract.md` (mirrors the authoritative `<repo>/notification/docs/async-contracts.md`); pair with `/alaa-async-messaging` and `/alaa-laravel-job-rabbitmq` for producers, `/alaa-golang` for Go producers, and `/alaa-observability-soc` for correlation.
 - `Mode F - Frontend coding contract`
   - Use when frontend or host-app code consumes the `@alaa/*` SDK packages, or when building/consuming Page Kit, UI Kit, app-shell, or widgets: which package to import, app-versus-SDK responsibility for trusted headers/token/refresh, public correlation headers, UI capability hints and permission-driven rendering, props-in/events-out widget contracts, three-layer data flow, dist-only package boundaries, or island isolation.
-  - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `$alaa-frontend-developer`, `$alaa-mono-package`, and `$alaa-security-review`.
+  - Read `60-frontend-sdk-consumption-contract.md` for SDK consumption and `65-frontend-page-kit-and-widgets-contract.md` for Page Kit/widgets; pair with `/alaa-frontend-developer`, `/alaa-mono-package`, and `/alaa-security-review`.
 
 ## Cross-cutting references
 
@@ -89,6 +89,6 @@ Use this file to choose the smallest reference file that owns the rule you need.
 ## Working rule
 
 - Start with the smallest file that owns the rule you need.
-- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `$alaa-observability-soc` owns them.
-- When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `$alaa-reliability-sla` for the doctrine.
+- When observability design is in scope, treat `20` and `21` as a pair: `20` owns the exact stable surfaces, and `21` owns the OTLP configuration surface, the metric catalog, and the per-service reality table. Requirement levels, gates, Collector topology, and label budgets are not in either file; `/alaa-observability-soc` owns them.
+- When an outbound call, retry, pool, or admission decision is in scope, read `22` for the Ala values and `/alaa-reliability-sla` for the doctrine.
 - When you need to know whether a service already follows a rule, read `95-fleet-conformance.md` for the snapshot and the owning reference file for the rule. A conformance line never overrides a rule, and a repository that has moved since the snapshot overrides the snapshot.
