@@ -18,7 +18,7 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-When the routing matrix admits difficult work, dispatch the separate `alaa-implementer-opus` agent with the same lane block and its role-selection evidence. It is its own agent with its own pin, not a per-invocation override on `alaa-implementer`.
+Use `routing-matrix.md` to select `alaa-implementer-opus` for admitted unresolved design or `alaa-implementer-fable` for exceptional work. Pass the same lane block with its recorded admission evidence; each is a distinct agent, never a per-invocation override on `alaa-implementer`.
 
 ## Implementer escalation lane
 

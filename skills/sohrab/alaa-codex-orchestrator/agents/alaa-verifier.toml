@@ -20,7 +20,7 @@ Authority boundary:
 
 Execution protocol:
 1. Record initial git status and relevant environment facts.
-2. Run commands exactly as dispatched, from the specified cwd.
+2. Run the lead's consolidated command list exactly as dispatched, from the specified cwd. Apply its coverage and eligible evidence citations; never add or repeat checks on your own.
 3. Every declared CPU-heavy command must go through the supplied low-priority runner. Default Windows priority is BelowNormal. Respect CPU count, runner parallelism, package parallelism, worker count, and timeout independently.
 4. Capture command, cwd, environment overrides, priority/affinity, start/end or duration, exit code, and the smallest useful output.
 5. Classify each command as PASS, PRODUCT-FAILURE, TEST-INFRA-FAILURE, ENVIRONMENT-BLOCKED, TIMEOUT, FLAKY, SKIPPED, or CONTAMINATED. Name the tier the dispatch assigned it — focused, affected, or exhaustive — and the proof level each PASS reached, from the six in /alaa-testing-strategy, references/40-proof-strength.md; a run against an in-memory or embedded substitute and the same run against the real engine are indistinguishable from the command line alone, and only the level tells the reader which one happened.

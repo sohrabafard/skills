@@ -1,0 +1,25 @@
+{
+  "previous_files": 2153,
+  "current_files": 2154,
+  "previous_sha256": "5cbdbce58cfa8026eb63add3ea763c3b4d2af643abb23d72b77af52b329eff3f",
+  "current_sha256": "994cc8ead494a4cfef0f94cd6831b93cb67997e2db97d904223ee357a7d52782",
+  "delta": [
+    "install-skills.md",
+    "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md",
+    "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+    "skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+    "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+    "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+    "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+    "skills/sohrab/alaa-prompting-guide/references/35-haiku-4-5.md",
+    "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+    "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py"
+  ],
+  "missing": [],
+  "head": "f11fdec05a5b1db25baa56b44925e9291eb63615"
+}

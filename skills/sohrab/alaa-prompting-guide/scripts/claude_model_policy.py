@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_POLICY = SKILL_ROOT / "assets/claude-model-policy.json"
 AGENT_DIR = "skills/sohrab/alaa-cc-orchestrator/agents"
 WRITER_DIR = "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude"
-ROLES = frozenset("spec-analyst explorer researcher implementer implementer-opus failure-analyst verifier test-strategist reviewer adversarial-reviewer architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian documenter instruction-reviewer".split())
+ROLES = frozenset("spec-analyst explorer researcher implementer implementer-opus implementer-fable failure-analyst verifier test-strategist reviewer adversarial-reviewer architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian documenter instruction-reviewer".split())
 ARTIFACTS = {f"alaa-{role}": f"{AGENT_DIR}/alaa-{role}.md" for role in ROLES}
 ARTIFACTS["alaa-rule-writer"] = f"{WRITER_DIR}/alaa-rule-writer.md"
 EFFORTS = frozenset(("low", "medium", "high", "xhigh", "max"))
@@ -122,7 +122,7 @@ def validate_policy(policy, root=REPO_ROOT):
     if not isinstance(models, dict) or not models or not isinstance(profiles, dict) or not profiles:
         return errors + ["models and profiles must be nonempty objects"]
     for model, spec in models.items():
-        if not re.fullmatch(r"claude-(?:opus|sonnet|fable)-\d+(?:-\d+)?|claude-haiku-\d+-\d+-\d{8}", model):
+        if not re.fullmatch(r"claude-(?:opus|sonnet|fable)-\d+(?:-\d+)?|claude-haiku-(?:5-5|4-5-\d{8})", model):
             errors.append(f"{model}: exact API model ID required; aliases forbidden")
         if not shape(spec, ("supported_efforts", "default_effort", "thinking_mode", "source_ids"), model, errors, ("minimum_claude_code",)):
             continue
@@ -136,13 +136,13 @@ def validate_policy(policy, root=REPO_ROOT):
             errors.append(f"{model}: invalid supported_efforts")
         elif (levels and spec.get("default_effort") not in levels) or (not levels and spec.get("default_effort") is not None):
             errors.append(f"{model}: default_effort must be supported or null when unsupported")
-        if model.startswith("claude-haiku-") and levels != []:
-            errors.append(f"{model}: Haiku has no effort parameter")
+        if model.startswith("claude-haiku-4-5-") and levels != []:
+            errors.append(f"{model}: Haiku 4.5 has no effort parameter")
         if spec.get("thinking_mode") not in ("adaptive-always-on", "adaptive", "extended"):
             errors.append(f"{model}: invalid thinking_mode")
         references(spec, model)
     if set(profiles) != set(ARTIFACTS) | {"main"}:
-        errors.append("coverage: exactly main and 23 managed agent profiles required")
+        errors.append("coverage: exactly main and 24 managed agent profiles required")
     targets, evaluations = set(), []
     for role, profile in profiles.items():
         if not shape(profile, ("kind", "model", "effort", "rationale", "escalation_criterion", "confidence", "calibration_status", "availability", "source_ids", "artifacts"), role, errors, ("evaluation_evidence",)):

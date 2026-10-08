@@ -25,6 +25,7 @@ REQUIRED = {
     "alaa-test-strategist",
     "alaa-implementer",
     "alaa-implementer-opus",
+    "alaa-implementer-fable",
     "alaa-verifier",
     "alaa-failure-analyst",
     "alaa-reviewer",

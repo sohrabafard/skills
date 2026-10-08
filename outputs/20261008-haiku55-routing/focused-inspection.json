@@ -1,0 +1,206 @@
+{
+  "result": "PASS",
+  "counts": {
+    "python": 4,
+    "json": 3,
+    "frontmatter": 20,
+    "toml": 1,
+    "pins": 23
+  },
+  "sonnet_correction": {
+    "result": "PASS",
+    "profile_counts": {
+      "claude-opus-5-5": 7,
+      "claude-haiku-5-5": 4,
+      "claude-sonnet-5-5": 8,
+      "claude-fable-5-1": 5
+    },
+    "executable_pin_pairs": 23,
+    "sonnet_roles": [
+      "alaa-accessibility-reviewer",
+      "alaa-dependency-auditor",
+      "alaa-implementer",
+      "alaa-observability-reviewer",
+      "alaa-performance-profiler",
+      "alaa-release-guardian",
+      "alaa-researcher",
+      "alaa-test-strategist"
+    ],
+    "live_calibration": "unrun"
+  },
+  "legacy_haiku_replacement": {
+    "result": "PASS",
+    "active_haiku45_profiles": 0,
+    "haiku55_medium_profiles": 4,
+    "historical_capability_snapshot": "retained",
+    "availability_rule": "blocked, no legacy or other fallback"
+  },
+  "opus_restoration": {
+    "result": "PASS",
+    "profiles": 25,
+    "executable_projections": 24,
+    "cc_agents": 23,
+    "implementer_variants": 3,
+    "profile_counts": {
+      "claude-opus-5-5": 8,
+      "claude-haiku-5-5": 4,
+      "claude-sonnet-5-5": 8,
+      "claude-fable-5-1": 5
+    },
+    "pins": [
+      {
+        "profile": "main",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "kind": "policy-only"
+      },
+      {
+        "profile": "alaa-spec-analyst",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-explorer",
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-researcher",
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-implementer",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-failure-analyst",
+        "model": "claude-fable-5-1",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-verifier",
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-test-strategist",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-reviewer",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-adversarial-reviewer",
+        "model": "claude-fable-5-1",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-architecture-critic",
+        "model": "claude-fable-5-1",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-security-reviewer",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-migration-guardian",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-api-contract-reviewer",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-dependency-auditor",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-accessibility-reviewer",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-browser-qa",
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-performance-profiler",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-observability-reviewer",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-release-guardian",
+        "model": "claude-sonnet-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-documenter",
+        "model": "claude-haiku-5-5",
+        "effort": "medium",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-instruction-reviewer",
+        "model": "claude-fable-5-1",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-rule-writer",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-implementer-fable",
+        "model": "claude-fable-5-1",
+        "effort": "high",
+        "kind": "agent"
+      },
+      {
+        "profile": "alaa-implementer-opus",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "kind": "agent"
+      }
+    ],
+    "active_haiku45_profiles": 0,
+    "fable55": "unverified, not selected",
+    "live_calibration": "unrun"
+  }
+}

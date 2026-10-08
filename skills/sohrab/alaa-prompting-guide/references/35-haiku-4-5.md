@@ -1,10 +1,8 @@
 # Claude Haiku 4.5
 
-Haiku is a comparison candidate for bounded extraction, exploration and exact
-procedure execution. The policy JSON owns its exact dated API ID and capability snapshot;
-it assigns no default role to Haiku without workload evidence.
+Historical snapshot only: the guidance below records the prior Haiku 4.5 comparison regime, not current selection authority. For current selection apply the canonical legacy-replacement rule in `assets/claude-model-policy.json` notes through `references/90-model-selection.md`. The dated API ID and capability snapshot remain historical evidence.
 
-Haiku uses extended thinking and has no effort parameter. Omit executable effort metadata;
+Haiku 4.5 uses extended thinking and has no effort parameter. Omit executable effort metadata;
 an invented low-effort pin is invalid. Do not transfer adaptive-thinking API controls or
 newer-generation prompting assumptions to it. Give concrete scope, required evidence,
 failure reporting and stop conditions; retain the same authority and quality gates used

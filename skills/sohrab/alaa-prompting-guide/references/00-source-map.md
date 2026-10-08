@@ -9,7 +9,7 @@ Ground every version-sensitive claim here. This file decides which source wins a
 3. Live official documentation:
    - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
    - Codex and ChatGPT skills, commands, and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, and the Codex pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents`, `guides/agents-md`, and `config-reference`
-   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Sonnet 5.5, and Fable 5.1 pages under that path
+   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Fable 5.1, Haiku 5.5, and Sonnet 5.5 pages under that path
    - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, `goal`, and `desktop`
 4. This skill's dated references and local policy; they do not override current official capability facts. Use `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
 
@@ -56,3 +56,7 @@ The Desktop command-composer error quoted in `references/41-claude-code-runtime-
 is user-observed on 4 October 2026; no app version or official documentation of that exact
 restriction was supplied. Keep this evidence separate from the official goal limit and
 from any inferred release change. The rejected payload and live repaired submission remain unverified.
+
+Haiku 5.5 launch, migration, prompting, effort and Claude Code selection/subagent sources were refreshed 8 October 2026. Read `references/36-haiku-5-5.md` for URLs, workload limits and API-versus-harness controls. Local calibration and installed activation remain unrun.
+
+Sonnet 5.5 launch, overview, prompting, effort and Code selection sources were refreshed 8 October 2026 for the corrected active profiles. Its migration snapshot retains its 29 September date. Retained effort pins remain unrun workload hypotheses; vendor guidance proves no local calibration.

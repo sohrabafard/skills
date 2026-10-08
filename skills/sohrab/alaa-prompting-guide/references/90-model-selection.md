@@ -8,13 +8,13 @@ this page does not reproduce them. Use `references/50-effort-and-thinking.md` be
 one. A historical GPT-5.6 comparison does not authorize a production exception.
 
 For Claude Code, `assets/claude-model-policy.json` alone owns role pins, rationales,
-escalation criteria and calibration status. Use current model references for prompting and
+escalation criteria and calibration status. Apply its legacy-replacement rule in `notes` before selection; historical capability snapshots cannot override it. Use current model references for prompting and
 `references/41-claude-code-runtime-features.md` for activation limits. Historical references never select current profiles.
 
 ## Decision helper
 
 1. **Pick the runtime first.** It determines trigger syntax, harness features, and which model families are even available. Codex defaults to the GPT-6 family; Claude Code means the Claude family.
-2. **Within Claude Code**, select the registered role profile. Compare Fable or Haiku only in an explicitly authorized, representative evaluation; neither is an automatic local fallback. Restricted models and announced future generations receive no inferred default profile.
+2. **Within Claude Code**, select the registered role profile. Use the registered Haiku, Sonnet, Opus or Fable role profile; none is an automatic fallback. Historical Sonnet 5 and Haiku 4.5 snapshots authorize no active profile. Restricted models and announced future generations receive no inferred default profile.
 3. **Within Codex**, use the registered profile for the role; bounded evidence, routine engineering, and difficult judgment are distinct workloads, with exact pins owned by the policy JSON.
 4. **Choose effort separately**, using `references/50-effort-and-thinking.md`. Model and effort are different questions and answering them together produces bad answers to both.
 5. **Codex only:** **Default down when pinning.** Escalation is earned by decision density, not by surface sensitivity or goal importance. A lane that mechanically applies a ratified value or a precise spec is balanced-tier work on any surface; only lanes that must make non-obvious design decisions earn the top tier, and the criterion is recorded wherever the pin is raised. When uncertain, stay lower — gates catch the rare shortfall, and one justified re-dispatch costs less than habitual top-tier defaults.

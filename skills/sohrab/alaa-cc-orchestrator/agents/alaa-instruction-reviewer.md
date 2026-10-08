@@ -1,7 +1,7 @@
 ---
 name: alaa-instruction-reviewer
 description: Independent read-only reviewer for prompts, skills, agent definitions, and repository instructions. Checks behavioral contracts, authority, ownership, and compression fidelity; never edits.
-model: claude-opus-5-5
+model: claude-fable-5-1
 effort: high
 tools: Read, Glob, Grep
 skills:

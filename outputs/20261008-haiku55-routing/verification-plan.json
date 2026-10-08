@@ -1,0 +1,124 @@
+{
+  "observer": "alaa-verifier",
+  "resource_policy": "Sequential lightweight Python checks; normal priority, no parallel workers; no services, installs or live models. Heavy checks not included.",
+  "snapshot_roots": [
+    "skills/sohrab",
+    "scripts",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "install-skills.md",
+    "_to_delete/20261008-haiku55-role-rename"
+  ],
+  "commands": [
+    {
+      "id": "cc-pack",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "command": "python -B scripts/validate_pack.py",
+      "covers": "CC structure, core contracts, Claude policy CC projections and grants",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-contracts",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "command": "python -B scripts/check_agent_contracts.py",
+      "covers": "Remaining planning and verification contracts",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-pack-selftest",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "command": "python -B scripts/validate_pack.py --self-test",
+      "covers": "Changed role inventory checker",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-grants-selftest",
+      "cwd": "skills/sohrab/alaa-cc-orchestrator",
+      "command": "python -B scripts/check_agent_grants.py --self-test",
+      "covers": "Changed role grant inventory",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "claude-writer-policy",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "command": "python -B scripts/check_claude_model_policy.py --agent-root assets/rule-writer/claude",
+      "covers": "Managed root outside CC aggregate",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "claude-policy-selftest",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "command": "python -B scripts/check_claude_model_policy.py --self-test",
+      "covers": "Changed generation capability checker",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "claude-evals",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "command": "python -B scripts/check_claude_agent_evals.py",
+      "covers": "Updated unrun comparison corpus",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-pack",
+      "cwd": "skills/sohrab/alaa-codex-orchestrator",
+      "command": "python -B scripts/validate_pack.py",
+      "covers": "Codex structure, core contracts, grants and renderer drift",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-contracts",
+      "cwd": "skills/sohrab/alaa-codex-orchestrator",
+      "command": "python -B scripts/check_agent_contracts.py",
+      "covers": "Remaining planning and verification contracts",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "pack-structure",
+      "cwd": ".",
+      "command": "python -B scripts/validate_sohrab_skill_pack.py",
+      "covers": "First-party structure",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "indexes",
+      "cwd": ".",
+      "command": "python -B scripts/check_skill_index.py",
+      "covers": "Index identity",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "references",
+      "cwd": ".",
+      "command": "python -B scripts/check_fleet_references.py",
+      "covers": "Cross-skill references",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "lifecycle",
+      "cwd": ".",
+      "command": "python -B scripts/check_lifecycle_contract.py",
+      "covers": "Lifecycle owner and paired reporting",
+      "tier": "affected",
+      "timeout_seconds": 120
+    }
+  ],
+  "cited_focused": "Three skill-creator quick validations plus writer syntax/pin checks; not independent acceptance.",
+  "covered_child_invocations_not_repeated": [
+    "CC grants and CC policy projection checks",
+    "Codex grants and renderer drift check"
+  ]
+}

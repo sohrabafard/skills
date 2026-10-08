@@ -92,7 +92,7 @@
 
 | Skill | برای چه کاری |
 |---|---|
-| `alaa-cc-orchestrator` | هدایت چند-agent در Claude Code با ۲۲ نقش، دروازه‌های تایید و بازبینی مستقل |
+| `alaa-cc-orchestrator` | هدایت چند-agent در Claude Code با ۲۳ نقش، دروازه‌های تایید و بازبینی مستقل |
 | `alaa-codex-orchestrator` | هدایت چند-agent در Codex با ۲۲ نقش معنایی و ۲۳ profile اجرایی؛ review استاندارد و deep یک قرارداد دارند |
 | `alaa-codex-runtime-ops` | بازیابی از خطاهای runtime در Codex و ویندوز |
 | `alaa-memory-os` | مدل عملیاتی حافظه، مستقل از انبار: اینکه چه چیزی ارزش ثبت دارد، در چه شکل یادداشتی، و با چه بودجه بازخوانی و مسیر fail-open. ثبت drift وقتی دو منبع حقیقت اختلاف دارند. Basic Memory و Hindsight هر کدام یک reference آداپتور دارند و هیچ‌کدام موضوع این skill نیستند |

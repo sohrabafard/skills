@@ -1,6 +1,6 @@
 ---
 name: alaa-implementer-opus
-description: Difficult implementation lane for a concrete unresolved engineering design choice affecting correctness or failure behavior. Select through /alaa-cc-orchestrator references/routing-matrix.md instead of alaa-implementer; not for settled designs or sensitivity alone. Compatibility identifier retained.
+description: Demanding implementation lane for a concrete unresolved engineering design choice admitted by the routing matrix; exceptional Fable work uses its separate role. Select through /alaa-cc-orchestrator references/routing-matrix.md instead of alaa-implementer; not for settled designs or sensitivity alone.
 model: claude-opus-5-5
 effort: high
 disallowedTools: mcp__serena__execute_shell_command, mcp__hindsight

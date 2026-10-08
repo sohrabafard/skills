@@ -19,21 +19,18 @@ Effort also does not control scope. A model that widens the task beyond what was
 ## Thinking: keep it on, lower the effort instead
 
 Use the registered model capability snapshot and refresh its API documentation before changing
-thinking controls. Current Opus, Fable and Sonnet reject disabled/manual thinking; their
-model references own supported modes and exceptions. Haiku uses extended thinking and has
-no effort parameter. These API controls are not interchangeable Claude Code settings.
+thinking controls. Current model references own modes and exceptions. Haiku 5.5 supports effort and adaptive thinking; its API disabled-thinking exception does not transfer to Claude Code. Historical Haiku 4.5 uses extended thinking without effort. These API controls are not interchangeable Claude Code settings.
 
 For effort-enabled models, compare lower supported effort as a cost lever. Measure retrieval,
 tool-use reliability and task quality; report unsupported controls instead of substituting
-them. For Haiku, use its own supported thinking controls.
+them. Read `references/36-haiku-5-5.md` for current Haiku controls.
 
-Do not carry manual thinking budgets into adaptive-only models. Haiku is the extended-thinking
-exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor
+Do not carry manual thinking budgets into current adaptive models. Historical Haiku 4.5 is the extended-thinking exception. The value `adaptive` names a thinking mode, never an effort. Neither `ultra` nor
 `ultracode` is a Claude API effort value; harness orchestration modes require separate proof.
 
 ## Choosing a starting level
 
-Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/31-sonnet-5-5.md`, `references/42-fable-5-1.md`, `references/35-haiku-4-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
+Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/31-sonnet-5-5.md`, `references/42-fable-5-1.md`, `references/36-haiku-5-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
 
 Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Re-run the sweep.
 

@@ -1,0 +1,16 @@
+{
+  "source_gate_snapshot_sha256": "994cc8ead494a4cfef0f94cd6831b93cb67997e2db97d904223ee357a7d52782",
+  "closure_snapshot_sha256": "6d6ae32889684a0fabe4e91d881f2216e256b35e4eff239ab6e571049027c3f9",
+  "digest_method": "SHA-256 of UTF-8 JSON manifest with sort_keys=True, ensure_ascii=False, separators=(comma,colon)",
+  "files": 2154,
+  "source_changes_after_gates": [
+    "skills/sohrab/README.fa.md"
+  ],
+  "change": "Only existing Persian index role count changed from 22 to 23; no line count change. All other source hashes match nine-gate candidate.",
+  "documentation_size_approval": "Explicit user approval on 2026-10-08: preserve skills/sohrab/README.fa.md at 226 lines with only role count 22 to 23.",
+  "closure_checks": {
+    "skill_index": "PASS",
+    "documentation_links_and_line_budget": "PASS with explicit 226-line approval",
+    "technical_source_links": "PASS: 31 Markdown files"
+  }
+}

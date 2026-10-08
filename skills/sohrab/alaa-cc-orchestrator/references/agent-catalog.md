@@ -2,7 +2,7 @@
 
 The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
 
-Twenty-two roles are available; standard and deep review use the same reviewer.
+Twenty-three roles are available; standard and deep review use the same reviewer.
 
 ## Specification and evidence
 
@@ -18,7 +18,8 @@ Twenty-two roles are available; standard and deep review use the same reviewer.
 | Agent | Access | Use | Never use for |
 |---|---|---|---|
 | `alaa-implementer` | workspace write | Bounded implementation, including sensitive surfaces with settled designs | Lanes meeting difficult-role admission in `routing-matrix.md`, or self-review |
-| `alaa-implementer-opus` | workspace write | Unresolved engineering design decisions admitted by `routing-matrix.md` | Settled designs or sensitivity alone |
+| `alaa-implementer-opus` | workspace write | Concrete unresolved design admitted by `routing-matrix.md` | Settled work, exceptional-route work, or sensitivity alone |
+| `alaa-implementer-fable` | workspace write | Exceptional implementation admitted by `routing-matrix.md` | Ordinary unresolved design without exceptional evidence |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
@@ -71,7 +72,7 @@ inside that skill is the definition. This table is only the assignment.
 | `alaa-adversarial-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-opus` | full, minus Serena's shell tool and the Hindsight server | full |
+| `alaa-implementer`, `alaa-implementer-opus`, `alaa-implementer-fable` | full, minus Serena's shell tool and the Hindsight server | full |
 | `alaa-researcher` | none | docs |
 | `alaa-dependency-auditor` | none | docs |
 | `alaa-release-guardian` | none | docs |
@@ -133,7 +134,7 @@ installed skill, because a stale preload removes a standard silently. And a role
 `alaa-verifier` and `alaa-instruction-reviewer` use this restricted form. When no skill root is visible, as in an installed copy
 with no siblings, resolution is reported as skipped rather than passed.
 
-Run `python scripts/check_agent_grants.py` after any change to `agents/`. The checker compares every
+Schedule `python scripts/check_agent_grants.py` (or its identical aggregate-covered invocation under Gate economics) after any change to `agents/`. The checker compares every
 native and MCP grant and the implementation deny set with the authored roles. Unapproved metadata fields fail because hooks, server configuration, or permission overrides can add authority outside those roles: exit `0` is clean, exit `1`
 reports a grant mismatch, and exit `2` means the checker could not run. Both nonzero results fail the
 gate.

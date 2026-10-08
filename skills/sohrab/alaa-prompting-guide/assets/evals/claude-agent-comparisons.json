@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "policy_version": "1.1.0",
+  "policy_version": "2.0.0",
   "comparison_rule": "Eight unrun Claude comparisons; one factor per comparison, isolated fresh contexts, independent grading, no external or destructive actions. Static fixtures are not live evidence.",
   "scenarios": [
     {
       "id": "exploration",
       "profile": "alaa-explorer",
       "candidate": {
-        "model": "claude-sonnet-5-5",
+        "model": "claude-haiku-5-5",
         "effort": "medium"
       },
       "comparator": {
-        "model": "claude-sonnet-5-5",
+        "model": "claude-haiku-5-5",
         "effort": "low"
       },
       "repetitions": 2,
@@ -68,11 +68,11 @@
       "id": "debugging",
       "profile": "alaa-failure-analyst",
       "candidate": {
-        "model": "claude-opus-5-5",
+        "model": "claude-fable-5-1",
         "effort": "high"
       },
       "comparator": {
-        "model": "claude-opus-5-5",
+        "model": "claude-fable-5-1",
         "effort": "medium"
       },
       "repetitions": 2,
@@ -128,11 +128,11 @@
       "id": "architecture",
       "profile": "alaa-architecture-critic",
       "candidate": {
-        "model": "claude-opus-5-5",
+        "model": "claude-fable-5-1",
         "effort": "high"
       },
       "comparator": {
-        "model": "claude-fable-5-1",
+        "model": "claude-opus-5-5",
         "effort": "high"
       },
       "repetitions": 2,
@@ -187,11 +187,11 @@
       "id": "documentation",
       "profile": "alaa-documenter",
       "candidate": {
-        "model": "claude-sonnet-5-5",
+        "model": "claude-haiku-5-5",
         "effort": "medium"
       },
       "comparator": {
-        "model": "claude-sonnet-5-5",
+        "model": "claude-haiku-5-5",
         "effort": "low"
       },
       "repetitions": 2,
@@ -215,12 +215,12 @@
       "id": "failed-check",
       "profile": "alaa-verifier",
       "candidate": {
-        "model": "claude-sonnet-5-5",
-        "effort": "low"
+        "model": "claude-haiku-5-5",
+        "effort": "medium"
       },
       "comparator": {
-        "model": "claude-sonnet-5-5",
-        "effort": "medium"
+        "model": "claude-haiku-5-5",
+        "effort": "low"
       },
       "repetitions": 2,
       "status": "unrun",

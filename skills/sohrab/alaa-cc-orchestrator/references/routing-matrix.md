@@ -51,7 +51,7 @@ Do not spawn when the relevant paths and contracts are already established in cu
 
 Use `alaa-implementer` by default, including on sensitive surfaces when applying a ratified design, contract value, or precise specification. Independent review and specialist gates provide scrutiny; surface sensitivity does not earn a different implementation role.
 
-Before an initial assignment, material scope change, or fix-cycle follow-up, the lead assesses the remaining work. Dispatch `alaa-implementer-opus` only when the lane must resolve a non-obvious engineering design decision and at least one criterion below applies. Record the concrete open decision, its criterion, and its consequence for correctness or failure behavior in the existing lane/dispatch record and final roster:
+Before an initial assignment, material scope change, or fix-cycle follow-up, the lead assesses the remaining work. Dispatch `alaa-implementer-opus` when the lane must resolve a non-obvious engineering design decision and at least one criterion below applies. Record the concrete open decision, its criterion, and its consequence for correctness or failure behavior in the existing lane/dispatch record and final roster:
 
 - public API, event, or data contract changes;
 - service boundaries or architecture decisions;
@@ -62,9 +62,13 @@ Before an initial assignment, material scope change, or fix-cycle follow-up, the
 - complex backwards compatibility or rollout;
 - multiple plausible designs with materially different failure behavior.
 
+For exceptional implementation, select `alaa-implementer-fable` only when the lane has (a) documented demanding long-horizon work with coupled unresolved stages and invariants, or (b) representative evidence of an Opus higher-effort quality gap after excluding tool, context and specification causes. Record the exact dependent stages, open decisions, invariants and correctness/failure consequence, or the comparison evidence, in the existing lane/dispatch record and roster.
+
+Select one route: the exceptional condition selects `alaa-implementer-fable`; otherwise the unresolved-design admission above selects `alaa-implementer-opus`; settled designs and precise specifications use `alaa-implementer`.
+
 Importance, surface labels, file counts, uncertainty, prior role, and failure count alone do not qualify. Missing facts, tools, or product intent go to their owners; they are not design-complexity evidence. When routing remains uncertain, use the default implementer and let the review gate decide; re-dispatch requires qualifying evidence.
 
-At those follow-up boundaries, reapply admission to the work still unresolved: settled design returns to the default role. Continue the current difficult assignment while its same qualifying decision remains open; do not switch during a command or reassess ordinary progress updates. Before replacing a writer, retire its assignment and reconcile surviving edits and checkpoint. Hand off remaining work, scope, acceptance criteria, findings, and evidence; preserve required gates and never overlap writers.
+At those follow-up boundaries, reapply admission to the work still unresolved: settled design returns to the default role. Continue the current demanding or exceptional assignment while its same admission evidence remains valid; do not switch during a command or reassess ordinary progress updates. Before replacing a writer, retire its assignment and reconcile surviving edits and checkpoint. Hand off remaining work, scope, acceptance criteria, findings, and evidence; preserve required gates and never overlap writers.
 
 Read `model-effort-policy.md` before profile changes. Diagnose tool, context, and specification failures through their owners before considering escalation.
 ## Correctness review depth

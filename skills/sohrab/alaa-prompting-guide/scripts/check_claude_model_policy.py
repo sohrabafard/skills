@@ -133,6 +133,13 @@ def self_test():
     assert not validate_policy(haiku)
     assert not validate_agent_pin({"name":role, "model":"claude-haiku-4-5-20251001"}, haiku, role + ".md")
     assert validate_agent_pin({"name":role, "model":"claude-haiku-4-5-20251001", "effort":None}, haiku, role + ".md")
+    current_haiku = copy.deepcopy(policy)
+    current_haiku["profiles"][role].update(model="claude-haiku-5-5", effort="medium")
+    current_haiku["profiles"][role]["availability"]["minimum_claude_code"] = "2.1.293"
+    assert not validate_policy(current_haiku)
+    assert not validate_agent_pin({"name":role, "model":"claude-haiku-5-5", "effort":"medium"}, current_haiku, role + ".md")
+    current_haiku["profiles"][role]["effort"] = None
+    assert validate_policy(current_haiku), "Haiku 5.5 requires a supported effort"
     for filename in ("duplicate.json", "malformed.json"):
         try:
             read_json(FIXTURES / filename)

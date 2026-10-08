@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.0 - 2026-10-08
+
+- Project the prompting guide's Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1 routing; keep calibration unrun and preserve grants. Haiku work has bounded evidence and completion contracts.
+- Preserve `alaa-implementer-opus` for admitted unresolved design and add `alaa-implementer-fable` for exceptional long-horizon coupled judgment or diagnosed Opus higher-effort quality gaps. Settled work uses the default implementer; one admitted writer per lane. Installed updates require explicit authority; Opus is not retired.
+- Consolidate actual aggregate/child coverage and eligible independent evidence in one check list; preserve mandatory gates and changed-input reruns.
+
 ## 4.2.1 - 2026-10-05
 
 - Require decision-specific evidence for difficult implementation; sensitive surfaces and instruction edits with settled designs remain default work.

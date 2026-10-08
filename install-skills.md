@@ -216,6 +216,8 @@ Copy-Item (Join-Path $repoRoot "skills\sohrab\alaa-cc-orchestrator\agents\*.md")
 & (Join-Path $repoRoot "skills\sohrab\alaa-codex-orchestrator\scripts\Install-AlaaCodexAgents.ps1")
 ```
 
+Claude source version 5.0.0 keeps `alaa-implementer-opus` and adds `alaa-implementer-fable` with separate admission. Inspect installed roles before a future explicitly authorized update; the wildcard copy above updates present source wrappers but does not prove activation or remove unrelated files. Do not retire Opus. Read `skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md` and its routing owner before dispatch. This source update does not install or retire agents on your machine.
+
 The Codex `agents/*.toml` files are transport-neutral templates. The installer resolves the live
 MCP inventory, validates each role's exact grant, and installs the materialized definitions. A
 plain copy leaves grants unresolved. Installation changes the user-level agents directory and

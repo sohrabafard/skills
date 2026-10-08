@@ -19,9 +19,7 @@ approve their own result. Reject configurations that violate scope, fabricate su
 miss a blocking defect. Compare cost only among quality-passing configurations. Two runs
 are a bounded initial comparison, never proof of universal superiority.
 
-The architecture case compares Fable explicitly at shared effort; it creates no default role
-or fallback. Haiku needs a separately designed comparison because its missing effort control
-prevents a model-only comparison at a shared effort.
+The architecture case compares the registered Fable profile with Opus at shared effort; the corpus does not prove that routing choice or authorize fallback. Current Haiku 5.5 has effort-enabled candidate pairs. Historical Haiku 4.5 needs a separate control-regime comparison.
 
 ## Result records
 
