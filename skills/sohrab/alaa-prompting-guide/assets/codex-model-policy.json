@@ -1,26 +1,31 @@
 {
   "schema_version": 1,
-  "policy_version": "1.1.0",
+  "policy_version": "1.3.0",
   "surface": "codex",
-  "verified_on": "2026-09-30",
+  "verified_on": "2026-10-08",
   "sources": [
     {
       "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
-      "verified_on": "2026-09-30",
+      "verified_on": "2026-10-08",
       "scope": "Codex custom-agent pin precedence, GPT-6.1 Sol recommendation, and effort guidance"
     },
     {
       "url": "https://learn.chatgpt.com/docs/models",
-      "verified_on": "2026-09-30",
+      "verified_on": "2026-10-08",
       "scope": "Codex model availability, GPT-6.1 Sol recommendation, and Max/Ultra distinction"
     },
     {
       "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
-      "verified_on": "2026-09-30",
+      "verified_on": "2026-10-08",
       "scope": "GPT-6.1 Sol API reasoning-effort range; not Codex host configuration"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+      "verified_on": "2026-10-08",
+      "scope": "Specific small existing-file edits: Luna at medium; distinct from broader Codex Luna-high starting guidance. Automatic exact mechanical routing over finite enumerated scopes is uncalibrated user-authorized task policy, not a vendor file-count or quality claim."
     }
   ],
-  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability.",
+  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses.",
   "models": {
     "gpt-6-astra": {
       "supported_efforts": [
@@ -74,9 +79,9 @@
       "calibration_status": "unrun"
     },
     "main-deep": {
-      "model": "gpt-6-astra",
+      "model": "gpt-6.1-sol",
       "effort": "high",
-      "rationale": "Lead for goals with unresolved, interacting design decisions.",
+      "rationale": "Demanding planning with interacting uncertainties. Parent ratifies and owns the durable plan; unrun hypothesis.",
       "calibration_status": "unrun"
     },
     "alaa-spec-analyst": {
@@ -105,14 +110,14 @@
     },
     "alaa-implementer": {
       "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Implement multi-step changes within a ratified design.",
+      "effort": "medium",
+      "rationale": "Normal engineering with grounded scope and acceptance criteria when the mechanical route does not fit. Mechanical admission is direct and requires no lightweight first attempt. Unrun local starting hypothesis.",
       "calibration_status": "unrun"
     },
     "alaa-implementer-astra": {
       "model": "gpt-6-astra",
       "effort": "high",
-      "rationale": "Implement difficult changes requiring design judgment.",
+      "rationale": "Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. Unrun local starting hypothesis.",
       "calibration_status": "unrun"
     },
     "alaa-verifier": {
@@ -221,6 +226,30 @@
       "model": "gpt-6-astra",
       "effort": "high",
       "rationale": "Independently review behavioral contracts governing other agents.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-high": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "rationale": "Substantial interacting engineering reasoning. Unrun local starting hypothesis.",
+      "calibration_status": "unrun"
+    },
+    "alaa-planner": {
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "rationale": "Advisory read-only plan when scope, contracts and constraints are clear. Parent ratifies and owns the durable plan; unrun hypothesis.",
+      "calibration_status": "unrun"
+    },
+    "alaa-planner-high": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "rationale": "Advisory read-only plan requiring resolution of interacting uncertainties. Parent ratifies and owns the durable plan; unrun hypothesis.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-luna": {
+      "model": "gpt-6-luna",
+      "effort": "medium",
+      "rationale": "Automatic mechanical implementation only with an exact transformation, exclusions, finite explicitly enumerated existing-file scope and expected result; settled design with no semantic discretion; a known pattern; and cheap discriminating checks for wrong, incomplete or out-of-scope results. Every predicate is required. Many files are allowed; count alone neither qualifies nor disqualifies. Reject ambiguous matches, undefined scope or design changes. If fit ceases, stop dependent work and reclassify remaining work while preserving valid edits. No mandatory lightweight trial, replay or command-authority expansion. Unrun local user-authorized workload policy; vendor capability guidance is not calibrated comparative proof.",
       "calibration_status": "unrun"
     }
   },

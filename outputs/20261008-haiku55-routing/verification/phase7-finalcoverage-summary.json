@@ -1,0 +1,12 @@
+{
+  "phase7_checks": 14,
+  "new_check": "codex-writer-policy",
+  "snapshot_before_sha256": "0f1196eb1124212d4f9c39b2465b3676043ec35e67b15a29aa041a7d7ce85e12",
+  "snapshot_after_sha256": "0f1196eb1124212d4f9c39b2465b3676043ec35e67b15a29aa041a7d7ce85e12",
+  "matches_phase7_check_snapshot": true,
+  "changed": [],
+  "missing": [],
+  "head_before": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "head_after": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "classifications": "PASS=14"
+}

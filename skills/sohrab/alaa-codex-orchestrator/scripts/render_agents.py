@@ -10,6 +10,8 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT.parent / "alaa-prompting-guide" / "scripts"))
+from profile_projection import expected_profiles, profile_text
 REVIEWERS = ("alaa-reviewer", "alaa-reviewer-deep")
 
 
@@ -55,6 +57,7 @@ def expected_outputs(root: Path, policy: dict) -> dict[Path, bytes]:
         root / "agents" / f"{name}.toml": reviewer_text(name, body, policy).encode("utf-8")
         for name in REVIEWERS
     }
+    wrappers.update(expected_profiles(root, policy, "toml"))
     agents = {path: path.read_bytes() for path in sorted((root / "agents").glob("*.toml"))}
     agents.update(wrappers)
     manifest = {
@@ -85,17 +88,23 @@ def self_test(policy: dict, evidence_dir: Path | None = None) -> int:
     for name in REVIEWERS:
         parsed = _toml.loads(reviewer_text(name, tricky, policy))
         assert parsed["developer_instructions"] == tricky, "TOML must preserve canonical text"
+    parsed = _toml.loads(profile_text("toml", "alaa-implementer",
+        {"description": "fixture", "sandbox_mode": "workspace-write"}, tricky,
+        policy["profiles"]["alaa-implementer"], "assets/implementation-contract.md"))
+    assert parsed["developer_instructions"] == tricky, "profile codec must preserve contract"
     if evidence_dir is not None:
         # Keep explicitly requested evidence; never overwrite or clean a caller's directory.
         evidence_dir.mkdir(parents=True, exist_ok=False)
     context = (nullcontext(str(evidence_dir)) if evidence_dir is not None
                else tempfile.TemporaryDirectory(prefix="alaa-render-test-"))
+    policy = {**policy, "profiles": {name: policy["profiles"][name] for name in REVIEWERS}}
     with context as directory:
         root = Path(directory)
         (root / "agents").mkdir()
         (root / "assets").mkdir()
         (root / "VERSION").write_text("fixture\n", encoding="utf-8")
         (root / "assets" / "reviewer-contract.md").write_text("contract\n", encoding="utf-8")
+        (root / "assets/profile-wrappers.json").write_text('{"profiles": {}}\n', encoding="utf-8")
         outputs = expected_outputs(root, policy)
         assert len(drift(outputs)) == 3, "missing generated files must fail"
         for path, data in outputs.items():

@@ -1,0 +1,53 @@
+[
+  {
+    "id": "cc-pack",
+    "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "resource_limits": "Sequential, normal priority, one process, 120s timeout",
+    "start": "2026-10-08T14:53:36.9576408+03:30",
+    "end": "2026-10-08T14:53:37.4051275+03:30",
+    "duration_seconds": 0.447,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1-static",
+    "stdout": "retry-cc-pack.stdout.log",
+    "stderr": "retry-cc-pack.stderr.log",
+    "excerpt": "PACK VALID: 27 agents, skill version 5.1.0"
+  },
+  {
+    "id": "codex-pack",
+    "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "resource_limits": "Sequential, normal priority, one process, 120s timeout",
+    "start": "2026-10-08T14:53:37.4257490+03:30",
+    "end": "2026-10-08T14:53:37.7513189+03:30",
+    "duration_seconds": 0.326,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1-static",
+    "stdout": "retry-codex-pack.stdout.log",
+    "stderr": "retry-codex-pack.stderr.log",
+    "excerpt": "PACK VALID: 27 agents, skill version 5.1.0"
+  },
+  {
+    "id": "cc-render-selftest",
+    "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py --self-test --self-test-dir outputs/20261008-haiku55-routing/verification/cc-renderer-workspace-retry",
+    "cwd": ".",
+    "environment": "PYTHONDONTWRITEBYTECODE=1",
+    "resource_limits": "Sequential, normal priority, one process, 120s timeout",
+    "start": "2026-10-08T14:53:37.7546773+03:30",
+    "end": "2026-10-08T14:53:37.9206580+03:30",
+    "duration_seconds": 0.166,
+    "exit": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1-static",
+    "stdout": "retry-cc-render-selftest.stdout.log",
+    "stderr": "retry-cc-render-selftest.stderr.log",
+    "excerpt": "RENDER SELF-TEST OK: standalone projection, drift and canonical pin ownership"
+  }
+]

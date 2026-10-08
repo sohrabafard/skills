@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.2.0 - 2026-10-08
+
+- Allow direct automatic mechanical implementation only with exact transformation/exclusions, finite enumerated existing-file scope, expected result, settled design and cheap discriminating checks; file count alone does not decide.
+- Preserve workhorse/exceptional routes, normal implementation authority and independent gates; stop and reclassify remaining work if mechanical fit ceases.
+
+
+## 5.1.0 - 2026-10-08
+
+- Select implementation profiles directly from a grounded plan, with real medium/high workhorse and read-only planner variants.
+- Exceptional implementation requires applicable high-workhorse inadequacy or explicit user selection; no speculative complexity promotion or trial ladder.
+- Render implementation/planner variants from shared contracts and canonical pins; preserve reviewer generation and consolidated independent gates.
+
 ## 5.0.0 - 2026-10-05
 
 - Rename the difficult implementation role from `alaa-implementer-sol` to `alaa-implementer-astra`. Update dispatch callers to the new identifier; no source alias is retained. The model, effort, grants and routing behavior are unchanged.

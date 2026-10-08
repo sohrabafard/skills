@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_POLICY = SKILL_ROOT / "assets/claude-model-policy.json"
 AGENT_DIR = "skills/sohrab/alaa-cc-orchestrator/agents"
 WRITER_DIR = "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude"
-ROLES = frozenset("spec-analyst explorer researcher implementer implementer-opus implementer-fable failure-analyst verifier test-strategist reviewer adversarial-reviewer architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian documenter instruction-reviewer".split())
+ROLES = frozenset("spec-analyst explorer researcher implementer implementer-opus implementer-fable implementer-haiku implementer-sonnet-high implementer-opus-high planner planner-high failure-analyst verifier test-strategist reviewer adversarial-reviewer architecture-critic security-reviewer migration-guardian api-contract-reviewer dependency-auditor accessibility-reviewer browser-qa performance-profiler observability-reviewer release-guardian documenter instruction-reviewer".split())
 ARTIFACTS = {f"alaa-{role}": f"{AGENT_DIR}/alaa-{role}.md" for role in ROLES}
 ARTIFACTS["alaa-rule-writer"] = f"{WRITER_DIR}/alaa-rule-writer.md"
 EFFORTS = frozenset(("low", "medium", "high", "xhigh", "max"))
@@ -141,15 +141,15 @@ def validate_policy(policy, root=REPO_ROOT):
         if spec.get("thinking_mode") not in ("adaptive-always-on", "adaptive", "extended"):
             errors.append(f"{model}: invalid thinking_mode")
         references(spec, model)
-    if set(profiles) != set(ARTIFACTS) | {"main"}:
-        errors.append("coverage: exactly main and 24 managed agent profiles required")
+    if set(profiles) != set(ARTIFACTS) | {"main", "main-deep"}:
+        errors.append("coverage: exactly main/main-deep and 29 managed agent profiles required")
     targets, evaluations = set(), []
     for role, profile in profiles.items():
         if not shape(profile, ("kind", "model", "effort", "rationale", "escalation_criterion", "confidence", "calibration_status", "availability", "source_ids", "artifacts"), role, errors, ("evaluation_evidence",)):
             continue
         if not pair_valid(profile, policy):
             errors.append(f"{role}: unsupported model/effort pair")
-        if profile.get("kind") != ("policy-only" if role == "main" else "agent"):
+        if profile.get("kind") != ("policy-only" if role in {"main", "main-deep"} else "agent"):
             errors.append(f"{role}: wrong profile kind")
         for key in ("rationale", "escalation_criterion"):
             if not nonempty(profile.get(key)):
@@ -183,7 +183,7 @@ def validate_policy(policy, root=REPO_ROOT):
                 errors.append(f"{role}: provider requirement required; account status must remain unknown")
         references(profile, role)
         paths = profile.get("artifacts")
-        expected = [] if role == "main" else [ARTIFACTS.get(role)]
+        expected = [] if role in {"main", "main-deep"} else [ARTIFACTS.get(role)]
         if paths != expected:
             errors.append(f"{role}: artifacts must equal canonical role mapping")
         if not isinstance(paths, list):

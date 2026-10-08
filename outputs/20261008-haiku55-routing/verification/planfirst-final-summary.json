@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "required_source_contracts": 19,
+  "original_pass": 17,
+  "original_failure": 2,
+  "recovery_commands_passed": 3,
+  "unaffected_successes_reused": 16,
+  "semantic_cases_approved": 20,
+  "technical_artifact_links_files": 51,
+  "documentation_links_files": 3,
+  "skill_index_entries": 69,
+  "documentation_grades": {
+    "report": "GREEN 30",
+    "outputs_index": "GREEN 20",
+    "existing_persian_index": "RED 226, explicitly approved"
+  },
+  "workflow_retry_exit": 0,
+  "full_diff_exit": 0,
+  "last_artifact_diff_exit": 0,
+  "source_drift": [],
+  "source_snapshot": "e67b9af0d34c41ef4daea75d1bd10805ba6311263f38adbfc78a5086388c9e49",
+  "source_files": 2172,
+  "lifecycle": {
+    "IMPLEMENTED": "PASS",
+    "MERGE_CANDIDATE": "PASS",
+    "RELEASE_CANDIDATE": "NOT REQUESTED",
+    "PUBLISHED": "NOT REQUESTED"
+  },
+  "proof_limits": [
+    "static source/configuration proof",
+    "no installed activation",
+    "no live model calibration",
+    "no commit or publication"
+  ]
+}

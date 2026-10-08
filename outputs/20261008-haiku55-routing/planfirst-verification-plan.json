@@ -1,0 +1,260 @@
+{
+  "baseline": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "observer": "alaa-verifier",
+  "resource_policy": "Sequential lightweight Python checks, normal priority, one process, 120s per command; PYTHONDONTWRITEBYTECODE=1; no services, installs, live models or broad fixture expansion.",
+  "snapshot_roots": [
+    "skills/sohrab",
+    "scripts",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "install-skills.md",
+    "_to_delete/20261008-haiku55-role-rename",
+    "_to_delete/20261008-planfirst-no-luna-implementation"
+  ],
+  "commands": [
+    {
+      "id": "cc-pack",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py"
+      ],
+      "covers": "CC policy projections, grants, core contracts and generated drift",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-pack",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py"
+      ],
+      "covers": "Codex policy projections, grants, core contracts and reviewer/profile/manifest drift",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "claude-writer-policy",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py",
+        "--agent-root",
+        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude"
+      ],
+      "covers": "Remaining managed rule-writer root",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-writer-policy",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py",
+        "--agent-root",
+        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex"
+      ],
+      "covers": "Remaining managed rule-writer root",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-contracts",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py"
+      ],
+      "covers": "Remaining planning and verification contract checks",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-contracts",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py"
+      ],
+      "covers": "Remaining planning and verification contract checks",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "claude-evals",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py"
+      ],
+      "covers": "Changed unrun comparison inputs",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-evals",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py"
+      ],
+      "covers": "Changed unrun comparison inputs",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-pack-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+        "--self-test"
+      ],
+      "covers": "Changed aggregate rejection behavior",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-grants-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+        "--self-test"
+      ],
+      "covers": "Changed grant/role guard behavior",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-contracts-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+        "--self-test"
+      ],
+      "covers": "Changed variant coverage",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-grants-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+        "--self-test"
+      ],
+      "covers": "Changed grant/role guard behavior",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-contracts-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+        "--self-test"
+      ],
+      "covers": "Changed variant coverage",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-render-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py",
+        "--self-test"
+      ],
+      "covers": "New standalone-wrapper renderer preservation",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-render-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py",
+        "--self-test",
+        "--self-test-dir",
+        "outputs/20261008-haiku55-routing/verification/planfirst-render-selftest"
+      ],
+      "covers": "Changed renderer codec and drift; preserve bounded fixture evidence without cleanup",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "claude-policy-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py",
+        "--self-test"
+      ],
+      "covers": "Changed canonical profile coverage",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "pack-structure",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/validate_sohrab_skill_pack.py"
+      ],
+      "covers": "Repository native distinct contract",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "fleet-references",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/check_fleet_references.py"
+      ],
+      "covers": "Repository native distinct contract",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "lifecycle",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "scripts/check_lifecycle_contract.py"
+      ],
+      "covers": "Repository native distinct contract",
+      "tier": "affected",
+      "timeout_seconds": 120
+    }
+  ],
+  "deferred_documentation_gate": "Skill index, scoped links/line budget, workflow and final diff checks after bounded documentation; no repeated unaffected source acceptance."
+}

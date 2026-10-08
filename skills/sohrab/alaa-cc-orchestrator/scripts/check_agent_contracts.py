@@ -159,8 +159,8 @@ def verification_failures(gates: str, templates: list[str], roles: dict[str, str
     """Inspect integrated source contracts, never simulate model obedience."""
     errors = [f"missing gate authority boundary: {item}"
               for item in GATE_REQUIREMENTS if item not in gates]
-    if len(roles) != 3:
-        errors.append("expected all three implementer variants")
+    if len(roles) != 6:
+        errors.append("expected all registered implementer variants")
     for name, text in roles.items():
         errors.extend(f"{name}: {item}" for item in implementer_failures(text))
         if name.endswith(".toml") and name != "alaa-implementer.toml":

@@ -405,3 +405,7 @@ Notes:
 To link vendored skills, add the relevant vendored `skills/` directory to `$srcRoots`
 in the unified local install snippet above. The vendored source-root lines in that
 snippet are refreshed by `python scripts\vendor_subtrees.py refresh-docs`.
+
+## Managed implementation and planning profiles
+
+Before an authorized installation, generate and validate each affected orchestrator's standalone wrappers with its `scripts/render_agents.py --write` and aggregate validator. Edit `assets/implementation-contract.md`, `assets/planner-contract.md` or wrapper metadata, never generated bodies; model/effort pins come only from `/alaa-prompting-guide`. Existing reviewer rendering remains managed. Register all new implementation/planner files through the existing install procedure; source generation is not installation. Confirm actual host availability, configured controls, override precedence and grants before dispatch. A requested profile that cannot be realized blocks; do not silently substitute a model or effort.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "2.0.0",
+  "policy_version": "2.2.0",
   "comparison_rule": "Eight unrun Claude comparisons; one factor per comparison, isolated fresh contexts, independent grading, no external or destructive actions. Static fixtures are not live evidence.",
   "scenarios": [
     {
@@ -37,11 +37,11 @@
       "profile": "alaa-implementer",
       "candidate": {
         "model": "claude-sonnet-5-5",
-        "effort": "high"
+        "effort": "medium"
       },
       "comparator": {
         "model": "claude-sonnet-5-5",
-        "effort": "medium"
+        "effort": "high"
       },
       "repetitions": 2,
       "status": "unrun",

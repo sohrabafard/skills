@@ -31,3 +31,40 @@ The current [official model catalog](https://platform.claude.com/docs/en/models/
 The model catalog identifies demanding reasoning, long-horizon work and observed Opus higher-effort shortcomings as reasons to consider Fable. Local role admission remains an uncalibrated policy: Sonnet for settled precise implementation; restored Opus for a concrete admitted unresolved engineering decision; Fable for documented demanding coupled stages/invariants or representative Opus higher-effort quality-gap evidence after ruling out context, tools and specification. Only one writer/profile owns a lane. Existing reassessment boundaries and independent gates remain required.
 
 The user subsequently confirmed that Fable 5.1 was intended. The version ambiguity is resolved.
+
+## Phase 5 - Plan-first paired-runtime selection (verified 2026-10-08)
+
+Two independent read-only research lanes verified these current official sources. The chosen lane thresholds and strongest-model admission are local user policy; they are not measured cross-model equivalences or upstream guarantees. No paid model runs or installations occurred.
+
+### Claude evidence
+
+- [Sonnet prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5): medium for specified coding/tool work, high for harder or longer tasks; medium can check in prematurely on long work.
+- [Opus prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5): start at medium; higher effort costs more reasoning time/tokens. Effort scales differ across models, so Sonnet-high is not established as equivalent to Opus-medium.
+- [Model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model) and [model overview](https://platform.claude.com/docs/en/models/overview): everyday coding versus long agentic judgment; Fable targets demanding reasoning and cases where higher-effort Opus falls short. The selection guide mentions xhigh/max; this task deliberately sets the user-requested implementation boundary at diagnosed Opus-high inadequacy or explicit user direction. No extra trial sequence is mandated.
+- [Claude Code model controls](https://code.claude.com/docs/en/model-config): medium fits scoped engineering; high can explore more edge cases and make more autonomous choices. Session controls do not authorize an agent to claim it changed its own runtime identity.
+- [Claude Code subagents](https://code.claude.com/docs/en/sub-agents): named definitions support exact model and effort. Per-invocation model can override frontmatter; no documented Agent per-call effort field was established. Environment effort and organization caps may override a definition. Sonnet API default high and Code default medium differ, so use explicit pins.
+
+### GPT and Codex evidence
+
+- [Codex models](https://learn.chatgpt.com/docs/models): current Sol is the recommended coding/agentic workhorse, Luna fits focused repeatable work and starts at high, Astra fits hardest judgment. Medium suits planning; high suits harder multistep trade-offs.
+- [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol), [older GPT-6 Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra): API effort support differs from Codex tool support. The observed dispatch schema supports the selected medium/high pairs. Older Sol availability does not justify restoring it as another default tier.
+- [Codex subagent configuration](https://learn.chatgpt.com/docs/agent-configuration/subagents): caller/default/parent resolution precedes custom TOML application; explicit TOML model and effort pins win. Passing new caller effort to an old pinned wrapper does not realize a new profile.
+- Local configured main settings differ from the source policy; neither is proof of serving identity. Real planner profiles or verified session controls are needed. No installed configuration is changed by this source task.
+
+### Ratification
+
+The existing plan records four direct Claude implementation pairs, narrowly bounded Luna-high plus Sol-medium/high for GPT, and strictly exceptional Fable/Astra. Planning uses Opus or Sol medium/high with one selected planner, then the lead ratifies lane decomposition and actual registered profile selection before implementation. This separates initial selection from later diagnosis and offline calibration; it creates no try/fail ladder.
+
+### GPT implementation floor clarification
+
+The user clarified that normal implementation should not select below Sol. The prior Luna-high mechanical route was the lead's conservative workload inference from focused/repeatable-use guidance, not an official statement that Luna substitutes for Sonnet or is a preferred ordinary implementation model. The shipped task policy therefore keeps Sol medium/high for implementation and Astra only exceptionally, while retaining lightweight non-implementation Luna roles. This is a user-selected boundary; it does not claim the vendor forbids Luna coding. Current gpt-6.1-sol is retained rather than treating the user's generic gpt-6-sol comparison as a request for the older generation.
+
+### Final research-based GPT policy (supersedes the floor clarification)
+
+The user clarified that their experience was input and requested the best researched structure. The official [model-selection guide](https://developers.openai.com/api/docs/guides/model-selection), checked on 2026-10-08, explicitly recommends Luna medium for small existing-file edits and Luna low for fine-grained edits. This is task-specific starting guidance, not proof of an optimal production default.
+
+Final local policy: automatic implementation selects Sol medium/high; optional Luna medium requires explicit human selection for that lane and every bounded existing-file/settled-design/known-pattern/cheap-discriminating-check condition. This retains the documented useful case without silently changing the normal implementation quality/cost preference. Luna remains available for lightweight roles. Neither a coding ban nor cross-vendor equivalence is claimed. Actual calibration and serving identity remain unproven.
+
+## Phase7 - User-authorized automatic mechanical work
+
+The user's response annotations explicitly authorize Luna and Haiku5.5 for exact repeated edits, including finite batches across many files, and preserve their usefulness in existing support roles. This supersedes the prior per-lane human-request-only Luna restriction. The current local policy requires all mechanical fit predicates and preserves independent gates and command authority. Existing official capability research is reused; no new comparative benchmark, cross-family equivalence or calibrated quality claim is made.

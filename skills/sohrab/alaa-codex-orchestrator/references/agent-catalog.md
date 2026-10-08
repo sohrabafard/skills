@@ -2,7 +2,7 @@
 
 The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
 
-Twenty-two roles and one additional deep-review execution profile are available.
+Twenty-seven executable agents are available.
 
 ## Specification and evidence
 
@@ -12,13 +12,17 @@ Twenty-two roles and one additional deep-review execution profile are available.
 | `alaa-explorer` | read-only | Repository ownership and execution-path mapping | External research or design decisions |
 | `alaa-researcher` | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
 | `alaa-test-strategist` | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
+| `alaa-planner` | read-only | Advisory plan with clear contracts and constraints | Editing or owning the durable plan |
+| `alaa-planner-high` | read-only | Advisory plan resolving interacting uncertainties | Editing or owning the durable plan |
 
 ## Implementation and verification
 
 | Agent | Sandbox | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer` | workspace-write | Bounded implementation, including sensitive surfaces with settled designs | Lanes meeting difficult-role admission in `routing-matrix.md`, or self-review |
-| `alaa-implementer-astra` | workspace-write | Unresolved engineering design decisions admitted by `routing-matrix.md` | Settled designs or sensitivity alone |
+| `alaa-implementer` | workspace-write | Normal engineering with grounded scope and acceptance criteria. | Self-review or unrecorded profile admission |
+| `alaa-implementer-astra` | workspace-write | Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
+| `alaa-implementer-high` | workspace-write | Substantial interacting engineering reasoning. | Self-review or unrecorded profile admission |
+| `alaa-implementer-luna` | workspace-write | Automatic exact mechanical edits over finite enumerated existing-file scope; every fit predicate and cheap discriminating acceptance required | Ambiguous matches, undefined scope, semantic discretion, design changes, file-count-only admission or expanded authority |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 

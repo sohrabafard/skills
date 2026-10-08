@@ -202,5 +202,1120 @@
     "active_haiku45_profiles": 0,
     "fable55": "unverified, not selected",
     "live_calibration": "unrun"
+  },
+  "phase5": {
+    "cc": {
+      "executable_pins": {
+        "alaa-accessibility-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-browser-qa": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-dependency-auditor": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-documenter": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-explorer": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-failure-analyst": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-implementer-fable": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-implementer-opus-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-opus": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer-sonnet-high": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-performance-profiler": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-planner-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-release-guardian": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-researcher": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-spec-analyst": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-verifier": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        }
+      },
+      "canonical_profiles": {
+        "main": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-spec-analyst": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-explorer": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-researcher": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-failure-analyst": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-verifier": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-dependency-auditor": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-accessibility-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-browser-qa": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-performance-profiler": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-release-guardian": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-documenter": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-rule-writer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-fable": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-implementer-opus": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer-sonnet-high": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-opus-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "main-deep": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-planner-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        }
+      },
+      "generated_profile_count": 7,
+      "calibration_statuses": [
+        "unrun"
+      ]
+    },
+    "codex": {
+      "executable_pins": {
+        "alaa-accessibility-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-browser-qa": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-dependency-auditor": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-documenter": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-explorer": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-failure-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-implementer-astra": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-implementer-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-implementer-luna": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "alaa-implementer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-performance-profiler": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-planner-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-release-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-researcher": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-reviewer-deep": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-spec-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-verifier": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        }
+      },
+      "canonical_profiles": {
+        "main": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "main-deep": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-spec-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-explorer": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-researcher": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-implementer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-implementer-astra": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-verifier": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "alaa-failure-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-reviewer-deep": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-documenter": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-dependency-auditor": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-accessibility-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-browser-qa": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-performance-profiler": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-release-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-rule-writer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-implementer-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-planner-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-implementer-luna": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        }
+      },
+      "generated_profile_count": 6,
+      "calibration_statuses": [
+        "unrun"
+      ]
+    },
+    "python_ast": [
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py",
+      "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py",
+      "skills/sohrab/alaa-prompting-guide/scripts/profile_projection.py"
+    ],
+    "git_diff_check": {
+      "exit": 0,
+      "output": ""
+    },
+    "route_cases": "plan-first-routing-cases.md; independent semantic assessment remains unrun by writer",
+    "limits": "Static projection/AST inspection only; no live models, activation, installation, broad fixtures or independent acceptance.",
+    "errors": []
+  },
+  "phase5_review_correction": {
+    "planner_sandbox_cases": [
+      {
+        "role": "alaa-planner",
+        "sandbox": null,
+        "boundary": "template",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner",
+        "sandbox": null,
+        "boundary": "resolved",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner",
+        "sandbox": "workspace-write",
+        "boundary": "template",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner",
+        "sandbox": "workspace-write",
+        "boundary": "resolved",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner",
+        "sandbox": "read-only",
+        "boundary": "template",
+        "expected_rejection": false,
+        "observed_errors": []
+      },
+      {
+        "role": "alaa-planner",
+        "sandbox": "read-only",
+        "boundary": "resolved",
+        "expected_rejection": false,
+        "observed_errors": []
+      },
+      {
+        "role": "alaa-planner-high",
+        "sandbox": null,
+        "boundary": "template",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner-high: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner-high",
+        "sandbox": null,
+        "boundary": "resolved",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner-high: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner-high",
+        "sandbox": "workspace-write",
+        "boundary": "template",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner-high: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner-high",
+        "sandbox": "workspace-write",
+        "boundary": "resolved",
+        "expected_rejection": true,
+        "observed_errors": [
+          "alaa-planner-high: role requires read-only sandbox declaration"
+        ]
+      },
+      {
+        "role": "alaa-planner-high",
+        "sandbox": "read-only",
+        "boundary": "template",
+        "expected_rejection": false,
+        "observed_errors": []
+      },
+      {
+        "role": "alaa-planner-high",
+        "sandbox": "read-only",
+        "boundary": "resolved",
+        "expected_rejection": false,
+        "observed_errors": []
+      }
+    ],
+    "verdict": "PASS",
+    "limits": "Eight focused negative and four positive function cases only; not a live sandbox enforcement claim or independent acceptance."
+  },
+  "luna_implementation_retirement": {
+    "original": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml",
+    "archived": "_to_delete/20261008-planfirst-no-luna-implementation/alaa-implementer-luna.toml",
+    "size_before": 6240,
+    "size_after": 6240,
+    "staging": "Preserved; formerly staged source removal is left for the lead/external actor."
+  },
+  "phase7": {
+    "cc": {
+      "executable_pins": {
+        "alaa-accessibility-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-browser-qa": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-dependency-auditor": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-documenter": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-explorer": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-failure-analyst": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-implementer-fable": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-implementer-haiku": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer-opus-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-opus": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer-sonnet-high": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-performance-profiler": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-planner-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-release-guardian": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-researcher": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-spec-analyst": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-verifier": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        }
+      },
+      "canonical_profiles": {
+        "main": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-spec-analyst": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-explorer": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-researcher": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "medium"
+        },
+        "alaa-failure-analyst": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-verifier": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-dependency-auditor": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-accessibility-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-browser-qa": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-performance-profiler": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-release-guardian": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-documenter": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-rule-writer": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-fable": {
+          "model": "claude-fable-5-1",
+          "effort": "high"
+        },
+        "alaa-implementer-opus": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-implementer-sonnet-high": {
+          "model": "claude-sonnet-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-opus-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "main-deep": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "claude-opus-5-5",
+          "effort": "medium"
+        },
+        "alaa-planner-high": {
+          "model": "claude-opus-5-5",
+          "effort": "high"
+        },
+        "alaa-implementer-haiku": {
+          "model": "claude-haiku-5-5",
+          "effort": "medium"
+        }
+      },
+      "generated_profile_count": 8,
+      "calibration_statuses": [
+        "unrun"
+      ]
+    },
+    "codex": {
+      "executable_pins": {
+        "alaa-accessibility-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-browser-qa": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-dependency-auditor": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-documenter": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-explorer": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-failure-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-implementer-astra": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-implementer-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-implementer-luna": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "alaa-implementer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-performance-profiler": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-planner-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-release-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-researcher": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-reviewer-deep": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-spec-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-verifier": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        }
+      },
+      "canonical_profiles": {
+        "main": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "main-deep": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-spec-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-explorer": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-researcher": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-test-strategist": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-implementer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-implementer-astra": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-verifier": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "alaa-failure-analyst": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-reviewer-deep": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-adversarial-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-documenter": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "alaa-architecture-critic": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-security-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-migration-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-api-contract-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-dependency-auditor": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-accessibility-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-browser-qa": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-performance-profiler": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-observability-reviewer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-release-guardian": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-rule-writer": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-instruction-reviewer": {
+          "model": "gpt-6-astra",
+          "effort": "high"
+        },
+        "alaa-implementer-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-planner": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "alaa-planner-high": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "alaa-implementer-luna": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        }
+      },
+      "generated_profile_count": 6,
+      "calibration_statuses": [
+        "unrun"
+      ]
+    },
+    "python_ast": [
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py",
+      "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py",
+      "skills/sohrab/alaa-prompting-guide/scripts/profile_projection.py"
+    ],
+    "git_diff_check": {
+      "exit": 0,
+      "output": ""
+    },
+    "route_cases": "plan-first-routing-cases.md; independent semantic assessment remains unrun by writer",
+    "limits": "Static projection/AST inspection only; no live models, activation, installation, broad fixtures or independent acceptance.",
+    "errors": []
   }
 }

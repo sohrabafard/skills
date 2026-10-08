@@ -1,0 +1,13 @@
+{
+  "head": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "files": 2173,
+  "closure_snapshot_sha256": "e102c059c8324ae1cae808848e07a7325ec3cd36b9222abf9f19a2a3f9f9395e",
+  "digest_method": "SHA256 of UTF8 JSON manifest: sort_keys=True,ensure_ascii=False,separators=(comma,colon)",
+  "changed_after_acceptance": [
+    "skills/sohrab/README.fa.md"
+  ],
+  "unaffected_files": 2172,
+  "source_acceptance": "14 affected checks PASS; prior unaffected checks retained",
+  "semantic_cases": 23,
+  "documentation": "Three-file links/line budget and skill index PASS; 226-line Persian index explicitly approved"
+}

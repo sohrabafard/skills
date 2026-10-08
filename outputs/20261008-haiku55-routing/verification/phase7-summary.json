@@ -1,0 +1,153 @@
+{
+  "head_before": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "head_after": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "files_before": 2173,
+  "files_after": 2173,
+  "snapshot_before_sha256": "0f1196eb1124212d4f9c39b2465b3676043ec35e67b15a29aa041a7d7ce85e12",
+  "snapshot_after_sha256": "0f1196eb1124212d4f9c39b2465b3676043ec35e67b15a29aa041a7d7ce85e12",
+  "changed_during_run": [],
+  "missing": [],
+  "phase6_closure_snapshot": "e67b9af0d34c41ef4daea75d1bd10805ba6311263f38adbfc78a5086388c9e49",
+  "phase6_to_phase7_delta_count": 34,
+  "phase6_delta_reconciled": true,
+  "phase6_delta_paths": [
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/VERSION",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/assets/manifest.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/assets/profile-wrappers.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/VERSION",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/assets/profile-wrappers.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/claude-agent-comparisons.json",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/36-haiku-5-5.md",
+      "matches_recorded_after": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py",
+      "matches_recorded_after": true
+    }
+  ],
+  "checks": 13,
+  "classifications": "PASS=13"
+}

@@ -9,6 +9,11 @@ Convert a product or engineering goal into a controlled, evidence-driven multi-a
 
 **One skill, two runtimes.** This pack and its counterpart for the other runtime are the same orchestrator with identical behaviour by design — same decisions, gates, triggers, and stopping conditions — so a behavioural rule added to one is added to the other in the same change. Only expression differs: each states its mechanics in its own runtime's idiom and carries the delegation polarity its own target model family needs, which `/alaa-prompting-guide` owns. Any other difference is drift.
 
+## Plan-first profile selection
+
+Before planning, apply `references/routing-matrix.md` Planning profile selection. Verify compatible lead controls or dispatch the registered read-only planner; the lead ratifies its advisory draft. Record each lane's exact registered implementation profile and reason in the durable plan before dispatch. Planning effort does not determine implementation effort.
+
+
 ## When NOT to use
 
 - The change is a single edit whose correctness one reader can confirm without a second lane. Delegation

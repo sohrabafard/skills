@@ -1,0 +1,7 @@
+{
+  "head": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "files": 2172,
+  "manifest_sha256": "430cf7436df8583e02f9d46f52a089150fc32a8f0b1d134851e5bd491aca5531",
+  "environment": "PYTHONDONTWRITEBYTECODE=1",
+  "python": "Python 3.13.14"
+}

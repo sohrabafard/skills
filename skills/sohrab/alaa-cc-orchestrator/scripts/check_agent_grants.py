@@ -141,6 +141,9 @@ EXPECTED_MCP = {
 # Preserve the authored native grants as well as MCP scope. An extra Write,
 # Agent, or unrestricted tool is authority drift even when MCP grants match.
 READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
+EXPECTED_MCP.update({"alaa-implementer-haiku": None, "alaa-implementer-sonnet-high": None, "alaa-implementer-opus-high": None,
+                     "alaa-planner": EXPECTED_MCP["alaa-spec-analyst"],
+                     "alaa-planner-high": EXPECTED_MCP["alaa-spec-analyst"]})
 EXPECTED_NATIVE = {name: READ_NATIVE for name in EXPECTED_MCP}
 EXPECTED_NATIVE.update({
     "alaa-researcher": READ_NATIVE | {"WebFetch", "WebSearch"},

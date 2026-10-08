@@ -2,7 +2,7 @@
 
 The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
 
-Twenty-three roles are available; standard and deep review use the same reviewer.
+Twenty-eight executable agents are available.
 
 ## Specification and evidence
 
@@ -12,14 +12,19 @@ Twenty-three roles are available; standard and deep review use the same reviewer
 | `alaa-explorer` | read-only | Repository ownership and execution-path mapping | External research or design decisions |
 | `alaa-researcher` | read-only | Prior-context recall through `/alaa-memory-os`; official docs, versions, standards, third-party contracts | Memory writes, implementation, or final decision-making |
 | `alaa-test-strategist` | read-only | High-value test matrix before subtle work | Writing tests or running the final gate |
+| `alaa-planner` | read-only | Advisory plan with clear contracts and constraints | Editing or owning the durable plan |
+| `alaa-planner-high` | read-only | Advisory plan resolving interacting uncertainties | Editing or owning the durable plan |
 
 ## Implementation and verification
 
 | Agent | Access | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer` | workspace write | Bounded implementation, including sensitive surfaces with settled designs | Lanes meeting difficult-role admission in `routing-matrix.md`, or self-review |
-| `alaa-implementer-opus` | workspace write | Concrete unresolved design admitted by `routing-matrix.md` | Settled work, exceptional-route work, or sensitivity alone |
-| `alaa-implementer-fable` | workspace write | Exceptional implementation admitted by `routing-matrix.md` | Ordinary unresolved design without exceptional evidence |
+| `alaa-implementer` | workspace-write | Bounded settled implementation with precise scope and checks. | Self-review or unrecorded profile admission |
+| `alaa-implementer-opus` | workspace-write | Moderate unresolved engineering judgment. | Self-review or unrecorded profile admission |
+| `alaa-implementer-fable` | workspace-write | Only documented applicable Opus-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
+| `alaa-implementer-sonnet-high` | workspace-write | Harder or longer implementation whose design is settled. | Self-review or unrecorded profile admission |
+| `alaa-implementer-opus-high` | workspace-write | Interacting unresolved design decisions and demanding system reasoning. | Self-review or unrecorded profile admission |
+| `alaa-implementer-haiku` | workspace-write | Automatic exact mechanical edits over finite enumerated existing-file scope; every fit predicate and cheap discriminating acceptance required | Ambiguous matches, undefined scope, semantic discretion, design changes, file-count-only admission or expanded authority |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 

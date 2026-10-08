@@ -1,0 +1,46 @@
+{
+  "profiles": {
+    "alaa-implementer": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Normal engineering with grounded scope and acceptance criteria. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-high": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Substantial interacting engineering reasoning. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-astra": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-planner": {
+      "contract": "assets/planner-contract.md",
+      "metadata": {
+        "description": "Advisory read-only planner for clear scope, contracts and constraints. Parent ratifies and owns the durable plan; never implements or edits.",
+        "sandbox_mode": "read-only"
+      }
+    },
+    "alaa-planner-high": {
+      "contract": "assets/planner-contract.md",
+      "metadata": {
+        "description": "Advisory read-only planner for interacting uncertainties that must be resolved to form the plan. Parent ratifies and owns the durable plan; never implements or edits.",
+        "sandbox_mode": "read-only"
+      }
+    },
+    "alaa-implementer-luna": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Automatic bounded mechanical implementation when every predicate in /alaa-codex-orchestrator references/routing-matrix.md is met. Exact transformation, exclusions, enumerated existing-file scope, expected result, settled design/no semantic discretion, known pattern and cheap discriminating checks. File count alone does not decide; reject ambiguous matches, undefined scope or design changes. If fit ceases, preserve valid edits and return remaining work for reclassification. No mandatory first trial or authority expansion.",
+        "sandbox_mode": "workspace-write"
+      }
+    }
+  }
+}

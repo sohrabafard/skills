@@ -6,7 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
-| 2026-10-08 | [Claude model routing and verification consolidation](20261008-haiku55-routing/report.md) | Four-model Claude routing, paired verification consolidation, independent review; final snapshot passed all nine checks; local source only, no installation or live calibration |
+| 2026-10-08 | [Claude and Codex plan-first routing](20261008-haiku55-routing/report.md) | Four-model Claude routing, automatic mechanical Haiku/Luna medium routes, plan-first workhorse selection, consolidated verification; 14 affected checks passed; no installation or live calibration |
 | 2026-10-07 | [Implementer verification authority](20261007-verification-authority/report.md) | Dispatch conflict handling, focused-only implementation templates, independent acceptance authority, source checks and documented proof limits; no installation |
 | 2026-10-05 | [Implementation routing tune](20261005-implementation-routing/report.md) | Paired routing tune and Codex difficult-role rename; independent scenarios and source checks; no installation |
 | 2026-10-01 | [HAProxy 3.4.6 skill package archive](20261001-haproxy-346/README.md) | HAProxy and Lua guidance, source evidence, review rationale, and verification records |

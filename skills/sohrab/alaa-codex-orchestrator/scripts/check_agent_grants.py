@@ -180,6 +180,10 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-instruction-reviewer": {},
 }
 ROLE_POLICY["alaa-reviewer-deep"] = ROLE_POLICY["alaa-reviewer"]
+for name in ("alaa-implementer-luna", "alaa-implementer-high"):
+    ROLE_POLICY[name] = ROLE_POLICY["alaa-implementer"]
+for name in ("alaa-planner", "alaa-planner-high"):
+    ROLE_POLICY[name] = ROLE_POLICY["alaa-spec-analyst"]
 
 
 def _agent_paths(agents_dir: str) -> list[str]:
@@ -199,8 +203,8 @@ def _template_failures(name: str, text: str, data: dict) -> list[str]:
     failures = []
     if name not in ROLE_POLICY:
         failures.append(f"{name}: uncatalogued role")
-    if name == "alaa-instruction-reviewer" and data.get("sandbox_mode") != "read-only":
-        failures.append(f"{name}: native inspection requires read-only sandbox declaration")
+    if name in {"alaa-instruction-reviewer", "alaa-planner", "alaa-planner-high"} and data.get("sandbox_mode") != "read-only":
+        failures.append(f"{name}: role requires read-only sandbox declaration")
     if TEMPLATE_MARKER not in text:
         failures.append(f"{name}: inherited MCP omission lacks the installer materialization marker")
     if "mcp_servers" in data:
@@ -283,8 +287,8 @@ def _resolved_failures(
     failures = []
     if name not in ROLE_POLICY:
         return [f"{name}: uncatalogued role"]
-    if name == "alaa-instruction-reviewer" and data.get("sandbox_mode") != "read-only":
-        failures.append(f"{name}: native inspection requires read-only sandbox declaration")
+    if name in {"alaa-instruction-reviewer", "alaa-planner", "alaa-planner-high"} and data.get("sandbox_mode") != "read-only":
+        failures.append(f"{name}: role requires read-only sandbox declaration")
     servers = data.get("mcp_servers")
     expected = _expected_overlay(name, inventory)
     if not expected and servers in (None, {}):
@@ -447,6 +451,13 @@ def self_test() -> int:
                 "remote-docs": {"url": "https://example.invalid/mcp", "enabled": False},
             }}, inventory), "grant differs"),
     ]
+    for role in ("alaa-planner", "alaa-planner-high"):
+        for sandbox in (None, "workspace-write"):
+            data = {} if sandbox is None else {"sandbox_mode": sandbox}
+            cases.append((f"{role} template sandbox {sandbox}",
+                          _template_failures(role, TEMPLATE_MARKER, data), "read-only"))
+            cases.append((f"{role} resolved sandbox {sandbox}",
+                          _resolved_failures(role, {**data, "mcp_servers": _expected_overlay(role, inventory)}, inventory), "read-only"))
     memory_inventory = {"hindsight": ("command", "hindsight", True)}
     cases += [
         ("memory role overgranted Hindsight", _resolved_failures(
@@ -469,10 +480,13 @@ def self_test() -> int:
         if good["mcp_servers"]["hindsight"].get("enabled_tools") != HINDSIGHT_READ or _resolved_failures(
                 role, good, memory_inventory):
             failures.append(f"{role}: exact Hindsight read grant not produced or rejected")
-    for role in ("alaa-reviewer", "alaa-reviewer-deep", "alaa-instruction-reviewer"):
+    for role in ("alaa-reviewer", "alaa-reviewer-deep", "alaa-instruction-reviewer", "alaa-planner", "alaa-planner-high"):
         good = {"sandbox_mode": "read-only", "mcp_servers": _expected_overlay(role, inventory)}
         if _resolved_failures(role, good, inventory):
             failures.append(f"{role}: valid exact grant rejected")
+    for role in ("alaa-planner", "alaa-planner-high"):
+        if _template_failures(role, TEMPLATE_MARKER, {"sandbox_mode": "read-only"}):
+            failures.append(f"{role}: valid read-only template rejected")
     for label, observed, expected_message in cases:
         if not any(expected_message in item for item in observed):
             failures.append(f"{label}: did not observe {expected_message!r}; got {observed}")

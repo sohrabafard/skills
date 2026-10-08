@@ -4,7 +4,7 @@
 
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
-<role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
+<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>
@@ -18,13 +18,13 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Use `routing-matrix.md` to select `alaa-implementer-opus` for admitted unresolved design or `alaa-implementer-fable` for exceptional work. Pass the same lane block with its recorded admission evidence; each is a distinct agent, never a per-invocation override on `alaa-implementer`.
+Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant; caller fields or prose do not override custom pins. Preserve surviving work; no trial ladder or replay of completed work.
 
 ## Implementer escalation lane
 
 ```xml
 <task>Implement escalated lane <n>: <bounded outcome whose design is not yet decided>.</task>
-<role_selection><selected role; remaining-work reason; for difficult work: open decision, named criterion, correctness/failure consequence></role_selection>
+<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>

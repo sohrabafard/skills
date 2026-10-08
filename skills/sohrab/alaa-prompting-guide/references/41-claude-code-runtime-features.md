@@ -190,3 +190,7 @@ Ultraplan is documented as a research preview with no stated minimum version; do
 - [Model configuration](https://code.claude.com/docs/en/model-config)
 
 - [Model configuration](https://code.claude.com/docs/en/model-config)
+
+## Managed direct-selection profiles
+
+The runtime orchestrator renders standalone implementation and planner variants from one editable contract per role family. `scripts/render_agents.py --write` supplies pins only from this skill's canonical policy; `--check` rejects drift. Select the exact registered variant, not a caller effort override that custom metadata ignores. Planning inline requires verified compatible configured controls; a planner draft remains advisory and the parent owns the durable plan. Subagent YAML model and effort realize the selected pair; environment settings and effort caps may override them. No per-call Agent effort override is assumed without current supported-interface evidence. Static agreement proves source configuration, not runtime identity or model obedience.

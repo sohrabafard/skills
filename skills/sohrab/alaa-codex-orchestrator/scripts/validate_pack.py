@@ -39,6 +39,11 @@ def parse_toml(text: str) -> dict:
 ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
 REQUIRED = {
+    "alaa-implementer-luna",
+    "alaa-implementer-high",
+    "alaa-planner",
+    "alaa-planner-high",
+
     "alaa-explorer",
     "alaa-researcher",
     "alaa-test-strategist",

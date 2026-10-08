@@ -1,0 +1,61 @@
+{
+  "reason": "One cause-specific repair/retry for each failed operation; CC aggregate invalidated by renderer CLI delta. All other prior input contracts retained.",
+  "source_delta": [
+    "skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py",
+    "skills/sohrab/alaa-codex-orchestrator/assets/profile-wrappers.json",
+    "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml",
+    "skills/sohrab/alaa-codex-orchestrator/assets/manifest.json"
+  ],
+  "snapshot_roots": [
+    "skills/sohrab",
+    "scripts",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "install-skills.md",
+    "_to_delete/20261008-haiku55-role-rename",
+    "_to_delete/20261008-planfirst-no-luna-implementation"
+  ],
+  "resource_policy": "Sequential lightweight Python checks, normal priority, one process, 120s per command; PYTHONDONTWRITEBYTECODE=1; no services, installs, live models or broad fixture expansion.",
+  "commands": [
+    {
+      "id": "cc-pack",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py"
+      ],
+      "covers": "CC policy projections, grants, core contracts and generated drift",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "codex-pack",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py"
+      ],
+      "covers": "Codex policy projections, grants, core contracts and reviewer/profile/manifest drift",
+      "tier": "affected",
+      "timeout_seconds": 120
+    },
+    {
+      "id": "cc-render-selftest",
+      "cwd": ".",
+      "argv": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py",
+        "--self-test",
+        "--self-test-dir",
+        "outputs/20261008-haiku55-routing/verification/cc-renderer-workspace-retry"
+      ],
+      "covers": "New standalone-wrapper renderer preservation",
+      "tier": "affected",
+      "timeout_seconds": 120
+    }
+  ]
+}

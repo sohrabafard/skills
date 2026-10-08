@@ -1,0 +1,104 @@
+{
+  "profiles": {
+    "alaa-implementer": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Bounded settled implementation with precise scope and checks. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    },
+    "alaa-implementer-sonnet-high": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Harder or longer implementation whose design is settled. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    },
+    "alaa-implementer-opus": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Moderate unresolved engineering judgment. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    },
+    "alaa-implementer-opus-high": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Interacting unresolved design decisions and demanding system reasoning. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    },
+    "alaa-implementer-fable": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Only documented applicable Opus-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    },
+    "alaa-planner": {
+      "contract": "assets/planner-contract.md",
+      "metadata": {
+        "description": "Advisory read-only planner for clear scope, contracts and constraints. Parent ratifies and owns the durable plan; never implements or edits.",
+        "tools": "Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info",
+        "skills": [
+          "/alaa-code-intelligence-routing"
+        ],
+        "color": "cyan"
+      }
+    },
+    "alaa-planner-high": {
+      "contract": "assets/planner-contract.md",
+      "metadata": {
+        "description": "Advisory read-only planner for interacting uncertainties that must be resolved to form the plan. Parent ratifies and owns the durable plan; never implements or edits.",
+        "tools": "Read, Glob, Grep, Bash, Skill, mcp__codegraph, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info",
+        "skills": [
+          "/alaa-code-intelligence-routing"
+        ],
+        "color": "cyan"
+      }
+    },
+    "alaa-implementer-haiku": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Automatic bounded mechanical implementation when every predicate in /alaa-cc-orchestrator references/routing-matrix.md is met. Exact transformation, exclusions, enumerated existing-file scope, expected result, settled design/no semantic discretion, known pattern and cheap discriminating checks. File count alone does not decide; reject ambiguous matches, undefined scope or design changes. If fit ceases, preserve valid edits and return remaining work for reclassification. No mandatory first trial or authority expansion.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    }
+  }
+}

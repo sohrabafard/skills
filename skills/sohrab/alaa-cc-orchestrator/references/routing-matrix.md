@@ -47,30 +47,29 @@ Do not spawn when the relevant paths and contracts are already established in cu
 
 `/alaa-testing-strategy` is the doctrine this role applies. Name it in the dispatch, and read it directly when deciding which layer a behaviour is tested at, whether a double is honest enough to stand in for the real dependency, which of the six proof levels a claim actually reaches, or which scope tier has earned the right to run at this moment.
 
+## Planning profile selection
+
+Separate missing facts (retrieve or clarify) from coupled design judgment before planning. Use `alaa-planner` when scope, contracts and constraints are clear, or `alaa-planner-high` when formulating the plan requires resolving interacting uncertainties. The lead may plan inline only after verifying compatible configured controls from the canonical planning profile; otherwise dispatch the real registered planner. Planner drafts are advisory: the lead ratifies and persists the durable plan. Planning effort is independent of implementation effort; high planning may yield cheap implementation. The ratified plan records every lane's outcome, owned scope, exclusions, dependencies, settled/open decisions, failure/invariant reasoning, exact registered profile and selection reason before implementation dispatch. Do not pretend prose switches controls or use a caller override that a custom profile ignores.
+
 ## Implementation routing
 
-Use `alaa-implementer` by default, including on sensitive surfaces when applying a ratified design, contract value, or precise specification. Independent review and specialist gates provide scrutiny; surface sensitivity does not earn a different implementation role.
+Choose directly from the completed lane record; no mandatory sequence of attempts. Exact model/effort pins belong only to `/alaa-prompting-guide`; these role contracts classify work.
 
-Before an initial assignment, material scope change, or fix-cycle follow-up, the lead assesses the remaining work. Dispatch `alaa-implementer-opus` when the lane must resolve a non-obvious engineering design decision and at least one criterion below applies. Record the concrete open decision, its criterion, and its consequence for correctness or failure behavior in the existing lane/dispatch record and final roster:
+Select `alaa-implementer-haiku` directly for mechanical implementation only when ALL are recorded before dispatch: exact transformation and exclusions; finite explicitly enumerated existing-file scope; expected result; settled design with no semantic discretion; known pattern; and cheap discriminating checks that detect wrong, incomplete or out-of-scope results. Many files are allowed; file count alone neither qualifies nor disqualifies. Ambiguous matches, undefined scope or design changes fail admission. Human model preference does not waive fit. If fit ceases, stop dependent work and return remaining scope for reclassification while preserving valid edits. Never require a lightweight trial, replay completed work, expand command authority or waive independent gates. Otherwise use the workhorse routes below; unresolved facts still go to retrieval/clarification.
 
-- public API, event, or data contract changes;
-- service boundaries or architecture decisions;
-- concurrency, races, locking, distributed ordering, idempotency;
-- auth or trust boundary, or cryptographic correctness;
-- schema or data migration coupled to application logic;
-- authoring or rewriting agent instructions, architecture documents, or standards whose meaning, ownership, loading scope, or structure still requires design judgment. Applying ratified wording or a specified behavior-preserving rewrite can remain default work; the file extension does not qualify;
-- complex backwards compatibility or rollout;
-- multiple plausible designs with materially different failure behavior.
+- `alaa-implementer`: Bounded settled implementation with precise scope and checks.
+- `alaa-implementer-sonnet-high`: Harder or longer implementation whose design is settled.
+- `alaa-implementer-opus`: Moderate unresolved engineering judgment.
+- `alaa-implementer-opus-high`: Interacting unresolved design decisions and demanding system reasoning.
 
-For exceptional implementation, select `alaa-implementer-fable` only when the lane has (a) documented demanding long-horizon work with coupled unresolved stages and invariants, or (b) representative evidence of an Opus higher-effort quality gap after excluding tool, context and specification causes. Record the exact dependent stages, open decisions, invariants and correctness/failure consequence, or the comparison evidence, in the existing lane/dispatch record and roster.
+Use `alaa-implementer-fable` only for documented applicable Opus-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. An ordinary repairable defect, failed check or poor first answer is not demonstrated model inadequacy. For inadequacy-based admission only, the evidence must identify a remaining reasoning limitation of the applicable high-workhorse profile, distinguish it from a defect the owning implementer can repair, and explain why context/specification/tool correction and decomposition do not resolve that limitation. This diagnosis requires no additional mandatory retry or experiment. An explicit user instruction to select the exceptional model for this lane requires no failed-workhorse or reasoning-gap evidence; verify availability and effective authority in either branch. A model mention alone is not such an instruction. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work.
 
-Select one route: the exceptional condition selects `alaa-implementer-fable`; otherwise the unresolved-design admission above selects `alaa-implementer-opus`; settled designs and precise specifications use `alaa-implementer`.
+Record the actual profile and reason before dispatch. For exceptional admission record the applicable Opus-high result, the remaining inadequacy, corrections and decomposition consideration, or the explicit user direction. An unresolved decision alone selects an appropriate workhorse profile, never exceptional implementation. Missing facts, unavailable tools and product intent return to their owners.
 
-Importance, surface labels, file counts, uncertainty, prior role, and failure count alone do not qualify. Missing facts, tools, or product intent go to their owners; they are not design-complexity evidence. When routing remains uncertain, use the default implementer and let the review gate decide; re-dispatch requires qualifying evidence.
+Reassess remaining work only at existing initial-assignment, material-scope-change and fix-follow-up boundaries. Continue while the same reason applies; do not switch during a command or ordinary progress update. Before replacing a writer, retire its assignment and reconcile surviving edits/checkpoint. Hand off remaining scope, acceptance criteria and evidence; preserve independent gates, never overlap writers or replay completed work.
 
-At those follow-up boundaries, reapply admission to the work still unresolved: settled design returns to the default role. Continue the current demanding or exceptional assignment while its same admission evidence remains valid; do not switch during a command or reassess ordinary progress updates. Before replacing a writer, retire its assignment and reconcile surviving edits and checkpoint. Hand off remaining work, scope, acceptance criteria, findings, and evidence; preserve required gates and never overlap writers.
+Read `model-effort-policy.md` before profile changes.
 
-Read `model-effort-policy.md` before profile changes. Diagnose tool, context, and specification failures through their owners before considering escalation.
 ## Correctness review depth
 
 Select the deep route when review involves complex interactions among subsystems, a broad failure impact, or documented insufficiency of the standard review. Dispatch the existing `alaa-reviewer` for both standard and deep routes; do not create a second reviewer. Record the trigger and select only one profile per scope. When replacing an insufficient standard review, retire that assignment and pass its evidence to the deep route; do not run them concurrently.

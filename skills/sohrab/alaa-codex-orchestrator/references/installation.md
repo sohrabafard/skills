@@ -34,7 +34,7 @@ python scripts/validate_pack.py
 python scripts/check_agent_grants.py --self-test
 ```
 
-The renderer generates both correctness-review profiles from `assets/reviewer-contract.md`, then the version/hash manifest. `--check` never writes. Exit `0` is clean, `1` is findings/drift, and `2` is unavailable proof; either nonzero blocks installation and completion.
+The renderer preserves both correctness-review profiles from `assets/reviewer-contract.md`, adds standalone implementation/planner wrappers from their shared contracts and metadata-only `assets/profile-wrappers.json`, then writes the version/hash manifest. Canonical policy alone supplies model/effort pins. `--check` never writes. Exit `0` is clean, `1` is findings/drift, and `2` is unavailable proof; either nonzero blocks installation and completion.
 
 ## Installer rejection fixtures
 

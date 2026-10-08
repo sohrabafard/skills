@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "1.1.0",
+  "policy_version": "1.3.0",
   "comparison_rule": "Change one factor only; isolate each run; do not execute external or destructive actions.",
   "scenarios": [
     {
@@ -37,10 +37,10 @@
       "profile": "alaa-implementer",
       "candidate": {
         "model": "gpt-6.1-sol",
-        "effort": "high"
+        "effort": "medium"
       },
       "comparator": {
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "effort": "high"
       },
       "repetitions": 2,

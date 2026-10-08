@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.2.0 - 2026-10-08
+
+- Allow direct automatic mechanical implementation only with exact transformation/exclusions, finite enumerated existing-file scope, expected result, settled design and cheap discriminating checks; file count alone does not decide.
+- Preserve workhorse/exceptional routes, normal implementation authority and independent gates; stop and reclassify remaining work if mechanical fit ceases.
+
+
+## 5.1.0 - 2026-10-08
+
+- Select implementation profiles directly from a grounded plan, with real medium/high workhorse and read-only planner variants.
+- Exceptional implementation requires applicable high-workhorse inadequacy or explicit user selection; no speculative complexity promotion or trial ladder.
+- Render implementation/planner variants from shared contracts and canonical pins; preserve reviewer generation and consolidated independent gates.
+
 ## 5.0.0 - 2026-10-08
 
 - Project the prompting guide's Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1 routing; keep calibration unrun and preserve grants. Haiku work has bounded evidence and completion contracts.

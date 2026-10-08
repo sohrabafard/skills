@@ -10,6 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 from check_agent_contracts import agent_failures, dispatch_failures, orchestrator_failures
 from check_agent_grants import frontmatter
+from render_agents import drift, expected_outputs, load_policy, OWNER
 import argparse
 import re
 import subprocess
@@ -19,6 +20,12 @@ ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
 
 REQUIRED = {
+    "alaa-implementer-haiku",
+    "alaa-implementer-sonnet-high",
+    "alaa-implementer-opus-high",
+    "alaa-planner",
+    "alaa-planner-high",
+
     "alaa-spec-analyst",
     "alaa-explorer",
     "alaa-researcher",
@@ -158,6 +165,8 @@ def validate() -> int:
             if hit:
                 errors.append(f"cross-runtime leak in {path.relative_to(ROOT)}:{lineno}: {hit.group(0)!r}")
 
+    errors.extend(f"generated drift: {path.relative_to(ROOT)}" for path in
+                  drift(expected_outputs(ROOT, load_policy(OWNER / "assets/claude-model-policy.json"))))
     unavailable = False
     policy_check = ROOT.parent / "alaa-prompting-guide/scripts/check_claude_model_policy.py"
     for label, command in (

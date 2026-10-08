@@ -1,0 +1,27 @@
+{
+  "paths": [
+    "outputs/20261008-haiku55-routing/inspect-plan-profiles.py",
+    "skills/sohrab/alaa-cc-orchestrator/CHANGELOG.md",
+    "skills/sohrab/alaa-cc-orchestrator/VERSION",
+    "skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md",
+    "skills/sohrab/alaa-cc-orchestrator/assets/profile-wrappers.json",
+    "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+    "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+    "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+    "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+    "skills/sohrab/alaa-codex-orchestrator/CHANGELOG.md",
+    "skills/sohrab/alaa-codex-orchestrator/VERSION",
+    "skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md",
+    "skills/sohrab/alaa-codex-orchestrator/assets/profile-wrappers.json",
+    "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+    "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+    "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+    "skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json",
+    "skills/sohrab/alaa-prompting-guide/assets/evals/claude-agent-comparisons.json",
+    "skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md",
+    "skills/sohrab/alaa-prompting-guide/references/36-haiku-5-5.md",
+    "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py"
+  ]
+}

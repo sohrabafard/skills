@@ -1,0 +1,16 @@
+{
+  "pack": "alaa-codex-orchestrator",
+  "version": "fixture",
+  "managed_agents": [
+    {
+      "name": "alaa-reviewer-deep",
+      "file": "agents/alaa-reviewer-deep.toml",
+      "sha256": "4b86619eae66147c65033181fc1fbcbc89f8d49f0bf3d4047cab8d4cecb627a6"
+    },
+    {
+      "name": "alaa-reviewer",
+      "file": "agents/alaa-reviewer.toml",
+      "sha256": "32b90e1f67f41f4adab798bcb974501c37a3b81105ea903602e5c8b3cbbaef92"
+    }
+  ]
+}

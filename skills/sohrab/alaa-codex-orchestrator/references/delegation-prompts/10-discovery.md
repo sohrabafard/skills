@@ -1,5 +1,19 @@
 # Discovery and acceptance templates
 
+## Planner variants
+
+Select `alaa-planner` or `alaa-planner-high` through `routing-matrix.md` Planning profile selection; the parent ratifies the draft and owns durable plan/state writes.
+
+```xml
+<task>Draft a grounded advisory plan for <outcome>.</task>
+<planning_profile><exact registered planner; verified configured controls; clear constraints or interacting uncertainties requiring planning judgment></planning_profile>
+<repository_facts><current owners, contracts, constraints and retrieved evidence; missing facts stay unknown></repository_facts>
+<lane_records><outcome, owned scope, exclusions, dependencies, settled/open decisions, failure/invariant reasoning, exact registered implementation profile and reason per lane></lane_records>
+<exceptional_admission><applicable high-workhorse inadequacy after context/spec/tool correction and decomposition consideration, or explicit user instruction to use that exceptional profile; model mentions alone are not instructions></exceptional_admission>
+<action_safety>Read-only advisory draft. Never implement, edit or persist workflow state; the parent ratifies and writes it. No trial ladder, synthetic benchmark or replay of completed work.</action_safety>
+<output>Use the planner's bounded native output contract; include decisions, evidence, independent consolidated checks and unknowns.</output>
+```
+
 ## Spec analyst
 
 ```xml

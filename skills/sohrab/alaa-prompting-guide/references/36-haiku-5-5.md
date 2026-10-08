@@ -1,12 +1,12 @@
 # Claude Haiku 5.5
 
-Use for bounded retrieval, exact-procedure execution and documentation from verified behavior. `assets/claude-model-policy.json` owns assigned role pins, effort, availability and calibration. The launch's fast agentic-work claims support candidate workload selection; they do not prove local quality, latency or equivalence to a GPT model.
+Use for bounded retrieval, exact-procedure execution, mechanical implementation under the orchestrator's exact admission, and documentation from verified behavior. `assets/claude-model-policy.json` owns assigned role pins, effort, availability and calibration. The launch's fast agentic-work claims support candidate workload selection; they do not prove local quality, latency or equivalence to a GPT model.
 
 ## Prompting and work boundaries
 
 Give one outcome, named inputs or retrieval starts, required evidence/checks, allowed tools and side effects, and explicit completion and failure conditions. Require retrieval before factual conclusions and observed checks before success. Keep narrow lanes complete: report every requested item as evidenced or unresolved, and stop at the acceptance criteria. Return missing scope/evidence, wider architecture judgment or ambiguous failures to the lead rather than inventing facts or expanding the task.
 
-The orchestrator owns role triggers and independent gates. Use its registered bounded explorer, verifier, browser-evidence and documenter profiles; general research, policy design and difficult review need their own registered profiles. Do not make Haiku the lead or a universal fallback from a vendor benchmark. Unknown serving identity remains unknown; missing target access blocks dispatch.
+The orchestrator owns role triggers and independent gates. Use its registered bounded explorer, verifier, browser-evidence, documenter and mechanical implementation profiles; general research, policy design and difficult review need their own registered profiles. Do not make Haiku the lead or a universal fallback from a vendor benchmark. Unknown serving identity remains unknown; missing target access blocks dispatch.
 
 ## API and Claude Code controls
 
@@ -24,3 +24,5 @@ Treat the assigned medium effort as an unrun workload hypothesis. Compare one fa
 - [Code subagents](https://code.claude.com/docs/en/sub-agents)
 
 No live model calls, installation, account entitlement checks or local calibration ran. Static policy agreement proves source consistency only.
+
+The registered mechanical implementation role is user-authorized task policy, not a new benchmark claim. Apply `/alaa-cc-orchestrator` routing-matrix admission before dispatch; no arbitrary file-count cap or lightweight trial is required. Its normal implementation authority does not replace support-role restrictions or independent gates. Canonical policy owns the pin and unrun calibration.

@@ -30,7 +30,7 @@ Every dispatch that can run long carries `<progress>` with the active host's rep
 
 Combine the common envelope with the smallest applicable complete template from the routed child.
 
-- When dispatching a spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.
+- When dispatching a planner variant, spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.
 - When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for matrix-design or architecture-review template.
 - When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for lane template and escalation instructions.
 - When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for evidence-run or failure-diagnosis template.

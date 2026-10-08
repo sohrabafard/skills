@@ -1,0 +1,17 @@
+{
+  "id": "codex-writer-policy",
+  "command": "python -B skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py --agent-root skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex",
+  "cwd": ".",
+  "environment": "PYTHONDONTWRITEBYTECODE=1",
+  "resource_limits": "Sequential, normal priority, one process, 120s timeout",
+  "start": "2026-10-08T15:14:26.9555482+03:30",
+  "end": "2026-10-08T15:14:27.1112983+03:30",
+  "duration_seconds": 0.156,
+  "exit": 0,
+  "classification": "PASS",
+  "tier": "affected",
+  "proof_level": "1-static",
+  "stdout": "phase7-codex-writer-policy.stdout.log",
+  "stderr": "phase7-codex-writer-policy.stderr.log",
+  "excerpt": "OK: model policy and 1 agent pins"
+}

@@ -1,0 +1,15 @@
+{
+  "head": "006da19a314558d24c86e144be11ab73cf5f89aa",
+  "files": 2172,
+  "digest_method": "SHA-256 of UTF-8 JSON manifest with sort_keys=True, ensure_ascii=False, separators=(comma,colon)",
+  "closure_snapshot_sha256": "e67b9af0d34c41ef4daea75d1bd10805ba6311263f38adbfc78a5086388c9e49",
+  "changed_after_source_acceptance": [
+    "skills/sohrab/README.fa.md"
+  ],
+  "added": [],
+  "missing": [],
+  "expected_delta": [
+    "skills/sohrab/README.fa.md"
+  ],
+  "matches_expected_delta": true
+}

@@ -1,0 +1,11 @@
+{
+  "pack": "alaa-cc-orchestrator",
+  "version": "fixture",
+  "managed_agents": [
+    {
+      "name": "alaa-implementer",
+      "file": "agents/alaa-implementer.md",
+      "sha256": "81260ee616f60de34798fa3426bc3f572a2eadbe6ae69ab089338830aba1ad0a"
+    }
+  ]
+}

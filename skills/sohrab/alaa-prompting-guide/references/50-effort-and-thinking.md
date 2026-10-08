@@ -32,26 +32,16 @@ Do not carry manual thinking budgets into current adaptive models. Historical Ha
 
 Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/31-sonnet-5-5.md`, `references/42-fable-5-1.md`, `references/36-haiku-5-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
 
-Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Re-run the sweep.
+Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Revalidate current guidance and preserve unrun calibration status; a task selection does not require an experiment.
 
 ## The decision procedure
 
-1. **Classify the judgment.** Is the decision already made, and the lane applies it? Or must the lane itself decide something non-obvious? The first is mid-tier work; the second is top-tier work. This question, not the sensitivity of the surface, selects the model.
-2. **Classify the search.** Does the answer require exploring alternatives, tracing consequences across a system, or holding several constraints simultaneously? That is a high-effort shape. Does it require executing a known procedure and reporting what happened? That is a low-effort shape.
-3. **Start at the family's documented starting point** for that shape, not at your habit from a previous generation.
-4. **Diagnose before escalation.** Missing context, an unavailable tool, or an ambiguous specification needs that cause repaired, not a stronger model. Check the target runtime supports the proposed pair.
-5. **Compare one factor at a time.** Hold task, context, tools, and acceptance criteria constant; vary effort while keeping the model fixed, or vary the model at a shared effort. Use independent repetitions. Compare cost only among runs that pass quality and authority criteria.
-6. **Record the reason wherever the pin is raised.** An unexplained high pin is indistinguishable from drift, and it will be copied forward into contexts where it was never justified.
-
-## Escalation is earned by decision density
-
-The single most useful heuristic in this file: **escalate on decision density, not on surface sensitivity and not on goal importance.**
-
-Use the registered engineering profile for a precise, ratified implementation scope. Sensitive surfaces still require their declared specialist gates; promote the implementation profile when unresolved design or observed quality gaps justify it. Do not claim the stronger model adds no value without comparative evidence.
-
-Importance is handled by gates. Sensitivity is handled by gates. Tier is handled by how much of the decision is still open when the lane starts.
-
-When selection is uncertain, record the uncertainty and use the registered starting profile. Do not assume a later gate makes an unsuitable model safe; escalate when evidence identifies a judgment gap.
+1. **Classify missing facts before judgment.** Retrieve or clarify absent context, tool capability or product intent; a stronger model does not supply missing evidence.
+2. **Plan with the appropriate strong-workhorse profile.** Clear scope/contracts/constraints fit medium planning; resolving interacting uncertainties to form the plan fits high. Use verified compatible lead controls or a real read-only planner.
+3. **Select implementation directly from the completed plan.** Record outcome, scope, settled/open decisions, failure/invariant reasoning and exact registered profile/reason. Planning effort and implementation effort are independent. Runtime routing matrices own workload admission; canonical policies own pins.
+4. **Reserve exceptional implementation for evidence or explicit direction.** Require applicable high-effort workhorse inadequacy after correcting context/specification/tools and considering decomposition, or explicit user selection. Complexity, sensitivity, file/failure count and imagined insufficiency alone do not qualify. Prior applicable evidence may suffice; no trial ladder, synthetic benchmark or replay is required.
+5. **Keep selection and calibration separate.** Controlled comparisons vary one factor at a time with task/context/tools/acceptance held constant; compare cost only among passing runs. Local profile rationales remain unrun until measured. A task selection does not require a new experiment.
+6. **Realize the actual controls.** Verify runtime availability, caps and override precedence. A custom profile may ignore caller model/effort; prose never changes the running configuration. Reassess only at existing material-scope/fix-follow-up boundaries and preserve completed work and independent gates.
 
 ## Codex profiles and exceptions
 
@@ -88,7 +78,7 @@ The same applies to context. A model reasoning over a poorly assembled context d
 
 ## Anti-patterns
 
-- Carrying an effort level forward from a previous model generation without re-running the sweep.
+- Carrying an effort level forward from a previous model generation without revalidating current guidance and honestly retaining unrun calibration status; task selection does not require an experiment.
 - Disabling thinking to control cost instead of lowering effort, then writing repair instructions for the resulting behavior.
 - Lowering effort to shorten responses. Effort is not a verbosity control.
 - Raising effort because the goal is important or the surface is sensitive rather than because the lane must decide something.

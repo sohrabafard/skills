@@ -143,3 +143,7 @@ Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked
 - [Configuration Reference – Codex](https://developers.openai.com/codex/config-reference)
 - [Slash commands – Codex CLI](https://developers.openai.com/codex/cli/slash-commands)
 - [Automations – Codex app](https://developers.openai.com/codex/app/automations)
+
+## Managed direct-selection profiles
+
+The runtime orchestrator renders standalone implementation and planner variants from one editable contract per role family. `scripts/render_agents.py --write` supplies pins only from this skill's canonical policy; `--check` rejects drift. Select the exact registered variant, not a caller effort override that custom metadata ignores. Planning inline requires verified compatible configured controls; a planner draft remains advisory and the parent owns the durable plan. Custom-agent TOML model and model_reasoning_effort pins override caller settings. Static agreement proves source configuration, not runtime identity or model obedience.
