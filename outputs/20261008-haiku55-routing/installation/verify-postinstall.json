@@ -1,0 +1,80 @@
+{
+  "result": "PASS",
+  "receipt_status": "INSTALLED",
+  "claude_managed": 28,
+  "claude_exact_source_receipt_target_hash_and_frontmatter_matches": 28,
+  "claude_mismatches": [],
+  "claude_extra_unmanaged_files": [
+    "alaa-rule-writer.md"
+  ],
+  "codex_managed": 27,
+  "codex_semantic_source_body_metadata_and_current_grant_matches": 27,
+  "codex_mismatches": [],
+  "codex_manifest_source_hash_mismatches": [],
+  "codex_version_sentinel": "5.2.0",
+  "codex_live_mcp_server_count": 7,
+  "codex_live_mcp_fingerprint_sha256": "873eb8b76f890cdc70e0c9c695765d6312afa6bd0b7e05c43c3d4f92ed597905",
+  "codex_installed_inventory_sentinel_matches_live": true,
+  "rulewriter_canonical_hashes": {
+    "claude": {
+      "source_sha256": "a2a4ccf6f9786bea27eb175bed28b7aaf430e33f4cc8753965d3d46ff06dc6ce",
+      "installed_sha256": "a2a4ccf6f9786bea27eb175bed28b7aaf430e33f4cc8753965d3d46ff06dc6ce",
+      "match": true
+    },
+    "codex": {
+      "source_sha256": "ae91dd32886ae116aedfa23805a729343c326a49550226fe0bb65660ee9cfffc",
+      "installed_sha256": "ae91dd32886ae116aedfa23805a729343c326a49550226fe0bb65660ee9cfffc",
+      "match": true
+    }
+  },
+  "backup_entries": 47,
+  "backup_managed_current_entries": 45,
+  "backup_unmanaged_preserved_entries": 1,
+  "backup_unmanaged_mismatches": [],
+  "receipt_claims_unrelated_files_and_config": "preserved",
+  "current_config_files_present": {
+    "claude_settings": true,
+    "codex_config": true
+  },
+  "config_backup_preimage_available": false,
+  "claude_cli_version": "2.1.294",
+  "codex_cli_version": "0.160.0",
+  "version_evidence_note": "Observed from claude --version and codex --version; Codex emitted PATH/temp access warnings.",
+  "activation_or_live_model_proof": "not established; native files, pins, local current grants and CLI versions only.",
+  "claude_model_effort_inventory": {
+    "models": {
+      "claude-fable-5-1": 5,
+      "claude-haiku-5-5": 5,
+      "claude-opus-5-5": 9,
+      "claude-sonnet-5-5": 9
+    },
+    "efforts": {
+      "high": 18,
+      "medium": 10
+    }
+  },
+  "codex_model_effort_inventory": {
+    "models": {
+      "gpt-6-astra": 6,
+      "gpt-6-luna": 4,
+      "gpt-6.1-sol": 17
+    },
+    "efforts": {
+      "high": 15,
+      "low": 1,
+      "medium": 11
+    }
+  },
+  "backup_version_sentinel": {
+    "preinstall": "5.0.0",
+    "current": "5.2.0",
+    "source": "5.2.0",
+    "expected_update": true
+  },
+  "backup_mcp_inventory_preserved": {
+    "matches_backup": true,
+    "matches_live_fingerprint": true
+  },
+  "config_preservation_limit": "Receipt says preserved; backup has no pre-install config.toml or settings.json hash, so independent before/after config comparison is unavailable.",
+  "managed_content_verdict": "PASS"
+}

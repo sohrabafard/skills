@@ -71,3 +71,9 @@ Both runtimes now admit automatic mechanical implementation when all fit conditi
 Documentation passed: report30lines GREEN, outputs index20GREEN, existing Persian index226RED preserved under approval;69skill-index entries agree. Source snapshot e102c059c8324ae1cae808848e07a7325ec3cd36b9222abf9f19a2a3f9f9395e covers2173files. Only the approved Claude count correction differs from source acceptance; all other 2172 hashes match. Five existing agents were reused for implementation, instruction review, release review, verification and documentation; no new agent, requested model override or observed runtime identity. Lead performed the independent correctness review under the planned lean profile.
 
 Curation promotes the clarified automatic mechanical boundary through its existing owner; no additional memory candidate/write or pipeline reopen. Local IMPLEMENTED and MERGE_CANDIDATE apply; RELEASE_CANDIDATE and PUBLISHED not requested. No installation, live model calls, staging or commit.
+
+## Phase8 - Authorized installed result
+
+Managed installation and independent postcheck passed for28Claude and27Codex agents; current content/pins/grants and the5.2.0Codex sentinel agree. Backups preserve47prior managed files/sentinels. The installer observed unrelated configuration preservation; an independent before-image config hash was not recorded. Existing rule-writer hashes remain canonical. User output and independent observation confirm the native Claude update to2.1.294, clearing Haiku's2.1.293 minimum. Codex CLI0.160.0 was observed. No agent performed the CLI update, model invocation, source-policy edit, staging or commit.
+
+Three existing agents were reused for installation, independent verification and bounded documentation. Runtime activation, model access and behavior remain untested; installed static controls are the proven boundary. No new memory candidate or write was admitted.

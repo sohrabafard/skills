@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "managed_claude": 28,
+  "managed_codex": 27,
+  "claude_cli": "2.1.294",
+  "codex_cli": "0.160.0",
+  "haiku_minimum_version_satisfied": true,
+  "source_drift": [],
+  "live_model_activation": "not tested",
+  "cli_upgrade_actor": "user",
+  "source_policy_changes": false,
+  "agent_commit": false
+}
