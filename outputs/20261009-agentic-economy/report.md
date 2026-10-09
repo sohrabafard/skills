@@ -37,3 +37,7 @@ The aggregate source inventory covered 249 files. Closure observed no changes du
 | `alaa-cc-orchestrator` | 3,546 | 2,716 |
 
 The report is the archive's reader-facing summary. The plan, implementation records, source tables, and machine-readable verification evidence remain their own complete artifacts.
+
+## Later authorized installation
+
+After this source report, the user authorized both runtime installations. The [installation receipt and postcheck](installation/README.md) record 33 Codex and 29 Claude definitions installed successfully, with backups and preserved unrelated settings. This does not establish loaded-session activation or live model behavior.

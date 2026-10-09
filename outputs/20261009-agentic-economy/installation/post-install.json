@@ -1,0 +1,333 @@
+{
+  "status": "PASS",
+  "managed_counts": {
+    "claude": 29,
+    "codex": 33
+  },
+  "findings": [],
+  "codex_version_sentinel": "5.3.0",
+  "mcp_server_count": 7,
+  "cli_versions": {
+    "claude": {
+      "exit_code": 0,
+      "output": "2.1.294 (Claude Code)"
+    },
+    "codex": {
+      "exit_code": 0,
+      "output": "codex-cli 0.162.0"
+    }
+  },
+  "installed_records": [
+    {
+      "runtime": "claude",
+      "file": "alaa-accessibility-reviewer.md",
+      "installed_sha256": "bcee62b91e66865d130cb62a0b4f6e37b5c2634ac584e3d34d90c2939842c1fa"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-adversarial-reviewer.md",
+      "installed_sha256": "29b5c46ca0114733afd2506f58dd48ca6c5565f5ef69742698496a7591261e03"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-api-contract-reviewer.md",
+      "installed_sha256": "c40e9f473eb1595f028edf0b729146728dc3e86bb05ce8d3ea6f8fd6d9ff30ac"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-architecture-critic.md",
+      "installed_sha256": "e5634afa97394469d97353c39d24c592abeccc7762b2b9760d27807ba7b87d63"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-browser-qa.md",
+      "installed_sha256": "5e8a4891476935dee7f99341fe26bbbe3e9b3b03f04c8c529f957a0162847d39"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-dependency-auditor.md",
+      "installed_sha256": "adc72ed146d384ee2c8e7de903f00e181623e3908e5962f48ff6fec5e44710ba"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-documenter.md",
+      "installed_sha256": "93266304b4341983e99ee073236179347287aa0483d123886516ae3debf6931c"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-explorer.md",
+      "installed_sha256": "036db2da6edd7212ee2ed352221ecdde6c262f521ea7b7f60479852d6fccbe41"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-failure-analyst.md",
+      "installed_sha256": "0c1e561b4876d805dd170a59de33c9dcbad447d62944791184aa3c39be966a75"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer-fable.md",
+      "installed_sha256": "6bc1317c5e879538b2933c27f94de9ee54a431212c4cf7401c70ea871b8e2f70"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer-haiku-high.md",
+      "installed_sha256": "e4c6537ed54cdd4136c516a10564c1e688e3a92734ec2d355e93be095cf07084"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer-haiku.md",
+      "installed_sha256": "2da0a6d861d2a7f5f948ed83abc494b768844c497c1fb2b21dea8664045fad16"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer-opus-high.md",
+      "installed_sha256": "37689b8c9d1f08115e8e1b515849b92f1bfdcd91c2c958d85e9298d526cab7e1"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer-opus.md",
+      "installed_sha256": "27575925c6f9167118af5c2241d103d8ec6850e8235bf80150df75c0ad45f81b"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer-sonnet-high.md",
+      "installed_sha256": "9d71f926415f9be50951ebc64517e7dd0caeb36069e2c104cdaf35eb26ff53fb"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-implementer.md",
+      "installed_sha256": "5d1e7bfbccb9190e5e7f2f04a8aba4f229360029dd6220fb5432c45ede00b7d0"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-instruction-reviewer.md",
+      "installed_sha256": "c19fe8b49296ab59d65ed88564bf5c10075cd1b783e0223e908859af5c266f98"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-migration-guardian.md",
+      "installed_sha256": "77b1abc7047aa3bedc6ff1edc5ef57b2672d66bd714178542f565f96d63b8f7d"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-observability-reviewer.md",
+      "installed_sha256": "dd2d10b9603d3ef03966eaaf9b345d97002afa101aac04f4abe635db8fb791cb"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-performance-profiler.md",
+      "installed_sha256": "e4a79dc03885c0ceeb5606d9b8929778d3f06d62a0173ae414dff21ba9053143"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-planner-high.md",
+      "installed_sha256": "179a857770bc8eee62534b9e3deedc4ce77d79c754e74416bf2aa42c7cad6425"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-planner.md",
+      "installed_sha256": "8c69c1a1a5598429c7e97b10347819c74cd9e687d16acc088a6dc29cc93eafe1"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-release-guardian.md",
+      "installed_sha256": "9527a637df24a161372552457c726def1f9b132af0365b820b07dbb48895f76d"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-researcher.md",
+      "installed_sha256": "4893f3db1867d8279840b5413d0d6352657963d273d1dac5cb24fb88641c0ba1"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-reviewer.md",
+      "installed_sha256": "d020f0cc314573ea104154d2e1cdf9f15e4ffe3621a3db9a8487ceffe1dda2fb"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-security-reviewer.md",
+      "installed_sha256": "fff294899b929356b22bd6244f5d6aea21d6ac95a7d4d512702f634d1dd1baf8"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-spec-analyst.md",
+      "installed_sha256": "edcd2b3173d2637728275c3772c81d40d5ab0cb3d3971d2412254d2b576339f9"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-test-strategist.md",
+      "installed_sha256": "bea3193c57930ac5a3ee2bf9b7ccc39d9e4900d20f8bed7dec1c1f218a7b52a3"
+    },
+    {
+      "runtime": "claude",
+      "file": "alaa-verifier.md",
+      "installed_sha256": "8a65f49c0f72ac4d95c27effd4689efb49e8ec01981af905dfe19144c14100cc"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-accessibility-reviewer.toml",
+      "installed_sha256": "9a3850062fe465a583b14f5f55fe5d5affa22c5f01a19b738b4e63ccd8bc87a2"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-adversarial-reviewer.toml",
+      "installed_sha256": "f012e4e5da90b3bc2ade7ad09db4a0b50303098fcfdb14f42da0757ecdc6bc5c"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-api-contract-reviewer.toml",
+      "installed_sha256": "0a232dd704a8040027c4385a2364c9a5b9f2ba8efec774a4d9b3bc305e263c43"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-architecture-critic.toml",
+      "installed_sha256": "528f1fb654ecd3b2bebc73530fa600344a7f0dd54b82d3466f67f50276bc38f7"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-browser-qa.toml",
+      "installed_sha256": "118326222b87d156f250c282c958f2f23cdc9b8866fb237b6b6627342c6a857e"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-dependency-auditor.toml",
+      "installed_sha256": "86acbcd773a39add340c740c40b6c50e6da5e1c58b084988c96485e9dce1766f"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-documenter.toml",
+      "installed_sha256": "d2ae863ffe8cac336143390c69c50892bc084920aabb4b79b10da716ff1f0b06"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-explorer.toml",
+      "installed_sha256": "02e51708564b998e7e08f73d1dd6100b0fd721e5a56d5698c6c0094ab084b4f5"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-failure-analyst.toml",
+      "installed_sha256": "233e9190b13dfcdf76695f0bb9fc1a232a9bb24abb86a7c7fd0a1307cff2d113"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-astra-medium.toml",
+      "installed_sha256": "2a938fc499d92aff839c79e4eccba56166d4dc78d275e337b363a85b8c4a5425"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-astra-xhigh.toml",
+      "installed_sha256": "31db1f9e63003e3a28b4f21de3831367b5c4795dd68ab4759b467a5f82ebf17e"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-astra.toml",
+      "installed_sha256": "aac4a005a0ebe22800d096ac618389675264b7d641d8656919d7b5dc46b2e809"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-high.toml",
+      "installed_sha256": "c0e77d121575171f055c364f0e31474680430750fb98f45058ea48bb2de9e64c"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-low.toml",
+      "installed_sha256": "7568f548a2a91452bb9420275cc5de10a584feff7a60d87ae2dec128af61a25c"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-luna-high.toml",
+      "installed_sha256": "1d3966311748ebf660843d5740edce9642a0bce8bdbf52338acf23c1df6ac865"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-luna-low.toml",
+      "installed_sha256": "266450922b8bdeda3a3736ed856f8e0924ba4fb6aa12caab9c6a26219be615c1"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-luna.toml",
+      "installed_sha256": "4f7a7cfc49ef5e66c7bcdeec86a7e1604691062e853043710005587723989cc5"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer-xhigh.toml",
+      "installed_sha256": "138e789800406f4755f06380fe1c7c3a83a39279e78d4e8f835f978c0de10938"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-implementer.toml",
+      "installed_sha256": "f74291236c910b5ebba628ab8189bf9f2ff57c6520435e684ff478f7c23b2fe8"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-instruction-reviewer.toml",
+      "installed_sha256": "d67515b4f16ce5761f0aae34f5778169d5778133172fd65ae0ed63758a137c75"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-migration-guardian.toml",
+      "installed_sha256": "b3a9764ece158b1c05504dadc5c26c4e81da4aff448bf66fb1c11537e5e1cc48"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-observability-reviewer.toml",
+      "installed_sha256": "be8f7c17a2ffc56d501d7c283e97f5231a6eb8f6287241ba0089ec2fc23ae8d5"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-performance-profiler.toml",
+      "installed_sha256": "94382275c744837f59a09b2b095e23947c44147cebe6fdd0a9c60f54036c4b88"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-planner-high.toml",
+      "installed_sha256": "029896ccb8bd21459e0d574680959241fd5e8fc7fe8d6d463d441f668b6799ae"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-planner.toml",
+      "installed_sha256": "12ce2eb81a56b191c99b32886caf4a4e5a25cb1dccf0188b804b6961c7e13583"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-release-guardian.toml",
+      "installed_sha256": "05e4d065f094de93d97b1647043fd50436a6810497d0510e1f9df1084af8aec1"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-researcher.toml",
+      "installed_sha256": "bcbdfaa7d9e81cfed9900055e6ff96d36d4f99501b0a038b075eb7cfcd34346c"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-reviewer-deep.toml",
+      "installed_sha256": "d0a9c1588e656014303e5d51cd35ccb843d08a145d42d3dcc69c6b6bb6ab6a0c"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-reviewer.toml",
+      "installed_sha256": "e0495e42ff73e89ca9590d2e718d9647e60e9c6c19557932ac1b3f0340031ef7"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-security-reviewer.toml",
+      "installed_sha256": "fd5e4c09fb810d3f77321fe9477b4a755bfa2b490666bc9260cfc4c7b6c48738"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-spec-analyst.toml",
+      "installed_sha256": "30d111f54cb9220c73723b7958efa1854468350907c883b10719d49c1f71b930"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-test-strategist.toml",
+      "installed_sha256": "c33fa30dc543f63e13eeb335d8c9c7f6c18ae3331b0cbe19aeac56d9450e134f"
+    },
+    {
+      "runtime": "codex",
+      "file": "alaa-verifier.toml",
+      "installed_sha256": "ec11bfc500991ad0d38030dc9a685089bca1c993780481b58e8c3cdf77bf8d53"
+    }
+  ],
+  "limits": "Static installed-file/grant proof; no model calls, account access or loaded-session activation proof."
+}
