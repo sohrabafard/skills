@@ -1,0 +1,18 @@
+{
+  "command": "python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261009-222708_go-routing-ownership.md --continuation docs/agents/20261009-222708_go-routing-ownership-state.md --profile resumable",
+  "exit_code": 0,
+  "observed_output": "Validation completed without blocking errors (profile: resumable).",
+  "head": "52e576c31ca654e244a25657f8e8bca9bd3c32fe",
+  "sha256": "439fdefc76f42996ab588c4ce2c733fc51afa1e0afa896ce4930a115e4ded36c",
+  "files": [
+    {
+      "path": "docs/_agent_plans/20261009-222708_go-routing-ownership.md",
+      "sha256": "ec54c3efad4370e43a4a6b9d264d0dd0251ab8fabb08adb54b8c7d20c3c78cba"
+    },
+    {
+      "path": "docs/agents/20261009-222708_go-routing-ownership-state.md",
+      "sha256": "25a61fb7a478a5eddc1a29536a70b7a9dabc482f70bef9ca9ed0ea8f291d43b1"
+    }
+  ],
+  "note": "snapshot after successful validation, before phase-receipt insertion"
+}

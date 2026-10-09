@@ -1,0 +1,32 @@
+[
+  {
+    "file": "10-routing-contract.md",
+    "draft": "Name the question and reuse adequate fresh evidence before selecting one primary owner. A provider preference never requires retrieving an already answered fact again.",
+    "final": "Name the question; reuse adequate fresh evidence before selecting one primary owner. Preference never justifies retrieving an answered fact again.",
+    "classification": "wording only; same policy, trigger and limits"
+  },
+  {
+    "file": "10-routing-contract.md",
+    "draft": "Known file or symbol identity alone does not select Serena. Prefer eligible CodeGraph for source/structural questions it can adequately answer, then eligible Serena, then bounded native evidence. A required semantic operation that CodeGraph cannot establish goes directly to its capable semantic owner; do not make a graph-first call merely to satisfy a preference.",
+    "final": "Known identity alone does not select Serena. Prefer eligible CodeGraph for adequate source/structural answers, then eligible Serena, then bounded native evidence. Send required semantics beyond CodeGraph directly to the capable semantic owner; do not make a futile graph-first call.",
+    "classification": "wording only; same policy, trigger and limits"
+  },
+  {
+    "file": "40-stack-bindings.md",
+    "draft": "Explore accepts file or symbol names and can return verbatim source, relationships and impact together. Known identity does not change its eligibility; use it for adequate source/structural answers under the routing contract. Consume returned provenance: heuristic edges do not prove binding completeness.",
+    "final": "Explore accepts file/symbol names and can return verbatim source, relationships and impact together. Apply the routing contract regardless of known identity; heuristic edges do not prove binding completeness.",
+    "classification": "wording only; same policy, trigger and limits"
+  },
+  {
+    "file": "40-stack-bindings.md",
+    "draft": "A known file or symbol alone does not require a Serena read after adequate CodeGraph evidence.",
+    "final": "Known identity alone does not require a Serena read after adequate CodeGraph evidence.",
+    "classification": "wording only; same policy, trigger and limits"
+  },
+  {
+    "file": "40-stack-bindings.md",
+    "draft": "Do not require a graph call for an operation it cannot establish.",
+    "final": "Skip graph calls for unsupported operations.",
+    "classification": "wording only; same policy, trigger and limits"
+  }
+]

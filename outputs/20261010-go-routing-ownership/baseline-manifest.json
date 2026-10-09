@@ -1,0 +1,151 @@
+{
+  "head": "52e576c31ca654e244a25657f8e8bca9bd3c32fe",
+  "source": "committed files from git show; concurrent working edits excluded",
+  "sha256": "db184827e22df4dfd58db0b32f834161e2978ba21ba016ac0b5db9dc11c7ac90",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/SKILL.md",
+      "sha256": "2d1ad4d9815f8390ffca15de5782f728063dcc0a6adc7b4873947aeadbbc9946"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/agents/openai.yaml",
+      "sha256": "06eb9ca9ba14a313857cc18c6ca86dcb7797467672c34ea9e3e174b4a37b495c"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/00-topic-map.md",
+      "sha256": "8c8dc7fc4647a18c657e31b788c4dbede9b635fb58d72706d1cc3392b3d64adb"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+      "sha256": "e4e09d5457eaa0cbd8defe2741f0aceac265ccaba099e3af82615e136e325fe2"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md",
+      "sha256": "32778ac6be269218b3a950724d29c3d2a28f6b6234120ed02b1e1208ec203063"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/30-artifact-boundaries.md",
+      "sha256": "4ee103943242f32c2ad8ebe30fb6a87f1edcbc8502bbc25233a1c7373fe187de"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+      "sha256": "085c8658b6c1aa3820be6d1a434ddc9d34533ed105f8d1929fe288c4ef193487"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+      "sha256": "50515ad7f40901c1846a1586b1aa740f59f555e369bbe48e38bb3ecfe937b65a"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/50-hooks.md",
+      "sha256": "3131f4f12f241e09bbe2d7a3a3cd5d0529d7da2544f888f90851973523ba70f8"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/60-evaluation.md",
+      "sha256": "9bbdd4ed3e82fa5e36d48b175e64a202a42bb5e88cb0dc1e0eb2b7c738135a3d"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/70-project-bindings.md",
+      "sha256": "c4ef14e6e8db7ec31907d5352b7682469773a22ab3e1b4d75556ff5252127219"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/80-agent-scoping.md",
+      "sha256": "19204a0bb915018c25554513ec9a4841a0bad09da9ae8fd8782fdb4a4db85bd7"
+    },
+    {
+      "path": "skills/sohrab/alaa-code-intelligence-routing/references/90-source-map.md",
+      "sha256": "5cb082647fa28e947f071b79a31cf5f0031830d229dc2bc7c882ff6229f1a2dc"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/SKILL.md",
+      "sha256": "753848cd8a5e2a5aa405384f4d44fc40f2c9e1d122aeaecd5e18cc985dedad59"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/agents/openai.yaml",
+      "sha256": "87b2f313049b842e631fd77db4cbfd8f144cb9e79f9a619804b56cbbb74723f0"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/00-topic-map.md",
+      "sha256": "7802f0357c38a781053576db3cd589e2e3b4d7216390d170f65497ea8b1e3b5b"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/05-what-this-skill-does-not-own.md",
+      "sha256": "af0f5db58be99ae6b7a4d3429c8a30ff05a61c899e8de5358f53ff837131dcee"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+      "sha256": "80d0d433b9127a4f90cb53dd262425221934702d7541a85f0b512fec5a33ab8d"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+      "sha256": "97fe39ef5f41c8480907894be47369df0dfb52c942c48c5ac8f46bf1c4d553dd"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/20-sohrab-companions.md",
+      "sha256": "4364c70a5a6c196da8a3bb85b3e28788f6c64a3f73f7e2db623c3d7cb5f67d43"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/30-http-api-framework-choice.md",
+      "sha256": "2c48093302d038dc55b7bc0b9f53f46e8573d388a17d9640168ef915cef7cae0"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/31-chi-api-guide.md",
+      "sha256": "24a96380c170cab0967f5b11961644650a063252835fc852a1d994433f90a4bc"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+      "sha256": "9e1ad63d31f1420f4f4062b25e3a98be0140f6380add053dedd9fca140f86edd"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/45-failure-behavior-at-the-call-site.md",
+      "sha256": "aedad5ad9ece5bb0dc15ccec45a6a2af3a39e2c969ffa4282f78a2555e06245b"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/46-chi-under-load.md",
+      "sha256": "c2de0ef692b2895631d9313d14ac992c46888d91391a6290f8be64f61c4003af"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/60-service-architecture-patterns.md",
+      "sha256": "b163b1bed7f2a5ea58fa4f1584c7eecfe109d09b10e48af5386930f1c5720bab"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/61-redis-cache-layer.md",
+      "sha256": "3dfaded99bad1af35c72c88b422675b09e4ac326bcde54e5eb0904421b67922a"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md",
+      "sha256": "07ba0e32bff6f011539bb189eb8b7e6d1ad0a6e6538ade88f5bc7bf39f2e5239"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/63-tdd-and-testing-discipline.md",
+      "sha256": "31e791a4d2afa82a1729ea7385b8e6fbe6b93bf948fdd8ed971a0a16f4624eac"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+      "sha256": "cf763a68b366c3dd4feec774ba1c8fd0b820fe8a5b35300b15e811f1430b0693"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/10-release-status-and-changes.md",
+      "sha256": "57caedf89a7925e2120233a464d6bb1b92c0902eeef93a1f0a0c0e003efea659"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/20-directive-language-and-toolchain.md",
+      "sha256": "c7a3b34f88fcceaf409a9b77b393d65c4f99af140170a3bfa68afd006a2836e3"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md",
+      "sha256": "a7fcab122d977e09400cffaeee20e35424a9b884d2d11573a6aab6f177e94bf8"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/40-testing-security-and-experiments.md",
+      "sha256": "480c3ec3357d6726a0774d0b6539a8d4fb0f9ac63ea69f825454c4672e796406"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/70-modern-go-baseline/50-adoption-rules.md",
+      "sha256": "66afa31803ac63f619b3f33bcdaabb1ff0558cedd404ea09267eb02e58d594bd"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/SOURCES.md",
+      "sha256": "342f757fb8e0b6733e488d0e3ef5b95866c46ff6a6ec363907c9cb7fa7b71fad"
+    }
+  ]
+}

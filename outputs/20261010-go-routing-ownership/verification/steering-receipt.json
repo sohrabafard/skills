@@ -1,0 +1,99 @@
+{
+  "overall_status": "A9 verification set PASS; independent acceptance and parent-owned final checks remain pending.",
+  "agent": "alaa-verifier",
+  "configured_model_effort": "neutral definition, no model/effort pin",
+  "requested_model_effort": "gpt-6-luna / medium",
+  "observed_model_effort": "unknown",
+  "snapshot": {
+    "head": "52e576c31ca654e244a25657f8e8bca9bd3c32fe",
+    "files": 36,
+    "manifest": "outputs/20261010-go-routing-ownership/steering-final-manifest.txt",
+    "sha256": "ee706eae796c874bc68c91740fa2203b4c1316b2cc41a8d54fa65aaa68994024",
+    "previous_sha256": "0a4b66a5574cb229d4094eba918b34dc4075941887d35f277f026d8c4f28f30a",
+    "matches_before_between_after": true,
+    "changed_inputs": [
+      "skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+      "skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md"
+    ]
+  },
+  "commands": [
+    {
+      "id": "V2-steering",
+      "command": "python -B scripts/validate_sohrab_skill_pack.py",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "BelowNormal; 2 CPU affinity; 120s timeout",
+      "duration_ms": 323,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V2-steering.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V2-steering.stderr.txt"
+    },
+    {
+      "id": "V6-routing-refs",
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "BelowNormal; 2 CPU affinity; 120s timeout",
+      "duration_ms": 181,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V6-routing-refs.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V6-routing-refs.stderr.txt"
+    },
+    {
+      "id": "V7-unstaged-steering",
+      "command": "git diff --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "Normal; unconstrained CPU/timeout",
+      "duration_ms": 48,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V7-unstaged-steering.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V7-unstaged-steering.stderr.txt"
+    },
+    {
+      "id": "V7-staged-steering",
+      "command": "git diff --cached --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "Normal; unconstrained CPU/timeout",
+      "duration_ms": 41,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V7-staged-steering.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V7-staged-steering.stderr.txt"
+    },
+    {
+      "id": "V3-cited",
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-golang --skill alaa-code-intelligence-routing",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "writer bounded static receipt",
+      "duration": "0.00002 s per steering receipt",
+      "exit_code": 0,
+      "classification": "PASS (cited, not rerun)",
+      "tier": "focused",
+      "proof_level": "1 - static",
+      "source": "outputs/20261010-go-routing-ownership/steering-receipt.json"
+    }
+  ],
+  "reused": {
+    "V3": "Refreshed exit 0 cited from steering-receipt.json; exact steering snapshot.",
+    "V4_index": "Prior PASS retained: skill names/directories/index files did not change.",
+    "V4_lifecycle": "Prior PASS retained: lifecycle owner/state/reporter files did not change.",
+    "V5": "Prior PASS retained: agent contract and metadata files did not change.",
+    "V6": "Prior full 34-file run plus subsequent Go SKILL.md rerun retained for unchanged Markdown inputs; the only two newly changed Markdown references were checked in this run.",
+    "prior_receipts": "Initial receipt.json and fix-receipt.json preserved."
+  },
+  "repository": {
+    "cwd": "D:\\Sohrab\\Project\\skills",
+    "final_status_file": "outputs\\20261010-go-routing-ownership\\verification\\steering-final-scoped-git-status.txt",
+    "contamination": "None; manifest equality held across every command."
+  },
+  "pending": "Independent acceptance S11-S13 and parent-owned final workflow/report checks."
+}

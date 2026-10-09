@@ -1,0 +1,20 @@
+--- pre-fix/skills/sohrab/alaa-golang/SKILL.md
++++ post-fix/skills/sohrab/alaa-golang/SKILL.md
+@@ -29,7 +29,7 @@
+    when a source or impact question needs it. Repository truth overrides this skill; report discrepancies.
+ 2. When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, establish the active phase from the kit
+    repository through /alaa-go-chi-development before writing or reviewing a line. Read its
+-   `references/05-phase-and-source-truth.md`. If the phase forbids consumer work, stop and report
++   `../alaa-go-chi-development/references/05-phase-and-source-truth.md`. If the phase forbids consumer work, stop and report
+    the phase and decision-record filename. A consumer-shaped request, local consumer repository,
+    registry row or older record does not reactivate it; only a project-owner instruction naming
+    that consumer does. Load /alaa-golang-clean-code-principles before the first edit or review
+@@ -63,7 +63,7 @@
+ Add `go test -race ./...` when the change touches a goroutine, channel, mutex, cache, worker pool
+ or package-level variable. Run `govulncheck ./...` when `go.mod` or `go.sum` changed.
+ Report commands and outcomes using /alaa-go-chi-development
+-`references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`, `skipped`, `not run`.
++`../alaa-go-chi-development/references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`, `skipped`, `not run`.
+ Never report an outcome for a command you did not execute. Stop successfully only when the
+ requested behavior, required gates and completion answers are established in the target repository.
+ 

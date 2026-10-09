@@ -1,0 +1,39 @@
+{
+  "scope": "Only routing references 10-routing-contract.md and 40-stack-bindings.md; every Go and other routing file byte preserved",
+  "acceptance": "A9; S11-S13 expectations, independent acceptance pending",
+  "files": 36,
+  "sha256": "ee706eae796c874bc68c91740fa2203b4c1316b2cc41a8d54fa65aaa68994024",
+  "previous_sha256": "0a4b66a5574cb229d4094eba918b34dc4075941887d35f277f026d8c4f28f30a",
+  "receipts": [
+    {
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-golang --skill alaa-code-intelligence-routing",
+      "cwd": "D:/Sohrab/Project/skills",
+      "resource_policy": "ordinary bounded static command",
+      "chunk_id": "b9ee58",
+      "wall_time_seconds": 0.00002,
+      "exit_code": 0,
+      "original_token_count": 86,
+      "output": "check_fleet_references.py: 2 of 69 skills, 34 Markdown files, 32 citations\r\n\r\nFINDINGS: none\r\n\r\nINFO (5 unmarked target-repository paths across 1 skills; these never fail the run)\r\n     5  alaa-golang\r\n  Rerun with --show-info for every site, or --format json for all of them.\r\n  Mark each one as <repo>/<path> to retire it from this list.\r\n"
+    },
+    {
+      "command": "git diff --check -- skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+      "cwd": "D:/Sohrab/Project/skills",
+      "resource_policy": "ordinary bounded static command",
+      "chunk_id": "331d81",
+      "wall_time_seconds": 0.0853648,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "git diff --cached --check -- skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+      "cwd": "D:/Sohrab/Project/skills",
+      "resource_policy": "ordinary bounded static command",
+      "chunk_id": "632374",
+      "wall_time_seconds": 0.3131113,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  ]
+}

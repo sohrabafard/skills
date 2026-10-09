@@ -6,16 +6,15 @@ behind a trusted gateway, PostgreSQL, Redis, ClickHouse and RabbitMQ, deployed t
 **Rule:** work this ladder in order and stop at the first step that answers the question:
 
 1. The standard library.
-2. A package the kit already provides — check `/alaa-go-chi-development` (`$alaa-go-chi-development`)
+2. A package the kit already provides — check `/alaa-go-chi-development`
    `references/12-kit-capability-map.md` before adding anything that touches transport, storage, messaging,
    observability, or identity.
 3. A package already in the repository's `go.mod`.
 4. The **default** entry for that role below.
 5. A **conditional** entry below, when its stated condition holds.
-6. `/golang-popular-libraries` (`$golang-popular-libraries`) for discovery, then `/golang-pkg-go-dev`
-   (`$golang-pkg-go-dev`) to check the candidate's versions, licence, importers, and CVEs before proposing it.
+6. `/golang-popular-libraries` for discovery, then `/golang-pkg-go-dev` to check the candidate's versions, licence, importers, and CVEs before proposing it.
 
-**Rule:** apply the change with `/golang-dependency-management` (`$golang-dependency-management`) and run
+**Rule:** apply the change with `/golang-dependency-management` and run
 `govulncheck ./...` afterwards.
 
 **Forbidden:** adding a dependency without saying, in the same message, which complexity it removes and what the
@@ -31,8 +30,7 @@ standard library would have cost instead.
 
 `github.com/go-chi/httprate`, `golang.org/x/time/rate` — **conditional, and not on the kit.** Admission control is a
 kit-owned surface: see `46-chi-under-load.md` before reaching for either. Off the kit, `x/time/rate` is the in-process
-token bucket and `httprate` the HTTP-level limiter, and the policy they enforce comes from `/alaa-reliability-sla`
-(`$alaa-reliability-sla`).
+token bucket and `httprate` the HTTP-level limiter, and the policy they enforce comes from `/alaa-reliability-sla`.
 
 ## Config and logging
 
@@ -62,7 +60,7 @@ become the bulk of the code.
 
 `github.com/sony/gobreaker/v2` — **conditional, and not on the kit.** A breaker is a kit-owned surface
 (`46-chi-under-load.md`); off the kit, this is the implementation, and whether a breaker is warranted and with which
-thresholds belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+thresholds belongs to `/alaa-reliability-sla`.
 
 ## PostgreSQL
 
@@ -73,7 +71,7 @@ thresholds belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
 `github.com/pressly/goose/v3` — **default** migration runner, and what the kit's migrate lane uses.
 
 `atlas` — **conditional**, when schema drift detection and migration review are governance requirements rather than
-build steps. That choice belongs to `/alaa-data-layer` (`$alaa-data-layer`).
+build steps. That choice belongs to `/alaa-data-layer`.
 
 **Forbidden:** an ORM in a PostgreSQL service in this stack. **Rule:** use `pgx` with `sqlc`, or `pgx` with explicit
 repository code.
@@ -97,9 +95,9 @@ client to be the bottleneck. **Forbidden:** choosing it without that profile.
 `github.com/twmb/franz-go` — **not on this fleet.** RabbitMQ is the only broker this platform runs: the exchange
 and queue registry holds no Kafka topic, the service kit ships no Kafka package, no `KAFKA_*` environment key exists,
 and the registered async metric family is entirely `alaa_queue_*` and `alaa_outbox_*`. Adopting Kafka is an owner
-decision, recorded as a kit change request through `/alaa-go-chi-development` (`$alaa-go-chi-development`) before any
+decision, recorded as a kit change request through `/alaa-go-chi-development` before any
 service imports a client. Whether a message needs a broker at all and which transport carries it belong to
-`/alaa-async-messaging` (`$alaa-async-messaging`). Use this client and no other on the day a service is told to speak
+`/alaa-async-messaging`. Use this client and no other on the day a service is told to speak
 Kafka, because a second Kafka client in the fleet doubles the tuning surface for one transport.
 
 `github.com/ThreeDotsLabs/watermill` — **conditional**, only where a team has decided to adopt its eventing
@@ -141,7 +139,7 @@ a kit service.
 
 `github.com/golang-jwt/jwt/v5` — **conditional**, only in a service that owns an authentication boundary.
 **Forbidden:** adding JWT verification to a service that sits behind the trusted gateway; see
-`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
+`/alaa-trust-gateway-auth`.
 
 `github.com/MicahParks/keyfunc/v3` — **conditional**, when a service that already verifies JWTs must fetch keys from
 a JWKS endpoint.
@@ -160,7 +158,8 @@ using it to prove a query returns correct results — that needs a real database
 
 ## Repository tools
 
-`gopls` — **required backend** for Serena's Go semantic surface and the direct fallback reached through `/golang-gopls` (`$golang-gopls`); it is not the default agent-facing route.
+`gopls` — Go language server. For a task requiring a local semantic operation,
+load /alaa-code-intelligence-routing for surface selection.
 `golangci-lint` — **default** lint runner. **Rule:** pin its version in CI.
 `govulncheck` — **default** vulnerability gate.
 `buf` — **default** in any protobuf repository.
@@ -180,13 +179,13 @@ Plain constructors — **default** (`60-service-architecture-patterns.md`).
 `github.com/samber/do/v2` — **conditional**, only when `go.mod` already requires it.
 
 `github.com/google/wire` — **not for new work.** The repository was archived in 2025. **Rule:** on an existing Wire
-service, keep it and load `/golang-google-wire` (`$golang-google-wire`).
+service, keep it and load `/golang-google-wire`.
 
 ## Utilities
 
 `github.com/google/uuid` — **conditional** for a standalone service. **Forbidden:** using it to mint a public
 identifier on a kit service; UUIDv7 public ids come from the kit's `idkit`
-(`/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) P8).
+(`/alaa-golang-clean-code-principles` P8).
 
 ## Beyond the default stack
 
@@ -196,7 +195,7 @@ Reach here only when the standard library, the kit, a `golang-*` skill, and ever
 - `sigs.k8s.io/controller-runtime` — when the service is a controller or operator. **Forbidden:** a hand-written
   reconcile loop in a service that is part of the cluster control plane.
 - `ko` — build tool, when fast single-binary container builds matter more than a hand-written Dockerfile. The
-  production image decision belongs to `/alaa-docker-production` (`$alaa-docker-production`).
+  production image decision belongs to `/alaa-docker-production`.
 - `goreleaser` — release tool, for multi-platform binaries, archives, checksums, and publishing.
 
 **Rule:** `buf`, `ko`, and `goreleaser` are tools, not runtime dependencies. Pin them in tool directives or install

@@ -1,0 +1,118 @@
+{
+  "files": 36,
+  "sha256": "43df187cbd34026e120dfee1b4c39a43502a54db6ee0806af6a72d7876d467ac",
+  "changed": [
+    "skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+    "skills/sohrab/alaa-golang/SKILL.md",
+    "skills/sohrab/alaa-golang/agents/openai.yaml",
+    "skills/sohrab/alaa-golang/references/00-topic-map.md",
+    "skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+    "skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+    "skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+    "skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md"
+  ],
+  "unchanged": [
+    "skills/sohrab/alaa-code-intelligence-routing/agents/openai.yaml",
+    "skills/sohrab/alaa-code-intelligence-routing/references/00-topic-map.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/30-artifact-boundaries.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/50-hooks.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/60-evaluation.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/70-project-bindings.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/80-agent-scoping.md",
+    "skills/sohrab/alaa-code-intelligence-routing/references/90-source-map.md",
+    "skills/sohrab/alaa-code-intelligence-routing/SKILL.md",
+    "skills/sohrab/alaa-golang/references/05-what-this-skill-does-not-own.md",
+    "skills/sohrab/alaa-golang/references/20-sohrab-companions.md",
+    "skills/sohrab/alaa-golang/references/30-http-api-framework-choice.md",
+    "skills/sohrab/alaa-golang/references/31-chi-api-guide.md",
+    "skills/sohrab/alaa-golang/references/45-failure-behavior-at-the-call-site.md",
+    "skills/sohrab/alaa-golang/references/46-chi-under-load.md",
+    "skills/sohrab/alaa-golang/references/60-service-architecture-patterns.md",
+    "skills/sohrab/alaa-golang/references/61-redis-cache-layer.md",
+    "skills/sohrab/alaa-golang/references/63-tdd-and-testing-discipline.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline/10-release-status-and-changes.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline/20-directive-language-and-toolchain.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline/30-runtime-and-standard-library.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline/40-testing-security-and-experiments.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline/50-adoption-rules.md",
+    "skills/sohrab/alaa-golang/references/70-modern-go-baseline.md",
+    "skills/sohrab/alaa-golang/references/SOURCES.md"
+  ],
+  "content_checks": [
+    "One Go topic-map pointer",
+    "Native build/vet/changed-package/full-test gate retained",
+    "Race/vulnerability triggers retained",
+    "Kit phase, P1-P13, drift/gap and four completion answers retained",
+    "Go provider names limited to catalogue/provenance facts",
+    "Single Markdown invocation form: skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-golang/SKILL.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/SKILL.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/agents/openai.yaml",
+    "Single Markdown invocation form: skills/sohrab/alaa-golang/references/00-topic-map.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/references/00-topic-map.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+    "Single Markdown invocation form: skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md",
+    "No machine paths or emoji added: skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md",
+    "Common frontmatter only: alaa-golang",
+    "Packaged description <=1024 and no angle markup: alaa-golang",
+    "Codex default prompt keeps dollar invocation: alaa-golang",
+    "Common frontmatter only: alaa-code-intelligence-routing",
+    "Packaged description <=1024 and no angle markup: alaa-code-intelligence-routing",
+    "Codex default prompt keeps dollar invocation: alaa-code-intelligence-routing"
+  ],
+  "provider_mentions": [
+    {
+      "path": "skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+      "line": 144,
+      "text": "### golang-gopls (`/golang-gopls`)"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+      "line": 146,
+      "text": "Go's `gopls` language-server mechanics: build-aware definitions, references, package API discovery,"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+      "line": 161,
+      "text": "`gopls` \u2014 Go language server. For a task requiring a local semantic operation,"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/SOURCES.md",
+      "line": 37,
+      "text": "| `https://pkg.go.dev/golang.org/x/tools/gopls` | gopls capabilities, MCP tools, code actions, settings |"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/SOURCES.md",
+      "line": 38,
+      "text": "| `https://oraios.github.io/serena/01-about/020_programming-languages.html` | Serena Go support and its `gopls` prerequisite |"
+    },
+    {
+      "path": "skills/sohrab/alaa-golang/references/SOURCES.md",
+      "line": 39,
+      "text": "| `https://oraios.github.io/serena/02-usage/050_configuration.html` | Serena Go backend settings forwarded to `gopls` |"
+    }
+  ],
+  "per_package": {
+    "alaa-golang": {
+      "files": 23,
+      "sha256": "ad3a1ab1581d60ddaf0881630e29157f3565277a87710ef0824ba8d4542aa5f8"
+    },
+    "alaa-code-intelligence-routing": {
+      "files": 13,
+      "sha256": "821a773745f54f3bad3c9fe4863345444b793f20d13fbbde73f58642721bb71d"
+    }
+  }
+}

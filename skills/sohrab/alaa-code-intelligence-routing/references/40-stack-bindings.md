@@ -40,13 +40,13 @@ When application-info is unavailable, inspect direct installed package metadata;
 
 ## CodeGraph specialized groups
 
-Explore can return source, relationships and impact together: consume it under the routing contract. When a narrower unresolved fact needs it, use exposed node/source, symbol query, files, callers/callees, impact or context operations. CLI and MCP inventories can differ; do not enable optional MCP tools to mirror CLI.
+Explore accepts file/symbol names and can return verbatim source, relationships and impact together. Apply the routing contract regardless of known identity; heuristic edges do not prove binding completeness. When a narrower unresolved fact needs it, use exposed node/source, symbol query, files, callers/callees, impact or context operations. CLI and MCP inventories can differ; do not enable optional MCP tools to mirror CLI.
 
 Affected-test/dependency suggestions select candidate coverage; native execution alone proves tests passed. Status/version establish index/installation information. Init/uninit, index/sync/unlock, daemon control, install/uninstall/upgrade and telemetry changes have lifecycle/configuration effects; they require explicit corresponding authority, never automatic evidence fallback. A documented unreleased viewer is not an installed capability.
 
 ## Serena specialized groups
 
-Use supported symbol search/overview, declaration, references, implementations and diagnostics for exact symbol facts. Optional symbol diagnostics and backend-specific hierarchy/inspections require the backend exposing them. Inspections diagnose source; they do not discharge project proof.
+Use supported symbol search/overview, declaration, references, implementations and diagnostics for a separately needed semantic fact or eligible source fallback selected by the routing contract. Known identity alone does not require a Serena read after adequate CodeGraph evidence. Optional symbol diagnostics and backend-specific hierarchy/inspections require the backend exposing them. Inspections diagnose source; they do not discharge project proof.
 
 Supported symbol body/insert/rename operations and backend-specific move/inline/safe-delete are writes, each subject to mutation reconciliation. A safety-oriented name does not establish authorization or complete coverage.
 
@@ -56,11 +56,12 @@ Shell, REPL and debug evaluation carry execution authority. Beta REPL and backen
 
 ## Go
 
-Use CodeGraph for unknown source flow. Serena's configured Go backend uses gopls; backend use is not a parallel owner. Use direct configured gopls only for a recorded unavailable/unhealthy or missing build-aware, generated-code, dependency-resolution, package-API or code-action operation that it actually supports. Native Go recipes own build/vet/test proof. /alaa-golang owns implementation doctrine; routing does not authorize backend activation.
+For Go source/structural lookup, follow `references/10-routing-contract.md`: eligible CodeGraph is preferred when it can adequately answer, even for a known file or symbol. Required binding/build-aware semantics, diagnostics or semantic mutation select capable Serena directly, then configured gopls for a supported unavailable/unhealthy or missing-operation gap, then eligible native evidence retaining lost guarantees. Serena's Go backend uses gopls; that backend is not a parallel owner. Skip graph calls for unsupported operations. For dependency metadata/resolution or an authorized upgrade, use `references/45-native-tools.md`; source/impact/API questions trigger separate selection. The routing contract owns bounded native edits and supplemental diagnostics. Native Go recipes own build/vet/test proof.
+/alaa-golang owns implementation doctrine; routing does not authorize backend activation.
 
 ## Vue and Quasar
 
-Use CodeGraph for unknown component/composable/store/client flow. Use Serena for known Vue/TypeScript semantics only with the correct configured backend. Do not add another backend merely because TypeScript exists. Authorized browser observation owns runtime UI facts; native frontend recipes own proof. /alaa-frontend-developer and /alaa-vue-typescript-clean-code own implementation doctrine.
+Apply the routing contract to component/composable/store/client source questions, including known files/symbols. Required Vue/TypeScript semantics use capable Serena only with the correct configured backend. Do not add another backend merely because TypeScript exists. Authorized browser observation owns runtime UI facts; native frontend recipes own proof. /alaa-frontend-developer and /alaa-vue-typescript-clean-code own implementation doctrine.
 
 ## Other source
 

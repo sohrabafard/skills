@@ -1,0 +1,121 @@
+{
+  "overall_status": "Required source/workflow/document checks passed. Auxiliary checker failures are preserved below; no product drift was observed.",
+  "proof_level": "Static source and artifact conformance only; no live activation, provider behavior or performance proof",
+  "head": "52e576c31ca654e244a25657f8e8bca9bd3c32fe",
+  "product_sha256": "ee706eae796c874bc68c91740fa2203b4c1316b2cc41a8d54fa65aaa68994024",
+  "product_manifest": "outputs/20261010-go-routing-ownership/steering-final-manifest.txt",
+  "product_identity": {
+    "independent_receipt": "verification/steering-receipt.json",
+    "parent_equivalent_inspection": "chunk 21f772: 36 current files and 36 manifest entries; zero mismatches, zero missing files; published manifest text SHA256 matches",
+    "assessment": "Exact set/per-file identity establishes final source identity; no need to reconstruct an undocumented sort order"
+  },
+  "artifact_sha256": {
+    "docs/_agent_plans/20261009-222708_go-routing-ownership.md": "810c2b004d8aa9d75ccc81416b15e44beb3cd7577a02bce29cec80ab17e72159",
+    "docs/agents/20261009-222708_go-routing-ownership-state.md": "224d34aaa45f9d5007017516b2229b7f6abae247c8742f1ea8d240b896974d94",
+    "outputs/README.md": "e974d19570ab8a158f8d78cef1886030e12aa9bff5bfc29cc1d6d59b601124b9",
+    "outputs/20261010-go-routing-ownership/report.md": "2ff7d7fbbd10259096d7816da8601440d7ffa8bb85be9df59e19530da1ec6a8c",
+    "outputs/20261010-go-routing-ownership/review.md": "e8bb0c5ed8efccbea8b8e61828111edc180be12538bbe6e79c2ce151b3edecdc",
+    "outputs/20261010-go-routing-ownership/source-notes.md": "13c07197c23454c21eb9839d53ff7a4be4df613bd8b589667b2037fec1930edb",
+    "outputs/20261010-go-routing-ownership/authoring-report.md": "09753d196ba686fa0ff757d6dc2418802ff1e16518384e83de61fbef937301c4",
+    "outputs/20261010-go-routing-ownership/authoring-rule-map.md": "278db37c583b75432adf91d0b927d6c2a419db0e0318a1a5a9231d3dbb290217",
+    "outputs/20261010-go-routing-ownership/authoring-scenarios.md": "3d21877bffcfd68efe6460b6b22850944f2e2f9c25051914949b64cc728f1d9e",
+    "outputs/20261010-go-routing-ownership/steering-report.md": "ff346d88b459596a228183a51742e750f15d4e1bc8b81f3390e1e45c6dcfd2ff"
+  },
+  "scope": {
+    "changed_tracked_paths": 38,
+    "outside_scope": [],
+    "staged_state": "preserved"
+  },
+  "commands": [
+    {
+      "id": "V1-final",
+      "command": "& 'skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1' -FilePath python -ArgumentList @('-B','skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py','--plan','docs/_agent_plans/20261009-222708_go-routing-ownership.md','--continuation','docs/agents/20261009-222708_go-routing-ownership-state.md','--profile','resumable') -CpuCount 2 -TimeoutSeconds 120",
+      "chunk_id": "50a545",
+      "wall_time_seconds": 0.0000198,
+      "exit_code": 0,
+      "original_token_count": 77,
+      "output": "plan: docs/_agent_plans/20261009-222708_go-routing-ownership.md\r\ncheckpoint: docs/agents/20261009-222708_go-routing-ownership-state.md\r\nValidation completed without blocking errors (profile: resumable).\r\n[alaa-low-priority] pid=51536 priority=BelowNormal cpuCount=2 durationMs=315 timedOut=False exitCode=0\r\n"
+    },
+    {
+      "id": "V6-final",
+      "command": "& 'skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1' -FilePath python -ArgumentList @('-B','skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py','.','--files','docs/_agent_plans/20261009-222708_go-routing-ownership.md','docs/agents/20261009-222708_go-routing-ownership-state.md','outputs/README.md','outputs/20261010-go-routing-ownership/report.md','outputs/20261010-go-routing-ownership/review.md','outputs/20261010-go-routing-ownership/source-notes.md','outputs/20261010-go-routing-ownership/authoring-report.md','outputs/20261010-go-routing-ownership/authoring-rule-map.md','outputs/20261010-go-routing-ownership/authoring-scenarios.md','outputs/20261010-go-routing-ownership/steering-report.md') -CpuCount 2 -TimeoutSeconds 120",
+      "chunk_id": "98ca6e",
+      "wall_time_seconds": 0.1020171,
+      "exit_code": 0,
+      "original_token_count": 44,
+      "output": "Validated links in 10 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n[alaa-low-priority] pid=6260 priority=BelowNormal cpuCount=2 durationMs=234 timedOut=False exitCode=0\r\n"
+    },
+    {
+      "id": "V7-artifacts-unstaged",
+      "command": "git diff --check -- docs/_agent_plans/20261009-222708_go-routing-ownership.md docs/agents/20261009-222708_go-routing-ownership-state.md outputs/README.md outputs/20261010-go-routing-ownership/report.md outputs/20261010-go-routing-ownership/review.md outputs/20261010-go-routing-ownership/source-notes.md",
+      "chunk_id": "ae5679",
+      "wall_time_seconds": 0.1007009,
+      "exit_code": 0,
+      "original_token_count": 112,
+      "output": "warning: in the working copy of 'docs/_agent_plans/20261009-222708_go-routing-ownership.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/agents/20261009-222708_go-routing-ownership-state.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'outputs/20261010-go-routing-ownership/source-notes.md', CRLF will be replaced by LF the next time Git touches it\n"
+    },
+    {
+      "id": "V7-artifacts-staged",
+      "command": "git diff --cached --check -- docs/_agent_plans/20261009-222708_go-routing-ownership.md docs/agents/20261009-222708_go-routing-ownership-state.md outputs/README.md outputs/20261010-go-routing-ownership/report.md outputs/20261010-go-routing-ownership/review.md outputs/20261010-go-routing-ownership/source-notes.md",
+      "chunk_id": "138190",
+      "wall_time_seconds": 0.2308315,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  ],
+  "history_line_check": {
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "4e04a4",
+      "wall_time_seconds": 0.3946641,
+      "exit_code": 0,
+      "original_token_count": 59,
+      "output": "outputs/README.md: GREEN 23 physical lines\r\nValidated links, line budgets in 1 Markdown file(s) under D:\\Sohrab\\Project\\skills.\r\n[alaa-low-priority] pid=45300 priority=BelowNormal cpuCount=2 durationMs=166 timedOut=False exitCode=0\r\n"
+    }
+  },
+  "auxiliary_checks": {
+    "aggregate_reconstruction": {
+      "initial": {
+        "chunk_id": "36ac0f",
+        "wall_time_seconds": 0.3291965,
+        "exit_code": 1,
+        "original_token_count": 23,
+        "output": "Traceback (most recent call last):\r\n  File \"<stdin>\", line 7, in <module>\r\nAssertionError\r\n"
+      },
+      "one_retry": {
+        "chunk_id": "c7adf3",
+        "wall_time_seconds": 0.2766969,
+        "exit_code": 1,
+        "original_token_count": 23,
+        "output": "Traceback (most recent call last):\r\n  File \"<stdin>\", line 7, in <module>\r\nAssertionError\r\n"
+      },
+      "classification": "CHECKER-ASSUMPTION FAILURE: Python candidate ordering differs from the published manifest. No file mismatch exists. Retry budget exhausted; no further reconstruction attempted. Equivalent exact per-file proof and independent final identity check used."
+    },
+    "artifact_inventory": {
+      "initial": {
+        "chunk_id": "a40a51",
+        "wall_time_seconds": 0.5104468,
+        "exit_code": 1,
+        "original_token_count": 515,
+        "output": "{\r\n  \"head\": \"52e576c31ca654e244a25657f8e8bca9bd3c32fe\",\r\n  \"artifact_sha256\": {\r\n    \"docs/_agent_plans/20261009-222708_go-routing-ownership.md\": \"810c2b004d8aa9d75ccc81416b15e44beb3cd7577a02bce29cec80ab17e72159\",\r\n    \"docs/agents/20261009-222708_go-routing-ownership-state.md\": \"224d34aaa45f9d5007017516b2229b7f6abae247c8742f1ea8d240b896974d94\",\r\n    \"outputs/README.md\": \"e974d19570ab8a158f8d78cef1886030e12aa9bff5bfc29cc1d6d59b601124b9\",\r\n    \"outputs/20261010-go-routing-ownership/report.md\": \"2ff7d7fbbd10259096d7816da8601440d7ffa8bb85be9df59e19530da1ec6a8c\",\r\n    \"outputs/20261010-go-routing-ownership/review.md\": \"e8bb0c5ed8efccbea8b8e61828111edc180be12538bbe6e79c2ce151b3edecdc\",\r\n    \"outputs/20261010-go-routing-ownership/source-notes.md\": \"13c07197c23454c21eb9839d53ff7a4be4df613bd8b589667b2037fec1930edb\",\r\n    \"outputs/20261010-go-routing-ownership/authoring-report.md\": \"09753d196ba686fa0ff757d6dc2418802ff1e16518384e83de61fbef937301c4\",\r\n    \"outputs/20261010-go-routing-ownership/authoring-rule-map.md\": \"278db37c583b75432adf91d0b927d6c2a419db0e0318a1a5a9231d3dbb290217\",\r\n    \"outputs/20261010-go-routing-ownership/authoring-scenarios.md\": \"3d21877bffcfd68efe6460b6b22850944f2e2f9c25051914949b64cc728f1d9e\",\r\n    \"outputs/20261010-go-routing-ownership/steering-report.md\": \"ff346d88b459596a228183a51742e750f15d4e1bc8b81f3390e1e45c6dcfd2ff\"\r\n  },\r\n  \"artifact_findings\": [\r\n    \"docs/_agent_plans/20261009-222708_go-routing-ownership.md: machine-local path\",\r\n    \"outputs/20261010-go-routing-ownership/source-notes.md: machine-local path\",\r\n    \"outputs/20261010-go-routing-ownership/authoring-report.md: machine-local path\",\r\n    \"outputs/20261010-go-routing-ownership/steering-report.md: machine-local path\"\r\n  ],\r\n  \"changed_tracked_paths\": 38,\r\n  \"outside_scope_tracked_paths\": [],\r\n  \"product_identity_evidence\": \"Independent steering receipt and parent per-file comparison (chunk21f772): 36 files, zero mismatches or missing files; published manifest text digest ee706eae796c874bc68c91740fa2203b4c1316b2cc41a8d54fa65aaa68994024\"\r\n}\r\n"
+      },
+      "one_cause_specific_retry": {
+        "chunk_id": "5f58cd",
+        "wall_time_seconds": 0.3878714,
+        "exit_code": 0,
+        "original_token_count": 122,
+        "output": "{\r\n  \"cause\": \"Initial unbounded drive-letter regex matched the s:/ substring inside https:// URLs\",\r\n  \"repair\": \"Require a non-alphanumeric boundary before a drive letter\",\r\n  \"drive_path_matches\": {\r\n    \"docs/_agent_plans/20261009-222708_go-routing-ownership.md\": [],\r\n    \"outputs/20261010-go-routing-ownership/source-notes.md\": [],\r\n    \"outputs/20261010-go-routing-ownership/authoring-report.md\": [],\r\n    \"outputs/20261010-go-routing-ownership/steering-report.md\": []\r\n  }\r\n}\r\n"
+      },
+      "classification": "CHECKER-ASSUMPTION fail-then-pass: unbounded drive regex matched https://; boundary-aware retry found no machine paths. UTF-8/whitespace and scope had no findings."
+    }
+  },
+  "curation": "No additional admitted candidate; authoritative decisions are in the skills/task review. No memory write.",
+  "lifecycle": {
+    "IMPLEMENTED": "proven",
+    "MERGE_CANDIDATE": "proven",
+    "RELEASE_CANDIDATE": "not requested",
+    "PUBLISHED": "not requested"
+  },
+  "limitations": "Uncommitted local changes; installation and live activation unrequested/unverified; serving identities and input/output token counters unknown"
+}

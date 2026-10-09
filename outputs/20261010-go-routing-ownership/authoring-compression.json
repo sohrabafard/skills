@@ -1,0 +1,103 @@
+[
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "classification": "baseline preflight restoration before compression",
+    "change": "Name both existing instruction files and retain route-registration read for source changes; dependency-only exception is ratified A4."
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "Act as the Go engineering front door for the Ala platform. Select the applicable Go mechanics,\nhouse companions and doctrine owners; hold the Go decisions none of them owns. Finish the\nauthorized task with repository evidence, required native proof and the four completion answers.",
+    "final": "Own Go decisions no routed skill covers; select Go mechanics, house companions and doctrine\nowners for Ala platform work. Complete the authorized task with repository evidence, required\nnative proof and the four completion answers.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "Existing repository truth overrides this skill;\n   report discrepancies instead of silently deciding between conflicting statements.",
+    "final": "Repository truth overrides this skill; report discrepancies.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "follow it without restating\n   its rules.",
+    "final": "follow it without restating its rules.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "Route model, effort, thinking-budget, runtime-capability and invocation questions\n   through /alaa-prompting-guide and its `references/50-effort-and-thinking.md`; state none here.",
+    "final": "Take model, effort, thinking-budget, runtime-capability and invocation answers from\n   /alaa-prompting-guide and its `references/50-effort-and-thinking.md`, never this skill.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "Loading this skill alone\n   does not write files or authorize effects.",
+    "final": "Activation writes nothing and grants no additional authority.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "Report each actual command and outcome using /alaa-go-chi-development",
+    "final": "Report commands and outcomes using /alaa-go-chi-development",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/SKILL.md",
+    "draft": "Before calling Go work done, report all four:",
+    "final": "Report all four before calling Go work done:",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/references/00-topic-map.md",
+    "draft": "for selection of evidence and any required semantic operation; this row delegates the decision rather than selecting a provider",
+    "final": "for evidence and required semantic-operation selection",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/references/10-installed-golang-skills.md",
+    "draft": "it selects the eligible surface and records its limits, so this catalogue names capabilities only.",
+    "final": "it selects the surface and its limits. This catalogue names capabilities only.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md",
+    "draft": "it alone decides provider selection and degraded operation.",
+    "final": "it owns provider selection and degraded operation.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md",
+    "draft": "load /alaa-code-intelligence-routing to select its eligible surface; this list prescribes no provider.",
+    "final": "load /alaa-code-intelligence-routing for surface selection.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-golang/agents/openai.yaml",
+    "draft": "use $alaa-code-intelligence-routing and follow its sole provider-selection and degraded-operation contract.",
+    "final": "use $alaa-code-intelligence-routing for provider selection and degraded operation.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+    "draft": "An authorized bounded local edit does not require Serena, gopls or another semantic provider to be\nconfigured. When supported provider evidence is missing, first name the exact behavior and scope\nto change. Use adequate fresh source or already returned evidence, inspect applicable contracts,\ncallers and tests, verify the target worktree, preserve unrelated changes and inspect the resulting\ndiff. Execute every mandatory native gate under the stack/repository/task's proof policy. A source\nread alone is not proof of complete references, binding-safe rename or refactor safety. If a required\nproperty still needs unavailable semantic evidence and cannot be established by authorized equivalent\nproof, stop only its dependent action or claim. Do not require installation to continue a bounded edit\nwhose evidence and required proof are sufficient.",
+    "final": "Authorized bounded local edits need no configured Serena, gopls or other semantic provider.\nWhen provider evidence is missing, name the behavior and scope; use adequate fresh source or\nreturned evidence, inspect applicable contracts/callers/tests, verify the target worktree, preserve\nunrelated changes and inspect the resulting diff. Run every mandatory native gate under the\nstack/repository/task proof policy. Source reads alone prove neither complete references,\nbinding-safe rename nor refactor safety. Block only the dependent action or claim if its required\nsemantic property lacks authorized equivalent proof. Sufficient evidence and required proof permit\nthe bounded edit without installation.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+    "draft": "Provider diagnostics are supplemental unless a repository rule or acceptance criterion requires a\nspecific semantic property beyond native proof. Absence of an optional diagnostic does not block\nauthorized edits or completion after mandatory native gates pass. Record that gap and its lost\nguarantee; do not call native output equivalent without evidence. A specifically required uncovered\nproperty remains blocked, and native gates still execute for unrelated safe work.",
+    "final": "Provider diagnostics are supplemental unless repository rules or acceptance require a specific\nsemantic property beyond native proof. Missing optional diagnostics do not block authorized edits\nor completion after mandatory native gates pass. Record the gap and lost guarantee; do not claim\nnative output equivalent without evidence. Required uncovered properties remain blocked; execute\nnative gates for unrelated safe work.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+    "draft": "That contract\nalso owns bounded native editing and supplemental diagnostics.",
+    "final": "That contract also owns bounded native edits and supplemental diagnostics.",
+    "classification": "wording only; same trigger, obligation and scope"
+  },
+  {
+    "path": "skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+    "draft": "Do not survey symbols or call\npaths unless a separately named compatibility, API-use or impact fact requires that evidence.",
+    "final": "Survey symbols/call paths only for a separately named compatibility, API-use or impact fact.",
+    "classification": "wording only; same trigger, obligation and scope"
+  }
+]

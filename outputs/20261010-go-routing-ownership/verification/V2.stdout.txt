@@ -1,0 +1,25 @@
+D:\Sohrab\Project\skills\skills\sohrab: 69 skills
+Errors:
+- alaa-golang: referenced path does not exist -> references/05-phase-and-source-truth.md
+- alaa-golang: referenced path does not exist -> references/05-phase-and-source-truth.md
+Warnings:
+- alaa-algorithms-data-structures: top-level body is 153 lines
+- alaa-bale-provider: top-level body is 135 lines
+- alaa-cc-orchestrator: top-level body is 173 lines
+- alaa-codex-orchestrator: top-level body is 174 lines
+- alaa-gitlab-ci-cd: top-level body is 167 lines
+- alaa-golang-clean-code-principles: top-level body is 147 lines
+- alaa-laravel-job-rabbitmq: top-level body is 206 lines
+- alaa-laravel-public-api-contract-pack: top-level body is 180 lines
+- alaa-memory-os: top-level body is 152 lines
+- alaa-minio-object-storage: top-level body is 135 lines
+- alaa-octane-performance: top-level body is 151 lines
+- alaa-permission-generator: top-level body is 167 lines
+- alaa-php-clean-code: top-level body is 206 lines
+- alaa-project-constitution: top-level body is 210 lines
+- alaa-reliability-sla: top-level body is 140 lines
+- alaa-security-review: top-level body is 144 lines
+- alaa-services-contract: top-level body is 158 lines
+- alaa-system-design: top-level body is 166 lines
+- alaa-testing-strategy: top-level body is 190 lines
+- vector-rust-observability-pipelines: top-level body is 130 lines

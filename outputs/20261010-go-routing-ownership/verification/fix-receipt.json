@@ -1,0 +1,96 @@
+{
+  "overall_status": "Fix verification PASS; parent-owned final workflow/report gates remain pending.",
+  "agent": "alaa-verifier",
+  "configured_model_effort": "neutral definition, no model/effort pin",
+  "requested_model_effort": "gpt-6-luna / medium",
+  "observed_model_effort": "unknown",
+  "frozen_snapshot": {
+    "head": "52e576c31ca654e244a25657f8e8bca9bd3c32fe",
+    "file_count": 36,
+    "manifest": "outputs/20261010-go-routing-ownership/fix-final-manifest.txt",
+    "sha256": "0a4b66a5574cb229d4094eba918b34dc4075941887d35f277f026d8c4f28f30a",
+    "pre_fix_sha256": "43df187cbd34026e120dfee1b4c39a43502a54db6ee0806af6a72d7876d467ac",
+    "matches_before_between_after": true,
+    "scope": "Only two citations in skills/sohrab/alaa-golang/SKILL.md changed; routing package unchanged."
+  },
+  "commands": [
+    {
+      "id": "V2-retry",
+      "command": "python -B scripts/validate_sohrab_skill_pack.py",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "BelowNormal; 2 CPU affinity; 120s timeout",
+      "duration_ms": 324,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V2-retry.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V2-retry.stderr.txt"
+    },
+    {
+      "id": "V6-go-skill",
+      "command": "python -B skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py . --files skills/sohrab/alaa-golang/SKILL.md",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "BelowNormal; 2 CPU affinity; 120s timeout",
+      "duration_ms": 181,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V6-go-skill.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V6-go-skill.stderr.txt"
+    },
+    {
+      "id": "V7-unstaged",
+      "command": "git diff --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "Normal; unconstrained CPU/timeout",
+      "duration_ms": 65,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V7-unstaged-fix.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V7-unstaged-fix.stderr.txt"
+    },
+    {
+      "id": "V7-staged",
+      "command": "git diff --cached --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "Normal; unconstrained CPU/timeout",
+      "duration_ms": 57,
+      "exit_code": 0,
+      "classification": "PASS",
+      "tier": "affected",
+      "proof_level": "1 - static",
+      "stdout": "outputs/20261010-go-routing-ownership/verification/V7-staged-fix.stdout.txt",
+      "stderr": "outputs/20261010-go-routing-ownership/verification/V7-staged-fix.stderr.txt"
+    },
+    {
+      "id": "V3-cited",
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-golang --skill alaa-code-intelligence-routing",
+      "cwd": "D:\\Sohrab\\Project\\skills",
+      "resource_limits": "writer bounded static receipt",
+      "duration": "0.4284835 s",
+      "exit_code": 0,
+      "classification": "PASS (cited, not rerun)",
+      "tier": "focused",
+      "proof_level": "1 - static",
+      "source": "outputs/20261010-go-routing-ownership/fix-receipt.json"
+    }
+  ],
+  "reused": {
+    "V3": "Refreshed exit 0 receipt in fix-receipt.json; same fixed manifest inputs.",
+    "V4_index": "Prior exit 0 remains valid: change modifies only citation text in an existing file; skill names/directories and indexes unchanged.",
+    "V4_lifecycle": "Prior exit 0 remains valid: lifecycle owner/state/reporting files unchanged.",
+    "V5": "Prior exit 0 remains valid: no agent contract or openai.yaml files changed.",
+    "V6": "Prior pass covered all 34 files; only Go SKILL.md changed, so reran link check for that file; remaining 33 inputs unchanged.",
+    "initial_V2": "Original V2 exit 1 is retained in receipt.json; this authorized retry against the corrected manifest passed."
+  },
+  "repository_status": {
+    "scope": "two product packages, task plan/checkpoint/output directory, outputs/README.md",
+    "final_status_file": "outputs\\20261010-go-routing-ownership\\verification\\fix-final-scoped-git-status.txt",
+    "contamination": "None; product hash matched the new manifest throughout."
+  },
+  "blockers": "Parent-owned V1 and final workflow/report checks not part of this retry dispatch."
+}

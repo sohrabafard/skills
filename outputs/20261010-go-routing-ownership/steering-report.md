@@ -1,0 +1,21 @@
+# Source-selection steering report
+
+A9 is implemented in routing references 10/40 only; source is frozen for incremental independent acceptance.
+
+- AGENT: alaa-implementer; configured definition neutral; requested gpt-6.1-sol/medium; observed model/effort and narrower runtime enforcement unknown. Same bounded authoring allocation, no children.
+- Explicit policy delta: eligible CodeGraph now answers adequate source/declaration/structural questions even for known files/symbols. Known identity alone no longer selects Serena. Required binding/build-aware semantics, diagnostics or semantic mutation go directly to a capable semantic owner; configured Go gopls remains an eligible semantic fallback, then native evidence with limits.
+- Reuse wins before preference. Existing adequate evidence requires neither a retroactive graph call nor a Serena/native reassurance read. Verify only needed capabilities using still-valid state; no blanket health probes.
+- Specialized owners remain intact for native dependency metadata/resolution/upgrades, literal/unsupported artifacts, Boost/runtime facts and native proof. Required semantic completeness is not inferred from heuristic edges or source reads; missing required properties stay blocked. Unknown-mutation reconciliation, finite failure budgets, native continuation and optional-diagnostic boundaries are unchanged.
+- Changed paths: `skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md` selects by required fact rather than known identity; `skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md` aligns provider descriptions and Go/Vue application of that contract. Manifest comparison with the prior fix proves only these two product file hashes changed; all Go files and other routing files remain byte-identical.
+- S11: known source file/symbol with eligible adequate CodeGraph uses CodeGraph. S12: adequate existing evidence is reused; only a newly missing semantic fact triggers another owner. S13: required diagnostics/semantic mutation beyond graph capabilities selects capable Serena directly, or configured Go gopls for its supported gap, with no futile graph-first probe or setup.
+- First full drafts: `steering-drafts/`; five behavior-preserving wording cuts: `steering-compression.json`. `steering-draft-revision-1.md` makes implementation hierarchy conditional on required binding/build-aware semantics, retaining graph eligibility for adequate structural questions. These explicit policy changes precede compression and do not retroactively explain the earlier authoring lane.
+- `steering-diff.patch` records the two-file change and the subsequent hierarchy-scope refinement. New sorted 36-file UTF-8 payload manifest: `steering-final-manifest.txt`, SHA256 `ee706eae796c874bc68c91740fa2203b4c1316b2cc41a8d54fa65aaa68994024`. All prior manifests and receipts are preserved.
+- Focused V3: exit 0, 2 skills / 34 Markdown files / 32 citations, FINDINGS none; five existing informational unmarked target-path notices. Scoped working and cached diff checks: exit 0, empty output. Each command ran once from repository root with ordinary bounded static resource policy; exact output is in `steering-receipt.json`.
+- Source provenance refreshed by parent for this steering: [CodeGraph MCP](https://colbymchenry.github.io/codegraph/reference/mcp-server/) supports named-file/symbol exploration and source/paths; [resolution](https://colbymchenry.github.io/codegraph/core-concepts/resolution/) qualifies heuristic edges. Installed inventory, identity and freshness still govern eligibility. No setup, performance, live activation or compliance claim.
+- No product boundary conflict found. Broad validators and independent acceptance remain parent/verifier-owned and were not run here. No installation, configuration, commit or external mutation. Rollback is confined to this two-file policy delta, preserving prior work.
+
+Suggested commit message: `refactor(routing): prefer graph evidence for adequate source lookups`
+
+Skills used: requested alaa-prompting-guide, alaa-low-noise and alaa-code-intelligence-routing; existing Go preservation contract retained without edits.
+
+Session accounting: model/effort and tokens not observable in this runtime; subagents: none.

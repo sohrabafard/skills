@@ -1,0 +1,26 @@
+# Authoring lane report
+
+A1-A6 are implemented in the two assigned packages; source is frozen for independent review and verification.
+
+- AGENT: alaa-implementer; configured definition neutral, without model/effort pins; requested fresh-fork gpt-6.1-sol/medium; observed serving identity/effort unknown. No observable mismatch.
+- Authority: workspace-write, declared two-package/artifact scope; native shell and file tools used. No children, MCP mutation, integration setup, install, commit or external effect. Narrower enforcement beyond supplied sandbox/grants is unknown.
+- Decision: triggered pointers in Go, provider selection and degraded continuation in routing alone. Repeating replacement fallback rules in Go would preserve drift; requiring a semantic provider for every edit would contradict A3; dropping native gates would violate A2.
+- Invariants: kit phase and P1-P13, ownership/gap/freshness, HTTP/layer/cache/TDD/package/directive rules, native proof and four completion answers preserved. Unknown-mutation reconciliation and no-reference-completeness inference remain intact.
+- Acceptance map: A1/A3/A4 use routing 10/40/45 and seven Go files; A2 uses `authoring-rule-map.md`; A5 uses Go procedure/authority/failure/output and one topic-map pointer; A6 uses full drafts, revision drafts, compression receipt and policy-delta map. S1-S10 are mapped in `authoring-scenarios.md`; independent acceptance remains pending.
+- Focused receipt: `python -B scripts/check_fleet_references.py --skill alaa-golang --skill alaa-code-intelligence-routing`, repository root, ordinary bounded static execution, exit 0: 2 of 69 skills, 34 Markdown files, 32 citations; FINDINGS none; 5 existing unmarked target-path informational notices.
+- Focused receipts: scoped `git diff --check` and `git diff --cached --check` for both packages, same cwd/resource policy, exit 0, empty outputs. Exact command/output records: `authoring-focused-receipts.json`.
+- Content receipt: `python -B outputs/20261010-go-routing-ownership/authoring-finalize.py`, same cwd/resource policy, exit 0: 30 checks passed, 10 changed files, 26 unchanged Git-content files. `authoring-content-receipt.json` names each check and all paths. Initial check failed because raw committed/disk newline differences misclassified unchanged files; one cause-specific checker repair used Git's changed-path list, then one retry passed. No product change was made to satisfy that failure.
+- Frozen actual-disk manifest: 36 files, sorted repository-relative POSIX path + space + file SHA256 + newline, UTF-8 payload SHA256 `43df187cbd34026e120dfee1b4c39a43502a54db6ee0806af6a72d7876d467ac`. Full manifest: `authoring-final-manifest.txt`.
+- Per-package payload hashes: Go 23 files `ad3a1ab1581d60ddaf0881630e29157f3565277a87710ef0824ba8d4542aa5f8`; routing 13 files `821a773745f54f3bad3c9fe4863345444b793f20d13fbbde73f58642721bb71d`.
+- Evidence: `authoring-full-diff.patch`, `authoring-compression.json`, full `authoring-drafts/`, explicit revisions, rule map and scenarios. No first draft shipped without a wording pass; ownership migration and diagnostic/dependency changes are separate from compression.
+- Official authoring provenance supplied/refreshed by parent on 2026-10-10: [OpenAI Build skills](https://learn.chatgpt.com/docs/build-skills), [Claude skills](https://code.claude.com/docs/en/skills). They support common name/description and progressive disclosure; they do not establish provider routing performance or local activation. Existing Go release/kit facts and dated provenance were preserved, not refreshed or asserted as current.
+- Not run: broad pack/index/lifecycle/agent/link gates (independent verifier owns them), Go application tests, live provider/runtime replay or performance comparison. Product Markdown gates do not prove runtime compliance. No lane blocker or scope conflict.
+- Rollback/compatibility: revert only the scoped product patch if independently rejected, preserving unrelated work. Diagnostic eligibility intentionally changes under ratified D2; native gate strength and service contracts do not change. No installation means local runtime copies are not proven updated.
+
+Suggested commit message: `refactor(go): centralize evidence routing and native continuation`
+
+Skills used: requested alaa-prompting-guide, alaa-low-noise, alaa-golang and alaa-code-intelligence-routing; none additionally invoked.
+
+Session accounting: model/effort and tokens not observable in this runtime; subagents: none.
+
+Fix cycle: independent V2 found two isolated phase/source-truth citations resolving locally. Corrected only those two spans in Go SKILL.md to ../alaa-go-chi-development/references/05-phase-and-source-truth.md after confirming the bundled target and validator path convention. Behavior and the sole topic router are unchanged; routing source and original manifests/receipts remain preserved. Focused fleet/scoped worktree/cached diff checks each exit 0; exact receipts are in fix-receipt.json and two-span diff in fix-diff.patch. New 36-file fix-final-manifest.txt SHA256: 0a4b66a5574cb229d4094eba918b34dc4075941887d35f277f026d8c4f28f30a. Parent owns independent V2 retry and review; no broad gate was rerun by this lane.

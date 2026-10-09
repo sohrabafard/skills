@@ -34,7 +34,17 @@ Inspect Composer scripts, installed metadata and test/static/formatter configura
 
 Inspect module/workspace/build tags and repository recipes. Use installed Go build/vet/test, formatter/linter or wrapper only for the named property. Configured gofmt/goimports/gofumpt can write; inspect check/diff modes. Configured golangci-lint/gotestsum obey their installed configuration, not a generic flag recipe.
 
-Direct gopls is a semantic fallback only for the stack owner's recorded gap, with build context and the required operation verified. Go tests/builds can launch processes, dependencies and generated work; select the authorized scoped recipe and resource policy rather than assuming pure reads.
+For a dependency-metadata or upgrade question, inspect `go.mod`, `go.sum`, applicable `go.work`,
+replacements, toolchain/directive constraints and the repository's dependency-management recipe.
+Use /golang-dependency-management for Go dependency-change mechanics. Inspect the installed Go
+help and recipe before executing version queries or upgrade/tidy commands: they can download modules,
+write manifests or execute tooling. Execute only authorized effects. Survey symbols/call paths only for a separately named compatibility, API-use or impact fact.
+
+Direct configured gopls follows the routing contract's recorded capability gap, with build context
+and the operation verified. Bounded native edits and missing diagnostics follow
+`references/10-routing-contract.md`; semantic-provider absence alone does not require setup.
+Go tests/builds can launch processes, dependencies and generated work; select the authorized scoped
+recipe and resource policy rather than assuming pure reads.
 
 ## Package scripts and proof
 

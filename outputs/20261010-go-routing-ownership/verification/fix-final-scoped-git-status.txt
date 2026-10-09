@@ -1,0 +1,49 @@
+AM docs/_agent_plans/20261009-222708_go-routing-ownership.md
+AM docs/agents/20261009-222708_go-routing-ownership-state.md
+A  outputs/20261010-go-routing-ownership/authoring-compress.py
+A  outputs/20261010-go-routing-ownership/authoring-compression.json
+A  outputs/20261010-go-routing-ownership/authoring-content-receipt.json
+A  outputs/20261010-go-routing-ownership/authoring-drafts-revision-1/skills/sohrab/alaa-golang/SKILL.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts-revision-2/skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/SKILL.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/agents/openai.yaml
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/references/00-topic-map.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/references/10-installed-golang-skills.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md
+A  outputs/20261010-go-routing-ownership/authoring-drafts/skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md
+A  outputs/20261010-go-routing-ownership/authoring-edit.py
+A  outputs/20261010-go-routing-ownership/authoring-final-manifest.txt
+A  outputs/20261010-go-routing-ownership/authoring-finalize.py
+A  outputs/20261010-go-routing-ownership/authoring-focused-receipts.json
+A  outputs/20261010-go-routing-ownership/authoring-full-diff.patch
+AM outputs/20261010-go-routing-ownership/authoring-progress.md
+A  outputs/20261010-go-routing-ownership/baseline-manifest.json
+A  outputs/20261010-go-routing-ownership/planning-draft.md
+A  outputs/20261010-go-routing-ownership/planning-receipt.json
+A  outputs/20261010-go-routing-ownership/source-notes.md
+ M outputs/README.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md
+ M skills/sohrab/alaa-golang/SKILL.md
+ M skills/sohrab/alaa-golang/agents/openai.yaml
+ M skills/sohrab/alaa-golang/references/00-topic-map.md
+ M skills/sohrab/alaa-golang/references/10-installed-golang-skills.md
+ M skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md
+ M skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md
+ M skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md
+?? outputs/20261010-go-routing-ownership/authoring-freeze-receipt.json
+?? outputs/20261010-go-routing-ownership/authoring-report.md
+?? outputs/20261010-go-routing-ownership/authoring-rule-map.md
+?? outputs/20261010-go-routing-ownership/authoring-scenarios.md
+?? outputs/20261010-go-routing-ownership/fix-citation-draft.md
+?? outputs/20261010-go-routing-ownership/fix-diff.patch
+?? outputs/20261010-go-routing-ownership/fix-final-manifest.txt
+?? outputs/20261010-go-routing-ownership/fix-receipt.json
+?? outputs/20261010-go-routing-ownership/report.md
+?? outputs/20261010-go-routing-ownership/review.md
+?? outputs/20261010-go-routing-ownership/verification/

@@ -1,0 +1,39 @@
+{
+  "scope": "Exactly two citations in skills/sohrab/alaa-golang/SKILL.md; routing untouched",
+  "files": 36,
+  "sha256": "0a4b66a5574cb229d4094eba918b34dc4075941887d35f277f026d8c4f28f30a",
+  "pre_fix_sha256": "43df187cbd34026e120dfee1b4c39a43502a54db6ee0806af6a72d7876d467ac",
+  "independent_V2_retry": "parent-owned, not run by implementer",
+  "receipts": [
+    {
+      "command": "python -B scripts/check_fleet_references.py --skill alaa-golang --skill alaa-code-intelligence-routing",
+      "cwd": "D:/Sohrab/Project/skills",
+      "resource_policy": "ordinary bounded static command",
+      "chunk_id": "8fcac1",
+      "wall_time_seconds": 0.4284835,
+      "exit_code": 0,
+      "original_token_count": 86,
+      "output": "check_fleet_references.py: 2 of 69 skills, 34 Markdown files, 32 citations\r\n\r\nFINDINGS: none\r\n\r\nINFO (5 unmarked target-repository paths across 1 skills; these never fail the run)\r\n     5  alaa-golang\r\n  Rerun with --show-info for every site, or --format json for all of them.\r\n  Mark each one as <repo>/<path> to retire it from this list.\r\n"
+    },
+    {
+      "command": "git diff --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
+      "cwd": "D:/Sohrab/Project/skills",
+      "resource_policy": "ordinary bounded static command",
+      "chunk_id": "f54461",
+      "wall_time_seconds": 0.2662366,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "command": "git diff --cached --check -- skills/sohrab/alaa-golang skills/sohrab/alaa-code-intelligence-routing",
+      "cwd": "D:/Sohrab/Project/skills",
+      "resource_policy": "ordinary bounded static command",
+      "chunk_id": "10eb75",
+      "wall_time_seconds": 0.2480456,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  ]
+}

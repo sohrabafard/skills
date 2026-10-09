@@ -1,0 +1,1019 @@
+diff --git a/skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md b/skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
+index 64fb28296..836ae25c6 100644
+--- a/skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
++++ b/skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
+@@ -9,7 +9,8 @@ Scope, branch, service, configuration or resume changes require checking which e
+ | Question | Primary selection | Eligible fallback for a recorded gap |
+ |---|---|---|
+ | Unknown code location, related symbols, source call path, callers/callees or likely impact in supported indexed source | CodeGraph's installed exploration surface | Same-index CLI for transport failure; supported Serena operation; bounded native source for a narrower claim |
+-| Known-symbol declaration, references, implementations, hierarchy, diagnostics or semantic edit | Stack-declared semantic owner, otherwise supported Serena backend | Equivalent configured native semantic operation; targeted source for partial read evidence only |
++| Known-symbol declaration, references, implementations, hierarchy, diagnostics or semantic edit | Stack-declared semantic owner, otherwise supported Serena backend | Equivalent configured native semantic operation; targeted source for partial read evidence; bounded native edit under the continuation rule below |
++| Dependency metadata, resolved module/workspace versions or an authorized dependency upgrade | Native manifest/parser for declared metadata; inspected stack version/dependency recipe for resolution or upgrade | Eligible equivalent proving the named metadata property; discover source or semantics only for a separate missing impact/API fact |
+ | Literal, known hand-maintained text, Markdown, JSON/YAML/TOML or configuration | Bounded native search/read/parser | Available equivalent native operation retaining scope/dialect limits |
+ | Installed Laravel framework/package guidance | Applicable configured Boost documentation with verified installed versions | Version-correct official documentation; package source only for a separately named implementation question |
+ | Laravel application metadata, registered routes, URLs, logs/errors, schema or DB context | Applicable installed Boost operation or equivalent authorized native observation | Same-environment equivalent observation under stack failure-domain rules |
+@@ -43,6 +44,23 @@ For a failed operation, allow at most one cause-specific non-mutating health/cap
+ 
+ At exhaustion, give a partial answer or stop the dependent claim; unrelated safe work may continue. A changed question or environment invalidates only affected state, never justifies repeating valid covered facts.
+ 
++## Authorized native continuation
++
++Authorized bounded local edits need no configured Serena, gopls or other semantic provider.
++When provider evidence is missing, name the behavior and scope; use adequate fresh source or
++returned evidence, inspect applicable contracts/callers/tests, verify the target worktree, preserve
++unrelated changes and inspect the resulting diff. Run every mandatory native gate under the
++stack/repository/task proof policy. Source reads alone prove neither complete references,
++binding-safe rename nor refactor safety. Block only the dependent action or claim if its required
++semantic property lacks authorized equivalent proof. Sufficient evidence and required proof permit
++the bounded edit without installation.
++
++Provider diagnostics are supplemental unless repository rules or acceptance require a specific
++semantic property beyond native proof. Missing optional diagnostics do not block authorized edits
++or completion after mandatory native gates pass. Record the gap and lost guarantee; do not claim
++native output equivalent without evidence. Required uncovered properties remain blocked; execute
++native gates for unrelated safe work.
++
+ ## Mutation uncertainty
+ 
+ Before semantic mutation verify task authorization, supported operation and target identity; inspect resulting diff/state. A timeout or uncertain result after possible mutation requires actual state reconciliation before continuation. Never replay it or automatically substitute text editing. If safe resulting state cannot be established, stop that operation and report the unknown outcome. Fallback expands no authority.
+diff --git a/skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md b/skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md
+index fcf0b8996..d38bcf143 100644
+--- a/skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md
++++ b/skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md
+@@ -56,7 +56,9 @@ Shell, REPL and debug evaluation carry execution authority. Beta REPL and backen
+ 
+ ## Go
+ 
+-Use CodeGraph for unknown source flow. Serena's configured Go backend uses gopls; backend use is not a parallel owner. Use direct configured gopls only for a recorded unavailable/unhealthy or missing build-aware, generated-code, dependency-resolution, package-API or code-action operation that it actually supports. Native Go recipes own build/vet/test proof. /alaa-golang owns implementation doctrine; routing does not authorize backend activation.
++Use CodeGraph for unknown source flow. Serena's configured Go backend uses gopls; backend use is not a parallel owner. Use direct configured gopls only for a recorded unavailable/unhealthy or missing build-aware, generated-code, dependency-resolution, package-API or code-action operation that it actually supports. For dependency metadata or an authorized upgrade, use the native recipes in `references/45-native-tools.md`;
++source/impact/API questions trigger their own selection under `references/10-routing-contract.md`. That contract also owns bounded native edits and supplemental diagnostics. Native Go recipes own build/vet/test proof.
++/alaa-golang owns implementation doctrine; routing does not authorize backend activation.
+ 
+ ## Vue and Quasar
+ 
+diff --git a/skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md b/skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md
+index facc0ec4b..d91707a23 100644
+--- a/skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md
++++ b/skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md
+@@ -34,7 +34,17 @@ Inspect Composer scripts, installed metadata and test/static/formatter configura
+ 
+ Inspect module/workspace/build tags and repository recipes. Use installed Go build/vet/test, formatter/linter or wrapper only for the named property. Configured gofmt/goimports/gofumpt can write; inspect check/diff modes. Configured golangci-lint/gotestsum obey their installed configuration, not a generic flag recipe.
+ 
+-Direct gopls is a semantic fallback only for the stack owner's recorded gap, with build context and the required operation verified. Go tests/builds can launch processes, dependencies and generated work; select the authorized scoped recipe and resource policy rather than assuming pure reads.
++For a dependency-metadata or upgrade question, inspect `go.mod`, `go.sum`, applicable `go.work`,
++replacements, toolchain/directive constraints and the repository's dependency-management recipe.
++Use /golang-dependency-management for Go dependency-change mechanics. Inspect the installed Go
++help and recipe before executing version queries or upgrade/tidy commands: they can download modules,
++write manifests or execute tooling. Execute only authorized effects. Survey symbols/call paths only for a separately named compatibility, API-use or impact fact.
++
++Direct configured gopls follows the routing contract's recorded capability gap, with build context
++and the operation verified. Bounded native edits and missing diagnostics follow
++`references/10-routing-contract.md`; semantic-provider absence alone does not require setup.
++Go tests/builds can launch processes, dependencies and generated work; select the authorized scoped
++recipe and resource policy rather than assuming pure reads.
+ 
+ ## Package scripts and proof
+ 
+diff --git a/skills/sohrab/alaa-golang/SKILL.md b/skills/sohrab/alaa-golang/SKILL.md
+index 99c61805f..9bd3a9274 100644
+--- a/skills/sohrab/alaa-golang/SKILL.md
++++ b/skills/sohrab/alaa-golang/SKILL.md
+@@ -5,92 +5,79 @@ description: "Front door and router for Go work on the Ala platform. Selects the
+ 
+ # Alaa Golang
+ 
+-The front door for every Go task on this platform, with three jobs of equal weight. It **selects** the right vendor
+-`golang-*` skill, house companion, or doctrine owner for the situation in front of you. It **holds** the Ala platform
+-policy those skills do not know about. And it **owns every Go decision that no vendor skill and no doctrine owner
+-covers** — filling that gap is this skill's own work, not an overflow from routing, and the test that decides what
+-belongs here is in `references/05-what-this-skill-does-not-own.md`. A project that loads this skill and
+-`alaa-golang-clean-code-principles` therefore reaches the whole Go surface. It restates nothing it routes to. When
+-this skill and a skill it routes to disagree, follow the routed skill and report the disagreement as drift; do not
+-pick a side silently.
++Own Go decisions no routed skill covers; select Go mechanics, house companions and doctrine
++owners for Ala platform work. Complete the authorized task with repository evidence, required
++native proof and the four completion answers.
++If a routed owner disagrees with this skill, follow that owner and report both files as drift.
+ 
+ ## When NOT to use
+ 
+-Do not enter through this skill when the whole task belongs to another owner:
+-
+-- **The task is kit-conformance review of an existing `alaa-go-chi` consumer and nothing else** —
+-  load `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) directly.
+-- **The task is kit governance rather than service work** — load `/alaa-go-chi-development`
+-  (`$alaa-go-chi-development`) directly. Its row in `references/05-what-this-skill-does-not-own.md`
+-  lists which requests those are.
+-- **The task contains no Go source.** A Dockerfile, a pipeline, a chart, an edge configuration, or a
+-  document that merely mentions a Go service belongs to its own owner, named in
+-  `references/20-sohrab-companions.md`.
+-
+-Handing one topic inside a Go task to another owner is a different question, answered topic by topic
+-in `references/05-what-this-skill-does-not-own.md`.
+-
+-## Router
+-
+-Read `references/00-topic-map.md` and open only the rows whose situation matches what you are about to do.
+-
+-## Rules that hold on every Go task
+-
+-**Evidence before decision.** Before proposing any Go change, read the repo's `go.mod` (module path and `go`
+-directive), the imports of every package you will touch, the route-registration site, the existing tests for the code
+-you will change, and the repo's `AGENTS.md` and `CLAUDE.md` when those files exist. Repository truth outranks every
+-statement in this skill; where they differ, follow the repository and report the difference.
+-
+-**Phase gate on kit services.** When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, read
+-`alaa-go-chi-development` `references/05-phase-and-source-truth.md` and establish the active scope phase from the kit
+-repository before writing or reviewing a single line. If that phase forbids consumer work, stop and report the phase
+-and its decision-record filename instead of doing the work. A consumer-shaped request, a consumer repository on disk,
+-a registry row, or an older decision record does not reactivate consumer work; only a project-owner instruction naming
+-the consumer does.
+-
+-**Clean-code layer on kit services.** On the same trigger, load `/alaa-golang-clean-code-principles`
+-(`$alaa-golang-clean-code-principles`) before the first edit or the first review comment. Its P1–P13 are the
+-conformance bar; this skill adds no principle of its own and overrides none of them.
+-
+-**Route Go code intelligence through `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`).**
+-CodeGraph owns unknown package location, source flow, callers, callees, relationships, likely impact, and the files or
+-regions to inspect. Serena owns a known Go file or symbol: outline, declaration, references, implementation hierarchy,
+-diagnostics, semantic rename, and symbol-scoped edits. Serena's Go backend uses `gopls`; that backend is not a second
+-evidence owner. Invoke `/golang-gopls` (`$golang-gopls`) directly only when Serena is unavailable or unhealthy, or
+-after recording one required build-aware operation that Serena does not expose. Use `grep` only for text that is not
+-a Go symbol: struct tags, SQL strings, template names, config keys, and generated-file markers.
+-
+-**Route, do not restate — and record what nothing covers.** When another skill owns a topic, load it and follow it;
+-do not paraphrase its content into your answer or into this repository.
+-`references/05-what-this-skill-does-not-own.md` names every owner and the observable condition that hands the topic to
+-it. When a decision the task needs is covered by no vendor skill and no owner, apply the gap test in that same file,
+-decide, and state in your final report which decision you had to make and where you recorded it — a gap decided
+-silently is re-decided differently by the next agent.
+-
+-**Never state a model, a reasoning effort, or a runtime capability.** When the task needs a model choice, an effort or
+-thinking budget, a subagent or plan-mode capability, or trigger-syntax guidance, load `/alaa-prompting-guide`
+-(`$alaa-prompting-guide`) and its `references/50-effort-and-thinking.md`, and take the answer from there.
+-
+-**Validation gate.** After any Go edit, run in this order: `go build ./...`; Serena diagnostics on every changed Go
+-file; `go vet ./...`; the tests of the changed packages; `go test ./...`. If Serena is unavailable or unhealthy, or
+-does not expose the required diagnostic, record that one gap and invoke `/golang-gopls` (`$golang-gopls`)
+-`go_diagnostics` once as the fallback. Add `go test -race ./...` when the change
+-touches a goroutine, a channel, a mutex, a cache, a worker pool, or a package-level variable. Run `govulncheck ./...`
+-when `go.mod` or `go.sum` changed. Report every command with the evidence vocabulary in
+-`alaa-go-chi-development` `references/05-phase-and-source-truth.md` — `passed`, `failed`, `blocked`, `skipped`,
+-`not run` — and never report an outcome for a command you did not execute.
+-
+-**Completion check.** Before calling Go work done, produce four answers in the final report:
+-
+-1. Each validation command above and its outcome.
+-2. **What shipped** — the diff to the service's externally visible contract: routes added or removed, request and
+-   response fields added, removed or retyped, error codes, event payload fields. Write `no contract change` when
+-   there is none.
+-3. **How it is operated** — every environment key added, changed, or removed with its default and its accepted range,
+-   and every dashboard panel or alert rule that must exist for this change to be visible in production.
+-4. **How it fails** — each new failure mode the change introduces and the exact signal an operator sees when it
+-   occurs: which metric moves, which log event fires, which readiness check degrades.
+-
+-The shape of a contract entry belongs to `/alaa-services-contract` (`$alaa-services-contract`) and the shape of a
+-dashboard or alert to `/alaa-observability-soc` (`$alaa-observability-soc`). This rule fixes only that all four
+-answers appear.
++- Kit-conformance-only review of an existing `alaa-go-chi` consumer: load
++  /alaa-golang-clean-code-principles directly.
++- Kit governance, change requests or active scope phase alone: load /alaa-go-chi-development.
++- A task with no Go source or module/toolchain change, such as a Dockerfile, chart, pipeline,
++  edge configuration or a document merely mentioning a Go service: use its domain owner.
++
++## Procedure
++
++Read `references/00-topic-map.md` before a Go decision; open only rows matching the next action.
++
++1. Establish repository truth before proposing a change. Read applicable repository instructions, including `AGENTS.md` and `CLAUDE.md` when present,
++   `go.mod` (module path and `go` directive), and the imports and existing tests of every package
++   to change. For source changes, inspect route registration. For dependency-only work, inspect
++   module/workspace metadata and the native dependency recipe; source discovery applies only
++   when a source or impact question needs it. Repository truth overrides this skill; report discrepancies.
++2. When `go.mod` requires `git.alaatv.com/vk/alaa-go-chi`, establish the active phase from the kit
++   repository through /alaa-go-chi-development before writing or reviewing a line. Read its
++   `references/05-phase-and-source-truth.md`. If the phase forbids consumer work, stop and report
++   the phase and decision-record filename. A consumer-shaped request, local consumer repository,
++   registry row or older record does not reactivate it; only a project-owner instruction naming
++   that consumer does. Load /alaa-golang-clean-code-principles before the first edit or review
++   comment; P1-P13 bind and this skill adds or overrides no principle.
++3. Before choosing evidence, an editing surface or supplemental diagnostics, load
++   /alaa-code-intelligence-routing. It alone selects providers, order, eligibility and fallback.
++   Follow its rules for native continuation, missing guarantees and mutation reconciliation;
++   this skill supplies Go doctrine and native proof, not a provider sequence.
++4. Load each triggered domain owner before the governed action and follow it without restating its rules. For an uncovered decision, apply the gap test reached through the topic map, then
++   report the decision, why no owner covered it and where it was recorded. Never decide a gap
++   silently. Take model, effort, thinking-budget, runtime-capability and invocation answers from
++   /alaa-prompting-guide and its `references/50-effort-and-thinking.md`, never this skill.
++5. Change behavior through the test-first sequence selected by the topic map. Inspect the full
++   resulting diff and callers, then execute the validation gate below. Activation writes nothing and grants no additional authority.
++
++## Authority and failure
++
++Read accessible sources and make authorized local edits within the requested scope. Preserve
++existing behavior, contracts, user changes and repository conventions unless the task authorizes
++a change. Get explicit permission for installation, integration configuration, commits, publication,
++deployment, external mutation or destructive effects. A skill or tool being available grants none.
++When a required owner, fact, phase authorization or proof is missing, stop the dependent action
++and report the exact blocker; unrelated safe work may continue. Use the routing owner's finite
++failure budget for evidence and native gates; do not loop or claim an unrun gate passed.
++
++## Validation gate
++
++After any Go edit, run in order: `go build ./...`; `go vet ./...`; tests of the changed packages;
++`go test ./...`. Supplemental provider diagnostics and any required uncovered semantic property
++are governed by /alaa-code-intelligence-routing; they do not replace these native gates.
++Add `go test -race ./...` when the change touches a goroutine, channel, mutex, cache, worker pool
++or package-level variable. Run `govulncheck ./...` when `go.mod` or `go.sum` changed.
++Report commands and outcomes using /alaa-go-chi-development
++`references/05-phase-and-source-truth.md`: `passed`, `failed`, `blocked`, `skipped`, `not run`.
++Never report an outcome for a command you did not execute. Stop successfully only when the
++requested behavior, required gates and completion answers are established in the target repository.
++
++## Completion answers
++
++Report all four before calling Go work done:
++
++1. Each validation command and its observed outcome.
++2. What shipped: externally visible routes, request/response fields and types, error codes and
++   event-payload changes. Write `no contract change` when there is none.
++3. How it is operated: every environment key added, changed or removed, its default and accepted
++   range, and each dashboard panel or alert required to make the change visible in production.
++4. How it fails: each new failure mode and its exact operator signal, including metric, log event
++   or degraded readiness check.
++
++/alaa-services-contract owns contract-entry shape; /alaa-observability-soc owns dashboard/alert
++shape. This skill requires the four answers without restating either owner's contract.
+diff --git a/skills/sohrab/alaa-golang/agents/openai.yaml b/skills/sohrab/alaa-golang/agents/openai.yaml
+index abf43b089..103b07361 100644
+--- a/skills/sohrab/alaa-golang/agents/openai.yaml
++++ b/skills/sohrab/alaa-golang/agents/openai.yaml
+@@ -1,7 +1,7 @@
+ interface:
+   display_name: "Alaa Golang"
+   short_description: "Front door and router for Go work on the Ala platform"
+-  default_prompt: "Use $alaa-golang as the front door for this Go task: read its references/00-topic-map.md and open only the rows that match the situation. Establish the repository's go directive and module path from go.mod before deciding anything. If go.mod requires git.alaatv.com/vk/alaa-go-chi, confirm the active scope phase through $alaa-go-chi-development and load $alaa-golang-clean-code-principles before writing or reviewing a line. Route code intelligence through $alaa-code-intelligence-routing: CodeGraph owns unknown structure, Serena owns known Go symbols and semantic edits, and $golang-gopls is a recorded direct fallback rather than a duplicate discovery path. Route every name and value to $alaa-services-contract, every retry, timeout and degradation decision to $alaa-reliability-sla, and every model, effort and runtime-capability question to $alaa-prompting-guide. Start behaviour changes with a failing test, and finish with the validation gate and the four completion answers in SKILL.md."
++  default_prompt: "Use $alaa-golang as the front door for this Go task: read its references/00-topic-map.md and open only the rows that match the situation. Establish the repository's go directive and module path from go.mod before deciding anything. If go.mod requires git.alaatv.com/vk/alaa-go-chi, confirm the active scope phase through $alaa-go-chi-development and load $alaa-golang-clean-code-principles before writing or reviewing a line. Before selecting evidence, an editing surface or supplemental diagnostics, use $alaa-code-intelligence-routing for provider selection and degraded operation. Route every name and value to $alaa-services-contract, every retry, timeout and degradation decision to $alaa-reliability-sla, and every model, effort and runtime-capability question to $alaa-prompting-guide. Start behaviour changes with a failing test, and finish with the validation gate and the four completion answers in SKILL.md."
+ 
+ policy:
+   allow_implicit_invocation: true
+diff --git a/skills/sohrab/alaa-golang/references/00-topic-map.md b/skills/sohrab/alaa-golang/references/00-topic-map.md
+index 4a2809765..8d7270808 100644
+--- a/skills/sohrab/alaa-golang/references/00-topic-map.md
++++ b/skills/sohrab/alaa-golang/references/00-topic-map.md
+@@ -1,8 +1,7 @@
+ # Topic Map — the Router
+ 
+ Every row is a situation you can observe before you act. Find the rows that match what you are **about to do**, open
+-only those, and act. When several rows match, open all of them. Trigger forms are given for both runtimes: Claude Code
+-`/name`, Codex `$name`.
++only those, and act. When several rows match, open all of them. Each call site names its owning skill.
+ 
+ If no row matches, open `05-what-this-skill-does-not-own.md`: it routes the topic to its owner, or — when nothing
+ owns it — gives the test that decides whether this skill fills the gap itself.
+@@ -12,11 +11,11 @@ owns it — gives the test that decides whether this skill fills the gap itself.
+ | You are about to… | Read / load |
+ |---|---|
+ | start a new Ala Go service, or answer "chi or Fiber?" | `30-http-api-framework-choice.md` |
+-| edit a repository whose `go.mod` requires `github.com/gofiber/fiber/v2` or `/v3` | `/alaa-golang-fiber` (`$alaa-golang-fiber`) |
++| edit a repository whose `go.mod` requires `github.com/gofiber/fiber/v2` or `/v3` | `/alaa-golang-fiber` |
+ | create a package, move a file, or add a layer to a Go service | `60-service-architecture-patterns.md` |
+ | add an import to a package under `internal/domain` or `internal/application` | `62-import-direction-and-boundaries.md` |
+ | build a whole service or feature end to end and you do not yet know which parts apply | read in order: `60-service-architecture-patterns.md`, `31-chi-api-guide.md`, `45-failure-behavior-at-the-call-site.md`, `63-tdd-and-testing-discipline.md` |
+-| decide how a system splits into services, queues, or bounded contexts | `/alaa-system-design` (`$alaa-system-design`) |
++| decide how a system splits into services, queues, or bounded contexts | `/alaa-system-design` |
+ 
+ ## Writing HTTP
+ 
+@@ -26,10 +25,10 @@ owns it — gives the test that decides whether this skill fills the gap itself.
+ | decode a request body, bind query or path parameters, or validate a DTO | `31-chi-api-guide.md` |
+ | set `ReadTimeout`, `WriteTimeout`, `IdleTimeout`, or a body size limit | `45-failure-behavior-at-the-call-site.md` |
+ | answer "will chi hold this traffic?", or add rate limiting, an in-flight cap, load shedding, or a circuit breaker | `46-chi-under-load.md` |
+-| write or change an OpenAPI/Swagger annotation | `/golang-swagger` (`$golang-swagger`) |
+-| build or change a gRPC service | `/golang-grpc` (`$golang-grpc`) |
+-| build or change a GraphQL schema or resolver | `/golang-graphql` (`$golang-graphql`) |
+-| consume a trusted-gateway header, a permission bitmap, or a tenant identity | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |
++| write or change an OpenAPI/Swagger annotation | `/golang-swagger` |
++| build or change a gRPC service | `/golang-grpc` |
++| build or change a GraphQL schema or resolver | `/golang-graphql` |
++| consume a trusted-gateway header, a permission bitmap, or a tenant identity | `/alaa-trust-gateway-auth` |
+ 
+ ## Failure, load, and time
+ 
+@@ -38,30 +37,30 @@ owns it — gives the test that decides whether this skill fills the gap itself.
+ | set a timeout on a pgx, amqp, Redis, or outbound HTTP call | `45-failure-behavior-at-the-call-site.md` |
+ | pass a `context.Context` into a dependency, or handle its expiry inside a handler | `45-failure-behavior-at-the-call-site.md` |
+ | write or change shutdown, drain, or signal handling | `45-failure-behavior-at-the-call-site.md` |
+-| choose a retry count, a backoff curve, a circuit-breaker threshold, a degradation mode, or an SLO window | `/alaa-reliability-sla` (`$alaa-reliability-sla`) |
+-| discover the kit lacks a capability your service needs (admission control, ingress deadline, a new env key) | `46-chi-under-load.md`, then `/alaa-go-chi-development` (`$alaa-go-chi-development`) |
++| choose a retry count, a backoff curve, a circuit-breaker threshold, a degradation mode, or an SLO window | `/alaa-reliability-sla` |
++| discover the kit lacks a capability your service needs (admission control, ingress deadline, a new env key) | `46-chi-under-load.md`, then `/alaa-go-chi-development` |
+ 
+ ## Data, cache, and messaging
+ 
+ | You are about to… | Read / load |
+ |---|---|
+-| add a repository, a query, or a transaction boundary | `60-service-architecture-patterns.md`, then `/golang-database` (`$golang-database`) |
++| add a repository, a query, or a transaction boundary | `60-service-architecture-patterns.md`, then `/golang-database` |
+ | read from or write to Redis | `61-redis-cache-layer.md` |
+-| change a schema, a migration, a pooling lane, or tenant-scoped access | `/alaa-data-layer` (`$alaa-data-layer`) |
+-| choose or configure an S3 or MinIO client library | `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) |
+-| paginate a list endpoint or a query over a growing table | `/alaa-keyset-pagination` (`$alaa-keyset-pagination`) |
+-| write a queue consumer, a publisher, an outbox relay, or DLQ handling | `/alaa-async-messaging` (`$alaa-async-messaging`) |
+-| write a path whose cost grows with rows, tenants, retained history, or fan-out per event; or find a database, HTTP, cache, or permission call inside a loop | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
++| change a schema, a migration, a pooling lane, or tenant-scoped access | `/alaa-data-layer` |
++| choose or configure an S3 or MinIO client library | `/alaa-minio-object-storage` |
++| paginate a list endpoint or a query over a growing table | `/alaa-keyset-pagination` |
++| write a queue consumer, a publisher, an outbox relay, or DLQ handling | `/alaa-async-messaging` |
++| write a path whose cost grows with rows, tenants, retained history, or fan-out per event; or find a database, HTTP, cache, or permission call inside a loop | `/alaa-algorithms-data-structures` |
+ 
+ ## Changing existing code
+ 
+ | You are about to… | Read / load |
+ |---|---|
+-| find a definition, caller, package surface, implementation, or diagnostic | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`): Serena for the known Go symbol; direct `/golang-gopls` (`$golang-gopls`) only for one recorded unavailable, unhealthy, or missing-operation fallback |
+-| rename, move, extract, or inline across more than one file | `/golang-refactoring` (`$golang-refactoring`) for the process, `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) for the semantic actuator, plus the skill that defines the target shape |
++| find a definition, caller, package surface, implementation, or diagnostic | `/alaa-code-intelligence-routing` for evidence and required semantic-operation selection |
++| rename, move, extract, or inline across more than one file | `/golang-refactoring` for the process, `/alaa-code-intelligence-routing` for the semantic actuator, plus the skill that defines the target shape |
+ | change behaviour of any kind | `63-tdd-and-testing-discipline.md` |
+-| debug a panic, a deadlock, a leak, or output nobody can explain | `/golang-troubleshooting` (`$golang-troubleshooting`) |
+-| investigate slowness | `/golang-observability` (`$golang-observability`) first, then `/golang-benchmark` (`$golang-benchmark`), then `/golang-performance` (`$golang-performance`) |
++| debug a panic, a deadlock, a leak, or output nobody can explain | `/golang-troubleshooting` |
++| investigate slowness | `/golang-observability` first, then `/golang-benchmark`, then `/golang-performance` |
+ | pick between two Go skills that both look right, or work a task that spans several Go concerns | `11-orchestration-and-overlap-guide.md` |
+ 
+ ## Language, tooling, and dependencies
+@@ -69,27 +68,27 @@ owns it — gives the test that decides whether this skill fills the gap itself.
+ | You are about to… | Read / load |
+ |---|---|
+ | use a language or standard-library feature you have not confirmed the repo's `go` directive supports | `70-modern-go-baseline.md` |
+-| raise a `go` directive, or run a modernization pass over existing code | `70-modern-go-baseline.md`, then `/golang-modernize` (`$golang-modernize`) |
+-| add, upgrade, pin, or remove a dependency | `40-production-ready-package-catalog.md`, then `/golang-dependency-management` (`$golang-dependency-management`) |
+-| look up a published package's versions, symbols, importers, licence, or CVEs | `/golang-pkg-go-dev` (`$golang-pkg-go-dev`) |
++| raise a `go` directive, or run a modernization pass over existing code | `70-modern-go-baseline.md`, then `/golang-modernize` |
++| add, upgrade, pin, or remove a dependency | `40-production-ready-package-catalog.md`, then `/golang-dependency-management` |
++| look up a published package's versions, symbols, importers, licence, or CVEs | `/golang-pkg-go-dev` |
+ | load a vendor `golang-*` skill, or find out whether one exists for your topic | `10-installed-golang-skills.md` |
+-| configure `golangci-lint`, add an analyzer, or write a `//nolint` | `/golang-lint` (`$golang-lint`) |
+-| build or change a CLI | `/golang-cli` (`$golang-cli`) |
++| configure `golangci-lint`, add an analyzer, or write a `//nolint` | `/golang-lint` |
++| build or change a CLI | `/golang-cli` |
+ 
+ ## Platform, delivery, and governance
+ 
+ | You are about to… | Read / load |
+ |---|---|
+-| write or review Go in a repository whose `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` | `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`), after the phase gate in `SKILL.md` |
+-| change a kit surface, file a kit change request, or check the active scope phase | `/alaa-go-chi-development` (`$alaa-go-chi-development`) |
+-| write a metric name, an env key, an error code, an event name, a status code, a timeout value, or a window | `/alaa-services-contract` (`$alaa-services-contract`) |
+-| add a log field, a metric, a span, a dashboard, or an alert | `/alaa-observability-soc` (`$alaa-observability-soc`) |
+-| change authentication, authorization, tenant isolation, secret handling, or crypto | `/alaa-security-review` (`$alaa-security-review`) with `/golang-security` (`$golang-security`) |
+-| add or rename a permission name or bitmap id | `/alaa-permission-generator` (`$alaa-permission-generator`) |
+-| decide what "done" or "production ready" means for this change | `/alaa-project-constitution` (`$alaa-project-constitution`) |
+-| decide what kinds of tests a change needs, or design a test strategy for a service | `/alaa-testing-strategy` (`$alaa-testing-strategy`) |
++| write or review Go in a repository whose `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` | `/alaa-golang-clean-code-principles`, after the phase gate in `SKILL.md` |
++| change a kit surface, file a kit change request, or check the active scope phase | `/alaa-go-chi-development` |
++| write a metric name, an env key, an error code, an event name, a status code, a timeout value, or a window | `/alaa-services-contract` |
++| add a log field, a metric, a span, a dashboard, or an alert | `/alaa-observability-soc` |
++| change authentication, authorization, tenant isolation, secret handling, or crypto | `/alaa-security-review` with `/golang-security` |
++| add or rename a permission name or bitmap id | `/alaa-permission-generator` |
++| decide what "done" or "production ready" means for this change | `/alaa-project-constitution` |
++| decide what kinds of tests a change needs, or design a test strategy for a service | `/alaa-testing-strategy` |
+ | reach a platform, delivery, CI, container, Kubernetes, docs, or workflow companion | `20-sohrab-companions.md` |
+-| brief a subagent, or answer any question about model, effort, thinking budget, or runtime capability | `/alaa-prompting-guide` (`$alaa-prompting-guide`) |
++| brief a subagent, or answer any question about model, effort, thinking budget, or runtime capability | `/alaa-prompting-guide` |
+ 
+ ## Facts and freshness
+ 
+diff --git a/skills/sohrab/alaa-golang/references/10-installed-golang-skills.md b/skills/sohrab/alaa-golang/references/10-installed-golang-skills.md
+index c7584e632..7251fad77 100644
+--- a/skills/sohrab/alaa-golang/references/10-installed-golang-skills.md
++++ b/skills/sohrab/alaa-golang/references/10-installed-golang-skills.md
+@@ -3,8 +3,7 @@
+ The complete set of installed public `golang-*` skills and the condition that selects each one. When two of them look
+ equally right, `11-orchestration-and-overlap-guide.md` decides.
+ 
+-**Rule:** load a skill by naming it in the trigger form of the runtime you are in — Claude Code `/golang-testing`,
+-Codex `$golang-testing`. **Forbidden:** mentioning a vendor directory path in an answer to a user.
++**Rule:** load the named skill when its condition applies. **Forbidden:** mentioning a vendor directory path in an answer to a user.
+ 
+ **Forbidden:** restating a vendor skill's content in this pack or in a repository. **Rule:** load it and follow it.
+ These skills are git subtrees; nothing in this pack edits them.
+@@ -19,7 +18,7 @@ adds or removes a skill, update this file's entry list and this audit line, and
+ 
+ ## Orchestration
+ 
+-### golang-how-to (`/golang-how-to` · `$golang-how-to`)
++### golang-how-to (`/golang-how-to`)
+ 
+ Load it when the task is broad enough that you cannot name the primary Go skill yourself. It selects a primary plus
+ secondaries and carries the vendor catalogue. **Forbidden:** running its configure mode; see
+@@ -27,172 +26,171 @@ secondaries and carries the vendor catalogue. **Forbidden:** running its configu
+ 
+ ## Structure, architecture, and API shape
+ 
+-### golang-project-layout (`/golang-project-layout` · `$golang-project-layout`)
++### golang-project-layout (`/golang-project-layout`)
+ 
+ Module shape, folder layout, package boundaries, `cmd/` and `internal/`, workspaces, test layout.
+ 
+-### golang-design-patterns (`/golang-design-patterns` · `$golang-design-patterns`)
++### golang-design-patterns (`/golang-design-patterns`)
+ 
+ Boundary design, service layering, adapters and ports, constructors, resilience patterns, graceful-shutdown patterns.
+ 
+-### golang-structs-interfaces (`/golang-structs-interfaces` · `$golang-structs-interfaces`)
++### golang-structs-interfaces (`/golang-structs-interfaces`)
+ 
+ Interface size, receiver choice, type design, method sets, struct tags, embedding.
+ 
+-### golang-dependency-injection (`/golang-dependency-injection` · `$golang-dependency-injection`)
++### golang-dependency-injection (`/golang-dependency-injection`)
+ 
+ Choosing or changing a DI approach.
+ 
+-### golang-google-wire (`/golang-google-wire` · `$golang-google-wire`)
++### golang-google-wire (`/golang-google-wire`)
+ 
+ Load when `go.mod` requires `github.com/google/wire`, or the repository has `wire.Build`, `wire.NewSet`, or
+ `wire_gen.go`.
+ 
+-### golang-uber-dig (`/golang-uber-dig` · `$golang-uber-dig`)
++### golang-uber-dig (`/golang-uber-dig`)
+ 
+ Load when `go.mod` requires `go.uber.org/dig`.
+ 
+-### golang-uber-fx (`/golang-uber-fx` · `$golang-uber-fx`)
++### golang-uber-fx (`/golang-uber-fx`)
+ 
+ Load when `go.mod` requires `go.uber.org/fx`, or the code uses Fx modules or lifecycle hooks.
+ 
+-### golang-code-style (`/golang-code-style` · `$golang-code-style`)
++### golang-code-style (`/golang-code-style`)
+ 
+ Clarity, comment quality, line-level readability.
+ 
+-### golang-naming (`/golang-naming` · `$golang-naming`)
++### golang-naming (`/golang-naming`)
+ 
+ Package, exported identifier, error, method, receiver, and test names.
+ 
+ ## Language, correctness, and debugging
+ 
+-### golang-modernize (`/golang-modernize` · `$golang-modernize`)
++### golang-modernize (`/golang-modernize`)
+ 
+ Version-aware rewrites, newer standard-library idioms, release upgrades, modernize analyzer output.
+ 
+-### golang-concurrency (`/golang-concurrency` · `$golang-concurrency`)
++### golang-concurrency (`/golang-concurrency`)
+ 
+ Goroutines, channels, `errgroup`, worker pools, backpressure, leaks, shared state.
+ 
+-### golang-context (`/golang-context` · `$golang-context`)
++### golang-context (`/golang-context`)
+ 
+ Cancellation, deadlines, propagation, request lifetime, `WithoutCancel`.
+ 
+-### golang-safety (`/golang-safety` · `$golang-safety`)
++### golang-safety (`/golang-safety`)
+ 
+ Nil safety, map and slice hazards, aliasing, numeric conversion, resource lifecycle, race-prone patterns.
+ 
+-### golang-error-handling (`/golang-error-handling` · `$golang-error-handling`)
++### golang-error-handling (`/golang-error-handling`)
+ 
+ Error creation, wrapping, sentinels, custom types, propagation, error-contract design.
+ 
+-### golang-troubleshooting (`/golang-troubleshooting` · `$golang-troubleshooting`)
++### golang-troubleshooting (`/golang-troubleshooting`)
+ 
+ Production debugging, compiler and test failures, deadlocks, panics, `pprof`, Delve.
+ 
+ ## Data and dependencies
+ 
+-### golang-database (`/golang-database` · `$golang-database`)
++### golang-database (`/golang-database`)
+ 
+ Query patterns, pools, transactions, scanning, isolation, locking, application-side database access.
+ 
+-### golang-data-structures (`/golang-data-structures` · `$golang-data-structures`)
++### golang-data-structures (`/golang-data-structures`)
+ 
+ How a Go slice, map, builder, heap, generic container, or weak pointer behaves. **Rule:** for what a path is allowed
+-to *cost* as its input grows, load `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) instead.
++to *cost* as its input grows, load `/alaa-algorithms-data-structures` instead.
+ 
+-### golang-dependency-management (`/golang-dependency-management` · `$golang-dependency-management`)
++### golang-dependency-management (`/golang-dependency-management`)
+ 
+ Editing `go.mod`: adding, upgrading, pinning, replacing, tidying, workspaces.
+ 
+-### golang-pkg-go-dev (`/golang-pkg-go-dev` · `$golang-pkg-go-dev`)
++### golang-pkg-go-dev (`/golang-pkg-go-dev`)
+ 
+ Querying pkg.go.dev with `godig` for a known import path: versions, exported symbols, examples, importers, licences,
+ CVEs — including a package not yet in `go.mod`.
+ 
+-### golang-popular-libraries (`/golang-popular-libraries` · `$golang-popular-libraries`)
++### golang-popular-libraries (`/golang-popular-libraries`)
+ 
+ Broad library discovery. Pair with `40-production-ready-package-catalog.md` for the final choice in this stack.
+ 
+ ## Transport, protocols, CLIs, and docs
+ 
+-### golang-grpc (`/golang-grpc` · `$golang-grpc`)
++### golang-grpc (`/golang-grpc`)
+ 
+ gRPC services, protobuf generation, interceptors, streaming, TLS and mTLS, `bufconn` tests, status errors.
+ 
+-### golang-graphql (`/golang-graphql` · `$golang-graphql`)
++### golang-graphql (`/golang-graphql`)
+ 
+ GraphQL servers, schemas, resolvers, subscriptions, `gqlgen`, N+1 prevention, complexity limits.
+ 
+-### golang-cli (`/golang-cli` · `$golang-cli`)
++### golang-cli (`/golang-cli`)
+ 
+ Command lifecycle, flags, config layering, exit codes, I/O, signals, CLI tests.
+ 
+-### golang-spf13-cobra (`/golang-spf13-cobra` · `$golang-spf13-cobra`)
++### golang-spf13-cobra (`/golang-spf13-cobra`)
+ 
+ Load when `go.mod` requires `github.com/spf13/cobra`.
+ 
+-### golang-spf13-viper (`/golang-spf13-viper` · `$golang-spf13-viper`)
++### golang-spf13-viper (`/golang-spf13-viper`)
+ 
+ Load when `go.mod` requires `github.com/spf13/viper`.
+ 
+-### golang-swagger (`/golang-swagger` · `$golang-swagger`)
++### golang-swagger (`/golang-swagger`)
+ 
+ Swagger and OpenAPI with `swaggo/swag`: annotations, generated docs, UI routes, framework integration.
+ 
+ ## Code intelligence, navigation, and refactoring
+ 
+-### golang-gopls (`/golang-gopls` · `$golang-gopls`)
++### golang-gopls (`/golang-gopls`)
+ 
+-Direct access to Go's `gopls` language server for one operation Serena does not expose, or when Serena is unavailable
+-or unhealthy. Serena's Go backend also uses `gopls`, so the backend is not a second evidence owner. Do not invoke the
+-direct surface for a question already answered through Serena. The direct fallback can supply build-aware definitions,
+-references, package API discovery, diagnostics, rename, and code actions against the locally resolved build, including
+-`replace`d forks. `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) owns the fallback decision.
++Go's `gopls` language-server mechanics: build-aware definitions, references, package API discovery,
++diagnostics, rename and code actions against the locally resolved build, including `replace`d forks.
++When the task needs a local code-intelligence operation, load /alaa-code-intelligence-routing;
++it selects the surface and its limits. This catalogue names capabilities only.
+ 
+-### golang-refactoring (`/golang-refactoring` · `$golang-refactoring`)
++### golang-refactoring (`/golang-refactoring`)
+ 
+ The safe, staged process of restructuring existing Go: coverage safety net, behaviour-preserving transforms through
+-the semantic actuator selected by `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`), plus
++the semantic actuator selected by `/alaa-code-intelligence-routing`, plus
+ `gofmt -r`, `eg`, `gopatch`, and `go/analysis` fixers; breaking import cycles; moving types with aliases; and small
+ stacked PRs. It owns *how*; the target shape is owned elsewhere.
+ 
+ ## Quality, operations, and delivery
+ 
+-### golang-testing (`/golang-testing` · `$golang-testing`)
++### golang-testing (`/golang-testing`)
+ 
+ Unit, integration, HTTP, fuzz, race, fixture, mock, and coverage mechanics.
+ 
+-### golang-stretchr-testify (`/golang-stretchr-testify` · `$golang-stretchr-testify`)
++### golang-stretchr-testify (`/golang-stretchr-testify`)
+ 
+ Load when `go.mod` requires Testify.
+ 
+-### golang-lint (`/golang-lint` · `$golang-lint`)
++### golang-lint (`/golang-lint`)
+ 
+ `golangci-lint`, `go vet`, analyzer policy, `nolint` hygiene, staticcheck, revive, configuration.
+ 
+-### golang-benchmark (`/golang-benchmark` · `$golang-benchmark`)
++### golang-benchmark (`/golang-benchmark`)
+ 
+ `testing.B`, `benchstat`, profiles, regression detection, measurement methodology.
+ 
+-### golang-performance (`/golang-performance` · `$golang-performance`)
++### golang-performance (`/golang-performance`)
+ 
+ CPU, memory, I/O, GC, pooling, and hot-path optimisation — after a bottleneck is measured.
+ 
+-### golang-observability (`/golang-observability` · `$golang-observability`)
++### golang-observability (`/golang-observability`)
+ 
+ Logs, metrics, traces, profiling, dashboards, alerting, production telemetry mechanics.
+ 
+-### golang-security (`/golang-security` · `$golang-security`)
++### golang-security (`/golang-security`)
+ 
+ Code-level hardening, injection defences, secrets, crypto, filesystem safety, `govulncheck ./...` as the whole-tree
+ gate.
+ 
+-### golang-documentation (`/golang-documentation` · `$golang-documentation`)
++### golang-documentation (`/golang-documentation`)
+ 
+ Package docs, exported comments, examples, README, changelog.
+ 
+-### golang-continuous-integration (`/golang-continuous-integration` · `$golang-continuous-integration`)
++### golang-continuous-integration (`/golang-continuous-integration`)
+ 
+ CI, release gates, dependency automation, security scans, coverage, GoReleaser.
+ 
+@@ -200,29 +198,29 @@ CI, release gates, dependency automation, security scans, coverage, GoReleaser.
+ 
+ **Rule:** load one of these when `go.mod` requires that package, or when the user names it.
+ 
+-### golang-samber-do (`/golang-samber-do` · `$golang-samber-do`)
++### golang-samber-do (`/golang-samber-do`)
+ `github.com/samber/do` and `/v2` dependency injection and service lifecycle.
+ 
+-### golang-samber-lo (`/golang-samber-lo` · `$golang-samber-lo`)
++### golang-samber-lo (`/golang-samber-lo`)
+ `github.com/samber/lo` functional helpers.
+ 
+-### golang-samber-mo (`/golang-samber-mo` · `$golang-samber-mo`)
++### golang-samber-mo (`/golang-samber-mo`)
+ `github.com/samber/mo` Option, Result, Either, Future, IO, Task.
+ 
+-### golang-samber-ro (`/golang-samber-ro` · `$golang-samber-ro`)
++### golang-samber-ro (`/golang-samber-ro`)
+ `github.com/samber/ro` reactive streams and event pipelines.
+ 
+-### golang-samber-slog (`/golang-samber-slog` · `$golang-samber-slog`)
++### golang-samber-slog (`/golang-samber-slog`)
+ Samber `slog-*` adapters, routing, sampling, and backend handlers.
+ 
+-### golang-samber-hot (`/golang-samber-hot` · `$golang-samber-hot`)
++### golang-samber-hot (`/golang-samber-hot`)
+ `github.com/samber/hot` in-memory caching.
+ 
+-### golang-samber-oops (`/golang-samber-oops` · `$golang-samber-oops`)
++### golang-samber-oops (`/golang-samber-oops`)
+ `github.com/samber/oops` structured errors.
+ 
+ ## Ecosystem awareness
+ 
+-### golang-stay-updated (`/golang-stay-updated` · `$golang-stay-updated`)
++### golang-stay-updated (`/golang-stay-updated`)
+ 
+ Load when the task is learning or discovery about the Go ecosystem rather than changing code.
+diff --git a/skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md b/skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md
+index ce62d8692..c5c51e199 100644
+--- a/skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md
++++ b/skills/sohrab/alaa-golang/references/11-orchestration-and-overlap-guide.md
+@@ -3,8 +3,6 @@
+ Read this when two skills both look like they own your question, or when a task needs more than one at once. The
+ single-situation router is `00-topic-map.md`; this file resolves the cases where several skills touch the same ground.
+ 
+-Trigger forms: Claude Code `/name`, Codex `$name`.
+-
+ ## Loading more than one skill
+ 
+ **Rule:** choose one primary skill for the problem you are solving, and load the secondary skills for the adjacent
+@@ -12,34 +10,34 @@ risks at the start of the task, not after something breaks.
+ 
+ | The task is… | Primary | Also load |
+ |---|---|---|
+-| designing a new service or API | `/golang-design-patterns` (`$golang-design-patterns`) | `/golang-project-layout` (`$golang-project-layout`), `/golang-structs-interfaces` (`$golang-structs-interfaces`), `/golang-naming` (`$golang-naming`) |
+-| implementing database-backed behaviour | `/golang-database` (`$golang-database`) | `/golang-error-handling` (`$golang-error-handling`), `/golang-security` (`$golang-security`), `/golang-testing` (`$golang-testing`) |
+-| adding a cache | `/golang-performance` (`$golang-performance`) | `/golang-concurrency` (`$golang-concurrency`), `/golang-safety` (`$golang-safety`), `/golang-testing` (`$golang-testing`) |
+-| building gRPC | `/golang-grpc` (`$golang-grpc`) | `/golang-testing` (`$golang-testing`), `/golang-error-handling` (`$golang-error-handling`), `/golang-observability` (`$golang-observability`) |
+-| building GraphQL | `/golang-graphql` (`$golang-graphql`) | `/golang-testing` (`$golang-testing`), `/golang-error-handling` (`$golang-error-handling`), `/golang-security` (`$golang-security`) |
+-| building a CLI | `/golang-cli` (`$golang-cli`) | `/golang-spf13-cobra` (`$golang-spf13-cobra`), `/golang-spf13-viper` (`$golang-spf13-viper`) when `go.mod` requires them |
+-| debugging a panic or wrong output | `/golang-troubleshooting` (`$golang-troubleshooting`) | `/golang-safety` (`$golang-safety`), `/golang-testing` (`$golang-testing`) |
+-| investigating slowness | `/golang-observability` (`$golang-observability`) | `/golang-benchmark` (`$golang-benchmark`), then `/golang-performance` (`$golang-performance`) |
+-| reviewing security-sensitive code | `/golang-security` (`$golang-security`) | `/golang-safety` (`$golang-safety`), `/golang-lint` (`$golang-lint`), `/golang-error-handling` (`$golang-error-handling`) |
+-| changing dependencies | `/golang-dependency-management` (`$golang-dependency-management`) | `/golang-pkg-go-dev` (`$golang-pkg-go-dev`), `/golang-security` (`$golang-security`) |
+-| configuring CI | `/golang-continuous-integration` (`$golang-continuous-integration`) | `/golang-lint` (`$golang-lint`), `/golang-security` (`$golang-security`), `/golang-testing` (`$golang-testing`) |
+-| navigating unfamiliar code | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) | `/golang-project-layout` (`$golang-project-layout`); CodeGraph maps unknown structure and Serena answers the exact known symbol |
+-| restructuring existing code | `/golang-refactoring` (`$golang-refactoring`) | `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) and the skill that defines the target shape |
+-| adopting a newer Go feature | `/golang-modernize` (`$golang-modernize`) | `/golang-lint` (`$golang-lint`) and the semantic diagnostics selected by `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) |
++| designing a new service or API | `/golang-design-patterns` | `/golang-project-layout`, `/golang-structs-interfaces`, `/golang-naming` |
++| implementing database-backed behaviour | `/golang-database` | `/golang-error-handling`, `/golang-security`, `/golang-testing` |
++| adding a cache | `/golang-performance` | `/golang-concurrency`, `/golang-safety`, `/golang-testing` |
++| building gRPC | `/golang-grpc` | `/golang-testing`, `/golang-error-handling`, `/golang-observability` |
++| building GraphQL | `/golang-graphql` | `/golang-testing`, `/golang-error-handling`, `/golang-security` |
++| building a CLI | `/golang-cli` | `/golang-spf13-cobra`, `/golang-spf13-viper` when `go.mod` requires them |
++| debugging a panic or wrong output | `/golang-troubleshooting` | `/golang-safety`, `/golang-testing` |
++| investigating slowness | `/golang-observability` | `/golang-benchmark`, then `/golang-performance` |
++| reviewing security-sensitive code | `/golang-security` | `/golang-safety`, `/golang-lint`, `/golang-error-handling` |
++| changing dependencies | `/golang-dependency-management` | `/golang-pkg-go-dev`, `/golang-security` |
++| configuring CI | `/golang-continuous-integration` | `/golang-lint`, `/golang-security`, `/golang-testing` |
++| navigating unfamiliar code | `/alaa-code-intelligence-routing` | `/golang-project-layout` for package-layout decisions |
++| restructuring existing code | `/golang-refactoring` | `/alaa-code-intelligence-routing` and the skill that defines the target shape |
++| adopting a newer Go feature | `/golang-modernize` | `/golang-lint` and `/alaa-code-intelligence-routing` when a local code-intelligence question needs answering |
+ 
+ **Forbidden:** loading a Go skill because the task is written in Go. **Rule:** load a skill when the task hits the
+ condition that skill's row names, and no others.
+ 
+-**Forbidden:** running `/golang-how-to` (`$golang-how-to`) configure mode, or editing a repository's `CLAUDE.md` or `AGENTS.md` to
++**Forbidden:** running `/golang-how-to` configure mode, or editing a repository's `CLAUDE.md` or `AGENTS.md` to
+ force-load Go skills. **Rule:** if always-loaded Go skills would help, say so and let the user decide. This is the only
+ place in this skill that states this rule.
+ 
+ ## Observability, benchmark, performance, troubleshooting
+ 
+-- `/golang-observability` (`$golang-observability`) — production signals, dashboards, traces, structured logs.
+-- `/golang-benchmark` (`$golang-benchmark`) — measurement: `testing.B`, pprof, traces, `benchstat`.
+-- `/golang-performance` (`$golang-performance`) — optimisation of a bottleneck that has been measured.
+-- `/golang-troubleshooting` (`$golang-troubleshooting`) — root cause of a crash, deadlock, or behaviour nobody can explain.
++- `/golang-observability` — production signals, dashboards, traces, structured logs.
++- `/golang-benchmark` — measurement: `testing.B`, pprof, traces, `benchstat`.
++- `/golang-performance` — optimisation of a bottleneck that has been measured.
++- `/golang-troubleshooting` — root cause of a crash, deadlock, or behaviour nobody can explain.
+ 
+ **Rule:** observe, then measure, then optimise, in that order.
+ **Forbidden:** adding pooling, caching, preallocation, or a low-level rewrite before a profile or a benchmark names
+@@ -48,8 +46,8 @@ first and report it.
+ 
+ ## Dependency injection
+ 
+-- `/golang-dependency-injection` (`$golang-dependency-injection`) — the approach.
+-- `/golang-google-wire` (`$golang-google-wire`), `/golang-uber-dig` (`$golang-uber-dig`), `/golang-uber-fx` (`$golang-uber-fx`), `/golang-samber-do` (`$golang-samber-do`) — one per framework.
++- `/golang-dependency-injection` — the approach.
++- `/golang-google-wire`, `/golang-uber-dig`, `/golang-uber-fx`, `/golang-samber-do` — one per framework.
+ 
+ **Rule:** load a framework skill when `go.mod` already requires that framework.
+ **Forbidden:** introducing a DI framework into a service that does not require one, and using a container to supply a
+@@ -57,73 +55,73 @@ dependency a constructor could take as an argument.
+ 
+ ## Samber packages
+ 
+-- `/golang-samber-lo` (`$golang-samber-lo`) — slice, map, channel, and tuple helpers.
+-- `/golang-samber-ro` (`$golang-samber-ro`) — reactive streams.
+-- `/golang-samber-mo` (`$golang-samber-mo`) — Option, Result, Either, Future.
+-- `/golang-samber-oops` (`$golang-samber-oops`) — structured errors.
+-- `/golang-samber-hot` (`$golang-samber-hot`) — in-process caching.
+-- `/golang-samber-slog` (`$golang-samber-slog`) — slog adapters and handlers.
+-- `/golang-samber-do` (`$golang-samber-do`) — dependency container.
++- `/golang-samber-lo` — slice, map, channel, and tuple helpers.
++- `/golang-samber-ro` — reactive streams.
++- `/golang-samber-mo` — Option, Result, Either, Future.
++- `/golang-samber-oops` — structured errors.
++- `/golang-samber-hot` — in-process caching.
++- `/golang-samber-slog` — slog adapters and handlers.
++- `/golang-samber-do` — dependency container.
+ 
+ **Rule:** load one when `go.mod` requires that package, or when the user names it.
+ **Forbidden:** adding a functional-helper package to replace a loop that fits in five lines.
+ 
+ ## Errors, safety, security
+ 
+-- `/golang-error-handling` (`$golang-error-handling`) — creating, wrapping, matching, and handling an error exactly once.
+-- `/golang-safety` (`$golang-safety`) — nil, slice aliasing, numeric conversion, concurrent maps, zero values.
+-- `/golang-security` (`$golang-security`) — injection, crypto, secrets, filesystem and network exposure, untrusted input.
++- `/golang-error-handling` — creating, wrapping, matching, and handling an error exactly once.
++- `/golang-safety` — nil, slice aliasing, numeric conversion, concurrent maps, zero values.
++- `/golang-security` — injection, crypto, secrets, filesystem and network exposure, untrusted input.
+ 
+-**Rule:** load `/golang-safety` (`$golang-safety`) together with `/golang-security` (`$golang-security`) whenever the change parses untrusted input or sits on
++**Rule:** load `/golang-safety` together with `/golang-security` whenever the change parses untrusted input or sits on
+ an authentication or authorization path.
+ **Forbidden:** reporting a nil dereference as a security finding unless a caller from outside the trust boundary can
+ reach it. **Rule:** say who can reach it, or report it as a correctness defect.
+ 
+ ## Style, naming, lint, documentation
+ 
+-- `/golang-code-style` (`$golang-code-style`) — clarity and readability for a human.
+-- `/golang-naming` (`$golang-naming`) — package, type, function, error, receiver, and test names.
+-- `/golang-lint` (`$golang-lint`) — analyzer configuration and suppression policy.
+-- `/golang-documentation` (`$golang-documentation`) — package docs, examples, README, changelog.
++- `/golang-code-style` — clarity and readability for a human.
++- `/golang-naming` — package, type, function, error, receiver, and test names.
++- `/golang-lint` — analyzer configuration and suppression policy.
++- `/golang-documentation` — package docs, examples, README, changelog.
+ 
+-**Rule:** `/golang-lint` (`$golang-lint`) decides what the tool enforces; `/golang-code-style` (`$golang-code-style`) decides what a reviewer asks for.
++**Rule:** `/golang-lint` decides what the tool enforces; `/golang-code-style` decides what a reviewer asks for.
+ **Forbidden:** a `//nolint` without the specific linter named and a comment giving the reason. **Rule:** if the reason
+ cannot be written in one line, fix the code instead.
+ 
+ ## CLI
+ 
+-- `/golang-cli` (`$golang-cli`) — command lifecycle, exit codes, signals, stdout and stderr.
+-- `/golang-spf13-cobra` (`$golang-spf13-cobra`) — command trees, flags, completion.
+-- `/golang-spf13-viper` (`$golang-spf13-viper`) — layered config, environment binding, hot reload.
++- `/golang-cli` — command lifecycle, exit codes, signals, stdout and stderr.
++- `/golang-spf13-cobra` — command trees, flags, completion.
++- `/golang-spf13-viper` — layered config, environment binding, hot reload.
+ 
+ **Rule:** load Cobra or Viper when `go.mod` requires them.
+ **Forbidden:** adding either to a tool with one command and three flags.
+ 
+ ## Type design against architecture
+ 
+-- `/golang-structs-interfaces` (`$golang-structs-interfaces`) — method sets, receivers, embedding, interface size, struct tags.
+-- `/golang-design-patterns` (`$golang-design-patterns`) — middleware chains, adapters, lifecycle, API shape.
++- `/golang-structs-interfaces` — method sets, receivers, embedding, interface size, struct tags.
++- `/golang-design-patterns` — middleware chains, adapters, lifecycle, API shape.
+ 
+ **Rule:** load both when a type decision moves a boundary between packages.
+ **Forbidden:** declaring an interface before a consumer exists that calls every method on it.
+ 
+ ## Concurrency against context
+ 
+-- `/golang-concurrency` (`$golang-concurrency`) — goroutine ownership, channels, locks, worker pools, backpressure, races.
+-- `/golang-context` (`$golang-context`) — cancellation, deadlines, request-scoped values, propagation.
++- `/golang-concurrency` — goroutine ownership, channels, locks, worker pools, backpressure, races.
++- `/golang-context` — cancellation, deadlines, request-scoped values, propagation.
+ 
+ **Rule:** load both whenever a goroutine is cancelled through a context.
+ 
+ **Forbidden — absolutely, with no exception:** starting a goroutine that has no owner, no cancellation path, and no
+-place its error is reported. This is P9 in `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`), it is a rule and not a preference,
++place its error is reported. This is P9 in `/alaa-golang-clean-code-principles`, it is a rule and not a preference,
+ and this file does not soften it. **Rule:** every goroutine is started by a component that also stops it, takes a
+ context that shutdown cancels, and either returns its error to that owner or is a documented fire-and-forget whose
+ failure is recorded as a metric.
+ 
+ ## Modernize against lint
+ 
+-- `/golang-modernize` (`$golang-modernize`) — language and standard-library adoption.
+-- `/golang-lint` (`$golang-lint`) — analyzer configuration and rule interpretation.
++- `/golang-modernize` — language and standard-library adoption.
++- `/golang-lint` — analyzer configuration and rule interpretation.
+ 
+ **Rule:** use lint output to find candidates and modernize rules to choose the rewrite.
+ **Forbidden:** adopting a language feature the repository's `go` directive does not allow — see
+@@ -133,28 +131,27 @@ failure is recorded as a metric.
+ 
+ The dividing question is whether you are asking about *this repository's build* or *the published ecosystem*.
+ 
+-- `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) — this repository: CodeGraph for unknown
+-  structure, Serena for known Go symbols and semantic edits, and direct `/golang-gopls` (`$golang-gopls`) only for one
+-  recorded unavailable, unhealthy, or missing build-aware operation. Serena's Go backend itself uses `gopls`.
+-- `/golang-pkg-go-dev` (`$golang-pkg-go-dev`) — the published ecosystem: versions, symbols, examples, importers, licences, and CVEs of a
++- /alaa-code-intelligence-routing — evidence and editing surfaces for this repository;
++  it owns provider selection and degraded operation.
++- `/golang-pkg-go-dev` — the published ecosystem: versions, symbols, examples, importers, licences, and CVEs of a
+   package, including one not yet in `go.mod`. It queries pkg.go.dev, never your checkout.
+-- `/golang-security` (`$golang-security`) — the whole-tree reachable-CVE audit with `govulncheck ./...`, which is the gate of record.
++- `/golang-security` — the whole-tree reachable-CVE audit with `govulncheck ./...`, which is the gate of record.
+ 
+-**Rule:** read and reshape through the selected semantic owner, learn ecosystem facts with godig, and gate releases with `govulncheck`.
++**Rule:** route local evidence and editing-surface choices through /alaa-code-intelligence-routing,
++learn ecosystem facts with godig, and gate releases with `govulncheck`.
+ **Forbidden:** stating a package's version, licence, CVE status, or importer set from memory. **Rule:** query
+ `godig` and cite what it returned.
+ 
+ ## Refactoring against the target shape
+ 
+-- `/golang-refactoring` (`$golang-refactoring`) — the process: blast radius, PR ordering, the branch model, tool-driven transforms, the
++- `/golang-refactoring` — the process: blast radius, PR ordering, the branch model, tool-driven transforms, the
+   coverage safety net. It never decides what the result should look like.
+-- `/golang-naming` (`$golang-naming`), `/golang-project-layout` (`$golang-project-layout`), `/golang-code-style` (`$golang-code-style`), `/golang-design-patterns` (`$golang-design-patterns`), `/golang-modernize` (`$golang-modernize`) —
++- `/golang-naming`, `/golang-project-layout`, `/golang-code-style`, `/golang-design-patterns`, `/golang-modernize` —
+   the destination: the new name, the new package, the target shape, the modern idiom.
+-- `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) — the destination for any service on the kit.
++- `/alaa-golang-clean-code-principles` — the destination for any service on the kit.
+ 
+-**Rule:** load the process skill and the destination skill together, with the semantic actuator selected by
+-`/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`); Serena is the default Go surface and direct
+-`/golang-gopls` (`$golang-gopls`) is one recorded fallback.
++**Rule:** load the process skill and the destination skill together; use /alaa-code-intelligence-routing
++for the editing surface and any missing semantic guarantee before the dependent operation.
+ **Forbidden:** a commit that both moves code and changes behaviour. **Rule:** land the move, verify the tests are
+ unchanged and green, then land the behaviour change separately.
+ **Forbidden:** refactoring code that has no test covering the behaviour being preserved. **Rule:** add that test
+diff --git a/skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md b/skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md
+index 0caaf412b..553b5281f 100644
+--- a/skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md
++++ b/skills/sohrab/alaa-golang/references/40-production-ready-package-catalog.md
+@@ -6,16 +6,15 @@ behind a trusted gateway, PostgreSQL, Redis, ClickHouse and RabbitMQ, deployed t
+ **Rule:** work this ladder in order and stop at the first step that answers the question:
+ 
+ 1. The standard library.
+-2. A package the kit already provides — check `/alaa-go-chi-development` (`$alaa-go-chi-development`)
++2. A package the kit already provides — check `/alaa-go-chi-development`
+    `references/12-kit-capability-map.md` before adding anything that touches transport, storage, messaging,
+    observability, or identity.
+ 3. A package already in the repository's `go.mod`.
+ 4. The **default** entry for that role below.
+ 5. A **conditional** entry below, when its stated condition holds.
+-6. `/golang-popular-libraries` (`$golang-popular-libraries`) for discovery, then `/golang-pkg-go-dev`
+-   (`$golang-pkg-go-dev`) to check the candidate's versions, licence, importers, and CVEs before proposing it.
++6. `/golang-popular-libraries` for discovery, then `/golang-pkg-go-dev` to check the candidate's versions, licence, importers, and CVEs before proposing it.
+ 
+-**Rule:** apply the change with `/golang-dependency-management` (`$golang-dependency-management`) and run
++**Rule:** apply the change with `/golang-dependency-management` and run
+ `govulncheck ./...` afterwards.
+ 
+ **Forbidden:** adding a dependency without saying, in the same message, which complexity it removes and what the
+@@ -31,8 +30,7 @@ standard library would have cost instead.
+ 
+ `github.com/go-chi/httprate`, `golang.org/x/time/rate` — **conditional, and not on the kit.** Admission control is a
+ kit-owned surface: see `46-chi-under-load.md` before reaching for either. Off the kit, `x/time/rate` is the in-process
+-token bucket and `httprate` the HTTP-level limiter, and the policy they enforce comes from `/alaa-reliability-sla`
+-(`$alaa-reliability-sla`).
++token bucket and `httprate` the HTTP-level limiter, and the policy they enforce comes from `/alaa-reliability-sla`.
+ 
+ ## Config and logging
+ 
+@@ -62,7 +60,7 @@ become the bulk of the code.
+ 
+ `github.com/sony/gobreaker/v2` — **conditional, and not on the kit.** A breaker is a kit-owned surface
+ (`46-chi-under-load.md`); off the kit, this is the implementation, and whether a breaker is warranted and with which
+-thresholds belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
++thresholds belongs to `/alaa-reliability-sla`.
+ 
+ ## PostgreSQL
+ 
+@@ -73,7 +71,7 @@ thresholds belongs to `/alaa-reliability-sla` (`$alaa-reliability-sla`).
+ `github.com/pressly/goose/v3` — **default** migration runner, and what the kit's migrate lane uses.
+ 
+ `atlas` — **conditional**, when schema drift detection and migration review are governance requirements rather than
+-build steps. That choice belongs to `/alaa-data-layer` (`$alaa-data-layer`).
++build steps. That choice belongs to `/alaa-data-layer`.
+ 
+ **Forbidden:** an ORM in a PostgreSQL service in this stack. **Rule:** use `pgx` with `sqlc`, or `pgx` with explicit
+ repository code.
+@@ -97,9 +95,9 @@ client to be the bottleneck. **Forbidden:** choosing it without that profile.
+ `github.com/twmb/franz-go` — **not on this fleet.** RabbitMQ is the only broker this platform runs: the exchange
+ and queue registry holds no Kafka topic, the service kit ships no Kafka package, no `KAFKA_*` environment key exists,
+ and the registered async metric family is entirely `alaa_queue_*` and `alaa_outbox_*`. Adopting Kafka is an owner
+-decision, recorded as a kit change request through `/alaa-go-chi-development` (`$alaa-go-chi-development`) before any
++decision, recorded as a kit change request through `/alaa-go-chi-development` before any
+ service imports a client. Whether a message needs a broker at all and which transport carries it belong to
+-`/alaa-async-messaging` (`$alaa-async-messaging`). Use this client and no other on the day a service is told to speak
++`/alaa-async-messaging`. Use this client and no other on the day a service is told to speak
+ Kafka, because a second Kafka client in the fleet doubles the tuning surface for one transport.
+ 
+ `github.com/ThreeDotsLabs/watermill` — **conditional**, only where a team has decided to adopt its eventing
+@@ -141,7 +139,7 @@ a kit service.
+ 
+ `github.com/golang-jwt/jwt/v5` — **conditional**, only in a service that owns an authentication boundary.
+ **Forbidden:** adding JWT verification to a service that sits behind the trusted gateway; see
+-`/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`).
++`/alaa-trust-gateway-auth`.
+ 
+ `github.com/MicahParks/keyfunc/v3` — **conditional**, when a service that already verifies JWTs must fetch keys from
+ a JWKS endpoint.
+@@ -160,7 +158,8 @@ using it to prove a query returns correct results — that needs a real database
+ 
+ ## Repository tools
+ 
+-`gopls` — **required backend** for Serena's Go semantic surface and the direct fallback reached through `/golang-gopls` (`$golang-gopls`); it is not the default agent-facing route.
++`gopls` — Go language server. For a task requiring a local semantic operation,
++load /alaa-code-intelligence-routing for surface selection.
+ `golangci-lint` — **default** lint runner. **Rule:** pin its version in CI.
+ `govulncheck` — **default** vulnerability gate.
+ `buf` — **default** in any protobuf repository.
+@@ -180,13 +179,13 @@ Plain constructors — **default** (`60-service-architecture-patterns.md`).
+ `github.com/samber/do/v2` — **conditional**, only when `go.mod` already requires it.
+ 
+ `github.com/google/wire` — **not for new work.** The repository was archived in 2025. **Rule:** on an existing Wire
+-service, keep it and load `/golang-google-wire` (`$golang-google-wire`).
++service, keep it and load `/golang-google-wire`.
+ 
+ ## Utilities
+ 
+ `github.com/google/uuid` — **conditional** for a standalone service. **Forbidden:** using it to mint a public
+ identifier on a kit service; UUIDv7 public ids come from the kit's `idkit`
+-(`/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) P8).
++(`/alaa-golang-clean-code-principles` P8).
+ 
+ ## Beyond the default stack
+ 
+@@ -196,7 +195,7 @@ Reach here only when the standard library, the kit, a `golang-*` skill, and ever
+ - `sigs.k8s.io/controller-runtime` — when the service is a controller or operator. **Forbidden:** a hand-written
+   reconcile loop in a service that is part of the cluster control plane.
+ - `ko` — build tool, when fast single-binary container builds matter more than a hand-written Dockerfile. The
+-  production image decision belongs to `/alaa-docker-production` (`$alaa-docker-production`).
++  production image decision belongs to `/alaa-docker-production`.
+ - `goreleaser` — release tool, for multi-platform binaries, archives, checksums, and publishing.
+ 
+ **Rule:** `buf`, `ko`, and `goreleaser` are tools, not runtime dependencies. Pin them in tool directives or install
+diff --git a/skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md b/skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md
+index 32ced5f78..5e1a4aef1 100644
+--- a/skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md
++++ b/skills/sohrab/alaa-golang/references/62-import-direction-and-boundaries.md
+@@ -4,8 +4,8 @@ Read this before adding an import to a package that is not a transport or infras
+ package may import what, and how to check it.
+ 
+ Two things this file does not contain. The catalogue of Go design patterns and their mechanics belongs to
+-`/golang-design-patterns` (`$golang-design-patterns`). What each classic pattern becomes on this platform belongs to
+-`/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) `references/60-design-patterns-kit-era.md`.
++`/golang-design-patterns`. What each classic pattern becomes on this platform belongs to
++`/alaa-golang-clean-code-principles` `references/60-design-patterns-kit-era.md`.
+ Neither is repeated here, and choosing a pattern is not a reason to open this file.
+ 
+ On a kit service, P5 (`ports inward, adapters outward`) is the binding form of the rule below and it wins. This file
+@@ -58,10 +58,9 @@ the import graph lie about what depends on what. **Rule:** construct in the comp
+ 
+ - `go list -deps ./internal/domain/... ./internal/application/...` lists everything those layers actually pull in,
+   transitively. Nothing in the forbidden list above may appear.
+-- `/alaa-code-intelligence-routing` (`$alaa-code-intelligence-routing`) selects the semantic surface: Serena shows
+-  the package's known symbols and references before a move; invoke `/golang-gopls` (`$golang-gopls`) directly only
+-  for one recorded package-API or build-aware guarantee that Serena does not expose.
++- Before a move requiring package-API or reference evidence, load /alaa-code-intelligence-routing
++  for the evidence and editing surfaces; retain any coverage limits it establishes.
+ 
+ **Rule:** when the check fails, fix the direction rather than the check — move the type toward the layer that owns it,
+ or introduce the interface at the consumer. An import cycle in Go is always a boundary that was drawn in the wrong
+-place; `/golang-refactoring` (`$golang-refactoring`) owns the safe procedure for moving the type.
++place; `/golang-refactoring` owns the safe procedure for moving the type.
