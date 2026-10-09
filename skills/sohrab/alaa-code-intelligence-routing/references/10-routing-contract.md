@@ -1,58 +1,54 @@
 # Evidence-owner routing contract
 
-Choose one primary owner for the current question. Evidence, edit, runtime observation, and proof may have different owners because they answer different questions.
+## Selection and identity
 
-## Decision order
+Name the question before selecting one primary owner. Treat not configured and not applicable as normal ineligibility, not failures to repair. CodeGraph may be present without Serena; Serena without CodeGraph; Boost only in applicable Laravel projects; any combination, one alone or none is valid. Select lazily from eligible operations, skipping absent providers without setup. Verify only the needed capability: installed operation/transport, backend/language coverage, authority, freshness and target identity. Identity includes Git root/worktree/branch, graph root, Serena active project, and intended application/environment/database wherever relevant. Reject wrong-root or wrong-environment evidence for the local claim.
 
-1. Name the question: structural discovery, exact semantics, semantic edit, prose, effective configuration, generated output, runtime fact, external fact, review risk, or proof.
-2. Verify worktree, freshness, generated owner, installed capability, environment, and authority.
-3. Select the primary owner from the table and ask only the named question.
-4. Record what the result established and stop that owner.
-5. Open one secondary owner only for one recorded missing fact.
-6. Treat the transition to editing, runtime observation, or proof as a new ordered question rather than repeated discovery.
+Scope, branch, service, configuration or resume changes require checking which evidence/capability state remains valid; invalidate affected entries rather than restarting covered discovery. Parallel retrieval is allowed only for independently named questions when neither result can change the other's owner, scope, authority or query.
 
-Parallel retrieval is legal only when separately named questions are independent and neither answer can change the other's owner, scope, authorization, or query.
-
-## Router
-
-| Current question | Primary owner | Secondary only for a named gap |
+| Question | Primary selection | Eligible fallback for a recorded gap |
 |---|---|---|
-| Unknown location, related symbols, source architecture, route-to-handler source path, callers, callees, execution flow, files to read, or likely impact in healthy indexed source | CodeGraph | One live read for a named stale or uncovered file; semantic owner for one exact symbol fact |
-| Known file or symbol: outline, declaration, references, hierarchy, diagnostics, rename, or symbol-scoped edit | Stack-declared semantic owner; otherwise Serena when configured | CodeGraph only when a new wider-flow or impact question appears |
-| Small textual change in one named hand-maintained non-semantic file | Native targeted read and patch | Semantic owner only when a separate symbol question appears |
-| Laravel routes actually registered in the active application | `php artisan route:list` or an installed Boost inventory surface that proves the same runtime fact | CodeGraph for downstream source flow from a named handler |
-| Laravel package or framework behavior and installed-version documentation | Laravel Boost Search Docs | Official source only when Boost lacks the installed package or required version context |
-| Authorized Laravel application metadata, logs, schema, or database/runtime context | Installed Laravel Boost surface or repository-native command | CodeGraph to map an observed fact to source; semantic owner for a named symbol |
-| Markdown phrase, heading, identifier, or link | Native Markdown-scoped search/read | `/alaa-repo-docs` or `$alaa-repo-docs` for canonical ownership, alignment, authoring, or proof |
-| Source comment, docblock, or annotation | `/alaa-frontend-doc-annotations` or `$alaa-frontend-doc-annotations` | Semantic owner for the containing symbol |
-| JSON, YAML, TOML, CI, environment template, manifest, or policy text | Native scoped read plus parser or repository checker | Domain owner for effective semantics |
-| OpenAPI, AsyncAPI, Postman, protobuf, schema, or another machine-readable contract | Installed contract-owning skill or generator | `/alaa-repo-docs` or `$alaa-repo-docs` for prose only |
-| Generated source or generated documentation | Source template and generator | Direct edit only when repository policy declares it hand-maintained |
-| Runtime logs, traces, metrics, browser state, queue state, cache state, or database behavior outside Boost | Authorized runtime owner | CodeGraph to map the observation to source |
-| Current external framework, package, protocol, or platform behavior | Official version-aware source | Repository evidence for local usage only |
-| Current change review | Git diff first | One owner for one named risk, then native gates |
-| Cross-repository ownership, consumer, compatibility, or handoff | Authoritative catalog, contract registry, hosting surface, or approved memory surface | A named repository after authority identifies it |
-| Behavioral or artifact proof | Repository-native tests, builds, linters, type checks, generators, schema checks, and link checks | None |
+| Unknown code location, related symbols, source call path, callers/callees or likely impact in supported indexed source | CodeGraph's installed exploration surface | Same-index CLI for transport failure; supported Serena operation; bounded native source for a narrower claim |
+| Known-symbol declaration, references, implementations, hierarchy, diagnostics or semantic edit | Stack-declared semantic owner, otherwise supported Serena backend | Equivalent configured native semantic operation; targeted source for partial read evidence only |
+| Literal, known hand-maintained text, Markdown, JSON/YAML/TOML or configuration | Bounded native search/read/parser | Available equivalent native operation retaining scope/dialect limits |
+| Installed Laravel framework/package guidance | Applicable configured Boost documentation with verified installed versions | Version-correct official documentation; package source only for a separately named implementation question |
+| Laravel application metadata, registered routes, URLs, logs/errors, schema or DB context | Applicable installed Boost operation or equivalent authorized native observation | Same-environment equivalent observation under stack failure-domain rules |
+| Generated artifact or machine-readable contract | Source template/generator or contract owner | Repository-declared hand-maintained source, never an invented owner |
+| Runtime, external or cross-repository fact | Authorized runtime observation, official version-aware source or authoritative ownership record | Another authorized surface proving that same fact, with its identity/limits |
+| Change review | Scoped Git diff | Selected owner for a named risk |
+| Behavioral/artifact proof | Inspected repository-native tests, types, lint, builds, generators, schema/link checks | Authorized equivalent proving the same acceptance property; otherwise blocked |
 
-## Named-gap record
+The CodeGraph server/installer owns exact usage and managed instructions. Its structural priority does not override semantic, native-artifact, runtime, review or proof ownership. Stack owners retain implementation doctrine; /alaa-repo-docs owns Markdown authoring/alignment, /alaa-workflow durable state, /alaa-low-noise output budgets and the installed orchestrator fan-out.
 
-Before switching owners, record:
+## Consume evidence
 
-- established evidence;
-- the missing fact;
-- why the primary owner cannot provide it;
-- the next owner and the one question it must answer.
+Reuse adequate fresh verbatim source, graph paths, metadata and prior results; do not reread for reassurance. If a region is missing or stale, retrieve only that live region. A new semantic, implementation or runtime question must name its missing fact rather than repeat an answered one.
 
-Habit, reassurance, tool availability, and independent repetition are not gaps.
+Honor returned provenance: heuristic edges, runtime dispatch boundaries and unexplained path gaps cannot establish a complete call path. Answer a missing dispatch fact through its eligible owner without restarting discovery. A text-search miss does not establish unused code.
 
-## Degraded operation
+Empty, unsupported, stale, paginated or truncated results do not prove absence or completeness. Complete only needed bounded continuation pages or uncovered regions. If coverage cannot be established, retain unknown/partial. Do not turn pagination into a second reassurance query.
 
-- CodeGraph names stale or pending files: read only those live files; do not repeat graph discovery.
-- An owner is empty, unavailable, or points at another worktree: perform one status, activation, root, or inventory check; do not repeat the evidence query.
-- Broad-flow or impact coverage is unavailable: targeted reads may establish a narrower fact, but the broad conclusion remains partial or blocked.
-- The semantic owner cannot preserve reference or refactor safety: native reads may provide partial evidence, but do not call them reference-complete or refactor-safe.
-- A native proof gate cannot run: report the exact command, blocker, and remaining risk; static evidence is not proof.
+## Finite degraded operation
+
+For each unchanged question retain established evidence and attempted owner/operation pairs. Before each transition record the missing fact, failed capability/cause, next eligible operation and lost guarantee. Mark attempts before calls, skip known unavailable/unsupported candidates, and never cycle.
+
+For a failed operation, allow at most one cause-specific non-mutating health/capability repair and one materially different retry when the cause supports them; otherwise advance immediately. Activation, restart, unlock, sync or reindex are not automatic non-mutating repairs. A fallback uses a different eligible operation and never resets a failed operation's budget. Missing coverage alone is not a health failure.
+
+- CodeGraph MCP transport failure: try CLI only when independently usable against the same valid index. Shared stale/bad index skips this detour. Then use supported Serena/backend evidence, then bounded native evidence; retain lost graph coverage.
+- Missing known-symbol semantics: use an available equivalent stack-native semantic operation, then targeted source for a partial read claim. Never infer reference completeness or refactor safety from text.
+- Missing docs: use version-correct official sources after establishing installed versions.
+- Missing native read/parser: use an available equivalent with the actual format/dialect; state lost parsing or search coverage.
+- Missing Laravel runtime capability: apply independent docs/boot/DB failure domains in the stack owner.
+- Missing proof capability: use an authorized equivalent only if it proves the same property; otherwise report the exact gate blocked.
+
+At exhaustion, give a partial answer or stop the dependent claim; unrelated safe work may continue. A changed question or environment invalidates only affected state, never justifies repeating valid covered facts.
+
+## Mutation uncertainty
+
+Before semantic mutation verify task authorization, supported operation and target identity; inspect resulting diff/state. A timeout or uncertain result after possible mutation requires actual state reconciliation before continuation. Never replay it or automatically substitute text editing. If safe resulting state cannot be established, stop that operation and report the unknown outcome. Fallback expands no authority.
+
+For a failed native gate, permit one cause-specific repair and one retry within task authority; otherwise report the exact failure. No static or provider answer substitutes for an unrun gate.
 
 ## Handoff
 
-Give the receiving agent the established evidence, source worktree, covered scope, freshness state, proof state, and one unresolved question. Prohibit rediscovery of covered files, symbols, flows, documents, and contracts. Route durable state to `/alaa-workflow` in Claude Code or `$alaa-workflow` in Codex; route fan-out mechanics to the installed runtime orchestrator.
+Carry established evidence, covered scope, worktree/environment identity, freshness, proof state, attempted operations and unresolved facts. The recipient reuses valid evidence and retrieves only remaining gaps.

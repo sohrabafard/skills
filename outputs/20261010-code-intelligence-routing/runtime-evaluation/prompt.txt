@@ -1,0 +1,566 @@
+Evaluate the supplied routing contract by applying it to 15 independent synthetic situations. This is a source-prompt replay: do not inspect a repository, run tools, change files, query providers, or delegate. Treat case facts as fixture data, not live system observations. Use the supplied policy to propose the next bounded actions and truthful evidence limits. Do not grade yourself or claim real tool execution. Do not output hidden reasoning. Return only JSON with a decisions array, exactly one entry per case in input order. Each entry has id, primary_owner, next_actions (array of short proposed actions, not an executed trace), fallback_stop, evidence_limit, and gate_state. Use complete/partial/blocked/not-applicable only when justified by the fixture; 'gate_state' concerns the requested claim, not task-wide tests. No generic reassurances. Cases are independent, so do not reuse imagined results between them.
+
+# Policy snapshot
+
+## Policy file: references/00-topic-map.md
+
+# Topic map
+
+Load only rows whose observable condition applies. This is the skill's sole reference router.
+
+| You are about to | Read | Decision owned there |
+|---|---|---|
+| Select evidence, reuse a result, handle a gap/outage, reconcile a mutation or hand off evidence | `references/10-routing-contract.md` | Primary selection, evidence limits, finite fallback and retry termination |
+| Locate Markdown or source annotations, or verify a documentation claim | `references/20-documentation-routing.md` | Documentation surfaces and authoring ownership |
+| Inspect configuration, contracts, generated output, runtime/binary evidence, review or cross-repository claims | `references/30-artifact-boundaries.md` | Artifact authority and proof boundaries |
+| Choose a Laravel, Go, Vue/Quasar path or a provider's specialized operation | `references/40-stack-bindings.md` | Stack/capability fit and independent Boost failure domains |
+| Select a native command, parser, semantic fallback or proof recipe | `references/45-native-tools.md` | Presence/configuration checks, bounded examples and command limits |
+| Adopt or diagnose authorized routing hooks | `references/50-hooks.md` | Hook ownership, profiles, deviations and rollback |
+| Evaluate routing, compare performance or reuse verification evidence | `references/60-evaluation.md` | Expected scenarios, observations and claim strength |
+| Author an authorized binding, Serena context/language configuration or initial prompt | `references/70-project-bindings.md` | Portable fragments, editable source and configuration ownership |
+| Grant code intelligence to a role or check read-only enforcement | `references/80-agent-scoping.md` | Narrow effective read/write/execute grants and contract reachability |
+| Change a capability, version, command, schema, path or hook claim, or resolve source disagreement | `references/90-source-map.md` | Official provenance, dated limits and freshness |
+
+
+## Policy file: references/10-routing-contract.md
+
+# Evidence-owner routing contract
+
+## Selection and identity
+
+Name the question before selecting one primary owner. Treat not configured and not applicable as normal ineligibility, not failures to repair. CodeGraph may be present without Serena; Serena without CodeGraph; Boost only in applicable Laravel projects; any combination, one alone or none is valid. Select lazily from eligible operations, skipping absent providers without setup. Verify only the needed capability: installed operation/transport, backend/language coverage, authority, freshness and target identity. Identity includes Git root/worktree/branch, graph root, Serena active project, and intended application/environment/database wherever relevant. Reject wrong-root or wrong-environment evidence for the local claim.
+
+Scope, branch, service, configuration or resume changes require checking which evidence/capability state remains valid; invalidate affected entries rather than restarting covered discovery. Parallel retrieval is allowed only for independently named questions when neither result can change the other's owner, scope, authority or query.
+
+| Question | Primary selection | Eligible fallback for a recorded gap |
+|---|---|---|
+| Unknown code location, related symbols, source call path, callers/callees or likely impact in supported indexed source | CodeGraph's installed exploration surface | Same-index CLI for transport failure; supported Serena operation; bounded native source for a narrower claim |
+| Known-symbol declaration, references, implementations, hierarchy, diagnostics or semantic edit | Stack-declared semantic owner, otherwise supported Serena backend | Equivalent configured native semantic operation; targeted source for partial read evidence only |
+| Literal, known hand-maintained text, Markdown, JSON/YAML/TOML or configuration | Bounded native search/read/parser | Available equivalent native operation retaining scope/dialect limits |
+| Installed Laravel framework/package guidance | Applicable configured Boost documentation with verified installed versions | Version-correct official documentation; package source only for a separately named implementation question |
+| Laravel application metadata, registered routes, URLs, logs/errors, schema or DB context | Applicable installed Boost operation or equivalent authorized native observation | Same-environment equivalent observation under stack failure-domain rules |
+| Generated artifact or machine-readable contract | Source template/generator or contract owner | Repository-declared hand-maintained source, never an invented owner |
+| Runtime, external or cross-repository fact | Authorized runtime observation, official version-aware source or authoritative ownership record | Another authorized surface proving that same fact, with its identity/limits |
+| Change review | Scoped Git diff | Selected owner for a named risk |
+| Behavioral/artifact proof | Inspected repository-native tests, types, lint, builds, generators, schema/link checks | Authorized equivalent proving the same acceptance property; otherwise blocked |
+
+The CodeGraph server/installer owns exact usage and managed instructions. Its structural priority does not override semantic, native-artifact, runtime, review or proof ownership. Stack owners retain implementation doctrine; /alaa-repo-docs owns Markdown authoring/alignment, /alaa-workflow durable state, /alaa-low-noise output budgets and the installed orchestrator fan-out.
+
+## Consume evidence
+
+Reuse adequate fresh verbatim source, graph paths, metadata and prior results; do not reread for reassurance. If a region is missing or stale, retrieve only that live region. A new semantic, implementation or runtime question must name its missing fact rather than repeat an answered one.
+
+Honor returned provenance: heuristic edges, runtime dispatch boundaries and unexplained path gaps cannot establish a complete call path. Answer a missing dispatch fact through its eligible owner without restarting discovery. A text-search miss does not establish unused code.
+
+Empty, unsupported, stale, paginated or truncated results do not prove absence or completeness. Complete only needed bounded continuation pages or uncovered regions. If coverage cannot be established, retain unknown/partial. Do not turn pagination into a second reassurance query.
+
+## Finite degraded operation
+
+For each unchanged question retain established evidence and attempted owner/operation pairs. Before each transition record the missing fact, failed capability/cause, next eligible operation and lost guarantee. Mark attempts before calls, skip known unavailable/unsupported candidates, and never cycle.
+
+For a failed operation, allow at most one cause-specific non-mutating health/capability repair and one materially different retry when the cause supports them; otherwise advance immediately. Activation, restart, unlock, sync or reindex are not automatic non-mutating repairs. A fallback uses a different eligible operation and never resets a failed operation's budget. Missing coverage alone is not a health failure.
+
+- CodeGraph MCP transport failure: try CLI only when independently usable against the same valid index. Shared stale/bad index skips this detour. Then use supported Serena/backend evidence, then bounded native evidence; retain lost graph coverage.
+- Missing known-symbol semantics: use an available equivalent stack-native semantic operation, then targeted source for a partial read claim. Never infer reference completeness or refactor safety from text.
+- Missing docs: use version-correct official sources after establishing installed versions.
+- Missing native read/parser: use an available equivalent with the actual format/dialect; state lost parsing or search coverage.
+- Missing Laravel runtime capability: apply independent docs/boot/DB failure domains in the stack owner.
+- Missing proof capability: use an authorized equivalent only if it proves the same property; otherwise report the exact gate blocked.
+
+At exhaustion, give a partial answer or stop the dependent claim; unrelated safe work may continue. A changed question or environment invalidates only affected state, never justifies repeating valid covered facts.
+
+## Mutation uncertainty
+
+Before semantic mutation verify task authorization, supported operation and target identity; inspect resulting diff/state. A timeout or uncertain result after possible mutation requires actual state reconciliation before continuation. Never replay it or automatically substitute text editing. If safe resulting state cannot be established, stop that operation and report the unknown outcome. Fallback expands no authority.
+
+For a failed native gate, permit one cause-specific repair and one retry within task authority; otherwise report the exact failure. No static or provider answer substitutes for an unrun gate.
+
+## Handoff
+
+Carry established evidence, covered scope, worktree/environment identity, freshness, proof state, attempted operations and unresolved facts. The recipient reuses valid evidence and retrieves only remaining gaps.
+
+
+## Policy file: references/20-documentation-routing.md
+
+# Documentation routing
+
+/alaa-repo-docs owns repository Markdown authoring, canonical topic ownership, language, navigation, alignment, redaction and link validation. /alaa-frontend-doc-annotations owns source comments/docblocks. This reference selects their evidence surfaces.
+
+| Question | Surface |
+|---|---|
+| Which Markdown file contains a phrase, heading, endpoint, event or identifier? | Markdown-scoped native search/read |
+| Which document is canonical, what must change, or are links valid? | /alaa-repo-docs |
+| Does a documentation claim match source behavior? | Documentation owner names the implementation/runtime/configuration fact, then selects its routing-contract owner |
+| Is generated Markdown current? | Source template and generator |
+| What do installed Laravel package docs say? | Boost documentation |
+| What do other current package docs say? | Official version-aware source |
+
+CodeGraph contributes supported implementation evidence; it does not own Markdown. This pack does not enable Markdown in Serena by default. Add a Markdown backend only for a named recurring gap, verified health and explicit project decision; documentation ownership remains unchanged. Do not add a provider merely for repository text search; use the bundled native guide.
+
+
+## Policy file: references/30-artifact-boundaries.md
+
+# Artifact boundaries
+
+| Artifact or evidence | Primary owner | Boundary |
+|---|---|---|
+| JSON, YAML, TOML, CI, manifests, environment templates | Native scoped read plus parser or repository checker | Parsed syntax is not the effective runtime value. |
+| OpenAPI, AsyncAPI, Postman, protobuf, schemas | Owning contract skill or generator | Markdown may summarize but never replaces the exact contract. |
+| Migrations and source schema | Framework or schema owner | Name whether the question concerns migration intent or live schema. |
+| Live Laravel schema or database context | Installed Boost or native database surface | Runtime evidence does not replace source or completion proof. |
+| Generated source or docs | Generator and source template | Do not patch generated output as the source of truth. |
+| Logs, traces, metrics, browser state | Authorized runtime owner | Static tools may map evidence to source but cannot prove runtime behavior. |
+| Images, diagrams, PDFs, archives, binary assets | Native visual or artifact tool | CodeGraph and Serena do not own binary content. |
+| External framework or package behavior | Official version-aware docs | Laravel Boost owns installed Laravel package documentation. |
+| Cross-repository ownership, contracts, and handoffs | Catalog, contract registry, hosting surface, or approved memory surface | Local static evidence cannot prove another repository. |
+| Git review | Diff first | Expand only from changed artifacts and named risks. |
+| Completion | Repository-native gates | No graph, language server, docs answer, or runtime snapshot substitutes for proof. |
+
+
+
+## Policy file: references/40-stack-bindings.md
+
+# Stack and capability fit
+
+Select operations from the effective inventory and active backend, not remembered names. Optional/beta or newer documented capabilities remain unusable until actually exposed, supported and authorized. Reference 90 owns sources and dated discrepancies; reference 80 owns grants.
+
+## Project applicability
+
+Provider configuration is project-specific. CodeGraph requires a matching supported index; Serena requires the needed configured language/backend; Boost applies only to Laravel and is optional there. PHP without Laravel uses the source/native routes, not Boost. Go and other languages require their own supported operations. One provider alone, any combination or none follows the same eligible-operation selection; absence needs no setup. Temporary unhealthy or partial capabilities retain the routing contract's lost guarantees.
+
+## Laravel
+
+| Needed fact | Eligible installed Boost group | Evidence limit |
+|---|---|---|
+| Installed PHP/Laravel/packages/models | Application info | Installed metadata; lockfile alone is intended resolution |
+| Existing metadata resource or upgrade/simplification prompt | Installed resource/prompt | Reuse adequate metadata; a prompt is controlling advice, not authority or proof |
+| Framework convention or package guidance | Search docs | Establish installed versions first; source implementation is a different question |
+| Registered routes, one resolved URL | Route inventory if exposed; absolute-URL operation | A resolved URL does not prove route registration; native route-list can observe registration |
+| Connections/live schema | Connection inventory/schema | Must observe intended environment/database; migrations show intent only |
+| One database fact | Database query | Inspect query, credentials and effects; a query tool does not guarantee read-only access |
+| Application/browser errors/logs | Last error/log entries/browser logs | Verify application/session/time window, redact sensitive values; absence of entries proves no absence of failures |
+| Available Artisan commands or execution | Installed command inventory/execution | Inventory does not authorize execution; boot/dependency effects apply |
+| Arbitrary application expressions | Installed tinker/code-execution operation | Execution can mutate despite an apparently read-only expression |
+| Durable project instruction | Installed rule-recording operation | Writes agent instructions; separate authorized authoring, not evidence retrieval |
+| Guidelines/skills generation | Installed resource commands | Setup/update effects, not fallback or proof |
+
+Do not assume every group above exists in a particular Boost version. Inspect command/tool semantics before use. CodeGraph answers application source structure; Serena answers supported PHP semantics; neither proves framework conventions, runtime registration, database state or completion.
+
+Vendor/excluded source may lie outside Serena's configured coverage; verify inclusion before interpreting a framework-symbol miss. Retain unknown and select the installed-version documentation owner for a guidance question.
+
+Some versions gate tinker separately and constrain database queries with read-only transaction controls. Verify the installed gate, driver/enforcement and task scope rather than infer harmlessness from a tool name or annotation. Upgrade/simplification prompts remain subject to authorized change scope and repository rules.
+
+### Independent failure domains
+
+Classify the failed operation, not the whole provider:
+
+- **Docs transport/service failure:** retain healthy application metadata; use version-correct official documentation.
+- **Application boot failure:** retain healthy docs and directly readable installed package metadata. Another boot-dependent Artisan command is not an independent fallback. Use static source only for intent; block live application claims without equivalent observation.
+- **Database failure or wrong connection/environment:** retain docs/application evidence; live schema/query claims require equivalent authorized observation of the intended DB. Migrations do not recover that guarantee.
+
+When application-info is unavailable, inspect direct installed package metadata; distinguish it from lockfile intent. Verify native alternative working directory, runtime/container, application/environment and connection before making a runtime claim.
+
+## CodeGraph specialized groups
+
+Explore can return source, relationships and impact together: consume it under the routing contract. When a narrower unresolved fact needs it, use exposed node/source, symbol query, files, callers/callees, impact or context operations. CLI and MCP inventories can differ; do not enable optional MCP tools to mirror CLI.
+
+Affected-test/dependency suggestions select candidate coverage; native execution alone proves tests passed. Status/version establish index/installation information. Init/uninit, index/sync/unlock, daemon control, install/uninstall/upgrade and telemetry changes have lifecycle/configuration effects; they require explicit corresponding authority, never automatic evidence fallback. A documented unreleased viewer is not an installed capability.
+
+## Serena specialized groups
+
+Use supported symbol search/overview, declaration, references, implementations and diagnostics for exact symbol facts. Optional symbol diagnostics and backend-specific hierarchy/inspections require the backend exposing them. Inspections diagnose source; they do not discharge project proof.
+
+Supported symbol body/insert/rename operations and backend-specific move/inline/safe-delete are writes, each subject to mutation reconciliation. A safety-oriented name does not establish authorization or complete coverage.
+
+Configuration/manual-instruction inspection can identify active project, context, modes and tools. Activation/onboarding, language-server restart, project removal and dashboard opening are lifecycle effects; inspect side effects and authority first. File/search tools retain native coverage limits; they add no semantic guarantee and must not repeat answered facts.
+
+Shell, REPL and debug evaluation carry execution authority. Beta REPL and backend-specific evaluation require observed operation availability; an unrestricted execution surface is not a semantic-read grant. External-project queries require an explicitly named authorized target and independently verified identity. Provider memories remain under the task's memory owner, not this routing skill.
+
+## Go
+
+Use CodeGraph for unknown source flow. Serena's configured Go backend uses gopls; backend use is not a parallel owner. Use direct configured gopls only for a recorded unavailable/unhealthy or missing build-aware, generated-code, dependency-resolution, package-API or code-action operation that it actually supports. Native Go recipes own build/vet/test proof. /alaa-golang owns implementation doctrine; routing does not authorize backend activation.
+
+## Vue and Quasar
+
+Use CodeGraph for unknown component/composable/store/client flow. Use Serena for known Vue/TypeScript semantics only with the correct configured backend. Do not add another backend merely because TypeScript exists. Authorized browser observation owns runtime UI facts; native frontend recipes own proof. /alaa-frontend-developer and /alaa-vue-typescript-clean-code own implementation doctrine.
+
+## Other source
+
+Supported indexed structure uses CodeGraph; exact semantics use the configured stack owner or Serena. Unsupported/unindexed code uses an eligible native operation and retains lost graph/semantic guarantees. /alaa-laravel-architecture owns Laravel implementation doctrine.
+
+
+## Policy file: references/45-native-tools.md
+
+# Native evidence and proof
+
+This guide ships with the skill; it depends on no workstation inventory. Select the needed operation, inspect its repository recipe/configuration, and check only its executable: `Get-Command <tool>` in PowerShell or `command -v <tool>` in POSIX. Check version/dialect when the operation depends on it. Availability is not compatibility.
+
+Do not install, upgrade or allow package-runner downloads as discovery. Use installed project tooling or report the required gate blocked. Inspect scripts before execution: names such as check or dry-run do not establish harmlessness. Bound scope/output and avoid secret payloads. Examples below are read/diagnostic starting points, not universal proof commands; substitute the actual scoped path and inspected project recipe.
+
+## Files, literals and syntax
+
+| Need | Candidate and bounded example | Limit/fallback |
+|---|---|---|
+| Locate paths | `rg --files <scope>`; installed `fd '<name>' <scope>` | Ignore/hidden/generated coverage differs; native shell enumeration is an alternative with explicit coverage |
+| Literal/Markdown/config occurrence | `rg -n -F -- '<literal>' <scope>`; `rg -n -g '*.md' -- '<pattern>' <scope>` | A miss proves absence only in a demonstrated complete searched scope |
+| Known region | Native file read limited to needed lines | Does not prove call/reference coverage |
+| Supported syntax pattern | Installed ast-grep with language/path-bound pattern selected from its help | Syntax matches are not bindings/types or complete references; native text can supply partial evidence |
+
+In PowerShell a bounded region can use `Get-Content -LiteralPath <path> | Select-Object -Skip <offset> -First <count>`. In POSIX use `sed -n '<first>,<last>p' <path>`. Reuse adequate graph source instead of performing these reads again.
+
+## Structured data and saved working state
+
+- JSON: installed `jq '<specific-selector>' <path>`, or an available language parser.
+- YAML: installed yq after identifying its implementation/version and expression dialect; never assume incompatible yq dialects share flags. Use a configured language parser when equivalent.
+- TOML and other formats: repository checker or an installed format-aware parser. Regex can locate text, not validate syntax/effective values.
+- Git: `git rev-parse --show-toplevel`, `git branch --show-current`, `git status --short -- <scope>`, `git diff -- <scope>`, `git diff --cached -- <scope>`, `git show <ref>:<path>`. Include untracked scoped files in review; diff alone omits them.
+
+Parsing proves selected source data/syntax, not effective application configuration. Git identifies saved worktree/history, not runtime service/environment. Resolve symlinks or root aliases where identity is ambiguous.
+
+## PHP and Laravel
+
+Inspect Composer scripts, installed metadata and test/static/formatter configuration. Use installed PHP/Composer, configured Pest/PHPUnit, PHPStan and Pint only through the relevant project recipe/scope. A formatter's fix mode writes; a check mode must be verified from its help.
+
+`php artisan route:list` can observe registrations only in the intended application/environment after successful boot. Inspect filtering/output options in installed help before narrowing. Artisan and Composer scripts may execute project code or reach dependencies; inspect their effects and task authority. Do not use boot-dependent commands to bypass a known boot failure. A source route/migration read supplies intent only.
+
+## Go
+
+Inspect module/workspace/build tags and repository recipes. Use installed Go build/vet/test, formatter/linter or wrapper only for the named property. Configured gofmt/goimports/gofumpt can write; inspect check/diff modes. Configured golangci-lint/gotestsum obey their installed configuration, not a generic flag recipe.
+
+Direct gopls is a semantic fallback only for the stack owner's recorded gap, with build context and the required operation verified. Go tests/builds can launch processes, dependencies and generated work; select the authorized scoped recipe and resource policy rather than assuming pure reads.
+
+## Package scripts and proof
+
+Read package-manager scripts and lockfile/tool configuration; use installed locked tooling, not an on-demand runner that downloads. Stack owners retain test/type/build policy. A script's success covers only the property and scope actually exercised.
+
+On a missing tool, preserve established evidence and select an available equivalent under the routing contract. For proof, an alternative must demonstrate the same acceptance property and environment; otherwise report the exact mandatory command blocked. Graph suggestions, semantic diagnostics, parsed configuration and docs do not replace native execution.
+
+## Native sources
+
+Tool syntax comes from installed help plus primary documentation: [ripgrep](https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md), [fd](https://github.com/sharkdp/fd#readme), [ast-grep](https://ast-grep.github.io/guide/introduction.html), [jq](https://jqlang.org/manual/), [yq](https://github.com/mikefarah/yq#readme), [Git](https://git-scm.com/docs), [Composer scripts](https://getcomposer.org/doc/articles/scripts.md), [Laravel Artisan](https://laravel.com/docs/13.x/artisan), [Go commands](https://pkg.go.dev/cmd/go), [gopls](https://go.dev/gopls/). Examples are portable patterns; project recipes and observed compatibility remain authoritative.
+
+
+## Policy file: references/50-hooks.md
+
+# Routing-hook topology
+
+The vendor or runtime owns executable hook syntax and lifecycle behavior. This skill owns only which routing behavior may coexist without creating duplicate discovery.
+
+## Ownership
+
+- The CodeGraph installer owns its MCP registration, marker-fenced instructions, permissions, and any compatible prompt hook. Do not copy a second CodeGraph hook from this pack.
+- Project-local Serena hooks own activation and cleanup for the project.
+- The reminder hook is a burst breaker, not a nudge. It counts recent text-search and code-file-read calls and denies the call that crosses the threshold, then resets and stays quiet for a cooldown window. Where the semantic owner is the intended destination, that is the cheapest defence there is against the grep-and-read loop.
+- Its counters reset on one event only: a call to the semantic server's own symbolic tools. No other tool resets them, and the server's pattern-search, file-read, diagnostics and memory tools do not count as symbolic either. A structural-discovery server is therefore invisible to it.
+- The current implementation therefore conflicts with a structural-index-first discovery profile. An agent following the graph correctly — one exploration call, then reads of the files it named — accumulates read counts that nothing can reset, until it is denied for doing exactly the right thing and told to use the semantic owner instead. Omit the reminder wherever a structural index is the primary discovery owner; keep it wherever the semantic owner is. Re-check this against the installed version rather than treating it as a permanent law, because the conflict lives in one reset condition and would disappear if that condition widened.
+- Its matcher is client-specific and follows how that client performs searches and reads: every tool call where the client exposes separate search and read tools, and the shell tool alone where the client runs both through the shell. Copy the vendor's matcher for the client at hand rather than choosing one.
+- Every hook here is opt-in per the vendor, and lifecycle activation is the one worth running everywhere: it is what restores the server's instructions after the context that held them is gone. Whether to extend it beyond the events the vendor matches is a measurement, not a deduction; the deviation register below holds the open case.
+- Auto-approval does not broaden the selected permission mode, but it suppresses per-call prompts for matched Serena operations inside that mode. It emits an allow decision only while the client already reports a permissive permission mode and stays silent otherwise. Keep the vendor's own matcher; the authority boundary for a read-only lane belongs in that lane's tool grant, which is where `references/80-agent-scoping.md` puts it, not in a hook matcher.
+- One hook operation has one configuration owner. Do not rely on cross-layer replacement or deduplication; inspect effective hooks and remove semantically duplicate entries from the layer you control.
+
+## Adoption
+
+1. Verify CodeGraph root, Serena active project, and Git root resolve to the same worktree.
+2. Inspect installed CodeGraph and Serena help and the target runtime's official hook schema.
+3. Let the CodeGraph installer create or repair its own entries.
+4. Merge exactly one Serena profile: `codegraph-indexed` or `no-codegraph`.
+5. Parse the effective JSON or TOML and inspect the runtime's effective hook list.
+6. Exercise activation, one known-symbol Serena request, cleanup, and—only in the no-CodeGraph profile—one reminder case.
+7. Record the project-local delta and rollback path. Hook activation does not change evidence ownership. Do not modify hook or MCP configuration unless the task explicitly requests setup, upgrade, repair, or removal.
+
+## Rollback
+
+Remove only entries introduced from this pack. Preserve managed, user, plugin, vendor, and unrelated project hooks. Re-parse the effective configuration, inspect remaining hooks, and verify manual routing in the same worktree.
+
+Passive evaluation hooks may observe events but must not alter permissions, tool output, or routing decisions.
+
+## Recorded deviations from vendor defaults
+
+A hook profile that differs from the vendor's published example is a claim that the vendor was wrong
+for this repository, so each difference is recorded here with the evidence behind it. Anything not
+listed is copied verbatim and must stay that way. Reasoning is not evidence: a deviation that has not
+been observed belongs in the candidate list, not the adopted one.
+
+**Adopted.**
+
+| Deviation | Where | Evidence |
+|---|---|---|
+| The reminder hook is omitted | Both `codegraph-indexed` profiles | Read from the hook's own source: its counters reset only on the semantic server's symbolic tools, so structural-index calls never clear them and correct graph-driven reads eventually trip a deny that routes to the wrong owner. |
+
+**Candidate, not adopted.** Extending session-start activation to the clear and compact events on the
+runtime that documents all four matchers. The reasoning is that those two events are exactly when the
+server's instructions have just been dropped from context, and the same vendor already matches all
+events on the other runtime. It stays unadopted because it has not been observed: adopt it only after a
+test shows the instructions are actually lost after those events, that activation restores them, and
+that no duplicate activation or project switch results — then change the hook file, this register, and
+the checker together.
+
+Verify the feature flag and event names against the runtime's own documentation rather than the
+server's, which can lag: a flag renamed upstream may survive only as a deprecated alias.
+
+
+## Policy file: references/60-evaluation.md
+
+# Controlled evaluation
+
+Separate static instruction validity, declared outage scenarios, observed runtime behavior and measured performance. Vendor benchmarks, one success or fewer calls do not establish a best policy.
+
+## Controls and receipts
+
+Hold commit/worktree, question/prompt, client/version/configuration, permissions, enabled operations/backend, index freshness, environment and proof requirements constant. Separate cold/warm runs; use fresh sessions per prompt. Passive event instrumentation may count operations but must not change tool output, authority or routing.
+
+Define expectations before execution. Simulate outages through declared unavailability or disposable fixtures; do not change MCP registrations/services. Each cell records:
+
+- runtime/version, requested model/effort, observed controls only when visible;
+- worktree/environment and capability assumptions;
+- question, operations/owner transitions, evidence reuse and lost guarantees;
+- duplicate retrieval count/termination when observable;
+- native command/cwd/result and proof scope;
+- observed, unrun, failed or blocked status, with reason.
+
+Unknown counters and unavailable runtime cells stay unverified. Static source checks and no-tools reasoning trials do not prove installed activation, tool behavior or instruction compliance. Neither runtime's result proves the other.
+
+## Required scenario coverage
+
+| Scenario | Failure or discriminator |
+|---|---|
+| S01 | Healthy exploration source/paths reused without reassurance reads |
+| S02 | Known literal/config uses bounded native evidence |
+| S03 | Only missing/stale region retrieved; heuristic/boundary uncertainty retained |
+| S04 | MCP transport outage uses independently usable same-index CLI |
+| S05 | Wrong/stale index rejects graph evidence; CLI cannot repair shared failure |
+| S06 | Missing semantic/backend operation skips unsupported calls; native reads remain partial |
+| S07 | Multiple owner outages terminate at finite exhaustion |
+| S08 | Empty/paginated/truncated evidence never becomes an absence/completeness claim |
+| S09 | Possible mutation timeout reconciles state without replay/text substitution |
+| S10 | Docs outage retains healthy metadata and uses version-correct docs |
+| S11 | Boot outage retains docs; boot-dependent CLI is no independent proof |
+| S12 | DB outage/wrong environment blocks live claims without equivalent observation |
+| S13 | Advertised optional/beta capability absent from inventory is not called or granted |
+| S14 | Missing native proof tool leaves required gate blocked |
+| S15 | Resume/worktree/branch/service changes reuse only still-valid evidence |
+
+For each scenario map expected owner/fallback, forbidden action/inference and final-rule owner; keep actual traces separate from expectations.
+
+## Acceptance and interpretation
+
+Evaluate correctness/proof coverage first, then authorization/identity, then economy among accepted comparable runs. Reject missed consumers, unsupported claims, unauthorized effects, wrong targets or skipped mandatory gates regardless of apparent savings.
+
+A repeated call is waste only if it repeats an answered fact. Discovery-to-semantics, runtime observation or proof can answer new questions. Record latency/tokens only from observable counters and compare the same baseline/environment/questions before claiming improvement. /alaa-workflow owns proof reconciliation; the installed orchestrator owns independent acceptance.
+
+
+## Policy file: references/70-project-bindings.md
+
+# Portable project bindings
+
+Author a short binding in the repository's authoritative instruction source; the routing table stays in this skill. Apply this only during explicitly authorized binding/configuration work. Inspect current instructions/generated ownership before writing; preserve content outside the managed scope.
+
+## Binding fragment
+
+Replace the named placeholders with verified repository facts; do not publish invented surfaces or commands.
+
+```markdown
+## Code intelligence
+Invoke /alaa-code-intelligence-routing before choosing evidence.
+Enabled surfaces: [VERIFIED_PROJECT_SURFACES].
+Project identity: [VERIFIED_WORKTREE_AND_ENVIRONMENT_BINDING].
+Native proof recipes: [VERIFIED_REPOSITORY_COMMANDS].
+```
+
+This fragment delegates behavior rather than creating another router. It does not impose an import between runtime instruction files.
+
+## Laravel editable source
+
+The official Boost guide supports custom `<repo>/.ai/guidelines/*.md` or Blade guidelines as source for generated instructions. Put the authorized binding in one such editable file when the installed generator owns it. Inspect installed install/update behavior and generated markers before relying on preservation. Do not hand-edit generated blocks or maintain competing canonical copies. Generated guidelines, skills and project rules are distinct resources; resource generation/recording is a write effect.
+
+## Serena context and languages
+
+Choose context by the actual MCP client, not its containing application/window. Installed contexts can expose different file/shell tools; inspect the effective tool set. Take context names from the installed version rather than stale aliases.
+
+The installed schema owns `<repo>/.serena/project.yml`. Generate it only under setup authority, then merge language entries under its generated selection key; never create both old/new keys or rename from an old guide.
+
+Enable a backend only for recurring exact-symbol/refactoring needs. Start with the material language; do not add Markdown/configuration/shell just for file coverage. Additional backends require a named missing guarantee, verified health and accepted observed resource cost; remove one only under authorized configuration work when its requirement ends. Record the expected semantic owner so backend drift differs from a genuine unsupported operation.
+
+## Initial-prompt fragment
+
+During authorized setup, put this fragment under the installed schema's supported initial-prompt setting:
+
+```text
+Follow the repository binding and /alaa-code-intelligence-routing for evidence selection.
+```
+
+Keep it as a pointer, not a copied routing table. Confirm contract reachability after activation; activation alone does not prove that the client received it.
+
+Sources and freshness are owned by reference 90: Boost custom guidelines and Serena clients/workflow/configuration. No external setup-tree file is needed.
+
+
+## Policy file: references/80-agent-scoping.md
+
+# Per-role grants
+
+Grant only operations the role's dispatched questions require. The installed orchestrator owns role assignments/definitions; /alaa-prompting-guide owns runtime syntax and capability. A model/role name grants no extra authority.
+
+## Classes
+
+| Class | Needed question | Eligible grant |
+|---|---|---|
+| none | Native read/search/command evidence, release state or manifests | No code-intelligence server |
+| discovery | Unknown location, source relationships, paths or impact | Observed structural read operations |
+| discovery+semantic-read | Exact symbol facts a role may judge | Discovery plus verified backend read operations |
+| full | Authorized symbol-scoped writes | Required reads plus individually supported edit operations |
+
+A read-only role never earns full. A declared-command verifier earns none. Boost uses a separate axis: docs/versions, schema/connections, URL/routes, logs/browser observations and execution/writes are distinct grants; compose only needed groups.
+
+## Exact allowlists
+
+Start a semantic-read grant from observed supported equivalents of `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `find_declaration`, `find_implementations` and `get_diagnostics_for_file`. Optional symbol diagnostics or backend-specific declaration/reference/hierarchy/inspection operations are eligible only after their exact inventory and read semantics are verified. A remembered name grants nothing.
+
+Unknown operations are not read-safe. Exclude edits, file creation/deletion, shell, memory writes, activation/onboarding and unrestricted REPL/debug execution from a read-only grant. An advertised read query through a general execution tool is insufficient without observable restriction to that read set.
+
+MCP executes in a separate process; native sandbox/permission modes and withheld native edit tools do not enforce its filesystem/shell effects. Use an exact read allowlist rather than a whole-server grant or stale denylist. Report enforcement unavailable when the runtime cannot demonstrate the restriction.
+
+## Reachability and validation
+
+The repository binding and named routing skill must reach every granted role through orchestrator-owned wiring. Do not grant general skill discovery solely to make this contract reachable. Observe loading where runtime inheritance is undocumented.
+
+Inspect resolved effective tools, not only definition syntax. Confirm read-only roles cannot reach writes/execution, and launch behavior in each target repository shape, including absent servers. If absent-server behavior is unobserved, use a stack-specific definition rather than assume graceful startup. Recheck after definition/inventory changes; parse alone is insufficient.
+
+The grant lives in the role definition. Dispatch prose cannot widen it; report a missing grant rather than ask the role to bypass its tools.
+
+
+## Policy file: references/90-source-map.md
+
+# Official source map
+
+Refreshed on 2026-10-10. Official documentation establishes potential capability; effective installed inventory/schema and repository truth bound local usability. Refresh the specific claim before changing a version-sensitive command, key, capability, hook or path. Missing evidence remains unknown.
+
+## Provider evidence
+
+| Source | What it supports | Dated limitation |
+|---|---|---|
+| [CodeGraph MCP](https://colbymchenry.github.io/codegraph/reference/mcp-server/) | Explore source/paths; narrower optional operations | Current page describes a default explore-only surface; do not enable optional tools merely to match docs |
+| [CodeGraph CLI](https://colbymchenry.github.io/codegraph/reference/cli/) | Query/source/files/relationships/impact, affected candidates, lifecycle | CLI and MCP inventories differ; viewer page explicitly describes an unreleased feature |
+| [CodeGraph resolution](https://colbymchenry.github.io/codegraph/core-concepts/resolution/) and [framework routes](https://colbymchenry.github.io/codegraph/guides/framework-routes/) | Edge provenance and supported structural route extraction | Extraction is not runtime registration or complete dynamic resolution |
+| [CodeGraph releases](https://github.com/colbymchenry/codegraph/releases) | Release-specific provenance | Observe the selected project's version; no universal pin is prescribed |
+| [Serena tools](https://oraios.github.io/serena/01-about/035_tools.html) | Symbol/file/config, backend-specific, execution and optional groups | Current page marks REPL unreleased beta; effective context/backend/tools decide use |
+| [Serena clients](https://oraios.github.io/serena/02-usage/030_clients.html), [workflow](https://oraios.github.io/serena/02-usage/040_workflow.html), [configuration](https://oraios.github.io/serena/02-usage/050_configuration.html) | Context, project binding and generated schema ownership | No fixed schema/context aliases assumed |
+| [Serena languages](https://oraios.github.io/serena/01-about/020_programming-languages.html) and [releases](https://github.com/oraios/serena/releases) | Backend support and release history | Prior research identified stable 1.7.0; current beta docs are not proof of local installation |
+| [Boost guide](https://laravel.com/framework/docs/boost) | Docs/application/DB/URL/log tools, rule recording, custom guidelines/skills | Current guide differs from older tool lists; query/recording are not blanket read authority |
+| [Boost releases](https://github.com/laravel/boost/releases) and [changelog](https://github.com/laravel/boost/blob/main/CHANGELOG.md) | Version-specific tool/resource changes | Prior research identified 2.10.3; project installation and inventory remain separately verified |
+| [Boost v2.10.3 server](https://github.com/laravel/boost/blob/v2.10.3/src/Mcp/Boost.php), [Tinker](https://github.com/laravel/boost/blob/v2.10.3/src/Mcp/Tools/Tinker.php) and [DatabaseQuery](https://github.com/laravel/boost/blob/v2.10.3/src/Mcp/Tools/DatabaseQuery.php) | Resource/prompt registration, gated execution and driver-dependent read-only query controls | Snapshot-specific potential, not a universal tool list or local enforcement proof |
+
+## Runtime and hook owners
+
+- [Claude subagents](https://code.claude.com/docs/en/sub-agents), [Codex subagents](https://developers.openai.com/codex/subagents) and [Codex configuration](https://developers.openai.com/codex/config-reference) support grant-mechanics lookup through /alaa-prompting-guide.
+- [Claude hooks](https://code.claude.com/docs/en/hooks), [Codex hooks](https://learn.chatgpt.com/docs/hooks) and the [CodeGraph repository](https://github.com/colbymchenry/codegraph) support the hook owner's installed-version checks.
+- Native command provenance is bundled in reference 45; project recipes and installed help choose exact syntax.
+
+When installed behavior and docs disagree, record NEEDS_CONFIRMATION, retain eligible manual evidence fallback and stop the affected configuration mutation. Do not freeze external pins, hook payloads or generated schemas here.
+
+
+## Policy file: SKILL.md
+
+---
+name: alaa-code-intelligence-routing
+description: "Evidence routing for CodeGraph, Serena, Laravel Boost and useful native tools. Use to select an owner for discovery, call paths, impact, known-symbol semantics, semantic edits, Laravel documentation or runtime facts, configuration, Markdown, generated artifacts, review, fallback or proof; also use to scope provider grants for a role. Activating this skill performs no setup. Do not use to implement domain code, author repository documentation, manage durable state, orchestrate agents or prove completion; those belong to the stack owner, /alaa-repo-docs, /alaa-workflow, the installed orchestrator and repository-native gates."
+---
+
+# Alaa Code Intelligence Routing
+
+Route each named question to its best available evidence owner, consume the answer, and finish with native proof. This skill owns routing, not domain implementation, documentation authoring, workflow state, agent allocation or proof itself.
+
+## Decision procedure
+
+1. Name independently answerable questions and their intended worktree/environment.
+2. Before selecting an owner, handling its result or failure, or choosing a grant, read `references/00-topic-map.md`; it selects the sole reference owning that decision.
+3. Apply the routing contract: select one primary owner, reuse adequate evidence, and ask only the missing question.
+4. Treat editing, runtime observation and proof as distinct questions; execute applicable authorized native gates.
+
+## Authority
+
+Routing grants no additional authority. Do not change MCP, hooks, CodeGraph, Serena, Boost or language-server integrations/configuration unless explicitly asked for setup, upgrade, repair or removal. Index lifecycle effects require authorization too. Native sandbox restrictions do not establish MCP enforcement; use the scoped grant owner before assigning tools.
+
+## When NOT to use
+
+- An exact native/domain owner is already named and no routing choice exists.
+- Domain implementation, repository-document authoring, durable state or agent allocation is the task itself.
+- Static evidence is being used to prove another repository, runtime behavior or completion.
+- Unsupported artifacts are being forced through a graph or semantic backend.
+
+## Output
+
+Report outcome, question, primary owner, established evidence, fallback gaps/owners/lost guarantees, worktree/environment identity, changed artifacts, observed native command/results and partial or blocked claims. Do not emit raw transcripts.
+
+## Stop and failure
+
+Success requires answered questions, aligned artifacts and observed passing mandatory native gates in the same worktree. Stop a dependent step when missing facts, mismatched identity, unsupported safe operations, unauthorized effects or failed mandatory proof prevent it; report the blocker and continue unrelated safe work. The routing contract owns fallback termination and retry budgets.
+
+
+# Synthetic cases
+
+{
+  "schema_version": 1,
+  "kind": "source-prompt routing conformance; synthetic states; no real tool actions",
+  "cases": [
+    {
+      "id": "S01",
+      "situation": "In an indexed PHP repository, CodeGraph has returned the complete current PaymentService::capture body and its callers. The question was to explain that body. A teammate suggests reading the same file through Serena and rg for confidence. What happens next?"
+    },
+    {
+      "id": "S02",
+      "situation": "The user asks which literal value is assigned to retry_delay in a known YAML file. The file path is supplied. No relationship or type question is involved; native file read and yq are available."
+    },
+    {
+      "id": "S03",
+      "situation": "CodeGraph returned a usable path A -> callback boundary -> C. File C is flagged stale and its body was omitted. File A is fresh. The requested answer must distinguish what is established from what is unknown. Native scoped reads are available; Serena can resolve the callback's declaration."
+    },
+    {
+      "id": "S04",
+      "situation": "The CodeGraph MCP transport connection failed before answering. Its project identity and index were already verified. The installed CLI exposes explore, and there is no evidence of index failure. What is the next eligible action and when should this path stop?"
+    },
+    {
+      "id": "S05",
+      "situation": "The selected CodeGraph instance resolves to a different Git worktree. A suggestion proposes running the same query through its CLI against that same mismatched index. Serena has the intended active project. Assess the suggestion and choose a path."
+    },
+    {
+      "id": "S06",
+      "situation": "A Go task needs exact implementations of a known interface. Serena is connected but this backend does not expose that operation. The project's configured direct gopls interface supports it and points to the correct module/build configuration. Native text search is also available."
+    },
+    {
+      "id": "S07",
+      "situation": "For a structural caller question, CodeGraph is unavailable and the configured Serena backend is also unavailable. A bounded native search is available. Describe the next step and lost guarantees. Then consider the same question when native source is also inaccessible; what stops and what unrelated work may continue?"
+    },
+    {
+      "id": "S08",
+      "situation": "A references query returned zero entries with a truncation marker and a continuation token. The user asks whether the symbol is unused. One bounded continuation request is available. What may be claimed now and after an incomplete continuation?"
+    },
+    {
+      "id": "S09",
+      "situation": "An authorized Serena rename request timed out after possible writes. The actual diff has not been inspected. A teammate proposes immediately retrying rename or doing a repository-wide replacement to finish. Tools can inspect the diff but cannot establish yet whether all edits completed."
+    },
+    {
+      "id": "S10",
+      "situation": "Boost documentation search failed, but previously verified application metadata is healthy. Installed Composer metadata identifies the package version. An official documentation browser is available. The user asks for the version-correct framework convention."
+    },
+    {
+      "id": "S11",
+      "situation": "The Laravel application fails during boot. Independently reachable official documentation works. The user asks for both API guidance and the live registered route list. Running artisan route:list uses the same failing bootstrap; route source files are readable."
+    },
+    {
+      "id": "S12",
+      "situation": "Boost database access fails, and an available SQL connection points to a different environment. Healthy application metadata and migration source remain available. The user asks whether a specific index exists in the intended live database."
+    },
+    {
+      "id": "S13",
+      "situation": "Current vendor documentation advertises an optional diagnostics operation and a beta generic execution tool. The active inventory exposes neither. A read-only review lane wants diagnostics; it has no execution or configuration-change authority. How should discovery, grants, and fallback work?"
+    },
+    {
+      "id": "S14",
+      "situation": "A mandatory repository lint command cannot run because its executable is unavailable. CodeGraph says no affected caller and the source diff looks clean. Another installed formatter cannot prove the lint property. What is the gate result?"
+    },
+    {
+      "id": "S15",
+      "situation": "After a context reset the session switches worktree and branch. The old context contained graph source and resolved backend identity; the new context contains only their summary. A service also points to a different database. Which evidence may be reused and what must be checked before the next operation?"
+    }
+  ]
+}

@@ -1,55 +1,67 @@
-# Stack fast paths
+# Stack and capability fit
 
-These rows select evidence owners. The named stack skill still owns implementation doctrine.
+Select operations from the effective inventory and active backend, not remembered names. Optional/beta or newer documented capabilities remain unusable until actually exposed, supported and authorized. Reference 90 owns sources and dated discrepancies; reference 80 owns grants.
+
+## Project applicability
+
+CodeGraph requires a matching supported index; Serena requires the needed configured language/backend. Boost applies only to Laravel and is optional there; PHP without Laravel uses source/native routes. For operation eligibility, provider combinations, absence, unhealthy/partial states and fallback, apply `references/10-routing-contract.md`.
 
 ## Laravel
 
-Three servers, and the failure to avoid is asking the wrong one and then paying for a grep sweep to
-recover. The split is by question, not by preference.
+| Needed fact | Eligible installed Boost group | Evidence limit |
+|---|---|---|
+| Installed PHP/Laravel/packages/models | Application info | Installed metadata; lockfile alone is intended resolution |
+| Existing metadata resource or upgrade/simplification prompt | Installed resource/prompt | Reuse adequate metadata; a prompt is controlling advice, not authority or proof |
+| Framework convention or package guidance | Search docs | Establish installed versions first; source implementation is a different question |
+| Registered routes, one resolved URL | Route inventory if exposed; absolute-URL operation | A resolved URL does not prove route registration; native route-list can observe registration |
+| Connections/live schema | Connection inventory/schema | Must observe intended environment/database; migrations show intent only |
+| One database fact | Database query | Inspect query, credentials and effects; a query tool does not guarantee read-only access |
+| Application/browser errors/logs | Last error/log entries/browser logs | Verify application/session/time window, redact sensitive values; absence of entries proves no absence of failures |
+| Available Artisan commands or execution | Installed command inventory/execution | Inventory does not authorize execution; boot/dependency effects apply |
+| Arbitrary application expressions | Installed tinker/code-execution operation | Execution can mutate despite an apparently read-only expression |
+| Durable project instruction | Installed rule-recording operation | Writes agent instructions; separate authorized authoring, not evidence retrieval |
+| Guidelines/skills generation | Installed resource commands | Setup/update effects, not fallback or proof |
 
-Framework and package questions go to Laravel Boost first, and this is the row most often skipped.
-`search-docs` answers against the versions this project actually installed, so an API written from it is
-right the first time instead of right for whichever major the model remembers; `application-info`
-supplies those versions and the installed package list. Reading one framework file, or inferring a
-signature, is the more expensive path and it is also the one that produces a review cycle. Reach for
-Boost before reading `vendor/`, and before assuming a convention.
+Do not assume every group above exists in a particular Boost version. Inspect command/tool semantics before use. CodeGraph answers application source structure; Serena answers supported PHP semantics; neither proves framework conventions, runtime registration, database state or completion.
 
-Structure goes to CodeGraph and exact semantics go to Serena, unchanged by the presence of Boost:
-neither of them knows what the framework does, and Boost does not know how this application is wired.
+Vendor/excluded source may lie outside Serena's configured coverage; verify inclusion before interpreting a framework-symbol miss. Retain unknown and select the installed-version documentation owner for a guidance question.
 
-| Question | Owner |
-|---|---|
-| Where is the behavior, what symbols are related, what is the route-to-handler and downstream call path, who calls whom, what is the likely blast radius, and which files should be read? | CodeGraph in a healthy index |
-| What is the outline of this known PHP file, where is this declaration, what references it, what diagnostics apply, or how should this symbol be renamed or edited semantically? | Serena when the PHP backend is configured and healthy |
-| What does the installed framework or package do, what is its current signature, and what convention applies? | Boost `search-docs`, before reading `vendor/` and before inferring |
-| Which framework and package versions are installed here? | Boost `application-info`, which is what makes any other answer version-correct |
-| Which routes are registered, and what URL does this route or path resolve to? | `php artisan route:list`, or Boost `get-absolute-url` for one resolution |
-| What is the live schema, and which connections exist? | Boost `database-schema` and `database-connections` |
-| What just failed, and what does the application or browser log say? | Boost `last-error`, `read-log-entries`, `browser-logs` |
-| Did the change work? | Repository-native Laravel gates |
+Some versions gate tinker separately and constrain database queries with read-only transaction controls. Verify the installed gate, driver/enforcement and task scope rather than infer harmlessness from a tool name or annotation. Upgrade/simplification prompts remain subject to authorized change scope and repository rules.
 
-Serena cannot see inside `vendor/` unless the project has explicitly enabled it, and the empty result it
-returns for a framework symbol is indistinguishable from a true negative. Treat an empty semantic result
-on a framework name as unknown rather than absent, and re-ask Boost.
+### Independent failure domains
 
-Laravel Boost does not own source call graphs or symbol refactors. CodeGraph and Serena do not prove runtime registration, framework behavior, database state, or completion.
+Classify the failed operation, not the whole provider:
 
-Implementation doctrine routes to `/alaa-laravel-architecture` in Claude Code or `$alaa-laravel-architecture` in Codex and the other Laravel owners named by that skill.
+- **Docs transport/service failure:** retain healthy application metadata; use version-correct official documentation.
+- **Application boot failure:** retain healthy docs and directly readable installed package metadata. Another boot-dependent Artisan command is not an independent fallback. Use static source only for intent; block live application claims without equivalent observation.
+- **Database failure or wrong connection/environment:** retain docs/application evidence; live schema/query claims require equivalent authorized observation of the intended DB. Migrations do not recover that guarantee.
+
+When application-info is unavailable, inspect direct installed package metadata; distinguish it from lockfile intent. Verify native alternative working directory, runtime/container, application/environment and connection before making a runtime claim.
+
+## CodeGraph specialized groups
+
+Explore can return source, relationships and impact together: consume it under the routing contract. When a narrower unresolved fact needs it, use exposed node/source, symbol query, files, callers/callees, impact or context operations. CLI and MCP inventories can differ; do not enable optional MCP tools to mirror CLI.
+
+Affected-test/dependency suggestions select candidate coverage; native execution alone proves tests passed. Status/version establish index/installation information. Init/uninit, index/sync/unlock, daemon control, install/uninstall/upgrade and telemetry changes have lifecycle/configuration effects; they require explicit corresponding authority, never automatic evidence fallback. A documented unreleased viewer is not an installed capability.
+
+## Serena specialized groups
+
+Use supported symbol search/overview, declaration, references, implementations and diagnostics for exact symbol facts. Optional symbol diagnostics and backend-specific hierarchy/inspections require the backend exposing them. Inspections diagnose source; they do not discharge project proof.
+
+Supported symbol body/insert/rename operations and backend-specific move/inline/safe-delete are writes, each subject to mutation reconciliation. A safety-oriented name does not establish authorization or complete coverage.
+
+Configuration/manual-instruction inspection can identify active project, context, modes and tools. Activation/onboarding, language-server restart, project removal and dashboard opening are lifecycle effects; inspect side effects and authority first. File/search tools retain native coverage limits; they add no semantic guarantee and must not repeat answered facts.
+
+Shell, REPL and debug evaluation carry execution authority. Beta REPL and backend-specific evaluation require observed operation availability; an unrestricted execution surface is not a semantic-read grant. External-project queries require an explicitly named authorized target and independently verified identity. Provider memories remain under the task's memory owner, not this routing skill.
 
 ## Go
 
-Use CodeGraph for unknown package location, source flow, relationships, likely impact, and the files or regions to inspect.
-
-Enable Go in Serena for repositories covered by this pack. Serena is the agent-facing owner for a known Go file or symbol: outline, declaration, references, implementation hierarchy, diagnostics, semantic rename, and symbol-scoped edits. Serena's Go backend uses `gopls`, so the backend is not a parallel evidence owner.
-
-Invoke `/golang-gopls` in Claude Code or `$golang-gopls` in Codex directly only when Serena is unavailable or unhealthy, or after recording one required build-aware, generated-code, dependency-resolution, package-API, or code-action operation that Serena does not expose. Ask direct gopls only that missing question and do not repeat Serena evidence.
-
-Implementation doctrine, framework choice, and package selection remain with `/alaa-golang`, which is the front door for Go and routes onward to the installed Go skills. Native Go commands and repository gates own proof.
+Use CodeGraph for unknown source flow. Serena's configured Go backend uses gopls; backend use is not a parallel owner. Use direct configured gopls only for a recorded unavailable/unhealthy or missing build-aware, generated-code, dependency-resolution, package-API or code-action operation that it actually supports. Native Go recipes own build/vet/test proof. /alaa-golang owns implementation doctrine; routing does not authorize backend activation.
 
 ## Vue and Quasar
 
-Use CodeGraph for unknown page, route, component, composable, store, API-client, and static integration flow. Use Serena for a known Vue or TypeScript symbol only when the configured Vue backend exposes the required semantics and no project skill names another semantic owner. Do not add a second TypeScript backend merely because TypeScript files exist; use the project-generated Serena configuration and health result as authority. Browser evidence owns runtime UI behavior, and repository-native frontend gates own proof. Implementation doctrine routes to `/alaa-frontend-developer` or `$alaa-frontend-developer` and `/alaa-vue-typescript-clean-code` or `$alaa-vue-typescript-clean-code`.
+Use CodeGraph for unknown component/composable/store/client flow. Use Serena for known Vue/TypeScript semantics only with the correct configured backend. Do not add another backend merely because TypeScript exists. Authorized browser observation owns runtime UI facts; native frontend recipes own proof. /alaa-frontend-developer and /alaa-vue-typescript-clean-code own implementation doctrine.
 
-## Other source repositories
+## Other source
 
-CodeGraph owns unknown structural discovery in supported indexed source. The stack-declared semantic owner, otherwise configured Serena, owns known-symbol semantics and edits. The stack skill owns implementation doctrine. Native commands own proof. Unsupported or unindexed languages route to their language-native owner and retain a partial label when broad-flow or semantic guarantees are lost.
+Supported indexed structure uses CodeGraph; exact semantics use the configured stack owner or Serena. Unsupported/unindexed code uses an eligible native operation and retains lost graph/semantic guarantees. /alaa-laravel-architecture owns Laravel implementation doctrine.

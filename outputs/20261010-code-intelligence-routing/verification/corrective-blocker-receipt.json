@@ -1,0 +1,30 @@
+{
+  "agent": "/root/routing_verification",
+  "configuredModel": "unknown",
+  "configuredEffort": "unknown",
+  "requestedModel": "gpt-6-luna",
+  "requestedEffort": "medium",
+  "observedModel": "unknown",
+  "observedEffort": "unknown",
+  "status": "ENVIRONMENT-BLOCKED",
+  "blocker": "Required target manifest unavailable at <repo>/outputs/20261010-code-intelligence-routing/authoring-drafts/08-final-target-manifest.sha256; preflight Get-FileHash failed with file-not-found.",
+  "validatorCommand": "python -B scripts\\validate_sohrab_skill_pack.py",
+  "validatorExecuted": false,
+  "diffChecksExecuted": false,
+  "targetManifestExpected": "0c81cf9dd70fe68e2d2c60db7d61693d8386c79d573fdd1edd37817f050408be",
+  "manifestPathExists": false,
+  "scopedStatus": [
+    " M skills/sohrab/alaa-code-intelligence-routing/SKILL.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/agents/openai.yaml",
+    "A  skills/sohrab/alaa-code-intelligence-routing/references/00-topic-map.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md",
+    "A  skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/60-evaluation.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/70-project-bindings.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/80-agent-scoping.md",
+    " M skills/sohrab/alaa-code-intelligence-routing/references/90-source-map.md"
+  ],
+  "note": "No alternate manifest substituted; original failure receipt preserved."
+}

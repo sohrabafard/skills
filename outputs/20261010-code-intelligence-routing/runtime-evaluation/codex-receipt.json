@@ -1,0 +1,21 @@
+{
+  "execution_surface": "Codex collaboration default agent",
+  "agent": "/root/routing_codex_replay",
+  "requested": {
+    "model": "gpt-6.1-sol",
+    "effort": "medium"
+  },
+  "observed": {
+    "model": "unknown",
+    "effort": "unknown"
+  },
+  "input_target_sha256": "ea6d7a5483e4876d246660335887b0fc30fb74ae5daf1544279226c15baa60b1",
+  "status": "independently graded: S01-S15 proposed decisions PASS",
+  "actual_case_tools_executed": false,
+  "output_provenance": "Agent's returned JSON copied without changing decision text; formatting normalized",
+  "usage": "not observable",
+  "model_control_evidence": "Fresh-context spawn accepted explicit controls; serving identity unobservable",
+  "implementation_fix_invalidation": "Independent general reviewer approved reuse after references 40/60 corrections: fixture routing, authority and proof decisions unchanged. Later YAML UI-summary correction does not change replay input. Original execution snapshot retained; this is not a final-snapshot replay.",
+  "grading_evidence": "outputs/20261010-code-intelligence-routing/general-review.md",
+  "final_target_sha256_for_reuse": "0c81cf9dd70fe68e2d2c60db7d61693d8386c79d573fdd1edd37817f050408be"
+}

@@ -1,0 +1,37 @@
+ M docs/_agent_plans/20261010-003742_code-intelligence-routing-capability-fallback.md
+ M docs/agents/20261010-003742_code-intelligence-routing-capability-fallback-state.md
+A  outputs/20261010-code-intelligence-routing/authoring-drafts/01-full-draft.md
+A  outputs/20261010-code-intelligence-routing/authoring-drafts/02-applicability-and-source-draft.md
+A  outputs/20261010-code-intelligence-routing/availability-matrix.md
+A  outputs/20261010-code-intelligence-routing/capability-ledger.md
+A  outputs/20261010-code-intelligence-routing/environment-evidence.md
+A  outputs/20261010-code-intelligence-routing/planning-manifest.json
+A  outputs/20261010-code-intelligence-routing/runtime-evaluation/cases.json
+A  outputs/20261010-code-intelligence-routing/runtime-evaluation/run-claude-replay.py
+ M skills/sohrab/alaa-code-intelligence-routing/SKILL.md
+ M skills/sohrab/alaa-code-intelligence-routing/agents/openai.yaml
+A  skills/sohrab/alaa-code-intelligence-routing/references/00-topic-map.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/10-routing-contract.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/20-documentation-routing.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/40-stack-bindings.md
+A  skills/sohrab/alaa-code-intelligence-routing/references/45-native-tools.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/60-evaluation.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/70-project-bindings.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/80-agent-scoping.md
+ M skills/sohrab/alaa-code-intelligence-routing/references/90-source-map.md
+?? outputs/20261010-code-intelligence-routing/authoring-drafts/03-scoped-diff.txt
+?? outputs/20261010-code-intelligence-routing/authoring-drafts/04-target-manifest.sha256
+?? outputs/20261010-code-intelligence-routing/authoring-drafts/05-review-fix-draft.md
+?? outputs/20261010-code-intelligence-routing/authoring-drafts/06-corrected-target-manifest.sha256
+?? outputs/20261010-code-intelligence-routing/authoring-report.md
+?? outputs/20261010-code-intelligence-routing/codegraph-smoke.json
+?? outputs/20261010-code-intelligence-routing/rule-migration.md
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/claude-receipt.json
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/claude-result.json
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/claude-stderr.txt
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/claude-stdout.txt
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/codex-receipt.json
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/codex-result.json
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/input-manifest.json
+?? outputs/20261010-code-intelligence-routing/runtime-evaluation/prompt.txt
+?? outputs/20261010-code-intelligence-routing/scenario-expectations.md

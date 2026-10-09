@@ -1,0 +1,60 @@
+{
+  "kind": "synthetic source-prompt routing conformance",
+  "requested": {
+    "model": "claude-sonnet-5-5",
+    "effort": "medium"
+  },
+  "observed": {
+    "model": "unknown",
+    "effort": "unknown"
+  },
+  "configuration_verified": false,
+  "live_provider_actions": false,
+  "installed_skill_activation": false,
+  "status": "blocked",
+  "started_at": "2026-10-09T21:44:01.790255+00:00",
+  "effort_environment_override": "unset",
+  "arguments": [
+    "--safe-mode",
+    "--strict-mcp-config",
+    "--tools",
+    "",
+    "--permission-mode",
+    "plan",
+    "--no-session-persistence",
+    "--model",
+    "claude-sonnet-5-5",
+    "--effort",
+    "medium",
+    "--output-format",
+    "json",
+    "--print"
+  ],
+  "exit_code": 1,
+  "duration_seconds": 4.613,
+  "usage": {
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "is_error": true,
+  "reason": "Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue.",
+  "ended_at": "2026-10-09T21:44:06.408180+00:00"
+}

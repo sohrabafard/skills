@@ -1,0 +1,19 @@
+{
+  "kind": "one actual provider smoke, not routing conformance or performance",
+  "tool": "mcp__codegraph__codegraph_explore",
+  "arguments": {
+    "projectPath": "<current-worktree>",
+    "query": "scripts/check_skill_index.py",
+    "maxFiles": 1
+  },
+  "isError": false,
+  "returnedCharacters": 24671,
+  "resultExcerpt": "**Exploration: scripts/check_skill_index.py**\n\nFound 48 symbols across 1 file. 1 file pinned from the query.\n\n**Source Code**\n\n> The code below is the **verbatim, current on-disk source** of these files — re-read from disk on this call and line-numbered, byte-for-byte identical to what the Read tool returns. It is NOT a summary, outline, or stale cache. Treat each block as a Read you have already performed: do not Read a file shown here.\n\n**`scripts/check_skill_index.py`** — clean_arg(calls), run_case(calls), check_pack_claude_md(calls), check_pack_claude_md(function), run_case(function), main(calls), main(function), self_test(calls), self_test(function), EPILOG(variable), +62 more\n\n```pytho",
+  "completePayloadKeptInToolTranscript": true,
+  "noSecondRead": true,
+  "caveats": [
+    "Serena and Boost not callable here",
+    "One selected source query only",
+    "No installed-skill activation proof"
+  ]
+}

@@ -1,13 +1,13 @@
 # Workflow Checkpoint - Code intelligence routing capability and fallback upgrade
 
 - Plan: `docs/_agent_plans/20261010-003742_code-intelligence-routing-capability-fallback.md`
-- Status: planning
-- Current phase: Phase 1; plan prepared, independently reviewed, and validated; awaiting user approval
-- Last verified result: plan V01 `python -B skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan docs/_agent_plans/20261010-003742_code-intelligence-routing-capability-fallback.md --continuation docs/agents/20261010-003742_code-intelligence-routing-capability-fallback-state.md --profile resumable` returned exit 0, `Validation completed without blocking errors (profile: resumable).`; V02 also returned exit 0 after review corrections at 2026-10-09T21:19:49Z. Independent instruction review returned APPROVED. V03 and new-file receipts are in the plan; the 11 target files are unchanged.
-- Blockers: implementation requires separate user approval of the plan
-- Next action: wait for explicit user approval of the linked plan; then recheck the worktree and admit Phase 2 through its bound skills
-- Touched surfaces: this checkpoint and its linked plan only
-- Worktree identity and last evidence snapshot: `main` at `2f916326788eee35933b82ae4898a2dbfeace9af`; target baseline SHA256 `b86d0ae583fb0dcbc079984e1018140b472c90b5a70947efd62db152de07e89b` across 11 files
-- Updated: `2026-10-09T21:19:49Z`
+- Status: completed
+- Current phase: Phase 3 complete; final source accepted, evidence and limitations reconciled
+- Last verified result: independent corrective V04 `python -B scripts/validate_sohrab_skill_pack.py` returned exit 0 on final target SHA256 below; required native checks and both independent reviews passed. Codex synthetic proposed decisions: 15/15 independently graded PASS. Exact receipts and final changed-artifact validation are linked from `outputs/20261010-code-intelligence-routing/completion-report.md`.
+- Blockers: optional Claude replay returned HTTP 401 (expired OAuth token); live Serena/Boost unavailable here; no source-upgrade blocker
+- Next action: none within the approved local scope; preserve uncommitted product changes and receipts; unavailable runtime cells remain unverified
+- Touched surfaces: target skill, plan/checkpoint and grouped task evidence; separately authorized adjunct research is isolated and has no implementation effect
+- Worktree identity and last evidence snapshot: HEAD 74735f6d6b1a79cead1255406df9070255d93309; target SHA256 0c81cf9dd70fe68e2d2c60db7d61693d8386c79d573fdd1edd37817f050408be (13 files)
+- Updated: `2026-10-09T21:56:26Z`
 
 The plan owns acceptance, fallback, phase scope, and the handoff package. This checkpoint records position only.

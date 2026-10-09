@@ -1,35 +1,36 @@
 # Workflow Plan - Code intelligence routing capability and fallback upgrade
 
 - Task ID: `20261010-003742_code-intelligence-routing-capability-fallback`
-- Mode: `plan`
+- Mode: `execute`
 - Profile: `resumable`
-- Status: planning
+- Status: completed
 - Created: `2026-10-09T21:07:42Z`
 - Parent plan: not created; the August routing-upgrade family is completed history
 - Prompt pack: not created
 - Checkpoint: `docs/agents/20261010-003742_code-intelligence-routing-capability-fallback-state.md`
 - Machine state: not created
 - Base branch and commit: `main` / `2f916326788eee35933b82ae4898a2dbfeace9af`
-- Work branch: `main`; inspect again before approved implementation
+- Work branch: `main`; final observed HEAD `74735f6d6b1a79cead1255406df9070255d93309`; intervening external commit changed planning files only
 - Worktree: current checkout (`.`)
 
 ## Summary and Outcome
 
-The user authorized preparing this plan and checkpoint. Obtain separate approval of the validated plan before changing the target skill.
+The user explicitly approved this plan and its implementation on 2026-10-10. Execute the scoped upgrade, independent reviews, and validation; keep the checkpoint current.
+
+Execution is complete. The [completion report](../../outputs/20261010-code-intelligence-routing/completion-report.md) reconciles A01-A11, independent reviews, required check receipts and runtime limits. The separately requested additive-tool investigation did not alter this plan or implementation.
 
 Upgrade `skills/sohrab/alaa-code-intelligence-routing/` for Codex and Claude: select each operation's best available evidence owner, reuse evidence, handle simultaneous outages without loops, and finish with native proof. Keep the contract compact and portable; capability decides routing, without assuming universal speed or completeness.
 
 ## Scope
 
-- Authorized now: this plan and its checkpoint, read-only review, and their validation.
-- Proposed after approval: the target skill body, metadata, and bundled references; review/evaluation evidence under `outputs/20261010-code-intelligence-routing/`.
+- Authorized now: this plan/checkpoint, the target skill body, metadata and bundled references, independent reviews/validation, and evaluation evidence under `outputs/20261010-code-intelligence-routing/`.
 - Preserve other skills, runtime/model policies, repository instruction files, indexes, completed historical plans, and other repositories. A newly discovered required cross-scope edit returns for a scope decision.
 - No installation, provider upgrade, reindex, integration/hook configuration change, service startup, commit, or publication is part of this work.
 - Deliver English repository artifacts and Persian user reports. Keep shipped guidance portable and self-contained. Use existing role definitions; no custom agent files are needed.
 
 ## Handoff Package
 
-- Confirmed facts (verified, each with how it was verified): branch/HEAD above came from Git; tracked and scoped planning/target status were clean before this task. Reading the target found 11 files: body, metadata, nine references, and no scripts. The routing contract and default prompt currently limit a question to one secondary owner. Nine references require a topic map under the pack contract, but none exists. Local CLI output established CodeGraph `1.6.2`; the user subsequently reported successful reindexing of all projects. The latter is user evidence, not a new live verification.
+- Confirmed facts (verified, each with how it was verified): branch/HEAD above came from Git; tracked and scoped planning/target status were clean before this task. Reading the target found 11 files: body, metadata, nine references, and no scripts. The routing contract and default prompt currently limit a question to one secondary owner. Nine references require a topic map under the pack contract, but none exists. Local CLI output established CodeGraph `1.6.2`; the user reported successful completion of the requested reindex work. A later clarification says CodeGraph is configured in most projects, Serena in some, and Boost applies only to Laravel. These are user evidence, not universal prerequisites or a new fleet audit.
 - Open assumptions (believed but unverified, each with what would verify it): provider availability, semantic backend coverage, application/database identity, and access to both runtime families during implementation; inspect only the surface needed by a selected evaluation. Versioned upstream research establishes potential capability, not installation or health.
 - Ruled out (approach, reason, evidence): copying an external workstation tool inventory or depending on its path, per user correction; repeated indexing, because the user completed it; unconditional parallel retrieval, because it duplicates facts; new custom agents, because existing writer/reviewer/verifier roles provide the required authority separation.
 - Read first on resume (ordered exact paths): this plan; its checkpoint; `AGENTS.md`; `skills/sohrab/AGENTS.md`; `skills/sohrab/alaa-code-intelligence-routing/SKILL.md`; the reference selected by `skills/sohrab/alaa-prompting-guide/SKILL.md` for authoring; phase-bound skills below. Reuse prior research through the source ledger, refreshing only changed or unresolved claims.
@@ -52,7 +53,7 @@ Upgrade `skills/sohrab/alaa-code-intelligence-routing/` for Codex and Claude: se
 | ID | Required outcome | Evidence |
 |---|---|---|
 | A01 | A question selects one primary owner by operation and worktree; reuse adequate returned source, graph paths, metadata, and prior results. Fresh literal/known-file questions retain bounded native shortcuts. | Routing/source diff; S01-S03 |
-| A02 | Fallback is finite and operation-specific across multiple outages; every transition identifies the missing fact, failed capability, and lost guarantee. | State-machine review; S04-S07 |
+| A02 | Select from project-applicable capabilities: every provider subset, including none, is valid. Distinguish absent/not applicable from unhealthy/partial. Fallback is finite and operation-specific; each transition names the missing fact, failed capability, and lost guarantee. | State-machine and availability-combination review; S04-S07 |
 | A03 | Wrong-worktree evidence is rejected. Empty, truncated, stale, heuristic, and unsupported results cannot establish absence or completeness. | S03, S05, S08 |
 | A04 | Semantic mutations require supported operations and authorization; an uncertain result is reconciled before continuation, never replayed or automatically replaced with text editing. | S09; instruction review |
 | A05 | Boost documentation, application boot, and database failures are independent. Native alternatives must observe the same intended application/environment/database for runtime claims. | S10-S12 |
@@ -122,10 +123,10 @@ Mandatory static acceptance: every scenario has an expected owner/fallback, forb
 
 ### Phase 1 - Prepare and approve the execution contract
 
-- Status: planning
+- Status: completed
 - Depends on: none
 - Reasoning and selection reason: the user explicitly requested a reviewable plan/checkpoint before product edits.
-- Settled/open decisions and invariants: user scope and completed reindex are settled; implementation approval is outstanding.
+- Settled/open decisions and invariants: user scope and completed reindex are settled; implementation approval was received on 2026-10-10.
 - Risk and required observers: incomplete fallback/acceptance rules; read-only planner advice and independent instruction review.
 - Owned scope: this plan and checkpoint only.
 - Excluded from this phase: target skill edits and execution evaluations.
@@ -134,15 +135,15 @@ Mandatory static acceptance: every scenario has an expected owner/fallback, forb
   - [x] Inspect current target, repository rules, prior completed plan, and available validation interfaces; reuse completed parallel research. [skills: inherit]
   - [x] Draft the acceptance, fallback, scope, and evidence contract with a resumable checkpoint. [skills: inherit]
   - [x] Compress the draft without changing decisions; obtain independent review and pass planning checks. [skills: inherit]
-  - [ ] Receive explicit user approval of this plan before advancing. [skills: inherit]
+  - [x] Receive explicit user approval of this plan before advancing. [skills: inherit]
 - Acceptance criteria: A10; all remaining acceptance outcomes and next actions are checkable without conversation history.
 - Validation commands: V01-V03 below; compare the target manifest to the baseline.
-- Evidence observed: initializer exit 0; planner advisory complete; V01/V02 exit 0 after review corrections. V03 found only the two new planning files in scoped status, no target changes, and the unchanged 11-file target manifest. Independent instruction review approved the revised plan with no remaining actionable findings; complete capability coverage and checkpoint receipts closed its two initial findings. User approval is the only outstanding Phase 1 task.
-- Snapshot: target baseline at HEAD `2f916326788eee35933b82ae4898a2dbfeace9af`; SHA256 `b86d0ae583fb0dcbc079984e1018140b472c90b5a70947efd62db152de07e89b`; paths `skills/sohrab/alaa-code-intelligence-routing/` (11 files).
+- Evidence observed: initializer exit 0; planner advisory complete; V01/V02 exit 0 after review corrections. V03 found only the two new planning files in scoped status, no target changes, and the unchanged 11-file target manifest. Independent instruction review approved the revised plan with no remaining actionable findings; complete capability coverage and checkpoint receipts closed its two initial findings. The user explicitly approved execution; Phase 1 is complete.
+- Snapshot: HEAD 2f916326788eee35933b82ae4898a2dbfeace9af; SHA256 539fa4ca223c5a87c63494351b77b0ed60563ed2adb8c3095e3c0f2ebac3b1e9; paths docs/_agent_plans/20261010-003742_code-intelligence-routing-capability-fallback.md, docs/agents/20261010-003742_code-intelligence-routing-capability-fallback-state.md. Captured before receipt insertion; file hashes are in `outputs/20261010-code-intelligence-routing/planning-manifest.json`. Pre-implementation target baseline remains SHA256 b86d0ae583fb0dcbc079984e1018140b472c90b5a70947efd62db152de07e89b across 11 files.
 
 ### Phase 2 - Implement the approved routing contract
 
-- Status: pending
+- Status: completed
 - Depends on: Phase 1 and explicit plan approval
 - Reasoning and selection reason: one writer keeps interdependent routing, fallback, capability and metadata rules consistent.
 - Settled/open decisions and invariants: A01-A11 and the matrices above govern; verify installed interfaces before concrete examples.
@@ -151,18 +152,18 @@ Mandatory static acceptance: every scenario has an expected owner/fallback, forb
 - Excluded from this phase: unrelated skill/policy/configuration files and deployment effects.
 - Required skills: alaa-workflow, alaa-codex-orchestrator, alaa-prompting-guide, alaa-low-noise, alaa-code-intelligence-routing, alaa-testing-strategy
 - Work:
-  - [ ] Recheck working-tree changes and source-sensitive gaps; create an old-rule to new-owner map and scenario expectations. [skills: inherit]
-  - [ ] Update body, metadata, references 10/20/40/60/70/80/90 as needed; inspect 30/50 and change only rules directly affected by the approved contract. Add 00-topic-map and 45-native-tools. [skills: inherit]
-  - [ ] Replace stale external binding dependencies with self-contained, sourced guidance; preserve setup authority limits. Draft, then compress; review content relocation as a separate behavioral change. [skills: inherit]
-  - [ ] Prepare the complete capability/source ledger, map every included group to a scenario, and prepare the final scoped diff for independent acceptance. [skills: inherit]
+  - [x] Recheck working-tree changes and source-sensitive gaps; create an old-rule to new-owner map and scenario expectations. [skills: inherit]
+  - [x] Update body, metadata, references 10/20/40/60/70/80/90 as needed; inspect 30/50 and change only rules directly affected by the approved contract. Add 00-topic-map and 45-native-tools. [skills: inherit]
+  - [x] Replace stale external binding dependencies with self-contained, sourced guidance; preserve setup authority limits. Draft, then compress; review content relocation as a separate behavioral change. [skills: inherit]
+  - [x] Prepare the complete capability/source ledger, map every included group to a scenario, and prepare the final scoped diff for independent acceptance. [skills: inherit]
 - Acceptance criteria: A01-A08 and A10 are implemented; A09/A11 have evidence slots with no fabricated results.
 - Validation commands: focused V05 and diff review during authoring; V04-V09 once after integration in Phase 3.
-- Evidence observed: not run; not authorized yet.
-- Snapshot: not captured yet.
+- Evidence observed: writer completed 13 target files, 40 capability-group records, rule migration, preserved drafts, and S01-S15 expectations. User clarification is incorporated. Independent findings led to scoped corrections in references 40/60 and the YAML UI summary. The corrected focused V05 receipt retained exit 0, 12 Markdown files, 15 citations and no findings; later YAML-only changes do not invalidate it. Authoring history is preserved in `outputs/20261010-code-intelligence-routing/authoring-report.md`; Phase 3 independently accepted the final content.
+- Snapshot: HEAD 74735f6d6b1a79cead1255406df9070255d93309; SHA256 0c81cf9dd70fe68e2d2c60db7d61693d8386c79d573fdd1edd37817f050408be; paths skills/sohrab/alaa-code-intelligence-routing/ (13 files); manifest `outputs/20261010-code-intelligence-routing/authoring-drafts/08-metadata-corrected-target-manifest.sha256`. Prior ea6/6816 snapshots and correction drafts remain preserved.
 
 ### Phase 3 - Review, validate, and report
 
-- Status: pending
+- Status: completed
 - Depends on: Phase 2 integrated snapshot
 - Reasoning and selection reason: separate instruction correctness, executable checks, and live behavior evidence without duplicate broad reviews.
 - Settled/open decisions and invariants: passing structure does not establish runtime behavior or performance; unavailable cells remain visible.
@@ -171,14 +172,14 @@ Mandatory static acceptance: every scenario has an expected owner/fallback, forb
 - Excluded from this phase: unapproved setup or cross-scope repairs to make a gate pass.
 - Required skills: alaa-workflow, alaa-codex-orchestrator, alaa-prompting-guide, alaa-low-noise, alaa-code-intelligence-routing, alaa-testing-strategy
 - Work:
-  - [ ] Run V04-V09 and independent instruction/general reviews against the integrated snapshot; map A01-A11 and S01-S15 to results. [skills: inherit]
-  - [ ] Execute safe read-only evaluations through each already available runtime family; record inaccessible cells and observed controls, without installing or reconfiguring providers. [skills: inherit]
-  - [ ] Route actionable findings to the writer within the failure budget; recheck changed/invalidated evidence only. [skills: inherit]
-  - [ ] Reconcile source/docs/metadata, record final snapshot and unresolved limits, update checkpoint, and present the truthful Persian handoff. [skills: inherit]
+  - [x] Run V04-V09 and independent instruction/general reviews against the integrated snapshot; map A01-A11 and S01-S15 to results. [skills: inherit]
+  - [x] Execute safe read-only evaluations through each already available runtime family; record inaccessible cells and observed controls, without installing or reconfiguring providers. [skills: inherit]
+  - [x] Route actionable findings to the writer within the failure budget; recheck changed/invalidated evidence only. [skills: inherit]
+  - [x] Reconcile source/docs/metadata, record final snapshot and unresolved limits, update checkpoint, and present the truthful Persian handoff. [skills: inherit]
 - Acceptance criteria: A01-A11 reconciled; mandatory source checks and independent reviews pass, or the phase remains blocked. Unavailable optional live cells restrict claims explicitly.
 - Validation commands: V01-V09, consolidated rather than rerun per reviewer.
-- Evidence observed: not run.
-- Snapshot: not captured yet.
+- Evidence observed: independent instruction and general reviews APPROVED; every required source gate passed. V04's UI-summary defect was repaired once and its independent retry exited 0; V05 reuses the writer's complete corrected receipt. General review and 15/15 passing Codex synthetic decisions were retained after explicitly reviewed, non-invalidating changes; their original snapshots remain recorded. One live CodeGraph smoke passed. Claude replay failed with expired OAuth HTTP 401; live Serena/Boost were unavailable. No cross-runtime behavioral or speed claim is made. Final artifact checks and the A01-A11 audit are recorded under `outputs/20261010-code-intelligence-routing/`.
+- Snapshot: HEAD 74735f6d6b1a79cead1255406df9070255d93309; SHA256 0c81cf9dd70fe68e2d2c60db7d61693d8386c79d573fdd1edd37817f050408be; paths skills/sohrab/alaa-code-intelligence-routing/ (13 files); final manifest and independent receipts are linked from the completion report.
 
 ## Validation Commands and Receipts
 
@@ -198,7 +199,9 @@ Run from the repository root. Capture command, exit code, relevant output, and i
 
 Manifest procedure: sort all files under the target by repository-relative POSIX path; concatenate each path, one space, its SHA256, and a newline; SHA256 the UTF-8 result. Save the implementation receipts in `outputs/20261010-code-intelligence-routing/`. Checker self-tests are unnecessary unless checker code changes, which is outside this plan.
 
-Planning receipts observed on 2026-10-10: V01 returned exit 0, `Validation completed without blocking errors (profile: resumable).`; V02 returned exit 0, `Validated links in 2 Markdown file(s)`. Both passed again after review corrections at 2026-10-09T21:19:49Z. V03 `git diff --check` returned exit 0; scoped `git status --short --untracked-files=all --` with the two planning paths and target directory showed only the two new planning files. The Python manifest comparison returned exit 0, `target_files=11`, `target_unchanged=True`, and the baseline digest recorded in Phase 1. Because Git diff does not inspect untracked content, a separate Python read checked both new files: UTF-8, no machine-specific absolute paths, no template markers, and no trailing whitespace; exit 0. Independent review returned APPROVED, with no remaining actionable findings. V04-V09 and live provider evaluations have not run; they belong to the approved implementation phases.
+Planning receipts observed on 2026-10-10: V01 returned exit 0, `Validation completed without blocking errors (profile: resumable).`; V02 returned exit 0, `Validated links in 2 Markdown file(s)`. Both passed again after review corrections at 2026-10-09T21:19:49Z. On execution admission, V01 rejected the completed-phase snapshot because backtick-wrapped hashes did not match its documented machine-readable shape; one cause-specific formatting repair also recorded the planning-file manifest. V03 `git diff --check` returned exit 0; scoped `git status --short --untracked-files=all --` with the two planning paths and target directory showed only the two new planning files. The Python manifest comparison returned exit 0, `target_files=11`, `target_unchanged=True`, and the baseline digest recorded in Phase 1. Because Git diff does not inspect untracked content, a separate Python read checked both new files: UTF-8, no machine-specific absolute paths, no template markers, and no trailing whitespace; exit 0. Independent review returned APPROVED, with no remaining actionable findings. At that planning checkpoint, V04-V09 and live provider evaluations had not run; their later results follow.
+
+Execution receipts: `outputs/20261010-code-intelligence-routing/verification/verification-receipt.json` retains independent commands and initial V04 failure; `corrective-receipt.json` records the successful final V04 retry and scoped diff checks. V06/V07/V08, workflow and 20-file Markdown links returned exit 0. Focused V05 exit 0 is cited from the writer's post-correction receipt, not mislabeled as an independent run. Final changed-artifact checks are in `verification/final-artifact-receipt.json`; the completion report distinguishes observed live, synthetic, blocked and unrun cells.
 
 ## Task Allocation
 
@@ -209,9 +212,20 @@ The active runtime orchestrator owns these task selections; roles remain model-n
 | Completed independent CodeGraph, Serena, Boost research | alaa-researcher | User requested parallel Luna research | gpt-6-luna | high | Scoped primary-source research; results reused, 2026-10-10 | Three dispatched lanes; serving identity unobservable | Complete; no repeat sweep |
 | Advisory planning | alaa-planner | Balanced; settled scope, bounded semantic choices | gpt-6.1-sol | medium | Routing matrix and current neutral role, checked 2026-10-10 | Fresh-context explicit override dispatched; observed serving model/effort unknown | Read-only actions; narrower sandbox enforcement unknown |
 | Plan and final instruction review | alaa-instruction-reviewer | Balanced; interacting authority/fallback/compression decisions | gpt-6.1-sol | high | Instruction gate plus substantive semantic judgment, 2026-10-10 | Fresh-context explicit override; record observations at dispatch | Read-only; no implementation ownership |
-| Approved product authoring and fixes | alaa-implementer | Balanced; coupled rules across body/metadata/references | gpt-6.1-sol | high | Named scope, acceptance and interacting semantic decisions, 2026-10-10 | Future fresh-context explicit override | Plan approval and current controls required |
-| Final general acceptance review | alaa-reviewer | Balanced; focused complete-change correctness review | gpt-6.1-sol | medium | Distinct from instruction/compression specialist, 2026-10-10 | Future fresh-context explicit override | Independent of writer; avoid replaying specialist work |
-| Exact command verification | alaa-verifier | Balanced; fixed commands and bounded evidence capture | gpt-6-luna | medium | Mechanical verification, no fix or design authority, 2026-10-10 | Future fresh-context explicit override | Serialize resource-heavy checks; no broad test additions |
+| Approved product authoring and fixes | alaa-implementer | Balanced; coupled rules across body/metadata/references | gpt-6.1-sol | high | Named scope, acceptance and interacting semantic decisions, 2026-10-10 | Fresh-context explicit override dispatched; observed serving controls unknown | Completed after plan approval; no self-acceptance |
+| Final general acceptance review | alaa-reviewer | Balanced; focused complete-change correctness review | gpt-6.1-sol | medium | Distinct from instruction/compression specialist, 2026-10-10 | Fresh-context explicit override dispatched; observed serving controls unknown | Completed independently; replay grading included |
+| Exact command verification | alaa-verifier | Balanced; fixed commands and bounded evidence capture | gpt-6-luna | medium | Mechanical verification, no fix or design authority, 2026-10-10 | Fresh-context explicit override dispatched; neutral definition verified; observed serving controls unknown | Completed; BelowNormal, two CPUs, serialized commands |
+
+### Bounded runtime evaluation admission
+
+The approved Phase 3 live-check clause admits two source-prompt routing replays over the same 15 synthetic cases, separate from actual provider smoke evidence. Each receives the same final skill snapshot and case file, returns proposed operation traces, and performs no project tool action. Include a static matrix of every provider subset for Laravel and applicable subsets for PHP without Laravel, Go, and other languages, with native tools present/absent and capability support qualified. This is instruction conformance observation, not model comparison or calibration; the generic 32-run comparison corpora are not being executed.
+
+| Task/scope | Authority | Model | Effort | Admission and control evidence |
+|---|---|---|---|---|
+| Codex source-prompt replay | Fresh default evaluation agent, read-only input; no writes or child agents | gpt-6.1-sol | medium | Bounded routing decisions with complete supplied states; current spawn supports explicit controls. Serving identity remains unknown if not host-observable. |
+| Claude source-prompt replay | Tool-disabled CLI evaluation, no project changes | claude-sonnet-5-5 | medium | Policy minimum 2.1.284; observed CLI 2.1.294 exposes explicit model/effort, safe-mode and no-session-persistence. Require runtime result/control evidence; no silent model fallback. |
+
+The parent executes the bounded CLI harness, stores outputs, and does not grade them. The independent general reviewer grades both traces against A01-A11/S01-S15. The verifier owns native command execution. A runtime access failure leaves that replay blocked without installation or settings changes. No speed/cost or installed-skill activation conclusion follows.
 
 ## Delegation
 
@@ -235,5 +249,5 @@ Prior research was completed on 2026-10-10 through three parallel Luna lanes. Th
 
 ## Blockers and Next Action
 
-- Blockers: no planning blocker identified. Product implementation is awaiting explicit user approval of this plan.
-- Next action: present the validated plan/checkpoint and wait for explicit plan approval. Approval of preparing this plan must not be treated as approval of Phase 2.
+- Blockers: no source-upgrade blocker. Claude source-prompt replay returned 401 because its OAuth access token expired; that optional cell is blocked, no authentication/configuration changes attempted. Live Serena/Boost remain unavailable in this session.
+- Next action: no remaining action within the approved local source-upgrade scope. Product changes are uncommitted; preserve the final snapshot and receipts. Optional blocked/unrun cells constrain claims and are not mandatory source-upgrade blockers.

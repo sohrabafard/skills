@@ -1,0 +1,16 @@
+{
+  "captured_at": "2026-10-09T21:39:20.312352+00:00",
+  "head": "2f916326788eee35933b82ae4898a2dbfeace9af",
+  "files": [
+    {
+      "path": "docs/_agent_plans/20261010-003742_code-intelligence-routing-capability-fallback.md",
+      "sha256": "633f423251b97dbb8c0266a00db76cceff472828d547d10f7eae9e892f76f889"
+    },
+    {
+      "path": "docs/agents/20261010-003742_code-intelligence-routing-capability-fallback-state.md",
+      "sha256": "4c14f6e344df9f88bd18abd44057f5eef3bfb1a50ade38cf18cfcc5644257c69"
+    }
+  ],
+  "sha256": "539fa4ca223c5a87c63494351b77b0ed60563ed2adb8c3095e3c0f2ebac3b1e9",
+  "note": "Planning files captured before inserting this receipt; execution status already records user approval."
+}

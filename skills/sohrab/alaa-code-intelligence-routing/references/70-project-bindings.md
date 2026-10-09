@@ -1,46 +1,41 @@
-# Project bindings and Serena configuration
+# Portable project bindings
 
-Project bindings are always-loaded declarations. Keep them short: invoke the global routing skill, name locally enabled surfaces, preserve the same-worktree requirement, and name native proof. The routing table remains in `/alaa-code-intelligence-routing` in Claude Code or `$alaa-code-intelligence-routing` in Codex.
+Author a short binding in the repository's authoritative instruction source; the routing table stays in this skill. Apply this only during explicitly authorized binding/configuration work. Inspect current instructions/generated ownership before writing; preserve content outside the managed scope.
 
-## Laravel binding source
+## Binding fragment
 
-Use `project-setup/stacks/laravel/.ai/guidelines/30-alaa-code-intelligence.md`. Laravel Boost composes every file under `.ai/guidelines/` into one marker-fenced block in the generated agent instructions, replacing that block in place on each install or update while leaving text outside it untouched. So the binding is authored once in the guidelines directory and never hand-edited inside the generated block, where the next update would overwrite it. Do not maintain parallel hand-edited copies in `AGENTS.md` and `CLAUDE.md`.
+Replace the named placeholders with verified repository facts; do not publish invented surfaces or commands.
 
-## Non-Laravel binding source
+```markdown
+## Code intelligence
+Invoke /alaa-code-intelligence-routing before choosing evidence.
+Enabled surfaces: [VERIFIED_PROJECT_SURFACES].
+Project identity: [VERIFIED_WORKTREE_AND_ENVIRONMENT_BINDING].
+Native proof recipes: [VERIFIED_REPOSITORY_COMMANDS].
+```
 
-Merge `project-setup/stacks/none-laravel/AGENTS.binding.md` once into root `AGENTS.md`. Import that file from `CLAUDE.md` with the supplied bridge when the repository uses that pattern.
+This fragment delegates behavior rather than creating another router. It does not impose an import between runtime instruction files.
 
-## Serena client context
+## Laravel editable source
 
-Serena's client context, not only its project file, decides which tools it exposes. A context written
-for a coding client withholds the file-read, file-create, directory-listing, and shell tools the client
-already owns and sandboxes; a context written for a chat client leaves them enabled. Passing the wrong
-one is not cosmetic — it re-exposes duplicate surfaces outside the client's permission model and gives
-every lane a second way to reach the filesystem.
+The official Boost guide supports custom `<repo>/.ai/guidelines/*.md` or Blade guidelines as source for generated instructions. Put the authorized binding in one such editable file when the installed generator owns it. Inspect installed install/update behavior and generated markers before relying on preservation. Do not hand-edit generated blocks or maintain competing canonical copies. Generated guidelines, skills and project rules are distinct resources; resource generation/recording is a write effect.
 
-Select the context by the client that speaks MCP to the server, not by the window that client runs
-inside. A coding client hosted inside a chat application is still the coding client, and the config file
-the registration lives in is the reliable signal: a project MCP file belongs to the coding client, and
-the chat application's own config file belongs to the chat client. The same machine may hold both
-registrations with different contexts, and they do not conflict.
+## Serena context and languages
 
-Take the context name from the installed version's list rather than an older guide, and confirm the
-effective tool set after activation. Aliases are retired between releases; a context that once resolved
-may now resolve elsewhere or fail.
+Choose context by the actual MCP client, not its containing application/window. Installed contexts can expose different file/shell tools; inspect the effective tool set. Take context names from the installed version rather than stale aliases.
 
-## Serena language-selection policy
+The installed schema owns `<repo>/.serena/project.yml`. Generate it only under setup authority, then merge language entries under its generated selection key; never create both old/new keys or rename from an old guide.
 
-The installed Serena version owns the project schema. Generate `.serena/project.yml` first, then merge only the list items from this pack under the language-selection key Serena generated. Existing installations may expose different key names during a migration; never create both keys and never rename a generated key from a stale guide.
+Enable a backend only for recurring exact-symbol/refactoring needs. Start with the material language; do not add Markdown/configuration/shell just for file coverage. Additional backends require a named missing guarantee, verified health and accepted observed resource cost; remove one only under authorized configuration work when its requirement ends. Record the expected semantic owner so backend drift differs from a genuine unsupported operation.
 
-A language list selects semantic backends, not every repository file type. Each additional backend may add prerequisites, startup, indexing, memory, and background-process cost.
+## Initial-prompt fragment
 
-1. Enable a backend only for a recurring known-symbol, reference, hierarchy, diagnostics, or semantic-edit question.
-2. Start with the one material language whose semantics the project needs.
-3. Do not add Markdown, YAML, shell, or configuration languages merely for repository coverage.
-4. Select a backend on the project's own need, not to mirror another tool. Where a stack skill names a language-server interface of its own, enabling the semantic backend for that language is still correct when the project wants one uniform semantic surface — the stack interface then becomes the fallback for when the backend is absent or unhealthy. Record which one the project expects to answer, so a reader can tell a real gap from a misconfiguration.
-5. Add one backend only after naming the missing guarantee, verifying health, and accepting observed resource cost.
-6. Remove a backend when its recurring semantic requirement no longer exists.
+During authorized setup, put this fragment under the installed schema's supported initial-prompt setting:
 
-## Serena `initial_prompt`
+```text
+Follow the repository binding and /alaa-code-intelligence-routing for evidence selection.
+```
 
-Use the single fragment under `project-setup/serena/initial-prompt/`. It invokes this skill and defers owner selection, duplicate-retrieval prevention, fallback, and proof routing to the repository binding and skill. Do not copy the routing table into the prompt.
+Keep it as a pointer, not a copied routing table. Confirm contract reachability after activation; activation alone does not prove that the client received it.
+
+Sources and freshness are owned by reference 90: Boost custom guidelines and Serena clients/workflow/configuration. No external setup-tree file is needed.

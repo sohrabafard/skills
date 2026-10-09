@@ -1,0 +1,186 @@
+{
+  "decisions": [
+    {
+      "id": "S01",
+      "primary_owner": "CodeGraph evidence already returned",
+      "next_actions": [
+        "Explain PaymentService::capture using the complete current body already supplied.",
+        "Decline duplicate Serena and rg reads for reassurance."
+      ],
+      "fallback_stop": "Stop retrieval because the requested body explanation has adequate evidence.",
+      "evidence_limit": "The supplied source supports the body explanation; it does not establish runtime behavior or passing tests.",
+      "gate_state": "complete"
+    },
+    {
+      "id": "S02",
+      "primary_owner": "Bounded native YAML read/parser",
+      "next_actions": [
+        "Read the supplied file's retry_delay assignment.",
+        "If parsing is needed, verify the installed yq implementation and dialect, then select only retry_delay."
+      ],
+      "fallback_stop": "Stop when the literal assignment is established; use an equivalent format-aware parser only for a recorded parsing gap.",
+      "evidence_limit": "No value is supplied in the fixture. Reading or parsing would establish the source assignment, not the effective runtime configuration.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S03",
+      "primary_owner": "CodeGraph for established structure; native read and Serena for named gaps",
+      "next_actions": [
+        "Reuse fresh A source and the returned path with its callback boundary preserved.",
+        "Read only the omitted stale C body from current native source.",
+        "Resolve only the missing callback declaration through Serena."
+      ],
+      "fallback_stop": "Stop the complete-path claim if callback dispatch remains unresolved; do not reread A or reindex automatically.",
+      "evidence_limit": "Fresh A and the returned structural segments are established. C's current body remains unverified until retrieved. A declaration alone does not prove runtime callback dispatch or a complete A-to-C path.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S04",
+      "primary_owner": "CodeGraph exploration via independently usable same-index CLI",
+      "next_actions": [
+        "Record the MCP transport failure and unanswered question.",
+        "Confirm the CLI is independently usable against the already verified index, then propose its exposed explore operation.",
+        "If that fails, advance to an eligible supported Serena operation, then bounded native source."
+      ],
+      "fallback_stop": "Mark attempts before calls and never cycle. Allow at most one cause-specific non-mutating repair and one materially different retry per failed operation when supported by the cause. Stop at adequate evidence or finite exhaustion.",
+      "evidence_limit": "The MCP failure supplied no answer. A successful same-index CLI result could retain graph guarantees; later native fallback would lose structural completeness.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S05",
+      "primary_owner": "Supported Serena operation in the intended active project",
+      "next_actions": [
+        "Reject evidence from the wrong CodeGraph worktree.",
+        "Skip CLI exploration against that same mismatched index.",
+        "Verify the needed Serena operation and coverage, then ask only the unresolved question in the intended project."
+      ],
+      "fallback_stop": "If Serena lacks the needed operation, use bounded native evidence for a narrower claim; stop when eligible operations are exhausted. Do not activate or rebuild providers automatically.",
+      "evidence_limit": "The mismatched graph cannot support the local claim. Correct Serena project identity alone does not establish operation support or complete graph-path coverage.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S06",
+      "primary_owner": "Configured direct gopls implementation operation",
+      "next_actions": [
+        "Record that Serena's backend lacks the requested implementation operation.",
+        "Skip the unsupported Serena call.",
+        "Use the configured gopls implementation operation in the fixture's correct module and build configuration."
+      ],
+      "fallback_stop": "Stop after adequate semantic results. If gopls fails, use targeted source only for partial evidence under finite retry limits.",
+      "evidence_limit": "The fixture establishes gopls capability and identity, but supplies no implementation results. Text search cannot establish exact implementation completeness.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S07",
+      "primary_owner": "Bounded native source fallback",
+      "next_actions": [
+        "Record CodeGraph and Serena unavailability and skip their known unavailable operations.",
+        "Search only the relevant source scope for caller candidates.",
+        "If native source is also inaccessible, stop the caller claim and continue only independent authorized work with its own adequate evidence."
+      ],
+      "fallback_stop": "Terminate at native-source exhaustion; do not install, activate, restart or cycle through unavailable providers.",
+      "evidence_limit": "Native matches provide partial caller evidence without binding, dynamic-dispatch or complete structural coverage. With native source inaccessible, the caller claim is blocked.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S08",
+      "primary_owner": "The selected references operation's bounded continuation",
+      "next_actions": [
+        "Preserve the truncation marker and continuation token.",
+        "Request the one available bounded continuation.",
+        "If continuation remains incomplete, report reference coverage as unknown or partial."
+      ],
+      "fallback_stop": "Stop the unused-symbol conclusion when complete coverage cannot be established; do not restart the query for reassurance.",
+      "evidence_limit": "Zero entries in a truncated result do not prove no references. An incomplete continuation still cannot establish that the symbol is unused.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S09",
+      "primary_owner": "Actual Git diff and resulting state reconciliation",
+      "next_actions": [
+        "Inspect the actual diff and relevant resulting files in the authorized target worktree.",
+        "Determine which edits occurred and whether a safe resulting state can be established.",
+        "Report the unknown rename outcome if reconciliation cannot establish safe state."
+      ],
+      "fallback_stop": "Stop mutation continuation while the outcome is uncertain. Do not replay rename or substitute repository-wide text replacement.",
+      "evidence_limit": "Authorization and a timeout do not establish rename completion, rollback or safe refactor coverage. Diff inspection is necessary and may still be insufficient.",
+      "gate_state": "blocked"
+    },
+    {
+      "id": "S10",
+      "primary_owner": "Version-correct official documentation as Boost docs fallback",
+      "next_actions": [
+        "Retain the healthy verified application metadata and installed Composer version.",
+        "Record the documentation-search failure independently of application health.",
+        "Consult official documentation matching the installed version for the requested convention."
+      ],
+      "fallback_stop": "Stop after adequate version-correct guidance; if unavailable, retain the guidance gap without resetting failed-operation budgets.",
+      "evidence_limit": "Installed metadata identifies the applicable version. The fixture supplies no convention answer; documentation guidance does not prove application implementation or runtime behavior.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S11",
+      "primary_owner": "Official version-aware documentation for guidance; intended-environment runtime observation for routes",
+      "next_actions": [
+        "Establish installed versions through directly readable installed package metadata, then consult the reachable official guidance.",
+        "Retain the application boot failure and skip artisan route:list as a same-bootstrap fallback.",
+        "Use readable route source only to describe registration intent.",
+        "Require an independent authorized observation in the intended application and environment for the live route list."
+      ],
+      "fallback_stop": "Continue the independent guidance question. Stop the live registration claim because no equivalent working runtime observation is supplied.",
+      "evidence_limit": "API guidance can remain available despite boot failure. Route source proves intent only; the live registered route list is blocked.",
+      "gate_state": "partial"
+    },
+    {
+      "id": "S12",
+      "primary_owner": "Authorized schema observation of the intended live database",
+      "next_actions": [
+        "Record the Boost database failure and reject the other-environment SQL connection for this claim.",
+        "Retain healthy application metadata and migration evidence within their own scope.",
+        "Require an equivalent authorized schema observation with verified intended environment and database identity."
+      ],
+      "fallback_stop": "Stop the live-index claim because the fixture provides no eligible observation of the intended database.",
+      "evidence_limit": "Migration source describes intended schema. Neither it nor healthy application metadata proves that the index exists in the intended live database.",
+      "gate_state": "blocked"
+    },
+    {
+      "id": "S13",
+      "primary_owner": "Observed configured semantic diagnostics owner; exact grants owned by the installed orchestrator",
+      "next_actions": [
+        "Treat both advertised but absent operations as unavailable; do not call or grant them.",
+        "Check only for an already configured, authorized equivalent diagnostic operation.",
+        "If available, restrict access to its exact verified read operations and verify effective enforcement and routing-contract reachability.",
+        "If no equivalent exists, offer targeted source evidence only for narrower review facts."
+      ],
+      "fallback_stop": "Stop the diagnostics claim if no supported equivalent exists. Do not enable optional tools, change configuration or use generic execution to bypass the read-only grant.",
+      "evidence_limit": "Vendor documentation establishes potential capability, not installed availability. Native sandbox restrictions do not prove MCP read-only enforcement; targeted source cannot replace diagnostic coverage.",
+      "gate_state": "blocked"
+    },
+    {
+      "id": "S14",
+      "primary_owner": "Mandatory repository-native lint gate",
+      "next_actions": [
+        "Record the mandatory lint command as unrun because its executable is unavailable.",
+        "Reject the formatter, clean diff and graph answer as substitutes for the lint property.",
+        "Report the exact gate blocked."
+      ],
+      "fallback_stop": "Stop proof fallback because no installed alternative demonstrates the same acceptance property. Do not install or download tooling automatically.",
+      "evidence_limit": "No passing lint result exists. Structural evidence and source inspection cannot discharge the mandatory lint gate.",
+      "gate_state": "blocked"
+    },
+    {
+      "id": "S15",
+      "primary_owner": "Current worktree/environment identity and evidence-validity reconciliation",
+      "next_actions": [
+        "Treat the summary as a locator for prior evidence, not current verbatim source or resolved identity.",
+        "Check the new Git root, worktree and branch before selecting the next operation.",
+        "Verify the selected graph root/index freshness or semantic backend's active project and required operation as applicable.",
+        "For database questions, verify the intended application, environment and database connection.",
+        "Reuse only evidence demonstrably valid across the changes; retrieve only affected or missing regions."
+      ],
+      "fallback_stop": "Stop any dependent claim whose target identity, provenance or freshness cannot be established. Do not restart covered discovery or perform automatic activation, sync or reindex.",
+      "evidence_limit": "Old graph source and backend identity do not automatically apply to a different worktree and branch. Old database observations do not prove facts about the changed database. No current verification is supplied.",
+      "gate_state": "partial"
+    }
+  ]
+}

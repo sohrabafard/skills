@@ -1,0 +1,3 @@
+plan: docs/_agent_plans/20261010-003742_code-intelligence-routing-capability-fallback.md
+checkpoint: docs/agents/20261010-003742_code-intelligence-routing-capability-fallback-state.md
+Validation completed without blocking errors (profile: resumable).

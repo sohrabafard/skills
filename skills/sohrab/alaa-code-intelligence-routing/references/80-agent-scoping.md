@@ -1,81 +1,30 @@
-# Per-role code-intelligence scoping
+# Per-role grants
 
-A role that cannot ask a server's question gains nothing from holding it, and every unused server costs
-tool-description context in that role's window and widens its blast radius. Scope the grant to the
-question class the role is dispatched to answer.
+Grant only operations the role's dispatched questions require. The installed orchestrator owns role assignments/definitions; /alaa-prompting-guide owns runtime syntax and capability. A model/role name grants no extra authority.
 
-This file owns which grant class a question class earns and which tools each class contains. The
-installed orchestrator pack owns the per-agent assignment and the agent files. The runtime owns the
-syntax that expresses a grant and the behaviour of a grant that cannot resolve — route those to
-`/alaa-prompting-guide` or `$alaa-prompting-guide`, which owns agent-definition syntax and runtime
-capability, and verify against that runtime's current documentation rather than a remembered form.
+## Classes
 
-## Grant classes
-
-| Class | Contains | Earned by a role whose question is |
+| Class | Needed question | Eligible grant |
 |---|---|---|
-| `none` | no code-intelligence server | answerable from native read, search, and commands alone — command evidence, release state, manifests |
-| `discovery` | the structural index | unknown location, related symbols, call path, callers, callees, blast radius, or which files to read |
-| `discovery+semantic-read` | the above, plus the semantic read set below | exact references, declaration, hierarchy, or diagnostics for a symbol the role must judge but may not change |
-| `full` | the above, plus the semantic server's edit surface | symbol-scoped edits the role is authorized to write |
+| none | Native read/search/command evidence, release state or manifests | No code-intelligence server |
+| discovery | Unknown location, source relationships, paths or impact | Observed structural read operations |
+| discovery+semantic-read | Exact symbol facts a role may judge | Discovery plus verified backend read operations |
+| full | Authorized symbol-scoped writes | Required reads plus individually supported edit operations |
 
-A read-only role never earns `full`. A role that only runs declared commands and reports their output
-earns `none` regardless of how senior its model pin is; seniority is not a question class.
+A read-only role never earns full. A declared-command verifier earns none. Boost uses a separate axis: docs/versions, schema/connections, URL/routes, logs/browser observations and execution/writes are distinct grants; compose only needed groups.
 
-Framework-context servers are scoped the same way but on their own axis, because a role's need for
-framework documentation is independent of its need for structural discovery. Compose the grant from the
-narrowest classes the role's question actually requires — documentation and installed versions, live
-schema, URL and route resolution, application error and log surfaces, browser surfaces — rather than
-issuing one bundle. A lane that judges migrations has no use for browser logs, and a lane that drives a
-browser has no use for the connection inventory.
+## Exact allowlists
 
-## The semantic read set
+Start a semantic-read grant from observed supported equivalents of `find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `find_declaration`, `find_implementations` and `get_diagnostics_for_file`. Optional symbol diagnostics or backend-specific declaration/reference/hierarchy/inspection operations are eligible only after their exact inventory and read semantics are verified. A remembered name grants nothing.
 
-Grant these Serena tools by exact name, and no others, to a read-only role:
-`find_symbol`, `get_symbols_overview`, `find_referencing_symbols`, `find_declaration`,
-`find_implementations`, `get_diagnostics_for_file`.
+Unknown operations are not read-safe. Exclude edits, file creation/deletion, shell, memory writes, activation/onboarding and unrestricted REPL/debug execution from a read-only grant. An advertised read query through a general execution tool is insufficient without observable restriction to that read set.
 
-Everything else in that server is either an edit surface, a shell surface, a memory surface, or a
-duplicate of a native tool the runtime already sandboxes. Verify the names against the installed
-inventory before writing them into an agent file; a name that no longer exists silently grants nothing,
-and a new edit tool added upstream is not covered by a stale deny list.
+MCP executes in a separate process; native sandbox/permission modes and withheld native edit tools do not enforce its filesystem/shell effects. Use an exact read allowlist rather than a whole-server grant or stale denylist. Report enforcement unavailable when the runtime cannot demonstrate the restriction.
 
-## Why an allow list rather than a deny list
+## Reachability and validation
 
-A semantic MCP server is a separate process. Its file writes and shell calls do not pass through the
-client's sandbox, permission mode, or withheld native tools, so a role can be sandboxed read-only and
-still rename a symbol across the repository through the server. An allow list of read tools is the only
-form of the restriction that holds. Where the runtime offers both, express the grant as an allow list
-and use the deny list only to remove a whole server or a named tool from an otherwise inherited set.
+The repository binding and named routing skill must reach every granted role through orchestrator-owned wiring. Do not grant general skill discovery solely to make this contract reachable. Observe loading where runtime inheritance is undocumented.
 
-## The routing contract must remain reachable
+Inspect resolved effective tools, not only definition syntax. Confirm read-only roles cannot reach writes/execution, and launch behavior in each target repository shape, including absent servers. If absent-server behavior is unobserved, use a stack-specific definition rather than assume graceful startup. Recheck after definition/inventory changes; parse alone is insufficient.
 
-A grant without the contract that chooses among the granted servers recreates the problem the grant was
-meant to solve. Two things have to hold together, and the second is easy to lose.
-
-The always-loaded repository binding must reach the role. Where a runtime loads project memory into a
-subagent, the binding arrives with it; where that is undocumented, treat it as unproven and confirm by
-observation before relying on it.
-
-The role must also be able to act on what the binding says. Every role granted a code-intelligence
-server receives this routing contract through the orchestrator-owned agent definition. Do not grant a
-general skill-discovery surface solely to make this contract reachable; preload or otherwise bind this
-named skill without widening access to unrelated skills. The orchestrator pack owns the exact agent
-wiring, and `/alaa-prompting-guide` or `$alaa-prompting-guide` owns the runtime-specific syntax.
-
-## Validating a grant
-
-A definition states an intention. Only the resolved grant states a capability, so check the resolution
-rather than the file:
-
-- Confirm the effective tool list the role actually receives, and that a role granted the read class
-  cannot reach an edit or shell tool.
-- Confirm the role launches in each repository shape it will be installed into. A portable definition
-  may name a server a given repository lacks, but that is safe only where the runtime has been observed
-  to launch the role on the remaining tools; some runtimes refuse a role whose entire tool list resolves
-  to nothing. Where it has not been observed, use a stack-specific overlay instead of assuming.
-- Re-run the check after any change to the definitions, and treat a parse alone as insufficient — a
-  well-formed file can still hand a reviewer an edit tool.
-
-A grant lives in the agent definition, not in the dispatch. Do not ask a lane to use a server it was not
-granted, and do not widen a grant inside a prompt.
+The grant lives in the role definition. Dispatch prose cannot widen it; report a missing grant rather than ask the role to bypass its tools.

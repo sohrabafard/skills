@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "kind": "source-prompt routing conformance; synthetic states; no real tool actions",
+  "cases": [
+    {
+      "id": "S01",
+      "situation": "In an indexed PHP repository, CodeGraph has returned the complete current PaymentService::capture body and its callers. The question was to explain that body. A teammate suggests reading the same file through Serena and rg for confidence. What happens next?"
+    },
+    {
+      "id": "S02",
+      "situation": "The user asks which literal value is assigned to retry_delay in a known YAML file. The file path is supplied. No relationship or type question is involved; native file read and yq are available."
+    },
+    {
+      "id": "S03",
+      "situation": "CodeGraph returned a usable path A -> callback boundary -> C. File C is flagged stale and its body was omitted. File A is fresh. The requested answer must distinguish what is established from what is unknown. Native scoped reads are available; Serena can resolve the callback's declaration."
+    },
+    {
+      "id": "S04",
+      "situation": "The CodeGraph MCP transport connection failed before answering. Its project identity and index were already verified. The installed CLI exposes explore, and there is no evidence of index failure. What is the next eligible action and when should this path stop?"
+    },
+    {
+      "id": "S05",
+      "situation": "The selected CodeGraph instance resolves to a different Git worktree. A suggestion proposes running the same query through its CLI against that same mismatched index. Serena has the intended active project. Assess the suggestion and choose a path."
+    },
+    {
+      "id": "S06",
+      "situation": "A Go task needs exact implementations of a known interface. Serena is connected but this backend does not expose that operation. The project's configured direct gopls interface supports it and points to the correct module/build configuration. Native text search is also available."
+    },
+    {
+      "id": "S07",
+      "situation": "For a structural caller question, CodeGraph is unavailable and the configured Serena backend is also unavailable. A bounded native search is available. Describe the next step and lost guarantees. Then consider the same question when native source is also inaccessible; what stops and what unrelated work may continue?"
+    },
+    {
+      "id": "S08",
+      "situation": "A references query returned zero entries with a truncation marker and a continuation token. The user asks whether the symbol is unused. One bounded continuation request is available. What may be claimed now and after an incomplete continuation?"
+    },
+    {
+      "id": "S09",
+      "situation": "An authorized Serena rename request timed out after possible writes. The actual diff has not been inspected. A teammate proposes immediately retrying rename or doing a repository-wide replacement to finish. Tools can inspect the diff but cannot establish yet whether all edits completed."
+    },
+    {
+      "id": "S10",
+      "situation": "Boost documentation search failed, but previously verified application metadata is healthy. Installed Composer metadata identifies the package version. An official documentation browser is available. The user asks for the version-correct framework convention."
+    },
+    {
+      "id": "S11",
+      "situation": "The Laravel application fails during boot. Independently reachable official documentation works. The user asks for both API guidance and the live registered route list. Running artisan route:list uses the same failing bootstrap; route source files are readable."
+    },
+    {
+      "id": "S12",
+      "situation": "Boost database access fails, and an available SQL connection points to a different environment. Healthy application metadata and migration source remain available. The user asks whether a specific index exists in the intended live database."
+    },
+    {
+      "id": "S13",
+      "situation": "Current vendor documentation advertises an optional diagnostics operation and a beta generic execution tool. The active inventory exposes neither. A read-only review lane wants diagnostics; it has no execution or configuration-change authority. How should discovery, grants, and fallback work?"
+    },
+    {
+      "id": "S14",
+      "situation": "A mandatory repository lint command cannot run because its executable is unavailable. CodeGraph says no affected caller and the source diff looks clean. Another installed formatter cannot prove the lint property. What is the gate result?"
+    },
+    {
+      "id": "S15",
+      "situation": "After a context reset the session switches worktree and branch. The old context contained graph source and resolved backend identity; the new context contains only their summary. A service also points to a different database. Which evidence may be reused and what must be checked before the next operation?"
+    }
+  ]
+}

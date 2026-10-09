@@ -1,25 +1,48 @@
-# Controlled evaluation contract
+# Controlled evaluation
 
-Vendor benchmarks are directional evidence, not proof that one routing policy is best for this repository. Evaluate the installed combination on a held-constant corpus.
+Separate static instruction validity, declared outage scenarios, observed runtime behavior and measured performance. Vendor benchmarks, one success or fewer calls do not establish a best policy.
 
-## Controls
+## Controls and receipts
 
-Hold repository commit, active worktree, prompt, client configuration, permission mode, enabled surfaces, index freshness, semantic-project health, environment authority, and proof requirements constant. Use a fresh session per prompt and separate cold from warm runs.
+Hold commit/worktree, question/prompt, client/version/configuration, permissions, enabled operations/backend, index freshness, environment and proof requirements constant. Separate cold/warm runs; use fresh sessions per prompt. Passive event instrumentation may count operations but must not change tool output, authority or routing.
 
-Use passive instrumentation for tool-event counts. Do not ask an agent to reconstruct exact counts from memory or parse unstable private transcripts as a permanent metric source.
+Do not ask an agent to reconstruct exact counts from memory or parse unstable private transcripts as a permanent metric source.
 
-## Acceptance order
+Define expectations before execution. Simulate outages through declared unavailability or disposable fixtures; do not change MCP registrations/services. Each cell records:
 
-1. Correctness and required proof coverage.
-2. Authorization and worktree integrity.
-3. Only among accepted runs: duplicate retrieval, owner transitions, discovery streaks, tool attempts, delegated starts, latency, and stable client-provided usage data.
+- runtime/version, requested model/effort, observed controls only when visible;
+- worktree/environment and capability assumptions;
+- question, operations/owner transitions, evidence reuse and lost guarantees;
+- duplicate retrieval count/termination when observable;
+- native command/cwd/result and proof scope;
+- observed, unrun, failed or blocked status, with reason.
 
-Reject a run with a missed consumer, unsupported claim, wrong worktree, unauthorized effect, broken artifact, or skipped mandatory gate even when it is faster or cheaper.
+Unknown counters and unavailable runtime cells stay unverified. Static source checks and no-tools reasoning trials do not prove installed activation, tool behavior or instruction compliance. Neither runtime's result proves the other.
 
-## Corpus
+## Required scenario coverage
 
-Include representative cases for unknown-location flow, callers and callees, blast radius, known-symbol semantics, semantic edit, Laravel package context, registered routes, stale CodeGraph files, an unsupported artifact, repository Markdown, Git-diff review, and native proof. Add one degraded case for every owner and verify the result preserves the lost guarantee with a partial or blocked label.
+| Scenario | Failure or discriminator |
+|---|---|
+| S01 | Healthy exploration source/paths reused without reassurance reads |
+| S02 | Known literal/config uses bounded native evidence |
+| S03 | Only missing/stale region retrieved; heuristic/boundary uncertainty retained |
+| S04 | MCP transport outage uses independently usable same-index CLI |
+| S05 | Wrong/stale index rejects graph evidence; CLI cannot repair shared failure |
+| S06 | Missing semantic/backend operation skips unsupported calls; native reads remain partial |
+| S07 | Multiple owner outages terminate at finite exhaustion |
+| S08 | Empty/paginated/truncated evidence never becomes an absence/completeness claim |
+| S09 | Possible mutation timeout reconciles state without replay/text substitution |
+| S10 | Docs outage retains healthy metadata and uses version-correct docs |
+| S11 | Boot outage retains docs; boot-dependent CLI is no independent proof |
+| S12 | DB outage/wrong environment blocks live claims without equivalent observation |
+| S13 | Advertised optional/beta capability absent from inventory is not called or granted |
+| S14 | Missing native proof tool leaves required gate blocked |
+| S15 | Resume/worktree/branch/service changes reuse only still-valid evidence |
 
-## Interpretation
+For each scenario map expected owner/fallback, forbidden action/inference and final-rule owner; keep actual traces separate from expectations.
 
-Treat duplicate detection as a heuristic. A second tool call is waste only when it repeats an answered question; a transition from discovery to exact semantics, runtime observation, or proof is legitimate composition. Conclude only that one tested policy performed better on the held-constant corpus and measures. Vendor prose, one successful run, lower call count, or lower token use alone cannot establish an absolute best policy.
+## Acceptance and interpretation
+
+Evaluate correctness/proof coverage first, then authorization/identity, then economy among accepted comparable runs. Reject missed consumers, unsupported claims, unauthorized effects, wrong targets or skipped mandatory gates regardless of apparent savings.
+
+A repeated call is waste only if it repeats an answered fact. Discovery-to-semantics, runtime observation or proof can answer new questions. Record latency/tokens only from observable counters and compare the same baseline/environment/questions before claiming improvement. /alaa-workflow owns proof reconciliation; the installed orchestrator owns independent acceptance.
