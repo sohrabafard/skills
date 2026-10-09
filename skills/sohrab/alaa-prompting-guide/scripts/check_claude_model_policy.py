@@ -140,6 +140,13 @@ def self_test():
     assert not validate_agent_pin({"name":role, "model":"claude-haiku-5-5", "effort":"medium"}, current_haiku, role + ".md")
     current_haiku["profiles"][role]["effort"] = None
     assert validate_policy(current_haiku), "Haiku 5.5 requires a supported effort"
+    bounded_high = "alaa-implementer-haiku-high"
+    high_pin = {"name": bounded_high, "model": "claude-haiku-5-5", "effort": "high"}
+    assert not validate_agent_pin(high_pin, policy, bounded_high + ".md")
+    assert validate_agent_pin({**high_pin, "effort": "medium"}, policy, bounded_high + ".md")
+    missing_high = copy.deepcopy(policy)
+    del missing_high["profiles"][bounded_high]
+    assert any("coverage" in error for error in validate_policy(missing_high))
     for filename in ("duplicate.json", "malformed.json"):
         try:
             read_json(FIXTURES / filename)

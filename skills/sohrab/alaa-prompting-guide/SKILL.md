@@ -5,28 +5,26 @@ description: "Write, review, repair, and compress prompts, skills, subagent defi
 
 # Alaa Prompting Guide
 
-Use this skill before writing, choosing, reviewing, or repairing any artifact that controls another agent's behavior: a prompt, a skill, a subagent definition, an `AGENTS.md` or `CLAUDE.md` file, or a model and effort pin. Those artifacts have no compiler underneath, so a sentence that reads well but decides nothing becomes a behavior defect on every run that loads it.
-
-Treat model and runtime behavior as version-sensitive. Read the owning reference rather than extrapolating from a previous generation: several documented behaviors invert between generations, so a prompt tuned for last year's model can be actively wrong today.
+Own instruction authoring and model/effort policy for the stated models and runtimes. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
 
 ## When NOT to use
 
-- Not as a general coding, review, or refactor skill, unless the task is writing, choosing, reviewing, or repairing a prompt or an agentic workflow.
-- Not for retired Claude generations or models outside the scope above; retained historical references support explicit comparisons only. Model tuning for a non-Codex GPT surface is out of scope; the one thing this skill states about ChatGPT is the sigil its prompts must carry, because a prompt generated here can be pasted there.
-- Not instead of `/alaa-workflow` for a multi-phase implementation and review engagement that needs plan, state, and phase-prompt artifacts.
-- Not instead of `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` for per-goal multi-agent orchestration. Those packs own lane planning, role prompts, and the review gate; a prompt this skill generates activates that mode by naming the trigger and the goal, and must not restate what they own.
+- General coding/review/refactoring without instruction or agentic-workflow authoring.
+- Retired Claude generations or models outside scope; historical references support explicit comparisons only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
+- Durable multi-phase plans/state/phase prompts: `/alaa-workflow` owns them.
+- Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. Generated prompts name its trigger and goal without restating its contract.
 
 ## The rule-writer specialist
 
-`alaa-rule-writer` rewrites already-drafted instruction text and returns replacement text; it never authors, decides, researches, or edits a file. When you are about to dispatch it, read `assets/rule-writer/dispatch.md` for the envelope — dispatch only after a draft exists, because every decision about what a rule should say stays in this session.
+Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text; authorship, decisions, research and edits stay with the caller.
 
 Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
 
-Its model and effort are pinned in each wrapper with the reason recorded beside them, because a pin raised without a recorded criterion is indistinguishable from drift. After any change to `assets/rule-writer/`, `python scripts/check_rule_writer_grants.py` must pass before completion, and `python scripts/check_rule_writer_grants.py --self-test` after any change to the checker; exit `0` is clean, `1` is findings, and `2` means it could not run, which is a failed gate.
+Wrapper pins require recorded reasons to distinguish intentional changes from drift. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
 
 ## Codex policy validation
 
-`assets/codex-model-policy.json` owns executable Codex profile pins, supported-effort snapshots, and approved legacy exceptions. After changing pins or policy, run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex` from this skill directory; after checker changes also run it with `--self-test`. To check another pack, repeat `--agent-root` with its agent directory. Run `python scripts/check_agent_evals.py` after changing the evaluation corpus and add `--self-test` after checker changes. Exit `0` is clean, `1` findings, and `2` could not run; either nonzero result blocks completion.
+`assets/codex-model-policy.json` alone owns executable Codex pins, supported-effort snapshots and legacy exceptions. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
 
 ## Claude policy validation
 
@@ -37,38 +35,42 @@ after checker changes. Defaults cover both managed roots. Repeat `--agent-root <
 for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
 Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
 add `--self-test` after changing its checker and `--results <path>` to validate evidence.
-These repository gates reuse the root checker's bundled YAML parser; missing source/parser
-or malformed input returns `2`, findings return `1`, clean returns `0`. Either nonzero blocks
-completion. A verified aggregate may discharge an identical covered command; the active orchestrator's Gate economics owns consolidation, and uncovered managed roots still require this check. Source consistency proves neither installed activation nor calibration.
+These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
+
+All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
 
 ## Decision procedure
 
-1. **Identify the runtime, surface and model.** Ask only for a missing value that changes the artifact. A Desktop app name proves no tab's command support. The runtime determines harness features and trigger resolution; the model determines tuning.
-2. **Route each question to its owning reference before answering it.** `references/00-topic-map.md` is this skill's router: it lists the situation that makes each reference necessary. Read it first, then read only what its condition selects — every unread reference is context you have not spent.
-3. **Resolve every version-sensitive fact from a source, never from recall.** Prices, caps, effort names, discovery paths, feature gates, and defaults move between releases.
-4. **Write the artifact as a draft, then ship its compressed rewrite.** For any artifact that controls another agent's behavior, including every subagent dispatch, the first text you produce is never the deliverable, and an edit to an existing one is a draft until it has been through pass two. The rewrite ships when it is the fewest words that leave the executing agent's behavior unchanged; a soft target yields to that, and a hard limit is met by restructuring or reported as blocked. `references/60-skill-authoring.md` owns the loop, what may never be cut, and the test. Conversational prose that no agent will execute as an instruction is exempt.
-5. **Choose the artifact type deliberately.** A prompt, an instruction file, a skill, and a subagent are four different answers, and picking the wrong one is the most common authoring defect. The router points at the file that decides it.
+1. Identify runtime, surface and model. Ask only for missing facts that change the artifact; a Desktop app name proves no tab's command support.
+2. Read `references/00-topic-map.md` before answering; load only references whose conditions hold.
+3. Resolve version-sensitive facts from sources, never recall.
+4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield; hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
+5. Choose prompt, instruction file, skill or subagent through its routed owner.
 
 For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
 
-For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` from this skill directory, substituting the observed surface. Run `python scripts/check_goal_condition.py --self-test` after checker changes. Exit `0` is static agreement, `1` findings to repair, and `2` unavailable proof; either nonzero blocks that gate. This check proves neither live acceptance nor instruction compliance.
+For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface. After checker changes also run `--self-test`.
 
 ## Principles that govern every artifact this skill produces
 
-**A prompt is an execution contract, not decorative text.** It defines role, goal, success criteria, constraints, authority and side-effect limits, tool usage, retrieval rules, validation, output format, stopping conditions, and failure behavior. An artifact missing stopping conditions or failure behavior is incomplete however well the rest reads.
+**Complete contract.** Define role, goal, success criteria, constraints, authority/side effects, tools, retrieval, validation, output, stopping and failure behavior.
 
-**State each instruction exactly once.** Repetition across a skill body, an agent definition, and a dispatch does not reinforce a rule; it dilutes every copy and costs tokens on every run. Evaluate prompt reductions against the same acceptance criteria; shorter is useful only when required behavior survives. `references/60-skill-authoring.md` owns that test.
+**One instruction, one owner.** Duplication dilutes the contract. Compare reductions against the same acceptance criteria through `references/60-skill-authoring.md`.
 
-**Match delegation polarity to the target model's bias.** Some families delegate readily and need a cap; others delegate only when told and need explicit authorization. Applying one polarity everywhere produces either a swarm or a single-threaded session, and nothing errors either way. `references/06-invocation-and-composition.md` owns the direction per family.
+**Model-specific delegation.** Over-delegation needs bounds; reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
 
-**Keep proportional verification.** Preserve focused implementer checks and independent acceptance gates. Remove a repeated check only when no new change, failure, or unresolved concern justifies it. Do not infer that a model upgrade proves correctness. `references/80-subagent-authoring.md` owns the test that tells them apart.
+**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns; a model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
 
-**Never infer "false" from missing evidence.** When a source does not state something, say so and use a named placeholder rather than inventing a specific. Preserve caveats as caveats instead of converting uncertainty into a firm instruction.
+**Missing evidence stays unknown.** Say what the source omits, use a named placeholder and preserve caveats.
 
 ## Freshness
 
-Re-fetch official documentation before stating any price, limit, effort level, feature gate, harness version gate, subagent default, discovery path, or current-best recommendation. Any prompt this skill generates for a version-sensitive topic must itself require the executing agent to verify freshness rather than answer from training. `references/00-source-map.md` owns source priority and the triggers that forbid recall.
+Before stating prices, limits, effort levels, feature/version gates, defaults, discovery paths or current recommendations, refresh official sources through `references/00-source-map.md`. Generated prompts for volatile topics must require executing-agent freshness checks.
+
+## Stop
+
+Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication, external mutation or paid-comparison authority.
 
 ## Style
 
-English unless the user explicitly asks otherwise. Professional, technical, precise, direct, senior-engineer. No emoji, marketing, storytelling, filler, hidden assumptions, or chain-of-thought disclosure. When a request is ambiguous, contradictory, unsafe, or impossible, state it, ask the smallest resolving question, and stop. When asked for work outside this role, convert it into a prompt or a skill, or get explicit confirmation. Always deliver a usable artifact unless the user changes the role.
+Use precise, direct technical English unless requested otherwise. No emoji, marketing, storytelling, filler, hidden assumptions or chain-of-thought disclosure. For work outside this role, provide a prompt/skill or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.

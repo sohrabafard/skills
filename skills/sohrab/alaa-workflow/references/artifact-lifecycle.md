@@ -19,9 +19,23 @@ When an admitted family already exists, update it rather than creating another. 
 | `orchestrated` | required | required | required | opt-in | An automated consumer parses the state |
 | `legacy` | required | required | required | required | An old four-file consumer requires it |
 
-`resumable` is the documented default: work with more than one phase gets a plan and a checkpoint. The asymmetry is what settles it — the checkpoint is about ten lines written at four moments in the whole task, while losing position in the middle of long work costs a rediscovery from `git status` and diffs that is expensive and sometimes wrong. `direct` is therefore not the fallback for anything that does not obviously need state; it is a deliberate downgrade, chosen when the work is genuinely one phase and bounded, and it accepts that rediscovery as the price of an interruption.
+Use `resumable` for multi-phase work: event-driven checkpoints preserve position without repeating discovery after interruption. Choose `direct` deliberately for genuinely single-phase bounded work; it accepts rediscovery after interruption. No profile promises a fixed checkpoint size or update count.
 
 Apply admission before selecting a profile; no profile overrides its exceptions. An actionable execution-plan request uses `resumable` unless a real consumer requires a heavier profile.
+
+## Size and consolidate the plan
+
+Classify each phase and delegated lane before execution: missing facts to retrieve or clarify; mechanical work with settled decisions; bounded semantic judgment with a local causal path and decisive acceptance evidence; ordinary engineering judgment; or coupled judgment with interacting unresolved decisions. Record the reason, settled/open decisions and invariants. Assess risk separately: sensitivity determines gates, not reasoning complexity. `/alaa-prompting-guide` owns model/effort policy; the runtime orchestrator owns registered role selection. Planning effort never determines worker effort.
+
+Merge phases or tasks sharing context, ownership and a validation barrier when separation buys no decision or authority boundary. Preserve every acceptance outcome, evidence mapping, dependency, exclusion and required observer. Keep phases separate when a decision, changed tested state, independent authority or integration barrier requires it; record why. `references/workspace-and-integration.md` owns shared-check coverage and evidence reuse.
+
+After finalizing tasks, dependencies and consolidation, batch-allocate through `alaa-prompting-guide references/90-model-selection.md`. Before dispatch, record each task's official table row/date, priority, registered role/model/effort, reason, observed availability and evidence/calibration status in the plan. That owner supplies the table, algorithm and pins; workflow stores decisions alongside ready sets and conflict barriers. Material changes reassess only affected remaining tasks; never replay completed work.
+
+## Dependency and concurrency plan
+
+Record dependency edges and ready sets: work is ready only with satisfied prerequisites. Each lane names disjoint write ownership, shared-resource conflicts (including fixtures, generators, ports and test environments), integration barriers and parallel/serialized rationale. Disjoint files alone do not prove independence. Keep coupled decisions together; serialize overlapping writes and conflicting resources.
+
+Expose independent ready work to the runtime orchestrator; impose no workflow-wide writer limit. It owns observed capacity, dispatch mechanics and resource scheduling. Update ready sets at completion, scope-change or handoff boundaries; create no second scheduler artifact.
 
 ## Paths and correlation
 

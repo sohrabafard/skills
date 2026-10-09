@@ -18,7 +18,7 @@ Coordinate long work so it survives losing the conversation, without making ever
 
 ## Select the profile
 
-**`resumable` — a plan and a checkpoint — is the default for any work with more than one phase.** The asymmetry justifies it: the checkpoint is about ten lines and is written at four moments in the whole task, while losing position in the middle of long work costs an expensive rediscovery from `git status` and diffs, and sometimes gets it wrong. Drop to `direct`, a plan alone, only when the work is genuinely one phase and bounded. Choose `orchestrated` only when automation or another agent parses machine state, and `legacy` only when an old four-file consumer requires it.
+Select the smallest admitted profile through `references/artifact-lifecycle.md`; it also owns phase/lane complexity, consolidation and dependency planning. Record those decisions before execution.
 
 Create the files with `scripts/init_workflow_files.py --task <title> [--profile <profile>] [--with-prompts]`, and add `--with-prompts` only when the user explicitly requests reusable implementation or review prompts. Exit `0` created them. Exit `1` means an output already exists and nothing was written, so continue that artifact family instead of forcing over it. Exit `2` means the invocation could not run and no files exist.
 
@@ -62,7 +62,7 @@ Delegate only genuinely independent work with disjoint write scopes, or high-vol
 
 A dispatch is a one-way context wall; `references/context-continuity.md` covers what that requires of the dispatch text and the return.
 
-The parent owns the plan, integration, conflict resolution, and final validation, and reruns the combined validation surface. Put lane ownership inside the parent plan or the delegated prompt; do not create a separate lane-plan artifact.
+The parent owns the plan, integration, conflict resolution and final validation. Reconcile combined evidence through `references/workspace-and-integration.md` before deciding what still needs a run. Put lane ownership inside the parent plan or dispatch; do not create a separate lane-plan artifact.
 
 A phase that is itself one bounded goal with parallel role lanes may be executed by invoking `/alaa-codex-orchestrator` in Codex or `/alaa-cc-orchestrator` in Claude Code for that phase. The workflow parent still owns the plan, integration, and evidence recording, and records the orchestrator's final report as the phase evidence. Keep simple phases direct; do not stack both orchestration layers on work one agent can finish.
 

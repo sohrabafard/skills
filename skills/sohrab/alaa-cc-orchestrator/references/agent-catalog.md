@@ -2,7 +2,7 @@
 
 The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
 
-Twenty-eight executable agents are available.
+The manifest lists the executable agents available in this source pack.
 
 ## Specification and evidence
 
@@ -19,12 +19,13 @@ Twenty-eight executable agents are available.
 
 | Agent | Access | Use | Never use for |
 |---|---|---|---|
-| `alaa-implementer` | workspace-write | Bounded settled implementation with precise scope and checks. | Self-review or unrecorded profile admission |
-| `alaa-implementer-opus` | workspace-write | Moderate unresolved engineering judgment. | Self-review or unrecorded profile admission |
+| `alaa-implementer` | workspace-write | Everyday grounded coding with bounded local decisions. | Self-review or unrecorded profile admission |
+| `alaa-implementer-opus` | workspace-write | Materially coupled unresolved system decisions. | Self-review or unrecorded profile admission |
 | `alaa-implementer-fable` | workspace-write | Only documented applicable Opus-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
-| `alaa-implementer-sonnet-high` | workspace-write | Harder or longer implementation whose design is settled. | Self-review or unrecorded profile admission |
+| `alaa-implementer-sonnet-high` | workspace-write | Harder or longer grounded work with bounded local decisions. | Self-review or unrecorded profile admission |
 | `alaa-implementer-opus-high` | workspace-write | Interacting unresolved design decisions and demanding system reasoning. | Self-review or unrecorded profile admission |
-| `alaa-implementer-haiku` | workspace-write | Automatic exact mechanical edits over finite enumerated existing-file scope; every fit predicate and cheap discriminating acceptance required | Ambiguous matches, undefined scope, semantic discretion, design changes, file-count-only admission or expanded authority |
+| `alaa-implementer-haiku` | workspace-write | Exact mechanical edits or bounded semantic work with settled local cause, named scope, invariants and regression checks | Mechanical branch: semantic discretion or design changes; both branches: ambiguous scope, interacting design or wider authority |
+| `alaa-implementer-haiku-high` | workspace-write | Longer or stricter bounded semantic work satisfying the same recorded fit | Interacting design, unresolved cross-boundary contracts, trust, shared-state or consistency decisions |
 | `alaa-verifier` | artifacts only | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 

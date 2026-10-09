@@ -40,6 +40,13 @@ ROOT = Path(__file__).resolve().parent.parent
 AGENTS = ROOT / "agents"
 REQUIRED = {
     "alaa-implementer-luna",
+    "alaa-implementer-luna-low",
+    "alaa-implementer-xhigh",
+    "alaa-implementer-astra-medium",
+    "alaa-implementer-astra-xhigh",
+
+    "alaa-implementer-low",
+    "alaa-implementer-luna-high",
     "alaa-implementer-high",
     "alaa-planner",
     "alaa-planner-high",

@@ -246,6 +246,7 @@ class WorkflowFilesTest(unittest.TestCase):
             self.assertIn("Default: resumable", help_text)
             self.assertIn("more than one phase", help_text)
             self.assertIn("Choose direct deliberately for genuinely single-phase bounded work", help_text)
+            self.assertNotIn("four moments", help_text)
 
     def test_profiles_create_only_declared_companions(self) -> None:
         expectations = {
@@ -483,6 +484,27 @@ class WorkflowFilesTest(unittest.TestCase):
                 block = phase.split("\n## ", 1)[0]
                 for field in PHASE_FIELDS:
                     self.assertIn(f"- {field}:", block, msg=f"{field} missing from phase: {block.splitlines()[0]}")
+
+    def test_generated_plan_exposes_reasoning_and_dependency_schedule_without_extra_artifacts(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            payload, _ = self.init(root)
+            self.assertEqual(2, len(payload["outputs"]))
+            plan = root / str(payload["outputs"][0])
+            content = plan.read_text(encoding="utf-8")
+            for phase in content.split("### Phase ")[1:]:
+                block = phase.split("\n## ", 1)[0]
+                for field in ("Reasoning and selection reason", "Settled/open decisions and invariants", "Risk and required observers"):
+                    self.assertIn(f"- {field}: NEEDS_FILL", block)
+            for field in (
+                "Dependency edges and ready sets",
+                "Disjoint writes and shared-resource conflicts",
+                "Integration barriers and parallel/serialized rationale",
+                "Consolidated tasks/checks and preserved outcome/evidence mappings",
+                "Reusable evidence and invalidation conditions",
+            ):
+                self.assertIn(f"- {field}: NEEDS_FILL", content)
+            self.run_script(VALIDATE, ["--plan", str(plan.relative_to(root))], root)
 
     def test_previous_version_plan_without_a_handoff_package_only_warns(self) -> None:
         with workspace_tempdir() as tmp:

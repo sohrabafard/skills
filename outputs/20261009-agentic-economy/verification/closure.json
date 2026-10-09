@@ -1,0 +1,36 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+        "--plan",
+        "outputs/20261009-agentic-economy/docs/_agent_plans/20261009-090000_agentic-economy.md"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "seconds": 0.131
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "HEAD",
+        "--",
+        "outputs/20261009-agentic-economy",
+        "outputs/README.md"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "seconds": 0.045
+    }
+  ],
+  "final_source_file_count": 249,
+  "source_drift": [],
+  "status": "PASS",
+  "artifact_links": "verification/artifact-links.json",
+  "report_index_links_size": "documentation lane PASS; GREEN39/21",
+  "unrelated_preservation": "closure-facts.json"
+}

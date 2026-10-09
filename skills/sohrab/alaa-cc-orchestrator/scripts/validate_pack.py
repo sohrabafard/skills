@@ -21,6 +21,7 @@ AGENTS = ROOT / "agents"
 
 REQUIRED = {
     "alaa-implementer-haiku",
+    "alaa-implementer-haiku-high",
     "alaa-implementer-sonnet-high",
     "alaa-implementer-opus-high",
     "alaa-planner",

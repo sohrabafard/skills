@@ -1,0 +1,32 @@
+{
+  "preserved": {
+    "skills/sohrab/alaa-services-contract/references/24-metric-registry.md": true,
+    "skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md": true
+  },
+  "body_sizes": [
+    {
+      "path": "skills/sohrab/alaa-workflow/SKILL.md",
+      "before_words": 1662,
+      "after_words": 1588,
+      "after_lines": 101
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "before_words": 1439,
+      "after_words": 873,
+      "after_lines": 76
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "before_words": 3609,
+      "after_words": 2751,
+      "after_lines": 177
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "before_words": 3546,
+      "after_words": 2716,
+      "after_lines": 176
+    }
+  ]
+}

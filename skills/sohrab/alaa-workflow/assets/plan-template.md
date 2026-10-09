@@ -44,10 +44,15 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 
 ## Ordered Work
 
+Keep only phases with a distinct decision, authority or integration barrier. Merge compatible work while retaining each acceptance outcome and evidence mapping.
+
 ### Phase 1 - Ground and implement
 
 - Status: pending
 - Depends on: none
+- Reasoning and selection reason: NEEDS_FILL
+- Settled/open decisions and invariants: NEEDS_FILL
+- Risk and required observers: NEEDS_FILL
 - Owned scope: NEEDS_FILL
 - Excluded from this phase: NEEDS_FILL
 - Required skills: NEEDS_FILL
@@ -63,6 +68,9 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 
 - Status: pending
 - Depends on: Phase 1
+- Reasoning and selection reason: NEEDS_FILL
+- Settled/open decisions and invariants: NEEDS_FILL
+- Risk and required observers: NEEDS_FILL
 - Owned scope: NEEDS_FILL
 - Excluded from this phase: NEEDS_FILL
 - Required skills: NEEDS_FILL
@@ -74,10 +82,23 @@ Knowledge that lives only in the current agent's head and disappears on compacti
 - Evidence observed: not run
 - Snapshot: not captured yet
 
+## Task Allocation
+
+After finalizing tasks, dependencies and consolidation, batch-allocate through `alaa-prompting-guide references/90-model-selection.md`. Record observed availability; unresolved values block dispatch. Material changes reassess only affected remaining tasks.
+
+| Task | Official source row/date | Priority | Registered role/model/effort | Selection reason | Availability | Evidence/calibration status |
+|---|---|---|---|---|---|---|
+| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
+
 ## Delegation
 
 - Keep shared-context work in the main conversation.
 - Independent lane ownership, if admitted: none.
+- Dependency edges and ready sets: NEEDS_FILL
+- Disjoint writes and shared-resource conflicts: NEEDS_FILL
+- Integration barriers and parallel/serialized rationale: NEEDS_FILL
+- Consolidated tasks/checks and preserved outcome/evidence mappings: NEEDS_FILL
+- Reusable evidence and invalidation conditions: NEEDS_FILL
 - Dispatches assume zero shared context: copy the relevant handoff-package facts into the dispatch text rather than referring to this conversation.
 - Lanes report changed paths; this plan's owner records the validated snapshot and handles any explicitly authorized commit.
 

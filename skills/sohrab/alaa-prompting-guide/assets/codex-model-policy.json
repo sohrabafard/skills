@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "policy_version": "1.3.0",
+  "policy_version": "1.4.0",
   "surface": "codex",
-  "verified_on": "2026-10-08",
+  "verified_on": "2026-10-09",
   "sources": [
     {
       "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
@@ -23,9 +23,19 @@
       "url": "https://developers.openai.com/api/docs/guides/model-selection",
       "verified_on": "2026-10-08",
       "scope": "Specific small existing-file edits: Luna at medium; distinct from broader Codex Luna-high starting guidance. Automatic exact mechanical routing over finite enumerated scopes is uncalibrated user-authorized task policy, not a vendor file-count or quality claim."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+      "verified_on": "2026-10-09",
+      "scope": "Official explicit prose and recovered directly referenced selector asset: 27 tasks/81 cells, including Sol-low feature work, Sol medium balanced feature/debug work and Luna-high quality-prioritized scoped bugs. Editorial recommendations are not local calibration; admission remains local policy."
+    },
+    {
+      "url": "https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js",
+      "verified_on": "2026-10-09",
+      "scope": "Directly referenced official selector, read as text: all 27 task rows and 81 model/effort cells. Refresh current page asset before reuse; editorial starting points do not establish local calibration."
     }
   ],
-  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses.",
+  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses. Workload selection guidance refreshed 2026-10-09; capability ranges retain their individual snapshot dates. No account or installed activation proof.",
   "models": {
     "gpt-6-astra": {
       "supported_efforts": [
@@ -111,7 +121,7 @@
     "alaa-implementer": {
       "model": "gpt-6.1-sol",
       "effort": "medium",
-      "rationale": "Normal engineering with grounded scope and acceptance criteria when the mechanical route does not fit. Mechanical admission is direct and requires no lightweight first attempt. Unrun local starting hypothesis.",
+      "rationale": "Everyday grounded engineering with bounded design choices and discriminating acceptance; use after considering lighter admitted routes. Planning effort and surface sensitivity do not raise worker effort. Unrun local starting hypothesis.",
       "calibration_status": "unrun"
     },
     "alaa-implementer-astra": {
@@ -231,7 +241,7 @@
     "alaa-implementer-high": {
       "model": "gpt-6.1-sol",
       "effort": "high",
-      "rationale": "Substantial interacting engineering reasoning. Unrun local starting hypothesis.",
+      "rationale": "Demanding engineering with materially interacting decisions, invariants or failure paths requiring substantial reasoning. Select directly from the plan; length or file count alone is insufficient. Unrun local starting hypothesis.",
       "calibration_status": "unrun"
     },
     "alaa-planner": {
@@ -249,7 +259,43 @@
     "alaa-implementer-luna": {
       "model": "gpt-6-luna",
       "effort": "medium",
-      "rationale": "Automatic mechanical implementation only with an exact transformation, exclusions, finite explicitly enumerated existing-file scope and expected result; settled design with no semantic discretion; a known pattern; and cheap discriminating checks for wrong, incomplete or out-of-scope results. Every predicate is required. Many files are allowed; count alone neither qualifies nor disqualifies. Reject ambiguous matches, undefined scope or design changes. If fit ceases, stop dependent work and reclassify remaining work while preserving valid edits. No mandatory lightweight trial, replay or command-authority expansion. Unrun local user-authorized workload policy; vendor capability guidance is not calibrated comparative proof.",
+      "rationale": "Automatic mechanical implementation only with an exact transformation, exclusions, finite explicitly enumerated existing-file scope and expected result; settled design with no semantic discretion; a known pattern; and cheap discriminating checks for wrong, incomplete or out-of-scope results. Every predicate is required. Many files are allowed; count alone neither qualifies nor disqualifies. Reject ambiguous matches, undefined scope or design changes. If fit ceases, stop dependent work and reclassify remaining work while preserving valid edits. No mandatory lightweight trial, replay or command-authority expansion. Unrun local user-authorized workload policy; vendor capability guidance is not calibrated comparative proof. Separate balanced source-table scoped-bug branch: Bounded well-scoped bug with reproduced failure, traced local cause, explicit expected behavior, bounded semantic discretion and discriminating regression checks; no unresolved cross-boundary design. Stop dependent work if admission ceases, preserve valid edits and reclassify remaining work. Retain all required checks regardless of effort. Unrun local admission; official selector priority supplies the starting pair, not proof of quality.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-low": {
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "rationale": "Bounded semantic implementation with explicit outcome, local contracts, known causal path or pattern, bounded local choices and cheap discriminating checks. No unresolved cross-boundary design, consistency or trust decision. If fit ceases, stop dependent work and return remaining work for reassessment, preserving valid edits. Distinct from exact mechanical Luna medium. Unrun local economy hypothesis; the official selector recommends Sol-low for latency/cost-prioritized features, while bounded admission remains local policy.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-luna-high": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "rationale": "Well-scoped bug with reproduced failure, traced local causal path, explicit expected behavior, bounded semantic discretion and a discriminating regression oracle. Reject unresolved cross-boundary contracts, trust, shared-state or consistency design. If fit ceases, stop dependent work and return remaining work for reassessment, preserving valid edits. Distinct from exact mechanical Luna medium. Unrun local workload hypothesis informed by the official selector highest-quality scoped-bug cell and matching supplied screenshot; the medium/high choices are editorial checking options, not measured gains over low; no host availability or comparative quality proof. Priority is higher quality under the finalized task allocation procedure; no generic every-bug high default.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-luna-low": {
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "rationale": "Latency/cost-prioritized source-table scoped-bug route. Bounded well-scoped bug with reproduced failure, traced local cause, explicit expected behavior, bounded semantic discretion and discriminating regression checks; no unresolved cross-boundary design. Stop dependent work if admission ceases, preserve valid edits and reclassify remaining work. Retain all required checks regardless of effort. Unrun local admission; official selector priority supplies the starting pair, not proof of quality.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-xhigh": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "rationale": "Source-table higher-quality feature/debug work after finalized lane allocation; record actual reasoning need, task priority, acceptance and why lower-effort admission does not fit. File count, goal importance or planning effort alone is insufficient. No mandatory trial ladder. Unrun local hypothesis.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-astra-medium": {
+      "model": "gpt-6-astra",
+      "effort": "medium",
+      "rationale": "Direct source-table admission only for a finalized lane matching an actual task row and priority selecting this pair. Record why decomposition or a cheaper admitted profile cannot satisfy that lane acceptance; do not inherit an Astra choice from the goal label, sensitivity or file count. No prior failed trial is required for this source branch. Runtime matrix owns exact admission; preserve role authority and independent gates. Unrun local hypothesis, not comparative superiority.",
+      "calibration_status": "unrun"
+    },
+    "alaa-implementer-astra-xhigh": {
+      "model": "gpt-6-astra",
+      "effort": "xhigh",
+      "rationale": "Direct source-table admission only for a finalized lane matching an actual task row and priority selecting this pair. Record why decomposition or a cheaper admitted profile cannot satisfy that lane acceptance; do not inherit an Astra choice from the goal label, sensitivity or file count. No prior failed trial is required for this source branch. Runtime matrix owns exact admission; preserve role authority and independent gates. Unrun local hypothesis, not comparative superiority.",
       "calibration_status": "unrun"
     }
   },

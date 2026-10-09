@@ -3,7 +3,7 @@
     "alaa-implementer": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Bounded settled implementation with precise scope and checks. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Everyday grounded coding, features, local refactoring or debugging with known patterns, explicit contracts and bounded local decisions. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
         "skills": [
           "/alaa-code-intelligence-routing",
@@ -16,7 +16,7 @@
     "alaa-implementer-sonnet-high": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Harder or longer implementation whose design is settled. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Harder or longer grounded work with bounded decisions and local failure reasoning. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
         "skills": [
           "/alaa-code-intelligence-routing",
@@ -29,7 +29,7 @@
     "alaa-implementer-opus": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Moderate unresolved engineering judgment. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Materially coupled unresolved system decisions beyond bounded implementation. Scoped implementation; admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
         "skills": [
           "/alaa-code-intelligence-routing",
@@ -90,7 +90,20 @@
     "alaa-implementer-haiku": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Automatic bounded mechanical implementation when every predicate in /alaa-cc-orchestrator references/routing-matrix.md is met. Exact transformation, exclusions, enumerated existing-file scope, expected result, settled design/no semantic discretion, known pattern and cheap discriminating checks. File count alone does not decide; reject ambiguous matches, undefined scope or design changes. If fit ceases, preserve valid edits and return remaining work for reclassification. No mandatory first trial or authority expansion.",
+        "description": "Exact mechanical edits with no semantic discretion, or bounded semantic work with settled local cause, named scope, invariants and discriminating regression checks. Admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
+        "skills": [
+          "/alaa-code-intelligence-routing",
+          "/alaa-services-contract",
+          "/alaa-trust-gateway-auth"
+        ],
+        "color": "blue"
+      }
+    },
+    "alaa-implementer-haiku-high": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Longer or stricter bounded work with settled local cause, named scope, invariants and discriminating regression checks. Interacting design selects the grounded workhorse route. Admission in /alaa-cc-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
         "disallowedTools": "mcp__serena__execute_shell_command, mcp__hindsight",
         "skills": [
           "/alaa-code-intelligence-routing",

@@ -5,7 +5,7 @@
 ```xml
 <task>Resolve reviewer/specialist findings in original lane <n>.</task>
 <findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
+<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: canonical-supported exact official task/priority with reasoning need and rejected cheaper/decomposed alternatives, applicable high-workhorse inadequacy with context/spec/tool corrections, or explicit user direction></role_selection>
 <handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
 <original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
 <verification tier="focused">

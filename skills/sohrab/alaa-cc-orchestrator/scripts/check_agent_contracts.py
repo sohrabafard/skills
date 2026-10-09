@@ -6,6 +6,7 @@ Exit 0 clean, 1 findings, 2 unavailable input. --self-test rejects known regress
 from __future__ import annotations
 from pathlib import Path
 import re
+import json
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -89,6 +90,7 @@ def planning_failures(gates: str, implementation: str) -> list[str]:
 
 
 IMPLEMENTER_REQUIREMENTS = (
+    "Exceptional admission requires applicable high-effort workhorse inadequacy or explicit user selection",
     "Run only supplied",
     "focused commands: this lane's failure-mode tests",
     "this lane's failure-mode tests and lint/type/build scoped to touched files",
@@ -124,7 +126,8 @@ def implementer_failures(text: str) -> list[str]:
     # Contradictions must fail even when all required sentences remain present.
     for pattern in (r"Run the dispatched checks only", r"run (?:all|every) dispatched command",
                     r"run (?:the )?(?:affected|exhaustive) (?:tier|checks|suite)",
-                    r"run ambiguous or inseparable", r"invent (?:replacement|substitute) commands"):
+                    r"run ambiguous or inseparable", r"invent (?:replacement|substitute) commands",
+                    r"canonical-owner-supported exact official-task/priority route"):
         if re.search(pattern, text, re.I):
             errors.append(f"contradictory implementer instruction: {pattern}")
     return errors
@@ -155,11 +158,40 @@ def implementation_template_failures(text: str) -> list[str]:
     return errors
 
 
+def economy_failures(skill: str, gates: str, routing: str | None = None) -> list[str]:
+    errors = []
+    for required in ("## Admission", "route a single bounded edit", "logical outcomes", "Coalesce compatible actions"):
+        if required not in skill:
+            errors.append(f"missing economical intake/pipeline contract: {required}")
+    for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "workflow-selected", "references/context-curation.md"):
+        # Workspace selection is stated as current-checkout in the gates.
+        if required == "workflow-selected":
+            required = "current-checkout or isolation decision"
+        if required not in gates:
+            errors.append(f"missing economical execution contract: {required}")
+    routing = routing if routing is not None else (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8")
+    for required in ("## Batch allocation", "tasks, dependencies and consolidation decisions are finalized", "balanced default", "priority is not an effort value", "Reopen allocation only for remaining work"):
+        if required not in routing:
+            errors.append(f"missing finalized-plan batch allocation contract: {required}")
+    bounded = routing.split("Select the bounded semantic branch", 1)[-1].split("- `alaa-implementer`:", 1)[0]
+    for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "alaa-implementer-haiku-high", "Interacting design"):
+        if required not in bounded:
+            errors.append(f"missing bounded implementation admission: {required}")
+    for forbidden in ("at most two workspace-writing", "Dispatch one `alaa-implementer` per routine lane", "refuse to start on a tree carrying changes this run did not make"):
+        if forbidden in gates:
+            errors.append(f"retired costly default: {forbidden}")
+    return errors
+
+
 def verification_failures(gates: str, templates: list[str], roles: dict[str, str]) -> list[str]:
     """Inspect integrated source contracts, never simulate model obedience."""
     errors = [f"missing gate authority boundary: {item}"
               for item in GATE_REQUIREMENTS if item not in gates]
-    if len(roles) != 6:
+    policy_name = "claude-model-policy.json"
+    policy = json.loads((ROOT.parent / "alaa-prompting-guide" / "assets" / policy_name).read_text(encoding="utf-8"))
+    suffix = ".md"
+    expected = {name + suffix for name in policy["profiles"] if name.startswith("alaa-implementer")}
+    if set(roles) != expected:
         errors.append("expected all registered implementer variants")
     for name, text in roles.items():
         errors.extend(f"{name}: {item}" for item in implementer_failures(text))
@@ -230,6 +262,16 @@ def self_test() -> int:
         ("blanket no-verification rejected", bool(orchestrator_failures(skill + "\n**Do not add verification instructions.**"))),
         ("invented watchdog rejected", bool(orchestrator_failures(skill + "\nA watchdog ends a lane on silence rather than on duration"))),
     ]
+    cases.append(("economical execution accepted", not economy_failures(skill, gates)))
+    for required in ("observed host slots", "resource ceilings", "integration barriers", "only one CPU-heavy", "Phase transitions and new agents alone earn no rerun", "current-checkout or isolation decision", "references/context-curation.md"):
+        cases.append((f"economics {required} required", bool(economy_failures(skill, gates.replace(required, "omitted")))))
+    for forbidden in ("at most two workspace-writing", "Dispatch one `alaa-implementer` per routine lane", "refuse to start on a tree carrying changes this run did not make"):
+        cases.append((f"costly default {forbidden} rejected", bool(economy_failures(skill, gates + "\n" + forbidden))))
+    routing = (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8")
+    for required in ("## Batch allocation", "tasks, dependencies and consolidation decisions are finalized", "balanced default", "priority is not an effort value", "Reopen allocation only for remaining work"):
+        cases.append((f"batch allocation {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
+    for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "alaa-implementer-haiku-high", "Interacting design"):
+        cases.append((f"bounded admission {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
     policy, templates, roles = verification_sources()
     cases.append(("integrated verification authority accepted",
                   not verification_failures(policy, templates, roles)))
@@ -240,7 +282,8 @@ def self_test() -> int:
                           bool(verification_failures(policy, templates, broken))))
         for contradiction in ("run all dispatched commands", "run affected checks",
                               "run ambiguous or inseparable commands",
-                              "invent substitute commands"):
+                              "invent substitute commands",
+                              "canonical-owner-supported exact official-task/priority route"):
             broken = {**roles, name: role + "\n" + contradiction}
             cases.append((f"{name}: contradiction {contradiction} rejected",
                           bool(verification_failures(policy, templates, broken))))
@@ -292,6 +335,8 @@ def main() -> int:
             (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
             (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
         errors.extend(verification_failures(*verification_sources()))
+        errors.extend(economy_failures((ROOT / "SKILL.md").read_text(encoding="utf-8"),
+            (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")))
         for path in sorted((ROOT / "agents").glob("alaa-*")):
             if path.suffix in {".toml", ".md"}:
                 errors.extend(f"{path.name}: {item}" for item in agent_failures(path.read_text(encoding="utf-8")))
@@ -300,7 +345,7 @@ def main() -> int:
             return 1
         print("CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority")
         return 0
-    except (OSError, ValueError, StopIteration) as exc:
+    except (OSError, ValueError, KeyError, StopIteration) as exc:
         print(f"contract check unavailable: {exc}", file=sys.stderr)
         return 2
 

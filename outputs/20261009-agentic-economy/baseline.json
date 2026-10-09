@@ -1,0 +1,37 @@
+{
+  "head": "8d0db4b567dee4d5d5d1daca98e7ead4d6f144e1",
+  "bodies": [
+    {
+      "path": "skills/sohrab/alaa-workflow/SKILL.md",
+      "baseline_bytes": 11353,
+      "baseline_words": 1662,
+      "baseline_lines": 101,
+      "baseline_sha256": "9eb08cf28a66e6d103e67c7c3016b1616e592f38df59ad83834c7e67e625a4fb"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "baseline_bytes": 10302,
+      "baseline_words": 1439,
+      "baseline_lines": 74,
+      "baseline_sha256": "f061cc709a160fbd50579066fc1df6cb31e606cd3ec257fc962f4a4dfceaa465"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "baseline_bytes": 25050,
+      "baseline_words": 3609,
+      "baseline_lines": 183,
+      "baseline_sha256": "3a9bca2d060097f696ecf39ea17cd385a874315515bbcf6afd969633ec59c65c"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "baseline_bytes": 24384,
+      "baseline_words": 3546,
+      "baseline_lines": 183,
+      "baseline_sha256": "515d8f706d8b1c236e1f74f2e3a442697889fbb4be0d6fda4492a530a6ba5fb9"
+    }
+  ],
+  "preserve": {
+    "skills/sohrab/alaa-services-contract/references/24-metric-registry.md": "4719628f7676dfaa9ee361097cb90efd170e606f15e8664fd024cd603d8d7940",
+    "skills/sohrab/alaa-services-contract/references/95-fleet-conformance.md": "100b16d9f4ae030c08b32b4ce19de75734a058c331d9bcdce89eb59a730d8beb"
+  }
+}

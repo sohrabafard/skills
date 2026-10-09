@@ -38,7 +38,49 @@
     "alaa-implementer-luna": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Automatic bounded mechanical implementation when every predicate in /alaa-codex-orchestrator references/routing-matrix.md is met. Exact transformation, exclusions, enumerated existing-file scope, expected result, settled design/no semantic discretion, known pattern and cheap discriminating checks. File count alone does not decide; reject ambiguous matches, undefined scope or design changes. If fit ceases, preserve valid edits and return remaining work for reclassification. No mandatory first trial or authority expansion.",
+        "description": "Exact mechanical edits with every fit predicate, or localized reproduced bug with traced cause and bounded decisions at the canonical balanced priority. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-low": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Bounded semantic implementation with explicit outcome, named scope, grounded local contracts, known causal path or pattern, bounded decisions and cheap discriminating checks. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-luna-high": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Localized reproduced bug with traced causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-luna-low": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Localized reproduced bug with explicit expected behavior, traced local cause, bounded decisions and discriminating checks; cost-priority branch. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-xhigh": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Demanding workhorse implementation with sustained coupled technical reasoning and explicit acceptance. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-astra-medium": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Exceptional implementation admitted by an exact official source task and priority with remaining reasoning need and rejected cheaper/decomposed alternatives, or applicable workhorse inadequacy, or explicit user selection. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "sandbox_mode": "workspace-write"
+      }
+    },
+    "alaa-implementer-astra-xhigh": {
+      "contract": "assets/implementation-contract.md",
+      "metadata": {
+        "description": "Exceptional sustained implementation admitted by an exact official source task and priority with remaining reasoning need and rejected cheaper/decomposed alternatives, or applicable workhorse inadequacy, or explicit user selection. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
         "sandbox_mode": "workspace-write"
       }
     }

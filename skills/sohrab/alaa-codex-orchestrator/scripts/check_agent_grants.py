@@ -180,7 +180,7 @@ ROLE_POLICY: dict[str, dict[str, dict]] = {
     "alaa-instruction-reviewer": {},
 }
 ROLE_POLICY["alaa-reviewer-deep"] = ROLE_POLICY["alaa-reviewer"]
-for name in ("alaa-implementer-luna", "alaa-implementer-high"):
+for name in ("alaa-implementer-luna", "alaa-implementer-high", "alaa-implementer-low", "alaa-implementer-luna-high", "alaa-implementer-luna-low", "alaa-implementer-xhigh", "alaa-implementer-astra-medium", "alaa-implementer-astra-xhigh"):
     ROLE_POLICY[name] = ROLE_POLICY["alaa-implementer"]
 for name in ("alaa-planner", "alaa-planner-high"):
     ROLE_POLICY[name] = ROLE_POLICY["alaa-spec-analyst"]
@@ -487,6 +487,18 @@ def self_test() -> int:
     for role in ("alaa-planner", "alaa-planner-high"):
         if _template_failures(role, TEMPLATE_MARKER, {"sandbox_mode": "read-only"}):
             failures.append(f"{role}: valid read-only template rejected")
+    for role in sorted(name for name in ROLE_POLICY if name.startswith("alaa-implementer")):
+        combined_inventory = {**inventory, **memory_inventory}
+        good = {"sandbox_mode": "workspace-write",
+                "mcp_servers": _expected_overlay(role, combined_inventory)}
+        if _resolved_failures(role, good, combined_inventory):
+            failures.append(f"{role}: valid implementation grant rejected")
+        if good["mcp_servers"]["hindsight"]["enabled"]:
+            failures.append(f"{role}: implementation grant enabled memory")
+        broken = {**good, "mcp_servers": {**good["mcp_servers"],
+                  "serena": {"command": "serena", "enabled": True}}}
+        if not _resolved_failures(role, broken, combined_inventory):
+            failures.append(f"{role}: semantic shell safety deny omission accepted")
     for label, observed, expected_message in cases:
         if not any(expected_message in item for item in observed):
             failures.append(f"{label}: did not observe {expected_message!r}; got {observed}")

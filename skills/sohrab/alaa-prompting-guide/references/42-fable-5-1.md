@@ -18,6 +18,8 @@ quality difference. At lower effort verify that required retrieval still occurs.
 response length and progress reporting separately, and support long turns within the
 authorized runtime's resource limits. No measured pack speedup is claimed.
 
+Default effort depends on surface: Claude Code and Platform/API use high; Cowork and claude.ai use medium. All low/medium/high/xhigh/max levels are supported, subject to host controls. The launch reports low/medium improvements against Fable 5, not universal equivalence across models. Low can skip required retrieval; xhigh/max can duplicate deliverable drafting. Preserve required retrieval and artifact acceptance, and compare accepted outcomes rather than assuming higher effort is better.
+
 For independent workstreams, use the delegation conditions in
 `references/06-invocation-and-composition.md`; asynchronous coordination requires actual
 host support, not merely API documentation.
@@ -43,3 +45,5 @@ remain unrun.
 - [Fable migration](https://platform.claude.com/docs/en/models/fable-5-1/migration-guide)
 - [Fable model](https://platform.claude.com/docs/en/models/fable-5-1/overview)
 - [Fable release](https://www.anthropic.com/claude-fable-and-mythos-5-1)
+
+Surface defaults and effort caveats refreshed 9 October 2026 from the official September launch (publication day unspecified) and effort documentation. The joint article is evidence for Fable only here; Mythos is excluded from active selection and custom profiles.

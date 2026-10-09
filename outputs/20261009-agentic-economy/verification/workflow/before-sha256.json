@@ -1,0 +1,66 @@
+[
+  {
+    "path": "skills/sohrab/alaa-workflow/agents/openai.yaml",
+    "sha256": "bbf9b4b4e00403857cd04c254a3f0a96498786d7d36c2d8a499116ad21cb60dc"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/continuation-state-template.md",
+    "sha256": "a2d57e1a0a7155034da4dd4faebd0e98b6c8ee605a73dbeb1a4f14203da9516a"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+    "sha256": "37daded40be7b09500adad6174ad786ea1cf9a7aa2741bafbfadc7b52923b1a5"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/plan-template.md",
+    "sha256": "3df9fd84e63badf20b37b689c2fccee3ddbc290f619abb369d256427c45c339e"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/assets/state-template.json",
+    "sha256": "14cefcfb6b1204a05ac49e06a106f0e62c0519bdf26cc5bc41e29a6cf2100cd3"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+    "sha256": "9d7e974694577b28d2bc7cc929700fe9bda4b53d61c3013997c29091341baea9"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/companion-routing.md",
+    "sha256": "f54085a5969306e31ecbc77595d85ddde665a6b1c155dc732bcdae6c1ebaf271"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/context-continuity.md",
+    "sha256": "fa8fbe8c756acac5daac65aee8a8695db4453f487cb4b9e804cf82755065cead"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/context-curation.md",
+    "sha256": "accd4a2ca51b2c8e4e573e203305b626067b929133f9b2da20b07b583b09b2cd"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/phase-prompts.md",
+    "sha256": "189a4469d20b90dfe9e2c87cb4af2d5b95da8b789ade47b82f1fb84737b1a85a"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/review-mode.md",
+    "sha256": "497ff86b2ea3da1ad85b80534eee8148ca536b25f25ed42a33c20038abbc6fd4"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+    "sha256": "cb348aefb264d22bb018b89865066d32b727e369384e2666b79007a121fff7de"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/scripts/init_workflow_files.py",
+    "sha256": "4860a873f915e9f4fdb84cd4da518dbe7ee1bf94dd519a319c7fe3e55ba58eb6"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+    "sha256": "56538bcbd52a25e19283a0b4701361f0b67f76087d3a8fdd4dfa60ed999e730a"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/SKILL.md",
+    "sha256": "08cfb1022640d30ed6f7cda4bcf5c49ef70ae8bae2ba42ea1a5396c005a042e6"
+  },
+  {
+    "path": "skills/sohrab/alaa-workflow/tests/test_workflow_files.py",
+    "sha256": "93da0e1281fe8bd8104bf5c9bf9b85838f0c655e0b3d1baded5f5ba33573be40"
+  }
+]

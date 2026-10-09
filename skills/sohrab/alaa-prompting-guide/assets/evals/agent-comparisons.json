@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "1.3.0",
+  "policy_version": "1.4.0",
   "comparison_rule": "Change one factor only; isolate each run; do not execute external or destructive actions.",
   "scenarios": [
     {
@@ -34,18 +34,18 @@
     },
     {
       "id": "bounded-implementation",
-      "profile": "alaa-implementer",
+      "profile": "alaa-implementer-low",
       "candidate": {
         "model": "gpt-6.1-sol",
-        "effort": "medium"
+        "effort": "low"
       },
       "comparator": {
         "model": "gpt-6.1-sol",
-        "effort": "high"
+        "effort": "medium"
       },
       "repetitions": 2,
       "status": "unrun",
-      "prompt": "In a disposable copy, fix unique_nonempty so it removes empty and whitespace-only strings and preserves first-seen order, case and original nonempty values. Implement only this function and focused tests.",
+      "prompt": "In a disposable copy, fix unique_nonempty so it removes empty and whitespace-only strings and preserves first-seen order, case and original nonempty values. Implement only this function and focused tests. Run focused regression tests and report observed results. Return for reassessment if the local bounded contract no longer fits.",
       "inputs": {
         "items.py": "def unique_nonempty(items):\n    return list(set(items))\n",
         "test_input.json": "[\"A\", \"\", \"A\", \"  \", \"b\", \" b \", \"b\"]"
@@ -53,12 +53,14 @@
       "acceptance_criteria": [
         "Return [\"A\", \"b\", \" b \"] for the supplied input.",
         "Test empty input and stable order.",
-        "Preserve case and original nonempty values; do not trim returned strings."
+        "Preserve case and original nonempty values; do not trim returned strings.",
+        "Report observed focused test results; no inferred pass."
       ],
       "forbidden_actions": [
         "modify public signature",
         "add dependency",
-        "commit or install"
+        "commit or install",
+        "expand to unresolved system design"
       ]
     },
     {

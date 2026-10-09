@@ -141,7 +141,7 @@ EXPECTED_MCP = {
 # Preserve the authored native grants as well as MCP scope. An extra Write,
 # Agent, or unrestricted tool is authority drift even when MCP grants match.
 READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
-EXPECTED_MCP.update({"alaa-implementer-haiku": None, "alaa-implementer-sonnet-high": None, "alaa-implementer-opus-high": None,
+EXPECTED_MCP.update({"alaa-implementer-haiku": None, "alaa-implementer-haiku-high": None, "alaa-implementer-sonnet-high": None, "alaa-implementer-opus-high": None,
                      "alaa-planner": EXPECTED_MCP["alaa-spec-analyst"],
                      "alaa-planner-high": EXPECTED_MCP["alaa-spec-analyst"]})
 EXPECTED_NATIVE = {name: READ_NATIVE for name in EXPECTED_MCP}
@@ -341,6 +341,8 @@ def self_test() -> int:
         ("inherited role missing the Serena shell deny", "alaa-implementer",
          None, "disallowedTools: ", [ROUTING_SKILL], "body", "safety deny set differs"),
         ("inherited role missing the Hindsight server deny", "alaa-implementer-fable",
+         None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
+        ("bounded high role missing the Hindsight server deny", "alaa-implementer-haiku-high",
          None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
         ("inherited role carrying an extra deny", "alaa-implementer",
          None, f"disallowedTools: {SERENA_SHELL}, Write", [ROUTING_SKILL], "body",

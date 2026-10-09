@@ -1,0 +1,13 @@
+{
+  "started_utc": "2026-10-09T13:44:51.3247404+03:30",
+  "ended_utc": "2026-10-09T13:45:06.0760073+03:30",
+  "duration_seconds": 14.747,
+  "exit_code": 0,
+  "command": "python -B -m unittest discover -s skills/sohrab/alaa-workflow/tests -p test_workflow_files.py",
+  "cwd": ".",
+  "environment_override": "PYTHONDONTWRITEBYTECODE=1 (process-local)",
+  "priority": "standard host; lightweight sequential Python suite",
+  "runner_parallelism": 1,
+  "package_parallelism": 1,
+  "output_file": "outputs/20261009-agentic-economy/verification/workflow/unittest.log"
+}

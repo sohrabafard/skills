@@ -18,7 +18,7 @@ Before use, load the runtime-correct prompting guide and re-check official docum
 
 **Scope:** Change only the phase-owned surfaces. Preserve unrelated work. Delegate only independent, disjoint work or high-volume context isolation; the main agent owns integration.
 
-**Validation:** Run the plan's affected commands, repair in-scope failures, and record concise evidence.
+**Validation:** Reconcile prior evidence, run the plan's missing or invalidated affected commands under its authority limits, repair in-scope failures, and record concise evidence.
 
 **Done:** The phase acceptance criteria pass and status reflects verified reality.
 
@@ -32,7 +32,7 @@ Before use, load the runtime-correct prompting guide and re-check official docum
 
 **Scope:** Report confirmed findings first. Separate out-of-scope recommendations. Do not inherit the implementer's conclusions.
 
-**Validation:** Re-run or inspect the smallest decisive gates and cite exact evidence.
+**Validation:** Inspect the artifact independently; reconcile prior gate evidence and run missing or invalidated decisive checks. Cite exact evidence.
 
 **Done:** Return findings by severity, a verdict, and validation status.
 

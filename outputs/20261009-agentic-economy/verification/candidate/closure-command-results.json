@@ -1,0 +1,67 @@
+[
+  {
+    "id": "01-codex-validate-pack",
+    "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+    "cwd": ".",
+    "started_utc": "2026-10-09T10:30:46.8196499+00:00",
+    "ended_utc": "2026-10-09T10:30:47.2067016+00:00",
+    "duration_seconds": 0.384,
+    "exit_code": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1 - static",
+    "log": "outputs/20261009-agentic-economy/verification/candidate/closure-01-codex-validate-pack.log"
+  },
+  {
+    "id": "02-claude-validate-pack",
+    "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+    "cwd": ".",
+    "started_utc": "2026-10-09T10:30:47.2242326+00:00",
+    "ended_utc": "2026-10-09T10:30:47.6812247+00:00",
+    "duration_seconds": 0.457,
+    "exit_code": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1 - static",
+    "log": "outputs/20261009-agentic-economy/verification/candidate/closure-02-claude-validate-pack.log"
+  },
+  {
+    "id": "03-codex-check-agent-contracts",
+    "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+    "cwd": ".",
+    "started_utc": "2026-10-09T10:30:47.6836777+00:00",
+    "ended_utc": "2026-10-09T10:30:47.7977296+00:00",
+    "duration_seconds": 0.114,
+    "exit_code": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1 - static",
+    "log": "outputs/20261009-agentic-economy/verification/candidate/closure-03-codex-check-agent-contracts.log"
+  },
+  {
+    "id": "04-claude-check-agent-contracts",
+    "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+    "cwd": ".",
+    "started_utc": "2026-10-09T10:30:47.7987552+00:00",
+    "ended_utc": "2026-10-09T10:30:47.9103246+00:00",
+    "duration_seconds": 0.112,
+    "exit_code": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1 - static",
+    "log": "outputs/20261009-agentic-economy/verification/candidate/closure-04-claude-check-agent-contracts.log"
+  },
+  {
+    "id": "14-scoped-diff-check",
+    "command": "git diff --check HEAD -- skills/sohrab/alaa-workflow skills/sohrab/alaa-prompting-guide skills/sohrab/alaa-codex-orchestrator skills/sohrab/alaa-cc-orchestrator",
+    "cwd": ".",
+    "started_utc": "2026-10-09T10:30:47.9116458+00:00",
+    "ended_utc": "2026-10-09T10:30:47.9885115+00:00",
+    "duration_seconds": 0.077,
+    "exit_code": 0,
+    "classification": "PASS",
+    "tier": "affected",
+    "proof_level": "1 - static",
+    "log": "outputs/20261009-agentic-economy/verification/candidate/closure-14-scoped-diff-check.log"
+  }
+]

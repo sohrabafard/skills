@@ -6,10 +6,16 @@ Source checks do not prove account access, runtime activation or workload qualit
 
 ## Prompting and effort
 
-The API defaults to `high`. Begin comparisons at `medium` for bounded agentic work and
+Claude Code and Claude apps default to `medium`; Platform/API defaults to `high`. These surface defaults are not interchangeable agent pins. Begin comparisons at `medium` for well-specified agentic work and
 `high` for harder or longer tasks. Effort levels were recalibrated: retained role pins are
 unrun hypotheses, not inherited calibration. Use `references/50-effort-and-thinking.md`
 for controlled comparisons; raise effort only after excluding context, tool and specification gaps.
+
+The launch reports high-effort Sonnet approaching Opus on some work at similar cost; it proves no universal local equivalence. Medium and high remain distinct useful profiles. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking; higher effort can change tool behavior without improving acceptance.
+
+Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. Use the runtime routing matrix for admission and the canonical policy for pins. Materially coupled unresolved design goes to the registered Opus route.
+
+Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page specifically permits private reasoning before a strict JSON answer when that improves structured-output reliability. This is a task-specific exception, never authority to disclose private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
 
 At low effort, supply an observable done condition and required checks: early stopping and
 skipped verification are documented risks. At high or xhigh effort, constrain scope and stop
@@ -69,3 +75,8 @@ identity remain unmeasured. Re-fetch the relevant source before reusing a versio
 - [Sonnet changes](https://platform.claude.com/docs/en/models/sonnet-5-5/whats-new-sonnet-5-5)
 - [Effort](https://platform.claude.com/docs/en/build-with-claude/effort)
 - [Claude Code model configuration](https://code.claude.com/docs/en/model-config)
+- [Sonnet launch](https://www.anthropic.com/claude-sonnet-5-5)
+
+Agentic effort and structured-JSON prompting scope refreshed 9 October 2026; API migration facts retain their 29 September snapshot. The selection guide assigns everyday coding to Sonnet without an effort; medium/high come from the separate prompting source.
+
+Launch defaults and benchmark caveats refreshed 9 October 2026 from the official 28 September launch and effort documentation. No local comparative calibration ran.

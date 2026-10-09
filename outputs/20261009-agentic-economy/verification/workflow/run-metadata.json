@@ -1,0 +1,15 @@
+{
+  "observer": "independent verifier",
+  "cwd": ".",
+  "head": "dbf81c370872cb578d2f656b62dc504d48694f5e",
+  "python_version": "Python 3.13.14",
+  "logical_cpu_count": 16,
+  "runner_parallelism": 1,
+  "package_parallelism": 1,
+  "command": "python -B -m unittest discover -s skills/sohrab/alaa-workflow/tests -p test_workflow_files.py",
+  "environment_override": "PYTHONDONTWRITEBYTECODE=1 (process-local)",
+  "tier": "focused",
+  "proof_level": "2 - unit",
+  "source_snapshot": "before-sha256.json",
+  "initial_status_scope": " M skills/sohrab/alaa-workflow/SKILL.md\n M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md\n M skills/sohrab/alaa-workflow/assets/plan-template.md\n M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md\n M skills/sohrab/alaa-workflow/references/context-continuity.md\n M skills/sohrab/alaa-workflow/references/workspace-and-integration.md\n M skills/sohrab/alaa-workflow/scripts/init_workflow_files.py\n M skills/sohrab/alaa-workflow/tests/test_workflow_files.py"
+}

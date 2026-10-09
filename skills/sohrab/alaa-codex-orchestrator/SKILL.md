@@ -1,18 +1,21 @@
 ---
 name: alaa-codex-orchestrator
-description: "Production-grade multi-agent coding orchestration for Codex. Use when a user asks to build, fix, refactor, migrate, review, investigate, or plan non-trivial repository work with an orchestrator/advisor and specialist subagents. Activation only inspects installed roles; installation requires explicit authorization. It plans first, sizes the pipeline to that plan, and routes work through scoped implementation, risk-proportional verification, review, and conditional specialist gates on its own work branch. Do not use for trivial edits that need no delegation or for destructive/external actions without explicit authorization. Let /alaa-workflow lead a multi-session program; this skill writes its plan and state through it either way."
+description: "Production-grade multi-agent coding orchestration for Codex. Use when a user asks to build, fix, refactor, migrate, review, investigate, or plan non-trivial repository work with an orchestrator/advisor and specialist subagents. Activation only inspects installed roles; installation requires explicit authorization. It plans first, sizes the pipeline to that plan, and routes work through scoped implementation, risk-proportional verification, review, and conditional specialist gates in the workflow-selected checkout. Do not use for trivial edits that need no delegation or for destructive/external actions without explicit authorization. Let /alaa-workflow lead a multi-session program; this skill writes its plan and state through it either way."
 ---
 
 # Alaa Codex Orchestrator
 
 Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system. The main thread leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
 
-**One skill, two runtimes.** This pack and its counterpart for the other runtime are the same orchestrator with identical behaviour by design — same decisions, gates, triggers, and stopping conditions — so a behavioural rule added to one is added to the other in the same change. Only expression differs: each states its mechanics in its own runtime's idiom and carries the delegation polarity its own target model family needs, which `/alaa-prompting-guide` owns. Any other difference is drift.
+**Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
 
-## Plan-first profile selection
+## Admission
 
-Before planning, apply `references/routing-matrix.md` Planning profile selection. Verify compatible lead controls or dispatch the registered read-only planner; the lead ratifies its advisory draft. Record each lane's exact registered implementation profile and reason in the durable plan before dispatch. Planning effort does not determine implementation effort.
+Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner; do not start this pipeline. Required repository checks still apply. Non-trivial work continues below.
 
+## Plan and allocation
+
+Before planning apply `references/routing-matrix.md` Planning profile selection. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
 
 ## When NOT to use
 
@@ -46,7 +49,7 @@ Use when the user asks for a plan, critique, architecture advice, prompts, lane 
 
 Resolve explicit wording first. When intent remains ambiguous, choose the lowest-side-effect interpretation that still answers the request; do not interrupt merely to ask which mode.
 
-In orchestrator mode every goal writes its plan through `/alaa-workflow`, which owns plan files, resumable state, and phase prompt packs; this skill never recreates that machinery. When the engagement is a multi-session program rather than one goal, `/alaa-workflow` leads and invokes this skill for a single phase while keeping plan and state ownership. When one goal is the whole engagement, this skill leads and owns the plan it created there.
+In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts. Adopt an existing parent plan. For one goal this skill leads; for a multi-session program workflow leads and invokes this skill for a phase.
 
 ## 2. Main-thread contract
 
@@ -62,23 +65,21 @@ It must not: implement while implementation agents are viable; run CPU-heavy ver
 
 **Keep dispatches lean.** Apply the instruction-authoring contract in /alaa-prompting-guide. Dispatch text carries lane facts only: outcome, owned files, exclusions, acceptance criteria, verification commands, dependencies, resolved skill bindings, and the return contract. The role already lives in the agent TOML; restating it dilutes both. State each instruction once, expose only task-relevant tools, and keep examples only where they encode a real requirement.
 
-**Bound every return.** Each dispatch carries `/alaa-low-noise`: a child returns findings, verdicts, counts, and artifact paths, never transcripts, full diffs, or raw logs, and anything bulky is written to the permitted artifact directory and returned as a path. An unbounded child return is the most common way a main thread's context is flooded, and that cost is charged on every remaining turn of the goal. Anything a later turn or another agent might need again is written to a file first and referenced by path; the conversation is not the storage medium.
-
-**Bounded execution and recovery.** Every dispatched agent uses bounded invocations and reports meaningful progress under the active host contract. Do not infer a universal watchdog timeout or require narration between every command. If a lane is interrupted, reconcile its transcript, workflow checkpoint and surviving files before resuming; never restart completed writes blindly.
-
 **Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repeated checks only when no new change, failure or unresolved concern justifies them; generic self-check reminders never replace a gate. `alaa-verifier`, `alaa-reviewer` and specialist gates are authority boundaries: no lane approves its own change. Model capability never waives them. Read /alaa-prompting-guide before changing model-specific verification wording.
 
 ## 3. Intake and planning
 
-Before any dispatch: inspect the repository's own guidance and the affected code paths; restate the outcome, the checkable acceptance criteria, the preserved behavior, and every irreversible action; then split the work into the smallest lanes with disjoint write scopes and serialize the ones that overlap. `references/verification-and-gates.md` owns the full intake list and what each lane definition must carry, including the Phase A existing-infrastructure check (Phase A step 4).
+Before dispatch inspect repository guidance and affected paths, settle outcome, acceptance, preserved behavior and irreversible actions, then draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and the existing-infrastructure check.
 
-Before the first Phase A evidence dispatch, invoke `/alaa-memory-os` when its trigger list holds. The main thread performs one bounded recall, verifies useful claims against repository truth, and passes only confirmed facts into lane context; active plan and handoff state stay in `/alaa-workflow`. When the unresolved question is itself about a prior session, decision, file, or shared contract, or whether something already exists or who owns it, give the exact query to `alaa-researcher`; `alaa-explorer` uses memory only when the repository alone cannot answer. Independently invoke `/alaa-code-intelligence-routing` before choosing a code-evidence surface, then reuse the routed result rather than asking another surface for the same fact.
+Before Phase A evidence dispatch invoke `/alaa-memory-os` when triggered: one bounded recall, useful claims verified against repository truth. Active state remains in workflow. Give unresolved prior-session, ownership or shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Invoke `/alaa-code-intelligence-routing` before selecting code evidence, then reuse its result.
 
-Read `references/routing-matrix.md` for specialist triggers and `references/delegation-prompts.md` for dispatch contracts. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
+Every dispatch carries `/alaa-low-noise` and returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or narration between commands. After interruption reconcile transcript, workflow checkpoint and surviving files before resuming completed writes.
+
+The direct-reference router below selects role, dispatch and gate owners. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
 
 ## 4. Model and role routing
 
-Read `references/model-effort-policy.md` before selecting or deviating from a profile; it routes capability and pin policy to /alaa-prompting-guide. This pack owns role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
+`references/model-effort-policy.md` routes capability and pin policy to /alaa-prompting-guide. This pack owns role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
 
 Choose one correctness review profile for a scope. Use `alaa-reviewer-deep` when the deep-review trigger holds; its custom TOML pin takes precedence over caller model/effort values, so changing dispatch parameters is not an escalation mechanism.
 
@@ -86,7 +87,7 @@ Missing target models or roles are explicit blocked/degraded execution, never si
 
 ## 5. Orchestrator execution pipeline
 
-Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. They are also the gate order; there is no second list. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
+Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. These are logical outcomes, not mandatory separate dispatches or repeated ceremonies. Coalesce compatible actions and evidence under the workflow plan; preserve outcomes, independent authority and gate economics. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
 
 | Phase | Owns | Ends when |
 |---|---|---|
@@ -99,7 +100,7 @@ Phases A through E run in orchestrator mode; Phase F applies only to user-reques
 
 ### Execution profile: size the pipeline to the plan
 
-**Every profile preserves Phases A through E and their required gates.** Phase F is conditional on requested integration; local-only completion requires no merge prompt. The profile decides dispatch overhead, never whether an independent verification, review, or triggered specialist gate applies. What `lean` removes is dispatch overhead on a change that cannot justify it, where the cost lands on latency and the user's attention as much as on tokens. Choose the profile once, from the finished Phase A plan, and record it there. Escalate mid-run the moment a heavier profile's condition becomes true; never de-escalate the pipeline profile, because its qualifying evidence persists. Implementation-role reassessment is separate and follows `references/routing-matrix.md`.
+**Every profile preserves Phases A through E and their required gates.** Phase F is conditional; local-only completion requires no merge prompt. Select and record the profile from the finished plan. Escalate when a heavier condition becomes true; do not de-escalate because its qualifying evidence persists. Implementation-role reassessment follows `references/routing-matrix.md`.
 
 | Profile | Conditions — every one must hold | Shape |
 |---|---|---|
@@ -107,15 +108,15 @@ Phases A through E run in orchestrator mode; Phase F applies only to user-reques
 | `standard` | anything that is neither `lean` nor `hardened` | Phases A–E with every required gate; F only when requested |
 | `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
 
-`lean` drops the reviewer dispatch, never the review. The main thread did not write the diff, so it remains an independent authority over it, which is what the gate exists to guarantee. The moment the diff leaves the lane plan, the profile becomes `standard` and `alaa-reviewer` is dispatched against the complete change.
+`lean` review is independent because the lead did not author the diff. If the diff leaves the lane plan, select `standard` and dispatch `alaa-reviewer` against the complete change.
 
-**No profile suppresses a specialist.** The profile governs the reviewer dispatch and how much ceremony the phases carry; `references/routing-matrix.md` governs which specialists fire, identically at every profile. A one-lane retry change is still `lean` and still gets the observability reviewer. Any attempt to state which specialists a profile excludes would be a second copy of the trigger list, and the copy is what goes stale.
+**No profile suppresses a specialist.** Apply only the triggers owned by `references/routing-matrix.md`, identically at every profile.
 
 ### Final report
 
-Report in this order: the outcome, then the four completion-lifecycle states — `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` — each carrying its own verdict and none collapsed into another, with `alaa-workflow references/workspace-and-integration.md` owning what earns each state and this skill restating none of it; changes by lane and touched files; verification commands with observed results, each marked run or cited and carrying its tier; review and specialist verdicts with the resolution of each finding; documentation outcome with each touched document's grade; reusable-context curation outcome, including persisted, deferred, or empty; residual risks, skipped checks, and follow-ups; and the agent roster — every subagent dispatched this goal, one line each with agent name, configured/requested model and effort, separately observed runtime identity or unknown, flagging only observable mismatches, and for every escalated lane the named criterion that earned it.
+Report: outcome; separate verdicts for `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` under `alaa-workflow references/workspace-and-integration.md`; lane changes/touched files; commands/results marked run or cited and tier; review/specialist verdicts and finding dispositions; documentation outcome/grade per touched document; curation persisted/deferred/empty; risks, skipped checks and follow-ups. List every dispatched agent once with configured/requested model/effort, separately observed identity or unknown, observable mismatches only, and the named admission criterion for each escalated lane.
 
-Close with one run-accounting line: agents dispatched and how many distinct roles that was; underlying checks run versus checks cited (count covered children once); and the branch span, from the plan's `Created` timestamp to the last authorized commit, or unavailable when no such commit exists. Every figure is already in hand — the roster, the evidence table, and the plan header plus Phase E's final git inspection — so the accounting costs no extra command and no bookkeeping. Never start a timer and never carry a clock across turns: a run that measures its own slowness by being slower has answered nothing. Call it the branch span rather than the duration, because it excludes planning before the first commit and every gate after the last. The three are diagnostic only together — dispatches well above distinct roles is fix-cycle churn, checks run well above checks cited is the repetition the tiers exist to prevent — and no budget is stated for any of them, because a threshold invented here would be enforced everywhere and grounded nowhere.
+Close with one accounting line from existing plan, roster and evidence: dispatches/distinct roles; underlying checks run/cited (covered children counted once); branch span from plan `Created` to last authorized commit, or unavailable. No timer, extra command or invented budget.
 
 ## 6. Advisor-mode output
 
@@ -141,7 +142,7 @@ After changing reviewer instructions, pins, agents, or version, run `python scri
 - Do not start duplicate services when a reusable declared service already exists.
 - Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
 
-Read `references/resource-policy.md` for runner usage and ecosystem examples. Read `references/failure-taxonomy.md` when a check fails.
+The direct-reference router selects resource and failure handling before those decisions.
 
 ## 8. Safety and authority
 
@@ -149,7 +150,7 @@ Read `references/resource-policy.md` for runner usage and ecosystem examples. Re
 - Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
 - Installation and updates require explicit user authorization for named target paths; activation grants none.
 - A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.codex/agents`.
-- Commit only with explicit user authorization, on the run's work branch. Without it, preserve the reviewed diff and pin validation to a content snapshot under the workflow protocol. Installation, merge, push, tag, branch deletion, publication, deployment, and other external or destructive effects require their own explicit authorization. Never add Co-Authored tags.
+- Commit only with explicit user authorization, in the workflow-selected checkout. Without it, preserve the reviewed diff and pin validation to a content snapshot under the workflow protocol. Every external or destructive effect requires its own explicit authority. Never add Co-Authored tags.
 - Never expose secrets in prompts, logs, artifacts, or reports.
 
 ## 9. Stop conditions
@@ -158,26 +159,19 @@ Stop successfully only when every acceptance criterion has evidence, mandatory g
 
 Stop and report a partial or blocked state when: the same lane is blocked twice by the same cause; blocker or major findings remain after two fix cycles; verification remains flaky, timed out, contaminated, or environment-blocked; scope expands beyond the goal; an irreversible or product decision belongs to the user; or a safe execution path no longer exists.
 
-## 10. Anti-patterns
+## 10. Failure discipline
 
-Each of these inverts a default the main thread would otherwise follow. Rules already stated above are not repeated here.
+Use a reviewer only to judge, a verifier only to execute evidence commands, and a researcher only to retrieve. Classify shell, runtime, permission and stale-cache failures before any product edit; `references/failure-taxonomy.md` owns the categories. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill, not the whole family.
 
-- spawning every specialist for every task, several agents for one lane, or a duplicate summary-check lane; independent artifact review is a required authority gate;
-- delegating work the main thread could finish in a handful of tool calls, or the main thread implementing and running heavy suites while lanes are viable;
-- treating the verifier and reviewer gates as redundancy and skipping them because the work already looks checked — they are authority boundaries;
-- using a reviewer as a fixer, a verifier as a debugger, or a researcher as a decision-maker;
-- running the full suite, the race detector, or the acceptance set again on a tree that has not changed since the last run — breadth is bought by a change in the tree, never by reaching a new phase or handing the work to a new agent;
-- letting an implementation lane run the exhaustive tier on its own work, or running it before the final candidate exists;
-- editing the product in response to a shell-parsing, container-runtime, permission, or stale-cache failure that was never classified;
-- treating a rerun that passes after a failure as a clean pass;
-- dispatching implementation before Phase A produced a written plan with the approach chosen and the alternatives rejected;
-- dispatching the full reviewer and specialist set on a change whose plan meets the `lean` conditions, or staying in `lean` after the diff left the lane plan — `lean` removes dispatches, never phases;
-- treating activation or phase completion as authority to install, commit, or merge;
-- printing a diff, a log, or a file into the conversation instead of writing it to the artifact directory and reporting the path;
-- deciding a document's size grade locally, or restating a rule this pack routes to its owner, instead of applying the owner's;
-- escalating a lane's variant because the goal is important or the surface is sensitive, rather than because the lane meets a named escalation criterion — importance and sensitivity are handled by gates, not tier;
-- changing model or effort to mask tool failure, missing evidence, or an unresolved specification;
-- routing the adversarial reviewer's findings into another fix cycle instead of reporting them;
-- parallelizing migrations, generated contracts, or shared-state edits;
-- instrumenting a run to explain its own cost, when the measurement costs more than the waste it would find;
-- pre-loading every clean-code skill into every lane — name only the lane's matching skill.
+## Direct references
+
+| Before you | Read |
+|---|---|
+| Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
+| Dispatch a role | `references/delegation-prompts.md` |
+| Start Phase A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
+| Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
+| Inspect role authority, output or grants | `references/agent-catalog.md` |
+| Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |
+| Classify a failed check | `references/failure-taxonomy.md` |
+| Perform an explicitly authorized installation or update | `references/installation.md` |

@@ -4,13 +4,11 @@
 owns what each phase actually does and what each gate requires. Read it before dispatching Phase A,
 and again whenever a gate's requirement is in question.
 
-The phases are the gate order. There is no second numbered list of gates, because two orderings of
-the same pipeline drift and the agent follows whichever it read first.
+Phases name required outcomes and authority, not separate meetings, dispatches, artifacts or repeated checks. Coalesce compatible actions and evidence in the workflow plan; retain each outcome, observer and ordering constraint. Gate economics below may move cheap review before expensive verification.
 
-## Plan-first profile selection
+## Plan and allocation
 
-Before planning, apply `references/routing-matrix.md` Planning profile selection. Verify compatible lead controls or dispatch the registered read-only planner; the lead ratifies its advisory draft. Record each lane's exact registered implementation profile and reason in the durable plan before dispatch. Planning effort does not determine implementation effort.
-
+Apply `routing-matrix.md` for planning controls and the single post-consolidation worker allocation pass. Persist choices in the workflow plan before dispatch; no second allocation artifact.
 
 ## Before any dispatch
 
@@ -32,19 +30,15 @@ Before validation dispatch, record one check list in the existing plan: required
 2. **Run the expensive gate once on the reviewed tree.** A second dispatch of the same gate inside one phase means step 1 was skipped, not earned thoroughness.
 3. **Freeze before verifying.** With explicit permission, commit on the work branch before expensive verification; otherwise pin an authorized content snapshot of tracked diff, relevant untracked files and tool inputs, and prevent concurrent writes. Evidence needs no commit. `alaa-workflow references/workspace-and-integration.md` owns the commit protocol and forbidden writes during a pass.
 
-## Cross-phase reusable-context curation
+## Reusable-context owner
 
-At the end of Phases A through D, invoke `/alaa-extract-agent-lessons` for an intermediate scan only when the
-phase produced an explicit user or team judgment, an accepted tradeoff, a verified surprise, a costly detour,
-a validation-driven method change, a coordination bottleneck, or non-obvious reusable knowledge. This is a
-main-thread curation step, not a subagent lane. When a workflow parent exists, put admitted candidates in its
-handoff package; otherwise keep the compact candidates in the main thread. Never publish active phase state.
+Apply `alaa-workflow references/context-curation.md` at material boundaries and closure. Workflow owns scan admission, candidate storage, authorized publication and gate reopening; consume its recorded outcome once, including when this run is a child phase.
 
 ## Phase A — Plan
 
 Always first, never skipped, at any profile. Everything after it inherits its decisions, so a decomposition written before the solution is chosen decomposes the wrong solution and every lane then carries that mistake into its own diff.
 
-1. Set up the workspace before the first write: record the base branch and its commit, refuse to start on a tree carrying changes this run did not make, and create the run's work branch. `alaa-workflow references/workspace-and-integration.md` owns the base capture, the dirty-tree refusal, worktree mode, and the commit protocol.
+1. Before the first write apply `alaa-workflow references/workspace-and-integration.md`: record base/checkout identity, inspect unrelated changes and resolve overlapping ownership. Use its current-checkout or isolation decision; disjoint existing changes alone require neither refusal nor a new branch.
 2. Dispatch the specification, exploration, and research lanes whose conditions in `references/routing-matrix.md` hold, in parallel only when their questions are independent. Spending on `alaa-spec-analyst` here is the cheapest correctness lever in the pipeline and is wasted on a request that is already concrete.
 3. Reconcile observed facts and label unresolved assumptions. Resolve missing facts through retrieval/clarification, then select the planning profile through `routing-matrix.md` before making the plan; the lead ratifies an advisory planner draft.
 4. Before the plan approves any lane that creates a new container image, toolchain, chart, CI include or template, generator, hook pack, or a script meant for reuse by more than one repository or pipeline (editing an existing artifact does not trigger this check), run the existing-infrastructure check, because one repository's tree does not show what another already provides. Ask `/alaa-memory-os` whether existing infrastructure already provides that capability, under its active adapter's rule for existence and ownership questions. When `/alaa-services-contract` provides an infrastructure registry, follow its check-before-creating rule and read the registry first. Verify every hit in the owning repository. Record the answer in the plan — `found` with the artifact, its owner, and the evidence, or `none` with the queries and sources checked, or `no memory evidence` with the sources checked when recall failed open — and put it in that lane's dispatch `<context>`. A `found` answer enters step 5 as the reuse-or-extend alternative, chosen or rejected with its reason. Rejecting a `found` artifact in favour of a parallel one needs its owner's or the user's decision.
@@ -53,14 +47,14 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 7. Trigger `alaa-api-contract-reviewer` here rather than in Phase D whenever its condition in `references/routing-matrix.md` already holds, so consumer impact and the deprecation path are decided before code is written rather than discovered after.
 8. Use `alaa-test-strategist` before implementation, not after, whenever its condition in `references/routing-matrix.md` holds: a test matrix designed after the code exists is written against what was built rather than against what the change had to prove.
 9. Write the plan down through `/alaa-workflow` at the `resumable` profile, or adopt the parent plan when a workflow parent already exists. That plan is the run's single checklist — ordered phases, one checkbox per subtask, acceptance criteria, per-phase validation commands, and the handoff package — and it is where the main thread reads its own position back after compaction. Apply `alaa-workflow references/companion-routing.md` for executable phase/task skill bindings before implementation or write-lane dispatch. Tick a box once its outcome has been observed and never ahead of the evidence — several at once when one change satisfied several, and at the start for a subtask that turns out to be already done and was verified rather than assumed. `/alaa-workflow` owns the plan and state machinery; this skill consumes it and does not recreate it.
-10. Choose the execution profile from the finished plan, then present the plan and the profile in one compact message and continue without waiting, unless an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
+10. After tasks/dependencies are consolidated, run Batch allocation from `references/routing-matrix.md` once and record all lane choices. Choose the execution profile from the finished plan, then present the plan and the profile in one compact message and continue without waiting, unless an irreversible decision, destructive action, external side effect, or genuine product choice belongs to the user.
 
 ## Phase B — Implementation
 
-1. Dispatch one `alaa-implementer` per routine lane.
-2. Apply Implementation routing in `references/routing-matrix.md` before assignment or reassignment; carry its role-selection evidence in the dispatch and roster.
-3. Concurrency policy: at most two workspace-writing implementation agents at once; never parallelize overlapping write scopes; reserve remaining capacity for read-only agents; only one CPU-heavy verification or profiling command at a time.
-4. Each lane runs focused tests for its failure modes and lint/type/build scoped to touched files, never affected/exhaustive checks: wrong authority and wrong moment. `/alaa-testing-strategy` owns the tiers. Include every cheap check that could falsify any claimed property, including exported-surface, contract, type, or lint properties; return observed output, or mark the property not checked. Role definitions own dispatch-conflict handling; reconcile every excluded command and unrun check before accepting the lane.
+1. Select the registered implementation profile through `references/routing-matrix.md` before assignment or reassignment, then dispatch one agent per ready lane. Carry selection evidence in the dispatch and roster.
+2. Consume the workflow plan's dependency, ownership, resource-conflict and integration-barrier fields. A lane is ready only after required dependency contracts are reconciled. Dispatch ready independent lanes together when observed host slots and declared resource ceilings permit; increase parallel writers when capacity and ready work justify it. Record an unavailable capacity observation and use the smallest supported batch until capacity is established; do not invent a ceiling or assume unlimited capacity.
+3. Never overlap writes to files, generated outputs, contracts, migrations or shared runtime state. Reconcile at declared integration barriers before dependent work starts. Reserve capacity for the next required gate only when it is ready; run only one CPU-heavy verification or profiling command at a time.
+4. Each lane runs focused tests for its failure modes and lint/type/build scoped to touched files, never affected/exhaustive checks: wrong authority and wrong moment. `/alaa-testing-strategy` owns the tiers. Choose the smallest discriminating checks for claimed behavior and changed exported-surface, contract, type or lint properties; return observed output, or mark the property not checked. Role definitions own dispatch-conflict handling; reconcile every excluded command and unrun check before accepting the lane.
 5. Wait for all required lanes. A blocked lane is blocked; do not pad it into success.
 6. Reconcile actual diffs and lane evidence, not summaries alone. Detect scope violations, accidental generated changes, contract mismatches, and cross-lane breakage. Record each completed subtask and tick its box in the plan. Commit it only with explicit user permission.
 
@@ -90,7 +84,7 @@ Always first, never skipped, at any profile. Everything after it inherits its de
 3. After documentation edits, run the documentation gate below. Documentation is the final write lane and must not bypass validation.
 4. If integration is requested and explicitly authorized, bring the base branch into the work branch before final verification; otherwise verify the current candidate and mark integration not requested or awaiting authority as applicable. Select final checks and proof levels from repository validation policy and /alaa-testing-strategy. Preserve the independent verification/review gates and every required check. Run any required exhaustive tier once, fresh on the final candidate after documentation; do not require unrelated suites merely because this is Phase E. Record the content snapshot and, when integration is in scope, the base commit. No candidate writes may overlap the final pass.
 
-5. Invoke `/alaa-extract-agent-lessons` for the final full-engagement gate after the evidence is stable. Reconcile intermediate candidates, publish only authorized durable knowledge through `/alaa-memory-os`, and accept an empty retained set as a valid result. If it returns `pipeline reopen required`, follow the gate-reopen rule below before rerunning this final gate.
+5. Consume the workflow owner's final reusable-context gate after evidence is stable; an empty retained set is valid. Follow its `pipeline reopen required` outcome before closure.
 6. Re-check final git status and diff against declared scopes, confirm every plan checkbox matches what actually landed, and record the last authorized commit timestamp when available; otherwise record unavailable.
 7. Report in the order `SKILL.md` states, and audit every claim against an actual tool result from this session before reporting it.
 
@@ -106,11 +100,9 @@ Accept evidence with exact command, cwd, environment/resource limits, exit/resul
 
 Independent acceptance requires an observer independent of the implementation with authority for that gate. An implementer's broad PASS cannot discharge it, even with unchanged inputs. A cited result names command, timestamp, tested tree and observer; cite valid unchanged independent evidence instead of repeating it. `/alaa-testing-strategy` owns the four unchanged-input conditions and excludes exhaustive results from reuse.
 
-## Gate reopen rule
+## Gate reopen owner
 
-A repository promotion discovered after evidence was declared stable reopens the owning write lane and every
-affected verification, review, documentation, and documentation-check gate. After those gates pass, rerun final
-reusable-context curation. Durable memory publication alone does not reopen repository gates.
+When curation changes repository instructions, apply `alaa-workflow references/context-curation.md` for reopening affected gates; this run consumes that decision rather than defining a second protocol.
 
 ## Finding ownership
 

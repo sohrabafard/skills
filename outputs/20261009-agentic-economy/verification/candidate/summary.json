@@ -1,0 +1,64 @@
+{
+  "overall_status": "PASS for dispatched static inventory after targeted correction",
+  "observer": "independent verifier",
+  "configured_model": "gpt-6-luna",
+  "configured_effort": "low",
+  "requested_model_effort": "unspecified",
+  "observed_model_effort": "unknown",
+  "cwd": ".",
+  "head_before": "dbf81c370872cb578d2f656b62dc504d48694f5e",
+  "head_after": "dbf81c370872cb578d2f656b62dc504d48694f5e",
+  "priority": "normal",
+  "runner_parallelism": 1,
+  "package_parallelism": 1,
+  "environment_override": "PYTHONDONTWRITEBYTECODE=1 (process-local)",
+  "inventory_check_outcomes": {
+    "product_failures_unresolved": 0,
+    "commands_run_now": 5,
+    "unchanged_results_cited": 9,
+    "total": 14,
+    "current_pass": 14
+  },
+  "closure_checks": "Commands 1-4 and 14 executed once after the targeted source fix; all five passed",
+  "prior_failures": "Both pack-validator exit-1 results retained in original logs/results and marked resolved by post-fix passes",
+  "workflow_suite": {
+    "result": "PASS",
+    "tests": 75,
+    "proof_level": "2 - unit",
+    "rerun": false,
+    "hash_manifest_entries": 16,
+    "unchanged": true
+  },
+  "source_inventory": {
+    "files": 249,
+    "changed_since_first": 2,
+    "only_expected_two_files": true,
+    "changed_during_closure": 0,
+    "sha256_manifest_before": "outputs/20261009-agentic-economy/verification/candidate/closure-before-sha256.json",
+    "sha256_manifest_after": "outputs/20261009-agentic-economy/verification/candidate/closure-after-sha256.json",
+    "target_hashes": [
+      {
+        "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+        "sha256": "9b410e76e620c847a397c317c4dc4c8d7e046baf1fec032e498fc6ebd3b80dd2"
+      },
+      {
+        "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+        "sha256": "aa880bc27534a1b8017c3d8e64b3b215a7149c137317e2e922c3ab5a4246a6ee"
+      }
+    ]
+  },
+  "repository_status": {
+    "scoped_entry_count": 78,
+    "unchanged_during_closure": true,
+    "details": "closure-preflight.json and closure-after-metadata.json"
+  },
+  "consolidated_results": "outputs/20261009-agentic-economy/verification/candidate/consolidated-14-outcomes.json",
+  "raw_first_run_results": "outputs/20261009-agentic-economy/verification/candidate/command-results.json",
+  "post_fix_results": "outputs/20261009-agentic-economy/verification/candidate/closure-command-results.json",
+  "logs": "outputs/20261009-agentic-economy/verification/candidate/",
+  "unrun_limits": [
+    "Model behavior and comparative quality were not tested",
+    "No installation or live activation was tested",
+    "Parent-owned plan/docs/final closure gates remain separate"
+  ]
+}

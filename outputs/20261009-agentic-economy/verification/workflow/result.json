@@ -1,0 +1,33 @@
+{
+  "verification": "PASS",
+  "test_count": 75,
+  "source_hashes_unchanged": true,
+  "hash_manifest_entries_before": 16,
+  "hash_manifest_entries_after": 16,
+  "changed_paths": [],
+  "new_paths": [],
+  "final_status_scope": [
+    " M skills/sohrab/alaa-workflow/SKILL.md",
+    " M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md",
+    " M skills/sohrab/alaa-workflow/assets/plan-template.md",
+    " M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md",
+    " M skills/sohrab/alaa-workflow/references/context-continuity.md",
+    " M skills/sohrab/alaa-workflow/references/workspace-and-integration.md",
+    " M skills/sohrab/alaa-workflow/scripts/init_workflow_files.py",
+    " M skills/sohrab/alaa-workflow/tests/test_workflow_files.py"
+  ],
+  "execution": {
+    "started_utc": "2026-10-09T13:44:51.3247404+03:30",
+    "ended_utc": "2026-10-09T13:45:06.0760073+03:30",
+    "duration_seconds": 14.747,
+    "exit_code": 0,
+    "command": "python -B -m unittest discover -s skills/sohrab/alaa-workflow/tests -p test_workflow_files.py",
+    "cwd": "D:\\Sohrab\\Project\\skills",
+    "environment_override": "PYTHONDONTWRITEBYTECODE=1 (process-local)",
+    "priority": "standard host; lightweight sequential Python suite",
+    "runner_parallelism": 1,
+    "package_parallelism": 1,
+    "output_file": "outputs\\20261009-agentic-economy\\verification\\workflow\\unittest.log"
+  },
+  "output": "...........................................................................\r\n----------------------------------------------------------------------\r\nRan 75 tests in 14.460s\r\n\r\nOK\r\n"
+}

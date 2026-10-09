@@ -14,7 +14,11 @@ Before a gate, hold writes to its tested scope. Record the command, result, HEAD
 
 When the user explicitly authorizes commits, the parent stages only owned paths and commits after the focused check; lanes never interleave commits into one branch. Use a Conventional Commit subject and no agent attribution. A failed phase remains uncommitted unless the user expressly authorizes a partial checkpoint. When no commit is authorized, the observed snapshot is the phase's evidence identity and the uncommitted tree remains a reported recovery risk.
 
-Do not repeat a passing gate on an unchanged tested snapshot. If a later edit affects its inputs, run that gate again on the new snapshot. `/alaa-testing-strategy` owns any stricter repository proof tier.
+## Reconcile evidence before running checks
+
+Record each required outcome's command, covered inputs, result, required observer and tested identity in phase evidence. Before integration, resume or final validation, compare it with current files and relevant environment/configuration. Reuse a pass only when inputs and required authority match. Missing attribution, relevant changes, failures or unresolved concerns require affected checks; unrelated edits, phase transitions, new agents and interruptions alone do not. `/alaa-testing-strategy` owns stricter proof tiers.
+
+Inspect aggregate coverage before consolidating: every covered outcome, input scope and required observer must match. Cite identical covered child commands; run uncovered checks once. Aggregate names and lane-focused results prove neither combined behavior nor independent acceptance. Freeze tested scopes during gates; record which changed inputs invalidated which evidence. The parent reconciles the combined candidate and commissions only missing or invalidated proof, without blanket lane-check reruns.
 
 ## What still needs the user
 
@@ -50,6 +54,6 @@ If authorization is absent, leave the worktree and base intact and report the ve
 
 ## What this file does not own
 
-- Which tests run at which moment, and when a result may be cited instead of re-run: `/alaa-testing-strategy` (`$alaa-testing-strategy`).
-- Which agent may write to which files inside one goal: the orchestrator skills, `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex).
+- Which tests run at which strength: `/alaa-testing-strategy`.
+- Which agent may write to which files inside one goal: `/alaa-cc-orchestrator` or `/alaa-codex-orchestrator` for the active runtime.
 - What is written into the plan, checkpoint, and handoff package: `references/context-continuity.md` and `references/artifact-lifecycle.md`.

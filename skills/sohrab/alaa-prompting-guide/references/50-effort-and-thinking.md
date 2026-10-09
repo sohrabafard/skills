@@ -1,20 +1,14 @@
 # Effort and Thinking: A Cross-Model Decision Procedure
 
-This file owns the question "how hard should this model think, and how do I know?" It applies to every model in scope and to both runtimes. Read the target model's own reference for the levels it actually supports; read this file for how to choose among them.
+Owns effort selection across supported models/runtimes. The target model reference owns its levels; this file owns choosing among them.
 
 ## The two levers do different jobs
 
-**Model** selects the *kind* of judgment available. **Effort** selects *how much search* that judgment performs before it answers.
-
-Do not assume raising effort makes one model equivalent to another. Their trade-off is empirical: compare one variable at a time against the same task and acceptance criteria.
-
-Choose the model from the kind of judgment the task requires. Choose the effort from how much search that judgment needs. Then verify, because both choices are empirical.
+**Model** selects judgment; **effort** selects search depth. Choose from the lane's remaining decisions and required search, then verify. Higher effort proves no cross-model equivalence: comparisons vary one factor against the same task and acceptance.
 
 ## What effort does not control
 
-Effort controls thinking volume. It does not control response length, and on the current Claude flagship the documentation says so explicitly. This matters because the natural reflex when a model's answers run long is to lower effort, and that reflex fails: it produces a shallower answer of roughly the same length. Response length, written-deliverable length, and progress-update cadence are all prompt-controlled and need their own explicit instructions. Read `references/21-opus-5-5.md` for current calibration guidance.
-
-Effort also does not control scope. A model that widens the task beyond what was asked is not thinking too hard; it is missing a scope constraint. Fix that in the prompt.
+Response length, deliverable length, update cadence and scope require explicit prompt controls. Effort can change tokens and tool behavior; lowering it is not a reliable substitute for output/scope constraints. Read the target model reference for observed workload-specific effects.
 
 ## Thinking: keep it on, lower the effort instead
 
@@ -30,16 +24,14 @@ Do not carry manual thinking budgets into current adaptive models. Historical Ha
 
 ## Choosing a starting level
 
-Each family has a documented starting point, and the numbers are not the same across models, which is why "use high effort" is meaningless advice across vendors. This file does not restate them — a second copy is the first one to go stale. Read the target model's own reference (`references/21-opus-5-5.md`, `references/31-sonnet-5-5.md`, `references/42-fable-5-1.md`, `references/36-haiku-5-5.md`, `references/12-gpt-6.md`) for the levels it supports, its default, and its recommended starting point for coding and agentic work.
-
-Every family gives the same meta-instruction and it is the most important sentence in this file: **an effort level inherited from a previous model generation is an untested assumption, not a tuned setting.** Revalidate current guidance and preserve unrun calibration status; a task selection does not require an experiment.
+Read the target's reference for supported levels, default and workload starting point; shared effort names do not imply shared search depth. An inherited effort is untested: refresh guidance and retain unrun status. Selection requires no experiment.
 
 ## The decision procedure
 
 1. **Classify missing facts before judgment.** Retrieve or clarify absent context, tool capability or product intent; a stronger model does not supply missing evidence.
 2. **Plan with the appropriate strong-workhorse profile.** Clear scope/contracts/constraints fit medium planning; resolving interacting uncertainties to form the plan fits high. Use verified compatible lead controls or a real read-only planner.
-3. **Select implementation directly from the completed plan.** Record outcome, scope, settled/open decisions, failure/invariant reasoning and exact registered profile/reason. Planning effort and implementation effort are independent. Runtime routing matrices own workload admission; canonical policies own pins.
-4. **Reserve exceptional implementation for evidence or explicit direction.** Require applicable high-effort workhorse inadequacy after correcting context/specification/tools and considering decomposition, or explicit user selection. Complexity, sensitivity, file/failure count and imagined insufficiency alone do not qualify. Prior applicable evidence may suffice; no trial ladder, synthetic benchmark or replay is required.
+3. **Allocate implementation once after plan finalization**, through `references/90-model-selection.md`. Record scope, settled/open decisions, invariant/failure reasoning and the exact source-row/priority/profile reason. Its priority procedure owns when a concrete consequence justifies higher quality; that does not prove greater complexity. Planning and worker effort are independent. Runtime matrices own admission; canonical policies own pins.
+4. **Admit exceptional implementation through its runtime's route.** Codex's exact source-matched branch follows `references/90-model-selection.md`; outside it require applicable high-effort workhorse inadequacy after context/spec/tool correction and consideration of decomposition, or explicit user model selection. Claude Fable keeps that inadequacy/explicit-selection boundary. Complexity, sensitivity, file/failure count and imagined inadequacy alone do not qualify. Reuse prior applicable evidence; no trial ladder, synthetic benchmark or replay.
 5. **Keep selection and calibration separate.** Controlled comparisons vary one factor at a time with task/context/tools/acceptance held constant; compare cost only among passing runs. Local profile rationales remain unrun until measured. A task selection does not require a new experiment.
 6. **Realize the actual controls.** Verify runtime availability, caps and override precedence. A custom profile may ignore caller model/effort; prose never changes the running configuration. Reassess only at existing material-scope/fix-follow-up boundaries and preserve completed work and independent gates.
 
@@ -72,16 +64,14 @@ model/effort override precedence or claiming activation.
 
 ## Effort is not the only cost lever
 
-Before raising effort, check whether the real problem is prompt shape. On the current GPT generation, leaner system prompts measurably improved evaluation scores while substantially cutting tokens, which means prompt bloat degrades quality and costs money at the same time. Whether a shorter prompt or lower effort preserves quality must be measured on the target workload.
-
-The same applies to context. A model reasoning over a poorly assembled context does not need more thinking; it needs better retrieval. Raising effort to compensate for missing facts is the most expensive way to fail, because the model will explore thoroughly and confidently in the wrong direction.
+Before raising effort, resolve prompt bloat and missing context. Vendor lean-prompt results support evaluating shorter prompts; they prove no local quality or cost gain. Better retrieval addresses absent evidence.
 
 ## Anti-patterns
 
 - Carrying an effort level forward from a previous model generation without revalidating current guidance and honestly retaining unrun calibration status; task selection does not require an experiment.
 - Disabling thinking to control cost instead of lowering effort, then writing repair instructions for the resulting behavior.
-- Lowering effort to shorten responses. Effort is not a verbosity control.
-- Raising effort because the goal is important or the surface is sensitive rather than because the lane must decide something.
+- Treating lower effort as a reliable verbosity or scope control instead of specifying the required output and boundaries.
+- Arbitrary model/effort escalation from a vague importance or sensitivity label; documented consequence may select quality priority only through the allocation owner.
 - Pinning maximum effort by habit without measured quality benefit and a stated workload need.
 - Treating a supported effort as proof it is appropriate, or changing model and effort together in a comparison.
 - Setting an explicit thinking budget on a generation that no longer accepts one.

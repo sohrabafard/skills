@@ -16,7 +16,7 @@
   Unix runner: <absolute SKILL_ROOT>/scripts/run-low-priority.sh
   Priority: BelowNormal; CPU count: <n>; only one heavy command at a time.
 </resource_policy>
-<tier>affected | exhaustive — affected once per phase, exhaustive once on the final candidate</tier>
+<tier>affected | exhaustive; cite eligible unchanged affected evidence; exhaustive fresh once on the final candidate</tier>
 <already_observed><commands whose recorded results are still valid, with the run that produced each; do not re-run these></already_observed>
 <rerun_policy>none | one identical rerun for flake detection</rerun_policy>
 <action_safety>Evidence only. Never fix or alter command semantics.</action_safety>

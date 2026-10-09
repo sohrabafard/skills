@@ -58,7 +58,7 @@ Writing continuously is a tax; writing only at the end is a bet that nothing goe
 
 1. **A phase completes or fails.** Update the checkpoint. This is the routine case and it is cheap.
 2. **A decision is made or scope changes.** Update the checkpoint and, if the decision closed off an alternative, add it to *ruled out*.
-3. **A validation runs.** Record the command, actual result, and observed tree identity in the checkpoint. Hold concurrent writes to the tested scope while it runs. With commit authority, record the commit; otherwise record HEAD, the scoped paths and their content hash as `references/workspace-and-integration.md` defines. A result without its observed identity cannot be cited on resume. Re-run an affected gate only when that identity or relevant inputs changed.
+3. **A validation runs.** Record its evidence in the plan and point the checkpoint's last verified result to it. `references/workspace-and-integration.md` owns tested identity, write isolation and reuse; a result without attributable inputs cannot be cited on resume.
 4. **Something is learned that would be expensive to rediscover.** Add it to the matching handoff field immediately, while the detail is still exact.
 5. **Before handing off, and before any long autonomous stretch.** Bring both files fully current, then verify with the cold-start test.
 
@@ -71,6 +71,8 @@ Before a handoff, and periodically during long work, apply one question to the a
 > If a competent agent with no conversation history read only these files, could it take the next action correctly, without re-deriving anything expensive and without repeating anything already ruled out?
 
 If the answer is no, the missing piece names its own home. It does not know where we are — the checkpoint is stale. It does not know what to do next — the plan's phase breakdown is too coarse. It would retry something that already failed — the *ruled out* field is incomplete. It would trust something unverified — *confirmed facts* and *open assumptions* are not properly separated.
+
+The next action names owned scope, satisfied prerequisites, unresolved decision or blocker, exact command or edit target, and expected result. The plan identifies reusable evidence, invalidation conditions and interrupted lane progress paths. Repair gaps in existing fields; add no resume artifact or fresh agent solely for this test.
 
 This test is worth running mentally before any long unattended stretch, because that is exactly when nobody is watching to catch the gap.
 
@@ -108,7 +110,7 @@ Write dispatches assuming zero shared context: the outcome, the owned scope, the
 
 Require the child to return a compact structured result rather than a narrative, and record its evidence in the parent's artifacts. A finding that exists only inside a subagent's return has already been lost — the parent's context will compact too.
 
-A long-running lane, or one a host restart could kill, keeps a progress record at a path the dispatch names (inside the repository unless the plan says otherwise) and rewrites it after each completed item: items done, items remaining, last check result. It is lane-local, not a second checkpoint. After an interruption the parent re-dispatches a lane that reads the record and the actual diff before acting, re-verifies each item the record marks done, and does only the remainder.
+A long-running lane, or one a host restart could kill, keeps a progress record at a path the dispatch names (inside the repository unless the plan says otherwise): items done, items remaining and last evidence reference, updated after each completed item. It is lane-local, not a second checkpoint. After interruption, reconcile that record, surviving files and attributable evidence before re-dispatch. Use `references/workspace-and-integration.md` to retain valid completed outcomes, invalidate affected or unsupported claims and hand off only remaining work. Interruption alone does not require repeating completed writes or checks.
 
 Keep the parent responsible for synthesis. Children return findings and artifact paths; the parent decides what those mean and writes the outcome down.
 

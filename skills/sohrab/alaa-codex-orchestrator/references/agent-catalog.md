@@ -2,7 +2,7 @@
 
 The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
 
-Twenty-seven executable agents are available.
+The manifest lists the executable agents available in this source pack.
 
 ## Specification and evidence
 
@@ -22,7 +22,13 @@ Twenty-seven executable agents are available.
 | `alaa-implementer` | workspace-write | Normal engineering with grounded scope and acceptance criteria. | Self-review or unrecorded profile admission |
 | `alaa-implementer-astra` | workspace-write | Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
 | `alaa-implementer-high` | workspace-write | Substantial interacting engineering reasoning. | Self-review or unrecorded profile admission |
-| `alaa-implementer-luna` | workspace-write | Automatic exact mechanical edits over finite enumerated existing-file scope; every fit predicate and cheap discriminating acceptance required | Ambiguous matches, undefined scope, semantic discretion, design changes, file-count-only admission or expanded authority |
+| `alaa-implementer-luna` | workspace-write | Exact mechanical edits with every fit predicate, or balanced-priority reproduced local bug with traced cause, bounded decisions and regression oracle | Mechanical branch: semantic discretion or design changes; both branches: ambiguous scope, unresolved cross-boundary contracts, trust, shared-state or consistency design, or wider authority |
+| `alaa-implementer-low` | workspace-write | Bounded semantic edits with recorded fit and cheap discriminating checks | Unresolved cross-boundary design, consistency or trust |
+| `alaa-implementer-luna-high` | workspace-write | Local reproduced bug with traced cause, bounded decisions and regression oracle | Unresolved cross-boundary contracts, trust or shared-state design |
+| `alaa-implementer-luna-low` | workspace-write | Bounded local reproduced bug at the canonical cost priority | Self-review, unrecorded admission or wider authority |
+| `alaa-implementer-xhigh` | workspace-write | Sustained demanding workhorse reasoning from the batch mapping | Self-review, unrecorded admission or wider authority |
+| `alaa-implementer-astra-medium` | workspace-write | Exact official task/priority admission with reasoning need and rejected cheaper/decomposed alternatives | Self-review, unrecorded admission or wider authority |
+| `alaa-implementer-astra-xhigh` | workspace-write | Exact official task/priority admission with sustained reasoning need and rejected cheaper/decomposed alternatives | Self-review, unrecorded admission or wider authority |
 | `alaa-verifier` | workspace-write (artifacts only) | Exact commands and reproducible evidence | Fixing, debugging, or changing commands |
 | `alaa-failure-analyst` | read-only | Diagnose ambiguous, flaky, environment, or cross-lane failures | Applying fixes |
 
@@ -72,7 +78,7 @@ assigned here, including servers unknown to this pack, are disabled in that role
 | `alaa-performance-profiler` | CodeGraph | docs, schema, app-errors |
 | `alaa-reviewer`, `alaa-reviewer-deep`, `alaa-adversarial-reviewer`, `alaa-security-reviewer` | CodeGraph + Serena read set | docs, schema |
 | `alaa-failure-analyst` | CodeGraph + Serena read set | docs, app-errors, browser |
-| `alaa-implementer`, `alaa-implementer-astra` | full, minus Serena's shell tool | full |
+| Every registered implementer profile | full, minus Serena's shell tool | full |
 | `alaa-researcher`, `alaa-dependency-auditor`, `alaa-release-guardian` | none | docs |
 | `alaa-accessibility-reviewer`, `alaa-documenter` | none | docs, routing |
 | `alaa-browser-qa` | none | docs, routing, browser, app-errors |

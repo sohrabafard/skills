@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.3.0 - 2026-10-09
+
+- Coalesce logical phase outcomes; preserve independent verification, review and triggered gates.
+- Route tiny edits before role inspection; consume workflow checkout, curation and dependency records.
+- Schedule ready independent lanes against observed host capacity and resource ceilings; remove the fixed writer cap.
+- Project canonical bounded implementation profiles and revised workload admissions. Source consistency does not prove calibration or installed activation.
+
+
 ## 5.2.0 - 2026-10-08
 
 - Allow direct automatic mechanical implementation only with exact transformation/exclusions, finite enumerated existing-file scope, expected result, settled design and cheap discriminating checks; file count alone does not decide.

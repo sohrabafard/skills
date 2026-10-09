@@ -1,0 +1,39 @@
+{
+  "command": [
+    "python",
+    "-B",
+    "skills/sohrab/alaa-repo-docs/scripts/check_markdown_links.py",
+    ".",
+    "--files",
+    "outputs/20261009-agentic-economy/acceptance-cases.md",
+    "outputs/20261009-agentic-economy/docs/_agent_plans/20261009-090000_agentic-economy.md",
+    "outputs/20261009-agentic-economy/docs/agents/20261009-090000_agentic-economy-state.md",
+    "outputs/20261009-agentic-economy/official-model-selection.md",
+    "outputs/20261009-agentic-economy/orchestrator-implementation.md",
+    "outputs/20261009-agentic-economy/policy-implementation.md",
+    "outputs/20261009-agentic-economy/reviews/correctness.md",
+    "outputs/20261009-agentic-economy/reviews/instructions.md",
+    "outputs/20261009-agentic-economy/reviews/release.md",
+    "outputs/20261009-agentic-economy/source-evidence.md",
+    "outputs/20261009-agentic-economy/verification-inventory.md",
+    "outputs/20261009-agentic-economy/workflow-implementation.md"
+  ],
+  "cwd": ".",
+  "exit_code": 0,
+  "duration_seconds": 0.134,
+  "files": [
+    "outputs/20261009-agentic-economy/acceptance-cases.md",
+    "outputs/20261009-agentic-economy/docs/_agent_plans/20261009-090000_agentic-economy.md",
+    "outputs/20261009-agentic-economy/docs/agents/20261009-090000_agentic-economy-state.md",
+    "outputs/20261009-agentic-economy/official-model-selection.md",
+    "outputs/20261009-agentic-economy/orchestrator-implementation.md",
+    "outputs/20261009-agentic-economy/policy-implementation.md",
+    "outputs/20261009-agentic-economy/reviews/correctness.md",
+    "outputs/20261009-agentic-economy/reviews/instructions.md",
+    "outputs/20261009-agentic-economy/reviews/release.md",
+    "outputs/20261009-agentic-economy/source-evidence.md",
+    "outputs/20261009-agentic-economy/verification-inventory.md",
+    "outputs/20261009-agentic-economy/workflow-implementation.md"
+  ],
+  "reuse": "report.md and outputs/README.md links/line-budget passed in documentation lane; GREEN39/21"
+}

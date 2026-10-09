@@ -4,7 +4,7 @@
 
 ```xml
 <task>Implement lane <n>: <bounded outcome>.</task>
-<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: applicable high-workhorse inadequacy with context/spec/tool corrections and decomposition consideration, or explicit user direction></role_selection>
+<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: canonical-supported exact official task/priority with reasoning need and rejected cheaper/decomposed alternatives, applicable high-workhorse inadequacy with context/spec/tool corrections, or explicit user direction></role_selection>
 <scope><owned files/modules>; exclude <everything else>.</scope>
 <acceptance_criteria><numbered criteria></acceptance_criteria>
 <dependencies><completed lane contracts or none></dependencies>

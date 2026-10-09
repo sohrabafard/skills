@@ -106,7 +106,7 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Artifact profile. Default: resumable, because anything with more than one phase "
             "needs a checkpoint to survive compaction, a new session, or a fresh agent, and the "
-            "checkpoint costs about ten lines written at four moments. Choose direct deliberately "
+            "checkpoint records position at material events. Choose direct deliberately "
             "for genuinely single-phase bounded work."
         ),
     )

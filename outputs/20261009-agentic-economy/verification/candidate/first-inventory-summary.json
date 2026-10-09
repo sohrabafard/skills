@@ -1,0 +1,40 @@
+{
+  "overall_status": "PARTIAL - 2 product findings; final source snapshot/status closure deferred until targeted writer fix completes",
+  "observer": "independent verifier",
+  "configured_model": "gpt-6-luna",
+  "configured_effort": "low",
+  "requested_model_effort": "unspecified",
+  "observed_model_effort": "unknown",
+  "cwd": ".",
+  "head_before": "dbf81c370872cb578d2f656b62dc504d48694f5e",
+  "priority": "normal",
+  "runner_parallelism": 1,
+  "package_parallelism": 1,
+  "environment_override": "PYTHONDONTWRITEBYTECODE=1 (process-local)",
+  "commands_total": 14,
+  "commands_passed": 12,
+  "commands_product_failure": 2,
+  "commands_environment_blocked": 0,
+  "workflow_suite": "75 tests PASS, proof level 2, cited from prior run because all 16 workflow source hashes matched before inventory",
+  "source_inventory_files_before": 249,
+  "workflow_hash_differences_before_run": 0,
+  "after_hashes": "deferred by parent instruction while source correction is pending",
+  "findings": [
+    {
+      "command": "python -B skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "excerpt": "cross-runtime leak in scripts\\check_agent_contracts.py:184: 'claude'",
+      "log": "outputs/20261009-agentic-economy/verification/candidate/01-codex-validate-pack.log",
+      "exit_code": 1
+    },
+    {
+      "command": "python -B skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "excerpt": "cross-runtime leak in scripts\\check_agent_contracts.py:190: 'codex'; line 192: 'codex'",
+      "log": "outputs/20261009-agentic-economy/verification/candidate/02-claude-validate-pack.log",
+      "exit_code": 1
+    }
+  ],
+  "command_results": "outputs/20261009-agentic-economy/verification/candidate/command-results.json",
+  "initial_metadata": "outputs/20261009-agentic-economy/verification/candidate/run-metadata.json",
+  "logs": "outputs/20261009-agentic-economy/verification/candidate/",
+  "final_git_status": "deferred until fix/re-run"
+}
