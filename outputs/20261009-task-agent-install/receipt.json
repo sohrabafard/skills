@@ -1,0 +1,598 @@
+{
+  "date": "2026-10-09",
+  "repository": ".",
+  "source_git_head": "7b51799c428bcdc15a09ad145112b5cd42bef1e8",
+  "source_evidence_manifest": "outputs/20261009-task-model-routing/source-final.json",
+  "source_evidence_manifest_sha256": "85aaa99663ee63e28f3cd606328d55d84e23995b9c8ae5cfedf98feac15bdbce",
+  "targets": {
+    "claude_agent_directory": "CLAUDE_AGENT_HOME",
+    "codex_agent_directory": "CODEX_AGENT_HOME",
+    "claude_managed_count": 29,
+    "codex_orchestrator_managed_count": 33,
+    "codex_rule_writer_count": 1
+  },
+  "files": {
+    "claude": [
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-accessibility-reviewer.md",
+        "source_sha256": "904f992533134583947a61d942c24c3cf850c0af568bce5e59b457fe432606e1",
+        "installed_sha256": "904f992533134583947a61d942c24c3cf850c0af568bce5e59b457fe432606e1",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-accessibility-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-adversarial-reviewer.md",
+        "source_sha256": "ff09b2bd044d503c13845e03fb643946e6cc0e76e71327161cf071cf502b2150",
+        "installed_sha256": "ff09b2bd044d503c13845e03fb643946e6cc0e76e71327161cf071cf502b2150",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-adversarial-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-api-contract-reviewer.md",
+        "source_sha256": "7bfd68a723dc518dbb1a396d993a4baba662bcd214f3f8adf8eb924f69ef9633",
+        "installed_sha256": "7bfd68a723dc518dbb1a396d993a4baba662bcd214f3f8adf8eb924f69ef9633",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-api-contract-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-architecture-critic.md",
+        "source_sha256": "94c291dc2493fe4bfd87694ca9443a1a11a22f6c9fd909c506f1a4827ee7d08c",
+        "installed_sha256": "94c291dc2493fe4bfd87694ca9443a1a11a22f6c9fd909c506f1a4827ee7d08c",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-architecture-critic.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-browser-qa.md",
+        "source_sha256": "7ac3b4d59a41a00c8ffe41d6274066bfc4f016cfb025ed829cb1331ac5da6332",
+        "installed_sha256": "7ac3b4d59a41a00c8ffe41d6274066bfc4f016cfb025ed829cb1331ac5da6332",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-browser-qa.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-dependency-auditor.md",
+        "source_sha256": "d1b0f2cdf2ae8399b68001db70d2e4d77ec03e1a3fd1020c9dc1f5d5b9930781",
+        "installed_sha256": "d1b0f2cdf2ae8399b68001db70d2e4d77ec03e1a3fd1020c9dc1f5d5b9930781",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-dependency-auditor.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-documenter.md",
+        "source_sha256": "07be5dc1012c0a5c3945d5a9c1d34c2cfcd4f977861431f4215de34020e14602",
+        "installed_sha256": "07be5dc1012c0a5c3945d5a9c1d34c2cfcd4f977861431f4215de34020e14602",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-documenter.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-explorer.md",
+        "source_sha256": "0f52e0014805c9366287280a2ae4637879c97e9b1d9f4eff43f14e06d34a368b",
+        "installed_sha256": "0f52e0014805c9366287280a2ae4637879c97e9b1d9f4eff43f14e06d34a368b",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-explorer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-failure-analyst.md",
+        "source_sha256": "21109f8972bbad96970b8bf968063ab1eea8a9430601a7c7fac24bf605a11d8e",
+        "installed_sha256": "21109f8972bbad96970b8bf968063ab1eea8a9430601a7c7fac24bf605a11d8e",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-failure-analyst.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer-fable.md",
+        "source_sha256": "ea5944f96939543cbbfcd29a9373526b3753d25585858518d315408a414a64f7",
+        "installed_sha256": "ea5944f96939543cbbfcd29a9373526b3753d25585858518d315408a414a64f7",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer-fable.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer-haiku-high.md",
+        "source_sha256": "d2a889e5e1e48a9b861b434aee1ae0b946024a56179a1c265bc89609cb2b9e92",
+        "installed_sha256": "d2a889e5e1e48a9b861b434aee1ae0b946024a56179a1c265bc89609cb2b9e92",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer-haiku-high.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer-haiku.md",
+        "source_sha256": "0435448b99e4d3ede70e6e5226758e9cde2e412b47893f4ca479a2359f96b6bb",
+        "installed_sha256": "0435448b99e4d3ede70e6e5226758e9cde2e412b47893f4ca479a2359f96b6bb",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer-haiku.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer-opus-high.md",
+        "source_sha256": "be1d4e46a7dd86fd2661158a9c33a175879196919624aef4d38c93a4b1a6dd9d",
+        "installed_sha256": "be1d4e46a7dd86fd2661158a9c33a175879196919624aef4d38c93a4b1a6dd9d",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer-opus-high.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer-opus.md",
+        "source_sha256": "de2f984fa72c46c4270e97be1c456e5a567a14e79cfd4e45d589727a3e5101d3",
+        "installed_sha256": "de2f984fa72c46c4270e97be1c456e5a567a14e79cfd4e45d589727a3e5101d3",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer-opus.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer-sonnet-high.md",
+        "source_sha256": "7617d7f972e2aec53c7807194145132c46f9566d03b3297ab8bac54c31ebaefb",
+        "installed_sha256": "7617d7f972e2aec53c7807194145132c46f9566d03b3297ab8bac54c31ebaefb",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer-sonnet-high.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-implementer.md",
+        "source_sha256": "0ef91e9b83133eedbe6729029840ed6b821da9d244e8f29c07c57b14cfb5c1ef",
+        "installed_sha256": "0ef91e9b83133eedbe6729029840ed6b821da9d244e8f29c07c57b14cfb5c1ef",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-implementer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-instruction-reviewer.md",
+        "source_sha256": "ed71bbd5aacb981ae6664fc0f5a9d8d1615c7f36b3db19b0ec5264cdab02103c",
+        "installed_sha256": "ed71bbd5aacb981ae6664fc0f5a9d8d1615c7f36b3db19b0ec5264cdab02103c",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-instruction-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-migration-guardian.md",
+        "source_sha256": "3532938002f1f7093a1e20f4ac7ddc549fbbaf57f64025dbaed84e0252afdd95",
+        "installed_sha256": "3532938002f1f7093a1e20f4ac7ddc549fbbaf57f64025dbaed84e0252afdd95",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-migration-guardian.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-observability-reviewer.md",
+        "source_sha256": "4a1cbeb625746c708accbbfd9a18a12a4d2c9cbab99b3df22c735c1535e22d8b",
+        "installed_sha256": "4a1cbeb625746c708accbbfd9a18a12a4d2c9cbab99b3df22c735c1535e22d8b",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-observability-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-performance-profiler.md",
+        "source_sha256": "79ce2d0519388153e68f50c0a47e07f8b8c8bd5d6474a0a0f90b6b04a0f4ea02",
+        "installed_sha256": "79ce2d0519388153e68f50c0a47e07f8b8c8bd5d6474a0a0f90b6b04a0f4ea02",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-performance-profiler.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-planner-high.md",
+        "source_sha256": "0db651fdce76cf52da27c181182e43590143a1a83b9e274a16bba9e7b7d69215",
+        "installed_sha256": "0db651fdce76cf52da27c181182e43590143a1a83b9e274a16bba9e7b7d69215",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-planner-high.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-planner.md",
+        "source_sha256": "342b0540336044593be757759e9d8cebc3abe89b26e756ae6b06d4142db554db",
+        "installed_sha256": "342b0540336044593be757759e9d8cebc3abe89b26e756ae6b06d4142db554db",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-planner.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-release-guardian.md",
+        "source_sha256": "fe5fa60d6ef84d991b3063e6fd297cfff6e87df49fc12c8f3250d12da674dd27",
+        "installed_sha256": "fe5fa60d6ef84d991b3063e6fd297cfff6e87df49fc12c8f3250d12da674dd27",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-release-guardian.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-researcher.md",
+        "source_sha256": "718f744ab65e3e4ea7c9713abbe9ec1dbabc60a692d1afd5fd0ed1565392b275",
+        "installed_sha256": "718f744ab65e3e4ea7c9713abbe9ec1dbabc60a692d1afd5fd0ed1565392b275",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-researcher.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-reviewer.md",
+        "source_sha256": "c1d208e6f792dd156a66e7cd488d16fae393fcbbc1d9578276e52e8fac607c51",
+        "installed_sha256": "c1d208e6f792dd156a66e7cd488d16fae393fcbbc1d9578276e52e8fac607c51",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-security-reviewer.md",
+        "source_sha256": "258adb431fb118b30589769e5d7f8926e74ebee45c267c80773779c9841600ab",
+        "installed_sha256": "258adb431fb118b30589769e5d7f8926e74ebee45c267c80773779c9841600ab",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-security-reviewer.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-spec-analyst.md",
+        "source_sha256": "fa18660b0cdf69a4d4254f36a4a2ba6a110c21131559ead2aca61a5f00e6ce12",
+        "installed_sha256": "fa18660b0cdf69a4d4254f36a4a2ba6a110c21131559ead2aca61a5f00e6ce12",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-spec-analyst.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-test-strategist.md",
+        "source_sha256": "11d2516fe970d7884856d32658c4d0b407d0f628ed6877b0766afc457cd26e66",
+        "installed_sha256": "11d2516fe970d7884856d32658c4d0b407d0f628ed6877b0766afc457cd26e66",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-test-strategist.md"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md",
+        "installed_path": "CLAUDE_AGENT_HOME/alaa-verifier.md",
+        "source_sha256": "97aeb5d46fe475f177401a3648579f91082a98997353978ff4e5b8974ee2d924",
+        "installed_sha256": "97aeb5d46fe475f177401a3648579f91082a98997353978ff4e5b8974ee2d924",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/claude/alaa-verifier.md"
+      }
+    ],
+    "codex": [
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-accessibility-reviewer.toml",
+        "source_template_sha256": "040d0446bc081bb353f83743ba03d3189a91641b7c3b4ac0a9bde528696fb5f0",
+        "installed_sha256": "7900d8b85cb09aed390b278ec023ba3da91cb2a81544494193fd8a222bc6954b",
+        "resolved_grant_materialization_sha256": "7900d8b85cb09aed390b278ec023ba3da91cb2a81544494193fd8a222bc6954b",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-accessibility-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-adversarial-reviewer.toml",
+        "source_template_sha256": "78552b81663c7ee11ffb1010e9fa4f24aa33507fa0f3fd3694a7f3caf436a77b",
+        "installed_sha256": "da58027d66ef3971eec2573b0ea56e40f1f86a3794da06839c16c674a93bba21",
+        "resolved_grant_materialization_sha256": "da58027d66ef3971eec2573b0ea56e40f1f86a3794da06839c16c674a93bba21",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-adversarial-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-api-contract-reviewer.toml",
+        "source_template_sha256": "bc15044b2beea3d3d0005729d88772a7a9d40e23dc228bdc34c09d8fdb91ef30",
+        "installed_sha256": "4d823ab85b356afef254d52738a978390e127f6253c9cc678ab4015e669f3b5e",
+        "resolved_grant_materialization_sha256": "4d823ab85b356afef254d52738a978390e127f6253c9cc678ab4015e669f3b5e",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-api-contract-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-architecture-critic.toml",
+        "source_template_sha256": "e1405186950d252e187c6c591220cafbc3f44b6a2d3ac83df83774cb10d9533a",
+        "installed_sha256": "d27313812b6145de38c6647594641c1c29d3ed477c46a3fffab241f8ecf9b147",
+        "resolved_grant_materialization_sha256": "d27313812b6145de38c6647594641c1c29d3ed477c46a3fffab241f8ecf9b147",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-architecture-critic.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-browser-qa.toml",
+        "source_template_sha256": "22bfbe73b3ae6c1d8a8bffced030ca0774bb9340302047efb03fdc5fd7c9c12e",
+        "installed_sha256": "55737d1ba96940760c78825687f8d7deff2b6a57726529d1d219c0af9a5db41b",
+        "resolved_grant_materialization_sha256": "55737d1ba96940760c78825687f8d7deff2b6a57726529d1d219c0af9a5db41b",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-browser-qa.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-dependency-auditor.toml",
+        "source_template_sha256": "7b52de1bb2fbacae1a15502a2db5be8330e0d765c3565dc0784084f341ef7b53",
+        "installed_sha256": "9280bf48afd09a8ac032faacc7719ed6b32d544fe8e11004d21287e6cad0a95d",
+        "resolved_grant_materialization_sha256": "9280bf48afd09a8ac032faacc7719ed6b32d544fe8e11004d21287e6cad0a95d",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-dependency-auditor.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-documenter.toml",
+        "source_template_sha256": "be069652b0e5ad2fd34185374e475c2dea4f91375c30942c3d880b9632ecdbe0",
+        "installed_sha256": "232ae925e057be5209c6afbd2039e4efcb5318361291877f207636f11198038c",
+        "resolved_grant_materialization_sha256": "232ae925e057be5209c6afbd2039e4efcb5318361291877f207636f11198038c",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-documenter.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-explorer.toml",
+        "source_template_sha256": "1c8286ef277bb8bb857848fba5c0cfd9919a20d77949db750aeb809410040af2",
+        "installed_sha256": "46b2eefa7ac7f4c1dd7dbcb929704a9cff6a3beee3bfc46cc41ee9550393ef87",
+        "resolved_grant_materialization_sha256": "46b2eefa7ac7f4c1dd7dbcb929704a9cff6a3beee3bfc46cc41ee9550393ef87",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-explorer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-failure-analyst.toml",
+        "source_template_sha256": "d88c56bc6fa4250a7604d20116132a6b5166dc9f9b606556f309c07c29536fdc",
+        "installed_sha256": "b25c99b1e7c74182be7eb42e14306f8dd2b5aa3217618b91080d06dda10cfe00",
+        "resolved_grant_materialization_sha256": "b25c99b1e7c74182be7eb42e14306f8dd2b5aa3217618b91080d06dda10cfe00",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-failure-analyst.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-astra-medium.toml",
+        "source_template_sha256": "1bf0ef6aa6657b193dd3bbb0b1d869ffb73111f0927bd334cf8f30bc9ab44736",
+        "installed_sha256": "82e909efa9f848b490e65d13912f4535e118b9528ac73433bc993ca6383ef51f",
+        "resolved_grant_materialization_sha256": "82e909efa9f848b490e65d13912f4535e118b9528ac73433bc993ca6383ef51f",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-astra-medium.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-astra-xhigh.toml",
+        "source_template_sha256": "ef0b1131fb8e9fdb99863d02d3ac399369008ee8a9bfd23c042ee730d2216cd6",
+        "installed_sha256": "62c6dc6d8be843afe1a89e7e9aa178b265b9f5291f567a89d7ece9c99e840c1d",
+        "resolved_grant_materialization_sha256": "62c6dc6d8be843afe1a89e7e9aa178b265b9f5291f567a89d7ece9c99e840c1d",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-astra-xhigh.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-astra.toml",
+        "source_template_sha256": "d690d5c065c840a2eff0874be651ddc089827e8d71bd87e631df57910d06a0be",
+        "installed_sha256": "3bdccf72c63ae2d8b1f0e69dca204a7531842a35eb8d60da0af1d5c2b9918342",
+        "resolved_grant_materialization_sha256": "3bdccf72c63ae2d8b1f0e69dca204a7531842a35eb8d60da0af1d5c2b9918342",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-astra.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-high.toml",
+        "source_template_sha256": "dfec98b10d2c863f7616a1a427fdcf8bfece4b04d53c2d75c3af1216a0298549",
+        "installed_sha256": "c22a1edc288ce66aca98324e62a93d530f8dda7c64cc8eb7b7a726f60cbdd068",
+        "resolved_grant_materialization_sha256": "c22a1edc288ce66aca98324e62a93d530f8dda7c64cc8eb7b7a726f60cbdd068",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-high.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-low.toml",
+        "source_template_sha256": "90c2298c92a31935923825a5506ed6003a1f27ae5e20621f75fdc5b951677572",
+        "installed_sha256": "17811161f3ab1840ab7bab48867206695031b9fc9715462ecf95de63609ed41a",
+        "resolved_grant_materialization_sha256": "17811161f3ab1840ab7bab48867206695031b9fc9715462ecf95de63609ed41a",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-low.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-luna-high.toml",
+        "source_template_sha256": "6f0bb099ece911cb53cd21c5ee2f39969689e760d764d9154459409661db5562",
+        "installed_sha256": "fd8eb0752ff3b82a8082d9f0aef350a2d828ffaa2a1e2df081ba2c4ab851a38c",
+        "resolved_grant_materialization_sha256": "fd8eb0752ff3b82a8082d9f0aef350a2d828ffaa2a1e2df081ba2c4ab851a38c",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-luna-high.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-luna-low.toml",
+        "source_template_sha256": "4104643cbead43ac4ffba60ab857ac65e45925303535866d9077a4c7140dcc22",
+        "installed_sha256": "5e0146307b072dc59a03ebd432554658d311ad30561dddfdb05b53d65efa361f",
+        "resolved_grant_materialization_sha256": "5e0146307b072dc59a03ebd432554658d311ad30561dddfdb05b53d65efa361f",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-luna-low.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-luna.toml",
+        "source_template_sha256": "18fd20ee89ef3758f2493cadced3280117fef4e61395efb01030683797aa6401",
+        "installed_sha256": "02e780e22c157de04398cccef486f48cdca82dfdb80fe2fdd59f05d097d1c49a",
+        "resolved_grant_materialization_sha256": "02e780e22c157de04398cccef486f48cdca82dfdb80fe2fdd59f05d097d1c49a",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-luna.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer-xhigh.toml",
+        "source_template_sha256": "d8d33eec8fb52852df978e01be7143765c306703014bcd7ebf7ccefcc796498c",
+        "installed_sha256": "af9e11180cce83b5fa1966c4a5c3decdada67daf81ec14b7cdfd39592c169914",
+        "resolved_grant_materialization_sha256": "af9e11180cce83b5fa1966c4a5c3decdada67daf81ec14b7cdfd39592c169914",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer-xhigh.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-implementer.toml",
+        "source_template_sha256": "685f0fe5595b25dcd681665081772a6675e5635f280ff9759819f8d025d71ac5",
+        "installed_sha256": "c6e2b20ac163d68961582cc819d3c12d7741ce7ab23c5f6112ff5db45feb1358",
+        "resolved_grant_materialization_sha256": "c6e2b20ac163d68961582cc819d3c12d7741ce7ab23c5f6112ff5db45feb1358",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-implementer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-instruction-reviewer.toml",
+        "source_template_sha256": "54fc06def7da6fcf1612e5dc77552ab87573cd9c4557a726ddde35a5b8eac166",
+        "installed_sha256": "3dbda69be2d8dca53e4449b814df759e88b821999c456a0d91363209eb433438",
+        "resolved_grant_materialization_sha256": "3dbda69be2d8dca53e4449b814df759e88b821999c456a0d91363209eb433438",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-instruction-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-migration-guardian.toml",
+        "source_template_sha256": "fe2dee1e8a599bea42467b8a8545fa1cf34952d58e9ca455fac6e462ba45cdf4",
+        "installed_sha256": "caba14c952db62e9ba59a410233261c709bf3561ef835741fb6867a8a3472659",
+        "resolved_grant_materialization_sha256": "caba14c952db62e9ba59a410233261c709bf3561ef835741fb6867a8a3472659",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-migration-guardian.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-observability-reviewer.toml",
+        "source_template_sha256": "8b2e24cd8a20be6eff1cf6b34030794016c10b482b9c916c97402fdcfb5018cb",
+        "installed_sha256": "841f3bc2bed5c0c328ea2c221b42cedd4b2829b831830434d0f36c20e9588e26",
+        "resolved_grant_materialization_sha256": "841f3bc2bed5c0c328ea2c221b42cedd4b2829b831830434d0f36c20e9588e26",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-observability-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-performance-profiler.toml",
+        "source_template_sha256": "f29d49589673950c12664a8da4d86a291a61aec007b8570ba278d9acbd0d6092",
+        "installed_sha256": "237edf008a453df00036d8369be99cc3008bbba881ba8b78b0fece612ef837ad",
+        "resolved_grant_materialization_sha256": "237edf008a453df00036d8369be99cc3008bbba881ba8b78b0fece612ef837ad",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-performance-profiler.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-planner-high.toml",
+        "source_template_sha256": "96e6fdf3aa0aee9785ea0ed3ee6d35755d808286dac790bdd1e5fbbd0495fdb8",
+        "installed_sha256": "10b0b1902ff289b99d860a0d0462b7246dd1b684aa17e201b223886221780653",
+        "resolved_grant_materialization_sha256": "10b0b1902ff289b99d860a0d0462b7246dd1b684aa17e201b223886221780653",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-planner-high.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-planner.toml",
+        "source_template_sha256": "812b76b8d7b78a3ac7156f713e92eae5cf6a9362cfe2e6763c5453ac23d2ba29",
+        "installed_sha256": "57f35a499da25f1179ee36ac79ba192f5394e73b9de66dd41da447eee234aeae",
+        "resolved_grant_materialization_sha256": "57f35a499da25f1179ee36ac79ba192f5394e73b9de66dd41da447eee234aeae",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-planner.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-release-guardian.toml",
+        "source_template_sha256": "75dcd6f09c4adbe88a153c8f2263298b9f9842b550774a98627ee8e0b4ce575b",
+        "installed_sha256": "06fba646ca21c78abca75b53d5f513b593b8cd2252461fe24af38c93072cfe5d",
+        "resolved_grant_materialization_sha256": "06fba646ca21c78abca75b53d5f513b593b8cd2252461fe24af38c93072cfe5d",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-release-guardian.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-researcher.toml",
+        "source_template_sha256": "8c0c7da334b619d7b549cb43ec803ce40347202c7054da03b32f81af67e9235d",
+        "installed_sha256": "ddf4f1516f19d0a45cdb3313568d41a1af9331150c6b04b1ea99ae67953ef152",
+        "resolved_grant_materialization_sha256": "ddf4f1516f19d0a45cdb3313568d41a1af9331150c6b04b1ea99ae67953ef152",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-researcher.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-reviewer-deep.toml",
+        "source_template_sha256": "9923c06d4f8e2b3657925f0b04f90a060c1bbe843f932547563626f64b546b47",
+        "installed_sha256": "8662d9cdfabf1c001840ac14191ce514f7725f7e67b397e76c9d7fc5154d3cdd",
+        "resolved_grant_materialization_sha256": "8662d9cdfabf1c001840ac14191ce514f7725f7e67b397e76c9d7fc5154d3cdd",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-reviewer-deep.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-reviewer.toml",
+        "source_template_sha256": "fbfb50295c045c7f1db4458f72b7f0b720fab6fa711beeab8e764ded88ab4142",
+        "installed_sha256": "371c233d8d1207add5c3e10cc31fb0ea0a979287a6e2477a4017a307942c5694",
+        "resolved_grant_materialization_sha256": "371c233d8d1207add5c3e10cc31fb0ea0a979287a6e2477a4017a307942c5694",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-security-reviewer.toml",
+        "source_template_sha256": "5a1837b6a37f81f5ad6ae86ffe6bd56678027b736785f3ac47fda8b3faa5e655",
+        "installed_sha256": "d0cd32e6cf0b196f52423af4d499299d1fe3be54d5e2467df962fd9ed33c6ebc",
+        "resolved_grant_materialization_sha256": "d0cd32e6cf0b196f52423af4d499299d1fe3be54d5e2467df962fd9ed33c6ebc",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-security-reviewer.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-spec-analyst.toml",
+        "source_template_sha256": "5ec52099a2ceaa875757d7a4713caad5a50722e4c178b0cd1c724e8c483b3a9c",
+        "installed_sha256": "236eed0c9b5e8d6033945c512e555749e97c261be15844961271587c9d8c1b9b",
+        "resolved_grant_materialization_sha256": "236eed0c9b5e8d6033945c512e555749e97c261be15844961271587c9d8c1b9b",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-spec-analyst.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-test-strategist.toml",
+        "source_template_sha256": "ed68072f5ea238149e72431fd0d28fd3d598404ee04a30d5f153e3d06c5c2d17",
+        "installed_sha256": "7c61b3e708454371eb835ff99d893e0b0cb3af5d63de33cc02647afdaa9a1d73",
+        "resolved_grant_materialization_sha256": "7c61b3e708454371eb835ff99d893e0b0cb3af5d63de33cc02647afdaa9a1d73",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-test-strategist.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-verifier.toml",
+        "source_template_sha256": "fb7d2aed405f750bf471f2d58f72d70934116ac6c49ab12dc0b84421b4477eb9",
+        "installed_sha256": "a19c46e0c53bbe20ac31d4f5087850c4e2e2a1b838bc5738658e46cea3faa218",
+        "resolved_grant_materialization_sha256": "a19c46e0c53bbe20ac31d4f5087850c4e2e2a1b838bc5738658e46cea3faa218",
+        "resolved_hash_matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-verifier.toml"
+      },
+      {
+        "source_path": "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml",
+        "installed_path": "CODEX_AGENT_HOME/alaa-rule-writer.toml",
+        "source_template_sha256": "a89c8a66f5b12b816a66ea6e49909df708e3d2432bb0a2a62402d93acc679d8e",
+        "installed_sha256": "a89c8a66f5b12b816a66ea6e49909df708e3d2432bb0a2a62402d93acc679d8e",
+        "matches": true,
+        "backup_path": "CACHE_ROOT/codex-agent-install-backups/20261009/codex/alaa-rule-writer.toml"
+      }
+    ]
+  },
+  "backup_root": "CACHE_ROOT/codex-agent-install-backups/20261009",
+  "backup_count": 63,
+  "settings_sha256": {
+    "before": {
+      "codex": "05425792c8f69f7f0df2e263f86877afcb576f1c50132b03f68b41f776d0055c",
+      "claude": "89df3a00cec3ef582fe369bea3390974b58239dab957168c36c46ecc9f600d6f"
+    },
+    "after": {
+      "codex": "05425792c8f69f7f0df2e263f86877afcb576f1c50132b03f68b41f776d0055c",
+      "claude": "89df3a00cec3ef582fe369bea3390974b58239dab957168c36c46ecc9f600d6f"
+    }
+  },
+  "checks": {
+    "claude_source_pack": "PASS: validate_pack.py (29 agents, v5.3.0)",
+    "claude_source_grants": "PASS: 29 agents",
+    "claude_installed_grants": "PASS: 29 selected files",
+    "codex_installer": "PASS: 33 templates; 33 resolved agents across 7 live MCP servers",
+    "codex_postcheck": "PASS: fresh materialization hashes match all 33 installed orchestrator files",
+    "codex_policy": "PASS: 34 model-neutral agent files",
+    "codex_rule_writer_grants": "PASS",
+    "claude_full_directory_policy": "FAIL: legacy alaa-rule-writer.md has executable model and effort defaults",
+    "parent_independent_postcheck": "PASS: parent read-only check confirmed all 34 Codex and 29 Claude installed managed files match expected source/materialized definitions; no writes"
+  },
+  "claude_rule_writer": {
+    "status": "BLOCKED",
+    "installed_path": "CLAUDE_AGENT_HOME/alaa-rule-writer.md",
+    "current_sha256": "a2a4ccf6f9786bea27eb175bed28b7aaf430e33f4cc8753965d3d46ff06dc6ce",
+    "reason": "Current prompting-guide and install-skills instructions require plugin-root packaging and forbid a loose Claude wrapper. No local plugin build/install artifact or plugin-store copy for this agent exists in this checkout/runtime. Existing managed loose wrapper was preserved; it is not certified current.",
+    "instruction_sources": [
+      "skills/sohrab/alaa-prompting-guide/SKILL.md:21",
+      "install-skills.md:230-234"
+    ],
+    "source_lookup": "No Claude plugin manifest/build/install artifact found in the scoped checkout or user plugin store; no loose-file refresh performed"
+  },
+  "runtime": {
+    "claude_cli_version": "2.1.294",
+    "codex_cli_version": "codex-cli 0.162.0",
+    "loaded_context": "not verified",
+    "model_dispatch": "not verified"
+  },
+  "backup_metadata_count": 1
+}
