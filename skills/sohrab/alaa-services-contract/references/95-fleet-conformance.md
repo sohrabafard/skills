@@ -105,7 +105,10 @@ Corrections to note, because the evidence did not support the first reading:
   *Second pass*: every name in `comment`'s `app/Support/Observability/MetricCatalog.php:18-125` begins
   `alaa_`, so `comment` conforms on the prefix. *Second pass*: `entitlement-platform` does **not** conform —
   `services/entitlement-api/internal/observability/metrics.go:93-196` registers fifteen `entitlement_*`
-  names and the sidecar registers eight `authz_sidecar_*` names, none of them prefixed. The kit's bare names
+  names and the sidecar registers eight `authz_sidecar_*` names, none of them prefixed. 2026-10-09: the
+  nineteen projection-worker metrics of `entitlement-api` (`internal/observability/projection_metrics.go`)
+  are renamed to `alaa_entitlement_projection_*` on an unmerged local branch and registered in
+  `24-metric-registry.md`; the fifteen `entitlement_*` names above stay non-conforming. The kit's bare names
   are quoted and confirmed. `gateway` and `wa` metric names remain UNDETERMINED.
 - #10: *second pass*: `comment` and `content` both emit an object keyed by check name **and** carry
   `required` inside each item — `comment/app/Support/Operations/OperationalStatusService.php:216-236` and
