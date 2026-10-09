@@ -3,7 +3,7 @@
 Use for current Fable prompting. `references/40-fable-5.md` preserves the
 older generation's guidance for historical comparison only. Read the structured Claude
 policy before selecting a profile; availability and a vendor ranking do not prove a
-workload-specific advantage. The policy assigns Fable to difficult judgment roles as unrun starting hypotheses. Explicit comparisons may test those hypotheses after diagnosing context and tools; no source claim proves local superiority.
+workload-specific advantage. The runtime orchestrator chooses Fable only from actual task evidence; a difficult role title grants no automatic choice. Explicit comparisons may test those hypotheses after diagnosing context and tools; no source claim proves local superiority.
 
 ## Prompting
 

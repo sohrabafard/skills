@@ -1,19 +1,19 @@
 # Claude Sonnet 5.5
 
 Use for current Sonnet prompting and migration. `assets/claude-model-policy.json` owns
-role pins, capability snapshots and availability; `references/30-sonnet-5.md` is historical.
+role identity, capability snapshots and availability; `references/30-sonnet-5.md` is historical.
 Source checks do not prove account access, runtime activation or workload quality.
 
 ## Prompting and effort
 
-Claude Code and Claude apps default to `medium`; Platform/API defaults to `high`. These surface defaults are not interchangeable agent pins. Begin comparisons at `medium` for well-specified agentic work and
-`high` for harder or longer tasks. Effort levels were recalibrated: retained role pins are
+Claude Code and Claude apps default to `medium`; Platform/API defaults to `high`. These surface defaults are not task choices. Begin comparisons at `medium` for well-specified agentic work and
+`high` for harder or longer tasks. Effort levels were recalibrated: workload recommendations are
 unrun hypotheses, not inherited calibration. Use `references/50-effort-and-thinking.md`
 for controlled comparisons; raise effort only after excluding context, tool and specification gaps.
 
-The launch reports high-effort Sonnet approaching Opus on some work at similar cost; it proves no universal local equivalence. Medium and high remain distinct useful profiles. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking; higher effort can change tool behavior without improving acceptance.
+The launch reports high-effort Sonnet approaching Opus on some work at similar cost; it proves no universal local equivalence. Medium and high remain distinct supported task settings. In two reported benchmark cases, max underperformed xhigh because extra reviewer subagents caused timeouts or out-of-scope edits. Treat this as a workload-specific caveat, not a universal effort ranking; higher effort can change tool behavior without improving acceptance.
 
-Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. Use the runtime routing matrix for admission and the canonical policy for pins. Materially coupled unresolved design goes to the registered Opus route.
+Everyday coding can involve bounded local decisions; it need not be transcription of a fully settled patch. Use the runtime orchestrator routing matrix for task allocation/admission and canonical policy for supported pairs. The orchestrator decides the route for materially coupled unresolved design.
 
 Do not turn thinking-reminder removal into a blanket ban. The Sonnet prompting page specifically permits private reasoning before a strict JSON answer when that improves structured-output reliability. This is a task-specific exception, never authority to disclose private chain-of-thought. Preserve the required JSON schema and evaluate the change on that workload.
 

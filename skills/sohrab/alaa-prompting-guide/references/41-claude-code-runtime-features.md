@@ -1,7 +1,7 @@
 # Claude Code Runtime Features
 
 Model/API capabilities do not establish harness support. This file owns Claude Code selection
-and activation mechanics; the structured policy owns executable role pins. Refresh official
+and activation mechanics; the structured policy registers model-neutral role identities and capabilities. Refresh official
 runtime documentation against the actual CLI version before depending on a feature.
 
 ## Current model, effort and identity resolution
@@ -9,7 +9,7 @@ runtime documentation against the actual CLI version before depending on a featu
 Verified 25 September 2026 against model-config and sub-agents. Full API IDs pin versions;
 family aliases roll and can resolve differently by provider, parent model or gateway.
 Provider deployment mappings are separate runtime evidence, not aliases accepted by the policy.
-The policy records sourced minimum versions for assigned profiles. Haiku 5.5 requires Claude Code 2.1.293; unlike its API disabled-thinking exception, Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
+The policy records sourced model minimum versions. Haiku 5.5 requires Claude Code 2.1.293; unlike its API disabled-thinking exception, Code prevents switching thinking off for it (verified 8 October 2026 against model-config). A newer installed CLI alone proves neither account entitlement nor activation.
 
 For session selection, inspect explicit /model choice, startup --model, ANTHROPIC_MODEL,
 settings and ANTHROPIC_DEFAULT_MODEL, plus managed allowlists and host overrides. /model can
@@ -22,10 +22,7 @@ model environment target, or the parent when no target is set. Forks and skills 
 model: inherit retain documented exceptions; inspect them before claiming a pin won. Resolve inherit and family aliases on the target provider.
 Allowlists may substitute a different model. Requested selection is not observed identity.
 
-Frontmatter effort overrides session effort but remains subject to environment override,
-model support and effective caps. Unsupported levels may step down. Opus 5.5's default differs
-from older models, and legacy top-level user effortLevel has a documented exception; inspect
-per-model settings and effective effort instead of extrapolating a saved value.
+Verified 9 October 2026: since 2.1.292, non-fork invocation effort overrides frontmatter/session effort and persists on resume. `CLAUDE_CODE_EFFORT_LEVEL` supersedes invocation and frontmatter; model support and effective caps can step down unsupported levels. Managed roles omit model and effort, so dispatch must explicitly provide BOTH controls on that verified surface. Inspect force/environment/hook/provider resolution; omitted pins alone prove neither pair. Older/forked/unsupported surfaces require an available exact verified realization or a blocked affected lane, never inheritance as selection. Main-session configuration stays external.
 
 Record requested profile/model/effort and resolved controls separately from observed serving
 model/effort. Use unknown where the host exposes no observation. Session/subagent status and
@@ -191,6 +188,6 @@ Ultraplan is documented as a research preview with no stated minimum version; do
 
 - [Model configuration](https://code.claude.com/docs/en/model-config)
 
-## Managed direct-selection profiles
+## Managed task-selected authority roles
 
-The runtime orchestrator renders standalone implementation and planner variants from one editable contract per role family. `scripts/render_agents.py --write` supplies pins only from this skill's canonical policy; `--check` rejects drift. Select the exact registered variant, not a caller effort override that custom metadata ignores. Planning inline requires verified compatible configured controls; a planner draft remains advisory and the parent owns the durable plan. Subagent YAML model and effort realize the selected pair; environment settings and effort caps may override them. No per-call Agent effort override is assumed without current supported-interface evidence. Static agreement proves source configuration, not runtime identity or model obedience.
+The runtime orchestrator renders model-neutral definitions for every managed authority role. `scripts/render_agents.py --check` rejects source drift without claiming activation. The capability policy registers roles and supported pairs; the orchestrator chooses each actual task model AND effort and checks effective overrides. Existing model/effort-named IDs are compatibility names only. Source consistency cannot prove loaded registration, account access or serving identity. A planner draft remains advisory; main controls remain externally configured.

@@ -1,6 +1,6 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
+The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. All role definitions omit model and effort pins. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
 
 The manifest lists the executable agents available in this source pack.
 
@@ -21,7 +21,7 @@ The manifest lists the executable agents available in this source pack.
 |---|---|---|---|
 | `alaa-implementer` | workspace-write | Everyday grounded coding with bounded local decisions. | Self-review or unrecorded profile admission |
 | `alaa-implementer-opus` | workspace-write | Materially coupled unresolved system decisions. | Self-review or unrecorded profile admission |
-| `alaa-implementer-fable` | workspace-write | Only documented applicable Opus-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
+| `alaa-implementer-fable` | workspace-write | Compatibility implementation identity; exceptional model selection requires the all-role task admission. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
 | `alaa-implementer-sonnet-high` | workspace-write | Harder or longer grounded work with bounded local decisions. | Self-review or unrecorded profile admission |
 | `alaa-implementer-opus-high` | workspace-write | Interacting unresolved design decisions and demanding system reasoning. | Self-review or unrecorded profile admission |
 | `alaa-implementer-haiku` | workspace-write | Exact mechanical edits or bounded semantic work with settled local cause, named scope, invariants and regression checks | Mechanical branch: semantic discretion or design changes; both branches: ambiguous scope, interacting design or wider authority |

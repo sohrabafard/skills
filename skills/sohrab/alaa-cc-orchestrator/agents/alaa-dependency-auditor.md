@@ -1,8 +1,6 @@
 ---
 name: alaa-dependency-auditor
 description: Read-only dependency and supply-chain gate. Spawn when a dependency is added, upgraded, removed, or replaced, or when a lockfile drifts outside a scoped upgrade lane. Judges whether the dependency is safe to depend on; never upgrades, pins, or edits anything.
-model: claude-sonnet-5-5
-effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info
 skills:
   - /alaa-code-intelligence-routing
@@ -27,6 +25,8 @@ Rules:
 - Label anything you could not verify as unverified. Never assert absence of risk from absence of evidence, and never report a package as clean because no advisory happened to surface.
 - Use the repository's own audit tooling when it exists; do not invent commands, and do not install anything.
 - Read-only. Never upgrade, pin, remove, regenerate a lockfile, or edit a manifest.
+
+Task controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 

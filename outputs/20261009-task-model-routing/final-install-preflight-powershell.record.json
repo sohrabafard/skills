@@ -1,0 +1,16 @@
+{
+  "command": "python -B scripts\\test_install_preflight.py --scratch-dir CACHE_ROOT/task-model-routing-install-powershell-final-20261009 --shell powershell --executable pwsh",
+  "cwd": "skills/sohrab/alaa-codex-orchestrator",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+  "startUtc": "2026-10-09T16:00:35.6399784Z",
+  "endUtc": "2026-10-09T16:00:46.9891350Z",
+  "durationSeconds": 11.349,
+  "exitCode": 0,
+  "scratch": "CACHE_ROOT/task-model-routing-install-powershell-final-20261009",
+  "executable": "pwsh.exe (PATH-resolved)",
+  "stdout": "outputs/20261009-task-model-routing/final-install-preflight-powershell.stdout.log",
+  "stderr": "outputs/20261009-task-model-routing/final-install-preflight-powershell.stderr.log"
+}

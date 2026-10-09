@@ -1,6 +1,6 @@
 # Effort and Thinking: A Cross-Model Decision Procedure
 
-Owns effort selection across supported models/runtimes. The target model reference owns its levels; this file owns choosing among them.
+Owns cross-runtime effort evidence and control validation. Model references own supported levels; runtime orchestrators own actual task choices.
 
 ## The two levers do different jobs
 
@@ -28,39 +28,20 @@ Read the target's reference for supported levels, default and workload starting 
 
 ## The decision procedure
 
-1. **Classify missing facts before judgment.** Retrieve or clarify absent context, tool capability or product intent; a stronger model does not supply missing evidence.
-2. **Plan with the appropriate strong-workhorse profile.** Clear scope/contracts/constraints fit medium planning; resolving interacting uncertainties to form the plan fits high. Use verified compatible lead controls or a real read-only planner.
-3. **Allocate implementation once after plan finalization**, through `references/90-model-selection.md`. Record scope, settled/open decisions, invariant/failure reasoning and the exact source-row/priority/profile reason. Its priority procedure owns when a concrete consequence justifies higher quality; that does not prove greater complexity. Planning and worker effort are independent. Runtime matrices own admission; canonical policies own pins.
-4. **Admit exceptional implementation through its runtime's route.** Codex's exact source-matched branch follows `references/90-model-selection.md`; outside it require applicable high-effort workhorse inadequacy after context/spec/tool correction and consideration of decomposition, or explicit user model selection. Claude Fable keeps that inadequacy/explicit-selection boundary. Complexity, sensitivity, file/failure count and imagined inadequacy alone do not qualify. Reuse prior applicable evidence; no trial ladder, synthetic benchmark or replay.
-5. **Keep selection and calibration separate.** Controlled comparisons vary one factor at a time with task/context/tools/acceptance held constant; compare cost only among passing runs. Local profile rationales remain unrun until measured. A task selection does not require a new experiment.
-6. **Realize the actual controls.** Verify runtime availability, caps and override precedence. A custom profile may ignore caller model/effort; prose never changes the running configuration. Reassess only at existing material-scope/fix-follow-up boundaries and preserve completed work and independent gates.
+1. **Resolve missing evidence.** Retrieve or clarify absent context, capability or intent; a different model does not supply missing facts.
+2. **Obtain the task selection from its owner.** The runtime orchestrator selects model AND effort for each authority role through its routing matrix, using `references/90-model-selection.md` as evidence. Planning and implementation are separate actual tasks; role names and vendor defaults do not allocate them.
+3. **Validate capabilities and realization.** Check both explicit controls against the structured capability policy and actual host. Inspect loaded definitions, pins, fork restrictions, force/environment/provider overrides and caps. Missing, unsupported or mismatched controls block the affected lane; use only an available exact verified compatibility realization, never invented fallback.
+4. **Separate selection from calibration.** Comparisons hold task/context/tools/authority/acceptance constant and vary one factor. Compare cost only among passing outcomes. Recommendations and selected pairs remain unmeasured until task-specific evidence exists; selection requires no paid experiment or replay.
+5. **Preserve authority.** Model controls change neither scope, tools, verdict responsibilities nor independent gates. Main-session configuration stays external. Source consistency does not prove installed activation or observed serving identity.
 
-## Codex profiles and exceptions
 
-`assets/codex-model-policy.json` is the canonical Codex role-to-model/effort policy. The
-validator compares every executable pin to that file. No Codex model-tier ceiling applies:
-supported levels describe capability, while a selected level is a workload hypothesis.
-Default profiles never use `max` or `ultra`; this is local cost policy, not a vendor limit.
-A named non-default experiment may use a supported higher level with a stated need and
-recorded evidence, without changing the default profiles.
+## Capability registries and realized controls
 
-GPT-5.6 is allowed only through a matching `legacy_exceptions` entry recording profile,
-model, effort, reason, scope, evidence, review condition, approver, and approval date. Evidence
-must show a representative quality advantage or a verified availability constraint. Add
-current target-host supported-effort evidence before registering a legacy model. No exception
-is active by default. An unavailable requested model is reported; never substitute silently.
+The structured Codex/Claude policies register neutral role identities and supported pairs. Supported levels are capabilities, not task recommendations or role-wide ceilings. Historical entries do not authorize active selection. The runtime orchestrator owns actual task admission, priority and deliberate departures; this skill validates controls without allocating work.
 
-A custom TOML pin cannot be overridden by assuming a spawn parameter wins. Select a registered
-profile with the required pin; if none exists, report the selection limit or obtain authority
-for a configuration change. Read `references/11-codex-runtime-features.md` for precedence.
+Stale executable pins can defeat caller controls. Read the target runtime reference and verify the loaded definition, explicit pair and effective resolution. A source edit does not reload the current registry. Use an available exact verified realization or block the affected lane; never silently substitute or change installed configuration. Unknown observed identity is a reporting limit when configured resolution is established, not a requirement for paid probing.
 
-Unrun profiles remain `calibration_status: unrun`; evaluated profiles require an evidence
-pointer. `references/92-agent-evaluation.md` defines the comparison corpus and evidence fields.
-For Claude, `assets/claude-model-policy.json` is the separate canonical owner. Its supported
-levels are capabilities, not a blanket ceiling or a recommendation to maximize effort.
-Unrun is the initial calibration state; evaluated requires validated, matching runtime
-comparison evidence. Read `references/41-claude-code-runtime-features.md` before relying on
-model/effort override precedence or claiming activation.
+Task comparisons stay separate evidence through `references/92-agent-evaluation.md` or `references/93-claude-evaluation.md`. They calibrate only the recorded task/pair; no role-default model/effort or automatic selection follows.
 
 ## Effort is not the only cost lever
 
@@ -71,7 +52,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 - Carrying an effort level forward from a previous model generation without revalidating current guidance and honestly retaining unrun calibration status; task selection does not require an experiment.
 - Disabling thinking to control cost instead of lowering effort, then writing repair instructions for the resulting behavior.
 - Treating lower effort as a reliable verbosity or scope control instead of specifying the required output and boundaries.
-- Arbitrary model/effort escalation from a vague importance or sensitivity label; documented consequence may select quality priority only through the allocation owner.
+- Arbitrary model/effort escalation from a vague importance or sensitivity label; record consequence and priority through the runtime orchestrator allocation owner.
 - Pinning maximum effort by habit without measured quality benefit and a stated workload need.
 - Treating a supported effort as proof it is appropriate, or changing model and effort together in a comparison.
 - Setting an explicit thinking budget on a generation that no longer accepts one.
@@ -81,7 +62,7 @@ Before raising effort, resolve prompt bloat and missing context. Vendor lean-pro
 
 ## Caveats
 
-Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive; effort level names, per-model defaults, and starting-point recommendations are not restated here — read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures are from a specific vendor's internal testing on a specific generation and should not be generalized. Re-read the sources below before hard-coding any of these anywhere, and distinguish local pin policy from vendor capability.
+Thinking-disable constraints and the availability of manual thinking budgets are vendor-stated and time-sensitive; effort level names, per-model defaults, and starting-point recommendations are not restated here — read the target model's own file, which is the current source for its own numbers. The measured lean-prompt figures are from a specific vendor's internal testing on a specific generation and should not be generalized. Re-read the sources below before hard-coding any of these anywhere, and distinguish orchestrator task policy from vendor capability.
 
 ## Sources
 

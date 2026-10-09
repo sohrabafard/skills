@@ -15,7 +15,7 @@ Before role inspection or planning, route a single bounded edit whose correctnes
 
 ## Plan and allocation
 
-Before planning apply `references/routing-matrix.md` Planning profile selection. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
+Before planning apply `references/routing-matrix.md` Planning profile selection and All-role task allocation. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
 
 ## When NOT to use
 
@@ -33,7 +33,7 @@ Before planning apply `references/routing-matrix.md` Planning profile selection.
 
 Activation grants no installation or update authority. Inspect the installed role definitions, version, and effective tool permissions without writing files. Compare the roles needed for this goal with the shipped definitions; report missing, stale, or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work whose required roles are available; report the rest blocked.
 
-Install or update only with explicit user authorization for the target paths. Validate source pins, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
+Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
 
 Inspect the effective sandbox, parent overrides, and MCP grants before relying on isolation. A declared read-only role does not prove runtime enforcement. If effective permissions cannot be observed, report them unknown and keep operations within the role restriction.
 
@@ -53,7 +53,7 @@ In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts
 
 ## 2. Lead-session contract
 
-Read /alaa-prompting-guide for lead-session model and effort policy. Report configured/requested settings separately from observed identity; unobservable values stay unknown.
+Use `references/routing-matrix.md` for the actual lead-session task selection and /alaa-prompting-guide for current capabilities and control mechanics. Report configured/requested settings separately from observed identity; unobservable values stay unknown.
 
 The lead owns goal normalization and scope control; repository-aware lane planning; agent selection and dispatch authorization; cross-lane reconciliation; verification and review gates; specialist-trigger decisions; and final truthfulness and stopping.
 
@@ -83,7 +83,7 @@ The direct-reference router below selects role, dispatch and gate owners. `refer
 
 ## 4. Model and role routing
 
-`references/model-effort-policy.md` routes capability and pin policy to /alaa-prompting-guide. This pack owns role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
+`references/model-effort-policy.md` routes capabilities and control mechanics to /alaa-prompting-guide. Apply all-role task allocation in `references/routing-matrix.md` for EVERY dispatch. This pack owns actual model AND effort choices, role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
 
 Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`; record the deep-review trigger without creating a duplicate review lane.
 

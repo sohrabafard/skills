@@ -13,6 +13,8 @@ from claude_model_policy import (AGENT_DIR, ARTIFACTS, DEFAULT_POLICY, REPO_ROOT
     SKILL_ROOT, WRITER_DIR, CannotRun, digest, load_policy, read_json,
     validate_agent_pin, validate_policy)
 
+from task_model_controls import selection_self_test
+
 FIXTURES = SKILL_ROOT / "scripts/fixtures/claude-policy"
 
 
@@ -62,16 +64,6 @@ def check(policy_path, roots=None):
     tracked = [Path(policy_path), *paths]
     before = {path: digest(path) for path in tracked}
     policy = read_json(policy_path)
-    if isinstance(policy, dict) and isinstance(policy.get("profiles"), dict):
-        from claude_model_policy import relative_file
-        for profile in policy["profiles"].values():
-            if isinstance(profile, dict) and profile.get("calibration_status") == "evaluated":
-                evidence = relative_file(profile.get("evaluation_evidence"))
-                if evidence is not None and evidence.is_file():
-                    before[evidence] = digest(evidence)
-        corpus = SKILL_ROOT / "assets/evals/claude-agent-comparisons.json"
-        if any(isinstance(p, dict) and p.get("calibration_status") == "evaluated" for p in policy["profiles"].values()):
-            before[corpus] = digest(corpus)
     policy_errors = validate_policy(policy)
     if policy_errors:
         return policy_errors, len(paths)
@@ -119,34 +111,18 @@ def self_test():
         assert not case.get("cannot_run"), case["name"]
         assert bool(errors) == case["findings"], (case["name"], errors)
         count += 1
-    role = "alaa-rule-writer"
-    good = {"name": role, "model": policy["profiles"][role]["model"], "effort": policy["profiles"][role]["effort"]}
-    assert not validate_agent_pin(good, policy, role + ".md")
-    for key, value in (("model", "opus"), ("effort", "adaptive"), ("name", "unknown")):
-        assert validate_agent_pin({**good, key: value}, policy, role + ".md")
-    assert validate_agent_pin(good, policy, "alaa-reviewer.md")
-    haiku = copy.deepcopy(policy)
-    haiku["profiles"][role].update(model="claude-haiku-4-5-20251001", effort=None)
-    assert any("minimum_claude_code" in error for error in validate_policy(haiku))
-    # Hypothetical source evidence for a schema-only fixture, not a claimed Haiku version.
-    haiku["models"]["claude-haiku-4-5-20251001"]["minimum_claude_code"] = "0.0.0"
-    assert not validate_policy(haiku)
-    assert not validate_agent_pin({"name":role, "model":"claude-haiku-4-5-20251001"}, haiku, role + ".md")
-    assert validate_agent_pin({"name":role, "model":"claude-haiku-4-5-20251001", "effort":None}, haiku, role + ".md")
-    current_haiku = copy.deepcopy(policy)
-    current_haiku["profiles"][role].update(model="claude-haiku-5-5", effort="medium")
-    current_haiku["profiles"][role]["availability"]["minimum_claude_code"] = "2.1.293"
-    assert not validate_policy(current_haiku)
-    assert not validate_agent_pin({"name":role, "model":"claude-haiku-5-5", "effort":"medium"}, current_haiku, role + ".md")
-    current_haiku["profiles"][role]["effort"] = None
-    assert validate_policy(current_haiku), "Haiku 5.5 requires a supported effort"
-    bounded_high = "alaa-implementer-haiku-high"
-    high_pin = {"name": bounded_high, "model": "claude-haiku-5-5", "effort": "high"}
-    assert not validate_agent_pin(high_pin, policy, bounded_high + ".md")
-    assert validate_agent_pin({**high_pin, "effort": "medium"}, policy, bounded_high + ".md")
-    missing_high = copy.deepcopy(policy)
-    del missing_high["profiles"][bounded_high]
-    assert any("coverage" in error for error in validate_policy(missing_high))
+    pairs = ({"model":"claude-haiku-5-5","effort":"medium"}, {"model":"claude-sonnet-5-5","effort":"high"})
+    roles = selection_self_test(policy, pairs)
+    for role in ARTIFACTS:
+        good = {"name":role}
+        assert not validate_agent_pin(good, policy, role + ".md")
+        for key,value in (("model","claude-fable-5-1"),("effort","high"),("model_reasoning_effort","low")):
+            assert validate_agent_pin({**good,key:value},policy,role + ".md")
+        assert validate_agent_pin(good,policy,"unknown.md")
+        missing=copy.deepcopy(policy);del missing["profiles"][role]
+        assert any("coverage" in error for error in validate_policy(missing))
+    from task_model_controls import validate_task_selection
+    assert validate_task_selection("alaa-rule-writer",{"model":"claude-haiku-4-5-20251001","effort":"high"},policy)
     for filename in ("duplicate.json", "malformed.json"):
         try:
             read_json(FIXTURES / filename)
@@ -163,7 +139,7 @@ def self_test():
             raise AssertionError(f"accepted ambiguous YAML: {path}")
     for value in ([], True, None):
         assert validate_policy(value)
-    print(f"OK: {count} policy/parser fixtures plus pin/coverage cases; static proof only")
+    print(f"OK: {count} policy/parser fixtures plus {roles} all-role control/pin/coverage cases; static proof only")
 
 
 def main():

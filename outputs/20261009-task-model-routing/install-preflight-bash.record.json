@@ -1,0 +1,16 @@
+{
+  "command": "python -B scripts\\test_install_preflight.py --scratch-dir CACHE_ROOT\\task-model-routing-install-bash-20261009 --shell bash --executable bash",
+  "cwd": "skills/sohrab/alaa-codex-orchestrator",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+  "startUtc": "2026-10-09T15:55:46.0604385Z",
+  "endUtc": "2026-10-09T15:55:46.4255295Z",
+  "durationSeconds": 0.365,
+  "exitCode": 2,
+  "scratch": "CACHE_ROOT/task-model-routing-install-bash-20261009",
+  "executable": "Git-Bash (PATH-resolved)",
+  "stdout": "outputs/20261009-task-model-routing/install-preflight-bash.stdout.log",
+  "stderr": "outputs/20261009-task-model-routing/install-preflight-bash.stderr.log"
+}

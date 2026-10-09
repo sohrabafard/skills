@@ -1,0 +1,12 @@
+{
+  "command": "git -c core.safecrlf=false diff --check -- AGENTS.md skills/sohrab",
+  "cwd": ".",
+  "environment": {},
+  "priority": "normal (light check)",
+  "startUtc": "2026-10-09T16:02:01.5386004Z",
+  "endUtc": "2026-10-09T16:02:01.6534044Z",
+  "durationSeconds": 0.115,
+  "exitCode": 0,
+  "stdout": "outputs/20261009-task-model-routing/final-scoped-diff-check.stdout.log",
+  "stderr": "outputs/20261009-task-model-routing/final-scoped-diff-check.stderr.log"
+}

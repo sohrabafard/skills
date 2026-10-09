@@ -1,0 +1,72 @@
+[
+  {
+    "command": "python -B scripts\\validate_pack.py",
+    "cwd": "skills/sohrab/alaa-codex-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T16:00:25.5185604Z",
+    "endUtc": "2026-10-09T16:00:25.9207063Z",
+    "durationSeconds": 0.402,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/final-codex-validate-pack.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/final-codex-validate-pack.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_agent_contracts.py",
+    "cwd": "skills/sohrab/alaa-codex-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T16:00:25.9476415Z",
+    "endUtc": "2026-10-09T16:00:26.0656906Z",
+    "durationSeconds": 0.118,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/final-codex-check-agent-contracts.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/final-codex-check-agent-contracts.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\validate_pack.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T16:00:26.0676867Z",
+    "endUtc": "2026-10-09T16:00:26.6129834Z",
+    "durationSeconds": 0.545,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/final-claude-validate-pack.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/final-claude-validate-pack.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_agent_contracts.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T16:00:26.6159867Z",
+    "endUtc": "2026-10-09T16:00:26.7372217Z",
+    "durationSeconds": 0.121,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/final-claude-check-agent-contracts.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/final-claude-check-agent-contracts.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_fleet_references.py",
+    "cwd": ".",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T16:00:26.7387342Z",
+    "endUtc": "2026-10-09T16:00:29.3718135Z",
+    "durationSeconds": 2.633,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/final-root-fleet-references.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/final-root-fleet-references.stderr.log"
+  }
+]

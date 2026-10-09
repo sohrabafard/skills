@@ -14,11 +14,14 @@ Use the smallest applicable template. Replace placeholders with concrete reposit
 <acceptance_criteria><numbered checkable criteria></acceptance_criteria>
 <constraints><safety, compatibility, resource, and user constraints></constraints>
 <authority>what the agent may and may not change or execute</authority>
+<task_controls><role authority identity; explicit model AND effort; actual task scope/complexity; priority/reason; admission/evidence; verified invocation surface and effective controls; availability or affected-lane blocker></task_controls>
 <skills><exact names, sources, activation conditions, and absence actions from the plan's phase/task bindings></skills>
 <progress>report meaningful progress under the active host contract; use bounded invocations per package or target</progress>
 <return>the shape of the return and its line bound; findings, verdicts, counts, and artifact paths only, never transcripts, full diffs, or raw logs</return>
 <output>use the agent's native output contract</output>
 ```
+
+Every dispatch carries `<task_controls>` and `<return>`. Resolve task controls through `routing-matrix.md` and verify the actual invocation through `model-effort-policy.md`; this envelope records the choice and cannot set runtime controls by prose. Every role template below inherits this requirement.
 
 Every dispatch carries the `<return>` field. An unbounded child return is the most common way a parent's context is flooded, and the parent pays that cost on every remaining turn of the goal, not only on the turn the return arrives.
 

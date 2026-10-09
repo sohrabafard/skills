@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gate the alaa-rule-writer specialist: grants, parity, and canonical pins and output-only identity.
+"""Gate the alaa-rule-writer specialist: grants, parity, and model-neutral controls and output-only identity.
 
 The specialist ships one shared contract and two runtime wrappers. The contract is the
 only place its behaviour is written; each wrapper embeds that contract verbatim and adds
@@ -21,10 +21,10 @@ Rules:
     G6  no wrapper emits an identity line, a model name, or an effort level
     G7  every doctrine path a wrapper names resolves
     G8  the wrappers agree on name and description
-    G9  the Codex wrapper retains its default-effort restriction
+    G9  both wrappers omit executable model and effort defaults
     G10 the Claude wrapper preloads every skill its contract names
-    G11 real Codex wrapper matches the canonical model policy
-    G12 real Claude wrapper matches the canonical Claude model policy CLI
+    G11 real Codex wrapper matches the neutral role registry
+    G12 real Claude wrapper matches the neutral Claude registry CLI
 
 G10 exists because the lane holds no Skill tool: without a preload it would have to find the
 doctrine by guessing a path, and under Claude Code the packaged skill lives at an opaque
@@ -32,11 +32,7 @@ plugin-managed location. Codex has no equivalent key that this repository has ev
 wrapper reaches the same files through the documented `~/.codex/skills/` install path instead;
 do not invent a `skills.config` block to make the two look symmetric.
 
-A model and effort pin belongs in runtime metadata and never in text the agent emits. The pin
-routes the dispatch; an identity line or a model name inside the contract reaches the caller's
-report, goes stale the first time a pin moves, and is copied forward because it looks
-authoritative. Claude model and effort legality belongs only to its canonical policy;
-G9 preserves the existing restriction for the other runtime.
+Model and effort are explicit task controls supplied by the caller, never wrapper defaults or replacement output. Neutral metadata preserves the wording-only authority boundary while allowing supported task pairs. G9 rejects stale pins in either runtime; capability legality belongs to the canonical registry.
 
 G5 compares the value the runtime loads, not the bytes on disk, and for the Codex wrapper
 those differ. A TOML basic multi-line string processes escapes, so one backslash inside
@@ -267,9 +263,9 @@ def check(root: Path) -> List[str]:
         if named_model:
             findings.append(f"G6: the {name} wrapper emits the model name {named_model.group(0)!r}")
 
-        for key in (("effort", "model_reasoning_effort") if name == "codex" else ()):
-            if str(fields.get(key, "")).strip().lower() in ("max", "ultra"):
-                findings.append(f"G9: the {name} wrapper pins {key} at a prohibited default effort")
+        for key in ("model", "effort", "model_reasoning_effort"):
+            if key in fields:
+                findings.append(f"G9: the {name} wrapper carries executable {key}; task controls must remain explicit")
 
         for cited in DOCTRINE_RE.findall(body):
             if not (root / cited).is_file():
@@ -378,6 +374,16 @@ def self_test(fixtures: Path) -> int:
         with patch(__name__ + ".read_text", side_effect=mutated):
             if not any(issue.startswith("G2:") for issue in check(fixtures / "green")):
                 raise CannotRun(f"unauthorized {key} was accepted")
+    for runtime,rel,pin in (("claude",CLAUDE_WRAPPER,"model: claude-fable-5-1\neffort: high\n"),
+                            ("codex",CODEX_WRAPPER,'model = "gpt-6-astra"\nmodel_reasoning_effort = "high"\n')):
+        original = read_text
+        def pinned(path: Path) -> str:
+            text=original(path)
+            if path == fixtures / "green" / rel:
+                text=text.replace("---\n", "---\n"+pin,1) if runtime=="claude" else pin+text
+            return text
+        with patch(__name__ + ".read_text", side_effect=pinned):
+            assert any(issue.startswith("G9:") for issue in check(fixtures / "green")), "stale frontier defaults accepted"
     failures = 0
     for name, expected in cases:
         root = fixtures / name
@@ -440,7 +446,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         for f in findings:
             print(f"  {f}")
         return EXIT_FINDINGS
-    print("OK: both wrappers embed the contract unchanged, hold read-only grants, and keep their pins out of the output")
+    print("OK: both wrappers embed the contract unchanged, hold read-only grants, and omit executable model/effort defaults")
     return EXIT_CLEAN
 
 

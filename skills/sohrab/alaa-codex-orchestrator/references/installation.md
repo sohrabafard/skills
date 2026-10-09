@@ -6,7 +6,7 @@ Activation inspects role availability; it never installs or updates agents. Obta
 
 Keep the complete orchestrator source beside `alaa-prompting-guide`, or pass its root explicitly (`-PolicyRoot` in PowerShell; the third agent-installer argument or second skill-installer argument in shell). Validation fails with exit `2` when the canonical policy owner cannot be loaded. Never substitute a local copy of model policy.
 
-The agent installer accepts only its own resolved canonical `agents/` directory. An alternate source directory is rejected before target writes, even when its sibling canonical source validates. Source TOMLs under `agents/` are transport-neutral templates and cannot be installed by plain copy. All installers validate policy pins, role grants, generated reviewer wrappers, and the source manifest before writing to the target. A source failure leaves the destination untouched. Materialization then resolves the live parent MCP inventory, retains each transport discriminator, applies exact per-role grants, disables unassigned or unknown servers, and validates resolved definitions. Missing inventory or transport information fails closed.
+The agent installer accepts only its own resolved canonical `agents/` directory. An alternate source directory is rejected before target writes, even when its sibling canonical source validates. Source TOMLs under `agents/` are transport-neutral templates and cannot be installed by plain copy. All installers validate model-neutral policy roles, role grants, generated reviewer wrappers, and the source manifest before writing to the target. A source failure leaves the destination untouched. Materialization then resolves the live parent MCP inventory, retains each transport discriminator, applies exact per-role grants, disables unassigned or unknown servers, and validates resolved definitions. Missing inventory or transport information fails closed.
 
 ## Explicit agent installation
 
@@ -34,7 +34,7 @@ python scripts/validate_pack.py
 python scripts/check_agent_grants.py --self-test
 ```
 
-The renderer preserves both correctness-review profiles from `assets/reviewer-contract.md`, adds standalone implementation/planner wrappers from their shared contracts and metadata-only `assets/profile-wrappers.json`, then writes the version/hash manifest. Canonical policy alone supplies model/effort pins. `--check` never writes. Exit `0` is clean, `1` is findings/drift, and `2` is unavailable proof; either nonzero blocks installation and completion.
+The renderer preserves both correctness-review profiles from `assets/reviewer-contract.md`, adds standalone implementation/planner wrappers from their shared contracts and metadata-only `assets/profile-wrappers.json`, then writes the version/hash manifest. Canonical policy registers task-selected roles; all-role projections omit both model and effort pins without changing authority. Actual task controls must be explicitly supplied and verified at dispatch. `--check` never writes. Exit `0` is clean, `1` is findings/drift, and `2` is unavailable proof; either nonzero blocks installation and completion.
 
 ## Installer rejection fixtures
 
@@ -54,6 +54,6 @@ Inspect only that fresh directory. This validates grants against the live parent
 
 Version 5 renames `alaa-implementer-sol` to `alaa-implementer-astra` without a source alias. Update dispatch callers. During an explicitly authorized installed upgrade, materialize the new wrapper with the supported installer and archive the old managed wrapper outside the agent discovery directory under that upgrade's target-path authority. The current installers preserve files absent from the new source; installation alone therefore does not retire the old role. Verify the new role and absence of the retired role before claiming activation.
 
-Version 4 changes final-report parsing: verdict/status or opening outcome is first, followed by configured/requested settings and separately observed runtime identity. Unknown observations remain unknown. Existing verdict vocabularies remain unchanged. The deep profile is selected by role name because a custom TOML pin overrides caller model/effort values. Do not dispatch standard and deep profiles concurrently for one scope.
+Version 4 changes final-report parsing: verdict/status or opening outcome is first, followed by configured/requested settings and separately observed runtime identity. Unknown observations remain unknown. Existing verdict vocabularies remain unchanged. The deep role ID preserves workload/authority compatibility and supplies no model or effort. Review depth and actual task controls are separate decisions. Do not dispatch standard and deep profiles concurrently for one scope.
 
 Missing, stale, or unavailable required roles must be reported; there is no silent fallback or implicit installation. A changed MCP inventory requires an authorized rematerialization. Never change global runtime configuration as an installation repair.

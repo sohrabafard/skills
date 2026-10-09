@@ -17,7 +17,9 @@ def agent_failures(text: str) -> list[str]:
     for required in ("CONFIGURED", "REQUESTED", "OBSERVED", "otherwise unknown",
                      "Never infer observed identity from a pin or request",
                      "Report metadata after the verdict/status or opening outcome",
-                     "Effective authority:", "parent overrides", "tool/MCP grants"):
+                     "Effective authority:", "parent overrides", "tool/MCP grants",
+                     "Task controls:", "model AND effort", "block this lane",
+                     "model choice changes no authority"):
         if required not in text:
             errors.append(f"missing metadata/authority contract: {required}")
     if "Identity line: begin" in text:
@@ -59,7 +61,9 @@ def orchestrator_failures(text: str) -> list[str]:
 def dispatch_failures(text: str) -> list[str]:
     errors = []
     for required in ("<skills>", "exact names, sources, activation conditions, and absence actions",
-                     "alaa-workflow references/companion-routing.md"):
+                     "alaa-workflow references/companion-routing.md",
+                     "<task_controls>", "explicit model AND effort",
+                     "verified invocation surface and effective controls"):
         if required not in text:
             errors.append(f"missing dispatch skill bindings: {required}")
     if "<progress>report meaningful progress under the active host contract" not in text:
@@ -90,7 +94,7 @@ def planning_failures(gates: str, implementation: str) -> list[str]:
 
 
 IMPLEMENTER_REQUIREMENTS = (
-    "Exceptional admission requires applicable high-effort workhorse inadequacy or explicit user selection",
+    "Exceptional model admission follows the parent's all-role task allocation record",
     "Run only supplied",
     "focused commands: this lane's failure-mode tests",
     "this lane's failure-mode tests and lint/type/build scoped to touched files",
@@ -126,8 +130,7 @@ def implementer_failures(text: str) -> list[str]:
     # Contradictions must fail even when all required sentences remain present.
     for pattern in (r"Run the dispatched checks only", r"run (?:all|every) dispatched command",
                     r"run (?:the )?(?:affected|exhaustive) (?:tier|checks|suite)",
-                    r"run ambiguous or inseparable", r"invent (?:replacement|substitute) commands",
-                    r"canonical-owner-supported exact official-task/priority route"):
+                    r"run ambiguous or inseparable", r"invent (?:replacement|substitute) commands"):
         if re.search(pattern, text, re.I):
             errors.append(f"contradictory implementer instruction: {pattern}")
     return errors
@@ -208,6 +211,28 @@ def verification_failures(gates: str, templates: list[str], roles: dict[str, str
     return errors
 
 
+def task_allocation_failures(routing: str, controls: str) -> list[str]:
+    errors = []
+    for required in ("## All-role task allocation", "EVERY role", "balanced default",
+                     "priority is not an effort value", "Role title, sensitivity, duration",
+                     "second independent lens", "not model diversity", "model AND effort",
+                     "compatibility identities", "exact verified available compatibility realization",
+                     "block that affected lane", "Source changes do not reload"):
+        if required not in routing:
+            errors.append(f"missing all-role task allocation: {required}")
+    for required in ("Before every dispatch", "Explicitly supply BOTH model AND effort",
+                     "effective configured pair matches", "or block", "affected lane",
+                     "Source checks prove neither installed activation", "parent overrides"):
+        if required not in controls:
+            errors.append(f"missing effective task controls: {required}")
+    for forbidden in ("owns only role triggers", "Agent metadata carries executable pins",
+                      "both standard and deep review inherit", "non-implementation roles remain fixed",
+                      "stronger model solely because it is a second lens"):
+        if forbidden in routing or forbidden in controls:
+            errors.append(f"retired role-selected controls: {forbidden}")
+    return errors
+
+
 def verification_sources() -> tuple[str, list[str], dict[str, str]]:
     return (
         (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
@@ -272,6 +297,24 @@ def self_test() -> int:
         cases.append((f"batch allocation {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
     for required in ("settled local causal path or pattern", "known invariants", "discriminating behavior/regression checks", "alaa-implementer-haiku-high", "Interacting design"):
         cases.append((f"bounded admission {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
+    controls = (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")
+    cases.append(("all-role allocation/effective controls", not task_allocation_failures(routing, controls)))
+    for required in ("EVERY role", "model AND effort", "second independent lens",
+                     "compatibility identities", "block that affected lane"):
+        cases.append((f"task allocation requires {required}", bool(task_allocation_failures(
+            routing.replace(required, "omitted"), controls))))
+    for required in ("Explicitly supply BOTH model AND effort", "effective configured pair matches",
+                     "parent overrides", "Source checks prove neither installed activation"):
+        cases.append((f"effective controls require {required}", bool(task_allocation_failures(
+            routing, controls.replace(required, "omitted")))))
+    for path in sorted((ROOT / "agents").glob("alaa-*")):
+        if path.suffix not in {".toml", ".md"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        cases.append((f"{path.name}: explicit task controls", not agent_failures(text)))
+        for requirement in ("Task controls:", "model AND effort", "block this lane"):
+            cases.append((f"{path.name}: reject missing {requirement}",
+                          bool(agent_failures(text.replace(requirement, "omitted")))))
     policy, templates, roles = verification_sources()
     cases.append(("integrated verification authority accepted",
                   not verification_failures(policy, templates, roles)))
@@ -282,8 +325,7 @@ def self_test() -> int:
                           bool(verification_failures(policy, templates, broken))))
         for contradiction in ("run all dispatched commands", "run affected checks",
                               "run ambiguous or inseparable commands",
-                              "invent substitute commands",
-                              "canonical-owner-supported exact official-task/priority route"):
+                              "invent substitute commands"):
             broken = {**roles, name: role + "\n" + contradiction}
             cases.append((f"{name}: contradiction {contradiction} rejected",
                           bool(verification_failures(policy, templates, broken))))
@@ -335,6 +377,9 @@ def main() -> int:
             (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8"),
             (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")))
         errors.extend(verification_failures(*verification_sources()))
+        errors.extend(task_allocation_failures(
+            (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
+            (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))
         errors.extend(economy_failures((ROOT / "SKILL.md").read_text(encoding="utf-8"),
             (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")))
         for path in sorted((ROOT / "agents").glob("alaa-*")):

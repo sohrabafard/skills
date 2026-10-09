@@ -21,7 +21,7 @@ Project agents live in `.claude/agents/`, user agents in `~/.claude/agents/`; bo
 
 Only `name` and `description` are required. The documented optional fields are `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `skills`, `mcpServers`, `hooks`, `memory`, `background`, `effort`, `isolation`, `color`, and `initialPrompt`. The markdown body below the frontmatter becomes the subagent's system prompt — and only that: a subagent receives its own system prompt plus basic environment details, not the full Claude Code system prompt and not the parent's conversation history.
 
-`alaa-reviewer` is the worked example. Its model and effort metadata are checked against `assets/claude-model-policy.json`; it declares `tools: Read, Glob, Grep, Bash` and a `skills:` list preloading the clean-code and security references the reviewer must apply. Note what is absent: `Write` and `Edit`. The description states the role and closes with the boundary in three words — "Never edits or fixes." Native tools, Bash command permissions, and MCP grants must all preserve that boundary; omitting Write and Edit alone is insufficient.
+`alaa-reviewer` is the worked example. Its model-neutral metadata are checked against `assets/claude-model-policy.json`; it declares `tools: Read, Glob, Grep, Bash` and a `skills:` list preloading the clean-code and security references the reviewer must apply. Note what is absent: `Write` and `Edit`. The description states the role and closes with the boundary in three words — "Never edits or fixes." Native tools, Bash command permissions, and MCP grants must all preserve that boundary; omitting Write and Edit alone is insufficient.
 
 ### Codex: standalone TOML
 
@@ -29,10 +29,7 @@ Personal agents live in `~/.codex/agents/`, project agents in `.codex/agents/`, 
 
 **`skills.config` is not the Codex equivalent of Claude's `skills:` preload, and reaching for it as one is the mistake to avoid.** It is `[ { path = "…", enabled = true } ]`: an enable/disable override naming a directory that contains a `SKILL.md`. It selects which skills an agent may use; it never injects one into the agent's context the way a preload does, and each entry carries a filesystem path, so a committed definition would hard-code one machine's layout. Codex documents no per-agent preload at all. Where a Codex lane must apply doctrine, name the files in `developer_instructions` and let it read them from the installed skills path.
 
-The executable Codex pin for each role is owned by `assets/codex-model-policy.json` and checked
-against its TOML wrapper. `alaa-implementer-astra` is the difficult implementation profile.
-Custom TOML model and effort pins override dispatch parameters. Read `references/11-codex-runtime-features.md` before
-selecting a different profile or relying on parent inheritance.
+Managed Codex authority roles omit executable model and effort pins; `assets/codex-model-policy.json` checks their identity and capability contract. Explicit task spawn controls require a verified compatible runtime. Stale/custom TOML pins override caller settings; read `references/11-codex-runtime-features.md` before assuming an override.
 
 The two runtimes express the same four decisions with different key names. A cross-runtime pack ships both files from one `agents/` directory and installs the right one per runtime.
 
@@ -40,10 +37,7 @@ The two runtimes express the same four decisions with different key names. A cro
 
 **One role with a hard authority boundary.** An agent that reviews *and* fixes will fix, because fixing feels like progress and the model resolves ambiguity toward action. Pick the verb and enforce it in configuration.
 
-**A model and supported effort appropriate to the role.** Read the runtime's structured policy
-and check executable metadata against it. Pins express intent; check version-dependent
-overrides and observed identity before claiming they took effect. Omit effort for models
-without that parameter.
+**Task control realization without role defaults.** Managed definitions omit both model and effort. The delegating parent supplies explicit task controls from its runtime orchestrator allocation procedure; the capability policy checks support. Verify loaded definitions and effective overrides separately from observed identity. A pair changes no role authority; main-session configuration remains external.
 
 **The tools it may use.** Claude Code inherits every tool available to subagents when `tools` is omitted, so omission is a decision to grant everything — usually the wrong one. `disallowedTools` subtracts from the inherited pool when a narrow allowlist would be brittle. Codex expresses the coarser cut through `sandbox_mode`.
 
@@ -88,19 +82,15 @@ Model resolution differs by runtime. Read `references/11-codex-runtime-features.
 pin precedence and `references/41-claude-code-runtime-features.md` for Claude configuration.
 Neither runtime's precedence proves the model that actually served a response.
 
-## Choosing model and effort per role
+## Task model and effort independent of authority role
 
-Read `references/50-effort-and-thinking.md` for the decision procedure and
-`assets/codex-model-policy.json` for Codex pins or `assets/claude-model-policy.json` for Claude pins. Choose by unresolved judgment and task evidence;
-model and effort are different variables. A registered profile is a starting hypothesis until
-comparative evidence supports it. Do not transfer an API effort, a previous generation's ceiling,
-or a dispatch override assumption into a custom-agent definition.
+Read the runtime orchestrator's allocation procedure for actual task choice and `references/90-model-selection.md` for capability/source evidence. Structured policies register neutral roles and supported pairs, not role defaults. Compatibility model/effort-named IDs grant no choice. Both controls must be explicit and realized; unresolved serving identity can remain unknown when configured control resolution is verified. No normal dispatch requires paid calibration.
 
 ## Prompting a subagent once defined
 
 A Claude Code subagent starts with a fresh, isolated context window: it does not see the conversation history, the skills already invoked, or the files already read. The only exception is a fork, which inherits the parent. Everything the lane needs must therefore be in the dispatch — and nothing else should be.
 
-The dispatch carries **lane facts only**: the one concrete outcome; the owned files and modules; explicit exclusions; acceptance criteria; the exact verification commands with working directory and timeout; and dependencies on other lanes. It does not carry the role, the tool inventory, the general engineering philosophy, or decorative examples. The definition already owns those, and restating them dilutes both — the dispatch should add task facts rather than duplicate the role contract; measure quality after changing it.
+The dispatch carries **lane facts only**: the one concrete outcome; the owned files and modules; explicit exclusions; acceptance criteria; the exact verification commands with working directory and timeout; dependencies on other lanes; and explicit task model/effort with control-resolution evidence. A compact dispatch suffices when no durable plan is admitted. It does not carry the role, the tool inventory, the general engineering philosophy, or decorative examples. The definition already owns those, and restating them dilutes both — the dispatch should add task facts rather than duplicate the role contract; measure quality after changing it.
 
 Two dispatch rules follow from the same place. Name the *one* skill the lane needs rather than pre-loading every clean-code skill into every lane. Use one agent per owned lane. Add independent review or verification through the declared gate triggers, not an unbounded request to double-check.
 
@@ -132,7 +122,7 @@ Claude Code disables subagent nesting by default — a subagent cannot spawn sub
 1. The work genuinely needs a separate context, a different tool set, or an authority boundary — otherwise it is an inline instruction, a skill, or a script.
 2. The definition uses documented keys only for its runtime, and required keys are present.
 3. One role, one verb, and the boundary is enforced by `tools` / `disallowedTools` / `sandbox_mode` rather than by a sentence; effective permissions and MCP grants are checked.
-4. Model and effort are pinned from the judgment required and the search needed, against the canonical local policy and supported runtime pairs.
+4. Managed roles are model-neutral; each task explicitly supplies both supported controls and verifies their effective realization without changing authority.
 5. The description states when to delegate to this agent and where its lens ends relative to adjacent agents.
 6. The output contract fixes a first-line verdict token, per-finding severity and confidence, an evidence section, and an explicit statement of what was not assessed.
 7. Requested and observed identity are separate; unknown values stay unknown and verdict ordering is preserved.

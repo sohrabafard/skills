@@ -1,6 +1,6 @@
 # Agent Catalog
 
-The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers live in `routing-matrix.md`; /alaa-prompting-guide owns model/effort policy. Agent metadata carries executable pins.
+The orchestrator leads the session; it is not a custom subagent. Installation requires explicit authorization. Role triggers and actual task model/effort allocation live in `routing-matrix.md`; /alaa-prompting-guide owns capabilities and runtime mechanics. All role definitions omit model and effort pins. Legacy model/effort-named IDs retain workload and authority compatibility; their names select neither control.
 
 The manifest lists the executable agents available in this source pack.
 
@@ -20,7 +20,7 @@ The manifest lists the executable agents available in this source pack.
 | Agent | Sandbox | Use | Never use for |
 |---|---|---|---|
 | `alaa-implementer` | workspace-write | Normal engineering with grounded scope and acceptance criteria. | Self-review or unrecorded profile admission |
-| `alaa-implementer-astra` | workspace-write | Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
+| `alaa-implementer-astra` | workspace-write | Compatibility implementation identity; exceptional model selection requires the all-role task admission. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. | Self-review or unrecorded profile admission |
 | `alaa-implementer-high` | workspace-write | Substantial interacting engineering reasoning. | Self-review or unrecorded profile admission |
 | `alaa-implementer-luna` | workspace-write | Exact mechanical edits with every fit predicate, or balanced-priority reproduced local bug with traced cause, bounded decisions and regression oracle | Mechanical branch: semantic discretion or design changes; both branches: ambiguous scope, unresolved cross-boundary contracts, trust, shared-state or consistency design, or wider authority |
 | `alaa-implementer-low` | workspace-write | Bounded semantic edits with recorded fit and cheap discriminating checks | Unresolved cross-boundary design, consistency or trust |

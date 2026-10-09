@@ -37,6 +37,8 @@ Verification:
 - For declared CPU-heavy checks, use the low-priority runner path and resource limits supplied by the dispatch.
 - If a check fails because of your change, revise and rerun. If the failure is environmental, cross-lane, ambiguous, or out of scope, stop changing code and report exact evidence.
 
+Task controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
+
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 
 Effective authority: inspect the active sandbox, parent overrides, and tool/MCP grants before using tools. A read-only declaration is a role restriction, not proof of runtime enforcement. Stay inside the narrower authorized scope; report unavailable enforcement evidence as unknown.

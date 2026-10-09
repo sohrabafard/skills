@@ -135,7 +135,7 @@ opinion.
   settled in a design record and committed before the code that satisfies it, where the boundary the contract sits on
   runs, and which component owns each datum crossing it. This skill keeps the shape itself — the envelope, header,
   event, code, and identifier a decided contract must use. Read it before adding a surface, not while adding one.
-- **`alaa-prompting-guide`** owns model and effort selection.
+- **`alaa-prompting-guide`** owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
 
 ## When not to use
 

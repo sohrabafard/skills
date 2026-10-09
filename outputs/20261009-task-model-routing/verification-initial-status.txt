@@ -1,0 +1,165 @@
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0jpgm2sb/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-0_km1ar9/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-35ewheyo/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6m1s_7qt/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-6p4y1wba/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-7iti0y11/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-f44vwy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-faznmppg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-fcc1majp/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-g5ldl87f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-irqap9y1/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-jwqodzp8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-nc7wzr4k/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-oe_ej8t8/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-pqr858jg/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-ri65mz7f/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tcd67ob6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-tpd6kyku/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-vfgxpvfj/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-w5nihy07/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-wlzn74i6/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x0lnu3kc/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-xko8o0np/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-x_siyr9v/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-y1m6slz7/': Permission denied
+warning: could not open directory '_to_delete/20260804-agent-lessons-validation-artifacts/workflow-test-temp-artifacts/alaa-workflow-yya74gqq/': Permission denied
+ M AGENTS.md
+ M skills/sohrab/AGENTS.md
+ M skills/sohrab/alaa-cc-orchestrator/SKILL.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-accessibility-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-adversarial-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-api-contract-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-architecture-critic.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-browser-qa.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-dependency-auditor.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-documenter.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-explorer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-failure-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-fable.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-haiku.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-opus.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer-sonnet-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-implementer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-instruction-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-migration-guardian.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-observability-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-performance-profiler.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner-high.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-planner.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-release-guardian.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-researcher.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-security-reviewer.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-spec-analyst.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-test-strategist.md
+ M skills/sohrab/alaa-cc-orchestrator/agents/alaa-verifier.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-cc-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-cc-orchestrator/assets/profile-wrappers.json
+ M skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md
+ M skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
+ M skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py
+ M skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-codex-orchestrator/README-fa.md
+ M skills/sohrab/alaa-codex-orchestrator/SKILL.md
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml
+ M skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml
+ M skills/sohrab/alaa-codex-orchestrator/assets/implementation-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/assets/manifest.json
+ M skills/sohrab/alaa-codex-orchestrator/assets/planner-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/assets/profile-wrappers.json
+ M skills/sohrab/alaa-codex-orchestrator/assets/reviewer-contract.md
+ M skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md
+ M skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md
+ M skills/sohrab/alaa-codex-orchestrator/references/installation.md
+ M skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md
+ M skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
+ M skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py
+ M skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py
+ M skills/sohrab/alaa-codex-orchestrator/scripts/test_install_preflight.py
+ M skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py
+ M skills/sohrab/alaa-golang/references/05-what-this-skill-does-not-own.md
+ M skills/sohrab/alaa-prompting-guide/SKILL.md
+ M skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json
+ M skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json
+ M skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json
+ M skills/sohrab/alaa-prompting-guide/assets/evals/claude-agent-comparisons.json
+ M skills/sohrab/alaa-prompting-guide/assets/rule-writer/claude/alaa-rule-writer.md
+ M skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml
+ M skills/sohrab/alaa-prompting-guide/assets/rule-writer/dispatch.md
+ M skills/sohrab/alaa-prompting-guide/references/00-topic-map.md
+ M skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md
+ M skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md
+ M skills/sohrab/alaa-prompting-guide/references/21-opus-5-5.md
+ M skills/sohrab/alaa-prompting-guide/references/31-sonnet-5-5.md
+ M skills/sohrab/alaa-prompting-guide/references/36-haiku-5-5.md
+ M skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md
+ M skills/sohrab/alaa-prompting-guide/references/42-fable-5-1.md
+ M skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md
+ M skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md
+ M skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
+ M skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md
+ M skills/sohrab/alaa-prompting-guide/references/93-claude-evaluation.md
+ M skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py
+ M skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py
+ M skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py
+ M skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py
+ M skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py
+ M skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py
+ M skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py
+ M skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/policy-cases.json
+ M skills/sohrab/alaa-prompting-guide/scripts/profile_projection.py
+ M skills/sohrab/alaa-reliability-sla/SKILL.md
+ M skills/sohrab/alaa-security-review/SKILL.md
+ M skills/sohrab/alaa-services-contract/SKILL.md
+ M skills/sohrab/alaa-testing-strategy/SKILL.md
+ M skills/sohrab/alaa-workflow/assets/phase-prompts-template.md
+ M skills/sohrab/alaa-workflow/assets/plan-template.md
+ M skills/sohrab/alaa-workflow/references/artifact-lifecycle.md
+ M skills/sohrab/alaa-workflow/references/companion-routing.md
+ M skills/sohrab/alaa-workflow/references/phase-prompts.md
+ M skills/sohrab/alaa-workflow/scripts/init_workflow_files.py
+ M skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py
+ M skills/sohrab/alaa-workflow/tests/test_workflow_files.py
+?? outputs/20261009-task-model-routing/
+?? skills/sohrab/alaa-prompting-guide/scripts/task_model_controls.py

@@ -143,5 +143,5 @@ Read the smallest set the surface inventory hits.
 - `/alaa-services-contract` owns the wire contracts these invariants instantiate - header names, decision codes, endpoint categories, route registration, permission catalogs. Where a rule here and a contract there describe the same control, that file owns the wire and this file owns the invariant.
 - `/alaa-minio-object-storage` (`$alaa-minio-object-storage`) owns the object store's own posture: what a bucket policy may grant, how a storage identity is scoped and rotated, which transport carries the bytes, and how long a presigned URL may live. Read it when reviewing a bucket policy, a storage identity, a plaintext hop to an object store, or a presigned URL's lifetime; that skill owns the value the review measures against, and this skill owns the verdict.
 - `/alaa-observability-soc` owns what a security event contains and how it reaches a SOC. This skill names *that* an event is required at a decision point; its shape is owned there.
-- `/alaa-prompting-guide` owns every model and effort question.
+- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role.
 - Report length and noise discipline belong to `/alaa-low-noise`; they are not security decisions and never justify dropping an item.

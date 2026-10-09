@@ -579,10 +579,31 @@ def validate_checkpoint(path: Path, plan_path: Path | None, profile: str) -> lis
     return messages
 
 
+def prompt_task_controls_failures(content: str) -> list[str]:
+    """Check selected-control completeness; never claim effective runtime proof."""
+    messages = []
+    for role in ("Implementer", "Independent reviewer", "Documenter"):
+        pair = field_value(content, role + " runtime/model")
+        effort = field_value(content, role + " effort")
+        if role == "Documenter" and pair == "not included / not included":
+            continue
+        runtime, separator, model = (pair or "").partition("/")
+        selected = [runtime.strip(), model.strip(), (effort or "").strip()]
+        if not separator or any(not value or value.lower() == "not included" or
+                                UNRESOLVED_RE.search(value) for value in selected):
+            messages.append(error("prompts.task-controls", f"{role} lacks explicit selected model AND effort.",
+                                  "Record both task controls from the runtime orchestrator; inherited defaults are incomplete."))
+    if "verify BOTH effective model and effort" not in content:
+        messages.append(error("prompts.effective-controls", "Dispatch-time control verification is absent.",
+                              "Route every dispatch to the active orchestrator's verified control surface."))
+    return messages
+
+
 def validate_prompt_pack(path: Path, plan_path: Path | None, profile: str) -> list[str]:
     content = read_text(path)
     messages: list[str] = []
     if profile != "legacy":
+        messages.extend(prompt_task_controls_failures(content))
         concepts = (
             ("roles", r"\bimplementer\b[\s\S]*\bindependent reviewer\b"),
             ("outcome", r"\boutcome\b"),

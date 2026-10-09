@@ -127,7 +127,7 @@ Read only the files whose condition the task meets. Loading the whole tree means
 - `/alaa-data-layer` owns pool mechanics inside a driver, transaction and isolation semantics, and the index that a uniqueness constraint compiles to. This skill owns why the constraint must exist and where it must live.
 - `/alaa-controlled-ops` owns the bulk-operation approval lifecycle and its dry-run hashes. This skill owns the general replay-versus-conflict contract that lifecycle instantiates.
 - The per-language skills own idiom — which library, which construct, which annotation. This skill owns the decision the idiom expresses.
-- `/alaa-prompting-guide` owns every model and effort question. This skill names no model.
+- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
 
 ## Anti-patterns
 

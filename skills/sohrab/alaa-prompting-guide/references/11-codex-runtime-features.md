@@ -40,9 +40,7 @@ project's `.codex/agents/`. Required fields are `name`, `description`, and
 `developer_instructions`. The official subagent page documents optional model and effort pins,
 sandbox, MCP, and skill configuration; use only keys supported by the target host.
 
-**Custom TOML model and effort pins win over spawn arguments.** Omitted settings inherit from
-the parent. Changing a dispatch argument does not upgrade a pinned agent; select another registered
-profile such as the deep reviewer. If unavailable, report the limit without claiming an override.
+**Custom TOML model and effort pins win over spawn arguments.** Verified 9 October 2026: when both pins are omitted, explicit spawn controls precede global agent defaults and parent settings. Managed authority roles omit both pins. Supply BOTH task controls on a verified compatible spawn surface; inherited values are not a task decision. Full-history forks can forbid overrides in the active host. A stale loaded pin cannot be changed by prose or a disk edit; use an available exact verified realization or block the affected lane.
 A definition created in the repository does not prove the current session has loaded it.
 
 A subagent inherits parent sandbox policy and runtime overrides. A `read-only` TOML value is not
@@ -144,6 +142,6 @@ Goals, `spawn_agents_on_csv`, and the agent-team-style batch flow are all marked
 - [Slash commands – Codex CLI](https://developers.openai.com/codex/cli/slash-commands)
 - [Automations – Codex app](https://developers.openai.com/codex/app/automations)
 
-## Managed direct-selection profiles
+## Managed task-selected authority roles
 
-The runtime orchestrator renders standalone implementation and planner variants from one editable contract per role family. `scripts/render_agents.py --write` supplies pins only from this skill's canonical policy; `--check` rejects drift. Select the exact registered variant, not a caller effort override that custom metadata ignores. Planning inline requires verified compatible configured controls; a planner draft remains advisory and the parent owns the durable plan. Custom-agent TOML model and model_reasoning_effort pins override caller settings. Static agreement proves source configuration, not runtime identity or model obedience.
+The orchestrator renders model-neutral definitions preserving role authority, grants and contracts. `scripts/render_agents.py --check` checks projection consistency, not serving identity. The canonical capability policy registers roles and supports explicit task controls; existing model/effort-named IDs are compatibility labels only. The orchestrator selects every actual task pair and verifies loaded definitions, controls and effective permissions. Main configuration remains external; a planner draft stays advisory and the parent owns the durable plan. No source check proves installation, loaded registration or model obedience.

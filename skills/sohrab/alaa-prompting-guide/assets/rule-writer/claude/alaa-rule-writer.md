@@ -2,9 +2,6 @@
 name: alaa-rule-writer
 description: Wording-only rewriter for already-drafted text that controls another agent — a rule or prompt, a SKILL.md section, a subagent definition, or an AGENTS.md or CLAUDE.md section. Returns replacement text that is the fewest words leaving the executing agent's behavior unchanged. Never authors, decides, researches, judges correctness, or edits a file, and stops blocked rather than invent a decision.
 tools: Read, Glob, Grep
-# Pin and calibration rationale: assets/claude-model-policy.json, alaa-rule-writer profile.
-model: claude-opus-5-5
-effort: high
 skills:
   - /alaa-prompting-guide
 ---

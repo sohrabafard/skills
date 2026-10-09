@@ -3,84 +3,84 @@
     "alaa-implementer": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Normal engineering with grounded scope and acceptance criteria. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Normal engineering with grounded scope and acceptance criteria. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-high": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Substantial interacting engineering reasoning. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Substantial interacting engineering reasoning. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-astra": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. Scoped implementation; admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-planner": {
       "contract": "assets/planner-contract.md",
       "metadata": {
-        "description": "Advisory read-only planner for clear scope, contracts and constraints. Parent ratifies and owns the durable plan; never implements or edits.",
+        "description": "Advisory read-only planner for clear scope, contracts and constraints. Parent ratifies and owns the durable plan; never implements or edits. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "read-only"
       }
     },
     "alaa-planner-high": {
       "contract": "assets/planner-contract.md",
       "metadata": {
-        "description": "Advisory read-only planner for interacting uncertainties that must be resolved to form the plan. Parent ratifies and owns the durable plan; never implements or edits.",
+        "description": "Advisory read-only planner for interacting uncertainties that must be resolved to form the plan. Parent ratifies and owns the durable plan; never implements or edits. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "read-only"
       }
     },
     "alaa-implementer-luna": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Exact mechanical edits with every fit predicate, or localized reproduced bug with traced cause and bounded decisions at the canonical balanced priority. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Exact mechanical edits with every fit predicate, or localized reproduced bug with traced cause and bounded decisions at the canonical balanced priority. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-low": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Bounded semantic implementation with explicit outcome, named scope, grounded local contracts, known causal path or pattern, bounded decisions and cheap discriminating checks. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Bounded semantic implementation with explicit outcome, named scope, grounded local contracts, known causal path or pattern, bounded decisions and cheap discriminating checks. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-luna-high": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Localized reproduced bug with traced causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Localized reproduced bug with traced causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-luna-low": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Localized reproduced bug with explicit expected behavior, traced local cause, bounded decisions and discriminating checks; cost-priority branch. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Localized reproduced bug with explicit expected behavior, traced local cause, bounded decisions and discriminating checks; cost-priority branch. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-xhigh": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Demanding workhorse implementation with sustained coupled technical reasoning and explicit acceptance. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Demanding workhorse implementation with sustained coupled technical reasoning and explicit acceptance. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope. Model and effort are selected for the task, never from this compatibility ID.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-astra-medium": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Exceptional implementation admitted by an exact official source task and priority with remaining reasoning need and rejected cheaper/decomposed alternatives, or applicable workhorse inadequacy, or explicit user selection. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope.",
         "sandbox_mode": "workspace-write"
       }
     },
     "alaa-implementer-astra-xhigh": {
       "contract": "assets/implementation-contract.md",
       "metadata": {
-        "description": "Exceptional sustained implementation admitted by an exact official source task and priority with remaining reasoning need and rejected cheaper/decomposed alternatives, or applicable workhorse inadequacy, or explicit user selection. Admission in /alaa-codex-orchestrator references/routing-matrix.md. Never self-review or widen scope.",
+        "description": "Compatibility implementation authority identity. Exceptional model admission is a separate task decision under the all-role allocation record; the role name selects neither model nor effort. Never self-review or widen scope.",
         "sandbox_mode": "workspace-write"
       }
     }

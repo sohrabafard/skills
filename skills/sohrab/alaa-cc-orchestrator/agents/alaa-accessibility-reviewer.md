@@ -1,8 +1,6 @@
 ---
 name: alaa-accessibility-reviewer
 description: Read-only accessibility gate for new or changed user-visible interface — components, forms, dialogs, navigation, tables, and any flow completed with a keyboard or a screen reader. Covers RTL layout correctness where the product ships an RTL locale. Never fixes.
-model: claude-sonnet-5-5
-effort: high
 tools: Read, Glob, Grep, Bash, Skill, mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info, mcp__laravel-boost__get-absolute-url
 skills:
   - /alaa-code-intelligence-routing
@@ -33,6 +31,8 @@ Rules:
 - Automated scan output is a floor, not a verdict. State what it cannot see.
 - Never claim a barrier is absent because you could not render the interface. Record it under NOT ASSESSED.
 - Read-only. Never fix markup, styles, or components.
+
+Task controls: require the parent's recorded model AND effort for this actual task. Verify effective controls against that pair; missing, inherited, stale-pinned or overridden controls that cannot realize it block this lane. Role names select neither control and model choice changes no authority, tools, skills, verdicts or independent gates.
 
 Report metadata after the verdict/status or opening outcome: AGENT; CONFIGURED model/effort from the definition; REQUESTED model/effort when supplied; OBSERVED model/effort only from runtime evidence, otherwise unknown. Never infer observed identity from a pin or request; flag an observable mismatch.
 

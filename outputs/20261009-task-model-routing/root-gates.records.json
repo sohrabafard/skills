@@ -1,0 +1,70 @@
+[
+  {
+    "command": "python -B scripts\\validate_sohrab_skill_pack.py",
+    "cwd": ".",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:55.8964446Z",
+    "endUtc": "2026-10-09T15:55:56.135388Z",
+    "durationSeconds": 0.239,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/root-validate-skill-pack.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/root-validate-skill-pack.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_skill_index.py",
+    "cwd": ".",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:56.1582775Z",
+    "endUtc": "2026-10-09T15:55:56.3069587Z",
+    "durationSeconds": 0.149,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/root-check-skill-index.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/root-check-skill-index.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_fleet_references.py",
+    "cwd": ".",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:56.3098267Z",
+    "endUtc": "2026-10-09T15:55:58.9020242Z",
+    "durationSeconds": 2.592,
+    "exitCode": 1,
+    "stdout": "outputs/20261009-task-model-routing/root-check-fleet-references.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/root-check-fleet-references.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_lifecycle_contract.py",
+    "cwd": ".",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:58.9059185Z",
+    "endUtc": "2026-10-09T15:55:59.2726067Z",
+    "durationSeconds": 0.367,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/root-check-lifecycle-contract.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/root-check-lifecycle-contract.stderr.log"
+  },
+  {
+    "command": "git -c core.safecrlf=false diff --check -- AGENTS.md skills/sohrab",
+    "cwd": ".",
+    "environment": {},
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:59.2743829Z",
+    "endUtc": "2026-10-09T15:55:59.3539761Z",
+    "durationSeconds": 0.08,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/scoped-diff-check.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/scoped-diff-check.stderr.log"
+  }
+]

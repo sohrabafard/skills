@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "2.3.0",
+  "policy_version": "3.0.0",
   "comparison_rule": "Eight unrun Claude comparisons; one factor per comparison, isolated fresh contexts, independent grading, no external or destructive actions. Static fixtures are not live evidence.",
   "scenarios": [
     {
@@ -240,5 +240,6 @@
         "guess path"
       ]
     }
-  ]
+  ],
+  "notes": "Explicit task-pair comparison designs, not role-default routing or live calibration."
 }

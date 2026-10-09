@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Structural validator for the alaa-cc-orchestrator pack.
 
-Checks that every managed agent exists with a legal pin, that the skill and its
+Checks that every managed agent is model-neutral, that the skill and its
 references agree with the agents on disk, and that no cross-runtime reference
 has leaked into this pack. Run from anywhere; paths resolve against the pack root.
 """
 from __future__ import annotations
 
 from pathlib import Path
-from check_agent_contracts import agent_failures, dispatch_failures, orchestrator_failures
+from check_agent_contracts import agent_failures, dispatch_failures, orchestrator_failures, task_allocation_failures
 from check_agent_grants import frontmatter
 from render_agents import drift, expected_outputs, load_policy, OWNER
 import argparse
@@ -61,6 +61,9 @@ def validate() -> int:
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     errors.extend(orchestrator_failures(skill))
     errors.extend(dispatch_failures((ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")))
+    errors.extend(task_allocation_failures(
+        (ROOT / "references/routing-matrix.md").read_text(encoding="utf-8"),
+        (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")))
     match = re.match(r"^---\n(.*?)\n---\n", skill, re.S)
     if not match:
         errors.append("SKILL.md is missing YAML frontmatter")

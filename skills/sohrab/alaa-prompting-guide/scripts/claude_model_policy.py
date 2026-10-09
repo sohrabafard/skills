@@ -7,6 +7,7 @@ import re
 from datetime import date
 from pathlib import Path, PurePosixPath
 from urllib.parse import urlparse
+from task_model_controls import validate_task_selection
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -88,8 +89,8 @@ def validate_policy(policy, root=REPO_ROOT):
     errors = []
     if not shape(policy, ("schema_version", "policy_version", "surface", "verified_on", "sources", "models", "profiles"), "policy", errors):
         return errors
-    if type(policy.get("schema_version")) is not int or policy["schema_version"] != 1:
-        errors.append("schema_version must be integer 1")
+    if type(policy.get("schema_version")) is not int or policy["schema_version"] != 2:
+        errors.append("schema_version must be integer 2")
     if not isinstance(policy.get("policy_version"), str) or not SEMVER.fullmatch(policy["policy_version"]):
         errors.append("policy_version must be semantic version")
     if policy.get("surface") != "claude-code" or not iso_date(policy.get("verified_on")):
@@ -124,7 +125,7 @@ def validate_policy(policy, root=REPO_ROOT):
     for model, spec in models.items():
         if not re.fullmatch(r"claude-(?:opus|sonnet|fable)-\d+(?:-\d+)?|claude-haiku-(?:5-5|4-5-\d{8})", model):
             errors.append(f"{model}: exact API model ID required; aliases forbidden")
-        if not shape(spec, ("supported_efforts", "default_effort", "thinking_mode", "source_ids"), model, errors, ("minimum_claude_code",)):
+        if not shape(spec, ("supported_efforts", "default_effort", "thinking_mode", "source_ids"), model, errors, ("minimum_claude_code", "selection_enabled")):
             continue
         if "minimum_claude_code" in spec:
             try:
@@ -140,63 +141,20 @@ def validate_policy(policy, root=REPO_ROOT):
             errors.append(f"{model}: Haiku 4.5 has no effort parameter")
         if spec.get("thinking_mode") not in ("adaptive-always-on", "adaptive", "extended"):
             errors.append(f"{model}: invalid thinking_mode")
+        if type(spec.get("selection_enabled")) is not bool:
+            errors.append(f"{model}: selection_enabled must be boolean")
+        if spec.get("selection_enabled") is True and "minimum_claude_code" not in spec:
+            errors.append(f"{model}: active model requires minimum_claude_code")
         references(spec, model)
     if set(profiles) != set(ARTIFACTS) | {"main", "main-deep"}:
         errors.append(f"coverage: exactly main/main-deep and {len(ARTIFACTS)} managed agent profiles required")
-    targets, evaluations = set(), []
     for role, profile in profiles.items():
-        if not shape(profile, ("kind", "model", "effort", "rationale", "escalation_criterion", "confidence", "calibration_status", "availability", "source_ids", "artifacts"), role, errors, ("evaluation_evidence",)):
-            continue
-        if not pair_valid(profile, policy):
-            errors.append(f"{role}: unsupported model/effort pair")
-        if profile.get("kind") != ("policy-only" if role in {"main", "main-deep"} else "agent"):
-            errors.append(f"{role}: wrong profile kind")
-        for key in ("rationale", "escalation_criterion"):
-            if not nonempty(profile.get(key)):
-                errors.append(f"{role}: {key} required")
-        if profile.get("confidence") not in ("low", "medium", "high"):
-            errors.append(f"{role}: invalid confidence")
-        status = profile.get("calibration_status")
-        if status not in ("unrun", "evaluated"):
-            errors.append(f"{role}: invalid calibration_status")
-        if status == "unrun" and "evaluation_evidence" in profile:
-            errors.append(f"{role}: unrun profile cannot carry evaluation_evidence")
-        if status == "evaluated":
-            path = relative_file(profile.get("evaluation_evidence"), root)
-            if path is None or not path.is_file():
-                errors.append(f"{role}: evaluated profile requires existing repository-relative evaluation_evidence")
-            else:
-                evaluations.append((path, role, profile))
-        availability = profile.get("availability")
-        if shape(availability, ("minimum_claude_code", "provider_requirement", "account_status"), f"{role}.availability", errors):
-            version = availability.get("minimum_claude_code")
-            if not isinstance(version, str) or not SEMVER.fullmatch(version):
-                errors.append(f"{role}: minimum_claude_code must be semantic version")
-            model_spec = models.get(profile.get("model")) if isinstance(profile.get("model"), str) else None
-            model_minimum = model_spec.get("minimum_claude_code") if isinstance(model_spec, dict) else None
-            try:
-                if semver_key(version) < semver_key(model_minimum):
-                    errors.append(f"{role}: profile minimum_claude_code is below model minimum")
-            except ValueError:
-                errors.append(f"{role}: assigned model requires a valid minimum_claude_code")
-            if not nonempty(availability.get("provider_requirement")) or availability.get("account_status") != "unknown":
-                errors.append(f"{role}: provider requirement required; account status must remain unknown")
-        references(profile, role)
-        paths = profile.get("artifacts")
-        expected = [] if role in {"main", "main-deep"} else [ARTIFACTS.get(role)]
-        if paths != expected:
-            errors.append(f"{role}: artifacts must equal canonical role mapping")
-        if not isinstance(paths, list):
-            continue
-        for path in paths:
-            if relative_file(path, root) is None or path in targets:
-                errors.append(f"{role}: unsafe or duplicate artifact path")
-            elif isinstance(path, str):
-                targets.add(path)
-    if not errors:
-        from check_claude_agent_evals import validate_calibration
-        for path, role, profile in evaluations:
-            errors.extend(validate_calibration(path, role, profile, policy))
+        main = role in {"main", "main-deep"}
+        expected = {"kind": "policy-only" if main else "agent",
+                    "selection_mode": "externally-configured" if main else "task-selected",
+                    "artifacts": [] if main else [ARTIFACTS.get(role)]}
+        if profile != expected:
+            errors.append(f"{role}: dynamic role identity/artifacts drift; model/effort defaults forbidden")
     return errors
 
 
@@ -226,22 +184,18 @@ def load_policy(path=DEFAULT_POLICY):
 
 
 def validate_agent_pin(agent, policy, filename):
+    """Compatibility API name: task-selected roles omit both model and effort."""
     if not isinstance(agent, dict):
         return ["agent frontmatter must be a mapping"]
     role = agent.get("name")
     if not isinstance(role, str) or role not in ARTIFACTS:
         return [f"unknown executable profile {role!r}"]
-    profile = policy["profiles"][role]
     errors = []
     if filename != Path(ARTIFACTS[role]).name:
         errors.append(f"{role}: filename/profile mapping drift")
-    if agent.get("model") != profile["model"]:
-        errors.append(f"{role}: model policy drift")
-    if profile["effort"] is None:
-        if "effort" in agent:
-            errors.append(f"{role}: effort must be omitted for unsupported model")
-    elif agent.get("effort") != profile["effort"]:
-        errors.append(f"{role}: effort policy drift")
+    for key in ("model", "effort", "model_reasoning_effort"):
+        if key in agent:
+            errors.append(f"{role}: executable {key} defeats task-selected controls")
     return errors
 
 

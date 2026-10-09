@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "1.4.0",
+  "policy_version": "2.0.0",
   "comparison_rule": "Change one factor only; isolate each run; do not execute external or destructive actions.",
   "scenarios": [
     {
@@ -239,5 +239,6 @@
         "guess path"
       ]
     }
-  ]
+  ],
+  "notes": "Explicit task-pair comparison designs, not role-default routing or live calibration."
 }

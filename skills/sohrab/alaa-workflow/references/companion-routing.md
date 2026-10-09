@@ -4,8 +4,8 @@
 
 ## Core companions
 
-- Prompt design, model and effort selection, runtime feature syntax, and freshness: `/alaa-prompting-guide`. It owns every model name, effort level, and trigger-syntax question this skill defers on; add `/openai-docs` for current OpenAI guidance.
-- Per-goal multi-model role orchestration: `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code — a bounded goal or a single phase executed across parallel role lanes. The workflow plan stays authoritative and records the orchestrator's final report as phase evidence.
+- Prompt design, supported model/effort capabilities and source guidance, runtime feature syntax, and freshness: `/alaa-prompting-guide`. It owns capability and trigger-syntax evidence; actual task allocation belongs to the runtime orchestrator; add `/openai-docs` for current OpenAI guidance.
+- Actual task model AND effort allocation for every role and per-goal orchestration: `/alaa-codex-orchestrator` in Codex, `/alaa-cc-orchestrator` in Claude Code — a bounded goal or a single phase executed across parallel role lanes. The workflow plan stays authoritative and records the orchestrator's final report as phase evidence.
 - Context economy and output discipline: `/alaa-low-noise`. It owns both what enters the context window and what gets printed. This skill owns what gets written down durably; the two are complementary and neither substitutes for the other.
 - Prior-context recall when `/alaa-memory-os`'s trigger holds, and durable publication after curation: `/alaa-memory-os`. Recall supplies leads that must be verified against repository truth; this workflow still owns active plans, checkpoints, evidence, and handoffs.
 - Reusable-context curation at signal-bearing phase boundaries and before completion: `/alaa-extract-agent-lessons`. It owns admission and the decision-interface, judgment-rubric, and knowledge-card shapes. This workflow owns the intermediate handoff location and the final lifecycle gate; `/alaa-memory-os` owns durable publication.

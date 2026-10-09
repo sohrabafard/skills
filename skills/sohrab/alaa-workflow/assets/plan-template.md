@@ -84,11 +84,14 @@ Keep only phases with a distinct decision, authority or integration barrier. Mer
 
 ## Task Allocation
 
-After finalizing tasks, dependencies and consolidation, batch-allocate through `alaa-prompting-guide references/90-model-selection.md`. Record observed availability; unresolved values block dispatch. Material changes reassess only affected remaining tasks.
+After finalizing tasks, dependencies and consolidation, record the runtime orchestrator's all-role allocation.
+In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
+In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
+Prompting-guide supplies capability/mechanics evidence; workflow stores decisions. Unresolved controls or availability block the affected dispatch. Material changes reassess only affected remaining tasks.
 
-| Task | Official source row/date | Priority | Registered role/model/effort | Selection reason | Availability | Evidence/calibration status |
-|---|---|---|---|---|---|---|
-| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
+| Task/scope/complexity | Role authority | Priority/reason | Model | Effort | Selection/admission evidence and source date | Invocation/requested/effective controls | Availability/limits |
+|---|---|---|---|---|---|---|---|
+| NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL | NEEDS_FILL |
 
 ## Delegation
 

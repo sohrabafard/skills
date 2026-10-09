@@ -16,9 +16,9 @@ separate evidence. It proves test design, never runtime availability or model qu
 3. Materialize each scenario's supplied files in a separate disposable directory per run.
    Start a fresh context with the same role contract, prompt, inputs, tools, permissions, and
    resource limits for both configurations. Never use an evaluated answer as another run's input.
-4. Run both configurations twice. Change only the factor named by their difference. Custom
-   agent pins override spawn settings: use explicitly configured isolated evaluation profiles
-   when authorized, or mark the comparison blocked. Source-prompt runs do not prove installed
+4. Run both configurations twice. Change only the factor named by their difference. Use model-neutral roles with explicit controls on a verified compatible surface. Stale
+   custom pins can override spawn settings; an available exact verified realization or
+   a blocked affected comparison is required. Source-prompt runs do not prove installed
    custom-agent activation. Do not modify installed agents to enable an experiment implicitly.
 5. Have an independent reviewer assess the captured outputs against each acceptance criterion
    and forbidden action. The implementer or evaluated model does not grade its own result.
@@ -44,8 +44,8 @@ keyed by `scenario`, `configuration` (`candidate` or `comparator`), and `repetit
 
 Missing runtime metadata is not a match. Missing price or token telemetry is not zero cost.
 Record configuration-control evidence separately from self-reported model identity. Do not label
-a selected profile calibrated until the comparison's required runs and independent grading are
-complete with preserved evidence. Policy `evaluation_evidence` points to that report.
+a selected task pair calibrated until the comparison's required runs and independent grading are
+complete with preserved evidence. Keep the role/task/pair and evidence together in the result record; no role-wide calibrated default follows.
 
 ## Interpretation
 

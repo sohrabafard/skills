@@ -7,8 +7,12 @@
 - Implementer runtime/model: {{implementer_runtime}} / {{implementer_model}}
 - Independent reviewer runtime/model: {{reviewer_runtime}} / {{reviewer_model}}
 - Documenter runtime/model: {{documenter_runtime}} / {{documenter_model}}
+- Implementer effort: {{implementer_effort}}
+- Independent reviewer effort: {{reviewer_effort}}
+- Documenter effort: {{documenter_effort}}
+- Effective runtime controls: not observed by initializer; verify through the active orchestrator before dispatch.
 
-Before use, load the runtime-correct prompting guide and re-check official documentation when any value above is unresolved or stale.
+Before use, load the runtime-correct prompting guide and re-check unresolved or stale source evidence. Before EVERY dispatch, apply the active runtime orchestrator's task allocation and verify BOTH effective model and effort against the plan; missing or conflicting controls block that lane.
 
 ## Implementer
 

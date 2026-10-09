@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "policy_version": "1.4.0",
+  "schema_version": 2,
+  "policy_version": "2.0.0",
   "surface": "codex",
   "verified_on": "2026-10-09",
   "sources": [
@@ -33,6 +33,11 @@
       "url": "https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js",
       "verified_on": "2026-10-09",
       "scope": "Directly referenced official selector, read as text: all 27 task rows and 81 model/effort cells. Refresh current page asset before reuse; editorial starting points do not establish local calibration."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "verified_on": "2026-10-09",
+      "scope": "Unpinned custom roles permit explicit spawn model/effort; pinned values override spawn. Installed and loaded definitions require separate verification."
     }
   ],
   "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses. Workload selection guidance refreshed 2026-10-09; capability ranges retain their individual snapshot dates. No account or installed activation proof.",
@@ -46,7 +51,8 @@
         "max",
         "ultra"
       ],
-      "recommended_start": "low"
+      "recommended_start": "low",
+      "selection_enabled": true
     },
     "gpt-6-sol": {
       "supported_efforts": [
@@ -57,7 +63,8 @@
         "max",
         "ultra"
       ],
-      "recommended_start": "medium"
+      "recommended_start": "medium",
+      "selection_enabled": true
     },
     "gpt-6.1-sol": {
       "supported_efforts": [
@@ -68,7 +75,8 @@
         "max",
         "ultra"
       ],
-      "recommended_start": "medium"
+      "recommended_start": "medium",
+      "selection_enabled": true
     },
     "gpt-6-luna": {
       "supported_efforts": [
@@ -78,226 +86,259 @@
         "xhigh",
         "max"
       ],
-      "recommended_start": "high"
+      "recommended_start": "high",
+      "selection_enabled": true
     }
   },
   "profiles": {
     "main": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Balanced lead for defined goals.",
-      "calibration_status": "unrun"
+      "kind": "policy-only",
+      "selection_mode": "externally-configured",
+      "artifacts": []
     },
     "main-deep": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Demanding planning with interacting uncertainties. Parent ratifies and owns the durable plan; unrun hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "policy-only",
+      "selection_mode": "externally-configured",
+      "artifacts": []
     },
     "alaa-spec-analyst": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Extract acceptance criteria and material ambiguity.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml"
+      ]
     },
     "alaa-explorer": {
-      "model": "gpt-6-luna",
-      "effort": "high",
-      "rationale": "Bounded read-only discovery with source evidence.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml"
+      ]
     },
     "alaa-researcher": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Resolve source disagreement and version-specific evidence.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml"
+      ]
     },
     "alaa-test-strategist": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Design discriminating tests and agent evaluations.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml"
+      ]
     },
     "alaa-implementer": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Everyday grounded engineering with bounded design choices and discriminating acceptance; use after considering lighter admitted routes. Planning effort and surface sensitivity do not raise worker effort. Unrun local starting hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml"
+      ]
     },
     "alaa-implementer-astra": {
-      "model": "gpt-6-astra",
-      "effort": "high",
-      "rationale": "Only documented applicable Sol-high inadequacy for the same remaining problem, after correcting context, specification and tools and considering decomposition, or explicit user model selection. Complexity, sensitivity, file count, failure count and imagined insufficiency alone do not qualify. Reuse applicable prior evidence; no mandatory trial ladder, synthetic benchmark or replay of completed work. Unrun local starting hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml"
+      ]
     },
     "alaa-verifier": {
-      "model": "gpt-6-luna",
-      "effort": "low",
-      "rationale": "Execute exact checks and report evidence without debugging.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml"
+      ]
     },
     "alaa-failure-analyst": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Diagnose failure from incomplete and interacting evidence.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml"
+      ]
     },
     "alaa-reviewer": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Independent standard correctness review.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml"
+      ]
     },
     "alaa-reviewer-deep": {
-      "model": "gpt-6-astra",
-      "effort": "high",
-      "rationale": "Same review contract for complex cross-subsystem interactions.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml"
+      ]
     },
     "alaa-adversarial-reviewer": {
-      "model": "gpt-6-astra",
-      "effort": "high",
-      "rationale": "Challenge load-bearing design assumptions.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml"
+      ]
     },
     "alaa-documenter": {
-      "model": "gpt-6-luna",
-      "effort": "high",
-      "rationale": "Document verified behavior without deciding product policy.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml"
+      ]
     },
     "alaa-architecture-critic": {
-      "model": "gpt-6-astra",
-      "effort": "high",
-      "rationale": "Pressure-test boundaries, consistency, and design consequences.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml"
+      ]
     },
     "alaa-security-reviewer": {
-      "model": "gpt-6-astra",
-      "effort": "high",
-      "rationale": "Judge trust boundaries and security failure paths.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml"
+      ]
     },
     "alaa-migration-guardian": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Analyze rollout ordering, compatibility, and recovery.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml"
+      ]
     },
     "alaa-api-contract-reviewer": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Trace consumer compatibility and transition windows.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml"
+      ]
     },
     "alaa-dependency-auditor": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Assess dependency evidence against explicit criteria.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml"
+      ]
     },
     "alaa-accessibility-reviewer": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Compare source and rendered evidence to accessibility criteria.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml"
+      ]
     },
     "alaa-browser-qa": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Navigate browser state and distinguish product from environment failure.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml"
+      ]
     },
     "alaa-performance-profiler": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Interpret measurements and separate bottlenecks from noise.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml"
+      ]
     },
     "alaa-observability-reviewer": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Assess diagnosability of declared failure modes.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml"
+      ]
     },
     "alaa-release-guardian": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Review packaging, configuration, and rollout evidence.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml"
+      ]
     },
     "alaa-rule-writer": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Compress drafted instructions without changing behavior.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml"
+      ]
     },
     "alaa-instruction-reviewer": {
-      "model": "gpt-6-astra",
-      "effort": "high",
-      "rationale": "Independently review behavioral contracts governing other agents.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml"
+      ]
     },
     "alaa-implementer-high": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Demanding engineering with materially interacting decisions, invariants or failure paths requiring substantial reasoning. Select directly from the plan; length or file count alone is insufficient. Unrun local starting hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml"
+      ]
     },
     "alaa-planner": {
-      "model": "gpt-6.1-sol",
-      "effort": "medium",
-      "rationale": "Advisory read-only plan when scope, contracts and constraints are clear. Parent ratifies and owns the durable plan; unrun hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml"
+      ]
     },
     "alaa-planner-high": {
-      "model": "gpt-6.1-sol",
-      "effort": "high",
-      "rationale": "Advisory read-only plan requiring resolution of interacting uncertainties. Parent ratifies and owns the durable plan; unrun hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml"
+      ]
     },
     "alaa-implementer-luna": {
-      "model": "gpt-6-luna",
-      "effort": "medium",
-      "rationale": "Automatic mechanical implementation only with an exact transformation, exclusions, finite explicitly enumerated existing-file scope and expected result; settled design with no semantic discretion; a known pattern; and cheap discriminating checks for wrong, incomplete or out-of-scope results. Every predicate is required. Many files are allowed; count alone neither qualifies nor disqualifies. Reject ambiguous matches, undefined scope or design changes. If fit ceases, stop dependent work and reclassify remaining work while preserving valid edits. No mandatory lightweight trial, replay or command-authority expansion. Unrun local user-authorized workload policy; vendor capability guidance is not calibrated comparative proof. Separate balanced source-table scoped-bug branch: Bounded well-scoped bug with reproduced failure, traced local cause, explicit expected behavior, bounded semantic discretion and discriminating regression checks; no unresolved cross-boundary design. Stop dependent work if admission ceases, preserve valid edits and reclassify remaining work. Retain all required checks regardless of effort. Unrun local admission; official selector priority supplies the starting pair, not proof of quality.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml"
+      ]
     },
     "alaa-implementer-low": {
-      "model": "gpt-6.1-sol",
-      "effort": "low",
-      "rationale": "Bounded semantic implementation with explicit outcome, local contracts, known causal path or pattern, bounded local choices and cheap discriminating checks. No unresolved cross-boundary design, consistency or trust decision. If fit ceases, stop dependent work and return remaining work for reassessment, preserving valid edits. Distinct from exact mechanical Luna medium. Unrun local economy hypothesis; the official selector recommends Sol-low for latency/cost-prioritized features, while bounded admission remains local policy.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml"
+      ]
     },
     "alaa-implementer-luna-high": {
-      "model": "gpt-6-luna",
-      "effort": "high",
-      "rationale": "Well-scoped bug with reproduced failure, traced local causal path, explicit expected behavior, bounded semantic discretion and a discriminating regression oracle. Reject unresolved cross-boundary contracts, trust, shared-state or consistency design. If fit ceases, stop dependent work and return remaining work for reassessment, preserving valid edits. Distinct from exact mechanical Luna medium. Unrun local workload hypothesis informed by the official selector highest-quality scoped-bug cell and matching supplied screenshot; the medium/high choices are editorial checking options, not measured gains over low; no host availability or comparative quality proof. Priority is higher quality under the finalized task allocation procedure; no generic every-bug high default.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml"
+      ]
     },
     "alaa-implementer-luna-low": {
-      "model": "gpt-6-luna",
-      "effort": "low",
-      "rationale": "Latency/cost-prioritized source-table scoped-bug route. Bounded well-scoped bug with reproduced failure, traced local cause, explicit expected behavior, bounded semantic discretion and discriminating regression checks; no unresolved cross-boundary design. Stop dependent work if admission ceases, preserve valid edits and reclassify remaining work. Retain all required checks regardless of effort. Unrun local admission; official selector priority supplies the starting pair, not proof of quality.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml"
+      ]
     },
     "alaa-implementer-xhigh": {
-      "model": "gpt-6.1-sol",
-      "effort": "xhigh",
-      "rationale": "Source-table higher-quality feature/debug work after finalized lane allocation; record actual reasoning need, task priority, acceptance and why lower-effort admission does not fit. File count, goal importance or planning effort alone is insufficient. No mandatory trial ladder. Unrun local hypothesis.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml"
+      ]
     },
     "alaa-implementer-astra-medium": {
-      "model": "gpt-6-astra",
-      "effort": "medium",
-      "rationale": "Direct source-table admission only for a finalized lane matching an actual task row and priority selecting this pair. Record why decomposition or a cheaper admitted profile cannot satisfy that lane acceptance; do not inherit an Astra choice from the goal label, sensitivity or file count. No prior failed trial is required for this source branch. Runtime matrix owns exact admission; preserve role authority and independent gates. Unrun local hypothesis, not comparative superiority.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml"
+      ]
     },
     "alaa-implementer-astra-xhigh": {
-      "model": "gpt-6-astra",
-      "effort": "xhigh",
-      "rationale": "Direct source-table admission only for a finalized lane matching an actual task row and priority selecting this pair. Record why decomposition or a cheaper admitted profile cannot satisfy that lane acceptance; do not inherit an Astra choice from the goal label, sensitivity or file count. No prior failed trial is required for this source branch. Runtime matrix owns exact admission; preserve role authority and independent gates. Unrun local hypothesis, not comparative superiority.",
-      "calibration_status": "unrun"
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml"
+      ]
     }
   },
-  "legacy_exceptions": []
+  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
 }

@@ -38,7 +38,7 @@
 /alaa-codex-orchestrator
 ```
 
-با activation فقط وضعیت نقش‌ها بررسی می‌شود. نصب خودکار انجام نمی‌شود. installer مجاز، فایل‌های TOML را پس از بررسی pinها، wrapperها، manifest و materialization مجوزهای MCP در این مسیر می‌نویسد:
+Activation inspects roles only. An explicitly authorized installer validates model-neutral roles, wrappers, manifests and resolved MCP grants before writing the TOML files to the following path:
 
 ```text
 %USERPROFILE%\.codex\agents
@@ -72,7 +72,7 @@
 - `alaa-observability-reviewer`
 - `alaa-release-guardian`
 
-جزئیات نقش‌ها و triggerها در `references/agent-catalog.md` و `references/routing-matrix.md` قرار دارد. مالک مدل و effort، مهارت `/alaa-prompting-guide` است. راهنمای انگلیسی نصب و ارتقا در `references/installation.md` قرار دارد.
+Role triggers and actual task model AND effort allocation are owned by `references/routing-matrix.md`. `/alaa-prompting-guide` supplies capabilities and runtime mechanics. All roles are model-neutral; installation and source-versus-session activation are documented in `references/installation.md`.
 
 ## قرارداد گزارش نسخهٔ جدید
 

@@ -1,0 +1,17 @@
+{
+  "command": "python -B -m unittest discover -s tests",
+  "cwd": "skills/sohrab/alaa-workflow",
+  "environment": {
+    "TEMP": "CACHE_ROOT",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMP": "CACHE_ROOT",
+    "TMPDIR": "CACHE_ROOT"
+  },
+  "priority": "normal (light sequential gate; no supplied low-priority runner available)",
+  "startUtc": "2026-10-09T15:53:27.0203391Z",
+  "endUtc": "2026-10-09T15:53:27.6972031Z",
+  "durationSeconds": 0.677,
+  "exitCode": 1,
+  "stdout": "outputs/20261009-task-model-routing/workflow-suite.stdout.log",
+  "stderr": "outputs/20261009-task-model-routing/workflow-suite.stderr.log"
+}

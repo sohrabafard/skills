@@ -1,0 +1,114 @@
+[
+  {
+    "command": "python -B scripts\\validate_pack.py",
+    "cwd": "skills/sohrab/alaa-codex-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:54:58.6871548Z",
+    "endUtc": "2026-10-09T15:54:59.1410586Z",
+    "durationSeconds": 0.454,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/codex-validate-pack.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/codex-validate-pack.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_agent_contracts.py",
+    "cwd": "skills/sohrab/alaa-codex-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:54:59.1741792Z",
+    "endUtc": "2026-10-09T15:54:59.3333724Z",
+    "durationSeconds": 0.159,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/codex-check-agent-contracts.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/codex-check-agent-contracts.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\validate_pack.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:54:59.3371632Z",
+    "endUtc": "2026-10-09T15:54:59.9473889Z",
+    "durationSeconds": 0.61,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/claude-validate-pack.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/claude-validate-pack.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_agent_contracts.py",
+    "cwd": "skills/sohrab/alaa-cc-orchestrator",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:54:59.9500711Z",
+    "endUtc": "2026-10-09T15:55:00.0770375Z",
+    "durationSeconds": 0.127,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/claude-check-agent-contracts.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/claude-check-agent-contracts.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_rule_writer_grants.py",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:00.0804081Z",
+    "endUtc": "2026-10-09T15:55:00.4436206Z",
+    "durationSeconds": 0.363,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/rule-writer-grants.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/rule-writer-grants.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_agent_evals.py",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:00.4448019Z",
+    "endUtc": "2026-10-09T15:55:00.6022132Z",
+    "durationSeconds": 0.157,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/codex-agent-evals.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/codex-agent-evals.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\check_claude_agent_evals.py",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:00.604012Z",
+    "endUtc": "2026-10-09T15:55:00.8029271Z",
+    "durationSeconds": 0.199,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/claude-agent-evals.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/claude-agent-evals.stderr.log"
+  },
+  {
+    "command": "python -B scripts\\profile_projection.py --self-test",
+    "cwd": "skills/sohrab/alaa-prompting-guide",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "priority": "normal (sequential light gate; no supplied low-priority runner available)",
+    "startUtc": "2026-10-09T15:55:00.8046317Z",
+    "endUtc": "2026-10-09T15:55:01.2956996Z",
+    "durationSeconds": 0.491,
+    "exitCode": 0,
+    "stdout": "outputs/20261009-task-model-routing/profile-projection-self-test.stdout.log",
+    "stderr": "outputs/20261009-task-model-routing/profile-projection-self-test.stderr.log"
+  }
+]

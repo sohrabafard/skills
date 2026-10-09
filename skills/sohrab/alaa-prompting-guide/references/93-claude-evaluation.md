@@ -19,7 +19,7 @@ approve their own result. Reject configurations that violate scope, fabricate su
 miss a blocking defect. Compare cost only among quality-passing configurations. Two runs
 are a bounded initial comparison, never proof of universal superiority.
 
-The architecture case compares the registered Fable profile with Opus at shared effort; the corpus does not prove that routing choice or authorize fallback. Current Haiku 5.5 has effort-enabled candidate pairs. Historical Haiku 4.5 needs a separate control-regime comparison.
+The architecture case compares an explicitly selected Fable task pair with Opus at shared effort; the corpus does not prove that routing choice or authorize fallback. Current Haiku 5.5 has effort-enabled candidate pairs. Historical Haiku 4.5 needs a separate control-regime comparison.
 
 ## Result records
 
@@ -36,7 +36,8 @@ requested pair. A completed row also requires:
 - `elapsed_seconds`, `usage`, and `correction_count`, nonnegative numbers or unknown;
 - `resolution`: exact `claude_code_version`, `model_controls` with invocation/frontmatter/
   environment/parent/force values, `selected_source`, `provider_and_caps_checked: true`,
-  and `evidence`; controls contain resolved full IDs or null, with force recording the
+  `effort_controls` with invocation/frontmatter/environment/parent, `selected_effort_source`,
+  `non_fork: true`, and `evidence`; controls contain resolved full IDs/efforts or null, with force recording the
   resolved forced target, not the raw boolean environment switch;
 - `fallback`: kind none/safety/overload/unknown, boolean `disclosed`, and
   `safeguards_preserved: true`; a non-none kind requires evidence and cannot pass the
@@ -44,8 +45,7 @@ requested pair. A completed row also requires:
   turn off safeguards to make this contract pass.
 
 Completed records require a sourced model minimum Claude Code version in the canonical
-policy. Candidate records additionally satisfy the role's minimum; use the higher requirement.
-Comparator records require their own model minimum, including models with no assigned role.
+policy. Both candidate and comparator additionally require the dynamic non-fork invocation-effort boundary, and explicit invocation model AND effort. Roles carry no model minimum or effort default.
 A missing model minimum permits unrun or blocked records, not an activation or calibration
 claim. A below-minimum runtime cannot support a completed record; report it as blocked.
 
@@ -57,12 +57,7 @@ mismatch cannot pass or verify the requested pair. Unknown usage is never zero c
 
 ## Calibration gate
 
-The policy's evaluated status requires an existing repository-relative result JSON that
-passes this contract, is complete and nonsynthetic, and contains two accepted candidate runs
-matching the profile's requested and observed pair. No unrelated file or unknown identity
-can calibrate a profile. Roles without representative scenarios remain unrun until the corpus
-and its acceptance coverage are extended. The checker validates records; an independent
-reviewer must establish that linked evidence is truthful and applicable.
+Task-pair calibration requires complete nonsynthetic result evidence and two accepted candidate runs matching the explicit requested and observed pair for the scenario/role. Unknown identity cannot calibrate that pair. Calibration of one task never assigns a role-wide default. The checker validates records; an independent reviewer establishes whether linked evidence is truthful and applicable.
 
 Run `python scripts/check_claude_agent_evals.py --self-test` after checker changes. Fixtures
 exercise identity uncertainty, old/new precedence, force overrides and fallback disclosure

@@ -45,9 +45,10 @@ pass.
   `ls -la` that it arrived at its original size. `skills/sohrab/AGENTS.md` owns this rule; it is
   named here because `_to_delete/` is a root-level directory and `rm` fails on the Windows mount
   this repository is developed on.
-- **Keep model, effort, and runtime-capability policy in one owner:** `/alaa-prompting-guide`.
-  Its controlled policy may project explicit model and effort pins into executable agent metadata;
-  other skills and repository instructions point to that owner instead of defining a second policy.
+- **Keep capability evidence and runtime control mechanics in one owner:** `/alaa-prompting-guide`.
+  It owns supported model/effort pairs and checked model-neutral role projections. Runtime
+  orchestrators own actual task allocation/admission for every authority role; workflow records it.
+  A role name or metadata default never chooses a task pair.
 - **Write one call form, `/name`.** Both runtimes load these skills and the plugin build rewrites
   `$name` and `/name` alike, so a second form is a duplicate. `skills/sohrab/AGENTS.md` owns the
   rule, the one `agents/openai.yaml` exception, and what to do with the legacy pairs still in the

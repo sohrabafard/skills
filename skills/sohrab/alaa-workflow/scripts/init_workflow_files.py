@@ -123,6 +123,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reviewer-model")
     parser.add_argument("--documenter-runtime")
     parser.add_argument("--documenter-model")
+    parser.add_argument("--implementer-effort")
+    parser.add_argument("--reviewer-effort")
+    parser.add_argument("--documenter-effort")
     parser.add_argument("--verified-on", help="Official-doc verification date in YYYY-MM-DD format.")
     parser.add_argument("--verification-source", action="append", default=[])
 
@@ -173,13 +176,21 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
         args.reviewer_model,
     ]
     documenter_fields = [args.documenter_runtime, args.documenter_model]
+    efforts = [args.implementer_effort, args.reviewer_effort]
+    if any(value is not None and not value.strip() for value in
+           fields + documenter_fields + efforts + [args.documenter_effort]):
+        raise Misuse("Runtime, model and effort values must be nonempty.")
+    if any(efforts) and (not all(efforts) or not all(fields)):
+        raise Misuse("Provide both implementer/reviewer efforts with complete runtime/model metadata.")
+    if args.documenter_effort and (not all(documenter_fields) or not all(efforts)):
+        raise Misuse("Documenter effort requires complete documenter and implementer/reviewer controls.")
     if any(fields) and not all(fields):
         raise Misuse("Provide all implementer/reviewer runtime and model values together.")
     if any(documenter_fields) and not all(documenter_fields):
         raise Misuse("Provide documenter runtime and model values together.")
     if any(documenter_fields) and not all(fields):
         raise Misuse("Documenter metadata requires the implementer/reviewer metadata.")
-    if not active and (any(fields) or any(documenter_fields) or args.verified_on or args.verification_source):
+    if not active and (any(fields) or any(documenter_fields) or any(efforts) or args.documenter_effort or args.verified_on or args.verification_source):
         raise Misuse("Prompt verification metadata requires --with-prompts.")
     if not active:
         return {}
@@ -198,6 +209,9 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
             "reviewer_model": UNRESOLVED,
             "documenter_runtime": UNRESOLVED,
             "documenter_model": UNRESOLVED,
+            "implementer_effort": UNRESOLVED,
+            "reviewer_effort": UNRESOLVED,
+            "documenter_effort": UNRESOLVED,
         }
     if not args.verified_on or not args.verification_source:
         raise Misuse("Resolved prompt metadata requires --verified-on and at least one --verification-source.")
@@ -208,7 +222,9 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
         raise Misuse("--verified-on must match YYYY-MM-DD") from exc
     sources = ", ".join(args.verification_source)
     return {
-        "verification_status": "verified",
+        "verification_status": ("configured intent; source metadata supplied; effective controls require dispatch verification"
+                                if all(efforts) and (not all(documenter_fields) or args.documenter_effort)
+                                else UNRESOLVED),
         "verified_on": verified_on,
         "verification_sources": sources,
         "implementer_runtime": args.implementer_runtime,
@@ -217,6 +233,9 @@ def resolve_prompt_metadata(args: argparse.Namespace, active: bool) -> dict[str,
         "reviewer_model": args.reviewer_model,
         "documenter_runtime": args.documenter_runtime or "not included",
         "documenter_model": args.documenter_model or "not included",
+        "implementer_effort": args.implementer_effort or UNRESOLVED,
+        "reviewer_effort": args.reviewer_effort or UNRESOLVED,
+        "documenter_effort": (args.documenter_effort or UNRESOLVED) if all(documenter_fields) else "not included",
     }
 
 

@@ -1,35 +1,14 @@
 # Model Selection and Companion Routing
 
-## Active model routing
+## Capability evidence and allocation ownership
 
-For Codex, read `references/12-gpt-6.md` and the exact role profile in
-`assets/codex-model-policy.json`. That file alone owns executable Codex pins and rationales;
-this page does not reproduce them. Use `references/50-effort-and-thinking.md` before changing
-one. A historical GPT-5.6 comparison does not authorize a production exception.
+`assets/codex-model-policy.json` and `assets/claude-model-policy.json` own capability snapshots, active model/effort support and model-neutral role/artifact registrations. They define no role-default or task choice. Main-session controls remain externally configured; an allocation does not change them.
 
-For Claude Code, `assets/claude-model-policy.json` alone owns role pins, rationales,
-escalation criteria and calibration status. Apply its legacy-replacement rule in `notes` before selection; historical capability snapshots cannot override it. Use current model references for prompting and
-`references/41-claude-code-runtime-features.md` for activation limits. Historical references never select current profiles.
+For every managed role, including research, review, verification, documentation and rule-writer, the runtime orchestrator owns task allocation, priority, admission and deliberate source departures. Read `/alaa-codex-orchestrator` or `/alaa-cc-orchestrator` `references/routing-matrix.md` for that decision. For bounded standalone delegation, the parent uses that allocation procedure and records a compact dispatch; it need not start the full pipeline or create a plan solely for selection. `/alaa-workflow` records allocation when durable state is admitted. The tables below are evidence inputs, not executable defaults.
 
-The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is explicitly excluded from active selection and custom profiles; a joint launch page supplies no admission.
+Use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` to realize explicit task model AND effort, and `references/50-effort-and-thinking.md` for capability/uncertainty checks. Registered role names, including retained model/effort-named compatibility IDs, select authority only. Neither names nor inherited controls count as task selection.
 
-## Decision helper
-
-1. Resolve runtime, surface and available registered profiles. Historical or announced models authorize no active fallback.
-2. Finalize scope, dependencies and task consolidation before model allocation. Then allocate every finalized plan task in one batch through the procedure below. Runtime matrices own admission; canonical policies own exact registered pins. Planning effort does not determine worker effort; do not impose a trial ladder.
-3. For Codex distinguish exact mechanical work, bounded semantic work, reproduced local bugs, ordinary engineering and demanding coupled reasoning. For Claude, exact mechanical or settled bounded semantic work can fit Haiku medium/high; everyday engineering with interacting local decisions fits Sonnet, and materially coupled unresolved system design fits Opus. A settled architecture need not prescribe every line of an implementation.
-4. Apply `references/50-effort-and-thinking.md` for effort, planning and exceptional admission. Selection is an unrun hypothesis until compared; no task requires a calibration experiment.
-5. Verify actual controls and availability. Pinned profiles can override caller values; prose cannot change them. Inline planning needs verified compatible controls, otherwise a registered read-only planner. Its draft stays advisory; the parent ratifies the durable plan.
-6. Before delegation wording read `references/06-invocation-and-composition.md`. For a requested goal loop read that runtime's feature reference; `/goal` mechanisms differ. `/alaa-workflow` owns durable multi-phase artifacts.
-
-## One allocation pass over the finalized plan
-
-1. Choose the task's authority role first. Research, review, verification and documentation retain their registered role restrictions and canonical pins; an implementation row never turns them into implementers. Match each actual task/lane to an applicable source row from its scope and remaining decisions; record `not applicable` with the role reason when no row fits. A goal-level label does not describe every child task. Read recommendations once for the batch and reuse them; do not repeat discovery per task.
-2. Default priority to **Balanced**. Use **Lower latency/cost** when the user explicitly prefers it. Use **Higher quality** for an explicit user high/quality request, documented inability of the current route to meet acceptance after excluding missing context/tool/specification problems, or a demonstrably consequential task whose concrete failure consequence is recorded in the plan. Vague importance or a production label is insufficient. Importance can select priority; it does not establish complexity or waive gates.
-3. For OpenAI implementation lanes, look up the row's actual model/effort cell. Higher-quality preference does not mean effort `high`: the cell can select medium, high or xhigh. Select its registered implementation profile only when lane admission holds. Other roles retain canonical role pins; record recommendations as guidance or a deliberate departure, never a prose override. A source-matched Astra branch records why decomposition or cheaper admitted work cannot satisfy that lane's acceptance; it requires no artificial failed trial. Outside a matching source branch, existing inadequacy/explicit-user exceptional admission remains available.
-4. Claude's guide is a capability/workload matrix, without the OpenAI slider. Match admitted settled bounded work to Haiku, everyday work to Sonnet and materially coupled unresolved work to Opus; apply supported medium/high guidance and priority with an explicit reason. Longer or stricter bounded Haiku work can use high; complexity needing interacting design decisions selects Sonnet. Do not infer a Fable route from every long session or deep-research label: the pack retains inadequate-workhorse/explicit-model admission. Vendor xhigh/max escalation advice and local Opus-high admission remain distinct.
-5. Write all selections together into the workflow plan before dispatch: task, source row/date, priority and trigger, exact registered role/model/effort, deciding scope/acceptance evidence, admission or deliberate departure, calibration status and target availability. Unsupported or unavailable pairs stay blocked; never silently substitute. A documented deliberate source departure does not manufacture a missing profile or grant configuration authority.
-6. At an existing material-scope or fix-follow-up boundary, reallocate only affected remaining tasks. Preserve completed work and still-valid evidence. No rediscovery, replay or new calibration experiment is required by allocation alone.
+The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is excluded from active selection and custom profiles. Historical models supply comparison evidence only; availability and loaded registry remain separately verified.
 
 ## Official task guidance and local policy
 
@@ -69,7 +48,7 @@ The matrix is a dated editorial starting point. Some rationale metadata retains 
 
 Explicit prose also recommends Luna low for precise/bounded work, Luna xhigh for cross-app prioritization, Sol medium for complex revisable technical work and Sol xhigh for polished/connected/conflicting-evidence work. Astra low fits concise nuanced writing, medium broad ambitious projects and xhigh demanding analysis. It suggests comparing Sol on cost-conscious complex work and optionally defaulting to Astra with unconstrained cost/latency, without assigning effort to those two suggestions.
 
-Sol-low feature work and Luna-high scoped bugs have official selector support; their narrow admission contracts remain uncalibrated local policy. Source-matched Astra medium/xhigh routes are admitted through the batch procedure. The existing Astra-high inadequacy/explicit-selection profile remains a compatibility route outside matching table cells. No recommendation guarantees local superiority.
+Sol-low feature work and Luna-high scoped bugs have official selector support. Workload admission and exceptional selection belong to the runtime orchestrator; source guidance proves no local superiority or availability.
 
 | Claude workload/path | Source recommendation | Effort evidence |
 |---|---|---|
@@ -82,7 +61,7 @@ Sol-low feature work and Luna-high scoped bugs have official selector support; t
 | Demanding long-horizon work inadequate at Opus xhigh/max | Consider Fable | No selected Fable effort |
 | Bulk execution with difficult decisions | Cheaper workers plus frontier advisor | No selected pair |
 
-The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Local Fable implementation remains inadequacy/explicit-selection after context/tool/spec correction and decomposition; its Opus-high boundary is local policy, distinct from vendor xhigh/max advice. No live comparison is implied.
+The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live comparison is implied.
 
 - [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js) (refresh the current page/asset before reuse)
 - [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
@@ -94,9 +73,9 @@ The guide recommends Opus as a most-workloads starting point. Qualify defaults b
 
 The catalog is a menu: dispatch only triggered roles. The orchestrator owns parallel scheduling and gate economics; this reference imposes no spawn-count default.
 
-Claude pins are read from `assets/claude-model-policy.json`; executable frontmatter is a checked projection, never a second policy. Standard and deep reviewer scopes share the existing reviewer profile; scope breadth alone does not create a second executable identity.
+Claude role identity and neutral controls are checked against `assets/claude-model-policy.json`; executable frontmatter preserves authority without selecting a task pair. Standard and deep reviewer scopes share the existing reviewer profile; scope breadth alone does not create a second executable identity.
 
-Codex pins and calibration status are read from `assets/codex-model-policy.json`; the catalog owns role triggers, not a second model policy.
+Codex capabilities and neutral role identities are checked against `assets/codex-model-policy.json`; the orchestrator owns role triggers and actual task selection.
 
 In both packs the lead never implements or runs heavy suites itself, the verifier executes commands under a low-priority resource policy, and no lane approves its own change. Prefer these packs over hand-writing a fan-out; the lead is always the session's own model.
 

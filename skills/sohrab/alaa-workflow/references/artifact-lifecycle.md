@@ -25,11 +25,14 @@ Apply admission before selecting a profile; no profile overrides its exceptions.
 
 ## Size and consolidate the plan
 
-Classify each phase and delegated lane before execution: missing facts to retrieve or clarify; mechanical work with settled decisions; bounded semantic judgment with a local causal path and decisive acceptance evidence; ordinary engineering judgment; or coupled judgment with interacting unresolved decisions. Record the reason, settled/open decisions and invariants. Assess risk separately: sensitivity determines gates, not reasoning complexity. `/alaa-prompting-guide` owns model/effort policy; the runtime orchestrator owns registered role selection. Planning effort never determines worker effort.
+Classify each phase and delegated lane before execution: missing facts to retrieve or clarify; mechanical work with settled decisions; bounded semantic judgment with a local causal path and decisive acceptance evidence; ordinary engineering judgment; or coupled judgment with interacting unresolved decisions. Record the reason, settled/open decisions and invariants. Assess risk separately: sensitivity determines gates, not reasoning complexity. The runtime orchestrator owns actual task model/effort allocation; `/alaa-prompting-guide` supplies capabilities and runtime mechanics. Planning effort never determines worker effort.
 
 Merge phases or tasks sharing context, ownership and a validation barrier when separation buys no decision or authority boundary. Preserve every acceptance outcome, evidence mapping, dependency, exclusion and required observer. Keep phases separate when a decision, changed tested state, independent authority or integration barrier requires it; record why. `references/workspace-and-integration.md` owns shared-check coverage and evidence reuse.
 
-After finalizing tasks, dependencies and consolidation, batch-allocate through `alaa-prompting-guide references/90-model-selection.md`. Before dispatch, record each task's official table row/date, priority, registered role/model/effort, reason, observed availability and evidence/calibration status in the plan. That owner supplies the table, algorithm and pins; workflow stores decisions alongside ready sets and conflict barriers. Material changes reassess only affected remaining tasks; never replay completed work.
+After finalizing tasks, dependencies and consolidation, route allocation for EVERY role through the active runtime orchestrator.
+In Codex, `/alaa-codex-orchestrator` owns `references/routing-matrix.md`.
+In Claude Code, `/alaa-cc-orchestrator` owns `references/routing-matrix.md`.
+Workflow records its task scope/complexity, priority/reason, role authority identity, explicit model AND effort, source/evidence, invocation surface, requested/effective controls, availability and limits alongside ready sets and conflict barriers; it chooses no role-based pair. Material changes reassess only affected remaining tasks; never replay completed work.
 
 ## Dependency and concurrency plan
 

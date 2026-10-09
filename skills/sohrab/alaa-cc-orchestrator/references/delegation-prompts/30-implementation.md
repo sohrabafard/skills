@@ -18,7 +18,7 @@
 <action_safety>No unrelated work, commit, deploy, publish, destructive action, or global configuration change.</action_safety>
 ```
 
-Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant; caller fields or prose do not override custom pins. Preserve surviving work; no trial ladder or replay of completed work.
+Use `routing-matrix.md` to select directly from the ratified lane record. Pass the same bounded lane block to the real registered variant; the compatibility role name never selects model or effort; explicitly supply the recorded task pair on the verified invocation surface. Preserve surviving work; no trial ladder or replay of completed work.
 
 ## Implementer escalation lane
 

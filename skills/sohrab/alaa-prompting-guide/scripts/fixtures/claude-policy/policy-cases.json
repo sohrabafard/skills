@@ -18,7 +18,7 @@
         "path": [
           "schema_version"
         ],
-        "value": 2
+        "value": 3
       }
     ],
     "findings": true
@@ -186,16 +186,15 @@
     "findings": true
   },
   {
-    "name": "invented-entitlement",
+    "name": "role-model-default-forbidden",
     "changes": [
       {
         "path": [
           "profiles",
           "alaa-reviewer",
-          "availability",
-          "account_status"
+          "model"
         ],
-        "value": "available"
+        "value": "claude-fable-5-1"
       }
     ],
     "findings": true
@@ -298,9 +297,9 @@
     "changes": [
       {
         "path": [
-          "profiles",
-          "alaa-implementer",
-          "effort"
+          "models",
+          "claude-sonnet-5-5",
+          "default_effort"
         ],
         "value": "xhigh"
       }
@@ -312,9 +311,9 @@
     "changes": [
       {
         "path": [
-          "profiles",
-          "alaa-implementer",
-          "effort"
+          "models",
+          "claude-sonnet-5-5",
+          "default_effort"
         ],
         "value": "max"
       }
@@ -412,22 +411,21 @@
     "findings": true
   },
   {
-    "name": "profile-minimum-below-model",
+    "name": "implicit-preset-mode-forbidden",
     "changes": [
       {
         "path": [
           "profiles",
           "alaa-reviewer",
-          "availability",
-          "minimum_claude_code"
+          "selection_mode"
         ],
-        "value": "2.1.279"
+        "value": "preset"
       }
     ],
     "findings": true
   },
   {
-    "name": "malformed-evaluation-evidence",
+    "name": "role-wide-calibration-forbidden",
     "changes": [
       {
         "path": [
@@ -446,7 +444,7 @@
         "value": "skills/sohrab/alaa-prompting-guide/scripts/fixtures/claude-policy/malformed.json"
       }
     ],
-    "cannot_run": true
+    "findings": true
   },
   {
     "name": "retired-sonnet-pin",
@@ -463,16 +461,15 @@
     "findings": true
   },
   {
-    "name": "sonnet55-runtime-too-old",
+    "name": "managed-role-kind-drift",
     "changes": [
       {
         "path": [
           "profiles",
-          "alaa-explorer",
-          "availability",
-          "minimum_claude_code"
+          "alaa-reviewer",
+          "kind"
         ],
-        "value": "2.1.283"
+        "value": "policy-only"
       }
     ],
     "findings": true

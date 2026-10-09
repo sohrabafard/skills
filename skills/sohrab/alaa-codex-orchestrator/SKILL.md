@@ -15,7 +15,7 @@ Before role inspection or planning, route a single bounded edit whose correctnes
 
 ## Plan and allocation
 
-Before planning apply `references/routing-matrix.md` Planning profile selection. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
+Before planning apply `references/routing-matrix.md` Planning profile selection and All-role task allocation. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
 
 ## When NOT to use
 
@@ -33,7 +33,7 @@ Before planning apply `references/routing-matrix.md` Planning profile selection.
 
 Activation grants no installation or update authority. Inspect the installed role definitions, version, and effective tool permissions without writing files. Compare the roles needed for this goal with the shipped definitions; report missing, stale, or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work whose required roles are available; report the rest blocked.
 
-Install or update only with explicit user authorization for the target paths. Validate source pins, grants, and generated artifacts before the first target write. Use the supported materializing installers described in `references/installation.md`; a direct TOML copy inherits parent MCP grants and is unsupported.
+Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Use the supported materializing installers described in `references/installation.md`; a direct TOML copy inherits parent MCP grants and is unsupported.
 
 Inspect the effective sandbox, parent overrides, and MCP grants before relying on isolation. A declared read-only role does not prove runtime enforcement. If effective permissions cannot be observed, report them unknown and keep operations within the role restriction.
 
@@ -53,7 +53,7 @@ In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts
 
 ## 2. Main-thread contract
 
-Read /alaa-prompting-guide for main-thread model and effort policy. A requested profile is not evidence of this session's observed identity.
+Use `references/routing-matrix.md` for the actual main-thread task selection and /alaa-prompting-guide for current capabilities and control mechanics. A requested profile is not evidence of this session's observed identity.
 
 It owns goal normalization and scope control; repository-aware lane planning; agent selection and dispatch authorization; cross-lane reconciliation; verification and review gates; specialist-trigger decisions; and final truthfulness and stopping.
 
@@ -79,9 +79,9 @@ The direct-reference router below selects role, dispatch and gate owners. `refer
 
 ## 4. Model and role routing
 
-`references/model-effort-policy.md` routes capability and pin policy to /alaa-prompting-guide. This pack owns role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
+`references/model-effort-policy.md` routes capabilities and control mechanics to /alaa-prompting-guide. Apply all-role task allocation in `references/routing-matrix.md` for EVERY dispatch. This pack owns actual model AND effort choices, role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
 
-Choose one correctness review profile for a scope. Use `alaa-reviewer-deep` when the deep-review trigger holds; its custom TOML pin takes precedence over caller model/effort values, so changing dispatch parameters is not an escalation mechanism.
+Choose one correctness reviewer for a scope; deep review changes the review task, then requires its own justified model AND effort selection. `alaa-reviewer-deep` is a compatibility identity with the same authority, never a fixed-model escalation.
 
 Missing target models or roles are explicit blocked/degraded execution, never silent fallback. Diagnose missing context, tool failure, and specification ambiguity before attributing failure to model capacity. The catalog is a menu; dispatch only roles whose triggers hold.
 

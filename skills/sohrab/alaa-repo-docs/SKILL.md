@@ -85,7 +85,7 @@ Route by name rather than restating. Claude Code form first, Codex form second.
 | The complexity bound behind a documented list, export, or fan-out flow | `/alaa-algorithms-data-structures` (`$alaa-algorithms-data-structures`) |
 | Whether an unverifiable security or auth claim is safe to publish | `/alaa-security-review` (`$alaa-security-review`) |
 | The ten-criterion quality bar this documentation is measured against | `alaa-project-constitution references/quality-bar.md` |
-| Model and effort selection | `/alaa-prompting-guide` (`$alaa-prompting-guide`) `references/50-effort-and-thinking.md` |
+| Model/effort capabilities and runtime mechanics; actual task allocation | `/alaa-prompting-guide` `references/50-effort-and-thinking.md` for capabilities/mechanics; the active runtime orchestrator for task allocation |
 | Context economy and the subagent fan-out budget | `/alaa-low-noise` (`$alaa-low-noise`) |
 | Postman collections, request documentation blocks, and the OpenAPI contract | `/alaa-postman-collections` (`$alaa-postman-collections`) |
 | Trusted headers, gateway identity propagation, downstream auth semantics | `/alaa-trust-gateway-auth` (`$alaa-trust-gateway-auth`) |

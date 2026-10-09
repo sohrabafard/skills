@@ -172,7 +172,7 @@ Read only the files whose stated condition the task meets. Loading the whole tre
 - `/alaa-controlled-ops` (`$alaa-controlled-ops`) owns its own package and adopter release gates and its boundary-check script. This skill owns the proof-level vocabulary those gates report in.
 - The per-language skills and the vendored `/golang-testing` (`$golang-testing`) own framework idiom, assertion syntax, fixture and mock libraries, table-driven form, and runner flags. This skill owns the decision; it names no framework construct.
 - The `alaa-verifier` role in `/alaa-cc-orchestrator` (`$alaa-codex-orchestrator` in Codex) owns command execution, resource policy, low-priority runners, artifact directories, and the status vocabulary a run is reported in — `references/failure-taxonomy.md`. This skill owns what each status licenses a reader to conclude, which tier had the right to run, and whether an earlier result is still citable.
-- `/alaa-prompting-guide` (`$alaa-prompting-guide`) owns every model and effort question. This skill names no model.
+- `/alaa-prompting-guide` owns model/effort capability evidence and runtime mechanics; the runtime orchestrator owns actual task allocation for every authority role. This skill names no model.
 
 ## Anti-patterns
 

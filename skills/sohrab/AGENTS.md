@@ -26,7 +26,7 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 | **Ala platform values** — timeouts, pool sizes, retry budgets | `alaa-services-contract` `references/22-…` | `alaa-reliability-sla` owns the doctrine and states no Ala number |
 | Reliability **doctrine** — why a mechanism exists, how to shape it | `alaa-reliability-sla` | every other skill points here |
 | The **ten-point quality bar** | `alaa-project-constitution` `references/quality-bar.md` | every other skill points here instead of restating |
-| **Model and effort policy**, every runtime capability claim | `alaa-prompting-guide` | executable agent metadata and controlled projections may carry pins; other skills point to the owner |
+| **Model/effort capability evidence, runtime mechanics and checked neutral projections** | `alaa-prompting-guide` | runtime orchestrators own actual task allocation/admission for every role; workflow records it |
 | The **completion lifecycle** — what `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, and `PUBLISHED` each require | `alaa-workflow` `references/workspace-and-integration.md` | both orchestrators report the four states and point here; no skill restates a definition |
 
 `fail-closed` and `fail-open` conflict by design. A control deciding whether a caller may act denies when it cannot decide — that is `alaa-security-review`. A component that merely contributes degrades when it fails — that is `alaa-reliability-sla`. The deciding question is what the failure lets through, never how important the component is.
@@ -35,7 +35,7 @@ A rule has exactly one owning file. When two skills state the same rule, one of 
 
 **Never edit anything under `vendor/`.** Those are upstream git subtrees, re-pulled periodically. A local edit either collides on the next pull or is silently overwritten. Wrap a vendored skill from the owning `alaa-*` skill and point into it; never fork it.
 
-**Keep one model policy owner.** Route model, effort, and runtime-capability decisions to `/alaa-prompting-guide`. Explicit pins belong in its structured policy and the executable metadata or controlled projections checked against that policy; no other skill defines an independent model-selection rule. Unchecked copies drift silently.
+**Keep capability and task-selection ownership separate.** `/alaa-prompting-guide` owns supported pairs, runtime capability evidence and checked model-neutral projections. The runtime orchestrator owns the actual task model/effort and admission for every authority role; `/alaa-workflow` records it. Role identities, including model-named compatibility IDs, select no pair. Main-session configuration stays external.
 
 **Never delete a file.** The device mount forbids `unlink`, and history matters. Move a retired file into `_to_delete/<YYYYMMDD>-<reason>/` at the repository root and say what you moved.
 

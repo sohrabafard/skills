@@ -277,6 +277,8 @@ class WorkflowFilesTest(unittest.TestCase):
                 "runtime-b",
                 "--reviewer-model",
                 "current-b",
+                "--implementer-effort", "medium",
+                "--reviewer-effort", "high",
                 "--verified-on",
                 "2026-07-10",
                 "--verification-source",
@@ -310,6 +312,8 @@ class WorkflowFilesTest(unittest.TestCase):
             "runtime-b",
             "--reviewer-model",
             "current-b",
+            "--implementer-effort", "medium",
+            "--reviewer-effort", "high",
             "--verified-on",
             "2026-07-10",
             "--verification-source",
@@ -317,7 +321,7 @@ class WorkflowFilesTest(unittest.TestCase):
         ]
         with workspace_tempdir() as tmp:
             root = Path(tmp)
-            payload, _ = self.init(root, *resolved, "--documenter-runtime", "runtime-c", "--documenter-model", "current-c")
+            payload, _ = self.init(root, *resolved, "--documenter-runtime", "runtime-c", "--documenter-model", "current-c", "--documenter-effort", "low")
             content = (root / str(payload["outputs"][1])).read_text(encoding="utf-8")
             self.assertIn("## Documenter", content)
             self.assertIn("runtime-c / current-c", content)
@@ -1048,6 +1052,78 @@ class SkillBindingsTest(unittest.TestCase):
 
     def test_explicit_no_owner_reason_can_be_inherited(self) -> None:
         self.assertEqual([], self.check(("- Required skills: example-owner", "- Required skills: none (plain fixture inspection)")))
+
+
+class TaskControlMetadataTest(unittest.TestCase):
+    """Pure focused checks for complete intent versus effective runtime evidence."""
+    @classmethod
+    def setUpClass(cls) -> None:
+        spec = importlib.util.spec_from_file_location("workflow_init_task_controls", INIT)
+        cls.init_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.init_module)
+        spec = importlib.util.spec_from_file_location("workflow_validate_task_controls", VALIDATE)
+        cls.validate_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.validate_module)
+
+    def metadata(self, **overrides):
+        from argparse import Namespace
+        values = dict(implementer_runtime="codex", implementer_model="selected-a",
+                      reviewer_runtime="codex", reviewer_model="selected-b",
+                      documenter_runtime=None, documenter_model=None,
+                      implementer_effort="medium", reviewer_effort="high", documenter_effort=None,
+                      verified_on="2026-10-09", verification_source=["https://example.invalid/official"])
+        values.update(overrides)
+        return self.init_module.resolve_prompt_metadata(Namespace(**values), True)
+
+    def prompt(self, metadata):
+        return self.init_module.render("phase-prompts-template.md",
+            {**metadata, "task": "Control selection", "plan_path": "plan.md"})
+
+    def test_complete_pair_records_intent_without_claiming_runtime_observation(self):
+        content = self.prompt(self.metadata())
+        self.assertIn("configured intent; source metadata supplied", content)
+        self.assertIn("Implementer effort: medium", content)
+        self.assertIn("Independent reviewer effort: high", content)
+        self.assertIn("not observed by initializer", content)
+        self.assertNotIn("NEEDS_LIVE_VERIFICATION", content)
+        self.assertEqual([], self.validate_module.prompt_task_controls_failures(content))
+
+    def test_legacy_model_only_input_remains_unresolved_draft(self):
+        metadata = self.metadata(implementer_effort=None, reviewer_effort=None)
+        self.assertEqual("NEEDS_LIVE_VERIFICATION", metadata["verification_status"])
+        self.assertTrue(self.validate_module.prompt_task_controls_failures(self.prompt(metadata)))
+
+    def test_partial_or_empty_effort_is_rejected(self):
+        for changes in ({"reviewer_effort": None}, {"implementer_effort": " "},
+                        {"documenter_effort": "low"}):
+            with self.subTest(changes=changes), self.assertRaises(self.init_module.Misuse):
+                self.metadata(**changes)
+
+    def test_included_documenter_needs_its_own_effort(self):
+        draft = self.metadata(documenter_runtime="codex", documenter_model="selected-c")
+        self.assertEqual("NEEDS_LIVE_VERIFICATION", draft["documenter_effort"])
+        self.assertTrue(self.validate_module.prompt_task_controls_failures(self.prompt(draft)))
+        complete = self.metadata(documenter_runtime="codex", documenter_model="selected-c", documenter_effort="low")
+        self.assertEqual([], self.validate_module.prompt_task_controls_failures(self.prompt(complete)))
+
+    def test_missing_selection_or_runtime_verification_clause_is_rejected(self):
+        content = self.prompt(self.metadata())
+        for removed in ("- Implementer effort: medium\n", "- Independent reviewer runtime/model: codex / selected-b\n",
+                        "verify BOTH effective model and effort"):
+            with self.subTest(removed=removed):
+                self.assertTrue(self.validate_module.prompt_task_controls_failures(content.replace(removed, "")))
+        for malformed in ("codex /", "/ selected-b", "codex / not included",
+                          "codex / NEEDS_LIVE_VERIFICATION"):
+            with self.subTest(malformed=malformed):
+                broken = content.replace("codex / selected-b", malformed)
+                self.assertTrue(self.validate_module.prompt_task_controls_failures(broken))
+
+    def test_same_role_can_record_routine_and_demanding_task_controls(self):
+        routine = self.prompt(self.metadata(implementer_model="selected-small", implementer_effort="low"))
+        demanding = self.prompt(self.metadata(implementer_model="selected-workhorse", implementer_effort="high"))
+        self.assertEqual([], self.validate_module.prompt_task_controls_failures(routine))
+        self.assertEqual([], self.validate_module.prompt_task_controls_failures(demanding))
+        self.assertEqual(routine.split("## Implementer", 1)[1], demanding.split("## Implementer", 1)[1])
 
 
 if __name__ == "__main__":

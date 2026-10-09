@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
-from codex_model_policy import load_policy, PolicyLoadError
+from codex_model_policy import load_policy, PolicyLoadError, validate_task_selection
 
 CORPUS = Path(__file__).resolve().parents[1] / "assets/evals/agent-comparisons.json"
 EXPECTED = {"exploration", "bounded-implementation", "debugging", "known-defect-review", "architecture", "instruction-rewrite", "documentation", "failed-check"}
@@ -48,19 +48,24 @@ def validate(corpus: dict, policy: dict) -> list[str]:
         if not isinstance(candidate, dict) or not isinstance(comparator, dict):
             errors.append(f"{name}: candidate and comparator must be objects")
             continue
-        if not profile or candidate != {"model": profile["model"], "effort": profile["effort"]}:
-            errors.append(f"{name}: candidate differs from role profile")
+        if not profile or validate_task_selection(case.get("profile"), candidate, policy):
+            errors.append(f"{name}: explicit candidate task pair/role invalid")
         if sum(candidate.get(key) != comparator.get(key) for key in ("model", "effort")) != 1:
             errors.append(f"{name}: comparison must change exactly one factor")
         for config in (candidate, comparator):
-            model = policy["models"].get(config.get("model"), {})
-            if config.get("effort") not in model.get("supported_efforts", []):
+            if validate_task_selection(case.get("profile"), config, policy):
                 errors.append(f"{name}: unsupported comparison pair")
     return errors
 
 
 def self_test(corpus: dict, policy: dict) -> None:
     assert not validate(corpus, policy)
+    changed=copy.deepcopy(corpus)
+    changed["scenarios"][0]["candidate"]["effort"]="medium"
+    changed["scenarios"][0]["comparator"]={"model":changed["scenarios"][0]["candidate"]["model"],"effort":"high"}
+    assert not validate(changed,policy), "same role must accept another explicit task pair"
+    missing=copy.deepcopy(corpus);del missing["scenarios"][0]["candidate"]["effort"]
+    assert validate(missing,policy)
     bad = copy.deepcopy(corpus)
     bad["scenarios"].pop()
     assert validate(bad, policy)

@@ -10,51 +10,38 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 from codex_model_policy import PolicyLoadError, load_policy, validate_agent_pin, validate_policy
+from task_model_controls import selection_self_test
 
 
 def self_test() -> None:
     policy = load_policy()
-    profile = policy["profiles"]["alaa-rule-writer"]
-    good = {"name": "alaa-rule-writer", "model": profile["model"], "model_reasoning_effort": profile["effort"]}
-    assert not validate_agent_pin(good, policy)
-    assert policy["models"]["gpt-6.1-sol"]["supported_efforts"] == ["low", "medium", "high", "xhigh", "max", "ultra"]
-    for role, effort in (("alaa-rule-writer", "medium"), ("alaa-reviewer", "high")):
-        assert policy["profiles"][role]["model"] == "gpt-6.1-sol"
-        assert policy["profiles"][role]["effort"] == effort
-        assert not validate_agent_pin({"name": role, "model": "gpt-6.1-sol", "model_reasoning_effort": effort}, policy)
-    for key, value in (("model", "gpt-5.6-sol"), ("model_reasoning_effort", "max"), ("name", "unregistered")):
-        assert validate_agent_pin({**good, key: value}, policy), (key, value)
-    for model, effort in (("gpt-6-luna", "ultra"), ("gpt-6-sol", "none"), ("gpt-6.1-sol", "none"), ("gpt-6-astra", "max"), ("gpt-6.1-sol", "ultra"), ("gpt-5.6-sol", "medium")):
-        bad = copy.deepcopy(policy)
-        bad["profiles"]["alaa-rule-writer"].update(model=model, effort=effort)
-        assert validate_policy(bad), (model, effort)
-    old_sol = copy.deepcopy(policy)
-    old_sol["profiles"]["alaa-rule-writer"]["model"] = "gpt-6-sol"
-    assert not validate_policy(old_sol)
-    unregistered = copy.deepcopy(policy)
-    unregistered["profiles"]["alaa-rule-writer"]["model"] = "gpt-6.1-sol-preview"
-    assert any("unsupported model/effort" in finding for finding in validate_policy(unregistered))
-    impostor = copy.deepcopy(policy)
-    impostor["models"]["gpt-6.1-sol-preview"] = impostor["models"]["gpt-6.1-sol"].copy()
-    impostor["profiles"]["alaa-rule-writer"]["model"] = "gpt-6.1-sol-preview"
-    assert any("legacy pin" in finding for finding in validate_policy(impostor))
-    bad = copy.deepcopy(policy)
-    bad["legacy_exceptions"] = [{"profile": "alaa-rule-writer"}]
+    pairs = ({"model":"gpt-6-luna", "effort":"low"}, {"model":"gpt-6.1-sol", "effort":"high"})
+    count = selection_self_test(policy, pairs)
+    for role, profile in policy["profiles"].items():
+        if profile["selection_mode"] != "task-selected":
+            continue
+        good = {"name":role}
+        assert not validate_agent_pin(good, policy)
+        for key, value in (("model", "gpt-6-astra"), ("model_reasoning_effort", "high"), ("effort", "low")):
+            assert validate_agent_pin({**good,key:value},policy)
+        missing = copy.deepcopy(policy)
+        del missing["profiles"][role]
+        assert any("coverage" in error for error in validate_policy(missing))
+        fixed = copy.deepcopy(policy)
+        fixed["profiles"][role]["model"] = "gpt-6-astra"
+        assert validate_policy(fixed)
+    assert validate_agent_pin({"name":"unregistered"},policy)
+    for key,value in (("schema_version",True),("schema_version",1),("verified_on","2026-02-30")):
+        bad=copy.deepcopy(policy);bad[key]=value;assert validate_policy(bad)
+    for model,effort in (("gpt-6-luna","ultra"),("gpt-6.1-sol","none")):
+        from task_model_controls import validate_task_selection
+        assert validate_task_selection("alaa-reviewer",{"model":model,"effort":effort},policy)
+    bad=copy.deepcopy(policy);bad["models"]["gpt-6.1-sol-preview"]=bad["models"]["gpt-6.1-sol"].copy()
     assert validate_policy(bad)
-    bad = copy.deepcopy(policy)
-    bad["profiles"]["alaa-rule-writer"]["calibration_status"] = "evaluated"
+    bad=copy.deepcopy(policy);bad["models"]["gpt-6.1-sol"]["recommended_start"]="none"
     assert validate_policy(bad)
-    for invalid in (True, [], " "):
-        bad["profiles"]["alaa-rule-writer"]["evaluation_evidence"] = invalid
-        assert validate_policy(bad)
     assert validate_policy([])
-    # A documented exception is possible, but never enabled by default.
-    legacy = copy.deepcopy(policy)
-    legacy["models"]["gpt-5.6-sol"] = {"supported_efforts": ["medium"], "recommended_start": "medium"}
-    legacy["profiles"]["alaa-rule-writer"]["model"] = "gpt-5.6-sol"
-    legacy["legacy_exceptions"] = [{"profile": "alaa-rule-writer", "model": "gpt-5.6-sol", "effort": "medium", **{key: "synthetic fixture only" for key in ("reason", "scope", "evidence", "review_condition", "approved_by", "approved_on")}}]
-    legacy["legacy_exceptions"][0]["approved_on"] = "2026-09-25"
-    assert not validate_policy(legacy)
+    print(f"OK: {count} roles with distinct task pairs, explicit controls, coverage and stale-pin rejection")
 
 
 def main() -> int:
@@ -81,7 +68,7 @@ def main() -> int:
         if findings:
             print("\n".join(findings))
             return 1
-        print(f"OK: model policy and {count} agent pins")
+        print(f"OK: model policy and {count} model-neutral agents")
         return 0
     except (PolicyLoadError, tomllib.TOMLDecodeError) as exc:
         print(f"could not run: {exc}", file=sys.stderr)

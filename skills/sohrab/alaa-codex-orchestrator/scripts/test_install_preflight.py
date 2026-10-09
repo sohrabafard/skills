@@ -41,8 +41,7 @@ def main() -> int:
             if kind == "pin":
                 path = source / "agents" / "alaa-implementer.toml"
                 text = path.read_text(encoding="utf-8")
-                import re
-                path.write_text(re.sub(r'^model = .*$', 'model = "unapproved-model"', text, flags=re.M),
+                path.write_text('model = "gpt-6-astra"\nmodel_reasoning_effort = "high"\n' + text,
                                 encoding="utf-8", newline="\n")
             elif kind == "wrapper":
                 path = source / "agents" / "alaa-reviewer-deep.toml"
@@ -56,9 +55,8 @@ def main() -> int:
                 candidate = source / "candidate-agents"
                 shutil.copytree(source / "agents", candidate)
                 path = candidate / "alaa-implementer.toml"
-                import re
-                path.write_text(re.sub(r'^model = .*$', 'model = "unapproved-model"',
-                                       path.read_text(encoding="utf-8"), flags=re.M),
+                path.write_text('model = "gpt-6-astra"\nmodel_reasoning_effort = "high"\n' +
+                                path.read_text(encoding="utf-8"),
                                 encoding="utf-8", newline="\n")
             owner = scratch / "absent-policy-owner" if kind == "missing-owner" else policy_root
             result = subprocess.run(

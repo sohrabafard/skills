@@ -40,7 +40,7 @@ Two consequences follow, and they are absolute:
 | `/alaa-go-chi-development` (`$alaa-go-chi-development`) | check the active scope phase; change anything inside the kit; file a kit change request or baseline proposal; register a consumer; or discover that the capability your service needs is a kit-owned surface the kit does not yet have |
 | `/alaa-golang-clean-code-principles` (`$alaa-golang-clean-code-principles`) | write, review, or refactor Go in a repository whose `go.mod` requires `git.alaatv.com/vk/alaa-go-chi` — its P1–P13 are the conformance bar |
 | `/alaa-golang-fiber` (`$alaa-golang-fiber`) | edit a repository whose `go.mod` requires `github.com/gofiber/fiber/v2` or `/v3`, or build a Fiber prototype the user has explicitly scoped |
-| `/alaa-prompting-guide` (`$alaa-prompting-guide`) | choose a model, a reasoning effort, or a thinking budget; decide whether a subagent, plan mode, or background execution is available; or write a prompt for another agent. Its `references/50-effort-and-thinking.md` owns effort and thinking. This skill names no model and no effort level anywhere |
+| `/alaa-prompting-guide` | verify model/effort capabilities or thinking controls, runtime availability, or prompt authoring. The runtime orchestrator owns actual task model/effort allocation for every authority role; prompting-guide supplies evidence and mechanics. This skill names no model or effort level |
 
 ## Go mechanics owners
 

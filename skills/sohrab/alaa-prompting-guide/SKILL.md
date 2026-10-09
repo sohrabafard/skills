@@ -1,11 +1,11 @@
 ---
 name: alaa-prompting-guide
-description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use for model and effort selection, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, skill and subagent authoring, or runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use for model and effort capability evidence, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, skill and subagent authoring, or runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
 ---
 
 # Alaa Prompting Guide
 
-Own instruction authoring and model/effort policy for the stated models and runtimes. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
+Own instruction authoring, model/effort capability evidence and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
 
 ## When NOT to use
 
@@ -20,22 +20,21 @@ Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It
 
 Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
 
-Wrapper pins require recorded reasons to distinguish intentional changes from drift. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
+Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
 
 ## Codex policy validation
 
-`assets/codex-model-policy.json` alone owns executable Codex pins, supported-effort snapshots and legacy exceptions. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
+`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
 
 ## Claude policy validation
 
-`assets/claude-model-policy.json` owns Claude profile pins, capabilities, availability conditions,
-rationales and calibration status. From this skill directory run
+`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. Task comparisons remain separate evidence, never role defaults. From this skill directory run
 `python scripts/check_claude_model_policy.py` after policy or projection changes; add `--self-test`
 after checker changes. Defaults cover both managed roots. Repeat `--agent-root <path>`
 for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
 Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
 add `--self-test` after changing its checker and `--results <path>` to validate evidence.
-These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
+After shared projection/control changes, run `python scripts/profile_projection.py --self-test`; both policy self-tests cover explicit task controls for every role. These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
 
 All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
 
