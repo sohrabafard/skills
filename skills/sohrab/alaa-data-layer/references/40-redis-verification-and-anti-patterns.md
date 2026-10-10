@@ -39,6 +39,8 @@ Namespaced and tenant-aware. Shape:
 
 - `{app}:{env}:{tenant}:{resource}:{id}:{version}`
 - Example: `comment-service:prod:project_123:thread:01J…:v1`
+- The fleet value of each segment, the ACL pattern, and the registry of every service's key templates are
+  `/alaa-services-contract` (`$alaa-services-contract`) `references/29-redis-key-registry.md`.
 
 Rules:
 

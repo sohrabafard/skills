@@ -2,8 +2,8 @@
 
 Ala fleet only. Read this file before creating or choosing a container image, toolchain layer, chart, CI include
 or template, generator, hook pack, or script meant for more than one repository or pipeline, and whenever a task
-asks which project owns a delivery step, how the gateway's configuration is produced, or whether a Compose or
-Swarm production target exists. It owns the registry of shared delivery artifacts, the check-before-creating
+asks which project owns a delivery step, how the gateway's configuration is produced, or which Compose or
+Swarm production artifacts exist. It owns the registry of shared delivery artifacts, the check-before-creating
 rule, project roles, delivery flows, and the gateway generation facts. Deployment modes, shared-infra reuse, and
 the CI baseline rules stay in `15-deployment-and-runtime-contract.md`; the gateway prefix map and route
 ownership stay in `25-end-to-end-flow-and-boundaries.md`.
@@ -60,7 +60,7 @@ deciding document). Deploy items `EO-NN` live in `<repo>/docs/employer-open-item
 | Service CI kit | `<repo>/gitlab/contract-and-handoff.yml`, `<repo>/VERSION` and the repository's tags | `service-ci-kit` `<repo>/README.md`, `<repo>/docs/rfc/`; the handoff definition is `deploy` `<repo>/ci/handoff-inputs.yaml`, which wins on a conflict | `$alaa-gitlab-ci-cd` | Current major `unpublished` while its tag is missing; read `<repo>/VERSION` against the tags |
 | Service runtime kit | `<repo>/scripts/render-runtime.sh`, `<repo>/VERSION`; in a consumer, `runtime/service.runtime.env` and the generated files | `service-runtime-kit` `<repo>/README.md`, `<repo>/docs/02-service-ci-kit-vs-service-runtime-kit.md`, `<repo>/docs/requests-for-change/` | `$service-runtime-kit-governance`, `$alaa-docker-production` | `live` for local runtime; read `<repo>/VERSION` against the tags for the current line |
 | PHP base image | `octane-base` `<repo>/README.md` registry line; the consumer's `OCTANE_BASE_IMAGE` | `octane-base` `<repo>/README.md`, `<repo>/CHANGELOG.md` | `$alaa-docker-production`, `$alaa-octane-performance` | `live` |
-| Gateway | `<repo>/charts/gateway`, `<repo>/scripts/gateway-start`, `<repo>/snapshots/README.md` | `gateway` `<repo>/AGENTS.md`, `<repo>/docs/route-set.md`, `<repo>/docs/error-code-registry.md`, `<repo>/docs/DOCKER_SHARED_RUNTIME.md` | `$alaa-haproxy`, `$alaa-trust-gateway-auth` | Kubernetes path `unpublished` with the deploy toolkit; non-Kubernetes production `being decided` (deploy RFC 0006) |
+| Gateway | `<repo>/charts/gateway`, `<repo>/scripts/gateway-start`, `<repo>/snapshots/README.md` | `gateway` `<repo>/AGENTS.md`, `<repo>/docs/route-set.md`, `<repo>/docs/error-code-registry.md`, `<repo>/docs/DOCKER_SHARED_RUNTIME.md` | `$alaa-haproxy`, `$alaa-trust-gateway-auth` | Kubernetes path `unpublished` with the deploy toolkit; Compose/Swarm production artifacts `missing` (deploy RFC 0006) |
 | Nexus | The consumer's `.env.example` variable | `deploy` `<repo>/docs/employer-open-items.md` | `$alaa-docker-production`, `$alaa-gitlab-ci-cd` | `live`; individual repositories missing from it are EO items |
 
 External platform services (GitLab, OpenShift, Arvan CaaS) are not entries: `$alaa-gitlab-ci-cd`,
@@ -74,7 +74,7 @@ provides.
 | Service repository (`auth`, `content`, `comment-service`) | Application code; `deploy/service.yaml` (ServiceContract v1, class `laravel`), the only per-service source for routes, body caps, env keys, and database and broker defaults; runtime-kit inputs; a thin `.gitlab-ci.yml` | Chart, manifest, RBAC, cluster credential, release, migrate, or monitor job, gateway posture keys | Kubernetes through `deploy`; local Compose and Swarm |
 | `client` | Quasar SSR/PWA front end; its contract (class `edge`) with `consumes.gatewayUrl` and `consumes.apiPrefixes` | Chart, manifest, release job, trusted header | Image on Kubernetes; `quasar dev` locally |
 | `gateway` | HAProxy image, posture (public paths, rate limits, authz route groups, sanitize lists, JWT and TOTP) in `charts/gateway` keyed `<service>/<route>`, its contract (class `edge`), `gateway-start`, `snapshots/` | A releasable template, environment overlay, release job, backend routes or ports | Kubernetes (render at start); local shared Docker |
-| `deploy` | Schemas, class layers, both charts, release script, CD pipeline, the EO register; only writer of `RUNNER_JOB_IMAGE` | Secrets, any per-service route, body cap, or env key, gateway posture, a dev chart or values file, invented hosts, internet downloads, cluster-scoped RBAC | Kubernetes/OpenShift production only |
+| `deploy` | Schemas, class layers, both charts, release script, CD pipeline, the EO register; only writer of `RUNNER_JOB_IMAGE` | Secrets, any per-service route, body cap, or env key, gateway posture, a dev chart or values file, invented hosts, internet downloads, cluster-scoped RBAC | Kubernetes/OpenShift release only |
 | `service-ci-kit` | Service CI: build, label, smoke, release, handoff | Any cluster, Helm, kubectl, kubeconfig, Secret, migration, or DB job; a public-registry fallback | CI only |
 | `service-runtime-kit` | Local Compose and Swarm generation for Laravel and PHP | GitLab CI logic, Kubernetes or OpenShift release | Local Compose; Swarm templates |
 | `ci-image` | The CI toolchain image and its pins | Runner installation, application build stacks, Secrets, tool pins duplicated elsewhere | Job image for all CI; base of deploy-tools |
@@ -245,10 +245,11 @@ namespace `docker-shared`, and placeholder digests, renders `charts/gateway` on 
 adds content-hashed Swarm configs and `docker stack deploy`, documented as local or single-node. Backends have
 generated Swarm stacks; the gateway has only this local profile.
 
-No production gateway path exists on Compose or Swarm: no production stack, no deploy-side Swarm release, no
-operator procedure. That is inferred from absence, and deploy RFC 0006
-(`<repo>/docs/rfc/0006-production-gateway-on-a-non-kubernetes-target.md`) holds the decision. Until it
-closes, report a request for one as an owner decision, and never ship the `local` route set, the widened local
+The gateway has no production-grade Compose or Swarm artifacts yet: no production stack, no deploy-side Swarm
+release, no operator procedure (inferred from absence). This is an artifact gap, not a mode restriction:
+`APP_ENV` sets the environment class in every mode (`15-deployment-and-runtime-contract.md`). Deploy RFC 0006
+(`<repo>/docs/rfc/0006-production-gateway-on-a-non-kubernetes-target.md`) tracks the artifacts. Until they
+exist, report a request for them as owner work, and never ship the `local` route set, the widened local
 overlay, or placeholder digests as production.
 
 ## Open items

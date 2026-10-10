@@ -291,6 +291,13 @@ special case into its own SDK, and each one is a second migration later.
    and `notif.recipient_chunks` (`internal/mq/types.go:16-20`), each with `.retry` and `.dlq`. The defect is
    the publish path, not the naming. `notif.recipient_chunks` has no wired consumer, which is an undrained
    durable queue and is recorded as such in the registry.
+   *2026-10-10*: `projector`'s legacy runtime is retired and the rule projection uses registered command
+   exchanges. The remaining default-exchange publishers are `entitlement-api`'s legacy outbox relay
+   (`entitlement.projector.work`, removed at AP-6) and `entitlement.reconciliation`, which is deprecated and
+   removed at AP-6 with its route by owner decision 2026-10-10. Correction, same day: the expansion-worker also
+   publishes `notif.expand_users`, `notif.recipient_chunks`, and its retry and dead-letter legs through the
+   default exchange, and `entitlement-api` declares `.retry` and `.dlq` only for its three managed queues,
+   not for those two (`entitlement-api: internal/mq/topology.go:14-20`, `internal/mq/publisher.go:112-114`).
 2. **Rename the event envelope fields** — `event_id`, `event_type`, `aggregate_version`, `schema_version`,
    `producer` become the canonical names; `aggregate_version` keeps its name and meaning. Rule:
    `20-operational-and-observability-contract.md`. Evidence:
@@ -310,6 +317,11 @@ special case into its own SDK, and each one is a second migration later.
    the platform names in `24-metric-registry.md`; the genuinely service-owned ones take the `alaa_`
    prefix and are already registered there under their new names. One catalog file per service makes the
    next survey cheap. Rule: `24-metric-registry.md`.
+   *2026-10-10*: four more unregistered `entitlement-api` collector gauges are now recorded as non-conforming,
+   three without a mapped name; the outbox-publisher and expansion-worker roles expose no `/metrics`. The
+   sidecar's eight `authz_sidecar_*` families stand, beside one conforming `alaa_http_requests_in_flight`.
+   `entitlement-projector` emits only registered shared names. Evidence: each repository's
+   `docs/handoffs/mesh-145d79be-registry-inventory.md`.
 6. **Confirm the readiness `checks` element type** is an object keyed by check name. Rule:
    `10-core-service-contract.md`. Evidence: `services/entitlement-api/internal/health/service.go:30-44`.
 7. **Compute the ingress deadline.** The `context.Context` plumbing already reaches every outbound call, so
@@ -319,6 +331,21 @@ special case into its own SDK, and each one is a second migration later.
 8. Already conforming and worth keeping: the error envelope with `meta`, UPPER_SNAKE codes, prefetch `50` on
    both consumers, manual acknowledgement after handler success, publisher confirms, the `.retry`/`.dlq`
    topology, `Idempotency-Key` on write routes, and UUIDv7 public identifiers.
+9. **Emit the shared event names** (*2026-10-10*). `entitlement-api` emits only `http.request.completed` and
+   `http.request.failed`, `entitlement-projector` only `queue.publish.failed`, and `authz-sidecar` seven of
+   the eleven. Rule and per-service gaps: `20-operational-and-observability-contract.md`, "Service-specific
+   event names (authorization mesh)".
+10. **Add the code registry and its test** (*2026-10-10*, `authz-sidecar` `ac89ce0`). The sidecar has no committed
+    machine-readable registry file of its codes and no test that reads one, so `10-core-service-contract.md`
+    (Error code registry and casing) is unmet. The names sit in Go constants
+    (`internal/observability/cache_clear.go:11-21`, `internal/httpserver/envelope.go:16-17`,
+    `internal/httpserver/clear.go:44-62`) and in the registries in `20-operational-and-observability-contract.md`
+    and `24-metric-registry.md`. This is a sidecar-owned follow-up.
+11. **Cap the encoded `X-Access` value** (*2026-10-10*). No reference publishes a maximum length;
+    `22-failure-load-and-deprecation-contract.md` names none. The sidecar applies the permission-bitmap decoder's
+    fallback of 1024 characters (`internal/authz/access.go:13`, `internal/authz/bitmap.go:42`), which the decoder
+    documents as a fallback, not the contract value. The cap is undecided; the skill owner publishes it, then
+    every service passes it to the decoder.
 
 ### `gateway`
 

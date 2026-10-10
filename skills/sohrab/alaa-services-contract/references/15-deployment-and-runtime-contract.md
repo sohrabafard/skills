@@ -7,8 +7,10 @@ This file is Ala-specific and normative. Before creating or choosing a shared im
 ## Ownership split
 
 Rules:
-- treat Kubernetes/OpenShift, released only from the `deploy` repository, as the only Ala production path; the current target is one offline OpenShift namespace
-- treat Docker Compose and Docker Swarm as supported Ala runtime modes that must still satisfy the same service contract; whether either becomes a production target is undecided (`16-infrastructure-services-and-delivery-artifacts.md`)
+- the environment class (`dev`, `production`, ...) comes only from the service's environment env (`APP_ENV`), never from the runtime mode; every supported mode can run every environment class and must satisfy the same service contract; an unset or empty `APP_ENV` means `production` in every service binary (fail-closed), so development and tests set it explicitly
+- every outbound connection to a dependency (PostgreSQL, Redis, RabbitMQ, the OpenFGA engine, OTLP, Sentry and similar) selects its transport by env in every environment: `<SERVICE_PREFIX>_<DEPENDENCY>_TRANSPORT` = `plain`, `tls-unverified` (self-signed accepted) or `tls-verified`, with an optional `<SERVICE_PREFIX>_<DEPENDENCY>_TLS_CA_FILE`; unset derives from the URL scheme and a contradicting scheme is refused. A plain or tls-unverified connection is a legitimate configuration and is never reported as a warning in logs or readiness. Inbound listeners and service-to-service caller identity are out of this rule until the gateway mTLS decision
+- release Kubernetes/OpenShift only from the `deploy` repository; the current Kubernetes target is one offline OpenShift namespace
+- Docker Compose and Docker Swarm are supported Ala runtime modes (`16-infrastructure-services-and-delivery-artifacts.md` names each delivery step's owner)
 - load `$alaa-k8s-helm` for Helm, values layering, OCI chart delivery, and rollout mechanics, `$alaa-gitlab-ci-cd` for pipeline mechanics, and `$caas-arvan-kuber` for a fact that differs on Arvan CaaS
 - load `$alaa-docker-production` for Dockerfile hardening, runtime-user rules, Compose and Swarm delivery mechanics, and registry-plumbing details
 - do not duplicate Kubernetes implementation detail in this file when the concern is already owned by `$alaa-k8s-helm` or `$caas-arvan-kuber`
@@ -30,12 +32,12 @@ Normalized Ala deployment modes:
 
 | Mode                 | Status in the Ala contract | Primary use                                                    |
 |----------------------|----------------------------|----------------------------------------------------------------|
-| Kubernetes/OpenShift | only production path       | release from `deploy` with the image-embedded service contract |
-| Docker Compose       | supported Ala runtime mode | single-host local, validation, or operator-managed runtime     |
-| Docker Swarm         | supported Ala runtime mode | multi-node Docker runtime; production use undecided            |
+| Kubernetes/OpenShift | supported Ala runtime mode | release from `deploy` with the image-embedded service contract |
+| Docker Compose       | supported Ala runtime mode | single host or one VM scale unit                               |
+| Docker Swarm         | supported Ala runtime mode | multi-node Docker runtime                                      |
 
-Which project owns each delivery step, and the current state of a Compose or Swarm production target for the
-gateway, live in `16-infrastructure-services-and-delivery-artifacts.md`.
+The mode is a delivery choice; `APP_ENV` alone sets the environment class. Which project owns each delivery
+step lives in `16-infrastructure-services-and-delivery-artifacts.md`.
 
 Rules:
 - new or refactored Ala services must ship `deploy/service.yaml` for the Kubernetes/OpenShift path and document both Docker paths, Compose and Swarm
@@ -166,6 +168,19 @@ Rules:
 Rules:
 - in Docker Compose and Docker Swarm, gateway-side backend discovery uses direct DNS against the canonical backend alias
 - do not couple gateway config to replica names, task IDs, or host IP lists
+
+## Docker Compose VM scale unit
+
+Owner decision 2026-10-10. Applies when Ala services run under Docker Compose without Swarm on operator-provided VMs; each VM is one scale unit.
+
+- Run only Ala services on the VM. Postgres, RabbitMQ, Redis and other infrastructure run outside it, reached through the external-mode host, port and credential envs. Never run a per-VM copy of business or authorization truth: a revoke written on one VM would not reach the others.
+- Keep every service stateless: no container volume holds business, authorization or queue state, so a VM can be added or removed without data loss.
+- Publish no host port except the gateway entry; the operator's load balancer spreads requests across the VMs' gateways. Loopback ports for local tools stay in an opt-in overlay.
+- Set each service's replica count, CPU and memory by env. A replicated service declares no `container_name` and no fixed host port; callers use its canonical alias.
+- Grow one VM's profile while the operator's VM envelope allows it, then add a VM with the same profile.
+- Per service, raise one instance's CPU and memory first while each added core still delivers at least 80% of the previous core's throughput on the target VM. Add replicas first when the process is single-threaded (PgBouncer uses one core per instance), when an instance reaches a hard per-instance limit, or when availability needs two instances.
+- Derive each pool-holding instance's connections from the shared budget (budget divided by instances); adding instances never multiplies database connections. `22-failure-load-and-deprecation-contract.md` owns the budget.
+- Every worker and queue consumer runs on every VM, so it must stay correct with N concurrent instances (competing consumers, row claims, idempotent effects). Run a worker not yet proven N-safe on one designated VM only.
 - keep gateway backend naming aligned with the service-owned canonical alias
 - when a backend is not yet wired into the shared Docker runtime, document the gap instead of inventing alternate names
 

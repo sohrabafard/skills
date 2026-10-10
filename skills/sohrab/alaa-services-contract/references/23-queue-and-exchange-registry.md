@@ -66,8 +66,8 @@ for one service and an operator cannot tell which one a binding meant.
 | Command queue | `<service>.command.<family>.v<major>` | — | `notification.command.sms.send_pattern.v1` |
 | Event consumer queue | `<consumer-service>.<producer-service>.<purpose>` | — | `notif.auth.user_projection` |
 | Service-internal work queue | `<service>.jobs.<lane>` | — | `auth.jobs.sms` |
-| Retry queue | `<queue>.retry` | — | `entitlement.projector.work.retry` |
-| Dead-letter queue | `<queue>.dlq` | — | `entitlement.projector.work.dlq` |
+| Retry queue | `<queue>.retry` | — | `notif.retrieve_users.retry` |
+| Dead-letter queue | `<queue>.dlq` | — | `notif.retrieve_users.dlq` |
 
 Routing keys:
 - An event's routing key is the `message_type` value byte-for-byte, with no substitution.
@@ -145,10 +145,12 @@ Every row carries exactly one status, and each means one thing:
 | `auth.events` | `auth` | event, topic | `auth` domain facts: sessions, tokens, profile changes | `auth` | any service that binds | `conforming` in code (`config/outbox.php:6` default), `non-conforming` in `.env.example:238`, which overrides it to `auth-profile.events` |
 | `content.events` | `content` | event, topic | `content` domain facts: course, set, content changes | `content` | any service that binds | `gap` — `content` publishes to an exchange literally named `events` (`app/Support/Content/RabbitMqIntegrationEventPublisher.php:19`, `.env.example:101`) |
 | `comment.events` | `comment` | event, topic | `comment` domain facts: comments, replies, likes, moderation | `comment` | any service that binds | `gap` — no exchange is configured at all (`config/queue.php:84` carries a queue name only) |
-| `entitlement.events` | `entitlement-api` | event, topic | grant and entitlement facts | `entitlement-api`, `projector` | any service that binds | `gap` — `projector` publishes to the default exchange (`services/projector/internal/runtime/amqp.go:104`) |
+| `entitlement.events` | `entitlement-api` | event, topic | grant and entitlement facts | `entitlement-api` | any service that binds | `gap` — not declared; only `entitlement-api`'s legacy outbox relay publishes these facts, through the default exchange (see `entitlement.projector.work`) |
 | `notification.commands` | `notification` | command, direct | the fleet's only cross-service ingress into `notification` | every producer service | `notification`; `notif` when it takes over a family | `conforming` |
 | `notification.commands.dlx` | `notification` | command dead-letter, direct | dead-lettered commands from the queues below | broker on nack | operator replay | `conforming` |
-| `<service>.commands` for `auth`, `content`, `comment`, `entitlement-api`, `wa` | each service | command, direct | inbound work another service requires this service to do | the requesting service | the owning service | `gap` — no service other than `notification` accepts commands today, so every cross-service instruction is either an HTTP call or absent |
+| `projector.commands` (+ `projector.commands.dlx`) | `entitlement-projector` | command, direct | rule projection tasks, routing key `rule_projection.task.v1` | `entitlement-api` projection relay | `entitlement-projector` executor | `conforming` (`entitlement-api/docs/contracts/source-owned-rule-projection-v1/`, `internal/mq/projection.go:17-24`); production declarer unverified: the executor only passive-declares its queue (`entitlement-projector: internal/execruntime/runtime.go:585`), and `entitlement-api` declares this topology only with `ENTITLEMENT_API_PROJECTION_DECLARE_TASK_TOPOLOGY` on, for tests and local (`entitlement-api: internal/app/projection_worker.go:164-168`) |
+| `entitlement.commands` (+ `entitlement.commands.dlx`) | `entitlement-api` | command, direct | rule projection receipts, routing key `rule_projection.receipt.v1` | `entitlement-projector` | `entitlement-api` projection worker | `conforming` (same sources) |
+| `<service>.commands` for `auth`, `content`, `comment`, `wa` | each service | command, direct | inbound work another service requires this service to do | the requesting service | the owning service | `gap` — only `notification`, `entitlement-projector` and `entitlement-api` (projection receipts) accept commands today, so every other cross-service instruction is either an HTTP call or absent |
 
 ## Registry: queues
 
@@ -159,11 +161,13 @@ Every row carries exactly one status, and each means one thing:
 | `notification.command.notification.store.v1` | `notification` | command | store an in-app inbox message | any producer, routing key `notification.store.v1` | `notification` | `conforming` (`config/queue.php:214-220`); stays on `notification` and does not migrate to `notif` |
 | `notification.command.user_projection.upsert.v1` | `notification` | command | keep notification's user projection resolvable | every service that owns users | `notification` | `conforming` (`config/queue.php:225-226`) |
 | `notification.command.<family>.v1.dlq` for each of the four above | `notification` | dead-letter | failed commands, routing key `<family>.v1.failed` | broker | operator replay | `conforming` |
-| `entitlement.projector.work` (+ `.retry`, `.dlq`) | `entitlement-api` | command | tuple-projection work for `projector` | `entitlement-api` | `projector` | `conforming` name; `non-conforming` publish path, which uses the default exchange |
-| `entitlement.reconciliation` (+ `.retry`, `.dlq`) | `entitlement-api` | command | reconciliation sweeps | `entitlement-api` | `entitlement-api` reconciliation worker | `conforming` name; same publish path defect |
-| `notif.retrieve_users` (+ `.retry`, `.dlq`) | `entitlement-api` | command | resolve an object audience into recipients | any service needing audience expansion | `entitlement-api` `expansion-worker` | `conforming` (`services/entitlement-api/internal/mq/types.go:17`) |
-| `notif.expand_users` (+ `.retry`, `.dlq`) | `entitlement-api` | command | expand one principal into users | `entitlement-api` | audience/expansion provider | `conforming` (`types.go:18`) |
-| `notif.recipient_chunks` (+ `.retry`, `.dlq`) | `entitlement-api` | command | deliver resolved recipient chunks | `entitlement-api` | reserved — no consumer is wired | `conforming` name, undrained consumer |
+| `projector.command.rule_projection.task.v1` (+ `.dlq`) | `entitlement-projector` | command | one rule projection task | `entitlement-api` projection relay | `entitlement-projector` executor | `conforming`; replaces `entitlement.projector.work` |
+| `entitlement.command.rule_projection.receipt.v1` (+ `.dlq`) | `entitlement-api` | command | one projection receipt | `entitlement-projector` | `entitlement-api` projection worker | `conforming` |
+| `entitlement.projector.work` (+ `.retry`, `.dlq`) | `entitlement-api` | command | legacy tuple-projection work | `entitlement-api` outbox relay and `projection-replay` | none since the source-owned rule projection; never add a consumer | `legacy` — removed at the AP-6 cutover (owner decision D2, `source-owned-rule-projection-v1/80-bounds-and-cutover.md`); until then a deployment running the rule projection stops the outbox relay, or the queue grows unbounded |
+| `entitlement.reconciliation` (+ `.retry`, `.dlq`) | `entitlement-api` | command | `reconciliation.requested` repair trigger for the legacy projector `reconcile` lane | `entitlement-api` api role, `POST /api/v1/admin/reconciliation/run` | none: the projector `reconcile` consumer was removed 2026-10-09 (`entitlement-projector` `515cdb0`, constitution 3.0.0); never add a consumer | `legacy` — route and event deprecated by owner decision 2026-10-10 and removed at the AP-6 cutover with the legacy outbox publication; until then the route answers `202`, the message is never consumed, and the queue (no `x-max-length`) grows. Replacements: `projection-repair-rule`, `projection-reopen-task`, generation replacement, and the projector drift audit (`entitlement-api: internal/reconciliation/service.go:114`, `internal/mq/topology.go:30-35`, `docs/handoffs/mesh-145d79be-registry-inventory.md` section B; `entitlement-projector: docs/rfc/projector-bounds-defaults.md:291`) |
+| `notif.retrieve_users` (+ `.retry`, `.dlq`) | `entitlement-api` | command | resolve an object audience into recipients | requester unverified; no publisher in `entitlement-api` | `entitlement-api` `expansion-worker`; it writes `.retry` and `.dlq` itself | `conforming` (`entitlement-api: internal/mq/types.go:17`, `internal/workers/expansion_worker.go:262-309`) |
+| `notif.expand_users` | unverified — `entitlement-api` only publishes and does not declare it; its doc names `notification` as declarer (`entitlement-api: docs/delivery-operators/20-local-bring-up.md:109`, doc only) | command | expand one group principal into users | `entitlement-api` `expansion-worker` (default `AUTH_EXPANSION_PROVIDER_MODE=queue`) | audience/expansion provider, unverified; no reply is read from the queue | `conforming` name (`entitlement-api: internal/mq/types.go:18`, `internal/mq/topology.go:14-20`); `.retry`/`.dlq` unverified |
+| `notif.recipient_chunks` | unverified — same as `notif.expand_users` | command | deliver resolved recipient chunks | `entitlement-api` `expansion-worker`, only for a job carrying a `notification_id` | reserved — no consumer is wired | `conforming` name, undrained consumer (`entitlement-api: internal/mq/types.go:19`, `internal/expansion/service.go:576-582`); `.retry`/`.dlq` unverified |
 | `auth.jobs.sms` | `auth` | internal job | `auth`'s own SMS send jobs, enqueued and consumed by `auth` | `auth` | `auth` | `gap` — the queue is named `sms` today (`config/queue.php:79`, `.env.example:246`) |
 | `comment.jobs.outbox` | `comment` | internal job | `comment`'s own outbox relay job | `comment` | `comment` | `gap` — the queue is named `events` today (`config/queue.php:84`, `.env.example:128`) |
 | `content.jobs.outbox` | `content` | internal job | `content`'s own outbox relay job | `content` | `content` | `gap` — the queue is named `events` today (`.env.example:101`) |
@@ -177,6 +181,11 @@ Every row carries exactly one status, and each means one thing:
 | `notif.notification.command.user_projection.upsert.v2` | `notif` | command | project-scoped, location-aware projection | any producer | `notif` | `planned` |
 | `notif.notification.command.news.broadcast.v1` | `notif` | command | news broadcast dispatch | `news` | `notif` | `planned` |
 | `notif.notification.command.news.broadcast_cancel.v1` | `notif` | command | cancel a news broadcast | `news` | `notif` | `planned` |
+
+Not rows, verified 2026-10-10:
+- `authz-sidecar` uses no broker: a synchronous HTTP checker with no AMQP module (`authz-sidecar: go.mod:5-22`, `internal/httpserver/server.go:51-55`).
+- `authz-openfga` uses no broker: the engine is PostgreSQL-only (`authz-openfga: docker-compose.yml:27`). The queues its `verification/extraction-handoff/broker/` harness polls are non-runtime test fixtures.
+- `entitlement-api`'s projection-worker startup probe publishes to an undeclared `entitlement.projection.probe.<uuid>` on the default exchange, unroutable by design, to prove the broker rejects a forged AMQP `user_id`; no queue exists (`entitlement-api: internal/mq/user_probe.go:20-27`).
 
 ## The `auth` to `notification` command path
 

@@ -219,8 +219,8 @@ resource and one service's burst becomes every service's outage.
   container, and `25` maximum open plus `25` maximum idle for a Go service.
 - Go services also set `ConnMaxLifetime` to `30m` and `ConnMaxIdleTime` to `5m` so a rolling infra change
   drains old connections instead of holding them.
-- Across a whole service, `replicas * max_connections_per_container` must stay at or below `60%` of the
-  target Postgres `max_connections`. When a scale-up would breach that ceiling, lower the per-container
+- Across a whole service, `replicas * max_connections_per_container`, summed over every VM or host that runs
+  it, must stay at or below `60%` of the target Postgres `max_connections`. When a scale-up would breach that ceiling, lower the per-container
   maximum in the same change instead of raising replicas alone.
 - A request waits at most `1000 ms` to acquire a pooled connection, then fails with `503`, code
   `DEPENDENCY_UNAVAILABLE`, and event `dependency.unavailable`. An unbounded acquire wait converts a slow

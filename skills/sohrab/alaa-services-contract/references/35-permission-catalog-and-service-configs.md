@@ -70,6 +70,7 @@ Use this file when an Ala service or shared frontend package changes `config/per
   and remains separate from object-level OpenFGA `can_*` relations.
 - news permissions own bitmap ids `108-119`.
 - auth admin and scope permissions own bitmap ids `120-130`.
+- authz-sidecar (`service_key` `authz`) owns bitmap id `131`: `authz_decision_cache_clear`, the guard of the decision-cache clear route; the generated Go map is compiled into the sidecar.
 - The `client` frontend is the only registered aggregate consumer. It consumes every active permission in the
   catalog and owns none of them.
 
@@ -91,6 +92,7 @@ Use this compact grouping instead of copying the full catalog into prompts:
 | `96-107`      | `entitlement` | entitlement-api grant, explain, expansion, reconciliation, projection, query, and access-rule admin permissions |
 | `108-119`     | `news`    | news send-scope, edit/remove, root, and visibility-diagnostics permissions                    |
 | `120-130`     | `auth`    | auth admin and scope permissions                                                              |
+| `131`         | `authz`   | authz-sidecar decision-cache clear (`authz_decision_cache_clear`)                              |
 
 ## Companion Skill Boundary
 

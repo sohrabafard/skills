@@ -201,6 +201,11 @@ Rules:
   `20-operational-and-observability-contract.md`. They belong in the same registry and satisfy the same
   pattern; do not keep a second list for them.
 
+Fleet location and minimal shape (hub ruling, MESH-145d79be, 2026-10-10; precedent entitlement-api and auth):
+`docs/contracts/<service>/errors/error-codes.json`, a JSON object with `service`, `version`, an `errors` array of
+`{code, status, meaning}` and an `events` array of `{event, level, codes[]}` for the event-to-code pairs. Metric names
+stay in `24-metric-registry.md`, not in this file. Extra fields a service already carries stay allowed.
+
 Observable that decides compliance: a test enumerates every code the service can emit, asserts each matches
 the pattern above, and asserts each appears in the committed registry file in the same repository.
 

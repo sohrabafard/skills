@@ -53,7 +53,7 @@ identifier-level trigger vocabulary per mode; each reference file names its own 
 | Task touches | File |
 |---|---|
 | Health, readiness, service identity, route families | `10-core-service-contract.md` |
-| Creating or choosing an image, toolchain, chart, CI include, generator, hook pack, or shared script; which project owns a delivery step; the gateway's generated config; a Compose or Swarm production target | `16-infrastructure-services-and-delivery-artifacts.md` |
+| Creating or choosing an image, toolchain, chart, CI include, generator, hook pack, or shared script; which project owns a delivery step; the gateway's generated config; Compose or Swarm production artifacts | `16-infrastructure-services-and-delivery-artifacts.md` |
 | Deployment mode, shared infra, registry, CI baseline, fast tests | `15-deployment-and-runtime-contract.md` |
 | Correlation headers, log fields, event and code names, request middleware | `20-operational-and-observability-contract.md` |
 | OTLP exporter env, Prometheus scraping, per-service telemetry reality | `21-alaa-platform-observability-directive.md` |

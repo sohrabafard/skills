@@ -102,19 +102,22 @@ For request and operational flows owned by this skill, use these exact event nam
   deadline no longer covers another attempt
 - `queue.publish.failed` when a broker publish or its outbox write fails
 - `request.shed` when ingress refuses a request because in-flight requests are at the configured maximum
+- `panic.recovered` when a request, handler or worker recovers a panic and turns it into an error response or a failed delivery
 
 Use these exact code expectations:
 - `HTTP_REQUEST_COMPLETED` with `http.request.completed`
 - `HTTP_REQUEST_FAILED` with `http.request.failed`
 - `SERVICE_NOT_READY` with `service.readiness.failed`
 - `SERVICE_READY` with `service.readiness.recovered` when used
-- `AUTH_*` codes from `$alaa-trust-gateway-auth` with `auth.context.invalid`
+- `AUTH_*` and `TENANT_CONTEXT_*` codes from `$alaa-trust-gateway-auth` (`references/50-deny-codes.md` owns each name and status) with `auth.context.invalid`, or with the event of the route that refuses them
 - stable domain denial codes with `authz.denied`
 - stable validation codes with `input.validation.failed`
 - `DEPENDENCY_CALL_FAILED` with `dependency.call.failed`
 - `DEPENDENCY_UNAVAILABLE` with `dependency.unavailable`
 - `QUEUE_PUBLISH_FAILED` with `queue.publish.failed`
 - `REQUEST_SHED` with `request.shed`
+- `PANIC_RECOVERED` with `panic.recovered`
+- `INTERNAL_ERROR` as the response `code` of an unexpected `500` (a response that cannot be rendered, or a recovered panic); the log line keeps `HTTP_REQUEST_FAILED` or `PANIC_RECOVERED`
 
 The behaviour these four names describe is defined in `22-failure-load-and-deprecation-contract.md`. This
 file owns the names; that file owns when they are emitted.
@@ -123,6 +126,62 @@ Rules:
 - Do not invent alternate names for the same event type.
 - Keep `event` and `code` aligned.
 - Keep user-facing messages separate from these machine-readable names.
+
+## Service-specific event names (authorization mesh)
+
+A record, not a rule: the `event` values each mesh service emits, verified 2026-10-10. Each owning
+repository's `docs/handoffs/mesh-145d79be-registry-inventory.md` cites every name at `file:line`.
+
+| Owner | `event` values | Emitted when |
+|---|---|---|
+| `entitlement-api` | `panic.recovered` | recovered panic in a handler, worker, consumer, or operator mode (`internal/observability/recovery.go:21-26`) |
+| `entitlement-api` | `security.audit.attempt`, `security.audit.outcome` | start and end of an audited access route (`internal/httpserver/access_observability.go:43-62`) |
+| `entitlement-api` | `entitlement.projection_replay.started`, `entitlement.projection_replay.completed` | legacy `projection-replay` operator mode (`internal/app/projection_replay.go:73-100`) |
+| `entitlement-api` | `projection_operator_started`, `projection_task_reopened`, `projection_write_fence_applied`, `projection_generation_created`, `projection_bootstrap_applied`, `projection_bootstrap_completed`, `projection_switch_check`, `projection_generation_abandoned_retired`, `projection_generation_retire_applied`, `projection_hydration_live_recheck`, `projection_hydration_verified`, `projection_hydration_refused`, `projection_marker_incident_operator_failed`, `projection_rule_inspection`, `projection_rule_inspection_revision`, `projection_minimum_generation`, `projection_minimum_generation_refused`, `projection_rule_repair_applied`, `projection_snapshot_exported`, `projection_snapshot_verified` | one audited `projection-*` operator mode started, applied, verified, refused, or reported (`internal/app/projection_operator*.go`, `projection_reopen.go`) |
+| `entitlement-api` | `projection_rule_blocked`, `projection_outcome_conflict`, `projection_task_dead_lettered`, `projection_deny_retire_exhausted`, `projection_incident_repeat`, `projection_marker_incident`, `projection_marker_incident_failed`, `projection_marker_incident_closed`, `projection_marker_incident_awaiting_verification`, `projection_marker_incident_fenced_successor`, `projection_deny_not_effective`, `projection_deny_retire_success_after_refusal` | projection-worker receipt processing blocked a rule, opened, repeated, or closed an incident, or saw a dead-letter, conflict, or ineffective deny (`internal/projectionreceipts/transition.go`, `incident.go`) |
+| `entitlement-projector` | `panic.recovered`, `telemetry_shutdown_incomplete` | recovered panic; incomplete exporter shutdown; all modes (`internal/observability/recovery.go:22-23`, `shutdown.go:64`) |
+| `entitlement-projector` | `executor_task_rejected`, `executor_task_disposed`, `executor_task_defect`, `executor_task_held`, `executor_task_hold_repeated`, `executor_task_hold_reclassified`, `executor_task_retry`, `executor_task_final_attempt_dead_lettered`, `executor_task_final_attempt_notice` | rule-executor task attempt rejected, applied, held, retried, or dead-lettered (`internal/execruntime/handler.go`, `runtime.go`) |
+| `entitlement-projector` | `executor_generation_verify_failed`, `executor_engine_tls_unverified`, `executor_intake_paused`, `executor_intake_channel_lost`, `executor_intake_return_unproven`, `executor_intake_channel_closed_at_ceiling`, `executor_intake_probe_failed`, `executor_intake_probe_passed`, `executor_intake_resume_failed`, `executor_intake_return_mode`, `executor_shutdown_drain_expired`, `executor_shutdown_deliveries_returned` | rule-executor startup verification, intake pause, probe, resume, and shutdown drain (`internal/execruntime/readiness.go`, `app.go`, `runtime.go`) |
+| `entitlement-projector` | `audit_config_invalid`, `audit_engine_tls_unverified`, `audit_finished`, `audit_engine_failed`, `audit_refused`, `audit_output_failed` | read-only `audit` mode (`internal/audit/run.go`) |
+| `entitlement-projector` | `hydration_evidence_config_invalid`, `hydration_evidence_engine_tls_unverified`, `hydration_evidence_digest_mismatch`, `hydration_evidence_written`, `hydration_evidence_markers_read`, `hydration_evidence_refused`, `hydration_evidence_engine_failed`, `hydration_evidence_output_failed` | read-only `hydration-evidence` mode (`internal/hydrationevidence/run.go`) |
+| `authz-sidecar` | `panic.recovered` | recovered panic in the HTTP or geography path (`internal/observability/recovery.go:18-21`) |
+| `authz-sidecar` | `authz.model_fence.opened`, `authz.model_fence.recovered`, `authz.model_fence.unverified`, `authz.model_fence.closed` | model fence transition (`internal/health/model_fence.go:133-149`) |
+| `authz-sidecar` | `sentry.configuration`, `sentry.spotlight.unsupported`, `sentry.flush` | Sentry boot configuration, unsupported Spotlight setting, exit flush (`internal/observability/sentry.go:38,159`; `cmd/authz-sidecar/main.go:101-103`) |
+| `authz-sidecar` | `authz.cache.cleared`, `authz.cache.clear_refused` | emitted (CACHE-1 P5, `authz-sidecar` `ac89ce0`: `internal/observability/cache_clear.go:18-20`; `internal/httpserver/clear_audit.go:84,94` (at `6135113`)): one terminal audit event per `POST /internal/authz/cache/clear` attempt, `authz.cache.cleared` at info (warn when `outcome` is `partial`) and `authz.cache.clear_refused` at warn, sampled to at most one line per second per `reason` per replica with `suppressed_since_last_log` (the counter stays unsampled). Fields: `actor_user_id`, `actor_project_id`, `scope`, `project_id`, `user_id` (subject and decision scopes), `requested_items`, `cleared`, `mechanism`, `outcome` (`partial` after a partial `UNLINK`), `code`, `reason` (`disabled`, `cidr`, `gateway_credential`, `identity`, `permission`, `tenant`, `rate_limited`, `shed`, `validation`, `unavailable`; `clear_audit.go:15-26`), `peer_ip`, `request_id`, trace and span ids. Never logged: object ids, locations, keys, tokens, secrets (`authz-sidecar: docs/integrations/gateway/authz-sidecar-contract.md:654`) |
+| `authz-sidecar` | `authz.cache.clear_started` | info; the audit record of an accepted clear, written after the body is validated and the actor bucket admits it, and before the fleet cooldown and any Redis mutation; the record shape is that of `authz.cache.cleared`. It fails closed: when it cannot be written, the clear returns `503` `DEPENDENCY_UNAVAILABLE` and mutates nothing (`authz-sidecar` `dd02250`: `internal/observability/cache_clear.go:18-20`; `internal/httpserver/clear_audit.go:84,94` (at `6135113`); `internal/httpserver/clear.go:30,213-220`) |
+| `authz-sidecar` | `authz.cache.clear_route.enabled` | info at startup when the clear route is mounted; fields `allowed_cidrs` and `gateway_keys` are counts, never values (`authz-sidecar: cmd/authz-sidecar/main.go:161-162`) |
+| `authz-sidecar` | `authz.decision_cache.armed`, `authz.decision_cache.disarmed` | decision cache (mode `redis`) armed at info once the redis-mode lease is held; disarmed at warn when the lease cannot be renewed for its 30 s TTL and decisions go to the engine (`authz-sidecar: internal/decisioncache/cache.go:507-530`) |
+| `authz-sidecar` | `authz.decision_cache.global_token_rotated` | info when a replica finds no redis-mode lease and rotates the global token before creating the lease (`authz-sidecar: internal/decisioncache/cache.go:566-567`) |
+| `authz-sidecar` | `authz.decision_cache.mac_mismatch` | warn when a cached entry fails MAC verification and is served from the engine; at most one line per second with `mismatches_since_last_log`; no key, token, user or object (`authz-sidecar: internal/decisioncache/cache.go:43,592-605`) |
+| `authz-sidecar` | `authz.decision_cache.breaker_open` | warn once per opening of the decision-cache Redis breaker; fields `consecutive_failures`, `cooldown_ms` (`authz-sidecar: internal/decisioncache/guard.go:68-88`) |
+| `authz-sidecar` | `authz.decision_cache.arm_failed` | warn when an arm or lease-renewal attempt of the redis-mode lease fails, the first attempt included; at most one line per lease TTL (30 s); fields `error_class`, a closed set (`redis_unavailable`, `timeout`, `auth`, `oom`, `other`; Redis reply words such as NOAUTH or WRONGPASS are classifier inputs only, never emitted), and `failures_since_last_log`, the integer count of attempts folded into the line; no key, token, user or object (`authz-sidecar` `051ef44`: `internal/decisioncache/cache.go:598`, classifier `internal/decisioncache/errorclass.go`). The disarmed warn also carries `error_class` from the same set |
+| `authz-sidecar` | `authz.decision_cache.token_rollback` | warn when a scope token is read back at the value before the latest one (a failover, restore or replay that may have undone a clear); at most one line per second per replica; fields `token_scope` (`project`, `subject`, `global`) and `rollbacks_since_last_log`; no key, token, user or object (`authz-sidecar` `dd02250`: `internal/decisioncache/cache.go:46,610-644`) |
+| `authz-sidecar` | `authz.cache_status.invalid` | warn when a decision's cache status falls outside the closed set and is reported as `bypass`; at most one line per interval; fields `cache_status`, `request_id`, `trace_id` (`authz-sidecar: internal/decision/engine.go:272-288`) |
+| `authz-openfga` | none | it defines no structured logging; delivery and fixture scripts print CLI refusal lines with exit codes, and the engine writes upstream JSON logs (`authz-openfga: scripts/openfga/delivery.py:1266-1269`, `docker-compose.yml:37`) |
+
+A row marked planned is an accepted design that no code emits yet; it is not verified against source.
+
+Service-specific error codes (authorization mesh), same rules as above (UPPER_SNAKE, append-only):
+
+| Owner | `code` | Status | Emitted when |
+|---|---|---|---|
+| `authz-sidecar` | `AUTHZ_CACHE_CLEAR_RATE_LIMITED` | emitted (CACHE-1 P5, `authz-sidecar` `ac89ce0`) | `429` on `POST /internal/authz/cache/clear` when the actor bucket, the replica bucket or the fleet cooldown refuses the request; `Retry-After` header and `meta` `{"retry_after_seconds":n}` (`authz-sidecar: internal/httpserver/clear.go:29,201-206,224-233`; `internal/observability/cache_clear.go:21`; `docs/integrations/gateway/authz-sidecar-contract.md:644`). |
+| `authz-sidecar` | `NOT_FOUND` | emitted (`authz-sidecar` `ac89ce0`) | `404` catch-all envelope for every unmatched path and for the clear route while it is disabled or the peer is refused; the body is one fixed byte string, so those cases are indistinguishable (`authz-sidecar: internal/httpserver/envelope.go:16,25,52-54,73-82`) |
+| `authz-sidecar` | `METHOD_NOT_ALLOWED` | emitted (`authz-sidecar` `ac89ce0`) | `405` catch-all envelope with an `Allow` header when a known fixed route (`/internal/authz/check`, `/api/health`, `/api/ready`) receives another method (`authz-sidecar: internal/httpserver/envelope.go:17,65-82`) |
+| `authz-sidecar` | `READINESS_OPENFGA_CONFIG_MISSING`, `READINESS_OPENFGA_STORE_PIN_MISSING`, `READINESS_OPENFGA_MODEL_PIN_MISSING`, `READINESS_OPENFGA_API_UNAVAILABLE`, `READINESS_OPENFGA_MODEL_FENCE_INVALID`, `READINESS_OPENFGA_MODEL_FENCE_UNAVAILABLE` | emitted (`authz-sidecar` `48ce029` registry) | `503` readiness check codes inside a `SERVICE_NOT_READY` body: OpenFGA url not configured, no store pin, no model pin, API did not answer, engine model differs from the bundle model, engine model could not be verified |
+| `authz-sidecar` | `READINESS_OPENFGA_CONFIG_READY`, `READINESS_OPENFGA_STORE_PIN_READY`, `READINESS_OPENFGA_MODEL_PIN_READY`, `READINESS_OPENFGA_API_READY`, `READINESS_OPENFGA_MODEL_FENCE_READY` | emitted (`authz-sidecar` `48ce029` registry) | `200` readiness check codes inside a `SERVICE_READY` body, one per passing check above |
+
+Each service's complete code and event list is its registry, `docs/contracts/<service>/errors/error-codes.json` (reference 10). `authz-sidecar` committed its registry in `48ce029`. This table names only the codes no other owner defines. `AUTHZ_ALLOWED`, `AUTHZ_DENIED`, the location codes and the other `AUTHZ_*` decision codes belong to `26-request-time-authorization-openfga/40-decision-and-enforcement.md`. `AUTH_*` and `TENANT_CONTEXT_*` belong to `$alaa-trust-gateway-auth` `references/50-deny-codes.md`. `INPUT_VALIDATION_FAILED` belongs to reference 10.
+
+Conformance gaps against the shared names above:
+
+| Service | Shared names emitted | Shared names not emitted |
+|---|---|---|
+| `entitlement-api` | `http.request.completed`, `http.request.failed`, `request.shed` (in-flight cap and body budget), `dependency.unavailable` (database pool or pooler refusal; entitlement-api `f6a77d1`) | all others; readiness, trust, denial, and validation outcomes return only a response, and broker outages log without `event` |
+| `entitlement-projector` | `queue.publish.failed` (receipt or notice publish not confirmed) | all others; readiness is metric-only, and startup and exit logs carry no `event` (`cmd/projector/main.go`) |
+| `authz-sidecar` | `http.request.completed`, `http.request.failed`, `authz.denied`, `input.validation.failed`, `auth.context.invalid`, `request.shed`, `service.readiness.failed` | `service.readiness.recovered`, `dependency.call.failed`, `dependency.unavailable` (OpenFGA non-200 answers log without `event`), `queue.publish.failed` (no broker) |
+
+All three Go services emit `panic.recovered` with `PANIC_RECOVERED`, which the shared list now names (registered 2026-10-10 from existing emitters).
 
 ## Domain event envelope
 
