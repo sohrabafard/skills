@@ -1,0 +1,17 @@
+{
+  "schema_version": 2,
+  "task_id": "20261012-120000_orchestrator-routing",
+  "task": "Orchestrator model routing and instruction economy",
+  "status": "planning",
+  "plan_path": "outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md",
+  "current_phase": "Phase 1",
+  "next_actions": [
+    "Planning handoff ready; implementation awaits the user's kickoff, then reconcile checkout and begin Phase 1."
+  ],
+  "blockers": [],
+  "last_validation": {
+    "status": "passed",
+    "summary": "Workflow validator exit 0 after repair; instruction review APPROVED after scoped coverage repair. Final snapshot/results: outputs/20261012-orchestrator-routing-plan/validation.md"
+  },
+  "updated_at": "2026-10-12"
+}

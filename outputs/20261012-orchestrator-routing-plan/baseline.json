@@ -1,0 +1,71 @@
+{
+  "verified_on": "2026-10-12",
+  "head": "6f6c82facd91779bd3bec8e5c7028b499964091e",
+  "branch": "main",
+  "worktree": "repository root",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "bytes": 20670,
+      "words": 2779,
+      "lines": 177,
+      "sha256": "f8b3f5d5ba7b3ea22e9ff92e896dd3d7e84ab6254621ec88d3a37b46ce46793d"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "bytes": 18336,
+      "words": 2493,
+      "lines": 167,
+      "sha256": "3e20e0291fc99b0d2825a8ee1f9888b522bb0b151a15b0a42889f11c05bd96d0"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+      "bytes": 3744,
+      "words": 472,
+      "lines": 19,
+      "sha256": "e857a6f29e5523d474998c815004e261b5e73b8fa99a970327c29631c471f80c"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "bytes": 4418,
+      "words": 480,
+      "lines": 45,
+      "sha256": "dc522f667cd844b63985f760ee2fc2313e23aa6739274a8375a5744159c5cbb4"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "bytes": 20161,
+      "words": 2743,
+      "lines": 176,
+      "sha256": "fcd449f88d98ab2fa6ffc8247cd70b6f92e0e1fec76d7b897c2478025cb4ac8e"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+      "bytes": 18083,
+      "words": 2463,
+      "lines": 164,
+      "sha256": "1d1cac6b6f2ad0d6314d276ecf597ba5346a7b851acd9f6c1ba05bdb1f174518"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+      "bytes": 3714,
+      "words": 465,
+      "lines": 19,
+      "sha256": "ce6a80f6c2790e9275778b4a114e448af515ca48ad7acd46fee7d75af2f0ffad"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "bytes": 4418,
+      "words": 480,
+      "lines": 45,
+      "sha256": "dc522f667cd844b63985f760ee2fc2313e23aa6739274a8375a5744159c5cbb4"
+    }
+  ],
+  "installed_codex_inspection": {
+    "scope": "user Codex agents/alaa-*.toml",
+    "count": 34,
+    "files_with_top_level_controls": [],
+    "loaded_registry_or_serving_identity": "not proved"
+  },
+  "tokens": "not measured; words and UTF-8 bytes are proxies only"
+}

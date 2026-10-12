@@ -1,0 +1,39 @@
+{
+  "head": "6f6c82facd91779bd3bec8e5c7028b499964091e",
+  "branch": "main",
+  "worktree": "repository root",
+  "observed_at": "2026-10-12T12:33:37.581139+00:00",
+  "manifest_method": "sort repository-relative POSIX paths; SHA256 each file; concatenate path NUL sha256 LF; SHA256 UTF-8 manifest",
+  "scope": [
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/.codex/state/20261012-120000_orchestrator-routing.json",
+      "sha256": "0fda0fef4af38ccdf71757a4bf00796e4bef2f366ddee837aaa3c2290dd5ac8d"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/baseline.json",
+      "sha256": "d8aa6328da69f3aa565e904d48f82bae10fb6c20ad9e41d115c8f92806aaed16"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md",
+      "sha256": "72098d576fbb898daae722acdb699b3493b81afa86a0e50fdc6efb500aaf30b8"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing__phase-prompts.md",
+      "sha256": "563266d301785c14642d28311f1ddb3a88272de85cf83faba194dbcd1cba0698"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/docs/agents/20261012-120000_orchestrator-routing-state.md",
+      "sha256": "e3cf42e59885b8c245c59ccd84ddfcbd87bd91222196c204d9d2252cfa58daaf"
+    }
+  ],
+  "manifest_sha256": "472121fedaa9e8b38a77add45ef6e9c51e47d08f9434fc388578909f90c10608",
+  "command": [
+    "python",
+    "skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py",
+    "--plan",
+    "outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md"
+  ],
+  "exit_code": 0,
+  "output": "plan: outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md\nprompts: outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing__phase-prompts.md\ncheckpoint: outputs/20261012-orchestrator-routing-plan/docs/agents/20261012-120000_orchestrator-routing-state.md\nstate: outputs/20261012-orchestrator-routing-plan/.codex/state/20261012-120000_orchestrator-routing.json\nValidation completed without blocking errors (profile: orchestrated).",
+  "observer": "parent; independent semantic review recorded separately"
+}
