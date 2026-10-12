@@ -1,105 +1,80 @@
-# OpenFGA Best Practices Skill
+# Knowledge Work Plugins
 
-A comprehensive skill for AI agents to author, review, and refactor OpenFGA authorization models following best practices.
+Plugins that turn Claude into a specialist for your role, team, and company. Built for [Claude Cowork](https://claude.com/product/cowork), also compatible with [Claude Code](https://claude.com/product/claude-code).
 
-## Installation
+## Why Plugins
 
-```bash
-npx skills add openfga/agent-skills
-```
+Cowork lets you set the goal and Claude delivers finished, professional work. Plugins let you go further: tell Claude how you like work done, which tools and data to pull from, how to handle critical workflows, and what slash commands to expose — so your team gets better and more consistent outcomes.
 
-## What's Included
+Each plugin bundles the skills, connectors, slash commands, and sub-agents for a specific job function. Out of the box, they give Claude a strong starting point for helping anyone in that role. The real power comes when you customize them for your company — your tools, your terminology, your processes — so Claude works like it was built for your team.
 
-This skill provides guidelines and patterns for:
+## Plugin Marketplace
 
-- **Authorization Model Design** - Types, relations, and permission structures
-- **Relationship Patterns** - Direct, concentric, indirect, and conditional relationships
-- **Testing & Validation** - `.fga.yaml` test files and CLI usage
-- **Custom Roles** - User-defined roles and role assignments
-- **SDK Integration** - Code examples for JavaScript, Go, Python, Java, and .NET
+We're open-sourcing 11 plugins built and inspired by our own work:
 
-## Rule Categories
+| Plugin | How it helps | Connectors |
+|--------|-------------|------------|
+| **[productivity](./productivity)** | Manage tasks, calendars, daily workflows, and personal context so you spend less time repeating yourself. | Slack, Notion, Asana, Linear, Jira, Monday, ClickUp, Microsoft 365 |
+| **[sales](./sales)** | Research prospects, prep for calls, review your pipeline, draft outreach, and build competitive battlecards. | Slack, HubSpot, Close, Clay, ZoomInfo, Notion, Jira, Fireflies, Microsoft 365 |
+| **[customer-support](./customer-support)** | Triage tickets, draft responses, package escalations, research customer context, and turn resolved issues into knowledge base articles. | Slack, Intercom, HubSpot, Guru, Jira, Notion, Microsoft 365 |
+| **[product-management](./product-management)** | Write specs, plan roadmaps, synthesize user research, keep stakeholders updated, and track the competitive landscape. | Slack, Linear, Asana, Monday, ClickUp, Jira, Notion, Figma, Amplitude, Pendo, Intercom, Fireflies |
+| **[marketing](./marketing)** | Draft content, plan campaigns, enforce brand voice, brief on competitors, and report on performance across channels. | Slack, Canva, Figma, HubSpot, Amplitude, Notion, Ahrefs, SimilarWeb, Klaviyo |
+| **[legal](./legal)** | Review contracts, triage NDAs, navigate compliance, assess risk, prep for meetings, and draft templated responses. | Slack, Box, Egnyte, Jira, Microsoft 365 |
+| **[finance](./finance)** | Prep journal entries, reconcile accounts, generate financial statements, analyze variances, manage close, and support audits. | Snowflake, Databricks, BigQuery, Slack, Microsoft 365 |
+| **[data](./data)** | Query, visualize, and interpret datasets — write SQL, run statistical analysis, build dashboards, and validate your work before sharing. | Snowflake, Databricks, BigQuery, Definite, Hex, Amplitude, Jira |
+| **[enterprise-search](./enterprise-search)** | Find anything across email, chat, docs, and wikis — one query across all your company's tools. | Slack, Notion, Guru, Jira, Asana, Microsoft 365 |
+| **[bio-research](./bio-research)** | Connect to preclinical research tools and databases (literature search, genomics analysis, target prioritization) to accelerate early-stage life sciences R&D. | PubMed, BioRender, bioRxiv, ClinicalTrials.gov, ChEMBL, Synapse, Wiley, Owkin, Open Targets, Benchling |
+| **[cowork-plugin-management](./cowork-plugin-management)** | Create new plugins or customize existing ones for your organization's specific tools and workflows. | — |
 
-| Category | Description |
-|----------|-------------|
-| Core | Types, relations, tuples, schema basics |
-| Relations | Direct, concentric, indirect, conditional patterns |
-| Design | Permissions, hierarchies, naming, modules |
-| Roles | Simple static, custom, and resource-specific roles |
-| Optimization | Simplification, tuple minimization, type restrictions |
-| Testing | `.fga.yaml` structure, assertions, CLI validation |
-| SDKs | Language-specific client usage |
+Install these directly from Cowork, browse the full collection here on GitHub, or build your own.
 
-## When This Skill Activates
+## Getting Started
 
-The skill triggers when working with:
+### Cowork
 
-- `.fga` model files
-- `.fga.yaml` test files
-- OpenFGA relationship definitions
-- Permission structures and authorization logic
-- OpenFGA SDK code in any supported language
+Install plugins from [claude.com/plugins](https://claude.com/plugins/).
 
-## SDK Support
-
-Includes complete examples for:
-
-- **JavaScript/TypeScript** - `@openfga/sdk`
-- **Go** - `github.com/openfga/go-sdk`
-- **Python** - `openfga_sdk` (async and sync)
-- **Java** - `dev.openfga:openfga-sdk`
-- **.NET** - `OpenFga.Sdk`
-
-## File Structure
-
-```
-openfga/
-├── SKILL.md              # Skill metadata, rule index, and workflow
-├── AGENTS.md             # Generated comprehensive guide (all rules expanded)
-└── references/
-    ├── core-*.md         # Core concept references
-    ├── relation-*.md     # Relationship pattern references
-    ├── design-*.md       # Design pattern references
-    ├── roles-*.md        # Custom role references
-    ├── optimize-*.md     # Optimization references
-    ├── test-*.md         # Testing references
-    ├── workflow-*.md     # Workflow references
-    └── sdk-*.md          # SDK-specific references
-```
-
-## Rebuilding AGENTS.md
-
-The `AGENTS.md` file is generated from the individual reference files. To regenerate it after making changes:
+### Claude Code
 
 ```bash
-node scripts/build-agents-md.js
+# Add the marketplace first
+claude plugin marketplace add anthropics/knowledge-work-plugins
+
+# Then install a specific plugin
+claude plugin install sales@knowledge-work-plugins
 ```
 
-The script reads:
-- Section order and rule order from the Rule Index tables in `skills/openfga/SKILL.md`
-- Individual rule content from `skills/openfga/references/*.md`
+Once installed, plugins activate automatically. Skills fire when relevant, and slash commands are available in your session (e.g., `/sales:call-prep`, `/data:write-query`).
 
-When adding new rules:
-1. Create the rule file in `references/` with the appropriate prefix (e.g., `core-`, `relation-`, `test-`)
-2. Add the rule to the corresponding table in the Rule Index section of `SKILL.md`
-3. Run the build script to regenerate `AGENTS.md`
+## How Plugins Work
 
-## Example Usage
+Every plugin follows the same structure:
 
-Once installed, AI agents will automatically apply these best practices when:
+```
+plugin-name/
+├── .claude-plugin/plugin.json   # Manifest
+├── .mcp.json                    # Tool connections
+├── commands/                    # Slash commands you invoke explicitly
+└── skills/                      # Domain knowledge Claude draws on automatically
+```
 
-1. Creating new OpenFGA models
-2. Reviewing existing authorization code
-3. Writing relationship tuples
-4. Implementing permission checks in application code
-5. Setting up model tests
+- **Skills** encode the domain expertise, best practices, and step-by-step workflows Claude needs to give you useful help. Claude draws on them automatically when relevant.
+- **Commands** are explicit actions you trigger (e.g., `/finance:reconciliation`, `/product-management:write-spec`).
+- **Connectors** wire Claude to the external tools your role depends on — CRMs, project trackers, data warehouses, design tools, and more — via [MCP servers](https://modelcontextprotocol.io/).
 
-## Resources
+Every component is file-based — markdown and JSON, no code, no infrastructure, no build steps.
 
-- [OpenFGA Documentation](https://openfga.dev/docs)
-- [OpenFGA GitHub](https://github.com/openfga)
-- [OpenFGA Playground](https://play.fga.dev)
+## Making Them Yours
 
-## License
+These plugins are generic starting points. They become much more useful when you customize them for how your company actually works:
 
-APACHE 2.0
+- **Swap connectors** — Edit `.mcp.json` to point at your specific tool stack.
+- **Add company context** — Drop your terminology, org structure, and processes into skill files so Claude understands your world.
+- **Adjust workflows** — Modify skill instructions to match how your team actually does things, not how a textbook says to.
+- **Build new plugins** — Use the `cowork-plugin-management` plugin or follow the structure above to create plugins for roles and workflows we haven't covered yet.
+
+As your team builds and shares plugins, Claude becomes a cross-functional expert. The context you define gets baked into every relevant interaction, so leaders and admins can spend less time enforcing processes and more time improving them.
+
+## Contributing
+
+Plugins are just markdown files. Fork the repo, make your changes, and submit a PR.
