@@ -1,0 +1,90 @@
+{
+  "runtime": "codex",
+  "repetition": 1,
+  "command": "dispatch exact argv",
+  "cwd": ".",
+  "request": "checker-lane/codex-allocation-request.txt",
+  "request_sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380",
+  "probe_input": "checker-lane/codex-probe-input.json",
+  "probe_input_sha256": "404dac148cf8a35b888833e1289f5851399e3dfc7f8782e2eceb256843d54472",
+  "loaded_sources": [
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "expected_sha256": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f",
+      "actual_sha256": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "expected_sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+      "actual_sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+      "expected_sha256": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b",
+      "actual_sha256": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+      "expected_sha256": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0",
+      "actual_sha256": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "expected_sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+      "actual_sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "expected_sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+      "actual_sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+      "expected_sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+      "actual_sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+      "expected_sha256": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda",
+      "actual_sha256": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "expected_sha256": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc",
+      "actual_sha256": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc",
+      "matches": true
+    }
+  ],
+  "source_pin_files": 541,
+  "source_pin": "outputs/20261012-orchestrator-routing-plan/verification/review-fix/source-pin-refreshed.json",
+  "launcher": "<RESOLVED_NODE> <RESOLVED_CODEX_CLI_JS>",
+  "argv": [
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--sandbox",
+    "read-only",
+    "--model",
+    "gpt-6.1-sol",
+    "--config",
+    "model_reasoning_effort=\"high\"",
+    "--json",
+    "--output-last-message",
+    "<REPO_ROOT>/outputs/20261012-orchestrator-routing-plan/runtime/codex-r1-final.txt",
+    "-"
+  ],
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "process_priority": "ordinary OS default",
+  "affinity": "default",
+  "timeout_seconds": 600,
+  "stdin": "raw request bytes"
+}

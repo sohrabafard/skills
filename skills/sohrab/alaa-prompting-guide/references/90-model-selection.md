@@ -2,11 +2,13 @@
 
 ## Capability evidence and allocation ownership
 
-`assets/codex-model-policy.json` and `assets/claude-model-policy.json` own capability snapshots, active model/effort support and model-neutral role/artifact registrations. They define no role-default or task choice. Main-session controls remain externally configured; an allocation does not change them.
+`assets/codex-model-policy.json` and `assets/claude-model-policy.json` own capability snapshots, ordinary eligibility and neutral role/artifact registrations. Supported efforts differ from selection_enabled: history never enables a disabled model. They define no role-default or task choice. Main-session controls remain externally configured; an allocation does not change them.
 
 For every managed role, including research, review, verification, documentation and rule-writer, the runtime orchestrator owns task allocation, priority, admission and deliberate source departures. Read `/alaa-codex-orchestrator` or `/alaa-cc-orchestrator` `references/routing-matrix.md` for that decision. For bounded standalone delegation, the parent uses that allocation procedure and records a compact dispatch; it need not start the full pipeline or create a plan solely for selection. `/alaa-workflow` records allocation when durable state is admitted. The tables below are evidence inputs, not executable defaults.
 
 Use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` to realize explicit task model AND effort, and `references/50-effort-and-thinking.md` for capability/uncertainty checks. Registered role names, including retained model/effort-named compatibility IDs, select authority only. Neither names nor inherited controls count as task selection.
+
+Ordinary Codex selection excludes GPT-6 Sol, retaining its effort snapshot as history. GPT-6.1 Sol is the current Sol candidate. Use the newest verified supported eligible member of the selected family; suitable Luna stays eligible. If current Sol is unavailable, require an exact eligible realization or block the affected lane, never fall back to old Sol. Record explicit user legacy requests separately; they neither restore ordinary eligibility nor pass ordinary task-control validation.
 
 The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is excluded from active selection and custom profiles. Historical models supply comparison evidence only; availability and loaded registry remain separately verified.
 

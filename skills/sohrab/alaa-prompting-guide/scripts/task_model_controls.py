@@ -13,6 +13,8 @@ def validate_task_selection(role, selection, policy, resolved=None):
     ):
         return [f"{role}: explicit model AND effort required; inheritance is not selection"]
     models = policy.get("models", {})
+    if policy.get("surface") == "codex" and selection["model"] == "gpt-6-sol":
+        return [f"{role}: historical Sol cannot authorize ordinary task selection"]
     model = models.get(selection["model"]) if isinstance(models, dict) else None
     if not isinstance(model, dict) or model.get("selection_enabled") is not True:
         return [f"{role}: unsupported or inactive model"]

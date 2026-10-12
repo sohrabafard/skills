@@ -1,0 +1,16 @@
+[
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "before_repair_sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+    "after_sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+    "removed_byte_only_growth": 0,
+    "wording_unchanged": true
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "before_repair_sha256": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+    "after_sha256": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+    "removed_byte_only_growth": 0,
+    "wording_unchanged": true
+  }
+]

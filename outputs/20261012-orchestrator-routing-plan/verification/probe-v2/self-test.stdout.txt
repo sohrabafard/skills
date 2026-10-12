@@ -1,0 +1,3 @@
+OK: R1-R15 decisions, equivalent compression, red controls and honest unknown/synthetic boundaries; no allocation executed
+OK: emitted probe/consumer shape parity, both runtimes, variant role overrides and old mismatch red controls; synthetic only
+OK: allocation-only records/source contract; availability, child dispatch and worker quality unproven

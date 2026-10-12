@@ -1,0 +1,90 @@
+{
+  "runtime": "claude-code",
+  "repetition": 1,
+  "command": "dispatch exact argv",
+  "cwd": ".",
+  "request": "checker-lane/claude-code-allocation-request.txt",
+  "request_sha256": "cb9f230deb5736d2d17943c88b8ddab40ec7b3771e19fd3e4ed3dcfedbf171a2",
+  "probe_input": "checker-lane/claude-code-probe-input.json",
+  "probe_input_sha256": "bc0a521625315c50985b346a36a805f858f465764f2413e448a75047ccd2dd2c",
+  "loaded_sources": [
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "expected_sha256": "e97e95b6277e37d5950d4e5f011843ead340309884ffd5001a58e75c0f01c140",
+      "actual_sha256": "e97e95b6277e37d5950d4e5f011843ead340309884ffd5001a58e75c0f01c140",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+      "expected_sha256": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+      "actual_sha256": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+      "expected_sha256": "99e445b0ad2d7ded099f82faa842bf4ce745962eb7a86e8f2edfc2653148b990",
+      "actual_sha256": "99e445b0ad2d7ded099f82faa842bf4ce745962eb7a86e8f2edfc2653148b990",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+      "expected_sha256": "679698a94e22b7a19e174c50c3a237de8c02e2234c33e7d56cf7a9b6aa0ba063",
+      "actual_sha256": "679698a94e22b7a19e174c50c3a237de8c02e2234c33e7d56cf7a9b6aa0ba063",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "expected_sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+      "actual_sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "expected_sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+      "actual_sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+      "expected_sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+      "actual_sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+      "expected_sha256": "03382f23d038828859d141a7f64db0933b4a1ae9ad4301d36563117456d1f51e",
+      "actual_sha256": "03382f23d038828859d141a7f64db0933b4a1ae9ad4301d36563117456d1f51e",
+      "matches": true
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+      "expected_sha256": "0611f685c38034a20685b968f070f00113411b355ec11fe7c3b099d1ee6e2ef3",
+      "actual_sha256": "0611f685c38034a20685b968f070f00113411b355ec11fe7c3b099d1ee6e2ef3",
+      "matches": true
+    }
+  ],
+  "source_pin_files": 541,
+  "source_pin": "outputs/20261012-orchestrator-routing-plan/verification/review-fix/source-pin-refreshed.json",
+  "launcher": "<RESOLVED_CLAUDE_EXE>",
+  "argv": [
+    "--safe-mode",
+    "--tools",
+    "",
+    "--no-session-persistence",
+    "--permission-mode",
+    "plan",
+    "--model",
+    "claude-sonnet-5-5",
+    "--effort",
+    "high",
+    "--output-format",
+    "json",
+    "-p"
+  ],
+  "requested_model": "claude-sonnet-5-5",
+  "requested_effort": "high",
+  "process_priority": "ordinary OS default",
+  "affinity": "default",
+  "timeout_seconds": 600,
+  "stdin": "raw request bytes"
+}

@@ -1,0 +1,9 @@
+{
+  "source_capture_status": "initial-codex-r1-capture-status.json",
+  "field": "effective_controls",
+  "prior_value": "explicit invocation arguments",
+  "corrected_value": "unknown; initialization failed before runtime acceptance evidence",
+  "reason": "requested arguments are not evidence of effective controls",
+  "supersedes_interpretation_only": true,
+  "original_artifact_preserved": true
+}

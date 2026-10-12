@@ -1,0 +1,1 @@
+OK: allocation-only records/source contract; availability, child dispatch and worker quality unproven

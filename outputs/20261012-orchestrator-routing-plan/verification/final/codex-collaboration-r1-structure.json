@@ -1,0 +1,15 @@
+{
+  "artifact": "runtime/codex-collaboration-r1.json",
+  "sha256": "cb1250508b9d9c98f3b573d26ce99ccb46666c0f007f3f734279c2f7c3361c27",
+  "top_level_keys": [
+    "responses"
+  ],
+  "response_count": 30,
+  "exact_key_coverage": true,
+  "unique_key_count": 30,
+  "response_schema_fields_match": true,
+  "request_sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380",
+  "manifest_request_sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380",
+  "request_hash_matches": true,
+  "pinned_source_file_count": 541
+}

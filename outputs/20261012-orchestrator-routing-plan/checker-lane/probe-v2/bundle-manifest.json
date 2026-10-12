@@ -1,0 +1,161 @@
+{
+  "observed_on": "2026-10-12T14:14:06.022620+00:00",
+  "source_frozen": true,
+  "source_changes": [
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_allocation_evals.py",
+      "before_sha256": "15576d56d572a91842f06be26b21272fa73bbfecad71e076b5e217418565ad9e",
+      "after_sha256": "f64494abc128bdc7e2cb25dbd9cbfc3dbb16c28340cd4a513145314f4112b268",
+      "bytes": 43136
+    }
+  ],
+  "consumer_regions": "Byte-identical after newline normalization; only emitter/schema/helper plus self-test call changed",
+  "preservation": "Original known input/request/manifest/loaded-source/template hashes unchanged; captures never read or edited by this lane",
+  "inputs": [
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/allocation-cases.json",
+      "sha256": "fe28862644f95a630630ad8e2dcfc9157d59e545fc0cb2d1b6988d4c4853d44b"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/allocation-oracle.json",
+      "sha256": "1473ada2d70c040bee8f9aeac78e513d2667d3e080e0a777bdf47c68da7af8cc"
+    }
+  ],
+  "bundle_files": [
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/allocation-results-unrun.json",
+      "bytes": 38499,
+      "sha256": "627f23a54c4aeed5e8d5f060c2181a1642f142af0ad82f904b01a0470b48122c"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/audit-shape.py",
+      "bytes": 1510,
+      "sha256": "b6ad9fa046b361072113572afe6ebe1aa9da645a4e3bda54768c3cd4ac0b9528"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/check-generated-probes.py",
+      "bytes": 5526,
+      "sha256": "1b8323ef507d6626fe7a11c0196b91cf15074cc8b290d44e59effcc0730b9fc5"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/checker-before.py",
+      "bytes": 31166,
+      "sha256": "15576d56d572a91842f06be26b21272fa73bbfecad71e076b5e217418565ad9e"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/checker-self-test-final.log",
+      "bytes": 353,
+      "sha256": "005436b35b79ea5833d116ee70c810a7d1fb292fdbbf53ecfebf1290d72f1fb9"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/checker-self-test.log",
+      "bytes": 353,
+      "sha256": "005436b35b79ea5833d116ee70c810a7d1fb292fdbbf53ecfebf1290d72f1fb9"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/claude-code-allocation-request.txt",
+      "bytes": 237575,
+      "sha256": "c97eca64d5a712b7238d652c43479ccc9bbd8f6c1376dd9d3ffcf7bd583a9afe"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/claude-code-emission.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/claude-code-loaded-contracts.txt",
+      "bytes": 121529,
+      "sha256": "d901dfb9ce25a56635c978789b8c6edf438e192f2409df26f63b350996d19a47"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/claude-code-probe-input.json",
+      "bytes": 115261,
+      "sha256": "8b7e9579505a5df434b59c0110a812f7fd8d8032fcb16b91b6b450a4a0777b7d"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/claude-code-probe-manifest.json",
+      "bytes": 2283,
+      "sha256": "b086819ef32d9380dd26cca9f5f491190fad0f0203ac7dcbf0eee3a8e1eb2ba7"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/codex-allocation-request.txt",
+      "bytes": 221932,
+      "sha256": "259e5da9d3d1cfb09f1b0f081eff2c53d0fe28a7d0d6d677e8bda8f27a316dda"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/codex-emission.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/codex-loaded-contracts.txt",
+      "bytes": 107611,
+      "sha256": "79fc2f26818e6c54e3343c708ee34c6ff1cf02be65881e550edb5153c6e1fc1b"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/codex-probe-input.json",
+      "bytes": 113536,
+      "sha256": "69df1aae327e9bf9812bc0b4748c82e878586f77b9c4ee53480abe91b9910188"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/codex-probe-manifest.json",
+      "bytes": 2276,
+      "sha256": "65702b99d6ab03e075a1ca15e30c1767cc0e12b1fd0604e66d44c4460ffef3d7"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/focused-results.jsonl",
+      "bytes": 1450,
+      "sha256": "882bdc444510699904c4817e9ad5a78dc4ab7826e45ccce19b41bc2a935e205d"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/generated-parity.log",
+      "bytes": 283,
+      "sha256": "878d246c4f87c2b85448506a0291f6ede5c2366c6519592cb776944f7056e45a"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/pin.py",
+      "bytes": 2738,
+      "sha256": "bb7159cded197ca8e6757d33a1ca3d7c31ec10a7f70d829d9288cc050e75219f"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/prepare.log",
+      "bytes": 130,
+      "sha256": "d81b756eea07fc4b7abccbbc93d3aecd1e7b590af738a20ec7b38f53406fdd48"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/prepare.py",
+      "bytes": 4530,
+      "sha256": "2e35f183ee8fd4f64ea58e4584f1d84581737e2a4fce71b25a3d5484a950530c"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/preservation.json",
+      "bytes": 1951,
+      "sha256": "4871e3f45375d1780ebfa77cf328843cfb9ffdeea46e945e50141591f89f9a3a"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/repair-initial-failure.log",
+      "bytes": 271,
+      "sha256": "e7ebd70ba43831cc0f4197fd0f1f4a591a495364501c9f326c50ee80cb5bcaa9"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/repair.py",
+      "bytes": 15244,
+      "sha256": "05992cdd23be6a143c3ae87b7c5932996c86f54b3ce75a6df74d24770eaaa6e8"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/run-final.py",
+      "bytes": 1493,
+      "sha256": "e072a47b93a5cfeb7d303ccd773f148b37f19dd256480dda679bccf0ab600291"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/run-self-test.py",
+      "bytes": 1083,
+      "sha256": "a95be808d8e8314d3b2824bf8d902cf3732bd35e610298027b3a42372ef4ae58"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/probe-v2/source-change.patch",
+      "bytes": 16732,
+      "sha256": "67e90a2f0dc24e48149717d7c194460d95c505310689a16d3d0746b692b69578"
+    }
+  ]
+}

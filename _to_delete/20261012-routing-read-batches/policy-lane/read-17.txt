@@ -1,0 +1,305 @@
+
+FILE skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md chars 0:1913
+# Review follow-up templates
+
+## Fix-cycle dispatch
+
+```xml
+<task>Resolve reviewer/specialist findings in original lane <n>.</task>
+<findings_verbatim><file:line, severity, failure, required fix></findings_verbatim>
+<role_selection><exact registered profile from ratified plan; outcome/scope; settled and open decisions; failure/invariant reasoning; selection reason; exceptional admission: canonical-supported exact official task/priority with reasoning need and rejected cheaper/decomposed alternatives, applicable high-workhorse inadequacy with context/spec/tool corrections, or explicit user direction></role_selection>
+<handoff><remaining work, surviving edits/checkpoint, evidence, and retired writer if reassigned; or none></handoff>
+<original_scope_and_acceptance>unchanged unless the orchestrator explicitly revises them</original_scope_and_acceptance>
+<verification tier="focused">
+  <commands><exact focused commands for each fixed finding; scoped lint/type/build></commands>
+  <excluded>the full suite, race detector, end-to-end suite, and any other lane's checks</excluded>
+</verification>
+<output>For each finding: fixed | disputed with repository evidence; touched files; verification; new risks.</output>
+```
+
+## Documenter
+
+```xml
+<task>Update documentation for verified shipped change: <goal>.</task>
+<change_summary><actual behavior, files, configuration/API/operational changes></change_summary>
+<verdicts><review and specialist verdicts></verdicts>
+<scope><expected documentation files/sections></scope>
+<checks><docs formatter, links, examples, scope check, and the size grade></checks>
+<size_grade>Grade every eligible narrative document by the ladder in alaa-repo-docs references/15-document-size-and-clustering.md and report each final grade with the reason that file requires.</size_grade>
+<action_safety>Documentation files only; no intended or unverified behavior.</action_safety>
+```
+
+FILE skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md chars 0:4373
+# Delegation Prompt Templates
+
+Use the smallest applicable template. Replace placeholders with concrete repository facts and absolute script paths where required.
+
+## Common dispatch envelope
+
+```xml
+<goal><one-sentence outcome></goal>
+<context><relevant repository facts, prior lane outcomes, and preserved behavior></context>
+<scope>
+  <owned>files/modules or read-only questions</owned>
+  <excluded>explicit exclusions</excluded>
+</scope>
+<acceptance_criteria><numbered checkable criteria></acceptance_criteria>
+<constraints><safety, compatibility, resource, and user constraints></constraints>
+<authority>what the agent may and may not change or execute</authority>
+<task_controls><role authority identity; explicit model AND effort; actual task scope/complexity; priority/reason; admission/evidence; verified invocation surface and effective controls; availability or affected-lane blocker></task_controls>
+<skills><exact names, sources, activation conditions, and absence actions from the plan's phase/task bindings></skills>
+<progress>report meaningful progress under the active host contract; use bounded invocations per package or target</progress>
+<return>the shape of the return and its line bound; findings, verdicts, counts, and artifact paths only, never transcripts, full diffs, or raw logs</return>
+<output>use the agent's native output contract</output>
+```
+
+Every dispatch carries `<task_controls>` and `<return>`. Resolve task controls through `routing-matrix.md` and verify the actual invocation through `model-effort-policy.md`; this envelope records the choice and cannot set runtime controls by prose. Every role template below inherits this requirement.
+
+Every dispatch carries the `<return>` field. An unbounded child return is the most common way a parent's context is flooded, and the parent pays that cost on every remaining turn of the goal, not only on the turn the return arrives.
+
+Resolve `<skills>` through `alaa-workflow references/companion-routing.md`; copy the lane's resolved entries into the dispatch because a child cannot inherit the parent's context.
+
+Every dispatch that can run long carries `<progress>` with the active host's reporting requirements. Do not infer a universal watchdog timeout or require narration between every command. Follow `SKILL.md` for interrupted-lane recovery.
+
+## Role templates
+
+Combine the common envelope with the smallest applicable complete template from the routed child.
+
+- When dispatching a planner variant, spec analyst, explorer, or researcher, read [Discovery and acceptance](./delegation-prompts/10-discovery.md) for acceptance, repository-mapping, or research template.
+- When dispatching a test strategist or architecture critic, read [Design and test strategy](./delegation-prompts/20-design.md) for matrix-design or architecture-review template.
+- When dispatching an implementation lane, read [Implementation](./delegation-prompts/30-implementation.md) for lane template and escalation instructions.
+- When dispatching a verifier or failure analyst, read [Verification and failure analysis](./delegation-prompts/40-verification.md) for evidence-run or failure-diagnosis template.
+- When dispatching a correctness, instruction, or adversarial reviewer, read [Correctness and instruction review](./delegation-prompts/50-correctness-review.md) for selected review template and its boundary.
+- When dispatching an API contract reviewer, security reviewer, or migration guardian, read [Contract and security review](./delegation-prompts/60-contract-review.md) for compatibility, trust-boundary, or migration template.
+- When dispatching a dependency auditor or release guardian, read [Dependency and release review](./delegation-prompts/70-release-review.md) for supply-chain or release-readiness template.
+- When dispatching an accessibility reviewer or browser QA agent, read [Interface review](./delegation-prompts/80-interface-review.md) for accessibility or browser-scenario template.
+- When dispatching a performance profiler or observability reviewer, read [Operability evidence](./delegation-prompts/90-completion/10-operability-evidence.md) for measurement or diagnosability template.
+- When dispatching a fix cycle or documenter after review, read [Review follow-up](./delegation-prompts/90-completion/20-review-followup.md) for finding-repair or verified-documentation template.
+
+FILE skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md chars 0:4249
+# Verification Failure Taxonomy
+
+Use one primary classification per command and record secondary factors separately.
+
+## PASS
+
+The exact dispatched command completed successfully, evidence was captured, and no unexpected tracked changes occurred.
+
+## PRODUCT-FAILURE
+
+The implemented repository behavior violates a test, lint rule, type/build contract, smoke scenario, or acceptance criterion. Route to the owning implementation lane.
+
+## TEST-INFRA-FAILURE
+
+The test harness, fixture, runner, generated setup, service dependency, or test environment is broken independently of the intended product behavior. Create an explicit infrastructure lane when a repository change is needed.
+
+## ENVIRONMENT-BLOCKED
+
+A required executable, service, permission, network dependency, secret, browser, database, or platform capability is unavailable. Do not disguise this as a product failure or install/change the environment without authority.
+
+## TIMEOUT
+
+The command exceeded its declared timeout. Preserve partial logs and process/resource evidence. A timeout may indicate product deadlock, test deadlock, resource starvation, or an unrealistic timeout; use the failure analyst.
+
+## FLAKY
+
+Identical execution produces inconsistent outcomes, including fail-then-pass. Never promote it to PASS. Capture ordering, seed, timing, resource, and environment evidence.
+
+## CONTAMINATED
+
+Unexpected tracked-source changes, concurrent external modifications, wrong worktree, stale generated output, or unowned service/state makes the result unreliable. Do not revert automatically.
+
+## SKIPPED
+
+The check was explicitly not run. Record the reason and risk. Unexecuted checks are never implied passes.
+
+## Host-environment sub-classes
+
+These are the failures most often misread as product defects, because the command that surfaced them is a product command. Each resolves to one primary class above; record the sub-class beside it so the same block is recognised on sight the second time.
+
+| Observation | Primary class | Discriminator |
+|---|---|---|
+| The command line was parsed by a shell other than the intended one — PowerShell quoting, `$VAR` versus `%VAR%`, backtick versus backslash escaping, a Git Bash path rewritten to a Windows path, a here-string that did not close | `ENVIRONMENT-BLOCKED` | The same command parses under the intended shell; the product was never reached |
+| A container runtime is not running, an image is absent, a mount failed, or the daemon refused the socket | `ENVIRONMENT-BLOCKED` | The failure precedes the process under test starting |
+| A file, directory, port, or device was refused, locked, or held open by another process | `ENVIRONMENT-BLOCKED` | The message names an OS-level permission, lock, or address rather than an assertion |
+| A required executable, service, credential, browser, or platform capability is absent | `ENVIRONMENT-BLOCKED` | Absence, not misbehaviour |
+| A build, dependency, module, or test cache served an artifact from before the change | `CONTAMINATED` | The outcome changes after the cache is cleared with no source edit |
+| The harness, fixture, factory, seed, or generated setup broke independently of the behaviour under test | `TEST-INFRA-FAILURE` | Reverting the change under test leaves the failure in place |
+
+Never repair the product in response to any row above: each names an owner outside the implementation lane, and a product edit made against one of them is a change with no defect behind it.
+
+Clearing a cache, installing a tool, changing a permission, or starting a service is a declared and reported action, never a silent retry step. A silent clear destroys the only evidence that the cache was the cause, and the same block then returns unrecognised on the next run.
+
+## Diagnostic sequence
+
+1. Identify the first causal error, not the last stack trace.
+2. Confirm command/cwd/environment/resource limits.
+3. Compare initial/final git status and concurrent changes.
+4. Determine whether the failure reproduces in the smallest targeted scope, if one authorized rerun exists.
+5. Inspect the owning code/test/config path.
+6. Classify owner: implementation lane, test infrastructure lane, environment owner, or orchestrator decision.
+7. Route the smallest grounded next action.
+
+FILE skills/sohrab/alaa-codex-orchestrator/references/installation.md chars 0:5937
+# Authorized Installation and Updates
+
+Activation inspects role availability; it never installs or updates agents. Obtain explicit authorization for target paths before invoking any installer. `install-skills.md` at the repository root owns installation locations; /alaa-prompting-guide owns current runtime discovery and precedence facts.
+
+## Source prerequisites
+
+Keep the complete orchestrator source beside `alaa-prompting-guide`, or pass its root explicitly (`-PolicyRoot` in PowerShell; the third agent-installer argument or second skill-installer argument in shell). Validation fails with exit `2` when the canonical policy owner cannot be loaded. Never substitute a local copy of model policy.
+
+The agent installer accepts only its own resolved canonical `agents/` directory. An alternate source directory is rejected before target writes, even when its sibling canonical source validates. Source TOMLs under `agents/` are transport-neutral templates and cannot be installed by plain copy. All installers validate model-neutral policy roles, role grants, generated reviewer wrappers, and the source manifest before writing to the target. A source failure leaves the destination untouched. Materialization then resolves the live parent MCP inventory, retains each transport discriminator, applies exact per-role grants, disables unassigned or unknown servers, and validates resolved definitions. Missing inventory or transport information fails closed.
+
+## Explicit agent installation
+
+From this skill directory, after authorization:
+
+```powershell
+./scripts/Install-AlaaCodexAgents.ps1
+```
+
+```bash
+./scripts/install-agents.sh
+```
+
+The default target is `~/.codex/agents`. The installer changes only managed agent files, its lock/staging files, and the version/inventory sentinels. It replaces differing managed files and preserves unrelated agents and configuration. Source control owns rollback versions; inspect current runtime discovery before claiming the new roles are active.
+
+To install the complete skill and its agents after authorization, use `scripts/Install-AlaaCodexOrchestrator.ps1` or `scripts/install-skill.sh`. For isolated target inspection, pass `-TargetAgentDirectory` to the complete PowerShell installer or an agent target as the shell installer's third argument. The model-policy owner remains a required separate sibling or explicitly supplied source; these commands do not install it automatically.
+
+## Reproducible source checks
+
+```text
+python scripts/render_agents.py --write
+python scripts/render_agents.py --check
+python scripts/render_agents.py --self-test
+python scripts/validate_pack.py
+python scripts/check_agent_grants.py --self-test
+```
+
+The renderer preserves both correctness-review profiles from `assets/reviewer-contract.md`, adds standalone implementation/planner wrappers from their shared contracts and metadata-only `assets/profile-wrappers.json`, then writes the version/hash manifest. Canonical policy registers task-selected roles; all-role projections omit both model and effort pins without changing authority. Actual task controls must be explicitly supplied and verified at dispatch. `--check` never writes. Exit `0` is clean, `1` is findings/drift, and `2` is unavailable proof; either nonzero blocks installation and completion.
+
+## Installer rejection fixtures
+
+Run `python scripts/test_install_preflight.py --shell powershell --scratch-dir <new-scratch-directory>` and the same command with `--shell bash` and a different new directory after installer changes. Use `--executable` for an explicitly selected shell. Each checks out-of-policy pins, wrapper drift, manifest drift, and a missing policy owner against both installers, plus an altered sibling-source bypass against the agent installer; failure must precede every destination write. Evidence is retained. Exit `0` is pass, `1` regression, `2` unavailable proof; neither nonzero is a pass. These tests never target user-home paths.
+
+If temporary-directory creation is blocked, run `python scripts/render_agents.py --self-test --self-test-dir <new-evidence-directory>` to retain the same renderer fixtures in an explicitly writable location. The directory must not exist; it is never cleaned automatically.
+
+## Materialization proof without installation
+
+```text
+python scripts/check_agent_grants.py --materialize agents <new-empty-scratch-directory>
+```
+
+Inspect only that fresh directory. This validates grants against the live parent inventory; it neither installs nor proves model availability, effective parent sandbox overrides, runtime identity, or task quality. Record those evidence levels separately.
+
+## Upgrade contract
+
+Version 5 renames `alaa-implementer-sol` to `alaa-implementer-astra` without a source alias. Update dispatch callers. During an explicitly authorized installed upgrade, materialize the new wrapper with the supported installer and archive the old managed wrapper outside the agent discovery directory under that upgrade's target-path authority. The current installers preserve files absent from the new source; installation alone therefore does not retire the old role. Verify the new role and absence of the retired role before claiming activation.
+
+Version 4 changes final-report parsing: verdict/status or opening outcome is first, followed by configured/requested settings and separately observed runtime identity. Unknown observations remain unknown. Existing verdict vocabularies remain unchanged. The deep role ID preserves workload/authority compatibility and supplies no model or effort. Review depth and actual task controls are separate decisions. Do not dispatch standard and deep profiles concurrently for one scope.
+
+Missing, stale, or unavailable required roles must be reported; there is no silent fallback or implicit installation. A changed MCP inventory requires an authorized rematerialization. Never change global runtime configuration as an installation repair.
+
+FILE skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md chars 0:3726
+# Model and Effort Control Route
+
+`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they do not assign a pair merely from role identity.
+
+The registry is `alaa-prompting-guide assets/codex-model-policy.json`. Every managed role uses task-selected controls and carries no executable model or effort pin. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
+
+## Before every dispatch
+
+Read the owner's current runtime reference and inspect actual host controls, installed/session role definitions, capability/access evidence, context mode and effective overrides. Explicitly supply BOTH model AND effort from the plan on the verified invocation surface. Check the effective configured pair matches the selected pair; prose, requested controls or source validation alone cannot prove it. If exact realization is unavailable, use only an exact verified available compatibility realization preserving the role contract, or block the affected lane with evidence. Never silently change the pair, install, mutate shared configuration or claim source edits activated a session.
+
+For Codex, inspect the currently loaded custom definition and global/parent controls before dispatch. Custom `model` and `model_reasoning_effort` pins override caller controls. Model-neutral TOMLs omit BOTH pins; explicitly pass `model` and `reasoning_effort` to the supported spawn surface. Verify the host permits those arguments and the requested fork/context mode; do not imply full-history forks accept overrides when this host rejects them. If the current host exposes fixed named-role definitions, treat their loaded controls as fixed until a verified reload; source edits alone do not prove that registry reloaded. A fixed compatibility realization is usable only when its exact controls and authority match the selected task; otherwise block that lane. Runtime precedence and current official evidence are owned by `alaa-prompting-guide references/11-codex-runtime-features.md`.
+
+Keep permissions separate: inspect effective sandbox/permission mode, parent overrides and native/MCP grants; remain within narrower role authority when enforcement is unknown. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before capacity; reassess only remaining work under the allocation boundary. Comparisons change one factor at a time.
+
+Report configured and requested model/effort separately from observed identity; unknown observation remains unknown. Put verdict/outcome first, then metadata. The rule-writer replacement-only contract remains owned by /alaa-prompting-guide.
+
+## Source generation and proof
+
+The existing projection engine renders implementation/planner contracts and neutralizes every other managed definition while preserving its authority/body. Wrapper metadata never owns model/effort. Run `python scripts/render_agents.py --write` after managed definition, contract or version changes; aggregate validation checks drift. After renderer logic changes also run `python scripts/render_agents.py --self-test`. Exit `0` is clean, `1` findings/drift, `2` unavailable; either nonzero blocks completion. Source checks prove neither installed activation, account access nor serving identity.
+
+FILE skills/sohrab/alaa-codex-orchestrator/references/resource-policy.md chars 0:3215
+# Resource and Low-Priority Execution Policy
+
+Resource controls have separate layers:
+
+1. OS process priority (`BelowNormal` by default on Windows, `nice 10` on Unix).
+2. Optional CPU affinity/count.
+3. Tool/runtime concurrency (`GOMAXPROCS`, package parallelism, test workers, browser workers).
+4. Timeout and one-heavy-command-at-a-time policy.
+
+Lower priority does not limit parallelism. Configure both.
+
+## Windows runner
+
+Use the absolute script path from the installed skill:
+
+```powershell
+$runner = "<SKILL_ROOT>\scripts\Invoke-AlaaLowPriority.ps1"
+
+& $runner `
+  -Priority BelowNormal `
+  -CpuCount 2 `
+  -WorkingDirectory "D:\path\to\repo" `
+  -Environment @{ GOMAXPROCS = "2" } `
+  -TimeoutSeconds 900 `
+  -FilePath "go" `
+  -ArgumentList @("test", "-p", "1", "-parallel", "2", "-count=1", "./...")
+```
+
+The wrapper returns the child exit code and emits stdout/stderr. It sets the parent test process priority immediately after start; normal child processes inherit process scheduling constraints unless they explicitly override them.
+
+Use `Idle` only for explicitly background-grade benchmark/fuzz/full-profile work. Do not use `Realtime` or `High`.
+
+## Unix/WSL runner
+
+```bash
+"<SKILL_ROOT>/scripts/run-low-priority.sh" \
+  --priority BelowNormal \
+  --cpu-count 2 \
+  -- go test -p 1 -parallel 2 -count=1 ./...
+```
+
+It uses `nice`; when `taskset` is available and `--cpu-count` is set, it also limits CPU affinity.
+
+## Go verification profiles
+
+Derive final commands from repository guidance. Common conservative examples:
+
+```powershell
+# Targeted unit package
+-Environment @{ GOMAXPROCS = "2" }
+-ArgumentList @("test", "-p", "1", "-parallel", "2", "-count=1", "./path/to/package")
+
+# Race check: expensive, one package worker and one parallel test
+-Environment @{ GOMAXPROCS = "2" }
+-ArgumentList @("test", "-race", "-p", "1", "-parallel", "1", "-count=1", "./...")
+```
+
+`-p` controls package/build concurrency. `-parallel` controls tests using `t.Parallel` inside a test binary. `GOMAXPROCS` controls runtime CPU parallelism. They are not interchangeable.
+
+## Node/Vue/Quasar
+
+Use repository scripts exactly. Apply worker limits only when the test/build tool supports them and the repository does not define a conflicting policy. Examples vary by Vitest/Jest/Playwright/Vite and must not be guessed.
+
+Do not run package installation merely because a command is missing. Report `ENVIRONMENT-BLOCKED`.
+
+## PHP/Laravel
+
+PHPUnit is commonly single-process unless a parallel runner is configured. Use repository commands and do not introduce ParaTest or process isolation during verification. Lower the OS priority for broad suites or static analysis when declared CPU-heavy.
+
+## Browser QA
+
+- Preserve explicit `--browser chromium`.
+- Preserve configured user-data/profile paths.
+- Reuse an existing declared dev server.
+- Limit browser workers through the repository-supported mechanism only.
+- Do not kill or reuse another worktree's server without explicit ownership.
+
+## Artifacts
+
+Each dispatch declares one artifact directory. Verifiers/profilers/browser QA may write only there plus unavoidable tool temp directories allowed by the sandbox. Unexpected tracked file changes contaminate the run.

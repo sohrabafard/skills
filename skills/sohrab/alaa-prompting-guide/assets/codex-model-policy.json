@@ -64,7 +64,7 @@
         "ultra"
       ],
       "recommended_start": "medium",
-      "selection_enabled": true
+      "selection_enabled": false
     },
     "gpt-6.1-sol": {
       "supported_efforts": [
@@ -340,5 +340,5 @@
       ]
     }
   },
-  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
+  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos. Ordinary selection excludes gpt-6-sol; its effort snapshot remains history. Record explicit user legacy requests separately; ordinary eligibility stays disabled."
 }

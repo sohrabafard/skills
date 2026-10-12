@@ -1,0 +1,12 @@
+{
+  "command": "python scripts/check_allocation_evals.py --results ../../../outputs/20261012-orchestrator-routing-plan/runtime/codex-v2-results.json --require-live",
+  "cwd": "skills/sohrab/alaa-prompting-guide",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_seconds": 120,
+  "duration_ms": 306,
+  "exit_code": 0,
+  "classification": "PASS",
+  "stdout": "codex-v2-require-live-retry.stdout.txt"
+}

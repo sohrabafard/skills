@@ -1,0 +1,74 @@
+{
+  "pin_entry_count": 541,
+  "pin_differences": [],
+  "all_pin_entries_match": true,
+  "preserved_artifact_checks": [
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/allocation-results-unrun.json",
+      "expected_sha256": "627f23a54c4aeed5e8d5f060c2181a1642f142af0ad82f904b01a0470b48122c",
+      "actual_sha256": "627f23a54c4aeed5e8d5f060c2181a1642f142af0ad82f904b01a0470b48122c",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-allocation-request.txt",
+      "expected_sha256": "cb9f230deb5736d2d17943c88b8ddab40ec7b3771e19fd3e4ed3dcfedbf171a2",
+      "actual_sha256": "cb9f230deb5736d2d17943c88b8ddab40ec7b3771e19fd3e4ed3dcfedbf171a2",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-loaded-contracts.txt",
+      "expected_sha256": "d901dfb9ce25a56635c978789b8c6edf438e192f2409df26f63b350996d19a47",
+      "actual_sha256": "d901dfb9ce25a56635c978789b8c6edf438e192f2409df26f63b350996d19a47",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-probe-input.json",
+      "expected_sha256": "bc0a521625315c50985b346a36a805f858f465764f2413e448a75047ccd2dd2c",
+      "actual_sha256": "bc0a521625315c50985b346a36a805f858f465764f2413e448a75047ccd2dd2c",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-probe-manifest.json",
+      "expected_sha256": "97493ff92e848b949411ab790dabd12707645eaf7a8fcc4c153b20384cb6d010",
+      "actual_sha256": "97493ff92e848b949411ab790dabd12707645eaf7a8fcc4c153b20384cb6d010",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-allocation-request.txt",
+      "expected_sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380",
+      "actual_sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-loaded-contracts.txt",
+      "expected_sha256": "79fc2f26818e6c54e3343c708ee34c6ff1cf02be65881e550edb5153c6e1fc1b",
+      "actual_sha256": "79fc2f26818e6c54e3343c708ee34c6ff1cf02be65881e550edb5153c6e1fc1b",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-probe-input.json",
+      "expected_sha256": "404dac148cf8a35b888833e1289f5851399e3dfc7f8782e2eceb256843d54472",
+      "actual_sha256": "404dac148cf8a35b888833e1289f5851399e3dfc7f8782e2eceb256843d54472",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-probe-manifest.json",
+      "expected_sha256": "ff96c1d6f07f87b051b8274fb323519aced1a702933e3ca56bc0d7efa31ff719",
+      "actual_sha256": "ff96c1d6f07f87b051b8274fb323519aced1a702933e3ca56bc0d7efa31ff719",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime/codex-collaboration-r1.json",
+      "expected_sha256": "cb1250508b9d9c98f3b573d26ce99ccb46666c0f007f3f734279c2f7c3361c27",
+      "actual_sha256": "cb1250508b9d9c98f3b573d26ce99ccb46666c0f007f3f734279c2f7c3361c27",
+      "matches": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime/codex-collaboration-r2.json",
+      "expected_sha256": "c75a8f784c3ea561ad2647320454f6c280400eb40f8ee52d2f21998eb1ca0c70",
+      "actual_sha256": "c75a8f784c3ea561ad2647320454f6c280400eb40f8ee52d2f21998eb1ca0c70",
+      "matches": true
+    }
+  ],
+  "all_preserved_artifacts_match": true
+}

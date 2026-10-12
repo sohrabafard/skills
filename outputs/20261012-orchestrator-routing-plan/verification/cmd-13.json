@@ -1,0 +1,13 @@
+{
+  "index": 13,
+  "command": "python scripts\\check_skill_index.py",
+  "cwd": "D:\\Sohrab\\Project\\skills",
+  "env_override": "PYTHONDONTWRITEBYTECODE=1",
+  "priority": "ordinary",
+  "affinity": "default",
+  "started": "2026-10-12T06:22:35.3817343-07:00",
+  "ended": "2026-10-12T06:22:35.6878547-07:00",
+  "duration_seconds": 0.306,
+  "exit_code": 0,
+  "log": "cmd-13.log"
+}

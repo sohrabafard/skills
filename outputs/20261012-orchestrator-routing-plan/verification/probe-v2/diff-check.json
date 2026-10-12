@@ -1,0 +1,9 @@
+{
+  "command": "git diff --check",
+  "cwd": ".",
+  "environment": {},
+  "timeout_seconds": 120,
+  "duration_ms": 70,
+  "exit_code": 0,
+  "classification": "PASS"
+}

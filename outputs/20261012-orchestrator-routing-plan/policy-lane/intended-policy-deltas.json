@@ -1,0 +1,81 @@
+[
+  {
+    "id": "P6 eligibility before controls alaa-cc-orchestrator",
+    "before": "Every managed role uses task-selected controls and carries no executable model or effort pin.",
+    "draft": "Every managed role uses task-selected controls and carries no executable model or effort pin. Check ordinary-selection eligibility separately from supported efforts and host availability before realizing either control."
+  },
+  {
+    "id": "P3 all-role least-cost suitability alaa-cc-orchestrator",
+    "before": "3. Compare supported available model AND effort pairs against that task, current official starting guidance and applicable prior evidence. Record the exact source row/date when applicable, alternatives and why a cheaper pair or decomposition would not meet acceptance. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality.",
+    "draft": "3. Compare eligible supported available model AND effort pairs for the actual task. Evaluate the cheapest candidate for EVERY role, including evidence, planning, implementation, verification, review, specialist, documentation and rule-writer work. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts and known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion, and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical and bug branches retain their own predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; never use quotas. Justify model and effort separately from remaining reasoning, priority, current official starting guidance and applicable prior evidence. For each cheaper rejection record the actual failed fit predicate or stronger task-specific evidence, plus rejected decomposition and the exact source row/date when applicable. A title, volume, priority label or whole-goal complexity is no failed predicate. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality."
+  },
+  {
+    "id": "P6 eligibility before controls alaa-codex-orchestrator",
+    "before": "Every managed role uses task-selected controls and carries no executable model or effort pin.",
+    "draft": "Every managed role uses task-selected controls and carries no executable model or effort pin. Check ordinary-selection eligibility separately from supported efforts and host availability before realizing either control."
+  },
+  {
+    "id": "P3 all-role least-cost suitability alaa-codex-orchestrator",
+    "before": "3. Compare supported available model AND effort pairs against that task, current official starting guidance and applicable prior evidence. Record the exact source row/date when applicable, alternatives and why a cheaper pair or decomposition would not meet acceptance. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality.",
+    "draft": "3. Compare eligible supported available model AND effort pairs for the actual task. Evaluate the cheapest candidate for EVERY role, including evidence, planning, implementation, verification, review, specialist, documentation and rule-writer work. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts and known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion, and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical and bug branches retain their own predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; never use quotas. Justify model and effort separately from remaining reasoning, priority, current official starting guidance and applicable prior evidence. For each cheaper rejection record the actual failed fit predicate or stronger task-specific evidence, plus rejected decomposition and the exact source row/date when applicable. A title, volume, priority label or whole-goal complexity is no failed predicate. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality."
+  },
+  {
+    "id": "P4 Codex legacy exclusion",
+    "before": "2. Use balanced default priority;",
+    "draft": "2. Exclude gpt-6-sol from ordinary allocation even when the host offers it; use the canonical eligibility registry. Current-family selection never upgrades suitable Luna to Sol. Unavailable current Sol requires an exact eligible realization or an affected-lane block, never old-Sol fallback. An explicit user legacy exception is separately recorded and never restores ordinary eligibility. Use balanced default priority;"
+  },
+  {
+    "id": "P5 non-bug semantic authority",
+    "before": "Select `alaa-implementer-low` for bounded semantic work only when the plan records an explicit outcome, named scope, grounded local contracts, known causal path or pattern, bounded local decisions and cheap discriminating checks. Unresolved cross-boundary design, consistency or trust decisions fail admission.",
+    "draft": "Select `alaa-implementer-low` for bounded semantic work only when the plan records every bounded-suitability predicate in All-role task allocation and cheap discriminating checks. This authority identity admits non-bug work with bounded local decisions; choose its pair separately, including Luna when suitable. Unresolved cross-boundary design, consistency or trust decisions fail admission."
+  },
+  {
+    "id": "P1 capability-versus-eligibility",
+    "before": "own capability snapshots, active model/effort support and model-neutral role/artifact registrations.",
+    "draft": "own capability snapshots, ordinary-selection eligibility and model-neutral role/artifact registrations. Supported efforts and selection_enabled are separate: historical support never makes a disabled model eligible."
+  },
+  {
+    "id": "P2 current-family eligibility",
+    "before": "The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1.",
+    "draft": "Ordinary Codex selection excludes GPT-6 Sol; its supported-effort snapshot remains dated history. GPT-6.1 Sol is the current Sol workhorse candidate. Within any selected family use its newest verified supported eligible member; this never replaces suitable Luna with Sol. Unavailable current Sol does not authorize old-Sol fallback: require an exact eligible realization or report the affected lane blocked. An explicit user legacy request is a separately recorded exception, never ordinary eligibility or an ordinary task-control pass.\n\nThe active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1."
+  },
+  {
+    "id": "P7 isolated historical validation",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "## Historical comparison isolation\n\nThe original comparison corpus and policy under `assets/evals/history/20261009/` are dated historical-only evidence. Validate their manifest with `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` from this skill directory. This path checks original hashes/provenance and historical support; it cannot combine with active `--corpus`, `--results` or `--self-test`, authorize ordinary task allocation, or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.\n\n"
+  },
+  {
+    "id": "P8 separate allocation observation",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "\n## Allocation-only observations\n\nWhen testing task selection, use `assets/evals/allocation-cases.json` and the separate reviewer-only `assets/evals/allocation-oracle.json`. These inputs test R1-R15 decisions, not worker quality. The corpus has two neutral variants per case and two repetitions. Give an allocator only neutral inputs; never expose the oracle or another run's answer. Observe two fresh runs per authorized available allocator configuration with the same loaded contracts, authority and inputs; record unavailable configurations as blocked or unassessed. No child worker, paid comparison, installation or configuration mutation is authorized.\n\nFrom this skill directory run `python scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--self-test` after checker changes, `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations and independent grading. `--corpus <path>` and `--oracle <path>` select explicit files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases and the response contract, excludes the oracle, and performs no inference or writes. Exit 0 is clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow the authorized failure/retry limit rather than changing controls or checks to pass.\n\nResults use `schema_version: 1`, `purpose: allocation-results`, boolean `synthetic`/`complete`, `corpus_sha256`, `oracle_sha256`, `configurations`, and `runs`. Each configuration records `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, and `loaded_contracts` entries with repository-relative path/SHA-256. Keep actual allocator controls separate from simulated scenario controls and proposed worker controls.\n\nEvery declared configuration represents each case/variant/repetition, including unrun/blocked rows. Runs carry `case`, `variant`, `configuration`, `runtime`, `repetition`, `status`, `input_sha256`, and a blocker when blocked. Completed rows add `response`, `output_evidence`, `output_sha256`, `reviewer`, `independent_review`, `criterion_verdicts`, `forbidden_effects_observed`, `elapsed_seconds`, `usage`, and `correction_count`; unobservable counters stay unknown.\n\nThe response records `action`, explicit `proposed_worker` model/effort or null, `model_reason`, `effort_reason`, `fit` with verdict/evidence for every named predicate, `alternatives` with failed predicate or stronger evidence, `admission`, `continuity`, and `compression` with preserved-invariant verdicts. Decision-only probes set `worker_dispatched: false` and leave `worker_effective`/`worker_observed` unknown. A simulated pin/availability answer proves no actual child realization.\n\nAn independent reviewer grades captured decisions against the withheld oracle and checks linked evidence truth. Concrete allocator-control mismatch or unknown effective controls prevents a live pass. Unknown observed serving identity requires separate control evidence and stays unknown. Synthetic records prove only consumer discrimination; live sampled allocation answers prove neither worker dispatch/quality, actual scenario availability, universal suitability, cost nor savings. Keep those claims separate from source checks and controlled worker comparisons above.\n"
+  },
+  {
+    "id": "P9 allocation reachability SKILL.md",
+    "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+    "draft": "## Allocation evidence validation\n\nFor allocation-only evidence run `python scripts/check_allocation_evals.py` from this skill directory; add `--results <path> --require-live` for complete nonsynthetic observations and independent grading, and `--self-test` after checker changes. Exit 0 is clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. The reference router selects `references/92-agent-evaluation.md` for inputs, flags, record fields and proof limits. This validates decisions, never child dispatch or worker quality.\n\n",
+    "authority": "parent narrow scope addition"
+  },
+  {
+    "id": "P9 allocation reachability references/00-topic-map.md",
+    "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+    "draft": "Design or execute representative Codex model/effort comparisons or allocation-only observations for either runtime",
+    "authority": "parent narrow scope addition"
+  },
+  {
+    "id": "P10 nonmechanical continuation alaa-codex-orchestrator",
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "before": "Otherwise use the workhorse routes below; unresolved facts still go to retrieval/clarification.",
+    "draft": "Otherwise evaluate the remaining routes below, including bounded semantic work; unresolved facts still go to retrieval/clarification."
+  },
+  {
+    "id": "P10 nonmechanical continuation alaa-cc-orchestrator",
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "before": "Otherwise use the workhorse routes below; unresolved facts still go to retrieval/clarification.",
+    "draft": "Otherwise evaluate the remaining routes below, including bounded semantic work; unresolved facts still go to retrieval/clarification."
+  },
+  {
+    "id": "P8a allocation authority record",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "Response role matches neutral task authority; checker-lane final interface requires role."
+  }
+]

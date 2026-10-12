@@ -1,0 +1,344 @@
+{
+  "schema_version": 2,
+  "policy_version": "2.0.0",
+  "surface": "codex",
+  "verified_on": "2026-10-09",
+  "sources": [
+    {
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "verified_on": "2026-10-08",
+      "scope": "Codex custom-agent pin precedence, GPT-6.1 Sol recommendation, and effort guidance"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/models",
+      "verified_on": "2026-10-08",
+      "scope": "Codex model availability, GPT-6.1 Sol recommendation, and Max/Ultra distinction"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "verified_on": "2026-10-08",
+      "scope": "GPT-6.1 Sol API reasoning-effort range; not Codex host configuration"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+      "verified_on": "2026-10-08",
+      "scope": "Specific small existing-file edits: Luna at medium; distinct from broader Codex Luna-high starting guidance. Automatic exact mechanical routing over finite enumerated scopes is uncalibrated user-authorized task policy, not a vendor file-count or quality claim."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+      "verified_on": "2026-10-09",
+      "scope": "Official explicit prose and recovered directly referenced selector asset: 27 tasks/81 cells, including Sol-low feature work, Sol medium balanced feature/debug work and Luna-high quality-prioritized scoped bugs. Editorial recommendations are not local calibration; admission remains local policy."
+    },
+    {
+      "url": "https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js",
+      "verified_on": "2026-10-09",
+      "scope": "Directly referenced official selector, read as text: all 27 task rows and 81 model/effort cells. Refresh current page asset before reuse; editorial starting points do not establish local calibration."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "verified_on": "2026-10-09",
+      "scope": "Unpinned custom roles permit explicit spawn model/effort; pinned values override spawn. Installed and loaded definitions require separate verification."
+    }
+  ],
+  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses. Workload selection guidance refreshed 2026-10-09; capability ranges retain their individual snapshot dates. No account or installed activation proof.",
+  "models": {
+    "gpt-6-astra": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "recommended_start": "low",
+      "selection_enabled": true
+    },
+    "gpt-6-sol": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "recommended_start": "medium",
+      "selection_enabled": true
+    },
+    "gpt-6.1-sol": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ],
+      "recommended_start": "medium",
+      "selection_enabled": true
+    },
+    "gpt-6-luna": {
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "recommended_start": "high",
+      "selection_enabled": true
+    }
+  },
+  "profiles": {
+    "main": {
+      "kind": "policy-only",
+      "selection_mode": "externally-configured",
+      "artifacts": []
+    },
+    "main-deep": {
+      "kind": "policy-only",
+      "selection_mode": "externally-configured",
+      "artifacts": []
+    },
+    "alaa-spec-analyst": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml"
+      ]
+    },
+    "alaa-explorer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml"
+      ]
+    },
+    "alaa-researcher": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml"
+      ]
+    },
+    "alaa-test-strategist": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml"
+      ]
+    },
+    "alaa-implementer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml"
+      ]
+    },
+    "alaa-implementer-astra": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml"
+      ]
+    },
+    "alaa-verifier": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml"
+      ]
+    },
+    "alaa-failure-analyst": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml"
+      ]
+    },
+    "alaa-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml"
+      ]
+    },
+    "alaa-reviewer-deep": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml"
+      ]
+    },
+    "alaa-adversarial-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml"
+      ]
+    },
+    "alaa-documenter": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml"
+      ]
+    },
+    "alaa-architecture-critic": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml"
+      ]
+    },
+    "alaa-security-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml"
+      ]
+    },
+    "alaa-migration-guardian": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml"
+      ]
+    },
+    "alaa-api-contract-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml"
+      ]
+    },
+    "alaa-dependency-auditor": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml"
+      ]
+    },
+    "alaa-accessibility-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml"
+      ]
+    },
+    "alaa-browser-qa": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml"
+      ]
+    },
+    "alaa-performance-profiler": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml"
+      ]
+    },
+    "alaa-observability-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml"
+      ]
+    },
+    "alaa-release-guardian": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml"
+      ]
+    },
+    "alaa-rule-writer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml"
+      ]
+    },
+    "alaa-instruction-reviewer": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml"
+      ]
+    },
+    "alaa-implementer-high": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml"
+      ]
+    },
+    "alaa-planner": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml"
+      ]
+    },
+    "alaa-planner-high": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml"
+      ]
+    },
+    "alaa-implementer-luna": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml"
+      ]
+    },
+    "alaa-implementer-low": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml"
+      ]
+    },
+    "alaa-implementer-luna-high": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml"
+      ]
+    },
+    "alaa-implementer-luna-low": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml"
+      ]
+    },
+    "alaa-implementer-xhigh": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml"
+      ]
+    },
+    "alaa-implementer-astra-medium": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml"
+      ]
+    },
+    "alaa-implementer-astra-xhigh": {
+      "kind": "agent",
+      "selection_mode": "task-selected",
+      "artifacts": [
+        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml"
+      ]
+    }
+  },
+  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
+}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1305b-21db-7943-8a4b-bd999d3450db"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Codex is ignoring 1 unrecognized configuration setting. Check for typos or deprecated settings.\n  requirements (C:\\ProgramData\\OpenAI\\Codex\\requirements.toml): `windows.allow_mxc` is ignored."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"Codex is ignoring 1 unrecognized configuration setting. Check for typos or deprecated settings.\n  requirements (C:\\ProgramData\\OpenAI\\Codex\\requirements.toml): `windows.allow_mxc` is ignored."}}
+{"type":"turn.started"}

@@ -1,0 +1,46 @@
+{
+  "runtime": "codex",
+  "command": "python scripts/check_allocation_evals.py --probe-input codex",
+  "exit": 0,
+  "input_sha256": "404dac148cf8a35b888833e1289f5851399e3dfc7f8782e2eceb256843d54472",
+  "request_sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380",
+  "loaded_contracts": [
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+      "sha256": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+      "sha256": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+      "sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+      "sha256": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "sha256": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc"
+    }
+  ],
+  "claims": "neutral handoff emitted; no inference, allocation observation, child dispatch, grading or calibration"
+}

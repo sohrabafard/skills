@@ -51,6 +51,10 @@ def validate_policy(policy: dict) -> list[str]:
         return errors + ["models must be a nonempty object"]
     if not isinstance(profiles, dict) or not profiles:
         return errors + ["profiles must be a nonempty object"]
+    # Ordinary readers never promote a dated capability snapshot into task authority.
+    legacy = models.get("gpt-6-sol")
+    if not isinstance(legacy, dict) or legacy.get("selection_enabled") is not False:
+        errors.append("gpt-6-sol: historical support must remain selection-disabled")
     for model, spec in models.items():
         if model not in {"gpt-6-astra", "gpt-6-sol", "gpt-6.1-sol", "gpt-6-luna"}:
             errors.append(f"{model}: unsupported exact model ID")

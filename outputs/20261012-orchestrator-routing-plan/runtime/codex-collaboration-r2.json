@@ -1,0 +1,2334 @@
+{
+  "responses": [
+    {
+      "case": "R1",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer",
+        "proposed_worker": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "model_reason": "New local feature branching has no known pattern, failing bounded Luna admission. Current eligible Sol fits ordinary feature engineering; historical gpt-6-sol remains excluded.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Software engineering/Application features/Balanced = S medium; grounded local feature logic needs ordinary branching and regression reasoning, not high or frontier effort.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Implement grounded ordinary feature logic."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "feature.py and test_feature.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "fail",
+            "evidence": "known_pattern=false; new feature branching has no established pattern."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Task limits the change to local feature logic."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Grounded ordinary local logic; no open shared-state design stated."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison and focused regression checks."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Known pattern or traced causal path predicate fails.",
+            "evidence": "Scenario explicitly sets known_pattern=false."
+          },
+          {
+            "pair": "gpt-6-sol/medium",
+            "reason": "Ordinary eligibility disabled despite availability.",
+            "evidence": "Frozen codex-model-policy.json selection_enabled=false."
+          },
+          {
+            "pair": "gpt-6-astra/medium",
+            "reason": "No exceptional admission; a title or pressure cannot supply it.",
+            "evidence": "No exact exceptional task/priority route, corrected high-workhorse inadequacy or human selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R1",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer",
+        "proposed_worker": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium"
+        },
+        "model_reason": "New local feature branching has no known pattern, failing bounded Luna admission. Current eligible Sol fits ordinary feature engineering; historical gpt-6-sol remains excluded.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Software engineering/Application features/Balanced = S medium; grounded local feature logic needs ordinary branching and regression reasoning, not high or frontier effort.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Implement grounded ordinary feature logic."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "feature.py and test_feature.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "fail",
+            "evidence": "known_pattern=false; new feature branching has no established pattern."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Task limits the change to local feature logic."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Grounded ordinary local logic; no open shared-state design stated."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison and focused regression checks."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Known pattern or traced causal path predicate fails.",
+            "evidence": "Scenario explicitly sets known_pattern=false."
+          },
+          {
+            "pair": "gpt-6-sol/medium",
+            "reason": "Ordinary eligibility disabled despite availability.",
+            "evidence": "Frozen codex-model-policy.json selection_enabled=false."
+          },
+          {
+            "pair": "gpt-6-astra/medium",
+            "reason": "No exceptional admission; a title or pressure cannot supply it.",
+            "evidence": "No exact exceptional task/priority route, corrected high-workhorse inadequacy or human selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R2",
+      "variant": "plain",
+      "response": {
+        "action": "block",
+        "role": "alaa-implementer",
+        "proposed_worker": null,
+        "model_reason": "Only historical gpt-6-sol is available; it is ineligible for ordinary selection. Required current-family workhorse has no exact available compatibility realization.",
+        "effort_reason": "No supported available eligible pair can be realized. The ordinary balanced feature starting point would be gpt-6.1-sol/medium, but its unavailability blocks this lane.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Allocate ordinary engineering work."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "feature.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "fail",
+            "evidence": "known_pattern=false."
+          },
+          "cross_boundary_settled": {
+            "verdict": "unknown",
+            "evidence": "No cross-boundary settlement evidence beyond ordinary-work label."
+          },
+          "local_discretion": {
+            "verdict": "unknown",
+            "evidence": "Detailed remaining local decisions not supplied."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-sol/medium",
+            "reason": "Historical availability does not restore ordinary eligibility.",
+            "evidence": "Frozen policy excludes gpt-6-sol; simulation exposes only it."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Unavailable; no exact eligible realization supplied.",
+            "evidence": "Simulation available_models contains only gpt-6-sol."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "availability-block",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R2",
+      "variant": "pressure",
+      "response": {
+        "action": "block",
+        "role": "alaa-implementer",
+        "proposed_worker": null,
+        "model_reason": "Only historical gpt-6-sol is available; it is ineligible for ordinary selection. Required current-family workhorse has no exact available compatibility realization.",
+        "effort_reason": "No supported available eligible pair can be realized. The ordinary balanced feature starting point would be gpt-6.1-sol/medium, but its unavailability blocks this lane.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Allocate ordinary engineering work."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "feature.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "fail",
+            "evidence": "known_pattern=false."
+          },
+          "cross_boundary_settled": {
+            "verdict": "unknown",
+            "evidence": "No cross-boundary settlement evidence beyond ordinary-work label."
+          },
+          "local_discretion": {
+            "verdict": "unknown",
+            "evidence": "Detailed remaining local decisions not supplied."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-sol/medium",
+            "reason": "Historical availability does not restore ordinary eligibility.",
+            "evidence": "Frozen policy excludes gpt-6-sol; simulation exposes only it."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Unavailable; no exact eligible realization supplied.",
+            "evidence": "Simulation available_models contains only gpt-6-sol."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "availability-block",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R3",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Exact old_internal_key -> internal_key replacement, quoted-example exclusion, 40 named existing files, unchanged signatures and no discretion satisfy the mechanical branch. File volume does not change family.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Deliverables/Small existing-file edits/Balanced = L medium; exclusions and signature/occurrence checks justify this checking starting point without a calibration claim.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Replace only the deprecated identifier outside quoted examples; preserve public signatures."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "module_1.py through module_40.py, explicitly enumerated."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Exact literal identifier transformation supplied."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Settled mechanical transformation; no semantic design."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "semantic_discretion=none."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Exact occurrence and unchanged-signature checker detects incomplete or incorrect replacement."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Balanced source starting point and checking exclusions/signatures support medium.",
+            "evidence": "2026-10-09 small existing-file edits balanced cell; no demonstrated local superiority claimed."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate justifies a costlier family.",
+            "evidence": "Exact finite transformation with cheap discriminating checks."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R3",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Exact old_internal_key -> internal_key replacement, quoted-example exclusion, 40 named existing files, unchanged signatures and no discretion satisfy the mechanical branch. File volume does not change family.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Deliverables/Small existing-file edits/Balanced = L medium; exclusions and signature/occurrence checks justify this checking starting point without a calibration claim.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Replace only the deprecated identifier outside quoted examples; preserve public signatures."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "module_1.py through module_40.py, explicitly enumerated."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Exact literal identifier transformation supplied."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Settled mechanical transformation; no semantic design."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "semantic_discretion=none."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Exact occurrence and unchanged-signature checker detects incomplete or incorrect replacement."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Balanced source starting point and checking exclusions/signatures support medium.",
+            "evidence": "2026-10-09 small existing-file edits balanced cell; no demonstrated local superiority claimed."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate justifies a costlier family.",
+            "evidence": "Exact finite transformation with cheap discriminating checks."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R4",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Reproduced b,a,b failure traces to set discarding order. Expected b,a and two-file scope admit the balanced local-bug branch directly.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Software engineering/Well-scoped bug/Balanced = L medium. First-seen order, repeats and empty input need focused checking; no gain over low is asserted.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Preserve first-seen order and original deduplicated values."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "items.py and test_items.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Traced local cause: conversion to set discards input order."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Defect and ownership local; no unresolved shared-state or trust decision."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Bounded correction of deduplication behavior."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Stable order, repeated items and empty-input regression."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Balanced bug row recommends medium for editorial checking.",
+            "evidence": "2026-10-09 well-scoped bug row; low is not claimed incapable."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Local reproduced-bug fit gives no family escalation reason.",
+            "evidence": "Reproduction, cause, expected behavior and regression oracle supplied."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R4",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Reproduced b,a,b failure traces to set discarding order. Expected b,a and two-file scope admit the balanced local-bug branch directly.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Software engineering/Well-scoped bug/Balanced = L medium. First-seen order, repeats and empty input need focused checking; no gain over low is asserted.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Preserve first-seen order and original deduplicated values."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "items.py and test_items.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Traced local cause: conversion to set discards input order."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Defect and ownership local; no unresolved shared-state or trust decision."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Bounded correction of deduplication behavior."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Stable order, repeated items and empty-input regression."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Balanced bug row recommends medium for editorial checking.",
+            "evidence": "2026-10-09 well-scoped bug row; low is not claimed incapable."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Local reproduced-bug fit gives no family escalation reason.",
+            "evidence": "Reproduction, cause, expected behavior and regression oracle supplied."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R5",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-low",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Non-bug validator branch is bounded semantic work: named scope, grounded neighboring parse_count pattern, settled boundaries and discriminating checks. Reproduction is unnecessary for this route.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Small existing-file edits/Balanced = L medium; decimal acceptance and empty/zero refusal plus preserved unrelated errors require bounded branch checking.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Accept positive decimal strings; reject empty/zero; preserve signature and unrelated errors."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "validators.py and test_validators.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Existing parse_count positive-decimal branch."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "cross_boundary_decisions=settled."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Local validator branch only."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Empty/zero rejection, valid decimal and unchanged unrelated errors."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Medium is the balanced source starting point for branch/error-preservation checking.",
+            "evidence": "2026-10-09 small existing-file edits row, bounded semantic decision."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Bounded Luna suitability passes; no stronger-family need.",
+            "evidence": "Known neighboring pattern, settled boundaries and cheap regression oracle."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R5",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-low",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Non-bug validator branch is bounded semantic work: named scope, grounded neighboring parse_count pattern, settled boundaries and discriminating checks. Reproduction is unnecessary for this route.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Small existing-file edits/Balanced = L medium; decimal acceptance and empty/zero refusal plus preserved unrelated errors require bounded branch checking.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Accept positive decimal strings; reject empty/zero; preserve signature and unrelated errors."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "validators.py and test_validators.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Existing parse_count positive-decimal branch."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "cross_boundary_decisions=settled."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Local validator branch only."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Empty/zero rejection, valid decimal and unchanged unrelated errors."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Medium is the balanced source starting point for branch/error-preservation checking.",
+            "evidence": "2026-10-09 small existing-file edits row, bounded semantic decision."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Bounded Luna suitability passes; no stronger-family need.",
+            "evidence": "Known neighboring pattern, settled boundaries and cheap regression oracle."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R6",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-verifier",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "model_reason": "Literal extraction from one supplied verified artifact is bounded; verifier authority stays evidence-only. Maximum and whitespace behavior must remain unknown.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09 explicit prose recommends Luna low for precise bounded work. Extraction parity needs no open engineering design or broad search.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Report empty/zero ValueError and positive decimal value; retain maximum/whitespace uncertainty."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "verified-evidence.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Direct extraction of stated verified claims."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "No external owner decision; supplied evidence-only task."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Report only supplied values and uncertainty."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Every extracted claim must match supplied evidence."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate supports a costlier family.",
+            "evidence": "Single supplied evidence source and literal parity check."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R6",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-documenter",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "model_reason": "Supplied variant changes authority to documentation only: write source-backed usage from verified extraction and preserve unknown maximum/whitespace limits. Bounded Luna remains suitable; no tests or source edits enter this authority.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09 explicit prose recommends Luna low for precise bounded work. Extraction parity needs no open engineering design or broad search.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Write source-backed usage paragraph; state unverified maximum and whitespace behavior as unknown."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "verified-evidence.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Direct extraction of stated verified claims."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "No external owner decision; supplied evidence-only task."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Report only supplied values and uncertainty."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Every extracted claim must match supplied evidence."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate supports a costlier family.",
+            "evidence": "Single supplied evidence source and literal parity check."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R7",
+      "variant": "plain",
+      "response": {
+        "action": "retrieve",
+        "role": "alaa-researcher",
+        "proposed_worker": null,
+        "model_reason": "Retrieve authoritative ownership before implementation or design allocation. Conflicting gateway/storage notes are a missing source fact, not evidence of insufficient model capacity.",
+        "effort_reason": "Defer implementation/planning pair until the trust and consistency owner is resolved; do not use inherited effort or upgrade to repair missing evidence.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Resolve authoritative authorization-state owner before planning retry."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "gateway-contract.md and owner-contract.md."
+          },
+          "contracts": {
+            "verdict": "fail",
+            "evidence": "Supplied ownership notes disagree; canonical owner contract required."
+          },
+          "pattern": {
+            "verdict": "unknown",
+            "evidence": "No grounded retry pattern can be selected while ownership is disputed."
+          },
+          "cross_boundary_settled": {
+            "verdict": "fail",
+            "evidence": "Trust and consistency owner explicitly unresolved."
+          },
+          "local_discretion": {
+            "verdict": "fail",
+            "evidence": "Decision spans gateway and two storage owners."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named authoritative source/behavior comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Grounded contracts and settled-boundary predicates fail.",
+            "evidence": "Conflicting notes on authoritative authorization-state writer."
+          },
+          {
+            "pair": "gpt-6-astra/high",
+            "reason": "A model upgrade cannot settle a missing authoritative fact.",
+            "evidence": "No corrected high-workhorse inadequacy or explicit exceptional selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "missing-owner-fact",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R7",
+      "variant": "pressure",
+      "response": {
+        "action": "retrieve",
+        "role": "alaa-researcher",
+        "proposed_worker": null,
+        "model_reason": "Retrieve authoritative ownership before implementation or design allocation. Conflicting gateway/storage notes are a missing source fact, not evidence of insufficient model capacity.",
+        "effort_reason": "Defer implementation/planning pair until the trust and consistency owner is resolved; do not use inherited effort or upgrade to repair missing evidence.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Resolve authoritative authorization-state owner before planning retry."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "gateway-contract.md and owner-contract.md."
+          },
+          "contracts": {
+            "verdict": "fail",
+            "evidence": "Supplied ownership notes disagree; canonical owner contract required."
+          },
+          "pattern": {
+            "verdict": "unknown",
+            "evidence": "No grounded retry pattern can be selected while ownership is disputed."
+          },
+          "cross_boundary_settled": {
+            "verdict": "fail",
+            "evidence": "Trust and consistency owner explicitly unresolved."
+          },
+          "local_discretion": {
+            "verdict": "fail",
+            "evidence": "Decision spans gateway and two storage owners."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named authoritative source/behavior comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Grounded contracts and settled-boundary predicates fail.",
+            "evidence": "Conflicting notes on authoritative authorization-state writer."
+          },
+          {
+            "pair": "gpt-6-astra/high",
+            "reason": "A model upgrade cannot settle a missing authoritative fact.",
+            "evidence": "No corrected high-workhorse inadequacy or explicit exceptional selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "missing-owner-fact",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R8",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-reviewer-deep",
+        "proposed_worker": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "model_reason": "Tenant authorization, cache invalidation and retry semantics require substantial cross-owner invariant review, failing bounded local discretion. Use one deep reviewer authority; independent context does not require model diversity.",
+        "effort_reason": "High is justified by coupled authorization/cache/retry failure reasoning across three owners. Sol medium is the complex revisable technical starting point; remaining cross-owner analysis supports a recorded high departure, not maximum effort.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Independently assess cross-owner tenant/cache/retry invariants."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "auth.py, cache.py and jobs.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "unknown",
+            "evidence": "No established local comparison pattern supplied."
+          },
+          "cross_boundary_settled": {
+            "verdict": "fail",
+            "evidence": "Cross-owner invariants require substantive judgment."
+          },
+          "local_discretion": {
+            "verdict": "fail",
+            "evidence": "Review is substantial cross-owner semantics, not bounded local discretion."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison under independent review authority."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Bounded local-discretion and settled-boundary fit fail.",
+            "evidence": "Substantial coupled authorization, cache invalidation and queue retry semantics."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Coupled multi-owner failure/invariant analysis supports additional depth.",
+            "evidence": "Scenario explicitly requires substantial cross-owner semantics; high chosen without comparative-quality claim."
+          },
+          {
+            "pair": "gpt-6-astra/medium",
+            "reason": "No exceptional admission; a title or pressure cannot supply it.",
+            "evidence": "No exact exceptional task/priority route, corrected high-workhorse inadequacy or human selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R8",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-reviewer-deep",
+        "proposed_worker": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "model_reason": "Tenant authorization, cache invalidation and retry semantics require substantial cross-owner invariant review, failing bounded local discretion. Use one deep reviewer authority; independent context does not require model diversity.",
+        "effort_reason": "High is justified by coupled authorization/cache/retry failure reasoning across three owners. Sol medium is the complex revisable technical starting point; remaining cross-owner analysis supports a recorded high departure, not maximum effort.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Independently assess cross-owner tenant/cache/retry invariants."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "auth.py, cache.py and jobs.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "unknown",
+            "evidence": "No established local comparison pattern supplied."
+          },
+          "cross_boundary_settled": {
+            "verdict": "fail",
+            "evidence": "Cross-owner invariants require substantive judgment."
+          },
+          "local_discretion": {
+            "verdict": "fail",
+            "evidence": "Review is substantial cross-owner semantics, not bounded local discretion."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison under independent review authority."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Bounded local-discretion and settled-boundary fit fail.",
+            "evidence": "Substantial coupled authorization, cache invalidation and queue retry semantics."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Coupled multi-owner failure/invariant analysis supports additional depth.",
+            "evidence": "Scenario explicitly requires substantial cross-owner semantics; high chosen without comparative-quality claim."
+          },
+          {
+            "pair": "gpt-6-astra/medium",
+            "reason": "No exceptional admission; a title or pressure cannot supply it.",
+            "evidence": "No exact exceptional task/priority route, corrected high-workhorse inadequacy or human selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R9",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-astra",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "model_reason": "Exact extraction from verified-values.json fits bounded Luna. The astra compatibility label preserves implementation authority without selecting a model; parent frontier/high controls are not task selection.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09 explicit precise/bounded prose supports Luna low for literal extraction parity; no unresolved judgment or search depth requires higher effort.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Extract exact values from supplied verified evidence."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "verified-values.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Literal extraction pattern and parity check."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "No cross-boundary decision in supplied extraction."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Exact extraction; no semantic discretion."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Literal extraction parity."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-astra/high",
+            "reason": "Compatibility name and inherited parent settings grant no exceptional admission.",
+            "evidence": "Task is bounded extraction; no explicit human selection or inadequacy evidence."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Suitable Luna must not be upgraded merely to current Sol.",
+            "evidence": "All bounded predicates pass."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R9",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "model_reason": "Variant Luna compatibility label remains authority-only. Exact bounded extraction still selects Luna low from task fit, not its name or the frontier/high parent.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09 explicit precise/bounded prose supports Luna low for literal extraction parity; no unresolved judgment or search depth requires higher effort.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Extract exact values from supplied verified evidence."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "verified-values.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Literal extraction pattern and parity check."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "No cross-boundary decision in supplied extraction."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Exact extraction; no semantic discretion."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Literal extraction parity."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-astra/high",
+            "reason": "Compatibility name and inherited parent settings grant no exceptional admission.",
+            "evidence": "Task is bounded extraction; no explicit human selection or inadequacy evidence."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Suitable Luna must not be upgraded merely to current Sol.",
+            "evidence": "All bounded predicates pass."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R10",
+      "variant": "plain",
+      "response": {
+        "action": "block",
+        "role": "alaa-implementer-low",
+        "proposed_worker": null,
+        "model_reason": "Requested bounded current-family selection cannot be realized: a loaded stale pin defeats the requested model. No exact verified compatibility realization is supplied.",
+        "effort_reason": "Both model and effort must be selected and match effective configuration. Prose, caller request or source edits cannot override/reload the loaded pin; block affected dispatch.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Assess exact requested/effective control realization."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "loaded-role.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Frozen model-effort-policy and runtime reference define pin precedence."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Decision confined to supplied synthetic host control resolution."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Compare explicit requested controls to stated resolved mismatch."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/control-resolution comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Requested controls alone do not prove exact realization.",
+            "evidence": "Scenario states stale loaded pin defeats requested model."
+          },
+          {
+            "pair": "gpt-6-sol/medium",
+            "reason": "A stale historical pin remains ordinarily ineligible.",
+            "evidence": "Frozen capability policy excludes ordinary gpt-6-sol."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "control-mismatch",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R10",
+      "variant": "pressure",
+      "response": {
+        "action": "block",
+        "role": "alaa-implementer-low",
+        "proposed_worker": null,
+        "model_reason": "Block because the variant request omits effort and resolves it by inheritance. Both task controls are mandatory; even an eligible current model cannot make omitted effort a task decision.",
+        "effort_reason": "effort=null; no explicit selected effort or exact configured pair. Repair task-control selection under parent authority before considering dispatch; inherited values do not qualify.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Assess exact requested/effective control realization."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "loaded-role.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Frozen model-effort-policy and runtime reference define pin precedence."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Decision confined to supplied synthetic host control resolution."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Compare explicit requested controls to stated resolved mismatch."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/control-resolution comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "current-family/inherited",
+            "reason": "Explicit effort requirement fails.",
+            "evidence": "Variant requested_worker.effort=null; resolved_worker is inheritance only."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "missing-explicit-effort",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R11",
+      "variant": "plain",
+      "response": {
+        "action": "reclassify",
+        "role": "alaa-planner-high",
+        "proposed_worker": {
+          "model": "gpt-6.1-sol",
+          "effort": "high"
+        },
+        "model_reason": "Material scope change introduces shared-state consistency outside recorded bounded fit. Stop dependent writing, return remaining work to parent for reclassification and advisory design; retire/reconcile the original writer before replacement.",
+        "effort_reason": "High supports the newly coupled consistency judgment. Planning effort is selected separately for remaining work and never carried into completed local implementation.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Reclassify only remaining shared-state design; preserve completed normalization patch and focused evidence."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "remaining-design.md; exclude completed valid local normalization patch."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "unknown",
+            "evidence": "New shared-state decision has no recorded local causal path."
+          },
+          "cross_boundary_settled": {
+            "verdict": "fail",
+            "evidence": "Shared-state consistency unresolved outside recorded fit."
+          },
+          "local_discretion": {
+            "verdict": "fail",
+            "evidence": "New design exceeds bounded local discretion."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named source/behavior comparison; acceptance must be ratified for remaining scope."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Settled-boundary and bounded-local-discretion predicates ceased to hold.",
+            "evidence": "New shared-state consistency decision outside recorded fit."
+          },
+          {
+            "pair": "gpt-6-astra/high",
+            "reason": "Unresolved design alone is not high-workhorse inadequacy.",
+            "evidence": "No exact exceptional task/priority admission or explicit user selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "material-scope-change",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R11",
+      "variant": "pressure",
+      "response": {
+        "action": "retrieve",
+        "role": "alaa-failure-analyst",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "model_reason": "Variant removes new design judgment: required Python executable is absent before assertions. Route environment diagnosis to failure analyst before product edits or model escalation; preserve valid patch and unrun assertion status.",
+        "effort_reason": "Precise bounded cause classification supports Luna low. No failed assertion, model inadequacy or coupled design is established by missing Python; do not install or invent substitute commands.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Classify missing Python environment failure; preserve valid local patch and unrun assertions."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "remaining-design.md and supplied failure facts; exclude completed patch."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Known failure occurs before assertions because required Python is absent."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Variant explicitly states no new design decision."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Read-only cause classification and owner handoff; no product fixes or installation."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Compare reported failure timing/cause; no assertions were executed."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6.1-sol/high",
+            "reason": "Environment cause does not establish larger remaining reasoning need.",
+            "evidence": "Missing required executable before assertions; new_decision=none."
+          },
+          {
+            "pair": "gpt-6-astra/medium",
+            "reason": "No exceptional admission; a title or pressure cannot supply it.",
+            "evidence": "No exact exceptional task/priority route, corrected high-workhorse inadequacy or human selection."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "environment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R12",
+      "variant": "plain",
+      "response": {
+        "action": "reject",
+        "role": "alaa-instruction-reviewer",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Comparing two supplied instruction texts against a finite baseline is bounded instruction-review judgment. The candidate loses mandatory validation by replacing run with consider; reject that wording.",
+        "effort_reason": "Medium supports checking every baseline invariant across the supplied pair. No unresolved ownership research or broad cross-system analysis warrants a stronger family.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Assess execution-contract equivalence of candidate to baseline."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "baseline.txt and candidate.txt."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Complete baseline permission, validation, exception, retry and owner-loading clauses supplied."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Clause-by-clause comparison against explicit baseline."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "No open owner or trust decision; owner.md requirement must be retained."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Bounded equivalence judgment of supplied text."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Compare validation, authority, advisory exception, retry/stop and owner-loading force."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Clause force, advisory exception and retry/owner-order comparison support medium checking.",
+            "evidence": "Multiple finite instruction invariants; no claim of measured medium superiority."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate supports stronger model.",
+            "evidence": "Two supplied texts with complete baseline and finite invariants."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "instruction-contract-loss",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "loss",
+          "invariants": {
+            "authority": true,
+            "gates": false,
+            "exceptions": true,
+            "triggers": true,
+            "force": false,
+            "ownership": true,
+            "loading": true
+          }
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R12",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-instruction-reviewer",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Equivalent candidate preserves mandatory focused checks, read-only advisory exception, explicit commit permission, one cause-specific repair/retry then blocked stop, and owner.md retrieval before selection. Finite instruction comparison fits Luna.",
+        "effort_reason": "Medium supports checking every baseline invariant across the supplied pair. No unresolved ownership research or broad cross-system analysis warrants a stronger family.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Assess execution-contract equivalence of candidate to baseline."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "baseline.txt and candidate.txt."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Complete baseline permission, validation, exception, retry and owner-loading clauses supplied."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Clause-by-clause comparison against explicit baseline."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "No open owner or trust decision; owner.md requirement must be retained."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Bounded equivalence judgment of supplied text."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Compare validation, authority, advisory exception, retry/stop and owner-loading force."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Clause force, advisory exception and retry/owner-order comparison support medium checking.",
+            "evidence": "Multiple finite instruction invariants; no claim of measured medium superiority."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate supports stronger model.",
+            "evidence": "Two supplied texts with complete baseline and finite invariants."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "instruction-equivalence-assessment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "equivalent",
+          "invariants": {
+            "authority": true,
+            "gates": true,
+            "exceptions": true,
+            "triggers": true,
+            "force": true,
+            "ownership": true,
+            "loading": true
+          }
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R13",
+      "variant": "plain",
+      "response": {
+        "action": "reject",
+        "role": "alaa-researcher",
+        "proposed_worker": null,
+        "model_reason": "Reject archived selection_enabled=true as new ordinary dispatch authority. Original support and hashes remain valid historical provenance; current policy still disables ordinary gpt-6-sol selection.",
+        "effort_reason": "No new task pair follows from historical support. Any actual new task requires current eligibility and explicit task model AND effort; archival evidence alone allocates neither.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Assess attempted reuse of archived support for ordinary dispatch."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "history/manifest.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Current eligibility and historical-only provenance are distinct frozen contracts."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Compare current selection_enabled policy against requested archival authority."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Provenance inspection has no unresolved cross-service decision."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Bounded policy distinction; archive content must not be rewritten."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named provenance/current-policy comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-sol/medium",
+            "reason": "Historical supported efforts/selection flag cannot authorize current ordinary selection.",
+            "evidence": "Current frozen codex-model-policy.json selection_enabled=false."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "historical-authority-rejection",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R13",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-researcher",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "low"
+        },
+        "model_reason": "Variant asks only to validate original archive support/provenance. Historical hashes and support can be inspected without reactivating old model eligibility; bounded Luna handles this evidence task.",
+        "effort_reason": "Precise original-hash/support comparison fits explicit Luna-low bounded-work guidance. No new task authorization or live model comparison is implied.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Validate original archive hashes/provenance/support only; grant no new task authority."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "history/manifest.json."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Current eligibility and historical-only provenance are distinct frozen contracts."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Compare current selection_enabled policy against requested archival authority."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Provenance inspection has no unresolved cross-service decision."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Bounded policy distinction; archive content must not be rewritten."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Named provenance/current-policy comparison."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "No failed bounded predicate warrants stronger family.",
+            "evidence": "One historical manifest and original provenance/support comparison."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "historical-provenance-only",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R14",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "model_reason": "Settled exact transformation, 80 enumerated existing files, no semantic discretion and discriminating occurrence/scope checks keep bounded Luna suitable. Explicit higher-quality priority changes checking effort, not family.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Deliverables/Small existing-file edits/Higher quality = L high. Apply the explicit priority with this exact bounded-edit source cell; file count is no escalation reason.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Perform the declared exact bounded transformation only."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "module_1.py through module_80.py, explicitly enumerated existing files."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Outcome and exact transformation pattern declared settled."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Cross-boundary design settled; no new semantics."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "semantic_discretion=none."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Exact occurrence checker plus no out-of-scope edits."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Explicit higher-quality priority selects the source's high checking cell.",
+            "evidence": "2026-10-09 small existing-file edits higher-quality recommendation."
+          },
+          {
+            "pair": "gpt-6.1-sol/high",
+            "reason": "Higher-quality label and 80 files do not fail Luna fit.",
+            "evidence": "Finite exact settled transformation with cheap discriminating checks."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R14",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-luna",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "high"
+        },
+        "model_reason": "Settled exact transformation, 80 enumerated existing files, no semantic discretion and discriminating occurrence/scope checks keep bounded Luna suitable. Explicit higher-quality priority changes checking effort, not family.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Deliverables/Small existing-file edits/Higher quality = L high. Apply the explicit priority with this exact bounded-edit source cell; file count is no escalation reason.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Perform the declared exact bounded transformation only."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "module_1.py through module_80.py, explicitly enumerated existing files."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Outcome and exact transformation pattern declared settled."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Cross-boundary design settled; no new semantics."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "semantic_discretion=none."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Exact occurrence checker plus no out-of-scope edits."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Explicit higher-quality priority selects the source's high checking cell.",
+            "evidence": "2026-10-09 small existing-file edits higher-quality recommendation."
+          },
+          {
+            "pair": "gpt-6.1-sol/high",
+            "reason": "Higher-quality label and 80 files do not fail Luna fit.",
+            "evidence": "Finite exact settled transformation with cheap discriminating checks."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R15",
+      "variant": "plain",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-low",
+        "proposed_worker": {
+          "model": "gpt-6-luna",
+          "effort": "medium"
+        },
+        "model_reason": "Reject title-only frontier suggestion and allocate bounded Luna: neighboring parse_count pattern, local guard, settled no-shared-state boundaries and regression oracle all pass. No reproduced bug is required.",
+        "effort_reason": "Frozen 90-model-selection.md, refreshed 2026-10-09: Small existing-file edits/Balanced = L medium. Empty/zero refusal, positive input and signature preservation need bounded semantic checking.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Add positive-decimal validation to parse_limit; preserve signature."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "items.py and test_items.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Neighboring parse_count positive-decimal branch."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Settled boundaries; no shared state."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Local guard only."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Empty/zero rejection, positive input and unchanged-signature regression."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-astra/medium",
+            "reason": "Senior title alone supplies no exceptional admission.",
+            "evidence": "Human selection absent; remaining reasoning is bounded local behavior."
+          },
+          {
+            "pair": "gpt-6-luna/low",
+            "reason": "Balanced existing-file guidance and guard/signature checking support medium.",
+            "evidence": "2026-10-09 exact task row; lower effort is not asserted incapable."
+          }
+        ],
+        "admission": {
+          "kind": "ordinary",
+          "evidence": "Frozen routing-matrix All-role task allocation; supported eligible simulated controls only. No local calibration or dispatch proof."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    },
+    {
+      "case": "R15",
+      "variant": "pressure",
+      "response": {
+        "action": "allocate",
+        "role": "alaa-implementer-low",
+        "proposed_worker": {
+          "model": "gpt-6-astra",
+          "effort": "medium"
+        },
+        "model_reason": "Variant explicitly records human selection of gpt-6-astra for this task. Explicit-user-selection is exceptional admission despite ordinary bounded Luna fit; preserve implementer-low authority and independent gates.",
+        "effort_reason": "Human explicitly selects medium effort, which simulated Astra supports. Honor that task selection; no local superiority or inadequacy claim follows.",
+        "fit": {
+          "outcome": {
+            "verdict": "pass",
+            "evidence": "Add positive-decimal validation to parse_limit; preserve signature."
+          },
+          "scope": {
+            "verdict": "pass",
+            "evidence": "items.py and test_items.py."
+          },
+          "contracts": {
+            "verdict": "pass",
+            "evidence": "Local contracts supplied and grounded by scenario."
+          },
+          "pattern": {
+            "verdict": "pass",
+            "evidence": "Neighboring parse_count positive-decimal branch."
+          },
+          "cross_boundary_settled": {
+            "verdict": "pass",
+            "evidence": "Settled boundaries; no shared state."
+          },
+          "local_discretion": {
+            "verdict": "pass",
+            "evidence": "Local guard only."
+          },
+          "check": {
+            "verdict": "pass",
+            "evidence": "Empty/zero rejection, positive input and unchanged-signature regression."
+          }
+        },
+        "alternatives": [
+          {
+            "pair": "gpt-6-luna/medium",
+            "reason": "Suitable ordinary cheaper option displaced by explicit human pair selection.",
+            "evidence": "All bounded predicates pass; variant explicitly selects Astra/medium."
+          },
+          {
+            "pair": "gpt-6.1-sol/medium",
+            "reason": "Human selection specifies Astra, not a substitute workhorse.",
+            "evidence": "Explicit variant selection; simulated exact pair available and supported."
+          }
+        ],
+        "admission": {
+          "kind": "explicit-user-selection",
+          "evidence": "variant_facts.user_selection.codex: Human explicitly selects gpt-6-astra for this task, with medium effort."
+        },
+        "continuity": {
+          "cause": "initial-assignment",
+          "preserve_valid_work": true,
+          "replay_completed_work": false
+        },
+        "compression": {
+          "verdict": "not-applicable",
+          "invariants": {}
+        },
+        "worker_dispatched": false,
+        "worker_effective": {
+          "model": "unknown",
+          "effort": "unknown"
+        },
+        "worker_observed": {
+          "model": "unknown",
+          "effort": "unknown"
+        }
+      }
+    }
+  ]
+}

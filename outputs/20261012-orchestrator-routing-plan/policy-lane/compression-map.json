@@ -1,0 +1,681 @@
+[
+  {
+    "id": "W17",
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+    "draft": "Every managed role uses task-selected controls and carries no executable model or effort pin. Check ordinary-selection eligibility separately from supported efforts and host availability before realizing either control.",
+    "final": "Managed roles carry no executable model/effort pins. Before realizing task-selected controls, check ordinary eligibility, effort support and host availability separately.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W1",
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "draft": "Otherwise evaluate the remaining routes below, including bounded semantic work; unresolved facts still go to retrieval/clarification.",
+    "final": "Otherwise evaluate remaining routes, including bounded semantic work; retrieve/clarify unresolved facts.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W14",
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "draft": "3. Compare eligible supported available model AND effort pairs for the actual task. Evaluate the cheapest candidate for EVERY role, including evidence, planning, implementation, verification, review, specialist, documentation and rule-writer work. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts and known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion, and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical and bug branches retain their own predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; never use quotas. Justify model and effort separately from remaining reasoning, priority, current official starting guidance and applicable prior evidence. For each cheaper rejection record the actual failed fit predicate or stronger task-specific evidence, plus rejected decomposition and the exact source row/date when applicable. A title, volume, priority label or whole-goal complexity is no failed predicate. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality.",
+    "final": "3. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical/bug branches retain their predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; no quotas. Justify model and effort separately using remaining reasoning, priority, current official guidance and applicable prior evidence. Record each cheaper rejection's actual failed fit predicate or stronger task-specific evidence, rejected decomposition and applicable exact source row/date. Titles, volume, priority labels and whole-goal complexity are no failed predicates. Select directly: no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "C2",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "The session model leads; narrow subagents",
+    "final": "Narrow subagents",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C4",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "The lead session plans, dispatches, reconciles, gates, and reports. It should not perform normal implementation itself while viable implementation agents are available, and it does not run heavy test suites itself \u2014 the verifier does.",
+    "final": "The lead plans, dispatches, reconciles, gates and reports. It should not implement while viable implementers are available; the verifier runs heavy suites.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C6",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "The lead owns goal normalization and scope control; repository-aware lane planning; agent selection and dispatch authorization; cross-lane reconciliation; verification and review gates; specialist-trigger decisions; and final truthfulness and stopping.",
+    "final": "The lead owns goal normalization/scope control, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C8",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "The lead must not: implement while implementation agents are viable; run CPU-heavy verification itself; silently implement a failed lane; let an implementer approve its own change; soften or omit reviewer findings; claim checks it did not observe; fan out overlapping write lanes concurrently; print bulky tool output into the conversation instead of routing it to a file and reporting the path; or run destructive, publishing, deployment, force-push, data-deletion, or externally visible actions without explicit user permission.",
+    "final": "The lead must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C9",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Report: outcome; separate verdicts for `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` under `alaa-workflow references/workspace-and-integration.md`; lane changes/touched files; commands/results marked run or cited and tier; review/specialist verdicts and finding dispositions; documentation outcome/grade per touched document; curation persisted/deferred/empty; risks, skipped checks and follow-ups. List every dispatched agent once with configured/requested model/effort, separately observed identity or unknown, observable mismatches only, and the named admission criterion for each escalated lane.",
+    "final": "Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes/files; commands/results with run/cited and tier; review/specialist verdicts/dispositions; each touched document's outcome/grade; curation persisted/deferred/empty; risks, skipped checks, follow-ups. List each dispatched agent once: configured/requested pair, separately observed identity or unknown, observable mismatches and named escalated-lane admission.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C10",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Close with one accounting line from existing plan, roster and evidence: dispatches/distinct roles; underlying checks run/cited (covered children counted once); branch span from plan `Created` to last authorized commit, or unavailable. No timer, extra command or invented budget.",
+    "final": "Close with one line from existing plan/roster/evidence: dispatches/distinct roles; underlying checks run/cited, covered children counted once; span from plan `Created` to last authorized commit or unavailable. No timer, extra command or invented budget.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C11",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Stop successfully only when every acceptance criterion has evidence, mandatory gates passed, the final candidate passed the scope and proof levels required by repository policy and /alaa-testing-strategy, the final diff scope is clean, documentation was completed or explicitly skipped, the final reusable-context gate reported what was persisted, deferred, rejected, or absent, and any requested integration has an accurately reported authorized, declined, or blocked outcome. Local-only requests complete without an integration prompt.",
+    "final": "Stop successfully only with evidenced acceptance, passing mandatory gates and final candidate scope/proof under repository policy and /alaa-testing-strategy, clean final diff scope, completed or explicitly skipped documentation, and the final reusable-context gate reporting disposition (persisted/deferred/rejected/absent). Accurately report requested integration as authorized, declined or blocked. Local-only completion needs no integration prompt.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C12",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Stop and report a partial or blocked state when: the same lane is blocked twice by the same cause; blocker or major findings remain after two fix cycles; verification remains flaky, timed out, contaminated, or environment-blocked; scope expands beyond the goal; an irreversible or product decision belongs to the user; or a safe execution path no longer exists.",
+    "final": "Stop and report partial/blocked after the same lane/cause blocks twice, blockers/majors survive two fix cycles, or verification stays flaky/timed-out/contaminated/environment-blocked; also stop for scope beyond the goal, user-owned irreversible/product decisions, or no safe path.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C14",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.claude/agents`.",
+    "final": "Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.claude/agents`, because reinstall restores pack grants.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C15",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Commit only with explicit user authorization, in the workflow-selected checkout. Without it, preserve the reviewed diff and pin validation to a content snapshot under the workflow protocol. Every external or destructive effect requires its own explicit authority. Never add Co-Authored tags.",
+    "final": "Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C17",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system inside Claude Code.",
+    "final": "Lead a controlled, evidence-driven multi-agent goal inside Claude Code.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C18",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner; do not start this pipeline. Required repository checks still apply. Non-trivial work continues below.",
+    "final": "Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner. Do not start this pipeline for it; required repository checks still apply.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C19",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Before planning apply `references/routing-matrix.md` Planning profile selection and All-role task allocation. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.",
+    "final": "Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks/dependencies, then allocate the batch once, record each registered profile/reason in the plan, and dispatch. Planning effort never sets worker effort; worker selection alone needs no planner dispatch.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C20",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "- The change is a single edit whose correctness one reader can confirm without a second lane. Delegation\n  then costs more than the work.",
+    "final": "- A single edit one reader can confirm without a second lane; delegation costs more than the work.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C21",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "- The request is a destructive or externally visible action \u2014 a push, a deploy, a data change, a published\n  artifact \u2014 and no explicit authorization for it exists yet.",
+    "final": "- A destructive or external effect, including push, deploy, data change or publication, lacks explicit authorization.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C23",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "- The runtime is Codex rather than Claude Code. The bootstrap here writes Claude Code agent files and\n  does nothing useful there.",
+    "final": "- The runtime is Codex rather than Claude Code. These agent files do not serve it.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C24",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "- The engagement is a multi-session program whose value is the plan and its continuity rather than one\n  goal's parallel role lanes. `/alaa-workflow` leads there and invokes this skill for a\n  single phase. This skill still writes its plan through that one; the question is only which of the two leads.",
+    "final": "- A multi-session program centers on plan continuity: `/alaa-workflow` leads and invokes this skill for a phase. This skill still writes its plan through workflow.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C25",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Activation grants no installation or update authority. Inspect the installed role definitions, version, and effective tool permissions without writing files. Compare the roles needed for this goal with the shipped definitions; report missing, stale, or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work whose required roles are available; report the rest blocked.",
+    "final": "Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C26",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Inspect the effective sandbox, parent overrides, and MCP grants before relying on isolation. A declared read-only role does not prove runtime enforcement. If effective permissions cannot be observed, report them unknown and keep operations within the role restriction.",
+    "final": "Inspect effective sandbox, parent overrides and MCP grants before relying on isolation. Read-only declarations prove no enforcement. Report unobservable permissions unknown and operate within role restrictions.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C27",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Use when the user asks for a plan, critique, architecture advice, prompts, lane definitions, or review without implementation. Research and read-only specialist agents may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md`; its admission and explicit exceptions govern planning artifacts. Plan-only work grants no product execution, branch, or commit authority.",
+    "final": "For plans, critiques, architecture advice, prompts, lane definitions or review without implementation, research/read-only specialists may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md` for admission and explicit exceptions. Plan-only work grants no product execution, branch, or commit authority.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C28",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Resolve explicit wording first. When intent remains ambiguous, choose the lowest-side-effect interpretation that still answers the request; do not interrupt merely to ask which mode.",
+    "final": "Follow explicit wording; otherwise choose the lowest-side-effect interpretation answering the request without asking merely to select a mode.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C29",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts. Adopt an existing parent plan. For one goal this skill leads; for a multi-session program workflow leads and invokes this skill for a phase.",
+    "final": "In orchestrator mode adopt an existing parent plan; `/alaa-workflow` owns plan/checkpoint/prompts. This skill leads one goal; workflow leads multi-session programs and invokes it per phase.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C31",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "**Delegate narrowly.** Dispatch one agent per lane and never several agents for the same lane. Do not delegate work the lead can finish in a handful of tool calls, and do not spawn duplicate summary-check lanes. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out in the same turn \u2014 the constraint is on redundancy, not on parallelism.",
+    "final": "**Delegate narrowly.** One agent per lane; no duplicate lane or summary-check agent. Keep work finishable in a handful of tool calls inline. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes in the same turn.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C33",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repeated checks only when no new change, failure or unresolved concern justifies them; generic self-check reminders never replace a gate. `alaa-verifier`, `alaa-reviewer` and specialist gates are authority boundaries: no lane approves its own change. Model capability never waives them. Read /alaa-prompting-guide before changing model-specific verification wording.",
+    "final": "**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repetition only without new changes, failures or unresolved concerns. Generic reminders never replace a gate: `alaa-verifier`, `alaa-reviewer` and specialists enforce independent authority, which model capability never waives. Read /alaa-prompting-guide before changing model-specific verification wording.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C34",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "**Correct sparingly.** Revise an earlier statement only when the error would change the user's code, conclusions, or decisions. State the correction plainly, briefly, and continue. For slips that change nothing, fix and move on without narrating.",
+    "final": "**Correct sparingly.** Revise statements only when an error changes user code, conclusions or decisions; state it plainly and briefly, then continue. Fix immaterial slips without narration.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C35",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "**Calibrate length.** Reports and written deliverables run long by default. Match length to what the task needs: cover the substance, then stop. No filler sections, no redundant summaries, no boilerplate. Lead every report with the outcome \u2014 the first sentence answers \"what happened\" \u2014 and put supporting detail after it. Anything a later turn or another agent might need again is written to a file first and referenced by path; the conversation is not the storage medium, and `/alaa-low-noise` owns the budgets.",
+    "final": "**Calibrate length.** Reports/deliverables run long by default: cover the required substance, then stop without filler, redundant summaries or boilerplate. Start reports with the outcome, then supporting detail. Save reusable material before reporting its path; conversation is not storage. `/alaa-low-noise` owns budgets.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C36",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Before dispatch inspect repository guidance and affected paths, settle outcome, acceptance, preserved behavior and irreversible actions, then draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and the existing-infrastructure check.",
+    "final": "Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C37",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Before Phase A evidence dispatch invoke `/alaa-memory-os` when triggered: one bounded recall, useful claims verified against repository truth. Active state remains in workflow. Give unresolved prior-session, ownership or shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Invoke `/alaa-code-intelligence-routing` before selecting code evidence, then reuse its result.",
+    "final": "Before Phase A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C38",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Every dispatch carries `/alaa-low-noise` and returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or narration between commands. After interruption reconcile transcript, workflow checkpoint and surviving files before resuming completed writes.",
+    "final": "Every dispatch carries `/alaa-low-noise`; return findings, verdicts, counts and permitted artifact paths, never transcripts/full diffs/logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After interruption reconcile transcript, checkpoint and surviving files before resuming writes.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C39",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "The direct-reference router below selects role, dispatch and gate owners. `references/verification-and-gates.md` owns gate economics \u2014 which gate runs before which, and what must be frozen before the expensive one is dispatched.",
+    "final": "The router below selects role/dispatch/gate owners. `references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C40",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "`references/model-effort-policy.md` routes capabilities and control mechanics to /alaa-prompting-guide. Apply all-role task allocation in `references/routing-matrix.md` for EVERY dispatch. This pack owns actual model AND effort choices, role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.",
+    "final": "For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority/output. `references/model-effort-policy.md` routes capability/control mechanics to /alaa-prompting-guide.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C41",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Missing target models or roles are explicit blocked/degraded execution, never silent fallback. Diagnose missing context, tool failure, and specification ambiguity before attributing failure to model capacity. The catalog is a menu; dispatch only roles whose triggers hold.",
+    "final": "Report missing models/roles as blocked/degraded, never silent fallback. Diagnose context/tool/specification failures before capacity. Dispatch only triggered catalog roles.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C42",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. These are logical outcomes, not mandatory separate dispatches or repeated ceremonies. Coalesce compatible actions and evidence under the workflow plan; preserve outcomes, independent authority and gate economics. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires \u2014 read it before dispatching Phase A.",
+    "final": "Orchestrator mode runs A\u2013E; F requires requested integration and explicit authority before effects. Advisor mode runs no execution phases; section 1 routes planning artifacts. Phases are logical outcomes, not separate mandatory dispatches. Coalesce compatible actions/evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Phase A dispatch read `references/verification-and-gates.md` for phase behavior, triggers and requirements.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C43",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "**Every profile preserves Phases A through E and their required gates.** Phase F is conditional; local-only completion requires no merge prompt. Select and record the profile from the finished plan. Escalate when a heavier condition becomes true; do not de-escalate because its qualifying evidence persists. Implementation-role reassessment follows `references/routing-matrix.md`.",
+    "final": "**Every profile preserves A\u2013E and required gates.** F is conditional; local-only completion requires no merge prompt. Record the profile from the finished plan. Escalate on a heavier condition; do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C44",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "`lean` review is independent because the lead did not author the diff. If the diff leaves the lane plan, select `standard` and dispatch `alaa-reviewer` against the complete change.",
+    "final": "`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C45",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "**No profile suppresses a specialist.** Apply only the triggers owned by `references/routing-matrix.md`, identically at every profile.",
+    "final": "**No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C46",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Schedule the commands below through `references/verification-and-gates.md` Gate economics; proven aggregate coverage may discharge an identical child invocation, never a different scope or observer.",
+    "final": "Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope/observer.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C47",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "The direct-reference router selects resource and failure handling before those decisions.",
+    "final": "Before resource/failure decisions apply the router below.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C48",
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "draft": "Use a reviewer only to judge, a verifier only to execute evidence commands, and a researcher only to retrieve. Classify shell, runtime, permission and stale-cache failures before any product edit; `references/failure-taxonomy.md` owns the categories. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill, not the whole family.",
+    "final": "Reviewers only judge, verifiers only execute evidence commands, researchers only retrieve. Before product edits classify shell/runtime/permission/stale-cache failures through `references/failure-taxonomy.md`. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "W17",
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+    "draft": "Every managed role uses task-selected controls and carries no executable model or effort pin. Check ordinary-selection eligibility separately from supported efforts and host availability before realizing either control.",
+    "final": "Managed roles carry no executable model/effort pins. Before realizing task-selected controls, check ordinary eligibility, effort support and host availability separately.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W1",
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "draft": "Otherwise evaluate the remaining routes below, including bounded semantic work; unresolved facts still go to retrieval/clarification.",
+    "final": "Otherwise evaluate remaining routes, including bounded semantic work; retrieve/clarify unresolved facts.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W14",
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "draft": "3. Compare eligible supported available model AND effort pairs for the actual task. Evaluate the cheapest candidate for EVERY role, including evidence, planning, implementation, verification, review, specialist, documentation and rule-writer work. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts and known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion, and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical and bug branches retain their own predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; never use quotas. Justify model and effort separately from remaining reasoning, priority, current official starting guidance and applicable prior evidence. For each cheaper rejection record the actual failed fit predicate or stronger task-specific evidence, plus rejected decomposition and the exact source row/date when applicable. A title, volume, priority label or whole-goal complexity is no failed predicate. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality.",
+    "final": "3. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical/bug branches retain their predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; no quotas. Justify model and effort separately using remaining reasoning, priority, current official guidance and applicable prior evidence. Record each cheaper rejection's actual failed fit predicate or stronger task-specific evidence, rejected decomposition and applicable exact source row/date. Titles, volume, priority labels and whole-goal complexity are no failed predicates. Select directly: no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W15",
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "draft": "2. Exclude gpt-6-sol from ordinary allocation even when the host offers it; use the canonical eligibility registry. Current-family selection never upgrades suitable Luna to Sol. Unavailable current Sol requires an exact eligible realization or an affected-lane block, never old-Sol fallback. An explicit user legacy exception is separately recorded and never restores ordinary eligibility. Use balanced default priority;",
+    "final": "2. Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades suitable Luna to Sol. Missing current Sol requires exact eligible realization or an affected-lane block, never old-Sol fallback. Record explicit user legacy exceptions separately; ordinary eligibility stays disabled. Use balanced default priority;",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W16",
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "draft": "Select `alaa-implementer-low` for bounded semantic work only when the plan records every bounded-suitability predicate in All-role task allocation and cheap discriminating checks. This authority identity admits non-bug work with bounded local decisions; choose its pair separately, including Luna when suitable. Unresolved cross-boundary design, consistency or trust decisions fail admission.",
+    "final": "Select `alaa-implementer-low` for bounded semantic work only with every All-role bounded-suitability predicate and cheap discriminating checks recorded. Non-bug local decisions qualify; allocate its pair separately, including suitable Luna. Unresolved cross-boundary design, consistency or trust fails admission.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "C1",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "The main thread leads; narrow subagents",
+    "final": "Narrow subagents",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C3",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "The main thread plans, dispatches, reconciles, gates, and reports. It should not perform normal implementation itself while viable implementation agents are available, and it does not run heavy test suites itself \u2014 the verifier does.",
+    "final": "The main thread plans, dispatches, reconciles, gates and reports. It should not implement while viable implementers are available; the verifier runs heavy suites.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C5",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "It owns goal normalization and scope control; repository-aware lane planning; agent selection and dispatch authorization; cross-lane reconciliation; verification and review gates; specialist-trigger decisions; and final truthfulness and stopping.",
+    "final": "It owns goal normalization/scope control, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C7",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "It must not: implement while implementation agents are viable; run CPU-heavy verification itself; silently implement a failed lane; let an implementer approve its own change; soften or omit reviewer findings; claim checks it did not observe; fan out overlapping write lanes concurrently; print bulky tool output into the conversation instead of routing it to a file and reporting the path; or run destructive, publishing, deployment, force-push, data-deletion, or externally visible actions without explicit user permission.",
+    "final": "It must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C9",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Report: outcome; separate verdicts for `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` under `alaa-workflow references/workspace-and-integration.md`; lane changes/touched files; commands/results marked run or cited and tier; review/specialist verdicts and finding dispositions; documentation outcome/grade per touched document; curation persisted/deferred/empty; risks, skipped checks and follow-ups. List every dispatched agent once with configured/requested model/effort, separately observed identity or unknown, observable mismatches only, and the named admission criterion for each escalated lane.",
+    "final": "Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes/files; commands/results with run/cited and tier; review/specialist verdicts/dispositions; each touched document's outcome/grade; curation persisted/deferred/empty; risks, skipped checks, follow-ups. List each dispatched agent once: configured/requested pair, separately observed identity or unknown, observable mismatches and named escalated-lane admission.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C10",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Close with one accounting line from existing plan, roster and evidence: dispatches/distinct roles; underlying checks run/cited (covered children counted once); branch span from plan `Created` to last authorized commit, or unavailable. No timer, extra command or invented budget.",
+    "final": "Close with one line from existing plan/roster/evidence: dispatches/distinct roles; underlying checks run/cited, covered children counted once; span from plan `Created` to last authorized commit or unavailable. No timer, extra command or invented budget.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C11",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Stop successfully only when every acceptance criterion has evidence, mandatory gates passed, the final candidate passed the scope and proof levels required by repository policy and /alaa-testing-strategy, the final diff scope is clean, documentation was completed or explicitly skipped, the final reusable-context gate reported what was persisted, deferred, rejected, or absent, and any requested integration has an accurately reported authorized, declined, or blocked outcome. Local-only requests complete without an integration prompt.",
+    "final": "Stop successfully only with evidenced acceptance, passing mandatory gates and final candidate scope/proof under repository policy and /alaa-testing-strategy, clean final diff scope, completed or explicitly skipped documentation, and the final reusable-context gate reporting disposition (persisted/deferred/rejected/absent). Accurately report requested integration as authorized, declined or blocked. Local-only completion needs no integration prompt.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C12",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Stop and report a partial or blocked state when: the same lane is blocked twice by the same cause; blocker or major findings remain after two fix cycles; verification remains flaky, timed out, contaminated, or environment-blocked; scope expands beyond the goal; an irreversible or product decision belongs to the user; or a safe execution path no longer exists.",
+    "final": "Stop and report partial/blocked after the same lane/cause blocks twice, blockers/majors survive two fix cycles, or verification stays flaky/timed-out/contaminated/environment-blocked; also stop for scope beyond the goal, user-owned irreversible/product decisions, or no safe path.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C13",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.codex/agents`.",
+    "final": "Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.codex/agents`, because reinstall restores pack grants.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C15",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Commit only with explicit user authorization, in the workflow-selected checkout. Without it, preserve the reviewed diff and pin validation to a content snapshot under the workflow protocol. Every external or destructive effect requires its own explicit authority. Never add Co-Authored tags.",
+    "final": "Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C16",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system.",
+    "final": "Lead a controlled, evidence-driven multi-agent goal.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C18",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner; do not start this pipeline. Required repository checks still apply. Non-trivial work continues below.",
+    "final": "Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner. Do not start this pipeline for it; required repository checks still apply.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C19",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Before planning apply `references/routing-matrix.md` Planning profile selection and All-role task allocation. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.",
+    "final": "Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks/dependencies, then allocate the batch once, record each registered profile/reason in the plan, and dispatch. Planning effort never sets worker effort; worker selection alone needs no planner dispatch.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C20",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "- The change is a single edit whose correctness one reader can confirm without a second lane. Delegation\n  then costs more than the work.",
+    "final": "- A single edit one reader can confirm without a second lane; delegation costs more than the work.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C21",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "- The request is a destructive or externally visible action \u2014 a push, a deploy, a data change, a published\n  artifact \u2014 and no explicit authorization for it exists yet.",
+    "final": "- A destructive or external effect, including push, deploy, data change or publication, lacks explicit authorization.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C22",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "- The runtime is Claude Code rather than Codex. The role definitions here use TOMLs and do\n  not serve that runtime.",
+    "final": "- The runtime is Claude Code rather than Codex. These TOML roles do not serve it.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C24",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "- The engagement is a multi-session program whose value is the plan and its continuity rather than one\n  goal's parallel role lanes. `/alaa-workflow` leads there and invokes this skill for a\n  single phase. This skill still writes its plan through that one; the question is only which of the two leads.",
+    "final": "- A multi-session program centers on plan continuity: `/alaa-workflow` leads and invokes this skill for a phase. This skill still writes its plan through workflow.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C25",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Activation grants no installation or update authority. Inspect the installed role definitions, version, and effective tool permissions without writing files. Compare the roles needed for this goal with the shipped definitions; report missing, stale, or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work whose required roles are available; report the rest blocked.",
+    "final": "Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C26",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Inspect the effective sandbox, parent overrides, and MCP grants before relying on isolation. A declared read-only role does not prove runtime enforcement. If effective permissions cannot be observed, report them unknown and keep operations within the role restriction.",
+    "final": "Inspect effective sandbox, parent overrides and MCP grants before relying on isolation. Read-only declarations prove no enforcement. Report unobservable permissions unknown and operate within role restrictions.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C27",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Use when the user asks for a plan, critique, architecture advice, prompts, lane definitions, or review without implementation. Research and read-only specialist agents may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md`; its admission and explicit exceptions govern planning artifacts. Plan-only work grants no product execution, branch, or commit authority.",
+    "final": "For plans, critiques, architecture advice, prompts, lane definitions or review without implementation, research/read-only specialists may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md` for admission and explicit exceptions. Plan-only work grants no product execution, branch, or commit authority.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C28",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Resolve explicit wording first. When intent remains ambiguous, choose the lowest-side-effect interpretation that still answers the request; do not interrupt merely to ask which mode.",
+    "final": "Follow explicit wording; otherwise choose the lowest-side-effect interpretation answering the request without asking merely to select a mode.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C29",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts. Adopt an existing parent plan. For one goal this skill leads; for a multi-session program workflow leads and invokes this skill for a phase.",
+    "final": "In orchestrator mode adopt an existing parent plan; `/alaa-workflow` owns plan/checkpoint/prompts. This skill leads one goal; workflow leads multi-session programs and invokes it per phase.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C30",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "**One agent per lane.** Never several agents for the same lane, and no duplicate summary-check lane. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out together \u2014 the constraint is on redundancy, not on parallelism. Do not delegate work the main thread can finish in a handful of tool calls.",
+    "final": "**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep work finishable in a handful of tool calls inline.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C32",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "**Keep dispatches lean.** Apply the instruction-authoring contract in /alaa-prompting-guide. Dispatch text carries lane facts only: outcome, owned files, exclusions, acceptance criteria, verification commands, dependencies, resolved skill bindings, and the return contract. The role already lives in the agent TOML; restating it dilutes both. State each instruction once, expose only task-relevant tools, and keep examples only where they encode a real requirement.",
+    "final": "**Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the TOML role, which dilutes both contracts. State instructions once; expose task-relevant tools and only requirement-bearing examples.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C33",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repeated checks only when no new change, failure or unresolved concern justifies them; generic self-check reminders never replace a gate. `alaa-verifier`, `alaa-reviewer` and specialist gates are authority boundaries: no lane approves its own change. Model capability never waives them. Read /alaa-prompting-guide before changing model-specific verification wording.",
+    "final": "**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repetition only without new changes, failures or unresolved concerns. Generic reminders never replace a gate: `alaa-verifier`, `alaa-reviewer` and specialists enforce independent authority, which model capability never waives. Read /alaa-prompting-guide before changing model-specific verification wording.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C36",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Before dispatch inspect repository guidance and affected paths, settle outcome, acceptance, preserved behavior and irreversible actions, then draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and the existing-infrastructure check.",
+    "final": "Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C37",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Before Phase A evidence dispatch invoke `/alaa-memory-os` when triggered: one bounded recall, useful claims verified against repository truth. Active state remains in workflow. Give unresolved prior-session, ownership or shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Invoke `/alaa-code-intelligence-routing` before selecting code evidence, then reuse its result.",
+    "final": "Before Phase A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C38",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Every dispatch carries `/alaa-low-noise` and returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or narration between commands. After interruption reconcile transcript, workflow checkpoint and surviving files before resuming completed writes.",
+    "final": "Every dispatch carries `/alaa-low-noise`; return findings, verdicts, counts and permitted artifact paths, never transcripts/full diffs/logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After interruption reconcile transcript, checkpoint and surviving files before resuming writes.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C39",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "The direct-reference router below selects role, dispatch and gate owners. `references/verification-and-gates.md` owns gate economics \u2014 which gate runs before which, and what must be frozen before the expensive one is dispatched.",
+    "final": "The router below selects role/dispatch/gate owners. `references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C40",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "`references/model-effort-policy.md` routes capabilities and control mechanics to /alaa-prompting-guide. Apply all-role task allocation in `references/routing-matrix.md` for EVERY dispatch. This pack owns actual model AND effort choices, role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.",
+    "final": "For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority/output. `references/model-effort-policy.md` routes capability/control mechanics to /alaa-prompting-guide.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C41",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Missing target models or roles are explicit blocked/degraded execution, never silent fallback. Diagnose missing context, tool failure, and specification ambiguity before attributing failure to model capacity. The catalog is a menu; dispatch only roles whose triggers hold.",
+    "final": "Report missing models/roles as blocked/degraded, never silent fallback. Diagnose context/tool/specification failures before capacity. Dispatch only triggered catalog roles.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C42",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. These are logical outcomes, not mandatory separate dispatches or repeated ceremonies. Coalesce compatible actions and evidence under the workflow plan; preserve outcomes, independent authority and gate economics. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires \u2014 read it before dispatching Phase A.",
+    "final": "Orchestrator mode runs A\u2013E; F requires requested integration and explicit authority before effects. Advisor mode runs no execution phases; section 1 routes planning artifacts. Phases are logical outcomes, not separate mandatory dispatches. Coalesce compatible actions/evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Phase A dispatch read `references/verification-and-gates.md` for phase behavior, triggers and requirements.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C43",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "**Every profile preserves Phases A through E and their required gates.** Phase F is conditional; local-only completion requires no merge prompt. Select and record the profile from the finished plan. Escalate when a heavier condition becomes true; do not de-escalate because its qualifying evidence persists. Implementation-role reassessment follows `references/routing-matrix.md`.",
+    "final": "**Every profile preserves A\u2013E and required gates.** F is conditional; local-only completion requires no merge prompt. Record the profile from the finished plan. Escalate on a heavier condition; do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C44",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "`lean` review is independent because the lead did not author the diff. If the diff leaves the lane plan, select `standard` and dispatch `alaa-reviewer` against the complete change.",
+    "final": "`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C45",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "**No profile suppresses a specialist.** Apply only the triggers owned by `references/routing-matrix.md`, identically at every profile.",
+    "final": "**No profile suppresses a specialist.** Apply only `references/routing-matrix.md` triggers, identically across profiles.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C46",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Schedule the commands below through `references/verification-and-gates.md` Gate economics; proven aggregate coverage may discharge an identical child invocation, never a different scope or observer.",
+    "final": "Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child invocations with the same scope/observer.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C47",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "The direct-reference router selects resource and failure handling before those decisions.",
+    "final": "Before resource/failure decisions apply the router below.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "C48",
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "draft": "Use a reviewer only to judge, a verifier only to execute evidence commands, and a researcher only to retrieve. Classify shell, runtime, permission and stale-cache failures before any product edit; `references/failure-taxonomy.md` owns the categories. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill, not the whole family.",
+    "final": "Reviewers only judge, verifiers only execute evidence commands, researchers only retrieve. Before product edits classify shell/runtime/permission/stale-cache failures through `references/failure-taxonomy.md`. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.",
+    "equivalence": "Same section, authority, trigger, obligation, exception and reason; wording only; no relocation."
+  },
+  {
+    "id": "W3",
+    "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+    "draft": "Ordinary selection excludes gpt-6-sol while retaining its supported-effort snapshot for dated history. An explicit user legacy request is a separately recorded exception; it never reenables ordinary eligibility.",
+    "final": "Ordinary selection excludes gpt-6-sol; its effort snapshot remains history. Record explicit user legacy requests separately; ordinary eligibility stays disabled.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W2",
+    "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+    "draft": "Design or execute representative Codex model/effort comparisons or allocation-only observations for either runtime",
+    "final": "Design/run representative Codex comparisons or allocation-only observations for either runtime",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W12",
+    "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+    "draft": "own capability snapshots, ordinary-selection eligibility and model-neutral role/artifact registrations. Supported efforts and selection_enabled are separate: historical support never makes a disabled model eligible.",
+    "final": "own capability snapshots, ordinary eligibility and neutral role/artifact registrations. Supported efforts differ from selection_enabled: history never enables a disabled model.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W13",
+    "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+    "draft": "Ordinary Codex selection excludes GPT-6 Sol; its supported-effort snapshot remains dated history. GPT-6.1 Sol is the current Sol workhorse candidate. Within any selected family use its newest verified supported eligible member; this never replaces suitable Luna with Sol. Unavailable current Sol does not authorize old-Sol fallback: require an exact eligible realization or report the affected lane blocked. An explicit user legacy request is a separately recorded exception, never ordinary eligibility or an ordinary task-control pass.",
+    "final": "Ordinary Codex selection excludes GPT-6 Sol, retaining its effort snapshot as history. GPT-6.1 Sol is the current Sol candidate. Use the newest verified supported eligible member of the selected family; suitable Luna stays eligible. If current Sol is unavailable, require an exact eligible realization or block the affected lane, never fall back to old Sol. Record explicit user legacy requests separately; they neither restore ordinary eligibility nor pass ordinary task-control validation.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W4",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "When testing task selection, use `assets/evals/allocation-cases.json` and the separate reviewer-only `assets/evals/allocation-oracle.json`. These inputs test R1-R15 decisions, not worker quality. The corpus has two neutral variants per case and two repetitions. Give an allocator only neutral inputs; never expose the oracle or another run's answer. Observe two fresh runs per authorized available allocator configuration with the same loaded contracts, authority and inputs; record unavailable configurations as blocked or unassessed. No child worker, paid comparison, installation or configuration mutation is authorized.",
+    "final": "For task-selection tests use `assets/evals/allocation-cases.json` and separate reviewer-only `assets/evals/allocation-oracle.json`: R1-R15 decisions, not worker quality. Each case has two neutral variants and two repetitions. Give allocators only neutral inputs, never the oracle or another run's answer. Observe two fresh runs per authorized available allocator configuration with identical loaded contracts, authority and inputs; record unavailable configurations blocked/unassessed. This authorizes no worker dispatch, paid comparison, installation or configuration mutation.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W5",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "From this skill directory run `python scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--self-test` after checker changes, `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations and independent grading. `--corpus <path>` and `--oracle <path>` select explicit files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases and the response contract, excludes the oracle, and performs no inference or writes. Exit 0 is clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow the authorized failure/retry limit rather than changing controls or checks to pass.",
+    "final": "Here run `python scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--self-test` after checker changes, `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations/independent grading. `--corpus <path>`/`--oracle <path>` select files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases/response contract without oracle, inference or writes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow authorized failure/retry limits; never alter controls/checks to pass.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W6",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "Results use `schema_version: 1`, `purpose: allocation-results`, boolean `synthetic`/`complete`, `corpus_sha256`, `oracle_sha256`, `configurations`, and `runs`. Each configuration records `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, and `loaded_contracts` entries with repository-relative path/SHA-256. Keep actual allocator controls separate from simulated scenario controls and proposed worker controls.",
+    "final": "Results: `schema_version: 1`, `purpose: allocation-results`, boolean `synthetic`/`complete`, `corpus_sha256`, `oracle_sha256`, `configurations`, `runs`. Configurations: `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, `loaded_contracts` (repository-relative path/SHA-256). Separate actual allocator controls, simulated scenario controls and proposed worker controls.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W7",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "Every declared configuration represents each case/variant/repetition, including unrun/blocked rows. Runs carry `case`, `variant`, `configuration`, `runtime`, `repetition`, `status`, `input_sha256`, and a blocker when blocked. Completed rows add `response`, `output_evidence`, `output_sha256`, `reviewer`, `independent_review`, `criterion_verdicts`, `forbidden_effects_observed`, `elapsed_seconds`, `usage`, and `correction_count`; unobservable counters stay unknown.",
+    "final": "Represent every declared configuration's case/variant/repetition, including unrun/blocked work. Runs: `case`, `variant`, `configuration`, `runtime`, `repetition`, `status`, `input_sha256`; blocked rows require `blocker`. Completed rows add `response`, `output_evidence`, `output_sha256`, `reviewer`, `independent_review`, `criterion_verdicts`, `forbidden_effects_observed`, `elapsed_seconds`, `usage`, `correction_count`. Unobservable counters stay unknown.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W8",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "The response records `action`, `role` matching the neutral task authority, explicit `proposed_worker` model/effort or null, `model_reason`, `effort_reason`, `fit` with verdict/evidence for every named predicate, `alternatives` with failed predicate or stronger evidence, `admission`, `continuity`, and `compression` with preserved-invariant verdicts. Decision-only probes set `worker_dispatched: false` and leave `worker_effective`/`worker_observed` unknown. A simulated pin/availability answer proves no actual child realization.",
+    "final": "Responses: `action`, `role` matching neutral task authority, explicit `proposed_worker` model/effort or null, `model_reason`, `effort_reason`, `fit` verdict/evidence per named predicate, `alternatives` with failed predicate or stronger evidence, `admission`, `continuity`, `compression` with preserved-invariant verdicts. Decision-only probes require `worker_dispatched: false`, unknown `worker_effective`/`worker_observed`. Simulated pin/availability answers prove no child realization.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W10",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "The original comparison corpus and policy under `assets/evals/history/20261009/` are dated historical-only evidence. Validate their manifest with `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` from this skill directory. This path checks original hashes/provenance and historical support; it cannot combine with active `--corpus`, `--results` or `--self-test`, authorize ordinary task allocation, or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.",
+    "final": "The original corpus/policy under `assets/evals/history/20261009/` are historical-only. Here run `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` for original hashes/provenance and historical support. It cannot combine with active `--corpus`, `--results` or `--self-test`, authorize ordinary allocation or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W11",
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "draft": "An independent reviewer grades captured decisions against the withheld oracle and checks linked evidence truth. Concrete allocator-control mismatch or unknown effective controls prevents a live pass. Unknown observed serving identity requires separate control evidence and stays unknown. Synthetic records prove only consumer discrimination; live sampled allocation answers prove neither worker dispatch/quality, actual scenario availability, universal suitability, cost nor savings. Keep those claims separate from source checks and controlled worker comparisons above.",
+    "final": "An independent reviewer grades decisions against the withheld oracle and checks linked evidence truth. Concrete allocator-control mismatch or unknown effective controls prevents a live pass. Unknown serving identity stays unknown and needs separate control evidence. Synthetic records prove consumer discrimination only; sampled live answers prove no worker dispatch/quality, actual scenario availability, universal suitability, cost or savings. Keep source checks, allocation observations and worker comparisons distinct.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  },
+  {
+    "id": "W9",
+    "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+    "draft": "For allocation-only evidence run `python scripts/check_allocation_evals.py` from this skill directory; add `--results <path> --require-live` for complete nonsynthetic observations and independent grading, and `--self-test` after checker changes. Exit 0 is clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. The reference router selects `references/92-agent-evaluation.md` for inputs, flags, record fields and proof limits. This validates decisions, never child dispatch or worker quality.",
+    "final": "For allocation evidence run `python scripts/check_allocation_evals.py` here; add `--results <path> --require-live` for complete nonsynthetic observations/independent grading and `--self-test` after checker changes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. The router selects `references/92-agent-evaluation.md` for inputs, flags, records and limits. Decisions prove no child dispatch or worker quality.",
+    "equivalence": "Same intended policy delta, predicate set, exception and authority; shorter wording in place."
+  }
+]

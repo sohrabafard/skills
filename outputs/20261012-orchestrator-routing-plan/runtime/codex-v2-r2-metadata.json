@@ -1,0 +1,20 @@
+{
+  "capture": "runtime/codex-v2-r2.json",
+  "requested_pair": {
+    "model": "gpt-6.1-sol",
+    "effort": "high"
+  },
+  "accepted_call": {
+    "thinking": "high",
+    "fork_turns": "none",
+    "model": "gpt-6.1-sol"
+  },
+  "effective_pair_evidence": "accepted explicit tool arguments and neutral role definition inspected",
+  "observed_serving_identity": "unknown",
+  "installed_role_sha256": "dfec98b10d2c863f7616a1a427fdcf8bfece4b04d53c2d75c3af1216a0298549",
+  "model_effort_pins": "none",
+  "grant_template": "unmaterialized",
+  "mcp_isolation": "unknown",
+  "tool_trace": "full trace unavailable to parent; dispatch restrictions and self-reported capture metadata only; no independent audit of tool effects",
+  "grading": "not performed"
+}

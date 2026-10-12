@@ -1,0 +1,73 @@
+{
+  "observed_on": "2026-10-12T13:33:26.270937+00:00",
+  "head": "9086158d204e8015f7fd0c1e66f83f710bc0dfac",
+  "method": "sorted repository-relative path, raw-byte SHA256 and byte-size manifest; canonical compact JSON digest",
+  "manifest_sha256": "166bf34d721967b5d22a0a953f23a1005e884699e915c91f01c38577f33accac",
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "bytes": 30584,
+      "sha256": "b54de1faf0dec25886a8961903339e627586b5ee0a1c29bf6e9eafd22e259a83"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "bytes": 29914,
+      "sha256": "db2417ef5ce29ca47635614ade909c01d5301b619adde3770ca6f5a51742ea29"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json",
+      "bytes": 10858,
+      "sha256": "d52d616604e1fbbbbc9432468dbaf30e8a258782f2c0b80b6d20e1100489c30c"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/allocation-cases.json",
+      "bytes": 64362,
+      "sha256": "fe28862644f95a630630ad8e2dcfc9157d59e545fc0cb2d1b6988d4c4853d44b"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/allocation-oracle.json",
+      "bytes": 30430,
+      "sha256": "1473ada2d70c040bee8f9aeac78e513d2667d3e080e0a777bdf47c68da7af8cc"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/history/20261009/agent-comparisons.json",
+      "bytes": 10201,
+      "sha256": "15f2bade085567c717c4213e3f007b4d9215275950c37a34582e73e5895eb546"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/history/20261009/codex-model-policy.json",
+      "bytes": 11729,
+      "sha256": "8a8cdd6c7fab9cda471d9c55166114c16827b128c66af959282440157f0431d4"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/history/20261009/manifest.json",
+      "bytes": 833,
+      "sha256": "beb2a89c2f2093e4d0e0f2556942307a6d0398cbb134e5dfe6ac2b7d037fc3d4"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py",
+      "bytes": 20915,
+      "sha256": "5601a30779e287778138e95746357c1ea7a924eb9e233680ad1f77ba459e5ac8"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_allocation_evals.py",
+      "bytes": 31166,
+      "sha256": "15576d56d572a91842f06be26b21272fa73bbfecad71e076b5e217418565ad9e"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py",
+      "bytes": 4600,
+      "sha256": "dd5c568cf8b9233ae7311429432c8629d2a256d4b85f43644d353b766db3f13a"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py",
+      "bytes": 6411,
+      "sha256": "528822492cad4dbec2dbb639ac12441562f5e71487f1b937e93e1dcc5c478059"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/task_model_controls.py",
+      "bytes": 2959,
+      "sha256": "73fe0760a9a12da4f8e30ff9a81f8a4d116e08581257be558482ba2347d465eb"
+    }
+  ]
+}

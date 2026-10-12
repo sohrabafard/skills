@@ -1,0 +1,24 @@
+{
+  "event_types": [
+    "thread.started",
+    "item.completed",
+    "item.completed",
+    "turn.started"
+  ],
+  "tool_events": [
+    {
+      "event": "item.completed",
+      "item_type": "error",
+      "item_id": "item_0",
+      "name": null
+    },
+    {
+      "event": "item.completed",
+      "item_type": "error",
+      "item_id": "item_1",
+      "name": null
+    }
+  ],
+  "reported_usage": [],
+  "extract_note": null
+}

@@ -1,0 +1,13 @@
+{
+  "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+  "reason": "Parent-approved correctness-review minor finding: archive proof description exceeded executable verification. No Git/runtime dependency or active authority added.",
+  "draft": "The archive checker validates hash integrity, syntactic provenance fields, and historical supported pairs. It does not authenticate source_commit; source identity must be established by independent verification.",
+  "final": "for hash integrity, provenance-field syntax and historical support. Verify source identity independently.",
+  "before_sha256": "314a579d74ae7cfc7a0b91ee1aacd86417766dcb20ee8d109998fa716b405026",
+  "after_sha256": "efe90af9937e43092d3131be1b2b5794361bad811e01577131b618c00dde8a02",
+  "delta_bytes": 51,
+  "delta_words": 6,
+  "regular_read_paths_unchanged": true,
+  "source_frozen": true,
+  "verification": "One exact byte replacement observed on disk; original newline bytes and every other paragraph unchanged. Existing gates not rerun by this lane."
+}

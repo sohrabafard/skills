@@ -1,0 +1,5 @@
+{
+  "command": "python skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md",
+  "exit_code": 0,
+  "observer": "parent final metadata check after independent closure gates"
+}

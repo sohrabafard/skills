@@ -1,0 +1,51 @@
+{
+  "purpose": "closure evidence and document content manifest",
+  "files": [
+    {
+      "path": "outputs/README.md",
+      "bytes": 3115,
+      "sha256": "4007d649cdd9e7b5ba198dce4b521f1626998a27b0f627873b23848190110e3c"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/execution-report.md",
+      "bytes": 5026,
+      "sha256": "4712aaad942004ab7d4723dec765b19a0a9da9e0eea035aabd206076b4ddd056"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime-proof-handoff.md",
+      "bytes": 5662,
+      "sha256": "4d036d4139913d2c588ddda8ec67116b986ce06f6bc882492cda9bcb0e9b25e0"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime-review.md",
+      "bytes": 7129,
+      "sha256": "faf41d39f2efeb12047b1478aa53f8673a64882ee80e3e8635d7f436926b7797"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/instruction-review.md",
+      "bytes": 3468,
+      "sha256": "0e49f18a2c0bec494c23d341c57932d358edd6c7e5dcd86a57af249cce942e8c"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/correctness-review.md",
+      "bytes": 2883,
+      "sha256": "9f1b08b86aefc6f805cd504b6acd4929bdaf459d7fa6590e3e3ff1d758f0b32e"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime/reviewer-v2-verdict.json",
+      "bytes": 1558,
+      "sha256": "b8dbf3d8121a04f48a1a56ee5838e60113ce303376c1446e78eee195cbc4dfe9"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime/codex-v2-results.json",
+      "bytes": 247387,
+      "sha256": "2bc6a2b2c6be0cf5b0cdb6243f995357f71fb948f05ccba543afc21c8d8b74d8"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/verification/probe-v2/source-pin-refreshed.json",
+      "bytes": 113589,
+      "sha256": "562dd5ff9e92c9d5cde385614f602f7804b7aad6f2ab54d2d0ae8ad1d6753aab"
+    }
+  ],
+  "note": "Active workflow metadata is validated separately to avoid a self-referential hash."
+}

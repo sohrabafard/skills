@@ -1,0 +1,75 @@
+{
+  "overall": "runtime CLI capture incomplete; parent-owned collaboration capture is separate",
+  "source_pin_files": 541,
+  "source_pin_unchanged_at_end": true,
+  "source_pin_mismatches": [],
+  "operator_controls": {
+    "requested_model": "gpt-6-luna",
+    "requested_effort": "medium",
+    "observed_serving_identity": "unknown"
+  },
+  "claude": {
+    "result_excerpt": "Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue.",
+    "r1_exit": 1,
+    "requested_effort": "high",
+    "requested_model": "claude-sonnet-5-5",
+    "is_error": true,
+    "next_action": "operator re-authentication required; not performed",
+    "effective_controls": "unknown",
+    "r2": "unrun: r1 authentication failure",
+    "api_error_status": 401,
+    "observed_identity": "unknown"
+  },
+  "codex": {
+    "escalated_retry": {
+      "stdout_bytes": 0,
+      "reported_usage": "none",
+      "duration_seconds": 600.164,
+      "timed_out": true,
+      "observed_identity": "unknown",
+      "exit_code": 124,
+      "effective_controls": "unknown",
+      "event_types": [
+        "thread.started",
+        "turn.started",
+        "item.completed",
+        "item.completed"
+      ],
+      "final_response": "absent"
+    },
+    "requested_effort": "high",
+    "no_alternate_cli_call": true,
+    "sandbox_attempt": {
+      "native_error": "Access denied initializing in-process app-server client",
+      "exit": "unknown",
+      "effective_controls": "unknown"
+    },
+    "requested_model": "gpt-6.1-sol",
+    "r2": "unrun: authorized single retry timed out",
+    "timeout_error_events": "Two item.completed error events reported the same ignored requirement setting: windows.allow_mxc; the CLI also warned that its PowerShell shell snapshot is unsupported. No usage counters or final response were reported."
+  },
+  "process_ownership": {
+    "additional_cleanup": "none",
+    "top_level_capture_process": "helper invoked Process.Kill() at timeout",
+    "owned_descendant_state": "unknown",
+    "targeted_process_query": "Get-CimInstance Win32_Process returned Access denied"
+  },
+  "artifacts": [
+    "runtime/codex-r1-metadata.json",
+    "runtime/codex-r1-stdout.jsonl",
+    "runtime/codex-r1-stderr.txt",
+    "runtime/codex-r1-events-usage.json",
+    "runtime/claude-code-r1-metadata.json",
+    "runtime/claude-code-r1-stdout.jsonl",
+    "runtime/claude-code-r1-stderr.txt",
+    "runtime/claude-code-r1-final.txt",
+    "runtime/initial-codex-r1/",
+    "runtime/initial-codex-r1-move-manifest.json",
+    "runtime/initial-codex-r1-moved.json",
+    "runtime/initial-codex-r1/capture-interpretation-correction.json",
+    "runtime/cli-blocked-results.json",
+    "runtime/codex-process-ownership-evidence.json"
+  ],
+  "blocked_matrix": "runtime/cli-blocked-results.json",
+  "result_matrix_status": "ungraded; no complete CLI allocation responses available"
+}

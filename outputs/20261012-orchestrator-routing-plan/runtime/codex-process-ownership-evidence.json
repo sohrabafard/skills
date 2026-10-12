@@ -1,0 +1,8 @@
+{
+  "cwd": ".",
+  "query": "Targeted Win32_Process enumeration for node.exe, codex.exe, pwsh.exe",
+  "result": "Access denied",
+  "owned_descendants": "unknown",
+  "top_level_timeout_action": "capture helper called Process.Kill() on its own Process object",
+  "additional_cleanup": "none"
+}

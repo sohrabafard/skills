@@ -1,0 +1,12 @@
+{
+  "command": "python scripts/check_agent_evals.py",
+  "cwd": "skills/sohrab/alaa-prompting-guide",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_seconds": 120,
+  "duration_ms": 257,
+  "exit_code": 0,
+  "stdout": "active-corpus.stdout.txt",
+  "stderr": "active-corpus.stderr.txt"
+}

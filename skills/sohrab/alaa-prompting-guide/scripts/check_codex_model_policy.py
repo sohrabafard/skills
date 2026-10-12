@@ -10,13 +10,23 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 from codex_model_policy import PolicyLoadError, load_policy, validate_agent_pin, validate_policy
-from task_model_controls import selection_self_test
+from task_model_controls import selection_self_test, validate_task_selection
 
 
 def self_test() -> None:
     policy = load_policy()
     pairs = ({"model":"gpt-6-luna", "effort":"low"}, {"model":"gpt-6.1-sol", "effort":"high"})
     count = selection_self_test(policy, pairs)
+    legacy = {"model": "gpt-6-sol", "effort": "high"}
+    assert validate_task_selection("alaa-reviewer", legacy, policy)
+    archival = copy.deepcopy(policy)
+    archival["models"]["gpt-6-sol"]["selection_enabled"] = True
+    assert validate_policy(archival), "ordinary policy must reject archive eligibility"
+    assert validate_task_selection("alaa-reviewer", legacy, archival), "archive is never task authority"
+    missing_current = copy.deepcopy(policy)
+    missing_current["models"]["gpt-6.1-sol"]["selection_enabled"] = False
+    assert validate_task_selection("alaa-reviewer", pairs[1], missing_current)
+    assert validate_task_selection("alaa-reviewer", legacy, missing_current), "no old-Sol fallback"
     for role, profile in policy["profiles"].items():
         if profile["selection_mode"] != "task-selected":
             continue
@@ -34,7 +44,6 @@ def self_test() -> None:
     for key,value in (("schema_version",True),("schema_version",1),("verified_on","2026-02-30")):
         bad=copy.deepcopy(policy);bad[key]=value;assert validate_policy(bad)
     for model,effort in (("gpt-6-luna","ultra"),("gpt-6.1-sol","none")):
-        from task_model_controls import validate_task_selection
         assert validate_task_selection("alaa-reviewer",{"model":model,"effort":effort},policy)
     bad=copy.deepcopy(policy);bad["models"]["gpt-6.1-sol-preview"]=bad["models"]["gpt-6.1-sol"].copy()
     assert validate_policy(bad)

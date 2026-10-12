@@ -1,0 +1,13 @@
+{
+  "index": 10,
+  "command": "python scripts/check_agent_contracts.py --self-test",
+  "cwd": "D:\\Sohrab\\Project\\skills\\skills\\sohrab\\alaa-cc-orchestrator",
+  "env_override": "PYTHONDONTWRITEBYTECODE=1",
+  "priority": "ordinary",
+  "affinity": "default",
+  "started": "2026-10-12T06:22:29.6043783-07:00",
+  "ended": "2026-10-12T06:22:30.3168392-07:00",
+  "duration_seconds": 0.712,
+  "exit_code": 0,
+  "log": "cmd-10.log"
+}

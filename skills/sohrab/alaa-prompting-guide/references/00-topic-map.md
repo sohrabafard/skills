@@ -10,7 +10,7 @@ Rows are conditions, not headings. If your situation is not listed, no reference
 | Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
 | Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
 | Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
-| Design or execute representative Codex model/effort comparisons | `references/92-agent-evaluation.md` | Defines controlled comparisons and honest evidence status |
+| Design/run representative Codex comparisons or allocation-only observations for either runtime | `references/92-agent-evaluation.md` | Separates allocation-only observations, historical validation and controlled worker comparisons |
 | Design Claude comparisons, record identity or fallback, or validate calibration evidence | `references/93-claude-evaluation.md` | Source checks and synthetic fixtures do not prove runtime behavior |
 | Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
 | Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |

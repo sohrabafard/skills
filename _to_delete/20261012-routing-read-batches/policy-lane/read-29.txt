@@ -1,0 +1,556 @@
+
+FILE skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py chars 0:21335
+#!/usr/bin/env python3
+"""Enforce the exact per-role tool grant of every managed Claude Code agent.
+
+The catalog assigns named MCP tools to each allowlisted role. Implementation roles
+inherit the runtime tool set, but must carry the exact safety deny set.
+
+**A role can always reach a skill it is told to apply.** Two mechanisms serve that,
+and they are complementary rather than alternatives. ``skills:`` preloads what a role
+always needs — the routing contract, and the doctrine its verdict is measured against.
+The ``Skill`` tool covers everything else: the skill a lane needs is often not knowable
+when the definition is written, because it depends on the repository's language and the
+surface the dispatch hands over, and the pack's rule is to name the one skill the lane
+needs rather than preload every candidate into every lane. An allowlisted role keeps
+``Skill`` for exactly that reason, and an implementation role inherits it.
+
+Withholding ``Skill`` was tried and reverted. It narrows nothing on a role that already
+holds ``Bash``, ``Read``, ``Write``, and ``Edit``; it makes the dispatch's own
+``clean_code_skill`` field unsatisfiable; and it silently removed runtime invocation
+from every specialist on the theory that its preload list was complete, which no
+evidence supported. The safety deny set is therefore exactly Serena's shell tool, a
+real second path to the shell that bypasses the runtime's approval rules, plus the
+Hindsight server, whose write tools an inheriting role would otherwise receive.
+
+What is checked instead is reachability, in both directions. Every preloaded name must
+resolve to an installed skill, because a stale preload silently removes a standard. And
+a role that does not hold ``Skill`` must preload every installed skill its body names,
+because that role has no other way to reach one.
+
+  exit 0  every invariant holds
+  exit 1  at least one invariant failed
+  exit 2  usage or parse error
+
+Run with --self-test to prove the gate rejects known-bad definitions.
+"""
+from __future__ import annotations
+import glob, os, re, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AGENTS = os.path.join(ROOT, "agents")
+PACK = os.path.dirname(ROOT)
+REPO = os.path.dirname(os.path.dirname(PACK))
+
+ROUTING_SKILL = "/alaa-code-intelligence-routing"
+MUST_DENY = frozenset((
+    "mcp__serena__execute_shell_command",
+    # Server-level pattern: removes every Hindsight tool, including retain and ingest,
+    # because a memory write is the lead's decision, never an implementation lane's.
+    "mcp__hindsight",
+))
+
+
+def skill_roots() -> list[str]:
+    """Directories that may contain an installable skill, newest layout first.
+
+    Returns an empty list when this checker runs from an installed copy with no
+    sibling skills around it. A root that cannot be seen proves nothing about the
+    names inside it, so preload resolution is skipped rather than failed there.
+    """
+    roots = [PACK]
+    roots += [os.path.join(REPO, "skills", ".curated"), os.path.join(REPO, "skills", ".system")]
+    roots += sorted(glob.glob(os.path.join(REPO, "vendor", "*", "skills")))
+    return [r for r in roots if os.path.isdir(r)]
+
+
+def installed_skills(roots: list[str]) -> set[str]:
+    return {entry for r in roots for entry in os.listdir(r) if os.path.isdir(os.path.join(r, entry))}
+
+
+def unresolved_skills(names: set[str], roots: list[str]) -> list[str]:
+    if not roots:
+        return []
+    return sorted(n for n in names if not any(os.path.isdir(os.path.join(r, n.lstrip("/"))) for r in roots))
+
+
+def named_skills(body: str, roots: list[str]) -> set[str]:
+    """Installed skills the body names. A bare ``/word`` is prose or a path far more
+    often than it is a trigger, so only tokens matching a real skill directory count."""
+    if not roots:
+        return set()
+    installed = installed_skills(roots)
+    return {"/" + t for t in re.findall(r"(?<![\w-])/([\w-]+)", body) if t in installed}
+
+CODEGRAPH = {"mcp__codegraph"}
+SERENA_READ = {
+    "mcp__serena__find_symbol",
+    "mcp__serena__get_symbols_overview",
+    "mcp__serena__find_referencing_symbols",
+    "mcp__serena__find_declaration",
+    "mcp__serena__find_implementations",
+    "mcp__serena__get_diagnostics_for_file",
+}
+BOOST_DOCS = {
+    "mcp__laravel-boost__search-docs",
+    "mcp__laravel-boost__application-info",
+}
+BOOST_ROUTING = {"mcp__laravel-boost__get-absolute-url"}
+BOOST_SCHEMA = {
+    "mcp__laravel-boost__database-schema",
+    "mcp__laravel-boost__database-connections",
+}
+BOOST_ERRORS = {
+    "mcp__laravel-boost__last-error",
+    "mcp__laravel-boost__read-log-entries",
+}
+BOOST_BROWSER = {"mcp__laravel-boost__browser-logs"}
+# Read-only memory set for the roles that answer existence and ownership questions.
+# Retain, ingest, and capture tools stay with the lead, which owns memory writes.
+HINDSIGHT_READ = {
+    "mcp__hindsight__hindsight_search_knowledge_pages",
+    "mcp__hindsight__hindsight_read_knowledge_page",
+    "mcp__hindsight__hindsight_list_knowledge_pages",
+    "mcp__hindsight__hindsight_reflect",
+}
+
+EXPECTED_MCP = {
+    "alaa-accessibility-reviewer": BOOST_DOCS | BOOST_ROUTING,
+    "alaa-adversarial-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-api-contract-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | BOOST_SCHEMA,
+    "alaa-architecture-critic": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | HINDSIGHT_READ,
+    "alaa-browser-qa": BOOST_DOCS | BOOST_ROUTING | BOOST_ERRORS | BOOST_BROWSER,
+    "alaa-dependency-auditor": BOOST_DOCS,
+    "alaa-documenter": BOOST_DOCS | BOOST_ROUTING,
+    "alaa-explorer": CODEGRAPH | BOOST_DOCS | BOOST_ROUTING | HINDSIGHT_READ,
+    "alaa-failure-analyst": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
+    "alaa-implementer-opus": None,
+    "alaa-implementer-fable": None,
+    "alaa-implementer": None,
+    "alaa-migration-guardian": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-observability-reviewer": CODEGRAPH | BOOST_DOCS | BOOST_ERRORS | BOOST_BROWSER,
+    "alaa-performance-profiler": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA | BOOST_ERRORS,
+    "alaa-release-guardian": BOOST_DOCS,
+    "alaa-researcher": BOOST_DOCS | HINDSIGHT_READ,
+    "alaa-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-security-reviewer": CODEGRAPH | SERENA_READ | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-spec-analyst": CODEGRAPH | BOOST_DOCS,
+    "alaa-test-strategist": CODEGRAPH | BOOST_DOCS | BOOST_SCHEMA,
+    "alaa-verifier": set(),
+    "alaa-instruction-reviewer": set(),
+}
+
+# Preserve the authored native grants as well as MCP scope. An extra Write,
+# Agent, or unrestricted tool is authority drift even when MCP grants match.
+READ_NATIVE = {"Read", "Glob", "Grep", "Bash", "Skill"}
+EXPECTED_MCP.update({"alaa-implementer-haiku": None, "alaa-implementer-haiku-high": None, "alaa-implementer-sonnet-high": None, "alaa-implementer-opus-high": None,
+                     "alaa-planner": EXPECTED_MCP["alaa-spec-analyst"],
+                     "alaa-planner-high": EXPECTED_MCP["alaa-spec-analyst"]})
+EXPECTED_NATIVE = {name: READ_NATIVE for name in EXPECTED_MCP}
+EXPECTED_NATIVE.update({
+    "alaa-researcher": READ_NATIVE | {"WebFetch", "WebSearch"},
+    "alaa-documenter": READ_NATIVE | {"Write", "Edit"},
+    "alaa-verifier": {"Read", "Glob", "Grep", "Bash"},
+    "alaa-instruction-reviewer": {"Read", "Glob", "Grep"},
+})
+ALLOWED_FIELDS = {"name", "description", "model", "effort", "tools",
+                  "disallowedTools", "skills", "color"}
+
+
+def frontmatter(path: str) -> dict[str, str | list[str]]:
+    text = open(path, encoding="utf-8").read().replace("\r\n", "\n")
+    if not text.startswith("---\n") or "\n---\n" not in text[4:]:
+        raise ValueError(f"{path}: missing frontmatter delimiters")
+    head = text[4:].split("\n---\n", 1)[0]
+    out: dict[str, str | list[str]] = {}
+    list_key: str | None = None
+    for line in head.split("\n"):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        m = re.match(r"^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$", line)
+        if m:
+            key, value = m.group(1), m.group(2)
+            if key in out:
+                raise ValueError(f"{path}: duplicate frontmatter key {key}")
+            if key == "skills" and not value:
+                out[key] = []
+                list_key = key
+            else:
+                out[key] = value
+                list_key = None
+            continue
+        item = re.match(r"^\s+-\s+(.+?)\s*$", line)
+        if item and list_key:
+            value = out[list_key]
+            assert isinstance(value, list)
+            value.append(item.group(1))
+        else:
+            raise ValueError(f"{path}: unsupported frontmatter line {line!r}")
+    return out
+
+
+def csv(value: str | list[str]) -> list[str]:
+    if isinstance(value, list):
+        return value
+    return [x.strip() for x in value.split(",") if x.strip()]
+
+
+def grant_failures(
+    name: str,
+    fm: dict[str, str | list[str]],
+    roots: list[str] | None = None,
+    body: str = "",
+) -> tuple[list[str], str]:
+    failures: list[str] = []
+    if name not in EXPECTED_MCP:
+        return [f"{name}: uncatalogued role"], "invalid role"
+    expected = EXPECTED_MCP[name]
+    allow = csv(fm["tools"]) if "tools" in fm else None
+    deny = set(csv(fm.get("disallowedTools", "")))
+    skills = set(csv(fm.get("skills", [])))
+    roots = skill_roots() if roots is None else roots
+
+    for key in sorted(set(fm) - ALLOWED_FIELDS):
+        failures.append(f"{name}: unapproved metadata field {key}")
+    if allow is not None and len(allow) != len(set(allow)):
+        failures.append(f"{name}: duplicate tool grant")
+
+    for unknown in unresolved_skills(skills, roots):
+        failures.append(f"{name}: preloads {unknown}, which resolves to no installed skill")
+
+    can_invoke = (allow is None and "Skill" not in deny) or (allow is not None and "Skill" in allow)
+    if not can_invoke:
+        for unreachable in sorted(named_skills(body, roots) - skills):
+            failures.append(
+                f"{name}: names {unreachable} but holds no Skill tool and does not preload it"
+            )
+
+    if expected is None:
+        granted = "inherits all, exact safety deny"
+        if allow is not None:
+            failures.append(f"{name}: implementation role must inherit tools, but defines an allowlist")
+        if deny != MUST_DENY:
+            missing = sorted(MUST_DENY - deny)
+            extra = sorted(deny - MUST_DENY)
+            detail = []
+            if missing:
+                detail.append(f"missing {', '.join(missing)}")
+            if extra:
+                detail.append(f"unexpected {', '.join(extra)}")
+            failures.append(f"{name}: safety deny set differs from the catalog ({'; '.join(detail)})")
+        if ROUTING_SKILL not in skills:
+            failures.append(f"{name}: must preload {ROUTING_SKILL}")
+        return failures, granted
+
+    if allow is None:
+        failures.append(f"{name}: allowlisted role omits tools and therefore inherits every tool")
+        return failures, "invalid inherited grant"
+
+    actual_mcp = {tool for tool in allow if tool.startswith("mcp__")}
+    native = [tool for tool in allow if not tool.startswith("mcp__")]
+    if set(native) != EXPECTED_NATIVE[name]:
+        failures.append(f"{name}: native grant differs from the authored role: "
+                        f"expected {sorted(EXPECTED_NATIVE[name])}, got {sorted(native)}")
+    if not native:
+        failures.append(f"{name}: allowlist contains only MCP entries and may not launch without them")
+    if deny:
+        failures.append(f"{name}: allowlisted role has an unexpected disallowedTools overlay")
+    if actual_mcp != expected:
+        missing = sorted(expected - actual_mcp)
+        extra = sorted(actual_mcp - expected)
+        detail = []
+        if missing:
+            detail.append(f"missing {', '.join(missing)}")
+        if extra:
+            detail.append(f"unexpected {', '.join(extra)}")
+        failures.append(f"{name}: MCP grant differs from the catalog ({'; '.join(detail)})")
+    if expected and ROUTING_SKILL not in skills:
+        failures.append(f"{name}: MCP grant requires preloaded {ROUTING_SKILL}")
+
+    return failures, ", ".join(sorted(actual_mcp)) or "none"
+
+
+def main() -> int:
+    if not os.path.isdir(AGENTS):
+        print(f"no agents directory at {AGENTS}", file=sys.stderr)
+        return 2
+    names = sorted(f for f in os.listdir(AGENTS) if f.endswith(".md"))
+    if not names:
+        print("no agent definitions found", file=sys.stderr)
+        return 2
+
+    actual_names = {filename[:-3] for filename in names}
+    expected_names = set(EXPECTED_MCP)
+    if actual_names != expected_names:
+        missing = sorted(expected_names - actual_names)
+        extra = sorted(actual_names - expected_names)
+        if missing:
+            print(f"missing catalog roles: {', '.join(missing)}", file=sys.stderr)
+        if extra:
+            print(f"uncatalogued roles: {', '.join(extra)}", file=sys.stderr)
+        return 2
+
+    failures: list[str] = []
+    roots = skill_roots()
+    width = max(len(n) - 3 for n in names)
+    print("Effective code-intelligence grant")
+    for filename in names:
+        name = filename[:-3]
+        path = os.path.join(AGENTS, filename)
+        fm = frontmatter(path)
+        text = open(path, encoding="utf-8").read().replace("\r\n", "\n")
+        body = text.split("\n---\n", 1)[1] if "\n---\n" in text else ""
+        role_failures, granted = grant_failures(name, fm, roots, body)
+        failures.extend(role_failures)
+        print(f"  {name:<{width}}  {granted}")
+
+    print()
+    if not roots:
+        print("preload resolution skipped: no skill root is visible from this copy")
+    if failures:
+        print("FAILED")
+        for line in failures:
+            print(f"  - {line}")
+        return 1
+    print(f"OK: {len(names)} agents match authored native, MCP and skill grants")
+    return 0
+
+
+def self_test() -> int:
+    """Prove the gate can fail. A checker never observed rejecting a bad input is
+    indistinguishable from one that always passes."""
+    import tempfile
+    BOOST = "mcp__laravel-boost__search-docs, mcp__laravel-boost__application-info"
+    SERENA_SHELL = "mcp__serena__execute_shell_command"
+    HREAD = ", ".join(sorted(HINDSIGHT_READ))
+    SCHEMA = ", ".join(sorted(BOOST_SCHEMA))
+    SERENA = ", ".join(sorted(SERENA_READ))
+    # label, role, tools line, disallowedTools line, preloaded skills, body, expected message
+    cases = [
+        ("reviewer extra Write", "alaa-reviewer", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
+        ("verifier delegation", "alaa-verifier", "tools: Read, Glob, Grep, Bash, Agent", None, [], "body", "native grant differs"),
+        ("documenter missing Edit", "alaa-documenter", "tools: Read, Glob, Grep, Bash, Skill, Write", None, [], "body", "native grant differs"),
+        ("unknown role", "unknown", "tools: Read", None, [], "body", "uncatalogued"),
+        ("instruction reviewer shell", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, Bash", None, [], "body", "native grant"),
+        ("instruction reviewer MCP", "alaa-instruction-reviewer", "tools: Read, Glob, Grep, mcp__unknown", None, [], "body", "MCP grant differs"),
+        ("unexpected server on a no-MCP role", "alaa-verifier",
+         "tools: Read, Bash, mcp__codegraph", None, [], "body", "MCP grant differs"),
+        ("missing CodeGraph from explorer", "alaa-explorer",
+         f"tools: Read, Bash, {BOOST}, mcp__laravel-boost__get-absolute-url", None,
+         [ROUTING_SKILL], "body", "MCP grant differs"),
+        ("MCP grant without routing preload", "alaa-researcher",
+         f"tools: Read, Bash, {BOOST}", None, [], "body", "requires preloaded"),
+        ("inherited role missing the Serena shell deny", "alaa-implementer",
+         None, "disallowedTools: ", [ROUTING_SKILL], "body", "safety deny set differs"),
+        ("inherited role missing the Hindsight server deny", "alaa-implementer-fable",
+         None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
+        ("bounded high role missing the Hindsight server deny", "alaa-implementer-haiku-high",
+         None, f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body", "safety deny set differs"),
+        ("inherited role carrying an extra deny", "alaa-implementer",
+         None, f"disallowedTools: {SERENA_SHELL}, Write", [ROUTING_SKILL], "body",
+         "safety deny set differs"),
+        ("inherited role defining an allowlist", "alaa-implementer",
+         "tools: Read, Bash", f"disallowedTools: {SERENA_SHELL}", [ROUTING_SKILL], "body",
+         "must inherit tools"),
+        ("preload naming a skill that does not exist", "alaa-researcher",
+         f"tools: Read, Bash, {BOOST}", None, [ROUTING_SKILL, "/alaa-not-a-real-skill"], "body",
+         "resolves to no installed skill"),
+        ("named skill reachable by neither preload nor Skill", "alaa-researcher",
+         f"tools: Read, Bash, {BOOST}", None, [ROUTING_SKILL],
+         "Domain baseline: apply /alaa-testing-strategy when installed.",
+         "holds no Skill tool and does not preload it"),
+        ("memory role holding a Hindsight write tool", "alaa-researcher",
+         f"tools: Read, Bash, {BOOST}, {HREAD}, mcp__hindsight__hindsight_ingest_document", None,
+         [ROUTING_SKILL], "body", "MCP grant differs"),
+        ("memory role missing the Hindsight read set", "alaa-architecture-critic",
+         f"tools: Read, Bash, mcp__codegraph, {BOOST}, {SCHEMA}", None,
+         [ROUTING_SKILL], "body", "MCP grant differs"),
+        ("Hindsight granted to a role with no memory question", "alaa-reviewer",
+         f"tools: Read, Bash, mcp__codegraph, {SERENA}, {BOOST}, {SCHEMA}, mcp__hindsight__hindsight_reflect",
+         None, [ROUTING_SKILL], "body", "MCP grant differs"),
+        ("inherited role that denies Skill and names an unpreloaded one", "alaa-implementer",
+         None, f"disallowedTools: {SERENA_SHELL}, Skill", [ROUTING_SKILL],
+         "Domain baseline: apply /alaa-php-clean-code when installed.",
+         "holds no Skill tool and does not preload it"),
+    ]
+
+    roots = skill_roots()
+    needs_roots = ("resolves to no installed skill", "holds no Skill tool and does not preload it")
+    failures, skipped = [], []
+    from unittest.mock import mock_open, patch
+    for malformed in (
+        "---\ntools: Read\ntools: Write\n---\nbody",
+        "---\ntools: Read\nmissing-colon\n---\nbody",
+        "tools: Read\n---\nbody",
+    ):
+        with patch("builtins.open", mock_open(read_data=malformed)):
+            try:
+                frontmatter("fixture.md")
+            except ValueError:
+                pass
+            else:
+                failures.append("ambiguous/malformed frontmatter was accepted")
+    for field in ("hooks", "permissionMode", "mcpServers"):
+        observed, _ = grant_failures("alaa-verifier", {
+            "tools": "Read, Glob, Grep, Bash", field: "unauthorized"}, roots)
+        if not any("unapproved metadata" in item for item in observed):
+            failures.append(f"unauthorized {field} was accepted")
+    for name in EXPECTED_MCP:
+        path = os.path.join(AGENTS, name + ".md")
+        observed, _ = grant_failures(name, frontmatter(path), roots,
+                                     open(path, encoding="utf-8").read())
+        if observed:
+            failures.append(f"authored {name} rejected: {observed}")
+    for label, name, tools, deny, skills, body, expected_message in cases:
+        if expected_message in needs_roots and not roots:
+            skipped.append(label)
+            continue
+        lines = ["name: fixture", "description: red fixture", "model: sonnet"]
+        if tools:
+            lines.append(tools)
+        if deny is not None:
+            lines.append(deny)
+        if skills:
+            lines.append("skills:")
+            lines.extend(f"  - {s}" for s in skills)
+        text = "---\n" + "\n".join(lines) + "\n---\n\n" + body + "\n"
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".md", delete=False) as fixture:
+            fixture.write(text)
+            fixture_path = fixture.name
+        try:
+            observed, _ = grant_failures(name, frontmatter(fixture_path), roots, body)
+        finally:
+            os.unlink(fixture_path)
+        if not any(expected_message in item for item in observed):
+            failures.append(f"{label}: did not observe {expected_message!r}; got {observed}")
+    print()
+    for label in skipped:
+        print(f"SELF-TEST SKIPPED: {label} needs a visible skill root")
+    if failures:
+        print("SELF-TEST FAILED")
+        for line in failures:
+            print(f"  - {line}")
+        return 1
+    print(f"SELF-TEST OK: {len(cases) - len(skipped) + 6} red fixtures rejected; "
+          f"{len(EXPECTED_MCP)} authored grants accepted")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        if sys.argv[1:] not in ([], ["--self-test"]):
+            raise ValueError("usage: check_agent_grants.py [--self-test]")
+        sys.exit(self_test() if sys.argv[1:] else main())
+    except (OSError, UnicodeError, ValueError) as exc:
+        print(f"grant check unavailable: {exc}", file=sys.stderr)
+        sys.exit(2)
+
+FILE skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py chars 0:5540
+#!/usr/bin/env python3
+"""Render standalone managed wrappers and manifest. Exit 0 clean, 1 drift, 2 error."""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+OWNER = ROOT.parent / "alaa-prompting-guide"
+sys.path.insert(0, str(OWNER / "scripts"))
+from claude_model_policy import load_policy
+from profile_projection import expected_profiles, profile_text, neutral_agent_text
+
+
+def expected_outputs(root, policy):
+    wrappers = expected_profiles(root, policy, "yaml")
+    agents = {p: p.read_bytes() for p in sorted((root / "agents").glob("*.md"))}
+    agents.update(wrappers)
+    agents = {p: neutral_agent_text("yaml", data.decode("utf-8"),
+              policy["profiles"][p.stem]).encode("utf-8") for p, data in agents.items()}
+    manifest = {"pack": "alaa-cc-orchestrator",
+                "version": (root / "VERSION").read_text().strip(),
+                "managed_agents": [{"name": p.stem, "file": p.relative_to(root).as_posix(),
+                                    "sha256": hashlib.sha256(data).hexdigest()}
+                                   for p, data in sorted(agents.items())]}
+    return {**agents, root / "assets/manifest.json": (json.dumps(manifest, indent=2) + "\n").encode()}
+
+
+def drift(outputs):
+    return [p for p, data in outputs.items() if not p.is_file() or p.read_bytes() != data]
+
+
+def self_test(policy, evidence_dir=None):
+    from check_agent_grants import frontmatter
+    from tempfile import TemporaryDirectory
+    from contextlib import nullcontext
+    import re
+    for p in sorted((ROOT / "agents").glob("*.md")):
+        original = p.read_text(encoding="utf-8")
+        rendered = neutral_agent_text("yaml", original, policy["profiles"][p.stem])
+        head, body = original.split("\n---\n", 1)
+        assert rendered == re.sub(r"^(?:model|effort):[^\n]*\n", "", head + "\n", flags=re.M).rstrip("\n") + "\n---\n" + body, p.name
+    if evidence_dir is not None:
+        # Retain requested evidence; never overwrite or clean a caller's directory.
+        evidence_dir.mkdir(parents=True, exist_ok=False)
+    context = (nullcontext(str(evidence_dir)) if evidence_dir is not None
+               else TemporaryDirectory(prefix="alaa-profile-test-"))
+    with context as directory:
+        root = Path(directory)
+        policy = {**policy, "profiles": {"alaa-implementer": policy["profiles"]["alaa-implementer"]}}
+        (root / "assets").mkdir(); (root / "agents").mkdir()
+        (root / "VERSION").write_text("fixture\n")
+        metadata = {"description": "fixture", "disallowedTools": "mcp__hindsight"}
+        body = 'Contract with "quotes" and \\paths.\n'
+        (root / "assets/implementation-contract.md").write_text(body)
+        (root / "assets/profile-wrappers.json").write_text(json.dumps({"profiles": {
+            "alaa-implementer": {"contract": "assets/implementation-contract.md", "metadata": metadata}}}))
+        outputs = expected_outputs(root, policy)
+        assert len(drift(outputs)) == 2
+        for path, data in outputs.items(): path.write_bytes(data)
+        assert not drift(expected_outputs(root, policy))
+        wrapper = root / "agents/alaa-implementer.md"
+        assert "model" not in frontmatter(str(wrapper)) and "effort" not in frontmatter(str(wrapper))
+        assert wrapper.read_text().split("\n---\n", 1)[1].endswith(body)
+        wrapper.write_text(wrapper.read_text() + "drift\n")
+        assert wrapper in drift(expected_outputs(root, policy))
+        try: profile_text("yaml", "alaa-implementer", {**metadata, "model": "override"}, body,
+                          policy["profiles"]["alaa-implementer"], "contract")
+        except ValueError: pass
+        else: raise AssertionError("metadata pin override accepted")
+        (root / "assets/profile-wrappers.json").write_text('{"profiles": {}}\n')
+        try: expected_outputs(root, policy)
+        except ValueError: pass
+        else: raise AssertionError("omitted managed profile accepted")
+    print("RENDER SELF-TEST OK: all-role neutrality, unchanged authority/body and drift")
+    return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--write", action="store_true"); mode.add_argument("--check", action="store_true")
+    mode.add_argument("--self-test", action="store_true")
+    parser.add_argument("--self-test-dir", type=Path,
+                        help="new evidence directory to retain instead of a temporary directory")
+    args = parser.parse_args()
+    if args.self_test_dir is not None and not args.self_test:
+        parser.error("--self-test-dir requires --self-test")
+    try:
+        policy = load_policy()
+        if args.self_test: return self_test(policy, args.self_test_dir)
+        outputs = expected_outputs(ROOT, policy); changed = drift(outputs)
+        if args.check and changed:
+            for path in changed: print(f"generated drift: {path.relative_to(ROOT)}", file=sys.stderr)
+            return 1
+        if args.write:
+            for path in changed: path.write_bytes(outputs[path])
+        print(f"RENDER {'WRITE' if args.write else 'CHECK'} OK: {len(outputs)} generated files")
+        return 0
+    except (OSError, ValueError, KeyError) as exc:
+        print(f"render unavailable: {exc}", file=sys.stderr); return 2
+    except AssertionError as exc:
+        print(f"render findings: {exc}", file=sys.stderr); return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,4 @@
+outputs/README.md: GREEN 24 physical lines
+outputs/20261012-orchestrator-routing-plan/execution-report.md: GREEN 23 physical lines
+outputs/20261012-orchestrator-routing-plan/runtime-proof-handoff.md: GREEN 27 physical lines
+Validated links, line budgets in 3 Markdown file(s) under [REPO_ROOT].

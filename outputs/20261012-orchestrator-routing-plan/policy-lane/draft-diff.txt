@@ -1,0 +1,2075 @@
+--- skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
++++ skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md
+@@ -1,19 +1,19 @@
+-# Model and Effort Control Route
+-
+-`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they do not assign a pair merely from role identity.
+-
+-The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Every managed role uses task-selected controls and carries no executable model or effort pin. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
+-
+-## Before every dispatch
+-
+-Read the owner's current runtime reference and inspect actual host controls, installed/session role definitions, capability/access evidence, context mode and effective overrides. Explicitly supply BOTH model AND effort from the plan on the verified invocation surface. Check the effective configured pair matches the selected pair; prose, requested controls or source validation alone cannot prove it. If exact realization is unavailable, use only an exact verified available compatibility realization preserving the role contract, or block the affected lane with evidence. Never silently change the pair, install, mutate shared configuration or claim source edits activated a session.
+-
+-For Claude Code, inspect the loaded definition, active version and invocation controls before dispatch. Model-neutral YAML omits BOTH `model` and `effort`; explicitly pass both on the verified Agent invocation surface. Current owner evidence supports non-fork invocation effort since version 2.1.292, subject to environment, hook, force and provider overrides; inspect their effective precedence rather than assuming YAML or invocation controls win. If a fork, older version or restricted surface cannot realize both values, require an exact verified available compatibility realization preserving role authority or block that lane. A separate CLI session changes context and permissions and is not an automatic substitute. Runtime precedence and current official evidence are owned by `alaa-prompting-guide references/41-claude-code-runtime-features.md`.
+-
+-Keep permissions separate: inspect effective sandbox/permission mode, parent overrides and native/MCP grants; remain within narrower role authority when enforcement is unknown. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before capacity; reassess only remaining work under the allocation boundary. Comparisons change one factor at a time.
+-
+-Report configured and requested model/effort separately from observed identity; unknown observation remains unknown. Put verdict/outcome first, then metadata. The rule-writer replacement-only contract remains owned by /alaa-prompting-guide.
+-
+-## Source generation and proof
+-
+-The existing projection engine renders implementation/planner contracts and neutralizes every other managed definition while preserving its authority/body. Wrapper metadata never owns model/effort. Run `python scripts/render_agents.py --write` after managed definition, contract or version changes; aggregate validation checks drift. After renderer logic changes also run `python scripts/render_agents.py --self-test`. Exit `0` is clean, `1` findings/drift, `2` unavailable; either nonzero blocks completion. Source checks prove neither installed activation, account access nor serving identity.
++# Model and Effort Control Route
++
++`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they do not assign a pair merely from role identity.
++
++The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Managed roles carry no executable model/effort pins. Before realizing task-selected controls, check ordinary eligibility, effort support and host availability separately. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
++
++## Before every dispatch
++
++Read the owner's current runtime reference and inspect actual host controls, installed/session role definitions, capability/access evidence, context mode and effective overrides. Explicitly supply BOTH model AND effort from the plan on the verified invocation surface. Check the effective configured pair matches the selected pair; prose, requested controls or source validation alone cannot prove it. If exact realization is unavailable, use only an exact verified available compatibility realization preserving the role contract, or block the affected lane with evidence. Never silently change the pair, install, mutate shared configuration or claim source edits activated a session.
++
++For Claude Code, inspect the loaded definition, active version and invocation controls before dispatch. Model-neutral YAML omits BOTH `model` and `effort`; explicitly pass both on the verified Agent invocation surface. Current owner evidence supports non-fork invocation effort since version 2.1.292, subject to environment, hook, force and provider overrides; inspect their effective precedence rather than assuming YAML or invocation controls win. If a fork, older version or restricted surface cannot realize both values, require an exact verified available compatibility realization preserving role authority or block that lane. A separate CLI session changes context and permissions and is not an automatic substitute. Runtime precedence and current official evidence are owned by `alaa-prompting-guide references/41-claude-code-runtime-features.md`.
++
++Keep permissions separate: inspect effective sandbox/permission mode, parent overrides and native/MCP grants; remain within narrower role authority when enforcement is unknown. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before capacity; reassess only remaining work under the allocation boundary. Comparisons change one factor at a time.
++
++Report configured and requested model/effort separately from observed identity; unknown observation remains unknown. Put verdict/outcome first, then metadata. The rule-writer replacement-only contract remains owned by /alaa-prompting-guide.
++
++## Source generation and proof
++
++The existing projection engine renders implementation/planner contracts and neutralizes every other managed definition while preserving its authority/body. Wrapper metadata never owns model/effort. Run `python scripts/render_agents.py --write` after managed definition, contract or version changes; aggregate validation checks drift. After renderer logic changes also run `python scripts/render_agents.py --self-test`. Exit `0` is clean, `1` findings/drift, `2` unavailable; either nonzero blocks completion. Source checks prove neither installed activation, account access nor serving identity.
+--- skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
++++ skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md
+@@ -61,7 +61,7 @@
+ 
+ 1. Ground each actual task's scope, acceptance, settled/open decisions and remaining reasoning need. Retrieve missing facts and repair context, specification or tool failures before attributing a shortfall to model capacity.
+ 2. Use balanced default priority; priority is not an effort value. Apply an explicit user priority/model choice or a documented task-based reason to deviate. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
+-3. Compare supported available model AND effort pairs against that task, current official starting guidance and applicable prior evidence. Record the exact source row/date when applicable, alternatives and why a cheaper pair or decomposition would not meet acceptance. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality.
++3. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical/bug branches retain their predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; no quotas. Justify model and effort separately using remaining reasoning, priority, current official guidance and applicable prior evidence. Record each cheaper rejection's actual failed fit predicate or stronger task-specific evidence, rejected decomposition and applicable exact source row/date. Titles, volume, priority labels and whole-goal complexity are no failed predicates. Select directly: no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.
+ 4. For exceptional model selection on ANY role, require an exact canonical-owner-supported official-task/priority recommendation with remaining reasoning need and rejected cheaper/decomposed alternatives, applicable documented high-workhorse inadequacy after context/specification/tool correction and decomposition consideration, or explicit user selection. A repairable defect or imagined insufficiency is not model inadequacy. A model mention alone is no selection instruction.
+ 5. Record task, role/authority identity, scope/complexity, priority/reason, selected model AND effort, admission/evidence, runtime control surface, requested and effective configured controls, availability and unresolved limits in the existing workflow plan, or a compact dispatch when no durable plan is admitted. A bounded standalone delegation requires no full pipeline or new workflow artifacts solely for model selection. Preserve role tools, skills, verdicts and independent gates for every pair. Legacy model/effort-named IDs are compatibility identities; their names select neither control.
+ 6. Before EVERY dispatch, follow `model-effort-policy.md` to verify and explicitly supply BOTH controls. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
+--- skills/sohrab/alaa-cc-orchestrator/SKILL.md
++++ skills/sohrab/alaa-cc-orchestrator/SKILL.md
+@@ -1,176 +1,171 @@
+----
+-name: alaa-cc-orchestrator
+-description: "Production-grade multi-agent coding orchestration for Claude Code. Use when a user asks to build, fix, refactor, migrate, review, investigate, or plan non-trivial repository work with an orchestrator/advisor and specialist subagents. Activation only inspects installed roles; installation requires explicit authorization. It plans first, sizes the pipeline to that plan, and routes work through scoped implementation, risk-proportional verification, review, and conditional specialist gates in the workflow-selected checkout. Do not use for trivial edits that need no delegation or for destructive/external actions without explicit authorization. Let /alaa-workflow lead a multi-session program; this skill writes its plan and state through it either way."
+----
+-
+-# Alaa CC Orchestrator
+-
+-Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system inside Claude Code. The session model leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
+-
+-**Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
+-
+-## Admission
+-
+-Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner; do not start this pipeline. Required repository checks still apply. Non-trivial work continues below.
+-
+-## Plan and allocation
+-
+-Before planning apply `references/routing-matrix.md` Planning profile selection and All-role task allocation. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
+-
+-## When NOT to use
+-
+-- The change is a single edit whose correctness one reader can confirm without a second lane. Delegation
+-  then costs more than the work.
+-- The request is a destructive or externally visible action — a push, a deploy, a data change, a published
+-  artifact — and no explicit authorization for it exists yet.
+-- The runtime is Codex rather than Claude Code. The bootstrap here writes Claude Code agent files and
+-  does nothing useful there.
+-- The engagement is a multi-session program whose value is the plan and its continuity rather than one
+-  goal's parallel role lanes. `/alaa-workflow` leads there and invokes this skill for a
+-  single phase. This skill still writes its plan through that one; the question is only which of the two leads.
+-
+-## 0. Inspect role availability
+-
+-Activation grants no installation or update authority. Inspect the installed role definitions, version, and effective tool permissions without writing files. Compare the roles needed for this goal with the shipped definitions; report missing, stale, or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work whose required roles are available; report the rest blocked.
+-
+-Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
+-
+-Inspect the effective sandbox, parent overrides, and MCP grants before relying on isolation. A declared read-only role does not prove runtime enforcement. If effective permissions cannot be observed, report them unknown and keep operations within the role restriction.
+-
+-## 1. Operating modes
+-
+-### Orchestrator mode
+-
+-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead session plans, dispatches, reconciles, gates, and reports. It should not perform normal implementation itself while viable implementation agents are available, and it does not run heavy test suites itself — the verifier does.
+-
+-### Advisor mode
+-
+-Use when the user asks for a plan, critique, architecture advice, prompts, lane definitions, or review without implementation. Research and read-only specialist agents may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md`; its admission and explicit exceptions govern planning artifacts. Plan-only work grants no product execution, branch, or commit authority.
+-
+-Resolve explicit wording first. When intent remains ambiguous, choose the lowest-side-effect interpretation that still answers the request; do not interrupt merely to ask which mode.
+-
+-In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts. Adopt an existing parent plan. For one goal this skill leads; for a multi-session program workflow leads and invokes this skill for a phase.
+-
+-## 2. Lead-session contract
+-
+-Use `references/routing-matrix.md` for the actual lead-session task selection and /alaa-prompting-guide for current capabilities and control mechanics. Report configured/requested settings separately from observed identity; unobservable values stay unknown.
+-
+-The lead owns goal normalization and scope control; repository-aware lane planning; agent selection and dispatch authorization; cross-lane reconciliation; verification and review gates; specialist-trigger decisions; and final truthfulness and stopping.
+-
+-The lead must not: implement while implementation agents are viable; run CPU-heavy verification itself; silently implement a failed lane; let an implementer approve its own change; soften or omit reviewer findings; claim checks it did not observe; fan out overlapping write lanes concurrently; print bulky tool output into the conversation instead of routing it to a file and reporting the path; or run destructive, publishing, deployment, force-push, data-deletion, or externally visible actions without explicit user permission.
+-
+-### Lead calibration
+-
+-Read /alaa-prompting-guide for current model calibration. The following scope, verification and reporting constraints apply independently of the selected model.
+-
+-**Delegate narrowly.** Dispatch one agent per lane and never several agents for the same lane. Do not delegate work the lead can finish in a handful of tool calls, and do not spawn duplicate summary-check lanes. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out in the same turn — the constraint is on redundancy, not on parallelism.
+-
+-**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repeated checks only when no new change, failure or unresolved concern justifies them; generic self-check reminders never replace a gate. `alaa-verifier`, `alaa-reviewer` and specialist gates are authority boundaries: no lane approves its own change. Model capability never waives them. Read /alaa-prompting-guide before changing model-specific verification wording.
+-
+-**Correct sparingly.** Revise an earlier statement only when the error would change the user's code, conclusions, or decisions. State the correction plainly, briefly, and continue. For slips that change nothing, fix and move on without narrating.
+-
+-**Calibrate length.** Reports and written deliverables run long by default. Match length to what the task needs: cover the substance, then stop. No filler sections, no redundant summaries, no boilerplate. Lead every report with the outcome — the first sentence answers "what happened" — and put supporting detail after it. Anything a later turn or another agent might need again is written to a file first and referenced by path; the conversation is not the storage medium, and `/alaa-low-noise` owns the budgets.
+-
+-## 3. Intake and planning
+-
+-Before dispatch inspect repository guidance and affected paths, settle outcome, acceptance, preserved behavior and irreversible actions, then draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and the existing-infrastructure check.
+-
+-Before Phase A evidence dispatch invoke `/alaa-memory-os` when triggered: one bounded recall, useful claims verified against repository truth. Active state remains in workflow. Give unresolved prior-session, ownership or shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Invoke `/alaa-code-intelligence-routing` before selecting code evidence, then reuse its result.
+-
+-Every dispatch carries `/alaa-low-noise` and returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or narration between commands. After interruption reconcile transcript, workflow checkpoint and surviving files before resuming completed writes.
+-
+-The direct-reference router below selects role, dispatch and gate owners. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
+-
+-## 4. Model and role routing
+-
+-`references/model-effort-policy.md` routes capabilities and control mechanics to /alaa-prompting-guide. Apply all-role task allocation in `references/routing-matrix.md` for EVERY dispatch. This pack owns actual model AND effort choices, role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
+-
+-Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`; record the deep-review trigger without creating a duplicate review lane.
+-
+-Missing target models or roles are explicit blocked/degraded execution, never silent fallback. Diagnose missing context, tool failure, and specification ambiguity before attributing failure to model capacity. The catalog is a menu; dispatch only roles whose triggers hold.
+-
+-## 5. Orchestrator execution pipeline
+-
+-Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. These are logical outcomes, not mandatory separate dispatches or repeated ceremonies. Coalesce compatible actions and evidence under the workflow plan; preserve outcomes, independent authority and gate economics. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
+-
+-| Phase | Owns | Ends when |
+-|---|---|---|
+-| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
+-| B — Implementation | one lane per disjoint write scope, focused-tier checks, a reviewable diff per completed subtask | every required lane is reconciled against its actual diff |
+-| C — Verification | one integrated affected-tier plan, executed by an authority that owns no lane | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+-| D — Review and specialist gates | the independent review, plus every specialist whose trigger holds | findings are resolved or explicitly accepted by the user |
+-| E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | the candidate has the proof required for the requested outcome |
+-| F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
+-
+-### Execution profile: size the pipeline to the plan
+-
+-**Every profile preserves Phases A through E and their required gates.** Phase F is conditional; local-only completion requires no merge prompt. Select and record the profile from the finished plan. Escalate when a heavier condition becomes true; do not de-escalate because its qualifying evidence persists. Implementation-role reassessment follows `references/routing-matrix.md`.
+-
+-| Profile | Conditions — every one must hold | Shape |
+-|---|---|---|
+-| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Phases A–E, and F only when requested; the lead performs Phase D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
+-| `standard` | anything that is neither `lean` nor `hardened` | Phases A–E with every required gate; F only when requested |
+-| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
+-
+-`lean` review is independent because the lead did not author the diff. If the diff leaves the lane plan, select `standard` and dispatch `alaa-reviewer` against the complete change.
+-
+-**No profile suppresses a specialist.** Apply only the triggers owned by `references/routing-matrix.md`, identically at every profile.
+-
+-### Final report
+-
+-Report: outcome; separate verdicts for `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` under `alaa-workflow references/workspace-and-integration.md`; lane changes/touched files; commands/results marked run or cited and tier; review/specialist verdicts and finding dispositions; documentation outcome/grade per touched document; curation persisted/deferred/empty; risks, skipped checks and follow-ups. List every dispatched agent once with configured/requested model/effort, separately observed identity or unknown, observable mismatches only, and the named admission criterion for each escalated lane.
+-
+-Close with one accounting line from existing plan, roster and evidence: dispatches/distinct roles; underlying checks run/cited (covered children counted once); branch span from plan `Created` to last authorized commit, or unavailable. No timer, extra command or invented budget.
+-
+-## 6. Advisor-mode output
+-
+-Provide: grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; recommended agent, model, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission: report saved plan/checkpoint paths when admitted; otherwise deliver the plan in the reply. Do not imply implementation occurred.
+-
+-When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
+-
+-## 7. Verification and resource rules
+-
+-Schedule the commands below through `references/verification-and-gates.md` Gate economics; proven aggregate coverage may discharge an identical child invocation, never a different scope or observer.
+-
+-Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
+-
+-
+-- Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
+-- After any change to `agents/`, the grant checker must pass before completion; `references/agent-catalog.md` states its exact invocation and exit-code contract.
+-- Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
+-- On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.
+-- Do not kill unrelated services, dev servers, containers, or processes; do not start duplicate services when a reusable declared service exists.
+-- Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
+-
+-The direct-reference router selects resource and failure handling before those decisions.
+-
+-## 8. Safety and authority
+-
+-- Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
+-- Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
+-- Installation and updates require explicit user authorization for named target paths; activation grants none.
+-- A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.claude/agents`.
+-- Commit only with explicit user authorization, in the workflow-selected checkout. Without it, preserve the reviewed diff and pin validation to a content snapshot under the workflow protocol. Every external or destructive effect requires its own explicit authority. Never add Co-Authored tags.
+-- Never expose secrets in prompts, logs, artifacts, or reports.
+-
+-## 9. Stop conditions
+-
+-Stop successfully only when every acceptance criterion has evidence, mandatory gates passed, the final candidate passed the scope and proof levels required by repository policy and /alaa-testing-strategy, the final diff scope is clean, documentation was completed or explicitly skipped, the final reusable-context gate reported what was persisted, deferred, rejected, or absent, and any requested integration has an accurately reported authorized, declined, or blocked outcome. Local-only requests complete without an integration prompt.
+-
+-Stop and report a partial or blocked state when: the same lane is blocked twice by the same cause; blocker or major findings remain after two fix cycles; verification remains flaky, timed out, contaminated, or environment-blocked; scope expands beyond the goal; an irreversible or product decision belongs to the user; or a safe execution path no longer exists.
+-
+-## 10. Failure discipline
+-
+-Use a reviewer only to judge, a verifier only to execute evidence commands, and a researcher only to retrieve. Classify shell, runtime, permission and stale-cache failures before any product edit; `references/failure-taxonomy.md` owns the categories. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill, not the whole family.
+-
+-## Direct references
+-
+-| Before you | Read |
+-|---|---|
+-| Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
+-| Dispatch a role | `references/delegation-prompts.md` |
+-| Start Phase A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
+-| Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
+-| Inspect role authority, output or grants | `references/agent-catalog.md` |
+-| Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |
+-| Classify a failed check | `references/failure-taxonomy.md` |
++---
++name: alaa-cc-orchestrator
++description: "Production-grade multi-agent coding orchestration for Claude Code. Use when a user asks to build, fix, refactor, migrate, review, investigate, or plan non-trivial repository work with an orchestrator/advisor and specialist subagents. Activation only inspects installed roles; installation requires explicit authorization. It plans first, sizes the pipeline to that plan, and routes work through scoped implementation, risk-proportional verification, review, and conditional specialist gates in the workflow-selected checkout. Do not use for trivial edits that need no delegation or for destructive/external actions without explicit authorization. Let /alaa-workflow lead a multi-session program; this skill writes its plan and state through it either way."
++---
++
++# Alaa CC Orchestrator
++
++Lead a controlled, evidence-driven multi-agent goal inside Claude Code. The session model leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
++
++**Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
++
++## Admission
++
++Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner. Do not start this pipeline for it; required repository checks still apply.
++
++## Plan and allocation
++
++Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks/dependencies, then allocate the batch once, record each registered profile/reason in the plan, and dispatch. Planning effort never sets worker effort; worker selection alone needs no planner dispatch.
++
++## When NOT to use
++
++- A single edit one reader can confirm without a second lane; delegation costs more than the work.
++- A destructive or external effect, including push, deploy, data change or publication, lacks explicit authorization.
++- The runtime is Codex rather than Claude Code. These agent files do not serve it.
++- A multi-session program centers on plan continuity: `/alaa-workflow` leads and invokes this skill for a phase. This skill still writes its plan through workflow.
++
++## 0. Inspect role availability
++
++Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.
++
++Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Run `python scripts/validate_pack.py` and `python scripts/check_agent_grants.py` before an authorized copy of the managed agent files. Do not change unrelated agents or settings.
++
++Inspect effective sandbox, parent overrides and MCP grants before relying on isolation. Read-only declarations prove no enforcement. Report unobservable permissions unknown and operate within role restrictions.
++
++## 1. Operating modes
++
++### Orchestrator mode
++
++Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The lead plans, dispatches, reconciles, gates and reports. It should not implement while viable implementers are available; the verifier runs heavy suites.
++
++### Advisor mode
++
++For plans, critiques, architecture advice, prompts, lane definitions or review without implementation, research/read-only specialists may be spawned. Do not implement product changes. Before saving a plan, apply admission and explicit exceptions in `alaa-workflow references/artifact-lifecycle.md`. Plan-only work grants no product execution, branch, or commit authority.
++
++Follow explicit wording; otherwise choose the lowest-side-effect interpretation answering the request without asking merely to select a mode.
++
++In orchestrator mode adopt the parent plan; `/alaa-workflow` owns plan/checkpoint/prompts. This skill leads one goal; workflow leads multi-session programs and invokes it per phase.
++
++## 2. Lead-session contract
++
++Use `references/routing-matrix.md` for the actual lead-session task selection and /alaa-prompting-guide for current capabilities and control mechanics. Report configured/requested settings separately from observed identity; unobservable values stay unknown.
++
++The lead owns goal/scope, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.
++
++The lead must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
++
++### Lead calibration
++
++Read /alaa-prompting-guide for current model calibration. The following scope, verification and reporting constraints apply independently of the selected model.
++
++**Delegate narrowly.** One agent per lane; no duplicate lane or summary-check agent. Keep work finishable in a handful of tool calls inline. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes in the same turn.
++
++**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repetition only without new changes, failures or unresolved concerns. Generic reminders never replace a gate: `alaa-verifier`, `alaa-reviewer` and specialists enforce independent authority, which model capability never waives. Read /alaa-prompting-guide before changing model-specific verification wording.
++
++**Correct sparingly.** Revise statements only when an error changes user code, conclusions or decisions; state it plainly and briefly, then continue. Fix immaterial slips without narration.
++
++**Calibrate length.** Reports/deliverables run long by default: cover the required substance, then stop without filler, redundant summaries or boilerplate. Start reports with the outcome, then supporting detail. Save reusable material before reporting its path; conversation is not storage. `/alaa-low-noise` owns budgets.
++
++## 3. Intake and planning
++
++Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
++
++Before Phase A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
++
++Every dispatch carries `/alaa-low-noise`; return findings, verdicts, counts and permitted artifact paths, never transcripts/full diffs/logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After interruption reconcile transcript, checkpoint and surviving files before resuming writes.
++
++The router below selects role/dispatch/gate owners. `references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.
++
++## 4. Model and role routing
++
++For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority/output. `references/model-effort-policy.md` routes capability/control mechanics to /alaa-prompting-guide.
++
++Choose one correctness review profile for a scope. Both standard and deep review routes use the existing `alaa-reviewer`; record the deep-review trigger without creating a duplicate review lane.
++
++Report missing models/roles as blocked/degraded, never silent fallback. Diagnose context/tool/specification failures before capacity. Dispatch only triggered catalog roles.
++
++## 5. Orchestrator execution pipeline
++
++Orchestrator mode runs A–E; F requires requested integration and explicit authority before effects. Advisor mode runs no execution phases; section 1 routes planning artifacts. Phases are logical outcomes, not separate mandatory dispatches. Coalesce compatible actions/evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Phase A dispatch read `references/verification-and-gates.md` for phase behavior, triggers and requirements.
++
++| Phase | Owns | Ends when |
++|---|---|---|
++| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
++| B — Implementation | one lane per disjoint write scope, focused-tier checks, a reviewable diff per completed subtask | every required lane is reconciled against its actual diff |
++| C — Verification | one integrated affected-tier plan, executed by an authority that owns no lane | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
++| D — Review and specialist gates | the independent review, plus every specialist whose trigger holds | findings are resolved or explicitly accepted by the user |
++| E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | the candidate has the proof required for the requested outcome |
++| F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
++
++### Execution profile: size the pipeline to the plan
++
++**Every profile preserves A–E and required gates.** F is conditional; local-only completion requires no merge prompt. Record the profile from the finished plan. Escalate on a heavier condition; do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
++
++| Profile | Conditions — every one must hold | Shape |
++|---|---|---|
++| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Phases A–E, and F only when requested; the lead performs Phase D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
++| `standard` | anything that is neither `lean` nor `hardened` | Phases A–E with every required gate; F only when requested |
++| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
++
++`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
++
++**No profile suppresses a specialist.** Apply `references/routing-matrix.md` triggers identically across profiles.
++
++### Final report
++
++Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes/files; commands/results with run/cited and tier; review/specialist verdicts/dispositions; each touched document's outcome/grade; curation persisted/deferred/empty; risks, skipped checks, follow-ups. List each dispatched agent once: configured/requested pair, separately observed identity or unknown, observable mismatches and named escalated-lane admission.
++
++Close with one line from existing plan/roster/evidence: dispatches/distinct roles; underlying checks run/cited, covered children counted once; span from plan `Created` to last authorized commit or unavailable. No timer, extra command or invented budget.
++
++## 6. Advisor-mode output
++
++Provide: grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; recommended agent, model, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission: report saved plan/checkpoint paths when admitted; otherwise deliver the plan in the reply. Do not imply implementation occurred.
++
++When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
++
++## 7. Verification and resource rules
++
++Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child scope and observer.
++
++Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
++
++
++- Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
++- After any change to `agents/`, the grant checker must pass before completion; `references/agent-catalog.md` states its exact invocation and exit-code contract.
++- Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
++- On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.
++- Do not kill unrelated services, dev servers, containers, or processes; do not start duplicate services when a reusable declared service exists.
++- Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
++
++Before resource/failure decisions apply the router below.
++
++## 8. Safety and authority
++
++- Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
++- Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
++- Installation and updates require explicit user authorization for named target paths; activation grants none.
++- Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.claude/agents`, because reinstall restores pack grants.
++- Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
++- Never expose secrets in prompts, logs, artifacts, or reports.
++
++## 9. Stop conditions
++
++Success requires evidenced acceptance, passing mandatory gates and final candidate scope/proof under repository policy and /alaa-testing-strategy, clean final diff scope, completed or explicitly skipped documentation, and final curation disposition (persisted/deferred/rejected/absent). Accurately report requested integration as authorized, declined or blocked. Local-only completion needs no integration prompt.
++
++Stop partial/blocked after the same lane/cause blocks twice, blockers/majors survive two fix cycles, or verification stays flaky/timed-out/contaminated/environment-blocked; also stop for scope beyond the goal, user-owned irreversible/product decisions, or no safe path.
++
++## 10. Failure discipline
++
++Reviewers judge, verifiers execute evidence commands, researchers retrieve. Before product edits classify shell/runtime/permission/stale-cache failures through `references/failure-taxonomy.md`. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
++
++## Direct references
++
++| Before you | Read |
++|---|---|
++| Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
++| Dispatch a role | `references/delegation-prompts.md` |
++| Start Phase A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
++| Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
++| Inspect role authority, output or grants | `references/agent-catalog.md` |
++| Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |
++| Classify a failed check | `references/failure-taxonomy.md` |
+--- skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md
++++ skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md
+@@ -1,19 +1,19 @@
+-# Model and Effort Control Route
+-
+-`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they do not assign a pair merely from role identity.
+-
+-The registry is `alaa-prompting-guide assets/codex-model-policy.json`. Every managed role uses task-selected controls and carries no executable model or effort pin. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
+-
+-## Before every dispatch
+-
+-Read the owner's current runtime reference and inspect actual host controls, installed/session role definitions, capability/access evidence, context mode and effective overrides. Explicitly supply BOTH model AND effort from the plan on the verified invocation surface. Check the effective configured pair matches the selected pair; prose, requested controls or source validation alone cannot prove it. If exact realization is unavailable, use only an exact verified available compatibility realization preserving the role contract, or block the affected lane with evidence. Never silently change the pair, install, mutate shared configuration or claim source edits activated a session.
+-
++# Model and Effort Control Route
++
++`routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they do not assign a pair merely from role identity.
++
++The registry is `alaa-prompting-guide assets/codex-model-policy.json`. Managed roles carry no executable model/effort pins. Before realizing task-selected controls, check ordinary eligibility, effort support and host availability separately. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
++
++## Before every dispatch
++
++Read the owner's current runtime reference and inspect actual host controls, installed/session role definitions, capability/access evidence, context mode and effective overrides. Explicitly supply BOTH model AND effort from the plan on the verified invocation surface. Check the effective configured pair matches the selected pair; prose, requested controls or source validation alone cannot prove it. If exact realization is unavailable, use only an exact verified available compatibility realization preserving the role contract, or block the affected lane with evidence. Never silently change the pair, install, mutate shared configuration or claim source edits activated a session.
++
+ For Codex, inspect the currently loaded custom definition and global/parent controls before dispatch. Custom `model` and `model_reasoning_effort` pins override caller controls. Model-neutral TOMLs omit BOTH pins; explicitly pass `model` and `reasoning_effort` to the supported spawn surface. Verify the host permits those arguments and the requested fork/context mode; do not imply full-history forks accept overrides when this host rejects them. If the current host exposes fixed named-role definitions, treat their loaded controls as fixed until a verified reload; source edits alone do not prove that registry reloaded. A fixed compatibility realization is usable only when its exact controls and authority match the selected task; otherwise block that lane. Runtime precedence and current official evidence are owned by `alaa-prompting-guide references/11-codex-runtime-features.md`.
+-
+-Keep permissions separate: inspect effective sandbox/permission mode, parent overrides and native/MCP grants; remain within narrower role authority when enforcement is unknown. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before capacity; reassess only remaining work under the allocation boundary. Comparisons change one factor at a time.
+-
+-Report configured and requested model/effort separately from observed identity; unknown observation remains unknown. Put verdict/outcome first, then metadata. The rule-writer replacement-only contract remains owned by /alaa-prompting-guide.
+-
+-## Source generation and proof
+-
+-The existing projection engine renders implementation/planner contracts and neutralizes every other managed definition while preserving its authority/body. Wrapper metadata never owns model/effort. Run `python scripts/render_agents.py --write` after managed definition, contract or version changes; aggregate validation checks drift. After renderer logic changes also run `python scripts/render_agents.py --self-test`. Exit `0` is clean, `1` findings/drift, `2` unavailable; either nonzero blocks completion. Source checks prove neither installed activation, account access nor serving identity.
++
++Keep permissions separate: inspect effective sandbox/permission mode, parent overrides and native/MCP grants; remain within narrower role authority when enforcement is unknown. Model choice changes no tools, required skills, verdicts or independent gates. Diagnose missing context, tool failures and specification ambiguity before capacity; reassess only remaining work under the allocation boundary. Comparisons change one factor at a time.
++
++Report configured and requested model/effort separately from observed identity; unknown observation remains unknown. Put verdict/outcome first, then metadata. The rule-writer replacement-only contract remains owned by /alaa-prompting-guide.
++
++## Source generation and proof
++
++The existing projection engine renders implementation/planner contracts and neutralizes every other managed definition while preserving its authority/body. Wrapper metadata never owns model/effort. Run `python scripts/render_agents.py --write` after managed definition, contract or version changes; aggregate validation checks drift. After renderer logic changes also run `python scripts/render_agents.py --self-test`. Exit `0` is clean, `1` findings/drift, `2` unavailable; either nonzero blocks completion. Source checks prove neither installed activation, account access nor serving identity.
+--- skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
++++ skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md
+@@ -60,8 +60,8 @@
+ This orchestrator owns actual task complexity, priority, model and effort decisions for EVERY role. `/alaa-prompting-guide` owns current capabilities, official starting guidance, runtime precedence and checked model-neutral projections. Read its `references/90-model-selection.md` and `references/50-effort-and-thinking.md` before allocation; guidance informs the decision rather than assigning roles a default pair.
+ 
+ 1. Ground each actual task's scope, acceptance, settled/open decisions and remaining reasoning need. Retrieve missing facts and repair context, specification or tool failures before attributing a shortfall to model capacity.
+-2. Use balanced default priority; priority is not an effort value. Apply an explicit user priority/model choice or a documented task-based reason to deviate. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
+-3. Compare supported available model AND effort pairs against that task, current official starting guidance and applicable prior evidence. Record the exact source row/date when applicable, alternatives and why a cheaper pair or decomposition would not meet acceptance. Select directly; no mandatory trial ladder, synthetic experiment or replay of completed work. Supported capability is not calibrated local quality.
++2. Apply canonical eligibility: exclude gpt-6-sol ordinarily even if available. Current-family selection never upgrades suitable Luna to Sol. Missing current Sol requires exact eligible realization or an affected-lane block, never old-Sol fallback. Record explicit user legacy exceptions separately; ordinary eligibility stays disabled. Use balanced default priority; priority is not an effort value. Apply an explicit user priority/model choice or a documented task-based reason to deviate. Role title, sensitivity, duration, whole-goal labels and a second independent lens alone never select a frontier or stronger model. Independence comes from context and authority, not model diversity.
++3. Evaluate the cheapest eligible supported available model AND effort pair for EVERY role: evidence, planning, implementation, verification, review, specialists, documentation and rule-writer. Bounded suitability requires an explicit outcome, finite named scope, grounded local contracts/known invariants, a known pattern or causal path, settled cross-boundary decisions, bounded local discretion and a discriminating check. Non-bug semantic work needs no reproduced failure; mechanical/bug branches retain their predicates below. Select the least costly suitable available pair unless explicit user choice or recorded task evidence justifies departure; no quotas. Justify model and effort separately using remaining reasoning, priority, current official guidance and applicable prior evidence. Record each cheaper rejection's actual failed fit predicate or stronger task-specific evidence, rejected decomposition and applicable exact source row/date. Titles, volume, priority labels and whole-goal complexity are no failed predicates. Select directly: no mandatory trial ladder, synthetic experiment or replay. Supported capability is not calibrated local quality.
+ 4. For exceptional model selection on ANY role, require an exact canonical-owner-supported official-task/priority recommendation with remaining reasoning need and rejected cheaper/decomposed alternatives, applicable documented high-workhorse inadequacy after context/specification/tool correction and decomposition consideration, or explicit user selection. A repairable defect or imagined insufficiency is not model inadequacy. A model mention alone is no selection instruction.
+ 5. Record task, role/authority identity, scope/complexity, priority/reason, selected model AND effort, admission/evidence, runtime control surface, requested and effective configured controls, availability and unresolved limits in the existing workflow plan, or a compact dispatch when no durable plan is admitted. A bounded standalone delegation requires no full pipeline or new workflow artifacts solely for model selection. Preserve role tools, skills, verdicts and independent gates for every pair. Legacy model/effort-named IDs are compatibility identities; their names select neither control.
+ 6. Before EVERY dispatch, follow `model-effort-policy.md` to verify and explicitly supply BOTH controls. If the host cannot realize the selected pair, use only an exact verified available compatibility realization preserving authority; otherwise block that affected lane with evidence. No silent substitution, automatic installation or global configuration edit. Source changes do not reload installed or current-session roles. Unknown serving identity is a reporting limit, not evidence of a control mismatch or a reason for paid calibration.
+@@ -72,7 +72,7 @@
+ 
+ Select the mechanical branch of `alaa-implementer-luna` directly only when ALL are recorded before dispatch: exact transformation and exclusions; finite explicitly enumerated existing-file scope; expected result; settled design with no semantic discretion; known pattern; and cheap discriminating checks that detect wrong, incomplete or out-of-scope results. Many files are allowed; file count alone neither qualifies nor disqualifies. Ambiguous matches, undefined scope or design changes fail admission. Task priority or human model preference does not waive fit. If fit ceases, stop dependent work and return remaining scope for reclassification while preserving valid edits. Never require a lightweight trial, replay completed work, expand command authority or waive independent gates. Otherwise use the workhorse routes below; unresolved facts still go to retrieval/clarification.
+ 
+-Select `alaa-implementer-low` for bounded semantic work only when the plan records an explicit outcome, named scope, grounded local contracts, known causal path or pattern, bounded local decisions and cheap discriminating checks. Unresolved cross-boundary design, consistency or trust decisions fail admission.
++Select `alaa-implementer-low` for bounded semantic work only with every All-role bounded-suitability predicate and cheap discriminating checks recorded. Non-bug local decisions qualify; allocate its pair separately, including suitable Luna. Unresolved cross-boundary design, consistency or trust fails admission.
+ 
+ Select `alaa-implementer-luna-low`, the bug branch of `alaa-implementer-luna`, or `alaa-implementer-luna-high` from the exact official bug row and selected priority only when the plan records a reproduced failure, traced local causal path, explicit expected behavior, bounded scope and semantic discretion, and a discriminating regression oracle. Unresolved cross-boundary contracts, trust, shared-state or consistency design fail admission. This is distinct from the mechanical route above.
+ 
+--- skills/sohrab/alaa-codex-orchestrator/SKILL.md
++++ skills/sohrab/alaa-codex-orchestrator/SKILL.md
+@@ -1,177 +1,172 @@
+----
+-name: alaa-codex-orchestrator
+-description: "Production-grade multi-agent coding orchestration for Codex. Use when a user asks to build, fix, refactor, migrate, review, investigate, or plan non-trivial repository work with an orchestrator/advisor and specialist subagents. Activation only inspects installed roles; installation requires explicit authorization. It plans first, sizes the pipeline to that plan, and routes work through scoped implementation, risk-proportional verification, review, and conditional specialist gates in the workflow-selected checkout. Do not use for trivial edits that need no delegation or for destructive/external actions without explicit authorization. Let /alaa-workflow lead a multi-session program; this skill writes its plan and state through it either way."
+----
+-
+-# Alaa Codex Orchestrator
+-
+-Convert a product or engineering goal into a controlled, evidence-driven multi-agent execution system. The main thread leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
+-
+-**Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
+-
+-## Admission
+-
+-Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner; do not start this pipeline. Required repository checks still apply. Non-trivial work continues below.
+-
+-## Plan and allocation
+-
+-Before planning apply `references/routing-matrix.md` Planning profile selection and All-role task allocation. Finalize and consolidate tasks and dependencies first. Then run its single batch allocation pass, write every registered profile and reason into that plan, and dispatch. Planning effort does not determine worker effort; choosing workers alone requires no planner dispatch.
+-
+-## When NOT to use
+-
+-- The change is a single edit whose correctness one reader can confirm without a second lane. Delegation
+-  then costs more than the work.
+-- The request is a destructive or externally visible action — a push, a deploy, a data change, a published
+-  artifact — and no explicit authorization for it exists yet.
+-- The runtime is Claude Code rather than Codex. The role definitions here use TOMLs and do
+-  not serve that runtime.
+-- The engagement is a multi-session program whose value is the plan and its continuity rather than one
+-  goal's parallel role lanes. `/alaa-workflow` leads there and invokes this skill for a
+-  single phase. This skill still writes its plan through that one; the question is only which of the two leads.
+-
+-## 0. Inspect role availability
+-
+-Activation grants no installation or update authority. Inspect the installed role definitions, version, and effective tool permissions without writing files. Compare the roles needed for this goal with the shipped definitions; report missing, stale, or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work whose required roles are available; report the rest blocked.
+-
+-Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Use the supported materializing installers described in `references/installation.md`; a direct TOML copy inherits parent MCP grants and is unsupported.
+-
+-Inspect the effective sandbox, parent overrides, and MCP grants before relying on isolation. A declared read-only role does not prove runtime enforcement. If effective permissions cannot be observed, report them unknown and keep operations within the role restriction.
+-
+-## 1. Operating modes
+-
+-### Orchestrator mode
+-
+-Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates, and reports. It should not perform normal implementation itself while viable implementation agents are available, and it does not run heavy test suites itself — the verifier does.
+-
+-### Advisor mode
+-
+-Use when the user asks for a plan, critique, architecture advice, prompts, lane definitions, or review without implementation. Research and read-only specialist agents may be spawned. Do not implement product changes. Before deciding whether to save a plan, read `alaa-workflow references/artifact-lifecycle.md`; its admission and explicit exceptions govern planning artifacts. Plan-only work grants no product execution, branch, or commit authority.
+-
+-Resolve explicit wording first. When intent remains ambiguous, choose the lowest-side-effect interpretation that still answers the request; do not interrupt merely to ask which mode.
+-
+-In orchestrator mode `/alaa-workflow` owns plan, checkpoint and prompt artifacts. Adopt an existing parent plan. For one goal this skill leads; for a multi-session program workflow leads and invokes this skill for a phase.
+-
+-## 2. Main-thread contract
+-
+-Use `references/routing-matrix.md` for the actual main-thread task selection and /alaa-prompting-guide for current capabilities and control mechanics. A requested profile is not evidence of this session's observed identity.
+-
+-It owns goal normalization and scope control; repository-aware lane planning; agent selection and dispatch authorization; cross-lane reconciliation; verification and review gates; specialist-trigger decisions; and final truthfulness and stopping.
+-
+-It must not: implement while implementation agents are viable; run CPU-heavy verification itself; silently implement a failed lane; let an implementer approve its own change; soften or omit reviewer findings; claim checks it did not observe; fan out overlapping write lanes concurrently; print bulky tool output into the conversation instead of routing it to a file and reporting the path; or run destructive, publishing, deployment, force-push, data-deletion, or externally visible actions without explicit user permission.
+-
+-### Dispatch discipline
+-
+-**One agent per lane.** Never several agents for the same lane, and no duplicate summary-check lane. Independent verification and review inspect the actual artifact under separate authority. Independent lanes still go out together — the constraint is on redundancy, not on parallelism. Do not delegate work the main thread can finish in a handful of tool calls.
+-
+-**Keep dispatches lean.** Apply the instruction-authoring contract in /alaa-prompting-guide. Dispatch text carries lane facts only: outcome, owned files, exclusions, acceptance criteria, verification commands, dependencies, resolved skill bindings, and the return contract. The role already lives in the agent TOML; restating it dilutes both. State each instruction once, expose only task-relevant tools, and keep examples only where they encode a real requirement.
+-
+-**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repeated checks only when no new change, failure or unresolved concern justifies them; generic self-check reminders never replace a gate. `alaa-verifier`, `alaa-reviewer` and specialist gates are authority boundaries: no lane approves its own change. Model capability never waives them. Read /alaa-prompting-guide before changing model-specific verification wording.
+-
+-## 3. Intake and planning
+-
+-Before dispatch inspect repository guidance and affected paths, settle outcome, acceptance, preserved behavior and irreversible actions, then draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and the existing-infrastructure check.
+-
+-Before Phase A evidence dispatch invoke `/alaa-memory-os` when triggered: one bounded recall, useful claims verified against repository truth. Active state remains in workflow. Give unresolved prior-session, ownership or shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Invoke `/alaa-code-intelligence-routing` before selecting code evidence, then reuse its result.
+-
+-Every dispatch carries `/alaa-low-noise` and returns findings, verdicts, counts and permitted artifact paths, never transcripts, full diffs or logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or narration between commands. After interruption reconcile transcript, workflow checkpoint and surviving files before resuming completed writes.
+-
+-The direct-reference router below selects role, dispatch and gate owners. `references/verification-and-gates.md` owns gate economics — which gate runs before which, and what must be frozen before the expensive one is dispatched.
+-
+-## 4. Model and role routing
+-
+-`references/model-effort-policy.md` routes capabilities and control mechanics to /alaa-prompting-guide. Apply all-role task allocation in `references/routing-matrix.md` for EVERY dispatch. This pack owns actual model AND effort choices, role triggers in `references/routing-matrix.md` and authority/output contracts in `references/agent-catalog.md`.
+-
+-Choose one correctness reviewer for a scope; deep review changes the review task, then requires its own justified model AND effort selection. `alaa-reviewer-deep` is a compatibility identity with the same authority, never a fixed-model escalation.
+-
+-Missing target models or roles are explicit blocked/degraded execution, never silent fallback. Diagnose missing context, tool failure, and specification ambiguity before attributing failure to model capacity. The catalog is a menu; dispatch only roles whose triggers hold.
+-
+-## 5. Orchestrator execution pipeline
+-
+-Phases A through E run in orchestrator mode; Phase F applies only to user-requested integration and requires explicit authorization before effects. Advisor mode runs no execution phases; section 1 routes its planning artifacts separately. These are logical outcomes, not mandatory separate dispatches or repeated ceremonies. Coalesce compatible actions and evidence under the workflow plan; preserve outcomes, independent authority and gate economics. `references/verification-and-gates.md` owns what each phase does, its triggers, and what each gate requires — read it before dispatching Phase A.
+-
+-| Phase | Owns | Ends when |
+-|---|---|---|
+-| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
+-| B — Implementation | one lane per disjoint write scope, focused-tier checks, a reviewable diff per completed subtask | every required lane is reconciled against its actual diff |
+-| C — Verification | one integrated affected-tier plan, executed by an authority that owns no lane | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
+-| D — Review and specialist gates | the independent review, plus every specialist whose trigger holds | findings are resolved or explicitly accepted by the user |
+-| E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | the candidate has the proof required for the requested outcome |
+-| F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
+-
+-### Execution profile: size the pipeline to the plan
+-
+-**Every profile preserves Phases A through E and their required gates.** Phase F is conditional; local-only completion requires no merge prompt. Select and record the profile from the finished plan. Escalate when a heavier condition becomes true; do not de-escalate because its qualifying evidence persists. Implementation-role reassessment follows `references/routing-matrix.md`.
+-
+-| Profile | Conditions — every one must hold | Shape |
+-|---|---|---|
+-| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Phases A–E, and F only when requested; the main thread performs Phase D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
+-| `standard` | anything that is neither `lean` nor `hardened` | Phases A–E with every required gate; F only when requested |
+-| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
+-
+-`lean` review is independent because the lead did not author the diff. If the diff leaves the lane plan, select `standard` and dispatch `alaa-reviewer` against the complete change.
+-
+-**No profile suppresses a specialist.** Apply only the triggers owned by `references/routing-matrix.md`, identically at every profile.
+-
+-### Final report
+-
+-Report: outcome; separate verdicts for `IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED` under `alaa-workflow references/workspace-and-integration.md`; lane changes/touched files; commands/results marked run or cited and tier; review/specialist verdicts and finding dispositions; documentation outcome/grade per touched document; curation persisted/deferred/empty; risks, skipped checks and follow-ups. List every dispatched agent once with configured/requested model/effort, separately observed identity or unknown, observable mismatches only, and the named admission criterion for each escalated lane.
+-
+-Close with one accounting line from existing plan, roster and evidence: dispatches/distinct roles; underlying checks run/cited (covered children counted once); branch span from plan `Created` to last authorized commit, or unavailable. No timer, extra command or invented budget.
+-
+-## 6. Advisor-mode output
+-
+-Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; a recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission: report saved plan/checkpoint paths when admitted; otherwise deliver the plan in the reply. Do not imply implementation occurred.
+-
+-When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
+-
+-## 7. Verification and resource rules
+-
+-Schedule the commands below through `references/verification-and-gates.md` Gate economics; proven aggregate coverage may discharge an identical child invocation, never a different scope or observer.
+-
+-Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
+-
+-
+-After changing reviewer instructions, pins, agents, or version, run `python scripts/render_agents.py --write`, then `python scripts/render_agents.py --check` and `python scripts/validate_pack.py`. Run `python scripts/render_agents.py --self-test` after renderer changes. Exit `0` is clean, `1` is findings/drift, and `2` means unavailable proof; either nonzero blocks completion. Review both generated wrappers against `assets/reviewer-contract.md`.
+-
+-
+-- After any change to `agents/`, run `python scripts/check_agent_grants.py`; it verifies the transport-neutral templates. To exercise live resolution manually, run `python scripts/check_agent_grants.py --materialize agents <new-empty-output-directory>` and inspect only the generated scratch directory. Exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run; both nonzero results fail completion. Run `python scripts/check_agent_grants.py --self-test` when changing the checker itself. `scripts/validate_pack.py` checks the templates, and both agent installers materialize and validate the live resolved grants before writing.
+-- Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
+-- Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
+-- On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.
+-- Do not kill unrelated services, dev servers, containers, or processes.
+-- Do not start duplicate services when a reusable declared service already exists.
+-- Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
+-
+-The direct-reference router selects resource and failure handling before those decisions.
+-
+-## 8. Safety and authority
+-
+-- Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
+-- Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
+-- Installation and updates require explicit user authorization for named target paths; activation grants none.
+-- A lane's code-intelligence grant lives in its agent file, not in the dispatch. `references/agent-catalog.md` records which agents hold CodeGraph, the Serena read set, both, or neither; `/alaa-code-intelligence-routing` owns why. Reinstalling this pack restores those grants, so change them here rather than in `~/.codex/agents`.
+-- Commit only with explicit user authorization, in the workflow-selected checkout. Without it, preserve the reviewed diff and pin validation to a content snapshot under the workflow protocol. Every external or destructive effect requires its own explicit authority. Never add Co-Authored tags.
+-- Never expose secrets in prompts, logs, artifacts, or reports.
+-
+-## 9. Stop conditions
+-
+-Stop successfully only when every acceptance criterion has evidence, mandatory gates passed, the final candidate passed the scope and proof levels required by repository policy and /alaa-testing-strategy, the final diff scope is clean, documentation was completed or explicitly skipped, the final reusable-context gate reported what was persisted, deferred, rejected, or absent, and any requested integration has an accurately reported authorized, declined, or blocked outcome. Local-only requests complete without an integration prompt.
+-
+-Stop and report a partial or blocked state when: the same lane is blocked twice by the same cause; blocker or major findings remain after two fix cycles; verification remains flaky, timed out, contaminated, or environment-blocked; scope expands beyond the goal; an irreversible or product decision belongs to the user; or a safe execution path no longer exists.
+-
+-## 10. Failure discipline
+-
+-Use a reviewer only to judge, a verifier only to execute evidence commands, and a researcher only to retrieve. Classify shell, runtime, permission and stale-cache failures before any product edit; `references/failure-taxonomy.md` owns the categories. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill, not the whole family.
+-
+-## Direct references
+-
+-| Before you | Read |
+-|---|---|
+-| Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
+-| Dispatch a role | `references/delegation-prompts.md` |
+-| Start Phase A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
+-| Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
+-| Inspect role authority, output or grants | `references/agent-catalog.md` |
+-| Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |
+-| Classify a failed check | `references/failure-taxonomy.md` |
+-| Perform an explicitly authorized installation or update | `references/installation.md` |
++---
++name: alaa-codex-orchestrator
++description: "Production-grade multi-agent coding orchestration for Codex. Use when a user asks to build, fix, refactor, migrate, review, investigate, or plan non-trivial repository work with an orchestrator/advisor and specialist subagents. Activation only inspects installed roles; installation requires explicit authorization. It plans first, sizes the pipeline to that plan, and routes work through scoped implementation, risk-proportional verification, review, and conditional specialist gates in the workflow-selected checkout. Do not use for trivial edits that need no delegation or for destructive/external actions without explicit authorization. Let /alaa-workflow lead a multi-session program; this skill writes its plan and state through it either way."
++---
++
++# Alaa Codex Orchestrator
++
++Lead a controlled, evidence-driven multi-agent goal. The main thread leads; narrow subagents inspect, implement, verify, challenge, and document. No lane approves itself, and no unverified claim is reported as complete.
++
++**Mirrored behavior.** Change both runtime orchestrators together. Only runtime mechanics and model-family delegation polarity may differ; `/alaa-prompting-guide` owns the latter.
++
++## Admission
++
++Before role inspection or planning, route a single bounded edit whose correctness one reader can confirm to direct execution under its domain owner. Do not start this pipeline for it; required repository checks still apply.
++
++## Plan and allocation
++
++Apply `references/routing-matrix.md` Planning profile selection and All-role task allocation before planning. Finalize and consolidate tasks/dependencies, then allocate the batch once, record each registered profile/reason in the plan, and dispatch. Planning effort never sets worker effort; worker selection alone needs no planner dispatch.
++
++## When NOT to use
++
++- A single edit one reader can confirm without a second lane; delegation costs more than the work.
++- A destructive or external effect, including push, deploy, data change or publication, lacks explicit authorization.
++- The runtime is Claude Code rather than Codex. These TOML roles do not serve it.
++- A multi-session program centers on plan continuity: `/alaa-workflow` leads and invokes this skill for a phase. This skill still writes its plan through workflow.
++
++## 0. Inspect role availability
++
++Activation grants no installation or update authority. Inspect installed definitions, version and effective tools without writes; compare required roles with shipped definitions. Report missing, stale or unavailable roles before dispatch. Never silently substitute a model or a generic role. Continue only independent work with available required roles; report the rest blocked.
++
++Install or update only with explicit user authorization for the target paths. Validate model-neutral source roles, grants, and generated artifacts before the first target write. Use the supported materializing installers described in `references/installation.md`; a direct TOML copy inherits parent MCP grants and is unsupported.
++
++Inspect effective sandbox, parent overrides and MCP grants before relying on isolation. Read-only declarations prove no enforcement. Report unobservable permissions unknown and operate within role restrictions.
++
++## 1. Operating modes
++
++### Orchestrator mode
++
++Use when the user asks to build, fix, refactor, migrate, integrate, optimize, or otherwise change a repository. The main thread plans, dispatches, reconciles, gates and reports. It should not implement while viable implementers are available; the verifier runs heavy suites.
++
++### Advisor mode
++
++For plans, critiques, architecture advice, prompts, lane definitions or review without implementation, research/read-only specialists may be spawned. Do not implement product changes. Before saving a plan, apply admission and explicit exceptions in `alaa-workflow references/artifact-lifecycle.md`. Plan-only work grants no product execution, branch, or commit authority.
++
++Follow explicit wording; otherwise choose the lowest-side-effect interpretation answering the request without asking merely to select a mode.
++
++In orchestrator mode adopt the parent plan; `/alaa-workflow` owns plan/checkpoint/prompts. This skill leads one goal; workflow leads multi-session programs and invokes it per phase.
++
++## 2. Main-thread contract
++
++Use `references/routing-matrix.md` for the actual main-thread task selection and /alaa-prompting-guide for current capabilities and control mechanics. A requested profile is not evidence of this session's observed identity.
++
++It owns goal/scope, repository-aware lanes, selection/dispatch authority, reconciliation, verification/review, specialist triggers, truthful reporting and stopping.
++
++It must not implement while implementers are viable, run heavy verification, silently take over failed lanes, permit self-approval, soften/omit review findings, claim unobserved checks or overlap writers. Save bulky output and report its path. Destructive, publication, deployment, force-push, data-deletion and external effects require explicit user permission.
++
++### Dispatch discipline
++
++**One agent per lane.** No duplicate lane or summary-check agent. Independent verification and review inspect the actual artifact under separate authority. Dispatch independent lanes together; keep work finishable in a handful of tool calls inline.
++
++**Keep dispatches lean.** Apply /alaa-prompting-guide. Carry lane facts only: outcome, owned files, exclusions, acceptance, commands, dependencies, resolved skills and return contract. Do not restate the TOML role, which dilutes both contracts. State instructions once; expose task-relevant tools and only requirement-bearing examples.
++
++**Preserve proportional verification.** Retain required retrieval, focused implementer checks and independent acceptance gates. Remove repetition only without new changes, failures or unresolved concerns. Generic reminders never replace a gate: `alaa-verifier`, `alaa-reviewer` and specialists enforce independent authority, which model capability never waives. Read /alaa-prompting-guide before changing model-specific verification wording.
++
++## 3. Intake and planning
++
++Before dispatch inspect guidance/affected paths; settle outcome, acceptance, preserved behavior and irreversible actions; draw disjoint lanes. `references/verification-and-gates.md` owns intake, lane fields and infrastructure reuse.
++
++Before Phase A evidence dispatch, apply triggered `/alaa-memory-os`: one bounded recall, verify useful claims in repository truth; keep active state in workflow. Route unresolved prior-session/ownership/shared-contract questions to `alaa-researcher`; `alaa-explorer` uses memory only when the repository cannot answer. Apply `/alaa-code-intelligence-routing` before code-evidence selection and reuse its result.
++
++Every dispatch carries `/alaa-low-noise`; return findings, verdicts, counts and permitted artifact paths, never transcripts/full diffs/logs. Persist reusable context before returning its path. Use bounded invocations and host-required progress. Do not infer a universal watchdog timeout or per-command narration. After interruption reconcile transcript, checkpoint and surviving files before resuming writes.
++
++The router below selects role/dispatch/gate owners. `references/verification-and-gates.md` owns gate ordering and freezing before expensive dispatch.
++
++## 4. Model and role routing
++
++For EVERY dispatch apply task model AND effort allocation and role triggers in `references/routing-matrix.md`; `references/agent-catalog.md` owns authority/output. `references/model-effort-policy.md` routes capability/control mechanics to /alaa-prompting-guide.
++
++Choose one correctness reviewer for a scope; deep review changes the review task, then requires its own justified model AND effort selection. `alaa-reviewer-deep` is a compatibility identity with the same authority, never a fixed-model escalation.
++
++Report missing models/roles as blocked/degraded, never silent fallback. Diagnose context/tool/specification failures before capacity. Dispatch only triggered catalog roles.
++
++## 5. Orchestrator execution pipeline
++
++Orchestrator mode runs A–E; F requires requested integration and explicit authority before effects. Advisor mode runs no execution phases; section 1 routes planning artifacts. Phases are logical outcomes, not separate mandatory dispatches. Coalesce compatible actions/evidence in the workflow plan, preserving outcomes, independence and gate economics. Before Phase A dispatch read `references/verification-and-gates.md` for phase behavior, triggers and requirements.
++
++| Phase | Owns | Ends when |
++|---|---|---|
++| A — Plan | workspace setup, evidence lanes, the chosen solution and its rejected alternatives, the written plan, the profile | the plan and profile are recorded and presented |
++| B — Implementation | one lane per disjoint write scope, focused-tier checks, a reviewable diff per completed subtask | every required lane is reconciled against its actual diff |
++| C — Verification | one integrated affected-tier plan, executed by an authority that owns no lane | every command reached `PASS`, or the phase ended blocked with the failure classified and its owner named |
++| D — Review and specialist gates | the independent review, plus every specialist whose trigger holds | findings are resolved or explicitly accepted by the user |
++| E — Documentation and final validation | documentation and its grade, required final gates, the report; base integration only when requested and authorized | the candidate has the proof required for the requested outcome |
++| F — Requested integration | reviewable integration details and explicit authority, then the local merge | authorized integration is complete, or its declined/blocked status is reported; not applicable to local-only work |
++
++### Execution profile: size the pipeline to the plan
++
++**Every profile preserves A–E and required gates.** F is conditional; local-only completion requires no merge prompt. Record the profile from the finished plan. Escalate on a heavier condition; do not de-escalate while qualifying evidence persists. `references/routing-matrix.md` owns implementation-role reassessment.
++
++| Profile | Conditions — every one must hold | Shape |
++|---|---|---|
++| `lean` | one lane, one implementation phase, a diff that stays inside the lane plan, and none of the `hardened` conditions or deep-review triggers | Phases A–E, and F only when requested; the main thread performs Phase D's review itself instead of dispatching `alaa-reviewer`, and specialists still fire on their own triggers |
++| `standard` | anything that is neither `lean` nor `hardened` | Phases A–E with every required gate; F only when requested |
++| `hardened` | the change meets the adversarial reviewer's blast-radius condition in `references/routing-matrix.md` | `standard`, plus the architecture critic in Phase A and the adversarial reviewer in Phase D |
++
++`lean` review is independent: the lead authored no diff. If it leaves the lane plan, select `standard` and dispatch `alaa-reviewer` on the complete change.
++
++**No profile suppresses a specialist.** Apply `references/routing-matrix.md` triggers identically across profiles.
++
++### Final report
++
++Report outcome; independent lifecycle verdicts (`IMPLEMENTED`, `MERGE_CANDIDATE`, `RELEASE_CANDIDATE`, `PUBLISHED`) under `alaa-workflow references/workspace-and-integration.md`; lane changes/files; commands/results with run/cited and tier; review/specialist verdicts/dispositions; each touched document's outcome/grade; curation persisted/deferred/empty; risks, skipped checks, follow-ups. List each dispatched agent once: configured/requested pair, separately observed identity or unknown, observable mismatches and named escalated-lane admission.
++
++Close with one line from existing plan/roster/evidence: dispatches/distinct roles; underlying checks run/cited, covered children counted once; span from plan `Created` to last authorized commit or unavailable. No timer, extra command or invented budget.
++
++## 6. Advisor-mode output
++
++Provide grounded repository findings; a lane plan with dependencies and gates; one ready-to-run prompt per lane using the templates; a recommended agent, variant, and effort per lane; a verification plan and resource policy; and the risks, assumptions, and decisions that require the user. Apply section 1's artifact admission: report saved plan/checkpoint paths when admitted; otherwise deliver the plan in the reply. Do not imply implementation occurred.
++
++When generating a goal condition, read `alaa-prompting-guide references/06-invocation-and-composition.md`; it owns condition syntax and the skill-led kickoff.
++
++## 7. Verification and resource rules
++
++Schedule these commands through `references/verification-and-gates.md` Gate economics. Proven aggregate coverage discharges only identical child scope and observer.
++
++Run `python scripts/check_agent_contracts.py` after instruction-contract changes and `python scripts/check_agent_contracts.py --self-test` after checker changes. Exit `0` is clean, `1` is findings, and `2` is unavailable proof; either nonzero blocks completion. These fixtures check source requirements, not live model behavior.
++
++
++After changing reviewer instructions, pins, agents, or version, run `python scripts/render_agents.py --write`, then `python scripts/render_agents.py --check` and `python scripts/validate_pack.py`. Run `python scripts/render_agents.py --self-test` after renderer changes. Exit `0` is clean, `1` is findings/drift, and `2` means unavailable proof; either nonzero blocks completion. Review both generated wrappers against `assets/reviewer-contract.md`.
++
++
++- After any change to `agents/`, run `python scripts/check_agent_grants.py`; it verifies the transport-neutral templates. To exercise live resolution manually, run `python scripts/check_agent_grants.py --materialize agents <new-empty-output-directory>` and inspect only the generated scratch directory. Exit `0` is clean, exit `1` means grant findings, and exit `2` means the checker could not run; both nonzero results fail completion. Run `python scripts/check_agent_grants.py --self-test` when changing the checker itself. `scripts/validate_pack.py` checks the templates, and both agent installers materialize and validate the live resolved grants before writing.
++- Exact command semantics come from repository guidance and the dispatch. Never invent a flag merely to make a check pass.
++- Lowering process priority is mandatory for declared CPU-heavy local commands; limiting runner-level parallelism is separate and must also be explicit.
++- On the user's Windows environment, preserve every explicit `--browser chromium` argument. Never remove, replace, or change it without prior user approval.
++- Do not kill unrelated services, dev servers, containers, or processes.
++- Do not start duplicate services when a reusable declared service already exists.
++- Do not update snapshots, golden files, lockfiles, generated clients, dependencies, or migrations during verification unless that change is an explicitly scoped implementation lane.
++
++Before resource/failure decisions apply the router below.
++
++## 8. Safety and authority
++
++- Repository-local, reversible edits inside declared scopes may proceed in orchestrator mode.
++- Ask before destructive Git operations, force pushes, history rewrites, deployment, publishing, production access, data deletion, credential changes, shared-system configuration changes, or irreversible migrations.
++- Installation and updates require explicit user authorization for named target paths; activation grants none.
++- Agent files own code-intelligence grants; dispatches do not. `references/agent-catalog.md` assigns CodeGraph/Serena read/both/neither; `/alaa-code-intelligence-routing` owns rationale. Change grants here, not `~/.codex/agents`, because reinstall restores pack grants.
++- Commit only with explicit user authorization in the workflow-selected checkout. Otherwise preserve the reviewed diff and snapshot validation through workflow. Every external/destructive effect needs its own explicit authority. Never add Co-Authored tags.
++- Never expose secrets in prompts, logs, artifacts, or reports.
++
++## 9. Stop conditions
++
++Success requires evidenced acceptance, passing mandatory gates and final candidate scope/proof under repository policy and /alaa-testing-strategy, clean final diff scope, completed or explicitly skipped documentation, and final curation disposition (persisted/deferred/rejected/absent). Accurately report requested integration as authorized, declined or blocked. Local-only completion needs no integration prompt.
++
++Stop partial/blocked after the same lane/cause blocks twice, blockers/majors survive two fix cycles, or verification stays flaky/timed-out/contaminated/environment-blocked; also stop for scope beyond the goal, user-owned irreversible/product decisions, or no safe path.
++
++## 10. Failure discipline
++
++Reviewers judge, verifiers execute evidence commands, researchers retrieve. Before product edits classify shell/runtime/permission/stale-cache failures through `references/failure-taxonomy.md`. Never report fail-then-pass as clean PASS. Report adversarial findings without another fix loop. Name only the lane's matching clean-code skill.
++
++## Direct references
++
++| Before you | Read |
++|---|---|
++| Plan, allocate workers, reassess remaining work or decide a specialist trigger | `references/routing-matrix.md` |
++| Dispatch a role | `references/delegation-prompts.md` |
++| Start Phase A, consolidate checks or decide gate requirements | `references/verification-and-gates.md` |
++| Select or deviate from a model/effort profile | `references/model-effort-policy.md` |
++| Inspect role authority, output or grants | `references/agent-catalog.md` |
++| Set command priority, workers, timeout or resource limits | `references/resource-policy.md` |
++| Classify a failed check | `references/failure-taxonomy.md` |
++| Perform an explicitly authorized installation or update | `references/installation.md` |
+--- skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json
++++ skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json
+@@ -1,344 +1,344 @@
+-{
+-  "schema_version": 2,
+-  "policy_version": "2.0.0",
+-  "surface": "codex",
+-  "verified_on": "2026-10-09",
+-  "sources": [
+-    {
+-      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+-      "verified_on": "2026-10-08",
+-      "scope": "Codex custom-agent pin precedence, GPT-6.1 Sol recommendation, and effort guidance"
+-    },
+-    {
+-      "url": "https://learn.chatgpt.com/docs/models",
+-      "verified_on": "2026-10-08",
+-      "scope": "Codex model availability, GPT-6.1 Sol recommendation, and Max/Ultra distinction"
+-    },
+-    {
+-      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+-      "verified_on": "2026-10-08",
+-      "scope": "GPT-6.1 Sol API reasoning-effort range; not Codex host configuration"
+-    },
+-    {
+-      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+-      "verified_on": "2026-10-08",
+-      "scope": "Specific small existing-file edits: Luna at medium; distinct from broader Codex Luna-high starting guidance. Automatic exact mechanical routing over finite enumerated scopes is uncalibrated user-authorized task policy, not a vendor file-count or quality claim."
+-    },
+-    {
+-      "url": "https://developers.openai.com/api/docs/guides/model-selection",
+-      "verified_on": "2026-10-09",
+-      "scope": "Official explicit prose and recovered directly referenced selector asset: 27 tasks/81 cells, including Sol-low feature work, Sol medium balanced feature/debug work and Luna-high quality-prioritized scoped bugs. Editorial recommendations are not local calibration; admission remains local policy."
+-    },
+-    {
+-      "url": "https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js",
+-      "verified_on": "2026-10-09",
+-      "scope": "Directly referenced official selector, read as text: all 27 task rows and 81 model/effort cells. Refresh current page asset before reuse; editorial starting points do not establish local calibration."
+-    },
+-    {
+-      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+-      "verified_on": "2026-10-09",
+-      "scope": "Unpinned custom roles permit explicit spawn model/effort; pinned values override spawn. Installed and loaded definitions require separate verification."
+-    }
+-  ],
+-  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses. Workload selection guidance refreshed 2026-10-09; capability ranges retain their individual snapshot dates. No account or installed activation proof.",
+-  "models": {
+-    "gpt-6-astra": {
+-      "supported_efforts": [
+-        "low",
+-        "medium",
+-        "high",
+-        "xhigh",
+-        "max",
+-        "ultra"
+-      ],
+-      "recommended_start": "low",
+-      "selection_enabled": true
+-    },
+-    "gpt-6-sol": {
+-      "supported_efforts": [
+-        "low",
+-        "medium",
+-        "high",
+-        "xhigh",
+-        "max",
+-        "ultra"
+-      ],
+-      "recommended_start": "medium",
+-      "selection_enabled": true
+-    },
+-    "gpt-6.1-sol": {
+-      "supported_efforts": [
+-        "low",
+-        "medium",
+-        "high",
+-        "xhigh",
+-        "max",
+-        "ultra"
+-      ],
+-      "recommended_start": "medium",
+-      "selection_enabled": true
+-    },
+-    "gpt-6-luna": {
+-      "supported_efforts": [
+-        "low",
+-        "medium",
+-        "high",
+-        "xhigh",
+-        "max"
+-      ],
+-      "recommended_start": "high",
+-      "selection_enabled": true
+-    }
+-  },
+-  "profiles": {
+-    "main": {
+-      "kind": "policy-only",
+-      "selection_mode": "externally-configured",
+-      "artifacts": []
+-    },
+-    "main-deep": {
+-      "kind": "policy-only",
+-      "selection_mode": "externally-configured",
+-      "artifacts": []
+-    },
+-    "alaa-spec-analyst": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml"
+-      ]
+-    },
+-    "alaa-explorer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml"
+-      ]
+-    },
+-    "alaa-researcher": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml"
+-      ]
+-    },
+-    "alaa-test-strategist": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml"
+-      ]
+-    },
+-    "alaa-implementer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml"
+-      ]
+-    },
+-    "alaa-implementer-astra": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml"
+-      ]
+-    },
+-    "alaa-verifier": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml"
+-      ]
+-    },
+-    "alaa-failure-analyst": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml"
+-      ]
+-    },
+-    "alaa-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml"
+-      ]
+-    },
+-    "alaa-reviewer-deep": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml"
+-      ]
+-    },
+-    "alaa-adversarial-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml"
+-      ]
+-    },
+-    "alaa-documenter": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml"
+-      ]
+-    },
+-    "alaa-architecture-critic": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml"
+-      ]
+-    },
+-    "alaa-security-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml"
+-      ]
+-    },
+-    "alaa-migration-guardian": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml"
+-      ]
+-    },
+-    "alaa-api-contract-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml"
+-      ]
+-    },
+-    "alaa-dependency-auditor": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml"
+-      ]
+-    },
+-    "alaa-accessibility-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml"
+-      ]
+-    },
+-    "alaa-browser-qa": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml"
+-      ]
+-    },
+-    "alaa-performance-profiler": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml"
+-      ]
+-    },
+-    "alaa-observability-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml"
+-      ]
+-    },
+-    "alaa-release-guardian": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml"
+-      ]
+-    },
+-    "alaa-rule-writer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml"
+-      ]
+-    },
+-    "alaa-instruction-reviewer": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml"
+-      ]
+-    },
+-    "alaa-implementer-high": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml"
+-      ]
+-    },
+-    "alaa-planner": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml"
+-      ]
+-    },
+-    "alaa-planner-high": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml"
+-      ]
+-    },
+-    "alaa-implementer-luna": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml"
+-      ]
+-    },
+-    "alaa-implementer-low": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml"
+-      ]
+-    },
+-    "alaa-implementer-luna-high": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml"
+-      ]
+-    },
+-    "alaa-implementer-luna-low": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml"
+-      ]
+-    },
+-    "alaa-implementer-xhigh": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml"
+-      ]
+-    },
+-    "alaa-implementer-astra-medium": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml"
+-      ]
+-    },
+-    "alaa-implementer-astra-xhigh": {
+-      "kind": "agent",
+-      "selection_mode": "task-selected",
+-      "artifacts": [
+-        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml"
+-      ]
+-    }
+-  },
+-  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos."
+-}
++{
++  "schema_version": 2,
++  "policy_version": "2.0.0",
++  "surface": "codex",
++  "verified_on": "2026-10-09",
++  "sources": [
++    {
++      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
++      "verified_on": "2026-10-08",
++      "scope": "Codex custom-agent pin precedence, GPT-6.1 Sol recommendation, and effort guidance"
++    },
++    {
++      "url": "https://learn.chatgpt.com/docs/models",
++      "verified_on": "2026-10-08",
++      "scope": "Codex model availability, GPT-6.1 Sol recommendation, and Max/Ultra distinction"
++    },
++    {
++      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
++      "verified_on": "2026-10-08",
++      "scope": "GPT-6.1 Sol API reasoning-effort range; not Codex host configuration"
++    },
++    {
++      "url": "https://developers.openai.com/api/docs/guides/model-selection",
++      "verified_on": "2026-10-08",
++      "scope": "Specific small existing-file edits: Luna at medium; distinct from broader Codex Luna-high starting guidance. Automatic exact mechanical routing over finite enumerated scopes is uncalibrated user-authorized task policy, not a vendor file-count or quality claim."
++    },
++    {
++      "url": "https://developers.openai.com/api/docs/guides/model-selection",
++      "verified_on": "2026-10-09",
++      "scope": "Official explicit prose and recovered directly referenced selector asset: 27 tasks/81 cells, including Sol-low feature work, Sol medium balanced feature/debug work and Luna-high quality-prioritized scoped bugs. Editorial recommendations are not local calibration; admission remains local policy."
++    },
++    {
++      "url": "https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js",
++      "verified_on": "2026-10-09",
++      "scope": "Directly referenced official selector, read as text: all 27 task rows and 81 model/effort cells. Refresh current page asset before reuse; editorial starting points do not establish local calibration."
++    },
++    {
++      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
++      "verified_on": "2026-10-09",
++      "scope": "Unpinned custom roles permit explicit spawn model/effort; pinned values override spawn. Installed and loaded definitions require separate verification."
++    }
++  ],
++  "capability_evidence": "Official Codex pages plus the active Codex host and collaboration tool schemas on 2026-09-30; revalidate on the target host before use. API parameter ranges are separate and do not establish Codex ultra availability. Phase 5 official model and runtime guidance reverified on 2026-10-08; workload boundaries are unrun local hypotheses. Workload selection guidance refreshed 2026-10-09; capability ranges retain their individual snapshot dates. No account or installed activation proof.",
++  "models": {
++    "gpt-6-astra": {
++      "supported_efforts": [
++        "low",
++        "medium",
++        "high",
++        "xhigh",
++        "max",
++        "ultra"
++      ],
++      "recommended_start": "low",
++      "selection_enabled": true
++    },
++    "gpt-6-sol": {
++      "supported_efforts": [
++        "low",
++        "medium",
++        "high",
++        "xhigh",
++        "max",
++        "ultra"
++      ],
++      "recommended_start": "medium",
++      "selection_enabled": false
++    },
++    "gpt-6.1-sol": {
++      "supported_efforts": [
++        "low",
++        "medium",
++        "high",
++        "xhigh",
++        "max",
++        "ultra"
++      ],
++      "recommended_start": "medium",
++      "selection_enabled": true
++    },
++    "gpt-6-luna": {
++      "supported_efforts": [
++        "low",
++        "medium",
++        "high",
++        "xhigh",
++        "max"
++      ],
++      "recommended_start": "high",
++      "selection_enabled": true
++    }
++  },
++  "profiles": {
++    "main": {
++      "kind": "policy-only",
++      "selection_mode": "externally-configured",
++      "artifacts": []
++    },
++    "main-deep": {
++      "kind": "policy-only",
++      "selection_mode": "externally-configured",
++      "artifacts": []
++    },
++    "alaa-spec-analyst": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-spec-analyst.toml"
++      ]
++    },
++    "alaa-explorer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-explorer.toml"
++      ]
++    },
++    "alaa-researcher": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-researcher.toml"
++      ]
++    },
++    "alaa-test-strategist": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-test-strategist.toml"
++      ]
++    },
++    "alaa-implementer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer.toml"
++      ]
++    },
++    "alaa-implementer-astra": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra.toml"
++      ]
++    },
++    "alaa-verifier": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-verifier.toml"
++      ]
++    },
++    "alaa-failure-analyst": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-failure-analyst.toml"
++      ]
++    },
++    "alaa-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer.toml"
++      ]
++    },
++    "alaa-reviewer-deep": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-reviewer-deep.toml"
++      ]
++    },
++    "alaa-adversarial-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-adversarial-reviewer.toml"
++      ]
++    },
++    "alaa-documenter": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-documenter.toml"
++      ]
++    },
++    "alaa-architecture-critic": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-architecture-critic.toml"
++      ]
++    },
++    "alaa-security-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-security-reviewer.toml"
++      ]
++    },
++    "alaa-migration-guardian": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-migration-guardian.toml"
++      ]
++    },
++    "alaa-api-contract-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-api-contract-reviewer.toml"
++      ]
++    },
++    "alaa-dependency-auditor": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-dependency-auditor.toml"
++      ]
++    },
++    "alaa-accessibility-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-accessibility-reviewer.toml"
++      ]
++    },
++    "alaa-browser-qa": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-browser-qa.toml"
++      ]
++    },
++    "alaa-performance-profiler": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-performance-profiler.toml"
++      ]
++    },
++    "alaa-observability-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-observability-reviewer.toml"
++      ]
++    },
++    "alaa-release-guardian": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-release-guardian.toml"
++      ]
++    },
++    "alaa-rule-writer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-prompting-guide/assets/rule-writer/codex/alaa-rule-writer.toml"
++      ]
++    },
++    "alaa-instruction-reviewer": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-instruction-reviewer.toml"
++      ]
++    },
++    "alaa-implementer-high": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-high.toml"
++      ]
++    },
++    "alaa-planner": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner.toml"
++      ]
++    },
++    "alaa-planner-high": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-planner-high.toml"
++      ]
++    },
++    "alaa-implementer-luna": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna.toml"
++      ]
++    },
++    "alaa-implementer-low": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-low.toml"
++      ]
++    },
++    "alaa-implementer-luna-high": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-high.toml"
++      ]
++    },
++    "alaa-implementer-luna-low": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-luna-low.toml"
++      ]
++    },
++    "alaa-implementer-xhigh": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-xhigh.toml"
++      ]
++    },
++    "alaa-implementer-astra-medium": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-medium.toml"
++      ]
++    },
++    "alaa-implementer-astra-xhigh": {
++      "kind": "agent",
++      "selection_mode": "task-selected",
++      "artifacts": [
++        "skills/sohrab/alaa-codex-orchestrator/agents/alaa-implementer-astra-xhigh.toml"
++      ]
++    }
++  },
++  "notes": "Managed profiles register model-neutral authority roles and artifact identities, never task model/effort defaults. Both task controls must be chosen explicitly by the runtime orchestrator and realized on a verified compatible surface. Main controls remain externally configured. Existing model/effort-named role IDs are compatibility labels only. No runtime activation, account access or comparative calibration is established. Historical capability entries cannot authorize active selection; active Claude selection excludes Mythos. Ordinary selection excludes gpt-6-sol; its effort snapshot remains history. Record explicit user legacy requests separately; ordinary eligibility stays disabled."
++}
+--- skills/sohrab/alaa-prompting-guide/references/00-topic-map.md
++++ skills/sohrab/alaa-prompting-guide/references/00-topic-map.md
+@@ -1,33 +1,33 @@
+-# Topic Map
+-
+-The router for this skill. Every reference below is unread until its condition fires, and that is the point: the body of a skill is paid for on every run, while a reference is paid for only when something makes it necessary. Match your situation to a row, read that file, and do not pre-load the rest.
+-
+-Rows are conditions, not headings. If your situation is not listed, no reference here owns it — say so rather than reading the nearest-looking file.
+-
+-| You are about to | Read | Because |
+-|---|---|---|
+-| Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase/task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
+-| Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
+-| Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
+-| Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
+-| Design or execute representative Codex model/effort comparisons | `references/92-agent-evaluation.md` | Defines controlled comparisons and honest evidence status |
+-| Design Claude comparisons, record identity or fallback, or validate calibration evidence | `references/93-claude-evaluation.md` | Source checks and synthetic fixtures do not prove runtime behavior |
+-| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
+-| Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
+-| Compare historical Opus 5 behavior explicitly | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
+-| Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
+-| Compare historical Sonnet 5 behavior explicitly | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
+-| Tune current Fable prompting or assess an explicit comparison | `references/42-fable-5-1.md` | Its verification and API guidance differ from older Fable |
+-| Compare historical Fable 5 behavior explicitly | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
+-| Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
+-| Compare historical Haiku 4.5 explicitly | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |
+-| Use Claude Code's `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface availability, evaluator scope and the actual rejection decide what can run |
+-| Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
+-| Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
+-| Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |
+-| Shorten or edit an artifact that controls another agent, or judge whether a change altered behavior | `references/60-skill-authoring.md` | It owns equivalence and compression; read it with the artifact's own reference, which owns that artifact's required structure and content |
+-| Look up a skill discovery path, a frontmatter key surface, or a description character budget | `references/61-skill-platform-mechanics.md` | These are per-runtime lookups that go stale and must not be recalled from memory |
+-| Write, trim, or split an `AGENTS.md` or `CLAUDE.md` | `references/70-agent-instruction-files.md` | An instruction file is loaded unconditionally, so its economics differ from every other artifact here; trimming one also needs the row above |
+-| Define a model-neutral subagent and tools, or write explicit task controls in dispatch | `references/80-subagent-authoring.md` | It owns authority boundaries, output contracts, and the test separating a redundant self-check from a real gate; shortening a definition or a dispatch also needs the compression row |
+-| Choose a model, or compare models across runtimes | `references/90-model-selection.md` | Structured policies own capabilities; runtime orchestrators own actual all-role task selection |
+-| Ground a version-sensitive claim, or judge whether a number must be re-fetched before it is quoted | `references/00-source-map.md` | It owns source priority and the freshness triggers that decide when recall is not allowed |
++# Topic Map
++
++The router for this skill. Every reference below is unread until its condition fires, and that is the point: the body of a skill is paid for on every run, while a reference is paid for only when something makes it necessary. Match your situation to a row, read that file, and do not pre-load the rest.
++
++Rows are conditions, not headings. If your situation is not listed, no reference here owns it — say so rather than reading the nearest-looking file.
++
++| You are about to | Read | Because |
++|---|---|---|
++| Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase/task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
++| Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
++| Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
++| Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
++| Design/run representative Codex comparisons or allocation-only observations for either runtime | `references/92-agent-evaluation.md` | Separates allocation-only observations, historical validation and controlled worker comparisons |
++| Design Claude comparisons, record identity or fallback, or validate calibration evidence | `references/93-claude-evaluation.md` | Source checks and synthetic fixtures do not prove runtime behavior |
++| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
++| Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
++| Compare historical Opus 5 behavior explicitly | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
++| Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
++| Compare historical Sonnet 5 behavior explicitly | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
++| Tune current Fable prompting or assess an explicit comparison | `references/42-fable-5-1.md` | Its verification and API guidance differ from older Fable |
++| Compare historical Fable 5 behavior explicitly | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
++| Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
++| Compare historical Haiku 4.5 explicitly | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |
++| Use Claude Code's `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface availability, evaluator scope and the actual rejection decide what can run |
++| Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
++| Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
++| Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |
++| Shorten or edit an artifact that controls another agent, or judge whether a change altered behavior | `references/60-skill-authoring.md` | It owns equivalence and compression; read it with the artifact's own reference, which owns that artifact's required structure and content |
++| Look up a skill discovery path, a frontmatter key surface, or a description character budget | `references/61-skill-platform-mechanics.md` | These are per-runtime lookups that go stale and must not be recalled from memory |
++| Write, trim, or split an `AGENTS.md` or `CLAUDE.md` | `references/70-agent-instruction-files.md` | An instruction file is loaded unconditionally, so its economics differ from every other artifact here; trimming one also needs the row above |
++| Define a model-neutral subagent and tools, or write explicit task controls in dispatch | `references/80-subagent-authoring.md` | It owns authority boundaries, output contracts, and the test separating a redundant self-check from a real gate; shortening a definition or a dispatch also needs the compression row |
++| Choose a model, or compare models across runtimes | `references/90-model-selection.md` | Structured policies own capabilities; runtime orchestrators own actual all-role task selection |
++| Ground a version-sensitive claim, or judge whether a number must be re-fetched before it is quoted | `references/00-source-map.md` | It owns source priority and the freshness triggers that decide when recall is not allowed |
+--- skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
++++ skills/sohrab/alaa-prompting-guide/references/90-model-selection.md
+@@ -1,90 +1,92 @@
+-# Model Selection and Companion Routing
+-
+-## Capability evidence and allocation ownership
+-
+-`assets/codex-model-policy.json` and `assets/claude-model-policy.json` own capability snapshots, active model/effort support and model-neutral role/artifact registrations. They define no role-default or task choice. Main-session controls remain externally configured; an allocation does not change them.
+-
+-For every managed role, including research, review, verification, documentation and rule-writer, the runtime orchestrator owns task allocation, priority, admission and deliberate source departures. Read `/alaa-codex-orchestrator` or `/alaa-cc-orchestrator` `references/routing-matrix.md` for that decision. For bounded standalone delegation, the parent uses that allocation procedure and records a compact dispatch; it need not start the full pipeline or create a plan solely for selection. `/alaa-workflow` records allocation when durable state is admitted. The tables below are evidence inputs, not executable defaults.
+-
+-Use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` to realize explicit task model AND effort, and `references/50-effort-and-thinking.md` for capability/uncertainty checks. Registered role names, including retained model/effort-named compatibility IDs, select authority only. Neither names nor inherited controls count as task selection.
+-
+-The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is excluded from active selection and custom profiles. Historical models supply comparison evidence only; availability and loaded registry remain separately verified.
+-
+-## Official task guidance and local policy
+-
+-Refreshed 9 October 2026. These source recommendations are neither executable local pins, host availability nor comparative-quality proof. The complete served selector asset was read as text, without execution; browser interaction was not run. The supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, A = GPT-6 Astra.
+-
+-| Category | Task | Lower latency/cost | Balanced | Higher quality |
+-|---|---|---|---|---|
+-| Deliverables | Small existing-file edits | L low | L medium | L high |
+-| Deliverables | Slides or spreadsheets | L medium | S medium | A xhigh |
+-| Deliverables | Adapt existing content | S low | S medium | S high |
+-| Deliverables | Coordinated files from input data | S medium | S high | S xhigh |
+-| Deliverables | Source material to finished output | S medium | S medium | A xhigh |
+-| Deliverables | Complex polished deliverable | S medium | A high | A xhigh |
+-| Deliverables | Other (editorial fallback) | S low | S medium | A xhigh |
+-| Software engineering | Well-scoped bug | L low | L medium | L high |
+-| Software engineering | Update/debug existing software | L medium | S medium | S xhigh |
+-| Software engineering | Application features | S low | S medium | S xhigh |
+-| Software engineering | App/service migration | S medium | S high | A xhigh |
+-| Software engineering | Polished application | S medium | A medium | A xhigh |
+-| Software engineering | Other (editorial fallback) | S medium | S medium | A xhigh |
+-| 3D/design | Page/interface design (editorial fallback) | S medium | S medium | S high |
+-| 3D/design | Editable 3D models | S low | S medium | S high |
+-| 3D/design | 3D animation | S medium | S high | S xhigh |
+-| 3D/design | Interactive 3D experience | S medium | S high | A xhigh |
+-| 3D/design | Other (editorial fallback) | S medium | S high | A xhigh |
+-| Research/analysis | Organize information/priorities | L low | L medium | S high |
+-| Research/analysis | Search documents/messages/email | L medium | L high | L xhigh |
+-| Research/analysis | Research decisions/fact verification | S low | S medium | S xhigh |
+-| Research/analysis | Data analysis/problem solving | L medium | S high | A xhigh |
+-| Research/analysis | Other (editorial fallback) | S medium | S medium | S xhigh |
+-| Computer use | Find app information/controls | S low | S medium | S high |
+-| Computer use | Complete app workflow | S low | S medium | S high |
+-| Computer use | App/website testing | S medium | S high | S xhigh |
+-| Computer use | Other (editorial fallback) | S low | S medium | S xhigh |
+-
+-The matrix is a dated editorial starting point. Some rationale metadata retains an older Sol generation; use the served recommendations, not that historical label. Scoped-bug medium/high are editorial checking choices without demonstrated gains over low. Search medium/high lack direct benchmark proof; only xhigh was tested. Animation choices and marked fallback rows are editorial. No general reliability rate or savings follows.
+-
+-Explicit prose also recommends Luna low for precise/bounded work, Luna xhigh for cross-app prioritization, Sol medium for complex revisable technical work and Sol xhigh for polished/connected/conflicting-evidence work. Astra low fits concise nuanced writing, medium broad ambitious projects and xhigh demanding analysis. It suggests comparing Sol on cost-conscious complex work and optionally defaulting to Astra with unconstrained cost/latency, without assigning effort to those two suggestions.
+-
+-Sol-low feature work and Luna-high scoped bugs have official selector support. Workload admission and exceptional selection belong to the runtime orchestrator; source guidance proves no local superiority or availability.
+-
+-| Claude workload/path | Source recommendation | Effort evidence |
+-|---|---|---|
+-| Everyday coding, analysis, content, vision, agent tools | Sonnet | Unspecified in selection guide |
+-| Complex autonomous coding, broad refactors, systems, computer use | Opus | Unspecified in model matrix |
+-| Highest capability, long sessions, deep research, finished documents | Fable | Unspecified in model matrix |
+-| Real-time, bulk, cost-sensitive processing/subagents | Haiku | Unspecified in model matrix |
+-| Efficiency-first prototypes, latency or straightforward bulk | Start Haiku; move up for a demonstrated capability gap | No task-specific effort |
+-| Capability-first complex reasoning, accuracy or advanced autonomous coding | Start Opus; optimize downward after adequate quality | Opus medium starting effort |
+-| Demanding long-horizon work inadequate at Opus xhigh/max | Consider Fable | No selected Fable effort |
+-| Bulk execution with difficult decisions | Cheaper workers plus frontier advisor | No selected pair |
+-
+-The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live comparison is implied.
+-
+-- [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js) (refresh the current page/asset before reuse)
+-- [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
+-- [Sonnet prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
+-
+-## Companion routing
+-
+-`/alaa-codex-orchestrator` (Codex) and `/alaa-cc-orchestrator` (Claude Code) are the production multi-agent orchestration packs, each carrying a conditionally routed role catalog for its runtime: core lanes (spec analyst, explorer, researcher, test strategist, implementer with a separate escalated implementer, independent verifier, failure analyst, reviewer, documenter) plus conditionally gated specialists (adversarial review, architecture, security, migration, API contract, dependency audit, accessibility, browser QA, performance, observability, release).
+-
+-The catalog is a menu: dispatch only triggered roles. The orchestrator owns parallel scheduling and gate economics; this reference imposes no spawn-count default.
+-
+-Claude role identity and neutral controls are checked against `assets/claude-model-policy.json`; executable frontmatter preserves authority without selecting a task pair. Standard and deep reviewer scopes share the existing reviewer profile; scope breadth alone does not create a second executable identity.
+-
+-Codex capabilities and neutral role identities are checked against `assets/codex-model-policy.json`; the orchestrator owns role triggers and actual task selection.
+-
+-In both packs the lead never implements or runs heavy suites itself, the verifier executes commands under a low-priority resource policy, and no lane approves its own change. Prefer these packs over hand-writing a fan-out; the lead is always the session's own model.
+-
+-Other companions:
+-
+-- `/alaa-workflow`: durable multi-phase plans, phase prompts, resumable state, and the implementation-plus-review cadence.
+-- `/openai-docs`: freshest GPT-6 and Codex guidance when this skill is stale. Use official Anthropic docs for Claude gaps.
+-- `/alaa-low-noise`: broad prompt research, validation, or long tool-heavy sessions.
+-
+-## Caveats
+-
+-Benchmark claims, relative pricing, effort defaults, and the capability ordering among current models are vendor-stated and time-sensitive — a single release can invalidate any ranking here. Re-check `references/00-source-map.md` and the live model pages before treating any ranking here as current.
++# Model Selection and Companion Routing
++
++## Capability evidence and allocation ownership
++
++`assets/codex-model-policy.json` and `assets/claude-model-policy.json` own capability snapshots, ordinary eligibility and neutral role/artifact registrations. Supported efforts differ from selection_enabled: history never enables a disabled model. They define no role-default or task choice. Main-session controls remain externally configured; an allocation does not change them.
++
++For every managed role, including research, review, verification, documentation and rule-writer, the runtime orchestrator owns task allocation, priority, admission and deliberate source departures. Read `/alaa-codex-orchestrator` or `/alaa-cc-orchestrator` `references/routing-matrix.md` for that decision. For bounded standalone delegation, the parent uses that allocation procedure and records a compact dispatch; it need not start the full pipeline or create a plan solely for selection. `/alaa-workflow` records allocation when durable state is admitted. The tables below are evidence inputs, not executable defaults.
++
++Use `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` to realize explicit task model AND effort, and `references/50-effort-and-thinking.md` for capability/uncertainty checks. Registered role names, including retained model/effort-named compatibility IDs, select authority only. Neither names nor inherited controls count as task selection.
++
++Ordinary Codex selection excludes GPT-6 Sol, retaining its effort snapshot as history. GPT-6.1 Sol is the current Sol candidate. Use the newest verified supported eligible member of the selected family; suitable Luna stays eligible. If current Sol is unavailable, require an exact eligible realization or block the affected lane, never fall back to old Sol. Record explicit user legacy requests separately; they neither restore ordinary eligibility nor pass ordinary task-control validation.
++
++The active Claude set is Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1. Mythos is excluded from active selection and custom profiles. Historical models supply comparison evidence only; availability and loaded registry remain separately verified.
++
++## Official task guidance and local policy
++
++Refreshed 9 October 2026. These source recommendations are neither executable local pins, host availability nor comparative-quality proof. The complete served selector asset was read as text, without execution; browser interaction was not run. The supplied screenshots match its cells. L = GPT-6 Luna, S = GPT-6.1 Sol, A = GPT-6 Astra.
++
++| Category | Task | Lower latency/cost | Balanced | Higher quality |
++|---|---|---|---|---|
++| Deliverables | Small existing-file edits | L low | L medium | L high |
++| Deliverables | Slides or spreadsheets | L medium | S medium | A xhigh |
++| Deliverables | Adapt existing content | S low | S medium | S high |
++| Deliverables | Coordinated files from input data | S medium | S high | S xhigh |
++| Deliverables | Source material to finished output | S medium | S medium | A xhigh |
++| Deliverables | Complex polished deliverable | S medium | A high | A xhigh |
++| Deliverables | Other (editorial fallback) | S low | S medium | A xhigh |
++| Software engineering | Well-scoped bug | L low | L medium | L high |
++| Software engineering | Update/debug existing software | L medium | S medium | S xhigh |
++| Software engineering | Application features | S low | S medium | S xhigh |
++| Software engineering | App/service migration | S medium | S high | A xhigh |
++| Software engineering | Polished application | S medium | A medium | A xhigh |
++| Software engineering | Other (editorial fallback) | S medium | S medium | A xhigh |
++| 3D/design | Page/interface design (editorial fallback) | S medium | S medium | S high |
++| 3D/design | Editable 3D models | S low | S medium | S high |
++| 3D/design | 3D animation | S medium | S high | S xhigh |
++| 3D/design | Interactive 3D experience | S medium | S high | A xhigh |
++| 3D/design | Other (editorial fallback) | S medium | S high | A xhigh |
++| Research/analysis | Organize information/priorities | L low | L medium | S high |
++| Research/analysis | Search documents/messages/email | L medium | L high | L xhigh |
++| Research/analysis | Research decisions/fact verification | S low | S medium | S xhigh |
++| Research/analysis | Data analysis/problem solving | L medium | S high | A xhigh |
++| Research/analysis | Other (editorial fallback) | S medium | S medium | S xhigh |
++| Computer use | Find app information/controls | S low | S medium | S high |
++| Computer use | Complete app workflow | S low | S medium | S high |
++| Computer use | App/website testing | S medium | S high | S xhigh |
++| Computer use | Other (editorial fallback) | S low | S medium | S xhigh |
++
++The matrix is a dated editorial starting point. Some rationale metadata retains an older Sol generation; use the served recommendations, not that historical label. Scoped-bug medium/high are editorial checking choices without demonstrated gains over low. Search medium/high lack direct benchmark proof; only xhigh was tested. Animation choices and marked fallback rows are editorial. No general reliability rate or savings follows.
++
++Explicit prose also recommends Luna low for precise/bounded work, Luna xhigh for cross-app prioritization, Sol medium for complex revisable technical work and Sol xhigh for polished/connected/conflicting-evidence work. Astra low fits concise nuanced writing, medium broad ambitious projects and xhigh demanding analysis. It suggests comparing Sol on cost-conscious complex work and optionally defaulting to Astra with unconstrained cost/latency, without assigning effort to those two suggestions.
++
++Sol-low feature work and Luna-high scoped bugs have official selector support. Workload admission and exceptional selection belong to the runtime orchestrator; source guidance proves no local superiority or availability.
++
++| Claude workload/path | Source recommendation | Effort evidence |
++|---|---|---|
++| Everyday coding, analysis, content, vision, agent tools | Sonnet | Unspecified in selection guide |
++| Complex autonomous coding, broad refactors, systems, computer use | Opus | Unspecified in model matrix |
++| Highest capability, long sessions, deep research, finished documents | Fable | Unspecified in model matrix |
++| Real-time, bulk, cost-sensitive processing/subagents | Haiku | Unspecified in model matrix |
++| Efficiency-first prototypes, latency or straightforward bulk | Start Haiku; move up for a demonstrated capability gap | No task-specific effort |
++| Capability-first complex reasoning, accuracy or advanced autonomous coding | Start Opus; optimize downward after adequate quality | Opus medium starting effort |
++| Demanding long-horizon work inadequate at Opus xhigh/max | Consider Fable | No selected Fable effort |
++| Bulk execution with difficult decisions | Cheaper workers plus frontier advisor | No selected pair |
++
++The guide recommends Opus as a most-workloads starting point. Qualify defaults by surface: Opus medium; Haiku medium; Sonnet Code/apps medium versus Platform/API high; Fable Code/API high versus Cowork/claude.ai medium. Preserve capability-first and efficiency-first paths. Separate Sonnet prompting guidance recommends medium for well-specified agentic coding and high for harder/longer work; source examples of higher-effort regressions rule out automatic maximization. Any local Fable admission belongs to the runtime orchestrator and remains distinct from vendor xhigh/max advice. No live comparison is implied.
++
++- [OpenAI model selection](https://developers.openai.com/api/docs/guides/model-selection) and its [served selector asset](https://developers.openai.com/_astro/ModelSelection.react.DJkmSLnH.js) (refresh the current page/asset before reuse)
++- [Claude model selection](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
++- [Sonnet prompting](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5)
++
++## Companion routing
++
++`/alaa-codex-orchestrator` (Codex) and `/alaa-cc-orchestrator` (Claude Code) are the production multi-agent orchestration packs, each carrying a conditionally routed role catalog for its runtime: core lanes (spec analyst, explorer, researcher, test strategist, implementer with a separate escalated implementer, independent verifier, failure analyst, reviewer, documenter) plus conditionally gated specialists (adversarial review, architecture, security, migration, API contract, dependency audit, accessibility, browser QA, performance, observability, release).
++
++The catalog is a menu: dispatch only triggered roles. The orchestrator owns parallel scheduling and gate economics; this reference imposes no spawn-count default.
++
++Claude role identity and neutral controls are checked against `assets/claude-model-policy.json`; executable frontmatter preserves authority without selecting a task pair. Standard and deep reviewer scopes share the existing reviewer profile; scope breadth alone does not create a second executable identity.
++
++Codex capabilities and neutral role identities are checked against `assets/codex-model-policy.json`; the orchestrator owns role triggers and actual task selection.
++
++In both packs the lead never implements or runs heavy suites itself, the verifier executes commands under a low-priority resource policy, and no lane approves its own change. Prefer these packs over hand-writing a fan-out; the lead is always the session's own model.
++
++Other companions:
++
++- `/alaa-workflow`: durable multi-phase plans, phase prompts, resumable state, and the implementation-plus-review cadence.
++- `/openai-docs`: freshest GPT-6 and Codex guidance when this skill is stale. Use official Anthropic docs for Claude gaps.
++- `/alaa-low-noise`: broad prompt research, validation, or long tool-heavy sessions.
++
++## Caveats
++
++Benchmark claims, relative pricing, effort defaults, and the capability ordering among current models are vendor-stated and time-sensitive — a single release can invalidate any ranking here. Re-check `references/00-source-map.md` and the live model pages before treating any ranking here as current.
+--- skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md
++++ skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md
+@@ -1,68 +1,86 @@
+-# Evaluating agent profiles
+-
+-Use `assets/evals/agent-comparisons.json` for eight representative comparisons. Each includes
+-a concrete prompt, supplied source fixtures, acceptance criteria, forbidden actions, candidate,
+-comparator, and two independent repetitions. The reusable corpus stays `unrun`; results are
+-separate evidence. It proves test design, never runtime availability or model quality.
+-
+-## Execution
+-
+-1. Run `python scripts/check_agent_evals.py` from this skill directory. Nonzero means the
+-   corpus is invalid or unreadable; fix the reported cause before evaluation.
+-2. Verify model and effort selection on the intended runtime and account. Stop the affected
+-   comparison if the runtime rejects a pair or cannot establish its effective configuration.
+-   Do not downgrade silently. Repository files, desktop tool inventories, and CLI availability
+-   are separate evidence surfaces.
+-3. Materialize each scenario's supplied files in a separate disposable directory per run.
+-   Start a fresh context with the same role contract, prompt, inputs, tools, permissions, and
+-   resource limits for both configurations. Never use an evaluated answer as another run's input.
+-4. Run both configurations twice. Change only the factor named by their difference. Use model-neutral roles with explicit controls on a verified compatible surface. Stale
+-   custom pins can override spawn settings; an available exact verified realization or
+-   a blocked affected comparison is required. Source-prompt runs do not prove installed
+-   custom-agent activation. Do not modify installed agents to enable an experiment implicitly.
+-5. Have an independent reviewer assess the captured outputs against each acceptance criterion
+-   and forbidden action. The implementer or evaluated model does not grade its own result.
+-   Scope violation, fabricated success, or missed blocking defect rejects that configuration
+-   for the scenario; cost comparisons include only quality-passing configurations.
+-
+-No paid API client or automatic installation is part of this corpus. Use the current host's
+-authorized execution path, and stop after its bounded failure/retry policy is exhausted.
+-
+-## Evidence record
+-
+-Optionally validate a result matrix with `python scripts/check_agent_evals.py --results <path>`.
+-Its top-level fields are `schema_version: 1`, `complete` (boolean), and `runs`. Each run is
+-keyed by `scenario`, `configuration` (`candidate` or `comparator`), and `repetition`;
+-`requested` contains model and effort. All 32 keys must exist, with missing execution explicitly
+-`unrun`. For each intended run record:
+-
+-- scenario ID, repetition (1 or 2), candidate/comparator, policy version and fixture revision;
+-- requested model/effort, observed model/effort or `unknown`, and execution surface/account type;
+-- status `passed`, `failed`, `blocked`, or `unrun`; output/evidence path and exact blocker when any;
+-- criterion verdicts with supporting output excerpts, forbidden actions observed, reviewer verdict;
+-- correction or redispatch count, elapsed time, and observed usage or `unknown`.
+-
+-Missing runtime metadata is not a match. Missing price or token telemetry is not zero cost.
+-Record configuration-control evidence separately from self-reported model identity. Do not label
+-a selected task pair calibrated until the comparison's required runs and independent grading are
+-complete with preserved evidence. Keep the role/task/pair and evidence together in the result record; no role-wide calibrated default follows.
+-
+-## Interpretation
+-
+-Keep repository validation, runtime selection/activation, and comparative quality conclusions
+-separate. A validator pass supports structural consistency. A runtime smoke proves only the
+-tested surface. Two repetitions are a bounded initial comparison, not statistical proof of
+-universal model superiority. Re-run affected comparisons when the role contract, fixtures,
+-runtime behavior, or policy changes enough to invalidate the previous result.
+-
+-Completed result rows also require `output_evidence`, `reviewer`, `execution_surface`,
+-`fixture_revision`, `criterion_verdicts` (one pass/fail/unknown per criterion),
+-`forbidden_actions_observed`, `configuration_verified`, and `observed` model/effort.
+-For passed and failed rows alike, `forbidden_actions_observed` is a list of nonempty strings
+-(empty when none occurred), and `configuration_verified` is boolean. A concrete observed
+-model or effort mismatch forbids a pass or a verified-configuration claim; record it as a
+-failed run with `configuration_verified: false`. Unknown identity stays `unknown`; verifying
+-that configuration requires a separate nonempty `configuration_control_evidence` reference
+-to host resolution or equivalent control evidence, not the agent's self-report.
+-A pass requires all criteria passed, no forbidden action, and verified configuration.
+-The checker validates record completeness; the independent reviewer must verify evidence truth.
++# Evaluating agent profiles
++
++Use `assets/evals/agent-comparisons.json` for eight representative comparisons. Each includes
++a concrete prompt, supplied source fixtures, acceptance criteria, forbidden actions, candidate,
++comparator, and two independent repetitions. The reusable corpus stays `unrun`; results are
++separate evidence. It proves test design, never runtime availability or model quality.
++
++## Historical comparison isolation
++
++The original corpus/policy under `assets/evals/history/20261009/` are historical-only. Here run `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` for original hashes/provenance and historical support. It cannot combine with active `--corpus`, `--results` or `--self-test`, authorize ordinary allocation or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.
++
++## Execution
++
++1. Run `python scripts/check_agent_evals.py` from this skill directory. Nonzero means the
++   corpus is invalid or unreadable; fix the reported cause before evaluation.
++2. Verify model and effort selection on the intended runtime and account. Stop the affected
++   comparison if the runtime rejects a pair or cannot establish its effective configuration.
++   Do not downgrade silently. Repository files, desktop tool inventories, and CLI availability
++   are separate evidence surfaces.
++3. Materialize each scenario's supplied files in a separate disposable directory per run.
++   Start a fresh context with the same role contract, prompt, inputs, tools, permissions, and
++   resource limits for both configurations. Never use an evaluated answer as another run's input.
++4. Run both configurations twice. Change only the factor named by their difference. Use model-neutral roles with explicit controls on a verified compatible surface. Stale
++   custom pins can override spawn settings; an available exact verified realization or
++   a blocked affected comparison is required. Source-prompt runs do not prove installed
++   custom-agent activation. Do not modify installed agents to enable an experiment implicitly.
++5. Have an independent reviewer assess the captured outputs against each acceptance criterion
++   and forbidden action. The implementer or evaluated model does not grade its own result.
++   Scope violation, fabricated success, or missed blocking defect rejects that configuration
++   for the scenario; cost comparisons include only quality-passing configurations.
++
++No paid API client or automatic installation is part of this corpus. Use the current host's
++authorized execution path, and stop after its bounded failure/retry policy is exhausted.
++
++## Evidence record
++
++Optionally validate a result matrix with `python scripts/check_agent_evals.py --results <path>`.
++Its top-level fields are `schema_version: 1`, `complete` (boolean), and `runs`. Each run is
++keyed by `scenario`, `configuration` (`candidate` or `comparator`), and `repetition`;
++`requested` contains model and effort. All 32 keys must exist, with missing execution explicitly
++`unrun`. For each intended run record:
++
++- scenario ID, repetition (1 or 2), candidate/comparator, policy version and fixture revision;
++- requested model/effort, observed model/effort or `unknown`, and execution surface/account type;
++- status `passed`, `failed`, `blocked`, or `unrun`; output/evidence path and exact blocker when any;
++- criterion verdicts with supporting output excerpts, forbidden actions observed, reviewer verdict;
++- correction or redispatch count, elapsed time, and observed usage or `unknown`.
++
++Missing runtime metadata is not a match. Missing price or token telemetry is not zero cost.
++Record configuration-control evidence separately from self-reported model identity. Do not label
++a selected task pair calibrated until the comparison's required runs and independent grading are
++complete with preserved evidence. Keep the role/task/pair and evidence together in the result record; no role-wide calibrated default follows.
++
++## Interpretation
++
++Keep repository validation, runtime selection/activation, and comparative quality conclusions
++separate. A validator pass supports structural consistency. A runtime smoke proves only the
++tested surface. Two repetitions are a bounded initial comparison, not statistical proof of
++universal model superiority. Re-run affected comparisons when the role contract, fixtures,
++runtime behavior, or policy changes enough to invalidate the previous result.
++
++Completed result rows also require `output_evidence`, `reviewer`, `execution_surface`,
++`fixture_revision`, `criterion_verdicts` (one pass/fail/unknown per criterion),
++`forbidden_actions_observed`, `configuration_verified`, and `observed` model/effort.
++For passed and failed rows alike, `forbidden_actions_observed` is a list of nonempty strings
++(empty when none occurred), and `configuration_verified` is boolean. A concrete observed
++model or effort mismatch forbids a pass or a verified-configuration claim; record it as a
++failed run with `configuration_verified: false`. Unknown identity stays `unknown`; verifying
++that configuration requires a separate nonempty `configuration_control_evidence` reference
++to host resolution or equivalent control evidence, not the agent's self-report.
++A pass requires all criteria passed, no forbidden action, and verified configuration.
++The checker validates record completeness; the independent reviewer must verify evidence truth.
++
++## Allocation-only observations
++
++For task-selection tests use `assets/evals/allocation-cases.json` and separate reviewer-only `assets/evals/allocation-oracle.json`: R1-R15 decisions, not worker quality. Each case has two neutral variants and two repetitions. Give allocators only neutral inputs, never the oracle or another run's answer. Observe two fresh runs per authorized available allocator configuration with identical loaded contracts, authority and inputs; record unavailable configurations blocked/unassessed. This authorizes no worker dispatch, paid comparison, installation or configuration mutation.
++
++Here run `python scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--self-test` after checker changes, `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations/independent grading. `--corpus <path>`/`--oracle <path>` select files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases/response contract without oracle, inference or writes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow authorized failure/retry limits; never alter controls/checks to pass.
++
++Results: `schema_version: 1`, `purpose: allocation-results`, boolean `synthetic`/`complete`, `corpus_sha256`, `oracle_sha256`, `configurations`, `runs`. Configurations: `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, `loaded_contracts` (repository-relative path/SHA-256). Separate actual allocator controls, simulated scenario controls and proposed worker controls.
++
++Represent every declared configuration's case/variant/repetition, including unrun/blocked work. Runs: `case`, `variant`, `configuration`, `runtime`, `repetition`, `status`, `input_sha256`; blocked rows require `blocker`. Completed rows add `response`, `output_evidence`, `output_sha256`, `reviewer`, `independent_review`, `criterion_verdicts`, `forbidden_effects_observed`, `elapsed_seconds`, `usage`, `correction_count`. Unobservable counters stay unknown.
++
++Responses: `action`, explicit `proposed_worker` model/effort or null, `model_reason`, `effort_reason`, `fit` verdict/evidence per named predicate, `alternatives` with failed predicate or stronger evidence, `admission`, `continuity`, `compression` with preserved-invariant verdicts. Decision-only probes require `worker_dispatched: false`, unknown `worker_effective`/`worker_observed`. Simulated pin/availability answers prove no child realization.
++
++An independent reviewer grades decisions against the withheld oracle and checks linked evidence truth. Concrete allocator-control mismatch or unknown effective controls prevents a live pass. Unknown serving identity stays unknown and needs separate control evidence. Synthetic records prove consumer discrimination only; sampled live answers prove no worker dispatch/quality, actual scenario availability, universal suitability, cost or savings. Keep source checks, allocation observations and worker comparisons distinct.
+--- skills/sohrab/alaa-prompting-guide/SKILL.md
++++ skills/sohrab/alaa-prompting-guide/SKILL.md
+@@ -1,75 +1,79 @@
+----
+-name: alaa-prompting-guide
+-description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use for model and effort capability evidence, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, skill and subagent authoring, or runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+----
+-
+-# Alaa Prompting Guide
+-
+-Own instruction authoring, model/effort capability evidence and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
+-
+-## When NOT to use
+-
+-- General coding/review/refactoring without instruction or agentic-workflow authoring.
+-- Retired Claude generations or models outside scope; historical references support explicit comparisons only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
+-- Durable multi-phase plans/state/phase prompts: `/alaa-workflow` owns them.
+-- Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. Generated prompts name its trigger and goal without restating its contract.
+-
+-## The rule-writer specialist
+-
+-Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text; authorship, decisions, research and edits stay with the caller.
+-
+-Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
+-
+-Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
+-
+-## Codex policy validation
+-
+-`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
+-
+-## Claude policy validation
+-
+-`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. Task comparisons remain separate evidence, never role defaults. From this skill directory run
+-`python scripts/check_claude_model_policy.py` after policy or projection changes; add `--self-test`
+-after checker changes. Defaults cover both managed roots. Repeat `--agent-root <path>`
+-for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
+-Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
+-add `--self-test` after changing its checker and `--results <path>` to validate evidence.
+-After shared projection/control changes, run `python scripts/profile_projection.py --self-test`; both policy self-tests cover explicit task controls for every role. These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
+-
+-All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
+-
+-## Decision procedure
+-
+-1. Identify runtime, surface and model. Ask only for missing facts that change the artifact; a Desktop app name proves no tab's command support.
+-2. Read `references/00-topic-map.md` before answering; load only references whose conditions hold.
+-3. Resolve version-sensitive facts from sources, never recall.
+-4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield; hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
+-5. Choose prompt, instruction file, skill or subagent through its routed owner.
+-
+-For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
+-
+-For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface. After checker changes also run `--self-test`.
+-
+-## Principles that govern every artifact this skill produces
+-
+-**Complete contract.** Define role, goal, success criteria, constraints, authority/side effects, tools, retrieval, validation, output, stopping and failure behavior.
+-
+-**One instruction, one owner.** Duplication dilutes the contract. Compare reductions against the same acceptance criteria through `references/60-skill-authoring.md`.
+-
+-**Model-specific delegation.** Over-delegation needs bounds; reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
+-
+-**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns; a model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
+-
+-**Missing evidence stays unknown.** Say what the source omits, use a named placeholder and preserve caveats.
+-
+-## Freshness
+-
+-Before stating prices, limits, effort levels, feature/version gates, defaults, discovery paths or current recommendations, refresh official sources through `references/00-source-map.md`. Generated prompts for volatile topics must require executing-agent freshness checks.
+-
+-## Stop
+-
+-Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication, external mutation or paid-comparison authority.
+-
+-## Style
+-
+-Use precise, direct technical English unless requested otherwise. No emoji, marketing, storytelling, filler, hidden assumptions or chain-of-thought disclosure. For work outside this role, provide a prompt/skill or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.
++---
++name: alaa-prompting-guide
++description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use for model and effort capability evidence, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, skill and subagent authoring, or runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
++---
++
++# Alaa Prompting Guide
++
++Own instruction authoring, model/effort capability evidence and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
++
++## When NOT to use
++
++- General coding/review/refactoring without instruction or agentic-workflow authoring.
++- Retired Claude generations or models outside scope; historical references support explicit comparisons only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
++- Durable multi-phase plans/state/phase prompts: `/alaa-workflow` owns them.
++- Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. Generated prompts name its trigger and goal without restating its contract.
++
++## The rule-writer specialist
++
++Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text; authorship, decisions, research and edits stay with the caller.
++
++Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
++
++Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
++
++## Codex policy validation
++
++`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
++
++## Allocation evidence validation
++
++For allocation evidence run `python scripts/check_allocation_evals.py` here; add `--results <path> --require-live` for complete nonsynthetic observations/independent grading and `--self-test` after checker changes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. The router selects `references/92-agent-evaluation.md` for inputs, flags, records and limits. Decisions prove no child dispatch or worker quality.
++
++## Claude policy validation
++
++`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. Task comparisons remain separate evidence, never role defaults. From this skill directory run
++`python scripts/check_claude_model_policy.py` after policy or projection changes; add `--self-test`
++after checker changes. Defaults cover both managed roots. Repeat `--agent-root <path>`
++for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
++Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
++add `--self-test` after changing its checker and `--results <path>` to validate evidence.
++After shared projection/control changes, run `python scripts/profile_projection.py --self-test`; both policy self-tests cover explicit task controls for every role. These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
++
++All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
++
++## Decision procedure
++
++1. Identify runtime, surface and model. Ask only for missing facts that change the artifact; a Desktop app name proves no tab's command support.
++2. Read `references/00-topic-map.md` before answering; load only references whose conditions hold.
++3. Resolve version-sensitive facts from sources, never recall.
++4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield; hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
++5. Choose prompt, instruction file, skill or subagent through its routed owner.
++
++For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
++
++For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface. After checker changes also run `--self-test`.
++
++## Principles that govern every artifact this skill produces
++
++**Complete contract.** Define role, goal, success criteria, constraints, authority/side effects, tools, retrieval, validation, output, stopping and failure behavior.
++
++**One instruction, one owner.** Duplication dilutes the contract. Compare reductions against the same acceptance criteria through `references/60-skill-authoring.md`.
++
++**Model-specific delegation.** Over-delegation needs bounds; reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
++
++**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns; a model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
++
++**Missing evidence stays unknown.** Say what the source omits, use a named placeholder and preserve caveats.
++
++## Freshness
++
++Before stating prices, limits, effort levels, feature/version gates, defaults, discovery paths or current recommendations, refresh official sources through `references/00-source-map.md`. Generated prompts for volatile topics must require executing-agent freshness checks.
++
++## Stop
++
++Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication, external mutation or paid-comparison authority.
++
++## Style
++
++Use precise, direct technical English unless requested otherwise. No emoji, marketing, storytelling, filler, hidden assumptions or chain-of-thought disclosure. For work outside this role, provide a prompt/skill or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.

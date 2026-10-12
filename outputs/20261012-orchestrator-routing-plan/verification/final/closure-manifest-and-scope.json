@@ -1,0 +1,60 @@
+{
+  "closure_manifest_sha256": "8063abf29c29dc8c858083e26d56c45c2364c44de8de3544222ad4028075e823",
+  "expected_closure_manifest_sha256": "8063abf29c29dc8c858083e26d56c45c2364c44de8de3544222ad4028075e823",
+  "closure_manifest_hash_matches": true,
+  "closure_manifest_entry_count": 9,
+  "closure_manifest_entries_all_match": true,
+  "entry_checks": [
+    {
+      "path": "outputs/README.md",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/execution-report.md",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime-proof-handoff.md",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime-review.md",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/instruction-review.md",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/correctness-review.md",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime/reviewer-v2-verdict.json",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/runtime/codex-v2-results.json",
+      "bytes_match": true,
+      "hash_match": true
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/verification/probe-v2/source-pin-refreshed.json",
+      "bytes_match": true,
+      "hash_match": true
+    }
+  ],
+  "scope_path_count": 329,
+  "authorized_source_path_count": 24,
+  "task_output_path_count": 274,
+  "retired_batch_path_count": 31,
+  "outside_scope_paths": [],
+  "scope_whitelist_matches": true
+}

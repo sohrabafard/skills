@@ -1,0 +1,14 @@
+{
+  "command": "python scripts/check_allocation_evals.py --self-test",
+  "cwd": "skills/sohrab/alaa-prompting-guide",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_seconds": 120,
+  "duration_ms": 1287,
+  "process_exit_code": 0,
+  "classification": "PASS",
+  "capture_note": "Wrapper sidecar write failed after checker returned exit 0; output reconstructed from captured tool output; no retry.",
+  "stdout": "self-test.stdout.txt",
+  "stderr": "self-test.stderr.txt"
+}

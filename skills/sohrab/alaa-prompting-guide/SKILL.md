@@ -26,6 +26,10 @@ Managed wrappers omit model and effort; the orchestrator explicitly selects both
 
 `assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
 
+## Allocation evidence validation
+
+For allocation evidence run `python scripts/check_allocation_evals.py` here; add `--results <path> --require-live` for complete nonsynthetic observations/independent grading and `--self-test` after checker changes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. The router selects `references/92-agent-evaluation.md` for inputs, flags, records and limits. Decisions prove no child dispatch or worker quality.
+
 ## Claude policy validation
 
 `assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. Task comparisons remain separate evidence, never role defaults. From this skill directory run

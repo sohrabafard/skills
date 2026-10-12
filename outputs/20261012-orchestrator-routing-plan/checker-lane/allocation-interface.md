@@ -1,0 +1,25 @@
+# Allocation evidence interface
+
+Frozen checker design, 2026-10-12. Paths and flags resolve from `skills/sohrab/alaa-prompting-guide`.
+
+- `python scripts/check_allocation_evals.py`: validate the separate neutral corpus and reviewer-only oracle.
+- Add `--self-test` for synthetic positive/red records; add `--results <path>` for captured records.
+- Add `--require-live` with `--results` to require complete nonsynthetic allocation observations and independent grading. This proves neither worker dispatch nor worker quality.
+- `--corpus <path>` and `--oracle <path>` select explicit data files. `--probe-input codex|claude-code` emits neutral cases and the response contract to stdout, excluding the oracle. It performs no inference or writes.
+- `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json`: isolated hash/size integrity, provenance-field syntax and historical supported-pair validation. Source-identity attestation requires separate independent Git-byte verification. Cannot combine with active corpus/results/self-test; never authorizes task selection.
+
+The corpus has schema 1, purpose allocation-input, two repetitions, and R1-R15 cases with two variants each. Neutral cases carry task facts, authority role, priority, finite scope, checks and explicitly simulated host availability/overrides. The oracle is a separate schema-1 allocation-oracle file: expected actions/models, named behavioral criteria and prohibited effects. R15/pressure additionally requires `explicit_requested_pairs`, a runtime-to-model/effort map preserving the human request exactly (Codex Astra/medium; Claude Fable/medium). Other cases retain generalized supported effort controls. Probe inputs never contain these expected outcomes.
+
+Result top-level fields: `schema_version: 1`, `purpose: allocation-results`, `synthetic` and `complete` booleans, `corpus_sha256`, `oracle_sha256`, `configurations`, and `runs`. Every declared allocator configuration has all case/variant/repetition keys, including explicit unrun/blocked rows. Unrepresented runtimes are unassessed.
+
+Each configuration records `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, and `loaded_contracts` (repository-relative path plus SHA-256). Configured controls remain distinct from observed serving identity. A concrete mismatch or unknown effective pair prevents a live passing claim; unknown observed values need separate control evidence.
+
+Each run records `case`, `variant`, `configuration`, `runtime`, `repetition`, `status` (passed/failed/blocked/unrun), `input_sha256`, and `blocker` for blocked work. Completed rows add `response`, `output_evidence`, `output_sha256`, `reviewer`, `independent_review`, `criterion_verdicts`, `forbidden_effects_observed`, `elapsed_seconds`, `usage`, and `correction_count` (unobservable counters are unknown).
+
+The response records `action` (allocate/block/retrieve/reclassify/reject), `proposed_worker` (explicit model and effort, or null), `model_reason`, `effort_reason`, `fit` (seven named predicates, each verdict and evidence), `alternatives` (pair, failed predicate or stronger evidence, evidence), `admission` (kind and evidence), `continuity` (cause, preserve_valid_work, replay_completed_work), and `compression` (verdict and seven preserved-invariant verdicts). `worker_dispatched` is false; `worker_effective` and `worker_observed` are unknown pairs. Simulated override conclusions are decisions about input facts, never observed child controls.
+
+Static validation checks record structure, snapshot identities, finite coverage, active-pair legality, recorded fit/rejection/admission, behavioral action/model expectations, explicit requested-pair equality where specified, and independent verdict completeness. It cannot establish truth of linked evidence, semantic equivalence of arbitrary prose, actual host availability, loaded custom-role activation, child control resolution, model suitability, cost or savings. The independent reviewer owns evidence truth and semantic verdicts. Synthetic records exercise the consumer only. A live allocator answer to simulated scenarios remains a sampled decision-only observation.
+
+Invariants: archival support never becomes ordinary eligibility; no identical candidate/comparator redesign; no oracle leaks into the probe; no self-grading or fabricated worker dispatch; no missing/unknown evidence becomes a passing claim; compression retains gates, exceptions, triggers, normative force, authority, ownership and loading. Existing consumers remain public interfaces. Rollback consists of reverting scoped source/data changes; preserved original bytes remain dated evidence, never a fallback policy.
+
+Rejected designs: widening ordinary policy loading for archives (would authorize old Sol); adding routing fixtures to worker-quality comparisons (confounds selection and execution); grading prose by isolated keywords (misses weakened obligations and dropped exceptions); treating simulated controls as actual resolution (fabricates runtime proof).

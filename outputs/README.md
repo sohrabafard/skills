@@ -6,6 +6,7 @@ instructions. An archived result does not establish today's repository state or 
 
 | Date | Archive | Coverage |
 |---|---|---|
+| 2026-10-12 | [Orchestrator routing](20261012-orchestrator-routing-plan/execution-report.md) | Cross-runtime role routing, neutral role authority, explicit task-selected model/effort, checker policy, independent source review, and runtime-proof handoff |
 | 2026-10-10 | [Go routing ownership](20261010-go-routing-ownership/report.md) | Go provider-policy delegation, explicit native continuation and dependency routing; scoped rationale for three routing reference changes; source-only verification |
 | 2026-10-09 | [Task model routing](20261009-task-model-routing/report.md) | All-role task-selected model/effort, neutral role definitions, corrected ownership and runtime control contracts; source-only transition |
 | 2026-10-09 | [Agentic economy](20261009-agentic-economy/report.md) | Durable planning, batch-balanced task allocation, ready parallel sets, evidence reuse, model-role guidance and added source profiles; independent source inventory passed; no installation, activation or live calibration |

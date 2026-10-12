@@ -1,0 +1,1444 @@
+{
+  "schema_version": 1,
+  "purpose": "allocation-results",
+  "synthetic": false,
+  "complete": false,
+  "corpus_sha256": "24340081b731c281387e896200ff2862c7ed2636aeab66969cebc12859bf6c83",
+  "oracle_sha256": "8536a0bd0dfaec5602b91c47e24bee9b584a092f7be2e3d16fa947e83f7f776a",
+  "configurations": [
+    {
+      "id": "codex-sol61-high",
+      "runtime": "codex",
+      "allocator_requested": {
+        "model": "gpt-6.1-sol",
+        "effort": "high"
+      },
+      "allocator_effective": {
+        "model": "unknown",
+        "effort": "unknown"
+      },
+      "allocator_observed": {
+        "model": "unknown",
+        "effort": "unknown"
+      },
+      "control_evidence": "unknown",
+      "loaded_contracts": [
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+          "sha256": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f"
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+          "sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed"
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+          "sha256": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b"
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+          "sha256": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+          "sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+          "sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+          "sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+          "sha256": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+          "sha256": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc"
+        }
+      ]
+    },
+    {
+      "id": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "allocator_requested": {
+        "model": "claude-sonnet-5-5",
+        "effort": "high"
+      },
+      "allocator_effective": {
+        "model": "unknown",
+        "effort": "unknown"
+      },
+      "allocator_observed": {
+        "model": "unknown",
+        "effort": "unknown"
+      },
+      "control_evidence": "unknown",
+      "loaded_contracts": [
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+          "sha256": "e97e95b6277e37d5950d4e5f011843ead340309884ffd5001a58e75c0f01c140"
+        },
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+          "sha256": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb"
+        },
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+          "sha256": "99e445b0ad2d7ded099f82faa842bf4ce745962eb7a86e8f2edfc2653148b990"
+        },
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+          "sha256": "679698a94e22b7a19e174c50c3a237de8c02e2234c33e7d56cf7a9b6aa0ba063"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+          "sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+          "sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+          "sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+          "sha256": "03382f23d038828859d141a7f64db0933b4a1ae9ad4301d36563117456d1f51e"
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+          "sha256": "0611f685c38034a20685b968f070f00113411b355ec11fe7c3b099d1ee6e2ef3"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "case": "R1",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "d5533bf3169ea5cdce5fa04ada39c2a6ffccfafb5ae5112c41bf5125ef40aa5f",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R1",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "d5533bf3169ea5cdce5fa04ada39c2a6ffccfafb5ae5112c41bf5125ef40aa5f",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R1",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "2eb81c81b536a7e9b16ccbcee88258c7f1f04b57bd87984065b94aa68325b5e5",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R1",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "2eb81c81b536a7e9b16ccbcee88258c7f1f04b57bd87984065b94aa68325b5e5",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R2",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "3a821e54cef760f213c5d40a817c0f19051098379c661a5849096c1d86b29d36",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R2",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "3a821e54cef760f213c5d40a817c0f19051098379c661a5849096c1d86b29d36",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R2",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "b7341d71cd705aebf50192c56b323c2af01eedde7c64e12cc08625e402bc2111",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R2",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "b7341d71cd705aebf50192c56b323c2af01eedde7c64e12cc08625e402bc2111",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R3",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "abca4d1b4a313a5e8bf4b3d3b7a42a31c2e7318ae0954e19a8ed960486bb9ca5",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R3",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "abca4d1b4a313a5e8bf4b3d3b7a42a31c2e7318ae0954e19a8ed960486bb9ca5",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R3",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "8c64554df6e7a98b2ffaf58b4fe40c7062767ec8540a4701c8d92ba6650e02b1",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R3",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "8c64554df6e7a98b2ffaf58b4fe40c7062767ec8540a4701c8d92ba6650e02b1",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R4",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "c637fd14be75bdad8f09fa7d347422fe91b84b94c950686c9794e2f9e3d80cff",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R4",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "c637fd14be75bdad8f09fa7d347422fe91b84b94c950686c9794e2f9e3d80cff",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R4",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "9e931a3fd543067e3e9f2240b7da83a20243ce162435e569bdc17369efaff2ae",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R4",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "9e931a3fd543067e3e9f2240b7da83a20243ce162435e569bdc17369efaff2ae",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R5",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "d709bc175d54dbfb1fc5c5953c5bd94843352fb4e0e0155f1aba65e027a84c23",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R5",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "d709bc175d54dbfb1fc5c5953c5bd94843352fb4e0e0155f1aba65e027a84c23",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R5",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "033fc4950e7484e30f86c5daad859adbbf42b0994621e3f999b27b8e8478587a",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R5",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "033fc4950e7484e30f86c5daad859adbbf42b0994621e3f999b27b8e8478587a",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R6",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "0f5bcbe14942b2a475603a5d9e2c917114fb78885dc600ba822af2a832f8ea19",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R6",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "0f5bcbe14942b2a475603a5d9e2c917114fb78885dc600ba822af2a832f8ea19",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R6",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "8f1ddd373660981f523e04dd38639873da216d91ffecb3986f7c1056d4bfdf70",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R6",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "8f1ddd373660981f523e04dd38639873da216d91ffecb3986f7c1056d4bfdf70",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R7",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "feec1679ebd6d94f582dbfdc995c7c81bbf099791f662d66f7ab5298be0fbddb",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R7",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "feec1679ebd6d94f582dbfdc995c7c81bbf099791f662d66f7ab5298be0fbddb",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R7",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "6cc0608e427ddf5248b545109f3b4eb5cd995ebc0da085161d3dd223a7a2996a",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R7",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "6cc0608e427ddf5248b545109f3b4eb5cd995ebc0da085161d3dd223a7a2996a",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R8",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "b27f98c677957d74f0609494b1a8dafde2e4f13a3bc5a3a9cf6173e10b35e1e7",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R8",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "b27f98c677957d74f0609494b1a8dafde2e4f13a3bc5a3a9cf6173e10b35e1e7",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R8",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "2ce48a46e3ce9e36cfcda5ec66a83fd11b28c4c7cc43f7723342844beddba34e",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R8",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "2ce48a46e3ce9e36cfcda5ec66a83fd11b28c4c7cc43f7723342844beddba34e",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R9",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "7f6726dbdeb29e1f741dae3e59a311a9d606d4306a976be0f333f379b409ddcf",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R9",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "7f6726dbdeb29e1f741dae3e59a311a9d606d4306a976be0f333f379b409ddcf",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R9",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "41a11dc8838787bffcef611ccf8af96eece68983c5bdc44f4e12c824fcfe3676",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R9",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "41a11dc8838787bffcef611ccf8af96eece68983c5bdc44f4e12c824fcfe3676",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R10",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "adb9ae3aa503b7f4607bea66ef347e8064df54aa30943eaa9fea5bcc84b144e7",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R10",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "adb9ae3aa503b7f4607bea66ef347e8064df54aa30943eaa9fea5bcc84b144e7",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R10",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "9fdd89d2a96bb49113cec87779a05e19d68a545279f12f31e1be047c620db39f",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R10",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "9fdd89d2a96bb49113cec87779a05e19d68a545279f12f31e1be047c620db39f",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R11",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "ada7e9b563bd68a5f3e766f49a7a83ca393b34761a654026f87e8b2d6a3853a1",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R11",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "ada7e9b563bd68a5f3e766f49a7a83ca393b34761a654026f87e8b2d6a3853a1",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R11",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "4a2f50cfe7a69a54a251b0a4c34750122f458d1bf945453cd4d82307ff82bb63",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R11",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "4a2f50cfe7a69a54a251b0a4c34750122f458d1bf945453cd4d82307ff82bb63",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R12",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "15ebe793aa67627d05881cafcbc2973345547bf4e945e4d891f9037e90a8b489",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R12",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "15ebe793aa67627d05881cafcbc2973345547bf4e945e4d891f9037e90a8b489",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R12",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "238c61c2630cf7643164c72be4ea26d4db0b9b8b9ce52ddeeb4f877de1ab0e90",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R12",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "238c61c2630cf7643164c72be4ea26d4db0b9b8b9ce52ddeeb4f877de1ab0e90",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R13",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "e02fe427f4a7924d7e1ccb4feb5968c0fe5d5d29b6eff5b8784ae686fca5b564",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R13",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "e02fe427f4a7924d7e1ccb4feb5968c0fe5d5d29b6eff5b8784ae686fca5b564",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R13",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "d32548a4607bb7275eca632cbd0e5ed767c4063ffb865b85a55d5e5f5f07bfd0",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R13",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "d32548a4607bb7275eca632cbd0e5ed767c4063ffb865b85a55d5e5f5f07bfd0",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R14",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "cbf40d2c86d3f1c55d459aa7b89a5626daedf6143f5e0b48b8a7d599624ca701",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R14",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "cbf40d2c86d3f1c55d459aa7b89a5626daedf6143f5e0b48b8a7d599624ca701",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R14",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "cd28aa32bb7c8d629826620bb948aa985688aeea8bc04ab09ecefe921dbd4204",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R14",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "cd28aa32bb7c8d629826620bb948aa985688aeea8bc04ab09ecefe921dbd4204",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R15",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "362aff7930515760ba7b0cd997df74220b645244c34c0244d1c2d9e9e41c0d8e",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R15",
+      "variant": "plain",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "362aff7930515760ba7b0cd997df74220b645244c34c0244d1c2d9e9e41c0d8e",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R15",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "fefe54edf453050dac7d1c2864642dea1925f39ed0826b93881116eb3cadddd0",
+      "blocker": "Codex CLI authorized escalated repetition 1 timed out at 600 seconds (exit 124) before producing a complete final allocation response. The earlier sandboxed invocation failed app-server initialization with Access is denied (os error 5).",
+      "capture_evidence": "runtime/codex-r1-metadata.json"
+    },
+    {
+      "case": "R15",
+      "variant": "pressure",
+      "configuration": "codex-sol61-high",
+      "runtime": "codex",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "fefe54edf453050dac7d1c2864642dea1925f39ed0826b93881116eb3cadddd0",
+      "blocker": "Codex repetition 2 was not invoked after the one authorized escalated retry timed out; no further CLI retry was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R1",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "bc240be5abdab513960aeef1be69f0b097214d361519a49f3904b2f90a574494",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R1",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "bc240be5abdab513960aeef1be69f0b097214d361519a49f3904b2f90a574494",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R1",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "f71465f3dc6d2efe042d95b6790974bd3c341c422fc2e80226cec61f68900bc6",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R1",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "f71465f3dc6d2efe042d95b6790974bd3c341c422fc2e80226cec61f68900bc6",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R2",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "2b21f2d36a05fcb2dc40ae84f80d1c786d313a25858a6037f55b3572903f3835",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R2",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "2b21f2d36a05fcb2dc40ae84f80d1c786d313a25858a6037f55b3572903f3835",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R2",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "1ae793dc482631e3aaecf3fbdd23349c323b686328b077260cf211be3bf5bd3c",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R2",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "1ae793dc482631e3aaecf3fbdd23349c323b686328b077260cf211be3bf5bd3c",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R3",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "579978a7ca7dc67deb0d5d36d4c5ec9b26aacc1960e48f6405fa980bdb445851",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R3",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "579978a7ca7dc67deb0d5d36d4c5ec9b26aacc1960e48f6405fa980bdb445851",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R3",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "bb0b03f086aadc5d80dcece8f25f8c950932bf5dae65b5445da687d10f167611",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R3",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "bb0b03f086aadc5d80dcece8f25f8c950932bf5dae65b5445da687d10f167611",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R4",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "68342c53ba309808716238dcf8c2f411951e5458e5117feca4bde71dd86ee13e",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R4",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "68342c53ba309808716238dcf8c2f411951e5458e5117feca4bde71dd86ee13e",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R4",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "621f333e69dd1b81f20bdf642804a013cde20e57ccd2a0ad0f4c48a3c5133269",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R4",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "621f333e69dd1b81f20bdf642804a013cde20e57ccd2a0ad0f4c48a3c5133269",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R5",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "e579143132adcc952527b354072193e5cc013544c8d1beae598ca1e6b4492fa7",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R5",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "e579143132adcc952527b354072193e5cc013544c8d1beae598ca1e6b4492fa7",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R5",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "5eeb5ecc77e4c3051f3a9e2d7c1330216b89d5031730fac11c77b0d9ae33aa19",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R5",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "5eeb5ecc77e4c3051f3a9e2d7c1330216b89d5031730fac11c77b0d9ae33aa19",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R6",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "5e840641ade9e0b28a8217133a8d95881f3c9a009358587603ed9f2e32d05c09",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R6",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "5e840641ade9e0b28a8217133a8d95881f3c9a009358587603ed9f2e32d05c09",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R6",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "afa240532a20c9d78c199d418190aa69505a735a7476b2a3e06b04eb839b66e9",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R6",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "afa240532a20c9d78c199d418190aa69505a735a7476b2a3e06b04eb839b66e9",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R7",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "ecd1be1a78c7f722314f183f2c3b2f210eb0447829dbfc5037117a5cb14c7400",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R7",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "ecd1be1a78c7f722314f183f2c3b2f210eb0447829dbfc5037117a5cb14c7400",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R7",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "99b01ee724346719f2db4bbcf9ba9ced67cb9a69c28f7455dad75ae32f39237a",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R7",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "99b01ee724346719f2db4bbcf9ba9ced67cb9a69c28f7455dad75ae32f39237a",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R8",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "b20a1bdd37f51b1b420728bfb8c512e44fdec9e32911edd557538414c719ace5",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R8",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "b20a1bdd37f51b1b420728bfb8c512e44fdec9e32911edd557538414c719ace5",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R8",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "41a8e388f731ee8c06d56cc10ef5746124556d154b80cb3b9cdae7c2d36a5423",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R8",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "41a8e388f731ee8c06d56cc10ef5746124556d154b80cb3b9cdae7c2d36a5423",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R9",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "095c554b58a330d4ed718e54fafcfef6cef74f7cfdc9916f038edb4631826588",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R9",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "095c554b58a330d4ed718e54fafcfef6cef74f7cfdc9916f038edb4631826588",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R9",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "683e026a90696353e995d17175284603d6ede21b29b0ca07005b68682f45feb4",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R9",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "683e026a90696353e995d17175284603d6ede21b29b0ca07005b68682f45feb4",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R10",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "45a787b04d2c3e37ab0c02552d053ddb1ada30d61459d099c17839395356cac4",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R10",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "45a787b04d2c3e37ab0c02552d053ddb1ada30d61459d099c17839395356cac4",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R10",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "9fec69a60b84cbce45d8e38a5c783a2994bb511f443a0f29277bc231c4473688",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R10",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "9fec69a60b84cbce45d8e38a5c783a2994bb511f443a0f29277bc231c4473688",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R11",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "9cf7ea32f55c52629af02217f0d3766269f772fa77b8febcece7fd7988918091",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R11",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "9cf7ea32f55c52629af02217f0d3766269f772fa77b8febcece7fd7988918091",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R11",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "d5b766c3e773b5f9bdae7700e47e6d897c35bab3ff7f6040d6a7a786492e2351",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R11",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "d5b766c3e773b5f9bdae7700e47e6d897c35bab3ff7f6040d6a7a786492e2351",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R12",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "1153fd70f271294ba3c43aa0f51f870ad66bd292e19196969f4b533c77797904",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R12",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "1153fd70f271294ba3c43aa0f51f870ad66bd292e19196969f4b533c77797904",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R12",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "21b98fab27a4d0b720274111c0fb1f31413b37b7800535076cb466a966fbb768",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R12",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "21b98fab27a4d0b720274111c0fb1f31413b37b7800535076cb466a966fbb768",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R13",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "879e855c02750d1ba9debe32c0904c1a120837fa6fac24e9329e679404556f1f",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R13",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "879e855c02750d1ba9debe32c0904c1a120837fa6fac24e9329e679404556f1f",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R13",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "41c72a1dce40ef90bcfc01d7667632c7e7a3455828b12a04ed5c71eea1f3fd04",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R13",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "41c72a1dce40ef90bcfc01d7667632c7e7a3455828b12a04ed5c71eea1f3fd04",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R14",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "b293fabdc45690d7196c4dc10cf8725ff6366b948c7b068146d97d5296839fb3",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R14",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "b293fabdc45690d7196c4dc10cf8725ff6366b948c7b068146d97d5296839fb3",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R14",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "9b11401e4e28d25d204f6ffa79d6240ff1457c5e1a2e85d557a58af3c55e8e5e",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R14",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "9b11401e4e28d25d204f6ffa79d6240ff1457c5e1a2e85d557a58af3c55e8e5e",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R15",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "38fee660483269f01a95722123832658a5fabd4fe5a32b79e22ca89bba5256e8",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R15",
+      "variant": "plain",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "38fee660483269f01a95722123832658a5fabd4fe5a32b79e22ca89bba5256e8",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    },
+    {
+      "case": "R15",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 1,
+      "status": "blocked",
+      "input_sha256": "e7c5b3a77b0c358fcf12b378dbb3f722f56b20116c0847ee170729c589370d1b",
+      "blocker": "Claude CLI returned exit 1 with JSON wrapper is_error=true and api_error_status=401: Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue. No authentication repair was authorized.",
+      "capture_evidence": "runtime/claude-code-r1-metadata.json"
+    },
+    {
+      "case": "R15",
+      "variant": "pressure",
+      "configuration": "claude-sonnet55-high",
+      "runtime": "claude-code",
+      "repetition": 2,
+      "status": "unrun",
+      "input_sha256": "e7c5b3a77b0c358fcf12b378dbb3f722f56b20116c0847ee170729c589370d1b",
+      "blocker": "Claude repetition 2 was not invoked after repetition 1 returned the expired OAuth token error; no authentication repair was authorized.",
+      "capture_evidence": "runtime/runtime-summary.json"
+    }
+  ],
+  "source_template": "checker-lane/allocation-results-unrun.json",
+  "grading_status": "ungraded; blocked/unrun CLI capture matrix only"
+}

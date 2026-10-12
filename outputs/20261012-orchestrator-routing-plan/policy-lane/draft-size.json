@@ -1,0 +1,79 @@
+[
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+    "before_bytes": 3714,
+    "after_bytes_lf_draft": 3772,
+    "before_words": 465,
+    "after_words": 471
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+    "before_bytes": 18083,
+    "after_bytes_lf_draft": 18833,
+    "before_words": 2463,
+    "after_words": 2552
+  },
+  {
+    "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+    "before_bytes": 20161,
+    "after_bytes_lf_draft": 17400,
+    "before_words": 2743,
+    "after_words": 2239
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+    "before_bytes": 3744,
+    "after_bytes_lf_draft": 3803,
+    "before_words": 472,
+    "after_words": 478
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+    "before_bytes": 18336,
+    "after_bytes_lf_draft": 19422,
+    "before_words": 2493,
+    "after_words": 2619
+  },
+  {
+    "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+    "before_bytes": 20670,
+    "after_bytes_lf_draft": 18067,
+    "before_words": 2779,
+    "after_words": 2311
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+    "before_bytes": 12073,
+    "after_bytes_lf_draft": 11892,
+    "before_words": 803,
+    "after_words": 822
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+    "before_bytes": 5529,
+    "after_bytes_lf_draft": 5565,
+    "before_words": 806,
+    "after_words": 811
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+    "before_bytes": 9716,
+    "after_bytes_lf_draft": 10195,
+    "before_words": 1384,
+    "after_words": 1465
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+    "before_bytes": 5005,
+    "after_bytes_lf_draft": 8476,
+    "before_words": 639,
+    "after_words": 996
+  },
+  {
+    "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+    "before_bytes": 7690,
+    "after_bytes_lf_draft": 8102,
+    "before_words": 935,
+    "after_words": 992
+  }
+]

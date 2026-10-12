@@ -1,0 +1,71 @@
+{
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+      "sha256": "99e445b0ad2d7ded099f82faa842bf4ce745962eb7a86e8f2edfc2653148b990",
+      "bytes": 3791,
+      "words": 471
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+      "sha256": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+      "bytes": 18842,
+      "words": 2551
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "e97e95b6277e37d5950d4e5f011843ead340309884ffd5001a58e75c0f01c140",
+      "bytes": 17686,
+      "words": 2254
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+      "sha256": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b",
+      "bytes": 3822,
+      "words": 478
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "sha256": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+      "bytes": 19431,
+      "words": 2618
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f",
+      "bytes": 18356,
+      "words": 2326
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "sha256": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc",
+      "bytes": 12236,
+      "words": 822
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "sha256": "8431a4815f8714b673ce5fd37b75c0a797a84dd66245baa1036a41a6b35e6978",
+      "bytes": 5598,
+      "words": 811
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "sha256": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+      "bytes": 10287,
+      "words": 1465
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+      "sha256": "efe90af9937e43092d3131be1b2b5794361bad811e01577131b618c00dde8a02",
+      "bytes": 8653,
+      "words": 1007
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "sha256": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+      "bytes": 8181,
+      "words": 992
+    }
+  ],
+  "source_frozen": true
+}

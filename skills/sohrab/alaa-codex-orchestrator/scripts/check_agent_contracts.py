@@ -11,6 +11,33 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# Complete reviewed clauses, never isolated keyword scores. This is a finite
+# source regression gate; arbitrary semantic equivalence still needs review.
+EQUIVALENT_REQUIREMENTS = {
+    "Retain required retrieval, focused implementer checks and independent acceptance gates":
+        "Keep required source retrieval and focused implementer checks; independent acceptance gates remain mandatory",
+    "Independent verification and review inspect the actual artifact":
+        "Independent verification and review must inspect the changed artifact itself",
+    "Plan-only work grants no product execution, branch, or commit authority":
+        "Planning alone authorizes no product execution, branch creation or commit",
+    "Explicitly supply BOTH model AND effort":
+        "Supply an explicit model and an explicit reasoning effort for each dispatch",
+}
+BOUNDED_REQUIREMENTS = (
+    "Evaluate the cheapest eligible supported available model AND effort pair for EVERY role",
+    "explicit outcome", "finite named scope", "grounded local contracts/known invariants",
+    "known pattern or causal path", "settled cross-boundary decisions", "bounded local discretion",
+    "discriminating check", "Non-bug semantic work needs no reproduced failure",
+    "Justify model and effort separately", "actual failed fit predicate or stronger task-specific evidence",
+    "no quotas", "no mandatory trial ladder", "replay",
+)
+
+
+def contract_present(required: str, text: str) -> bool:
+    normal = " ".join(text.split()).casefold()
+    alternatives = (required, EQUIVALENT_REQUIREMENTS.get(required, required))
+    return any(" ".join(clause.split()).casefold() in normal for clause in alternatives)
+
 
 def agent_failures(text: str) -> list[str]:
     errors = []
@@ -42,7 +69,7 @@ def orchestrator_failures(text: str) -> list[str]:
                      "Independent verification and review inspect the actual artifact",
                      "Retain required retrieval, focused implementer checks and independent acceptance gates",
                      "Do not infer a universal watchdog timeout"):
-        if required not in text:
+        if not contract_present(required, text):
             errors.append(f"missing authority contract: {required}")
     for forbidden in ("On activation, idempotently installs", "Auto-install authority",
                       "Commit on the run's own work branch at each completed subtask",
@@ -215,10 +242,15 @@ def task_allocation_failures(routing: str, controls: str) -> list[str]:
                      "block that affected lane", "Source changes do not reload"):
         if required not in routing:
             errors.append(f"missing all-role task allocation: {required}")
+    for required in BOUNDED_REQUIREMENTS:
+        if not contract_present(required, routing):
+            errors.append(f"missing all-role bounded suitability: {required}")
+    if "exclude gpt-6-sol ordinarily even if available" not in routing:
+        errors.append("missing ordinary/historical Sol eligibility boundary")
     for required in ("Before every dispatch", "Explicitly supply BOTH model AND effort",
-                     "effective configured pair matches", "otherwise block", "affected lane",
+                     "effective configured pair matches", "or block", "affected lane",
                      "Source checks prove neither installed activation", "parent overrides"):
-        if required not in controls:
+        if not contract_present(required, controls):
             errors.append(f"missing effective task controls: {required}")
     for forbidden in ("owns only role triggers", "Agent metadata carries executable pins",
                       "both standard and deep review inherit", "non-implementation roles remain fixed",
@@ -246,6 +278,10 @@ def self_test() -> int:
     # A source definition contains the same contract whether represented as a
     # multiline body or a serialized scalar; these checks do not execute it.
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    for original, equivalent in EQUIVALENT_REQUIREMENTS.items():
+        source = skill if original in skill else (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")
+        assert contract_present(original, source.replace(original, equivalent)), original
+        assert not contract_present(original, equivalent.replace("mandatory", "optional").replace("must inspect", "may inspect").replace("authorizes no", "authorizes").replace("explicit reasoning effort", "inherited effort")), original
     dispatch = (ROOT / "references/delegation-prompts.md").read_text(encoding="utf-8")
     gates = (ROOT / "references/verification-and-gates.md").read_text(encoding="utf-8")
     implementation = (ROOT / "references/delegation-prompts/30-implementation.md").read_text(encoding="utf-8")
@@ -292,6 +328,8 @@ def self_test() -> int:
         cases.append((f"batch allocation {required} required", bool(economy_failures(skill, gates, routing.replace(required, "omitted")))))
     controls = (ROOT / "references/model-effort-policy.md").read_text(encoding="utf-8")
     cases.append(("all-role allocation/effective controls", not task_allocation_failures(routing, controls)))
+    for requirement in BOUNDED_REQUIREMENTS:
+        cases.append((f"bounded suitability requires {requirement}", bool(task_allocation_failures(routing.replace(requirement, "omitted"), controls))))
     for required in ("EVERY role", "model AND effort", "second independent lens",
                      "compatibility identities", "block that affected lane"):
         cases.append((f"task allocation requires {required}", bool(task_allocation_failures(
@@ -383,6 +421,9 @@ def main() -> int:
             return 1
         print("CONTRACT CHECK OK: metadata, dispatch scope and independent verification authority")
         return 0
+    except AssertionError as exc:
+        print(f"contract self-test failed: {exc}", file=sys.stderr)
+        return 1
     except (OSError, ValueError, KeyError, StopIteration) as exc:
         print(f"contract check unavailable: {exc}", file=sys.stderr)
         return 2

@@ -1,0 +1,9 @@
+{
+  "command": "git diff --check",
+  "cwd": ".",
+  "environment": {},
+  "timeout_seconds": 120,
+  "duration_ms": 72,
+  "exit_code": 0,
+  "stdout": "git-diff-check-retry.stdout.txt"
+}

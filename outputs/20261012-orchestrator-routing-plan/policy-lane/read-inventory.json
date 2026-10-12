@@ -1,0 +1,718 @@
+{
+  "files": [
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+      "sha256": "83ede85951f474f489d9dba8dc67202b66e95eb7b780f81f1fb0bbca53982f1f",
+      "bytes": 7690,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-source-map.md",
+      "sha256": "e7b554c8438ca7a9407a146c7c68424fb74eca9dd2d0f89632fb4f559121d841",
+      "bytes": 7282,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/00-topic-map.md",
+      "sha256": "b4b916e7cb0a877ce8e68c0e6af70951d26d5f871fed281fb286afb4af686f11",
+      "bytes": 5529,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/06-invocation-and-composition.md",
+      "sha256": "f27665305b8e268386000decffe767b7aeb26703b320d2b8bd784b414998ae42",
+      "bytes": 16129,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/10-gpt-5-6.md",
+      "sha256": "0a2b9d21817d8d3cea76b4066a7e4ddbea766b0f801eabc84e50c39d9f0c8021",
+      "bytes": 14667,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+      "sha256": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda",
+      "bytes": 15186,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/12-gpt-6.md",
+      "sha256": "15dd12d7c221248f5b3d1fbd8a73b24a10a8889689ade8bd22ed27d2982770c4",
+      "bytes": 5929,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/20-opus-5.md",
+      "sha256": "ff303b3c316c7682d9df4c3c69e6ac2bf3bc11d317dd5dcf72cd3e4baab9d8a4",
+      "bytes": 12420,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/21-opus-5-5.md",
+      "sha256": "aac5adfa287ec242bdc264182e73bd286cbee95dc18f8788ff893320aaa4c38a",
+      "bytes": 3310,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/30-sonnet-5.md",
+      "sha256": "23a59c554f64345eb98ca2e860dbf7c68b97239b992e90e6b5b81adb21114bfe",
+      "bytes": 10173,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/31-sonnet-5-5.md",
+      "sha256": "c7fe8b7d26dc3ff17734d3170017e57869c36539fca69976eb8b4b475b8fb4b3",
+      "bytes": 6225,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/35-haiku-4-5.md",
+      "sha256": "f615484b5fdaf457991462396997d3e174e9966b49c8a5df25c3c724f15c0ef7",
+      "bytes": 1497,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/36-haiku-5-5.md",
+      "sha256": "1a2c4925197abb07ee4ee47046c414ff70e5f8f9f415a882563015c3a0ef5daa",
+      "bytes": 4010,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/40-fable-5.md",
+      "sha256": "f5f57f1c97475e38f87c837c65f40bb730ddbe5f34565bdd453139c4e381c2ab",
+      "bytes": 13774,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+      "sha256": "03382f23d038828859d141a7f64db0933b4a1ae9ad4301d36563117456d1f51e",
+      "bytes": 25281,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/42-fable-5-1.md",
+      "sha256": "a00b6b1fc7951fd75aa5b6fbb24a9f405417309b54954806e599bdc32a4a94fb",
+      "bytes": 3532,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+      "sha256": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+      "bytes": 7304,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/60-skill-authoring.md",
+      "sha256": "8c8271e0c30b1dd326091432da41dff4e1ca6b22d7d16bf851bb82be3df61ebc",
+      "bytes": 19784,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/61-skill-platform-mechanics.md",
+      "sha256": "8440ef4c55375d287e07c2aca40313fba939701e4394bb8b7370aae056189657",
+      "bytes": 8819,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/70-agent-instruction-files.md",
+      "sha256": "349e1be2bc49893682c208d91214e164d0d64f4948ce1277d26c78b0808cc694",
+      "bytes": 16152,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/80-subagent-authoring.md",
+      "sha256": "10e7fe596f8c19a8678e1b0cd04f485ee59be0eba7329e8dfadf18627941cb51",
+      "bytes": 17787,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+      "sha256": "fc59365aa50f4ae7242ad8398eccf1b6047eb5789f794f5059620534418e9c88",
+      "bytes": 9716,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/92-agent-evaluation.md",
+      "sha256": "73afb0001a0d0d386994f95c5575e6e3c1fe1d5efc6533c552ba84a8c83d0106",
+      "bytes": 5005,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/references/93-claude-evaluation.md",
+      "sha256": "605e959b28c53beac6eaa4e76f4dcbda8d44a9255e4fba60628c52eeb9fb06eb",
+      "bytes": 5038,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py",
+      "sha256": "46252d1481d475b3f8a9c51497d1031d612c659c94d682f6e2049ae432658656",
+      "bytes": 13555,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_claude_agent_evals.py",
+      "sha256": "f719f0e890fbd83d050015efc564d695d093f5acd03efb5f1106e11d5b4b7d30",
+      "bytes": 23614,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_claude_model_policy.py",
+      "sha256": "2b8e326f8d9aff61f58a5765ec9612dae0f20395f9da30adc09216fc00edfaa3",
+      "bytes": 7307,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_codex_model_policy.py",
+      "sha256": "2706e5e44504ac23e02aebd0b37e2fda3e8c5da264e5f02fd86220896a5c787e",
+      "bytes": 3917,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_goal_condition.py",
+      "sha256": "0ad91924262a4ccab8a6b081f09c1e9fb9b2e3919ef919db71ffd38450db3002",
+      "bytes": 6073,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_rule_writer_grants.py",
+      "sha256": "575ba84e0316052f743932eab0f1f01d8c84fd2fd767db1b910394f67579f713",
+      "bytes": 21468,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/claude_model_policy.py",
+      "sha256": "5b567b22857bd30202f3bfa623295e268a61a850b1a1303aaeeecf9073324a3c",
+      "bytes": 10064,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/codex_model_policy.py",
+      "sha256": "4312374af114c7da00326ebe281c4fcab1af0aac33c831b6e106d37a65396507",
+      "bytes": 6113,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/profile_projection.py",
+      "sha256": "4a9293a5fa333a61b86398730df8fbdd756a0e153c9f10d0dfb9593038ebeb15",
+      "bytes": 11221,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/task_model_controls.py",
+      "sha256": "d2739d95c0ecdb2a2aa1e1bfd990c8e6cbc9bbdb7874f08558982811c4c3a2f6",
+      "bytes": 2794,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+      "sha256": "f8b3f5d5ba7b3ea22e9ff92e896dd3d7e84ab6254621ec88d3a37b46ce46793d",
+      "bytes": 20670,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+      "sha256": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0",
+      "bytes": 11283,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/10-discovery.md",
+      "sha256": "660600e1afbb75bc3f644113beab5132bd43a7d2f1ba9eecbc4671852c9bafea",
+      "bytes": 3655,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf",
+      "bytes": 1672,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/30-implementation.md",
+      "sha256": "d0dc56d4e599da4c7366b888e8a68fe72a8f3213c881dd9da9295ddca86b7890",
+      "bytes": 1597,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "sha256": "adad6d609a1ef06f8b4346576d027ad8296b815d4eadf8dfa6809a00fc2bce87",
+      "bytes": 1851,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "sha256": "76f33a1b6df294e0356e6393541b1e121192da13204420e46d1008688501fb66",
+      "bytes": 2616,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a",
+      "bytes": 2107,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1",
+      "bytes": 1439,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306",
+      "bytes": 1517,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3",
+      "bytes": 1161,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "sha256": "31197e02a5afa0ad2b66a2e3273846645df44570236cdd17a92a1dfda080f1d5",
+      "bytes": 1913,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "sha256": "dc522f667cd844b63985f760ee2fc2313e23aa6739274a8375a5744159c5cbb4",
+      "bytes": 4418,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md",
+      "sha256": "d95a44f4749468ef67d1a4dddf9b1ec1029d6279493788850757ca37a8456ba4",
+      "bytes": 4251,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/installation.md",
+      "sha256": "946a52abd24d0d258996d7028df24edaf3e5e88f8bbeff042cefac98fa736885",
+      "bytes": 5996,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+      "sha256": "e857a6f29e5523d474998c815004e261b5e73b8fa99a970327c29631c471f80c",
+      "bytes": 3744,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/resource-policy.md",
+      "sha256": "18787192c9691b3956b4e6772590091f407afcef4dcaf445d73656b1fca0bd21",
+      "bytes": 3215,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+      "sha256": "3e20e0291fc99b0d2825a8ee1f9888b522bb0b151a15b0a42889f11c05bd96d0",
+      "bytes": 18336,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/references/verification-and-gates.md",
+      "sha256": "b5677a08dc81348f291d7de95448ccdd211d3ecdca950861bb6752f0bb818bc1",
+      "bytes": 23065,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_contracts.py",
+      "sha256": "b47574089db539f5b04a59b2222a6e3bc88378b6443ad337f0d5a3559d5686da",
+      "bytes": 27007,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/check_agent_grants.py",
+      "sha256": "06a16406da735ad40161b503adadd051048bb30fcaf47f0656fc015a53dd3e15",
+      "bytes": 24142,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Get-AlaaCodexAgentStatus.ps1",
+      "sha256": "df1de5d19ec280b3a7396e1661c14b6e928560db34e3af618715401f9f794a7c",
+      "bytes": 2252,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/install-agents.sh",
+      "sha256": "b13cd13fd223c7f71024d8c57c95ba4f6b3e03dbef5fd098e98c381d98f0e6f8",
+      "bytes": 2621,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Install-AlaaCodexAgents.ps1",
+      "sha256": "1bc62f02fb62e1a4a0f4bd034595f528dfaac85ec89f4ec883d58c67bcbd12c6",
+      "bytes": 5725,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Install-AlaaCodexOrchestrator.ps1",
+      "sha256": "856f94b6f2633fbd93e1c731640d5f6abc517a27f400a25864bf18cc59eaf7b7",
+      "bytes": 4359,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/install-skill.sh",
+      "sha256": "288a84b21ebecd7974b9ac1d701f18f584f9bd355361234b5f742c73902e9e1a",
+      "bytes": 1455,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1",
+      "sha256": "bf2667dbcb23b4d33fa5015e5d29d8cd2024a4057fb85ab23d7d6f8865c9f714",
+      "bytes": 4168,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/render_agents.py",
+      "sha256": "66adcf6f020aa4a4ffd10237c98c0e9196bdc9cf4a7ee5a39ac049f15b3ddc6a",
+      "bytes": 9010,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "sha256": "a629cd29554ba67cdd5b37759a058bc787f21582129f48c7ad55fb484d73bc5d",
+      "bytes": 822,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/test_install_preflight.py",
+      "sha256": "94cb13f29c266726c1caedc21ff423840cf41e66b296a5da2fd6bf4938a326df",
+      "bytes": 6555,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-codex-orchestrator/scripts/validate_pack.py",
+      "sha256": "00b5efacfe822023ab24961975ae3a97ebce1927fe1e453605e8a689bf68f491",
+      "bytes": 8753,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+      "sha256": "fcd449f88d98ab2fa6ffc8247cd70b6f92e0e1fec76d7b897c2478025cb4ac8e",
+      "bytes": 20161,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+      "sha256": "679698a94e22b7a19e174c50c3a237de8c02e2234c33e7d56cf7a9b6aa0ba063",
+      "bytes": 12646,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/10-discovery.md",
+      "sha256": "b4ef74f111f02bac47df0cba39add398d49c3e1c280174cab15377eecd800d5a",
+      "bytes": 3661,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/20-design.md",
+      "sha256": "8d12f09a5d60e1e22d59e5274e50cad046edb72a1a9668bc67b6b7fec8c8a3bf",
+      "bytes": 1672,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/20-design.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/30-implementation.md",
+      "sha256": "9602851cb6a85574d3357ba8a5dd15424a27fa0c8da5bd910199a9c11c2f1e89",
+      "bytes": 3531,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/40-verification.md",
+      "sha256": "adad6d609a1ef06f8b4346576d027ad8296b815d4eadf8dfa6809a00fc2bce87",
+      "bytes": 1851,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/40-verification.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/50-correctness-review.md",
+      "sha256": "25bd87265c6ac9738c6d0488b19d332b2f79333cea84765ea7aeb6c744fccc61",
+      "bytes": 2481,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "sha256": "50c8035ddb8b8902a57c4f650554f41545a9a8254b372ab3fa2e117c46cfeb7a",
+      "bytes": 2107,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/60-contract-review.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/70-release-review.md",
+      "sha256": "6a8fb15feb08c4624410053705ba767e0163812fd1345dd30ff1cc0c0fa676e1",
+      "bytes": 1439,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/70-release-review.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "sha256": "cecae6d3267f57671aa49a1a789e514e6fb6e34948684ff9c8a9540f57b1a306",
+      "bytes": 1517,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/80-interface-review.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "sha256": "e87f677f6323bb53a2ed01b629574647197366df1bb2d133223e8f35a64c60d3",
+      "bytes": 1161,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts/90-completion/10-operability-evidence.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts/90-completion/20-review-followup.md",
+      "sha256": "bb66620502574d4b81c30189648ed39bf999b3dcab6d9458eaf26a617a1044f6",
+      "bytes": 1830,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/delegation-prompts.md",
+      "sha256": "dc522f667cd844b63985f760ee2fc2313e23aa6739274a8375a5744159c5cbb4",
+      "bytes": 4418,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/delegation-prompts.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/failure-taxonomy.md",
+      "sha256": "d95a44f4749468ef67d1a4dddf9b1ec1029d6279493788850757ca37a8456ba4",
+      "bytes": 4251,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/failure-taxonomy.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+      "sha256": "ce6a80f6c2790e9275778b4a114e448af515ca48ad7acd46fee7d75af2f0ffad",
+      "bytes": 3714,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/resource-policy.md",
+      "sha256": "18787192c9691b3956b4e6772590091f407afcef4dcaf445d73656b1fca0bd21",
+      "bytes": 3215,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/references/resource-policy.md",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+      "sha256": "1d1cac6b6f2ad0d6314d276ecf597ba5346a7b851acd9f6c1ba05bdb1f174518",
+      "bytes": 18083,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/references/verification-and-gates.md",
+      "sha256": "4894107bfe7df407081ba9f0c86dc753d8456bb438428f992bbd98757cfd388f",
+      "bytes": 22749,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_contracts.py",
+      "sha256": "1969b3898defac7dd67545702007e261aee1b27334fda8c80c684a3b6c38fc89",
+      "bytes": 27822,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/check_agent_grants.py",
+      "sha256": "6f3da00d152bd479479391ccbb063b9c8daeb2a79855971e23052cbd623f8fa8",
+      "bytes": 21337,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/Invoke-AlaaLowPriority.ps1",
+      "sha256": "bf2667dbcb23b4d33fa5015e5d29d8cd2024a4057fb85ab23d7d6f8865c9f714",
+      "bytes": 4168,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/scripts/Invoke-AlaaLowPriority.ps1",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/render_agents.py",
+      "sha256": "9f89f7ac942af053ea5af1f683b52b8be4db1bde73b2bbd9c2e6c3a4de2da65b",
+      "bytes": 5540,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/run-low-priority.sh",
+      "sha256": "a629cd29554ba67cdd5b37759a058bc787f21582129f48c7ad55fb484d73bc5d",
+      "bytes": 822,
+      "equivalent_to": "skills/sohrab/alaa-codex-orchestrator/scripts/run-low-priority.sh",
+      "read": true,
+      "read_method": "full native source, bounded batches; byte-identical mirror reused"
+    },
+    {
+      "path": "skills/sohrab/alaa-cc-orchestrator/scripts/validate_pack.py",
+      "sha256": "0cdfc6ccd3d67427e364032c3da1dfb6ea869bfdc98151ab1d721105f36d6f53",
+      "bytes": 9389,
+      "equivalent_to": null,
+      "read": true,
+      "read_method": "full native source, bounded batches; truncated regions completed in subsequent reads"
+    }
+  ],
+  "bundles": 31,
+  "completed_before_source_edits": true
+}

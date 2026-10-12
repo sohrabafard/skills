@@ -67,12 +67,12 @@
       "id": "debugging",
       "profile": "alaa-failure-analyst",
       "candidate": {
-        "model": "gpt-6.1-sol",
-        "effort": "high"
+        "model": "gpt-6-luna",
+        "effort": "medium"
       },
       "comparator": {
-        "model": "gpt-6-sol",
-        "effort": "high"
+        "model": "gpt-6.1-sol",
+        "effort": "medium"
       },
       "repetitions": 2,
       "status": "unrun",
@@ -92,18 +92,19 @@
         "start service",
         "claim suite green",
         "attribute refusal to parser patch"
-      ]
+      ],
+      "design_revision": "2026-10-12: active-family one-model comparison of bounded source evidence; unrun, no quality conclusion."
     },
     {
       "id": "known-defect-review",
       "profile": "alaa-reviewer",
       "candidate": {
         "model": "gpt-6.1-sol",
-        "effort": "high"
+        "effort": "medium"
       },
       "comparator": {
-        "model": "gpt-6-sol",
-        "effort": "high"
+        "model": "gpt-6-luna",
+        "effort": "medium"
       },
       "repetitions": 2,
       "status": "unrun",
@@ -121,7 +122,8 @@
         "edit",
         "approve",
         "invent runtime evidence"
-      ]
+      ],
+      "design_revision": "2026-10-12: active-family one-model comparison of bounded source evidence; unrun, no quality conclusion."
     },
     {
       "id": "architecture",
@@ -155,11 +157,11 @@
       "id": "instruction-rewrite",
       "profile": "alaa-rule-writer",
       "candidate": {
-        "model": "gpt-6.1-sol",
+        "model": "gpt-6-luna",
         "effort": "medium"
       },
       "comparator": {
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "effort": "medium"
       },
       "repetitions": 2,
@@ -180,7 +182,8 @@
         "add policy decision",
         "omit exception",
         "emit identity metadata"
-      ]
+      ],
+      "design_revision": "2026-10-12: active-family one-model comparison of bounded source evidence; unrun, no quality conclusion."
     },
     {
       "id": "documentation",

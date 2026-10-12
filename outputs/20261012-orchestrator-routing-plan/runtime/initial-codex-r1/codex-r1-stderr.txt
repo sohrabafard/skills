@@ -1,0 +1,5 @@
+WARNING: failed to clean up stale arg0 temp dirs: Access is denied. (os error 5)
+WARNING: proceeding, even though we could not create PATH aliases: Access is denied. (os error 5) at path "C:\\Users\\Alaa\\.codex\\tmp\\arg0\\codex-arg03L27Lq"
+2026-10-12T13:39:30.590372Z  WARN codex_state::runtime: failed to open memories db at C:\Users\Alaa\.codex\memories_1.sqlite: failed to open memories DB at C:\Users\Alaa\.codex\memories_1.sqlite: error returned from database: (code: 14) unable to open database file
+2026-10-12T13:39:30.591284Z  WARN codex_rollout::state_db: failed to initialize state runtime: failed to initialize state runtime at C:\Users\Alaa\.codex: failed to open memories DB at C:\Users\Alaa\.codex\memories_1.sqlite: error returned from database: (code: 14) unable to open database file: error returned from database: (code: 14) unable to open database file: (code: 14) unable to open database file
+Error: failed to initialize in-process app-server client: Access is denied. (os error 5)

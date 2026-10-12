@@ -1,0 +1,32 @@
+[
+  {
+    "source": "codex-r1-events-usage.json",
+    "destination": "initial-codex-r1/codex-r1-events-usage.json",
+    "bytes": 99,
+    "sha256": "c50e6c0055ba1a7ec97123f655eb71ede0269c4acf78101f16e4776e9d7e3267"
+  },
+  {
+    "source": "codex-r1-preflight.json",
+    "destination": "initial-codex-r1/codex-r1-preflight.json",
+    "bytes": 3934,
+    "sha256": "ea53d7267575b3c7644a1799c8a5012529e1a2bcf306f14bd259cbdd125b5bad"
+  },
+  {
+    "source": "codex-r1-stderr.txt",
+    "destination": "initial-codex-r1/codex-r1-stderr.txt",
+    "bytes": 1004,
+    "sha256": "7c7c185f456f32679e2b3c9e4b13999309eba8cd6c80513d0acb1c6f91ed0d23"
+  },
+  {
+    "source": "codex-r1-stdout.jsonl",
+    "destination": "initial-codex-r1/codex-r1-stdout.jsonl",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "codex-r1-capture-status.json",
+    "destination": "initial-codex-r1/codex-r1-capture-status.json",
+    "bytes": 1599,
+    "sha256": "71ef48cadb617164f9bad791de0960508f1b751c2f3bfc36df55e601ebb97df7"
+  }
+]

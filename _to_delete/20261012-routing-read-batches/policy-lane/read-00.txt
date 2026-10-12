@@ -1,0 +1,180 @@
+
+FILE skills/sohrab/alaa-prompting-guide/SKILL.md chars 0:7615
+---
+name: alaa-prompting-guide
+description: "Write, review, repair, and compress prompts, skills, subagent definitions, and AGENTS.md/CLAUDE.md files for GPT-6 in Codex and Claude Opus 5.5, Fable 5.1, Sonnet 5.5, or Haiku 5.5 in Claude Code. Use for model and effort capability evidence, thinking calibration, skill invocation, compact goal conditions, rejected goal prompts, skill and subagent authoring, or runtime workflows. Resolve Desktop Code versus Chat or Cowork before writing Claude commands. Do not use as a general coding or refactor skill, and do not extrapolate it to models outside this scope."
+---
+
+# Alaa Prompting Guide
+
+Own instruction authoring, model/effort capability evidence and runtime control mechanics for the stated models and runtimes. The runtime orchestrator owns task allocation and admission for every authority role. Apply before writing, choosing, reviewing or repairing prompts, skills, subagent definitions, `AGENTS.md`/`CLAUDE.md` or pins. Read current owners: behavior can invert between generations.
+
+## When NOT to use
+
+- General coding/review/refactoring without instruction or agentic-workflow authoring.
+- Retired Claude generations or models outside scope; historical references support explicit comparisons only. Non-Codex GPT tuning is excluded; ChatGPT invocation sigils remain covered for generated prompts.
+- Durable multi-phase plans/state/phase prompts: `/alaa-workflow` owns them.
+- Per-goal lanes, role prompts and review gates: the runtime orchestrator owns them. Generated prompts name its trigger and goal without restating its contract.
+
+## The rule-writer specialist
+
+Before dispatching `alaa-rule-writer`, read `assets/rule-writer/dispatch.md`. It rewrites an existing draft and returns replacement text; authorship, decisions, research and edits stay with the caller.
+
+Distributing it is not this skill's job. Under Claude Code the definition ships inside the plugin and loads from the plugin-root `agents/` directory once the plugin is installed or enabled, and the plugin manifest version is the installed agent-pack version: never copy a wrapper into `~/.claude/agents`, never write an installation sentinel, and never run the grants checker as an install gate. Under Codex, `install-skills.md` at this repository's root owns the one command that places `assets/rule-writer/codex/alaa-rule-writer.toml` into `~/.codex/agents`.
+
+Managed wrappers omit model and effort; the orchestrator explicitly selects both controls for each task, including rule-writer. Validate effective controls separately from role authority. After changing `assets/rule-writer/`, run `python scripts/check_rule_writer_grants.py`; after checker changes also run `--self-test`.
+
+## Codex policy validation
+
+`assets/codex-model-policy.json` owns supported-effort snapshots and model-neutral role/artifact registrations. It chooses no task pair; main controls stay externally configured. From this skill directory, after policy/pin changes run `python scripts/check_codex_model_policy.py --agent-root assets/rule-writer/codex`; repeat `--agent-root` for another pack. After corpus changes run `python scripts/check_agent_evals.py`. Add `--self-test` to each changed checker.
+
+## Claude policy validation
+
+`assets/claude-model-policy.json` owns Claude capabilities, model availability conditions and model-neutral role/artifact registrations. Task comparisons remain separate evidence, never role defaults. From this skill directory run
+`python scripts/check_claude_model_policy.py` after policy or projection changes; add `--self-test`
+after checker changes. Defaults cover both managed roots. Repeat `--agent-root <path>`
+for selected source/generated subsets, or use `--policy <path>` for an explicit policy.
+Run `python scripts/check_claude_agent_evals.py` for the separate Claude comparison corpus;
+add `--self-test` after changing its checker and `--results <path>` to validate evidence.
+After shared projection/control changes, run `python scripts/profile_projection.py --self-test`; both policy self-tests cover explicit task controls for every role. These gates require the root checker's bundled YAML parser. A verified aggregate can discharge an identical covered command; the orchestrator owns consolidation. Uncovered managed roots still require checks. Source agreement proves neither installed activation nor calibration.
+
+All gates use `0` clean, `1` findings, `2` unavailable proof (including malformed/unreadable input). Either nonzero blocks the affected completion; repair the stated cause within the active retry budget or report blocked. Static checks prove neither live acceptance nor instruction compliance.
+
+## Decision procedure
+
+1. Identify runtime, surface and model. Ask only for missing facts that change the artifact; a Desktop app name proves no tab's command support.
+2. Read `references/00-topic-map.md` before answering; load only references whose conditions hold.
+3. Resolve version-sensitive facts from sources, never recall.
+4. Draft, then compress every controlling artifact, including edits and dispatches, through `references/60-skill-authoring.md`. Ship the fewest words preserving behavior. Soft targets yield; hard limits require equivalent restructuring or a blocked report. Conversational prose is exempt.
+5. Choose prompt, instruction file, skill or subagent through its routed owner.
+
+For a goal, follow `references/06-invocation-and-composition.md` for the compact condition and kickoff; `/alaa-workflow` owns plans and phase/task skill mappings.
+
+For a rendered Claude condition, run `python scripts/check_goal_condition.py --surface claude-desktop-code --condition-file <path>` here, substituting the observed surface. After checker changes also run `--self-test`.
+
+## Principles that govern every artifact this skill produces
+
+**Complete contract.** Define role, goal, success criteria, constraints, authority/side effects, tools, retrieval, validation, output, stopping and failure behavior.
+
+**One instruction, one owner.** Duplication dilutes the contract. Compare reductions against the same acceptance criteria through `references/60-skill-authoring.md`.
+
+**Model-specific delegation.** Over-delegation needs bounds; reticence needs authorization. Read `references/06-invocation-and-composition.md` before tuning either.
+
+**Proportional verification.** Preserve focused checks and independent acceptance. Remove repetition only without changed inputs, failures or unresolved concerns; a model upgrade proves no correctness. `references/80-subagent-authoring.md` owns the authority test.
+
+**Missing evidence stays unknown.** Say what the source omits, use a named placeholder and preserve caveats.
+
+## Freshness
+
+Before stating prices, limits, effort levels, feature/version gates, defaults, discovery paths or current recommendations, refresh official sources through `references/00-source-map.md`. Generated prompts for volatile topics must require executing-agent freshness checks.
+
+## Stop
+
+Finish when the usable artifact preserves its intended contract and required gates pass. For ambiguity, contradiction, unsafe or impossible work, state the blocker, ask the smallest resolving question and stop. Source work grants no installation, commit, publication, external mutation or paid-comparison authority.
+
+## Style
+
+Use precise, direct technical English unless requested otherwise. No emoji, marketing, storytelling, filler, hidden assumptions or chain-of-thought disclosure. For work outside this role, provide a prompt/skill or obtain explicit confirmation. Deliver a usable artifact unless the user changes the role.
+
+FILE skills/sohrab/alaa-prompting-guide/references/00-source-map.md chars 0:7278
+# Source Map
+
+Ground every version-sensitive claim here. This file decides which source wins and when recall is forbidden; `references/00-topic-map.md` decides which reference answers a question. They are different jobs and neither restates the other.
+
+## Source priority
+
+1. Explicit user instructions for the current task.
+2. Current target-host tool schemas and effective configuration for runtime availability.
+3. Live official documentation:
+   - GPT-6: `https://developers.openai.com/api/docs/guides/latest-model`, `https://developers.openai.com/api/docs/models`
+   - Codex and ChatGPT skills, commands, and agent files: `https://learn.chatgpt.com/docs/build-skills`, `https://learn.chatgpt.com/docs/developer-commands`, and the Codex pages under `https://developers.openai.com/codex/` for `use-cases/follow-goals`, `subagents`, `guides/agents-md`, and `config-reference`
+   - Claude prompting: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices` plus the model-specific Opus 5.5, Fable 5.1, Haiku 5.5, and Sonnet 5.5 pages under that path
+   - Claude facts and runtime: `https://platform.claude.com/docs/en/models/overview`, `https://platform.claude.com/docs/en/build-with-claude/effort`, and the `https://code.claude.com/docs/en/` pages `model-config`, `skills`, `sub-agents`, `workflows`, `scheduled-tasks`, `permission-modes`, `ultraplan`, `goal`, and `desktop`
+4. This skill's dated references and local policy; they do not override current official capability facts. Use `/openai-docs` for current OpenAI guidance. Use community sources only as corroboration after official sources fail to answer.
+
+A redirect is a signal, not a detour: `developers.openai.com/codex/skills` now returns a permanent redirect to the `learn.chatgpt.com` skills page, so a citation to the old path is stale even though it still resolves. When a documented URL redirects across hosts, cite the destination and update the reference that named the origin.
+
+## Freshness triggers
+
+Re-fetch before stating any price, token limit, effort or verbosity name, version, default, flag, feature gate, goal or loop behavior, subagent nesting or concurrency limit, discovery path, or current-best recommendation, and before carrying forward any fact newer than the citing file's freshness stamp.
+
+Three areas are volatile enough that carrying a value forward is a defect rather than a shortcut: harness version gates and hard limits in Claude Code, subagent spawning defaults and depth behavior, and the exact discovery paths for skills and agent definitions in both runtimes. Each has changed in ways that silently broke prompts written against the previous documentation — silently, because nothing errors when a prompt requests a capability the harness no longer exposes under that name.
+
+## Cross-agent packaging contract
+
+- Keep one portable `SKILL.md` package for Codex and Claude Code.
+- Keep agent-neutral behavior in `SKILL.md` and `references/`. `agents/openai.yaml` is Codex interface metadata only, and is the one file in a skill that no build rewrites.
+- Runtime and model differences change prompt content, not package format. Skill *frontmatter* surfaces are nevertheless asymmetric between the runtimes even where the body is portable; when you are about to add a frontmatter key, read `references/61-skill-platform-mechanics.md` for which runtime documents it.
+
+## Interpretation contract
+
+Carry caveats forward as caveats. Never convert uncertainty into a firm instruction, and never infer that something is false from an absence of evidence — say the documentation does not state it, and use a named placeholder rather than an invented specific.
+
+Where official sources and `/alaa-workflow` disagree with this skill, report the drift, prefer current official and runtime truth for the task in hand, and reconcile the owning file afterwards. Silently choosing a side leaves two sources of truth and no record of which one was followed.
+
+OpenAI active-model/subagent and Claude model, prompting, effort and selection sources were
+refreshed 25 September 2026. Other harness mechanics retain their section-specific historical
+dates until re-fetched. For lifecycle, use the official model-deprecations page; for API ID
+semantics, use model-ids-and-versions. Full system cards were unavailable after bounded retrieval;
+release summaries are weaker evidence. Vendor scores and source validation do not prove
+local runtime activation, account access or a profile's comparative quality.
+
+Sonnet 5.5 model, migration, prompting, effort and Claude Code selection sources were
+refreshed 29 September 2026. Read `references/31-sonnet-5-5.md` for their exact URLs and
+provider/API boundaries. Other dated model snapshots retain their own verification dates.
+
+Claude goal, Desktop Code and slash-invocation sources refreshed 4 October 2026:
+`https://code.claude.com/docs/en/goal`, `https://code.claude.com/docs/en/desktop`, and
+`https://code.claude.com/docs/en/skills`. They establish the condition cap, three evaluator
+verdicts, transcript-only evidence, permission/trust/hook boundaries and direct versus
+mid-message invocation. They do not establish Chat/Cowork goal support, Unicode counting
+semantics, a recent parser/cap change, or acceptance of an unprovided rejected prompt.
+Source consistency and static fixtures do not prove live Desktop acceptance.
+
+The Desktop command-composer error quoted in `references/41-claude-code-runtime-features.md`
+is user-observed on 4 October 2026; no app version or official documentation of that exact
+restriction was supplied. Keep this evidence separate from the official goal limit and
+from any inferred release change. The rejected payload and live repaired submission remain unverified.
+
+Haiku 5.5 launch, migration, prompting, effort and Claude Code selection/subagent sources were refreshed 8 October 2026. Read `references/36-haiku-5-5.md` for URLs, workload limits and API-versus-harness controls. Local calibration and installed activation remain unrun.
+
+Sonnet 5.5 launch, overview, prompting, effort and Code selection sources were refreshed 8 October 2026 for the corrected active profiles. Its migration snapshot retains its 29 September date. Retained effort pins remain unrun workload hypotheses; vendor guidance proves no local calibration.
+
+Plan-first selection and runtime-control sources were reverified 8 October 2026: current Claude Sonnet/Opus prompting, model selection, model overview, Code model controls/subagents, Codex models/subagent configuration and current GPT model pages. Read canonical policy source entries and `references/11-codex-runtime-features.md` or `references/41-claude-code-runtime-features.md` for exact surfaces and precedence. These sources inform unrun local admission boundaries; they do not establish model equivalence or live activation.
+
+Task selection, GPT proportional-test guidance and Opus/Sonnet thinking exceptions refreshed 9 October 2026 through the official selection and prompting pages. `references/90-model-selection.md` separates explicit prose, rendered defaults and supplied screenshots. Other capability/runtime snapshots retain their own dates; neither unavailable selector cells nor unrun comparisons become negative evidence.
+
+FILE skills/sohrab/alaa-prompting-guide/references/00-topic-map.md chars 0:5494
+# Topic Map
+
+The router for this skill. Every reference below is unread until its condition fires, and that is the point: the body of a skill is paid for on every run, while a reference is paid for only when something makes it necessary. Match your situation to a row, read that file, and do not pre-load the rest.
+
+Rows are conditions, not headings. If your situation is not listed, no reference here owns it — say so rather than reading the nearest-looking file.
+
+| You are about to | Read | Because |
+|---|---|---|
+| Activate a skill in a generated prompt, choose a kickoff and compact goal condition, or prepare phase/task skill routing | `references/06-invocation-and-composition.md` | Direct invocation, role ownership and reachable completion decide the message shape |
+| Write delegation language and need to know whether to cap fan-out or authorize it | `references/06-invocation-and-composition.md` | It owns delegation polarity, and the wrong direction fails silently on either family |
+| Tune GPT prompts or choose active Codex profiles | `references/12-gpt-6.md` | Separates model capability, runtime availability, and local policy |
+| Evaluate a recorded legacy exception or compare historical GPT behavior | `references/10-gpt-5-6.md` | Legacy guidance is not the active routing default |
+| Design or execute representative Codex model/effort comparisons | `references/92-agent-evaluation.md` | Defines controlled comparisons and honest evidence status |
+| Design Claude comparisons, record identity or fallback, or validate calibration evidence | `references/93-claude-evaluation.md` | Source checks and synthetic fixtures do not prove runtime behavior |
+| Use Codex's goal loop, subagents, batch jobs, `AGENTS.md` discovery, or its slash commands | `references/11-codex-runtime-features.md` | These are harness features with version gates and hard limits a prompt must respect |
+| Tune current Opus prompting or migrate older Opus instructions | `references/21-opus-5-5.md` | Calibration and API boundaries differ from historical Opus 5 |
+| Compare historical Opus 5 behavior explicitly | `references/20-opus-5.md` | Retained evidence does not authorize current pins |
+| Tune current Sonnet prompting or migrate Sonnet API controls | `references/31-sonnet-5-5.md` | Recalibrated effort, thinking modes and tool contracts differ from Sonnet 5 |
+| Compare historical Sonnet 5 behavior explicitly | `references/30-sonnet-5.md` | Retained evidence does not authorize current pins |
+| Tune current Fable prompting or assess an explicit comparison | `references/42-fable-5-1.md` | Its verification and API guidance differ from older Fable |
+| Compare historical Fable 5 behavior explicitly | `references/40-fable-5.md` | Older verification reminders are historical, not current instructions |
+| Tune current Haiku prompts or select bounded retrieval, verification or documentation | `references/36-haiku-5-5.md` | Explicit completion, retrieval and check instructions preserve bounded work |
+| Compare historical Haiku 4.5 explicitly | `references/35-haiku-4-5.md` | Its missing effort support does not transfer to Haiku 5.5 |
+| Use Claude Code's `/loop`, subagents, workflows, plan mode or `/goal`, resolve a Desktop tab, or diagnose a rejected goal | `references/41-claude-code-runtime-features.md` | Surface availability, evaluator scope and the actual rejection decide what can run |
+| Set or change an effort level, or judge whether a lane needs a higher tier | `references/50-effort-and-thinking.md` | Model and effort are separate decisions, and an effort inherited from another generation is an untested assumption |
+| Decide whether what you are about to write is a prompt, an instruction file, a skill, or a subagent | `references/60-skill-authoring.md` | It holds the four-way test, and choosing wrong is the most common authoring defect |
+| Write, review, or repair a skill | `references/60-skill-authoring.md` | It owns the authoring procedure and how to split a subject into references |
+| Shorten or edit an artifact that controls another agent, or judge whether a change altered behavior | `references/60-skill-authoring.md` | It owns equivalence and compression; read it with the artifact's own reference, which owns that artifact's required structure and content |
+| Look up a skill discovery path, a frontmatter key surface, or a description character budget | `references/61-skill-platform-mechanics.md` | These are per-runtime lookups that go stale and must not be recalled from memory |
+| Write, trim, or split an `AGENTS.md` or `CLAUDE.md` | `references/70-agent-instruction-files.md` | An instruction file is loaded unconditionally, so its economics differ from every other artifact here; trimming one also needs the row above |
+| Define a model-neutral subagent and tools, or write explicit task controls in dispatch | `references/80-subagent-authoring.md` | It owns authority boundaries, output contracts, and the test separating a redundant self-check from a real gate; shortening a definition or a dispatch also needs the compression row |
+| Choose a model, or compare models across runtimes | `references/90-model-selection.md` | Structured policies own capabilities; runtime orchestrators own actual all-role task selection |
+| Ground a version-sensitive claim, or judge whether a number must be re-fetched before it is quoted | `references/00-source-map.md` | It owns source priority and the freshness triggers that decide when recall is not allowed |

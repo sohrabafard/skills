@@ -1,0 +1,1 @@
+Git emitted CRLF-to-LF working-copy warnings for scoped changed files before the exit-2 whitespace finding.

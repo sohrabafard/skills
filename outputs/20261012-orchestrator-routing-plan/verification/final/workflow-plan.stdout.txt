@@ -1,0 +1,8 @@
+plan: outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md
+ERROR [plan.phase-fields] Phase 1 ratification - 2026-10-12 is missing phase fields: Depends on, Owned scope, Excluded from this phase, Evidence observed, Validation commands. Remediation: Add them per assets/plan-template.md so a fresh agent can own the phase without re-deriving its boundaries.
+ERROR [plan.phase-snapshot] Phase 1 ratification - 2026-10-12 records neither a commit nor a scoped worktree snapshot, so its evidence has no identity. Remediation: Record an authorized Commit or an observed Snapshot per assets/plan-template.md; a phase that changed no files states that explicitly.
+ERROR [plan.phase-snapshot] Phase 1 - Freeze eligibility and allocation acceptance is complete but records no commit ID or scoped worktree snapshot. Remediation: Record an authorized commit ID, the actual HEAD and SHA-256 digest of the scoped path/content manifest, or state exactly that no files changed.
+ERROR [plan.skills-mapping] Phase 1 ratification - 2026-10-12 has no skill mapping. Remediation: Name exact Skill Bindings or use task [skills: inherit] under an explicit phase list.
+prompts: outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing__phase-prompts.md
+checkpoint: outputs/20261012-orchestrator-routing-plan/docs/agents/20261012-120000_orchestrator-routing-state.md
+state: outputs/20261012-orchestrator-routing-plan/.codex/state/20261012-120000_orchestrator-routing.json

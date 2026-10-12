@@ -1,0 +1,16 @@
+{
+  "initial_failed_matrix": "runtime/codex-v2-results-initial-failed.json",
+  "initial_sha256": "d1c618d0314ad38121563d125adbf8b16aa75d66c82fe0d6a869bf91d3cb1052",
+  "updated_matrix": "runtime/codex-v2-results.json",
+  "updated_sha256": "2bc6a2b2c6be0cf5b0cdb6243f995357f71fb948f05ccba543afc21c8d8b74d8",
+  "declared_configuration_id": "codex-sol61-high-v2",
+  "prior_run_configuration_ids": [
+    "codex-sol61-high"
+  ],
+  "updated_run_configuration_ids": [
+    "codex-sol61-high-v2"
+  ],
+  "run_count": 60,
+  "only_run_configuration_field_changed": true,
+  "responses_statuses_and_grades_preserved": true
+}

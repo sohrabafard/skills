@@ -1,0 +1,18 @@
+{
+  "index": 2,
+  "command": "python scripts/check_agent_evals.py --self-test",
+  "cwd": "skills/sohrab/alaa-prompting-guide",
+  "env_override": "PYTHONDONTWRITEBYTECODE=1",
+  "priority": "ordinary",
+  "affinity": "default",
+  "started": "2026-10-12T06:34:42.9755068-07:00",
+  "ended": "2026-10-12T06:34:43.5928877-07:00",
+  "duration_seconds": 0.617,
+  "exit_code": 0,
+  "log": "cmd-02.log",
+  "timeout_seconds": 120,
+  "tier": "affected",
+  "classification": "PASS",
+  "proof_level": "unit (level 2)",
+  "observer": "independent verifier"
+}

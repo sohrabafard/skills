@@ -1,0 +1,151 @@
+{
+  "v2": [
+    {
+      "runtime": "codex",
+      "input_expected": "69df1aae327e9bf9812bc0b4748c82e878586f77b9c4ee53480abe91b9910188",
+      "input_actual": "69df1aae327e9bf9812bc0b4748c82e878586f77b9c4ee53480abe91b9910188",
+      "input_matches": true,
+      "request_expected": "259e5da9d3d1cfb09f1b0f081eff2c53d0fe28a7d0d6d677e8bda8f27a316dda",
+      "request_actual": "259e5da9d3d1cfb09f1b0f081eff2c53d0fe28a7d0d6d677e8bda8f27a316dda",
+      "request_matches": true,
+      "emitter_expected": "f64494abc128bdc7e2cb25dbd9cbfc3dbb16c28340cd4a513145314f4112b268",
+      "emitter_actual": "f64494abc128bdc7e2cb25dbd9cbfc3dbb16c28340cd4a513145314f4112b268",
+      "loaded_contract_count": 9,
+      "all_loaded_match": true,
+      "loaded_contracts": [
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/SKILL.md",
+          "expected": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f",
+          "actual": "0e8b59c0b6c667afb2295036164d69f9bf08bb0086f89306ca94d5f0a8f9af7f",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/routing-matrix.md",
+          "expected": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+          "actual": "444e6e27930465483574dadf480ca0f6aabf0300320f1fedceaaaa65f4172eed",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/model-effort-policy.md",
+          "expected": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b",
+          "actual": "5bfa6423970a5cef7fd6d7196a8a28910e17c4ab266be95f63f3a253d17f347b",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-codex-orchestrator/references/agent-catalog.md",
+          "expected": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0",
+          "actual": "2b52eb260b37e09ba6abdec8229f42bdb93183b76ad05a37b5cf49e05df59da0",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+          "expected": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+          "actual": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+          "expected": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+          "actual": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+          "expected": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+          "actual": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/11-codex-runtime-features.md",
+          "expected": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda",
+          "actual": "dc919cfec8d0a5158e15c0e35001ae1568e799eef8f949b2646de95028fcccda",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+          "expected": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc",
+          "actual": "719a8ff30a8205d4a6eb51db201b6b1ce3917ae89c94c1a31bcf9ad98aa361bc",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "runtime": "claude-code",
+      "input_expected": "8b7e9579505a5df434b59c0110a812f7fd8d8032fcb16b91b6b450a4a0777b7d",
+      "input_actual": "8b7e9579505a5df434b59c0110a812f7fd8d8032fcb16b91b6b450a4a0777b7d",
+      "input_matches": true,
+      "request_expected": "c97eca64d5a712b7238d652c43479ccc9bbd8f6c1376dd9d3ffcf7bd583a9afe",
+      "request_actual": "c97eca64d5a712b7238d652c43479ccc9bbd8f6c1376dd9d3ffcf7bd583a9afe",
+      "request_matches": true,
+      "emitter_expected": "f64494abc128bdc7e2cb25dbd9cbfc3dbb16c28340cd4a513145314f4112b268",
+      "emitter_actual": "f64494abc128bdc7e2cb25dbd9cbfc3dbb16c28340cd4a513145314f4112b268",
+      "loaded_contract_count": 9,
+      "all_loaded_match": true,
+      "loaded_contracts": [
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/SKILL.md",
+          "expected": "e97e95b6277e37d5950d4e5f011843ead340309884ffd5001a58e75c0f01c140",
+          "actual": "e97e95b6277e37d5950d4e5f011843ead340309884ffd5001a58e75c0f01c140",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/routing-matrix.md",
+          "expected": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+          "actual": "14dc858a41c32b4a50abebda39e88729e51173d3c478548e674111d3fb0e72cb",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/model-effort-policy.md",
+          "expected": "99e445b0ad2d7ded099f82faa842bf4ce745962eb7a86e8f2edfc2653148b990",
+          "actual": "99e445b0ad2d7ded099f82faa842bf4ce745962eb7a86e8f2edfc2653148b990",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-cc-orchestrator/references/agent-catalog.md",
+          "expected": "679698a94e22b7a19e174c50c3a237de8c02e2234c33e7d56cf7a9b6aa0ba063",
+          "actual": "679698a94e22b7a19e174c50c3a237de8c02e2234c33e7d56cf7a9b6aa0ba063",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/SKILL.md",
+          "expected": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+          "actual": "f1e9ac8f637a57849a1d8a272fcda6ed5e88fa0a814b8fb4e4e89a3e085deadb",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/90-model-selection.md",
+          "expected": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+          "actual": "dd94102fc580485ad0b412604b29c14a850c6f7d0b7842ff2b9cb8bf69f63785",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/50-effort-and-thinking.md",
+          "expected": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+          "actual": "fc1ffc057c3b282e473a8fa308b1f097ab766e7fd8032c25a89e7a637f55d7fc",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/references/41-claude-code-runtime-features.md",
+          "expected": "03382f23d038828859d141a7f64db0933b4a1ae9ad4301d36563117456d1f51e",
+          "actual": "03382f23d038828859d141a7f64db0933b4a1ae9ad4301d36563117456d1f51e",
+          "matches": true
+        },
+        {
+          "path": "skills/sohrab/alaa-prompting-guide/assets/claude-model-policy.json",
+          "expected": "0611f685c38034a20685b968f070f00113411b355ec11fe7c3b099d1ee6e2ef3",
+          "actual": "0611f685c38034a20685b968f070f00113411b355ec11fe7c3b099d1ee6e2ef3",
+          "matches": true
+        }
+      ]
+    }
+  ],
+  "original_preservation": {
+    "original_codex_request_matches": true,
+    "original_codex_input_matches": true,
+    "codex_r1_expected": "cb1250508b9d9c98f3b573d26ce99ccb46666c0f007f3f734279c2f7c3361c27",
+    "codex_r1_actual": "cb1250508b9d9c98f3b573d26ce99ccb46666c0f007f3f734279c2f7c3361c27",
+    "codex_r2_expected": "c75a8f784c3ea561ad2647320454f6c280400eb40f8ee52d2f21998eb1ca0c70",
+    "codex_r2_actual": "c75a8f784c3ea561ad2647320454f6c280400eb40f8ee52d2f21998eb1ca0c70"
+  },
+  "all_v2_pass": true
+}

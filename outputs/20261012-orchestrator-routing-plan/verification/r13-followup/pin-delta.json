@@ -1,0 +1,13 @@
+{
+  "cwd": ".",
+  "files": 541,
+  "prior_files": 541,
+  "differences": [
+    "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py|20588|cb0e8934dd84b247cc54b6923163829524b37f99b9ebf6276b53afbe1dbd8526",
+    "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py|17601|6feb9c90036a2d5483218c449a570edf960c7a066fcadf34473e37602118f108"
+  ],
+  "changed_paths": [
+    "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py"
+  ],
+  "only_authorized_file": true
+}

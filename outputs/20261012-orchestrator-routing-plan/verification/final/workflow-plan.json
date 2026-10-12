@@ -1,0 +1,11 @@
+{
+  "command": "python skills/sohrab/alaa-workflow/scripts/validate_workflow_files.py --plan outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md",
+  "cwd": ".",
+  "environment": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "timeout_seconds": 120,
+  "duration_ms": 281,
+  "exit_code": 1,
+  "stdout": "workflow-plan.stdout.txt"
+}

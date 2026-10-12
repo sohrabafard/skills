@@ -1,0 +1,1 @@
+No whitespace errors; git emitted CRLF-to-LF working-copy warnings for changed files.

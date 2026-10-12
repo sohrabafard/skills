@@ -1,0 +1,13 @@
+{
+  "index": 4,
+  "command": "python scripts/check_agent_evals.py --self-test",
+  "cwd": "D:\\Sohrab\\Project\\skills\\skills\\sohrab\\alaa-prompting-guide",
+  "env_override": "PYTHONDONTWRITEBYTECODE=1",
+  "priority": "ordinary",
+  "affinity": "default",
+  "started": "2026-10-12T06:22:18.5962229-07:00",
+  "ended": "2026-10-12T06:22:18.8684817-07:00",
+  "duration_seconds": 0.272,
+  "exit_code": 0,
+  "log": "cmd-04.log"
+}

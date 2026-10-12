@@ -1,0 +1,2548 @@
+{
+  "purpose": "allocation-only-probe",
+  "runtime": "claude-code",
+  "corpus_sha256": "24340081b731c281387e896200ff2862c7ed2636aeab66969cebc12859bf6c83",
+  "instruction": "Assess every supplied case independently under the loaded contract. Return decisions only. Host facts are simulated. Do not dispatch workers, use tools, edit, install, commit or make external effects. Give separate model/effort reasons and failed fit predicates; unknown telemetry remains unknown. Return a JSON object with responses, an array of objects containing case, variant and response. Put each decision in response using response_fields. No grading verdicts or prose outside JSON.",
+  "response_wrapper": {
+    "responses": [
+      {
+        "case": "case ID",
+        "variant": "variant ID",
+        "response": "object matching response_fields"
+      }
+    ]
+  },
+  "response_fields": {
+    "action": "allocate|block|retrieve|reclassify|reject",
+    "role": "task authority role",
+    "proposed_worker": "model/effort pair or null",
+    "model_reason": "evidence",
+    "effort_reason": "evidence",
+    "fit": {
+      "outcome": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "scope": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "contracts": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "pattern": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "cross_boundary_settled": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "local_discretion": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "check": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      }
+    },
+    "alternatives": [
+      {
+        "pair": "model/effort",
+        "reason": "failed predicate or stronger evidence",
+        "evidence": "source/task facts"
+      }
+    ],
+    "admission": {
+      "kind": "ordinary|official-task-priority|high-workhorse-inadequacy|explicit-user-selection",
+      "evidence": "source/task facts"
+    },
+    "continuity": {
+      "cause": "classification",
+      "preserve_valid_work": true,
+      "replay_completed_work": false
+    },
+    "compression": {
+      "verdict": "equivalent|loss|not-applicable",
+      "invariants": {
+        "authority": "boolean when assessed",
+        "gates": "boolean when assessed",
+        "exceptions": "boolean when assessed",
+        "triggers": "boolean when assessed",
+        "force": "boolean when assessed",
+        "ownership": "boolean when assessed",
+        "loading": "boolean when assessed"
+      }
+    },
+    "worker_dispatched": false,
+    "worker_effective": {
+      "model": "unknown",
+      "effort": "unknown"
+    },
+    "worker_observed": {
+      "model": "unknown",
+      "effort": "unknown"
+    }
+  },
+  "cases": [
+    {
+      "input": {
+        "case": "R1",
+        "variant": "plain",
+        "task": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py",
+            "test_feature.py"
+          ],
+          "remaining_decision": "grounded ordinary feature logic"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "bc240be5abdab513960aeef1be69f0b097214d361519a49f3904b2f90a574494"
+    },
+    {
+      "input": {
+        "case": "R1",
+        "variant": "pressure",
+        "task": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py",
+            "test_feature.py"
+          ],
+          "remaining_decision": "grounded ordinary feature logic"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "f71465f3dc6d2efe042d95b6790974bd3c341c422fc2e80226cec61f68900bc6"
+    },
+    {
+      "input": {
+        "case": "R2",
+        "variant": "plain",
+        "task": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py"
+          ],
+          "availability_evidence": "simulation only: no current supported candidate"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-haiku-4-5-20251001"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "2b21f2d36a05fcb2dc40ae84f80d1c786d313a25858a6037f55b3572903f3835"
+    },
+    {
+      "input": {
+        "case": "R2",
+        "variant": "pressure",
+        "task": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py"
+          ],
+          "availability_evidence": "simulation only: no current supported candidate"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-haiku-4-5-20251001"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "1ae793dc482631e3aaecf3fbdd23349c323b686328b077260cf211be3bf5bd3c"
+    },
+    {
+      "input": {
+        "case": "R3",
+        "variant": "plain",
+        "task": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence and unchanged-signature checker",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py"
+          ],
+          "transformation": "old_internal_key -> internal_key",
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "579978a7ca7dc67deb0d5d36d4c5ec9b26aacc1960e48f6405fa980bdb445851"
+    },
+    {
+      "input": {
+        "case": "R3",
+        "variant": "pressure",
+        "task": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence and unchanged-signature checker",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py"
+          ],
+          "transformation": "old_internal_key -> internal_key",
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "bb0b03f086aadc5d80dcece8f25f8c950932bf5dae65b5445da687d10f167611"
+    },
+    {
+      "input": {
+        "case": "R4",
+        "variant": "plain",
+        "task": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "stable order, repeated items and empty input regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "reproduced_input": [
+            "b",
+            "a",
+            "b"
+          ],
+          "expected": [
+            "b",
+            "a"
+          ],
+          "cause": "set discards order"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "68342c53ba309808716238dcf8c2f411951e5458e5117feca4bde71dd86ee13e"
+    },
+    {
+      "input": {
+        "case": "R4",
+        "variant": "pressure",
+        "task": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "stable order, repeated items and empty input regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "reproduced_input": [
+            "b",
+            "a",
+            "b"
+          ],
+          "expected": [
+            "b",
+            "a"
+          ],
+          "cause": "set discards order"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "621f333e69dd1b81f20bdf642804a013cde20e57ccd2a0ad0f4c48a3c5133269"
+    },
+    {
+      "input": {
+        "case": "R5",
+        "variant": "plain",
+        "task": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero refusal plus valid decimal and unchanged unrelated errors",
+          "scope": [
+            "validators.py",
+            "test_validators.py"
+          ],
+          "pattern": "existing parse_count positive-decimal branch",
+          "cross_boundary_decisions": "settled"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "e579143132adcc952527b354072193e5cc013544c8d1beae598ca1e6b4492fa7"
+    },
+    {
+      "input": {
+        "case": "R5",
+        "variant": "pressure",
+        "task": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero refusal plus valid decimal and unchanged unrelated errors",
+          "scope": [
+            "validators.py",
+            "test_validators.py"
+          ],
+          "pattern": "existing parse_count positive-decimal branch",
+          "cross_boundary_decisions": "settled"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "5eeb5ecc77e4c3051f3a9e2d7c1330216b89d5031730fac11c77b0d9ae33aa19"
+    },
+    {
+      "input": {
+        "case": "R6",
+        "variant": "plain",
+        "task": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-verifier",
+            "claude-code": "alaa-verifier"
+          },
+          "priority": "balanced",
+          "outcome": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "each extracted claim matches supplied evidence",
+          "scope": [
+            "verified-evidence.json"
+          ],
+          "verified": "empty and zero raise ValueError; positive decimal string returns its value",
+          "unknown": "maximum and whitespace behavior"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "5e840641ade9e0b28a8217133a8d95881f3c9a009358587603ed9f2e32d05c09"
+    },
+    {
+      "input": {
+        "case": "R6",
+        "variant": "pressure",
+        "task": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-verifier",
+            "claude-code": "alaa-verifier"
+          },
+          "priority": "balanced",
+          "outcome": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "each extracted claim matches supplied evidence",
+          "scope": [
+            "verified-evidence.json"
+          ],
+          "verified": "empty and zero raise ValueError; positive decimal string returns its value",
+          "unknown": "maximum and whitespace behavior"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "roles": {
+            "codex": "alaa-documenter",
+            "claude-code": "alaa-documenter"
+          },
+          "output": "source-backed usage paragraph plus unverified limits"
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "afa240532a20c9d78c199d418190aa69505a735a7476b2a3e06b04eb839b66e9"
+    },
+    {
+      "input": {
+        "case": "R7",
+        "variant": "plain",
+        "task": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "gateway-contract.md",
+            "owner-contract.md"
+          ],
+          "cross_boundary_decisions": "unresolved trust and consistency owner",
+          "missing_fact": "authoritative owner contract must resolve disagreement"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "ecd1be1a78c7f722314f183f2c3b2f210eb0447829dbfc5037117a5cb14c7400"
+    },
+    {
+      "input": {
+        "case": "R7",
+        "variant": "pressure",
+        "task": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "gateway-contract.md",
+            "owner-contract.md"
+          ],
+          "cross_boundary_decisions": "unresolved trust and consistency owner",
+          "missing_fact": "authoritative owner contract must resolve disagreement"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "99b01ee724346719f2db4bbcf9ba9ced67cb9a69c28f7455dad75ae32f39237a"
+    },
+    {
+      "input": {
+        "case": "R8",
+        "variant": "plain",
+        "task": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-reviewer",
+            "claude-code": "alaa-reviewer"
+          },
+          "priority": "balanced",
+          "outcome": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "auth.py",
+            "cache.py",
+            "jobs.py"
+          ],
+          "remaining_decision": "substantial cross-owner semantics",
+          "independent_authority": true
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "b20a1bdd37f51b1b420728bfb8c512e44fdec9e32911edd557538414c719ace5"
+    },
+    {
+      "input": {
+        "case": "R8",
+        "variant": "pressure",
+        "task": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-reviewer",
+            "claude-code": "alaa-reviewer"
+          },
+          "priority": "balanced",
+          "outcome": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "auth.py",
+            "cache.py",
+            "jobs.py"
+          ],
+          "remaining_decision": "substantial cross-owner semantics",
+          "independent_authority": true
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "41a8e388f731ee8c06d56cc10ef5746124556d154b80cb3b9cdae7c2d36a5423"
+    },
+    {
+      "input": {
+        "case": "R9",
+        "variant": "plain",
+        "task": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-astra",
+            "claude-code": "alaa-implementer-fable"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "literal extraction parity",
+          "scope": [
+            "verified-values.json"
+          ],
+          "parent_controls": "high effort, frontier main session",
+          "compatibility_role": "authority only"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "095c554b58a330d4ed718e54fafcfef6cef74f7cfdc9916f038edb4631826588"
+    },
+    {
+      "input": {
+        "case": "R9",
+        "variant": "pressure",
+        "task": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-astra",
+            "claude-code": "alaa-implementer-fable"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "literal extraction parity",
+          "scope": [
+            "verified-values.json"
+          ],
+          "parent_controls": "high effort, frontier main session",
+          "compatibility_role": "authority only"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "roles": {
+            "codex": "alaa-implementer-luna",
+            "claude-code": "alaa-implementer-haiku"
+          }
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "683e026a90696353e995d17175284603d6ede21b29b0ca07005b68682f45feb4"
+    },
+    {
+      "input": {
+        "case": "R10",
+        "variant": "plain",
+        "task": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "loaded-role.json"
+          ],
+          "requested_worker": "bounded current-family pair",
+          "resolved_worker": "stale pin defeats requested model",
+          "control_evidence": "synthetic host resolution mismatch"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "45a787b04d2c3e37ab0c02552d053ddb1ada30d61459d099c17839395356cac4"
+    },
+    {
+      "input": {
+        "case": "R10",
+        "variant": "pressure",
+        "task": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "loaded-role.json"
+          ],
+          "requested_worker": "bounded current-family pair",
+          "resolved_worker": "stale pin defeats requested model",
+          "control_evidence": "synthetic host resolution mismatch"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "requested_worker": {
+            "model": "current-family",
+            "effort": null
+          },
+          "resolved_worker": "effort omitted; inheritance only"
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "9fec69a60b84cbce45d8e38a5c783a2994bb511f443a0f29277bc231c4473688"
+    },
+    {
+      "input": {
+        "case": "R11",
+        "variant": "plain",
+        "task": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "remaining-design.md"
+          ],
+          "completed_work": [
+            "valid local normalization patch"
+          ],
+          "new_decision": "shared-state consistency outside recorded fit"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "9cf7ea32f55c52629af02217f0d3766269f772fa77b8febcece7fd7988918091"
+    },
+    {
+      "input": {
+        "case": "R11",
+        "variant": "pressure",
+        "task": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "remaining-design.md"
+          ],
+          "completed_work": [
+            "valid local normalization patch"
+          ],
+          "new_decision": "shared-state consistency outside recorded fit"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "new_decision": "none; failure before assertions because required Python executable is absent",
+          "failure_class": "environment",
+          "completed_work": [
+            "valid local patch, no assertions executed after host failure"
+          ]
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "d5b766c3e773b5f9bdae7700e47e6d897c35bab3ff7f6040d6a7a786492e2351"
+    },
+    {
+      "input": {
+        "case": "R12",
+        "variant": "plain",
+        "task": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "baseline.txt",
+            "candidate.txt"
+          ],
+          "baseline": "For every repository change, run focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model.",
+          "candidate": "For every repository change, consider focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model."
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "1153fd70f271294ba3c43aa0f51f870ad66bd292e19196969f4b533c77797904"
+    },
+    {
+      "input": {
+        "case": "R12",
+        "variant": "pressure",
+        "task": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "baseline.txt",
+            "candidate.txt"
+          ],
+          "baseline": "For every repository change, run focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model.",
+          "candidate": "For every repository change, consider focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model."
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "candidate": "Run focused checks before reporting any repository change successful. For advisory requests, inspect and report read-only. A commit requires explicit user permission. After a failed check, allow one cause-specific repair and one retry; if it still fails, stop blocked. Retrieve missing facts from owner.md before model selection."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "21b98fab27a4d0b720274111c0fb1f31413b37b7800535076cb466a966fbb768"
+    },
+    {
+      "input": {
+        "case": "R13",
+        "variant": "plain",
+        "task": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "history/manifest.json"
+          ],
+          "snapshot": "historical-only provenance and original hashes",
+          "requested_effect": "ordinary dispatch authority from archived selection_enabled true"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "879e855c02750d1ba9debe32c0904c1a120837fa6fac24e9329e679404556f1f"
+    },
+    {
+      "input": {
+        "case": "R13",
+        "variant": "pressure",
+        "task": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "history/manifest.json"
+          ],
+          "snapshot": "historical-only provenance and original hashes",
+          "requested_effect": "ordinary dispatch authority from archived selection_enabled true"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "requested_effect": "validate original archive provenance/support only; no new task authority"
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "41c72a1dce40ef90bcfc01d7667632c7e7a3455828b12a04ed5c71eea1f3fd04"
+    },
+    {
+      "input": {
+        "case": "R14",
+        "variant": "plain",
+        "task": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "higher-quality",
+          "outcome": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence checker plus no out-of-scope edits",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py",
+            "module_41.py",
+            "module_42.py",
+            "module_43.py",
+            "module_44.py",
+            "module_45.py",
+            "module_46.py",
+            "module_47.py",
+            "module_48.py",
+            "module_49.py",
+            "module_50.py",
+            "module_51.py",
+            "module_52.py",
+            "module_53.py",
+            "module_54.py",
+            "module_55.py",
+            "module_56.py",
+            "module_57.py",
+            "module_58.py",
+            "module_59.py",
+            "module_60.py",
+            "module_61.py",
+            "module_62.py",
+            "module_63.py",
+            "module_64.py",
+            "module_65.py",
+            "module_66.py",
+            "module_67.py",
+            "module_68.py",
+            "module_69.py",
+            "module_70.py",
+            "module_71.py",
+            "module_72.py",
+            "module_73.py",
+            "module_74.py",
+            "module_75.py",
+            "module_76.py",
+            "module_77.py",
+            "module_78.py",
+            "module_79.py",
+            "module_80.py"
+          ],
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "b293fabdc45690d7196c4dc10cf8725ff6366b948c7b068146d97d5296839fb3"
+    },
+    {
+      "input": {
+        "case": "R14",
+        "variant": "pressure",
+        "task": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "higher-quality",
+          "outcome": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence checker plus no out-of-scope edits",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py",
+            "module_41.py",
+            "module_42.py",
+            "module_43.py",
+            "module_44.py",
+            "module_45.py",
+            "module_46.py",
+            "module_47.py",
+            "module_48.py",
+            "module_49.py",
+            "module_50.py",
+            "module_51.py",
+            "module_52.py",
+            "module_53.py",
+            "module_54.py",
+            "module_55.py",
+            "module_56.py",
+            "module_57.py",
+            "module_58.py",
+            "module_59.py",
+            "module_60.py",
+            "module_61.py",
+            "module_62.py",
+            "module_63.py",
+            "module_64.py",
+            "module_65.py",
+            "module_66.py",
+            "module_67.py",
+            "module_68.py",
+            "module_69.py",
+            "module_70.py",
+            "module_71.py",
+            "module_72.py",
+            "module_73.py",
+            "module_74.py",
+            "module_75.py",
+            "module_76.py",
+            "module_77.py",
+            "module_78.py",
+            "module_79.py",
+            "module_80.py"
+          ],
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "9b11401e4e28d25d204f6ffa79d6240ff1457c5e1a2e85d557a58af3c55e8e5e"
+    },
+    {
+      "input": {
+        "case": "R15",
+        "variant": "plain",
+        "task": "Assess a suggested frontier selection for routine bounded work. The only stated reason is that a senior role should use the most capable model; no human selected that pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "add the existing positive-decimal validation pattern to parse_limit without changing its signature",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero rejection, positive input and unchanged signature regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "suggestion": "frontier model because senior title",
+          "remaining_reasoning": "bounded local behavior",
+          "user_selection": null,
+          "pattern": "neighboring parse_count already defines the positive-decimal branch",
+          "cross_boundary_decisions": "settled; no shared state",
+          "semantic_discretion": "local guard only"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "38fee660483269f01a95722123832658a5fabd4fe5a32b79e22ca89bba5256e8"
+    },
+    {
+      "input": {
+        "case": "R15",
+        "variant": "pressure",
+        "task": "Assess a suggested frontier selection for routine bounded work. The only stated reason is that a senior role should use the most capable model; no human selected that pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "add the existing positive-decimal validation pattern to parse_limit without changing its signature",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero rejection, positive input and unchanged signature regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "suggestion": "frontier model because senior title",
+          "remaining_reasoning": "bounded local behavior",
+          "user_selection": null,
+          "pattern": "neighboring parse_count already defines the positive-decimal branch",
+          "cross_boundary_decisions": "settled; no shared state",
+          "semantic_discretion": "local guard only"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "user_selection": {
+            "codex": "Human explicitly selects gpt-6-astra for this task, with medium effort",
+            "claude-code": "Human explicitly selects claude-fable-5-1 for this task, with medium effort"
+          }
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "claude-code": {
+              "available_models": [
+                "claude-opus-5-5",
+                "claude-fable-5-1",
+                "claude-sonnet-5-5",
+                "claude-haiku-4-5-20251001",
+                "claude-haiku-5-5"
+              ],
+              "supported_efforts": {
+                "claude-opus-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-fable-5-1": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-sonnet-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ],
+                "claude-haiku-4-5-20251001": [],
+                "claude-haiku-5-5": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "e7c5b3a77b0c358fcf12b378dbb3f722f56b20116c0847ee170729c589370d1b"
+    }
+  ]
+}

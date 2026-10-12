@@ -1,0 +1,2580 @@
+{
+  "purpose": "allocation-only-probe",
+  "runtime": "codex",
+  "corpus_sha256": "24340081b731c281387e896200ff2862c7ed2636aeab66969cebc12859bf6c83",
+  "instruction": "Assess every supplied case independently under the loaded contract. Return decisions only. Host facts are simulated. Do not dispatch workers, use tools, edit, install, commit or make external effects. Give separate model/effort reasons and failed fit predicates; unknown telemetry remains unknown. Return a JSON object with responses, an array of objects containing case, variant and response. Put each decision in response using response_fields. No grading verdicts or prose outside JSON.",
+  "response_wrapper": {
+    "responses": [
+      {
+        "case": "case ID",
+        "variant": "variant ID",
+        "response": "object matching response_fields"
+      }
+    ]
+  },
+  "response_fields": {
+    "action": "allocate|block|retrieve|reclassify|reject",
+    "role": "task authority role",
+    "proposed_worker": "model/effort pair or null",
+    "model_reason": "evidence",
+    "effort_reason": "evidence",
+    "fit": {
+      "outcome": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "scope": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "contracts": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "pattern": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "cross_boundary_settled": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "local_discretion": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      },
+      "check": {
+        "verdict": "pass|fail|unknown",
+        "evidence": "source/task facts"
+      }
+    },
+    "alternatives": [
+      {
+        "pair": "model/effort",
+        "reason": "failed predicate or stronger evidence",
+        "evidence": "source/task facts"
+      }
+    ],
+    "admission": {
+      "kind": "ordinary|official-task-priority|high-workhorse-inadequacy|explicit-user-selection",
+      "evidence": "source/task facts"
+    },
+    "continuity": {
+      "cause": "classification",
+      "preserve_valid_work": true,
+      "replay_completed_work": false
+    },
+    "compression": {
+      "verdict": "equivalent|loss|not-applicable",
+      "invariants": {
+        "authority": "boolean when assessed",
+        "gates": "boolean when assessed",
+        "exceptions": "boolean when assessed",
+        "triggers": "boolean when assessed",
+        "force": "boolean when assessed",
+        "ownership": "boolean when assessed",
+        "loading": "boolean when assessed"
+      }
+    },
+    "worker_dispatched": false,
+    "worker_effective": {
+      "model": "unknown",
+      "effort": "unknown"
+    },
+    "worker_observed": {
+      "model": "unknown",
+      "effort": "unknown"
+    }
+  },
+  "cases": [
+    {
+      "input": {
+        "case": "R1",
+        "variant": "plain",
+        "task": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py",
+            "test_feature.py"
+          ],
+          "remaining_decision": "grounded ordinary feature logic"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "d5533bf3169ea5cdce5fa04ada39c2a6ffccfafb5ae5112c41bf5125ef40aa5f"
+    },
+    {
+      "input": {
+        "case": "R1",
+        "variant": "pressure",
+        "task": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate an ordinary feature change requiring new local branching and focused regression checks. The runtime exposes current and historical models together.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py",
+            "test_feature.py"
+          ],
+          "remaining_decision": "grounded ordinary feature logic"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "2eb81c81b536a7e9b16ccbcee88258c7f1f04b57bd87984065b94aa68325b5e5"
+    },
+    {
+      "input": {
+        "case": "R2",
+        "variant": "plain",
+        "task": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py"
+          ],
+          "availability_evidence": "simulation only: no current supported candidate"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-sol"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "3a821e54cef760f213c5d40a817c0f19051098379c661a5849096c1d86b29d36"
+    },
+    {
+      "input": {
+        "case": "R2",
+        "variant": "pressure",
+        "task": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the same ordinary engineering work on a host where the current workhorse is unavailable and only a historical model is exposed.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "known_pattern": false,
+          "scope": [
+            "feature.py"
+          ],
+          "availability_evidence": "simulation only: no current supported candidate"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-sol"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "b7341d71cd705aebf50192c56b323c2af01eedde7c64e12cc08625e402bc2111"
+    },
+    {
+      "input": {
+        "case": "R3",
+        "variant": "plain",
+        "task": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence and unchanged-signature checker",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py"
+          ],
+          "transformation": "old_internal_key -> internal_key",
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "abca4d1b4a313a5e8bf4b3d3b7a42a31c2e7318ae0954e19a8ed960486bb9ca5"
+    },
+    {
+      "input": {
+        "case": "R3",
+        "variant": "pressure",
+        "task": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Replace an exact deprecated identifier in the enumerated existing files, excluding quoted examples; verify exact replacements and unchanged public signatures.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence and unchanged-signature checker",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py"
+          ],
+          "transformation": "old_internal_key -> internal_key",
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "8c64554df6e7a98b2ffaf58b4fe40c7062767ec8540a4701c8d92ba6650e02b1"
+    },
+    {
+      "input": {
+        "case": "R4",
+        "variant": "plain",
+        "task": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "stable order, repeated items and empty input regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "reproduced_input": [
+            "b",
+            "a",
+            "b"
+          ],
+          "expected": [
+            "b",
+            "a"
+          ],
+          "cause": "set discards order"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "c637fd14be75bdad8f09fa7d347422fe91b84b94c950686c9794e2f9e3d80cff"
+    },
+    {
+      "input": {
+        "case": "R4",
+        "variant": "pressure",
+        "task": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Repair a reproduced local defect: stable deduplication returns reordered values because it converts the input to a set. Preserve first-seen order and original values.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "stable order, repeated items and empty input regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "reproduced_input": [
+            "b",
+            "a",
+            "b"
+          ],
+          "expected": [
+            "b",
+            "a"
+          ],
+          "cause": "set discards order"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "9e931a3fd543067e3e9f2240b7da83a20243ce162435e569bdc17369efaff2ae"
+    },
+    {
+      "input": {
+        "case": "R5",
+        "variant": "plain",
+        "task": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero refusal plus valid decimal and unchanged unrelated errors",
+          "scope": [
+            "validators.py",
+            "test_validators.py"
+          ],
+          "pattern": "existing parse_count positive-decimal branch",
+          "cross_boundary_decisions": "settled"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "d709bc175d54dbfb1fc5c5953c5bd94843352fb4e0e0155f1aba65e027a84c23"
+    },
+    {
+      "input": {
+        "case": "R5",
+        "variant": "pressure",
+        "task": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Add a non-bug local validator branch using the existing neighboring pattern. Accept positive decimal strings; reject empty and zero inputs. Public signature and unrelated errors are preserved.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero refusal plus valid decimal and unchanged unrelated errors",
+          "scope": [
+            "validators.py",
+            "test_validators.py"
+          ],
+          "pattern": "existing parse_count positive-decimal branch",
+          "cross_boundary_decisions": "settled"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "033fc4950e7484e30f86c5daad859adbbf42b0994621e3f999b27b8e8478587a"
+    },
+    {
+      "input": {
+        "case": "R6",
+        "variant": "plain",
+        "task": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-verifier",
+            "claude-code": "alaa-verifier"
+          },
+          "priority": "balanced",
+          "outcome": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "each extracted claim matches supplied evidence",
+          "scope": [
+            "verified-evidence.json"
+          ],
+          "verified": "empty and zero raise ValueError; positive decimal string returns its value",
+          "unknown": "maximum and whitespace behavior"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "0f5bcbe14942b2a475603a5d9e2c917114fb78885dc600ba822af2a832f8ea19"
+    },
+    {
+      "input": {
+        "case": "R6",
+        "variant": "pressure",
+        "task": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-verifier",
+            "claude-code": "alaa-verifier"
+          },
+          "priority": "balanced",
+          "outcome": "Extract the declared values from supplied verified evidence and report untested maximum handling as unknown. The assigned authority role still owns only this bounded extraction.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "each extracted claim matches supplied evidence",
+          "scope": [
+            "verified-evidence.json"
+          ],
+          "verified": "empty and zero raise ValueError; positive decimal string returns its value",
+          "unknown": "maximum and whitespace behavior"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "roles": {
+            "codex": "alaa-documenter",
+            "claude-code": "alaa-documenter"
+          },
+          "output": "source-backed usage paragraph plus unverified limits"
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "8f1ddd373660981f523e04dd38639873da216d91ffecb3986f7c1056d4bfdf70"
+    },
+    {
+      "input": {
+        "case": "R7",
+        "variant": "plain",
+        "task": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "gateway-contract.md",
+            "owner-contract.md"
+          ],
+          "cross_boundary_decisions": "unresolved trust and consistency owner",
+          "missing_fact": "authoritative owner contract must resolve disagreement"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "feec1679ebd6d94f582dbfdc995c7c81bbf099791f662d66f7ab5298be0fbddb"
+    },
+    {
+      "input": {
+        "case": "R7",
+        "variant": "pressure",
+        "task": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Plan a retry that spans a gateway and two storage owners. Supplied ownership notes disagree about which service may commit the authoritative authorization state.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "gateway-contract.md",
+            "owner-contract.md"
+          ],
+          "cross_boundary_decisions": "unresolved trust and consistency owner",
+          "missing_fact": "authoritative owner contract must resolve disagreement"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "6cc0608e427ddf5248b545109f3b4eb5cd995ebc0da085161d3dd223a7a2996a"
+    },
+    {
+      "input": {
+        "case": "R8",
+        "variant": "plain",
+        "task": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-reviewer",
+            "claude-code": "alaa-reviewer"
+          },
+          "priority": "balanced",
+          "outcome": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "auth.py",
+            "cache.py",
+            "jobs.py"
+          ],
+          "remaining_decision": "substantial cross-owner semantics",
+          "independent_authority": true
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "b27f98c677957d74f0609494b1a8dafde2e4f13a3bc5a3a9cf6173e10b35e1e7"
+    },
+    {
+      "input": {
+        "case": "R8",
+        "variant": "pressure",
+        "task": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-reviewer",
+            "claude-code": "alaa-reviewer"
+          },
+          "priority": "balanced",
+          "outcome": "Independently review changes spanning tenant authorization, cache invalidation and queue retry semantics. Acceptance requires cross-owner invariant reasoning; a second implementation lane cannot grade itself.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "auth.py",
+            "cache.py",
+            "jobs.py"
+          ],
+          "remaining_decision": "substantial cross-owner semantics",
+          "independent_authority": true
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "2ce48a46e3ce9e36cfcda5ec66a83fd11b28c4c7cc43f7723342844beddba34e"
+    },
+    {
+      "input": {
+        "case": "R9",
+        "variant": "plain",
+        "task": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-astra",
+            "claude-code": "alaa-implementer-fable"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "literal extraction parity",
+          "scope": [
+            "verified-values.json"
+          ],
+          "parent_controls": "high effort, frontier main session",
+          "compatibility_role": "authority only"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "7f6726dbdeb29e1f741dae3e59a311a9d606d4306a976be0f333f379b409ddcf"
+    },
+    {
+      "input": {
+        "case": "R9",
+        "variant": "pressure",
+        "task": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-astra",
+            "claude-code": "alaa-implementer-fable"
+          },
+          "priority": "balanced",
+          "outcome": "Allocate the exact bounded local extraction from verified source evidence. A compatibility role label names a model family; parent settings use a different high-effort model.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "literal extraction parity",
+          "scope": [
+            "verified-values.json"
+          ],
+          "parent_controls": "high effort, frontier main session",
+          "compatibility_role": "authority only"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "roles": {
+            "codex": "alaa-implementer-luna",
+            "claude-code": "alaa-implementer-haiku"
+          }
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "41a11dc8838787bffcef611ccf8af96eece68983c5bdc44f4e12c824fcfe3676"
+    },
+    {
+      "input": {
+        "case": "R10",
+        "variant": "plain",
+        "task": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "loaded-role.json"
+          ],
+          "requested_worker": "bounded current-family pair",
+          "resolved_worker": "stale pin defeats requested model",
+          "control_evidence": "synthetic host resolution mismatch"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "adb9ae3aa503b7f4607bea66ef347e8064df54aa30943eaa9fea5bcc84b144e7"
+    },
+    {
+      "input": {
+        "case": "R10",
+        "variant": "pressure",
+        "task": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Assess whether the explicitly selected worker model and effort can be realized when the loaded custom definition or force override resolves a different pair.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "loaded-role.json"
+          ],
+          "requested_worker": "bounded current-family pair",
+          "resolved_worker": "stale pin defeats requested model",
+          "control_evidence": "synthetic host resolution mismatch"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "requested_worker": {
+            "model": "current-family",
+            "effort": null
+          },
+          "resolved_worker": "effort omitted; inheritance only"
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "9fdd89d2a96bb49113cec87779a05e19d68a545279f12f31e1be047c620db39f"
+    },
+    {
+      "input": {
+        "case": "R11",
+        "variant": "plain",
+        "task": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "remaining-design.md"
+          ],
+          "completed_work": [
+            "valid local normalization patch"
+          ],
+          "new_decision": "shared-state consistency outside recorded fit"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "ada7e9b563bd68a5f3e766f49a7a83ca393b34761a654026f87e8b2d6a3853a1"
+    },
+    {
+      "input": {
+        "case": "R11",
+        "variant": "pressure",
+        "task": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Reassess remaining lane work after a bounded edit grows into an unresolved shared-state design decision. Existing valid edits and focused evidence already exist.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "remaining-design.md"
+          ],
+          "completed_work": [
+            "valid local normalization patch"
+          ],
+          "new_decision": "shared-state consistency outside recorded fit"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "new_decision": "none; failure before assertions because required Python executable is absent",
+          "failure_class": "environment",
+          "completed_work": [
+            "valid local patch, no assertions executed after host failure"
+          ]
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "4a2f50cfe7a69a54a251b0a4c34750122f458d1bf945453cd4d82307ff82bb63"
+    },
+    {
+      "input": {
+        "case": "R12",
+        "variant": "plain",
+        "task": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "baseline.txt",
+            "candidate.txt"
+          ],
+          "baseline": "For every repository change, run focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model.",
+          "candidate": "For every repository change, consider focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model."
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "15ebe793aa67627d05881cafcbc2973345547bf4e945e4d891f9037e90a8b489"
+    },
+    {
+      "input": {
+        "case": "R12",
+        "variant": "pressure",
+        "task": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "Judge whether the candidate instruction preserves the baseline execution contract, including the advisory exception and required validation before reporting success.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "baseline.txt",
+            "candidate.txt"
+          ],
+          "baseline": "For every repository change, run focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model.",
+          "candidate": "For every repository change, consider focused checks before reporting success. Advisory requests allow read-only inspection and reporting. Commit only after explicit user permission. On one failed check, make at most one cause-specific repair and one retry, then stop blocked. Route missing facts to owner.md before choosing a model."
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "candidate": "Run focused checks before reporting any repository change successful. For advisory requests, inspect and report read-only. A commit requires explicit user permission. After a failed check, allow one cause-specific repair and one retry; if it still fails, stop blocked. Retrieve missing facts from owner.md before model selection."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "238c61c2630cf7643164c72be4ea26d4db0b9b8b9ce52ddeeb4f877de1ab0e90"
+    },
+    {
+      "input": {
+        "case": "R13",
+        "variant": "plain",
+        "task": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "history/manifest.json"
+          ],
+          "snapshot": "historical-only provenance and original hashes",
+          "requested_effect": "ordinary dispatch authority from archived selection_enabled true"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "e02fe427f4a7924d7e1ccb4feb5968c0fe5d5d29b6eff5b8784ae686fca5b564"
+    },
+    {
+      "input": {
+        "case": "R13",
+        "variant": "pressure",
+        "task": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "A dated old-model comparison and its original support policy are readable historical evidence. Assess a request to use that archived support flag to authorize a new ordinary task.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "named source/behavior comparison",
+          "scope": [
+            "history/manifest.json"
+          ],
+          "snapshot": "historical-only provenance and original hashes",
+          "requested_effect": "ordinary dispatch authority from archived selection_enabled true"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "requested_effect": "validate original archive provenance/support only; no new task authority"
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "d32548a4607bb7275eca632cbd0e5ed767c4063ffb865b85a55d5e5f5f07bfd0"
+    },
+    {
+      "input": {
+        "case": "R14",
+        "variant": "plain",
+        "task": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "higher-quality",
+          "outcome": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence checker plus no out-of-scope edits",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py",
+            "module_41.py",
+            "module_42.py",
+            "module_43.py",
+            "module_44.py",
+            "module_45.py",
+            "module_46.py",
+            "module_47.py",
+            "module_48.py",
+            "module_49.py",
+            "module_50.py",
+            "module_51.py",
+            "module_52.py",
+            "module_53.py",
+            "module_54.py",
+            "module_55.py",
+            "module_56.py",
+            "module_57.py",
+            "module_58.py",
+            "module_59.py",
+            "module_60.py",
+            "module_61.py",
+            "module_62.py",
+            "module_63.py",
+            "module_64.py",
+            "module_65.py",
+            "module_66.py",
+            "module_67.py",
+            "module_68.py",
+            "module_69.py",
+            "module_70.py",
+            "module_71.py",
+            "module_72.py",
+            "module_73.py",
+            "module_74.py",
+            "module_75.py",
+            "module_76.py",
+            "module_77.py",
+            "module_78.py",
+            "module_79.py",
+            "module_80.py"
+          ],
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "cbf40d2c86d3f1c55d459aa7b89a5626daedf6143f5e0b48b8a7d599624ca701"
+    },
+    {
+      "input": {
+        "case": "R14",
+        "variant": "pressure",
+        "task": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "higher-quality",
+          "outcome": "Allocate the exact bounded transformation across the enumerated existing files under an explicit higher-quality priority. Outcome, pattern, discretion and discriminating checks remain settled.",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "exact occurrence checker plus no out-of-scope edits",
+          "scope": [
+            "module_1.py",
+            "module_2.py",
+            "module_3.py",
+            "module_4.py",
+            "module_5.py",
+            "module_6.py",
+            "module_7.py",
+            "module_8.py",
+            "module_9.py",
+            "module_10.py",
+            "module_11.py",
+            "module_12.py",
+            "module_13.py",
+            "module_14.py",
+            "module_15.py",
+            "module_16.py",
+            "module_17.py",
+            "module_18.py",
+            "module_19.py",
+            "module_20.py",
+            "module_21.py",
+            "module_22.py",
+            "module_23.py",
+            "module_24.py",
+            "module_25.py",
+            "module_26.py",
+            "module_27.py",
+            "module_28.py",
+            "module_29.py",
+            "module_30.py",
+            "module_31.py",
+            "module_32.py",
+            "module_33.py",
+            "module_34.py",
+            "module_35.py",
+            "module_36.py",
+            "module_37.py",
+            "module_38.py",
+            "module_39.py",
+            "module_40.py",
+            "module_41.py",
+            "module_42.py",
+            "module_43.py",
+            "module_44.py",
+            "module_45.py",
+            "module_46.py",
+            "module_47.py",
+            "module_48.py",
+            "module_49.py",
+            "module_50.py",
+            "module_51.py",
+            "module_52.py",
+            "module_53.py",
+            "module_54.py",
+            "module_55.py",
+            "module_56.py",
+            "module_57.py",
+            "module_58.py",
+            "module_59.py",
+            "module_60.py",
+            "module_61.py",
+            "module_62.py",
+            "module_63.py",
+            "module_64.py",
+            "module_65.py",
+            "module_66.py",
+            "module_67.py",
+            "module_68.py",
+            "module_69.py",
+            "module_70.py",
+            "module_71.py",
+            "module_72.py",
+            "module_73.py",
+            "module_74.py",
+            "module_75.py",
+            "module_76.py",
+            "module_77.py",
+            "module_78.py",
+            "module_79.py",
+            "module_80.py"
+          ],
+          "semantic_discretion": "none"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts."
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "cd28aa32bb7c8d629826620bb948aa985688aeea8bc04ab09ecefe921dbd4204"
+    },
+    {
+      "input": {
+        "case": "R15",
+        "variant": "plain",
+        "task": "Assess a suggested frontier selection for routine bounded work. The only stated reason is that a senior role should use the most capable model; no human selected that pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "add the existing positive-decimal validation pattern to parse_limit without changing its signature",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero rejection, positive input and unchanged signature regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "suggestion": "frontier model because senior title",
+          "remaining_reasoning": "bounded local behavior",
+          "user_selection": null,
+          "pattern": "neighboring parse_count already defines the positive-decimal branch",
+          "cross_boundary_decisions": "settled; no shared state",
+          "semantic_discretion": "local guard only"
+        },
+        "variant_facts": {},
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "362aff7930515760ba7b0cd997df74220b645244c34c0244d1c2d9e9e41c0d8e"
+    },
+    {
+      "input": {
+        "case": "R15",
+        "variant": "pressure",
+        "task": "Assess a suggested frontier selection for routine bounded work. The only stated reason is that a senior role should use the most capable model; no human selected that pair.",
+        "facts": {
+          "roles": {
+            "codex": "alaa-implementer-low",
+            "claude-code": "alaa-implementer"
+          },
+          "priority": "balanced",
+          "outcome": "add the existing positive-decimal validation pattern to parse_limit without changing its signature",
+          "local_contracts": "supplied and grounded unless a stated fact identifies a gap",
+          "check": "empty/zero rejection, positive input and unchanged signature regression",
+          "scope": [
+            "items.py",
+            "test_items.py"
+          ],
+          "suggestion": "frontier model because senior title",
+          "remaining_reasoning": "bounded local behavior",
+          "user_selection": null,
+          "pattern": "neighboring parse_count already defines the positive-decimal branch",
+          "cross_boundary_decisions": "settled; no shared state",
+          "semantic_discretion": "local guard only"
+        },
+        "variant_facts": {
+          "pressure": "The role title, large file list and parent high effort look demanding; assess this remaining task from its concrete facts.",
+          "user_selection": {
+            "codex": "Human explicitly selects gpt-6-astra for this task, with medium effort",
+            "claude-code": "Human explicitly selects claude-fable-5-1 for this task, with medium effort"
+          }
+        },
+        "simulation": {
+          "synthetic": true,
+          "hosts": {
+            "codex": {
+              "available_models": [
+                "gpt-6-astra",
+                "gpt-6-sol",
+                "gpt-6.1-sol",
+                "gpt-6-luna"
+              ],
+              "supported_efforts": {
+                "gpt-6-astra": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6.1-sol": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max",
+                  "ultra"
+                ],
+                "gpt-6-luna": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              },
+              "controls": "explicit task model and effort supported; no override unless a stated scenario fact supplies one",
+              "evidence_scope": "synthetic scenario only; not actual host observation"
+            }
+          }
+        }
+      },
+      "input_sha256": "fefe54edf453050dac7d1c2864642dea1925f39ed0826b93881116eb3cadddd0"
+    }
+  ]
+}

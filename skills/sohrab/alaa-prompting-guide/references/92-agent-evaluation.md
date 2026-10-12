@@ -5,6 +5,10 @@ a concrete prompt, supplied source fixtures, acceptance criteria, forbidden acti
 comparator, and two independent repetitions. The reusable corpus stays `unrun`; results are
 separate evidence. It proves test design, never runtime availability or model quality.
 
+## Historical comparison isolation
+
+The original corpus/policy under `assets/evals/history/20261009/` are historical-only. Here run `python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json` for hash integrity, provenance-field syntax and historical support. Verify source identity independently. It cannot combine with active `--corpus`, `--results` or `--self-test`, authorize ordinary allocation or reenable old Sol. Active redesigned comparisons remain separate unrun hypotheses.
+
 ## Execution
 
 1. Run `python scripts/check_agent_evals.py` from this skill directory. Nonzero means the
@@ -66,3 +70,17 @@ that configuration requires a separate nonempty `configuration_control_evidence`
 to host resolution or equivalent control evidence, not the agent's self-report.
 A pass requires all criteria passed, no forbidden action, and verified configuration.
 The checker validates record completeness; the independent reviewer must verify evidence truth.
+
+## Allocation-only observations
+
+For task-selection tests use `assets/evals/allocation-cases.json` and separate reviewer-only `assets/evals/allocation-oracle.json`: R1-R15 decisions, not worker quality. Each case has two neutral variants and two repetitions. Give allocators only neutral inputs, never the oracle or another run's answer. Observe two fresh runs per authorized available allocator configuration with identical loaded contracts, authority and inputs; record unavailable configurations blocked/unassessed. This authorizes no worker dispatch, paid comparison, installation or configuration mutation.
+
+Here run `python scripts/check_allocation_evals.py` for corpus/oracle structure. Add `--self-test` after checker changes, `--results <path>` for records, and `--require-live` with results for complete nonsynthetic observations/independent grading. `--corpus <path>`/`--oracle <path>` select files. `--probe-input codex` or `--probe-input claude-code` prints neutral cases/response contract without oracle, inference or writes. Exit 0 clean, 1 findings, 2 unavailable proof; either nonzero blocks the affected claim. Follow authorized failure/retry limits; never alter controls/checks to pass.
+
+Results: `schema_version: 1`, `purpose: allocation-results`, boolean `synthetic`/`complete`, `corpus_sha256`, `oracle_sha256`, `configurations`, `runs`. Configurations: `id`, `runtime`, `allocator_requested`, `allocator_effective`, `allocator_observed`, `control_evidence`, `loaded_contracts` (repository-relative path/SHA-256). Separate actual allocator controls, simulated scenario controls and proposed worker controls.
+
+Represent every declared configuration's case/variant/repetition, including unrun/blocked work. Runs: `case`, `variant`, `configuration`, `runtime`, `repetition`, `status`, `input_sha256`; blocked rows require `blocker`. Completed rows add `response`, `output_evidence`, `output_sha256`, `reviewer`, `independent_review`, `criterion_verdicts`, `forbidden_effects_observed`, `elapsed_seconds`, `usage`, `correction_count`. Unobservable counters stay unknown.
+
+Responses: `action`, `role` matching neutral task authority, explicit `proposed_worker` model/effort or null, `model_reason`, `effort_reason`, `fit` verdict/evidence per named predicate, `alternatives` with failed predicate or stronger evidence, `admission`, `continuity`, `compression` with preserved-invariant verdicts. Decision-only probes require `worker_dispatched: false`, unknown `worker_effective`/`worker_observed`. Simulated pin/availability answers prove no child realization.
+
+An independent reviewer grades decisions against the withheld oracle and checks linked evidence truth. Concrete allocator-control mismatch or unknown effective controls prevents a live pass. Unknown serving identity stays unknown and needs separate control evidence. Synthetic records prove consumer discrimination only; sampled live answers prove no worker dispatch/quality, actual scenario availability, universal suitability, cost or savings. Keep source checks, allocation observations and worker comparisons distinct.

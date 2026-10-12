@@ -1,0 +1,20 @@
+{
+  "artifact": "runtime/codex-v2-r2.json",
+  "sha256": "8e00d14b644f95d060d352bf42db5c870f1d7f6ad3358031b01a3c6217edfd13",
+  "top_level_keys": [
+    "responses"
+  ],
+  "response_count": 30,
+  "unique_key_count": 30,
+  "exact_key_coverage": true,
+  "response_schema_fields_match": true,
+  "request_sha256": "259e5da9d3d1cfb09f1b0f081eff2c53d0fe28a7d0d6d677e8bda8f27a316dda",
+  "manifest_request_sha256": "259e5da9d3d1cfb09f1b0f081eff2c53d0fe28a7d0d6d677e8bda8f27a316dda",
+  "request_hash_matches": true,
+  "input_sha256": "69df1aae327e9bf9812bc0b4748c82e878586f77b9c4ee53480abe91b9910188",
+  "manifest_input_sha256": "69df1aae327e9bf9812bc0b4748c82e878586f77b9c4ee53480abe91b9910188",
+  "input_hash_matches": true,
+  "loaded_source_count": 9,
+  "source_pin_file_count": 541,
+  "source_pin_checker_sha256": "f64494abc128bdc7e2cb25dbd9cbfc3dbb16c28340cd4a513145314f4112b268"
+}

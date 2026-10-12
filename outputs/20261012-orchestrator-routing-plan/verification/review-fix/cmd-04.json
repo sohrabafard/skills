@@ -1,0 +1,18 @@
+{
+  "index": 4,
+  "command": "git diff --check",
+  "cwd": ".",
+  "env_override": "PYTHONDONTWRITEBYTECODE=1",
+  "priority": "ordinary",
+  "affinity": "default",
+  "started": "2026-10-12T06:34:46.5808468-07:00",
+  "ended": "2026-10-12T06:34:46.7213178-07:00",
+  "duration_seconds": 0.14,
+  "exit_code": 0,
+  "log": "cmd-04.log",
+  "timeout_seconds": 120,
+  "tier": "affected",
+  "classification": "PASS",
+  "proof_level": "static (level 1)",
+  "observer": "independent verifier"
+}

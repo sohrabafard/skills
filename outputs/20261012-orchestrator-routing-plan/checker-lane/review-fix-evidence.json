@@ -1,0 +1,69 @@
+{
+  "scope": "One parent-authorized correctness review fix cycle; no archive or neutral source/input changes",
+  "source_changes": [
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/assets/evals/allocation-oracle.json",
+      "before_sha256": "0b232d0540473aa74091ea040f3c4806ea646e7ba889710dd58933897ae05e32",
+      "after_sha256": "1473ada2d70c040bee8f9aeac78e513d2667d3e080e0a777bdf47c68da7af8cc",
+      "bytes": 30430
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_agent_evals.py",
+      "before_sha256": "cb0e8934dd84b247cc54b6923163829524b37f99b9ebf6276b53afbe1dbd8526",
+      "after_sha256": "5601a30779e287778138e95746357c1ea7a924eb9e233680ad1f77ba459e5ac8",
+      "bytes": 20915
+    },
+    {
+      "path": "skills/sohrab/alaa-prompting-guide/scripts/check_allocation_evals.py",
+      "before_sha256": "c6ff1beafba40a3cf9f5be65aa790ad1511287742cf7e9bda9ef84417492b28d",
+      "after_sha256": "15576d56d572a91842f06be26b21272fa73bbfecad71e076b5e217418565ad9e",
+      "bytes": 31166
+    }
+  ],
+  "oracle_canonical_sha256": "8536a0bd0dfaec5602b91c47e24bee9b584a092f7be2e3d16fa947e83f7f776a",
+  "previous_oracle_canonical_sha256": "7e3098a3996e6e4d87cb0ab8dcb5d1614d41f892be62697031bff4755076939d",
+  "unrun_template_sha256": "627f23a54c4aeed5e8d5f060c2181a1642f142af0ad82f904b01a0470b48122c",
+  "focused_results": [
+    {
+      "command": "python scripts/check_allocation_evals.py --self-test",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "exit": 0,
+      "resource_policy": "sequential ordinary static Python; timeout 120 seconds; PYTHONDONTWRITEBYTECODE=1",
+      "timestamp": "20261012T133255Z",
+      "proof": "static/unit checker fixtures only",
+      "tier": "focused",
+      "log": "outputs/20261012-orchestrator-routing-plan/checker-lane/focused-4-20261012T133255Z.log"
+    },
+    {
+      "command": "python scripts/check_allocation_evals.py",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "exit": 0,
+      "resource_policy": "sequential ordinary static Python; timeout 120 seconds; PYTHONDONTWRITEBYTECODE=1",
+      "timestamp": "20261012T133256Z",
+      "proof": "static/unit checker fixtures only",
+      "tier": "focused",
+      "log": "outputs/20261012-orchestrator-routing-plan/checker-lane/focused-5-20261012T133256Z.log"
+    },
+    {
+      "command": "python scripts/check_agent_evals.py --self-test",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "exit": 0,
+      "resource_policy": "sequential ordinary static Python; timeout 120 seconds; PYTHONDONTWRITEBYTECODE=1",
+      "timestamp": "20261012T133257Z",
+      "proof": "static/unit checker fixtures only",
+      "tier": "focused",
+      "log": "outputs/20261012-orchestrator-routing-plan/checker-lane/focused-1-20261012T133257Z.log"
+    },
+    {
+      "command": "python scripts/check_agent_evals.py --history-manifest assets/evals/history/20261009/manifest.json",
+      "cwd": "skills/sohrab/alaa-prompting-guide",
+      "exit": 0,
+      "resource_policy": "sequential ordinary static Python; timeout 120 seconds; PYTHONDONTWRITEBYTECODE=1",
+      "timestamp": "20261012T133257Z",
+      "proof": "static/unit checker fixtures only",
+      "tier": "focused",
+      "log": "outputs/20261012-orchestrator-routing-plan/checker-lane/focused-3-20261012T133257Z.log"
+    }
+  ],
+  "source_frozen": true
+}

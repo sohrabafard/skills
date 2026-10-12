@@ -2,16 +2,21 @@
   "schema_version": 2,
   "task_id": "20261012-120000_orchestrator-routing",
   "task": "Orchestrator model routing and instruction economy",
-  "status": "planning",
+  "status": "complete",
   "plan_path": "outputs/20261012-orchestrator-routing-plan/docs/_agent_plans/20261012-120000_orchestrator-routing.md",
-  "current_phase": "Phase 1",
+  "current_phase": "Local phases 1-4 complete; external runtime proof handed off",
   "next_actions": [
-    "Planning handoff ready; implementation awaits the user's kickoff, then reconcile checkout and begin Phase 1."
+    "For blocked Claude proof, user runs claude auth login, then capture the current v2 bundle with refreshed controls/manifests. Original helper hardcodes v1; do not reuse blindly.",
+    "For Codex CLI proof, diagnose preserved access-denied/timeout evidence on the host before a newly authorized retry; no further CLI retry in this run. Preserve completed collaboration/source evidence."
   ],
-  "blockers": [],
+  "blockers": [
+    "Claude CLI: expired-OAuth HTTP401; authentication requires user action.",
+    "Codex CLI: initial access denied and sole600-second retry timeout without finalresponse; descendantstate unknown because process inspection was denied.",
+    "Serving identity, installed activation, full tool traces, child realization and worker quality remain unproven; no blanket runtime-success claim."
+  ],
   "last_validation": {
     "status": "passed",
-    "summary": "Workflow validator exit 0 after repair; instruction review APPROVED after scoped coverage repair. Final snapshot/results: outputs/20261012-orchestrator-routing-plan/validation.md"
+    "summary": "Independent source/review/documentation/evidence/scope gates passed after preserved repairs. Runtime review APPROVED-WITH-NITS:60 structurally valid observations,240 semantic passes, strict53pass7fail with accepted factual exceptions. Source541 identities and original captures unchanged. Final completion metadata validated separately."
   },
   "updated_at": "2026-10-12"
 }

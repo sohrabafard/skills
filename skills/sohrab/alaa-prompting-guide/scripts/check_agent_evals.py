@@ -4,19 +4,25 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
-from codex_model_policy import load_policy, PolicyLoadError, validate_task_selection
+from codex_model_policy import load_policy, PolicyLoadError, validate_task_selection, validate_policy
 
 CORPUS = Path(__file__).resolve().parents[1] / "assets/evals/agent-comparisons.json"
 EXPECTED = {"exploration", "bounded-implementation", "debugging", "known-defect-review", "architecture", "instruction-rewrite", "documentation", "failed-check"}
 
 
 def validate(corpus: dict, policy: dict) -> list[str]:
-    if not isinstance(corpus, dict) or corpus.get("schema_version") != 1:
+    return _validate(corpus, policy, validate_task_selection)
+
+
+def _validate(corpus: dict, policy: dict, pair_validator) -> list[str]:
+    if not isinstance(corpus, dict) or type(corpus.get("schema_version")) is not int or corpus.get("schema_version") != 1:
         return ["unsupported corpus schema"]
     errors = []
     if corpus.get("policy_version") != policy["policy_version"]:
@@ -25,7 +31,7 @@ def validate(corpus: dict, policy: dict) -> list[str]:
     if not isinstance(scenarios, list):
         return errors + ["scenarios must be a list"]
     names = [case.get("id") for case in scenarios if isinstance(case, dict)]
-    if len(names) != len(scenarios) or len(names) != len(EXPECTED) or set(names) != EXPECTED:
+    if len(names) != len(scenarios) or any(not isinstance(name, str) for name in names) or len(names) != len(EXPECTED) or set(names) != EXPECTED:
         errors.append("exactly eight distinct representative scenarios are required")
     for case in scenarios:
         if not isinstance(case, dict):
@@ -43,19 +49,102 @@ def validate(corpus: dict, policy: dict) -> list[str]:
             values = case.get(key)
             if not isinstance(values, list) or len(values) < 2 or any(not isinstance(v, str) or not v.strip() for v in values):
                 errors.append(f"{name}: explicit {key} required")
-        profile = policy["profiles"].get(case.get("profile"))
+        role = case.get("profile")
+        profile = policy["profiles"].get(role) if isinstance(role, str) else None
         candidate, comparator = case.get("candidate"), case.get("comparator")
         if not isinstance(candidate, dict) or not isinstance(comparator, dict):
             errors.append(f"{name}: candidate and comparator must be objects")
             continue
-        if not profile or validate_task_selection(case.get("profile"), candidate, policy):
+        if not profile or pair_validator(role, candidate, policy):
             errors.append(f"{name}: explicit candidate task pair/role invalid")
         if sum(candidate.get(key) != comparator.get(key) for key in ("model", "effort")) != 1:
             errors.append(f"{name}: comparison must change exactly one factor")
         for config in (candidate, comparator):
-            if validate_task_selection(case.get("profile"), config, policy):
+            if pair_validator(role, config, policy):
                 errors.append(f"{name}: unsupported comparison pair")
     return errors
+
+
+def validate_history(manifest_path: Path) -> list[str]:
+    """Check byte integrity, provenance-field syntax and support, not source identity."""
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(manifest, dict) or type(manifest.get("schema_version")) is not int or manifest.get("schema_version") != 1 or manifest.get("purpose") != "historical-only":
+        return ["historical-only manifest schema required"]
+    if not isinstance(manifest.get("source_commit"), str) or not re.fullmatch(r"[0-9a-f]{40}", manifest["source_commit"]):
+        return ["archive source_commit requires 40 lowercase hexadecimal characters; identity requires independent verification"]
+    if manifest.get("evidence_date") != "2026-10-09" or manifest.get("archived_on") != "2026-10-12":
+        return ["archive evidence and capture dates drift"]
+    entries = manifest.get("files")
+    expected = {"agent-comparisons.json": "assets/evals/agent-comparisons.json", "codex-model-policy.json": "assets/codex-model-policy.json"}
+    if not isinstance(entries, list) or len(entries) != 2 or any(not isinstance(entry, dict) or entry.get("file") not in expected for entry in entries):
+        return ["archive requires original corpus and policy entries"]
+    if {entry["file"] for entry in entries} != set(expected):
+        return ["duplicate archive entry"]
+    values = {}
+    for entry in entries:
+        name = entry["file"]
+        if entry.get("source") != "skills/sohrab/alaa-prompting-guide/" + expected[name]:
+            return ["archive declared source path drift"]
+        data = (manifest_path.parent / name).read_bytes()
+        if entry.get("sha256") != hashlib.sha256(data).hexdigest() or type(entry.get("bytes")) is not int or entry["bytes"] != len(data):
+            return [f"archive hash/size drift: {name}"]
+        values[name] = json.loads(data.decode("utf-8"))
+    policy = values["codex-model-policy.json"]
+    if not isinstance(policy, dict) or not isinstance(policy.get("models"), dict) or not isinstance(policy["models"].get("gpt-6-sol"), dict):
+        return ["original policy snapshot missing"]
+    # Validate the structural snapshot through its owner on a private ordinary-safe
+    # copy; never return/load the historically enabled policy as task authority.
+    ordinary = copy.deepcopy(policy)
+    ordinary["models"]["gpt-6-sol"]["selection_enabled"] = False
+    errors = validate_policy(ordinary)
+    if errors:
+        return errors
+    def historical_pair(role, pair, snapshot):
+        profile = snapshot["profiles"].get(role) if isinstance(role, str) else None
+        if not isinstance(profile, dict) or profile.get("selection_mode") != "task-selected":
+            return ["historical comparison requires registered task role"]
+        if not isinstance(pair, dict) or set(pair) != {"model", "effort"} or not all(isinstance(value, str) for value in pair.values()):
+            return ["historical supported pair required"]
+        spec = snapshot["models"].get(pair["model"])
+        return [] if isinstance(spec, dict) and pair["effort"] in spec["supported_efforts"] else ["unsupported historical pair"]
+    return _validate(values["agent-comparisons.json"], policy, historical_pair)
+
+
+def history_self_test(policy: dict) -> None:
+    """Isolate archive guards with in-memory corruptions; no files are changed."""
+    from unittest.mock import patch
+    path = CORPUS.parent / "history/20261009/manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    original_bytes = {entry["file"]: (path.parent / entry["file"]).read_bytes() for entry in manifest["files"]}
+    assert not validate_history(path), "original historical corpus remains readable"
+    archived_corpus = json.loads(original_bytes["agent-comparisons.json"])
+    archived_policy = json.loads(original_bytes["codex-model-policy.json"])
+    assert validate(archived_corpus, policy), "ordinary corpus rejects original historical task pairs"
+    assert validate(archived_corpus, archived_policy), "archival enabled flag cannot restore ordinary task authority"
+    read_text, read_bytes = Path.read_text, Path.read_bytes
+    def findings(changed_manifest, changed_bytes=None):
+        data = changed_bytes or original_bytes
+        with patch.object(Path, "read_text", lambda current, *a, **kw: json.dumps(changed_manifest) if current == path else read_text(current, *a, **kw)), patch.object(Path, "read_bytes", lambda current: data[current.name] if current.parent == path.parent and current.name in data else read_bytes(current)):
+            return validate_history(path)
+    nonattested = copy.deepcopy(manifest); nonattested["source_commit"] = "0" * 40
+    assert not findings(nonattested), "valid-format source_commit is not source-identity attestation"
+    for field, value in (("schema_version", True), ("purpose", "task-authority"), ("source_commit", "unknown"), ("evidence_date", "2026-10-12"), ("archived_on", "2026-10-09")):
+        changed = copy.deepcopy(manifest); changed[field] = value
+        assert findings(changed), field
+    for field, value in (("sha256", "0" * 64), ("bytes", True), ("source", "unowned/policy.json")):
+        changed = copy.deepcopy(manifest); changed["files"][0][field] = value
+        assert findings(changed), field
+    changed = copy.deepcopy(manifest); changed["files"][1] = copy.deepcopy(changed["files"][0])
+    assert findings(changed), "duplicate archive entry"
+    altered = {**original_bytes, "agent-comparisons.json": original_bytes["agent-comparisons.json"] + b"\n"}
+    assert findings(manifest, altered), "changed bytes rejected before decoding/support checks"
+    # Recompute the manifest so this red case isolates role validation, not hashing.
+    invalid_role = copy.deepcopy(archived_corpus); invalid_role["scenarios"][0]["profile"] = "main"
+    data = json.dumps(invalid_role).encode("utf-8")
+    changed = copy.deepcopy(manifest)
+    entry = next(entry for entry in changed["files"] if entry["file"] == "agent-comparisons.json")
+    entry.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+    assert findings(changed, {**original_bytes, "agent-comparisons.json": data}), "historical support cannot bypass registered comparison roles"
 
 
 def self_test(corpus: dict, policy: dict) -> None:
@@ -79,6 +168,7 @@ def self_test(corpus: dict, policy: dict) -> None:
     bad = copy.deepcopy(corpus)
     bad["scenarios"][0]["comparator"] = bad["scenarios"][0]["candidate"].copy()
     assert validate(bad, policy)
+    history_self_test(policy)
 
 
 def validate_results(results: dict, corpus: dict) -> list[str]:
@@ -188,8 +278,18 @@ def main() -> int:
     parser.add_argument("--corpus", type=Path, default=CORPUS)
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--results", type=Path, help="optional result matrix; never executes models")
+    parser.add_argument("--history-manifest", type=Path, help="isolated historical bytes/support validation; never task authority")
     args = parser.parse_args()
     try:
+        if args.history_manifest:
+            if args.corpus != CORPUS or args.results or args.self_test:
+                parser.error("--history-manifest is isolated from active corpus/results/self-test")
+            findings = validate_history(args.history_manifest)
+            if findings:
+                print("\n".join(findings))
+                return 1
+            print("OK: historical hash/size integrity, provenance-field syntax and supported pairs; source identity requires independent verification; no task-selection authority")
+            return 0
         policy = load_policy()
         corpus = json.loads(args.corpus.read_text(encoding="utf-8"))
         if args.self_test:

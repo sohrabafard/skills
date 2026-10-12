@@ -1,0 +1,2 @@
+OK: emitted probe/consumer shape parity, both runtimes, variant role overrides and old mismatch red controls; synthetic only
+OK: generated neutral schema/consumer parity; 300 action/role positives, former shape mismatches and conditional admission/compression reds; synthetic only

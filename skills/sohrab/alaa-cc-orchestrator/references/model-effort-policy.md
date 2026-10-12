@@ -2,7 +2,7 @@
 
 `routing-matrix.md` owns actual task allocation and admission for EVERY role. `/alaa-prompting-guide` owns supported capabilities, source guidance, runtime precedence and checked model-neutral projections. Its `references/50-effort-and-thinking.md` and `references/90-model-selection.md` inform the decision; they do not assign a pair merely from role identity.
 
-The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Every managed role uses task-selected controls and carries no executable model or effort pin. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
+The registry is `alaa-prompting-guide assets/claude-model-policy.json`. Managed roles carry no executable model/effort pins. Before realizing task-selected controls, check ordinary eligibility, effort support and host availability separately. Legacy model/effort-named roles are authority-compatible workload identities, never default pairs. Choose review depth from the actual review scope and allocate its pair separately; never use a stronger or different model solely for a second lens.
 
 ## Before every dispatch
 

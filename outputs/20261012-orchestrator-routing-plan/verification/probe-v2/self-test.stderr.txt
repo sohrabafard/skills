@@ -1,0 +1,1 @@
+Evidence sidecar write in command wrapper failed because verification/probe-v2 did not yet exist; gate process itself returned exit 0.

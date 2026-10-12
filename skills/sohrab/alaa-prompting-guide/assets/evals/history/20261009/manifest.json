@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "purpose": "historical-only",
+  "evidence_date": "2026-10-09",
+  "archived_on": "2026-10-12",
+  "source_commit": "9086158d204e8015f7fd0c1e66f83f710bc0dfac",
+  "files": [
+    {
+      "source": "skills/sohrab/alaa-prompting-guide/assets/evals/agent-comparisons.json",
+      "file": "agent-comparisons.json",
+      "sha256": "15f2bade085567c717c4213e3f007b4d9215275950c37a34582e73e5895eb546",
+      "bytes": 10201
+    },
+    {
+      "source": "skills/sohrab/alaa-prompting-guide/assets/codex-model-policy.json",
+      "file": "codex-model-policy.json",
+      "sha256": "8a8cdd6c7fab9cda471d9c55166114c16827b128c66af959282440157f0431d4",
+      "bytes": 11729
+    }
+  ],
+  "authority": "Dated comparison designs only; never ordinary task selection, activation or calibration authority."
+}

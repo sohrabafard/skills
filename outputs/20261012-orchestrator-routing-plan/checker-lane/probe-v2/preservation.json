@@ -1,0 +1,41 @@
+{
+  "checker_before_sha256": "15576d56d572a91842f06be26b21272fa73bbfecad71e076b5e217418565ad9e",
+  "preserved_paths": [
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/allocation-results-unrun.json",
+      "sha256": "627f23a54c4aeed5e8d5f060c2181a1642f142af0ad82f904b01a0470b48122c"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-allocation-request.txt",
+      "sha256": "cb9f230deb5736d2d17943c88b8ddab40ec7b3771e19fd3e4ed3dcfedbf171a2"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-loaded-contracts.txt",
+      "sha256": "d901dfb9ce25a56635c978789b8c6edf438e192f2409df26f63b350996d19a47"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-probe-input.json",
+      "sha256": "bc0a521625315c50985b346a36a805f858f465764f2413e448a75047ccd2dd2c"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/claude-code-probe-manifest.json",
+      "sha256": "97493ff92e848b949411ab790dabd12707645eaf7a8fcc4c153b20384cb6d010"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-allocation-request.txt",
+      "sha256": "be8f9abbdd490d4b48b4707b0167411ea9c2d92b2b07ded08e65dc4f4ae4c380"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-loaded-contracts.txt",
+      "sha256": "79fc2f26818e6c54e3343c708ee34c6ff1cf02be65881e550edb5153c6e1fc1b"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-probe-input.json",
+      "sha256": "404dac148cf8a35b888833e1289f5851399e3dfc7f8782e2eceb256843d54472"
+    },
+    {
+      "path": "outputs/20261012-orchestrator-routing-plan/checker-lane/codex-probe-manifest.json",
+      "sha256": "ff96c1d6f07f87b051b8274fb323519aced1a702933e3ca56bc0d7efa31ff719"
+    }
+  ]
+}

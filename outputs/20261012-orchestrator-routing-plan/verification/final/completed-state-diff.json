@@ -1,0 +1,5 @@
+{
+  "command": "git diff --check",
+  "exit_code": 0,
+  "observer": "parent final metadata check after independent closure gates"
+}

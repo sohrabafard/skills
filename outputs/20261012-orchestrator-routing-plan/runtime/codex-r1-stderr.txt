@@ -1,0 +1,7 @@
+2026-10-12T13:44:02.657945Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-12T13:44:02.998562Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-10-12T13:44:02.998999Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-10-12T13:44:02.999209Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-10-12T13:44:03.000551Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-10-12T13:44:03.000699Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
+2026-10-12T13:44:03.001991Z  WARN codex_skills::interface: ignoring interface.default_prompt: exceeds maximum length of 1024 characters
